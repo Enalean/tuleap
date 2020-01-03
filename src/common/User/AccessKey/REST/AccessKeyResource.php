@@ -39,7 +39,11 @@ use Tuleap\User\AccessKey\AccessKeyRevoker;
 use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
+use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilder;
+use Tuleap\User\AccessKey\Scope\InvalidScopeIdentifierKeyException;
+use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
 
 class AccessKeyResource extends AuthenticatedResource
 {
@@ -61,12 +65,14 @@ class AccessKeyResource extends AuthenticatedResource
      * <pre>
      * {<br/>
      *   "description": "This is my API key",<br/>
-     *   "expiration_date": "2019-08-07T10:15:57+02:00"<br/>
+     *   "expiration_date": "2019-08-07T10:15:57+02:00",<br/>
+     *   "scopes": ["write:rest"]<br/>
      * }<br/>
      * </pre>
      * <br/>
      * The expiration date is optional. If provided, it must be formatted as an ISO-8601 date.<br/>
      * In addition, you cannot create an already expired access key.
+     * The scopes are optional, by default only read/write access to the REST API is given.
      *
      * @url POST
      *
@@ -110,10 +116,30 @@ class AccessKeyResource extends AuthenticatedResource
             }
         }
 
+        $key_scopes               = [];
+        $access_key_scope_builder = new CoreAccessKeyScopeBuilder();
+        foreach ($access_key->scopes as $scope_identifier) {
+            try {
+                $key_scope = $access_key_scope_builder->buildAccessKeyScopeFromScopeIdentifier(
+                    AccessKeyScopeIdentifier::fromIdentifierKey($scope_identifier)
+                );
+            } catch (InvalidScopeIdentifierKeyException $exception) {
+                throw new RestException(
+                    400,
+                    "$scope_identifier does not have the expected format of an access key scope identifier"
+                );
+            }
+            if ($key_scope !== null) {
+                $key_scopes[] = $key_scope;
+            }
+        }
+
         try {
-            $access_key_creator->create($current_user, $access_key->description, $expiration_date);
+            $access_key_creator->create($current_user, $access_key->description, $expiration_date, ...$key_scopes);
         } catch (AccessKeyAlreadyExpiredException $exception) {
             throw new RestException(400, $exception->getMessage());
+        } catch (NoValidAccessKeyScopeException $exception) {
+            throw new RestException(400, 'No valid access key scope identifier has been given');
         }
 
         $representation = new UserAccessKeyCreationRepresentation();

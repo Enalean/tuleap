@@ -39,6 +39,8 @@ final class AccessKeyScopeIdentifier
 
     /**
      * @psalm-pure
+     *
+     * @throws InvalidScopeIdentifierKeyException
      */
     public static function fromIdentifierKey(string $identifier_key): self
     {

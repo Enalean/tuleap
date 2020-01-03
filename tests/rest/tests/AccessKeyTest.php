@@ -33,7 +33,7 @@ class AccessKeyTest extends RestBase
         $response = $this->getResponse($this->client->options('access_keys'));
 
         $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testAccessKeyLifeCycle(): void
@@ -87,6 +87,50 @@ class AccessKeyTest extends RestBase
         $this->assertEmpty($this->getAccessKeys());
     }
 
+    public function testAccessKeyCannotBeCreatedWithoutSpecifyingAScope(): void
+    {
+        $body_content = json_encode(
+            [
+                'description' => self::DESCRIPTION_ACCESS_KEY,
+                'scopes'      => []
+            ],
+            JSON_THROW_ON_ERROR
+        );
+
+        $response = $this->getResponse(
+            $this->client->post(
+                'access_keys',
+                null,
+                $body_content
+            ),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    public function testAccessKeyCannotBeCreatedWithAnInvalidScopeIdentifier(): void
+    {
+        $body_content = json_encode(
+            [
+                'description' => self::DESCRIPTION_ACCESS_KEY,
+                'scopes'      => ['invalid_scope_identifier']
+            ],
+            JSON_THROW_ON_ERROR
+        );
+
+        $response = $this->getResponse(
+            $this->client->post(
+                'access_keys',
+                null,
+                $body_content
+            ),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
     private function getFormattedExpirationDate(): string
     {
         $expiration_date = new DateTimeImmutable("tomorrow");
@@ -113,7 +157,7 @@ class AccessKeyTest extends RestBase
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
-        $this->assertEquals($response->getStatusCode(), 201);
+        $this->assertEquals(201, $response->getStatusCode());
         $access_key = $response->json();
         $this->assertArrayHasKey('identifier', $access_key);
         return $access_key['identifier'];
@@ -138,7 +182,7 @@ class AccessKeyTest extends RestBase
                 ),
                 REST_TestDataBuilder::TEST_USER_1_NAME
             );
-            $this->assertEquals($response->getStatusCode(), 200);
+            $this->assertEquals(200, $response->getStatusCode());
         }
     }
 

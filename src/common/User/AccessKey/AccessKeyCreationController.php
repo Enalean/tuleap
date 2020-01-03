@@ -32,7 +32,9 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
+use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
 
 class AccessKeyCreationController implements DispatchableWithRequest
 {
@@ -62,7 +64,14 @@ class AccessKeyCreationController implements DispatchableWithRequest
         $expiration_date = $this->getExpirationDate($request, $layout);
 
         try {
-            $access_key_creator->create($current_user, $description, $expiration_date);
+            $access_key_creator->create(
+                $current_user,
+                $description,
+                $expiration_date,
+                RESTAccessKeyScope::fromIdentifier(
+                    AccessKeyScopeIdentifier::fromIdentifierKey(RESTAccessKeyScope::IDENTIFIER_KEY)
+                )
+            );
             $layout->redirect('/account/#account-access-keys');
         } catch (AccessKeyAlreadyExpiredException $exception) {
             $layout->addFeedback(
