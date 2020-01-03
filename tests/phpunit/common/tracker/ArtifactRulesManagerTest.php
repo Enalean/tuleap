@@ -19,22 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generatePartial('ArtifactRulesManager', 'ArtifactRulesManagerTestVersion', array('_getArtifactRuleFactory', '_getSelectedValuesForField'));
+declare(strict_types=1);
 
-Mock::generate('ArtifactRuleValue');
-
-Mock::generate('ArtifactRuleFactory');
-
-Mock::generate('ArtifactFieldFactory');
-
-Mock::generate('Response');
-
-Mock::generate('ArtifactField');
-
-class ArtifactRulesManagerTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock;
 
-    function testValidate()
+    public function testValidate() : void
     {
         /*
         Fields:
@@ -67,59 +59,57 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         $r6 = new ArtifactRuleValue(6, 1, 'F3', 'C1', 'F2', 'B3');
         $r7 = new ArtifactRuleValue(7, 1, 'F3', 'C2', 'F2', 'B2');
 
-        $arf = new MockArtifactRuleFactory($this);
-        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array(&$r1, &$r2, &$r3, &$r4, &$r5, &$r6, &$r7));
+        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array(&$r1, &$r2, &$r3, &$r4, &$r5, &$r6, &$r7));
 
-        $f1 = new MockArtifactField($this);
-        $f1->setReturnValue('getID', 'F1');
-        $f1->setReturnValue('getLabel', 'f_1');
-        $f1->setReturnValue('getFieldPredefinedValues', null);
+        $f1 = \Mockery::spy(\ArtifactField::class);
+        $f1->shouldReceive('getID')->andReturns('F1');
+        $f1->shouldReceive('getLabel')->andReturns('f_1');
+        $f1->shouldReceive('getFieldPredefinedValues')->andReturns(null);
 
-        $f2 = new MockArtifactField($this);
-        $f2->setReturnValue('getID', 'F2');
-        $f2->setReturnValue('getLabel', 'f_2');
-        $f2->setReturnValue('getFieldPredefinedValues', null);
+        $f2 = \Mockery::spy(\ArtifactField::class);
+        $f2->shouldReceive('getID')->andReturns('F2');
+        $f2->shouldReceive('getLabel')->andReturns('f_2');
+        $f2->shouldReceive('getFieldPredefinedValues')->andReturns(null);
 
-        $f3 = new MockArtifactField($this);
-        $f3->setReturnValue('getID', 'F3');
-        $f3->setReturnValue('getLabel', 'f_3');
-        $f3->setReturnValue('getFieldPredefinedValues', null);
+        $f3 = \Mockery::spy(\ArtifactField::class);
+        $f3->shouldReceive('getID')->andReturns('F3');
+        $f3->shouldReceive('getLabel')->andReturns('f_3');
+        $f3->shouldReceive('getFieldPredefinedValues')->andReturns(null);
 
-        $f4 = new MockArtifactField($this);
-        $f4->setReturnValue('getID', 'F4');
-        $f4->setReturnValue('getLabel', 'f_4');
-        $f4->setReturnValue('getFieldPredefinedValues', null);
+        $f4 = \Mockery::spy(\ArtifactField::class);
+        $f4->shouldReceive('getID')->andReturns('F4');
+        $f4->shouldReceive('getLabel')->andReturns('f_4');
+        $f4->shouldReceive('getFieldPredefinedValues')->andReturns(null);
 
-        $aff = new MockArtifactFieldFactory($this);
-        $aff->setReturnReference('getFieldFromName', $f1, array('f_1'));
-        $aff->setReturnReference('getFieldFromName', $f2, array('f_2'));
-        $aff->setReturnReference('getFieldFromName', $f3, array('f_3'));
-        $aff->setReturnReference('getFieldFromName', $f4, array('f_4'));
+        $aff = \Mockery::spy(\ArtifactFieldFactory::class);
+        $aff->shouldReceive('getFieldFromName')->with('f_1')->andReturns($f1);
+        $aff->shouldReceive('getFieldFromName')->with('f_2')->andReturns($f2);
+        $aff->shouldReceive('getFieldFromName')->with('f_3')->andReturns($f3);
+        $aff->shouldReceive('getFieldFromName')->with('f_4')->andReturns($f4);
 
-        $arm = new ArtifactRulesManagerTestVersion($this);
-        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
-        $arm->setReturnValue('_getSelectedValuesForField', array('a_1'), array(null, 'F1', 'A1'));
-        $arm->setReturnValue('_getSelectedValuesForField', array('a_2'), array(null, 'F1', 'A2'));
-        $arm->setReturnValue('_getSelectedValuesForField', array('b_1'), array(null, 'F2', 'B1'));
-        $arm->setReturnValue('_getSelectedValuesForField', array('b_2'), array(null, 'F2', 'B2'));
-        $arm->setReturnValue('_getSelectedValuesForField', array('b_3'), array(null, 'F2', 'B3'));
-        $arm->setReturnValue('_getSelectedValuesForField', array('c_1'), array(null, 'F3', 'C1'));
-        $arm->setReturnValue('_getSelectedValuesForField', array('c_2'), array(null, 'F3', 'C2'));
-        $arm->setReturnValue('_getSelectedValuesForField', array('a_1'), array(null, 'F1', array('A1')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('a_2'), array(null, 'F1', array('A2')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('b_1'), array(null, 'F2', array('B1')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('b_2'), array(null, 'F2', array('B2')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('b_3'), array(null, 'F2', array('B3')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('c_1'), array(null, 'F3', array('C1')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('c_2'), array(null, 'F3', array('C2')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('a_1', 'a_2'), array(null, 'F3', array('A1', 'A2')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('b_1', 'b_3'), array(null, 'F3', array('B1', 'B3')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('b_1', 'b_2'), array(null, 'F3', array('B1', 'B2')));
-        $arm->setReturnValue('_getSelectedValuesForField', array('b_2', 'b_3'), array(null, 'F3', array('B2', 'B3')));
+        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', 'A1')->andReturns(array('a_1'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', 'A2')->andReturns(array('a_2'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B1')->andReturns(array('b_1'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B2')->andReturns(array('b_2'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B3')->andReturns(array('b_3'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', 'C1')->andReturns(array('c_1'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', 'C2')->andReturns(array('c_2'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', array('A1'))->andReturns(array('a_1'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', array('A2'))->andReturns(array('a_2'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', array('B1'))->andReturns(array('b_1'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', array('B2'))->andReturns(array('b_2'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', array('B3'))->andReturns(array('b_3'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('C1'))->andReturns(array('c_1'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('C2'))->andReturns(array('c_2'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('A1', 'A2'))->andReturns(array('a_1', 'a_2'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('B1', 'B3'))->andReturns(array('b_1', 'b_3'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('B1', 'B2'))->andReturns(array('b_1', 'b_2'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('B2', 'B3'))->andReturns(array('b_2', 'b_3'));
 
         //S1
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectNever('addFeedback');
         $this->assertTrue(
             $arm->validate(
                 1,
@@ -134,8 +124,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         );
         //$this->assertEqual($GLOBALS['feedback'], '');
         //S2
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectOnce('addFeedback', array('error', 'f_3(c_2) -> f_2(b_3)'));
         $this->assertFalse(
             $arm->validate(
                 1,
@@ -150,8 +138,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         );
         //$this->assertEqual($GLOBALS['feedback'],  'f_3(c_2) -> f_2(b_3) : ');
         //S3
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectNever('addFeedback');
         $this->assertTrue(
             $arm->validate(
                 1,
@@ -166,8 +152,7 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         );
         //$this->assertEqual($GLOBALS['feedback'],  '');
         //S4
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectNever('addFeedback');
+        $GLOBALS['Response'] = \Mockery::spy(\Response::class);
         $this->assertTrue(
             $arm->validate(
                 1,
@@ -182,8 +167,8 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         );
         //$this->assertEqual($GLOBALS['feedback'],  '');
         //S5
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectNever('addFeedback');
+        $GLOBALS['Response'] = \Mockery::spy(\Response::class);
+        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', 'f_3(c_2) -> f_2(b_3)')->never();
         $this->assertTrue(
             $arm->validate(
                 1,
@@ -198,8 +183,8 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         );
         //$this->assertEqual($GLOBALS['feedback'],  '');
         //S6
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectOnce('addFeedback', array('error', 'f_1(a_1) -> f_2(b_2)'));
+        $GLOBALS['Response'] = \Mockery::spy(\Response::class);
+        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', 'f_1(a_1) -> f_2(b_2)')->once();
         $this->assertFalse(
             $arm->validate(
                 1,
@@ -215,17 +200,17 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         //$this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2)');
     }
 
-    function testForbidden()
+    public function testForbidden() : void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = new MockArtifactRuleFactory($this);
-        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
 
-        $arm = new ArtifactRulesManagerTestVersion($this);
-        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
 
         //Forbidden sources
         $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'A'), "Field A cannot be the source of field A");
@@ -270,17 +255,17 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'D', 'D'), "Field D cannot be the target of field D");
     }
 
-    function testFieldHasSourceTarget()
+    public function testFieldHasSourceTarget() : void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = new MockArtifactRuleFactory($this);
-        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
 
-        $arm = new ArtifactRulesManagerTestVersion($this);
-        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
 
         $this->assertFalse($arm->fieldHasSource(1, 'A'));
         $this->assertTrue($arm->fieldHasSource(1, 'B'));
@@ -296,17 +281,18 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         $this->assertFalse($arm->fieldHasTarget(1, 'E'));
         $this->assertFalse($arm->fieldHasTarget(1, 'F'));
     }
-    function testIsCyclic()
+
+    public function testIsCyclic() : void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = new MockArtifactRuleFactory($this);
-        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
 
-        $arm = new ArtifactRulesManagerTestVersion($this);
-        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
 
         $this->assertTrue($arm->isCyclic(1, 'A', 'A'));
         $this->assertFalse($arm->isCyclic(1, 'A', 'B'));
@@ -339,17 +325,17 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         $this->assertTrue($arm->isCyclic(1, 'E', 'E'));
     }
 
-    function testRuleExists()
+    public function testRuleExists() : void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = new MockArtifactRuleFactory($this);
-        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
 
-        $arm = new ArtifactRulesManagerTestVersion($this);
-        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
 
         //Rule exists
         $this->assertFalse($arm->ruleExists(1, 'A', 'A'));
@@ -382,17 +368,18 @@ class ArtifactRulesManagerTest extends TuleapTestCase
         $this->assertFalse($arm->ruleExists(1, 'E', 'D'));
         $this->assertFalse($arm->ruleExists(1, 'E', 'E'));
     }
-    function testValueHasSourceTarget()
+
+    public function testValueHasSourceTarget() : void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = new MockArtifactRuleFactory($this);
-        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
 
-        $arm = new ArtifactRulesManagerTestVersion($this);
-        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
 
         //value has source or target
         $this->assertTrue($arm->valueHasSource(1, 'B', 2, 'A'));
