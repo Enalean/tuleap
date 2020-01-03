@@ -310,6 +310,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $this->criteria_value[$criteria->report->id];
     }
 
+    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
+    {
+        return;
+    }
+
     /**
      * Format the criteria value submitted by the user for storage purpose (dao or session)
      *

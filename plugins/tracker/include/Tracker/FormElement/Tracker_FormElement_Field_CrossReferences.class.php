@@ -41,7 +41,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
                 $criteria_value = CodendiDataAccess::instance()->quoteSmart($criteria_value);
                 $a = 'A_'. $this->id;
-                return " INNER JOIN cross_references AS $a 
+                return " INNER JOIN cross_references AS $a
                          ON (artifact.id = $a.source_id AND $a.source_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.target_id = $criteria_value
                              OR
                              artifact.id = $a.target_id AND $a.target_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.source_id = $criteria_value
@@ -198,7 +198,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
 
     /**
      * Return the dao of the criteria value used with this field.
-     * @return DataAccessObject
+     * @return Tracker_Report_Criteria_ValueDao
      */
     protected function getCriteriaDao()
     {

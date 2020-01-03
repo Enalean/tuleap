@@ -41,7 +41,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Display the field value as a criteria
-     * @param Tracker_ReportCriteria $criteria
      * @return string
      * @see fetchCriteria
      */
@@ -96,7 +95,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Return the dao of the criteria value used with this field.
-     * @return DataAccessObject|null
+     * @return Tracker_Report_Criteria_ValueDao|null
      */
     abstract protected function getCriteriaDao();
 
@@ -112,16 +111,16 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $this->criteria_value = array();
         }
 
-        if (!isset($this->criteria_value[$criteria->report->id])) {
-            $this->criteria_value[$criteria->report->id] = null;
+        if (!isset($this->criteria_value[$criteria->getReport()->getId()])) {
+            $this->criteria_value[$criteria->getReport()->getId()] = null;
             if ($v = $this->getCriteriaDao()
                           ->searchByCriteriaId($criteria->id)
                           ->getRow()
             ) {
-                $this->criteria_value[$criteria->report->id] = $v['value'];
+                $this->criteria_value[$criteria->getReport()->getId()] = $v['value'];
             }
         }
-        return $this->criteria_value[$criteria->report->id];
+        return $this->criteria_value[$criteria->getReport()->getId()];
     }
 
     public function setCriteriaValue($criteria_value, $report_id)
@@ -159,6 +158,42 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function getFormattedCriteriaValue($value)
     {
         return $value;
+    }
+
+    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
+    {
+        $criteria_value = $this->getCriteriaValue($criteria);
+        if ((string) $criteria_value !== '') {
+            $cdata_factory = new XML_SimpleXMLCDATAFactory();
+            $cdata_factory->insertWithAttributes(
+                $xml_criteria,
+                'criteria_value',
+                (string) $criteria_value,
+                ['type' => 'text']
+            );
+        }
+    }
+
+    public function setCriteriaValueFromXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria_value)
+    {
+        if ((string) $xml_criteria_value['type'] !== 'text') {
+            return;
+        }
+        $string_value = (string) $xml_criteria_value;
+
+        $this->setCriteriaValue($string_value, $criteria->getReport()->getId());
+    }
+
+    public function saveCriteriaValueFromXML(Tracker_Report_Criteria $criteria)
+    {
+        $report_id = $criteria->getReport()->getId();
+
+        if (! isset($this->criteria_value[$report_id])) {
+            return;
+        }
+
+        $value = $this->criteria_value[$report_id];
+        $this->updateCriteriaValue($criteria, $value);
     }
 
     /**
@@ -301,12 +336,16 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Update the criteria value
-     * @param Criteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @param mixed $value
      */
     public function updateCriteriaValue($criteria, $value)
     {
-        $this->getCriteriaDao()->save($criteria->id, $value);
+        $dao = $this->getCriteriaDao();
+        if ($dao === null) {
+            return;
+        }
+        $dao->save($criteria->id, $value);
     }
 
     /**
