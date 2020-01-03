@@ -19,14 +19,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
+use PHPUnit\Framework\TestCase;
 use Tuleap\Git\Driver\Gerrit\GerritUnsupportedVersionDriver;
 
 require_once __DIR__ .'/../../../bootstrap.php';
 
-class GerritDriverFactoryTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class GerritDriverFactoryTest extends TestCase
 {
 
-    public function setUp()
+    /**
+     * @var Git_Driver_Gerrit_GerritDriverFactory
+     */
+    private $gerrit_driver_factory;
+
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -39,7 +48,7 @@ class GerritDriverFactoryTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsAGerritUnsupportedVersionDriverObjectIfServerIsIn25Version()
+    public function testItReturnsAGerritUnsupportedVersionDriverObjectIfServerIsIn25Version(): void
     {
         $server = new Git_RemoteServer_GerritServer(
             0,
@@ -53,13 +62,15 @@ class GerritDriverFactoryTest extends TuleapTestCase
             Git_RemoteServer_GerritServer::GERRIT_VERSION_2_5,
             '',
             '',
-            ''
         );
 
-        $this->assertIsA($this->gerrit_driver_factory->getDriver($server), GerritUnsupportedVersionDriver::class);
+        $this->assertInstanceOf(
+            GerritUnsupportedVersionDriver::class,
+            $this->gerrit_driver_factory->getDriver($server)
+        );
     }
 
-    public function itReturnsAGerritUnsupportedVersionDriverObjectIfServerAsNoVersionSet()
+    public function testItReturnsAGerritUnsupportedVersionDriverObjectIfServerAsNoVersionSet(): void
     {
          $server = new Git_RemoteServer_GerritServer(
              0,
@@ -73,13 +84,17 @@ class GerritDriverFactoryTest extends TuleapTestCase
              '',
              '',
              '',
-             ''
          );
 
-        $this->assertIsA($this->gerrit_driver_factory->getDriver($server), GerritUnsupportedVersionDriver::class);
+
+
+        $this->assertInstanceOf(
+            GerritUnsupportedVersionDriver::class,
+            $this->gerrit_driver_factory->getDriver($server)
+        );
     }
 
-    public function itReturnsAGerritDriverRESTObjectIfServerIsIn28Version()
+    public function testItReturnsAGerritDriverRESTObjectIfServerIsIn28Version(): void
     {
         $server = new Git_RemoteServer_GerritServer(
             0,
@@ -93,8 +108,11 @@ class GerritDriverFactoryTest extends TuleapTestCase
             Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS,
             '',
             '',
-            ''
         );
-        $this->assertIsA($this->gerrit_driver_factory->getDriver($server), 'Git_Driver_GerritREST');
+
+        $this->assertInstanceOf(
+            Git_Driver_GerritREST::class,
+            $this->gerrit_driver_factory->getDriver($server)
+        );
     }
 }

@@ -18,15 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../bootstrap.php';
-require_once dirname(__FILE__).'/../../../../../ldap/include/LDAP_User.class.php';
-require_once dirname(__FILE__).'/../../../../../ldap/include/LDAPResult.class.php';
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__.'/../../../../../ldap/include/LDAP_User.class.php';
+require_once __DIR__.'/../../../../../ldap/include/LDAPResult.class.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UserAccountManagerGetGerritUserTest extends TuleapTestCase
+class UserAccountManagerGetGerritUserTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -35,10 +39,10 @@ class UserAccountManagerGetGerritUserTest extends TuleapTestCase
         EventManager::setInstance($event_manager);
 
         $this->ldap_login  = 'bla blo';
-        $this->ldap_result = stub('LDAPResult')->getLogin()->returns($this->ldap_login);
+        $this->ldap_result = \Mockery::spy(\LDAPResult::class)->shouldReceive('getLogin')->andReturns($this->ldap_login)->getMock();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         EventManager::clearInstance();
         parent::tearDown();
@@ -49,14 +53,14 @@ class UserAccountManagerGetGerritUserTest extends TuleapTestCase
         $params['ldap_user'] = new LDAP_User($params['user'], $this->ldap_result);
     }
 
-    public function itCreatesGerritUserFromLdapUser()
+    public function testItCreatesGerritUserFromLdapUser()
     {
         $user_manager = new Git_Driver_Gerrit_UserAccountManager(
-            mock('Git_Driver_Gerrit_GerritDriverFactory'),
-            mock('Git_RemoteServer_GerritServerFactory')
+            \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class),
+            \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class)
         );
 
-        $gerrit_user = $user_manager->getGerritUser(mock('PFUser'));
-        $this->assertEqual($gerrit_user->getWebUserName(), $this->ldap_login);
+        $gerrit_user = $user_manager->getGerritUser(\Mockery::spy(\PFUser::class));
+        $this->assertEquals($this->ldap_login, $gerrit_user->getWebUserName());
     }
 }

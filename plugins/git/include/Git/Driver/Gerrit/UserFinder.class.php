@@ -52,6 +52,8 @@ class Git_Driver_Gerrit_UserFinder
                 return true;
             }
         }
+
+        return false;
     }
 
     /**
