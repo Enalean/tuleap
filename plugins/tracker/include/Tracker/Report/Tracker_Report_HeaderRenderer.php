@@ -266,21 +266,26 @@ class Tracker_Report_HeaderRenderer
         $options = '';
         if (count($reports) > 1) {
             $options = '<select id="tracker_select_report" name="select_report">';
-            $optgroup = array('personal' => '', 'public' => '');
+            $personal = '';
+            $public   = '';
             foreach ($reports as $r) {
                 $prefix = '<option value="'. $r->id .'"';
                 $suffix = '>'. $this->purifier->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
                 $selected = $r->id == $report->id ? 'selected="selected"' : '';
-                $optgroup[($r->isPublic() ? 'public' : 'personal')] .= $prefix .' '. $selected . $suffix;
+                if ($r->isPublic()) {
+                    $public .= $prefix .' '. $selected . $suffix;
+                } else {
+                    $personal .= $prefix .' '. $selected . $suffix;
+                }
             }
-            if ($optgroup['personal']) {
+            if ($personal !== '') {
                 $options .= '<optgroup label="Personal reports">';
-                $options .= $optgroup['personal'];
+                $options .= $personal;
                 $options .= '</optgroup>';
             }
-            if ($optgroup['public']) {
+            if ($public !== '') {
                 $options .= '<optgroup label="Public reports">';
-                $options .= $optgroup['public'];
+                $options .= $public;
                 $options .= '</optgroup>';
             }
             $options .= '</select>';

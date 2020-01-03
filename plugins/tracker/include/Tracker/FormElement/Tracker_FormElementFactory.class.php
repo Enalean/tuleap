@@ -1675,7 +1675,7 @@ class Tracker_FormElementFactory
                     )) {
                         //Set permissions
                         if (!array_key_exists($type, array_merge($this->group_classnames, $this->staticfield_classnames))) {
-                            $ugroups_permissions = $this->getPermissionsFromFormElementData($id, $form_element_data);
+                            $ugroups_permissions = $this->getPermissionsFromFormElementData($id, (array) $form_element_data);
                             if ($ugroups_permissions) {
                                 plugin_tracker_permission_process_update_fields_permissions(
                                     $tracker->group_id,
@@ -1702,7 +1702,7 @@ class Tracker_FormElementFactory
                             }
 
                             //All is done, the field may want to do some things depending on the request
-                            $form_element->afterCreate($form_element_data, $tracker_is_empty);
+                            $form_element->afterCreate((array) $form_element_data, $tracker_is_empty);
 
                             return $id;
                         }

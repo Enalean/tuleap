@@ -1717,6 +1717,9 @@ class ArtifactField
         } else {
             $user = $um->getUserById($user_id);
         }
+        if ($user === null) {
+            return false;
+        }
         $ok = $user->isSuperUser()
               || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)))
               || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
@@ -1755,6 +1758,9 @@ class ArtifactField
             $user = $um->getCurrentUser();
         } else {
             $user = $um->getUserById($user_id);
+        }
+        if ($user === null) {
+            return false;
         }
         $ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
         return $ok;

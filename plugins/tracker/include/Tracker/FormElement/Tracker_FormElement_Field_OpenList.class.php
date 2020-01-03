@@ -800,7 +800,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
     {
-        if (array_key_exists('bind_value_objects', $value['value']) && is_array($value['value']['bind_value_objects'])) {
+        if (isset($value['value']) && array_key_exists('bind_value_objects', $value['value']) && is_array($value['value']['bind_value_objects'])) {
             return $this->getFieldDataFromRESTObjects($value['value']['bind_value_objects']);
         } elseif (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
             return $this->getFieldDataFromArray($value['bind_value_ids']);

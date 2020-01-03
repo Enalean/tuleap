@@ -202,8 +202,10 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $field_id = null;
         if ($params['store_in_session']) {
             $this->report_session = new Tracker_Report_Session($params['report']->id);
-            $this->report_session->changeSessionNamespace("renderers.{$params['row']['id']}");
-            $field_id = $this->report_session->get("field_id");
+            if (isset($params['row']['id'])) {
+                $this->report_session->changeSessionNamespace("renderers.{$params['row']['id']}");
+                $field_id = $this->report_session->get("field_id");
+            }
         }
         if (! $field_id) {
             $dao = new Cardwall_RendererDao();

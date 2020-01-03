@@ -68,6 +68,11 @@ class Wiki
     public function isAutorized($uid)
     {
         $user = UserManager::instance()->getUserById($uid);
+
+        if ($user === null) {
+            return false;
+        }
+
         if ($user->isMember($this->gid, ProjectUGroup::PROJECT_ADMIN_PERMISSIONS)
         || $user->isMember($this->gid, ProjectUGroup::WIKI_ADMIN_PERMISSIONS)) {
             return true;

@@ -110,7 +110,7 @@ class FRSPackageController
                     $package = new FRSPackage($package_data);
                     frs_display_package_form($package, $title, $url, $existing_packages);
                 } else {
-                    $this->package_factory->create($package_data);
+                    $this->package_factory->create((array) $package_data);
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_added'));
                     $GLOBALS['Response']->redirect('/file/?group_id='.$project->getGroupId());
                 }

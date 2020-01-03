@@ -196,6 +196,6 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      */
     private function fieldHasChanged(array $mapping_fields, ?Tracker $mapping_tracker = null, ?Tracker_FormElement $field = null)
     {
-        return !isset($mapping_fields[$mapping_tracker->getId()]) || $mapping_fields[$mapping_tracker->getId()] != $field->getId();
+        return !isset($mapping_fields[$mapping_tracker->getId()]) || ($field !== null && $mapping_fields[$mapping_tracker->getId()] != $field->getId());
     }
 }

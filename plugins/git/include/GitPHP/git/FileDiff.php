@@ -740,6 +740,7 @@ class FileDiff
             switch ($d[0]) {
                 case '@':
                     if ($currentDiff) {
+                        assert(isset($currentDiff['left'], $currentDiff['right'], $currentDiff['line']));
                         if (count($currentDiff['left']) == 0 && count($currentDiff['right']) > 0) {
                             $currentDiff['line']++;     // HACK to make added blocks align correctly
                         }
@@ -770,6 +771,7 @@ class FileDiff
             }
         }
         if ($currentDiff) {
+            assert(isset($currentDiff['left'], $currentDiff['right'], $currentDiff['line']));
             if (count($currentDiff['left']) == 0 && count($currentDiff['right']) > 0) {
                 $currentDiff['line']++;     // HACK to make added blocks align correctly
             }

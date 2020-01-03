@@ -137,6 +137,9 @@ class Codendi_DiffOp_Change extends Codendi_DiffOp
  */
 class Codendi_DiffEngine
 {
+    private $xv;
+    private $yv;
+
     function diff($from_lines, $to_lines)
     {
         $n_from = sizeof($from_lines);

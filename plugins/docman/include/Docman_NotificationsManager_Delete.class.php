@@ -56,6 +56,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                         break;
                     }
                 }
+                assert(isset($t));
                 $this->_addMessage(
                     $l['user'],
                     $t == self::MESSAGE_REMOVED ? $last['item']->getTitle() : $p->getTitle(),

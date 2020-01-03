@@ -52,7 +52,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
     private function getTitleWhenFilterIsSet(array $params)
     {
-        if (isset($params['filter']) || $params['filter'] === null) {
+        if (! isset($params['filter']) || $params['filter'] === null) {
             return false;
         }
 
