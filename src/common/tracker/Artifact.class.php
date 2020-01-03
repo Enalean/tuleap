@@ -620,7 +620,7 @@ class Artifact
      *
      *  @return bool
      */
-    function addComment($comment, $email = false, &$changes, $comment_format = self::FORMAT_TEXT)
+    function addComment($comment, $email, &$changes, $comment_format = self::FORMAT_TEXT)
     {
 
         global $art_field_fact,$Language;
@@ -1269,7 +1269,7 @@ class Artifact
      *
      * @return bool
      */
-    function deleteCC($artifact_cc_id = false, &$changes, $masschange = false)
+    function deleteCC($artifact_cc_id, &$changes, $masschange = false)
     {
         global $Language;
 

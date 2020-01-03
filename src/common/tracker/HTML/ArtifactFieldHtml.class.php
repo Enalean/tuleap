@@ -105,7 +105,7 @@ class ArtifactFieldHtml extends ArtifactField
      *  @param display: define whether the MB will be displayed or not: In case of RO, it will not be displayed
      *    @return    string
      */
-    function multipleFieldBox($box_name = '', $group_artifact_id, $checked = false, $show_none = false, $text_none = 0, $show_any = false, $text_any = 0, $show_unchanged = false, $text_unchanged = 0, $show_value = false, $display = true)
+    function multipleFieldBox($box_name, $group_artifact_id, $checked = false, $show_none = false, $text_none = 0, $show_any = false, $text_any = 0, $show_unchanged = false, $text_unchanged = 0, $show_value = false, $display = true)
     {
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();
@@ -210,7 +210,7 @@ class ArtifactFieldHtml extends ArtifactField
      *
      *    @return    string
      */
-    function fieldBox($box_name = '', $group_artifact_id, $checked = false, $show_none = false, $text_none = 0, $show_any = false, $text_any = 0, $show_unchanged = false, $text_unchanged = 0, $display = true)
+    function fieldBox($box_name, $group_artifact_id, $checked = false, $show_none = false, $text_none = 0, $show_any = false, $text_any = 0, $show_unchanged = false, $text_unchanged = 0, $display = true)
     {
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();

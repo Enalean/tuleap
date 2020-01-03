@@ -84,7 +84,7 @@ class ArtifactFile
      *    @param    string    Item description.
      *  @return id on success / false on failure.
      */
-    function create($filename, $filetype, $filesize, $bin_data, $description = false, &$changes)
+    function create($filename, $filetype, $filesize, $bin_data, $description, &$changes)
     {
         global $Language;
 
@@ -114,7 +114,7 @@ class ArtifactFile
 
         $res=db_query("INSERT INTO artifact_file
 			(artifact_id,description,bin_data,filename,filesize,filetype,adddate,submitted_by)
-			VALUES 
+			VALUES
 			('". db_ei($this->Artifact->getID()) ."','". db_es($description) ."','','". db_es($filename) ."',
 			'".  db_ei($filesize)  ."','".  db_es($filetype)  ."','". time() ."','".  db_ei($userid)  ."')");
 
@@ -238,8 +238,8 @@ class ArtifactFile
     {
         global $Language;
 
-        $sql = "SELECT af.id, af.artifact_id, af.description, af.bin_data, af.filename, af.filesize, af.filetype, af.adddate, af.submitted_by, user.user_name, user.realname 
-                FROM artifact_file af, user 
+        $sql = "SELECT af.id, af.artifact_id, af.description, af.bin_data, af.filename, af.filesize, af.filetype, af.adddate, af.submitted_by, user.user_name, user.realname
+                FROM artifact_file af, user
                 WHERE (af.submitted_by = user.user_id) and af.id=". db_ei($id);
      //echo $sql;
         $res=db_query($sql);

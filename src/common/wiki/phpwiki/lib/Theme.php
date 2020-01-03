@@ -1483,7 +1483,7 @@ class SubmitImageButton extends SubmitButton
      * @param $img_url string URL for button's image.
      * @param $img_attr array Additional attributes for the &lt;img&gt; tag.
      */
-    function __construct($text, $name = false, $class = false, $img_url)
+    function __construct($text, $name, $class, $img_url)
     {
         parent::__construct('input', array('type'  => 'image',
                                           'src'   => $img_url,

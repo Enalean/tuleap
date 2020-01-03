@@ -334,7 +334,7 @@ function show_commitslist(
     echo $nav_bar;
 }
 
-function makeCvsLink($group_id, $filename = '', $text, $rev = '', $displayfunc = '')
+function makeCvsLink($group_id, $filename, $text, $rev = '', $displayfunc = '')
 {
     $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
 
@@ -348,7 +348,7 @@ function makeCvsLink($group_id, $filename = '', $text, $rev = '', $displayfunc =
     return '<A HREF="/cvs/viewvc.php/'.$filename.'?root='.$group_name.'&roottype=cvs'.$view_str.'"><B>'.$text."</B></A>";
 }
 
-function makeCvsDirLink($group_id, $filename = '', $text, $dir = '')
+function makeCvsDirLink($group_id, $filename, $text, $dir = '')
 {
     $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
     $row_grp = db_fetch_array($res_grp);

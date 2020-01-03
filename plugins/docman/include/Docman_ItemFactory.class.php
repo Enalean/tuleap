@@ -670,7 +670,7 @@ class Docman_ItemFactory
      *
      * @return ItemNode
      */
-    public function getItemList($id = 0, &$nbItemsFound, $params = null)
+    public function getItemList($id, &$nbItemsFound, $params = null)
     {
         if (!$id) {
             $dao = $this->_getItemDao();

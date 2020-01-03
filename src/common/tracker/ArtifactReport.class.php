@@ -935,7 +935,7 @@ class ArtifactReport
      *
      * @return void
      */
-    function getResultQueryElements($prefs, $morder, $advsrch, $aids = false, &$select, &$from, &$where, &$order_by)
+    function getResultQueryElements($prefs, $morder, $advsrch, $aids, &$select, &$from, &$where, &$order_by)
     {
 
       // NOTICE

@@ -42,7 +42,7 @@ class PluginHudsonJobDao extends DataAccessObject
     function searchByGroupID($group_id)
     {
         $sql = sprintf(
-            "SELECT *  
+            "SELECT *
                         FROM plugin_hudson_job
                         WHERE group_id = %s",
             $this->da->quoteSmart($group_id)
@@ -57,7 +57,7 @@ class PluginHudsonJobDao extends DataAccessObject
     function searchByJobID($job_id)
     {
         $sql = sprintf(
-            "SELECT *  
+            "SELECT *
                         FROM plugin_hudson_job
                         WHERE job_id = %s",
             $this->da->quoteSmart($job_id)
@@ -72,7 +72,7 @@ class PluginHudsonJobDao extends DataAccessObject
     function searchByJobName($job_name)
     {
         $sql = sprintf(
-            "SELECT *  
+            "SELECT *
                         FROM plugin_hudson_job
                         WHERE name = %s",
             $this->da->quoteSmart($job_name)
@@ -88,10 +88,10 @@ class PluginHudsonJobDao extends DataAccessObject
     function searchByUserID($user_id)
     {
         $sql = sprintf(
-            "SELECT j.*  
+            "SELECT j.*
                         FROM plugin_hudson_job j, user u, user_group ug
                         WHERE ug.group_id = j.group_id AND
-                              u.user_id = ug.user_id AND 
+                              u.user_id = ug.user_id AND
                               u.user_id = %s",
             $this->da->quoteSmart($user_id)
         );
@@ -106,9 +106,9 @@ class PluginHudsonJobDao extends DataAccessObject
         $project_id,
         $hudson_job_url,
         $job_name,
-        $use_svn_trigger = false,
-        $use_cvs_trigger = false,
-        $token = null,
+        $use_svn_trigger,
+        $use_cvs_trigger,
+        $token,
         $svn_paths
     ) {
         $project_id      = $this->da->quoteSmart($project_id);
@@ -129,9 +129,9 @@ class PluginHudsonJobDao extends DataAccessObject
         $job_id,
         $hudson_job_url,
         $job_name,
-        $use_svn_trigger = false,
-        $use_cvs_trigger = false,
-        $token = null,
+        $use_svn_trigger,
+        $use_cvs_trigger,
+        $token,
         $svn_paths
     ) {
         $job_id          = $this->da->quoteSmart($job_id);
