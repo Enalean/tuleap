@@ -330,9 +330,7 @@ class ZipWriter
 
         if (!empty($attrib['write_protected'])) {
             $atx = (0100444 << 16) | 1; // S_IFREG + read permissions to
-        }
-                                      // everybody.
-        else {
+        } else { // everybody.
             $atx = (0100644 << 16); // Add owner write perms.
         }
 

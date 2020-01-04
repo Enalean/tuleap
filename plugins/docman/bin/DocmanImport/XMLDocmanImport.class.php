@@ -455,9 +455,7 @@ class XMLDocmanImport
                         // Check that just one value is given to a list that allow only one value
                         if (count($values) > 1 && !$metadataDef['isMultipleValuesAllowed']) {
                             throw new Exception("Item '$item_name':\tThe list property '$title' allows only one value, but ".count($values)." values are given.");
-                        }
-                        // Check if no value is given to a list that require a value
-                        elseif (count($values) == 0 && !$metadataDef['isEmptyAllowed']) {
+                        } elseif (count($values) == 0 && !$metadataDef['isEmptyAllowed']) { // Check if no value is given to a list that require a value
                             throw new Exception("Item '$item_name':\tThe list property '$title' is required, but no <value> element is found.");
                         }
                 }

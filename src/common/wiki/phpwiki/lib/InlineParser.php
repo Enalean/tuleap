@@ -417,20 +417,19 @@ function LinkBracketLink($bracketlink)
         }
     } elseif (preg_match("/^phpwiki:/", $link)) {
         return new Cached_PhpwikiURL($link, $label);
-    }
-    /*
-     * Inline images in Interwiki urls's:
-     * [File:my_image.gif] inlines the image,
-     * File:my_image.gif shows a plain inter-wiki link,
-     * [what a pic|File:my_image.gif] shows a named inter-wiki link to the gif
-     * [File:my_image.gif|what a pic] shows a inlimed image linked to the page "what a pic"
-     *
-     * Note that for simplicity we will accept embedded object tags (non-images)
-     * here also, and seperate them later in LinkImage()
-     */
-    elseif (strstr($link, ':')
+    } elseif (strstr($link, ':')
             and ($intermap = getInterwikiMap())
             and preg_match("/^" . $intermap->getRegexp() . ":/", $link)) {
+        /*
+         * Inline images in Interwiki urls's:
+         * [File:my_image.gif] inlines the image,
+         * File:my_image.gif shows a plain inter-wiki link,
+         * [what a pic|File:my_image.gif] shows a named inter-wiki link to the gif
+         * [File:my_image.gif|what a pic] shows a inlimed image linked to the page "what a pic"
+         *
+         * Note that for simplicity we will accept embedded object tags (non-images)
+         * here also, and seperate them later in LinkImage()
+         */
         // trigger_error("label: $label link: $link", E_USER_WARNING);
         if (empty($label) and isImageLink($link)) {
             // if without label => inlined image [File:xx.gif]

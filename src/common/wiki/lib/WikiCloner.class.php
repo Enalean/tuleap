@@ -589,9 +589,7 @@ class WikiCloner
                             unset($data[$key][$k]);
                         }
                     }
-                }
-         // $value is serialized. Actually it is only  in user pages case.
-                else {
+                } else { // $value is serialized. Actually it is only  in user pages case.
                          $arr = $this->_deserialize($value);
                     if (is_array($arr)) {
                         foreach ($arr as $i => $j) {

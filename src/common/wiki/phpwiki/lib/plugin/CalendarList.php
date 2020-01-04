@@ -185,12 +185,10 @@ class WikiPlugin_CalendarList extends WikiPlugin
                 $now['tm_mday'] - $args['last_n_days'], // days prior
                 $now['tm_year'] + 1900
             );
-        }
-        elseif ($args['last_n']) {
+        } elseif ($args['last_n']) {
             // get date for last nth event
             $start = $this->_count_events($dbi, $args['last_n'], -1);
-        }
-        else {
+        } else {
             // start of requested month
             $start = mktime(
                 0,
@@ -213,12 +211,10 @@ class WikiPlugin_CalendarList extends WikiPlugin
                 $now['tm_mday'] + $args['next_n_days'], // days prior
                 $now['tm_year'] + 1900
             );
-        }
-        elseif ($args['last_n']) {
+        } elseif ($args['last_n']) {
             // get date for next nth event
             $end = $this->_count_events($dbi, $args['next_n'], 1);
-        }
-        else {
+        } else {
             // trick to get last day of requested month
             $end = mktime(
                 0,

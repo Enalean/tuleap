@@ -159,9 +159,7 @@ class FileFinder
             return "\\";  // FAT might use '\'
         } elseif (isMac()) {
             return ':';    // MacOsX is /
-        }
-        // VMS or LispM is really weird, we ignore it.
-        else {
+        } else { // VMS or LispM is really weird, we ignore it.
             return '/';
         }
     }

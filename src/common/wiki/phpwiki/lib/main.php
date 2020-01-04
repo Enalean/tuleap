@@ -1080,9 +1080,7 @@ class WikiRequest extends Request
             if ($retval = $plugin->lock_check($this, $page, $moderated)) {
                 $this->setArg('errormsg', $retval);
             }
-        }
-        // check if a link to ModeratedPage exists
-        elseif ($action_page = $page->existLink(_("ModeratedPage"))) {
+        } elseif ($action_page = $page->existLink(_("ModeratedPage"))) { // check if a link to ModeratedPage exists
             require_once("lib/WikiPlugin.php");
             $plugin = WikiPluginLoader::getPlugin("ModeratedPage");
             if ($retval = $plugin->lock_add($this, $page, $action_page)) {

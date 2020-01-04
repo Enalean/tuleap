@@ -263,17 +263,14 @@ class BlockParser_InputSubBlock extends BlockParser_Input
 
         if (($line = $input->currentLine()) === false) {
             $this->_line = false;
-        }
-        elseif ($initial_prefix) {
+        } elseif ($initial_prefix) {
             assert(substr($line, 0, strlen($initial_prefix)) == $initial_prefix);
             $this->_line = (string) substr($line, strlen($initial_prefix));
             $this->_atBlank = ! ltrim($line);
-        }
-        elseif (preg_match($this->_prefix_pat, $line, $m)) {
+        } elseif (preg_match($this->_prefix_pat, $line, $m)) {
             $this->_line = (string) substr($line, strlen($m[0]));
             $this->_atBlank = ! ltrim($line);
-        }
-        else {
+        } else {
             $this->_line = false;
         }
     }
@@ -303,8 +300,7 @@ class BlockParser_InputSubBlock extends BlockParser_Input
     {
         if ($this->_line === '') {
             $this->_atSpace = $this->_atBlank ? 'weak_space' : 'strong_space';
-        }
-        else {
+        } else {
             $this->_atSpace = false;
         }
 
@@ -917,12 +913,10 @@ class Block_oldlists extends Block_list
         if ($bullet == '*') {
             $this->_tag = 'ul';
             $itemtag = 'li';
-        }
-        elseif ($bullet == '#') {
+        } elseif ($bullet == '#') {
             $this->_tag = 'ol';
             $itemtag = 'li';
-        }
-        else {
+        } else {
             $this->_tag = 'dl';
             list ($term,) = explode(':', substr($prefix, 1), 2);
             $term = trim($term);
@@ -941,8 +935,7 @@ class Block_oldlists extends Block_list
         if (count($this->_content) == 1) {
             $li = &$this->_content[0];
             $li->setTightness($top, $bot);
-        }
-        else {
+        } else {
             // This is where php5 usually brakes.
             // wrong duplicated <li> contents
             if (DEBUG and DEBUG & _DEBUG_PARSER) {

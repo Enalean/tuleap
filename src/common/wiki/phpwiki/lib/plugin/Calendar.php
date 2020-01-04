@@ -147,8 +147,7 @@ class WikiPlugin_Calendar extends WikiPlugin
         if ($mday == $this->_today) {
             $mday = HTML::strong($mday);
             $td->setAttr('class', 'cal-today');
-        }
-        elseif ($dbi->isWikiPage($page_for_date)) {
+        } elseif ($dbi->isWikiPage($page_for_date)) {
             $this->_links[] = $page_for_date;
             $td->setAttr('class', 'cal-day');
         }
@@ -159,8 +158,7 @@ class WikiPlugin_Calendar extends WikiPlugin
                 array('class' => 'cal-day', 'href' => WikiURL($page_for_date), 'title' => $page_for_date),
                 HTML::em($mday)
             );
-        }
-        else {
+        } else {
             $date = HTML::a(
                 array(
                     'class' => 'cal-hide',

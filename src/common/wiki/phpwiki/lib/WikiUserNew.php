@@ -183,12 +183,7 @@ function _determineAdminUserOrOtherUser($UserName)
     //$group = &WikiGroup::getGroup($GLOBALS['request']);
     if ($UserName == ADMIN_USER) {
         return new _AdminUser($UserName);
-    }
-    /* elseif ($group->isMember(GROUP_ADMIN)) { // unneeded code
-        return _determineBogoUserOrPassUser($UserName);
-    }
-    */
-    else {
+    } else {
         return _determineBogoUserOrPassUser($UserName);
     }
 }
@@ -894,9 +889,7 @@ class _PassUser extends _AnonUser
                 if (USER_AUTH_POLICY === 'first-only') {
                     $class = $this->nextClass();
                     return new $class($UserName, $this->_prefs);
-                }
-                // Use the default behaviour from the previous versions:
-                elseif (USER_AUTH_POLICY === 'old') {
+                } elseif (USER_AUTH_POLICY === 'old') { // Use the default behaviour from the previous versions:
                     // Default: try to be smart
                     // On php5 we can directly return and upgrade the Object,
                     // before we have to upgrade it manually.

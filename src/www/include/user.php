@@ -56,9 +56,7 @@ function user_getname($user_id = 0)
     // use current user if one is not passed in
     if (!$user_id) {
         return UserManager::instance()->getCurrentUser()->getUserName();
-    }
-    // else must lookup name
-    else {
+    } else { // else must lookup name
         if (isset($USER_NAMES["user_$user_id"]) && $USER_NAMES["user_$user_id"]) {
          //user name was fetched previously
             return $USER_NAMES["user_$user_id"];

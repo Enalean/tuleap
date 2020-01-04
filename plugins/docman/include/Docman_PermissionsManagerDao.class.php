@@ -70,8 +70,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
         $res = $this->retrieve($sql);
         if (!$res->isError() && $res->rowCount() > 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

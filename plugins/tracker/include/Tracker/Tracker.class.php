@@ -2214,7 +2214,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
         if ($user->isSuperUser() || $user->isMember($this->getGroupId(), 'A')) {
             return true;
-        }  else {
+        } else {
             $permissions = $this->getPermissionsByUgroupId();
             foreach ($permissions as $ugroup_id => $permission_types) {
                 foreach ($permission_types as $permission_type) {

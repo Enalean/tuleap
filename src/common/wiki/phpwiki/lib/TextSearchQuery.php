@@ -860,70 +860,45 @@ class TextSearchQuery_Lexer
             } elseif (preg_match('/^([()])\s*/', $buf, $m)) {
                 $val = $m[1];
                 $type = $m[1] == '(' ? TSQ_TOK_LPAREN : TSQ_TOK_RPAREN;
-            }
-
-            // * => ALL
-            elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_GLOB)
-                    and preg_match('/^\*\s*/', $buf, $m)) {
+            } elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_GLOB)
+                    and preg_match('/^\*\s*/', $buf, $m)) { // * => ALL
                 $val = "*";
                 $type = TSQ_TOK_ALL;
-            }
-            // .* => ALL
-            elseif ($regex & (TSQ_REGEX_PCRE)
-                    and preg_match('/^\.\*\s*/', $buf, $m)) {
+            } elseif ($regex & (TSQ_REGEX_PCRE)
+                    and preg_match('/^\.\*\s*/', $buf, $m)) { // .* => ALL
                 $val = ".*";
                 $type = TSQ_TOK_ALL;
-            }
-            // % => ALL
-            elseif ($regex & (TSQ_REGEX_SQL)
-                    and preg_match('/^%\s*/', $buf, $m)) {
+            } elseif ($regex & (TSQ_REGEX_SQL)
+                    and preg_match('/^%\s*/', $buf, $m)) { // % => ALL
                 $val = "%";
                 $type = TSQ_TOK_ALL;
-            }
-
-            // ^word
-            elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_PCRE)
-                    and preg_match('/^\^([^-()][^()\s]*)\s*/', $buf, $m)) {
+            } elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_PCRE)
+                    and preg_match('/^\^([^-()][^()\s]*)\s*/', $buf, $m)) { // ^word
                 $val = $m[1];
                 $type = TSQ_TOK_STARTS_WITH;
-            }
-            // word*
-            elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_GLOB)
-                    and preg_match('/^([^-()][^()\s]*)\*\s*/', $buf, $m)) {
+            } elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_GLOB)
+                    and preg_match('/^([^-()][^()\s]*)\*\s*/', $buf, $m)) { // word*
                 $val = $m[1];
                 $type = TSQ_TOK_STARTS_WITH;
-            }
-            // *word
-            elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_GLOB)
-                    and preg_match('/^\*([^-()][^()\s]*)\s*/', $buf, $m)) {
+            } elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_GLOB)
+                    and preg_match('/^\*([^-()][^()\s]*)\s*/', $buf, $m)) { // *word
                 $val = $m[1];
                 $type = TSQ_TOK_ENDS_WITH;
-            }
-            // word$
-            elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_PCRE)
-                    and preg_match('/^([^-()][^()\s]*)\$\s*/', $buf, $m)) {
+            } elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_PCRE)
+                    and preg_match('/^([^-()][^()\s]*)\$\s*/', $buf, $m)) { // word$
                 $val = $m[1];
                 $type = TSQ_TOK_ENDS_WITH;
-            }
-            // ^word$
-            elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_PCRE)
-                    and preg_match('/^\^([^-()][^()\s]*)\$\s*/', $buf, $m)) {
+            } elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_PCRE)
+                    and preg_match('/^\^([^-()][^()\s]*)\$\s*/', $buf, $m)) { // ^word$
                 $val = $m[1];
                 $type = TSQ_TOK_EXACT;
-            }
-
-            // "words "
-            elseif (preg_match('/^ " ( (?: [^"]+ | "" )* ) " \s*/x', $buf, $m)) {
+            } elseif (preg_match('/^ " ( (?: [^"]+ | "" )* ) " \s*/x', $buf, $m)) { // "words "
                 $val = str_replace('""', '"', $m[1]);
                 $type = TSQ_TOK_WORD;
-            }
-            // 'words '
-            elseif (preg_match("/^ ' ( (?:[^']+|'')* ) ' \s*/x", $buf, $m)) {
+            } elseif (preg_match("/^ ' ( (?:[^']+|'')* ) ' \s*/x", $buf, $m)) { // 'words '
                 $val = str_replace("''", "'", $m[1]);
                 $type = TSQ_TOK_WORD;
-            }
-            // word
-            elseif (preg_match('/^([^-()][^()\s]*)\s*/', $buf, $m)) {
+            } elseif (preg_match('/^([^-()][^()\s]*)\s*/', $buf, $m)) { // word
                 $val = $m[1];
                 $type = TSQ_TOK_WORD;
             } else {

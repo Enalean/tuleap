@@ -634,8 +634,7 @@ class Docman_PermissionsManager
 
         if ($this->userCanAdmin($user)) {
             $oneWritable = true;
-        }
-        else {
+        } else {
             $oneWritable = $dao->oneFolderIsWritable($this->getProject()->getID(), $user->getUgroups($this->getProject()->getID(), array()));
         }
 

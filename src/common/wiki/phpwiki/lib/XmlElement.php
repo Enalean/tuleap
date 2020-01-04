@@ -112,8 +112,7 @@ class XmlContent
                 } else {
                     printf("==Object(%s)==", get_class($item));
                 }
-            }
-            else {
+            } else {
                 echo $this->_quote((string) $item);
             }
         }
@@ -131,8 +130,7 @@ class XmlContent
                 } else {
                     $xml .= sprintf("==Object(%s)==", get_class($item));
                 }
-            }
-            else {
+            } else {
                 $xml .= $this->_quote((string) $item);
             }
         }
@@ -149,8 +147,7 @@ class XmlContent
                 } else {
                     $val .= sprintf("==Object(%s)==", get_class($item));
                 }
-            }
-            else {
+            } else {
                 $val .= (string) $item;
             }
         }
@@ -274,8 +271,7 @@ class XmlElement extends XmlContent
 
         if ($value === false) {
             unset($this->_attr[$attr]);
-        }
-        else {
+        } else {
             if (is_bool($value)) {
                 $value = $attr;
             }
@@ -418,8 +414,7 @@ class XmlElement extends XmlContent
     {
         if ($this->isEmpty()) {
             $xml = $this->emptyTag();
-        }
-        else {
+        } else {
             $xml = $this->startTag();
             // FIXME: The next two lines could be removed for efficiency
             if (!$this->hasInlineContent()) {
@@ -506,8 +501,7 @@ class FormattedText
         $m = array();
         if (! preg_match_all('/(?<!%)%(\d+)\$/x', $this->_fs, $m)) {
             $this->_args  = $args;
-        }
-        else {
+        } else {
             // Format string has '%2$s' style argument reordering.
             // PHP doesn't support this.
             if (preg_match('/(?<!%)%[- ]?\d*[^- \d$]/x', $this->_fs)) { // $fmt
@@ -586,20 +580,17 @@ function PrintXML($val /* , ... */)
         foreach (func_get_args() as $arg) {
             PrintXML($arg);
         }
-    }
-    elseif (is_object($val)) {
+    } elseif (is_object($val)) {
         if (method_exists($val, 'printXML')) {
             $val->printXML();
         } elseif (method_exists($val, 'asXML')) {
             echo $val->asXML();
-        }
-        elseif (method_exists($val, 'asString')) {
+        } elseif (method_exists($val, 'asString')) {
             echo XmlContent_quote($val->asString());
         } else {
             printf("==Object(%s)==", get_class($val));
         }
-    }
-    elseif (is_array($val)) {
+    } elseif (is_array($val)) {
         // DEPRECATED:
         // Use XmlContent objects instead of arrays for collections of XmlElements.
         trigger_error(
@@ -609,8 +600,7 @@ function PrintXML($val /* , ... */)
         foreach ($val as $x) {
             PrintXML($x);
         }
-    }
-    else {
+    } else {
         echo (string)XmlContent_quote((string)$val);
     }
 }
@@ -625,8 +615,7 @@ function AsXML($val /* , ... */)
             $xml .= AsXML($arg);
         }
         return $xml;
-    }
-    elseif (is_object($val)) {
+    } elseif (is_object($val)) {
         if (method_exists($val, 'asXML')) {
             return $val->asXML();
         } elseif (method_exists($val, 'asString')) {
@@ -634,8 +623,7 @@ function AsXML($val /* , ... */)
         } else {
             return sprintf("==Object(%s)==", get_class($val));
         }
-    }
-    elseif (is_array($val)) {
+    } elseif (is_array($val)) {
         // DEPRECATED:
         // Use XmlContent objects instead of arrays for collections of XmlElements.
         if (empty($nowarn)) {
@@ -651,8 +639,7 @@ function AsXML($val /* , ... */)
             $xml .= AsXML($x);
         }
         return $xml;
-    }
-    else {
+    } else {
         return XmlContent_quote((string)$val);
     }
 }
@@ -665,15 +652,13 @@ function AsString($val)
             $str .= AsString($arg);
         }
         return $str;
-    }
-    elseif (is_object($val)) {
+    } elseif (is_object($val)) {
         if (method_exists($val, 'asString')) {
             return $val->asString();
         } else {
             return sprintf("==Object(%s)==", get_class($val));
         }
-    }
-    elseif (is_array($val)) {
+    } elseif (is_array($val)) {
         // DEPRECATED:
         // Use XmlContent objects instead of arrays for collections of XmlElements.
         trigger_error("Passing arrays to AsString() is deprecated", E_USER_NOTICE);

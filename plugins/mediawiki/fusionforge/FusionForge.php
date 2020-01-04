@@ -322,8 +322,7 @@ echo htmlspecialchars($item['class']) ?>"
                 <input type='submit' name="go" class="searchButton" id="searchGoButton"    value="<?php $this->msg('searcharticle') ?>"<?php echo $this->skin->tooltipAndAccesskey('search-go'); ?> /><?php if ($wgUseTwoButtonsSearchForm) {
                     ?>&nbsp;
                 <input type='submit' name="fulltext" class="searchButton" id="mw-searchButton" value="<?php $this->msg('searchbutton') ?>"<?php echo $this->skin->tooltipAndAccesskey('search-fulltext'); ?> />
-                    <?php } // phpcs:ignore Squiz.WhiteSpace.ScopeClosingBrace.Indent
-                    else { //phpcs:ignore Generic.WhiteSpace.ScopeIndent.IncorrectExact ?>
+                    <?php } else { ?>
                 <div><a href="<?php $this->text('searchaction') ?>" rel="search"><?php $this->msg('powersearch-legend') ?></a></div>
             <?php } // phpcs:ignore Squiz.WhiteSpace.ScopeClosingBrace.Indent ?>
 
