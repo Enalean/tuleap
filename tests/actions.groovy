@@ -98,6 +98,9 @@ def runPsalm(String configPath, String filesToAnalyze) {
 }
 
 def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAnalyze) {
+    if (filesToAnalyze == '') {
+        return;
+    }
     sh """
     docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none php:7.3-cli-alpine -d memory_limit=256M \
         ${phpcsPath} --extensions=php --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}
