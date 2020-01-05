@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
+
 namespace User\XML\Import;
 
-use TuleapTestCase;
+use Logger;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\GlobalLanguageMock;
+use UserManager;
 
-class WillBeCreatedUser_processTest extends TuleapTestCase
+final class WillBeCreatedUserTest extends \PHPUnit\Framework\TestCase
 {
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     /** @var ToBeCreatedUser */
     private $user;
@@ -33,12 +40,12 @@ class WillBeCreatedUser_processTest extends TuleapTestCase
     /** @var Logger */
     private $logger;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
-        $this->user_manager = mock('UserManager');
-        $this->logger       = mock('Logger');
+        $this->user_manager = \Mockery::spy(UserManager::class);
+        $this->logger       = \Mockery::spy(Logger::class);
 
         $this->user = new WillBeCreatedUser(
             'cstevens',
@@ -49,20 +56,18 @@ class WillBeCreatedUser_processTest extends TuleapTestCase
         );
     }
 
-    public function itCreatesANewUserInDatabase()
+    public function testItCreatesANewUserInDatabase() : void
     {
-        stub($this->user_manager)->createAccount()->returns(aUser()->build());
-
-        expect($this->user_manager)->createAccount()->once();
+        $this->user_manager->shouldReceive('createAccount')->once()->andReturns(new \PFUser(['language_id' => 'en']));
 
         $this->user->process($this->user_manager, $this->logger);
     }
 
-    public function itThrowsAnExceptionIfUserCannotBeCreated()
+    public function testItThrowsAnExceptionIfUserCannotBeCreated() : void
     {
-        stub($this->user_manager)->createAccount()->returns(false);
+        $this->user_manager->shouldReceive('createAccount')->andReturns(false);
 
-        $this->expectException('User\XML\Import\UserCannotBeCreatedException');
+        $this->expectException(\User\XML\Import\UserCannotBeCreatedException::class);
 
         $this->user->process($this->user_manager, $this->logger);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
+
 namespace User\XML\Import;
 
-use TuleapTestCase;
-
-class ReadyToBeImportedUsersCollection_getUserByXxxTest extends TuleapTestCase
+final class ReadyToBeImportedUsersCollectionTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var UsersToBeImportedCollection */
     private $collection;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->user = \Mockery::spy(\User\XML\Import\ReadyToBeImportedUser::class);
 
@@ -42,52 +43,52 @@ class ReadyToBeImportedUsersCollection_getUserByXxxTest extends TuleapTestCase
         $this->collection->add($this->user, $this->id, $this->username, $this->ldap_id);
     }
 
-    public function itRetrievesUserByUserName()
+    public function testItRetrievesUserByUserName() : void
     {
-        $this->assertEqual(
+        $this->assertEquals(
+            $this->user,
             $this->collection->getUserByUserName($this->username),
-            $this->user
         );
     }
 
-    public function itThrowsAnExceptionWhenUsernameNotFound()
+    public function testItThrowsAnExceptionWhenUsernameNotFound() : void
     {
-        $this->expectException('User\XML\Import\UserNotFoundException');
+        $this->expectException(\User\XML\Import\UserNotFoundException::class);
 
         $this->collection->getUserByUserName('unknown');
     }
 
-    public function itRetrievesUserById()
+    public function testItRetrievesUserById() : void
     {
-        $this->assertEqual(
+        $this->assertEquals(
             $this->collection->getUserById($this->id),
             $this->user
         );
     }
 
-    public function itThrowsAnExceptionWhenIdNotFound()
+    public function testItThrowsAnExceptionWhenIdNotFound() : void
     {
-        $this->expectException('User\XML\Import\UserNotFoundException');
+        $this->expectException(\User\XML\Import\UserNotFoundException::class);
 
         $this->collection->getUserById(66);
     }
 
-    public function itRetrievesUserByLdapId()
+    public function testItRetrievesUserByLdapId() : void
     {
-        $this->assertEqual(
+        $this->assertEquals(
+            $this->user,
             $this->collection->getUserByLdapId($this->ldap_id),
-            $this->user
         );
     }
 
-    public function itThrowsAnExceptionWhenLdapIdNotFound()
+    public function testItThrowsAnExceptionWhenLdapIdNotFound() : void
     {
-        $this->expectException('User\XML\Import\UserNotFoundException');
+        $this->expectException(\User\XML\Import\UserNotFoundException::class);
 
         $this->collection->getUserById('unknown');
     }
 
-    public function itDoesNotIndexByLdapIdWhenNoLdapId()
+    public function testItDoesNotIndexByLdapIdWhenNoLdapId() : void
     {
         $user = \Mockery::spy(\User\XML\Import\ReadyToBeImportedUser::class);
 
@@ -97,7 +98,7 @@ class ReadyToBeImportedUsersCollection_getUserByXxxTest extends TuleapTestCase
 
         $this->collection->add($user, $id, $username, $ldap_id);
 
-        $this->expectException('User\XML\Import\UserNotFoundException');
+        $this->expectException(\User\XML\Import\UserNotFoundException::class);
 
         $this->collection->getUserByLdapId($ldap_id);
     }

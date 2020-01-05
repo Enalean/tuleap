@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,39 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
+
 namespace User\XML\Import;
 
-use TuleapTestCase;
-
-class AlreadyExistingUser_isActionAllowedTest extends TuleapTestCase
+final class AlreadyExistingUserTest extends \PHPUnit\Framework\TestCase
 {
-
     /** @var AlreadyExistingUser */
-    protected $user;
+    private $user;
 
-    public function setUp()
+    protected function setUp() : void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $this->user = new AlreadyExistingUser(
-            aUser()->withUserName('cstevens')->build(),
+            new \PFUser(['user_name' => 'cstevens', 'language_id' => 'en']),
             104,
             'cs1234'
         );
     }
 
-    public function itReturnsFalseWhenActionIsCreate()
+    public function testItReturnsFalseWhenActionIsCreate() : void
     {
         $this->assertFalse($this->user->isActionAllowed('create'));
     }
 
-    public function itReturnsFalseWhenActionIsActivate()
+    public function testItReturnsFalseWhenActionIsActivate() : void
     {
         $this->assertTrue($this->user->isActionAllowed('noop'));
     }
 
-    public function itReturnsFalseWhenActionIsMap()
+    public function testItReturnsFalseWhenActionIsMap() : void
     {
         $this->assertTrue($this->user->isActionAllowed('map'));
     }

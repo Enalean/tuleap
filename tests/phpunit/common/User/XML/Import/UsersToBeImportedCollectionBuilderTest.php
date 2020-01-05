@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,56 +17,33 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
+
 namespace User\XML\Import;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use XML_Security;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 
-class MockArchive implements ArchiveInterface
+final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    /** @var SimpleXMLElement */
-    private $user_xml;
-
-    public function __construct($user_xml)
-    {
-        $this->user_xml = $user_xml;
-    }
-
-    public function cleanUp()
-    {
-    }
-
-    public function extractFiles()
-    {
-    }
-
-    public function getExtractionPath()
-    {
-    }
-
-    public function getProjectXML()
-    {
-    }
-
-    public function getUsersXML()
-    {
-        return $this->user_xml;
-    }
-}
-
-class UsersToBeImportedCollectionBuilderTestBase extends TuleapTestCase
-{
     /** @var UsersToBeImportedCollectionBuilder */
-    protected $builder;
-    protected $user_manager;
+    private $builder;
+    private $user_manager;
+    private $active_user_in_ldap;
+    private $suspended_user_in_ldap;
+    private $active_user_in_db;
+    private $suspended_user_in_db;
+    private $john_doe;
+    private $cat_steven;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->user_manager = \Mockery::spy(\UserManager::class);
         $this->builder = new UsersToBeImportedCollectionBuilder(
             $this->user_manager,
@@ -74,33 +51,6 @@ class UsersToBeImportedCollectionBuilderTestBase extends TuleapTestCase
             new XML_Security(),
             \Mockery::spy(\XML_RNGValidator::class)
         );
-    }
-
-    protected function createUser($id, $username, $realname, $email, $ldapid, $status)
-    {
-        return aUser()
-            ->withId($id)
-            ->withUserName($username)
-            ->withRealName($realname)
-            ->withEmail($email)
-            ->withLdapId($ldapid)
-            ->withStatus($status)
-            ->build();
-    }
-}
-
-class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollectionBuilderTestBase
-{
-
-    private $active_user_in_ldap;
-    private $suspended_user_in_ldap;
-    private $active_user_in_db;
-    private $suspended_user_in_db;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->active_user_in_ldap = $this->createUser(
             1001,
@@ -147,268 +97,6 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
             $this->active_user_in_ldap,
             $this->suspended_user_in_ldap
         ));
-    }
-
-    public function itReturnsACollection()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?><users />');
-
-        $collection = $this->builder->build($xml);
-
-        $this->assertIsA($collection, 'User\\XML\\Import\\UsersToBeImportedCollection');
-    }
-
-    public function itReturnsACollectionWithAliveUserInLDAP()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
-            <users>
-                <user>
-                    <id>107</id>
-                    <username>jdoe</username>
-                    <realname>John Doe</realname>
-                    <email>jdoe@example.com</email>
-                    <ldapid>jd3456</ldapid>
-                </user>
-            </users>
-        ');
-
-        $collection = $this->builder->build($xml);
-        $expected   = array(
-            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
-        );
-
-        $this->assertEqual(
-            $collection->toArray(),
-            $expected
-        );
-    }
-
-    public function itReturnsACollectionWithToBeActivatedWhenUserInLDAPIsNotAlive()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
-            <users>
-                <user>
-                    <id>107</id>
-                    <username>doe</username>
-                    <realname>John Doe</realname>
-                    <email>jdoe@example.com</email>
-                    <ldapid>sus1234</ldapid>
-                </user>
-            </users>
-        ');
-
-        $collection = $this->builder->build($xml);
-        $expected   = array(
-            'doe' => new ToBeActivatedUser($this->suspended_user_in_ldap, 107, 'sus1234')
-        );
-
-        $this->assertEqual(
-            $collection->toArray(),
-            $expected
-        );
-    }
-
-    public function itReturnsACollectionWithAliveUserNotInLDAP()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
-            <users>
-                <user>
-                    <id>108</id>
-                    <username>cstevens</username>
-                    <realname>Cat Stevens</realname>
-                    <email>cstevens@example.com</email>
-                    <ldapid></ldapid>
-                </user>
-            </users>
-        ');
-
-        $collection = $this->builder->build($xml);
-        $expected   = array(
-            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, '')
-        );
-
-        $this->assertEqual(
-            $collection->toArray(),
-            $expected
-        );
-    }
-
-    public function itReturnsACollectionWithUserNotInLDAPToBeActivated()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
-            <users>
-                <user>
-                    <id>109</id>
-                    <username>kperry</username>
-                    <realname>Katy Perry</realname>
-                    <email>kperry@example.com</email>
-                    <ldapid></ldapid>
-                </user>
-            </users>
-        ');
-
-        $collection = $this->builder->build($xml);
-        $expected   = array(
-            'kperry' => new ToBeActivatedUser($this->suspended_user_in_db, 109, '')
-        );
-
-        $this->assertEqual(
-            $collection->toArray(),
-            $expected
-        );
-    }
-
-    public function itReturnsACollectionWithUserNotInLDAPWhenLdapIdDoesNotMatch()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
-            <users>
-                <user>
-                    <id>108</id>
-                    <username>cstevens</username>
-                    <realname>Cat Stevens</realname>
-                    <email>cstevens@example.com</email>
-                    <ldapid>no_matching_ldap_id</ldapid>
-                </user>
-            </users>
-        ');
-
-        $collection = $this->builder->build($xml);
-        $expected   = array(
-            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, 'no_matching_ldap_id')
-        );
-
-        $this->assertEqual(
-            $collection->toArray(),
-            $expected
-        );
-    }
-
-    public function itReturnsACollectionWithUserToBeMappedWhenEmailDoesNotMatch()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
-            <users>
-                <user>
-                    <id>108</id>
-                    <username>cstevens</username>
-                    <realname>Cat Stevens</realname>
-                    <email>bogossdu38@example.com</email>
-                    <ldapid></ldapid>
-                </user>
-            </users>
-        ');
-
-        $collection = $this->builder->build($xml);
-        $expected   = array(
-            'cstevens' => new EmailDoesNotMatchUser($this->active_user_in_db, 'bogossdu38@example.com', 108, '')
-        );
-
-        $this->assertEqual(
-            $collection->toArray(),
-            $expected
-        );
-    }
-
-    public function itTrustsLDAPEvenIfEmailDoesNotMatch()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
-            <users>
-                <user>
-                    <id>107</id>
-                    <username>jdoe</username>
-                    <realname>John Doe</realname>
-                    <email>bogossdu73@example.com</email>
-                    <ldapid>jd3456</ldapid>
-                </user>
-            </users>
-        ');
-
-        $collection = $this->builder->build($xml);
-        $expected   = array(
-            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
-        );
-
-        $this->assertEqual(
-            $collection->toArray(),
-            $expected
-        );
-    }
-
-    public function itReturnsACollectionWithUserToBeCreatedWhenNotFoundInLDAPByUsernameOrByEmail()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
-            <users>
-                <user>
-                    <id>111</id>
-                    <username>mmanson</username>
-                    <realname>Marylin Manson</realname>
-                    <email>mmanson@example.com</email>
-                    <ldapid></ldapid>
-                </user>
-            </users>
-        ');
-
-        $collection = $this->builder->build($xml);
-        $expected   = array(
-            'mmanson' => new ToBeCreatedUser(
-                'mmanson',
-                'Marylin Manson',
-                'mmanson@example.com',
-                111,
-                ''
-            )
-        );
-
-        $this->assertEqual(
-            $collection->toArray(),
-            $expected
-        );
-    }
-
-    public function itReturnsACollectionWithUserToBeMappedWhenUserIsFoundByMail()
-    {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
-            <users>
-                <user>
-                    <id>109</id>
-                    <username>john.doe</username>
-                    <realname>John Doe</realname>
-                    <email>jdoe@example.com</email>
-                    <ldapid></ldapid>
-                </user>
-            </users>
-        ');
-
-        $collection = $this->builder->build($xml);
-        $expected   = array(
-            'john.doe' => new ToBeMappedUser(
-                'john.doe',
-                'John Doe',
-                array(
-                    $this->active_user_in_ldap,
-                    $this->suspended_user_in_ldap
-                ),
-                109,
-                ''
-            )
-        );
-
-        $this->assertEqual(
-            $collection->toArray(),
-            $expected
-        );
-    }
-}
-
-class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCollectionBuilderTestBase
-{
-
-    private $john_doe;
-    private $cat_steven;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->john_doe = $this->createUser(
             1001,
@@ -434,9 +122,306 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with('cstevens@example.com')->andReturns(array($this->john_doe));
     }
 
-    public function itReturnsAlreadyActiveUserWhenUserIsValidInLdap()
+    private function createUser(int $id, string $username, string $realname, string $email, string $ldapid, string $status): PFUser
     {
-        $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
+        return new PFUser([
+            'user_id'     => $id,
+            'user_name'   => $username,
+            'realname'    => $realname,
+            'email'       => $email,
+            'ldap_id'     => $ldapid,
+            'status'      => $status,
+            'language_id' => 'en'
+        ]);
+    }
+
+    private function createArchiveXMLUsers(string $user_xml): ArchiveInterface
+    {
+        return new class($user_xml) implements ArchiveInterface
+        {
+            /** @var string */
+            private $user_xml;
+
+            public function __construct(string $user_xml)
+            {
+                $this->user_xml = $user_xml;
+            }
+
+            public function cleanUp()
+            {
+            }
+
+            public function extractFiles()
+            {
+            }
+
+            public function getExtractionPath()
+            {
+            }
+
+            public function getProjectXML()
+            {
+            }
+
+            public function getUsersXML()
+            {
+                return $this->user_xml;
+            }
+        };
+    }
+
+    public function testItReturnsACollection() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?><users />');
+
+        $collection = $this->builder->build($xml);
+
+        $this->assertInstanceOf(\User\XML\Import\UsersToBeImportedCollection::class, $collection);
+    }
+
+    public function testItReturnsACollectionWithAliveUserInLDAP() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
+            <users>
+                <user>
+                    <id>107</id>
+                    <username>jdoe</username>
+                    <realname>John Doe</realname>
+                    <email>jdoe@example.com</email>
+                    <ldapid>jd3456</ldapid>
+                </user>
+            </users>
+        ');
+
+        $collection = $this->builder->build($xml);
+        $expected   = array(
+            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
+        );
+
+        $this->assertEquals(
+            $expected,
+            $collection->toArray(),
+        );
+    }
+
+    public function testItReturnsACollectionWithToBeActivatedWhenUserInLDAPIsNotAlive() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
+            <users>
+                <user>
+                    <id>107</id>
+                    <username>doe</username>
+                    <realname>John Doe</realname>
+                    <email>jdoe@example.com</email>
+                    <ldapid>sus1234</ldapid>
+                </user>
+            </users>
+        ');
+
+        $collection = $this->builder->build($xml);
+        $expected   = array(
+            'doe' => new ToBeActivatedUser($this->suspended_user_in_ldap, 107, 'sus1234')
+        );
+
+        $this->assertEquals(
+            $expected,
+            $collection->toArray(),
+        );
+    }
+
+    public function testItReturnsACollectionWithAliveUserNotInLDAP() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
+            <users>
+                <user>
+                    <id>108</id>
+                    <username>cstevens</username>
+                    <realname>Cat Stevens</realname>
+                    <email>cstevens@example.com</email>
+                    <ldapid></ldapid>
+                </user>
+            </users>
+        ');
+
+        $collection = $this->builder->build($xml);
+        $expected   = array(
+            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, '')
+        );
+
+        $this->assertEquals(
+            $expected,
+            $collection->toArray(),
+        );
+    }
+
+    public function testItReturnsACollectionWithUserNotInLDAPToBeActivated() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
+            <users>
+                <user>
+                    <id>109</id>
+                    <username>kperry</username>
+                    <realname>Katy Perry</realname>
+                    <email>kperry@example.com</email>
+                    <ldapid></ldapid>
+                </user>
+            </users>
+        ');
+
+        $collection = $this->builder->build($xml);
+        $expected   = array(
+            'kperry' => new ToBeActivatedUser($this->suspended_user_in_db, 109, '')
+        );
+
+        $this->assertEquals(
+            $expected,
+            $collection->toArray(),
+        );
+    }
+
+    public function testItReturnsACollectionWithUserNotInLDAPWhenLdapIdDoesNotMatch() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
+            <users>
+                <user>
+                    <id>108</id>
+                    <username>cstevens</username>
+                    <realname>Cat Stevens</realname>
+                    <email>cstevens@example.com</email>
+                    <ldapid>no_matching_ldap_id</ldapid>
+                </user>
+            </users>
+        ');
+
+        $collection = $this->builder->build($xml);
+        $expected   = array(
+            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, 'no_matching_ldap_id')
+        );
+
+        $this->assertEquals(
+            $expected,
+            $collection->toArray(),
+        );
+    }
+
+    public function testItReturnsACollectionWithUserToBeMappedWhenEmailDoesNotMatch() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
+            <users>
+                <user>
+                    <id>108</id>
+                    <username>cstevens</username>
+                    <realname>Cat Stevens</realname>
+                    <email>bogossdu38@example.com</email>
+                    <ldapid></ldapid>
+                </user>
+            </users>
+        ');
+
+        $collection = $this->builder->build($xml);
+        $expected   = array(
+            'cstevens' => new EmailDoesNotMatchUser($this->active_user_in_db, 'bogossdu38@example.com', 108, '')
+        );
+
+        $this->assertEquals(
+            $expected,
+            $collection->toArray(),
+        );
+    }
+
+    public function testItTrustsLDAPEvenIfEmailDoesNotMatch() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
+            <users>
+                <user>
+                    <id>107</id>
+                    <username>jdoe</username>
+                    <realname>John Doe</realname>
+                    <email>bogossdu73@example.com</email>
+                    <ldapid>jd3456</ldapid>
+                </user>
+            </users>
+        ');
+
+        $collection = $this->builder->build($xml);
+        $expected   = array(
+            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
+        );
+
+        $this->assertEquals(
+            $expected,
+            $collection->toArray(),
+        );
+    }
+
+    public function testItReturnsACollectionWithUserToBeCreatedWhenNotFoundInLDAPByUsernameOrByEmail() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
+            <users>
+                <user>
+                    <id>111</id>
+                    <username>mmanson</username>
+                    <realname>Marylin Manson</realname>
+                    <email>mmanson@example.com</email>
+                    <ldapid></ldapid>
+                </user>
+            </users>
+        ');
+
+        $collection = $this->builder->build($xml);
+        $expected   = array(
+            'mmanson' => new ToBeCreatedUser(
+                'mmanson',
+                'Marylin Manson',
+                'mmanson@example.com',
+                111,
+                ''
+            )
+        );
+
+        $this->assertEquals(
+            $expected,
+            $collection->toArray(),
+        );
+    }
+
+    public function testItReturnsACollectionWithUserToBeMappedWhenUserIsFoundByMail() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
+            <users>
+                <user>
+                    <id>109</id>
+                    <username>john.doe</username>
+                    <realname>John Doe</realname>
+                    <email>jdoe@example.com</email>
+                    <ldapid></ldapid>
+                </user>
+            </users>
+        ');
+
+        $collection = $this->builder->build($xml);
+        $expected   = array(
+            'john.doe' => new ToBeMappedUser(
+                'john.doe',
+                'John Doe',
+                array(
+                    $this->active_user_in_ldap,
+                    $this->suspended_user_in_ldap
+                ),
+                109,
+                ''
+            )
+        );
+
+        $this->assertEquals(
+            $expected,
+            $collection->toArray(),
+        );
+    }
+
+    public function testItReturnsAlreadyActiveUserWhenUserIsValidInLdap() : void
+    {
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
                     <id>109</id>
@@ -453,15 +438,15 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
             'jdoe' => new AlreadyExistingUser($this->john_doe, 109, 'jd3456')
         );
 
-        $this->assertEqual(
+        $this->assertEquals(
+            $expected,
             $collection->toArray(),
-            $expected
         );
     }
 
-    public function itReturnsAnAlreadyExistingUserWhenUsernameAreEqualsAndEmailAreDifferent()
+    public function testItReturnsAnAlreadyExistingUserWhenUsernameAreEqualsAndEmailAreDifferent() : void
     {
-         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
                     <id>110</id>
@@ -479,15 +464,15 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
             'cstevens' => new AlreadyExistingUser($this->cat_steven, 110, 'cs3456')
         );
 
-        $this->assertEqual(
+        $this->assertEquals(
+            $expected,
             $collection->toArray(),
-            $expected
         );
     }
 
-    public function itCreatesUserWhenNeitherLdapNorUserNameMatchEvenIfEmailExists()
+    public function testItCreatesUserWhenNeitherLdapNorUserNameMatchEvenIfEmailExists() : void
     {
-         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
+        $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
                     <id>111</id>
@@ -511,9 +496,9 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
             )
         );
 
-        $this->assertEqual(
+        $this->assertEquals(
+            $expected,
             $collection->toArray(),
-            $expected
         );
     }
 }
