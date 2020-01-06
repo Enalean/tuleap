@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
+use EventManager;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Project;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Container_Fieldset;
@@ -35,9 +37,7 @@ use User\XML\Import\IFindUserFromXMLReference;
 
 class TrackerFormElementFactoryTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
-    use GlobalResponseMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
 
     /**
      * @var Mockery\MockInterface|Tracker_FormElementFactory
@@ -136,6 +136,49 @@ class TrackerFormElementFactoryTest extends TestCase
             ->withArgs(['warning', 'Type \'mon_type\' does not exist. This field is ignored. (Name : \'field_name\', ID: \'F0\').']);
 
         $this->assertNull($this->form_element_factory->getInstanceFromXML($this->tracker, $this->xml_element, $mapping, $this->user_finder, $this->feedback_collector));
+    }
+
+    public function testImportCallExternalElementEventAndReturnNull(): void
+    {
+        $mapping = [];
+        $xml     = new SimpleXMLElement(
+            '<?xml version="1.0" standalone="yes"?>
+            <externalField type="external" ID="F1602" rank="2">
+                 <name>external</name>
+                 <label><![CDATA[Steps definition]]></label>
+                 <description><![CDATA[Definition of the test\'s steps]]></description>
+                <permissions>
+                 <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                 <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                 <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                </permissions>
+            </externalField>'
+        );
+        $this->tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+
+        $event_manager = Mockery::mock(EventManager::class);
+        EventManager::setInstance($event_manager);
+
+        $event_manager->shouldReceive('processEvent')->once();
+
+
+        $this->feedback_collector
+            ->shouldReceive('addWarnings')
+            ->withArgs(['Type \'external\' does not exist. This field is ignored. (Name : \'external\', ID: \'F1602\').']);
+
+        $GLOBALS['Response']
+            ->shouldReceive('addFeedback')
+            ->withArgs(['warning', 'Type \'external\' does not exist. This field is ignored. (Name : \'external\', ID: \'F1602\').']);
+
+        $element_from_instance = $this->form_element_factory->getInstanceFromXML(
+            $this->tracker,
+            $xml,
+            $mapping,
+            $this->user_finder,
+            $this->feedback_collector
+        );
+
+        $this->assertNull($element_from_instance);
     }
 
     private function getXmlElement(): SimpleXMLElement
