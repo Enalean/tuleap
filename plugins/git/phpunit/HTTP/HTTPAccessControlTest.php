@@ -24,13 +24,13 @@ use PermissionsManager;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 
-class HTTPAccessControlTest extends TestCase
+final class HTTPAccessControlTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     protected function tearDown() : void
     {
-        unset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+        unset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_SERVER['REMOTE_ADDR']);
     }
 
     public function testHTTPReplicationUserCanBeAuthenticated(): void
@@ -39,6 +39,7 @@ class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
 
@@ -47,6 +48,7 @@ class HTTPAccessControlTest extends TestCase
             $forge_access,
             $user_login_manager,
             $replication_http_user_authenticator,
+            $access_key_authenticator,
             $permissions_manager,
             $user_dao,
             new GitHTTPAskBasicAuthenticationChallenge()
@@ -75,6 +77,7 @@ class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
 
@@ -83,6 +86,7 @@ class HTTPAccessControlTest extends TestCase
             $forge_access,
             $user_login_manager,
             $replication_http_user_authenticator,
+            $access_key_authenticator,
             $permissions_manager,
             $user_dao,
             new GitHTTPAskBasicAuthenticationChallenge()
@@ -98,6 +102,8 @@ class HTTPAccessControlTest extends TestCase
         $_SERVER['PHP_AUTH_PW']   = 'password';
         $replication_http_user_authenticator->shouldReceive('authenticate')->
             andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
+        $access_key_authenticator->shouldReceive('getUser')->andReturnNull();
         $expected_user = \Mockery::mock(\PFUser::class);
         $expected_user->shouldReceive('getUnixName');
         $expected_user->shouldReceive('getId');
@@ -109,12 +115,55 @@ class HTTPAccessControlTest extends TestCase
         $this->assertSame($expected_user, $authenticated_user);
     }
 
-    public function testAuthenticationIsDeniedWhenNoValidUserIsFound(): void
+    public function testTuleapUserCanBeAuthenticatedFromAnAccessKey(): void
     {
         $logger                              = \Mockery::mock(\Logger::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
+        $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
+        $user_dao                            = \Mockery::mock(\UserDao::class);
+
+        $http_access_control = new HTTPAccessControl(
+            $logger,
+            $forge_access,
+            $user_login_manager,
+            $replication_http_user_authenticator,
+            $access_key_authenticator,
+            $permissions_manager,
+            $user_dao,
+            new GitHTTPAskBasicAuthenticationChallenge()
+        );
+
+        $git_repository   = \Mockery::mock(\GitRepository::class);
+        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
+
+        $logger->shouldReceive('debug');
+        $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
+        $git_repository->shouldReceive('getFullName');
+        $_SERVER['PHP_AUTH_USER'] = 'user1';
+        $_SERVER['PHP_AUTH_PW']   = 'access_key';
+        $replication_http_user_authenticator->shouldReceive('authenticate')
+            ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
+        $expected_user = \Mockery::mock(\PFUser::class);
+        $expected_user->shouldReceive('getUnixName');
+        $expected_user->shouldReceive('getId');
+        $access_key_authenticator->shouldReceive('getUser')->andReturn($expected_user);
+
+        $authenticated_user = $http_access_control->getUser($git_repository, $git_operation);
+
+        $this->assertSame($expected_user, $authenticated_user);
+    }
+
+    public function testAuthenticationIsDeniedWhenAnAccessKeyMisusageIsDetected(): void
+    {
+        $logger                              = \Mockery::mock(\Logger::class);
+        $forge_access                        = \Mockery::mock(\ForgeAccess::class);
+        $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
+        $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
         $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
@@ -124,6 +173,54 @@ class HTTPAccessControlTest extends TestCase
             $forge_access,
             $user_login_manager,
             $replication_http_user_authenticator,
+            $access_key_authenticator,
+            $permissions_manager,
+            $user_dao,
+            $ask_basic_authentication_challenge
+        );
+
+        $git_repository   = \Mockery::mock(\GitRepository::class);
+        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
+
+        $logger->shouldReceive('debug');
+        $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
+        $git_repository->shouldReceive('getFullName');
+        $_SERVER['PHP_AUTH_USER'] = 'user1';
+        $_SERVER['PHP_AUTH_PW']   = 'access_key';
+        $replication_http_user_authenticator->shouldReceive('authenticate')->
+        andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
+        $found_user = \Mockery::mock(\PFUser::class);
+        $found_user->shouldReceive('getUserName')->andReturn('username');
+        $access_key_authenticator->shouldReceive('getUser')
+            ->andThrow(new HTTPUserAccessKeyMisusageException('user1', $found_user));
+
+        $not_supposed_to_return = new class extends \LogicException
+        {
+        };
+        $ask_basic_authentication_challenge->shouldReceive('askBasicAuthenticationChallenge')->once()->andThrow($not_supposed_to_return);
+        $this->expectException(get_class($not_supposed_to_return));
+
+        $http_access_control->getUser($git_repository, $git_operation);
+    }
+
+    public function testAuthenticationIsDeniedWhenNoValidUserIsFound(): void
+    {
+        $logger                              = \Mockery::mock(\Logger::class);
+        $forge_access                        = \Mockery::mock(\ForgeAccess::class);
+        $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
+        $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
+        $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
+        $user_dao                            = \Mockery::mock(\UserDao::class);
+        $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
+
+        $http_access_control = new HTTPAccessControl(
+            $logger,
+            $forge_access,
+            $user_login_manager,
+            $replication_http_user_authenticator,
+            $access_key_authenticator,
             $permissions_manager,
             $user_dao,
             $ask_basic_authentication_challenge
@@ -139,6 +236,8 @@ class HTTPAccessControlTest extends TestCase
         $_SERVER['PHP_AUTH_PW']   = 'invalid_password';
         $replication_http_user_authenticator->shouldReceive('authenticate')->
             andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
+        $access_key_authenticator->shouldReceive('getUser')->andReturnNull();
         $user_login_manager->shouldReceive('authenticate')->
             andThrows(\Mockery::spy(\User_LoginException::class));
 
@@ -156,6 +255,7 @@ class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
         $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
@@ -165,6 +265,7 @@ class HTTPAccessControlTest extends TestCase
             $forge_access,
             $user_login_manager,
             $replication_http_user_authenticator,
+            $access_key_authenticator,
             $permissions_manager,
             $user_dao,
             $ask_basic_authentication_challenge
@@ -193,6 +294,7 @@ class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
 
@@ -201,6 +303,7 @@ class HTTPAccessControlTest extends TestCase
             $forge_access,
             $user_login_manager,
             $replication_http_user_authenticator,
+            $access_key_authenticator,
             $permissions_manager,
             $user_dao,
             new GitHTTPAskBasicAuthenticationChallenge()
