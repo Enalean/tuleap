@@ -590,9 +590,11 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
 
     public function itIgnoresInvalidFieldValues()
     {
-        $criteria             = mock('Tracker_Report_Criteria');
-        $criteria->report     = mock('Tracker_Report');
-        $criteria->report->id = 1;
+        $criteria   = mock('Tracker_Report_Criteria');
+        $report     = mock('Tracker_Report');
+        stub($criteria)->getReport()->returns($report);
+        stub($report)->getId()->returns(1);
+
         $rest_criteria_value  = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => '106',
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
@@ -607,9 +609,11 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
 
     public function itAddsACriterion()
     {
-        $criteria             = mock('Tracker_Report_Criteria');
-        $criteria->report     = mock('Tracker_Report');
-        $criteria->report->id = 1;
+        $criteria   = mock('Tracker_Report_Criteria');
+        $report     = mock('Tracker_Report');
+        stub($criteria)->getReport()->returns($report);
+        stub($report)->getId()->returns(1);
+
         $rest_criteria_value  = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => '101',
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
@@ -626,9 +630,11 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
 
     public function itAddsCriteria()
     {
-        $criteria             = mock('Tracker_Report_Criteria');
-        $criteria->report     = mock('Tracker_Report');
-        $criteria->report->id = 1;
+        $criteria   = mock('Tracker_Report_Criteria');
+        $report     = mock('Tracker_Report');
+        stub($criteria)->getReport()->returns($report);
+        stub($report)->getId()->returns(1);
+
         $rest_criteria_value  = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => array('101', 103),
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS

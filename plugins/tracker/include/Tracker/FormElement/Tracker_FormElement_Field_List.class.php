@@ -253,7 +253,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     /**
      * Return the dao of the criteria value used with this field.
-     * @return Tracker_Report_Criteria_List_ValueDao
+     * @return Tracker_Report_Criteria_ValueDao
      */
     protected function getCriteriaDao()
     {
@@ -312,28 +312,28 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     /**
      * Search in the db the criteria value used to search against this field.
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return mixed
      */
     public function getCriteriaValue($criteria)
     {
-        if (empty($this->criteria_value) || empty($this->criteria_value[$criteria->report->id])) {
+        if (empty($this->criteria_value) || empty($this->criteria_value[$criteria->getReport()->getId()])) {
             $this->criteria_value = array();
 
-            if (empty($this->criteria_value[$criteria->report->id])) {
-                $this->criteria_value[$criteria->report->id] = array();
+            if (empty($this->criteria_value[$criteria->getReport()->getId()])) {
+                $this->criteria_value[$criteria->getReport()->getId()] = array();
 
                 if ($criteria->id > 0) {
                     foreach ($this->getCriteriaDao()->searchByCriteriaId($criteria->id) as $row) {
-                        $this->criteria_value[$criteria->report->id][] = $row['value'];
+                        $this->criteria_value[$criteria->getReport()->getId()][] = $row['value'];
                     }
                 }
             }
-        } elseif (in_array('', $this->criteria_value[$criteria->report->id])) {
+        } elseif (in_array('', $this->criteria_value[$criteria->getReport()->getId()])) {
             return '';
         }
 
-        return $this->criteria_value[$criteria->report->id];
+        return $this->criteria_value[$criteria->getReport()->getId()];
     }
 
     /**
@@ -375,14 +375,89 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $criterias[] = $this->formatCriteriaValue($value_to_match);
         }
 
-        $this->setCriteriaValue($criterias, $criteria->report->id);
+        $this->setCriteriaValue($criterias, $criteria->getReport()->getId());
 
         return count($criterias) > 0;
     }
 
     public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
     {
-        return;
+        if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static) {
+            return;
+        }
+
+        $criteria_value = $this->getCriteriaValue($criteria);
+        if (is_array($criteria_value) && count($criteria_value) > 0) {
+            $criteria_value_node = $xml_criteria->addChild('criteria_value');
+            $criteria_value_node->addAttribute('type', 'list');
+
+            foreach ($criteria_value as $value_id) {
+                if ($value_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                    $criteria_value_node->addChild('none_value');
+                } else {
+                    $selected_value_node = $criteria_value_node->addChild('selected_value');
+                    $selected_value_node->addAttribute('REF', 'V'.$value_id);
+                }
+            }
+        }
+    }
+
+    public function setCriteriaValueFromXML(
+        Tracker_Report_Criteria $criteria,
+        SimpleXMLElement $xml_criteria_value,
+        array $xml_field_mapping
+    ) {
+        if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static) {
+            return;
+        }
+
+        if ((string) $xml_criteria_value['type'] !== 'list') {
+            return;
+        }
+
+        $criteria_list_value = [];
+        foreach ($xml_criteria_value->selected_value as $xml_selected_value) {
+            $ref_value = (string) $xml_selected_value['REF'];
+
+            if (! isset($xml_field_mapping[$ref_value])) {
+                continue;
+            }
+
+            $field_value = $xml_field_mapping[$ref_value];
+            assert($field_value instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
+
+            $criteria_list_value[] = $field_value;
+        }
+
+        if (isset($xml_criteria_value->none_value)) {
+            $criteria_list_value[] = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+        }
+
+        if (count($criteria_list_value) > 0) {
+            $this->setCriteriaValue($criteria_list_value, $criteria->getReport()->getId());
+        }
+    }
+
+    public function saveCriteriaValueFromXML(Tracker_Report_Criteria $criteria)
+    {
+        if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static) {
+            return;
+        }
+
+        $report_id = $criteria->getReport()->getId();
+
+        if (! isset($this->criteria_value[$report_id])) {
+            return;
+        }
+
+        $value_in_field_value      = $this->criteria_value[$report_id];
+        $formatted_criteria_value = [];
+        foreach ($value_in_field_value as $field_value) {
+            assert($field_value instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
+            $formatted_criteria_value[] = (int) $field_value->getId();
+        }
+
+        $this->updateCriteriaValue($criteria, $formatted_criteria_value);
     }
 
     protected function formatCriteriaValue($value_to_match)

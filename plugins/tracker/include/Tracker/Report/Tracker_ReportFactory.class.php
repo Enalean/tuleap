@@ -291,7 +291,11 @@ class Tracker_ReportFactory
                 continue;
             }
             if (isset($criteria->criteria_value)) {
-                $report_criteria->getField()->setCriteriaValueFromXML($report_criteria, $criteria->criteria_value);
+                $report_criteria->getField()->setCriteriaValueFromXML(
+                    $report_criteria,
+                    $criteria->criteria_value,
+                    $xmlMapping
+                );
             }
 
             $report->criterias[] = $report_criteria;

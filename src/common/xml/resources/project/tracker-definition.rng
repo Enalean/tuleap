@@ -967,10 +967,31 @@
     </optional>
   </define>
   <define name="reportValueContent">
-    <attribute name="type">
-      <value>text</value>
-    </attribute>
-    <data type="string"/>
+    <choice>
+      <group>
+        <attribute name="type">
+          <value>text</value>
+        </attribute>
+        <data type="string"/>
+      </group>
+      <group>
+        <attribute name="type">
+          <value>list</value>
+        </attribute>
+        <optional>
+          <element name="none_value">
+            <empty/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="selected_value">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </zeroOrMore>
+      </group>
+    </choice>
   </define>
   <define name="rendererContent">
     <optional>

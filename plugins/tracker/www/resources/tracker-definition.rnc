@@ -436,6 +436,14 @@ tracker =
             attribute type { "text" },
             xsd:string
         )
+        |
+        (
+            attribute type { "list" },
+            element none_value { empty }?,
+            element selected_value {
+                attribute REF { xsd:IDREF }
+            }*
+        )
 
     rendererContent =
         attribute ID { xsd:ID }?,

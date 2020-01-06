@@ -181,9 +181,11 @@ class Tracker_FormElement_Field_CriteriaTest extends TestCase
             <criteria_value type="text"><![CDATA[My text]]></criteria_value>
         ');
 
+        $mapping = [];
         $this->field->setCriteriaValueFromXML(
             $this->criteria,
-            $xml_criteria_value
+            $xml_criteria_value,
+            $mapping
         );
 
         $this->assertEquals(

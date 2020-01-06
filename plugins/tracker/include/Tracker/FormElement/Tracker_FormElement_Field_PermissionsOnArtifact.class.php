@@ -492,7 +492,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
 
     /**
      * Search in the db the criteria value used to search against this field.
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return mixed
      */
     public function getCriteriaValue($criteria)
@@ -516,9 +516,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             }
         } elseif (! isset($this->criteria_value[$criteria->report->id])) {
             $this->criteria_value[$criteria->report->id] = array();
-            foreach ($this->getCriteriaDao()
-                         ->searchByCriteriaId($criteria->id) as $row) {
-                $this->criteria_value[$criteria->report->id][$row['value']] = $row;
+            $dao = $this->getCriteriaDao();
+            if ($dao !== null) {
+                foreach ($dao->searchByCriteriaId($criteria->id) as $row) {
+                    $this->criteria_value[$criteria->report->id][$row['value']] = $row;
+                }
             }
         }
 
