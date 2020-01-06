@@ -66,3 +66,19 @@ export interface ProjectNameProperties {
     slugified_name: string;
     name: string;
 }
+
+export interface MinimalProjectRepresentation {
+    resources: Array<ServiceResource>;
+    is_member_of: boolean;
+    id: string;
+    uri: string;
+    label: string;
+    shortname: string;
+    status: string;
+    access: string;
+}
+
+export interface ServiceResource {
+    type: string;
+    uri: string;
+}

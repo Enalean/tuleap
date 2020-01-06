@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { postProject } from "./rest-querier";
+import { postProject, getProjectUserIsAdminOf } from "./rest-querier";
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
-import { ProjectProperties } from "../type";
+import { MinimalProjectRepresentation, ProjectProperties, TemplateData } from "../type";
 
 jest.mock("tlp");
 
@@ -44,5 +44,56 @@ describe("rest-querier", () => {
 
         await postProject(project_properties);
         expect(tlpPost).toHaveBeenCalled();
+    });
+
+    it("getProjectUserIsAdminOf - retrieves project user is admin of and format them", async () => {
+        const project_a: MinimalProjectRepresentation = {
+            resources: [],
+            is_member_of: true,
+            id: "101",
+            uri: "project/101",
+            label: "My A project",
+            shortname: "My A project",
+            status: "A",
+            access: "public"
+        };
+
+        const project_b: MinimalProjectRepresentation = {
+            resources: [],
+            is_member_of: true,
+            id: "101",
+            uri: "project/101",
+            label: "My B project",
+            shortname: "My B project",
+            status: "B",
+            access: "public"
+        };
+
+        const project_list = [project_a, project_b];
+
+        const recursiveGet = jest
+            .spyOn(tlp, "recursiveGet")
+            .mockReturnValue(Promise.resolve(project_list));
+
+        const formatted_projects = await getProjectUserIsAdminOf();
+        expect(recursiveGet).toHaveBeenCalled();
+
+        const formatted_project_a: TemplateData = {
+            title: "My A project",
+            description: "",
+            id: "101",
+            glyph: "",
+            is_built_in: false
+        };
+
+        const formatted_project_b: TemplateData = {
+            title: "My B project",
+            description: "",
+            id: "101",
+            glyph: "",
+            is_built_in: false
+        };
+
+        expect(formatted_projects).toEqual([formatted_project_a, formatted_project_b]);
     });
 });

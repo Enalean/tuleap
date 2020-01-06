@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post } from "tlp";
-import { ProjectProperties } from "../type";
+import { post, recursiveGet } from "tlp";
+import { ProjectProperties, MinimalProjectRepresentation, TemplateData } from "../type";
 
-export { postProject };
+export { postProject, getProjectUserIsAdminOf };
 
 async function postProject(project_properties: ProjectProperties): Promise<string> {
     const headers = {
@@ -35,4 +35,29 @@ async function postProject(project_properties: ProjectProperties): Promise<strin
     const response = await post("/api/projects", { headers, body });
 
     return response.json();
+}
+
+async function getProjectUserIsAdminOf(): Promise<TemplateData[]> {
+    const minimal_project_representations: Array<MinimalProjectRepresentation> = await recursiveGet(
+        "/api/projects/",
+        {
+            params: {
+                limit: 50,
+                offset: 0,
+                query: JSON.stringify({ is_admin_of: true })
+            }
+        }
+    );
+
+    return minimal_project_representations
+        .map(project => {
+            return {
+                title: project.label,
+                description: "",
+                id: project.id,
+                glyph: "",
+                is_built_in: false
+            };
+        })
+        .sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
 }

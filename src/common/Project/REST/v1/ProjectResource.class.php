@@ -214,6 +214,9 @@ class ProjectResource extends AuthenticatedResource
      *   <li>a property "is_member_of" to search projects the current user is member of.
      *     Example: <pre>{"is_member_of": true}</pre>
      *   </li>
+     *   <li>a property "is_admin_of" to search projects the current user is admin of.
+     *     Example: <pre>{"is_admin_of": true}</pre>
+     *   </li>
      *   <li>a property "is_tracker_admin" to search projects the current user is administrator of at least one tracker.
      *     Example: <pre>{"is_tracker_admin": true}</pre>
      *   </li>
@@ -347,6 +350,12 @@ class ProjectResource extends AuthenticatedResource
             );
         } elseif (isset($json_query['is_member_of'])) {
             return $this->project_manager->getMyProjectsForREST(
+                $user,
+                $offset,
+                $limit
+            );
+        } elseif (isset($json_query['is_admin_of'])) {
+            return $this->project_manager->getProjectICanAdminForREST(
                 $user,
                 $offset,
                 $limit

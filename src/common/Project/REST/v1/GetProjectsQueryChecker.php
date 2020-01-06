@@ -89,7 +89,7 @@ class GetProjectsQueryChecker
      */
     private function checkExternalCriteria(array $json_query)
     {
-        $is_query_valid      = isset($json_query['shortname']) || isset($json_query['is_member_of']) || isset($json_query['is_tracker_admin']) || isset($json_query['with_status']);
+        $is_query_valid      = isset($json_query['shortname']) || isset($json_query['is_member_of']) || isset($json_query['is_admin_of'])  || isset($json_query['is_tracker_admin']) || isset($json_query['with_status']);
         $additional_criteria = new GetAdditionalCriteria();
         $this->event_manager->processEvent($additional_criteria);
 
@@ -106,7 +106,7 @@ class GetProjectsQueryChecker
             }
             throw new RestException(
                 400,
-                "You can only search on 'shortname', 'is_member_of': true, 'is_tracker_admin': true, 'with_status'" . $possible_criteria .
+                "You can only search on 'shortname', 'is_member_of': true, 'is_admin_of': true,  'is_tracker_admin': true, 'with_status'" . $possible_criteria .
                 ". If the query is valid, your plugin is maybe not installed."
             );
         }

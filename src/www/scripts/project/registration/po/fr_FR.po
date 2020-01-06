@@ -32,6 +32,12 @@ msgstr "Patrons de projet personnalisés"
 msgid "Description"
 msgstr "Description"
 
+msgid "For advanced users"
+msgstr "Pour les utilisateurs avancés"
+
+msgid "From an other project I'm admin of"
+msgstr "Depuis un autre projet dont je suis administrateur"
+
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
 
@@ -53,6 +59,12 @@ msgstr "Nom"
 msgid "Next"
 msgstr "Suivant"
 
+msgid "Oh snap! Failed to load project you are admin of."
+msgstr "Oups! Erreur lors du chargement des projets dont vous êtes membres."
+
+msgid "Please choose a project..."
+msgstr "Merci de choisir un projet ..."
+
 msgid "Privacy"
 msgstr "Visibilité"
 
@@ -61,6 +73,9 @@ msgstr "Privé"
 
 msgid "Private incl. restricted"
 msgstr "Privé incl. les utilisateurs restreints"
+
+msgid "Project configuration will be duplicated into your new project."
+msgstr "La configuration du projet sera dupliquée dans votre nouveau projet."
 
 msgid "Project information"
 msgstr "Information sur le projet"
@@ -116,8 +131,8 @@ msgid ""
 "some items."
 msgstr ""
 "La visibilité du projet est : publique. Par défaut, son contenu est "
-"accessible à tout utilisateur authentifié. Veuillez noter que "
-"des permissions plus restrictives peuvent être apposées sur certains items."
+"accessible à tout utilisateur authentifié. Veuillez noter que des "
+"permissions plus restrictives peuvent être apposées sur certains items."
 
 msgid ""
 "Project privacy set to public. By default, its content is available to "
@@ -125,8 +140,8 @@ msgid ""
 "permissions might exist on some items."
 msgstr ""
 "La visibilité du projet est : publique. Par défaut, son contenu est "
-"accessible à tout utilisateur (authentifié ou non). Veuillez noter que "
-"des permissions plus restrictives peuvent être apposées sur certains items."
+"accessible à tout utilisateur (authentifié ou non). Veuillez noter que des "
+"permissions plus restrictives peuvent être apposées sur certains items."
 
 msgid ""
 "Project short name must have between %{ min } and %{ max } characters "
@@ -179,6 +194,9 @@ msgstr "Patrons de projet Tuleap"
 
 msgid "What kind of project is it?"
 msgstr "Quel type de projet est-ce ?"
+
+msgid "You are not administrator of any project."
+msgstr "Vous êtes administrateur d'aucun projet."
 
 msgid "Your project has been submitted to the administrators for validation"
 msgstr "Votre projet a été soumis aux administrateurs pour validation"

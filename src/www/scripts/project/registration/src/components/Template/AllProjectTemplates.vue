@@ -38,6 +38,7 @@
                 <under-construction-information />
                 <company-templates-list />
                 <tuleap-template-list />
+                <advanced-template-list />
             </div>
         </div>
         <template-footer />
@@ -52,9 +53,11 @@ import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
 import TemplateFooter from "./TemplateFooter.vue";
 import CompanyTemplatesList from "./Company/CompanyTemplateList.vue";
+import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
 
 @Component({
     components: {
+        AdvancedTemplateList,
         CompanyTemplatesList,
         TemplateFooter,
         NewProjectBoxes,

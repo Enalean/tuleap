@@ -65,7 +65,7 @@ describe("ProjectInformationFooter", () => {
 
     it(`reset the selected template when the 'Back' button is clicked`, () => {
         factory.find("[data-test=project-registration-back-button]").trigger("click");
-        expect(store.dispatch).toHaveBeenCalledWith("resetSelectedTemplate");
+        expect(store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
     });
 
     it(`Displays spinner when project is creating`, () => {
