@@ -22,7 +22,8 @@
     <div class="tlp-form-element">
         <label class="tlp-label tlp-checkbox">
             <input type="checkbox" value="1" required />
-            <span v-dompurify-html="agreement"></span>
+            <span v-dompurify-html="agreement" v-on:click="loadAgreement" />
+            <agreement-modal />
         </label>
     </div>
 </template>
@@ -30,10 +31,26 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-@Component
+import AgreementModal from "./AgreementModal.vue";
+import EventBus from "../../../helpers/event-bus";
+
+@Component({
+    components: { AgreementModal }
+})
 export default class PolicyAgreement extends Vue {
+    is_loading = false;
+
     get agreement(): string {
         return this.$gettext(`I agree to the <a href="/tos/tos.php">policy agreement</a>`);
+    }
+
+    loadAgreement(event: MouseEvent): void {
+        if (event.target instanceof Element) {
+            if (event.target.tagName === "A") {
+                EventBus.$emit("show-agreement");
+                event.preventDefault();
+            }
+        }
     }
 }
 </script>

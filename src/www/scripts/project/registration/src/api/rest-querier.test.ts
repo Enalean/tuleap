@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { postProject, getProjectUserIsAdminOf } from "./rest-querier";
+import { postProject, getProjectUserIsAdminOf, getTermOfService } from "./rest-querier";
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
@@ -89,5 +89,18 @@ describe("rest-querier", () => {
         };
 
         expect(formatted_projects).toEqual([formatted_project_a]);
+    });
+
+    it("getTermOfService - retrieves the term of service", async () => {
+        const response_text = jest.fn();
+        jest.spyOn(tlp, "get").mockImplementation(() => {
+            return ({
+                text: response_text
+            } as unknown) as Promise<Response>;
+        });
+
+        await getTermOfService();
+
+        expect(response_text).toHaveBeenCalled();
     });
 });
