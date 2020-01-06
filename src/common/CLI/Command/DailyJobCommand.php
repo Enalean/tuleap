@@ -94,8 +94,8 @@ class DailyJobCommand extends Command
             $this->user_manager->checkUserAccountValidity();
             $this->auto_mails_sender->sendNotificationMailToIdleAccounts();
 
-            $now = (new \DateTime())->getTimestamp();
-            $this->access_key_revoker->revokeExpiredUserAccessKeys($now);
+            $now = new \DateTimeImmutable();
+            $this->access_key_revoker->revokeUnusableUserAccessKeys($now);
         });
         return 0;
     }

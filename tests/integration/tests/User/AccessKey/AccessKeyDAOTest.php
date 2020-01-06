@@ -74,6 +74,17 @@ final class AccessKeyDAOTest extends TestCase
         $this->assertEmpty($this->access_key_scope_dao->searchScopeKeysByAccessKeyID($key_id));
     }
 
+    public function testKeysWithNoScopesAreRemoved(): void
+    {
+        $key_id = $this->createAccessKey(101, 10, null, 'scope:a');
+
+        DBFactory::getMainTuleapDBConnection()->getDB()->run('DELETE FROM user_access_key_scope');
+
+        $this->access_key_dao->deleteKeysWithNoScopes();
+
+        $this->assertNull($this->access_key_dao->searchAccessKeyVerificationAndTraceabilityDataByID($key_id));
+    }
+
     private function createAccessKey(int $user_id, int $current_time, ?int $expiration, string ...$scope_keys): int
     {
         $key_id = $this->access_key_dao->create($user_id, 'hash_verification_string', $current_time, 'description', $expiration);
