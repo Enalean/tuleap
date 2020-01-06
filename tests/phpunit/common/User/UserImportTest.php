@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User;
 
 use PFUser;
 use Project;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
-use TuleapTestCase;
 use UserHelper;
 use UserImport;
 use UserManager;
 
-class UserImportTest extends TuleapTestCase
+final class UserImportTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     private $user_email_filename;
     private $user_filename;
     /**
@@ -51,10 +54,9 @@ class UserImportTest extends TuleapTestCase
      */
     private $project;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->user_helper         = \Mockery::spy(\UserHelper::class);
         $this->project             = \Mockery::spy(\Project::class, ['getID' => 110, 'getUnixName' => false, 'isPublic' => false]);
@@ -64,14 +66,14 @@ class UserImportTest extends TuleapTestCase
         $this->user_import         = new UserImport($this->user_manager, $this->user_helper, \Mockery::mock(ProjectMemberAdder::class));
     }
 
-    public function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
 
         UserManager::clearInstance();
     }
 
-    public function itImportsUserByUserName()
+    public function testItImportsUserByUserName() : void
     {
         $user = $this->getUser(102);
 
@@ -88,12 +90,12 @@ class UserImportTest extends TuleapTestCase
             'avatar_url'       => ''
         );
 
-        $this->assertEqual($user_collection->getFormattedUsers(), array($expected_user));
-        $this->assertEqual($user_collection->getWarningsMultipleUsers(), null);
-        $this->assertEqual($user_collection->getWarningsInvalidUsers(), null);
+        $this->assertEquals(array($expected_user), $user_collection->getFormattedUsers());
+        $this->assertEmpty($user_collection->getWarningsMultipleUsers());
+        $this->assertEmpty($user_collection->getWarningsInvalidUsers());
     }
 
-    public function itImportsUserByEmail()
+    public function testItImportsUserByEmail() : void
     {
         $user = $this->getUser(102);
 
@@ -110,12 +112,12 @@ class UserImportTest extends TuleapTestCase
             'avatar_url'       => ''
         );
 
-        $this->assertEqual($user_collection->getFormattedUsers(), array($expected_user));
-        $this->assertEqual($user_collection->getWarningsMultipleUsers(), null);
-        $this->assertEqual($user_collection->getWarningsInvalidUsers(), null);
+        $this->assertEquals(array($expected_user), $user_collection->getFormattedUsers());
+        $this->assertEmpty($user_collection->getWarningsMultipleUsers());
+        $this->assertEmpty($user_collection->getWarningsInvalidUsers());
     }
 
-    public function itDoesNotImportUserByEmailIfEmailLinkedToMultipleUsers()
+    public function testItDoesNotImportUserByEmailIfEmailLinkedToMultipleUsers() : void
     {
         $user  = $this->getUser(102);
         $user2 = $this->getUser(103);
@@ -124,37 +126,34 @@ class UserImportTest extends TuleapTestCase
 
         $user_collection = $this->user_import->parse($this->project->getID(), $this->user_email_filename);
 
-        $this->assertEqual($user_collection->getFormattedUsers(), null);
-        $this->assertEqual(
-            $user_collection->getWarningsMultipleUsers(),
+        $this->assertEmpty($user_collection->getFormattedUsers());
+        $this->assertEquals(
             array(
                 array('warning' => 'zurg@example.com has multiple corresponding users.')
-            )
+            ),
+            $user_collection->getWarningsMultipleUsers(),
         );
-        $this->assertEqual($user_collection->getWarningsInvalidUsers(), null);
+        $this->assertEmpty($user_collection->getWarningsInvalidUsers());
     }
 
-    public function itDoesNotImportUserIfUserNameDoesNotExist()
+    public function testItDoesNotImportUserIfUserNameDoesNotExist() : void
     {
         $this->user_manager->shouldReceive('findUser')->with('zurg')->andReturns(null);
         $this->user_manager->shouldReceive('getAllUsersByEmail')->andReturns([]);
 
         $user_collection = $this->user_import->parse($this->project->getID(), $this->user_filename);
 
-        $this->assertEqual($user_collection->getFormattedUsers(), null);
-        $this->assertEqual($user_collection->getWarningsMultipleUsers(), null);
-        $this->assertEqual(
-            $user_collection->getWarningsInvalidUsers(),
+        $this->assertEmpty($user_collection->getFormattedUsers());
+        $this->assertEmpty($user_collection->getWarningsMultipleUsers());
+        $this->assertEquals(
             array(
                 array('warning' => "User 'zurg' does not exist")
-            )
+            ),
+            $user_collection->getWarningsInvalidUsers()
         );
     }
 
-    /**
-     * @return PFUser
-     */
-    private function getUser($id)
+    private function getUser(int $id): PFUser
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isActive')->andReturns(true);

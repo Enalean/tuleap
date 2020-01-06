@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User;
 
-use TuleapTestCase;
-
-class SessionManagerTest extends TuleapTestCase
+final class SessionManagerTest extends \PHPUnit\Framework\TestCase
 {
-    public const SESSION_LIFETIME_2_WEEKS = 1209600;
-    public const CURRENT_TIME             = 1481202269;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    private const SESSION_LIFETIME_2_WEEKS = 1209600;
+    private const CURRENT_TIME             = 1481202269;
 
     /**
      * @var \UserManager
@@ -40,37 +42,37 @@ class SessionManagerTest extends TuleapTestCase
      */
     private $session_dao;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->user_manager            = mock('UserManager');
-        $this->random_number_generator = mock('RandomNumberGenerator');
-        $this->session_dao             = mock('SessionDao');
+        $this->user_manager            = \Mockery::spy(\UserManager::class);
+        $this->random_number_generator = \Mockery::spy(\RandomNumberGenerator::class);
+        $this->session_dao             = \Mockery::spy(\SessionDao::class);
     }
 
-    public function itThrowsAnExceptionWhenTheSessionIdentifierIsMalformed()
+    public function testItThrowsAnExceptionWhenTheSessionIdentifierIsMalformed() : void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
         $session_identifier = 'malformed_session_identifier';
 
-        $this->expectException('Tuleap\User\InvalidSessionException');
+        $this->expectException(\Tuleap\User\InvalidSessionException::class);
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
     }
 
-    public function itThrowsAnExceptionWhenTheSessionIsNotFound()
+    public function testItThrowsAnExceptionWhenTheSessionIsNotFound() : void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
         $session_identifier = '1.random_string';
 
-        stub($this->session_dao)->searchById('1', self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->returns(false);
+        $this->session_dao->shouldReceive('searchById')->with('1', self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(false);
 
-        $this->expectException('Tuleap\User\InvalidSessionException');
+        $this->expectException(\Tuleap\User\InvalidSessionException::class);
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
     }
 
-    public function itThrowsAnExceptionWhenTokenDoesNotMatch()
+    public function testItThrowsAnExceptionWhenTokenDoesNotMatch() : void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
@@ -78,15 +80,13 @@ class SessionManagerTest extends TuleapTestCase
         $session_token      = 'token';
         $session_identifier = "$session_id.$session_token";
 
-        stub($this->session_dao)->searchById($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->returns(
-            array('session_hash' => 'expected_token')
-        );
+        $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(array('session_hash' => 'expected_token'));
 
-        $this->expectException('Tuleap\User\InvalidSessionException');
+        $this->expectException(\Tuleap\User\InvalidSessionException::class);
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
     }
 
-    public function itThrowsAnExceptionWhenTheUserCanNotBeRetrieved()
+    public function testItThrowsAnExceptionWhenTheUserCanNotBeRetrieved() : void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
@@ -95,18 +95,16 @@ class SessionManagerTest extends TuleapTestCase
         $hashed_session_token = hash(SessionManager::HASH_ALGORITHM, $session_token);
         $session_identifier   = "$session_id.$session_token";
 
-        stub($this->session_dao)->searchById($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->returns(
-            array(
-                'session_hash' => $hashed_session_token,
-                'user_id'      => '101'
-            )
-        );
+        $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(array(
+            'session_hash' => $hashed_session_token,
+            'user_id'      => '101'
+        ));
 
-        $this->expectException('Tuleap\User\InvalidSessionException');
+        $this->expectException(\Tuleap\User\InvalidSessionException::class);
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
     }
 
-    public function itGetsTheUserFromTheSessionIdentifier()
+    public function testItGetsTheUserFromTheSessionIdentifier() : void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
@@ -116,47 +114,45 @@ class SessionManagerTest extends TuleapTestCase
         $session_identifier   = "$session_id.$session_token";
         $user_id              = '101';
 
-        stub($this->session_dao)->searchById($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->returns(
-            array(
-                'session_hash' => $hashed_session_token,
-                'user_id'      => $user_id
-            )
-        );
-        $user = mock('PFUser');
-        stub($this->user_manager)->getUserById($user_id)->returns($user);
+        $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(array(
+            'session_hash' => $hashed_session_token,
+            'user_id'      => $user_id
+        ));
+        $user = \Mockery::spy(\PFUser::class);
+        $this->user_manager->shouldReceive('getUserById')->with($user_id)->andReturns($user);
 
-        $user->expectOnce('setSessionId', array($session_id));
-        $user->expectOnce('setSessionHash', array("$session_id.$session_token"));
+        $user->shouldReceive('setSessionId')->with($session_id)->once();
+        $user->shouldReceive('setSessionHash')->with("$session_id.$session_token")->once();
         $session_user = $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
-        $this->assertIdentical($user, $session_user);
+        $this->assertSame($user, $session_user);
     }
 
-    public function itThrowsAnExceptionWhenTheSessionCanNotBeCreated()
+    public function testItThrowsAnExceptionWhenTheSessionCanNotBeCreated() : void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
-        stub($this->session_dao)->create()->returns(null);
-        $user    = mock('PFUser');
-        $request = mock('HTTPRequest');
+        $this->session_dao->shouldReceive('create')->andReturns(null);
+        $user    = \Mockery::spy(\PFUser::class);
+        $request = \Mockery::spy(\HTTPRequest::class);
 
-        $this->expectException('Tuleap\User\SessionNotCreatedException');
+        $this->expectException(\Tuleap\User\SessionNotCreatedException::class);
         $session_manager->createSession($user, $request, self::CURRENT_TIME);
     }
 
-    public function itCreatesANewSession()
+    public function testItCreatesANewSession() : void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
         $session_id   = '1';
-        $user         = mock('PFUser');
-        $request      = mock('HTTPRequest');
+        $user         = \Mockery::spy(\PFUser::class);
+        $request      = \Mockery::spy(\HTTPRequest::class);
         $random_token = 'random_token';
-        stub($this->session_dao)->create()->returns($session_id);
-        stub($this->random_number_generator)->getNumber()->returns($random_token);
+        $this->session_dao->shouldReceive('create')->andReturns($session_id);
+        $this->random_number_generator->shouldReceive('getNumber')->andReturns($random_token);
 
-        $user->expectOnce('setSessionId', array($session_id));
-        $user->expectOnce('setSessionHash', array("$session_id.$random_token"));
+        $user->shouldReceive('setSessionId')->with($session_id)->once();
+        $user->shouldReceive('setSessionHash')->with("$session_id.$random_token")->once();
         $session_identifier = $session_manager->createSession($user, $request, self::CURRENT_TIME);
-        $this->assertEqual("$session_id.$random_token", $session_identifier);
+        $this->assertEquals("$session_id.$random_token", $session_identifier);
     }
 }

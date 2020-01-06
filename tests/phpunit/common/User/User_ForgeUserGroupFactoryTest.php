@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupFactory_BaseTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
      * @var UserGroupDao
@@ -31,27 +35,22 @@ class User_ForgeUserGroupFactory_BaseTest extends TuleapTestCase
      */
     protected $factory;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->dao     = \Mockery::spy(\UserGroupDao::class);
         $this->factory = new User_ForgeUserGroupFactory($this->dao);
     }
-}
 
-class User_ForgeUserGroupFactory_GetAllTest extends User_ForgeUserGroupFactory_BaseTest
-{
-
-    public function itReturnsEmptyArrayIfNoResultsInDb()
+    public function testItReturnsEmptyArrayIfNoResultsInDb() : void
     {
         $this->dao->shouldReceive('getAllForgeUGroups')->andReturns(false);
         $all = $this->factory->getAllForgeUserGroups();
 
-        $this->assertEqual(0, count($all));
+        $this->assertCount(0, $all);
     }
 
-    public function itReturnsArrayOfUserGroups()
+    public function testItReturnsArrayOfUserGroups() : void
     {
         $data = array(
             array(
@@ -59,7 +58,7 @@ class User_ForgeUserGroupFactory_GetAllTest extends User_ForgeUserGroupFactory_B
                 'name'          => 'thom thumbs',
                 'description'   => 'whatever',
             ),
-             array(
+            array(
                 'ugroup_id'     => 12,
                 'name'          => 'wild rover',
                 'description'   => 'whatttttt',
@@ -74,34 +73,30 @@ class User_ForgeUserGroupFactory_GetAllTest extends User_ForgeUserGroupFactory_B
         $this->dao->shouldReceive('getAllForgeUGroups')->andReturns($data);
         $all = $this->factory->getAllForgeUserGroups();
 
-        $this->assertEqual(3, count($all));
+        $this->assertCount(3, $all);
 
         $first  = $all[0];
         $second = $all[1];
         $third  = $all[2];
 
-        $this->assertIsA($first, 'User_ForgeUGroup');
-        $this->assertIsA($second, 'User_ForgeUGroup');
-        $this->assertIsA($third, 'User_ForgeUGroup');
+        $this->assertInstanceOf(\User_ForgeUGroup::class, $first);
+        $this->assertInstanceOf(\User_ForgeUGroup::class, $second);
+        $this->assertInstanceOf(\User_ForgeUGroup::class, $third);
 
-        $this->assertEqual($first->getId(), 10);
-        $this->assertEqual($second->getId(), 12);
-        $this->assertEqual($third->getId(), 15);
+        $this->assertEquals(10, $first->getId());
+        $this->assertEquals(12, $second->getId());
+        $this->assertEquals(15, $third->getId());
 
-        $this->assertEqual($first->getName(), 'thom thumbs');
-        $this->assertEqual($second->getName(), 'wild rover');
-        $this->assertEqual($third->getName(), 'nb,er');
+        $this->assertEquals('thom thumbs', $first->getName());
+        $this->assertEquals('wild rover', $second->getName());
+        $this->assertEquals('nb,er', $third->getName());
 
-        $this->assertEqual($first->getDescription(), 'whatever');
-        $this->assertEqual($second->getDescription(), 'whatttttt');
-        $this->assertEqual($third->getDescription(), 'whatever gbgf');
+        $this->assertEquals('whatever', $first->getDescription());
+        $this->assertEquals('whatttttt', $second->getDescription());
+        $this->assertEquals('whatever gbgf', $third->getDescription());
     }
-}
 
-class User_ForgeUserGroupFactory_GetUGroupTest extends User_ForgeUserGroupFactory_BaseTest
-{
-
-    public function itGetsForgeUGroup()
+    public function testItGetsForgeUGroup() : void
     {
         $user_group_id = 105;
         $row = array(
@@ -114,27 +109,23 @@ class User_ForgeUserGroupFactory_GetUGroupTest extends User_ForgeUserGroupFactor
 
         $ugroup = $this->factory->getForgeUserGroupById($user_group_id);
 
-        $this->assertEqual($ugroup->getId(), 105);
-        $this->assertEqual($ugroup->getName(), 'my name');
-        $this->assertEqual($ugroup->getDescription(), 'user group');
+        $this->assertEquals(105, $ugroup->getId());
+        $this->assertEquals('my name', $ugroup->getName());
+        $this->assertEquals('user group', $ugroup->getDescription());
     }
 
-    public function itThrowsExceptionIfUGroupNotFound()
+    public function testItThrowsExceptionIfUGroupNotFound() : void
     {
-        $this->expectException('User_UserGroupNotFoundException');
+        $this->expectException(\User_UserGroupNotFoundException::class);
 
         $user_group_id = 105;
 
-        $this->dao->shouldReceive('getForgeUGroup')->with($user_group_id)->andReturns(false);
+        $this->dao->shouldReceive('getForgeUGroup')->once()->with($user_group_id)->andReturns(false);
 
         $this->factory->getForgeUserGroupById($user_group_id);
     }
-}
 
-class User_ForgeUserGroupFactory_cCeateForgeUGroupTest extends User_ForgeUserGroupFactory_BaseTest
-{
-
-    public function itCreatesForgeUGroup()
+    public function testItCreatesForgeUGroup() : void
     {
         $name        = 'my group';
         $description = 'my desc';
@@ -144,20 +135,19 @@ class User_ForgeUserGroupFactory_cCeateForgeUGroupTest extends User_ForgeUserGro
 
         $ugroup = $this->factory->createForgeUGroup($name, $description);
 
-        $this->assertEqual($ugroup->getId(), 102);
-        $this->assertEqual($ugroup->getName(), 'my group');
-        $this->assertEqual($ugroup->getDescription(), 'my desc');
+        $this->assertEquals(102, $ugroup->getId());
+        $this->assertEquals('my group', $ugroup->getName());
+        $this->assertEquals('my desc', $ugroup->getDescription());
     }
 
-    public function itThrowsExceptionIfUGroupNameExists()
+    public function testItThrowsExceptionIfUGroupNameExists() : void
     {
-        $this->expectException('User_UserGroupNameInvalidException');
-
         $name        = 'my group';
         $description = 'my desc';
 
         $this->dao->shouldReceive('createForgeUGroup')->with($name, $description)->andThrows(new User_UserGroupNameInvalidException());
 
+        $this->expectException(\User_UserGroupNameInvalidException::class);
         $this->factory->createForgeUGroup($name, $description);
     }
 }
