@@ -55,7 +55,8 @@ describe("rest-querier", () => {
             label: "My A project",
             shortname: "My A project",
             status: "A",
-            access: "public"
+            access: "public",
+            is_template: false
         };
 
         const project_b: MinimalProjectRepresentation = {
@@ -66,7 +67,8 @@ describe("rest-querier", () => {
             label: "My B project",
             shortname: "My B project",
             status: "B",
-            access: "public"
+            access: "public",
+            is_template: true
         };
 
         const project_list = [project_a, project_b];
@@ -86,14 +88,6 @@ describe("rest-querier", () => {
             is_built_in: false
         };
 
-        const formatted_project_b: TemplateData = {
-            title: "My B project",
-            description: "",
-            id: "101",
-            glyph: "",
-            is_built_in: false
-        };
-
-        expect(formatted_projects).toEqual([formatted_project_a, formatted_project_b]);
+        expect(formatted_projects).toEqual([formatted_project_a]);
     });
 });

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types =1);
 
 namespace Tuleap\Project\REST;
 
@@ -57,16 +59,21 @@ class MinimalProjectRepresentation
      * @var string {@choice unrestricted,public,private,private-wo-restr}
      */
     public $access;
+    /**
+     * @var bool
+     */
+    public $is_template;
 
-    public function buildMinimal(Project $project)
+    public function buildMinimal(Project $project): void
     {
-        $this->id        = JsonCast::toInt($project->getID());
-        $this->uri       = self::ROUTE . '/' . $this->id;
-        $this->label     = $project->getUnconvertedPublicName();
-        $this->shortname = $project->getUnixName();
-        $this->status    = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag(
+        $this->id          = JsonCast::toInt($project->getID());
+        $this->uri         = self::ROUTE . '/' . $this->id;
+        $this->label       = $project->getUnconvertedPublicName();
+        $this->shortname   = $project->getUnixName();
+        $this->status      = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag(
             $project->getStatus()
         );
-        $this->access    = $project->getAccess();
+        $this->access      = $project->getAccess();
+        $this->is_template = $project->isTemplate();
     }
 }

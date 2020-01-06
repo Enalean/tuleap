@@ -50,6 +50,7 @@ async function getProjectUserIsAdminOf(): Promise<TemplateData[]> {
     );
 
     return minimal_project_representations
+        .filter(project => !project.is_template)
         .map(project => {
             return {
                 title: project.label,

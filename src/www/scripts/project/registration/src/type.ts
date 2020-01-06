@@ -76,6 +76,7 @@ export interface MinimalProjectRepresentation {
     shortname: string;
     status: string;
     access: string;
+    is_template: boolean;
 }
 
 export interface ServiceResource {
