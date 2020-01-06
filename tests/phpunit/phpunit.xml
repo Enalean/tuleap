@@ -12,7 +12,7 @@
     <php>
         <ini name="assert.exception" value="1"/>
         <ini name="date.timezone" value="Europe/Paris"/>
-        <ini name="memory_limit" value="1024M" /> <!-- This needs to be quite permissive to be able to generate coverage report -->
+        <ini name="memory_limit" value="1536M" /> <!-- This needs to be quite permissive to be able to generate coverage report -->
     </php>
     <listeners>
         <listener class="\Mockery\Adapter\Phpunit\TestListener"/>
