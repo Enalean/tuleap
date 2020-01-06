@@ -25,7 +25,8 @@ use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
-use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilder;
+use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
+use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 
 require_once __DIR__ . '/../include/pre.php';
 
@@ -189,7 +190,13 @@ $user_default_format = user_get_preference('user_edition_default_format');
 $access_key_presenters         = [];
 $access_key_metadata_retriever = new AccessKeyMetadataRetriever(
     new AccessKeyDAO(),
-    new AccessKeyScopeRetriever(new AccessKeyScopeDAO(), new CoreAccessKeyScopeBuilder())
+    new AccessKeyScopeRetriever(
+        new AccessKeyScopeDAO(),
+        AggregateAccessKeyScopeBuilder::fromBuildersList(
+            CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
+            AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+        )
+    )
 );
 foreach ($access_key_metadata_retriever->getMetadataByUser($user) as $access_key_metadata) {
     $access_key_presenters[] = new AccessKeyMetadataPresenter($access_key_metadata);

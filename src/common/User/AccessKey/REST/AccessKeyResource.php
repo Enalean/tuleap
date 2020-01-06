@@ -41,7 +41,8 @@ use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
-use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilder;
+use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
+use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\AccessKey\Scope\InvalidScopeIdentifierKeyException;
 use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
 
@@ -117,7 +118,10 @@ class AccessKeyResource extends AuthenticatedResource
         }
 
         $key_scopes               = [];
-        $access_key_scope_builder = new CoreAccessKeyScopeBuilder();
+        $access_key_scope_builder = AggregateAccessKeyScopeBuilder::fromBuildersList(
+            CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
+            AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+        );
         foreach ($access_key->scopes as $scope_identifier) {
             try {
                 $key_scope = $access_key_scope_builder->buildAccessKeyScopeFromScopeIdentifier(

@@ -25,6 +25,10 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
+use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
+use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
 use Tuleap\User\PasswordVerifier;
 use User_ForgeUserGroupPermissionsDao;
@@ -86,7 +90,7 @@ class UserManager
         $this->read_only_admin_user_builder       = $read_only_admin_user_builder;
     }
 
-    public static function build()
+    public static function build(): self
     {
         $user_manager     = \UserManager::instance();
         $password_handler = PasswordHandlerFactory::getPasswordHandler();
@@ -100,7 +104,15 @@ class UserManager
                 $password_handler
             ),
             new AccessKeySerializer(),
-            new AccessKeyVerifier(new AccessKeyDAO(), new SplitTokenVerificationStringHasher(), $user_manager),
+            new AccessKeyVerifier(
+                new AccessKeyDAO(),
+                new SplitTokenVerificationStringHasher(),
+                $user_manager,
+                new AccessKeyScopeRetriever(
+                    new AccessKeyScopeDAO(),
+                    CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder()
+                )
+            ),
             new RestReadOnlyAdminUserBuilder(
                 new User_ForgeUserGroupPermissionsManager(
                     new User_ForgeUserGroupPermissionsDao()
@@ -202,7 +214,7 @@ class UserManager
         $access_key            = $this->access_key_identifier_unserializer->getSplitToken(new ConcealedString($access_key_identifier));
 
         $request = \HTTPRequest::instance();
-        return $this->access_key_verifier->getUser($access_key, $request->getIPAddress());
+        return $this->access_key_verifier->getUser($access_key, RESTAccessKeyScope::fromItself(), $request->getIPAddress());
     }
 
     /**

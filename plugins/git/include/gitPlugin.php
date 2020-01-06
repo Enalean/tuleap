@@ -122,6 +122,7 @@ use Tuleap\Git\RepositoryList\ListPresenterBuilder;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
 use Tuleap\Git\SystemEvents\ProjectIsSuspended;
+use Tuleap\Git\User\AccessKey\Scope\GitRepositoryAccessKeyScope;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\GitBundle;
@@ -150,6 +151,8 @@ use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderFromClassNames;
 use Tuleap\User\PasswordVerifier;
 
 require_once 'constants.php';
@@ -303,6 +306,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(ProjectSuspendedAndNotBlockedWarningCollector::NAME);
         $this->addHook(StatisticsCollectionCollector::NAME);
         $this->addHook(CLICommandsCollector::NAME);
+        $this->addHook(AccessKeyScopeBuilderCollector::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2919,6 +2923,15 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     new GitRepositoryObjectsSizeRetriever()
                 );
             }
+        );
+    }
+
+    public function collectAccessKeyScopeBuilder(AccessKeyScopeBuilderCollector $collector): void
+    {
+        $collector->addAccessKeyScopeBuilder(
+            new AccessKeyScopeBuilderFromClassNames(
+                GitRepositoryAccessKeyScope::class
+            )
         );
     }
 }
