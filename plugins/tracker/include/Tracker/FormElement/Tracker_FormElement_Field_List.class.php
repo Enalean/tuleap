@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
+use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
@@ -434,7 +435,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
 
         if (count($criteria_list_value) > 0) {
-            $this->setCriteriaValue($criteria_list_value, $criteria->getReport()->getId());
+            $cache = XMLCriteriaValueCache::instance(spl_object_id($this));
+            $cache->set($criteria->getReport()->getId(), $criteria_list_value);
         }
     }
 
@@ -446,11 +448,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         $report_id = $criteria->getReport()->getId();
 
-        if (! isset($this->criteria_value[$report_id])) {
+        $cache = XMLCriteriaValueCache::instance(spl_object_id($this));
+
+        if (! $cache->has($report_id)) {
             return;
         }
 
-        $value_in_field_value      = $this->criteria_value[$report_id];
+        $value_in_field_value = $cache->get($criteria->getReport()->getId());
         $formatted_criteria_value = [];
         foreach ($value_in_field_value as $field_value) {
             assert($field_value instanceof Tracker_FormElement_Field_List_Bind_StaticValue);

@@ -31,6 +31,7 @@ use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_Report;
 use Tracker_Report_Criteria;
+use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_CriteriaTest extends TestCase
@@ -60,7 +61,8 @@ class Tracker_FormElement_Field_List_CriteriaTest extends TestCase
 
     public function testItSetsCriteriaValueFromXML(): void
     {
-        $report = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn('XML_IMPORT_'.rand())->getMock();
+        $report_id = 'XML_IMPORT_'.rand();
+        $report    = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn($report_id)->getMock();
         $this->criteria->shouldReceive('getReport')->andReturn($report);
 
         $static_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
@@ -85,15 +87,18 @@ class Tracker_FormElement_Field_List_CriteriaTest extends TestCase
             $mapping
         );
 
+        $cache = XMLCriteriaValueCache::instance(spl_object_id($this->field));
+
         $this->assertEquals(
             [$value_01],
-            $this->field->getCriteriaValue($this->criteria)
+            $cache->get($report_id)
         );
     }
 
     public function testItDoesNotSetCriteriaValueFromXMLIfNotAStaticBind(): void
     {
-        $report = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn('XML_IMPORT_'.rand())->getMock();
+        $report_id = 'XML_IMPORT_'.rand();
+        $report    = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn($report_id)->getMock();
         $this->criteria->shouldReceive('getReport')->andReturn($report);
 
         $user_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class);
@@ -112,9 +117,7 @@ class Tracker_FormElement_Field_List_CriteriaTest extends TestCase
             $mapping
         );
 
-        $this->assertEquals(
-            [],
-            $this->field->getCriteriaValue($this->criteria)
-        );
+        $cache = XMLCriteriaValueCache::instance(spl_object_id($this->field));
+        $this->assertFalse($cache->has($report_id));
     }
 }

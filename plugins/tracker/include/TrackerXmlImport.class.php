@@ -22,6 +22,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerFromXmlImportCannotBeUpdatedException;
@@ -733,6 +734,7 @@ class TrackerXmlImport
             $this->displayWarnings($feedback_collector);
         }
 
+        XMLCriteriaValueCache::clearInstances();
         $this->formelement_factory->clearCaches();
         $this->tracker_factory->clearCaches();
 

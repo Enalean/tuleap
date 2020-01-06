@@ -33,6 +33,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CriteriaTest extends TestCase
@@ -174,7 +175,8 @@ class Tracker_FormElement_Field_CriteriaTest extends TestCase
 
     public function testItSetsCriteriaValueFromXML(): void
     {
-        $report = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn('XML_IMPORT_'.rand())->getMock();
+        $report_id = 'XML_IMPORT_'.rand();
+        $report    = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn($report_id)->getMock();
         $this->criteria->shouldReceive('getReport')->andReturn($report);
 
         $xml_criteria_value = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -188,9 +190,11 @@ class Tracker_FormElement_Field_CriteriaTest extends TestCase
             $mapping
         );
 
+        $cache = XMLCriteriaValueCache::instance(spl_object_id($this->field));
+
         $this->assertEquals(
             'My text',
-            $this->field->getCriteriaValue($this->criteria)
+            $cache->get($report_id)
         );
     }
 }
