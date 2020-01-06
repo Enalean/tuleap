@@ -83,3 +83,12 @@ export interface ServiceResource {
     type: string;
     uri: string;
 }
+
+export interface ServiceData {
+    id: string;
+    uri: string;
+    name: string;
+    label: string;
+    is_enabled: boolean;
+    icon: string;
+}

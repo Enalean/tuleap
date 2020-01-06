@@ -39,6 +39,11 @@ $card-border-margin: 150px;
     border-color: $tlp-theme-color;
 }
 
+.project-registration-template-card-description-content {
+    display: flex;
+    flex-direction: column;
+}
+
 .project-registration-template-card-description {
     color: $tlp-ui-dimmed;
     font-size: 14px;
@@ -120,6 +125,10 @@ $card-border-margin: 150px;
     justify-content: center;
     width: ($card-border-margin - 2 * $tlp-spacing);
     height: calc(100% - 2 * #{$tlp-spacing});
+}
+
+.user-project-list-select {
+    margin: 0 0 $tlp-half-spacing;
 }
 
 @media screen and (max-width: 1200px) {

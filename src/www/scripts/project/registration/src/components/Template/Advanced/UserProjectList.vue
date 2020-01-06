@@ -24,7 +24,7 @@
             You are not administrator of any project.
         </translate>
         <select
-            class="tlp-select tlp-select-adjusted"
+            class="tlp-select tlp-select-adjusted user-project-list-select"
             id="from-another-project"
             data-test="from-another-project"
             name="from-another-project"
@@ -42,6 +42,7 @@
                 {{ project.title }}
             </option>
         </select>
+        <project-services v-if="selected_project !== ''" v-bind:project="selected_project" />
     </div>
 </template>
 
@@ -49,8 +50,11 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import { TemplateData } from "../../../type";
+import ProjectServices from "../Services/ProjectServices.vue";
 
-@Component({})
+@Component({
+    components: { ProjectServices }
+})
 export default class UserProjectList extends Vue {
     @Prop({ required: true })
     readonly projectList!: Array<TemplateData>;
