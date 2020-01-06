@@ -1,195 +1,45 @@
 <project>
-    <dashboards>
-        <dashboard name="0 - Project Dashboard">
-            <line>
-                <column>
-                    <widget name="projectnote">
-                        <preference name="note">
-                            <value name="title">Note from the editor</value>
-                            <value name="content"><![CDATA[
-You've created a new project based upon a template.
-
-Feel free to change tools customization to your needs.
-
-Add user groups and set permissions.
-
-Customize workflow options.
-
-Need professional support to help you adapt your workspace? Get in touch with our sales team: <sales@enalean.com>
-]]></value>
-                        </preference>
-                    </widget>
-                </column>
-                <column>
-                    <widget name="projectheartbeat" />
-                </column>
-            </line>
-            <line>
-                <column>
-                    <widget name="projectmembers" />
-                </column>
-                <column>
-                    <widget name="projectcontacts" />
-                </column>
-            </line>
-        </dashboard>
-        <dashboard name="1 - Team View">
-            <line>
-                <column>
-                    <widget name="plugin_tracker_projectrenderer">
-                        <preference name="renderer">
-                            <reference name="id" REF="R1604"></reference>
-                            <value name="title">Open Issues</value>
-                        </preference>
-                    </widget>
-                </column>
-                <column>
-                    <widget name="plugin_tracker_projectrenderer">
-                        <preference name="renderer">
-                            <reference name="id" REF="R1605"></reference>
-                            <value name="title">Open Issues Charts</value>
-                        </preference>
-                    </widget>
-                </column>
-            </line>
-            <line>
-                <column>
-                    <widget name="projectlatestgitcommits" />
-                </column>
-            </line>
-        </dashboard>
-        <dashboard name="2 - Project Manager View">
-            <line>
-                <column>
-                    <widget name="plugin_tracker_projectrenderer">
-                        <preference name="renderer">
-                            <reference name="id" REF="R1607"></reference>
-                            <value name="title">Late Critical Issues</value>
-                        </preference>
-                    </widget>
-                </column>
-            </line>
-            <line>
-                <column>
-                    <widget name="plugin_tracker_projectrenderer">
-                        <preference name="renderer">
-                            <reference name="id" REF="R1682"></reference>
-                            <value name="title">All issues Charts</value>
-                        </preference>
-                    </widget>
-                </column>
-            </line>
-        </dashboard>
-    </dashboards>
     <trackers use-natures="true">
         <tracker id="T448" parent_id="0" instantiate_for_new_projects="1">
             <name><![CDATA[Issues]]></name>
             <item_name>issue</item_name>
-            <description><![CDATA[requests, bugs, tasks, activities]]></description>
-            <color>lake-placid-blue</color>
+            <description><![CDATA[Incident, bugs, issues]]></description>
+            <color>fiesta-red</color>
             <cannedResponses/>
             <formElements>
-                <formElement type="fieldset" ID="F13606" rank="6">
-                    <name>access_information</name>
-                    <label><![CDATA[Access Information]]></label>
-                    <formElements>
-                        <formElement type="column" ID="F13615" rank="0">
-                            <name>column_0</name>
-                            <label><![CDATA[Access information left column]]></label>
-                            <formElements>
-                                <formElement type="subon" ID="F13621" rank="1">
-                                    <name>submitted_on</name>
-                                    <label><![CDATA[Submitted on]]></label>
-                                    <description><![CDATA[Date and time for the initial artifact submission]]></description>
-                                </formElement>
-                                <formElement type="subby" ID="F13622" rank="3" notifications="1">
-                                    <name>submitted_by</name>
-                                    <label><![CDATA[Submitted by]]></label>
-                                    <description><![CDATA[User who originally submitted the artifact]]></description>
-                                </formElement>
-                            </formElements>
-                        </formElement>
-                        <formElement type="column" ID="F13616" rank="1">
-                            <name>column_1</name>
-                            <label><![CDATA[Access information right column]]></label>
-                            <formElements>
-                                <formElement type="lud" ID="F13623" rank="0">
-                                    <name>last_update_on</name>
-                                    <label><![CDATA[Last Update On]]></label>
-                                    <description><![CDATA[Date and time of the latest modification in an artifact]]></description>
-                                </formElement>
-                                <formElement type="luby" ID="F13624" rank="3">
-                                    <name>last_update_by</name>
-                                    <label><![CDATA[Last Update By]]></label>
-                                </formElement>
-                            </formElements>
-                        </formElement>
-                    </formElements>
-                </formElement>
-                <formElement type="fieldset" ID="F13603" rank="28" required="1">
+                <formElement type="fieldset" ID="F13603" rank="18" required="1">
                     <name>description</name>
                     <label><![CDATA[Description]]></label>
                     <formElements>
-                        <formElement type="column" ID="F14165" rank="0">
-                            <name>description_col1</name>
-                            <label><![CDATA[description_col1]]></label>
-                            <formElements>
-                                <formElement type="aid" ID="F13620" rank="0">
-                                    <name>issue_number</name>
-                                    <label><![CDATA[Issue Number]]></label>
-                                    <description><![CDATA[Unique artifact identifier]]></description>
-                                </formElement>
-                            </formElements>
-                        </formElement>
-                        <formElement type="column" ID="F14166" rank="1">
-                            <name>description_col2</name>
-                            <label><![CDATA[description_col2]]></label>
-                            <formElements>
-                                <formElement type="sb" ID="F14167" rank="0">
-                                    <name>type</name>
-                                    <label><![CDATA[Type]]></label>
-                                    <bind type="static" is_rank_alpha="0">
-                                        <items>
-                                            <item ID="V13787" label="Request" is_hidden="0"/>
-                                            <item ID="V13788" label="Bug" is_hidden="0"/>
-                                            <item ID="V13789" label="Task" is_hidden="0"/>
-                                            <item ID="V13790" label="Activity" is_hidden="0"/>
-                                        </items>
-                                        <decorators>
-                                            <decorator REF="V13787" tlp_color_name="clockwork-orange"/>
-                                            <decorator REF="V13788" tlp_color_name="fiesta-red"/>
-                                            <decorator REF="V13789" tlp_color_name="acid-green"/>
-                                            <decorator REF="V13790" tlp_color_name="daphne-blue"/>
-                                        </decorators>
-                                    </bind>
-                                </formElement>
-                            </formElements>
-                        </formElement>
-                        <formElement type="string" ID="F13607" rank="2" required="1">
-                            <name>title</name>
-                            <label><![CDATA[Title]]></label>
+                        <formElement type="string" ID="F13607" rank="0" required="1">
+                            <name>summary</name>
+                            <label><![CDATA[Summary]]></label>
                             <description><![CDATA[One line description of the artifact]]></description>
                             <properties maxchars="150" size="60"/>
                         </formElement>
-                        <formElement type="text" ID="F13608" rank="5">
+                        <formElement type="text" ID="F13608" rank="4">
                             <name>details</name>
-                            <label><![CDATA[Description]]></label>
+                            <label><![CDATA[Original Submission]]></label>
                             <description><![CDATA[A full description of the artifact]]></description>
                             <properties rows="7" cols="60"/>
                         </formElement>
-                    </formElements>
-                </formElement>
-                <formElement type="fieldset" ID="F13793" rank="29">
-                    <name>attachment_1</name>
-                    <label><![CDATA[Attachment]]></label>
-                    <formElements>
-                        <formElement type="file" ID="F13609" rank="0">
+                        <formElement type="file" ID="F13609" rank="5">
                             <name>attachment</name>
                             <label><![CDATA[Attachments]]></label>
                         </formElement>
+                        <formElement type="tbl" ID="F13610" rank="6" notifications="1">
+                            <name>cc</name>
+                            <label><![CDATA[CC]]></label>
+                            <properties hint="Type in a search term"/>
+                            <bind type="users">
+                                <items>
+                                    <item label="group_members"/>
+                                </items>
+                            </bind>
+                        </formElement>
                     </formElements>
                 </formElement>
-                <formElement type="fieldset" ID="F13604" rank="432" required="1">
+                <formElement type="fieldset" ID="F13604" rank="421" required="1">
                     <name>fieldset_2</name>
                     <label><![CDATA[fieldset_status_bugs_lbl_key]]></label>
                     <description><![CDATA[fieldset_status_bugs_desc_key]]></description>
@@ -210,21 +60,29 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                                             <item ID="V13618" label="On going" is_hidden="0">
                                                 <description><![CDATA[The team is working on the subject]]></description>
                                             </item>
-                                            <item ID="V13621" label="Under review" is_hidden="0">
-                                                <description><![CDATA[The issue is under review]]></description>
+                                            <item ID="V13619" label="Invalid" is_hidden="0">
+                                                <description><![CDATA[The submitted bug is not valid for some reason (wrong description, using incorrect software version,...)]]></description>
                                             </item>
-                                            <item ID="V13620" label="Canceled" is_hidden="0">
-                                                <description><![CDATA[The issue won't be done.]]></description>
+                                            <item ID="V13620" label="Wont Fix" is_hidden="0">
+                                                <description><![CDATA[The bug won't be fixed (probably because it is very minor)]]></description>
                                             </item>
-                                            <item ID="V13623" label="Done" is_hidden="0">
-                                                <description><![CDATA[The issue is done, achieved or fixed.]]></description>
+                                            <item ID="V13621" label="Works for me" is_hidden="0">
+                                                <description><![CDATA[The project team was unable to reproduce the bug]]></description>
+                                            </item>
+                                            <item ID="V13622" label="Duplicate" is_hidden="0">
+                                                <description><![CDATA[This bug is already covered by another bug description (see related bugs list)]]></description>
+                                            </item>
+                                            <item ID="V13623" label="Fixed" is_hidden="0">
+                                                <description><![CDATA[The bug was resolved]]></description>
                                             </item>
                                         </items>
                                         <decorators>
-                                            <decorator REF="V13617" tlp_color_name="firemist-silver"/>
-                                            <decorator REF="V13618" tlp_color_name="acid-green"/>
-                                            <decorator REF="V13620" tlp_color_name="teddy-brown"/>
-                                            <decorator REF="V13621" tlp_color_name="neon-green"/>
+                                            <decorator REF="V13617" tlp_color_name="acid-green"/>
+                                            <decorator REF="V13618" tlp_color_name="clockwork-orange"/>
+                                            <decorator REF="V13619" tlp_color_name="chrome-silver"/>
+                                            <decorator REF="V13620" tlp_color_name="inca-silver"/>
+                                            <decorator REF="V13621" tlp_color_name="firemist-silver"/>
+                                            <decorator REF="V13622" tlp_color_name="teddy-brown"/>
                                             <decorator REF="V13623" tlp_color_name="army-green"/>
                                         </decorators>
                                         <default_values>
@@ -232,9 +90,9 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                                         </default_values>
                                     </bind>
                                 </formElement>
-                                <formElement type="sb" ID="F13618" rank="6">
-                                    <name>priority</name>
-                                    <label><![CDATA[Priority]]></label>
+                                <formElement type="sb" ID="F13618" rank="2">
+                                    <name>severity</name>
+                                    <label><![CDATA[Severity]]></label>
                                     <description><![CDATA[Impact of the artifact on the system (Critical, Major,...)]]></description>
                                     <bind type="static" is_rank_alpha="0">
                                         <items>
@@ -272,34 +130,60 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                         </formElement>
                     </formElements>
                 </formElement>
-                <formElement type="fieldset" ID="F13605" rank="447" required="1">
+                <formElement type="fieldset" ID="F13605" rank="433" required="1">
                     <name>fieldset_5</name>
                     <label><![CDATA[Links]]></label>
                     <description><![CDATA[Establish a dependency link from an artifact to one or several other artifacts belonging to any of the tracker of any project]]></description>
                     <formElements>
                         <formElement type="art_link" ID="F13613" rank="0">
-                            <name>linked_issues</name>
-                            <label><![CDATA[Linked Issues]]></label>
+                            <name>links</name>
+                            <label><![CDATA[Links]]></label>
                         </formElement>
                         <formElement type="cross" ID="F13614" rank="1">
                             <name>references</name>
-                            <label><![CDATA[Cross References]]></label>
+                            <label><![CDATA[References]]></label>
                         </formElement>
                     </formElements>
                 </formElement>
-                <formElement type="fieldset" ID="F13839" rank="448">
-                    <name>achievement</name>
-                    <label><![CDATA[Achievement]]></label>
+                <formElement type="fieldset" ID="F13606" rank="57901">
+                    <name>access_information</name>
+                    <label><![CDATA[Access Information]]></label>
                     <formElements>
-                        <formElement type="date" ID="F13840" rank="0">
-                            <name>close_date</name>
-                            <label><![CDATA[Close Date]]></label>
-                            <properties display_time="0"/>
+                        <formElement type="column" ID="F13615" rank="0">
+                            <name>column_0</name>
+                            <label><![CDATA[Access information left column]]></label>
+                            <formElements>
+                                <formElement type="aid" ID="F13620" rank="0">
+                                    <name>artifact_id</name>
+                                    <label><![CDATA[Artifact ID]]></label>
+                                    <description><![CDATA[Unique artifact identifier]]></description>
+                                </formElement>
+                                <formElement type="subon" ID="F13621" rank="1">
+                                    <name>submitted_on</name>
+                                    <label><![CDATA[Submitted on]]></label>
+                                    <description><![CDATA[Date and time for the initial artifact submission]]></description>
+                                </formElement>
+                                <formElement type="subby" ID="F13622" rank="3" notifications="1">
+                                    <name>submitted_by</name>
+                                    <label><![CDATA[Submitted by]]></label>
+                                    <description><![CDATA[User who originally submitted the artifact]]></description>
+                                </formElement>
+                            </formElements>
                         </formElement>
-                        <formElement type="text" ID="F13841" rank="1">
-                            <name>achievement_details</name>
-                            <label><![CDATA[Achievement Details]]></label>
-                            <properties rows="10" cols="50"/>
+                        <formElement type="column" ID="F13616" rank="1">
+                            <name>column_1</name>
+                            <label><![CDATA[Access information right column]]></label>
+                            <formElements>
+                                <formElement type="lud" ID="F13623" rank="0">
+                                    <name>last_update_on</name>
+                                    <label><![CDATA[Last Update On]]></label>
+                                    <description><![CDATA[Date and time of the latest modification in an artifact]]></description>
+                                </formElement>
+                                <formElement type="luby" ID="F13624" rank="3">
+                                    <name>last_update_by</name>
+                                    <label><![CDATA[Last Update By]]></label>
+                                </formElement>
+                            </formElements>
                         </formElement>
                     </formElements>
                 </formElement>
@@ -357,7 +241,7 @@ Need professional support to help you adapt your workspace? Get in touch with ou
             </rules>
             <reports>
                 <report is_default="0">
-                    <name>All issues</name>
+                    <name>Bugs</name>
                     <description>Bugs Report</description>
                     <criterias>
                         <criteria rank="0">
@@ -374,187 +258,101 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                         </criteria>
                     </criterias>
                     <renderers>
-                        <renderer ID="R1681" type="table" rank="0" chunksz="15">
-                            <name>All Issues</name>
+                        <renderer ID="R1574" type="table" rank="0" chunksz="15">
+                            <name>Bugs</name>
                             <columns>
                                 <field REF="F13620"/>
                                 <field REF="F13607"/>
                                 <field REF="F13617"/>
                                 <field REF="F13618"/>
                                 <field REF="F13619"/>
-                            </columns>
-                        </renderer>
-                        <renderer ID="R1682" type="plugin_graphontrackersv5" rank="1">
-                            <name>All Issues Charts</name>
-                            <description>All Issues Charts</description>
-                            <charts>
-                                <chart type="bar" width="600" height="400" rank="0" base="F13618" group="F13617">
-                                    <title>Priority</title>
-                                    <description>Number of Artifacts by severity level</description>
-                                </chart>
-                                <chart type="pie" width="600" height="400" rank="1" base="F13617">
-                                    <title>Status</title>
-                                </chart>
-                                <chart type="pie" width="600" height="400" rank="2" base="F13619">
-                                    <title>Assignment</title>
-                                    <description>Number of Artifacts by Assignee</description>
-                                </chart>
-                            </charts>
-                        </renderer>
-                        <renderer ID="R1683" type="plugin_cardwall" rank="2">
-                            <name>CardWall</name>
-                        </renderer>
-                    </renderers>
-                </report>
-                <report is_default="0" is_in_expert_mode="1" expert_query="status = &quot;New&quot; AND submitted_on &gt; NOW()+1d AND priority = &quot;Critical impact&quot;">
-                    <name>Late critical issues</name>
-                    <description>Bugs Report</description>
-                    <criterias>
-                        <criteria rank="0">
-                            <field REF="F13620"/>
-                        </criteria>
-                        <criteria rank="1">
-                            <field REF="F13607"/>
-                        </criteria>
-                        <criteria rank="2" is_advanced="1">
-                            <field REF="F13617"/>
-                        </criteria>
-                        <criteria rank="3">
-                            <field REF="F13618"/>
-                        </criteria>
-                    </criterias>
-                    <renderers>
-                        <renderer ID="R1607" type="table" rank="0" chunksz="15">
-                            <name>Late Critical Issues</name>
-                            <columns>
-                                <field REF="F13620"/>
-                                <field REF="F13607"/>
-                                <field REF="F13617"/>
-                                <field REF="F13618"/>
-                                <field REF="F13619"/>
-                            </columns>
-                        </renderer>
-                    </renderers>
-                </report>
-                <report is_default="0" is_in_expert_mode="1" expert_query="status IN ('New', 'On Going', 'Under Review') AND assigned_to = MYSELF()">
-                    <name>My issues</name>
-                    <description>Bugs Report</description>
-                    <criterias>
-                        <criteria rank="0">
-                            <field REF="F13620"/>
-                        </criteria>
-                        <criteria rank="1">
-                            <field REF="F13607"/>
-                        </criteria>
-                        <criteria rank="2" is_advanced="1">
-                            <field REF="F13617"/>
-                        </criteria>
-                        <criteria rank="3">
-                            <field REF="F13618"/>
-                        </criteria>
-                    </criterias>
-                    <renderers>
-                        <renderer ID="R1601" type="table" rank="0" chunksz="15">
-                            <name>My Issues</name>
-                            <columns>
-                                <field REF="F13620"/>
-                                <field REF="F13607"/>
-                                <field REF="F13617"/>
-                                <field REF="F13618"/>
+                                <field REF="F13622"/>
                                 <field REF="F13621"/>
                             </columns>
                         </renderer>
-                        <renderer ID="R1602" type="plugin_graphontrackersv5" rank="1">
-                            <name>My Charts</name>
-                            <description>My Charts</description>
+                        <renderer ID="R1575" type="plugin_graphontrackersv5" rank="1">
+                            <name>Graph</name>
+                            <description>Graphic Report By Default For Bugs</description>
                             <charts>
-                                <chart type="pie" width="600" height="400" rank="0">
+                                <chart type="pie" width="600" height="400" rank="0" base="F13617">
                                     <title>Status</title>
                                 </chart>
-                                <chart type="pie" width="600" height="400" rank="0">
+                                <chart type="pie" width="600" height="400" rank="0" base="F13619">
                                     <title>Assignment</title>
                                     <description>Number of Artifacts by Assignee</description>
                                 </chart>
-                                <chart type="bar" width="600" height="400" rank="0">
+                                <chart type="bar" width="600" height="400" rank="0" base="F13618" group="F13617">
                                     <title>Severity</title>
                                     <description>Number of Artifacts by severity level</description>
                                 </chart>
                             </charts>
                         </renderer>
-                        <renderer ID="R1603" type="plugin_cardwall" rank="2">
-                            <name>My cardwall</name>
+                        <renderer ID="R1576" type="plugin_cardwall" rank="2">
+                            <name>CardWall</name>
                         </renderer>
                     </renderers>
                 </report>
                 <report is_default="0">
-                    <name>Open Issues</name>
-                    <description>Bugs Report</description>
+                    <name>Default</name>
+                    <description>The system default artifact report</description>
                     <criterias>
                         <criteria rank="0">
-                            <field REF="F13620"/>
+                            <field REF="F13619"/>
                         </criteria>
                         <criteria rank="1">
-                            <field REF="F13607"/>
+                            <field REF="F13621"/>
                         </criteria>
-                        <criteria rank="2" is_advanced="1">
-                            <field REF="F13617"/>
-                            <criteria_value type="list">
-                                <none_value/>
-                                <selected_value REF="V13617"/>
-                                <selected_value REF="V13618"/>
-                                <selected_value REF="V13621"/>
-                            </criteria_value>
-                        </criteria>
-                        <criteria rank="3">
-                            <field REF="F13618"/>
+                        <criteria rank="2">
+                            <field REF="F13620"/>
                         </criteria>
                     </criterias>
                     <renderers>
-                        <renderer ID="R1604" type="table" rank="0" chunksz="15">
-                            <name>Open Issues</name>
+                        <renderer ID="R1577" type="table" rank="0" chunksz="15">
+                            <name>Results</name>
                             <columns>
                                 <field REF="F13620"/>
                                 <field REF="F13607"/>
-                                <field REF="F13617"/>
-                                <field REF="F13618"/>
+                                <field REF="F13621"/>
                                 <field REF="F13619"/>
+                                <field REF="F13622"/>
                             </columns>
                         </renderer>
-                        <renderer ID="R1605" type="plugin_graphontrackersv5" rank="1">
-                            <name>Open Issues Charts</name>
-                            <description>Open Issues Charts</description>
+                        <renderer ID="R1578" type="plugin_graphontrackersv5" rank="1">
+                            <name>Default</name>
+                            <description>Graphic Report By Default For Bugs</description>
                             <charts>
-                                <chart type="bar" width="600" height="400" rank="0" base="F13618" group="F13617">
-                                    <title>Priority</title>
-                                    <description>Number of Artifacts by severity level</description>
-                                </chart>
-                                <chart type="pie" width="600" height="400" rank="1" base="F13617">
-                                    <title>Status</title>
-                                </chart>
-                                <chart type="pie" width="600" height="400" rank="2" base="F13619">
+                                <chart type="pie" width="600" height="400" rank="0" base="F13619">
                                     <title>Assignment</title>
                                     <description>Number of Artifacts by Assignee</description>
                                 </chart>
+                                <chart type="bar" width="600" height="400" rank="0" base="F13618">
+                                    <title>Severity</title>
+                                    <description>Number of Artifacts by severity level</description>
+                                </chart>
+                                <chart type="pie" width="600" height="400" rank="0">
+                                    <title>Status</title>
+                                    <description>Number of Artifacts by Status</description>
+                                </chart>
                             </charts>
-                        </renderer>
-                        <renderer ID="R1606" type="plugin_cardwall" rank="2">
-                            <name>CardWall</name>
                         </renderer>
                     </renderers>
                 </report>
             </reports>
             <simple_workflow>
                 <field_id REF="F13617"/>
-                <is_used>1</is_used>
+                <is_used>0</is_used>
                 <states>
                     <state>
                         <to_id REF="V13617"/>
                         <transitions>
                             <transition>
+                                <from_id REF="null"/>
+                            </transition>
+                            <transition>
                                 <from_id REF="V13623"/>
                             </transition>
                             <transition>
-                                <from_id REF="null"/>
+                                <from_id REF="V13619"/>
                             </transition>
                             <transition>
                                 <from_id REF="V13620"/>
@@ -563,18 +361,9 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                                 <from_id REF="V13621"/>
                             </transition>
                             <transition>
-                                <from_id REF="null"/>
-                            </transition>
-                            <transition>
-                                <from_id REF="null"/>
+                                <from_id REF="V13622"/>
                             </transition>
                         </transitions>
-                        <postactions>
-                            <postaction_hidden_fieldsets>
-                                <fieldset_id REF="F13604"/>
-                                <fieldset_id REF="F13605"/>
-                            </postaction_hidden_fieldsets>
-                        </postactions>
                         <conditions>
                             <condition type="perms">
                                 <permissions>
@@ -587,13 +376,16 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                         <to_id REF="V13618"/>
                         <transitions>
                             <transition>
+                                <from_id REF="null"/>
+                            </transition>
+                            <transition>
                                 <from_id REF="V13617"/>
                             </transition>
                             <transition>
                                 <from_id REF="V13623"/>
                             </transition>
                             <transition>
-                                <from_id REF="null"/>
+                                <from_id REF="V13619"/>
                             </transition>
                             <transition>
                                 <from_id REF="V13620"/>
@@ -602,7 +394,7 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                                 <from_id REF="V13621"/>
                             </transition>
                             <transition>
-                                <from_id REF="null"/>
+                                <from_id REF="V13622"/>
                             </transition>
                         </transitions>
                         <conditions>
@@ -611,16 +403,14 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                                     <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
                                 </permissions>
                             </condition>
-                            <condition type="notempty">
-                                <field REF="F13619"/>
-                                <field REF="F13618"/>
-                                <field REF="F13617"/>
-                            </condition>
                         </conditions>
                     </state>
                     <state>
                         <to_id REF="V13623"/>
                         <transitions>
+                            <transition>
+                                <from_id REF="null"/>
+                            </transition>
                             <transition>
                                 <from_id REF="V13617"/>
                             </transition>
@@ -628,11 +418,27 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                                 <from_id REF="V13618"/>
                             </transition>
                         </transitions>
-                        <postactions>
-                            <postaction_field_date valuetype="2">
-                                <field_id REF="F13840"/>
-                            </postaction_field_date>
-                        </postactions>
+                        <conditions>
+                            <condition type="perms">
+                                <permissions>
+                                    <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                                </permissions>
+                            </condition>
+                        </conditions>
+                    </state>
+                    <state>
+                        <to_id REF="V13619"/>
+                        <transitions>
+                            <transition>
+                                <from_id REF="null"/>
+                            </transition>
+                            <transition>
+                                <from_id REF="V13617"/>
+                            </transition>
+                            <transition>
+                                <from_id REF="V13618"/>
+                            </transition>
+                        </transitions>
                         <conditions>
                             <condition type="perms">
                                 <permissions>
@@ -645,17 +451,15 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                         <to_id REF="V13620"/>
                         <transitions>
                             <transition>
+                                <from_id REF="null"/>
+                            </transition>
+                            <transition>
                                 <from_id REF="V13617"/>
                             </transition>
                             <transition>
                                 <from_id REF="V13618"/>
                             </transition>
                         </transitions>
-                        <postactions>
-                            <postaction_field_date valuetype="2">
-                                <field_id REF="F13840"/>
-                            </postaction_field_date>
-                        </postactions>
                         <conditions>
                             <condition type="perms">
                                 <permissions>
@@ -668,17 +472,33 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                         <to_id REF="V13621"/>
                         <transitions>
                             <transition>
+                                <from_id REF="null"/>
+                            </transition>
+                            <transition>
                                 <from_id REF="V13617"/>
                             </transition>
                             <transition>
                                 <from_id REF="V13618"/>
                             </transition>
                         </transitions>
-                        <postactions>
-                            <postaction_field_date valuetype="2">
-                                <field_id REF="F13840"/>
-                            </postaction_field_date>
-                        </postactions>
+                        <conditions>
+                            <condition type="perms">
+                                <permissions>
+                                    <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                                </permissions>
+                            </condition>
+                        </conditions>
+                    </state>
+                    <state>
+                        <to_id REF="V13622"/>
+                        <transitions>
+                            <transition>
+                                <from_id REF="null"/>
+                            </transition>
+                            <transition>
+                                <from_id REF="V13617"/>
+                            </transition>
+                        </transitions>
                         <conditions>
                             <condition type="perms">
                                 <permissions>
@@ -691,14 +511,6 @@ Need professional support to help you adapt your workspace? Get in touch with ou
             </simple_workflow>
             <permissions>
                 <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
-                <permission scope="field" REF="F13621" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F13622" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F13623" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F13624" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F13620" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F14167" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F14167" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-                <permission scope="field" REF="F14167" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
                 <permission scope="field" REF="F13607" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F13607" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F13607" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
@@ -708,8 +520,12 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                 <permission scope="field" REF="F13609" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F13609" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F13609" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F13610" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F13610" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F13610" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
                 <permission scope="field" REF="F13617" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F13617" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F13617" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F13618" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F13618" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
                 <permission scope="field" REF="F13619" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
@@ -717,9 +533,11 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                 <permission scope="field" REF="F13613" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F13613" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
                 <permission scope="field" REF="F13614" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F13840" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F13840" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-                <permission scope="field" REF="F13841" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F13620" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F13621" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F13622" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F13623" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F13624" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
             </permissions>
             <artifacts/>
         </tracker>
