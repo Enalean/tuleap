@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,33 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
+
 namespace User\XML\Import;
 
-use TuleapTestCase;
+use org\bovigo\vfs\vfsStream;
 
-class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase
+final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var UsersToBeImportedCollection */
     private $collection;
 
     private $output_filename;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
-        $this->output_filename = $this->getTmpDir() . '/output.csv';
+        $this->output_filename = vfsStream::setup()->url() . '/output.csv';
 
         $this->collection = new UsersToBeImportedCollection();
-    }
-
-    public function tearDown()
-    {
-        if (is_file($this->output_filename)) {
-            unlink($this->output_filename);
-        }
-        parent::tearDown();
     }
 
     private function getCSVHeader()
@@ -70,15 +65,15 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase
         return array($header, $first_data);
     }
 
-    public function itGeneratesTheHeader()
+    public function testItGeneratesTheHeader() : void
     {
         $this->collection->toCSV($this->output_filename);
 
         $header = $this->getCSVHeader();
-        $this->assertEqual($header, array('name', 'action', 'comments'));
+        $this->assertEquals(array('name', 'action', 'comments'), $header);
     }
 
-    public function itDoesNotDumpAlreadyExistingUser()
+    public function testItDoesNotDumpAlreadyExistingUser() : void
     {
         $this->collection->add(new AlreadyExistingUser(\Mockery::spy(\PFUser::class), 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
@@ -87,7 +82,7 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase
         $this->assertFalse($data);
     }
 
-    public function itDumpsToBeActivatedUser()
+    public function testItDumpsToBeActivatedUser() : void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getUserName')->andReturns('jdoe');
@@ -97,19 +92,19 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEqual($data, array('jdoe', 'noop', 'Status of existing user jdoe is [S]'));
+        $this->assertEquals(array('jdoe', 'noop', 'Status of existing user jdoe is [S]'), $data);
     }
 
-    public function itDumpsToBeCreatedUser()
+    public function testItDumpsToBeCreatedUser() : void
     {
         $this->collection->add(new ToBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEqual($data, array('jdoe', 'create:S', 'John Doe (jdoe) <jdoe@example.com> must be created'));
+        $this->assertEquals(array('jdoe', 'create:S', 'John Doe (jdoe) <jdoe@example.com> must be created'), $data);
     }
 
-    public function itDumpsEmailDoesNotMatchUser()
+    public function testItDumpsEmailDoesNotMatchUser() : void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getUserName')->andReturns('jdoe');
@@ -120,14 +115,17 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEqual($data, array(
-            'jdoe',
-            'map:',
-            'There is an existing user jdoe but its email <john.doe@example.com> does not match <jdoe@example.com>. Use action "map:jdoe" to confirm the mapping.'
-        ));
+        $this->assertEquals(
+            array(
+                'jdoe',
+                'map:',
+                'There is an existing user jdoe but its email <john.doe@example.com> does not match <jdoe@example.com>. Use action "map:jdoe" to confirm the mapping.'
+            ),
+            $data
+        );
     }
 
-    public function itDumpsToBeMappedUser()
+    public function testItDumpsToBeMappedUser() : void
     {
         $user1 = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getUserName')->andReturns('john');
@@ -145,11 +143,14 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEqual($data, array(
-            'jdoe',
-            'map:',
-            'User John Doe (jdoe) has the same email address than following users: John Doe (john) [A], John Doe (admin) (admin_john) [A].'
-            . ' Use one of the following actions to confirm the mapping: "map:john", "map:admin_john".'
-        ));
+        $this->assertEquals(
+            array(
+                'jdoe',
+                'map:',
+                'User John Doe (jdoe) has the same email address than following users: John Doe (john) [A], John Doe (admin) (admin_john) [A].'
+                . ' Use one of the following actions to confirm the mapping: "map:john", "map:admin_john".'
+            ),
+            $data
+        );
     }
 }
