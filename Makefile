@@ -85,7 +85,7 @@ clean-rng:
 post-checkout: composer generate-mo dev-clear-cache dev-forgeupgrade npm-build restart-services ## Clear caches, run forgeupgrade, build assets and generate language files
 
 npm-build:
-	npm ci
+	npm install
 	npm run build
 
 redeploy-nginx: ## Redeploy nginx configuration
