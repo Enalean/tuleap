@@ -39,8 +39,9 @@ class AccessKeyRevoker
         $this->dao->deleteByUserIDAndKeyIDs((int) $user->getId(), $access_key_ids);
     }
 
-    public function revokeExpiredUserAccessKeys(int $timestamp): void
+    public function revokeUnusableUserAccessKeys(\DateTimeImmutable $current_time): void
     {
-        $this->dao->deleteByExpirationDate($timestamp);
+        $this->dao->deleteByExpirationDate($current_time->getTimestamp());
+        $this->dao->deleteKeysWithNoScopes();
     }
 }

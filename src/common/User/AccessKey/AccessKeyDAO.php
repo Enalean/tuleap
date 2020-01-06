@@ -96,4 +96,14 @@ class AccessKeyDAO extends DataAccessObject
 
         $this->getDB()->run($sql, $current_time, $ip_address, $current_time, $id);
     }
+
+    public function deleteKeysWithNoScopes(): void
+    {
+        $this->getDB()->run(
+            'DELETE user_access_key.*
+                    FROM user_access_key
+                    LEFT JOIN user_access_key_scope ON user_access_key.id = user_access_key_scope.access_key_id
+                    WHERE user_access_key_scope.access_key_id IS NULL'
+        );
+    }
 }
