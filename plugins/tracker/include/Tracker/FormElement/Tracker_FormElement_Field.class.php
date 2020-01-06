@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -182,18 +183,20 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
         $string_value = (string) $xml_criteria_value;
 
-        $this->setCriteriaValue($string_value, $criteria->getReport()->getId());
+        $cache = XMLCriteriaValueCache::instance(spl_object_id($this));
+        $cache->set($criteria->getReport()->getId(), $string_value);
     }
 
     public function saveCriteriaValueFromXML(Tracker_Report_Criteria $criteria)
     {
         $report_id = $criteria->getReport()->getId();
+        $cache = XMLCriteriaValueCache::instance(spl_object_id($this));
 
-        if (! isset($this->criteria_value[$report_id])) {
+        if (! $cache->has($report_id)) {
             return;
         }
 
-        $value = $this->criteria_value[$report_id];
+        $value = $cache->get($criteria->getReport()->getId());
         $this->updateCriteriaValue($criteria, $value);
     }
 
