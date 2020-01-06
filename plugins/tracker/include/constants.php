@@ -162,20 +162,6 @@ define('TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS', 'tracker_event_get_semantic_dup
 define('TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA', 'tracker_event_report_display_additional_criteria');
 
 /**
- * We are searching the matching ids
- *
- * Parameters:
- * 'request'                CodendiRequest
- * 'result'                 array
- * 'search_performed'       Boolean
- * 'tracker'                Tracker  (IN)     the current tracker
- * 'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
- * 'user'                   PFUser
- * 'form_element_factory'   Tracker_FormElementFactory
- */
-define('TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY', 'tracker_event_report_process_additional_query');
-
-/**
  * We want to save in database additional criteria
  *
  * Parameters:

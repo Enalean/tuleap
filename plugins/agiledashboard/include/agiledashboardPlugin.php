@@ -104,6 +104,7 @@ use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
+use Tuleap\Tracker\Report\Event\TrackerReportProcessAdditionalQuery;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
@@ -164,7 +165,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
             $this->addHook('plugin_statistics_service_usage');
             $this->addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
-            $this->addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
             $this->addHook(TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
@@ -226,6 +226,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
             $this->addHook(TrackerMasschangeGetExternalActionsEvent::NAME);
             $this->addHook(TrackerMasschangeProcessExternalActionsEvent::NAME);
+            $this->addHook(TrackerReportProcessAdditionalQuery::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -371,17 +372,14 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $params['array_of_html_criteria'][] = $additional_criterion;
     }
 
-    /**
-     * @see TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY
-     */
-    public function tracker_event_report_process_additional_query($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function trackerReportProcessAdditionalQuery(TrackerReportProcessAdditionalQuery $event)
     {
-        $backlog_tracker = $params['tracker'];
+        $backlog_tracker = $event->getTracker();
 
-        $user    = $params['user'];
+        $user    = $event->getUser();
         $project = $backlog_tracker->getProject();
 
-        $unplanned_report_criterion_checker = new UnplannedReportCriterionChecker($params['additional_criteria']);
+        $unplanned_report_criterion_checker = new UnplannedReportCriterionChecker($event->getAdditionalCriteria());
         if ($unplanned_report_criterion_checker->isUnplannedValueSelected()) {
             $retriever = new UnplannedReportCriterionMatchingIdsRetriever(
                 new ExplicitBacklogDao(),
@@ -391,16 +389,20 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             );
 
             try {
-                $params['result'][]         = $retriever->getMatchingIds($backlog_tracker, $user);
-                $params['search_performed'] = true;
-            } catch (UnplannedReportCriterionProjectNotUsingExplicitBacklogException $exception) {
-                //Does nothing
-            } finally {
+                $event->addResult($retriever->getMatchingIds($backlog_tracker, $user));
+                $event->setSearchIsPerformed();
                 return;
+            } catch (UnplannedReportCriterionProjectNotUsingExplicitBacklogException $exception) {
+                //Restore to all milestones
+                $dao = new MilestoneReportCriterionDao();
+                $dao->save(
+                    $event->getTrackerReport()->getId(),
+                    AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY
+                );
             }
         }
 
-        $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($params['additional_criteria'], $this->getMilestoneFactory(), $user, $project);
+        $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($event->getAdditionalCriteria(), $this->getMilestoneFactory(), $user, $project);
         $milestone          = $milestone_provider->getMilestone();
 
         if ($milestone) {
@@ -416,8 +418,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 new ArtifactsInExplicitBacklogDao()
             );
 
-            $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker, $user);
-            $params['search_performed'] = true;
+            $event->addResult($provider->getMatchingIds($milestone, $backlog_tracker, $user));
+            $event->setSearchIsPerformed();
         }
     }
 
