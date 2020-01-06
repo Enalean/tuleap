@@ -230,9 +230,10 @@ class RestProjectCreatorTest extends TestCase
         $this->project->allow_restricted  = false;
 
         $services = [
-            M::mock(Service::class, ['getShortName' => \trackerPlugin::SERVICE_SHORTNAME, 'getId' => 12]),
-            M::mock(Service::class, ['getShortName' => \GitPlugin::SERVICE_SHORTNAME, 'getId' => 13]),
+            M::mock(Service::class, ['getShortName' => "summary", 'getId' => 12]),
+            M::mock(Service::class, ['getShortName' => "admin", 'getId' => 13]),
             M::mock(Service::class, ['getShortName' => \AgileDashboardPlugin::PLUGIN_SHORTNAME, 'getId' => 14]),
+            M::mock(Service::class, ['getShortName' => \trackerPlugin::SERVICE_SHORTNAME, 'getId' => 15]),
         ];
 
         $this->service_manager->shouldReceive('getListOfServicesAvailableAtSiteLevel')->andReturns($services);

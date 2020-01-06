@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-        unix-name="scrum-template"
-        full-name="Scrum Template"
-        description="Template used to create a project based on Scrum methodology"
-        access="public"
->
-  <long-description>
-    Template used to create a project based on Scrum methodology
-  </long-description>
+<project unix-name="scrumtemplate" full-name="Scrum Template" description="Collect stories, plan releases, monitor sprints with a ready-to-use Scrum area" access="public">
+  <long-description></long-description>
   <services>
-    <service shortname="plugin_agiledashboard" enabled="1" />
-    <service shortname="plugin_tracker" enabled="1" />
-    <service shortname="plugin_git" enabled="1" />
+      <service shortname="summary" enabled="1"/>
+      <service shortname="admin" enabled="1"/>
+      <service shortname="plugin_agiledashboard" enabled="1"/>
+      <service shortname="plugin_tracker" enabled="1"/>
   </services>
 </project>
