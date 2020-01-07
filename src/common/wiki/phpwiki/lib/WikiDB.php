@@ -298,8 +298,7 @@ class WikiDB
         if (method_exists($this->_backend, 'numPages')) {
             // FIXME: currently are all args ignored.
             $count = $this->_backend->numPages($include_empty, $exclude);
-        }
-        else {
+        } else {
             // FIXME: exclude ignored.
             $iter = $this->getAllPages($include_empty, false, false, $exclude);
             $count = $iter->count();
@@ -636,11 +635,9 @@ class WikiDB
         global $DBParams;
         if (isset($DBParams[$param])) {
             return $DBParams[$param];
-        }
-        elseif ($param == 'prefix') {
+        } elseif ($param == 'prefix') {
             return '';
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -650,14 +647,11 @@ class WikiDB
         global $DBAuthParams;
         if (isset($DBAuthParams[$param])) {
             return $DBAuthParams[$param];
-        }
-        elseif ($param == 'USER_AUTH_ORDER') {
+        } elseif ($param == 'USER_AUTH_ORDER') {
             return $GLOBALS['USER_AUTH_ORDER'];
-        }
-        elseif ($param == 'USER_AUTH_POLICY') {
+        } elseif ($param == 'USER_AUTH_POLICY') {
             return $GLOBALS['USER_AUTH_POLICY'];
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -1104,8 +1098,7 @@ class WikiDB_Page
                 sprintf(_("PageChange Notification of %s sent to %s"), $this->_pagename, join(',', $userids)),
                 E_USER_NOTICE
             );
-        }
-        else {
+        } else {
             trigger_error(
                 sprintf(_("PageChange Notification Error: Couldn't send %s to %s"), $this->_pagename, join(',', $userids)),
                 E_USER_WARNING
@@ -1223,8 +1216,7 @@ class WikiDB_Page
         $pagename = &$this->_pagename;
         if ($version === false) {
             $version = $this->_wikidb->_cache->get_latest_version($pagename);
-        }
-        else {
+        } else {
             $version = $this->_coerce_to_version($version);
         }
 
@@ -1416,8 +1408,7 @@ class WikiDB_Page
             if (!empty($data[$key]) && $data[$key] == $newval) {
                 return;         // values identical, skip update.
             }
-        }
-        else {
+        } else {
             if (empty($data[$key])) {
                 return; // values identical, skip update.
             }
@@ -1688,14 +1679,12 @@ class WikiDB_PageRevision
                 $page->set('_cached_html', ''); // ignored with !USECACHE
             }
             $possibly_cache_results = false;
-        }
-        elseif (USECACHE and !$this->_transformedContent) {
+        } elseif (USECACHE and !$this->_transformedContent) {
             //$backend->lock();
             if ($this->isCurrent()) {
                 $page = $this->getPage();
                 $this->_transformedContent = TransformedText::unpack($page->get('_cached_html'));
-            }
-            else {
+            } else {
                 $possibly_cache_results = false;
             }
             //$backend->unlock();
@@ -1784,8 +1773,7 @@ class WikiDB_PageRevision
         if ($newdata) {
             assert(is_string($newdata['%content']));
             return $newdata['%content'];
-        }
-        else {
+        } else {
             // else revision has been deleted... What to do?
             return PHPWikiSprintf("Oops! Revision %s of %s seems to have been deleted!", $version, $pagename);
         }
@@ -2005,8 +1993,7 @@ class WikiDB_PageIterator
             }
             if (!empty($exclude) and !in_array($pagename, $exclude)) {
                 $pagenames[] = $pagename;
-            }
-            elseif (empty($exclude)) {
+            } elseif (empty($exclude)) {
                 $pagenames[] = $pagename;
             }
         }
@@ -2019,8 +2006,7 @@ class WikiDB_PageIterator
         $sortby = PageList::sortby($sortby, 'init');
         if ($sortby == '+pagename') {
             sort($array, SORT_STRING);
-        }
-        elseif ($sortby == '-pagename') {
+        } elseif ($sortby == '-pagename') {
             rsort($array, SORT_STRING);
         }
         reset($array);

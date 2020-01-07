@@ -210,9 +210,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
                 || ($s == 0 && $d != 0 && $f == $d)
                 ) {
                 $this->addMilestone($i, $this->data[$i], array('date' => max($this->data[$i]['due'], $this->data[$i]['finish'])));
-            }
-            //Late milestone
-            elseif ($s == 0 && $d != 0 && $f != 0 && $d < $f) {
+            } elseif ($s == 0 && $d != 0 && $f != 0 && $d < $f) { //Late milestone
                 $this->addLateBar($i, $this->data[$i], false, array(
                     'start'   => 'due',
                     'end'     => 'finish',
@@ -221,9 +219,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
                     'height'  => 0.2
                 ));
                 $this->addMilestone($i, $this->data[$i], array('date' => 'finish'));
-            }
-            //Early milestone
-            elseif ($s == 0 && $d != 0 && $f != 0 && $f < $d) {
+            } elseif ($s == 0 && $d != 0 && $f != 0 && $f < $d) { //Early milestone
                 $this->addBar($i, $this->data[$i], false, array(
                     'start'   => 'finish',
                     'end'     => 'due',
@@ -232,23 +228,17 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
                     'height'  => 0.2
                 ));
                 $this->addMilestone($i, $this->data[$i], array('date' => 'finish'));
-            }
-            //Bar, start to finish
-            elseif ($s != 0 && $d == 0 && $s <= $f) {
+            } elseif ($s != 0 && $d == 0 && $s <= $f) { //Bar, start to finish
                 $this->addBar($i, $this->data[$i], true, array(
                     'start'   => 'start',
                     'end'     => 'finish'
                 ));
-            }
-            //Bar, start to due
-            elseif ($s != 0 && $d != 0 && $s <= $d && ($f == 0 || $d == $f)) {
+            } elseif ($s != 0 && $d != 0 && $s <= $d && ($f == 0 || $d == $f)) { //Bar, start to due
                 $this->addBar($i, $this->data[$i], true, array(
                     'start'   => 'start',
                     'end'     => 'due'
                 ));
-            }
-            //Late bar, start to due to finish
-            elseif ($s != 0 && $d != 0 && $f != 0 && $s <= $d && $d < $f) {
+            } elseif ($s != 0 && $d != 0 && $f != 0 && $s <= $d && $d < $f) { //Late bar, start to due to finish
                 $this->addBar($i, $this->data[$i], true, array(
                     'start' => 'start',
                     'end' => 'due',
@@ -257,21 +247,15 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
                     'start' => date($format, ( strtotime($this->data[$i]['due']) + $one_day)),
                     'end' => 'finish',
                     'label' => ""));
-            }
-            //Late bar, due to start
-            elseif ($s != 0 && $d != 0 && $d < $s && ($f == 0 || $s == $f)) {
+            } elseif ($s != 0 && $d != 0 && $d < $s && ($f == 0 || $s == $f)) { //Late bar, due to start
                 $bar = $this->addLateBar($i, $this->data[$i], true, array(
                     'start' => 'due',
                     'end' => 'start'));
-            }
-            //Late bar, due to finish
-            elseif ($s != 0 && $d != 0 && $f != 0 && $d < $s && $s < $f) {
+            } elseif ($s != 0 && $d != 0 && $f != 0 && $d < $s && $s < $f) { //Late bar, due to finish
                 $bar = $this->addLateBar($i, $this->data[$i], true, array(
                     'start' => 'due',
                     'end' => 'finish'));
-            }
-            //Early bar
-            elseif ($s != 0 && $d != 0 && $f != 0 && $s <= $f && $f < $d) {
+            } elseif ($s != 0 && $d != 0 && $f != 0 && $s <= $f && $f < $d) { //Early bar
                 $this->addBar($i, $this->data[$i], true, array(
                     'start' => 'start',
                     'end' => 'finish',
@@ -281,9 +265,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
                     'end' => 'due',
                     'label' => "",
                     'height' => 0.2));
-            }
-            //Error
-            else {
+            } else { //Error
                 $this->addErrorBar($i, $this->data[$i]);
             }
         }

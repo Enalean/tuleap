@@ -112,14 +112,13 @@ class WikiPlugin_BackLinks extends WikiPlugin
                         "One page would link to %s:",
                         $pagelink
                     ));
-                }
+                } else {
                     // Some future localizations will actually require
                     // this... (BelieveItOrNot, English-only-speakers!(:)
                     //
                     // else if ($pagelist->getTotal() == 2)
                     //     $pagelist->setCaption(fmt("Two pages would link to %s:",
                     //                               $pagelink));
-                else {
                     $pagelist->setCaption(fmt(
                         "%s pages would link to %s:",
                         $pagelist->getTotal(),
@@ -141,14 +140,13 @@ class WikiPlugin_BackLinks extends WikiPlugin
                         "One page links to %s:",
                         $pagelink
                     ));
-                }
-                // Some future localizations will actually require
-                // this... (BelieveItOrNot, English-only-speakers!(:)
-                //
-                // else if ($pagelist->getTotal() == 2)
-                //     $pagelist->setCaption(fmt("Two pages link to %s:",
-                //                               $pagelink));
-                else {
+                } else {
+                    // Some future localizations will actually require
+                    // this... (BelieveItOrNot, English-only-speakers!(:)
+                    //
+                    // else if ($pagelist->getTotal() == 2)
+                    //     $pagelist->setCaption(fmt("Two pages link to %s:",
+                    //                               $pagelink));
                     $pagelist->setCaption(fmt(
                         "%s pages link to %s:",
                         $pagelist->getTotal(),

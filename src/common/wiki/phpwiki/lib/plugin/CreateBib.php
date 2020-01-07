@@ -78,9 +78,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
             // $starttag shows when to start
             if (preg_match('/^@/', $content[$i], $match)) {
                 $start = true;
-            }
-            // $endtag shows when to stop
-            elseif (preg_match('/^\}/', $content[$i], $match)) {
+            } elseif (preg_match('/^\}/', $content[$i], $match)) { // $endtag shows when to stop
                 $stop = true;
             }
             if ($start) {

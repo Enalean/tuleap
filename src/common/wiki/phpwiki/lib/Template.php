@@ -200,10 +200,9 @@ class Template
             if (preg_match('/Undefined variable:\s*[_A-Z]+\s*$/', $error->errstr)) {
                 return true;
             }
-        }
-        // ignore recursively nested htmldump loop: browse -> body -> htmldump -> browse -> body ...
-        // FIXME for other possible loops also
-        elseif (strstr($error->errfile, "In template 'htmldump'")) {
+        } elseif (strstr($error->errfile, "In template 'htmldump'")) {
+            // ignore recursively nested htmldump loop: browse -> body -> htmldump -> browse -> body ...
+            // FIXME for other possible loops also
             ; //return $error;
         } elseif (strstr($error->errfile, "In template '")) { // merge
             $error->errfile = preg_replace("/'(\w+)'\)$/", "'\\1' < '$this->_name')", $error->errfile);

@@ -54,9 +54,7 @@ class ErrorPlot extends Plot
         if (isset($this->coords[1])) {
             if (count($this->coords[1])!=$numpoints) {
                 JpGraphError::RaiseL(2003, count($this->coords[1]), $numpoints);
-            }
-            //("Number of X and Y points are not equal. Number of X-points:".count($this->coords[1])." Number of Y-points:$numpoints");
-            else {
+            } else { //("Number of X and Y points are not equal. Number of X-points:".count($this->coords[1])." Number of Y-points:$numpoints");
                 $exist_x = true;
             }
         } else {
