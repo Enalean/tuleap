@@ -1586,9 +1586,6 @@ class ProjectResource extends AuthenticatedResource
 
         $current_user = $this->user_manager->getCurrentUser();
 
-        if (! $current_user->isAdmin($id)) {
-            throw new RestException(403);
-        }
         $this->sendAllowHeadersForProjectServices();
 
         $builder  = new ServiceRepresentationCollectionBuilder(ServiceManager::instance());
