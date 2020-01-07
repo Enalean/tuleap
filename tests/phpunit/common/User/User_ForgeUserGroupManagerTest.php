@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 -2018. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,35 +18,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 
-class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
      * @var User_ForgeUserGroupPermissionsDao
      */
-    protected $dao;
+    private $dao;
 
     /**
-     * @var UserGroupDao
+     * @var User_ForgeUserGroupManager
      */
-    protected $factory;
+    private $manager;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->dao = \Mockery::spy(\UserGroupDao::class);
         $this->manager = new User_ForgeUserGroupManager(
             $this->dao,
-            mock(SiteAdministratorPermissionChecker::class)
+            \Mockery::spy(SiteAdministratorPermissionChecker::class)
         );
     }
 
-    public function itThrowsExceptionIfUGroupNotFound()
+    public function testItThrowsExceptionIfUGroupNotFound() : void
     {
-        $this->expectException('User_UserGroupNotFoundException');
+        $this->expectException(\User_UserGroupNotFoundException::class);
 
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
@@ -55,7 +58,7 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase
         $this->manager->updateUserGroup($ugroup);
     }
 
-    public function itReturnsTrueIfThereAreNoModifications()
+    public function testItReturnsTrueIfThereAreNoModifications() : void
     {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
@@ -69,7 +72,7 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase
         $this->assertTrue($update);
     }
 
-    public function itUpdates()
+    public function testItUpdates() : void
     {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
@@ -85,9 +88,9 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase
         $this->assertTrue($update);
     }
 
-    public function itThrowsAnExceptionIfUGroupNameAlreadyExists()
+    public function testItThrowsAnExceptionIfUGroupNameAlreadyExists() : void
     {
-        $this->expectException('User_UserGroupNameInvalidException');
+        $this->expectException(\User_UserGroupNameInvalidException::class);
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
         $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns(array(

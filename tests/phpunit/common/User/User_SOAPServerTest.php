@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 use Tuleap\User\SessionNotCreatedException;
 
-class User_SOAPServerTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class User_SOAPServerTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException()
+    public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException() : void
     {
         $this->GivenAUserManagerThatIsProgrammedToThrow(new UserNotAuthorizedException())
                 ->thenLoginAsReturns(new SoapFault('3300', 'Permission denied. You must be site admin to loginAs someonelse'));
@@ -32,7 +36,7 @@ class User_SOAPServerTest extends TuleapTestCase
                 ->thenLoginAsReturns(new SoapFault('3303', 'Temporary error creating a session, please try again in a couple of seconds'));
     }
 
-    public function testLoginAsReturnsASessionHash()
+    public function testLoginAsReturnsASessionHash() : void
     {
         $admin_session_hash = 'admin_session_hash';
         $um = $this->GivenAUserManagerWithValidAdmin($admin_session_hash);
@@ -43,12 +47,9 @@ class User_SOAPServerTest extends TuleapTestCase
 
         $um->shouldReceive('loginAs')->with($user_name)->andReturns($expected_session_hash);
         $user_session_hash = $user_soap_server->loginAs($admin_session_hash, $user_name);
-        $this->assertEqual($expected_session_hash, $user_session_hash);
+        $this->assertEquals($expected_session_hash, $user_session_hash);
     }
 
-    /**
-     * @return Mock
-     */
     private function GivenAUserManagerWithValidAdmin($admin_session_hash)
     {
         $adminUser = \Mockery::spy(\PFUser::class);
@@ -60,7 +61,7 @@ class User_SOAPServerTest extends TuleapTestCase
         return $um;
     }
 
-    public function testLoginAsReturnsASoapFaultIfUserNotLoggedIn()
+    public function testLoginAsReturnsASoapFaultIfUserNotLoggedIn() : void
     {
         $admin_session_hash = 'admin_session_hash';
 
@@ -73,7 +74,7 @@ class User_SOAPServerTest extends TuleapTestCase
         $user_soap_server = new User_SOAPServer($um);
         $user_name        = 'toto';
 
-        $this->expectException('SoapFault');
+        $this->expectException(\SoapFault::class);
 
         $um->shouldReceive('loginAs')->never();
         $user_soap_server->loginAs($admin_session_hash, $user_name);
@@ -89,27 +90,24 @@ class User_SOAPServerTest extends TuleapTestCase
 
         $um->shouldReceive('loginAs')->andThrows($exception);
         $server = new User_SOAPServer($um);
-        return new UserManagerAsserter($server, $this);
-    }
-}
 
-class UserManagerAsserter
-{
+        return new class ($server, $this) {
+            private $server;
+            private $asserter;
 
-    private $server;
-    private $asserter;
+            public function __construct(User_SOAPServer $server, \PHPUnit\Framework\TestCase $asserter)
+            {
+                $this->server   = $server;
+                $this->asserter = $asserter;
+            }
 
-    public function __construct(User_SOAPServer $server, TuleapTestCase $asserter)
-    {
-        $this->server   = $server;
-        $this->asserter = $asserter;
-    }
-
-    public function thenLoginAsReturns(SoapFault $expected)
-    {
-        $returned = $this->server->loginAs(null, null);
-        $this->asserter->assertIsA($returned, 'SoapFault');
-        $this->asserter->assertEqual($returned->getCode(), $expected->getCode());
-        $this->asserter->assertEqual($returned->getMessage(), $expected->getMessage());
+            public function thenLoginAsReturns(SoapFault $expected): void
+            {
+                $returned = $this->server->loginAs(null, null);
+                $this->asserter->assertInstanceOf(\SoapFault::class, $returned);
+                $this->asserter->assertEquals($expected->getCode(), $returned->getCode());
+                $this->asserter->assertEquals($expected->getMessage(), $returned->getMessage());
+            }
+        };
     }
 }
