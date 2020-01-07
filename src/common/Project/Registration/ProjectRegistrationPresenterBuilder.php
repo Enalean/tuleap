@@ -69,11 +69,19 @@ class ProjectRegistrationPresenterBuilder
             },
             $this->template_factory->getCompanyTemplateList()
         );
+
+        $default_project_template_presenter = null;
+        $default_project_template           = $this->template_factory->getDefaultProjectTemplate();
+        if ($default_project_template) {
+            $default_project_template_presenter = new TemplatePresenter($default_project_template);
+        }
+
         return new ProjectRegistrationPresenter(
             $this->default_project_visibility_retriever->getDefaultProjectVisibility(),
             $this->trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren(),
             $this->fields_factory->getAllDescriptionFields(),
             $company_templates,
+            $default_project_template_presenter,
             ...array_map(
                 static function (ProjectTemplate $project_template) {
                     return new TemplatePresenter($project_template);

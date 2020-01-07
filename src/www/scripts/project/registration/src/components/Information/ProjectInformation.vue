@@ -107,6 +107,8 @@ import {
     ACCESS_PUBLIC_UNRESTRICTED
 } from "../../constant";
 
+const DEFAULT_PROJECT_ID = "100";
+
 @Component({
     components: {
         PolicyAgreement,
@@ -232,8 +234,17 @@ export default class ProjectInformation extends Vue {
             categories: this.trove_cats,
             fields: this.field_list
         };
-        if (this.selected_tuleap_template) {
+        if (
+            this.selected_tuleap_template &&
+            this.selected_tuleap_template.id !== DEFAULT_PROJECT_ID
+        ) {
             project_properties.xml_template_name = this.selected_tuleap_template.id;
+        }
+        if (
+            this.selected_tuleap_template &&
+            this.selected_tuleap_template.id === DEFAULT_PROJECT_ID
+        ) {
+            project_properties.template_id = parseInt(this.selected_tuleap_template.id, 10);
         }
         if (this.selected_company_template) {
             project_properties.template_id = parseInt(this.selected_company_template.id, 10);

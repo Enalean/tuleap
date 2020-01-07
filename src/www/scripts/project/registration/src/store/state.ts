@@ -34,6 +34,7 @@ const state: State = {
     is_description_required: false,
     project_fields: [],
     company_templates: [],
+    default_project_template: null,
     company_name: ""
 };
 

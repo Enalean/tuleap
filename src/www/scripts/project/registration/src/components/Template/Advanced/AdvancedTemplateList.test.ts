@@ -24,13 +24,62 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import { TemplateData } from "../../../type";
 import * as rest_querier from "../../../api/rest-querier";
 import { mockFetchSuccess } from "../../../../../../../themes/common/tlp/mocks/tlp-fetch-mock-helper";
+import { State } from "../../../store/type";
+import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
+import { Store } from "vuex-mock-store";
+import TemplateCard from "../TemplateCard.vue";
 
 describe("AdvancedTemplateList", () => {
     let wrapper: Wrapper<AdvancedTemplateList>;
+    let state: State;
+    let store: Store;
+
+    beforeEach(() => {
+        state = {
+            default_project_template: null
+        } as State;
+        const store_options = {
+            state
+        };
+        store = createStoreMock(store_options);
+    });
+
+    it("does not display the TemplateCard Component if the defaut project template is null", async () => {
+        state = {
+            default_project_template: null
+        } as State;
+        const store_options = {
+            state
+        };
+        store = createStoreMock(store_options);
+
+        wrapper = shallowMount(AdvancedTemplateList, {
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store }
+        });
+        expect(wrapper.contains(TemplateCard)).toBe(false);
+    });
+
+    it("displays the TemplateCard Component if the defaut project template is provided", async () => {
+        state = {
+            default_project_template: {} as TemplateData
+        } as State;
+        const store_options = {
+            state
+        };
+        store = createStoreMock(store_options);
+
+        wrapper = shallowMount(AdvancedTemplateList, {
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store }
+        });
+        expect(wrapper.contains(TemplateCard)).toBe(true);
+    });
 
     it("Display the description by default", async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store }
         });
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBeTruthy();
@@ -41,7 +90,8 @@ describe("AdvancedTemplateList", () => {
 
     it(`Display spinner when project list is loading`, async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store }
         });
 
         wrapper.vm.$data.is_loading_project_list = true;
@@ -54,7 +104,8 @@ describe("AdvancedTemplateList", () => {
 
     it(`Does not display spinner if an error happened`, async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store }
         });
 
         wrapper.vm.$data.is_loading_project_list = true;
@@ -68,7 +119,8 @@ describe("AdvancedTemplateList", () => {
 
     it(`Display error if something went wrong`, async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store }
         });
 
         wrapper.vm.$data.has_error = true;
@@ -84,10 +136,11 @@ describe("AdvancedTemplateList", () => {
         mockFetchSuccess(is_user_admin_of, { return_json: {} });
 
         wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store }
         });
 
-        wrapper.find("[data-test=project-load-user-project-list").trigger("click");
+        wrapper.find("[data-test=project-registration-card-label").trigger("click");
 
         expect(is_user_admin_of).toHaveBeenCalled();
 
@@ -101,7 +154,8 @@ describe("AdvancedTemplateList", () => {
 
     it(`Does not load twice the project list`, async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store }
         });
 
         const project: TemplateData = {

@@ -27,7 +27,6 @@
         <section
             class="project-registration-default-templates-section"
             data-test="project-load-user-project-list"
-            v-on:click="loadUserProjects"
         >
             <div class="project-registration-template-card">
                 <input
@@ -41,6 +40,7 @@
                     class="tlp-card project-registration-template-label"
                     data-test="project-registration-card-label"
                     v-bind:for="'project-registration-tuleap-template-other-user-project'"
+                    v-on:click="loadUserProjects"
                 >
                     <div class="project-registration-template-glyph"><svg-template /></div>
                     <div class="project-registration-template-content">
@@ -79,6 +79,10 @@
                     </div>
                 </label>
             </div>
+            <template-card
+                v-if="default_project_template"
+                v-bind:template="default_project_template"
+            />
         </section>
     </div>
 </template>
@@ -90,9 +94,12 @@ import { Component } from "vue-property-decorator";
 import SvgTemplate from "./SvgTemplate.vue";
 import { getProjectUserIsAdminOf } from "../../../api/rest-querier";
 import { TemplateData } from "../../../type";
+import TemplateCard from "../TemplateCard.vue";
+import { State } from "vuex-class";
 
 @Component({
     components: {
+        TemplateCard,
         SvgTemplate,
         UserProjectList
     }
@@ -102,6 +109,9 @@ export default class AdvancedTemplateList extends Vue {
     is_loading_project_list = false;
     has_error = false;
     project_list: TemplateData[] = [];
+
+    @State
+    default_project_template!: TemplateData | null;
 
     async loadUserProjects(): Promise<void> {
         if (this.project_list.length > 0) {
