@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Event\Events\ExportXmlProject;
@@ -53,6 +54,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\HTTP\HTTPUserAccessKeyAuthenticator;
 use Tuleap\Git\Repository\GitRepositoryObjectsSizeRetriever;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
@@ -151,8 +153,14 @@ use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\User\AccessKey\AccessKeyDAO;
+use Tuleap\User\AccessKey\AccessKeySerializer;
+use Tuleap\User\AccessKey\AccessKeyVerifier;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilder;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderFromClassNames;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\PasswordVerifier;
 
 require_once 'constants.php';
@@ -2686,6 +2694,19 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $this->getGerritServerFactory(),
                 new HttpUserValidator()
             ),
+            new HTTPUserAccessKeyAuthenticator(
+                new AccessKeySerializer(),
+                new AccessKeyVerifier(
+                    new AccessKeyDAO(),
+                    new SplitTokenVerificationStringHasher(),
+                    \UserManager::instance(),
+                    new AccessKeyScopeRetriever(
+                        new AccessKeyScopeDAO(),
+                        $this->buildAccessKeyScopeBuilder()
+                    )
+                ),
+                $logger
+            ),
             $this->getPermissionsManager(),
             $this->getUserDao(),
             new \Tuleap\Git\HTTP\GitHTTPAskBasicAuthenticationChallenge(),
@@ -2928,10 +2949,13 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function collectAccessKeyScopeBuilder(AccessKeyScopeBuilderCollector $collector): void
     {
-        $collector->addAccessKeyScopeBuilder(
-            new AccessKeyScopeBuilderFromClassNames(
-                GitRepositoryAccessKeyScope::class
-            )
+        $collector->addAccessKeyScopeBuilder($this->buildAccessKeyScopeBuilder());
+    }
+
+    private function buildAccessKeyScopeBuilder(): AccessKeyScopeBuilder
+    {
+        return new AccessKeyScopeBuilderFromClassNames(
+            GitRepositoryAccessKeyScope::class
         );
     }
 }

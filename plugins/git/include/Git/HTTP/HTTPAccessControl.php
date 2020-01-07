@@ -24,6 +24,7 @@ namespace Tuleap\Git\HTTP;
 use Logger;
 use PermissionsManager;
 use PFUser;
+use Tuleap\Cryptography\ConcealedString;
 use User_LoginManager;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use UserDao;
@@ -51,6 +52,10 @@ class HTTPAccessControl
     private $replication_http_user_authenticator;
 
     /**
+     * @var HTTPUserAccessKeyAuthenticator
+     */
+    private $access_key_authenticator;
+    /**
      * @var PermissionsManager
      */
     private $permissions_manager;
@@ -68,6 +73,7 @@ class HTTPAccessControl
         \ForgeAccess $forge_access,
         User_LoginManager $login_manager,
         ReplicationHTTPUserAuthenticator $replication_http_user_authenticator,
+        HTTPUserAccessKeyAuthenticator $access_key_authenticator,
         PermissionsManager $permissions_manager,
         UserDao $user_dao,
         GitHTTPAskBasicAuthenticationChallenge $ask_basic_authentication_challenge
@@ -76,6 +82,7 @@ class HTTPAccessControl
         $this->forge_access                        = $forge_access;
         $this->login_manager                       = $login_manager;
         $this->replication_http_user_authenticator = $replication_http_user_authenticator;
+        $this->access_key_authenticator            = $access_key_authenticator;
         $this->permissions_manager                 = $permissions_manager;
         $this->user_dao                            = $user_dao;
         $this->ask_basic_authentication_challenge  = $ask_basic_authentication_challenge;
@@ -153,6 +160,21 @@ class HTTPAccessControl
             $this->logger->debug('Replication user not recognized ' . $exception->getMessage());
         } catch (\Git_RemoteServer_NotFoundException $exception) {
             $this->logger->debug($exception->getMessage());
+        }
+
+        try {
+            $user = $this->access_key_authenticator->getUser(
+                $_SERVER['PHP_AUTH_USER'],
+                new ConcealedString($_SERVER['PHP_AUTH_PW']),
+                \HTTPRequest::instance()->getIPAddress()
+            );
+        } catch (HTTPUserAccessKeyMisusageException $ex) {
+            $this->logger->debug('LOGIN ERROR ' . $exception->getMessage());
+            $this->basicAuthenticationChallenge();
+        }
+        if ($user !== null) {
+            $this->logger->debug('LOGGED AS ' . $user->getUnixName());
+            return $user;
         }
 
         try {
