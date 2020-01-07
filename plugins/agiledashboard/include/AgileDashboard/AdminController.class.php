@@ -33,6 +33,7 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
+use MilestoneReportCriterionDao;
 use PFUser;
 use PlanningFactory;
 use Project;
@@ -54,6 +55,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
 use UserManager;
@@ -257,7 +260,9 @@ class AdminController extends BaseController
                 new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
                 new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory),
                 new ConfigurationUpdater(
-                    new ExplicitBacklogDao()
+                    new ExplicitBacklogDao(),
+                    new MilestoneReportCriterionDao(),
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 )
             );
         }

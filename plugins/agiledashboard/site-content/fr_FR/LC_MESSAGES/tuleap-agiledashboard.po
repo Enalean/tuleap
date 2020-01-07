@@ -48,6 +48,13 @@ msgid "Agiledashboard plannings"
 msgstr "Plannings du tableau de bord agile"
 
 msgid ""
+"All tracker reports using \"Unplanned\" option for \"In milestone\" report "
+"criterion will now use \"Any\"."
+msgstr ""
+"L'ensemble des rapports d'outil de suivi utilisant la valeur \"Non planifié"
+"\" pour le critère \"Dans le jalon\" utiliseront l'option \"Tous\"."
+
+msgid ""
 "An artifact could be considered <strong>done</strong> only if a semantic "
 "status is defined."
 msgstr ""
@@ -162,6 +169,14 @@ msgstr "Reconstruire le cache"
 msgid "Go back to semantic overview"
 msgstr "Retour à l'administration de la sémantique"
 
+msgid ""
+"If you switch back to the old mode, some tracker reports could be updated to "
+"not use anymore the \"unplanned\" value for \"In milestone\" criterion."
+msgstr ""
+"Si vous revenez à l'ancien mode, des rapports d'outil de suivi peuvent être mis "
+"à jour afin de ne plus utiliser la valeur \"Non planifié\" du critère "
+"\"Dans le jalon\"."
+
 msgid "Item"
 msgstr "Élément"
 
@@ -182,6 +197,9 @@ msgstr "Jalons"
 
 msgid "None"
 msgstr "Aucun"
+
+msgid "Once activated, you will start with an empty top backlog."
+msgstr "Une fois activée, la planification générale sera vide."
 
 #, php-format
 msgid "Other %s"
@@ -209,6 +227,9 @@ msgstr "Sauvegarder"
 
 msgid "Scrum"
 msgstr "Scrum"
+
+msgid "Scrum configuration successfully updated."
+msgstr "La configuration de Scrum a été mise à jour."
 
 msgid "Selected values are invalid because some are not closed values anymore."
 msgstr ""
@@ -275,12 +296,10 @@ msgstr "Il n’y a aucun élément pour l'instant"
 
 msgid ""
 "This is an experimental feature. It's explained <a href=\"https://tuleap.net/"
-"plugins/tracker/?aid=13997\">here</a>. Once activated, you will start with "
-"an empty top backlog."
+"plugins/tracker/?aid=13997\">here</a>."
 msgstr ""
 "Cette fonctionnalité est expérimentale. Elle est expliquée <a href=\"https://"
-"tuleap.net/plugins/tracker/?aid=13997\">ici</a>. Une fois activée, la "
-"planification générale sera vide."
+"tuleap.net/plugins/tracker/?aid=13997\">ici</a>."
 
 msgid ""
 "This option will display all the burnup charts in the project with elements "

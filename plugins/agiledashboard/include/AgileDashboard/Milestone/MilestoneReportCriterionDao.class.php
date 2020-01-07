@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -52,5 +52,20 @@ class MilestoneReportCriterionDao extends DataAccessObject
                 WHERE report_id = $report_id";
 
         return $this->retrieve($sql);
+    }
+
+    public function updateAllUnplannedValueToAnyInProject(int $project_id): void
+    {
+        $project_id      = $this->da->escapeInt($project_id);
+        $unplanned_value = $this->da->escapeInt(AgileDashboard_Milestone_MilestoneReportCriterionProvider::UNPLANNED);
+
+        $sql = "DELETE plugin_agiledashboard_criteria.*
+                FROM plugin_agiledashboard_criteria
+                    INNER JOIN tracker_report ON (plugin_agiledashboard_criteria.report_id = tracker_report.id)
+                    INNER JOIN tracker ON (tracker_report.tracker_id = tracker.id)
+                WHERE plugin_agiledashboard_criteria.milestone_id = $unplanned_value
+                    AND tracker.group_id = $project_id";
+
+        $this->update($sql);
     }
 }

@@ -101,7 +101,15 @@
                                     <label for="use-explicit-top-backlog" class="tlp-switch-button" aria-hidden></label>
                                 </div>
                                 <p class="tlp-text-warning">
-                                    <i class="fa fa-warning"></i> {{# dgettext }}tuleap-agiledashboard | This is an experimental feature. It's explained <a href="https://tuleap.net/plugins/tracker/?aid=13997">here</a>. Once activated, you will start with an empty top backlog.{{/ dgettext }}
+                                    <i class="fa fa-warning"></i> {{# dgettext }}tuleap-agiledashboard | This is an experimental feature. It's explained <a href="https://tuleap.net/plugins/tracker/?aid=13997">here</a>.{{/ dgettext }}
+                                </p>
+                                <p class="tlp-text-warning">
+                                    {{^ explicit_top_backlog_enabled }}
+                                        {{# dgettext }}tuleap-agiledashboard | Once activated, you will start with an empty top backlog.{{/ dgettext }}
+                                    {{/ explicit_top_backlog_enabled }}
+                                    {{# explicit_top_backlog_enabled }}
+                                        {{# dgettext }}tuleap-agiledashboard | If you switch back to the old mode, some tracker reports could be updated to not use anymore the "unplanned" value for "In milestone" criterion.{{/ dgettext }}
+                                    {{/ explicit_top_backlog_enabled }}
                                 </p>
                             </div>
                         {{/ must_display_explicit_top_backlog_switch }}
