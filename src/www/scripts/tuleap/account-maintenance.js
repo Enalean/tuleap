@@ -27,9 +27,11 @@
         const ssh_keys_delete_button = $("#button-delete-keys"),
             svn_tokens_delete_button = $("#button-delete-svn-tokens"),
             access_keys_delete_button = $("#button-revoke-access-tokens"),
+            new_access_key_submit_button = $("#generate-new-access-key-button"),
             ssk_keys_checkboxes = $('input[type="checkbox"][name="ssh_key_selected[]"]'),
             svn_tokens_checkboxes = $('input[type="checkbox"][name="svn-tokens-selected[]"]'),
-            access_keys_checkboxes = $('input[type="checkbox"][name="access-keys-selected[]"]');
+            access_keys_checkboxes = $('input[type="checkbox"][name="access-keys-selected[]"]'),
+            access_key_scopes_checkboxes = $('input[type="checkbox"][name="access-key-scopes[]"]');
 
         loadAvatarReset();
         loadAvatarPreview();
@@ -62,6 +64,13 @@
             changeDeleteButtonStatusDependingCheckboxesStatus(
                 access_keys_delete_button,
                 access_keys_checkboxes
+            );
+        });
+
+        access_key_scopes_checkboxes.change(function() {
+            changeDeleteButtonStatusDependingCheckboxesStatus(
+                new_access_key_submit_button,
+                access_key_scopes_checkboxes
             );
         });
 

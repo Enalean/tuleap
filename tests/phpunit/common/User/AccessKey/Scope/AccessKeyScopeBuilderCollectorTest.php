@@ -55,6 +55,11 @@ final class AccessKeyScopeBuilderCollectorTest extends TestCase
             {
                 return null;
             }
+
+            public function buildAllAvailableAccessKeyScopes(): array
+            {
+                return [];
+            }
         };
     }
 }

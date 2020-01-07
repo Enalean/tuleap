@@ -111,4 +111,68 @@ final class AccessKeyScopeBuilderFromClassNamesTest extends TestCase
             $builder->buildAccessKeyScopeFromScopeIdentifier(AccessKeyScopeIdentifier::fromIdentifierKey('unknown:unknown'))
         );
     }
+
+    public function testBuildAllKnownKeyScopes(): void
+    {
+        $key_scope_1 = new /** @psalm-immutable */ class implements AccessKeyScope
+        {
+            use AccessKeyScopeThrowOnActualMethodCall;
+
+            /**
+             * @psalm-pure
+             */
+            public static function fromItself(): AccessKeyScope
+            {
+                return new self();
+            }
+
+            /**
+             * @psalm-pure
+             */
+            public static function fromIdentifier(AccessKeyScopeIdentifier $identifier): ?AccessKeyScope
+            {
+                return null;
+            }
+        };
+        $key_scope_2 = new /** @psalm-immutable */ class implements AccessKeyScope
+        {
+            use AccessKeyScopeThrowOnActualMethodCall;
+
+            /**
+             * @psalm-pure
+             */
+            public static function fromItself(): AccessKeyScope
+            {
+                return new self();
+            }
+
+            /**
+             * @psalm-pure
+             */
+            public static function fromIdentifier(AccessKeyScopeIdentifier $identifier): ?AccessKeyScope
+            {
+                return null;
+            }
+        };
+
+        $key_scope_1_class_name = get_class($key_scope_1);
+        $key_scope_2_class_name = get_class($key_scope_2);
+
+        $this->assertNotEquals($key_scope_1_class_name, $key_scope_2_class_name);
+
+        $builder = new AccessKeyScopeBuilderFromClassNames(
+            $key_scope_1_class_name,
+            $key_scope_2_class_name
+        );
+
+        $all_scope_classnames = [];
+        foreach ($builder->buildAllAvailableAccessKeyScopes() as $scope) {
+            $all_scope_classnames[] = get_class($scope);
+        }
+
+        $this->assertEqualsCanonicalizing(
+            [$key_scope_1_class_name, $key_scope_2_class_name],
+            $all_scope_classnames
+        );
+    }
 }

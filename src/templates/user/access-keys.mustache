@@ -1,10 +1,10 @@
 <div id="account-access-keys">
     <h3 class="account-title">
-        <i class="fa fa-unlock-alt" aria-hidden="true"></i> {{# gettext }}Personal API access keys{{/ gettext }}
+        <i class="fa fa-unlock-alt" aria-hidden="true"></i> {{# gettext }}Personal access keys{{/ gettext }}
     </h3>
 
     <p class="help">
-        {{# gettext }}You can use API access keys to access the REST API from scripts or command line.
+        {{# gettext }}You can use access keys to access resources from scripts or command line.
         However, these access keys are like password and should be guarded carefully.{{/ gettext }}
     </p>
 
@@ -68,7 +68,7 @@
             {{^ has_access_keys }}
                 <tbody>
                 <tr>
-                    <td class="table-cell-empty" colspan="6">{{# gettext }}No API access keys{{/ gettext }}</td>
+                    <td class="table-cell-empty" colspan="6">{{# gettext }}No access keys{{/ gettext }}</td>
                 </tr>
                 </tbody>
             {{/ has_access_keys }}
@@ -100,7 +100,7 @@
 >
     <div class="modal-header">
         <h3><i class="fa fa-unlock-alt" aria-hidden="true"></i><span id="access-keys-generate-modal-title">
-            {{# gettext }}New personal API access key{{/ gettext }}
+            {{# gettext }}New personal access key{{/ gettext }}
         </span></h3>
     </div>
 
@@ -110,13 +110,23 @@
         {{/ csrf_token }}
         <div class="modal-body">
             <p>
-                {{# gettext }}A personal API access key will be automatically generated at the form submission.
+                {{# gettext }}A personal access key will be automatically generated at the form submission.
                 The description is not required but it can help you to manage your access keys.{{/ gettext }}
             </p>
 
             <label for="access-key-description">{{# gettext }}Access key description{{/ gettext }}</label>
             <textarea id="access-key-description" name="access-key-description" rows="5"
                       placeholder="{{# gettext }}What's this access key for?{{/ gettext }}"></textarea>
+
+            <div class="control-group">
+                <span>{{# gettext }}Access key scopes{{/ gettext }} <font color="red">*</font></span>
+                {{# access_key_scopes }}
+                    <label class="checkbox">
+                        <input type="checkbox" name="access-key-scopes[]" value="{{ identifier }}">
+                        <span title="{{ description }}">{{ name }}</span>
+                    </label>
+                {{/ access_key_scopes }}
+            </div>
 
             <div class="form-group">
                 <label for="access-key-expiration-date-picker">{{# gettext }}Access key expiration date{{/ gettext }}</label>
@@ -141,7 +151,7 @@
 
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_close_label }}</button>
-            <input type="submit" class="btn btn-primary" value="{{# gettext }}Generate new key{{/ gettext }}">
+            <input type="submit" class="btn btn-primary" id="generate-new-access-key-button" value="{{# gettext }}Generate new key{{/ gettext }}" disabled>
         </div>
     </form>
 </div>

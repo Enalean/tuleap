@@ -79,7 +79,6 @@ final class AggregateAccessKeyScopeBuilderTest extends TestCase
             }
         };
 
-
         $aggregate_builder = AggregateAccessKeyScopeBuilder::fromEventDispatcher($event_dispatcher);
 
         $this->assertNotNull(
@@ -87,5 +86,32 @@ final class AggregateAccessKeyScopeBuilderTest extends TestCase
                 AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar')
             )
         );
+    }
+
+    public function testGetAllAccessKeysScopesFromMultipleBuilders(): void
+    {
+        $scope_1   = \Mockery::mock(AccessKeyScope::class);
+        $scope_2   = \Mockery::mock(AccessKeyScope::class);
+        $builder_1 = \Mockery::mock(AccessKeyScopeBuilder::class);
+        $builder_1->shouldReceive('buildAllAvailableAccessKeyScopes')->andReturn([$scope_1, $scope_2]);
+        $builder_2 = \Mockery::mock(AccessKeyScopeBuilder::class);
+        $scope_3   = \Mockery::mock(AccessKeyScope::class);
+        $builder_2->shouldReceive('buildAllAvailableAccessKeyScopes')->andReturn([$scope_3]);
+        $builder_3 = \Mockery::mock(AccessKeyScopeBuilder::class);
+        $builder_3->shouldReceive('buildAllAvailableAccessKeyScopes')->andReturn([]);
+
+        $aggregate_builder = AggregateAccessKeyScopeBuilder::fromBuildersList($builder_1, $builder_2, $builder_3);
+
+        $this->assertEqualsCanonicalizing(
+            [$scope_1, $scope_2, $scope_3],
+            $aggregate_builder->buildAllAvailableAccessKeyScopes()
+        );
+    }
+
+    public function testGetEmptySetOfScopesWhenThereIsNoBuilder(): void
+    {
+        $aggregate_builder = AggregateAccessKeyScopeBuilder::fromBuildersList();
+
+        $this->assertEmpty($aggregate_builder->buildAllAvailableAccessKeyScopes());
     }
 }

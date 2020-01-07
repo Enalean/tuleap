@@ -212,6 +212,9 @@ abstract class BaseLayout extends Response
         return '';
     }
 
+    /**
+     * @psalm-return never-return
+     */
     public function redirect($url)
     {
         $is_anon = UserManager::instance()->getCurrentUser()->isAnonymous();
