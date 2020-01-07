@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,82 +15,279 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+use Tuleap\TemporaryTestDirectory;
 
-require_once __DIR__ . '/bootstrap.php';
+require_once 'bootstrap.php';
 
-class Git_Backend_GitoliteTest extends \PHPUnit\Framework\TestCase // @codingStandardsIgnoreLine
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_Backend_GitoliteTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
 
-    public function testGetAccessURLIsEmptyWhenGenerationReturnsEmptyURLs()
+    private $fixtureRenamePath;
+    private $forkPermissions;
+
+    public function setUp(): void
     {
-        $url_generator = Mockery::mock(GitoliteAccessURLGenerator::class);
-        $backend       = new Git_Backend_Gitolite(
-            Mockery::mock(Git_GitoliteDriver::class),
-            $url_generator,
-            Mockery::mock(Logger::class)
-        );
+        parent::setUp();
+        $this->fixtureRenamePath = $this->getTmpDir() . '/rename';
 
-        $url_generator->shouldReceive('getSSHURL')->andReturns('');
-        $url_generator->shouldReceive('getHTTPURL')->andReturns('');
+        mkdir($this->fixtureRenamePath .'/legacy', 0770, true);
 
-        $access_urls = $backend->getAccessURL(Mockery::mock(GitRepository::class));
-
-        $this->assertEquals([], $access_urls);
+        $this->forkPermissions = array();
     }
 
-    public function testGetAccessURLWithOnlySSHURLSet()
+    public function testRenameProjectOk()
     {
-        $url_generator = Mockery::mock(GitoliteAccessURLGenerator::class);
-        $backend       = new Git_Backend_Gitolite(
-            Mockery::mock(Git_GitoliteDriver::class),
-            $url_generator,
-            Mockery::mock(Logger::class)
-        );
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getUnixName')->andReturns('legacy');
 
-        $url_generator->shouldReceive('getSSHURL')->andReturns('ssh://gitolite@example.com/');
-        $url_generator->shouldReceive('getHTTPURL')->andReturns('');
+        $backend = Mockery::mock(Git_Backend_Gitolite::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-        $access_urls = $backend->getAccessURL(Mockery::mock(GitRepository::class));
+        $driver = \Mockery::spy(\Git_GitoliteDriver::class);
+        $driver->shouldReceive('getRepositoriesPath')->andReturns($this->fixtureRenamePath);
+        $backend->setDriver($driver);
 
-        $this->assertEquals(['ssh' => 'ssh://gitolite@example.com/'], $access_urls);
+        $bck = \Mockery::spy(\Backend::class);
+        $bck->shouldReceive('log')->never();
+        $backend->shouldReceive('getBackend')->andReturns($bck);
+
+        $this->assertTrue(is_dir($this->fixtureRenamePath .'/legacy'));
+        $this->assertFalse(is_dir($this->fixtureRenamePath .'/newone'));
+
+        $backend->shouldReceive('glRenameProject')->with('legacy', 'newone')->once();
+        $this->assertTrue($backend->renameProject($project, 'newone'));
+
+        clearstatcache(true, $this->fixtureRenamePath .'/legacy');
+        $this->assertFalse(is_dir($this->fixtureRenamePath .'/legacy'));
+        $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
     }
 
-    public function testGetAccessURLWithOnlyHTTPURLSet()
+    public function testItSavesForkInfoIntoDB(): void
     {
-        $url_generator = Mockery::mock(GitoliteAccessURLGenerator::class);
-        $backend       = new Git_Backend_Gitolite(
-            Mockery::mock(Git_GitoliteDriver::class),
-            $url_generator,
-            Mockery::mock(Logger::class)
-        );
+        $name  = 'tuleap';
+        $old_namespace = '';
+        $new_namespace = 'u/johanm/ericsson';
+        $new_repo_path = "gpig/$new_namespace/$name.git";
 
-        $url_generator->shouldReceive('getSSHURL')->andReturns('');
-        $url_generator->shouldReceive('getHTTPURL')->andReturns('https://example.com/');
+        $project = \Mockery::spy(\Project::class);
 
-        $access_urls = $backend->getAccessURL(Mockery::mock(GitRepository::class));
+        $new_repo = $this->givenAGitRepoWithNameAndNamespace($name, $new_namespace);
+        $new_repo->setProject($project);
+        $new_repo->setPath($new_repo_path);
+        $old_repo = $this->givenAGitRepoWithNameAndNamespace($name, $old_namespace);
+        $old_repo->setProject($project);
 
-        $this->assertEquals(['http' => 'https://example.com/'], $access_urls);
+        $backend = \Mockery::mock(\Git_Backend_Gitolite::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao = \Mockery::spy(GitDao::class);
+        $backend->setDao($dao);
+
+        $backend->shouldReceive('clonePermissions')->with($old_repo, $new_repo)->once();
+        $dao->shouldReceive('save')->with($new_repo)->once()->andReturns(667);
+        $dao->shouldReceive('isRepositoryExisting')->with(\Mockery::any(), $new_repo_path)->andReturns(false);
+
+        $this->assertEquals(667, $backend->fork($old_repo, $new_repo, $this->forkPermissions));
     }
 
-    public function testGetAccessURLWithSSHAndHTTPURLs()
+    public function testForkClonesRepository(): void
     {
-        $url_generator = Mockery::mock(GitoliteAccessURLGenerator::class);
-        $backend       = new Git_Backend_Gitolite(
-            Mockery::mock(Git_GitoliteDriver::class),
-            $url_generator,
-            Mockery::mock(Logger::class)
-        );
+        $name  = 'tuleap';
+        $old_namespace = '';
+        $new_namespace = 'u/johanm/ericsson';
+        $new_repo_path = "gpig/$new_namespace/$name.git";
 
-        $url_generator->shouldReceive('getSSHURL')->andReturns('ssh://gitolite@example.com/');
-        $url_generator->shouldReceive('getHTTPURL')->andReturns('https://example.com/');
+        $driver     = \Mockery::spy(\Git_GitoliteDriver::class);
+        $project    = \Mockery::spy(\Project::class);
 
-        $access_urls = $backend->getAccessURL(Mockery::mock(GitRepository::class));
+        $project->shouldReceive('getUnixName')->andReturns('gpig');
 
-        $this->assertEquals(['ssh' => 'ssh://gitolite@example.com/', 'http' => 'https://example.com/'], $access_urls);
+        $new_repo = $this->givenAGitRepoWithNameAndNamespace($name, $new_namespace);
+        $new_repo->setProject($project);
+        $new_repo->setPath($new_repo_path);
+        $old_repo = $this->givenAGitRepoWithNameAndNamespace($name, $old_namespace);
+        $old_repo->setProject($project);
+
+        $backend = \Mockery::mock(
+            \Git_Backend_Gitolite::class,
+            [
+                $driver,
+                \Mockery::spy(GitoliteAccessURLGenerator::class),
+                \Mockery::spy(\Logger::class)
+            ]
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $driver->shouldReceive('fork')->with($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace)->once()->andReturns(true);
+        $driver->shouldReceive('dumpProjectRepoConf')->with($project)->once();
+        $driver->shouldReceive('push')->never();
+
+        $backend->forkOnFilesystem($old_repo, $new_repo);
+    }
+
+    public function testForkClonesRepositoryFromOneProjectToAnotherSucceed(): void
+    {
+        $repo_name        = 'tuleap';
+        $old_project_name = 'garden';
+        $new_project_name = 'gpig';
+        $namespace        = '';
+        $new_repo_path    = "$new_project_name/$namespace/$repo_name.git";
+
+        $driver     = \Mockery::spy(\Git_GitoliteDriver::class);
+
+        $new_project    = \Mockery::spy(\Project::class);
+        $new_project->shouldReceive('getUnixName')->andReturns($new_project_name);
+
+        $old_project    = \Mockery::spy(\Project::class);
+        $old_project->shouldReceive('getUnixName')->andReturns('garden');
+
+        $new_repo = $this->givenAGitRepoWithNameAndNamespace($repo_name, $namespace);
+        $new_repo->setProject($new_project);
+        $new_repo->setPath($new_repo_path);
+        $old_repo = $this->givenAGitRepoWithNameAndNamespace($repo_name, $namespace);
+        $old_repo->setProject($old_project);
+
+        $backend = \Mockery::mock(
+            \Git_Backend_Gitolite::class,
+            [
+                $driver,
+                \Mockery::spy(GitoliteAccessURLGenerator::class),
+                \Mockery::spy(\Logger::class)
+            ]
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $driver->shouldReceive('fork')->with($repo_name, $old_project_name.'/'. $namespace, $new_project_name.'/'. $namespace)->once()->andReturns(true);
+        $driver->shouldReceive('dumpProjectRepoConf')->with($new_project)->once();
+        $driver->shouldReceive('push')->never();
+
+        $backend->forkOnFilesystem($old_repo, $new_repo, $this->forkPermissions);
+    }
+
+    public function testForkWithTargetPathAlreadyExistingShouldNotFork(): void
+    {
+        $name  = 'tuleap';
+        $old_namespace = '';
+        $new_namespace = 'u/johanm/ericsson';
+        $new_repo_path = "gpig/$new_namespace/$name.git";
+
+        $driver     = \Mockery::spy(\Git_GitoliteDriver::class);
+        $dao        = \Mockery::spy(GitDao::class);
+
+        $new_repo = $this->givenAGitRepoWithNameAndNamespace($name, $new_namespace);
+        $new_repo->setPath($new_repo_path);
+        $project_id = $new_repo->getProject()->getId();
+
+        $old_repo = $this->givenAGitRepoWithNameAndNamespace($name, $old_namespace);
+
+        $backend = \Mockery::mock(
+            \Git_Backend_Gitolite::class,
+            [
+                $driver,
+                \Mockery::spy(GitoliteAccessURLGenerator::class),
+                \Mockery::spy(\Logger::class)
+            ]
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $backend->setDao($dao);
+
+        $this->expectException(\GitRepositoryAlreadyExistsException::class);
+
+        $backend->shouldReceive('clonePermissions')->never();
+        $dao->shouldNotReceive('save');
+        $dao->shouldReceive('isRepositoryExisting')->with($project_id, $new_repo_path)->andReturns(true);
+        $driver->shouldReceive('fork')->never();
+        $driver->shouldReceive('dumpProjectRepoConf')->never();
+        $driver->shouldReceive('push')->never();
+
+        $backend->fork($old_repo, $new_repo, $this->forkPermissions);
+    }
+
+    public function testClonePermsWithPersonalFork(): void
+    {
+        $old_repo_id = 110;
+        $new_repo_id = 220;
+
+        $project = \Mockery::spy(\Project::class);
+
+        $old = \Mockery::spy(\GitRepository::class);
+        $old->shouldReceive('getId')->andReturns($old_repo_id);
+        $old->shouldReceive('getProject')->andReturns($project);
+
+        $new = \Mockery::spy(\GitRepository::class);
+        $new->shouldReceive('getId')->andReturns($new_repo_id);
+        $new->shouldReceive('getProject')->andReturns($project);
+
+        $backend  = $this->givenABackendGitolite();
+
+        $permissionsManager = $backend->getPermissionsManager();
+        $permissionsManager->shouldReceive('duplicateWithStatic')->with($old_repo_id, $new_repo_id, Git::allPermissionTypes())->once();
+
+        $backend->clonePermissions($old, $new);
+    }
+
+    public function testClonePermsCrossProjectFork(): void
+    {
+        $old_repo_id = 110;
+        $old_project = \Mockery::spy(\Project::class);
+        $old_project->shouldReceive('getId')->andReturns(1);
+
+        $new_repo_id = 220;
+        $new_project = \Mockery::spy(\Project::class);
+        $new_project->shouldReceive('getId')->andReturns(2);
+
+        $old = \Mockery::spy(\GitRepository::class);
+        $old->shouldReceive('getId')->andReturns($old_repo_id);
+        $old->shouldReceive('getProject')->andReturns($old_project);
+
+        $new = \Mockery::spy(\GitRepository::class);
+        $new->shouldReceive('getId')->andReturns($new_repo_id);
+        $new->shouldReceive('getProject')->andReturns($new_project);
+
+        $backend  = $this->givenABackendGitolite();
+
+        $permissionsManager = $backend->getPermissionsManager();
+        $permissionsManager->shouldReceive('duplicateWithoutStatic')->with($old_repo_id, $new_repo_id, Git::allPermissionTypes())->once();
+
+        $backend->clonePermissions($old, $new);
+    }
+
+    private function givenAGitRepoWithNameAndNamespace($name, $namespace): GitRepository
+    {
+        $repository = new GitRepository();
+        $repository->setName($name);
+        $repository->setNamespace($namespace);
+
+        $project = \Mockery::spy(\Project::class);
+        $project->shouldReceive('getUnixName')->andReturns('gpig');
+        $project->shouldReceive('getId')->andReturns(123);
+        $repository->setProject($project);
+
+        return $repository;
+    }
+
+    private function givenABackendGitolite(): Git_Backend_Gitolite
+    {
+        $driver             = \Mockery::spy(\Git_GitoliteDriver::class);
+        $dao                = \Mockery::spy(GitDao::class);
+        $permissionsManager = \Mockery::spy(\PermissionsManager::class);
+        $gitPlugin          = \Mockery::mock(GitPlugin::class);
+        $backend = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), \Mockery::spy(\Logger::class));
+        $backend->setDao($dao);
+        $backend->setPermissionsManager($permissionsManager);
+        $backend->setGitPlugin($gitPlugin);
+        return $backend;
     }
 }

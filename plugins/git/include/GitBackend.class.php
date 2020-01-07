@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+  * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
   *
   * This file is a part of Tuleap.
@@ -254,8 +254,8 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     {
         chdir($this->getGitRootPath());
         $path = $repository->getPath();
-        $archiveName = $repository->getBackupPath().'.tar.bz2';
-        $cmd    = ' tar cjf '.$archiveName.' '.$path.' 2>&1';
+        $archiveName = $repository->getBackupPath().'.tar.gz';
+        $cmd    = ' tar czf '.$archiveName.' '.$path.' 2>&1';
         $rcode  = 0 ;
         $output = $this->system($cmd, $rcode);
         if ($rcode != 0) {

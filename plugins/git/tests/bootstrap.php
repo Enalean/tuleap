@@ -24,7 +24,3 @@
 
 require_once __DIR__ . '/../include/gitPlugin.php';
 require_once __DIR__ . '/../../statistics/include/statisticsPlugin.php';
-
-foreach (glob(dirname(__FILE__).'/builders/*.php') as $file) {
-    require_once $file;
-}
