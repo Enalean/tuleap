@@ -31,6 +31,17 @@ final class AzureProviderIssuerClaimValidator implements IssuerClaimValidator
 {
     public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token) : bool
     {
-        return $iss_from_id_token === "https://login.microsoftonline.com/".urlencode($provider->getTenantId())."/v2.0";
+        foreach ($provider->getAcceptableIssuerTenantIDs() as $acceptable_issuer_tenant_id) {
+            if ($iss_from_id_token === $this->buildIssuerURL($acceptable_issuer_tenant_id)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function buildIssuerURL(string $guid): string
+    {
+        return 'https://login.microsoftonline.com/' . urlencode($guid) . '/v2.0';
     }
 }

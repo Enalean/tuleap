@@ -24,14 +24,13 @@ namespace Tuleap\OpenIDConnectClient\Provider;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
-
-require_once(__DIR__ . '/../bootstrap.php');
 
 class ProviderManagerTest extends TestCase
 {
@@ -82,7 +81,8 @@ class ProviderManagerTest extends TestCase
             false,
             'github',
             'fiesta_red',
-            'tenant'
+            'tenant',
+            AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID('common', 'tenant')
         );
 
         $this->generic_provider = new GenericProvider(

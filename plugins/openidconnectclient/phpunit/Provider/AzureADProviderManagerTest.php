@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\Provider;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
@@ -47,7 +48,8 @@ class AzureADProviderManagerTest extends TestCase
             false,
             'github',
             'fiesta_red',
-            'tenant'
+            'tenant',
+            AcceptableTenantForAuthenticationConfiguration::fromSpecificTenantID('tenant')
         );
 
         $res = $azure_provider_manager->createAzureADProvider(
@@ -77,7 +79,8 @@ class AzureADProviderManagerTest extends TestCase
             false,
             'github',
             'fiesta_red',
-            'tenant id'
+            'tenant id',
+            AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID('common', 'tenant id')
         );
 
         $generic_provider_dao->shouldReceive('save')->once();

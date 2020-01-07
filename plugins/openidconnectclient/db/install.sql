@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_provider_generic (
 
 CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_provider_azure_ad (
     provider_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
-    tenant_id TEXT NOT NULL
+    tenant_id TEXT NOT NULL,
+    acceptable_tenant_auth_identifier VARCHAR(32) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_unlinked_account (

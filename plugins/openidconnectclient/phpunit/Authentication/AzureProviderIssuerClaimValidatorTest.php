@@ -22,9 +22,10 @@
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 
-class AzureProviderIssuerClaimValidatorTest extends TestCase
+final class AzureProviderIssuerClaimValidatorTest extends TestCase
 {
     /**
      * @var AzureProviderIssuerClaimValidator
@@ -36,10 +37,8 @@ class AzureProviderIssuerClaimValidatorTest extends TestCase
         $this->generic_issuer_claim_validator = new AzureProviderIssuerClaimValidator();
     }
 
-    public function testIssuerClaimIsValid()
+    public function testIssuerClaimIsValid(): void
     {
-        $iss_from_id_token = 'https://login.microsoftonline.com/tenant_id/v2.0';
-
         $provider = new AzureADProvider(
             0,
             'Provider',
@@ -49,14 +48,18 @@ class AzureProviderIssuerClaimValidatorTest extends TestCase
             'Secret',
             'fiesta_red',
             'tenant_id',
+            AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID('common', 'tenant_id')
         );
 
-        $result = $this->generic_issuer_claim_validator->isIssuerClaimValid($provider, $iss_from_id_token);
-
-        $this->assertTrue($result);
+        $this->assertTrue(
+            $this->generic_issuer_claim_validator->isIssuerClaimValid($provider, 'https://login.microsoftonline.com/tenant_id/v2.0')
+        );
+        $this->assertTrue(
+            $this->generic_issuer_claim_validator->isIssuerClaimValid($provider, 'https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0')
+        );
     }
 
-    public function testIssuerClaimIsInvalid()
+    public function testIssuerClaimIsInvalid(): void
     {
         $iss_from_id_token = 'https://login.microsoftonline.com/pas_tenant_id/v2.0';
 
@@ -69,6 +72,7 @@ class AzureProviderIssuerClaimValidatorTest extends TestCase
             'Secret',
             'fiesta_red',
             'tenant_id',
+            AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID('common', 'tenant_id')
         );
 
         $result = $this->generic_issuer_claim_validator->isIssuerClaimValid($provider, $iss_from_id_token);
