@@ -66,4 +66,20 @@ final class AggregateAccessKeyScopeBuilder implements AccessKeyScopeBuilder
 
         return null;
     }
+
+    /**
+     * @psalm-pure
+     *
+     * @return AccessKeyScope[]
+     */
+    public function buildAllAvailableAccessKeyScopes(): array
+    {
+        $key_scope_sets = [];
+
+        foreach ($this->builders as $builder) {
+            $key_scope_sets[] = $builder->buildAllAvailableAccessKeyScopes();
+        }
+
+        return array_merge([], ...$key_scope_sets);
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Tuleap\User\AccessKey\AccessKeyMetadataPresenter;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopePresenter;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
@@ -187,15 +188,20 @@ if (isset($_SESSION['last_svn_token'])) {
 
 $user_default_format = user_get_preference('user_edition_default_format');
 
+$access_key_scope_builder      = AggregateAccessKeyScopeBuilder::fromBuildersList(
+    CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
+    AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+);
+$access_key_scope_presenters   = [];
+foreach ($access_key_scope_builder->buildAllAvailableAccessKeyScopes() as $access_key_scope) {
+    $access_key_scope_presenters[] = new AccessKeyScopePresenter($access_key_scope);
+}
 $access_key_presenters         = [];
 $access_key_metadata_retriever = new AccessKeyMetadataRetriever(
     new AccessKeyDAO(),
     new AccessKeyScopeRetriever(
         new AccessKeyScopeDAO(),
-        AggregateAccessKeyScopeBuilder::fromBuildersList(
-            CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
-            AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
-        )
+        $access_key_scope_builder
     )
 );
 foreach ($access_key_metadata_retriever->getMetadataByUser($user) as $access_key_metadata) {
@@ -231,6 +237,7 @@ $presenter = new User_PreferencesPresenter(
     $ssh_keys_extra_html,
     $svn_token_presenters,
     $access_key_presenters,
+    $access_key_scope_presenters,
     $third_paty_html,
     $csrf,
     $tracker_formats,

@@ -56,4 +56,20 @@ final class AccessKeyScopeBuilderFromClassNames implements AccessKeyScopeBuilder
 
         return null;
     }
+
+    /**
+     * @psalm-pure
+     *
+     * @return AccessKeyScope[]
+     */
+    public function buildAllAvailableAccessKeyScopes(): array
+    {
+        $scopes = [];
+
+        foreach ($this->classnames as $classname) {
+            $scopes[] = $classname::fromItself();
+        }
+
+        return $scopes;
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -44,6 +44,11 @@ class User_PreferencesPresenter
      * @var \Tuleap\User\AccessKey\AccessKeyMetadataPresenter[]
      */
     public $access_keys;
+
+    /**
+     * @var \Tuleap\User\AccessKey\Scope\AccessKeyScopePresenter[]
+     */
+    public $access_key_scopes;
 
     /**
      * @var CSRFSynchronizerToken
@@ -94,6 +99,9 @@ class User_PreferencesPresenter
     public $display_density_name;
     public $display_density_condensed;
 
+    /**
+     * @param \Tuleap\User\AccessKey\Scope\AccessKeyScopePresenter[] $access_key_scopes
+     */
     public function __construct(
         PFUser $user,
         $can_change_real_name,
@@ -104,6 +112,7 @@ class User_PreferencesPresenter
         $ssh_keys_extra_html,
         $svn_tokens,
         $access_keys,
+        array $access_key_scopes,
         $third_party_html,
         CSRFSynchronizerToken $csrf_token,
         array $tracker_formats,
@@ -125,6 +134,7 @@ class User_PreferencesPresenter
         $this->ssh_keys_extra_html     = $ssh_keys_extra_html;
         $this->svn_tokens              = $svn_tokens;
         $this->access_keys             = $access_keys;
+        $this->access_key_scopes       = $access_key_scopes;
         $this->third_party_html        = $third_party_html;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();

@@ -31,9 +31,14 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\AccessKey\Scope\AccessKeyScope;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
-use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
+use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
+use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
+use Tuleap\User\AccessKey\Scope\InvalidScopeIdentifierKeyException;
+use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
 
 class AccessKeyCreationController implements DispatchableWithRequest
 {
@@ -67,7 +72,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
                 $current_user,
                 $description,
                 $expiration_date,
-                RESTAccessKeyScope::fromItself()
+                ...$this->getAccessKeyScopes($request, $layout)
             );
             $layout->redirect('/account/#account-access-keys');
         } catch (AccessKeyAlreadyExpiredException $exception) {
@@ -77,7 +82,57 @@ class AccessKeyCreationController implements DispatchableWithRequest
             );
 
             $layout->redirect('/account/');
+        } catch (NoValidAccessKeyScopeException $exception) {
+            $this->rejectMalformedAccessKeyScopes($layout);
         }
+    }
+
+    /**
+     * @return AccessKeyScope[]
+     */
+    private function getAccessKeyScopes(HTTPRequest $request, BaseLayout $layout): array
+    {
+        $access_key_scope_builder = AggregateAccessKeyScopeBuilder::fromBuildersList(
+            CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
+            AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+        );
+
+        $scope_identifier_keys = $request->get('access-key-scopes');
+        if (! is_array($scope_identifier_keys)) {
+            $this->rejectMalformedAccessKeyScopes($layout);
+        }
+
+        $access_key_scopes = [];
+
+        foreach ($scope_identifier_keys as $scope_identifier_key) {
+            try {
+                $access_key_scope_identifier = AccessKeyScopeIdentifier::fromIdentifierKey($scope_identifier_key);
+            } catch (InvalidScopeIdentifierKeyException $ex) {
+                $this->rejectMalformedAccessKeyScopes($layout);
+            }
+            $access_key_scope = $access_key_scope_builder->buildAccessKeyScopeFromScopeIdentifier(
+                $access_key_scope_identifier
+            );
+            if ($access_key_scope === null) {
+                $this->rejectMalformedAccessKeyScopes($layout);
+            }
+            $access_key_scopes[] = $access_key_scope;
+        }
+
+        return $access_key_scopes;
+    }
+
+    /**
+     * @psalm-return never-return
+     */
+    private function rejectMalformedAccessKeyScopes(BaseLayout $layout): void
+    {
+        $layout->addFeedback(
+            \Feedback::ERROR,
+            _('Access key scopes are not well formed.')
+        );
+
+        $layout->redirect('/account/');
     }
 
     private function getExpirationDate(HTTPRequest $request, BaseLayout $layout): ?DateTimeImmutable
