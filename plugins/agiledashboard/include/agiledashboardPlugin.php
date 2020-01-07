@@ -391,14 +391,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             try {
                 $event->addResult($retriever->getMatchingIds($backlog_tracker, $user));
                 $event->setSearchIsPerformed();
-                return;
             } catch (UnplannedReportCriterionProjectNotUsingExplicitBacklogException $exception) {
-                //Restore to all milestones
-                $dao = new MilestoneReportCriterionDao();
-                $dao->save(
-                    $event->getTrackerReport()->getId(),
-                    AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY
-                );
+                //Do nothing
+            } finally {
+                return;
             }
         }
 

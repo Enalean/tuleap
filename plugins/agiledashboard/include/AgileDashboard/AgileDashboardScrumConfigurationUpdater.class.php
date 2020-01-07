@@ -116,6 +116,14 @@ class AgileDashboardScrumConfigurationUpdater
             }
         }
 
+        $GLOBALS['Response']->addFeedback(
+            \Feedback::INFO,
+            dgettext(
+                'tuleap-agiledashboard',
+                'Scrum configuration successfully updated.'
+            )
+        );
+
         $this->response->scrumConfigurationUpdated();
     }
 

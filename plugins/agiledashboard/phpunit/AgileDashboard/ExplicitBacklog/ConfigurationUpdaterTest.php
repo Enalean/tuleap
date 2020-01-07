@@ -23,13 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use Codendi_Request;
+use MilestoneReportCriterionDao;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class ConfigurationUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalResponseMock;
 
     /**
      * @var ConfigurationUpdater
@@ -41,14 +44,28 @@ class ConfigurationUpdaterTest extends TestCase
      */
     private $explicit_backlog_dao;
 
+    /**
+     * @var MilestoneReportCriterionDao|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $milestone_report_criterion_dao;
+
+    /**
+     * @var DBTransactionExecutorPassthrough
+     */
+    private $db_transaction_executor;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao = Mockery::mock(ExplicitBacklogDao::class);
+        $this->explicit_backlog_dao           = Mockery::mock(ExplicitBacklogDao::class);
+        $this->milestone_report_criterion_dao = Mockery::mock(MilestoneReportCriterionDao::class);
+        $this->db_transaction_executor        = new DBTransactionExecutorPassthrough();
 
         $this->updater = new ConfigurationUpdater(
-            $this->explicit_backlog_dao
+            $this->explicit_backlog_dao,
+            $this->milestone_report_criterion_dao,
+            $this->db_transaction_executor
         );
     }
 
@@ -60,6 +77,7 @@ class ConfigurationUpdaterTest extends TestCase
 
         $this->explicit_backlog_dao->shouldNotReceive('setProjectIsNoMoreUsingExplicitBacklog');
         $this->explicit_backlog_dao->shouldNotReceive('setProjectUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
 
         $this->updater->updateScrumConfiguration($request);
     }
@@ -73,6 +91,7 @@ class ConfigurationUpdaterTest extends TestCase
 
         $this->explicit_backlog_dao->shouldNotReceive('setProjectIsNoMoreUsingExplicitBacklog');
         $this->explicit_backlog_dao->shouldNotReceive('setProjectUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
@@ -91,6 +110,7 @@ class ConfigurationUpdaterTest extends TestCase
 
         $this->explicit_backlog_dao->shouldNotReceive('setProjectIsNoMoreUsingExplicitBacklog');
         $this->explicit_backlog_dao->shouldNotReceive('setProjectUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
@@ -109,6 +129,7 @@ class ConfigurationUpdaterTest extends TestCase
 
         $this->explicit_backlog_dao->shouldNotReceive('setProjectIsNoMoreUsingExplicitBacklog');
         $this->explicit_backlog_dao->shouldReceive('setProjectIsUsingExplicitBacklog')->once();
+        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
@@ -127,6 +148,7 @@ class ConfigurationUpdaterTest extends TestCase
 
         $this->explicit_backlog_dao->shouldReceive('setProjectIsNoMoreUsingExplicitBacklog')->once();
         $this->explicit_backlog_dao->shouldNotReceive('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->shouldReceive('updateAllUnplannedValueToAnyInProject')->once();
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
