@@ -28,6 +28,7 @@ use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueSaver;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentDao;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
+use Tuleap\Tracker\Report\Event\TrackerReportProcessAdditionalQuery;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
@@ -1913,20 +1914,17 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $additional_criteria = $this->getAdditionalCriteria();
             $this->matching_ids  = $this->getMatchingIdsFromCriteriaInDb($criteria, $additional_criteria);
 
-            $result           = array();
-            $search_performed = false;
-            EventManager::instance()->processEvent(
-                TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
-                array(
-                    'request'              => $request,
-                    'result'               => &$result,
-                    'search_performed'     => &$search_performed,
-                    'tracker'              => $this->getTracker(),
-                    'additional_criteria'  => $additional_criteria,
-                    'user'                 => $user,
-                    'form_element_factory' => $this->getFormElementFactory()
-                )
+            $event = new TrackerReportProcessAdditionalQuery(
+                $this,
+                $this->getTracker(),
+                $user,
+                $additional_criteria
             );
+            EventManager::instance()->processEvent($event);
+
+            $result           = $event->getResult();
+            $search_performed = $event->isSearchPerformed();
+
             if ($search_performed) {
                 $joiner = new Tracker_Report_ResultJoiner();
 

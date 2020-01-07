@@ -42,4 +42,12 @@ class ExplicitBacklogDao extends DataAccessObject
 
         $this->getDB()->run($sql, $project_id, $project_id);
     }
+
+    public function setProjectIsNoMoreUsingExplicitBacklog(int $project_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_agiledashboard_planning_explicit_backlog_usage',
+            ['project_id' => $project_id]
+        );
+    }
 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
@@ -54,9 +54,9 @@ class AgileDashboardScrumConfigurationUpdater
     private $scrum_mono_milestone_checker;
 
     /**
-     * @var ExplicitBacklogDao
+     * @var ConfigurationUpdater
      */
-    private $explicit_backlog_dao;
+    private $configuration_updater;
 
     public function __construct(
         Codendi_Request $request,
@@ -66,7 +66,7 @@ class AgileDashboardScrumConfigurationUpdater
         ScrumForMonoMilestoneEnabler $scrum_mono_milestone_enabler,
         ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        ExplicitBacklogDao $explicit_backlog_dao
+        ConfigurationUpdater $configuration_updater
     ) {
         $this->request                       = $request;
         $this->project_id                    = (int) $this->request->get('group_id');
@@ -76,7 +76,7 @@ class AgileDashboardScrumConfigurationUpdater
         $this->scrum_mono_milestone_enabler  = $scrum_mono_milestone_enabler;
         $this->scrum_mono_milestone_disabler = $scrum_mono_milestone_disabler;
         $this->scrum_mono_milestone_checker  = $scrum_mono_milestone_checker;
-        $this->explicit_backlog_dao          = $explicit_backlog_dao;
+        $this->configuration_updater         = $configuration_updater;
     }
 
     public function updateConfiguration()
@@ -85,17 +85,6 @@ class AgileDashboardScrumConfigurationUpdater
             $this->response->missingScrumTitle();
 
             return;
-        }
-
-        $use_explicit_top_backlog = false;
-        if ($this->request->exist('use-explicit-top-backlog')) {
-            $use_explicit_top_backlog = $this->request->get('use-explicit-top-backlog');
-            if (! $use_explicit_top_backlog &&
-                $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $this->project_id)
-            ) {
-                $this->response->deactivateExplicitTopBacklogNotAllowed();
-                return;
-            }
         }
 
         $scrum_is_activated = $this->getActivatedScrum();
@@ -108,9 +97,7 @@ class AgileDashboardScrumConfigurationUpdater
             $this->config_manager->getKanbanTitle($this->project_id)
         );
 
-        if ($use_explicit_top_backlog) {
-            $this->explicit_backlog_dao->setProjectIsUsingExplicitBacklog((int) $this->project_id);
-        }
+        $this->configuration_updater->updateScrumConfiguration($this->request);
 
         $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled(
             $this->project_id
