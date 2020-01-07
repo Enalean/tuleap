@@ -25,7 +25,7 @@ use Tuleap\Plugin\PluginLoader;
 
 final class LoaderSchedulerTest extends TestCase // phpcs:ignore
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory;
 
     /**
      * @var Mockery\MockInterface
@@ -53,6 +53,8 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
      */
     public function testSessionHashLoading() : void
     {
+        session_save_path($this->getTmpDir());
+
         $this->cookie_manager->shouldReceive('isCookie')->once()->andReturn(true);
         $this->cookie_manager->shouldReceive('getCookie')->once()->andReturn('test_value');
         $this->plugin_loader->shouldReceive('loadPlugins')->once();
