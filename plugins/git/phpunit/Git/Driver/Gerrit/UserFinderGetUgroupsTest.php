@@ -18,66 +18,74 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/../../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UserFinderGetUgroupsTest extends TuleapTestCase
+class UserFinderGetUgroupsTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     private $permissions_manager;
     private $ugroup_manager;
     private $user_finder;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->permissions_manager = mock('PermissionsManager');
-        $this->ugroup_manager      = mock('UGroupManager');
+        $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
+        $this->ugroup_manager      = \Mockery::spy(\UGroupManager::class);
         $this->user_finder         = new Git_Driver_Gerrit_UserFinder($this->permissions_manager, $this->ugroup_manager);
     }
 
-    public function itAsksPermissionsToPermissionsManager()
+    public function testItAsksPermissionsToPermissionsManager(): void
     {
         $repository_id   = 12;
-        $permission_type = GIT::PERM_READ;
+        $permission_type = Git::PERM_READ;
 
-        stub($this->permissions_manager)->getAuthorizedUgroups()->returnsEmptyDar();
-        expect($this->permissions_manager)->getAuthorizedUgroups($repository_id, $permission_type, false)->once();
+        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')
+            ->with($repository_id, $permission_type, false)
+            ->once()
+            ->andReturns(\TestHelper::emptyDar());
 
         $this->user_finder->getUgroups($repository_id, $permission_type);
     }
 
-    public function itReturnsUGroupIdsFromPermissionsManager()
+    public function testItReturnsUGroupIdsFromPermissionsManager(): void
     {
         $ugroup_id_120 = 120;
         $ugroup_id_115 = 115;
-        stub($this->permissions_manager)->getAuthorizedUgroups()->returnsDar(array('ugroup_id' => $ugroup_id_115), array('ugroup_id' => $ugroup_id_120));
+        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')
+            ->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => $ugroup_id_115), array('ugroup_id' => $ugroup_id_120)));
 
         $ugroups = $this->user_finder->getUgroups('whatever', 'whatever');
-        $this->assertEqual(
-            $ugroups,
+        $this->assertEquals(
             array(
                 $ugroup_id_115,
                 $ugroup_id_120,
-            )
+            ),
+            $ugroups
         );
     }
 
-    public function itAlwaysReturnsTheProjectAdminGroupWhenGitAdministratorsAreRequested()
+    public function testItAlwaysReturnsTheProjectAdminGroupWhenGitAdministratorsAreRequested(): void
     {
         $project_admin_group_id = ProjectUGroup::PROJECT_ADMIN;
 
         $expected_ugroups = array($project_admin_group_id);
         $ugroups          = $this->user_finder->getUgroups('whatever', Git::SPECIAL_PERM_ADMIN);
 
-        $this->assertEqual($ugroups, $expected_ugroups);
+        $this->assertEquals($expected_ugroups, $ugroups);
     }
 
-    public function itDoesntJoinWithUGroupTableWhenItFetchesGroupPermissionsInOrderToReturnSomethingWhenWeAreDeletingTheGroup()
+    public function testItDoesntJoinWithUGroupTableWhenItFetchesGroupPermissionsInOrderToReturnSomethingWhenWeAreDeletingTheGroup(): void
     {
-        stub($this->permissions_manager)->getAuthorizedUgroups()->returnsEmptyDar();
-
-        expect($this->permissions_manager)->getAuthorizedUgroups('*', '*', false)->once();
+        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')
+            ->with(\Mockery::any(), \Mockery::any(), false)
+            ->once()
+            ->andReturns(\TestHelper::emptyDar());
 
         $this->user_finder->getUgroups('whatever', 'whatever');
     }
