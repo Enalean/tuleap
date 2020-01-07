@@ -29,22 +29,7 @@ import TemplateFooter from "./TemplateFooter.vue";
 describe("TemplateFooter", () => {
     let factory: Wrapper<TemplateFooter>, router: VueRouter, store: Store, state: State;
     beforeEach(async () => {
-        state = {
-            selected_tuleap_template: null,
-            tuleap_templates: [],
-            are_restricted_users_allowed: false,
-            are_anonymous_allowed: false,
-            project_default_visibility: "public",
-            error: null,
-            is_creating_project: false,
-            is_project_approval_required: false,
-            trove_categories: [],
-            is_description_required: false,
-            project_fields: [],
-            selected_company_template: null,
-            company_templates: [],
-            company_name: ""
-        };
+        state = {} as State;
         const getters = {
             is_template_selected: false
         };

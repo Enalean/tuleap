@@ -19,32 +19,22 @@
  */
 
 import mutations from "./mutations";
+import { State } from "./type";
+import { TemplateData } from "../type";
 
 describe("mutation", () => {
     describe("setSelectedTemplate()", () => {
         it(`stores the tuleap template and make sure the company template is null`, () => {
             const state = {
                 selected_tuleap_template: null,
-                tuleap_templates: [],
-                are_restricted_users_allowed: false,
-                are_anonymous_allowed: false,
-                project_default_visibility: "",
-                error: null,
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                company_templates: [],
                 selected_company_template: {
                     title: "Whole lot company",
                     description: "I have got whole lot",
                     id: "10",
                     glyph: "<svg></svg>",
                     is_built_in: false
-                },
-                company_name: ""
-            };
+                } as TemplateData
+            } as State;
 
             const selected_template = {
                 title: "scrum template",
@@ -66,21 +56,9 @@ describe("mutation", () => {
                     id: "scrum",
                     glyph: "<svg></svg>",
                     is_built_in: true
-                },
-                tuleap_templates: [],
-                are_restricted_users_allowed: false,
-                are_anonymous_allowed: false,
-                project_default_visibility: "",
-                error: null,
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                company_templates: [],
-                selected_company_template: null,
-                company_name: ""
-            };
+                } as TemplateData,
+                selected_company_template: null
+            } as State;
 
             const selected_template = {
                 title: "Whole lot company",
@@ -103,27 +81,15 @@ describe("mutation", () => {
                     id: "scrum",
                     glyph: "<svg></svg>",
                     is_built_in: true
-                },
-                tuleap_templates: [],
-                are_restricted_users_allowed: false,
-                are_anonymous_allowed: false,
-                project_default_visibility: "",
-                error: null,
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                company_templates: [],
+                } as TemplateData,
                 selected_company_template: {
                     title: "Whole lot company",
                     description: "I have got whole lot",
                     id: "10",
                     glyph: "<svg></svg>",
                     is_built_in: false
-                },
-                company_name: ""
-            };
+                } as TemplateData
+            } as State;
 
             mutations.resetSelectedTemplate(state);
             expect(state.selected_tuleap_template).toBeNull();

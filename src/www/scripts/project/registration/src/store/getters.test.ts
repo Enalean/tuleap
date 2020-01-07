@@ -19,26 +19,15 @@
  */
 import * as getters from "./getters";
 import { State } from "./type";
+import { TemplateData } from "../type";
 
 describe("getters", () => {
     describe("is_template_selected", () => {
         it(`Should return false when there is no selected template`, () => {
             const state: State = {
                 selected_tuleap_template: null,
-                tuleap_templates: [],
-                company_templates: [],
-                are_restricted_users_allowed: false,
-                are_anonymous_allowed: false,
-                project_default_visibility: "",
-                error: null,
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                selected_company_template: null,
-                company_name: ""
-            };
+                selected_company_template: null
+            } as State;
             expect(getters.is_template_selected(state)).toBe(false);
         });
         it(`Should return true when a tuleap template is choosen`, () => {
@@ -49,46 +38,22 @@ describe("getters", () => {
                     id: "scrum_template",
                     glyph: "<svg></svg>",
                     is_built_in: true
-                },
-                tuleap_templates: [],
-                are_restricted_users_allowed: false,
-                are_anonymous_allowed: false,
-                project_default_visibility: "",
-                error: null,
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                company_templates: [],
-                selected_company_template: null,
-                company_name: ""
-            };
+                } as TemplateData,
+                selected_company_template: null
+            } as State;
             expect(getters.is_template_selected(state)).toBe(true);
         });
         it(`Should return true when a company template is choosen`, () => {
             const state: State = {
                 selected_tuleap_template: null,
-                tuleap_templates: [],
-                are_restricted_users_allowed: false,
-                are_anonymous_allowed: false,
-                project_default_visibility: "",
-                error: null,
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                company_templates: [],
                 selected_company_template: {
                     title: "scrum",
                     description: "scrum desc",
                     id: "10",
                     glyph: "<svg></svg>",
                     is_built_in: false
-                },
-                company_name: ""
-            };
+                } as TemplateData
+            } as State;
             expect(getters.is_template_selected(state)).toBe(true);
         });
     });
@@ -96,40 +61,14 @@ describe("getters", () => {
     describe("has_error", () => {
         it(`Should return false when no error message is stored`, () => {
             const state: State = {
-                selected_tuleap_template: null,
-                tuleap_templates: [],
-                are_restricted_users_allowed: false,
-                are_anonymous_allowed: false,
-                project_default_visibility: "",
-                error: null,
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                company_templates: [],
-                selected_company_template: null,
-                company_name: ""
-            };
+                error: null
+            } as State;
             expect(getters.has_error(state)).toBe(false);
         });
         it(`Should return true when a template is choosen`, () => {
             const state: State = {
-                selected_tuleap_template: null,
-                tuleap_templates: [],
-                are_restricted_users_allowed: false,
-                are_anonymous_allowed: false,
-                project_default_visibility: "",
-                error: "Ho snap!",
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                company_templates: [],
-                selected_company_template: null,
-                company_name: ""
-            };
+                error: "Ho snap!"
+            } as State;
             expect(getters.has_error(state)).toBe(true);
         });
     });

@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectInformationInputPrivacySwitch Spawns the ProjectInformationInputPrivacySwitch component 1`] = `
+<div class="tlp-form-element"><label for="project-information-input-privacy-switch-label" class="tlp-label"><span data-msgid="Privacy" data-current-language="en_US">Privacy</span> <span data-tlp-tooltip="Project privacy set to public. By default, its content is available to all authenticated. Please note that more restrictive permissions might exist on some items." data-test="project-information-input-privacy-tooltip" class="tlp-tooltip tlp-tooltip-top"><i aria-hidden="true" class="fa fa-question-circle project-information-input-privacy-icon"></i></span></label>
+  <div class="tlp-switch"><input type="checkbox" id="project-information-input-privacy-switch-label" data-test="project-information-input-privacy-switch" class="tlp-switch-checkbox project-information-input-privacy-switch-checkbox"> <label for="project-information-input-privacy-switch-label" aria-hidden="" class="tlp-switch-button project-information-input-privacy-switch-button"></label></div>
+</div>
+`;

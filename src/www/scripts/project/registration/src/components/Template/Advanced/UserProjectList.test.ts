@@ -33,28 +33,7 @@ describe("UserProjectList", () => {
         store: Store;
 
     beforeEach(() => {
-        const state: State = {
-            selected_tuleap_template: {
-                title: "scrum",
-                description: "scrum desc",
-                id: "scrum",
-                glyph: "<svg></svg>",
-                is_built_in: false
-            },
-            tuleap_templates: [],
-            are_restricted_users_allowed: false,
-            are_anonymous_allowed: false,
-            project_default_visibility: "public",
-            error: null,
-            is_creating_project: false,
-            is_project_approval_required: false,
-            trove_categories: [],
-            is_description_required: false,
-            project_fields: [],
-            selected_company_template: null,
-            company_templates: [],
-            company_name: ""
-        };
+        const state: State = {} as State;
 
         const store_options = {
             state
