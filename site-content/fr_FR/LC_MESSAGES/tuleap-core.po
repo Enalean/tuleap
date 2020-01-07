@@ -71,16 +71,6 @@ msgstr ""
 "Un service non disponible ne peut être activé. Pour activer ce service, vous "
 "devez au préalable le rendre disponible."
 
-msgid ""
-"A personal access key will be automatically generated at the form "
-"submission.\n"
-"                The description is not required but it can help you to "
-"manage your access keys."
-msgstr ""
-"Une nouvelle clé d'accès sera généré lors de soumission du formulaire.\n"
-"                La description n'est pas requise mais peut vous aider à "
-"gérer vos clés d'accès."
-
 #, php-format
 msgid ""
 "A personal access key (%s) with the %s scope was recently added to your "
@@ -105,6 +95,16 @@ msgstr[1] ""
 
 msgid "A personal access key has been added to your account"
 msgstr "Une clé personnelle d'accès a été ajoutée à votre compte"
+
+msgid ""
+"A personal access key will be automatically generated at the form "
+"submission.\n"
+"                The description is not required but it can help you to "
+"manage your access keys."
+msgstr ""
+"Une nouvelle clé d'accès sera généré lors de soumission du formulaire.\n"
+"                La description n'est pas requise mais peut vous aider à "
+"gérer vos clés d'accès."
 
 msgid "A project cannot be its own parent."
 msgstr "Un projet ne peut être son propre parent."
