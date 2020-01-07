@@ -28,27 +28,8 @@ describe("FieldDescription -", () => {
     let factory: Wrapper<FieldDescription>;
     beforeEach(async () => {
         const state: State = {
-            selected_tuleap_template: {
-                title: "string",
-                description: "string",
-                id: "string",
-                glyph: "string",
-                is_built_in: true
-            },
-            tuleap_templates: [],
-            are_restricted_users_allowed: false,
-            are_anonymous_allowed: false,
-            project_default_visibility: "",
-            error: null,
-            is_creating_project: false,
-            is_project_approval_required: false,
-            trove_categories: [],
-            is_description_required: false,
-            project_fields: [],
-            selected_company_template: null,
-            company_templates: [],
-            company_name: ""
-        };
+            is_description_required: false
+        } as State;
 
         const getters = {
             has_error: false,

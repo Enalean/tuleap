@@ -22,49 +22,55 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import ProjectInformationInputPrivacySwitch from "./ProjectInformationInputPrivacySwitch.vue";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
-import { StoreOptions } from "../../../store/type";
+import { State } from "../../../store/type";
+import { TemplateData } from "../../../type";
 
 describe("ProjectInformationInputPrivacySwitch", () => {
-    async function getProjectInformationPrivacySwitchInstance(
-        store_options: StoreOptions
-    ): Promise<Wrapper<ProjectInformationInputPrivacySwitch>> {
+    let factory: Wrapper<ProjectInformationInputPrivacySwitch>;
+
+    beforeEach(async () => {
+        const state = {
+            project_default_visibility: "public",
+            tuleap_templates: [] as TemplateData[],
+            error: null,
+            is_creating_project: false,
+            is_project_approval_required: false,
+            are_anonymous_allowed: false
+        } as State;
+
+        const store_options = { state };
+
         const store = createStoreMock(store_options);
-        return shallowMount(ProjectInformationInputPrivacySwitch, {
+
+        factory = shallowMount(ProjectInformationInputPrivacySwitch, {
             localVue: await createProjectRegistrationLocalVue(),
             mocks: { $store: store }
         });
-    }
-
-    it("Spawns the ProjectInformationInputPrivacySwitch component", async () => {
-        const state = {
-            selected_template: null,
-            tuleap_templates: [],
-            project_default_visibility: "public",
-            error: null,
-            is_creating_project: false,
-            is_project_approval_required: false,
-            are_anonymous_allowed: false
-        };
-
-        const store_options = { state };
-
-        const factory = await getProjectInformationPrivacySwitchInstance(store_options);
-        expect(factory.contains(ProjectInformationInputPrivacySwitch)).toBe(true);
     });
-    it("changes the tooltip text when the project privacy is private", async () => {
-        const state = {
-            selected_template: null,
-            tuleap_templates: [],
-            project_default_visibility: "public",
-            error: null,
-            is_creating_project: false,
-            is_project_approval_required: false,
-            are_anonymous_allowed: false
-        };
 
-        const store_options = { state };
+    it("Spawns the ProjectInformationInputPrivacySwitch component", () => {
+        const wrapper = factory;
 
-        const wrapper = await getProjectInformationPrivacySwitchInstance(store_options);
+        wrapper.vm.$store.state.selected_template = null;
+        wrapper.vm.$store.state.tuleap_templates = [];
+        wrapper.vm.$store.state.project_default_visibility = "public";
+        wrapper.vm.$store.state.error = null;
+        wrapper.vm.$store.state.is_creating_project = false;
+        wrapper.vm.$store.state.is_project_approval_required = false;
+        wrapper.vm.$store.state.are_anonymous_allowed = false;
+
+        expect(wrapper).toMatchSnapshot();
+    });
+    it("changes the tooltip text when the project privacy is private", () => {
+        const wrapper = factory;
+
+        wrapper.vm.$store.state.selected_template = null;
+        wrapper.vm.$store.state.tuleap_templates = [];
+        wrapper.vm.$store.state.project_default_visibility = "public";
+        wrapper.vm.$store.state.error = null;
+        wrapper.vm.$store.state.is_creating_project = false;
+        wrapper.vm.$store.state.is_project_approval_required = false;
+        wrapper.vm.$store.state.are_anonymous_allowed = false;
 
         const tooltip: HTMLSpanElement = wrapper.find(
             "[data-test=project-information-input-privacy-tooltip]"
@@ -80,20 +86,16 @@ describe("ProjectInformationInputPrivacySwitch", () => {
             "Project privacy set to private. Only project members can access its content."
         );
     });
-    it("displays the right message when the plateform does not allow anonymous users", async () => {
-        const state = {
-            selected_template: null,
-            tuleap_templates: [],
-            project_default_visibility: "public",
-            error: null,
-            is_creating_project: false,
-            is_project_approval_required: false,
-            are_anonymous_allowed: false
-        };
+    it("displays the right message when the platform does not allow anonymous users", () => {
+        const wrapper = factory;
 
-        const store_options = { state };
-
-        const wrapper = await getProjectInformationPrivacySwitchInstance(store_options);
+        wrapper.vm.$store.state.selected_template = null;
+        wrapper.vm.$store.state.tuleap_templates = [];
+        wrapper.vm.$store.state.project_default_visibility = "public";
+        wrapper.vm.$store.state.error = null;
+        wrapper.vm.$store.state.is_creating_project = false;
+        wrapper.vm.$store.state.is_project_approval_required = false;
+        wrapper.vm.$store.state.are_anonymous_allowed = false;
 
         const tooltip: HTMLSpanElement = wrapper.find(
             "[data-test=project-information-input-privacy-tooltip]"
@@ -104,20 +106,16 @@ describe("ProjectInformationInputPrivacySwitch", () => {
         );
     });
 
-    it("displays the right message when the platform allows anonymous users", async () => {
-        const state = {
-            selected_template: null,
-            tuleap_templates: [],
-            project_default_visibility: "public",
-            error: null,
-            is_creating_project: false,
-            is_project_approval_required: false,
-            are_anonymous_allowed: true
-        };
+    it("displays the right message when the platform allows anonymous users", () => {
+        const wrapper = factory;
 
-        const store_options = { state };
-
-        const wrapper = await getProjectInformationPrivacySwitchInstance(store_options);
+        wrapper.vm.$store.state.selected_template = null;
+        wrapper.vm.$store.state.tuleap_templates = [];
+        wrapper.vm.$store.state.project_default_visibility = "public";
+        wrapper.vm.$store.state.error = null;
+        wrapper.vm.$store.state.is_creating_project = false;
+        wrapper.vm.$store.state.is_project_approval_required = false;
+        wrapper.vm.$store.state.are_anonymous_allowed = true;
 
         const tooltip: HTMLSpanElement = wrapper.find(
             "[data-test=project-information-input-privacy-tooltip]"

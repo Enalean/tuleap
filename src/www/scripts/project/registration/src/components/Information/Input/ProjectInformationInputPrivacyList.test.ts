@@ -17,45 +17,23 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
-import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import { State, StoreOptions } from "../../../store/type";
+import { State } from "../../../store/type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import ProjectInformationInputPrivacyList from "./ProjectInformationInputPrivacyList.vue";
 
 describe("ProjectInformationInputPrivacyList", () => {
     let factory: Wrapper<ProjectInformationInputPrivacyList>;
-    let store_options: StoreOptions;
-    let local_vue = createLocalVue();
-
-    function getProjectInformationInstance(
-        store_options: StoreOptions
-    ): Wrapper<ProjectInformationInputPrivacyList> {
-        const store = createStoreMock(store_options);
-        return shallowMount(ProjectInformationInputPrivacyList, {
-            localVue: local_vue,
-            mocks: { $store: store }
-        });
-    }
 
     beforeEach(async () => {
-        local_vue = await createProjectRegistrationLocalVue();
-        const state: State = {
-            selected_tuleap_template: null,
-            are_restricted_users_allowed: false,
-            are_anonymous_allowed: false,
+        const state = {
             project_default_visibility: "public",
-            tuleap_templates: [],
             error: null,
             is_creating_project: false,
             is_project_approval_required: false,
-            trove_categories: [],
-            is_description_required: false,
-            project_fields: [],
-            selected_company_template: null,
-            company_templates: [],
-            company_name: ""
-        };
+            are_anonymous_allowed: false
+        } as State;
 
         const store_options = { state };
 
@@ -162,72 +140,79 @@ describe("ProjectInformationInputPrivacyList", () => {
         });
     });
     describe("The selected default project visibility when the component is mounted -", () => {
-        it("Should select the  'Public' by default", () => {
-            store_options = {
-                state: {
-                    selected_template: null,
-                    tuleap_templates: [],
-                    project_default_visibility: "public",
-                    error: null,
-                    is_creating_project: false,
-                    is_project_approval_required: false,
-                    are_anonymous_allowed: false
-                }
-            };
-            const wrapper = getProjectInformationInstance(store_options);
+        it("Should select the  'Public' by default", async () => {
+            const state: State = {
+                project_default_visibility: "public"
+            } as State;
 
-            (wrapper.find("[data-test=public]").element as HTMLOptionElement).selected = true;
+            const store_options = { state };
+
+            const store = createStoreMock(store_options);
+
+            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store }
+            });
+
+            expect((wrapper.find("[data-test=public]").element as HTMLOptionElement).selected).toBe(
+                true
+            );
         });
-        it("Should select the  'Public incl. restricted' by default", () => {
-            store_options = {
-                state: {
-                    selected_template: null,
-                    tuleap_templates: [],
-                    project_default_visibility: "unrestricted",
-                    error: null,
-                    is_creating_project: false,
-                    is_project_approval_required: false,
-                    are_anonymous_allowed: false
-                }
-            };
-            const wrapper = getProjectInformationInstance(store_options);
+        it("Should select the  'Public incl. restricted' by default", async () => {
+            const state = {
+                project_default_visibility: "unrestricted"
+            } as State;
 
-            (wrapper.find("[data-test=unrestricted]").element as HTMLOptionElement).selected = true;
-        });
+            const store_options = { state };
 
-        it("Should select the  'Private' by default", () => {
-            store_options = {
-                state: {
-                    selected_template: null,
-                    tuleap_templates: [],
-                    project_default_visibility: "private-wo-restr",
-                    error: null,
-                    is_creating_project: false,
-                    is_project_approval_required: false,
-                    are_anonymous_allowed: false
-                }
-            };
-            const wrapper = getProjectInformationInstance(store_options);
+            const store = createStoreMock(store_options);
 
-            (wrapper.find("[data-test=private-wo-restr]")
-                .element as HTMLOptionElement).selected = true;
+            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store }
+            });
+
+            expect(
+                (wrapper.find("[data-test=unrestricted]").element as HTMLOptionElement).selected
+            ).toBe(true);
         });
 
-        it("Should select the  'Private incl. restricted' by default", () => {
-            store_options = {
-                state: {
-                    selected_template: null,
-                    tuleap_templates: [],
-                    project_default_visibility: "private",
-                    error: null,
-                    is_creating_project: false,
-                    is_project_approval_required: false,
-                    are_anonymous_allowed: false
-                }
-            };
-            const wrapper = getProjectInformationInstance(store_options);
+        it("Should select the  'Private' by default", async () => {
+            const state = {
+                project_default_visibility: "private-wo-restr"
+            } as State;
 
-            (wrapper.find("[data-test=private]").element as HTMLOptionElement).selected = true;
+            const store_options = { state };
+
+            const store = createStoreMock(store_options);
+
+            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store }
+            });
+
+            expect(
+                (wrapper.find("[data-test=private-wo-restr]").element as HTMLOptionElement).selected
+            ).toBe(true);
+        });
+
+        it("Should select the  'Private incl. restricted' by default", async () => {
+            const state = {
+                project_default_visibility: "private"
+            } as State;
+
+            const store_options = { state };
+
+            const store = createStoreMock(store_options);
+
+            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store }
+            });
+
+            expect(
+                (wrapper.find("[data-test=private]").element as HTMLOptionElement).selected
+            ).toBe(true);
         });
     });
 });
