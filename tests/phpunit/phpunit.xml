@@ -30,7 +30,6 @@
             <directory suffix=".php">../../tests/lib/</directory>
             <directory suffix=".php">../../tests/phpcs/TuleapCodingStandard/</directory>
             <exclude>
-                <directory suffix=".php">../../src/common/tracker/</directory>
                 <directory suffix=".php">../../src/common/wiki/</directory>
                 <directory suffix=".php">../../src/common/chart/</directory>
                 <file>../../src/common/admin/Homepage/Controller.php</file>
