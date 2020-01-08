@@ -204,8 +204,10 @@ class Docman_LockFactory
      */
     public function unlock($item, $user)
     {
-        $this->dao->delLock($item->getId());
-        $this->logUnlock($item, $user);
+        if ($this->itemIsLocked($item)) {
+            $this->dao->delLock($item->getId());
+            $this->logUnlock($item, $user);
+        }
     }
 
     /**
