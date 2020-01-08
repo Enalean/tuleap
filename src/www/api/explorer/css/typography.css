@@ -3,6 +3,7 @@
   font-family: 'Droid Sans';
   font-style: normal;
   font-weight: 400;
+  font-display: swap;
   src: local('Droid Sans'), local('DroidSans'), url('../fonts/DroidSans.ttf') format('truetype');
 }
 /* Google Font's Droid Sans Bold */
@@ -10,5 +11,6 @@
   font-family: 'Droid Sans';
   font-style: normal;
   font-weight: 700;
+  font-display: swap;
   src: local('Droid Sans Bold'), local('DroidSans-Bold'), url('../fonts/DroidSans-Bold.ttf') format('truetype');
 }

@@ -24,6 +24,7 @@ $tlp-font-basepath: '../' !default;
     font-style: normal;
     font-weight: normal;
     src: url('#{$tlp-font-basepath}/fonts/tlp-font/TLP.woff') format('woff');
+    font-display: block;
 }
 
 $tlp-fontawesome-icons: (

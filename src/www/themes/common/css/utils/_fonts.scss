@@ -2,6 +2,7 @@
     font-family: 'SourceSansPro';
     src: url('/themes/common/font/SourceSansPro-Regular.eot');
     src: url('/themes/common/font/SourceSansPro-Regular.ttf.woff') format('truetype');
+    font-display: swap;
 }
 
 @font-face {
@@ -9,6 +10,7 @@
     src: url('/themes/common/font/SourceSansPro-Semibold.eot');
     src: url('/themes/common/font/SourceSansPro-Semibold.ttf.woff') format('truetype');
     font-weight: 600;
+    font-display: swap;
 }
 
 @font-face {
@@ -16,6 +18,7 @@
     src: url('/themes/common/font/SourceSansPro-Light.eot');
     src: url('/themes/common/font/SourceSansPro-Light.ttf.woff') format('truetype');
     font-weight: 300;
+    font-display: swap;
 }
 
 @font-face {
@@ -23,6 +26,7 @@
     src: url('/themes/common/font/kalam/Kalam-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -30,6 +34,7 @@
     src: url('/themes/common/font/kalam/Kalam-Bold.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -37,4 +42,5 @@
     src: url('/themes/common/font/kalam/Kalam-Light.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
