@@ -516,7 +516,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->logger->info("Gerrit REST driver: Delete project $gerrit_project_full_name");
         $response = $this->sendRequest(
             $server,
-            $this->request_factory->createRequest('DELETE', $this->getGerritURL($server, '/projects/'. urlencode($gerrit_project_full_name)))
+            $this->request_factory->createRequest(
+                'POST',
+                $this->getGerritURL($server, '/projects/'. urlencode($gerrit_project_full_name) . '/delete-project~delete')
+            )
         );
 
         $response_status_code = $response->getStatusCode();
