@@ -243,7 +243,6 @@ class Docman_ItemFactory
     * @param string $wiki_page
     * @param string $group_id
     *
-    * @psalm-return array[Docman_Wiki]
     * @return Docman_Wiki[] items that reference the same given wiki page.
     */
     public function getWikiPageReferencers($wiki_page, $group_id)
@@ -254,10 +253,18 @@ class Docman_ItemFactory
             $items_ids = $item_dao->getItemIdByWikiPageAndGroupId($wiki_page, $group_id);
             if (is_array($items_ids)) {
                 foreach ($items_ids as $key => $id) {
-                    $items[] = $this->getItemFromDb($id);
+                    $item = $this->getItemFromDb($id);
+                    if ($item !== null) {
+                        assert($item instanceof Docman_Wiki);
+                        $items[] = $item;
+                    }
                 }
             } else {
-                $items[] = $this->getItemFromDb($items_ids);
+                $item = $this->getItemFromDb($items_ids);
+                if ($item !== null) {
+                    assert($item instanceof Docman_Wiki);
+                    $items[] = $item;
+                }
             }
         }
         return $items;
@@ -682,7 +689,7 @@ class Docman_ItemFactory
     /**
      * @param int $limit
      * @param int $offset
-     * @return Docman_File[]
+     * @return Docman_Item[]
      */
     public function searchPaginatedWithVersionByGroupId($limit, $offset)
     {
@@ -690,7 +697,10 @@ class Docman_ItemFactory
 
         $items = array();
         foreach ($result as $row) {
-            $items[] = $this->getItemFromRow($row);
+            $item = $this->getItemFromRow($row);
+            if ($item !== null) {
+                $items[] = $item;
+            }
         }
 
         $result->freeMemory();
@@ -919,7 +929,7 @@ class Docman_ItemFactory
      * Find root unique child if exists.
      *
      * @param $groupId Project id of the docman.
-     * @return int/boolean false if there is more than one children for root.
+     * @return int|bool false if there is more than one children for root.
      *                     true if there is no child for root.
      *                     item_id of the unique child of root if any.
      */
@@ -1296,7 +1306,7 @@ class Docman_ItemFactory
     * This order deletion of cut preferences of all users set on item identified by $item_id.
     *
     * @param int $item_id identifier of docman item that has been marked as deleted.
-    * @return void.
+    * @return void
     *
     */
     function delCutPreferenceForAllUsers($item_id)
@@ -1309,7 +1319,7 @@ class Docman_ItemFactory
     * This order deletion of copy preferences of all users set on item identified by $item_id.
     *
     * @param int $item_id identifier of docman item that has been marked as deleted.
-    * @return void.
+    * @return void
     *
     */
     function delCopyPreferenceForAllUsers($item_id)

@@ -29,8 +29,8 @@ interface Tracker_IDisplayTrackerLayout
      *
      * @param Project $project    The project
      * @param string  $title      The title for this page
-     * @param array   $breadcrumb The breadcrumbs for this page
-     * @param ?       $toolbar    The toolbar
+     * @param array   $breadcrumbs The breadcrumbs for this page
+     * @param mixed   $toolbar    The toolbar
      *
      * @return void
      */

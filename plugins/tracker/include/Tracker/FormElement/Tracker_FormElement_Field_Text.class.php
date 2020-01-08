@@ -649,6 +649,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     private function getRightBodyFormat(Tracker_Artifact $artifact, $value)
     {
         $last_changeset_value = $this->getLastChangesetValue($artifact);
+        assert($last_changeset_value === null || $last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
         $old_format           = $last_changeset_value ? $last_changeset_value->getFormat() : null;
         return is_array($value) ? $value['format'] : $old_format;
     }

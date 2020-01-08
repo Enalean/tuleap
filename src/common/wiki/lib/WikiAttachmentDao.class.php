@@ -192,7 +192,7 @@ class WikiAttachmentDao extends DataAccessObject
     /**
      * Save the purge date of a deleted attachment
      *
-     * @param int $attachmentId
+     * @param int $id
      * @param int $time
      *
      * @return bool

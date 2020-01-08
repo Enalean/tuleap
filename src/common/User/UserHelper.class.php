@@ -323,7 +323,7 @@ class UserHelper
     /**
      * _isUserNameNone
      *
-     * @param  user_name
+     * @param string  $user_name
      */
     function _isUserNameNone($user_name)
     {

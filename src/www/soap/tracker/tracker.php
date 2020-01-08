@@ -2646,7 +2646,7 @@ if (defined('NUSOAP')) {
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the attached file
  * @param int $artifact_id the ID of the artifact we want to retrieve the attached file
  * @param int $file_id the ID of the attached file
- * @return {SOAPArtifactFile} the attached file of the artifact,
+ * @return mixed {SOAPArtifactFile} the attached file of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker

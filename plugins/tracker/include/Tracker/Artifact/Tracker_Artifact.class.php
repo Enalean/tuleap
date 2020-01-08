@@ -295,7 +295,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * This method returns the artifact mail rendering
      *
-     * @param array  $recipient
+     * @param PFUser  $recipient
      * @param string $format, the mail format text or html
      * @param bool   $ignore_perms, indicates if we ignore various permissions
      *
@@ -332,7 +332,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Returns the artifact field for mail rendering
      *
-     * @param array  $recipient
+     * @param PFUser  $recipient
      * @param string $format, the mail format text or html
      * @param bool   $ignore_perms, indicates if we ignore various permissions
      *
@@ -358,7 +358,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $output;
     }
 
-    /** @param Tracker_FormElement[] */
+    /** @param Tracker_FormElement[] $toplevel_form_elements */
     private function prepareElementsForDisplay($toplevel_form_elements)
     {
         foreach ($toplevel_form_elements as $formElement) {
@@ -663,9 +663,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     /**
      *
-     * @param <type> $recipient
-     * @param <type> $ignore_perms
-     * @return <type>
+     * @param PFUser $recipient
+     * @param bool $ignore_perms
+     * @return string
      */
     public function fetchMailTitle($recipient, $format = 'text', $ignore_perms = false)
     {

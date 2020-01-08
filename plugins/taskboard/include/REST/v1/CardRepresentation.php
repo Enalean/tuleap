@@ -93,7 +93,7 @@ class CardRepresentation
 
     /**
      * @param MinimalUserRepresentation[] $assignees
-     * @psalm-param list<MinimalUserRepresentation>
+     * @psalm-param list<MinimalUserRepresentation> $assignees
      */
     public function build(
         Tracker_Artifact $artifact,

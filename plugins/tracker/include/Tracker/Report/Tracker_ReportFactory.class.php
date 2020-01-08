@@ -79,7 +79,7 @@ class Tracker_ReportFactory
     }
     /**
      * @param int $tracker_id the id of the tracker
-     * @param array
+     * @return Tracker_Report|null
      */
     public function getDefaultReportsByTrackerId($tracker_id)
     {
@@ -92,7 +92,7 @@ class Tracker_ReportFactory
 
     /**
      * @param int $tracker_id the id of the tracker
-     * @param Tracker_Report
+     * @return Tracker_Report|null
      */
     public function getDefaultReportByTrackerId($tracker_id)
     {
@@ -119,7 +119,7 @@ class Tracker_ReportFactory
     /**
      * Save a report
      *
-     * @param Report $report the report to save
+     * @param Tracker_Report $report the report to save
      *
      * @return bool true if the save succeed
      */
@@ -157,9 +157,9 @@ class Tracker_ReportFactory
      * Duplicate a report. The new report will have $from_report as parent.
      *
      * @param Tracker_Report $from_report   The report to copy
-     * @param int            $tracker_id    The id of the target tracker
+     * @param int            $to_tracker_id    The id of the target tracker
      * @param array          $field_mapping The mapping of the field, if any
-     * @param int            $current_user  The id of the current user
+     * @param int|null       $current_user_id  The id of the current user
      *
      * @return Tracker_Report the new report
      */

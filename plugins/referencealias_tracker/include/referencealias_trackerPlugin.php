@@ -35,7 +35,7 @@ class referencealias_trackerPlugin extends Plugin //phpcs:ignore
     private $dao;
 
     /**
-     * @var OriginalReferencesBuilder;
+     * @var OriginalReferencesBuilder
      */
     private $original_references_builder;
 

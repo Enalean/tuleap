@@ -247,8 +247,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
 
     /**
      *@todo move the archive to another directory
-     * @param <type> $repository
-     * @return <type>
+     * @return true
      */
     public function archive(GitRepository $repository)
     {

@@ -122,7 +122,7 @@ function ugroup_db_get_members(
 /**
  * Return name and id (as DB result) of all ugroups belonging to a specific project.
  *
- * @param int $groupId Id of the project
+ * @param int $group_id Id of the project
  * @param Array   $predefined List of predefined ugroup id
  *
  * @deprecated Use UGroupManager::getExistingUgroups() instead
@@ -763,7 +763,7 @@ function ugroup_count_project_admins($groupId, $usersSql)
  *
  * @param int $groupId
  * @param Array   $ugroups
- * @param Array   $validUgroups
+ * @param Array   &$validUGroups
  *
  * @return int
  */
@@ -793,7 +793,7 @@ function ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, &$validUG
  *
  * @param int $groupId
  * @param Array   $ugroups
- * @param Array   $validUgroups
+ * @param Array   &$validUGroups
  *
  * @return int
  */

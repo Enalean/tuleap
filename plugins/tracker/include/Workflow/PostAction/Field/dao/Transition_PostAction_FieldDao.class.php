@@ -188,7 +188,7 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
     /**
      * Delete a postaction entry by transition id
      *
-     * @param int $id The id of the transition
+     * @param int $transition_id The id of the transition
      *
      * @return bool true if success false otherwise
      */
@@ -206,7 +206,7 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
    /**
     * Delete a postaction entries by workflow_id
     *
-    * @param int $id The id of the workflow
+    * @param int $workflow_id The id of the workflow
     *
     * @return bool true if success false otherwise
     */

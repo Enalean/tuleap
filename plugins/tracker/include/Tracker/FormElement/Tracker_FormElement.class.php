@@ -365,9 +365,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      *
-     * @param <type> $artifact
-     * @param <type> $format
-     * @return <type>
+     * @param Tracker_Artifact $artifact
+     * @param string $format
+     * @return string
      */
     public function fetchMailFormElements($artifact, $format = 'text', $ignore_perms = false)
     {
@@ -711,7 +711,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      *
      * @param Tracker_Artifact $artifact
-     * @return <type>
+     * @return string
      */
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {

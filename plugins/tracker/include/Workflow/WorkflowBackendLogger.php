@@ -44,7 +44,7 @@ final class WorkflowBackendLogger extends TruncateLevelLogger
     /** @var string */
     private $indentation_prefix    = '';
 
-    /** @var string */
+    /** @var string|int */
     private $fingerprint = '';
 
     public function debug($message) : void
@@ -112,7 +112,7 @@ final class WorkflowBackendLogger extends TruncateLevelLogger
      *
      * At the name implies, once defined, a fingerprint cannot be changed.
      *
-     * @param string $the_fingerprint
+     * @param string|int $fingerprint
      */
     public function defineFingerprint($fingerprint) : void
     {

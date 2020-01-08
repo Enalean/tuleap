@@ -95,8 +95,9 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
 
     protected function validate(Tracker_Artifact $artifact, $value)
     {
-        if ($this->getLastChangesetValue($artifact) !== null
-            && $this->getLastChangesetValue($artifact)->getValue() === $value
+        $last_changeset_value = $this->getLastChangesetValue($artifact);
+        if ($last_changeset_value !== null
+            && $last_changeset_value->getValue() === $value
         ) {
             return true;
         }

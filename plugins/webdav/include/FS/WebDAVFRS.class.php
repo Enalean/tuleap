@@ -130,7 +130,7 @@ class WebDAVFRS extends Sabre_DAV_Directory
     /**
      * Returns the project
      *
-     * @return FRSProject
+     * @return Project
      */
     function getProject()
     {
@@ -211,7 +211,7 @@ class WebDAVFRS extends Sabre_DAV_Directory
     /**
      * Generates package list of the given GroupId
      *
-     * @param int $groupId
+     * @param Project $project
      *
      * @return Array
      */

@@ -183,7 +183,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     public function listParentProjects(Git_RemoteServer_GerritServer $server)
     {
-        return;
+        return [];
     }
 
     public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, $owner)

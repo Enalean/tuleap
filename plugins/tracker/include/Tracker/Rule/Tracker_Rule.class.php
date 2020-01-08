@@ -69,7 +69,7 @@ abstract class Tracker_Rule
 
     /**
      *
-     * @param int $tracker
+     * @param int $tracker_id
      * @return \Tracker_Rule
      */
     public function setTrackerId($tracker_id)

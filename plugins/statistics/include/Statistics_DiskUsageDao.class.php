@@ -311,7 +311,7 @@ class Statistics_DiskUsageDao extends DataAccessObject
     /**
      * Compute average size of user_id
      *
-     * @param int $user_id
+     * @param int $userId
      *
      * @return DataAccessResult
      */
@@ -376,8 +376,6 @@ class Statistics_DiskUsageDao extends DataAccessObject
 
     /**
      * Compute average size of user_id
-     *
-     * @param int $user_id
      *
      * @return DataAccessResult
      */

@@ -1059,9 +1059,8 @@ class GitActions extends PluginActions
 
     /**
      * Internal method called by SystemEvent_PROJECT_IS_PRIVATE
-     * @param <type> $projectId
-     * @param <type> $isPublic
-     * @return <type>
+     * @param int $projectId
+     * @param bool $isPrivate
      */
     public static function changeProjectRepositoriesAccess($projectId, $isPrivate, GitDao $dao, GitRepositoryFactory $factory)
     {
@@ -1123,8 +1122,7 @@ class GitActions extends PluginActions
     /**
      * Fork a bunch of repositories in a project for a given user
      *
-     * @param int    $groupId         The project id
-     * @param array  $repos_ids       The array of id of repositories to fork
+     * @param array  $repos       The array of id of repositories to fork
      * @param string $namespace       The namespace where the new repositories will live
      * @param PFUser   $user            The owner of those new repositories
      * @param Layout $response        The response object

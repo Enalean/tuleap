@@ -52,10 +52,10 @@ class GitDriver implements DVCSDriver
 
     /**
      * Make a clone of a source repository
-     * @param <String> $source      source directory
-     * @param <String> $destination destination directory
-     * @param <String> $option     String of options.
-     * @return <boolean>
+     * @param string $source      source directory
+     * @param string $destination destination directory
+     * @param string $option     String of options.
+     * @return bool
      */
     private function cloneRepo($source, $destination, $option)
     {

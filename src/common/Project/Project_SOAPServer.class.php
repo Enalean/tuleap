@@ -403,7 +403,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     /**
      *
      * @param String  $session_key  The project admin session hash
-     * @param int $groupId The Project id where the Generic user is
+     * @param int $group_id The Project id where the Generic user is
      */
     public function unsetGenericUser($session_key, $group_id)
     {

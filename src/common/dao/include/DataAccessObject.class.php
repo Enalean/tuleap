@@ -227,7 +227,9 @@ class DataAccessObject
      *
      * @deprecated
      *
-     * @return int the last insert id or false if there is an error
+     * @return int|false the last insert id or false if there is an error
+     *
+     * @psalm-ignore-falsable-return
      */
     protected function updateAndGetLastId($sql)
     {

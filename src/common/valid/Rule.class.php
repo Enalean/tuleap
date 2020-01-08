@@ -46,7 +46,7 @@ abstract class Rule
     /**
      * Default error message if rule is not apply on value.
      *
-     * @param String $val Value to check.
+     * @param string $key
      * @return string
      */
     function getErrorMessage($key = '')

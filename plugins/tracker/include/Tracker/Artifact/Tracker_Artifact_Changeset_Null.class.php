@@ -45,7 +45,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
      *
      * @param Tracker_FormElement_Field $field The field
      *
-     * @return Tracker_Artifact_ChangesetValue, or null if not found
+     * @return null|Tracker_Artifact_ChangesetValue or null if not found
      */
     public function getValue(Tracker_FormElement_Field $field)
     {

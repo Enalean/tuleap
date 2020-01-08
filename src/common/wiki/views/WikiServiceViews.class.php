@@ -166,7 +166,7 @@ class WikiServiceViews extends WikiViews
   /**
    * _browsePages - private
    *
-   * @param  string[] $pagelist List of page names.
+   * @param  string[] &$pageList List of page names.
    */
     function _browsePages(&$pageList)
     {

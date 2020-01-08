@@ -218,7 +218,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
 
     /**
      * Fetch the element for the submit masschange form
-     * @return <type>
+     * @return string
      */
     public function fetchSubmitMasschange()
     {

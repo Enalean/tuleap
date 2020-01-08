@@ -263,7 +263,6 @@ class TreeNode /*implements Visitable*/
     /**
      * Visitor entry.
      *
-     * @param Visitor
      */
     function accept(&$visitor, $params = null)
     {

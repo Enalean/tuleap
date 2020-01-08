@@ -59,7 +59,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
     private $enhanced_content;
 
     /**
-     * @param PFUser[] $owners
+     * @param PFUser[] $owners_without_change_user
      */
     private function __construct(
         PullRequest $pull_request,

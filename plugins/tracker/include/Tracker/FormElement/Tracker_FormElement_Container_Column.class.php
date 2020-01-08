@@ -165,7 +165,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
             $next = array();
             $tf   = Tracker_FormElementFactory::instance();
             $cur = $this;
-            while (is_a($cur, 'Tracker_FormElement_Container_Column')) {
+            while ($cur instanceof \Tracker_FormElement_Container_Column) {
                 $next[] = $cur;
                 $cur = $tf->getNextSibling($cur);
             }

@@ -24,7 +24,8 @@ use Luracast\Restler\RestException;
 class KanbanAddRepresentation
 {
     /**
-     * @var {@type array}
+     * @var array {@type int}
+     * @psalm-var int[]
      */
     public $ids;
 

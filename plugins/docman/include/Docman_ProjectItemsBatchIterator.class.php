@@ -37,7 +37,7 @@ class Docman_ProjectItemsBatchIterator
     }
 
     /**
-     * @return Docman_File[]
+     * @return Docman_Item[]
      */
     public function next()
     {
@@ -47,7 +47,7 @@ class Docman_ProjectItemsBatchIterator
     }
 
     /**
-     * @return Docman_File[]
+     * @return Docman_Item[]
      */
     public function current()
     {

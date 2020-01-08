@@ -323,7 +323,6 @@ class ArtifactLinkValueSaver
         );
     }
 
-    /** @return {'tracker' => Tracker, 'ids' => int[]}[] */
     private function getArtifactIdsToLink(
         Tracker $from_tracker,
         Tracker_Artifact $artifact,

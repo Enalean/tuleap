@@ -1788,7 +1788,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     /**
      * Validate the format of the item name
-     * @param string $itemname
+     * @param string $item_name
      * @return bool
      */
     public function itemNameIsValid($item_name)
@@ -2669,7 +2669,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Validation of CSV file datas in this tracker
      *
-     * @return bool, true if CSV file is valid, false otherwise
+     * @return bool true if CSV file is valid, false otherwise
      */
     public function isValidCSV($lines, $separator)
     {

@@ -36,7 +36,7 @@ class Docman_FolderFactory extends Docman_ItemFactory
      * user. Stricly speaking, we should pass user in argument but there is no
      * existing function that handle prefences in this way.
      *
-     * @param Folder
+     * @param Docman_Folder $folder
      */
     function collapse($folder)
     {
@@ -46,7 +46,7 @@ class Docman_FolderFactory extends Docman_ItemFactory
     /**
      * Set a expand preference for given folder for current user.
      *
-     * @param Folder
+     * @param Docman_Folder $folder
      */
     function expand($folder)
     {

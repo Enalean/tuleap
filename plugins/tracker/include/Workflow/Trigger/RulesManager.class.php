@@ -325,6 +325,9 @@ class Tracker_Workflow_Trigger_RulesManager
             if ($mapping['from'] === $template_trigger_rule_target->getField()->getId()) {
                 $new_field_id = $mapping['to'];
                 $target_field = $this->formelement_factory->getFieldById($new_field_id);
+                if ($target_field === null) {
+                    continue;
+                }
                 $target_value = $this->getValue($target_field->getAllValues(), $mapping['values'][$template_trigger_rule_target->getValue()->getId()]);
 
                 break;

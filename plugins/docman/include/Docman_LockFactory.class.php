@@ -123,8 +123,6 @@ class Docman_LockFactory
     /**
      * Return true if item is locked
      *
-     * @param Docman_Item $item Item to test
-     *
      * @return bool
      */
     function itemIsLockedByItemId($itemId)

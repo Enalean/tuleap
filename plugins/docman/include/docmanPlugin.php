@@ -105,7 +105,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     /**
      * Store docman root items indexed by groupId
      *
-     * @var Array;
+     * @var array
      */
     private $rootItems = array();
 

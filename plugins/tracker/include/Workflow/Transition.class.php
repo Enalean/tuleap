@@ -234,7 +234,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *
      * @param Array $fields_data Request field data (array[field_id] => data)
      *
-     * @return bool, true if the transition can occur, false otherwise
+     * @return bool true if the transition can occur, false otherwise
      */
     public function validate($fields_data, Tracker_Artifact $artifact, $comment_body)
     {

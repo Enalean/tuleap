@@ -207,7 +207,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      * @param PFUser                          $user             The user who will receive the email
      * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
      *
      * @return string
      */

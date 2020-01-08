@@ -260,7 +260,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     }
 
     /**
-     * @param String $http_password
+     * @param string $replication_password
      */
     public function setReplicationPassword($replication_password)
     {

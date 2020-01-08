@@ -901,7 +901,7 @@ function util_get_ids_from_aid($aid, &$art_group_id, &$atid, &$art_name)
  *
  * @param cid: the commit id
  *
- * @return group_id, or 0 if group does not exist
+ * @return 0|string group_id, or 0 if group does not exist
  */
 function util_get_group_from_commit_id($cid)
 {

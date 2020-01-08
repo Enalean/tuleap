@@ -85,7 +85,7 @@ interface Git_Driver_Gerrit
     /**
      *
      * @param Git_RemoteServer_GerritServer $server
-     * @return array : the list of the parent project created in the gerrit server
+     * @return array the list of the parent project created in the gerrit server
      */
     public function listParentProjects(Git_RemoteServer_GerritServer $server);
 

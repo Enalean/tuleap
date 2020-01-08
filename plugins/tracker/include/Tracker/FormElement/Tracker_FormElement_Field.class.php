@@ -500,7 +500,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      *
      * @param Tracker_Artifact $artifact
-     * @return <type>
+     * @return string
      */
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
@@ -1533,8 +1533,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Get the last ChangesetValue of the field
-     *
-     * @param Tracker_Artifact
      *
      * @return Tracker_Artifact_ChangesetValue|null
      */

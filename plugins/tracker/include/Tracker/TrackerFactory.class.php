@@ -87,7 +87,7 @@ class TrackerFactory
     }
 
     /**
-     * @param int $id the id of the tracker to retrieve
+     * @param int $tracker_id the id of the tracker to retrieve
      * @return Tracker identified by id (null if not found)
      */
     public function getTrackerById($tracker_id)

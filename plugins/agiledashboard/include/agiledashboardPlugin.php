@@ -951,7 +951,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     /**
      *
-     * @param array $param
+     * @param array $params
      *  Expected key/ values:
      *      project_id  int             The ID of the project for the import
      *      xml_content SimpleXmlObject A string of valid xml
@@ -960,7 +960,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
      */
     public function import_xml_project_cardwall_done($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = new HTTPRequest($params);
+        $request = new HTTPRequest();
         $request->set('action', 'import');
         $request->set('xml_content', $params['xml_content']);
         $request->set('mapping', $params['mapping']);

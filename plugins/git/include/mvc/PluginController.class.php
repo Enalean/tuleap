@@ -132,10 +132,6 @@ abstract class PluginController
     {
         return $this->permittedActions;
     }
-    /**
-     *
-     * @param <type> $action
-     */
     public function addPermittedAction($action)
     {
         $this->permittedActions[] = $action;
@@ -154,7 +150,6 @@ abstract class PluginController
     /**
      * Add actions result data
      * @see getData()
-     * @param <type> $data
      */
     public function addData($data)
     {

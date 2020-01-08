@@ -140,7 +140,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
 
     /**
      * Get the "where" statement to allow search with this field
-     * @param array $criteria_value array of id => criteria_value (which are array)
+     * @param array $criteria array of id => criteria_value (which are array)
      * @return string
      * @see getCriteriaFrom
      */

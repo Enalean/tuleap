@@ -56,7 +56,7 @@ class UserResource extends AuthenticatedResource
      * @param String $query
      * @param int $limit
      * @param int $offset
-     * @return TimetrackingRepresentation[]
+     * @return TimetrackingRepresentation[][]
      * @throws RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \Tuleap\REST\Exceptions\InvalidJsonException

@@ -114,7 +114,7 @@ class ProjectGetSvn implements Dispatchable
     }
 
     /**
-     * @param array
+     * @param array $repositories_representations
      */
     public function addRepositoriesRepresentations($repositories_representations)
     {
@@ -122,7 +122,7 @@ class ProjectGetSvn implements Dispatchable
     }
 
     /**
-     * @param int
+     * @param int $total_repositories
      */
     public function addTotalRepositories($total_repositories)
     {

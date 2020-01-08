@@ -2289,9 +2289,6 @@ class Artifact
     /**
       * Checks if a user is allowed to delete and update a follow-up comment
       *
-      * @param user_id
-      * @param comment_id
-      *
       * @return bool
       */
     function userCanEditFollowupComment($comment_id)

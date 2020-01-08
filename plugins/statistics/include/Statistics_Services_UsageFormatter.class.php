@@ -76,7 +76,7 @@ class Statistics_Services_UsageFormatter
     /**
      * Format a query result containing size to put them in MegaBytes
      *
-     * @param array|DataAccessResult $query_result
+     * @param array|DataAccessResult $query_results
      */
     public function formatSizeInMegaBytes($query_results)
     {

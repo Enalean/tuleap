@@ -78,9 +78,6 @@ class BurnupCalculator
 
         $total_effort = 0;
         $team_effort  = 0;
-        /**
-         * @var $item \AgileDashboard_Milestone_Backlog_BacklogItem
-         */
         foreach ($backlog_items as $item) {
             $artifact     = $this->artifact_factory->getArtifactById($item['id']);
 

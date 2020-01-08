@@ -28,12 +28,12 @@ interface Permission
     public function getPattern();
 
     /**
-     * @return []
+     * @return array
      */
     public function getWritersUgroup();
 
     /**
-     * @return []
+     * @return array
      */
     public function getRewindersUgroup();
 }

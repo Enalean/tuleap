@@ -90,7 +90,7 @@ class GitRepositoryManager
     /**
      * @param GitRepositoryFactory $repository_factory
      * @param Git_SystemEventManager   $git_system_event_manager
-     * @param backup_directory
+     * @param string $backup_directory
      */
     public function __construct(
         GitRepositoryFactory $repository_factory,

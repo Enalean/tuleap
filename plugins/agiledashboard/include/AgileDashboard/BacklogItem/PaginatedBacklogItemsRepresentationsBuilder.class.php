@@ -52,7 +52,7 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
     }
 
     /**
-     * @return AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations;
+     * @return AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations
      */
     public function getPaginatedBacklogItemsRepresentationsForMilestone(PFUser $user, Planning_Milestone $milestone, $limit, $offset)
     {
@@ -62,7 +62,7 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
     }
 
     /**
-     * @return AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations;
+     * @return AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations
      */
     public function getPaginatedBacklogItemsRepresentationsForTopMilestone(PFUser $user, Planning_Milestone $top_milestone, $limit, $offset)
     {

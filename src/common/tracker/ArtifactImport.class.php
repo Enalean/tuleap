@@ -895,7 +895,7 @@ class ArtifactImport
    *
    * Note that the first element returned will be the follow-up header
    *
-   * @param string $followup_comment the string containing the follow-up comments
+   * @param string $followup_comments the string containing the follow-up comments
    * @return array of string the follow-up comments extracted from the string $followup_comments or false if an error occured
    */
     function splitFollowUpComments($followup_comments)

@@ -921,7 +921,7 @@ class Docman_ItemDao extends DataAccessObject
     /**
     * This removes all users copy preferences set on item identified by $item_id. This is done once the corresponding item is deleted
     *
-    * @param int $itemid identifer of docman item that has been marked as deleted.
+    * @param int $item_id identifer of docman item that has been marked as deleted.
     *@return void
     *
     */
@@ -940,7 +940,7 @@ class Docman_ItemDao extends DataAccessObject
     /**
     * This removes all users cut preferences set on item identified by $item_id. This is done once the corresponding item is deleted
     *
-    * @param int $itemid identifer of docman item that has been marked as deleted.
+    * @param int $item_id identifer of docman item that has been marked as deleted.
     *@return void
     *
     */

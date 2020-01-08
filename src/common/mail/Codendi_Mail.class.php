@@ -471,7 +471,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      *
      * @param array of User $bcc
      *
-     * @return array;
+     * @return array
      */
     public function setBccUser($bcc)
     {

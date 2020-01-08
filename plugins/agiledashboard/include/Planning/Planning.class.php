@@ -160,7 +160,7 @@ class Planning
     }
 
     /**
-     * @param Tracker[] $backlog_tracker The trackers used as a backlog
+     * @param Tracker[] $backlog_trackers The trackers used as a backlog
      */
     public function setBacklogTrackers(array $backlog_trackers)
     {

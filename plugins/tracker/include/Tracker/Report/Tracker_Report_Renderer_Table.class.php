@@ -50,7 +50,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * @param string $name the name of the renderer
      * @param string $description the description of the renderer
      * @param int $rank the rank
-     * @param int $chnuksz the size of the chunk (Browse X at once)
+     * @param int $chunksz the size of the chunk (Browse X at once)
      * @param bool $multisort use multisort?
      */
     public function __construct($id, $report, $name, $description, $rank, $chunksz, $multisort)
@@ -243,7 +243,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Adds aggregates to database
      *
-     * @param array $cols
+     * @param array $aggs
      */
     public function saveAggregates($aggs)
     {
@@ -1517,7 +1517,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Build oredered query
      *
      * @param array                       $matching_ids The artifact to display
-     * @param Tracker_FormElement_Field[] $fields       The fields to display
      *
      * @return array of sql queries
      */
@@ -2406,7 +2405,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      *Test if sort contains at least one used field
      *
-     * @return bool, true f sort has at least one used field
+     * @return bool true f sort has at least one used field
      */
     public function sortHasUsedField($store_in_session = true)
     {

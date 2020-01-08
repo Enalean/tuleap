@@ -420,7 +420,7 @@ class GitRepository implements DVCSRepository
     }
     /**
      *  Check repo status, if it is not initialized
-     * @return <type>
+     * @return bool
      */
     public function isInitialized()
     {

@@ -129,8 +129,7 @@ class Tracker_Report_RendererFactory
     }
 
     /**
-     * @param Report $report the id of the report
-     * @param array
+     * @param Tracker_Report $report the id of the report
      */
     public function getReportRendererByReportAndId($report, $renderer_id, $store_in_session = true)
     {
@@ -340,7 +339,7 @@ class Tracker_Report_RendererFactory
      * Force the order of renderers for a report
      *
      * @param Tracker_Report $report          The report
-     * @param array          $renderers_order The ids of renderers in specified order
+     * @param array          $report_renderers The ids of renderers in specified order
      *
      * @return bool true on success false on failure
      */

@@ -27,8 +27,8 @@ namespace Tuleap\Timetracking\REST\v1;
 class TimetrackingRepresentationBuilder
 {
     /**
-     * @param Time[]
-     * @return TimetrackingRepresentation[]
+     * @param \Tuleap\Timetracking\Time\Time[] $times
+     * @return TimetrackingRepresentation[][]
      */
     public function buildPaginatedTimes(array $times)
     {

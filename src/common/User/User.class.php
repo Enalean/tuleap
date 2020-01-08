@@ -1224,7 +1224,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * Set new Email
      *
-     * @param  String $new_email
+     * @param  string $newEmail
      */
     function setNewMail($newEmail)
     {
@@ -1234,7 +1234,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * Set Register Purpose
      *
-     * @param  String $regiter_purpose
+     * @param  string $registerPurpose
      */
     function setRegisterPurpose($registerPurpose)
     {
@@ -1244,7 +1244,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * Set Confirm Hash
      *
-     * @param  String $confirm_hash
+     * @param  string $confirmHash
      */
     public function setConfirmHash($confirmHash)
     {
@@ -1259,7 +1259,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * Set Expiry Date
      *
-     * @param  String $expiry date
+     * @param  string|int $expiryDate
      */
     function setExpiryDate($expiryDate)
     {
@@ -1331,7 +1331,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      * Example:
      * $user->togglePreference('cardwall', 'display_avatars', 'display_usernames');
      *
-     * @param string $preference_name
+     * @param string $pref_name
      * @param mixed  $default_value
      * @param mixed  $alternate_value
      */

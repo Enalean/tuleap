@@ -36,7 +36,7 @@ class WholeInstanceKeysAggregator implements IProvideKey
     }
 
     /**
-     * @return \Tuleap\Git\Gitolite\SSHKey\Key;
+     * @return \Tuleap\Git\Gitolite\SSHKey\Key
      */
     public function current()
     {

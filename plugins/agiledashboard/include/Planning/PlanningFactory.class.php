@@ -354,7 +354,7 @@ class PlanningFactory
     /**
      * Get a planning
      *
-     * @param int $group_id
+     * @param int $planning_id
      *
      * @return Planning
      */
@@ -627,8 +627,6 @@ class PlanningFactory
 
     /**
      * Retrieve the project trackers that can be used as planning trackers.
-     *
-     * @param Planning $planning The planning for which we want to know the available trackers.
      *
      * @return Array of Tracker
      */

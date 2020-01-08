@@ -62,7 +62,7 @@ class XMLRepositoryImporter
     /** @var string */
     private $access_file_contents;
 
-    /** @var array(array(path => (string), emails => (string)), ...) */
+    /** @var array array(array(path => (string), emails => (string)), ...) */
     private $subscriptions;
 
     /** @var SimpleXMLElement */

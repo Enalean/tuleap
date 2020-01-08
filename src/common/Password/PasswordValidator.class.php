@@ -24,11 +24,7 @@
 /* abstract */ class PasswordValidator
 {
     public $description;
-    /**
-    * PasswordValidator
-    *
-    * @param  description
-    */
+
     function __construct($description)
     {
         $this->description = $description;

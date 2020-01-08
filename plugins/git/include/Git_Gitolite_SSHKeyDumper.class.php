@@ -158,7 +158,6 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
     /**
      * Remove all pub SSH keys previously associated to a user
      *
-     * @param IHaveAnSSHKey $user
      * @param int           $last_key_id
      */
     private function removeUserExistingKeysFromAGivenKeyId($user_name, $last_key_id)

@@ -833,7 +833,7 @@ class Planning_MilestoneFactory
     /**
      * Create Milestones corresponding to an array of artifacts
      *
-     * @param Tracker_Artifact[] $artifact
+     * @param Tracker_Artifact[] $artifacts
      *
      * @return Planning_ArtifactMilestone[]
      */

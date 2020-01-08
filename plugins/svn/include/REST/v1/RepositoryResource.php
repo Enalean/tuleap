@@ -505,7 +505,7 @@ class RepositoryResource extends AuthenticatedResource
      * @status 202
      * @access protected
      *
-     * @param int $repository_id Id of the repository
+     * @param int $id Id of the repository
      *
      * @throws RestException 400
      * @throws RestException 403

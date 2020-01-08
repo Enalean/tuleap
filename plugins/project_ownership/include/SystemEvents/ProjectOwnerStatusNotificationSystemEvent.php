@@ -29,7 +29,7 @@ class ProjectOwnerStatusNotificationSystemEvent extends \SystemEvent
     public const NAME = 'PROJECT_OWNER_STATUS_NOTIFICATION';
 
     /**
-     * @var Sender;
+     * @var Sender
      */
     private $mail_sender;
 

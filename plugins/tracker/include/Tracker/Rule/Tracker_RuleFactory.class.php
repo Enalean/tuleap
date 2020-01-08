@@ -337,7 +337,7 @@ class Tracker_RuleFactory
 
     /**
      *
-     * @param SimpleXMLElement $xml         containing the structure of the imported semantic
+     * @param SimpleXMLElement $date_rules         containing the structure of the imported semantic
      * @param array            $xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the rule is attached
      * @return array of \Tracker_Rule_Date
@@ -370,7 +370,7 @@ class Tracker_RuleFactory
 
     /**
      *
-     * @param SimpleXMLElement $xml         containing the structure of the imported semantic
+     * @param SimpleXMLElement $list_rules         containing the structure of the imported semantic
      * @param array            $xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the rule is attached
      * @return array of Tracker_Rule_List

@@ -1057,9 +1057,6 @@ class ArtifactField
     /**
      *  Return the value used for the where clause
      *
-     * @param field_name: the field name
-     * @param to_match:
-     *
      * @return string
      */
     function buildMatchExpression($field_name, &$to_match)

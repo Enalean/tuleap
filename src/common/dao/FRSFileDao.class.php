@@ -354,9 +354,9 @@ class FRSFileDao extends DataAccessObject
     /**
      * Log the file download action into the database
      *
-     * @param Object{FRSFile) $file the FRSFile Object to log the download of
+     * @param FRSFile $file the FRSFile Object to log the download of
      * @param int $user_id the user that download the file
-     * @return boolean true if there is no error, false otherwise
+     * @return bool true if there is no error, false otherwise
      */
     function logDownload($file, $user_id)
     {

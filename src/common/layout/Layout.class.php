@@ -627,7 +627,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      *
      * @param string  $id the id of the input element
      * @param string  $name the name of the input element
-     * @param array   $critria_selector list of extra criterias to be listed in a prepended select
+     * @param array   $criteria_selector list of extra criterias to be listed in a prepended select
      * @param array   $classes extra css classes if needed
      * @param bool $is_time_displayed to know if the time need to be displayed
      *

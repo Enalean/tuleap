@@ -335,7 +335,6 @@ class WikiAttachmentRevision
 
     /**
      * @access public static
-     * @param  Iterator
      */
     function getRevisionIterator($gid = null, $id = null)
     {
