@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic type="tooltip">
+ <field REF="F8" />
+ <field REF="F16" />
+ <field REF="F9" />
+</semantic>
