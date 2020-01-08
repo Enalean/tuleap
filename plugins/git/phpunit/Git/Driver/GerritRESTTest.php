@@ -585,9 +585,9 @@ final class GerritRESTTest extends TestCase
 
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('DELETE', $request->getMethod());
+        $this->assertEquals('POST', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/projects/' . urlencode($project_name), $request_uri->getPath());
+        $this->assertEquals('/a/projects/' . urlencode($project_name) . '/delete-project~delete', $request_uri->getPath());
         $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
     }
 
