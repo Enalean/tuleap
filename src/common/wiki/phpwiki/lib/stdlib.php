@@ -2079,25 +2079,23 @@ function stripForSearch( $string ) {
  */
 function url_get_contents($uri)
 {
-    if (get_cfg_var('allow_url_fopen')) { // was ini_get('allow_url_fopen'))
-        return @file_get_contents($uri);
-    } else {
-        require_once("lib/HttpClient.php");
-        $bits = parse_url($uri);
-        $host = $bits['host'];
-        $port = isset($bits['port']) ? $bits['port'] : 80;
-        $path = isset($bits['path']) ? $bits['path'] : '/';
-        if (isset($bits['query'])) {
-            $path .= '?'.$bits['query'];
-        }
-        $client = new HttpClient($host, $port);
-        $client->use_gzip = false;
-        if (!$client->get($path)) {
-            return false;
-        } else {
-            return $client->getContent();
-        }
+    $client          = \Tuleap\Http\HttpClientFactory::createClient();
+    $request_factory = \Tuleap\Http\HTTPFactoryBuilder::requestFactory();
+    try {
+        $response = $client->sendRequest(
+            $request_factory->createRequest('GET', $uri)
+        );
+    } catch (\Psr\Http\Client\ClientExceptionInterface $e) {
+        return false;
     }
+
+    $content = $response->getBody()->getContents();
+
+    if ($content === '') {
+        return false;
+    }
+
+    return $content;
 }
 
 /**
