@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,21 @@
 
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
-require_once __DIR__.'/../../bootstrap.php';
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class VisitCleanerTest extends \TuleapTestCase
+final class VisitCleanerTest extends TestCase
 {
-    public function itClearsVisitedArtifacts()
+    use MockeryPHPUnitIntegration;
+
+    public function testItClearsVisitedArtifacts(): void
     {
         $user_id = 101;
-        $user    = mock('PFUser');
-        stub($user)->getId()->returns($user_id);
+        $user    = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns($user_id);
 
-        $recently_visited_dao = mock('Tuleap\\Tracker\\Artifact\\RecentlyVisited\\RecentlyVisitedDao');
-        $recently_visited_dao->expectOnce('deleteVisitByUserId', array($user_id));
+        $recently_visited_dao = \Mockery::mock(\Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao::class);
+        $recently_visited_dao->shouldReceive('deleteVisitByUserId')->with($user_id)->once();
 
         $visit_cleaner = new VisitCleaner($recently_visited_dao);
         $visit_cleaner->clearVisitedArtifacts($user);

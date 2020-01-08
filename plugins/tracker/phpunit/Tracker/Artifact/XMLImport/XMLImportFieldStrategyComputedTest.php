@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,51 +18,54 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 namespace Tuleap\Tracker\Artifact\XMLImport;
 
-require_once __DIR__.'/../../bootstrap.php';
-
+use Mockery;
+use PFUser;
+use PHPUnit\Framework\TestCase;
+use Tracker_Artifact;
 use Tracker_FormElement_Field_Computed;
 
-class XMLImportFieldStrategyComputedTest extends \TuleapTestCase
+final class XMLImportFieldStrategyComputedTest extends TestCase
 {
-    public function itShouldWorkWithAManualValue()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    public function testItShouldWorkWithAManualValue(): void
     {
-        $field             = mock('Tracker_FormElement_Field_Computed');
-        $user              = mock('PFUser');
+        $field             = Mockery::mock(Tracker_FormElement_Field_Computed::class);
+        $user              = Mockery::mock(PFUser::class);
         $xml_change        = new \SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="capacity" type="computed">
                     <manual_value>0</manual_value>
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, mock('Tracker_Artifact'));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Tracker_Artifact::class));
         $expected_result = array(Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '0');
 
-        $this->assertIdentical($change_computed, $expected_result);
+        $this->assertSame($expected_result, $change_computed);
     }
 
-    public function itShouldWorkWhenIsAutocomputed()
+    public function testItShouldWorkWhenIsAutocomputed(): void
     {
-        $field             = mock('Tracker_FormElement_Field_Computed');
-        $user              = mock('PFUser');
+        $field             = Mockery::mock(Tracker_FormElement_Field_Computed::class);
+        $user              = Mockery::mock(PFUser::class);
         $xml_change        = new \SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="capacity" type="computed">
                     <is_autocomputed>1</is_autocomputed>
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, mock('Tracker_Artifact'));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Tracker_Artifact::class));
         $expected_result = array(Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1');
 
-        $this->assertIdentical($change_computed, $expected_result);
+        $this->assertSame($expected_result, $change_computed);
     }
 
-    public function itShouldWorkWithAManualValueAndIsAutocomputed()
+    public function testItShouldWorkWithAManualValueAndIsAutocomputed(): void
     {
-        $field             = mock('Tracker_FormElement_Field_Computed');
-        $user              = mock('PFUser');
+        $field             = Mockery::mock(Tracker_FormElement_Field_Computed::class);
+        $user              = Mockery::mock(PFUser::class);
         $xml_change        = new \SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="capacity" type="computed">
                     <manual_value></manual_value>
@@ -70,12 +73,12 @@ class XMLImportFieldStrategyComputedTest extends \TuleapTestCase
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, mock('Tracker_Artifact'));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Tracker_Artifact::class));
         $expected_result = array(
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'
         );
 
-        $this->assertIdentical($change_computed, $expected_result);
+        $this->assertSame($expected_result, $change_computed);
     }
 }
