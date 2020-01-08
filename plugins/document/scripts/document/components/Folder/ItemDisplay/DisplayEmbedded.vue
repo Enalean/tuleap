@@ -18,8 +18,13 @@
   -->
 
 <template>
-    <display-embedded-content v-if="has_loaded_without_error" data-test="embedded_content" />
-    <display-embedded-spinner v-else-if="is_loading" data-test="embedded_spinner" />
+    <div>
+        <display-embedded-content v-if="has_loaded_without_error" data-test="embedded_content" />
+        <display-embedded-spinner
+            v-else-if="has_loaded_without_error && is_loading"
+            data-test="embedded_spinner"
+        />
+    </div>
 </template>
 
 <script>

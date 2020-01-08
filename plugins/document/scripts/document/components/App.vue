@@ -19,17 +19,20 @@
 
 <template>
     <div class="document-app">
-        <permission-error v-if="has_folder_permission_error" />
         <document-breadcrumb v-if="!has_folder_permission_error" />
-        <loading-error
-            v-if="has_folder_loading_error || has_document_loading_error || has_document_lock_error"
-        />
+
+        <permission-error v-if="has_folder_permission_error" />
         <item-permission-error
-            v-if="has_document_permission_error"
+            v-else-if="has_document_permission_error"
             v-bind:csrf_token="csrf_token"
             v-bind:csrf_token_name="csrf_token_name"
         />
-        <router-view />
+        <loading-error
+            v-else-if="
+                has_folder_loading_error || has_document_loading_error || has_document_lock_error
+            "
+        />
+        <router-view v-else />
         <switch-to-old-u-i v-if="user_id !== 0" />
         <post-item-deletion-notification />
     </div>
