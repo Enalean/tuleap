@@ -35,6 +35,7 @@
                 type="submit"
                 class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
                 data-test="project-registration-next-button"
+                v-bind:disabled="is_creating_project"
             >
                 <span v-translate>Start my project</span>
                 <i v-bind:class="get_icon" data-test="project-submission-icon" />
