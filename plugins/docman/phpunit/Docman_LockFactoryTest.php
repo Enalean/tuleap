@@ -23,7 +23,8 @@ declare(strict_types = 1);
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class Docman_LockFactoryTest extends TestCase // @codingStandardsIgnoreLine
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Docman_LockFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     /**
@@ -89,8 +90,21 @@ class Docman_LockFactoryTest extends TestCase // @codingStandardsIgnoreLine
         $this->item->shouldReceive('getId')->andReturn(1);
         $this->item->shouldReceive('getGroupId')->andReturn(100);
         $this->user->shouldReceive('getId')->andReturn(105);
+        $this->dao->shouldReceive('searchLocksForProjectByItemId')->andReturn([['item_id' => 1]]);
         $this->dao->shouldReceive('delLock')->once();
         $this->docman_log->shouldReceive('log')->once();
+
+        $this->lock_factory->unlock($this->item, $this->user);
+    }
+
+    public function testItemIsNotUnlockedAgainIfTheDocumentIsAlreadyUnlocked(): void
+    {
+        $this->item->shouldReceive('getId')->andReturn(1);
+        $this->item->shouldReceive('getGroupId')->andReturn(100);
+        $this->user->shouldReceive('getId')->andReturn(105);
+        $this->dao->shouldReceive('searchLocksForProjectByItemId')->andReturn([]);
+        $this->dao->shouldReceive('delLock')->never();
+        $this->docman_log->shouldReceive('log')->never();
 
         $this->lock_factory->unlock($this->item, $this->user);
     }
