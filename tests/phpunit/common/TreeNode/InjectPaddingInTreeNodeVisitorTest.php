@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TreeNode_InjectPaddingInTreeNodeVisitorTest extends TuleapTestCase
-{
+use PHPUnit\Framework\TestCase;
 
-    function ItInjectsPadding()
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class TreeNodeInjectPaddingInTreeNodeVisitorTest extends TestCase
+{
+    public function testItInjectsPadding(): void
     {
-        $root = new TreeNode();
+        $root  = new TreeNode();
         $node1 = new TreeNode();
         $node2 = new TreeNode();
         $root->addChild($node1);
@@ -33,6 +35,6 @@ class TreeNode_InjectPaddingInTreeNodeVisitorTest extends TuleapTestCase
         $root->accept($visitor);
 
         $data = $node2->getData();
-        $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $data['tree-padding']);
+        $this->assertRegExp('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $data['tree-padding']);
     }
 }

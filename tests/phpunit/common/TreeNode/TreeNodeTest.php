@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TreeNodeTest extends TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class TreeNodeTest extends TestCase
 {
-    public function itMayWrapAnObject()
+    use MockeryPHPUnitIntegration;
+
+    public function testItMayWrapAnObject()
     {
-        $object = mock('stdClass');
+        $object = \Mockery::spy(\stdClass::class);
         $node   = new TreeNode();
 
         $node->setObject($object);
-        $this->assertEqual($object, $node->getObject());
+        $this->assertEquals($object, $node->getObject());
     }
-}
 
-class TreeNode_FlattenChildrenTest extends TuleapTestCase
-{
-
-    public function itReturnsAnEmptyArrayWhenNoChildren()
+    public function testItReturnsAnEmptyArrayWhenNoChildren(): void
     {
         $node = new TreeNode();
-        $this->assertIdentical(array(), $node->flattenChildren());
+        $this->assertSame(array(), $node->flattenChildren());
     }
 
-    public function itReturnsTheChildrenWhenNoSubChildren()
+    public function testItReturnsTheChildrenWhenNoSubChildren(): void
     {
         $child1 = new TreeNode();
         $child2 = new TreeNode();
@@ -48,10 +50,10 @@ class TreeNode_FlattenChildrenTest extends TuleapTestCase
         $node->addChild($child1);
         $node->addChild($child2);
 
-        $this->assertEqual(array($child1, $child2), $node->flattenChildren());
+        $this->assertEquals(array($child1, $child2), $node->flattenChildren());
     }
 
-    public function itReturnsTheChildrenAndSubChildrenAsAFlatList()
+    public function testItReturnsTheChildrenAndSubChildrenAsAFlatList(): void
     {
         $child1 = new TreeNode();
         $subchild1 = new TreeNode();
@@ -61,14 +63,10 @@ class TreeNode_FlattenChildrenTest extends TuleapTestCase
 
         $node->addChild($child1);
         $node->addChild($child2);
-        $this->assertEqual(array($child1,  $subchild1, $child2), $node->flattenChildren());
+        $this->assertEquals(array($child1,  $subchild1, $child2), $node->flattenChildren());
     }
-}
 
-class TreeNode_AddChildrenTest extends TuleapTestCase
-{
-
-    public function itBuildsATreeInline()
+    public function testItBuildsATreeInline(): void
     {
         $root       = new TreeNode();
         $node_1     = new TreeNode();
@@ -87,33 +85,29 @@ class TreeNode_AddChildrenTest extends TuleapTestCase
             $node_2
         );
 
-        $this->assertEqual($node_1, $root->getChild(0));
-        $this->assertEqual($node_1_1, $root->getChild(0)->getChild(0));
-        $this->assertEqual($node_1_1_1, $root->getChild(0)->getChild(0)->getChild(0));
-        $this->assertEqual($node_1_2, $root->getChild(0)->getChild(1));
-        $this->assertEqual($node_2, $root->getChild(1));
+        $this->assertEquals($node_1, $root->getChild(0));
+        $this->assertEquals($node_1_1, $root->getChild(0)->getChild(0));
+        $this->assertEquals($node_1_1_1, $root->getChild(0)->getChild(0)->getChild(0));
+        $this->assertEquals($node_1_2, $root->getChild(0)->getChild(1));
+        $this->assertEquals($node_2, $root->getChild(1));
     }
-}
 
-class TreeNode_SetChildrenTest extends TuleapTestCase
-{
-
-    public function itAddsTheGivenChildren()
+    public function testItAddsTheGivenChildren(): void
     {
         $root       = new TreeNode();
         $children   = array(new TreeNode(), new TreeNode());
         $root->setChildren($children);
-        $this->assertEqual($children, $root->getChildren());
+        $this->assertEquals($children, $root->getChildren());
     }
 
-    public function itSetsTheParentNodeOfTheChildren()
+    public function testItSetsTheParentNodeOfTheChildren(): void
     {
         $root       = new TreeNode();
         $node_1     = new TreeNode();
         $node_2     = new TreeNode();
         $children   = array($node_1, $node_2);
         $root->setChildren($children);
-        $this->assertEqual($root, $node_2->getParentNode());
-        $this->assertEqual($root, $node_1->getParentNode());
+        $this->assertEquals($root, $node_2->getParentNode());
+        $this->assertEquals($root, $node_1->getParentNode());
     }
 }
