@@ -382,25 +382,24 @@ class TrackerFactory
     /**
      * @return bool
      */
-    private function isRequiredInformationsAvailable($name, $description, $itemname)
+    private function isRequiredInformationsAvailable($name, $itemname)
     {
-        return trim($name) !== '' && trim($description) !== '' && trim($itemname) !== '';
+        return trim($name) !== '' && trim($itemname) !== '';
     }
 
     /**
-     * Valid the name, description and itemname on creation.
+     * Valid the name and itemname on creation.
      * Add feedback if error.
      *
      * @param string $name        the name of the new tracker
-     * @param string $description the description of the new tracker
      * @param string $itemname    the itemname of the new tracker
      * @param int    $group_id    the id of the group of the new tracker
      *
      * @return bool true if all valid
      */
-    public function validMandatoryInfoOnCreate($name, $description, $itemname, $group_id)
+    public function validMandatoryInfoOnCreate($name, $itemname, $group_id)
     {
-        if (! $this->isRequiredInformationsAvailable($name, $description, $itemname)) {
+        if (! $this->isRequiredInformationsAvailable($name, $itemname)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'name_requ'));
             return false;
         }
@@ -438,7 +437,7 @@ class TrackerFactory
         $invalid_trackers_name = array();
 
         foreach ($trackers as $tracker) {
-            if (! $this->areMandatoryCreationInformationsValid($tracker->getName(), $tracker->getDescription(), $tracker->getItemName(), $project_id)) {
+            if (! $this->areMandatoryCreationInformationsValid($tracker->getName(), $tracker->getItemName(), $project_id)) {
                 $invalid_trackers_name[] = $tracker->getName();
             }
         }
@@ -451,13 +450,12 @@ class TrackerFactory
      */
     private function areMandatoryCreationInformationsValid(
         $tracker_name,
-        $tracker_description,
         $tracker_shortname,
         $project_id
     ) {
         $reference_manager = $this->getReferenceManager();
 
-        return $this->isRequiredInformationsAvailable($tracker_name, $tracker_description, $tracker_shortname)
+        return $this->isRequiredInformationsAvailable($tracker_name, $tracker_shortname)
             && $this->isShortNameValid($tracker_shortname) && ! $this->isNameExists($tracker_name, $project_id)
             && ! $this->isShortNameExists($tracker_shortname, $project_id)
             && ! $reference_manager->_isKeywordExists($tracker_shortname, $project_id);
@@ -479,7 +477,7 @@ class TrackerFactory
     function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false)
     {
 
-        if ($this->validMandatoryInfoOnCreate($name, $description, $itemname, $project_id)) {
+        if ($this->validMandatoryInfoOnCreate($name, $itemname, $project_id)) {
             // Get the template tracker
             $template_tracker = $this->getTrackerById($id_template);
             if (!$template_tracker) {
@@ -905,7 +903,7 @@ class TrackerFactory
     private function createTracker($name, $description, $itemname, Project $project, ArtifactType $tv3)
     {
         $tracker = null;
-        if ($this->validMandatoryInfoOnCreate($name, $description, $itemname, $project->getId())) {
+        if ($this->validMandatoryInfoOnCreate($name, $itemname, $project->getId())) {
             $migration_v3 = new Tracker_Migration_V3($this);
             $tracker      = $migration_v3->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
 

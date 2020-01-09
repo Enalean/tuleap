@@ -774,7 +774,7 @@ plugin_tracker_common_artifacts	not_get	Récupération impossible des artefacts&
 plugin_tracker_common_type	invalid	Pas d'objet de groupe valide
 plugin_tracker_common_type	no_match	Group_id dans la BDD ne correspond pas à l'objet Group
 plugin_tracker_common_type	perm_fail	La création des permissions utilisateurs a échoué&nbsp;: $1
-plugin_tracker_common_type	name_requ	Le nom , la description, la couleur et le nom court sont obligatoires.
+plugin_tracker_common_type	name_requ	Le nom, la couleur et le nom court sont obligatoires.
 plugin_tracker_common_type	invalid_shortname	Nom court invalide&nbsp;: $1. Veuillez utiliser uniquement des caractères alphanumériques ou un nom court non réservé. Retournez à la page précédente et modifiez ce champ.
 plugin_tracker_common_type	invalid_templ	Le patron de projet selectionné est invalide
 plugin_tracker_common_type	invalid_tracker_tmpl	Le patron d'outil de suivi selectionné est invalide

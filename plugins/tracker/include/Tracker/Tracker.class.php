@@ -1725,7 +1725,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->instantiate_for_new_projects = $request->getValidated('instantiate_for_new_projects') || $cannot_configure_instantiate_for_new_projects ? 1 : 0;
         $this->log_priority_changes         = $request->getValidated('log_priority_changes') ? 1 : 0;
 
-        if (!$this->name || !$this->description || !$request_tracker_color || !$this->item_name) {
+        if (!$this->name || !$request_tracker_color || !$this->item_name) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'name_requ'));
         } else {
             if ($old_name != $this->name) {
