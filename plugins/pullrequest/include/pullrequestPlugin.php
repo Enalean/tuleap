@@ -171,8 +171,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     {
         $css_assets = new CssAsset(
             new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/pullrequest/BurningParrot',
-                '/assets/pullrequest/BurningParrot'
+                __DIR__ . '/../../../src/www/assets/pullrequest/themes',
+                '/assets/pullrequest/themes'
             ),
             'repository'
         );

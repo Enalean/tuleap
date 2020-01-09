@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -85,8 +85,8 @@ class PullrequestDisplayer
             $layout->addCssAsset(
                 new CssAsset(
                     new IncludeAssets(
-                        __DIR__ . '/../../../src/www/assets/pullrequest/BurningParrot',
-                        '/assets/pullrequest/BurningParrot'
+                        __DIR__ . '/../../../src/www/assets/pullrequest/themes',
+                        '/assets/pullrequest/themes'
                     ),
                     'pull-requests'
                 )

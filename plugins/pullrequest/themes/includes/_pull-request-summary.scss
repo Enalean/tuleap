@@ -1,0 +1,76 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.pull-request-summary {
+    display: flex;
+    align-items: center;
+
+    > .tlp-avatar {
+        flex: 0 0 auto;
+    }
+}
+
+.pull-request-summary-info {
+    flex: 1 1 auto;
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+.pull-request-summary-title {
+    margin: 0 0 $tlp-half-spacing;
+}
+
+.pull-request-summary-metadata {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.pull-request-summary-author {
+    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+}
+
+.pull-request-summary-refs {
+    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+    white-space: nowrap;
+}
+
+.pull-request-summary-creation-date {
+    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+    color: $tlp-ui-dimmed;
+
+    > .fa-calendar {
+        margin: 0 3px 0 0;
+    }
+}
+
+.pull-request-summary-labels-box {
+    display: inline-block;
+    margin: 0 0 0 $tlp-half-spacing;
+
+    .select2.select2-container--disabled > .selection > .item-labels-box-select2 {
+        min-height: auto;
+        /* stylelint-disable-next-line selector-max-compound-selectors, selector-class-pattern */
+        > .select2-selection__rendered > .select2-selection__choice {
+            margin: 1px 3px;
+        }
+    }
+}
+
+.pull-request-summary-status {
+    margin: 0 0 0 $tlp-spacing;
+}
