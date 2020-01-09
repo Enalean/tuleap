@@ -22,6 +22,8 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import DisplayEmbedded from "./DisplayEmbedded.vue";
 import VueRouter from "vue-router";
+import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
+import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 
 describe("DisplayEmbedded", () => {
     let router, component_options, store;
@@ -43,7 +45,7 @@ describe("DisplayEmbedded", () => {
     });
 
     it(`Given user display an embedded file content
-        When backend throw an error
+        When backend throw a permission error
         Then no spinner is displayed and component is not rendered`, async () => {
         const store_options = {
             state: {
@@ -62,8 +64,32 @@ describe("DisplayEmbedded", () => {
 
         await wrapper.vm.$nextTick().then(() => {});
 
-        expect(wrapper.find("[data-test=embedded_content]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=embedded_spinner]").exists()).toBeFalsy();
+        expect(wrapper.find(DisplayEmbeddedContent).exists()).toBeFalsy();
+        expect(wrapper.find(DisplayEmbeddedSpinner).exists()).toBeFalsy();
+    });
+
+    it(`Given user display an embedded file content
+        When backend throw a loading error
+        Then no spinner is displayed and component is not rendered`, async () => {
+        const store_options = {
+            state: {
+                error: {
+                    has_document_permission_error: false,
+                    has_document_loading_error: true
+                }
+            },
+            getters: {
+                "error/does_document_have_any_error": true
+            }
+        };
+        store = createStoreMock(store_options);
+
+        const wrapper = shallowMount(DisplayEmbedded, { store, ...component_options });
+
+        await wrapper.vm.$nextTick().then(() => {});
+
+        expect(wrapper.find(DisplayEmbeddedContent).exists()).toBeFalsy();
+        expect(wrapper.find(DisplayEmbeddedSpinner).exists()).toBeFalsy();
     });
 
     it(`Given user display an embedded file content
@@ -91,12 +117,12 @@ describe("DisplayEmbedded", () => {
             }
         });
 
-        expect(wrapper.find("[data-test=embedded_content]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=embedded_spinner]").exists()).toBeFalsy();
+        expect(wrapper.find(DisplayEmbeddedContent).exists()).toBeTruthy();
+        expect(wrapper.find(DisplayEmbeddedSpinner).exists()).toBeFalsy();
     });
 
     it(`Reset currently displayed item form stored
-        When compontent is destroyed`, () => {
+        When component is destroyed`, () => {
         const store_options = {
             state: {
                 error: {}
