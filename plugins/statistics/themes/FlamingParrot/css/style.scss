@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'variables/variables-purple';
+@import './disk-usage-pie';
 
-@import 'statistics';
+/* stylelint-disable-next-line selector-class-pattern */
+.stat_help {
+    width: auto;
+    margin: .5em;
+    padding: .5em .5em .5em 40px;
+    border: 1px solid #dddddd;
+    background: url('../images/ic/help.png') no-repeat 5px center;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.plugin_statistics_table_legend {
+    margin: 1em;
+    padding-left: 1em;
+    border: 1px solid #000000;
+}

@@ -1,5 +1,5 @@
-/*!
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -77,7 +77,6 @@
 }
 
 .disk-usage-pie-slice-used {
-
     > path {
         fill: #58b359;
     }
@@ -88,7 +87,6 @@
 }
 
 .disk-usage-pie-slice-remaining {
-
     > path {
         fill: #cccccc;
     }
