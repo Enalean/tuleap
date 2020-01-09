@@ -72,6 +72,16 @@ class AgileDashboard_KanbanFactory
         return $this->instantiateFromRow($row);
     }
 
+    public function getKanbanForXmlImport(int $kanban_id)
+    {
+        $row = $this->dao->getKanbanById($kanban_id)->getRow();
+
+        if (! $row) {
+            throw new AgileDashboard_KanbanNotFoundException();
+        }
+        return $this->instantiateFromRow($row);
+    }
+
     /**
      * @return int[]
      */
