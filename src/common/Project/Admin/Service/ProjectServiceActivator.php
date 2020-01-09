@@ -74,6 +74,10 @@ class ProjectServiceActivator
             if (isset($service_info['is_used'])) {
                 $is_used = $service_info['is_used'];
             } else {
+                if ($data->isIsBuiltFromXml() && $short_name !== 'admin') {
+                    continue;
+                }
+
                 $is_used = $template_service['is_used'];
                 if ($short_name === 'admin' || $short_name === 'summary') {
                     $is_used = '1';
