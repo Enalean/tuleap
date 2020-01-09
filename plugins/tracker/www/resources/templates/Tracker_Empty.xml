@@ -5,115 +5,6 @@
   <description>Empty Tracker</description>
   <cannedResponses/>
   <formElements>
-    <formElement type="file" ID="F1" rank="0" use_it="0">
-      <name>attachment</name>
-      <label>Attachments</label>
-    </formElement>
-    <formElement type="text" ID="F2" rank="2" use_it="0">
-      <name>details</name>
-      <label>Original Submission</label>
-      <description>A full description of the artifact</description>
-      <properties rows="7" cols="60"/>
-    </formElement>
-    <formElement type="string" ID="F3" rank="4" use_it="0" required="1">
-      <name>summary</name>
-      <label>Summary</label>
-      <description>One line description of the artifact</description>
-      <properties maxchars="150" size="60"/>
-    </formElement>
-    <formElement type="tbl" ID="F4" rank="6" use_it="0">
-      <name>cc</name>
-      <label>CC</label>
-      <properties hint="Type in a search term"/>
-      <bind type="static" is_rank_alpha="0"/>
-    </formElement>
-    <formElement type="sb" ID="F7" rank="12" use_it="0">
-      <name>status_id</name>
-      <label>Status</label>
-      <description>Artifact Status</description>
-      <bind type="static" is_rank_alpha="0">
-        <items>
-          <item ID="F7-V0" label="Open">
-            <description>The artifact has been submitted</description>
-          </item>
-          <item ID="F7-V1" label="Closed">
-            <description>The artifact is no longer active. See the Resolution field for details on how it was resolved.</description>
-          </item>
-        </items>
-      </bind>
-    </formElement>
-    <formElement type="sb" ID="F8" rank="14" use_it="0">
-      <name>assigned_to</name>
-      <label>Assigned to</label>
-      <description>Who is in charge of solving the artifact</description>
-      <bind type="users">
-        <items>
-          <item label="group_members"/>
-        </items>
-      </bind>
-    </formElement>
-    <formElement type="sb" ID="F11" rank="20" use_it="0">
-      <name>category_id</name>
-      <label>Category</label>
-      <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
-      <bind type="static" is_rank_alpha="0"/>
-    </formElement>
-    <formElement type="sb" ID="F12" rank="22" use_it="0">
-      <name>severity</name>
-      <label>Priority</label>
-      <description>How quickly the artifact must be completed</description>
-      <bind type="static" is_rank_alpha="0">
-        <items>
-          <item ID="F12-V0" label="Low"/>
-          <item ID="F12-V1" label="Medium"/>
-          <item ID="F12-V2" label="High"/>
-        </items>
-        <decorators>
-          <decorator REF="F12-V0" tlp_color_name="graffiti-yellow"/>
-          <decorator REF="F12-V1" tlp_color_name="clockwork-orange"/>
-          <decorator REF="F12-V2" tlp_color_name="fiesta-red"/>
-        </decorators>
-      </bind>
-    </formElement>
-    <formElement type="sb" ID="F13" rank="24" use_it="0">
-      <name>stage</name>
-      <label>Stage</label>
-      <description>Stage in the life cycle of the artifact</description>
-      <bind type="static" is_rank_alpha="0">
-        <items>
-          <item ID="F13-V0" label="New">
-            <description>The artifact has just been submitted</description>
-          </item>
-          <item ID="F13-V1" label="Analyzed">
-            <description>The cause of the artifact has been identified and documented</description>
-          </item>
-          <item ID="F13-V2" label="Accepted">
-            <description>The artifact will be worked on.</description>
-          </item>
-          <item ID="F13-V3" label="Under Implementation">
-            <description>The artifact is being worked on.</description>
-          </item>
-          <item ID="F13-V4" label="Ready for Review">
-            <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
-          </item>
-          <item ID="F13-V5" label="Ready for Test">
-            <description>Updated/Created software is ready to be included in the next build</description>
-          </item>
-          <item ID="F13-V6" label="In Test">
-            <description>Updated/Created software is in the build and is ready to enter the test phase</description>
-          </item>
-          <item ID="F13-V7" label="Approved">
-            <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
-          </item>
-          <item ID="F13-V8" label="Declined">
-            <description>The artifact was not accepted.</description>
-          </item>
-          <item ID="F13-V9" label="Done">
-            <description>The artifact is closed.</description>
-          </item>
-        </items>
-      </bind>
-    </formElement>
   </formElements>
   <semantics>
     <semantic type="tooltip"/>
@@ -128,43 +19,11 @@
           <name>Results</name>
           <columns/>
         </renderer>
-        <renderer type="plugin_graphontrackersv5" rank="1">
-          <name>Default</name>
-          <description>Graphic Report By Default For Support Requests</description>
-          <charts/>
-        </renderer>
       </renderers>
     </report>
   </reports>
   <workflow/>
   <permissions>
-    <permission scope="field" REF="F1" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F1" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F1" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F2" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F2" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F2" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F3" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F3" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F3" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F4" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F4" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F4" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F7" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F7" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F7" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F8" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F8" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F8" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F11" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F11" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F11" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F12" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F12" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F12" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F13" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F13" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F13" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
   </permissions>
 </tracker>
