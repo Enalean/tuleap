@@ -45,9 +45,7 @@ msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
 
 msgid "I agree to the <a href=\"/tos/tos.php\">policy agreement</a>"
-msgstr ""
-"J'accepte les <a href=\"/tos/tos.php\">conditions "
-"d'utilisation</a>"
+msgstr "J'accepte les <a href=\"/tos/tos.php\">conditions d'utilisation</a>"
 
 msgid "Must start with a letter, avoid spaces and punctuation."
 msgstr "Doit commencer par une lettre, éviter les espaces et la ponctuation."
@@ -66,6 +64,9 @@ msgstr "Suivant"
 
 msgid "Oh snap! Failed to load project you are admin of."
 msgstr "Oups! Erreur lors du chargement des projets dont vous êtes membres."
+
+msgid "Oh snap! Impossible to load project services."
+msgstr "Oups! Erreur lors du chargement des services du projet."
 
 msgid "Please choose a project..."
 msgstr "Merci de choisir un projet ..."
@@ -173,6 +174,9 @@ msgstr "Publique"
 msgid "Public incl. restricted"
 msgstr "Publique incl. les utilisateurs restreints"
 
+msgid "Services used in %{project.title}"
+msgstr "Services utilisés par %{project.title}"
+
 msgid "Start a new project"
 msgstr "Démarrer un nouveau projet"
 
@@ -202,6 +206,9 @@ msgstr "Patrons de projet Tuleap"
 
 msgid "What kind of project is it?"
 msgstr "Quel type de projet est-ce ?"
+
+msgid "What's inside?"
+msgstr "Qu'y a-t-il a l'intérieur ?"
 
 msgid "You are not administrator of any project."
 msgstr "Vous êtes administrateur d'aucun projet."
