@@ -97,7 +97,6 @@ function orderManifestsByDependencies() {
 }
 
 function getPluginTasks(asset_dir) {
-    const sass_tasks = [];
     const all_plugins_tasks = orderManifestsByDependencies().map(manifest => {
         const name = manifest.name;
         const base_dir = path.join("plugins", name);
@@ -131,14 +130,6 @@ function getPluginTasks(asset_dir) {
             plugin_tasks.push(cleanAndBuildJsTask);
         }
 
-        if ("themes" in manifest) {
-            const sass_task_name = "sass-" + name;
-            const pluginSassTasks = sass_builder.getSassTasks(sass_task_name, base_dir, manifest);
-
-            plugin_tasks.push(pluginSassTasks);
-            sass_tasks.push(pluginSassTasks);
-        }
-
         if (plugin_tasks.length === 0) {
             throw new Error(
                 "build-manifest.json file at " + base_dir + " resulted in no task. Please delete it"
@@ -150,8 +141,7 @@ function getPluginTasks(asset_dir) {
     });
 
     return {
-        all_plugins_tasks: gulp.series(...all_plugins_tasks),
-        sass_tasks: gulp.series(...sass_tasks)
+        all_plugins_tasks: gulp.series(...all_plugins_tasks)
     };
 }
 

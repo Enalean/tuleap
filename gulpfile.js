@@ -122,10 +122,9 @@ function cleanCoreJs() {
     return del("src/" + asset_dir + "/*");
 }
 
-const { all_plugins_tasks, sass_tasks } = tuleap.getPluginTasks(asset_dir);
+const { all_plugins_tasks } = tuleap.getPluginTasks(asset_dir);
 
 const pluginsTask = all_plugins_tasks;
-const pluginsSassTask = sass_tasks;
 
 const buildCoreComponents = component_builder.getComponentsBuildTasks(
     base_dir,
@@ -150,7 +149,7 @@ const coreThemeTask = sass_builder.getSassTasks("sass-core-themes", base_dir, co
 
 const coreSassTask = series(select2Task, coreThemeTask);
 
-const buildAllSass = series(coreSassTask, pluginsSassTask);
+const buildAllSass = series(coreSassTask);
 const coreTask = series(coreJsTask, coreSassTask);
 
 function watchTask() {

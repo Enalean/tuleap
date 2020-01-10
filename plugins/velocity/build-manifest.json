@@ -1,49 +1,10 @@
 {
     "name": "velocity",
-    "themes": {
-        "FlamingParrot": {
-            "files": [
-                "themes/FlamingParrot/css/style.scss"
-            ],
-            "includes": [
-                "../../src/www/themes/FlamingParrot/css/utils"
-            ],
-            "target_dir": "../../src/www/assets/velocity/FlamingParrot",
-            "is_revisioned": true
-        },
-        "BurningParrot": {
-            "files": [
-                "themes/BurningParrot/css/velocity-blue.scss",
-                "themes/BurningParrot/css/velocity-blue-condensed.scss",
-                "themes/BurningParrot/css/velocity-green.scss",
-                "themes/BurningParrot/css/velocity-green-condensed.scss",
-                "themes/BurningParrot/css/velocity-grey.scss",
-                "themes/BurningParrot/css/velocity-grey-condensed.scss",
-                "themes/BurningParrot/css/velocity-orange.scss",
-                "themes/BurningParrot/css/velocity-orange-condensed.scss",
-                "themes/BurningParrot/css/velocity-purple.scss",
-                "themes/BurningParrot/css/velocity-purple-condensed.scss",
-                "themes/BurningParrot/css/velocity-red.scss",
-                "themes/BurningParrot/css/velocity-red-condensed.scss"
-            ],
-            "includes": [
-                "../../src/www/themes/common/tlp/src/scss",
-                "../../src/www/themes/BurningParrot/css/includes"
-            ],
-            "watched_includes": [
-                "themes/BurningParrot/css/**/_*.scss"
-            ],
-            "target_dir": "../../src/www/assets/velocity/BurningParrot",
-            "is_revisioned": true
-        }
-    },
     "gettext-js": {
         "velocity-chart": {
             "src": "www/scripts/velocity-chart/src",
-            "po" : "www/scripts/velocity-chart/po"
+            "po": "www/scripts/velocity-chart/po"
         }
     },
-    "components": [
-        "www/scripts"
-    ]
+    "components": ["www/scripts", "themes"]
 }
