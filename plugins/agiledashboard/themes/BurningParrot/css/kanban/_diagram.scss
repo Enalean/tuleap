@@ -1,0 +1,155 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.chart {
+    position: relative;
+    overflow: hidden;
+
+    .axis line,
+    path {
+        stroke: #9c9c9c;
+    }
+
+    .grid line {
+        stroke: #d8d8d8;
+    }
+
+    .axis text {
+        fill: #9c9c9c;
+        font-weight: 600;
+    }
+
+    .area {
+        transition: fill-opacity 250ms linear,stroke-opacity 250ms linear;
+        fill-opacity: .7;
+        stroke-opacity: 0;
+
+        &.hover {
+            fill-opacity: .9;
+        }
+    }
+
+    .line {
+        stroke-width: 2px;
+        fill: none;
+    }
+
+    .tooltip-undisplayed {
+        display: none;
+        top: 0;
+        left: 0;
+    }
+
+    .tooltip-displayed {
+        display: initial;
+        opacity: .9;
+    }
+
+    .guide-line-undisplayed {
+        display: none;
+    }
+
+    .guide-line-displayed {
+        display: initial;
+        stroke: #ffffff;
+    }
+}
+
+#legend {
+    width: 155px;
+    margin: 20px 0;
+    overflow: hidden;
+
+    ul {
+        margin: 0;
+
+        > .legend-value {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+            list-style-type: none;
+            text-overflow: ellipsis;
+            cursor: pointer;
+
+
+            > .legend-value-color {
+                min-width: 20px;
+                height: 20px;
+                min-height: 20px;
+                margin: 0 8px 0 0;
+                border-radius: 50%;
+            }
+        }
+    }
+}
+
+#tooltip {
+    position: absolute;
+    padding: 1px;
+    border: 1px solid rgba(0, 0, 0, .5);
+    border-radius: 4px;
+    background-color: #303030;
+    color: #ffffff;
+    font: 13px Arial;
+    text-align: left;
+    white-space: nowrap;
+    user-select: none;
+
+    > .tooltip-content {
+        min-width: 160px;
+        margin: 6px;
+
+        > .row-date {
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        > .tooltip-content-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+
+            &.hover {
+                background-color: #4d4d4d;
+            }
+
+            > .row-legend {
+                width: 12px;
+                height: 12px;
+                margin: 0 5px 0 0;
+                border-radius: 50%;
+            }
+
+            > .row-label {
+                flex: 1 1 auto;
+            }
+
+            > .row-value {
+                font-weight: 700;
+                text-align: right;
+            }
+
+            > .row-total-label {
+                font-weight: 700;
+            }
+        }
+    }
+}

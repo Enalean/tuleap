@@ -475,6 +475,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php73/run.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/FlamingParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/BurningParrot/composer.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/agiledashboard/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/scripts/

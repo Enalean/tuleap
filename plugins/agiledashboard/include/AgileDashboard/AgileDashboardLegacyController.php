@@ -69,8 +69,8 @@ class AgileDashboardLegacyController implements DispatchableWithRequest
             $layout->addCssAsset(
                 new CssAsset(
                     new IncludeAssets(
-                        __DIR__ . '/../../www/themes/BurningParrot/assets',
-                        '/plugins/agiledashboard/themes/BurningParrot/assets'
+                        __DIR__ . '/../../../../src/www/assets/agiledashboard/themes',
+                        '/assets/agiledashboard/themes'
                     ),
                     'kanban'
                 )
