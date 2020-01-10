@@ -332,15 +332,15 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     public function getStylesheetDependencies()
     {
         $tracker_assets = new IncludeAssets(
-            __DIR__ . '/../../tracker/www/themes/FlamingParrot/assets',
-            TRACKER_BASE_URL . '/themes/FlamingParrot/assets'
+            __DIR__ . '/../../../src/www/assets/tracker/themes',
+            '/assets/tracker/themes'
         );
         $cardwall_assets = new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/cardwall/themes',
             '/assets/cardwall/themes'
         );
         return new CssAssetCollection([
-            new CssAssetWithoutVariantDeclinaisons($tracker_assets, 'style'),
+            new CssAssetWithoutVariantDeclinaisons($tracker_assets, 'style-fp'),
             new CssAssetWithoutVariantDeclinaisons($cardwall_assets, 'flamingparrot-theme')
         ]);
     }

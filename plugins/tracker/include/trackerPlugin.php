@@ -366,19 +366,15 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             $include_assets = new IncludeAssets(
-                TRACKER_BASE_DIR . '/../www/themes/FlamingParrot/assets',
-                TRACKER_BASE_URL . '/themes/FlamingParrot/assets'
+                __DIR__ . '/../../../src/www/assets/tracker/themes',
+                '/assets/tracker/themes'
             );
 
-            $style_css_url = $include_assets->getFileURL('style.css');
+            $style_css_url = $include_assets->getFileURL('style-fp.css');
             $print_css_url = $include_assets->getFileURL('print.css');
 
             echo '<link rel="stylesheet" type="text/css" href="'.$style_css_url.'" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$print_css_url.'" media="print" />';
-            if (file_exists($this->getThemePath().'/css/ieStyle.css')) {
-                $ie_style_css_url = $include_assets->getFileURL('ieStyle.css');
-                echo '<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="'.$ie_style_css_url.'" /><![endif]-->';
-            }
         }
     }
 
@@ -391,11 +387,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0
         ) {
             $theme_include_assets    = new IncludeAssets(
-                __DIR__ . '/../www/themes/BurningParrot/assets',
-                $this->getThemePath() . '/assets'
+                __DIR__ . '/../../../src/www/assets/tracker/themes',
+                '/assets/tracker/themes'
             );
             $variant                 = $params['variant'];
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('tracker-bp-' . $variant->getName() . '.css');
         }
     }
 

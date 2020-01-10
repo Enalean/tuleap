@@ -23,13 +23,14 @@
  *
  */
 
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 
 /**
  * Display links from and to a project on the summary page.
  */
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class ProjectLinks_Widget_HomePageLinks extends Widget
 {
     protected $pluginPath;
@@ -69,7 +70,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * @see src/common/Widget/Widget#getContent()
      * @return String
      */
-    function getContent()
+    public function getContent()
     {
         $request = HTTPRequest::instance();
         $groupId = $request->get('group_id');
@@ -87,7 +88,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * @param int $groupId Group id
      * @return String
      */
-    function getAllLinks($groupId)
+    private function getAllLinks($groupId)
     {
         $dao      = $this->getProjectLinksDao();
         $html     = '';
@@ -112,7 +113,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * @param  String $sql The SQL to get the links
      * @return String
      */
-    function getLinksByLinkType($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar)
+    private function getLinksByLinkType($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar)
     {
         $html = '';
         if ($dar->rowCount() > 0) {
@@ -144,7 +145,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * @param  String $res One row of link
      * @return String
      */
-    function getLinks($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar)
+    private function getLinks($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar)
     {
         $html = '';
         $previousLinkName = '';
@@ -187,7 +188,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * @param  array $row One row for a link
      * @return String
      */
-    function getOneLink(array $row)
+    private function getOneLink(array $row)
     {
         $url = str_replace('$projname', $row['unix_group_name'], $row['uri_plus']);
         $ic = '';
@@ -205,7 +206,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      *
      * @return ProjectLinksDao
      */
-    function getProjectLinksDao()
+    private function getProjectLinksDao()
     {
         include_once 'ProjectLinksDao.class.php';
         return new ProjectLinksDao(CodendiDataAccess::instance());
@@ -214,9 +215,9 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
     public function getStylesheetDependencies()
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/projectlinks/BurningParrot',
-            '/assets/projectlinks/BurningParrot'
+            __DIR__ . '/../../../src/www/assets/projectlinks/themes',
+            '/assets/projectlinks/themes'
         );
-        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
+        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($include_assets, 'projectlinks')]);
     }
 }

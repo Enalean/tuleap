@@ -23,6 +23,10 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
+use Tuleap\CVS\DiskUsage\FullHistoryDao;
+use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
@@ -34,14 +38,12 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\SOAP\SOAPRequestValidatorImplementation;
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
-use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
-use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
-use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\SystemEvent\RootDailyStartEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class StatisticsPlugin extends Plugin
 {
 
@@ -245,13 +247,17 @@ class StatisticsPlugin extends Plugin
         $this->removeOrphanWidgets(array('plugin_statistics_projectstatistics'));
     }
 
-    function cssFile($params)
+    public function cssFile($params)
     {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+            $css_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/statistics/themes',
+                '/assets/statistics/themes'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="' . $css_assets->getFileURL('style-fp.css') . '" />' . "\n";
         }
     }
 
@@ -358,8 +364,13 @@ class StatisticsPlugin extends Plugin
     public function burning_parrot_get_stylesheets(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+            $variant    = $params['variant'];
+            $css_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/statistics/themes',
+                '/assets/statistics/themes'
+            );
+
+            $params['stylesheets'][] = $css_assets->getFileURL('style-bp-' . $variant->getName() . '.css');
         }
     }
 

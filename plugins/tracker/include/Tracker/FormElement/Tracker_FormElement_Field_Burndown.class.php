@@ -187,8 +187,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         );
 
         $theme_include_assets = new IncludeAssets(
-            TRACKER_BASE_DIR . '/../www/themes/'. $GLOBALS['sys_user_theme'] .'/assets',
-            TRACKER_BASE_URL . '/themes/'. $GLOBALS['sys_user_theme'] .'/assets'
+            __DIR__ . '/../../../../../src/www/assets/tracker/themes',
+            '/assets/tracker/themes/'
         );
 
         $css_file_url = $theme_include_assets->getFileURL('burndown-chart.css');
