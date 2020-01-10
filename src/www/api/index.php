@@ -51,7 +51,7 @@ try {
 }
 
 preg_match('/^\/api\/v(\d+)\//', $_SERVER['REQUEST_URI'], $matches);
-$version = floor(file_get_contents(__DIR__ .'/VERSION'));
+$version = 1;
 if ($matches && isset($matches[1]) && $matches[1] == 2) {
     $version = 2;
 }

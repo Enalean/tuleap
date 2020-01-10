@@ -381,14 +381,16 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-docman
 Share your data with project members.
 
-%package api-explorer
+%package plugin-api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
-Version: 1.0
+Version: @@PLUGIN_API_EXPLORER_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description api-explorer
-Web API Explorer for Restler. Based on Swagger UI, it dynamically generates beautiful documentation.
+Obsoletes: tuleap-api-explorer
+Provides: tuleap-api-explorer
+%description plugin-api-explorer
+%{summary}.
 
 #
 ## Themes
@@ -478,6 +480,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/package.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/webpack.*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/agiledashboard/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/api_explorer/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/api_explorer/script/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/scripts/
@@ -851,8 +855,6 @@ fi
 # API Explorer is not packaged with the core
 %dir %{APP_DIR}/src/www/api
 %{APP_DIR}/src/www/api/index.php
-%{APP_DIR}/src/www/api/VERSION
-%{APP_DIR}/src/www/api/.htaccess
 %{APP_DIR}/src/www/api/reference
 %dir %{APP_DIR}/src/www/assets
 %{APP_DIR}/src/www/assets/*.js
@@ -1173,9 +1175,10 @@ fi
 %{APP_DIR}/plugins/docman
 %{APP_DIR}/src/www/assets/docman
 
-%files api-explorer
+%files plugin-api-explorer
 %defattr(-,root,root,-)
-%{APP_DIR}/src/www/api/explorer
+%{APP_DIR}/plugins/api_explorer
+%{APP_DIR}/src/www/assets/api-explorer
 
 #
 # Themes

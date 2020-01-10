@@ -20,13 +20,14 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
-$renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/help');
+$renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/help');
 
-
+$explorer_endpoint_event = new \Tuleap\REST\ExplorerEndpointAvailableEvent();
+EventManager::instance()->dispatch($explorer_endpoint_event);
 
 $presenter = array(
     'should_display_documentation_about_deprecated_soap_api' => ForgeConfig::get('should_display_documentation_about_deprecated_soap_api'),
-    'explorer_available' => is_dir('/usr/share/tuleap/src/www/api/explorer'),
+    'explorer_url' => $explorer_endpoint_event->getEndpointURL(),
     'end_points'         => array(
         array(
             'title'       => 'Core',
