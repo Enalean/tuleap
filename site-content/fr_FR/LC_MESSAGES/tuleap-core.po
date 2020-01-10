@@ -989,7 +989,7 @@ msgid "No matching labels"
 msgstr "Il n'y a aucun label correspondant"
 
 msgid "No project template found!"
-msgstr "Aucun patron de projet trouvé!"
+msgstr "Aucun modèle de projet trouvé!"
 
 msgid "No project trove categories"
 msgstr "Aucune catégorie de projet"
@@ -1261,7 +1261,7 @@ msgid "Project settings"
 msgstr "Configuration des projets"
 
 msgid "Project templates"
-msgstr "Patrons de projet"
+msgstr "Modèles de projet"
 
 msgid "Project trove categories"
 msgstr "Catégories de projet"
@@ -1282,7 +1282,7 @@ msgid "Projects"
 msgstr "ProjetS"
 
 msgid "Projects created from this template"
-msgstr "Projets créés à partir de ce patron"
+msgstr "Projets créés à partir de ce modèle"
 
 msgid "Projects in category"
 msgstr "Projets dans la catégorie selectionnée"
@@ -1502,10 +1502,10 @@ msgid "System groups"
 msgstr "Groupes système"
 
 msgid "Template used by project"
-msgstr "Patron utilisé par ce projet"
+msgstr "Modèle utilisé par ce projet"
 
 msgid "Templates"
-msgstr "Patrons de projet"
+msgstr "Modèles de projet"
 
 msgid "That user does not exist."
 msgstr "Cet utilisateur n'existe pas"

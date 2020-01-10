@@ -96,7 +96,7 @@ include_layout	banner	Bannière
 include_layout	logo	Logo
 include_layout	counter	Compteur
 include_layout	Help	Aide
-include_layout	template_warning	Attention ce projet est un patron de projet
+include_layout	template_warning	Attention ce projet est un modèle de projet
 #
 #-----------------------------------------------
 # Script: SF/www/include/menu.php
@@ -337,7 +337,7 @@ include_common_groupfactory	none_found	Rien n'a été trouvé
 # Script: SF/common/include/Template.class.php
 #
 include_common_template	project	Projet
-include_common_template	template	Patron de projet
+include_common_template	template	Modèle de projet
 include_common_template	test_project	Projet de test
 #
 #-----------------------------------------------

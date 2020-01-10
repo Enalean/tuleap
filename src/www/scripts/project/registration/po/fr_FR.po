@@ -13,7 +13,7 @@ msgstr ""
 "X-Generator: Poedit 2.2.4\n"
 
 msgid "%s templates"
-msgstr "Patrons de projet %s"
+msgstr "Modèles de projet %s"
 
 msgid ""
 "<b>You will receive an email</b> when the administrator has validated it."
@@ -30,7 +30,7 @@ msgid "Close"
 msgstr "Fermer"
 
 msgid "Custom templates"
-msgstr "Patrons de projet personnalisés"
+msgstr "Modèles de projet personnalisés"
 
 msgid "Description"
 msgstr "Description"
@@ -202,7 +202,7 @@ msgstr ""
 "processus courant d'enregistrement de projet pendant ce temps."
 
 msgid "Tuleap templates"
-msgstr "Patrons de projet Tuleap"
+msgstr "Modèles de projet Tuleap"
 
 msgid "What kind of project is it?"
 msgstr "Quel type de projet est-ce ?"

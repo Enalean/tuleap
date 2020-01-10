@@ -279,7 +279,7 @@ admin_groupedit	other_info	Autre information
 admin_groupedit	grp_name	Nom du projet
 admin_groupedit	unix_grp	Nom du groupe unix
 admin_groupedit	description	Description
-admin_groupedit	built_from_template	Créé à partir du patron
+admin_groupedit	built_from_template	Créé à partir du modèle
 admin_groupedit	rename_project_title	Renommage du Projet
 admin_groupedit	rename_project_label	Renommage du Projet en
 admin_groupedit	rename_project_msg	Le changement du nom du projet sur le système va être traité dans quelques instants ($1 -> $2).

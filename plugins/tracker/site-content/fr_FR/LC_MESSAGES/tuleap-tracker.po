@@ -1195,7 +1195,7 @@ msgid "This semantic is not defined yet."
 msgstr "Cette sémantique n'est pas encore définie."
 
 msgid "This template does not use trackers"
-msgstr "Ce patron n'utilise pas les trackers"
+msgstr "Ce modèle n'utilise pas les trackers"
 
 msgid "This tracker does not exist."
 msgstr "Cet outil de suivi n'existe pas."

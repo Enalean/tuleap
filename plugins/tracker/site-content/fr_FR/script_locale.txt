@@ -37,7 +37,7 @@ codendi.locales['tracker_artifact_link'] = {
     nature_label: 'Liens par nature'
 };
 codendi.locales['tracker_template'] = {
-    no_template: 'Pas de patron' //same as plugin_tracker_include_type - tmpl_src_no_trk
+    no_template: 'Pas de modèle' //same as plugin_tracker_include_type - tmpl_src_no_trk
 };
 codendi.locales['tracker_hierarchy'] = {
     no_child_artifacts: 'Cet artefact n\'as pas encore d\'enfants',
