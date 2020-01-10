@@ -501,6 +501,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_encryption/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/userlog/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files

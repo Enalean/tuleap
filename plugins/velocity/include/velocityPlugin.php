@@ -143,10 +143,10 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         if ($this->isInAdminSemantics()) {
             $theme_include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/velocity/FlamingParrot',
-                '/assets/velocity/FlamingParrot'
+                __DIR__ . '/../../../src/www/assets/velocity/themes',
+                '/assets/velocity/themes'
             );
-            $css_file_url         = $theme_include_assets->getFileURL('style.css');
+            $css_file_url         = $theme_include_assets->getFileURL('style-fp.css');
 
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
@@ -168,8 +168,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     public function burningParrotGetStylesheets(array $params)
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/velocity/BurningParrot',
-            '/assets/velocity/BurningParrot'
+            __DIR__ . '/../../../src/www/assets/velocity/themes',
+            '/assets/velocity/themes'
         );
 
         $variant = $params['variant'];
