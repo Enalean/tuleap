@@ -76,24 +76,42 @@ class ProjectRegistrationPresenter
      * @var bool
      */
     public $are_anonymous_allowed;
+    /**
+     * @var ?string
+     */
+    public $default_project_template;
+    /**
+     * @var bool
+     */
+    public $is_default_project_template_available;
 
     public function __construct(
         string $project_default_visibility,
         array $trove_categories,
         array $field_list,
         array $company_templates,
+        ?TemplatePresenter $default_project_template,
         TemplatePresenter ...$tuleap_templates
     ) {
-        $this->tuleap_templates             = json_encode($tuleap_templates);
-        $this->has_templates                = count($tuleap_templates) > 0;
-        $this->are_restricted_users_allowed = (bool) ForgeConfig::areRestrictedUsersAllowed();
-        $this->project_default_visibility   = $project_default_visibility;
-        $this->projects_must_be_approved    = (bool) ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true);
-        $this->trove_categories             = json_encode($trove_categories, JSON_THROW_ON_ERROR);
-        $this->is_description_mandatory     = ProjectDescriptionUsageRetriever::isDescriptionMandatory();
-        $this->field_list                   = json_encode($field_list);
-        $this->company_templates            = json_encode($company_templates);
-        $this->company_name                 = ForgeConfig::get('sys_org_name');
-        $this->are_anonymous_allowed        = (bool)ForgeConfig::areAnonymousAllowed();
+        $this->tuleap_templates                      = json_encode($tuleap_templates);
+        $this->has_templates                         = count($tuleap_templates) > 0;
+        $this->are_restricted_users_allowed          = (bool)ForgeConfig::areRestrictedUsersAllowed();
+        $this->project_default_visibility            = $project_default_visibility;
+        $this->projects_must_be_approved             = (bool)ForgeConfig::get(
+            \ProjectManager::CONFIG_PROJECT_APPROVAL,
+            true
+        );
+        $this->trove_categories                      = json_encode($trove_categories, JSON_THROW_ON_ERROR);
+        $this->is_description_mandatory              = ProjectDescriptionUsageRetriever::isDescriptionMandatory();
+        $this->field_list                            = json_encode($field_list);
+        $this->company_templates                     = json_encode($company_templates);
+        $this->company_name                          = ForgeConfig::get('sys_org_name');
+        $this->are_anonymous_allowed                 = (bool)ForgeConfig::areAnonymousAllowed();
+        $this->is_default_project_template_available = $default_project_template !== null;
+        if ($default_project_template) {
+            $this->default_project_template = json_encode($default_project_template);
+        } else {
+            $this->default_project_template = null;
+        }
     }
 }

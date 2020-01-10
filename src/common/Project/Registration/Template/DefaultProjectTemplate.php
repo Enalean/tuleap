@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,8 +26,9 @@ namespace Tuleap\Project\Registration\Template;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 
-class CompanyTemplate implements ProjectTemplate
+class DefaultProjectTemplate implements ProjectTemplate
 {
+
     private const NAME = 'default-and-company-template';
 
     /**
@@ -78,6 +79,6 @@ class CompanyTemplate implements ProjectTemplate
 
     public function isBuiltIn(): bool
     {
-        return false;
+        return true;
     }
 }

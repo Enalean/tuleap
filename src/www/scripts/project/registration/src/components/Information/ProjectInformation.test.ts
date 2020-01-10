@@ -33,6 +33,7 @@ import EventBus from "../../helpers/event-bus";
 import VueRouter from "vue-router";
 import * as location_helper from "../../helpers/location-helper";
 import { Store } from "vuex-mock-store";
+import { ProjectProperties, TemplateData } from "../../type";
 
 describe("ProjectInformation -", () => {
     let factory: Wrapper<ProjectInformation>, router: VueRouter, store: Store;
@@ -358,6 +359,190 @@ describe("ProjectInformation -", () => {
                 { field_id: 1, value: "updated value" },
                 { field_id: 2, value: "other value" }
             ]);
+        });
+    });
+    describe("Build the project properties object -", () => {
+        it("Build the properties according to the scrum built in template", async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
+            const state: State = {
+                selected_tuleap_template: {
+                    title: "string",
+                    description: "string",
+                    id: "scrum",
+                    glyph: "string",
+                    is_built_in: true
+                } as TemplateData,
+                default_project_template: null,
+                company_name: ""
+            } as State;
+
+            const getters = {
+                has_error: false,
+                is_template_selected: true
+            };
+
+            const store_options = {
+                state,
+                getters
+            };
+
+            store = createStoreMock(store_options);
+
+            factory = shallowMount(ProjectInformation, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store },
+                router
+            });
+            factory.vm.$data.selected_visibility = "unrestricted";
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
+
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: true,
+                description: "",
+                categories: [],
+                xml_template_name: "scrum",
+                fields: []
+            } as ProjectProperties;
+
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
+
+            await factory.vm.$nextTick();
+
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
+        });
+
+        it("Build the properties according to the selected company template", async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
+            const state: State = {
+                selected_tuleap_template: null,
+                selected_company_template: {
+                    title: "Company Template",
+                    description: "desc",
+                    id: "150",
+                    glyph: "string",
+                    is_built_in: true
+                } as TemplateData
+            } as State;
+
+            const getters = {
+                has_error: false,
+                is_template_selected: true
+            };
+
+            const store_options = {
+                state,
+                getters
+            };
+
+            store = createStoreMock(store_options);
+
+            factory = shallowMount(ProjectInformation, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store },
+                router
+            });
+            factory.vm.$data.selected_visibility = "unrestricted";
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
+
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: true,
+                description: "",
+                categories: [],
+                template_id: 150,
+                fields: []
+            } as ProjectProperties;
+
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
+
+            await factory.vm.$nextTick();
+
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
+        });
+        it("Build the properties according to the project template 100", async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
+            const state: State = {
+                selected_tuleap_template: {
+                    title: "Default Site Template",
+                    description: "The default Tuleap template",
+                    id: "100",
+                    glyph: "string",
+                    is_built_in: true
+                } as TemplateData,
+                default_project_template: null
+            } as State;
+
+            const getters = {
+                has_error: false,
+                is_template_selected: true
+            };
+
+            const store_options = {
+                state,
+                getters
+            };
+
+            store = createStoreMock(store_options);
+
+            factory = shallowMount(ProjectInformation, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store },
+                router
+            });
+            factory.vm.$data.selected_visibility = "unrestricted";
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
+
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: true,
+                description: "",
+                categories: [],
+                template_id: 100,
+                fields: []
+            } as ProjectProperties;
+
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
+
+            await factory.vm.$nextTick();
+
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
         });
     });
 });

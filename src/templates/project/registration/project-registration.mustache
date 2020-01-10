@@ -30,7 +30,10 @@
          data-field-list="{{ field_list }}"
          data-company-templates="{{ company_templates }}"
          data-company-name = "{{ company_name }}"
-         data-are-anonymous-allowed= {{ are_anonymous_allowed }}
+         data-are-anonymous-allowed= "{{ are_anonymous_allowed }}"
+         {{# is_default_project_template_available }}
+            data-default-project-template= "{{ default_project_template }}"
+         {{/is_default_project_template_available}}
     >
     </div>
 {{/has_templates}}

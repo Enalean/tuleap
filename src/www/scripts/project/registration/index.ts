@@ -73,6 +73,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const company_name = String(vue_mount_point.dataset.companyName);
 
+    let default_project_template;
+    const default_project_template_json = vue_mount_point.dataset.defaultProjectTemplate;
+    if (!default_project_template_json) {
+        default_project_template = null;
+    } else {
+        default_project_template = JSON.parse(default_project_template_json);
+    }
+
     const root_state: State = {
         tuleap_templates,
         selected_tuleap_template,
@@ -87,6 +95,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         is_description_required,
         project_fields,
         company_templates,
+        default_project_template,
         company_name
     };
 
