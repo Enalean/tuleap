@@ -23,6 +23,10 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
+    /**
+     * @var bool
+     */
+    private $is_built_from_xml = false;
     private $logger;
     /**
      * @var DefaultProjectVisibilityRetriever
@@ -252,6 +256,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->data_fields   = array(
             'form_101' => (string)$xml->$long_description_tagname
         );
+        $this->is_built_from_xml = true;
 
         switch ($attrs['access']) {
             case 'unrestricted':
@@ -343,5 +348,10 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     public function setAccessFromProjectData(array $project): string
     {
         return $this->access = $this->getAccessFromProjectArrayData($project);
+    }
+
+    public function isIsBuiltFromXml(): bool
+    {
+        return $this->is_built_from_xml;
     }
 }

@@ -114,6 +114,7 @@ final class ProjectServiceActivatorTest extends TestCase
 
         $data = Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn([]);
+        $data->shouldReceive('isIsBuiltFromXml')->andReturnFalse();
 
         $template_service = ['service_id' => 10, 'short_name' => 'document', 'is_used' => 1];
         $other_template_service = ['service_id' => 10, 'short_name' => 'document', 'is_used' => 1];
@@ -166,6 +167,7 @@ final class ProjectServiceActivatorTest extends TestCase
 
         $data = \Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn([]);
+        $data->shouldReceive('isIsBuiltFromXml')->andReturnFalse();
 
         $template_service = ['service_id' => 10, 'short_name' => 'admin', 'is_used' => 0];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
@@ -242,6 +244,7 @@ final class ProjectServiceActivatorTest extends TestCase
 
         $data = \Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn([]);
+        $data->shouldReceive('isIsBuiltFromXml')->andReturnFalse();
 
         $template_service = ['service_id' => 10, 'short_name' => 'tracker', 'is_used' => 1];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
@@ -318,6 +321,7 @@ final class ProjectServiceActivatorTest extends TestCase
 
         $data = \Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn([]);
+        $data->shouldReceive('isIsBuiltFromXml')->andReturnFalse();
 
         $template_service = ['service_id' => 10, 'short_name' => 'svn', 'is_used' => 1];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
@@ -335,6 +339,73 @@ final class ProjectServiceActivatorTest extends TestCase
                     'name'    => 'test-name',
                     'id'      => 201,
                     'is_used' => false,
+                ]
+            ]
+        )->once();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
+
+        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+    }
+
+    public function testServiceUsageDoesNotInheritTemplateForXmlImport(): void
+    {
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->once()->andReturn(101);
+
+        $template = Mockery::mock(\Project::class);
+        $template->shouldReceive('getID')->once()->andReturn(201);
+        $template->shouldReceive('isSystem')->once()->andReturn(false);
+        $template->shouldReceive('getUnixName')->once()->andReturn('test-name');
+
+        $data = Mockery::mock(\ProjectCreationData::class);
+        $data->shouldReceive('getServiceInfo')->andReturn([]);
+        $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
+
+        $template_service = ['service_id' => 10, 'short_name' => 'document', 'is_used' => 0];
+        $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
+            [
+                $template_service
+            ]
+        );
+
+        $this->service_creator->shouldReceive('createService')->never();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
+
+        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+    }
+
+    public function testAdminServiceShouldAlwaysBeEnabledForProjectFromXmlImport(): void
+    {
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->once()->andReturn(101);
+
+        $template = Mockery::mock(\Project::class);
+        $template->shouldReceive('getID')->once()->andReturn(201);
+        $template->shouldReceive('isSystem')->once()->andReturn(false);
+        $template->shouldReceive('getUnixName')->once()->andReturn('test-name');
+
+        $data = Mockery::mock(\ProjectCreationData::class);
+        $data->shouldReceive('getServiceInfo')->andReturn([]);
+        $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
+
+        $template_service = ['service_id' => 10, 'short_name' => 'admin', 'is_used' => 0];
+        $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
+            [
+                $template_service
+            ]
+        );
+
+        $this->service_creator->shouldReceive('createService')->withArgs(
+            [
+                $template_service,
+                101,
+                [
+                    'system'  => false,
+                    'name'    => 'test-name',
+                    'id'      => 201,
+                    'is_used' => true,
                 ]
             ]
         )->once();
