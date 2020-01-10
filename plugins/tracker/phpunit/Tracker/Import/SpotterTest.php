@@ -20,19 +20,17 @@
 
 namespace Tuleap\Tracker\Import;
 
-use TuleapTestCase;
+use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/../bootstrap.php';
-
-class SpotterTest extends TuleapTestCase
+class SpotterTest extends TestCase
 {
-    public function itDoesNotHaveImportRunningByDefault()
+    public function testItDoesNotHaveImportRunningByDefault()
     {
         $spotter = Spotter::instance();
         $this->assertFalse($spotter->isImportRunning());
     }
 
-    public function itGivesCurrentStatus()
+    public function testItGivesCurrentStatus()
     {
         $spotter = Spotter::instance();
         $spotter->startImport();
