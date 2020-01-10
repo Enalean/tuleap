@@ -571,6 +571,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pluginsadministration/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/proftpd/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/userlog/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1049,6 +1050,7 @@ fi
 %{APP_DIR}/src/www/assets/project-registration
 %{APP_DIR}/src/www/assets/projectlinks
 %{APP_DIR}/src/www/assets/statistics
+%{APP_DIR}/src/www/assets/userlog
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file

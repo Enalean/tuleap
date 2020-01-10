@@ -27,6 +27,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Event\Events\HitEvent;
 use Tuleap\Event\Events\ProjectProviderEvent;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Userlog\UserlogAccess;
 use Tuleap\Userlog\UserlogAccessStorage;
 use Tuleap\Userlog\UserLogBuilder;
@@ -43,7 +44,6 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
     {
         parent::__construct($id);
         $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
-        $this->addHook('cssfile', 'cssFile', false);
         $this->addHook(HitEvent::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
 
@@ -58,7 +58,11 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
             $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+            $css_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/userlog/themes',
+                '/assets/userlog/themes'
+            );
+            $params['stylesheets'][] = $css_assets->getFileURL('style-bp-' . $variant->getName() . '.css');
         }
     }
 
@@ -76,15 +80,6 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
             $this->pluginInfo = new UserLogPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    public function cssFile($params)
-    {
-        // Only show the stylesheet if we're actually in the Docman pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
-        }
     }
 
     public function siteAdminHooks($params)
