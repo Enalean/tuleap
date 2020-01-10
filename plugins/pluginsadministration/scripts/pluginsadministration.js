@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global tlp:readonly */
+import { modal as createModal, filterInlineTable } from "tlp";
 
-(function() {
-    "use strict";
-
+document.addEventListener("DOMContentLoaded", function() {
     var switches = document.querySelectorAll(".tlp-switch-checkbox");
 
     [].forEach.call(switches, function(switch_button) {
@@ -35,7 +33,7 @@
         var dom_install_plugin_modal = document.getElementById(
             install_plugin_button.dataset.modalId
         );
-        var tlp_install_plugin_modal = tlp.modal(dom_install_plugin_modal);
+        var tlp_install_plugin_modal = createModal(dom_install_plugin_modal);
 
         install_plugin_button.addEventListener("click", function() {
             tlp_install_plugin_modal.toggle();
@@ -47,7 +45,7 @@
         var dom_uninstall_plugin_modal = document.getElementById(
             uninstall_plugin_button.dataset.modalId
         );
-        var tlp_uninstall_plugin_modal = tlp.modal(dom_uninstall_plugin_modal);
+        var tlp_uninstall_plugin_modal = createModal(dom_uninstall_plugin_modal);
 
         uninstall_plugin_button.addEventListener("click", function() {
             tlp_uninstall_plugin_modal.toggle();
@@ -56,6 +54,6 @@
 
     var filter = document.getElementById("filter-plugins");
     if (filter) {
-        tlp.filterInlineTable(filter);
+        filterInlineTable(filter);
     }
-})();
+});

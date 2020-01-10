@@ -69,7 +69,11 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
-            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/pluginsadministration.js';
+            $js_assets                    = new IncludeAssets(
+                __DIR__ . "/../../../src/www/assets/pluginsadministration/scripts",
+                "/assets/pluginsadministration/scripts"
+            );
+            $params['javascript_files'][] = $js_assets->getFileURL('pluginsadministration.js');
         }
     }
 
