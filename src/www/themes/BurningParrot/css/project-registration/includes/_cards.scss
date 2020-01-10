@@ -27,7 +27,7 @@ $card-border-margin: 150px;
 .project-registration-template-card {
     display: flex;
     width: calc(50% - #{$tlp-half-spacing});
-    height: 120px;
+    min-height: 120px;
     margin: 0 $tlp-half-spacing $tlp-spacing 0;
 
     &:nth-child(even) {
@@ -94,6 +94,9 @@ $card-border-margin: 150px;
 }
 
 .project-registration-template-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     margin: 0 0 0 ($card-border-margin - $tlp-spacing);
 }
 
