@@ -98,7 +98,7 @@ class Tracker_Migration_MigrationManager
      */
     public function askForMigration(Project $project, $tracker_id, $name, $description, $short_name)
     {
-        if (! $this->tracker_factory->validMandatoryInfoOnCreate($name, $description, $short_name, $project->getGroupId())) {
+        if (! $this->tracker_factory->validMandatoryInfoOnCreate($name, $short_name, $project->getGroupId())) {
             return false;
         }
 

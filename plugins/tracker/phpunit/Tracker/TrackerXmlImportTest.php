@@ -119,7 +119,7 @@ class TrackerXmlImportTest extends TestCase
         rmdir($this->temporary_directory);
     }
 
-    public function testItShouldRaiseExceptionWithEmptyTrackerDescription()
+    public function testItShouldNotRaiseExceptionWithEmptyTrackerDescription()
     {
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -135,11 +135,10 @@ class TrackerXmlImportTest extends TestCase
             </project>'
         );
 
-        $this->expectException('XML_ParseException');
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
 
-    public function testItShouldRaiseExceptionWithOnlyWhitespacesTrackerDescription()
+    public function testItShouldNotRaiseExceptionWithOnlyWhitespacesTrackerDescription()
     {
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -155,7 +154,6 @@ class TrackerXmlImportTest extends TestCase
             </project>'
         );
 
-        $this->expectException('XML_ParseException');
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
 

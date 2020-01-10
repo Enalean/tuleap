@@ -129,7 +129,7 @@
     </optional>
     <optional>
       <element name="description">
-        <ref name="non_empty_string"/>
+        <data type="string"/>
       </element>
     </optional>
     <optional>

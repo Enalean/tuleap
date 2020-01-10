@@ -464,8 +464,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
               <input type="text" name="name" id="newtracker_name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'" required="required" />
           </p>
           <p>
-              <label for="newtracker_description"><b>'.$Language->getText('plugin_tracker_include_artifact', 'desc').'</b>: <font color="red">*</font><br />
-              <textarea id="newtracker_description" name="description" rows="3" cols="50" required="required">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
+              <label for="newtracker_description"><b>'.$Language->getText('plugin_tracker_include_artifact', 'desc').'</b>:<br />
+              <textarea id="newtracker_description" name="description" rows="3" cols="50">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
           </p>
           <p>
               <label for="newtracker_itemname"><b>'.$Language->getText('plugin_tracker_include_type', 'short_name').'</b>: <font color="red">*</font></label><br />

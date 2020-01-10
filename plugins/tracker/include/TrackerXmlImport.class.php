@@ -703,7 +703,7 @@ class TrackerXmlImport
     public function createFromXML(SimpleXMLElement $xml_element, Project $project, $name, $description, $itemname)
     {
         $tracker = null;
-        if ($this->tracker_factory->validMandatoryInfoOnCreate($name, $description, $itemname, $project->getId())) {
+        if ($this->tracker_factory->validMandatoryInfoOnCreate($name, $itemname, $project->getId())) {
             $this->rng_validator->validate(
                 $xml_element,
                 realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/tracker.rng')

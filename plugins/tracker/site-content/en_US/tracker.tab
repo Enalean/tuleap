@@ -785,7 +785,7 @@ plugin_tracker_common_artifacts	not_get	Could not get artifacts: $1
 plugin_tracker_common_type	invalid	No Valid Group Object
 plugin_tracker_common_type	no_match	Group_id in db result does not match Group Object
 plugin_tracker_common_type	perm_fail	Failed to create user permission: $1
-plugin_tracker_common_type	name_requ	Name, Description, Color, and Short Name are required.
+plugin_tracker_common_type	name_requ	Name, Color, and Short Name are required.
 plugin_tracker_common_type	invalid_shortname	Invalid short name: $1. Please use only alphanumerical characters or an unreserved reference. Press the "Back" button and update this information.
 plugin_tracker_common_type	invalid_templ	Invalid project template
 plugin_tracker_common_type	invalid_tracker_tmpl	Invalid tracker template
