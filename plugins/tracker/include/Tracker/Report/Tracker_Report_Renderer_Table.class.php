@@ -32,6 +32,7 @@ use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 use Tuleap\Tracker\Report\Renderer\Table\ProcessExportEvent;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable
 {
 
@@ -2532,9 +2533,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public function getStylesheetDependencies()
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../www/themes/BurningParrot/assets',
-            TRACKER_BASE_URL . '/themes/BurningParrot/assets'
+            __DIR__ . '/../../../../../src/www/assets/tracker/themes',
+            '/assets/tracker/themes'
         );
-        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
+        return new CssAssetCollection([new CssAsset($include_assets, 'tracker-bp')]);
     }
 }

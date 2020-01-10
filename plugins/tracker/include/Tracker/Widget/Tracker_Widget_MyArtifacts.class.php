@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\MyArtifactsCollection;
  *
  * Artifact assigned to or submitted by this person
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Widget_MyArtifacts extends Widget
 {
     public const ID        = 'plugin_tracker_myartifacts';
@@ -36,7 +37,7 @@ class Tracker_Widget_MyArtifacts extends Widget
 
     protected $artifact_show;
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct(self::ID);
         $this->artifact_show = user_get_preference(self::PREF_SHOW);
@@ -46,12 +47,12 @@ class Tracker_Widget_MyArtifacts extends Widget
         }
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'my_arts') . ' [' . $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', strtolower($this->artifact_show)) . ']';
     }
 
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
         $vShow = new Valid_WhiteList('show', array('A', 'S', 'AS'));
@@ -111,12 +112,12 @@ class Tracker_Widget_MyArtifacts extends Widget
             ';
     }
 
-    function isAjax()
+    public function isAjax()
     {
         return true;
     }
 
-    function getContent()
+    public function getContent()
     {
         $html_my_artifacts = '';
 
@@ -173,7 +174,8 @@ class Tracker_Widget_MyArtifacts extends Widget
         return $html_my_artifacts;
     }
 
-    function _display_artifacts(MyArtifactsCollection $my_artifacts)
+
+    public function _display_artifacts(MyArtifactsCollection $my_artifacts) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $hp = Codendi_HTMLPurifier::instance();
 
@@ -218,12 +220,12 @@ class Tracker_Widget_MyArtifacts extends Widget
         return $ajax_url;
     }
 
-    function getCategory()
+    public function getCategory()
     {
         return dgettext('tuleap-tracker', 'Trackers');
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'description');
     }
@@ -231,9 +233,9 @@ class Tracker_Widget_MyArtifacts extends Widget
     public function getStylesheetDependencies()
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../www/themes/BurningParrot/assets',
-            TRACKER_BASE_URL . '/themes/BurningParrot/assets'
+            __DIR__ . '/../../../../../src/www/assets/tracker/themes',
+            '/assets/tracker/themes'
         );
-        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
+        return new CssAssetCollection([new CssAsset($include_assets, 'tracker-bp')]);
     }
 }

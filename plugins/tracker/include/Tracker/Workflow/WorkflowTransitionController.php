@@ -70,8 +70,8 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         $layout->includeFooterJavascriptFile($javascriptAssets->getFileURL('tracker-workflow-transitions.js'));
 
         $cssAssets = new IncludeAssets(
-            __DIR__ . '/../../../www/themes/BurningParrot/assets',
-            TRACKER_BASE_URL . '/themes/BurningParrot/assets'
+            __DIR__ . '/../../../../../src/www/assets/tracker/themes',
+            '/assets/tracker/themes'
         );
         $layout->addCssAsset(new CssAsset($cssAssets, 'workflow'));
 

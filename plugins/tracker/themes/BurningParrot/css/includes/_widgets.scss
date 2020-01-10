@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../tracker/themes/FlamingParrot/css/colorpicker';
-@import '../../../../tracker/themes/default/css/includes/field-bound-colors';
-@import '../../../../tracker/themes/default/css/includes/columns-colors';
+.tracker-widget-artifacts {
+    line-height: 20px;
+    text-decoration: none;
 
-.tracker-colorpicker {
-    font-weight: normal;
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
-.colorpicker-circular-color {
-    font-size: 12.6px;
+.tracker-widget-artifacts-toggler::before {
+    top: 5px;
+}
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+ul.tracker-widget-artifacts-list {
+    margin: 0 0 $tlp-half-spacing;
+    list-style: none;
+}
+
+.empty-artifacts-cover {
+    fill: desaturate(lighten($tlp-theme-color, 40%), 15%);
+}
+
+.empty-artifacts-icon {
+    fill: $tlp-theme-color;
+}
+
+.empty-artifacts-sheet-border {
+    stroke: desaturate(lighten($tlp-theme-color, 20%), 10%);
 }

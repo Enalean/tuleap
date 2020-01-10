@@ -571,6 +571,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pluginsadministration/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/proftpd/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/userlog/themes/
 
 # Link to local config for logo and themes images
@@ -1275,6 +1276,7 @@ fi
 %files plugin-tracker
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/tracker
+%{APP_DIR}/src/www/assets/tracker
 %dir %{APP_DATA_DIR}/tracker
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_tracker
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_tracker

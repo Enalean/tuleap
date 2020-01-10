@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 20209-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../tracker/themes/FlamingParrot/css/colorpicker';
-@import '../../../../tracker/themes/default/css/includes/field-bound-colors';
-@import '../../../../tracker/themes/default/css/includes/columns-colors';
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
-.tracker-colorpicker {
-    font-weight: normal;
-}
-
-.colorpicker-circular-color {
-    font-size: 12.6px;
-}
+module.exports = webpack_configurator.extendDevConfiguration(common);

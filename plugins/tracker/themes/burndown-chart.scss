@@ -17,14 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../tracker/themes/FlamingParrot/css/colorpicker';
-@import '../../../../tracker/themes/default/css/includes/field-bound-colors';
-@import '../../../../tracker/themes/default/css/includes/columns-colors';
-
-.tracker-colorpicker {
-    font-weight: normal;
-}
-
-.colorpicker-circular-color {
-    font-size: 12.6px;
-}
+@import './default/css/includes/burndown-chart';
