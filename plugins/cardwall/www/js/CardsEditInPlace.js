@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global codendi:readonly jQuery:readonly lightwindow:readonly */
+/* global jQuery:readonly */
 
 /**
  * This script is responsible for the edition of cards directly
@@ -28,33 +28,6 @@ var tuleap = tuleap || {};
 tuleap.cardwall = tuleap.cardwall || {};
 
 (function($) {
-    var overlay_window;
-
-    function displayIframeOverlay(event, link) {
-        event.preventDefault();
-
-        overlay_window = new lightwindow({
-            resizeSpeed: 10,
-            delay: 0,
-            finalAnimationDuration: 0,
-            finalAnimationDelay: 0
-        });
-
-        var artifact_id = link.attr("data-artifact-id");
-        var params = {
-            aid: artifact_id,
-            func: "show-in-overlay"
-        };
-
-        overlay_window.activateWindow({
-            href: codendi.tracker.base_url + "?" + $.param(params),
-            title: codendi.locales["cardwall"]["edit_card"],
-            iframeEmbed: true
-        });
-
-        bindCancelEvent();
-    }
-
     function getNewCardData(artifact_id, planning_id) {
         var params = {
             id: artifact_id,
@@ -70,23 +43,6 @@ tuleap.cardwall = tuleap.cardwall || {};
 
     function getConcernedPlanningId() {
         return $("div.hidden[data-planning-id]").attr("data-planning-id");
-    }
-
-    function disableOverlay() {
-        overlay_window.deactivate();
-    }
-
-    function bindCancelEvent() {
-        var iframe = $("#lightwindow_iframe").get(0);
-        $(iframe).load(function() {
-            var content = iframe.contentWindow.document;
-            $("button[name=cancel]", content).each(function() {
-                $(this).on("click", function(e) {
-                    disableOverlay();
-                    e.preventDefault();
-                });
-            });
-        });
     }
 
     tuleap.cardwall.isOnAgiledashboard = function() {
@@ -105,11 +61,6 @@ tuleap.cardwall = tuleap.cardwall || {};
 
                 var artifact_id = $(this).attr("data-artifact-id");
 
-                if (tuleap.browserCompatibility.isIE7()) {
-                    displayIframeOverlay(event, $(this));
-                    return;
-                }
-
                 tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(
                     artifact_id,
                     self.moveCardCallback(artifact_id)
@@ -120,7 +71,6 @@ tuleap.cardwall = tuleap.cardwall || {};
         validateEdition: function(artifact_id) {
             var planning_id = getConcernedPlanningId();
             getNewCardData(artifact_id, planning_id);
-            disableOverlay();
         },
 
         moveCardCallback: function(artifact_id) {
