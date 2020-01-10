@@ -1,16 +1,8 @@
 {
     "name": "core",
-    "themes": {
-        "common": {
-            "files": [
-                "src/www/themes/common/css/print.scss",
-                "src/www/themes/common/css/style.scss"
-            ],
-            "target_dir": "src/www/themes/common/css"
-        }
-    },
     "components": [
         "src/www/themes/common/tlp/",
+        "src/www/themes/common/",
         "src/www/themes/FlamingParrot/",
         "src/www/scripts/",
         "src/www/themes/BurningParrot/",

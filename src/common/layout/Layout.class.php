@@ -127,8 +127,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         }
         $html .= '>';
         $html .= '<option value="beginning">'. $GLOBALS['Language']->getText('global', 'at_the_beginning') .'</option>';
-        $html .= '<option value="end">'. $GLOBALS['Language']->getText('global', 'at_the_end') .'</option>';
-        list($options, $optgroups) = $this->selectRank_optgroup($id, $items);
+        $html .= '<option value="end">' . $GLOBALS['Language']->getText('global', 'at_the_end') . '</option>';
+        [$options, $optgroups] = $this->selectRank_optgroup($id, $items);
         $html .= $options . $optgroups;
         $html .= '</select>';
         return $html;
@@ -156,8 +156,17 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
                             $selected = 'selected="selected"';
                         }
                     }
-                    $optgroups .= '<option value="'. $purifier->purify($item['id']) . ':' . 'beginning' .'" '. $selected .'>'. 'At the beginning of '. $purifier->purify($prefix . $item['name']) .'</option>';
-                    list($o, $g) = $this->selectRank_optgroup($id, $item['subitems'], $prefix . $item['name'] .'::', $item['id'] . ':');
+                    $optgroups .= '<option value="' . $purifier->purify(
+                        $item['id']
+                    ) . ':' . 'beginning' . '" ' . $selected . '>' . 'At the beginning of ' . $purifier->purify(
+                        $prefix . $item['name']
+                    ) . '</option>';
+                    [$o, $g] = $this->selectRank_optgroup(
+                        $id,
+                        $item['subitems'],
+                        $prefix . $item['name'] . '::',
+                        $item['id'] . ':'
+                    );
                     $optgroups .= $o;
                     $optgroups .= '</optgroup>';
                     $optgroups .= $g;
@@ -547,11 +556,12 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
 
     protected function displayCommonStylesheetElements($params)
     {
+        $common_theme_assets = new IncludeAssets(__DIR__ . '/../../www/themes/common/assets', '/themes/common/assets');
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-22d39b3.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
+        echo '<link rel="stylesheet" type="text/css" href="' . $common_theme_assets->getFileURL('style.css') . '" />';
+        echo '<link rel="stylesheet" type="text/css" href="' . $common_theme_assets->getFileURL('print.css') .'" media="print" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
@@ -930,7 +940,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             $exact = 0;
         }
 
-        list($search_entries, $selected_entry, $hidden_fields) = $this->getSearchEntries();
+        [$search_entries, $selected_entry, $hidden_fields] = $this->getSearchEntries();
 
         $output = '
                 <form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>

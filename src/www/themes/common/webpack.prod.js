@@ -1,8 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
- *
- * Originally written by Nicolas Terray, 2008
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,22 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* stylelint-disable selector-id-pattern */
-#header,
-#navigation,
-.toolbar,
-#footer_debug,
-.footer {
-    display: none !important;
-}
-/* stylelint-enable selector-id-pattern */
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-/* stylelint-disable-next-line selector-class-pattern */
-.main_body_row {
-    padding: 0 !important;
-    border: 0;
-}
-
-.contenttable {
-    width: auto;
-}
+module.exports = webpack_configurator.extendProdConfiguration(common);

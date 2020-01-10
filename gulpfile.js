@@ -23,7 +23,6 @@ const del = require("del");
 
 const tuleap = require("./tools/utils/scripts/tuleap-gulp-build");
 const component_builder = require("./tools/utils/scripts/component-builder.js");
-const sass_builder = require("./tools/utils/scripts/sass-builder.js");
 
 const core_build_manifest = require("./build-manifest.json");
 
@@ -106,15 +105,7 @@ const fat_combined_files = [
         "src/www/scripts/tuleap/tuleap-tours.js",
         "src/www/scripts/tuleap/listFilter.js",
         "src/www/scripts/codendi/Tooltip.js"
-    ],
-    select2_scss = {
-        themes: {
-            common: {
-                files: ["src/www/scripts/select2/select2.scss"],
-                target_dir: "src/www/scripts/select2"
-            }
-        }
-    };
+    ];
 const asset_dir = "www/assets";
 const base_dir = ".";
 
@@ -144,14 +135,6 @@ function coreJsTask() {
     return tuleap.concatCoreJs(files_hash, target_dir);
 }
 
-const select2Task = sass_builder.getSassTasks("sass-core-select2", base_dir, select2_scss);
-const coreThemeTask = sass_builder.getSassTasks("sass-core-themes", base_dir, core_build_manifest);
-
-const coreSassTask = series(select2Task, coreThemeTask);
-
-const buildAllSass = series(coreSassTask);
-const coreTask = series(coreJsTask, coreSassTask);
-
 function watchTask() {
     watch(
         fat_combined_files
@@ -160,19 +143,13 @@ function watchTask() {
         coreJsTask
     );
 
-    watch(
-        core_build_manifest.themes.common.files.concat(select2_scss.themes.common.files),
-        coreSassTask
-    );
-
     tuleap.getPluginsWatchTasks(asset_dir);
 }
 
-const buildTask = series(cleanCoreJs, buildCoreComponents, coreTask, pluginsTask);
+const buildTask = series(cleanCoreJs, buildCoreComponents, coreJsTask, pluginsTask);
 
 module.exports = {
     default: buildTask,
     build: buildTask,
-    sass: buildAllSass,
     watch: watchTask
 };
