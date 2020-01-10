@@ -104,7 +104,6 @@ tracker_index	create_success	Artifact Successfully Created ($1)
 tracker_index	invalid_filename_attach	Invalid filename for attachment
 tracker_index	trackers_for	Trackers for $1
 tracker_index	admin_all_trackers	Admin All Trackers
-tracker_index	create_new_tracker	Create a New Tracker
 tracker_index	no_accessible_trackers_hdr	No Accessible Trackers Found
 tracker_index	no_accessible_trackers_msg	<strong>No trackers have been set up, or you are not allowed to view them.</strong>
 tracker_index	choose_tracker	Choose a tracker and you can browse/edit/add artifacts to it.
@@ -186,8 +185,6 @@ tracker_admin_field_values_details	manage_for	 - Manage Field Values for '$1'
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/index.php
 #
-tracker_admin_index	create_tracker	- Create tracker
-tracker_admin_index	tracker_created	Tracker created - Click on the new tracker ID to complete the tracker configuration
 tracker_admin_index	not_create_canned	ArtifactCanned could not be created
 tracker_admin_index	not_retrieved_report	ArtifactReport could not be retrieved: $1 
 tracker_admin_index	not_updated_report	ArtifactReport could not be updated
@@ -430,7 +427,6 @@ tracker_include_type	remove_tracker	Remove tracker
 tracker_include_type	restore_tracker	Restore tracker
 tracker_include_type	restore_confirm	Restore this tracker and all its dependencies?
 tracker_include_type	warning	Delete this tracker and all its dependencies (no possible restore operation)?
-tracker_include_type	create_from_scratch	Create a new tracker from scratch or from an existing tracker
 tracker_include_type	manage	Manage Trackers
 tracker_include_type	admin_or_del	Administrate or delete a tracker.	
 tracker_include_type	instantiate	Instantiate for new projects
@@ -452,19 +448,7 @@ tracker_include_type	no_user	No users for this tracker.
 tracker_include_type	allow_copy	Allow artifact duplication:
 tracker_include_type	submit_instr	<b>Submit instructions</b>:<br><i>(HTML tags allowed)</i>
 tracker_include_type	browse_instr	<b>Browse instructions</b>:<br><i>(HTML tags allowed)</i>
-tracker_include_type	fill_name	Please, fill the tracker name.
-tracker_include_type	fill_desc	Please, fill the tracker description.
-tracker_include_type	fill_short	Please, fill the tracker short name.
-tracker_include_type	choose_proj	Please, choose a project and a tracker first.
-tracker_include_type	choose_tmpl	Please, choose a template first.
-tracker_include_type	select_proj	Please, select a project first!
-tracker_include_type	create_tracker	<h2>Create a new tracker:</h2><p>Please, fill the name, description and short name of this new tracker:</p>
 tracker_include_type	short_name	Short name
-tracker_include_type	avoid_spaces	Please avoid spaces and punctuation in short names
-tracker_include_type	choose_creation	Choose a creation method:
-tracker_include_type	from_tmpl	From a predefined template:
-tracker_include_type	from_exist	<b>From an existing tracker:</b><br><i>(Choose a project first and then a tracker of this project)</i>
-tracker_include_type	proj_id	Project ID:
 tracker_include_type	tracker_id	Tracker ID:
 tracker_include_type	list_all_fields	List of all Available Fields
 tracker_include_type	type	Type

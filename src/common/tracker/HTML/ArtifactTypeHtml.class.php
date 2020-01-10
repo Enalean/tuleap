@@ -153,7 +153,6 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         site_project_header($params);
 
         echo '<strong><a href="/tracker/admin/?group_id='.(int)$group_id.'">'.$Language->getText('tracker_index', 'admin_all_trackers').'</a>';
-        echo ' | <a href="/tracker/admin/?group_id='.(int)$group_id.'&func=create">'.$Language->getText('tracker_index', 'create_new_tracker').'</a>';
         echo '</strong><hr>';
     }
 
@@ -190,8 +189,6 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
             echo '<p>'.$Language->getText('tracker_index', 'no_accessible_trackers_msg').'</p>';
         } else {
             echo '<H2>'.$Language->getText('tracker_admin_trackers', 'all_admin').'</H2>';
-            echo '<H3><a href="/tracker/admin/?group_id='.(int)$this->Group->getID().'&func=create">'.$Language->getText('tracker_index', 'create_new_tracker').'</a></H3>';
-            echo $Language->getText('tracker_include_type', 'create_from_scratch');
             echo '<H3>'.$Language->getText('tracker_include_type', 'manage').'</H3>';
             echo $Language->getText('tracker_include_type', 'admin_or_del').'<p>';
 
@@ -826,184 +823,6 @@ EOS;
 		  </table>
 		  <p align="center"><input type="submit" value="'.$Language->getText('global', 'btn_submit').'"></p>
 		</form>';
-    }
-
-
-    /**
-     *  Display a select box for the tracker list for a group
-     *
-     *  @param group_id: the project id
-     *  @param name: the select box name
-     *  @param checked: the default value
-     *
-     *  @return void
-     */
-    public function trackersSelectBox($group_id, $name, $checked = 'xzxz')
-    {
-        global $atf;
-        $hp = Codendi_HTMLPurifier::instance();
-                $tracker_names = array();
-                $tracker_ids   = array();
-                $trackers_array = $atf->getArtifactTypesFromId($group_id);
-        if ($trackers_array !== false) {
-            foreach ($trackers_array as $tracker) {
-                $tracker_names[] =  $hp->purify(SimpleSanitizer::unsanitize($tracker->getName()), CODENDI_PURIFIER_CONVERT_HTML) ;
-                $tracker_ids[] = $tracker->getId();
-            }
-        }
-
-        return html_build_select_box_from_arrays($tracker_ids, $tracker_names, $name, $checked);
-    }
-
-    /**
-     *  Display the create tracker form
-     *
-     *  @param group_id: the group id
-     *  @param codendi_template: the artifact type id chosen for a Codendi template
-     *  @param group_id_template: the group id chosen for an existing tracker
-     *  @param atid_template: the artifact type id chosen for an existing tracker
-     *  @param name: the name chosen
-     *  @param description: the description chosen
-     *  @param itemname: the short name chosen
-     *
-     *  @return void
-     */
-    public function displayCreateTracker($group_id, $codendi_template, $group_id_template, $atid_template, $name, $description, $itemname)
-    {
-        global $Language;
-        $hp = Codendi_HTMLPurifier::instance();
-        echo '<script language="JavaScript">
-		      function trimStr(value) {
-		      	trimValue = "";
-		      	for(i=0;i<value.length;i++) {
-		      		if ( value.charAt(i) != " " ) {
-		      			trimValue = trimValue + value.charAt(i);
-		      		}
-		      	}
-		      	return trimValue;
-		      }
-		    
-			  function onChangeGroup() {
-			  	document.form_create.func.value = "create";
-			  	document.form_create.submit();
-			  }
-			  
-			  function checkValues() {
-			  	if ( trimStr(document.form_create.name.value) == "" ) {
-                    document.form_create.feedback.value = "'.$Language->getText('tracker_include_type', 'fill_name').'";
-		  			return false;
-				}
-			  	if ( trimStr(document.form_create.description.value) == "" ) {
-                    document.form_create.feedback.value = "'.$Language->getText('tracker_include_type', 'fill_desc').'";
-		  			return false;
-				}
-			  	if ( trimStr(document.form_create.itemname.value) == "" ) {
-                    document.form_create.feedback.value = "'.$Language->getText('tracker_include_type', 'fill_short').'";
-		  			return false;
-				}
-	  			return true;
-				
-			  }
-			
-			  function onSubmitCreateTemplate() {
-			  	if ( checkValues() ) {
-			  		if ( (document.form_create.group_id_template.value == "")||(document.form_create.atid_template.value == "") ) {
-                        document.form_create.feedback.value = "'.$Language->getText('tracker_include_type', 'choose_proj').'";
-					  	document.form_create.func.value = "create";
-			  		}
-			  		document.form_create.atid_chosen.value = document.form_create.atid_template.value;
-			  		document.form_create.group_id_chosen.value = document.form_create.group_id_template.value;
-				} else {
-				  	document.form_create.func.value = "create";
-				}
-			  	document.form_create.submit();
-			  }
-
-			  function onSubmitCreateCodendiTemplate() {
-			  	if ( checkValues() ) {
-                    if ( document.form_create.codendi_template.value == 100 ) {
-                        document.form_create.feedback.value = "'.$Language->getText('tracker_include_type', 'choose_tmpl').'";
-					  	document.form_create.func.value = "create";
-			  		}
-			  		document.form_create.atid_chosen.value = document.form_create.codendi_template.value;
-			  		document.form_create.group_id_chosen.value = 100;
-				} else {
-				  	document.form_create.func.value = "create";
-				}
-			  	document.form_create.submit();
-			  }
-
-			  function showGroupSelection() {
-			  	win=window.open("","group_id_selection","height=210,width=480,toolbar=no,location=no,resizable=yes,left=200,top=200");
-				win.location = "/tracker/group_selection.php?opener_form=form_create&opener_field=group_id_template&filter=member";
-			  }
-
-			  function showTrackerSelection() {
-			  	if ( document.form_create.group_id_template.value == "" ) {
-                    alert("'.$Language->getText('tracker_include_type', 'select_proj').'");
-			  		return;
-			  	}
-			  	win=window.open("","artifact_group_id_selection","height=45,width=400,toolbar=no,location=no,resizable=yes,left=200,top=200");
-				win.location = "/tracker/tracker_selection.php?group_id=" + document.form_create.group_id_template.value + "&opener_form=form_create&opener_field=atid_template";
-			  }
-
-			  </script>
-			 ';
-        echo $Language->getText('tracker_include_type', 'create_tracker');
-        echo '<form name="form_create" >
-		  <input type="hidden" name="group_id" value="'.(int)$group_id.'">
-		  <input type="hidden" name="func" value="docreate">
-		  <input type="hidden" name="atid_chosen" value="">
-		  <input type="hidden" name="group_id_chosen" value="">
-		  <input type="hidden" name="feedback" value="">
-		  <table width="100%" border="0" cellpadding="5">
-		    <tr> 
-		      <td width="21%"><b>'.$Language->getText('tracker_include_artifact', 'name').'</b>: <font color="red">*</font></td>
-		      <td width="79%"> 
-		        <input type="text" name="name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'">
-		      </td>
-		    </tr>
-		    <tr> 
-		      <td width="21%"><b>'.$Language->getText('tracker_include_artifact', 'desc').'</b>: <font color="red">*</font></td>
-		      <td width="79%"> 
-		        <textarea name="description" rows="3" cols="50">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
-		      </td>
-		    </tr>
-		    <tr> 
-		      <td width="21%"><b>'.$Language->getText('tracker_include_type', 'short_name').'</b>: <font color="red">*</font></td>
-		      <td width="79%"> 
-		        <input type="text" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'">
-		      </td>
-		    </tr>
-                    <tr><td colspan=2><i>'.$Language->getText('tracker_include_type', 'avoid_spaces').'</i></td></tr>';
-        echo '</table>';
-        echo '<p>'.$Language->getText('tracker_include_type', 'choose_creation').'</p>';
-        echo '<table>
-			  <tr valign="top">
-			     <td width="300"><li><b>'.$Language->getText('tracker_include_type', 'from_tmpl').'</b></li></td>
-			     <td colspan="2">';
-        echo $this->trackersSelectBox(100, "codendi_template", $codendi_template);
-        echo '	 &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global', 'btn_create').'" onClick="onSubmitCreateCodendiTemplate()"><br><br></td>
-			  <tr valign="top">    
-			     <td width="300"><li>'.$Language->getText('tracker_include_type', 'from_exist').'</li></td>
-			     
-			     <td>
-			     	<table>
-			     	  <tr>
-                        <td>'.$Language->getText('tracker_include_type', 'proj_id').'</td>
-			     		<td><input name="group_id_template" value="'. $hp->purify($group_id_template, CODENDI_PURIFIER_CONVERT_HTML) .'"><a href="javascript:showGroupSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
-			     	  </tr>
-			     	  <tr>
-				        <td>'.$Language->getText('tracker_include_type', 'tracker_id').'</td>
-			     		<td><input name="atid_template" value="'. $hp->purify($atid_template, CODENDI_PURIFIER_CONVERT_HTML) .'"><a href="javascript:showTrackerSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
-					  <tr>
-					</table>
-				 </td>			     		
-		         <td><input type="button" name="CreateTemplate" value="'.$Language->getText('global', 'btn_create').'" onClick="onSubmitCreateTemplate()"></td>
-		      <tr>';
-
-        echo '</form>
-			  </table>';
     }
 
     /**

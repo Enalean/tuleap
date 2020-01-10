@@ -96,7 +96,6 @@ tracker_index	create_success	Artefact créé avec succès ($1)
 tracker_index	invalid_filename_attach	Nom de fichier invalide pour un attachement
 tracker_index	trackers_for	Outil de suivi pour $1
 tracker_index	admin_all_trackers	Administration des outils de suivi
-tracker_index	create_new_tracker	Créer un outil de suivi
 tracker_index	no_accessible_trackers_hdr	Aucun outil de suivi disponible
 tracker_index	no_accessible_trackers_msg	<strong>Aucun outil de suivi n'a été créé, ou vous n'êtes pas autorisé à les consulter.</strong>
 tracker_index	choose_tracker	Choisissez un outil de suivi pour visualiser, éditer ou ajouter des artefacts.
@@ -178,8 +177,6 @@ tracker_admin_field_values_details	manage_for	 - Administration des valeurs des 
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/index.php
 #
-tracker_admin_index	create_tracker	- Créer un outil de suivi
-tracker_admin_index	tracker_created	Outil de suivi créé - Cliquer sur l'identifiant du nouvel outil de suivi pour achever sa configuration
 tracker_admin_index	not_create_canned	ArtifactCanned n'a pas pu être créé
 tracker_admin_index	not_retrieved_report	ArtifactReport n'a pas pu être récupéré&nbsp;: $1
 tracker_admin_index	not_updated_report	ArtifactReport n'a pas pu être mis à jour
@@ -422,7 +419,6 @@ tracker_include_type	delete	Supprimer
 tracker_include_type	cancel	Annuler
 tracker_include_type	remove_tracker	Supprimer l'outil de suivi
 tracker_include_type	delay_deletion	Retarder la destruction de cet outil de suivi ?
-tracker_include_type	create_from_scratch	Créer un nouvel outil de suivi en totalité ou à partir d'un outil de suivi existant
 tracker_include_type	manage	Gérer les outils de suivi
 tracker_include_type	admin_or_del	Administrer ou détruire un outil de suivi.
 tracker_include_type	instantiate	Instancier dans les nouveaux projets
@@ -444,19 +440,7 @@ tracker_include_type	no_user	Aucun utilisateur pour cet outil de suivi.
 tracker_include_type	allow_copy	Autoriser la copie d'artefacts&nbsp;:
 tracker_include_type	submit_instr	<b>Instructions de soumissions</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
 tracker_include_type	browse_instr	<b>Instructions de navigation</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
-tracker_include_type	fill_name	Veuillez remplir le nom de l'outil de suivi.
-tracker_include_type	fill_desc	Veuillez remplir la description de l'outil de suivi.
-tracker_include_type	fill_short	Veuillez remplir le nom court de l'outil de suivi.
-tracker_include_type	choose_proj	Veuillez d'abord choisir un projet et un outil de suivi.
-tracker_include_type	choose_tmpl	Veuillez d'abord choisir un patron.
-tracker_include_type	select_proj	Veuillez d'abord sélectionner un projet !
-tracker_include_type	create_tracker	<h2>Créer un nouvel outil de suivi&nbsp;:</h2><p>Veuillez remplir le nom, la description et le nom court de cet outil de suivi&nbsp;:</p>
 tracker_include_type	short_name	Nom court
-tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les ponctuations dans le nom court
-tracker_include_type	choose_creation	Choisissez une méthode de création&nbsp;:
-tracker_include_type	from_tmpl	A partir d'un patron prédéfini&nbsp;:
-tracker_include_type	from_exist	<b>A partir d'un outil de suivi existant&nbsp;:</b><br><i>(Choisissez d'abord un projet et ensuite un outil de suivi pour ce projet)</i>
-tracker_include_type	proj_id	ID du projet&nbsp;:
 tracker_include_type	tracker_id	ID de l'outil de suivi&nbsp;:
 tracker_include_type	list_all_fields	Liste de tous les champs disponibles
 tracker_include_type	type	Type

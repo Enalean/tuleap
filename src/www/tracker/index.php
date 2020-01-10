@@ -968,7 +968,6 @@ if ($func == 'gotoid') {
         // Admin link and create link are only displayed if the user is a project administrator
     if (user_ismember($group_id, 'A')) {
         echo '<a href="/tracker/admin/?group_id='. (int)$group_id.'">'.$Language->getText('tracker_index', 'admin_all_trackers').'</a>';
-        echo ' | <a href="/tracker/admin/?group_id='. (int)$group_id.'&func=create">'.$Language->getText('tracker_index', 'create_new_tracker').'</a>';
         if ($params['help']) {
             echo ' | ';
         }
