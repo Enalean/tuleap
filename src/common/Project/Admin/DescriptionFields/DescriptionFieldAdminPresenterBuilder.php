@@ -50,8 +50,8 @@ class DescriptionFieldAdminPresenterBuilder
         foreach ($description_fields_infos as $field) {
             $field_presenters[] = new FieldPresenter(
                 $field['group_desc_id'],
-                $this->getFieldTranslatedTextLabel($field['desc_name']),
-                $this->getFieldTranslatedTextLabel($field['desc_description']),
+                DescriptionFieldLabelBuilder::getFieldTranslatedTextLabel($field['desc_name']),
+                DescriptionFieldLabelBuilder::getFieldTranslatedTextLabel($field['desc_description']),
                 $field['desc_required'],
                 $this->getTranslatedRequiredLabel($field['desc_required']),
                 $field['desc_type'],
@@ -62,17 +62,6 @@ class DescriptionFieldAdminPresenterBuilder
         }
 
         return $field_presenters;
-    }
-
-    private function getFieldTranslatedTextLabel($field_value)
-    {
-        if (preg_match('/(.*):(.*)/', $field_value, $matches)) {
-            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                $field_value = $GLOBALS['Language']->getText($matches[1], $matches[2]);
-            }
-        }
-
-        return $field_value;
     }
 
     private function getTranslatedRequiredLabel($is_required)
