@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
@@ -195,7 +196,11 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     public function cssFile($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/tracker') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
+            $css_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/tracker_encryption/themes',
+                '/assets/tracker_encryption/themes'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="' . $css_assets->getFileURL('style.css') . '" />';
         }
     }
 }

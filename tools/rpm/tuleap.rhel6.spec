@@ -575,6 +575,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/statistics/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_encryption/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/userlog/themes/
 
 # Link to local config for logo and themes images
@@ -1292,6 +1293,7 @@ fi
 %files plugin-tracker-encryption
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/tracker_encryption
+%{APP_DIR}/src/www/assets/tracker_encryption
 
 %files plugin-cardwall
 %defattr(-,%{APP_USER},%{APP_USER},-)
