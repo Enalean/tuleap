@@ -18,12 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class OneStepProjectCreationRequestTest extends TuleapTestCase
+class OneStepProjectCreationRequestTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     private $template_id        = 100;
     private $service_git_id     = 11;
@@ -31,7 +34,7 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase
 
     protected function aCreationRequest($request_data): Project_OneStepCreation_OneStepCreationRequest
     {
-        $request = aRequest()->withParams($request_data)->build();
+        $request = new Codendi_Request($request_data);
         $creation_request = new Project_OneStepCreation_OneStepCreationRequest(
             $request,
             new DefaultProjectVisibilityRetriever()
@@ -61,10 +64,10 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase
         );
 
         $creation_request = $this->aCreationRequest($request_data);
-        $this->assertEqual($text_content, $creation_request->getCustomProjectDescription($custom_id));
+        $this->assertEquals($text_content, $creation_request->getCustomProjectDescription($custom_id));
     }
 
-    public function itDoesNotSetACustomTextDescriptionFieldIfIdIsNotNumeric()
+    public function testItDoesNotSetACustomTextDescriptionFieldIfIdIsNotNumeric()
     {
         $text_content = 'bla bla bla';
         $custom_id    = 'name';
@@ -89,10 +92,13 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase
         $creation_request = $this->aCreationRequest($request_data);
 
         $project_values = $creation_request->getProjectValues();
-        $this->assertEqual($project_values['project'][Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id"], $text_content);
+        $this->assertEquals(
+            $text_content,
+            $project_values['project'][Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id"]
+        );
     }
 
-    public function itForcesTheProjectToNotBeATest()
+    public function testItForcesTheProjectToNotBeATest()
     {
         $request_data     = array('whatever');
         $creation_request = $this->aCreationRequest($request_data);
@@ -101,7 +107,7 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase
         $this->assertFalse($values['project']['is_test']);
     }
 
-    public function itIncludesTheUsedServicesOfTheChoosenTemplate()
+    public function testItIncludesTheUsedServicesOfTheChoosenTemplate()
     {
         $request_data = array(
             Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $this->template_id,
@@ -110,11 +116,11 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase
         $creation_request = $this->aCreationRequest($request_data);
         $values = $creation_request->getProjectValues();
 
-        $this->assertEqual($values['project']['services'][$this->service_tracker_id]['is_used'], 1);
-        $this->assertEqual($values['project']['services'][$this->service_git_id]['is_used'], 0);
+        $this->assertEquals(1, $values['project']['services'][$this->service_tracker_id]['is_used']);
+        $this->assertEquals(0, $values['project']['services'][$this->service_git_id]['is_used']);
     }
 
-    public function itIncludesMandatoryTroveCats()
+    public function testItIncludesMandatoryTroveCats()
     {
         $request_data = array(
             Project_OneStepCreation_OneStepCreationPresenter::TROVE_CAT_PREFIX => array(
@@ -126,6 +132,6 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase
         $values           = $creation_request->getProjectValues();
 
         $this->assertNotNull($values['project']['trove'][1]);
-        $this->assertEqual($values['project']['trove'][1], array(235));
+        $this->assertEquals(array(235), $values['project']['trove'][1]);
     }
 }

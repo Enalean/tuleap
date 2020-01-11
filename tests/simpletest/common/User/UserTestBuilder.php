@@ -31,59 +31,55 @@ function aUser()
     return new UserTestBuilder();
 }
 
-function anAnonymousUser()
-{
-    return aUser()->withId(0);
-}
-
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class UserTestBuilder
 {
     private $params = array('language_id' => 'en_US');
     private $language;
 
-    function withUserName($name)
+    public function withUserName($name)
     {
         $this->params['user_name'] = $name;
         return $this;
     }
 
-    function withRealName($realname)
+    public function withRealName($realname)
     {
         $this->params['realname'] = $realname;
         return $this;
     }
 
-    function withEmail($email)
+    public function withEmail($email)
     {
         $this->params['email'] = $email;
         return $this;
     }
 
-    function withId($id)
+    public function withId($id)
     {
         $this->params['user_id'] = $id;
         return $this;
     }
 
-    function withAuthorizedKeysArray(array $keys)
+    public function withAuthorizedKeysArray(array $keys)
     {
         $this->params['authorized_keys'] = implode(PFUser::SSH_KEY_SEPARATOR, $keys);
         return $this;
     }
 
-    function withUnixStatus($status)
+    public function withUnixStatus($status)
     {
         $this->params['unix_status'] = $status;
         return $this;
     }
 
-    function withLdapId($id)
+    public function withLdapId($id)
     {
         $this->params['ldap_id'] = $id;
         return $this;
     }
 
-    function withPassword($hashed_password)
+    public function withPassword($hashed_password)
     {
         $password_handler         = PasswordHandlerFactory::getPasswordHandler();
         $this->params['password'] = $password_handler->computeHashPassword($hashed_password);
@@ -91,31 +87,31 @@ class UserTestBuilder
         return $this;
     }
 
-    function withStatus($status)
+    public function withStatus($status)
     {
         $this->params['status'] = $status;
         return $this;
     }
 
-    function withLastPasswordUpdate($timestamp)
+    public function withLastPasswordUpdate($timestamp)
     {
         $this->params['last_pwd_update'] = $timestamp;
         return $this;
     }
 
-    function withLang($lang)
+    public function withLang($lang)
     {
         $this->params['language_id'] = $lang;
         return $this;
     }
 
-    function withLanguage(BaseLanguage $language)
+    public function withLanguage(BaseLanguage $language)
     {
         $this->language = $language;
         return $this;
     }
 
-    function build()
+    public function build()
     {
         $user = new PFUser($this->params);
         if ($this->language !== null) {
