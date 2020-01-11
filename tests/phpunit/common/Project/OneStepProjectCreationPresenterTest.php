@@ -19,14 +19,19 @@
  *
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
-class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class OneStepProjectCreationPresenter_FieldsTest extends TestCase
 {
-    protected function aOneStepProjectCreationForm($request_data)
+    use MockeryPHPUnitIntegration;
+
+    protected function aOneStepProjectCreationForm($request_data): Project_OneStepCreation_OneStepCreationPresenter
     {
-        $project_manager  = mock('ProjectManager');
-        $request          = aRequest()->withParams($request_data)->build();
+        $project_manager  = \Mockery::spy(\ProjectManager::class);
+        $request          = new Codendi_Request($request_data);
         $creation_request = new Project_OneStepCreation_OneStepCreationRequest(
             $request,
             new DefaultProjectVisibilityRetriever()
@@ -42,7 +47,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase //phpcs:
         );
     }
 
-    public function testNewObjectSetsFullName()
+    public function testNewObjectSetsFullName(): void
     {
         $full_name = 'my_test proj';
 
@@ -51,10 +56,10 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase //phpcs:
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
-        $this->assertEqual($full_name, $single_step->getFullName());
+        $this->assertEquals($full_name, $single_step->getFullName());
     }
 
-    public function testNewObjectSetsUnixName()
+    public function testNewObjectSetsUnixName(): void
     {
         $unix_name = 'fdgd';
 
@@ -63,10 +68,10 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase //phpcs:
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
-        $this->assertEqual($unix_name, $single_step->getUnixName());
+        $this->assertEquals($unix_name, $single_step->getUnixName());
     }
 
-    public function testNewObjectSetsShortDescription()
+    public function testNewObjectSetsShortDescription(): void
     {
         $description = 'short description';
 
@@ -75,10 +80,10 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase //phpcs:
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
-        $this->assertEqual($description, $single_step->getShortDescription());
+        $this->assertEquals($description, $single_step->getShortDescription());
     }
 
-    public function testNewObjectSetsIsPublic()
+    public function testNewObjectSetsIsPublic(): void
     {
         $is_public = true;
 
@@ -87,10 +92,10 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase //phpcs:
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
-        $this->assertEqual($is_public, $single_step->isPublic());
+        $this->assertEquals($is_public, $single_step->isPublic());
     }
 
-    public function testNewObjectSetsTemplateId()
+    public function testNewObjectSetsTemplateId(): void
     {
         $id = 5689;
 
@@ -99,18 +104,18 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase //phpcs:
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
-        $this->assertEqual($id, $single_step->getTemplateId());
+        $this->assertEquals($id, $single_step->getTemplateId());
     }
 
-    public function itSetsDefaultTemplateIdIfRequestDataDontHaveOne()
+    public function testItSetsDefaultTemplateIdIfRequestDataDontHaveOne(): void
     {
         $request_data          = array();
         $single_step = $this->aOneStepProjectCreationForm($request_data);
 
-        $this->assertEqual(Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID, $single_step->getTemplateId());
+        $this->assertEquals(Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID, $single_step->getTemplateId());
     }
 
-    public function testNewObjectSetsProjectApprobation()
+    public function testNewObjectSetsProjectApprobation(): void
     {
         $tos = 'approved';
 
