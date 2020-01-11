@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016- Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,28 @@
 
 namespace Tuleap\SvnCore\Cache;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use TestHelper;
-use TuleapTestCase;
 
-class ParameterRetrieverTest extends TuleapTestCase
+class ParameterRetrieverTest extends TestCase
 {
-    public function itReturnsDefaultParametersIfParameterDoesNotExist()
+    use MockeryPHPUnitIntegration;
+
+    public function testItReturnsDefaultParametersIfParameterDoesNotExist(): void
     {
-        $dao = mock('Tuleap\SvnCore\Cache\ParameterDao');
-        stub($dao)->search()->returns(TestHelper::emptyDar());
+        $dao = \Mockery::spy(\Tuleap\SvnCore\Cache\ParameterDao::class);
+        $dao->shouldReceive('search')->andReturns(TestHelper::emptyDar());
 
         $parameter_manager = new ParameterRetriever($dao);
 
         $parameter = $parameter_manager->getParameters();
 
-        $this->assertEqual($parameter->getMaximumCredentials(), ParameterRetriever::MAXIMUM_CREDENTIALS_DEFAULT);
-        $this->assertEqual($parameter->getLifetime(), ParameterRetriever::LIFETIME_DEFAULT);
+        $this->assertEquals(ParameterRetriever::MAXIMUM_CREDENTIALS_DEFAULT, $parameter->getMaximumCredentials());
+        $this->assertEquals(ParameterRetriever::LIFETIME_DEFAULT, $parameter->getLifetime());
     }
 
-    public function itUsesDatabaseInformationsToCreateParameters()
+    public function testItUsesDatabaseInformationsToCreateParameters(): void
     {
         $parameters_data = TestHelper::arrayToDar(
             array(
@@ -50,25 +53,25 @@ class ParameterRetrieverTest extends TuleapTestCase
                 'value' => 947
             )
         );
-        $dao             = mock('Tuleap\SvnCore\Cache\ParameterDao');
-        stub($dao)->search()->returns($parameters_data);
+        $dao             = \Mockery::spy(\Tuleap\SvnCore\Cache\ParameterDao::class);
+        $dao->shouldReceive('search')->andReturns($parameters_data);
 
         $parameter_manager = new ParameterRetriever($dao);
 
         $parameter = $parameter_manager->getParameters();
 
-        $this->assertEqual($parameter->getMaximumCredentials(), 877);
-        $this->assertEqual($parameter->getLifetime(), 947);
+        $this->assertEquals(877, $parameter->getMaximumCredentials());
+        $this->assertEquals(947, $parameter->getLifetime());
     }
 
-    public function itThrowsAnExceptionIfDatabaseCanNotBeQueried()
+    public function testItThrowsAnExceptionIfDatabaseCanNotBeQueried(): void
     {
-        $dao = mock('Tuleap\SvnCore\Cache\ParameterDao');
-        stub($dao)->search()->returns(false);
+        $dao = \Mockery::spy(\Tuleap\SvnCore\Cache\ParameterDao::class);
+        $dao->shouldReceive('search')->andReturns(false);
 
         $parameter_manager = new ParameterRetriever($dao);
 
-        $this->expectException('Tuleap\SvnCore\Cache\ParameterDataAccessException');
+        $this->expectException(\Tuleap\SvnCore\Cache\ParameterDataAccessException::class);
         $parameter_manager->getParameters();
     }
 }

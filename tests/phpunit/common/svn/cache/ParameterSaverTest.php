@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,17 @@
 
 namespace Tuleap\SvnCore\Cache;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class ParameterSaverTest extends TuleapTestCase
+class ParameterSaverTest extends TestCase
 {
-    public function itSavesParameters()
+    use MockeryPHPUnitIntegration;
+
+    public function testItSavesParameters(): void
     {
-        $dao = mock('Tuleap\SvnCore\Cache\ParameterDao');
-        stub($dao)->save()->returns(true);
-        $dao->expectOnce('save');
+        $dao = \Mockery::spy(\Tuleap\SvnCore\Cache\ParameterDao::class);
+        $dao->shouldReceive('save')->once()->andReturns(true);
 
         $event_manager = \Mockery::mock(\EventManager::class);
         $event_manager->shouldReceive('processEvent');
@@ -37,30 +39,30 @@ class ParameterSaverTest extends TuleapTestCase
         $parameter_saver->save(5, 5);
     }
 
-    public function itRejectsInvalidData()
+    public function testItRejectsInvalidData(): void
     {
-        $dao = mock('Tuleap\SvnCore\Cache\ParameterDao');
-        $dao->expectNever('save');
+        $dao = \Mockery::spy(\Tuleap\SvnCore\Cache\ParameterDao::class);
+        $dao->shouldReceive('save')->never();
 
         $event_manager = \Mockery::mock(\EventManager::class);
         $event_manager->shouldNotReceive('processEvent');
 
-        $this->expectException('Tuleap\SvnCore\Cache\ParameterMalformedDataException');
+        $this->expectException(\Tuleap\SvnCore\Cache\ParameterMalformedDataException::class);
 
         $parameter_saver = new ParameterSaver($dao, $event_manager);
         $parameter_saver->save(-1, 5);
         $parameter_saver->save(5, -1);
     }
 
-    public function itDealsWithDatabaseError()
+    public function testItDealsWithDatabaseError(): void
     {
-        $dao = mock('Tuleap\SvnCore\Cache\ParameterDao');
-        stub($dao)->save()->returns(false);
+        $dao = \Mockery::spy(\Tuleap\SvnCore\Cache\ParameterDao::class);
+        $dao->shouldReceive('save')->andReturns(false);
 
         $event_manager = \Mockery::mock(\EventManager::class);
         $event_manager->shouldNotReceive('processEvent');
 
-        $this->expectException('Tuleap\SvnCore\Cache\ParameterDataAccessException');
+        $this->expectException(\Tuleap\SvnCore\Cache\ParameterDataAccessException::class);
 
         $parameter_saver = new ParameterSaver($dao, $event_manager);
         $parameter_saver->save(5, 5);

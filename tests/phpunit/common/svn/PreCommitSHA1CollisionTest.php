@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,52 +20,56 @@
 
 namespace Tuleap\SvnCore;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use SVN_Hook_PreCommit;
 
-class PreCommitSHA1CollisionTest extends \TuleapTestCase
+class PreCommitSHA1CollisionTest extends TestCase
 {
-    public function itAcceptsCommitThatDoesNotContainSHA1Collision()
+    use MockeryPHPUnitIntegration;
+
+    public function testItAcceptsCommitThatDoesNotContainSHA1Collision(): void
     {
         $svn_hook                = \Mockery::spy(\SVN_Hooks::class)->shouldAllowMockingProtectedMethods();
-        $svn_hook->shouldReceive('getProjectFromRepositoryPath')->andReturns(aMockProject()->build());
+        $svn_hook->shouldReceive('getProjectFromRepositoryPath')->andReturns(\Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]));
         $svnlook                 = \Mockery::spy(\SVN_Svnlook::class);
         $sha1_collision_detector = \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
         $pre_commit_hook         = new SVN_Hook_PreCommit(
             $svn_hook,
-            mock('SVN_CommitMessageValidator'),
+            \Mockery::spy(\SVN_CommitMessageValidator::class),
             $svnlook,
-            mock('SVN_Immutable_Tags_Handler'),
+            \Mockery::spy(\SVN_Immutable_Tags_Handler::class),
             $sha1_collision_detector,
-            mock('Logger')
+            \Mockery::spy(\Logger::class)
         );
 
-        stub($svnlook)->getTransactionPath()->returns(array('D   trunk/f1', 'A   trunk/f2'));
-        stub($svnlook)->getContent()->returns(popen('', 'rb'));
+        $svnlook->shouldReceive('getTransactionPath')->andReturns(array('D   trunk/f1', 'A   trunk/f2'));
+        $svnlook->shouldReceive('getContent')->andReturns(popen('', 'rb'));
 
         $sha1_collision_detector->shouldReceive('isColliding')->once()->andReturns(false);
         $pre_commit_hook->assertCommitDoesNotContainSHA1Collision('', '');
     }
 
-    public function itRejectsCommitContainingSHA1Collision()
+    public function testItRejectsCommitContainingSHA1Collision(): void
     {
         $svn_hook                = \Mockery::spy(\SVN_Hooks::class)->shouldAllowMockingProtectedMethods();
-        $svn_hook->shouldReceive('getProjectFromRepositoryPath')->andReturns(aMockProject()->build());
+        $svn_hook->shouldReceive('getProjectFromRepositoryPath')->andReturns(\Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]));
         $svnlook                 = \Mockery::spy(\SVN_Svnlook::class);
         $sha1_collision_detector = \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
         $pre_commit_hook         = new SVN_Hook_PreCommit(
             $svn_hook,
-            mock('SVN_CommitMessageValidator'),
+            \Mockery::spy(\SVN_CommitMessageValidator::class),
             $svnlook,
-            mock('SVN_Immutable_Tags_Handler'),
+            \Mockery::spy(\SVN_Immutable_Tags_Handler::class),
             $sha1_collision_detector,
-            mock('Logger')
+            \Mockery::spy(\Logger::class)
         );
 
-        stub($svnlook)->getTransactionPath()->returns(array('A   trunk/f1'));
-        stub($svnlook)->getContent()->returns(popen('', 'rb'));
-        stub($sha1_collision_detector)->isColliding()->returns(true);
+        $svnlook->shouldReceive('getTransactionPath')->andReturns(array('A   trunk/f1'));
+        $svnlook->shouldReceive('getContent')->andReturns(popen('', 'rb'));
+        $sha1_collision_detector->shouldReceive('isColliding')->andReturns(true);
 
-        $this->expectException('Tuleap\\Svn\\SHA1CollisionException');
+        $this->expectException(\Tuleap\Svn\SHA1CollisionException::class);
         $pre_commit_hook->assertCommitDoesNotContainSHA1Collision('', '');
     }
 }
