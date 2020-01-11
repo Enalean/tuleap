@@ -403,7 +403,7 @@ class GitRepositoryManager
      *
      * @return bool
      */
-    public function isRepositoryNameAlreadyUsed(GitRepository $new_repository)
+    public function isRepositoryNameAlreadyUsed(GitRepository $new_repository): bool
     {
         $repositories = $this->repository_factory->getAllRepositories($new_repository->getProject());
         foreach ($repositories as $existing_repo) {
@@ -419,6 +419,8 @@ class GitRepositoryManager
                 return true;
             }
         }
+
+        return false;
     }
 
     private function nameIsSubPathOfExistingRepository($repository_path, $new_path)
