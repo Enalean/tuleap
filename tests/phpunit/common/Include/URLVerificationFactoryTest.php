@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,35 +15,41 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-class Plugin_URLVerification extends URLVerification
-{
-}
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class URLVerificationFactoryTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class URLVerificationFactoryTest extends TestCase
 {
-    function testGetUrlVerifictionNoPluginResponse()
+    use MockeryPHPUnitIntegration;
+
+    public function testGetUrlVerifictionNoPluginResponse(): void
     {
         $event_manager = \Mockery::mock(EventManager::class);
         $event_manager->shouldReceive('processEvent')->with('url_verification_instance', \Mockery::any())->once();
 
         $urlVerif = new URLVerificationFactory($event_manager);
 
-        $this->assertIsA($urlVerif->getURLVerification([]), URLVerification::class);
+        $this->assertInstanceOf(URLVerification::class, $urlVerif->getURLVerification([]));
     }
 
-    function testGetUrlVerifictionWithPluginResponse()
+    public function testGetUrlVerificationWithPluginResponse(): void
     {
+        $url_verification_instance =  new class extends URLVerification {
+        };
+
         $event_manager = \Mockery::mock(EventManager::class);
-        $event_manager->shouldReceive('processEvent')->with('url_verification_instance', \Mockery::on(function (array $args) {
-            $args['url_verification'] = new Plugin_URLVerification();
+        $event_manager->shouldReceive('processEvent')->with('url_verification_instance', \Mockery::on(function (array &$args) use ($url_verification_instance) {
+            $args['url_verification'] = $url_verification_instance;
             return true;
         }))->once();
 
         $urlVerif = new URLVerificationFactory($event_manager);
 
-        $this->assertIsA($urlVerif->getURLVerification([]), Plugin_URLVerification::class);
+        $this->assertSame($url_verification_instance, $urlVerif->getURLVerification([]));
     }
 }
