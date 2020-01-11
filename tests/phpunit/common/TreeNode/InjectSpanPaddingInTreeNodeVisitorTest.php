@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/InjectSpanPadding.class.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding
 {
 
@@ -33,31 +34,31 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding
     *      '-Child 2 (id:8)
     *
     */
-    protected function given_AParentWithOneChildTreeNode()
+    protected function givenAParentWithOneChildTreeNode()
     {
         return $this->buildBaseTree();
     }
 
-    public function itShouldSetDataToFirstChildThatMatches_IndentLast_leftTreeIndentMinus_treeAndChild()
+    public function testItShouldSetDataToFirstChildThatMatchesIndentLastLeftTreeIndentMinusTreeAndChild(): void
     {
-        $given = $this->given_AParentWithOneChildTreeNode();
-        $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
+        $given = $this->givenAParentWithOneChildTreeNode();
+        $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern = $this->getPatternSuite(" indent last-left tree indent minus-tree");
         $givenChild = $given->getChild(0);
 
-        $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
-        $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, $this->getPatternSuite(" content child"));
+        $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
+        $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content child"));
     }
 
-    public function itShouldSetDataToSecondChildThatMatches_BlankBlankLast_LeftLast_Right()
+    public function testItShouldSetDataToSecondChildThatMatchesBlankBlankLastLeftLastRight(): void
     {
-        $given      = $this->given_AParentWithOneChildTreeNode();
-        $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
+        $given      = $this->givenAParentWithOneChildTreeNode();
+        $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern    = $this->getPatternSuite(" blank blank indent last-left indent last-right");
         $givenChild = $given->getChild(0)->getChild(0);
 
-        $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
+        $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
     }
 }
