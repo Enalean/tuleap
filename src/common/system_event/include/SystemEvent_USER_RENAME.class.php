@@ -119,7 +119,8 @@ class SystemEvent_USER_RENAME extends SystemEvent
         if ($renameState) {
             $this->done();
         }
-        return $renameState;
+
+        return (bool) $renameState;
     }
 
 

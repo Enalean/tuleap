@@ -25,6 +25,7 @@ require_once __DIR__ . '/../../../www/project/admin/project_admin_utils.php';
  * Change project short name (unix_group_name)
  *
  */
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_PROJECT_RENAME extends SystemEvent
 {
 
@@ -159,7 +160,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
             $this->addProjectHistory('rename_with_error', $project->getUnixName(false).' :: '.$new_name.' (event n°'.$this->getId().')', $project->getId());
         }
 
-        return $renameState;
+        return (bool) $renameState;
     }
 
     /**
