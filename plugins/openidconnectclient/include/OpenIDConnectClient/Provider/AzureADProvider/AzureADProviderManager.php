@@ -62,13 +62,16 @@ class AzureADProviderManager
             throw new ProviderMalformedDataException();
         }
 
+        $acceptable_tenant_for_authentication = AcceptableTenantForAuthenticationConfiguration::fromSpecificTenantID($tenant_id);
+
         $id = $this->azure_provider_dao->create(
             $name,
             $client_id,
             $client_secret,
             $icon,
             $color,
-            $tenant_id
+            $tenant_id,
+            $acceptable_tenant_for_authentication->getIdentifier()
         );
 
         return new AzureADProvider(
@@ -79,7 +82,8 @@ class AzureADProviderManager
             $is_unique_authentication_endpoint,
             $icon,
             $color,
-            $tenant_id
+            $tenant_id,
+            $acceptable_tenant_for_authentication
         );
     }
 
@@ -93,7 +97,11 @@ class AzureADProviderManager
             (bool)$row['unique_authentication_endpoint'],
             $row['icon'],
             $row['color'],
-            $row['tenant_id']
+            $row['tenant_id'],
+            AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID(
+                $row['acceptable_tenant_auth_identifier'],
+                $row['tenant_id']
+            )
         );
     }
 

@@ -33,16 +33,18 @@ class AzureADProviderDao extends DataAccessObject
         string $client_secret,
         string $icon,
         string $color,
-        string $tenant_id
+        string $tenant_id,
+        string $acceptable_tenant_auth_identifier
     ) : int {
         return $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use (
+            static function (EasyDB $db) use (
                 $name,
                 $client_id,
                 $client_secret,
                 $icon,
                 $color,
-                $tenant_id
+                $tenant_id,
+                $acceptable_tenant_auth_identifier
             ) : int {
                 $sql = "INSERT INTO plugin_openidconnectclient_provider(name, client_id, client_secret, icon, color)
                     VALUES (?, ?, ?, ?, ?)";
@@ -51,9 +53,9 @@ class AzureADProviderDao extends DataAccessObject
 
                 $id = $db->lastInsertId();
 
-                $sql = "INSERT INTO plugin_openidconnectclient_provider_azure_ad(provider_id, tenant_id)
-                    VALUES (?, ?)";
-                $db->run($sql, $id, $tenant_id);
+                $sql = 'INSERT INTO plugin_openidconnectclient_provider_azure_ad(provider_id, tenant_id, acceptable_tenant_auth_identifier)
+                    VALUES (?, ?, ?)';
+                $db->run($sql, $id, $tenant_id, $acceptable_tenant_auth_identifier);
 
                 return (int)$id;
             }

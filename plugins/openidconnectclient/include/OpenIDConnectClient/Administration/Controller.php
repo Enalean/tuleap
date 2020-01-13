@@ -25,6 +25,7 @@ use Feedback;
 use HTTPRequest;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
@@ -299,6 +300,8 @@ class Controller
         $color         = $request->get('color');
         $tenant_id     = $request->get('tenant_id');
 
+        $acceptable_tenant_for_authentication = AcceptableTenantForAuthenticationConfiguration::fromSpecificTenantID($tenant_id);
+
         $updated_provider = new AzureADProvider(
             $id,
             $name,
@@ -307,7 +310,8 @@ class Controller
             $is_unique_authentication_endpoint,
             $icon,
             $color,
-            $tenant_id
+            $tenant_id,
+            $acceptable_tenant_for_authentication
         );
 
         try {
