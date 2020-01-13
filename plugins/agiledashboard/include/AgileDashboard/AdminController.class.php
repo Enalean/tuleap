@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard;
 
 use AdminKanbanPresenter;
+use AgileDashboard_BacklogItemDao;
 use AgileDashboard_ConfigurationManager;
 use AgileDashboard_FirstKanbanCreator;
 use AgileDashboard_FirstScrumCreator;
@@ -35,6 +36,7 @@ use EventManager;
 use Feedback;
 use MilestoneReportCriterionDao;
 use PFUser;
+use Planning_MilestoneFactory;
 use PlanningFactory;
 use Project;
 use ProjectXMLImporter;
@@ -43,6 +45,7 @@ use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
@@ -262,6 +265,9 @@ class AdminController extends BaseController
                 new ConfigurationUpdater(
                     new ExplicitBacklogDao(),
                     new MilestoneReportCriterionDao(),
+                    new AgileDashboard_BacklogItemDao(),
+                    Planning_MilestoneFactory::build(),
+                    new ArtifactsInExplicitBacklogDao(),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 )
             );
