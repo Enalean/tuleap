@@ -29,7 +29,7 @@
         </span>
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label" />
-            <card-info v-bind:card="card">
+            <card-info v-bind:card="card" v-bind:tracker="tracker">
                 <template v-slot:initial_effort>
                     <slot name="initial_effort" />
                 </template>

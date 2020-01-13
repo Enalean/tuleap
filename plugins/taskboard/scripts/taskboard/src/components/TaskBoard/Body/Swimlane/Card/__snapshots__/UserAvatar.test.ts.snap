@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserAvatar displays an empty list 1`] = `
+<div
+  class="tlp-avatar-small"
+  title="Steeve"
+>
+  <img
+    src="steeve.png"
+  />
+</div>
+`;

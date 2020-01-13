@@ -20,33 +20,64 @@
 
 <template>
     <div class="taskboard-card-assignees" v-bind:class="classes">
-        <div
+        <i
+            class="fa"
+            v-bind:class="user_edit_classes"
+            v-if="is_user_edit_displayed"
+            data-test="icon"
+        ></i>
+        <user-avatar
             v-for="assignee in card.assignees"
-            class="tlp-avatar-small taskboard-card-assignees-avatars"
-            v-bind:title="assignee.display_name"
+            class="taskboard-card-assignees-avatars"
+            v-bind:user="assignee"
             v-bind:key="assignee.id"
-        >
-            <img v-bind:src="assignee.avatar_url" />
-        </div>
+        />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card } from "../../../../../type";
-
-@Component
+import { Card, Tracker } from "../../../../../type";
+import UserAvatar from "./UserAvatar.vue";
+@Component({
+    components: { UserAvatar }
+})
 export default class CardAssignees extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
 
-    get classes(): string {
+    @Prop({ required: true })
+    readonly tracker!: Tracker;
+
+    get classes(): string[] {
         if (!this.card.is_in_edit_mode) {
-            return "";
+            return [];
         }
 
-        return "taskboard-card-assignees-edit-mode";
+        const classes = ["taskboard-card-assignees-edit-mode"];
+
+        if (this.is_updatable) {
+            classes.push("taskboard-card-assignees-editable");
+        }
+
+        return classes;
+    }
+
+    get user_edit_classes(): string[] {
+        if (this.card.assignees.length >= 1) {
+            return ["fa-tlp-user-pencil", "taskboard-card-assignees-edit-icon"];
+        }
+
+        return ["fa-user-plus", "taskboard-card-assignees-add-icon"];
+    }
+
+    get is_user_edit_displayed(): boolean {
+        return this.card.is_in_edit_mode && this.is_updatable;
+    }
+
+    get is_updatable(): boolean {
+        return this.tracker.assigned_to_field !== null;
     }
 }
 </script>

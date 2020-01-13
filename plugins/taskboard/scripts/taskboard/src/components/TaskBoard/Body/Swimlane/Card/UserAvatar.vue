@@ -19,28 +19,19 @@
   -->
 
 <template>
-    <div class="taskboard-card-info">
-        <slot name="initial_effort" v-if="!card.is_in_edit_mode" />
-        <card-assignees v-bind:card="card" v-bind:tracker="tracker" />
+    <div class="tlp-avatar-small" v-bind:title="user.display_name">
+        <img v-bind:src="user.avatar_url" />
     </div>
 </template>
 
 <script lang="ts">
-import CardAssignees from "./CardAssignees.vue";
-import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { Card, Tracker } from "../../../../../type";
+import { User } from "../../../../../type";
+import { Component, Prop } from "vue-property-decorator";
 
-@Component({
-    components: {
-        CardAssignees
-    }
-})
+@Component
 export default class CardInfo extends Vue {
     @Prop({ required: true })
-    readonly card!: Card;
-
-    @Prop({ required: true })
-    readonly tracker!: Tracker;
+    readonly user!: User;
 }
 </script>

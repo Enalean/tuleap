@@ -29,7 +29,27 @@
 .taskboard-card-assignees-edit-mode {
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: flex-end;
+    transition: color ease-in-out 100ms;
+    color: $tlp-theme-color;
+
+    > .taskboard-card-assignees-avatars:last-child {
+        margin: -3px 0 8px 5px;
+    }
+
+    &.taskboard-card-assignees-editable {
+        cursor: pointer;
+
+        &:hover {
+            color: darken($tlp-theme-color, 5%);
+        }
+    }
+}
+
+.taskboard-card-assignees-add-icon,
+.taskboard-card-assignees-edit-icon {
+    height: 25px;
 }
 
 :not(.gu-mirror) > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {

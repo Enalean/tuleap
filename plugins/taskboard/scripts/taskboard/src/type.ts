@@ -63,6 +63,11 @@ export interface TitleField {
     readonly is_string_field: boolean;
 }
 
+export interface AssignedToField {
+    readonly id: number;
+    readonly is_multiple: boolean;
+}
+
 export interface AddInPlace {
     child_tracker_id: number;
     parent_artifact_link_field_id: number;
@@ -72,6 +77,7 @@ export interface Tracker {
     readonly id: number;
     readonly can_update_mapped_field: boolean;
     readonly title_field: TitleField | null;
+    readonly assigned_to_field: AssignedToField | null;
     readonly artifact_link_field: ArtifactLinkField | null;
     readonly add_in_place_tracker_id: AddInPlace | null;
     readonly add_in_place: AddInPlace | null;
