@@ -29,7 +29,7 @@
             data-test="badge-sprint"
         />
         <release-badges-closed-sprints
-            v-if="open_sprints_details"
+            v-if="open_sprints_details && user_can_view_sub_milestones_planning"
             v-bind:release_data="release_data"
         />
         <hr
@@ -50,12 +50,15 @@ import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
 import { openSprintsExist } from "../../../helpers/milestones-sprints-helper";
+import { State } from "vuex-class";
 @Component({
     components: { ReleaseBadgesClosedSprints, ReleaseOthersBadges, ReleaseBadgesAllSprints }
 })
 export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @State
+    readonly user_can_view_sub_milestones_planning!: boolean;
 
     open_sprints_details = false;
 
@@ -66,7 +69,8 @@ export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     get display_badge_all_sprint(): boolean {
         return (
             openSprintsExist(this.release_data) &&
-            getTrackerSubmilestoneLabel(this.release_data) !== ""
+            getTrackerSubmilestoneLabel(this.release_data) !== "" &&
+            this.user_can_view_sub_milestones_planning
         );
     }
 }

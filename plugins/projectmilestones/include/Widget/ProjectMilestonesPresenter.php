@@ -62,16 +62,21 @@ class ProjectMilestonesPresenter
      * @var string
      */
     public $label_timeframe;
+    /**
+     * @var bool
+     */
+    public $user_can_view_sub_milestones_planning;
 
-    public function __construct(Project $project, int $nb_upcoming_releases, int $nb_backlog_items, array $trackers_id, string $label_tracker_planning, bool $is_timeframe_duration, string $label_start_date, string $label_timeframe)
+    public function __construct(Project $project, int $nb_upcoming_releases, int $nb_backlog_items, array $trackers_id, string $label_tracker_planning, bool $is_timeframe_duration, string $label_start_date, string $label_timeframe, bool $user_can_view_sub_milestones_planning)
     {
-        $this->project_id                    = $project->getID();
-        $this->nb_upcoming_releases          = $nb_upcoming_releases;
-        $this->nb_backlog_items              = $nb_backlog_items;
-        $this->json_trackers_agile_dashboard = (string)json_encode($trackers_id, JSON_THROW_ON_ERROR);
-        $this->label_tracker_planning        = $label_tracker_planning;
-        $this->is_timeframe_duration         = $is_timeframe_duration;
-        $this->label_start_date              = $label_start_date;
-        $this->label_timeframe               = $label_timeframe;
+        $this->project_id                            = $project->getID();
+        $this->nb_upcoming_releases                  = $nb_upcoming_releases;
+        $this->nb_backlog_items                      = $nb_backlog_items;
+        $this->json_trackers_agile_dashboard         = (string)json_encode($trackers_id, JSON_THROW_ON_ERROR);
+        $this->label_tracker_planning                = $label_tracker_planning;
+        $this->is_timeframe_duration                 = $is_timeframe_duration;
+        $this->label_start_date                      = $label_start_date;
+        $this->label_timeframe                       = $label_timeframe;
+        $this->user_can_view_sub_milestones_planning = $user_can_view_sub_milestones_planning;
     }
 }

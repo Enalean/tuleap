@@ -103,6 +103,7 @@ export interface StoreOptions {
         is_timeframe_duration?: boolean;
         label_start_date?: string;
         label_timeframe?: string;
+        user_can_view_sub_milestones_planning?: boolean;
     };
     getters?: {
         has_rest_error?: boolean;
@@ -123,6 +124,7 @@ export interface State {
     is_timeframe_duration: boolean;
     label_start_date: string;
     label_timeframe: string;
+    user_can_view_sub_milestones_planning: boolean;
 }
 
 export interface Context {

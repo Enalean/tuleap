@@ -74,6 +74,8 @@ describe("ReleaseBadgesClosedSprints", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
+            store_options.state.user_can_view_sub_milestones_planning = true;
+
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(true);
@@ -98,6 +100,7 @@ describe("ReleaseBadgesClosedSprints", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
+            store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(false);
@@ -122,6 +125,7 @@ describe("ReleaseBadgesClosedSprints", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
+            store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(true);
@@ -142,6 +146,33 @@ describe("ReleaseBadgesClosedSprints", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
+            store_options.state.user_can_view_sub_milestones_planning = true;
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(false);
+        });
+
+        it("When the user can't see the tracker's label, Then the total is not displayed", async () => {
+            release_data = {
+                id: 2,
+                total_sprint,
+                total_closed_sprint: 6,
+                resources: {
+                    milestones: {
+                        accept: {
+                            trackers: [
+                                {
+                                    label: "sprint"
+                                }
+                            ]
+                        }
+                    }
+                }
+            } as MilestoneData;
+
+            component_options.propsData = { release_data };
+            store_options.state.user_can_view_sub_milestones_planning = false;
+
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(false);

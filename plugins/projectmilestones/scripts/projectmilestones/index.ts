@@ -52,6 +52,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_timeframe_duration_dataset = vue_mount_point.dataset.isTimeframeDuration;
     const label_start_date = vue_mount_point.dataset.labelStartDate;
     const label_timeframe = vue_mount_point.dataset.labelTimeframe;
+    const user_can_view_sub_milestones_planning_dataset =
+        vue_mount_point.dataset.userCanViewSubMilestonesPlanning;
 
     if (!project_id_dataset) {
         throw new Error("Project Id is missing.");
@@ -88,6 +90,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         trackers_agile_dashboard_dataset
     );
     const is_timeframe_duration = Boolean(is_timeframe_duration_dataset);
+    const user_can_view_sub_milestones_planning = Boolean(
+        user_can_view_sub_milestones_planning_dataset
+    );
 
     const AppComponent = Vue.extend(App);
 
@@ -100,7 +105,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             label_tracker_planning,
             is_timeframe_duration,
             label_start_date,
-            label_timeframe
+            label_timeframe,
+            user_can_view_sub_milestones_planning
         )
     }).$mount(vue_mount_point);
 });

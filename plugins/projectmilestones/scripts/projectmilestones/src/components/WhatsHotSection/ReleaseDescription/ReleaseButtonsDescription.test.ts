@@ -81,6 +81,8 @@ describe("ReleaseButtonsDescription", () => {
         component_options.propsData = {
             release_data
         };
+
+        store_options.state.user_can_view_sub_milestones_planning = true;
     });
 
     it("Given user display widget, Then a good link to taskboard is renderer", async () => {
@@ -201,5 +203,12 @@ describe("ReleaseButtonsDescription", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains("[data-test=cardwall-link]")).toBe(false);
+    });
+
+    it("When the user can't see the subplanning, Then he can't see the planning link", async () => {
+        store_options.state.user_can_view_sub_milestones_planning = false;
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains("[data-test=planning-link]")).toBe(false);
     });
 });

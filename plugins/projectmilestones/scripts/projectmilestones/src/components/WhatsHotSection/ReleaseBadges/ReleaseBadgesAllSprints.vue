@@ -18,11 +18,14 @@
   -->
 
 <template>
-    <div class="project-release-open-sprint-badges" v-on:click="$emit('onClickOpenSprintsDetails')">
+    <div
+        class="project-release-open-sprint-badges"
+        v-on:click="$emit('onClickOpenSprintsDetails')"
+        v-if="display_sprint_badge"
+    >
         <i class="project-release-open-sprint-badge-icon-toggle fa" />
         <div
             class="project-release-info-badge project-release-info-badge-open-sprint tlp-badge-primary"
-            v-if="tracker_submilestone_label !== ''"
             data-test="badge-sprint"
         >
             <i class="fa fa-map-signs tlp-badge-icon" />
@@ -36,14 +39,21 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import { MilestoneData } from "../../../type";
 import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
+import { State } from "vuex-class";
 
 @Component
 export default class ReleaseBadgesAllSprints extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @State
+    readonly user_can_view_sub_milestones_planning!: boolean;
 
     get tracker_submilestone_label(): string {
         return getTrackerSubmilestoneLabel(this.release_data);
+    }
+
+    get display_sprint_badge(): boolean {
+        return this.tracker_submilestone_label !== "" && this.user_can_view_sub_milestones_planning;
     }
 }
 </script>
