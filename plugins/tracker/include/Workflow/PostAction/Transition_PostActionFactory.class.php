@@ -21,6 +21,7 @@
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
@@ -31,6 +32,15 @@ use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostActionFactory
 {
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(EventManager $event_manager)
+    {
+        $this->event_manager = $event_manager;
+    }
 
     private $shortnames_by_xml_tag_name = array(
         Transition_PostAction_Field_Float::XML_TAG_NAME => Transition_PostAction_Field_Float::SHORT_NAME,
@@ -267,6 +277,11 @@ class Transition_PostActionFactory
             $this->getFrozenFieldsFactory(),
             $this->getHiddenFieldsetsFactory(),
         ];
+
+        $event = new GetExternalSubFactoriesEvent();
+        $this->event_manager->processEvent($event);
+
+        $sub_factories = array_merge($sub_factories, $event->getFactories());
 
         return new Transition_PostActionSubFactories($sub_factories);
     }

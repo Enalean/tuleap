@@ -55,6 +55,11 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase
      */
     protected $hidden_fieldset_factory;
 
+    /**
+     * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    protected $event_manager;
+
     public function setUp()
     {
         parent::setUp();
@@ -63,7 +68,8 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase
         $this->transition_id = 123;
         $this->transition    = mockery_stub(\Transition::class)->getTransitionId()->returns($this->transition_id);
 
-        $this->factory = new Transition_PostActionFactory();
+        $this->event_manager = Mockery::mock(EventManager::class);
+        $this->factory = new Transition_PostActionFactory($this->event_manager);
 
         $this->field_factory        = \Mockery::spy(\Transition_PostAction_FieldFactory::class);
         $this->cibuild_factory      = \Mockery::spy(\Transition_PostAction_CIBuildFactory::class);
@@ -110,6 +116,8 @@ class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFa
         stub($this->field_factory)->duplicate($this->transition, 2, $field_mapping)->once();
         stub($this->cibuild_factory)->duplicate($this->transition, 2, $field_mapping)->once();
         stub($this->frozen_fields_actory)->duplicate($this->transition, 2, $field_mapping)->once();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
 
         $this->factory->duplicate($this->transition, 2, $field_mapping);
     }
@@ -300,6 +308,8 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends Transition_PostAct
         stub($this->field_factory)->deleteWorkflow($workflow_id)->once()->returns(true);
         stub($this->cibuild_factory)->deleteWorkflow($workflow_id)->once()->returns(true);
 
+        $this->event_manager->shouldReceive('processEvent')->once();
+
         $this->factory->deleteWorkflow($workflow_id);
     }
 }
@@ -313,6 +323,8 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transiti
         stub($this->cibuild_factory)->isFieldUsedInPostActions($field)->once()->returns(false);
         stub($this->field_factory)->isFieldUsedInPostActions($field)->once()->returns(false);
 
+        $this->event_manager->shouldReceive('processEvent')->once();
+
         $this->assertFalse($this->factory->isFieldUsedInPostActions($field));
     }
 
@@ -321,6 +333,8 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transiti
         $field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
 
         stub($this->field_factory)->isFieldUsedInPostActions($field)->returns(true);
+
+        $this->event_manager->shouldReceive('processEvent')->once();
 
         $this->assertTrue($this->factory->isFieldUsedInPostActions($field));
     }
@@ -357,6 +371,8 @@ class Transition_PostActionFactory_loadPostActionsTest extends Transition_PostAc
         stub($this->field_factory)->loadPostActions($this->transition)->returns(array($this->post_action_2))->once();
         $this->hidden_fieldset_factory->shouldReceive('loadPostActions')->with($this->transition)->once()->andReturn([$this->post_action_3]);
 
+        $this->event_manager->shouldReceive('processEvent')->once();
+
         $this->factory->loadPostActions($this->transition);
     }
 
@@ -368,6 +384,8 @@ class Transition_PostActionFactory_loadPostActionsTest extends Transition_PostAc
 
         $expected     = array($this->post_action_1, $this->post_action_2, $this->post_action_3);
         expect($this->transition)->setPostActions($expected)->once();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
 
         $this->factory->loadPostActions($this->transition);
     }

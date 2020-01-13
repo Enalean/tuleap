@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@
 /**
  * Manager for PostActions
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostActionManager
 {
 
@@ -56,6 +58,6 @@ class Transition_PostActionManager
      */
     public function getPostActionFactory()
     {
-        return new Transition_PostActionFactory();
+        return new Transition_PostActionFactory(EventManager::instance());
     }
 }

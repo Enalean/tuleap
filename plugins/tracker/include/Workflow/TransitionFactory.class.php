@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -111,7 +111,7 @@ class TransitionFactory
      */
     public function getPostActionFactory()
     {
-        return new Transition_PostActionFactory();
+        return new Transition_PostActionFactory(EventManager::instance());
     }
 
     /**
