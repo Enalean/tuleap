@@ -17,5 +17,6 @@
 
     <services>
         <service shortname="summary" enabled="true"/>
+        <service shortname="plugin_svn" enabled="true"/>
     </services>
 </project>
