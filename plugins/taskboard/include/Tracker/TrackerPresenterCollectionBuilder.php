@@ -77,6 +77,7 @@ class TrackerPresenterCollectionBuilder
                     $user,
                     $mapped_fields_collection
                 );
+                $assign_to_field = $this->getAssignToField($taskboard_tracker, $user);
 
                 $add_in_place_presenter  = $add_in_place ? new AddInPlacePresenter($add_in_place) : null;
                 $can_update_mapped_field = $mapped_field ? $mapped_field->userCanUpdate($user) : false;
@@ -85,7 +86,8 @@ class TrackerPresenterCollectionBuilder
                     $taskboard_tracker,
                     $can_update_mapped_field,
                     $title_field,
-                    $add_in_place_presenter
+                    $add_in_place_presenter,
+                    $assign_to_field
                 );
             }
         );
@@ -97,6 +99,15 @@ class TrackerPresenterCollectionBuilder
 
         return ($field_title !== null && $field_title->userCanUpdate($user))
             ? new TitleFieldPresenter($field_title)
+            : null;
+    }
+
+    private function getAssignToField(TaskboardTracker $taskboard_tracker, \PFUser $user): ?AssignedToFieldPresenter
+    {
+        $field_contributor = \Tracker_Semantic_Contributor::load($taskboard_tracker->getTracker())->getField();
+
+        return ($field_contributor !== null && $field_contributor->userCanUpdate($user))
+            ? new AssignedToFieldPresenter($field_contributor)
             : null;
     }
 

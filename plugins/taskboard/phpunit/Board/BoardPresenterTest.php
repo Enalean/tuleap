@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Taskboard\Column\ColumnPresenter;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
+use Tuleap\Taskboard\Tracker\AssignedToFieldPresenter;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Taskboard\Tracker\TitleFieldPresenter;
 use Tuleap\Taskboard\Tracker\TrackerPresenter;
@@ -107,8 +108,11 @@ final class BoardPresenterTest extends TestCase
         $title_field       = new TitleFieldPresenter(
             M::mock(\Tracker_FormElement_Field_Text::class)->shouldReceive(['getId' => 123])->getMock()
         );
+        $assign_to_field   = new AssignedToFieldPresenter(
+            M::mock(\Tracker_FormElement_Field_Selectbox::class)->shouldReceive(['getId' => 124, 'isMultiple' => false])->getMock()
+        );
 
-        $trackers = [new TrackerPresenter($taskboard_tracker, true, $title_field, null)];
+        $trackers = [new TrackerPresenter($taskboard_tracker, true, $title_field, null, $assign_to_field)];
 
         $presenter = new BoardPresenter(
             $this->milestone_presenter,
@@ -120,7 +124,24 @@ final class BoardPresenterTest extends TestCase
             false
         );
 
-        $this->assertNotNull($presenter->json_encoded_trackers);
+        $this->assertEquals(
+            json_encode([
+                [
+                    'id' => 96,
+                    'can_update_mapped_field' => true,
+                    'title_field' => [
+                        'id' => 123,
+                        'is_string_field' => false,
+                    ],
+                    'add_in_place' => null,
+                    'assigned_to_field' => [
+                        'id' => 124,
+                        'is_multiple' => false,
+                    ],
+                ],
+            ]),
+            $presenter->json_encoded_trackers
+        );
     }
 
     /**

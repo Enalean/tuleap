@@ -32,16 +32,20 @@ final class TrackerPresenter
     public $title_field;
     /** @var AddInPlacePresenter|null */
     public $add_in_place;
+    /** @var AssignedToFieldPresenter|null */
+    public $assigned_to_field;
 
     public function __construct(
         TaskboardTracker $tracker,
         bool $can_update_mapped_field,
         ?TitleFieldPresenter $title_field,
-        ?AddInPlacePresenter $add_in_place
+        ?AddInPlacePresenter $add_in_place,
+        ?AssignedToFieldPresenter $assigned_to_field
     ) {
         $this->id                      = $tracker->getTrackerId();
         $this->can_update_mapped_field = $can_update_mapped_field;
         $this->title_field             = $title_field;
         $this->add_in_place            = $add_in_place;
+        $this->assigned_to_field       = $assigned_to_field;
     }
 }
