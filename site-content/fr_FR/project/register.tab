@@ -93,13 +93,13 @@ register_why	why_register	Pourquoi enregistrer un projet ?
 #-----------------------------------------------
 # Script: src/common/project//template.php
 #
-register_template	choose	Choisir un patron de projet
+register_template	choose	Choisir un modèle de projet
 register_template	choose_admin	Ou choisir un projet dont vous êtes administrateur
 register_template	next_step	Etape 4&nbsp;: Informations Projet
 
 register_title	intro	Enregistrement d'un projet
 register_title	tos	Conditions générales d'utilisation de $1
-register_title	template	Patron de projet
+register_title	template	Modèle de projet
 register_title	basic	Description du projet
 register_title	name	Nom du projet
 register_title	license	Politique d'échange des logiciels
