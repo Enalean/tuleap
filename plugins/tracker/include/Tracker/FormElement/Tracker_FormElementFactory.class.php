@@ -809,26 +809,30 @@ class Tracker_FormElementFactory
     }
 
     /**
-     * Returns a list of used field elements of type select box or multi-select box, bind to users
-     * neither open lists nor subby fields will be returned.
-     *
      * @param Tracker $tracker
      *
-     * @return array All (multi)select box lists formElements bind to users used by the tracker
+     * @return array<Tracker_FormElement_Field_Selectbox|Tracker_FormElement_Field_Checkbox|Tracker_FormElement_Field_MultiSelectbox|Tracker_FormElement_Field_Radiobutton>
      */
-    public function getUsedUserSbFields($tracker)
+    public function searchUsedUserClosedListFields(Tracker $tracker): array
     {
         $form_elements = array();
-        foreach ($this->getDao()->searchUsedUserSbFieldByTrackerId($tracker->getId()) as $row) {
-            $form_elements[] = $this->getCachedInstanceFromRow($row);
+        foreach ($this->getDao()->searchUsedUserClosedListFieldsByTrackerId($tracker->getId()) as $row) {
+            $list = $this->getCachedInstanceFromRow($row);
+            assert(
+                $list instanceof Tracker_FormElement_Field_Selectbox
+                || $list instanceof Tracker_FormElement_Field_Checkbox
+                || $list instanceof Tracker_FormElement_Field_MultiSelectbox
+                || $list instanceof Tracker_FormElement_Field_Radiobutton
+            );
+            $form_elements[] = $list;
         }
         return array_filter($form_elements);
     }
 
-    public function getUsedUserSbFieldById($tracker, $field_id)
+    public function getUsedUserClosedListFieldById($tracker, $field_id)
     {
         $tracker_id = $tracker->getId();
-        if ($row = $this->getDao()->getUsedUserSbFieldById($tracker_id, $field_id)->getRow()) {
+        if ($row = $this->getDao()->getUsedUserClosedListFieldById($tracker_id, $field_id)->getRow()) {
             return $this->getCachedInstanceFromRow($row);
         }
     }

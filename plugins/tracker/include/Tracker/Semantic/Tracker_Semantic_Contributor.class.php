@@ -132,7 +132,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
 
-        if ($list_fields = Tracker_FormElementFactory::instance()->getUsedUserSbFields($this->tracker)) {
+        if ($list_fields = Tracker_FormElementFactory::instance()->searchUsedUserClosedListFields($this->tracker)) {
             $html .= '<form method="POST" action="'. $this->getUrl() .'">';
             $html .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="list_field_id">';
@@ -188,7 +188,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();
-            if ($field = Tracker_FormElementFactory::instance()->getUsedUserSbFieldById($this->tracker, $request->get('list_field_id'))) {
+            if ($field = Tracker_FormElementFactory::instance()->getUsedUserClosedListFieldById($this->tracker, $request->get('list_field_id'))) {
                 $this->list_field = $field;
                 if ($this->save()) {
                     $this->sendContributorChangeEvent();
