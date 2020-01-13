@@ -173,8 +173,8 @@ msgid ""
 "If you switch back to the old mode, some tracker reports could be updated to "
 "not use anymore the \"unplanned\" value for \"In milestone\" criterion."
 msgstr ""
-"Si vous revenez à l'ancien mode, des rapports d'outil de suivi peuvent être mis "
-"à jour afin de ne plus utiliser la valeur \"Non planifié\" du critère "
+"Si vous revenez à l'ancien mode, des rapports d'outil de suivi peuvent être "
+"mis à jour afin de ne plus utiliser la valeur \"Non planifié\" du critère "
 "\"Dans le jalon\"."
 
 msgid "Item"
@@ -198,8 +198,8 @@ msgstr "Jalons"
 msgid "None"
 msgstr "Aucun"
 
-msgid "Once activated, you will start with an empty top backlog."
-msgstr "Une fois activée, la planification générale sera vide."
+msgid "Once activated, you will start with a copy of the previous top backlog."
+msgstr "Une fois activée, la planification générale sera copiée de la précédente planification générale."
 
 #, php-format
 msgid "Other %s"
