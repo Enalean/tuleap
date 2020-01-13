@@ -19,23 +19,26 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CardAssignees from "./CardAssignees.vue";
+import { Card } from "../../../../../type";
 
 describe("CardAssignees", () => {
     it("displays the avatars of the card's assignees", () => {
         const wrapper = shallowMount(CardAssignees, {
             propsData: {
-                assignees: [
-                    {
-                        id: 101,
-                        display_name: "Steeve",
-                        avatar_url: "steeve.png"
-                    },
-                    {
-                        id: 102,
-                        display_name: "Bob",
-                        avatar_url: "Boob.png"
-                    }
-                ]
+                card: {
+                    assignees: [
+                        {
+                            id: 101,
+                            display_name: "Steeve",
+                            avatar_url: "steeve.png"
+                        },
+                        {
+                            id: 102,
+                            display_name: "Bob",
+                            avatar_url: "Boob.png"
+                        }
+                    ]
+                } as Card
             }
         });
         expect(wrapper.element).toMatchSnapshot();

@@ -22,6 +22,16 @@
     box-shadow: 0 0 8px 2px $color;
 }
 
+.taskboard-card-label-editor {
+    margin: $tlp-half-spacing 0 0;
+}
+
+.taskboard-card-assignees-edit-mode {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
 :not(.gu-mirror) > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
     > .taskboard-card-edit-trigger {
         @include pencil-background(var(--secondary-color, #{$tlp-ui-white}));
@@ -80,9 +90,13 @@
         padding: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing ($tlp-half-spacing + 2);
     }
 
-    /* stylelint-disable-next-line selector-max-compound-selectors */
-    > .taskboard-card-content > .taskboard-card-xref-label > .taskboard-card-xref {
-        color: $tlp-theme-color;
+    > .taskboard-card-content > .taskboard-card-xref-label {
+        flex-shrink: 0;
+
+        /* stylelint-disable-next-line selector-max-compound-selectors */
+        > .taskboard-card-xref {
+            color: $tlp-theme-color;
+        }
     }
 
     /* stylelint-disable-next-line selector-max-compound-selectors */

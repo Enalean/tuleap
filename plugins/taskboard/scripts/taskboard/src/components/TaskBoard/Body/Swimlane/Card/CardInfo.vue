@@ -19,34 +19,25 @@
   -->
 
 <template>
-    <div class="taskboard-card-assignees" v-bind:class="classes">
-        <div
-            v-for="assignee in card.assignees"
-            class="tlp-avatar-small taskboard-card-assignees-avatars"
-            v-bind:title="assignee.display_name"
-            v-bind:key="assignee.id"
-        >
-            <img v-bind:src="assignee.avatar_url" />
-        </div>
+    <div class="taskboard-card-info">
+        <slot name="initial_effort" v-if="!card.is_in_edit_mode" />
+        <card-assignees v-bind:card="card" />
     </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import CardAssignees from "./CardAssignees.vue";
 import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 import { Card } from "../../../../../type";
 
-@Component
-export default class CardAssignees extends Vue {
+@Component({
+    components: {
+        CardAssignees
+    }
+})
+export default class CardInfo extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
-
-    get classes(): string {
-        if (!this.card.is_in_edit_mode) {
-            return "";
-        }
-
-        return "taskboard-card-assignees-edit-mode";
-    }
 }
 </script>

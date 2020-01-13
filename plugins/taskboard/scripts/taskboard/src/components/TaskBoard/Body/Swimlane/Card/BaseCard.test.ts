@@ -91,16 +91,6 @@ describe("BaseCard", () => {
         expect(wrapper.contains(".taskboard-card > .my-remaining-effort")).toBe(true);
     });
 
-    it("includes the initial effort slot", () => {
-        const wrapper = getWrapper(getCard(), {
-            initial_effort: '<div class="my-initial-effort"></div>'
-        });
-
-        expect(
-            wrapper.contains(".taskboard-card-content > .taskboard-card-info > .my-initial-effort")
-        ).toBe(true);
-    });
-
     describe("edit mode", () => {
         beforeEach(() => {
             jest.clearAllMocks();
