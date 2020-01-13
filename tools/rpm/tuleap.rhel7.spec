@@ -492,6 +492,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ldap/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pluginsadministration/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pluginsadministration/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/proftpd/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectlinks/themes/
