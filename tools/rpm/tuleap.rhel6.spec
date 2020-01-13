@@ -513,7 +513,7 @@ for i in tools plugins site-content src VERSION LICENSE; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # No need of template
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/release_widget
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
@@ -527,7 +527,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/project_ownership
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/taskboard
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/releasewidget
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/document

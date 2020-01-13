@@ -1,0 +1,4 @@
+Project Milestones plugin
+=========================
+
+A widget for milestones monitoring.
