@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016. All rights reserved
+ * Copyright (c) Enalean SAS, 2016-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,7 @@
 
 namespace Tuleap\Markdown;
 
-use Michelf\MarkdownExtra;
-use Codendi_HTMLPurifier;
-
-class ContentInterpretor
+interface ContentInterpretor
 {
-
-    public function getInterpretedContent($markdown_content)
-    {
-
-        return Codendi_HTMLPurifier::instance()->purify(
-            MarkdownExtra::defaultTransform($markdown_content),
-            CODENDI_PURIFIER_FULL
-        );
-    }
+    public function getInterpretedContent(string $content): string;
 }

@@ -22,7 +22,7 @@
 namespace Tuleap\Git\GitPHP;
 
 use GitPHP\Commit\TreePresenter;
-use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Markdown\CommonMarkInterpreter;
 
 class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
@@ -146,7 +146,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
         $readme_tree_item = $this->getReadmeTreeItem($tree);
         $this->tpl->assign('readme_content', $readme_tree_item);
         if ($readme_tree_item !== null) {
-            $content_interpretor = new ContentInterpretor();
+            $content_interpretor = CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance());
             $this->tpl->assign(
                 'readme_content_interpreted',
                 $content_interpretor->getInterpretedContent(

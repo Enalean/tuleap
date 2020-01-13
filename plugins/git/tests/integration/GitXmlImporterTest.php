@@ -50,7 +50,6 @@ use SimpleXMLElement;
 use SiteCache;
 use System_Command;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
-use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\TemporaryTestDirectory;
 use UGroupManager;
@@ -196,7 +195,7 @@ final class GitXmlImporterTest extends TestCase
             $plugin_factory,
             new SiteCache($this->logger),
             new ForgeUpgradeConfig(new System_Command()),
-            new ContentInterpretor()
+            \Tuleap\Markdown\CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
         );
 
         PluginManager::setInstance($plugin_manager);

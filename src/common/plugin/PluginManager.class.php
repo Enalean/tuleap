@@ -69,7 +69,7 @@ class PluginManager
                 new ForgeUpgradeConfig(
                     new System_Command()
                 ),
-                new ContentInterpretor()
+                \Tuleap\Markdown\CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
             );
         }
 
