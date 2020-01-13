@@ -123,30 +123,32 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchUsedUserSbFieldByTrackerId($tracker_id)
+    public function searchUsedUserClosedListFieldsByTrackerId($tracker_id)
     {
         $tracker_id  = $this->da->escapeInt($tracker_id);
+
         $sql = "SELECT *
-                FROM $this->table_name f, tracker_field_list_bind_users lbu
-                WHERE f.tracker_id = $tracker_id 
-                  AND use_it = 1 
-                  AND f.id = lbu.field_id 
-                  AND formElement_type IN ('sb', 'msb')
+                FROM tracker_field AS f, tracker_field_list_bind_users AS lbu
+                WHERE f.tracker_id = $tracker_id
+                  AND use_it = 1
+                  AND f.id = lbu.field_id
+                  AND formElement_type IN ('sb', 'msb', 'cb', 'rb')
                 ORDER BY rank";
+
         return $this->retrieve($sql);
     }
 
-    public function getUsedUserSbFieldById($tracker_id, $field_id)
+    public function getUsedUserClosedListFieldById($tracker_id, $field_id)
     {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $field_id    = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name f, tracker_field_list_bind_users lbu
-                WHERE f.tracker_id = $tracker_id 
+                WHERE f.tracker_id = $tracker_id
                   AND f.id = $field_id
                   AND use_it = 1
-                  AND f.id = lbu.field_id 
-                  AND formElement_type IN ('sb', 'msb')
+                  AND f.id = lbu.field_id
+                  AND formElement_type IN ('sb', 'msb', 'cb', 'rb')
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
