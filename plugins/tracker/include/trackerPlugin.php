@@ -41,6 +41,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Request\DispatchableWithRequest;
@@ -278,6 +279,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(HeartbeatsEntryCollection::NAME);
         $this->addHook(StatisticsCollectionCollector::NAME);
+        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -2084,5 +2086,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         if ($event->getWidget()->getId() === Tracker_Widget_ProjectRenderer::ID) {
             (new ProjectRendererWidgetXMLImporter())->import($event);
         }
+    }
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
+    {
+        $event->addServiceByName($this->getServiceShortname());
     }
 }

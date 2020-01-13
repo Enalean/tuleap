@@ -81,6 +81,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
@@ -197,6 +198,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook(GetItemsReferencingWikiPageCollectionEvent::NAME);
 
         $this->addHook(StatisticsCollectionCollector::NAME);
+        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1573,5 +1575,10 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     private function getItemDao(): Docman_ItemDao
     {
         return new Docman_ItemDao();
+    }
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
+    {
+        $event->addServiceByName($this->getServiceShortname());
     }
 }

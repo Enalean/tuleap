@@ -23,24 +23,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\XML;
 
-use ServiceManager;
 use Tuleap\XML\PHPCast;
 
 class ConsistencyChecker
 {
     /**
-     * @var ServiceManager
+     * @var \EventManager
      */
-    private $service_manager;
+    private $event_manager;
     /**
      * @var XMLFileContentRetriever
      */
     private $xml_file_content_retriever;
+    /**
+     * @var ServiceEnableForXmlImportRetriever
+     */
+    private $event;
 
-    public function __construct(ServiceManager $service_manager, XMLFileContentRetriever $xml_file_content_retriever)
-    {
-        $this->service_manager            = $service_manager;
+    public function __construct(
+        XMLFileContentRetriever $xml_file_content_retriever,
+        \EventManager $event_manager,
+        ServiceEnableForXmlImportRetriever $event
+    ) {
         $this->xml_file_content_retriever = $xml_file_content_retriever;
+        $this->event_manager              = $event_manager;
+        $this->event                      = $event;
     }
 
     public function areAllServicesAvailable(string $file_path): bool
@@ -50,10 +57,12 @@ class ConsistencyChecker
         }
         $xml = $this->xml_file_content_retriever->getSimpleXMLElementFromFilePath($file_path);
 
-        $available_services = [];
-        foreach ($this->service_manager->getListOfServicesAvailableAtSiteLevel() as $service) {
-            $available_services[$service->getShortName()] = true;
-        }
+        $this->event->addServiceByName('file');
+        $this->event->addServiceByName('summary');
+        $this->event->addServiceByName('admin');
+        $this->event_manager->processEvent($this->event);
+
+        $available_services = $this->event->getAvailableServices();
 
         foreach ($xml->services->service as $service) {
             if (PHPCast::toBoolean($service['enabled']) === true) {

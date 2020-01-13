@@ -138,14 +138,6 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $this->dao->isServiceAvailableAtSiteLevelByShortName($name);
     }
 
-    /**
-     * @return Service[]
-     */
-    public function getListOfServicesAvailableAtSiteLevel(): array
-    {
-        return $this->project_manager->getProject(Project::ADMIN_PROJECT_ID)->getActiveServices();
-    }
-
     private function isServiceActiveInProject($project, $name)
     {
         $project_id = $project->getId();
