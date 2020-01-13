@@ -52,7 +52,8 @@ $tlp-fontawesome-icons: (
     kanban: '\f021',
     esc-key: '\f022',
     enter-key: '\f023',
-    hierarchy-plus: '\f024'
+    hierarchy-plus: '\f024',
+    user-pencil: '\f025'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
