@@ -23,9 +23,10 @@ nbproject
 !src/www/codendi.css
 !src/www/guidelines/_css/*.min.css
 !src/www/scripts/bootstrap/bootstrap-select/*.css
-!src/www/scripts/bootstrap/bootstrap-tour/*.css
 !src/www/scripts/bootstrap/bootstrap-datetimepicker/css/*.css
+!src/www/scripts/bootstrap/bootstrap-tour/*.css
 !src/www/scripts/jscrollpane/*.css
+!src/www/scripts/select2/select2.css
 !src/www/scripts/vendor/at/css/*.css
 !src/www/svn/repos-web/*.css
 !src/www/themes/common/css/bootstrap-2.3.0.min.css

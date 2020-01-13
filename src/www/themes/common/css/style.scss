@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS, 2011-2016. All rights reserved
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
  *
  * Originally written by Nicolas Terray, 2008
@@ -17,9 +17,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/* stylelint-disable selector-class-pattern */
+
 @import 'utils/utils';
 
 /********  general   **********/
@@ -28,6 +30,7 @@ body {
     background: #bcbcad;
 }
 
+/* stylelint-disable-next-line selector-no-qualifying-type */
 body.lab-mode {
     padding-bottom: 3em;
 }
@@ -37,7 +40,7 @@ body.lab-mode {
 }
 
 .alignright {
-    text-align: right
+    text-align: right;
 }
 
 .left {
@@ -45,12 +48,12 @@ body.lab-mode {
 }
 
 .error {
-    font-weight: bold;
     color: #980000;
+    font-weight: bold;
 }
 
 .feedback {
-    color: red;
+    color: #ff0000;
 }
 
 .bold {
@@ -58,15 +61,15 @@ body.lab-mode {
 }
 
 .disable {
-    color: gray;
+    color: #808080;
 }
 
 .highlight {
-    color: red;
+    color: #ff0000;
 }
 
 .newproject {
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
 }
 
 .top_up {
@@ -74,64 +77,73 @@ body.lab-mode {
 }
 
 .top_down {
-    color: #CC0000;
+    color: #cc0000;
 }
 
 .command {
-    font-family: "Courier New", courier, sans-serif;
+    font-family: 'Courier New', courier, sans-serif;
 }
 
 .subdomain {
-    color: green;
+    color: #008000;
 }
 
 .bg_confirmdownload {
-    background-color: #F7F7F7;
+    background-color: #f7f7f7;
 }
 
 img {
-    border: none;
+    border: 0;
 }
 
 /********   links    **********/
-a:link, a:visited {
+a:link,
+a:visited {
+    color: #8b4020;
     text-decoration: none;
-    color: #8b4020
 }
 
 a:active {
+    color: #000000;
     text-decoration: none;
-    color: #000000
 }
 
 a:hover {
-    text-decoration: underline;
     color: #ff0000;
+    text-decoration: underline;
 }
 
+/* stylelint-disable-next-line selector-no-qualifying-type */
 a.btn {
-    color: #222;
+    color: #222222;
+
     &:hover {
-        color: #222;
+        color: #222222;
     }
+
     &:visited {
-        color: #222;
+        color: #222222;
     }
+
     &:active {
-        color: #222;
+        color: #222222;
     }
 }
 
+/* stylelint-disable-next-line selector-no-qualifying-type */
 a.btn.btn-primary {
-    color: #fff;
+    color: #ffffff;
+
     &:hover {
-        color: #fff;
+        color: #ffffff;
     }
+
     &:visited {
-        color: #fff;
+        color: #ffffff;
     }
+
     &:active {
-        color: #fff;
+        color: #ffffff;
     }
 }
 
@@ -175,6 +187,7 @@ a.btn.btn-primary {
 /* .footer { color: #333333; } */
 .footer {
     padding-top: 1.5em;
+    color: #ffffff;
 }
 
 .standardtable {
@@ -186,11 +199,11 @@ a.btn.btn-primary {
 
 /* content frame specific */
 .contenttable {
-    background-color: #F7F7F7;
-    vertical-align: top;
     width: 99%;
     border-spacing: 0;
     border: 0;
+    background-color: #f7f7f7;
+    vertical-align: top;
 }
 
 .row_below_outertabs,
@@ -221,78 +234,79 @@ select[name=type_of_search] {
 
 /* left menu specific */
 .menuframe {
-    background-color: #e8e8e0;
-    vertical-align: top;
-    text-align: left;
     width: 60px;
+    background-color: #e8e8e0;
+    text-align: left;
+    vertical-align: top;
 }
 
 .menutable {
-    background-color: #e8e8e0;
-    vertical-align: top;
     width: 150px;
     border-spacing: 0;
     border: 0;
+    background-color: #e8e8e0;
+    vertical-align: top;
 }
 
 .menutitle {
-    vertical-align: top;
+    color: #333333;
     font-weight: bold;
     text-align: left;
-    color: #333333;
+    vertical-align: top;
 }
 
 .menuitem {
-    vertical-align: top;
-    text-align: right;
     color: #333333;
+    text-align: right;
+    vertical-align: top;
 }
 
 /* group menu specific (see tabs and tabselect too) */
 .groupmenutable {
-    background-color: #e8e8e0;
     width: 100%;
     border-top: thin solid #000000;
     border-bottom: thin solid #000000;
+    background-color: #e8e8e0;
 }
 
 /* classic box */
 .boxtable {
     width: 99%;
-    vertical-align: top;
     border-spacing: 1px;
     border: 0;
+    vertical-align: top;
 }
 
 .boxtitle {
-    background-color: #E0DDD2;
+    background-color: #e0ddd2;
+    color: #000000;
     font-weight: bold;
     text-align: center;
-    color: #000000;
 }
 
 .boxitem {
     background-color: transparent;
-    text-align: left;
     color: #333333;
+    text-align: left;
 }
 
 .boxitemalt {
-    text-align: left;
     background-color: #ffffff;
+    text-align: left;
 }
 
 .boxitemgrey {
-    text-align: left;
     background-color: #efefef;
+    text-align: left;
 }
 
 .boxhighlight {
     background-color: #e8e8e0;
-    text-align: left;
     color: #333333;
+    text-align: left;
 }
 
+/* stylelint-disable selector-no-qualifying-type */
 td.matrix_cell.matrix_highlight_col,
 tr.boxitem:hover {
     background-color: #fffff0;
@@ -302,51 +316,18 @@ td.matrix_cell.matrix_highlight_col,
 tr.boxitemalt:hover {
     background-color: #fffff0;
 }
-
-.boxtop {
-}
-
-.boxtop_top {
-}
-
-.boxtop_left {
-    background: url('../images/box-topleft.png') top right no-repeat;
-}
-
-.boxtop_center {
-    background: #e0ddd2 url('../images/box-grad.png') top left repeat-x;
-}
-
-.boxtop_right {
-    background: url('../images/box-topright.png') top left no-repeat;
-}
-
-.boxtop_inner {
-    background: #eaecef url('../images/vert-grad.png') top left repeat-x;
-}
-
-.boxmiddle {
-    background: #e0ddd2 url('../images/box-grad.png') top left repeat-x;
-}
-
-.boxmiddle_inner {
-    background: transparent url('../images/vert-grad.png') top left repeat-x;
-}
+/* stylelint-enable selector-no-qualifying-type */
 
 .boxspace {
-    font-size: 2pt;
+    font-size: 2pt; /* stylelint-disable unit-whitelist */
 }
 
 .maintitlebar {
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 .slogan {
     font-weight: bold;
-}
-
-.footer {
-    color: white;
 }
 
 .tabs {
@@ -358,7 +339,7 @@ tr.boxitemalt:hover {
 }
 
 .tabs:hover {
-    color: #FF0000;
+    color: #ff0000;
 }
 
 .tabselect {
@@ -372,14 +353,14 @@ tr.boxitemalt:hover {
 }
 
 .tabselect:hover {
-    color: #FF0000;
+    color: #ff0000;
     font-weight: bold;
 }
 
 .titlebar {
-    text-decoration: none;
     color: #000000;
     font-weight: bold;
+    text-decoration: none;
 }
 
 .develtitle {
@@ -407,39 +388,39 @@ tr.boxitemalt:hover {
 
 /* calendar (fixed font size) */
 .calendar_month {
-    background-color: #E0DDD2;
+    background-color: #e0ddd2;
 }
 
 .calendar_day {
-    background-color: #FFE6B5;
+    background-color: #ffe6b5;
 }
 
 .calendar_currentday {
-    background-color: #FFFFA3;
+    background-color: #ffffa3;
 }
 
 .calendar_nextmonth {
-    background-color: #DBEAF5;
+    background-color: #dbeaf5;
 }
 
 .calendar_daymonth {
-    background-color: white;
+    background-color: #ffffff;
 }
 
 .calendar_font_othermonth {
-    color: gray;
+    color: #808080;
 }
 
 .calendar_font {
-    color: black;
+    color: #000000;
 }
 
 .calendar_font_month {
-    color: black;
+    color: #000000;
 }
 
 .calendar_font_day {
-    color: black;
+    color: #000000;
 }
 
 /* Help classes */
@@ -449,28 +430,30 @@ tr.boxitemalt:hover {
 
 /* text with tooltips (e.g. artifact fields) */
 .artifact_field_tooltip {
+    color: #000000;
     text-decoration: none;
-    color: #000000
 }
 
 .artifact_field_tooltip:hover {
+    color: #ff0000;
     text-decoration: none;
-    color: #ff0000
 }
 
+/* stylelint-disable-next-line selector-id-pattern */
 #footer_debug {
-    background: white url(../images/debug_gradient.png) top left repeat-x;
-    color: #333;
     padding-top: 24px;
     padding-bottom: 1em;
+    background: #ffffff url('../images/debug_gradient.png') top left repeat-x;
+    color: #333333;
 }
 
 /* field sets */
 .fieldset_separator {
+    background-color: #cccccc;
     text-align: center;
-    background-color: #CCCCCC;
 }
 
+/* stylelint-disable-next-line selector-no-qualifying-type */
 td.artifact_spacer {
     width: 5%;
 }
@@ -478,12 +461,12 @@ td.artifact_spacer {
 .iframe_service {
     width: 100%;
     height: 650px;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
 }
 
 .iframe_showonly {
+    font-size: .85em;
     text-align: right;
-    font-size: 0.85em;
 }
 
 /* Start homepage & footer customization */
@@ -493,25 +476,28 @@ td.artifact_spacer {
     margin-bottom: 2em;
 }
 
+/* stylelint-disable-next-line selector-id-pattern */
 #homepage_speech {
-    float: left;
     width: 715px;
     margin-right: 5px;
+    float: left;
 }
 
+/* stylelint-disable-next-line selector-id-pattern */
 #homepage_boxes {
-    float: right;
     width: 235px;
     margin-left: 5px;
+    float: right;
 }
 
+/* stylelint-disable-next-line selector-id-pattern */
 #homepage_news {
     clear: both;
 }
 
 #homepage .hero-unit {
-    background: #f3f4f6 url(../images/homepage/image-homepage-tuleap.png) no-repeat;
     min-height: 220px;
+    background: #f3f4f6 url('../images/homepage/image-homepage-tuleap.png') no-repeat;
 }
 
 #homepage img {
@@ -527,15 +513,17 @@ td.artifact_spacer {
 
 .footer ul,
 #homepage ul {
-    padding: 0;
     margin: 0 0 9px 25px;
+    padding: 0;
 }
 
+/* stylelint-disable selector-no-qualifying-type */
 .footer ul.unstyled,
 #homepage ul.unstyled {
     margin-left: 0;
     list-style: none;
 }
+/* stylelint-enable selector-no-qualifying-type */
 
 #homepage h2,
 #homepage h3,
@@ -564,7 +552,7 @@ td.artifact_spacer {
 }
 
 .footer.container {
-    color: #666;
+    color: #666666;
 }
 
 /* End */
@@ -582,12 +570,12 @@ blockquote p {
     font-size: 1em;
 }
 
-input[type="file"] {
+input[type='file'] {
     margin-top: -13px;
 }
 
 legend {
-    -moz-box-sizing: border-box;
+    -moz-box-sizing: border-box; /* stylelint-disable-line property-no-vendor-prefix */
     box-sizing: border-box;
 }
 
@@ -609,18 +597,21 @@ legend {
 
 /* End */
 
+/* stylelint-disable-next-line selector-id-pattern */
 #browser_deprecated {
-    background: #CC0000;
-    text-align: center;
     padding: 3px;
-    color: #EEE;
+    background: #cc0000;
+    color: #eeeeee;
+    text-align: center;
 
     a {
-        color: #FFF;
+        color: #ffffff;
         font-weight: bold;
     }
 }
 
+/* stylelint-disable-next-line selector-id-pattern */
 #filter_type {
     width: 120px;
 }
+/* stylelint-enable */

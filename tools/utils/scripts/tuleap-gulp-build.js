@@ -28,7 +28,6 @@ const fs = require("fs");
 const path = require("path");
 
 const component_builder = require("./component-builder.js");
-const sass_builder = require("./sass-builder.js");
 
 function getAllPluginsFromManifestFiles() {
     var plugins_path = "./plugins";
@@ -174,26 +173,6 @@ function getPluginsWatchTasks(asset_dir) {
                 manifest.javascript.map(filepath => path.join(base_dir, filepath)),
                 buildPluginJavascriptTask
             );
-        }
-
-        if ("themes" in manifest) {
-            const sass_task_name = "sass-" + name;
-            const pluginSassTasks = sass_builder.getSassTasks(sass_task_name, base_dir, manifest);
-
-            let files = [];
-            Object.keys(manifest.themes).forEach(theme_name => {
-                files = files.concat(
-                    manifest.themes[theme_name].files.map(filepath => path.join(base_dir, filepath))
-                );
-                const watched_includes = manifest.themes[theme_name].watched_includes;
-                if (watched_includes) {
-                    files = files.concat(
-                        watched_includes.map(filepath => path.join(base_dir, filepath))
-                    );
-                }
-            });
-
-            gulp.watch(files, pluginSassTasks);
         }
     });
 }
