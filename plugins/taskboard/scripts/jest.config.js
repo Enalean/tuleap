@@ -21,5 +21,9 @@ const base_config = require("../../../tests/jest/jest.base.config.js");
 
 module.exports = {
     ...base_config,
-    displayName: "taskboard"
+    displayName: "taskboard",
+    moduleNameMapper: {
+        ...base_config.moduleNameMapper,
+        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js"
+    }
 };

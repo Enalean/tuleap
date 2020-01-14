@@ -6,8 +6,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "dompurify": "^2.0.7",
     "dragula": "^3.7.2",
     "fscreen": "^1.0.2",
+    "mustache": "^4.0.0",
     "p-retry": "^4.2.0",
     "sprintf-js": "^1.1.2",
     "vue": "^2.6.10",
@@ -15,10 +17,14 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
+    "@types/dompurify": "^2.0.1",
     "@types/dragula": "^2.1.34",
     "@types/fscreen": "^1.0.1",
+    "@types/jquery": "^3.3.31",
+    "@types/mustache": "^3.2.0",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.0.0-beta.27",
+    "jquery": "^3.4.1",
     "vue-property-decorator": "^8.2.1",
     "vuex-class": "^0.3.2"
   },

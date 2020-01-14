@@ -1,0 +1,125 @@
+<!--
+  - Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
+  -->
+
+<template>
+    <select class="tlp-input" style="width: 100%;"></select>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import {
+    select2,
+    Select2Plugin,
+    Options,
+    DataFormat,
+    LoadingData,
+    IdTextPair,
+    GroupedDataFormat
+} from "tlp";
+import $ from "jquery";
+import { sanitize } from "dompurify";
+import { render } from "mustache";
+import { UserForPeoplePicker } from "./type";
+
+@Component
+export default class PeoplePicker extends Vue {
+    @Prop({ required: true })
+    readonly is_multiple!: boolean;
+
+    @Prop({ required: true })
+    readonly data!: UserForPeoplePicker[];
+
+    select2_people_picker: Select2Plugin | null = null;
+
+    mounted(): void {
+        const configuration: Options = {
+            allowClear: true,
+            data: this.data,
+            multiple: this.is_multiple,
+            minimumInputLength: 3,
+            placeholder: this.$gettext("John"),
+            escapeMarkup: sanitize,
+            templateResult: this.formatUser,
+            templateSelection: this.formatUserWhenSelected
+        };
+
+        this.select2_people_picker = select2(this.$el, configuration);
+
+        $(this.$el).select2("open");
+    }
+
+    destroyed(): void {
+        if (this.select2_people_picker !== null) {
+            $(this.$el)
+                .off()
+                .select2("destroy");
+        }
+    }
+
+    formatUser(user: DataFormat | GroupedDataFormat | LoadingData): string {
+        if (!this.isForPeoplePicker(user)) {
+            return "";
+        }
+
+        return render(
+            `<div class="select2-result-user">
+                <div class="tlp-avatar select2-result-user__avatar">
+                    <img src="{{ avatar_url }}">
+                </div>
+                {{ label }}
+            </div>`,
+            user
+        );
+    }
+
+    isForPeoplePicker(
+        user: DataFormat | GroupedDataFormat | LoadingData // eslint-disable-line @typescript-eslint/no-unused-vars
+    ): user is UserForPeoplePicker {
+        // This is a trick to fool TypeScript so that we can have avatar on users.
+        // Default types definition of select2 forces us to have only "DataFormat" (basically: id, text) whereas
+        // we can deal with values with more attribute (for example: avatar_url).
+        //
+        // The chosen solution is to rely on user-defined type guards of TypeScript.
+        //
+        // Here we assume that:
+        // * we are not in LoadingData since there is no remote call (no ajax options to select2)
+        // * we are not in GroupedDataFormat since we didn't ask to group our users
+        // => user is DataFormat, however this.data is UserForPeoplePicker, therefore we can always return true
+        return true;
+    }
+
+    formatUserWhenSelected(
+        user: IdTextPair | LoadingData | DataFormat | GroupedDataFormat
+    ): string {
+        if (!this.isForPeoplePicker(user)) {
+            return user.text;
+        }
+
+        return render(
+            `<div class="tlp-avatar-mini">
+                <img src="{{ avatar_url }}">
+            </div>
+            {{ label }}`,
+            user
+        );
+    }
+}
+</script>

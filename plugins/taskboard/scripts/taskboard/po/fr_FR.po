@@ -36,6 +36,12 @@ msgstr "Réduire la colonne \"%{ label }\""
 msgid "Define columns"
 msgstr "Définir les colonnes"
 
+msgid "Edit assignee"
+msgstr "Éditer l'assigné"
+
+msgid "Edit assignees"
+msgstr "Éditer les assignés"
+
 msgid "Expand"
 msgstr "Étendre"
 
@@ -54,6 +60,9 @@ msgstr "Effort estimé"
 msgid "It seems an action you tried to perform can't be done"
 msgstr ""
 "Il semble que l'action que vous venez de tenter ne peut pas être réalisée"
+
+msgid "John"
+msgstr "Jean"
 
 msgid "New remaining effort"
 msgstr "Nouvel effort restant"

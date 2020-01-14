@@ -21,12 +21,20 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import CardAssignees from "./CardAssignees.vue";
 import { Card, Tracker, User } from "../../../../../type";
 import UserAvatar from "./UserAvatar.vue";
+import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
+import { mockFetchSuccess } from "../../../../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
+import * as tlp from "tlp";
+import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
 
-function getWrapper(
+jest.mock("tlp");
+jest.useFakeTimers();
+
+async function getWrapper(
     card: Card,
     tracker: Tracker = { assigned_to_field: null } as Tracker
-): Wrapper<CardAssignees> {
+): Promise<Wrapper<CardAssignees>> {
     return shallowMount(CardAssignees, {
+        localVue: await createTaskboardLocalVue(),
         propsData: {
             card,
             tracker
@@ -35,14 +43,14 @@ function getWrapper(
 }
 
 describe("CardAssignees", () => {
-    it("displays an empty list", () => {
-        const wrapper = getWrapper({ assignees: [] as User[] } as Card);
+    it("displays an empty list", async () => {
+        const wrapper = await getWrapper({ assignees: [] as User[] } as Card);
 
         expect(wrapper.classes()).toContain("taskboard-card-assignees");
         expect(wrapper.contains(UserAvatar)).toBe(false);
     });
 
-    it("displays the avatars of the card's assignees", () => {
+    it("displays the avatars of the card's assignees", async () => {
         const steeve: User = {
             id: 101,
             display_name: "Steeve",
@@ -53,7 +61,7 @@ describe("CardAssignees", () => {
             display_name: "Bob",
             avatar_url: "Boob.png"
         };
-        const wrapper = getWrapper({ assignees: [steeve, bob] } as Card);
+        const wrapper = await getWrapper({ assignees: [steeve, bob] } as Card);
 
         const avatars = wrapper.findAll(UserAvatar);
         expect(avatars.length).toBe(2);
@@ -61,27 +69,32 @@ describe("CardAssignees", () => {
         expect(avatars.at(1).props("user")).toBe(bob);
     });
 
-    it("switches the assignee to edit mode if the card is in edit mode", () => {
-        const wrapper = getWrapper({ assignees: [] as User[], is_in_edit_mode: true } as Card);
+    it("switches the assignee to edit mode if the card is in edit mode", async () => {
+        const wrapper = await getWrapper({
+            assignees: [] as User[],
+            is_in_edit_mode: true
+        } as Card);
 
-        expect(wrapper.classes()).toContain("taskboard-card-assignees-edit-mode");
+        expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-editable");
+        expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
         expect(wrapper.contains("[data-test=icon]")).toBe(false);
     });
 
-    it("adds additional class if assignees are editable", () => {
-        const wrapper = getWrapper(
+    it("adds additional class if assignees are editable", async () => {
+        const wrapper = await getWrapper(
             { assignees: [] as User[], is_in_edit_mode: true } as Card,
             { assigned_to_field: { id: 123 } } as Tracker
         );
 
-        expect(wrapper.classes()).toContain("taskboard-card-assignees-edit-mode");
+        expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
         expect(wrapper.classes()).toContain("taskboard-card-assignees-editable");
+        expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
         expect(wrapper.contains("[data-test=icon]")).toBe(true);
     });
 
-    it("Displays an icon user-add if assignees are editable and the current list is empty", () => {
-        const wrapper = getWrapper(
+    it("Displays an icon user-add if assignees are editable and the current list is empty", async () => {
+        const wrapper = await getWrapper(
             { assignees: [] as User[], is_in_edit_mode: true } as Card,
             { assigned_to_field: { id: 123 } } as Tracker
         );
@@ -92,13 +105,13 @@ describe("CardAssignees", () => {
         expect(icon.classes()).toContain("taskboard-card-assignees-add-icon");
     });
 
-    it("Displays an icon user-pencil if assignees are editable and the current list is not empty", () => {
+    it("Displays an icon user-pencil if assignees are editable and the current list is not empty", async () => {
         const steeve: User = {
             id: 101,
             display_name: "Steeve",
             avatar_url: "steeve.png"
         };
-        const wrapper = getWrapper(
+        const wrapper = await getWrapper(
             {
                 assignees: [steeve],
                 is_in_edit_mode: true
@@ -110,5 +123,33 @@ describe("CardAssignees", () => {
         expect(icon.classes()).toContain("fa");
         expect(icon.classes()).toContain("fa-tlp-user-pencil");
         expect(icon.classes()).toContain("taskboard-card-assignees-edit-icon");
+    });
+
+    it("Loads users and displays a spinner when assignees are editable and user clicks on them", async () => {
+        const wrapper = await getWrapper(
+            {
+                assignees: [] as User[],
+                is_in_edit_mode: true
+            } as Card,
+            { assigned_to_field: { id: 123 } } as Tracker
+        );
+
+        const tlpGet = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGet, {
+            return_json: []
+        });
+
+        wrapper.trigger("click");
+
+        expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
+        expect(wrapper.classes()).toContain("taskboard-card-assignees-editable");
+        expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
+        expect(wrapper.contains(PeoplePicker)).toBe(false);
+
+        const icon = wrapper.find("[data-test=icon]");
+        expect(icon.classes()).toContain("fa");
+        expect(icon.classes()).toContain("fa-circle-o-notch");
+        expect(icon.classes()).toContain("fa-spin");
+        expect(icon.classes()).toContain("taskboard-card-assignees-loading-icon");
     });
 });
