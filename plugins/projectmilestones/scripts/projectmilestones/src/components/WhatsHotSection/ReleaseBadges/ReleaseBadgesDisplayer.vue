@@ -22,7 +22,7 @@
         class="project-release-infos-badges"
         v-bind:class="{ 'on-open-sprints-details': open_sprints_details }"
     >
-        <release-badges-open-sprints
+        <release-badges-all-sprints
             v-if="release_data.total_sprint > 0 && tracker_submilestone_exists"
             v-bind:release_data="release_data"
             v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
@@ -33,32 +33,7 @@
             data-test="line-displayed"
             class="milestone-badges-sprints-separator"
         />
-        <div class="project-release-badges-capacity-effort">
-            <div class="project-release-info-badge tlp-badge-primary tlp-badge-outline">
-                <translate
-                    v-if="capacity_exists"
-                    v-bind:translate-params="{ capacity: release_data.capacity }"
-                    data-test="capacity-not-empty"
-                >
-                    Capacity: %{capacity}
-                </translate>
-                <translate v-else data-test="capacity-empty">
-                    Capacity: N/A
-                </translate>
-            </div>
-            <div class="project-release-info-badge tlp-badge-warning tlp-badge-outline">
-                <translate
-                    v-if="initial_effort_exists"
-                    v-bind:translate-params="{ initialEffort: release_data.initial_effort }"
-                    data-test="initial-effort-not-empty"
-                >
-                    Initial effort: %{initialEffort}
-                </translate>
-                <translate v-else data-test="initial-effort-empty">
-                    Initial effort: N/A
-                </translate>
-            </div>
-        </div>
+        <release-others-badges v-bind:release_data="release_data" />
     </div>
 </template>
 
@@ -67,9 +42,10 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../type";
 import { State } from "vuex-class";
-import ReleaseBadgesOpenSprints from "./ReleaseBadgesOpenSprints.vue";
+import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
+import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 @Component({
-    components: { ReleaseBadgesOpenSprints }
+    components: { ReleaseOthersBadges, ReleaseBadgesAllSprints }
 })
 export default class ReleaseBadgesDisplayer extends Vue {
     @Prop()
@@ -81,20 +57,6 @@ export default class ReleaseBadgesDisplayer extends Vue {
 
     on_click_open_sprints_details(): void {
         this.open_sprints_details = !this.open_sprints_details;
-    }
-
-    get capacity_exists(): boolean {
-        if (!this.release_data.capacity) {
-            return false;
-        }
-        return this.release_data.capacity > 0;
-    }
-
-    get initial_effort_exists(): boolean {
-        if (!this.release_data.initial_effort) {
-            return false;
-        }
-        return this.release_data.initial_effort > 0;
     }
 
     get tracker_submilestone_exists(): boolean {
