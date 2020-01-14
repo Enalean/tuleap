@@ -94,33 +94,6 @@ class Tracker_FormElementTest extends TuleapTestCase
     }
 }
 
-class Tracker_FormElementJsonTest extends TuleapTestCase
-{
-
-    private $user;
-    private $form_element;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->form_element = aStringField()->withId(300)->withLabel("My field")->withName('my_field')->build();
-
-        $this->user = aUser()->build();
-    }
-
-    public function itHasAllFieldElementsInJsonReadyArray()
-    {
-        $this->assertEqual(
-            $this->form_element->fetchFormattedForJson(),
-            array(
-                'id' => 300,
-                'label' => 'My field',
-                'name'  => 'my_field',
-            )
-        );
-    }
-}
-
 class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase
 {
 
