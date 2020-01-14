@@ -194,14 +194,12 @@ function CampaignEditCtrl(
         var selected_report = $scope.filters.selected_report;
 
         if (selected_report === "") {
-            return;
+            return $q.when();
         }
 
-        self.loadDefinitions(selected_report).then(definitions => {
-            //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
-            _.forEach($scope.tests_list, function(category) {
-                //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
-                _.forEach(category.tests, function(test) {
+        return $q.when(self.loadDefinitions(selected_report)).then(definitions => {
+            Object.values($scope.tests_list).forEach(category => {
+                Object.values(category.tests).forEach(test => {
                     test.selected = definitions.some(
                         definition => definition.id === test.definition.id
                     );

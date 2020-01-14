@@ -22,6 +22,7 @@ import ttm_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 import BaseController from "./campaign-edit-controller.js";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("CampaignEditController -", () => {
     let $scope,
@@ -34,7 +35,8 @@ describe("CampaignEditController -", () => {
         ExecutionService,
         NewTuleapArtifactModalService,
         editCampaignCallback,
-        project_id;
+        project_id,
+        wrapPromise;
 
     beforeEach(() => {
         angular.mock.module(ttm_module);
@@ -62,6 +64,8 @@ describe("CampaignEditController -", () => {
             SharedPropertiesService = _SharedPropertiesService_;
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
         });
+
+        wrapPromise = createAngularPromiseWrapper($scope);
 
         $httpBackend.when("GET", "campaign-list.tpl.html").respond(200);
 
@@ -91,7 +95,7 @@ describe("CampaignEditController -", () => {
             jest.spyOn(DefinitionService, "getDefinitions").mockImplementation(() => {});
         });
 
-        it("Given a selected report, then the definitions of that report will be loaded and set to selected and all other tests will be unselected", () => {
+        it("Given a selected report, then the definitions of that report will be loaded and set to selected and all other tests will be unselected", async () => {
             const definitions = [
                 { id: 85, summary: "AD test" },
                 { id: 3, summary: "Git test" }
@@ -112,8 +116,7 @@ describe("CampaignEditController -", () => {
                 }
             };
 
-            $scope.selectReportTests();
-            $scope.$apply();
+            await wrapPromise($scope.selectReportTests());
 
             expect(DefinitionService.getDefinitions).toHaveBeenCalledWith(project_id, "31");
             expect($scope.tests_list.uncategorized.tests[85].selected).toBe(true);
