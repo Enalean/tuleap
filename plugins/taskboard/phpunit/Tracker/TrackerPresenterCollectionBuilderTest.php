@@ -45,12 +45,15 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
     private $semantic_title;
     /** @var AddInPlaceRetriever */
     private $add_in_place_tracker_retriever;
+    /** @var M\LegacyMockInterface|M\MockInterface|\Tracker_Semantic_Contributor */
+    private $semantic_contributor;
 
     protected function setUp(): void
     {
         $this->trackers_retriever             = M::mock(TrackerCollectionRetriever::class);
         $this->mapped_field_retriever         = M::mock(MappedFieldRetriever::class);
         $this->semantic_title                 = M::mock(\Tracker_Semantic_Title::class);
+        $this->semantic_contributor           = M::mock(\Tracker_Semantic_Contributor::class);
         $this->add_in_place_tracker_retriever = M::mock(AddInPlaceRetriever::class);
         $this->trackers_builder               = new TrackerPresenterCollectionBuilder(
             $this->trackers_retriever,
@@ -62,6 +65,7 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
     protected function tearDown(): void
     {
         \Tracker_Semantic_Title::clearInstances();
+        \Tracker_Semantic_Contributor::clearInstances();
     }
 
     public function testBuildCollectionReturnsEmptyArrayWhenNoTrackers(): void
@@ -95,6 +99,7 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
                                      ->andReturnNull();
 
         $this->mockSemanticTitle($taskboard_tracker, true, false);
+        $this->mockSemanticContributor($taskboard_tracker, true, true);
         $this->add_in_place_tracker_retriever
             ->shouldReceive('retrieveAddInPlace')
             ->with($taskboard_tracker, $user, \Mockery::any())
@@ -145,6 +150,11 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
         $this->mockSemanticTitle($third_taskboard_tracker, true, true, \Tracker_FormElement_Field_String::class);
         $this->mockSemanticTitle($fourth_taskboard_tracker, true, true);
 
+        $this->mockSemanticContributor($first_taskboard_tracker, false, false);
+        $this->mockSemanticContributor($second_taskboard_tracker, true, false);
+        $this->mockSemanticContributor($third_taskboard_tracker, true, true);
+        $this->mockSemanticContributor($fourth_taskboard_tracker, true, true, \Tracker_FormElement_Field_MultiSelectbox::class);
+
         $this->add_in_place_tracker_retriever
             ->shouldReceive('retrieveAddInPlace')
             ->with($first_taskboard_tracker, $user, M::any())
@@ -186,6 +196,13 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
         $this->assertNull($result[2]->add_in_place);
         $this->assertEquals(666, $result[3]->add_in_place->child_tracker_id);
         $this->assertEquals(999, $result[3]->add_in_place->parent_artifact_link_field_id);
+
+        $this->assertNull($result[0]->assigned_to_field);
+        $this->assertNull($result[1]->assigned_to_field);
+        $this->assertEquals(1534, $result[2]->assigned_to_field->id);
+        $this->assertFalse($result[2]->assigned_to_field->is_multiple);
+        $this->assertEquals(1534, $result[3]->assigned_to_field->id);
+        $this->assertTrue($result[3]->assigned_to_field->is_multiple);
     }
 
     private function mockMappedField(
@@ -231,5 +248,27 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
         }
 
         $this->semantic_title->shouldReceive('getField')->andReturn($title_field)->once();
+    }
+
+    private function mockSemanticContributor(
+        TaskboardTracker $taskboard_tracker,
+        bool $is_semantic_set,
+        bool $can_user_update,
+        $classname = \Tracker_FormElement_Field_Selectbox::class
+    ): void {
+        \Tracker_Semantic_Contributor::setInstance($this->semantic_contributor, $taskboard_tracker->getTracker());
+
+        $contributor_field = null;
+
+        if ($is_semantic_set) {
+            $contributor_field = M::mock($classname);
+            $contributor_field->shouldReceive('getId')->andReturn(1534);
+            $contributor_field->shouldReceive('userCanUpdate')->andReturn($can_user_update);
+            $contributor_field->shouldReceive('isMultiple')->andReturn(
+                $classname === \Tracker_FormElement_Field_MultiSelectbox::class || $classname === \Tracker_FormElement_Field_Checkbox::class
+            );
+        }
+
+        $this->semantic_contributor->shouldReceive('getField')->andReturn($contributor_field)->once();
     }
 }

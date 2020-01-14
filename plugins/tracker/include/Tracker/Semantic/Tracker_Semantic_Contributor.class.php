@@ -31,6 +31,11 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     protected $list_field;
 
     /**
+     * @var self[]
+     */
+    private static $instances;
+
+    /**
      * Cosntructor
      *
      * @param Tracker                        $tracker    The tracker
@@ -252,18 +257,23 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
      *
      * @return Tracker_Semantic_Contributor
      */
-    public static function load(Tracker $tracker)
+    public static function load(Tracker $tracker): self
     {
-        $field_id = null;
-        $dao = new Tracker_Semantic_ContributorDao();
-        if ($row = $dao->searchByTrackerId($tracker->getId())->getRow()) {
-            $field_id = $row['field_id'];
+        if (!isset(self::$instances[$tracker->getId()])) {
+            $field_id = null;
+            $dao      = new Tracker_Semantic_ContributorDao();
+            if ($row = $dao->searchByTrackerId($tracker->getId())->getRow()) {
+                $field_id = $row['field_id'];
+            }
+
+            $field = null;
+            if ($field_id) {
+                $field = Tracker_FormElementFactory::instance()->getFieldById($field_id);
+            }
+            self::$instances[$tracker->getId()] = new self($tracker, $field);
         }
-        $field = null;
-        if ($field_id) {
-            $field = Tracker_FormElementFactory::instance()->getFieldById($field_id);
-        }
-        return new Tracker_Semantic_Contributor($tracker, $field);
+
+        return self::$instances[$tracker->getId()];
     }
 
     /**
@@ -296,5 +306,21 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     public function isUsedInSemantics(Tracker_FormElement_Field $field)
     {
         return $this->getFieldId() == $field->getId();
+    }
+
+    /**
+     * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function setInstance(Tracker_Semantic_Contributor $semantic_contributor, Tracker $tracker)
+    {
+        self::$instances[$tracker->getId()] = $semantic_contributor;
+    }
+
+    /**
+     * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function clearInstances()
+    {
+        self::$instances = null;
     }
 }

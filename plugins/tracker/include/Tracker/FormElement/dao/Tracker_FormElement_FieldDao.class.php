@@ -37,7 +37,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $name  = $this->da->quoteSmart($name);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE tracker_id = $tracker_id 
+                WHERE tracker_id = $tracker_id
                   AND name = $name";
         return $this->retrieve($sql);
     }
@@ -48,7 +48,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $name  = $this->da->quoteSmart($name);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE tracker_id = $tracker_id 
+                WHERE tracker_id = $tracker_id
                   AND name = $name
                   AND use_it = 1";
         return $this->retrieve($sql);
@@ -59,7 +59,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE tracker_id = $tracker_id 
+                WHERE tracker_id = $tracker_id
                   AND use_it = 0
                 ORDER BY parent_id, rank";
         return $this->retrieve($sql);
@@ -70,7 +70,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE tracker_id = $tracker_id 
+                WHERE tracker_id = $tracker_id
                   AND parent_id = 0
                   AND use_it = 1
                 ORDER BY rank";
@@ -89,7 +89,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         }
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE tracker_id = $tracker_id 
+                WHERE tracker_id = $tracker_id
                   AND id = $field_id
                   AND use_it = 1
                   AND formElement_type $type_stm
@@ -102,8 +102,8 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM $this->table_name f, tracker_field_list_bind_users lbu
-                WHERE f.tracker_id = $tracker_id 
-                  AND use_it = 1 
+                WHERE f.tracker_id = $tracker_id
+                  AND use_it = 1
                   AND f.id = lbu.field_id
                 ORDER BY rank";
         return $this->retrieve($sql);
@@ -115,7 +115,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $field_id    = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name f, tracker_field_list_bind_users lbu
-                WHERE f.tracker_id = $tracker_id 
+                WHERE f.tracker_id = $tracker_id
                   AND f.id = $field_id
                   AND use_it = 1
                   AND f.id = lbu.field_id
@@ -171,7 +171,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $parent_id  = $this->da->escapeInt($parent_id);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE parent_id = $parent_id 
+                WHERE parent_id = $parent_id
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
@@ -181,7 +181,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $parent_id  = $this->da->escapeInt($parent_id);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE parent_id = $parent_id 
+                WHERE parent_id = $parent_id
                   AND use_it = 1
                 ORDER BY rank";
         return $this->retrieve($sql);
@@ -199,7 +199,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
 
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE tracker_id = $tracker_id 
+                WHERE tracker_id = $tracker_id
                   AND formElement_type $type_stm";
         if ($used) {
             $sql.= " AND use_it = 1";
@@ -219,7 +219,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         }
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE tracker_id = $tracker_id 
+                WHERE tracker_id = $tracker_id
                   AND formElement_type $type_stm
                 ORDER BY rank";
         return $this->retrieve($sql);
@@ -307,7 +307,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         }
         if ($cases) {
             $sql = "UPDATE $this->table_name
-                    SET parent_id = CASE parent_id 
+                    SET parent_id = CASE parent_id
                                     $cases
                                     END
                     WHERE tracker_id = $tracker_id;";
@@ -321,14 +321,14 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $rank = (int)$this->prepareRanking($field->id, $field->parent_id, $field->rank, 'id', 'parent_id');
 
         $sql = "UPDATE $this->table_name
-                SET parent_id         = ". $this->da->escapeInt($field->parent_id) .", 
-                    label             = ". $this->da->quoteSmart($field->label) .", 
-                    name              = ". $this->da->quoteSmart($field->name) .", 
-                    description       = ". $this->da->quoteSmart($field->description) .", 
-                    scope             = ". $this->da->quoteSmart($field->scope) .", 
-                    required          = ". $this->da->escapeInt($field->required ? 1 : 0) .", 
-                    notifications     = ". ($field->notifications ? 1 : "NULL") .", 
-                    use_it            = ". $this->da->escapeInt($field->use_it ? 1 : 0) .", 
+                SET parent_id         = ". $this->da->escapeInt($field->parent_id) .",
+                    label             = ". $this->da->quoteSmart($field->label) .",
+                    name              = ". $this->da->quoteSmart($field->name) .",
+                    description       = ". $this->da->quoteSmart($field->description) .",
+                    scope             = ". $this->da->quoteSmart($field->scope) .",
+                    required          = ". $this->da->escapeInt($field->required ? 1 : 0) .",
+                    notifications     = ". ($field->notifications ? 1 : "NULL") .",
+                    use_it            = ". $this->da->escapeInt($field->use_it ? 1 : 0) .",
                     rank              = ". $this->da->escapeInt($rank) .",
                     original_field_id = ". $this->da->escapeInt($field->getOriginalFieldId()) ."
                 WHERE id = ". $this->da->escapeInt($field->id);
@@ -404,9 +404,9 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
     {
         $project_id  = $this->da->escapeInt($project_id);
         $sql = "SELECT tracker_field.*
-                FROM tracker_field 
-                INNER JOIN tracker ON tracker.id = tracker_field.tracker_id 
-                WHERE tracker.group_id = $project_id 
+                FROM tracker_field
+                INNER JOIN tracker ON tracker.id = tracker_field.tracker_id
+                WHERE tracker.group_id = $project_id
                   AND tracker_field.original_field_id != 0";
         return $this->retrieve($sql);
     }
@@ -417,10 +417,10 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
 
         $sql = "
             SELECT f.*
-        
+
             FROM       tracker_field AS f
             INNER JOIN tracker       AS t ON (f.tracker_id = t.id)
-        
+
             WHERE t.group_id = $group_id
             AND   f.use_it   = 1
             AND   t.deletion_date IS NULL
@@ -444,18 +444,18 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $project_id = $this->da->escapeInt($project_id);
         $sql = "SELECT * FROM
                 ((SELECT f_target.*
-                  FROM tracker_field   AS f_target 
-                    JOIN tracker_field AS f_src    ON (f_target.original_field_id = f_src.id) 
+                  FROM tracker_field   AS f_target
+                    JOIN tracker_field AS f_src    ON (f_target.original_field_id = f_src.id)
                     JOIN tracker                   ON (f_src.tracker_id           = tracker.id)
                   WHERE tracker.group_id = $project_id
                   AND f_target.use_it = 1)
-        
+
                  UNION
-        
+
                 (SELECT f_original.*
                   FROM tracker_field   AS f_original
                     JOIN tracker_field AS f_target   ON (f_original.id              = f_target.original_field_id)
-                    JOIN tracker_field AS f_src      ON (f_target.original_field_id = f_src.id) 
+                    JOIN tracker_field AS f_src      ON (f_target.original_field_id = f_src.id)
                     JOIN tracker                     ON (f_src.tracker_id           = tracker.id)
                   WHERE tracker.group_id = $project_id
                   AND f_target.use_it = 1)
@@ -529,8 +529,8 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $id                = $this->da->escapeInt($id);
 
         $sql = "
-            UPDATE $this->table_name  
-            SET   original_field_id = $original_field_id 
+            UPDATE $this->table_name
+            SET   original_field_id = $original_field_id
             WHERE id                = $id
         ";
 
