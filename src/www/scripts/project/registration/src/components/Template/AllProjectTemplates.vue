@@ -19,12 +19,11 @@
   -->
 
 <template>
-    <div>
-        <h1 class="project-registration-title" v-translate>Start a new project</h1>
-
+    <div class="project-registration-content">
         <div class="register-new-project-section">
             <new-project-boxes />
             <div class="register-new-project-list">
+                <h1 class="project-registration-title" v-translate>Start a new project</h1>
                 <h2>
                     <span class="tlp-badge-primary register-new-project-section-badge">1</span>
                     <span v-translate>What kind of project is it?</span>

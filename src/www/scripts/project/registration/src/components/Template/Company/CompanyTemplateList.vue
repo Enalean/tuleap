@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <div class="project-registration-templates">
         <h3 data-test="project-registration-company-template-title">
             {{ platform_template_name }}
         </h3>

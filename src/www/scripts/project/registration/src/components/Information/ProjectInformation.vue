@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <div class="project-registration-content">
         <div class="tlp-alert-danger" v-if="has_error" data-test="project-creation-failed">
             {{ error }}
         </div>

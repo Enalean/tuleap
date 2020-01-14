@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <div class="project-registration-templates">
         <h3 data-test="project-registration-company-template-title" v-translate>
             For advanced users
         </h3>

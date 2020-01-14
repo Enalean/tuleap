@@ -18,7 +18,7 @@
   -->
 
 <template functional>
-    <div class="register-new-project-box-spacing">
+    <div class="register-new-project-boxes">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -139,7 +139,7 @@
                 d="M117.993 59.1034L121.734 54.8356H94.4399L101.559 51.3161H124.819L127.802 47.9137L139.45 47.9271L136.348 51.3161H178.532L175.43 47.9271L187.078 47.9137L190.061 51.3161H213.321L220.44 54.8356H193.146L196.887 59.1034L185.658 59.1034L181.752 54.8356H133.128L129.222 59.1034L117.993 59.1034Z"
                 clip-rule="evenodd"
                 fill-rule="evenodd"
-                class="tlp-illustration-primary-box"
+                class="tlp-illustration-primary-fill"
             ></path>
         </svg>
     </div>

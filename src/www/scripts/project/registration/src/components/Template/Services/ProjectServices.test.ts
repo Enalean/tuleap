@@ -47,7 +47,7 @@ describe("ProjectServices", () => {
     it("Displays a spinner when services are loading", () => {
         wrapper.vm.$data.is_loading = true;
 
-        expect(wrapper.find("[data-test=project-service-link]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=project-service-link]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=project-service-spinner]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=project-service-error]").exists()).toBeFalsy();
     });

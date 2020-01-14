@@ -31,7 +31,7 @@
         />
 
         <label
-            class="tlp-card project-registration-template-label"
+            class="tlp-card tlp-card-selectable project-registration-template-label"
             data-test="project-registration-card-label"
             v-bind:for="'project-registration-tuleap-template-' + template.id"
         >

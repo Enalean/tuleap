@@ -35,10 +35,6 @@ $card-border-margin: 150px;
     }
 }
 
-.project-registration-template-card:hover {
-    border-color: $tlp-theme-color;
-}
-
 .project-registration-template-card-description-content {
     display: flex;
     flex-direction: column;
@@ -101,7 +97,6 @@ $card-border-margin: 150px;
 .project-registration-template-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     margin: 0 0 0 ($card-border-margin - $tlp-spacing);
 }
 

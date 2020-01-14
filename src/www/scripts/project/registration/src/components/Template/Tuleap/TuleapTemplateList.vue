@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <div class="project-registration-templates">
         <h3 v-translate>Tuleap templates</h3>
 
         <section class="project-registration-default-templates-section">
