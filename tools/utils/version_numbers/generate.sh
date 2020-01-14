@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Copyright (c) Enalean, 2012, 2013, 2014, 2016, 2017. All Rights Reserved.
+# Copyright (c) Enalean, 2012-Present. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #
@@ -34,9 +34,8 @@ search_modified_added_or_deleted_files_in_git_staging_area() {
 
 modified_plugins=$(search_modified_added_or_deleted_files_in_git_staging_area "plugins/" | cut -d/ -f1,2 | uniq)
 modified_themes=$(search_modified_added_or_deleted_files_in_git_staging_area "src/www/themes/" | cut -d/ -f3,4 | uniq)
-modified_api=$(search_modified_added_or_deleted_files_in_git_staging_area "src/www/api/" | cut -d/ -f3,4 | uniq)
 
-for item in $modified_plugins $modified_themes $modified_api; do
+for item in $modified_plugins $modified_themes; do
 
     item_type=$(echo $item | cut -d/ -f1)
     item_name=$(echo $item | cut -d/ -f2)
@@ -52,11 +51,6 @@ for item in $modified_plugins $modified_themes $modified_api; do
             fi
 
             path="src/www/$item"
-	    ;;
-
-	"api")
-	    item_name="REST API"
-	    path="src/www/api"
 	    ;;
     esac
 

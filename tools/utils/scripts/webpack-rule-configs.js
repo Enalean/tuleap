@@ -94,7 +94,7 @@ function configureBabelRule(babel_options) {
 function configureTypescriptRules(babel_options) {
     return [
         {
-            test: /\.ts$/,
+            test: /\.ts(x?)$/,
             exclude: /node_modules/,
             use: [
                 {

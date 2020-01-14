@@ -6,7 +6,6 @@
 **/node_modules/*
 **/vendor/*
 src/common/wiki/phpwiki/
-src/www/api/explorer/
 src/www/scripts/bootstrap/
 src/www/scripts/d3/
 src/www/scripts/datepicker/

@@ -1,0 +1,8 @@
+{
+  "name": "tuleap/plugin-api-explorer",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\APIExplorer\\": "include/"
+    }
+  }
+}
