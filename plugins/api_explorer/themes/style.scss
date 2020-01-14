@@ -19,6 +19,43 @@
 
 @import '../node_modules/swagger-ui/dist/swagger-ui';
 
-.swagger-ui .opblock-tag {
-    font-size: 20px;
+.swagger-ui {
+    .wrapper {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .opblock-tag-section {
+        margin: 0 0 20px;
+        padding: 0;
+        border: 1px solid #e3e5ed;
+        border-radius: 3px;
+        background: #ffffff;
+
+        > div {
+            margin: 0 20px 5px !important;
+        }
+
+        &:hover {
+            border-color: #1593c4;
+        }
+    }
+
+    .opblock-tag {
+        margin: 0;
+        padding: 20px;
+        border-bottom: 0;
+        color: #687a7c;
+        font-family: SourceSansPro,Helvetica,Arial,sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: .5px;
+        line-height: 22px;
+        text-transform: uppercase;
+
+        &:hover {
+            background: none;
+        }
+    }
 }
