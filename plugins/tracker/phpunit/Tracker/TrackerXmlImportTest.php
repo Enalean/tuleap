@@ -34,6 +34,7 @@ use Tracker_RuleFactory;
 use Tracker_SemanticFactory;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\XML\MappingsRegistry;
@@ -64,15 +65,28 @@ class TrackerXmlImportTest extends TestCase
 
     private $configuration;
 
-    protected function setUp() : void
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\TrackerFactory
+     */
+    private $tracker_factory;
+
+    /**
+     * @var \EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $event_manager;
+
+    protected function setUp(): void
     {
         $this->temporary_directory = sys_get_temp_dir() . '/' . bin2hex(random_bytes(8));
         mkdir($this->temporary_directory);
         ForgeConfig::set('tmp_dir', $this->temporary_directory);
+        $this->tracker_factory    = \Mockery::mock(\TrackerFactory::class);
+        $this->event_manager      = \Mockery::spy(\EventManager::class);
+        $external_field_extractor = \Mockery::mock(ExternalFieldsExtractor::class);
 
         $class_parameters = [
-            \Mockery::spy(\TrackerFactory::class),
-            \Mockery::spy(\EventManager::class),
+            $this->tracker_factory,
+            $this->event_manager,
             \Mockery::spy(HierarchyDAO::class),
             \Mockery::spy(Tracker_CannedResponseFactory::class),
             \Mockery::spy(Tracker_FormElementFactory::class),
@@ -89,21 +103,20 @@ class TrackerXmlImportTest extends TestCase
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
+            $external_field_extractor
         ];
-
+        $external_field_extractor->shouldReceive('extractExternalFieldFromProjectElement');
         $this->tracker_xml_importer = \Mockery::mock(\TrackerXmlImport::class, $class_parameters)
                                               ->makePartial()
                                               ->shouldAllowMockingProtectedMethods();
 
-        $this->tracker_xml_importer->shouldReceive('createFromXML')->andReturn(\Mockery::spy(\Tracker::class));
-
-        $this->project           = \Mockery::spy(\Project::class);
+        $this->project = \Mockery::spy(\Project::class);
         $this->mapping_registery = new MappingsRegistry();
-        $this->configuration     = new ImportConfig();
+        $this->configuration = new ImportConfig();
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $folders = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($this->temporary_directory, RecursiveDirectoryIterator::SKIP_DOTS),
@@ -121,6 +134,8 @@ class TrackerXmlImportTest extends TestCase
 
     public function testItShouldNotRaiseExceptionWithEmptyTrackerDescription()
     {
+        $this->tracker_xml_importer->shouldReceive('createFromXML')->andReturn(\Mockery::spy(\Tracker::class));
+
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
             <project>
@@ -140,6 +155,8 @@ class TrackerXmlImportTest extends TestCase
 
     public function testItShouldNotRaiseExceptionWithOnlyWhitespacesTrackerDescription()
     {
+        $this->tracker_xml_importer->shouldReceive('createFromXML')->andReturn(\Mockery::spy(\Tracker::class));
+
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
             <project>
@@ -239,6 +256,8 @@ class TrackerXmlImportTest extends TestCase
 
     public function testItAllowsItemsLabelToHavePlusCharacter()
     {
+        $this->tracker_xml_importer->shouldReceive('createFromXML')->andReturn(\Mockery::spy(\Tracker::class));
+
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
             <project>

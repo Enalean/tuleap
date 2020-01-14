@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 
 /**
  * Handles the HTTP actions related to  the agile dashborad as a whole.
@@ -67,6 +68,11 @@ class AgileDashboard_XMLController extends MVC2_PluginController
      */
     private $explicit_backlog_xml_import;
 
+    /**
+     * @var ExternalFieldsExtractor
+     */
+    private $external_field_extractor;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -76,7 +82,8 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         AgileDashboard_XMLImporter $agiledashboard_xml_importer,
         Planning_RequestValidator $planning_request_validator,
         XMLImporter $explicit_backlog_xml_import,
-        $plugin_theme_path
+        $plugin_theme_path,
+        ExternalFieldsExtractor $external_field_extractor
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -89,6 +96,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $this->agiledashboard_xml_importer = $agiledashboard_xml_importer;
         $this->planning_request_validator  = $planning_request_validator;
         $this->explicit_backlog_xml_import = $explicit_backlog_xml_import;
+        $this->external_field_extractor    = $external_field_extractor;
     }
 
     /**
@@ -135,7 +143,10 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $xml       = $this->request->get('xml_content');
         $rng_path  = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/project/project.rng');
 
-        $this->xml_rng_validator->validate($xml, $rng_path);
+        $partial_element = clone $xml;
+        $this->external_field_extractor->extractExternalFieldFromProjectElement($partial_element);
+
+        $this->xml_rng_validator->validate($partial_element, $rng_path);
         $xml = $this->request->get('xml_content')->agiledashboard;
 
         $this->importPlannings($xml);

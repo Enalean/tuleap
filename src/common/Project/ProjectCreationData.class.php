@@ -19,6 +19,7 @@
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 
 class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -54,6 +55,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         } else {
             $this->logger = new WrapperLogger($logger, self::class);
         }
+
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
     }
 
@@ -217,19 +219,21 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         ?XML_RNGValidator $xml_validator = null,
         ?ServiceManager $service_manager = null,
         ?Logger $logger = null,
-        ?DefaultProjectVisibilityRetriever $default_project_visibility_retriever = null
+        ?DefaultProjectVisibilityRetriever $default_project_visibility_retriever = null,
+        ?ExternalFieldsExtractor $external_fields_extractor = null
     ) {
         $default_project_visibility_retriever = $default_project_visibility_retriever ?? new DefaultProjectVisibilityRetriever();
 
         $instance = new ProjectCreationData($default_project_visibility_retriever, $logger);
-        $instance->fromXML($xml, $xml_validator, $service_manager);
+        $instance->fromXML($xml, $xml_validator, $service_manager, $external_fields_extractor);
         return $instance;
     }
 
     private function fromXML(
         SimpleXMLElement $xml,
         ?XML_RNGValidator $xml_validator = null,
-        ?ServiceManager $service_manager = null
+        ?ServiceManager $service_manager = null,
+        ?ExternalFieldsExtractor $external_fields_extractor = null
     ) {
         if (empty($xml_validator)) {
             $xml_validator = new XML_RNGValidator();
@@ -237,10 +241,15 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         if (empty($service_manager)) {
             $service_manager = ServiceManager::instance();
         }
+        if (empty($external_fields_extractor)) {
+            $external_fields_extractor = new ExternalFieldsExtractor(new EventManager());
+        }
 
         $this->logger->debug("Start import from XML, validate RNG");
         $rng_path = realpath(dirname(__FILE__).'/../xml/resources/project/project.rng');
-        $xml_validator->validate($xml, $rng_path);
+        $partial_element = clone $xml;
+        $external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
+        $xml_validator->validate($partial_element, $rng_path);
         $this->logger->debug("RNG validated, feed the data");
 
         $long_description_tagname = 'long-description';

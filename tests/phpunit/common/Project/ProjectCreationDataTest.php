@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Configuration\Logger\LoggerInterface;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 
 class ProjectCreationDataTest extends TestCase
 {
@@ -86,7 +87,10 @@ class ProjectCreationDataTest extends TestCase
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private';
-        $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
+        $external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
+        $external_field_extractor->shouldReceive('extractExternalFieldFromProjectElement');
+
+        $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager, null, null, $external_field_extractor);
         $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 
