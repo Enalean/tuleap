@@ -29,10 +29,11 @@
         </span>
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label" />
-            <div class="taskboard-card-info">
-                <slot name="initial_effort" />
-                <card-assignees v-bind:assignees="card.assignees" />
-            </div>
+            <card-info v-bind:card="card">
+                <template v-slot:initial_effort>
+                    <slot name="initial_effort" />
+                </template>
+            </card-info>
         </div>
         <label-editor v-model="label" v-if="card.is_in_edit_mode" v-on:save="save" />
         <div class="taskboard-card-accessibility" v-if="show_accessibility_pattern"></div>
@@ -44,21 +45,21 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import CardXrefLabel from "./CardXrefLabel.vue";
-import CardAssignees from "./CardAssignees.vue";
 import { Card, TaskboardEvent, Tracker } from "../../../../../type";
 import { namespace, Getter } from "vuex-class";
 import EventBus from "../../../../../helpers/event-bus";
 import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
 import LabelEditor from "./Editor/Label/LabelEditor.vue";
+import CardInfo from "./CardInfo.vue";
 
 const user = namespace("user");
 const swimlane = namespace("swimlane");
 
 @Component({
     components: {
+        CardInfo,
         LabelEditor,
-        CardXrefLabel,
-        CardAssignees
+        CardXrefLabel
     }
 })
 export default class BaseCard extends Vue {
