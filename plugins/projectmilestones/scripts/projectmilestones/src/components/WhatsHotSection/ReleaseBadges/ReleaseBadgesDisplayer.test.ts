@@ -23,6 +23,7 @@ import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-com
 import { MilestoneData, StoreOptions } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
+import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
@@ -215,5 +216,13 @@ describe("ReleaseBadgesDisplayer", () => {
 
         wrapper.setData({ open_sprints_details: true });
         expect(wrapper.contains("[data-test=line-displayed]")).toBe(true);
+    });
+
+    it("When the user clicked on sprints, Then ReleaseBadgesClosedSprints is rendered", async () => {
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(false);
+        wrapper.setData({ open_sprints_details: true });
+        expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(true);
     });
 });

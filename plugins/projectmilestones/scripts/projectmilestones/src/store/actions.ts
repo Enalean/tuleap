@@ -20,6 +20,7 @@
 import {
     getCurrentMilestones as getAllCurrentMilestones,
     getMilestonesContent as getContent,
+    getNbOfClosedSprints,
     getNbOfSprints
 } from "../api/rest-querier";
 
@@ -46,9 +47,12 @@ export function getEnhancedMilestones(
 ): Promise<MilestoneData> {
     const milestone_data = async (): Promise<MilestoneData> => {
         await getInitialEffortAndNumberArtifactsInTrackers(context, milestone);
+        const total_sprint = await getNbOfSprints(milestone.id, context.state);
+        const total_closed_sprint = await getNbOfClosedSprints(milestone.id);
         return {
             ...milestone,
-            total_sprint: await getNbOfSprints(milestone.id, context.state)
+            total_sprint,
+            total_closed_sprint
         };
     };
     return milestone_data();

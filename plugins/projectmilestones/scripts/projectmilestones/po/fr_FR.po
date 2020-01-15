@@ -25,6 +25,11 @@ msgid_plural "%{nb_upcoming_releases} upcoming %{label_tracker}."
 msgstr[0] "%{nb_upcoming_releases} prochain(e) %{label_tracker}."
 msgstr[1] "%{nb_upcoming_releases} prochain(e)s %{label_tracker}."
 
+msgid "%{total_closed_sprint} closed %{tracker_label}"
+msgid_plural "%{ total_closed_sprint } closed %{tracker_label}"
+msgstr[0] "%{total_closed_sprint} %{tracker_label} fermé(e)"
+msgstr[1] "%{total_closed_sprint} %{tracker_label} fermé(e)s"
+
 msgid "'%s' field is empty or invalid."
 msgstr "Le champs '%s' est vide ou invalide."
 
