@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - 2017. All rights reserved.
+ * Copyright Enalean (c) 2014 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,11 +22,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * I'm responsible of handling what happens in pre-commit subversion hook
- */
-class SVN_Hook_PreCommit_BaseTest extends TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class PreCommitCommitToTagTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     /** @var SVN_Svnlook */
     protected $svn_look;
@@ -37,61 +39,34 @@ class SVN_Hook_PreCommit_BaseTest extends TuleapTestCase
     /** @var SVN_Immutable_Tags_Handler */
     protected $handler;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->repo           = 'SVN_repo';
         $this->commit_message = '';
         $this->transaction    = '1';
-        $this->project        = mock('Project');
+        $this->project        = \Mockery::spy(\Project::class);
 
-        $this->svn_hook                 = stub('SVN_Hooks')->getProjectFromRepositoryPath($this->repo)->returns($this->project);
-        $this->commit_message_validator = mock('SVN_CommitMessageValidator');
+        $this->svn_hook                 = \Mockery::spy(\SVN_Hooks::class)->shouldReceive('getProjectFromRepositoryPath')->with($this->repo)->andReturns($this->project)->getMock();
+        $this->commit_message_validator = \Mockery::spy(\SVN_CommitMessageValidator::class);
 
-        $this->svn_look = mock('SVN_Svnlook');
-        $this->handler  = mock('SVN_Immutable_Tags_Handler');
+        $this->svn_look = \Mockery::spy(\SVN_Svnlook::class);
+        $this->handler  = \Mockery::spy(\SVN_Immutable_Tags_Handler::class);
 
         $this->pre_commit = new SVN_Hook_PreCommit(
             $this->svn_hook,
             $this->commit_message_validator,
             $this->svn_look,
             $this->handler,
-            mock('Tuleap\\Svn\\SHA1CollisionDetector'),
-            mock('BackendLogger')
+            \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class),
+            \Mockery::spy(\BackendLogger::class)
         );
     }
-}
 
-class SVN_Hook_PreCommit_MessageTest extends SVN_Hook_PreCommit_BaseTest
-{
-
-    public function itRejectsCommitIfCommitMessageIsEmptyAndForgeRequiresACommitMessage()
+    public function testCommitToTagIsAllowed(): void
     {
-        ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
-
-        $this->expectException('Exception');
-        expect($this->commit_message_validator)->assertCommitMessageIsValid()->never();
-
-        $this->pre_commit->assertCommitMessageIsValid($this->repo, $this->commit_message);
-    }
-
-    public function itDoesNotRejectCommitIfCommitMessageIsEmptyAndForgeDoesNotRequireACommitMessage()
-    {
-        ForgeConfig::set('sys_allow_empty_svn_commit_message', true);
-
-        expect($this->commit_message_validator)->assertCommitMessageIsValid()->once();
-
-        $this->pre_commit->assertCommitMessageIsValid($this->repo, $this->commit_message);
-    }
-}
-
-class SVN_Hook_PreCommit_CommitToTagTest extends SVN_Hook_PreCommit_BaseTest
-{
-
-    public function testCommitToTagIsAllowed()
-    {
-        stub($this->handler)->doesProjectUsesImmutableTags()->returns(false);
+        $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(false);
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
@@ -138,10 +113,10 @@ class SVN_Hook_PreCommit_CommitToTagTest extends SVN_Hook_PreCommit_BaseTest
         $this->assertCommitIsAllowed('A   trunk/toto', 'A   tags/moduleA/v1/toto');
     }
 
-    public function testCommitToTagIsDeniedInModule()
+    public function testCommitToTagIsDeniedInModule(): void
     {
-        stub($this->handler)->doesProjectUsesImmutableTags()->returns(true);
-        stub($this->handler)->getImmutableTagsPathForProject()->returns('/*/tags/');
+        $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(true);
+        $this->handler->shouldReceive('getImmutableTagsPathForProject')->andReturns('/*/tags/');
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
@@ -188,11 +163,11 @@ class SVN_Hook_PreCommit_CommitToTagTest extends SVN_Hook_PreCommit_BaseTest
         $this->assertCommitIsAllowed('A   trunk/toto', 'A   tags/moduleA/v1/toto');
     }
 
-    public function testCommitToTagIsDeniedAtRoot()
+    public function testCommitToTagIsDeniedAtRoot(): void
     {
-        stub($this->handler)->doesProjectUsesImmutableTags()->returns(true);
-        stub($this->handler)->getImmutableTagsPathForProject()->returns('/tags/');
-        stub($this->handler)->getAllowedTagsFromWhiteList()->returns(array(
+        $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(true);
+        $this->handler->shouldReceive('getImmutableTagsPathForProject')->andReturns('/tags/');
+        $this->handler->shouldReceive('getAllowedTagsFromWhiteList')->andReturns(array(
             '/tags/moduleA'
         ));
 
@@ -241,15 +216,15 @@ class SVN_Hook_PreCommit_CommitToTagTest extends SVN_Hook_PreCommit_BaseTest
         $this->assertCommitIsDenied('A   trunk/toto', 'A   tags/moduleA/v1/toto');
     }
 
-    public function testCommitToTagIsDeniedAtRootAndInModules()
+    public function testCommitToTagIsDeniedAtRootAndInModules(): void
     {
         $paths = <<<EOS
 /tags
 /*/tags
 EOS;
 
-        stub($this->handler)->doesProjectUsesImmutableTags()->returns(true);
-        stub($this->handler)->getImmutableTagsPathForProject()->returns($paths);
+        $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(true);
+        $this->handler->shouldReceive('getImmutableTagsPathForProject')->andReturns($paths);
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
@@ -296,7 +271,7 @@ EOS;
         $this->assertCommitIsDenied('A   trunk/toto', 'A   tags/moduleA/v1/toto');
     }
 
-    private function assertCommitIsAllowed()
+    private function assertCommitIsAllowed(): void
     {
         $paths      = func_get_args();
         $pre_commit = $this->buildPreCommitHook($paths);
@@ -307,13 +282,13 @@ EOS;
                 $this->transaction
             );
 
-            $this->pass();
+            $this->doesNotPerformAssertions();
         } catch (SVN_CommitToTagDeniedException $ex) {
             $this->fail('Commit of "'.implode(', ', $paths) .'" should be allowed');
         }
     }
 
-    private function assertCommitIsDenied()
+    private function assertCommitIsDenied(): void
     {
         $paths      = func_get_args();
         $pre_commit = $this->buildPreCommitHook($paths);
@@ -326,23 +301,21 @@ EOS;
 
             $this->fail('Commit of "'.implode(', ', $paths).'" should be denied');
         } catch (SVN_CommitToTagDeniedException $ex) {
-            $this->pass();
+            $this->doesNotPerformAssertions();
         }
     }
 
-    private function buildPreCommitHook(array $paths)
+    private function buildPreCommitHook(array $paths): SVN_Hook_PreCommit
     {
-        $svn_look = stub('SVN_Svnlook')
-            ->getTransactionPath($this->project, $this->transaction)
-            ->returns($paths);
+        $svn_look = \Mockery::spy(\SVN_Svnlook::class)->shouldReceive('getTransactionPath')->with($this->project, $this->transaction)->andReturns($paths)->getMock();
 
         return new SVN_Hook_PreCommit(
             $this->svn_hook,
             $this->commit_message_validator,
             $svn_look,
             $this->handler,
-            mock('Tuleap\\Svn\\SHA1CollisionDetector'),
-            mock('BackendLogger')
+            \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class),
+            \Mockery::spy(\BackendLogger::class)
         );
     }
 }
