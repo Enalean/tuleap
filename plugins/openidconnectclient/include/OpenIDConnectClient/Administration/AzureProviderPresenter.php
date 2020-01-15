@@ -44,6 +44,11 @@ class AzureProviderPresenter
      */
     public $can_user_enable_unique_authentication_endpoint;
 
+    /**
+     * @var string
+     */
+    public $description_users_allowed_to_connect;
+
     public function __construct(
         AzureADProvider $provider,
         $can_user_enable_unique_authentication_endpoint,
@@ -54,6 +59,7 @@ class AzureProviderPresenter
         $this->can_user_enable_unique_authentication_endpoint = $can_user_enable_unique_authentication_endpoint;
         $this->icons_presenters                               = $icons_presenters;
         $this->colors_presenters                              = $colors_presenters;
+        $this->description_users_allowed_to_connect           = $provider->getDescriptionOfUsersAllowedToConnect();
     }
 
     public function getId()

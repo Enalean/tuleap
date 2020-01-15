@@ -53,6 +53,10 @@
     margin: 0 0 0 $tlp-half-spacing;
 }
 
+.provider-azure-ad-description-allowed-to-connect {
+    max-width: 375px;
+}
+
 @media screen and (max-width: 1300px) {
     .tlp-pane {
         flex-direction: column;

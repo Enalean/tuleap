@@ -1,6 +1,14 @@
-<div class="tlp-property">
-    <label class="tlp-label">
-        {{# dgettext }} tuleap-openidconnectclient | Tenant ID {{/ dgettext }}
-    </label>
-    <p>{{ getTenantId }}</p>
+<div>
+    <div class="tlp-property">
+        <label class="tlp-label">
+            {{# dgettext }} tuleap-openidconnectclient | Authentication allowed for {{/ dgettext }}
+        </label>
+        <p class="provider-azure-ad-description-allowed-to-connect">{{ description_users_allowed_to_connect }}</p>
+    </div>
+    <div class="tlp-property">
+        <label class="tlp-label">
+            {{# dgettext }} tuleap-openidconnectclient | Tenant ID {{/ dgettext }}
+        </label>
+        <p>{{ getTenantId }}</p>
+    </div>
 </div>

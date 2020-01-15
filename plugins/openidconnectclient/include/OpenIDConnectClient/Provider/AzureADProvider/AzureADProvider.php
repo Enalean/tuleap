@@ -158,6 +158,11 @@ final class AzureADProvider implements Provider
         return $this->acceptable_tenant_for_authentication_configuration->getAcceptableIssuerTenantIDs();
     }
 
+    public function getDescriptionOfUsersAllowedToConnect(): string
+    {
+        return $this->acceptable_tenant_for_authentication_configuration->getDescription();
+    }
+
     public function getRedirectUri() : string
     {
         return 'https://'. ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/azure/';

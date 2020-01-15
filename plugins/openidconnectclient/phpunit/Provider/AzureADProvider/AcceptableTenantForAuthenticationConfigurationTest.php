@@ -35,6 +35,7 @@ final class AcceptableTenantForAuthenticationConfigurationTest extends TestCase
 
         $this->assertEquals('common', $configuration->getIdentifier());
         $this->assertEquals($configuration->getIdentifier(), $configuration->getValueForAuthenticationFlow());
+        $this->assertNotEmpty($configuration->getDescription());
     }
 
     public function testValueUsedByTheAuthenticationFlowIsTheTenantIDWhenOnlyUsersFromTheSpecificTenantCanAuthenticate(): void
@@ -46,6 +47,7 @@ final class AcceptableTenantForAuthenticationConfigurationTest extends TestCase
 
         $this->assertEquals('tenant_specific', $configuration->getIdentifier());
         $this->assertEquals('tenant_id', $configuration->getValueForAuthenticationFlow());
+        $this->assertNotEmpty($configuration->getDescription());
     }
 
     public function testRejectsUnknownAcceptableTenantForLoginIdentifier(): void
