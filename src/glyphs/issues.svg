@@ -1,7 +1,7 @@
 <svg width="74" height="46" viewBox="0 0 74 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1.5" y="1.5" width="9" height="9" rx="1.5" class="project-registration-template-card-svg" stroke-width="3"/>
-    <rect x="1.5" y="35.5" width="9" height="9" rx="1.5" class="project-registration-template-card-svg" stroke-width="3"/>
+    <rect x="1.5" y="1.5" width="9" height="9" rx="1.5" class="project-registration-template-card-svg-stroke" stroke-width="3"/>
+    <rect x="1.5" y="35.5" width="9" height="9" rx="1.5" class="project-registration-template-card-svg-stroke" stroke-width="3"/>
     <path class="project-registration-template-card-svg" fill-rule="evenodd" clip-rule="evenodd" d="M0 22.7445C0.128905 22.9901 0.295605 23.2181 0.500102 23.4181L3 25.7712V26H3.24311L5.66667 28.2812L7.93748 26H9V24.9326L12 21.9188V26C12 27.6569 10.6569 29 9 29H3C1.34315 29 2.58456e-08 27.6569 2.58456e-08 26L0 22.7445ZM0 20.026C0.128916 19.7804 0.295634 19.5524 0.500152 19.3524C1.60664 18.2705 3.73032 18.2705 4.8368 19.3524L5.66667 20L8.81597 17H3C1.34315 17 2.58456e-08 18.3431 2.58456e-08 20L0 20.026Z"/>
-    <path d="M3 21.6667L5.5 24L13 17" class="project-registration-template-card-svg-stroke" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M3 21.6667L5.5 24L13 17" class="project-registration-template-card-svg-stroke" stroke-width="2.5" stroke-linecap=" round"/>
     <path class="project-registration-template-card-svg" fill-rule="evenodd" clip-rule="evenodd" d="M19 6C19 4.89543 19.8954 4 21 4H72C73.1046 4 74 4.89543 74 6C74 7.10457 73.1046 8 72 8H21C19.8954 8 19 7.10457 19 6ZM19 23C19 21.8954 19.8954 21 21 21H50C51.1046 21 52 21.8954 52 23C52 24.1046 51.1046 25 50 25H21C19.8954 25 19 24.1046 19 23ZM21 38C19.8954 38 19 38.8954 19 40C19 41.1046 19.8954 42 21 42H61C62.1046 42 63 41.1046 63 40C63 38.8954 62.1046 38 61 38H21Z"/>
 </svg>

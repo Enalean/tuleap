@@ -208,7 +208,7 @@ msgid "What kind of project is it?"
 msgstr "Quel type de projet est-ce ?"
 
 msgid "What's inside?"
-msgstr "Qu'y a-t-il a l'intérieur ?"
+msgstr "Qu'y a-t-il à l'intérieur ?"
 
 msgid "You are not administrator of any project."
 msgstr "Vous êtes administrateur d'aucun projet."

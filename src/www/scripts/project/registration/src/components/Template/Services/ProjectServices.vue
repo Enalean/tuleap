@@ -22,21 +22,21 @@
     <div class="services-whats-inside">
         <div
             class="services-whats-inside-link"
-            v-if="!is_loading"
             v-on:click="show"
             data-test="project-service-link"
             tabindex="0"
             role="button"
         >
-            <i class="fa fa-fw fa-long-arrow-right" />
-            <translate>What's inside?</translate>
+            <i class="fa fa-fw fa-long-arrow-right"></i>
+            <span class="services-whats-inside-link-text">
+                <translate>What's inside?</translate>
+            </span>
+            <i
+                v-if="is_loading && !has_error"
+                class="tlp-text-muted fa fa-spinner fa-circle-o-notch"
+                data-test="project-service-spinner"
+            ></i>
         </div>
-
-        <i
-            v-if="is_loading && !has_error"
-            class="fa fa-spinner fa-circle-o-notch"
-            data-test="project-service-spinner"
-        />
 
         <div class="tlp-text-danger" v-if="has_error" data-test="project-service-error" v-translate>
             Oh snap! Impossible to load project services.
@@ -56,7 +56,7 @@
                     v-bind:id="`modal-services-used-${project.id}`"
                     v-translate
                 >
-                    What's inside?
+                    Services used in %{project.title}
                 </h1>
                 <div
                     class="tlp-modal-close"
@@ -67,16 +67,14 @@
                 </div>
             </div>
             <div class="tlp-modal-body">
-                <h2 class="tlp-modal-subtitle" key="project_service_label" v-translate>
-                    Services used in %{project.title}
-                </h2>
                 <ul class="project-service-list">
                     <li
                         v-for="service of services"
                         v-bind:key="service.id"
                         v-bind:data-test="`project-modal-services-list${service.id}`"
+                        class="project-service-list-item"
                     >
-                        <i v-bind:class="`fa fa-fw service-modal-icon ${service.icon}`" />
+                        <i v-bind:class="`fa fa-fw service-modal-icon ${service.icon}`"></i>
                         {{ service.label }}
                     </li>
                 </ul>
