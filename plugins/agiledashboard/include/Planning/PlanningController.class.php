@@ -25,9 +25,11 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Planning\PlanningBacklogTrackerRemovalChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActionException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
@@ -123,6 +125,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      */
     private $planning_request_validator;
 
+    /**
+     * @var PlanningBacklogTrackerRemovalChecker
+     */
+    private $planning_backlog_tracker_removal_checker;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -144,32 +151,34 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         PlanningUpdater $planning_updater,
         EventManager $event_manager,
-        Planning_RequestValidator $planning_request_validator
+        Planning_RequestValidator $planning_request_validator,
+        PlanningBacklogTrackerRemovalChecker $planning_backlog_tracker_removal_checker
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->project                           = $this->request->getProject();
-        $this->group_id                          = $this->project->getID();
-        $this->planning_factory                  = $planning_factory;
-        $this->milestone_factory                 = $milestone_factory;
-        $this->project_manager                   = $project_manager;
-        $this->xml_exporter                      = $xml_exporter;
-        $this->plugin_path                       = $plugin_path;
-        $this->kanban_manager                    = $kanban_manager;
-        $this->config_manager                    = $config_manager;
-        $this->kanban_factory                    = $kanban_factory;
-        $this->planning_permissions_manager      = $planning_permissions_manager;
-        $this->scrum_mono_milestone_checker      = $scrum_mono_milestone_checker;
-        $this->scrum_planning_filter             = $scrum_planning_filter;
-        $this->tracker_form_element_factory      = $tracker_form_element_factory;
-        $this->service_crumb_builder             = $service_crumb_builder;
-        $this->admin_crumb_builder               = $admin_crumb_builder;
-        $this->timeframe_checker                 = $timeframe_checker;
-        $this->transaction_executor              = $transaction_executor;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
-        $this->planning_updater                  = $planning_updater;
-        $this->event_manager                     = $event_manager;
-        $this->planning_request_validator        = $planning_request_validator;
+        $this->project                                  = $this->request->getProject();
+        $this->group_id                                 = $this->project->getID();
+        $this->planning_factory                         = $planning_factory;
+        $this->milestone_factory                        = $milestone_factory;
+        $this->project_manager                          = $project_manager;
+        $this->xml_exporter                             = $xml_exporter;
+        $this->plugin_path                              = $plugin_path;
+        $this->kanban_manager                           = $kanban_manager;
+        $this->config_manager                           = $config_manager;
+        $this->kanban_factory                           = $kanban_factory;
+        $this->planning_permissions_manager             = $planning_permissions_manager;
+        $this->scrum_mono_milestone_checker             = $scrum_mono_milestone_checker;
+        $this->scrum_planning_filter                    = $scrum_planning_filter;
+        $this->tracker_form_element_factory             = $tracker_form_element_factory;
+        $this->service_crumb_builder                    = $service_crumb_builder;
+        $this->admin_crumb_builder                      = $admin_crumb_builder;
+        $this->timeframe_checker                        = $timeframe_checker;
+        $this->transaction_executor                     = $transaction_executor;
+        $this->artifacts_in_explicit_backlog_dao        = $artifacts_in_explicit_backlog_dao;
+        $this->planning_updater                         = $planning_updater;
+        $this->event_manager                            = $event_manager;
+        $this->planning_request_validator               = $planning_request_validator;
+        $this->planning_backlog_tracker_removal_checker = $planning_backlog_tracker_removal_checker;
     }
 
     public function index()
@@ -629,12 +638,25 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $updated_planning_id = (int) $this->request->get('planning_id');
             $user                = $this->request->getCurrentUser();
 
-            $this->planning_updater->update($user, $this->project, $updated_planning_id, $planning_parameter);
+            try {
+                $this->planning_backlog_tracker_removal_checker->checkRemovedBacklogTrackersCanBeRemoved(
+                    $user,
+                    $this->planning_factory->getPlanning($updated_planning_id),
+                    $planning_parameter
+                );
 
-            $this->addFeedback(
-                Feedback::INFO,
-                dgettext('tuleap-agiledashboard', 'Planning succesfully updated.')
-            );
+                $this->planning_updater->update($user, $this->project, $updated_planning_id, $planning_parameter);
+
+                $this->addFeedback(
+                    Feedback::INFO,
+                    dgettext('tuleap-agiledashboard', 'Planning succesfully updated.')
+                );
+            } catch (TrackerHaveAtLeastOneAddToTopBacklogPostActionException $exception) {
+                $this->addFeedback(
+                    Feedback::ERROR,
+                    $exception->getMessage()
+                );
+            }
         } else {
             $this->addFeedback(
                 Feedback::ERROR,

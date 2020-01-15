@@ -35,11 +35,13 @@ use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetri
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
+use Tuleap\AgileDashboard\Planning\PlanningBacklogTrackerRemovalChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -163,7 +165,11 @@ class AgileDashboardRouterBuilder
             $event_manager,
             new PlanningUpdater($planning_factory, new ArtifactsInExplicitBacklogDao()),
             new Planning_RequestValidator($planning_factory),
-            AgileDashboard_XMLExporter::build()
+            AgileDashboard_XMLExporter::build(),
+            new PlanningBacklogTrackerRemovalChecker(
+                $this->getPlanningFactory(),
+                new AddToTopBacklogPostActionDao()
+            )
         );
     }
 
