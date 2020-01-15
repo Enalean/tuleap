@@ -75,21 +75,6 @@ class Transition_PostActionSubFactories
     }
 
     /**
-     * Delete a workflow
-     *
-     * @param int $workflow_id the id of the workflow
-     *
-     */
-    public function deleteWorkflow($workflow_id)
-    {
-        $status = true;
-        foreach ($this->factories as $factory) {
-            $status = $factory->deleteWorkflow($workflow_id) && $status;
-        }
-        return $status;
-    }
-
-    /**
      * Duplicate postactions of a transition
      *
      * @param Transition $from_transition the template transition

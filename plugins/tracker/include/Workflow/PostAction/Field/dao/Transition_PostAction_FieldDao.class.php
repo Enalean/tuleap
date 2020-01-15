@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,7 +46,7 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
     {
         $transition_id = $this->da->escapeInt($transition_id);
 
-        $sql = "INSERT INTO $this->table_name (transition_id) 
+        $sql = "INSERT INTO $this->table_name (transition_id)
                 VALUES ($transition_id)";
 
         return $this->updateAndGetLastId($sql);
@@ -102,7 +102,7 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
     {
         $transition_id = $this->da->escapeInt($transition_id);
 
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM $this->table_name
                 WHERE transition_id = $transition_id
                 ORDER BY id";
@@ -125,9 +125,9 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
         $field_id      = $this->da->escapeInt($field_id);
         $transition_id = $this->da->escapeInt($transition_id);
 
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM $this->table_name
-                WHERE field_id      = $field_id 
+                WHERE field_id      = $field_id
                   AND transition_id = $transition_id
                 ORDER BY id";
 
@@ -147,9 +147,9 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
     {
         $field_id = $this->da->escapeInt($field_id);
 
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM $this->table_name
-                WHERE field_id = $field_id 
+                WHERE field_id = $field_id
                 ORDER BY id";
 
         return $this->retrieve($sql);
@@ -196,28 +196,9 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
     {
         $transition_id = $this->da->escapeInt($transition_id);
 
-        $sql = "DELETE 
-                FROM $this->table_name 
+        $sql = "DELETE
+                FROM $this->table_name
                 WHERE transition_id = $transition_id";
-
-        return $this->update($sql);
-    }
-
-   /**
-    * Delete a postaction entries by workflow_id
-    *
-    * @param int $workflow_id The id of the workflow
-    *
-    * @return bool true if success false otherwise
-    */
-    public function deletePostActionsByWorkflowId($workflow_id)
-    {
-        $workflow_id = $this->da->escapeInt($workflow_id);
-
-        $sql = "DELETE P
-                FROM       $this->table_name           AS P
-                INNER JOIN tracker_workflow_transition AS T ON P.transition_id = T.transition_id
-                WHERE T.workflow_id = $workflow_id";
 
         return $this->update($sql);
     }
