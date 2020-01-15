@@ -27,7 +27,7 @@
 import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../../type";
 import Vue from "vue";
-import { createBurndownChart } from "../../../../../burndown_chart_builder/burndown-chart-drawer";
+import { createBurndownChart } from "../../../../burndown_chart_builder/burndown-chart-drawer";
 import { ChartPropsBurndownWhithoutTooltip } from "../../../../../../../../../src/www/scripts/charts-builders/type";
 
 @Component
