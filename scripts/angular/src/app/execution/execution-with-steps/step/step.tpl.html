@@ -11,7 +11,8 @@
         <div ng-bind-html="$ctrl.step.description"
             ng-if="$ctrl.step.description_format === 'html'"
         ></div>
-        <div class="steps-step-description-text"
+        <div ng-bind-html="$ctrl.step.description"
+            class="steps-step-description-text"
              ng-if="$ctrl.step.description_format !== 'html'"
         ><p>{{ $ctrl.step.description }}</p></div>
         <div ng-if="$ctrl.step.expected_results" class="steps-step-expected">
@@ -26,7 +27,8 @@
                      ng-bind-html="$ctrl.step.expected_results"
                      ng-if="$ctrl.step.expected_results_format === 'html'"
                 ></div>
-                <div class="steps-step-expected-content steps-step-description-text"
+                <div ng-bind-html="$ctrl.step.description"
+                    class="steps-step-expected-content steps-step-description-text"
                      ng-if="$ctrl.step.expected_results_format !== 'html'"
                 ><p>{{ $ctrl.step.expected_results }}</p></div>
             </div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,15 +24,9 @@ use PFUser;
 use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\ConfigConformanceValidator;
-use UserManager;
 
 class DefinitionRepresentationBuilder
 {
-
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
 
     /**
      * @var Tracker_FormElementFactory
@@ -48,17 +42,21 @@ class DefinitionRepresentationBuilder
      * @var RequirementRetriever
      */
     private $requirement_retriever;
+    /**
+     * @var \Codendi_HTMLPurifier
+     */
+    private $purifier;
 
     public function __construct(
-        UserManager $user_manager,
         Tracker_FormElementFactory $tracker_form_element_factory,
         ConfigConformanceValidator $conformance_validator,
-        RequirementRetriever $requirement_retriever
+        RequirementRetriever $requirement_retriever,
+        \Codendi_HTMLPurifier $purifier
     ) {
-        $this->user_manager                       = $user_manager;
-        $this->tracker_form_element_factory       = $tracker_form_element_factory;
-        $this->conformance_validator              = $conformance_validator;
-        $this->requirement_retriever              = $requirement_retriever;
+        $this->tracker_form_element_factory = $tracker_form_element_factory;
+        $this->conformance_validator        = $conformance_validator;
+        $this->requirement_retriever        = $requirement_retriever;
+        $this->purifier                     = $purifier;
     }
 
     public function getDefinitionRepresentation(PFUser $user, Tracker_Artifact $definition_artifact)
@@ -70,7 +68,7 @@ class DefinitionRepresentationBuilder
         $requirement = $this->requirement_retriever->getRequirementForDefinition($definition_artifact, $user);
         $changeset   = null;
 
-        $definition_representation = new DefinitionRepresentation();
+        $definition_representation = new DefinitionRepresentation($this->purifier);
         $definition_representation->build(
             $definition_artifact,
             $this->tracker_form_element_factory,

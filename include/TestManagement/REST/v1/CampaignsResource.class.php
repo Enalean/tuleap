@@ -189,7 +189,8 @@ class CampaignsResource
             $requirement_retriever,
             $definition_retriever,
             $this->execution_dao,
-            $steps_results_representation_builder
+            $steps_results_representation_builder,
+            \Codendi_HTMLPurifier::instance()
         );
 
         $campaign_dao = new CampaignDao();

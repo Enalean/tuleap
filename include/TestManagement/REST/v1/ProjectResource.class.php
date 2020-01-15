@@ -96,10 +96,10 @@ class ProjectResource
         $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $this->config);
 
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
-            $this->user_manager,
             $this->tracker_form_element_factory,
             $conformance_validator,
-            $retriever
+            $retriever,
+            \Codendi_HTMLPurifier::instance()
         );
 
         $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new KeyFactory());

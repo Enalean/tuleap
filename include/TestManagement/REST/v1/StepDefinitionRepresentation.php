@@ -50,12 +50,13 @@ class StepDefinitionRepresentation
      */
     public $rank;
 
-    public function build(Step $step)
+    public function build(Step $step, \Codendi_HTMLPurifier $purifier, \Tracker_Artifact $artifact)
     {
         $this->id                      = JsonCast::toInt($step->getId());
-        $this->description             = $step->getDescription();
+        $project_id                      = $artifact->getTracker()->getGroupId();
+        $this->description             = $purifier->purifyHTMLWithReferences($step->getDescription(), $project_id);
         $this->description_format      = $step->getDescriptionFormat();
-        $this->expected_results        = $step->getExpectedResults();
+        $this->expected_results        = $purifier->purifyHTMLWithReferences($step->getExpectedResults(), $project_id);
         $this->expected_results_format = $step->getExpectedResultsFormat();
         $this->rank                    = JsonCast::toInt($step->getRank());
     }
