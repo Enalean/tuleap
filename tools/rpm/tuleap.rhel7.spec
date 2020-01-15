@@ -35,7 +35,10 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 AutoReqProv: no
 
 # Php and web related stuff
-Requires: php73-php, php73-php-mysql, php73-php-xml, php73-php-json, php73-php-mbstring, php73-php-gd, php73-php-soap, php73-php-intl, php73-php-process, php73-php-opcache, php73-php-fpm, php73-php-pecl-redis, php73-php-sodium, rh-mysql57-mysql
+Requires: php73-php, php73-php-mysql, php73-php-xml, php73-php-json, php73-php-mbstring, php73-php-gd, php73-php-soap
+Requires: php73-php-intl, php73-php-process, php73-php-opcache, php73-php-fpm, php73-php-pecl-redis, php73-php-sodium
+Requires: php73-php-pecl-zip
+Requires: rh-mysql57-mysql
 
 Requires: perl-DBI, perl-DBD-MySQL, sudo
 Requires: highlight, forgeupgrade >= 1.6, nginx, logrotate
