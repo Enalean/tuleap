@@ -199,7 +199,9 @@ msgid "None"
 msgstr "Aucun"
 
 msgid "Once activated, you will start with a copy of the previous top backlog."
-msgstr "Une fois activée, la planification générale sera copiée de la précédente planification générale."
+msgstr ""
+"Une fois activée, la planification générale sera copiée de la précédente "
+"planification générale."
 
 #, php-format
 msgid "Other %s"
@@ -260,6 +262,15 @@ msgstr "Statut"
 
 msgid "Submit"
 msgstr "Valider"
+
+#, php-format
+msgid ""
+"The backlog trackers cannot be updated because the following trackers have "
+"at least one \"Add to top backlog\" workflow post action: %s"
+msgstr ""
+"Les outils de suivi définissant le backlog ne peuvent être mis à jour "
+"car les outils de suivi suivant utilisent au moins une action de workflow de "
+"type \"Ajouter à la planification générale\" : %s"
 
 msgid ""
 "The field for semantic status cannot be updated because semantic done is "

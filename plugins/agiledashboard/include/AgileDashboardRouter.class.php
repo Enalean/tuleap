@@ -34,6 +34,7 @@ use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
+use Tuleap\AgileDashboard\Planning\PlanningBacklogTrackerRemovalChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
@@ -164,6 +165,11 @@ class AgileDashboardRouter
      */
     private $agile_dashboard_exporter;
 
+    /**
+     * @var PlanningBacklogTrackerRemovalChecker
+     */
+    private $planning_backlog_tracker_removal_checker;
+
     public function __construct(
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
@@ -188,32 +194,34 @@ class AgileDashboardRouter
         EventManager $event_manager,
         PlanningUpdater $planning_updater,
         Planning_RequestValidator $planning_request_validator,
-        AgileDashboard_XMLExporter $agile_dashboard_exporter
+        AgileDashboard_XMLExporter $agile_dashboard_exporter,
+        PlanningBacklogTrackerRemovalChecker $planning_backlog_tracker_removal_checker
     ) {
-        $this->plugin                       = $plugin;
-        $this->milestone_factory            = $milestone_factory;
-        $this->planning_factory             = $planning_factory;
-        $this->milestone_controller_factory = $milestone_controller_factory;
-        $this->project_manager              = $project_manager;
-        $this->xml_exporter                 = $xml_exporter;
-        $this->kanban_manager               = $kanban_manager;
-        $this->config_manager               = $config_manager;
-        $this->kanban_factory               = $kanban_factory;
-        $this->planning_permissions_manager = $planning_permissions_manager;
-        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
-        $this->planning_filter              = $planning_filter;
-        $this->permissions_retriever        = $permissions_retriever;
-        $this->service_crumb_builder        = $service_crumb_builder;
-        $this->admin_crumb_builder          = $admin_crumb_builder;
-        $this->timeframe_checker            = $timeframe_checker;
-        $this->count_elements_mode_checker  = $count_elements_mode_checker;
-        $this->transaction_executor         = $transaction_executor;
-        $this->explicit_backlog_dao         = $explicit_backlog_dao;
-        $this->scrum_presenter_builder      = $scrum_presenter_builder;
-        $this->event_manager                = $event_manager;
-        $this->planning_updater             = $planning_updater;
-        $this->planning_request_validator   = $planning_request_validator;
-        $this->agile_dashboard_exporter     = $agile_dashboard_exporter;
+        $this->plugin                                   = $plugin;
+        $this->milestone_factory                        = $milestone_factory;
+        $this->planning_factory                         = $planning_factory;
+        $this->milestone_controller_factory             = $milestone_controller_factory;
+        $this->project_manager                          = $project_manager;
+        $this->xml_exporter                             = $xml_exporter;
+        $this->kanban_manager                           = $kanban_manager;
+        $this->config_manager                           = $config_manager;
+        $this->kanban_factory                           = $kanban_factory;
+        $this->planning_permissions_manager             = $planning_permissions_manager;
+        $this->scrum_mono_milestone_checker             = $scrum_mono_milestone_checker;
+        $this->planning_filter                          = $planning_filter;
+        $this->permissions_retriever                    = $permissions_retriever;
+        $this->service_crumb_builder                    = $service_crumb_builder;
+        $this->admin_crumb_builder                      = $admin_crumb_builder;
+        $this->timeframe_checker                        = $timeframe_checker;
+        $this->count_elements_mode_checker              = $count_elements_mode_checker;
+        $this->transaction_executor                     = $transaction_executor;
+        $this->explicit_backlog_dao                     = $explicit_backlog_dao;
+        $this->scrum_presenter_builder                  = $scrum_presenter_builder;
+        $this->event_manager                            = $event_manager;
+        $this->planning_updater                         = $planning_updater;
+        $this->planning_request_validator               = $planning_request_validator;
+        $this->agile_dashboard_exporter                 = $agile_dashboard_exporter;
+        $this->planning_backlog_tracker_removal_checker = $planning_backlog_tracker_removal_checker;
     }
 
     /**
@@ -481,7 +489,8 @@ class AgileDashboardRouter
             $this->explicit_backlog_dao,
             $this->planning_updater,
             $this->event_manager,
-            $this->planning_request_validator
+            $this->planning_request_validator,
+            $this->planning_backlog_tracker_removal_checker
         );
     }
 

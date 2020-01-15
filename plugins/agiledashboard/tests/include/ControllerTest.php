@@ -23,6 +23,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\Planning\PlanningBacklogTrackerRemovalChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
@@ -77,7 +78,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
             Mockery::mock(ArtifactsInExplicitBacklogDao::class),
             Mockery::mock(PlanningUpdater::class),
             Mockery::mock(EventManager::class),
-            $this->planning_request_validator
+            $this->planning_request_validator,
+            Mockery::mock(PlanningBacklogTrackerRemovalChecker::class)
         );
 
         $configuration_manager = mock('AgileDashboard_ConfigurationManager');
@@ -190,7 +192,8 @@ class Planning_ControllerNewTest extends TuleapTestCase
             Mockery::mock(ArtifactsInExplicitBacklogDao::class),
             Mockery::mock(PlanningUpdater::class),
             $event_manager,
-            $this->planning_request_validator
+            $this->planning_request_validator,
+            Mockery::mock(PlanningBacklogTrackerRemovalChecker::class)
         );
 
         stub($GLOBALS['Language'])->getText()->returns('');

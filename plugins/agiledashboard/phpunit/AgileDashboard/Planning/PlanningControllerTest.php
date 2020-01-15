@@ -82,6 +82,11 @@ class PlanningControllerTest extends TestCase
      */
     private $planning_controller;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningBacklogTrackerRemovalChecker
+     */
+    private $tracker_removal_checker;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -104,6 +109,8 @@ class PlanningControllerTest extends TestCase
         $this->event_manager              = Mockery::mock(EventManager::class);
         $this->planning_request_validator = Mockery::mock(\Planning_RequestValidator::class);
         $this->planning_updater           = Mockery::mock(PlanningUpdater::class);
+        $this->tracker_removal_checker    = Mockery::mock(PlanningBacklogTrackerRemovalChecker::class);
+
         $this->planning_controller        = new Planning_Controller(
             $this->request,
             $this->planning_factory,
@@ -125,7 +132,8 @@ class PlanningControllerTest extends TestCase
             $this->explicit_backlog_dao,
             $this->planning_updater,
             $this->event_manager,
-            $this->planning_request_validator
+            $this->planning_request_validator,
+            $this->tracker_removal_checker
         );
     }
 
@@ -209,6 +217,39 @@ class PlanningControllerTest extends TestCase
 
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
+        $this->planning_updater->shouldNotReceive('update');
+
+        $this->planning_controller->update();
+    }
+
+    public function testItOnlyUpdateCardWallConfigWhenBacklogTrackerCannotBeRemoved(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+
+        $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
+        $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
+
+        $planning_parameters = [];
+        $this->request->shouldReceive('get')->withArgs(['planning'])->andReturn($planning_parameters);
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
+
+        $planning = Mockery::mock(\Planning::class);
+        $planning->shouldReceive('getPlanningTracker')->once();
+        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
+
+        $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
+        $this->tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')
+            ->once()
+            ->andThrow(new TrackerHaveAtLeastOneAddToTopBacklogPostActionException([]));
+
+        $this->planning_updater->shouldNotReceive('update');
+
+        $GLOBALS['Response']->shouldReceive('redirect')->once();
+
         $this->planning_controller->update();
     }
 
@@ -229,9 +270,10 @@ class PlanningControllerTest extends TestCase
 
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTracker')->once();
-        $this->planning_factory->shouldReceive('getPlanning')->once()->andReturn($planning);
+        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
 
         $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
+        $this->tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')->once();
 
         $this->planning_updater->shouldReceive('update')->once();
 

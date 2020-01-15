@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class AddToTopBacklogPostActionDao extends DataAccessObject
@@ -33,5 +34,22 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
                 WHERE transition_id = ?";
 
         return $this->getDB()->row($sql, $transition_id);
+    }
+
+    public function getTrackersThatHaveAtLeastOneAddToTopBacklogPostAction(array $tracker_ids)
+    {
+        $tracker_ids_in_condition = EasyStatement::open()->in('?*', $tracker_ids);
+
+        $sql = "SELECT DISTINCT tracker.name
+                FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
+                    INNER JOIN tracker_workflow_transition ON (plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
+                    INNER JOIN tracker_workflow ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
+                    INNER JOIN tracker ON (tracker_workflow.tracker_id = tracker.id)
+                WHERE tracker.id IN ($tracker_ids_in_condition)";
+
+        return $this->getDB()->safeQuery(
+            $sql,
+            $tracker_ids_in_condition->values()
+        );
     }
 }
