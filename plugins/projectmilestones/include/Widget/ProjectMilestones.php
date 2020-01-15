@@ -77,10 +77,6 @@ class ProjectMilestones extends Widget
 
     public function getTitle() : string
     {
-        if ($this->label_tracker_backlog) {
-            return sprintf(dgettext('tuleap-projectmilestones', '%s Widget'), $this->label_tracker_backlog);
-        }
-
         return dgettext('tuleap-projectmilestones', 'Project Milestones');
     }
 

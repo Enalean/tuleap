@@ -2,10 +2,6 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
 #, php-format
-msgid "%s Widget"
-msgstr "%s Widget"
-
-#, php-format
 msgid "A widget for %s monitoring."
 msgstr "Un widget pour le suivi de %s."
 
