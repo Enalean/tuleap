@@ -24,6 +24,7 @@
 use Tuleap\Chart\ColorsForCharts;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Widget_ProjectSvnStats extends Widget
 {
     public function __construct()
@@ -36,7 +37,7 @@ class Widget_ProjectSvnStats extends Widget
         return $GLOBALS['Language']->getText('svn_widget', 'svnstats');
     }
 
-    function getCategory()
+    public function getCategory()
     {
         return _('Source code management');
     }
@@ -124,6 +125,9 @@ class Widget_ProjectSvnStats extends Widget
             $bars = array();
             $i = 0;
             foreach ($stats as $whoid => $stat) {
+                if (! array_key_exists('by_week', $stat)) {
+                    continue;
+                }
                 $l = new BarPlot(array_values($stat['by_week']));
                 $color = $colors[$i++ % $nb_colors];
                 $l->SetColor($color.':0.7');

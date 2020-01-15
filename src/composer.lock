@@ -1649,19 +1649,19 @@
             "authors": [
                 {
                     "name": "Scott Arciszewski",
-                    "role": "Developer",
                     "email": "scott@paragonie.com",
-                    "homepage": "https://paragonie.com"
+                    "homepage": "https://paragonie.com",
+                    "role": "Developer"
                 },
                 {
                     "name": "Woody Gilk",
-                    "role": "Contributor",
-                    "homepage": "https://github.com/shadowhand"
+                    "homepage": "https://github.com/shadowhand",
+                    "role": "Contributor"
                 },
                 {
                     "name": "SignpostMarv",
-                    "role": "Contributor",
-                    "homepage": "https://github.com/SignpostMarv"
+                    "homepage": "https://github.com/SignpostMarv",
+                    "role": "Contributor"
                 }
             ],
             "description": "Easy-to-use database abstraction",
@@ -3709,9 +3709,9 @@
             "authors": [
                 {
                     "name": "Christian Weiske",
-                    "role": "Developer",
                     "email": "cweiske@cweiske.de",
-                    "homepage": "http://github.com/cweiske/jsonmapper/"
+                    "homepage": "http://github.com/cweiske/jsonmapper/",
+                    "role": "Developer"
                 }
             ],
             "description": "Map nested JSON structures onto PHP classes",
@@ -5366,8 +5366,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sebastian@phpunit.de"
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
                 }
             ],
             "description": "Collection of value objects that represent the types of the PHP type system",
@@ -5676,8 +5676,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "role": "Developer",
-                    "email": "arne@blankerts.de"
+                    "email": "arne@blankerts.de",
+                    "role": "Developer"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
@@ -5685,16 +5685,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.8.1",
+            "version": "3.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "8e54e3aa060fc490d86d0e2abbf62750516d40fd"
+                "reference": "389af1bfc739bfdff3f9e3dc7bd6499aee51a831"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/8e54e3aa060fc490d86d0e2abbf62750516d40fd",
-                "reference": "8e54e3aa060fc490d86d0e2abbf62750516d40fd",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/389af1bfc739bfdff3f9e3dc7bd6499aee51a831",
+                "reference": "389af1bfc739bfdff3f9e3dc7bd6499aee51a831",
                 "shasum": ""
             },
             "require": {
@@ -5702,6 +5702,10 @@
                 "amphp/byte-stream": "^1.5",
                 "composer/xdebug-handler": "^1.1",
                 "ext-dom": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-simplexml": "*",
+                "ext-tokenizer": "*",
                 "felixfbecker/advanced-json-rpc": "^3.0.3",
                 "felixfbecker/language-server-protocol": "^1.4",
                 "netresearch/jsonmapper": "^1.0",
@@ -5710,7 +5714,7 @@
                 "openlss/lib-array2xml": "^1.0",
                 "php": "^7.1.3",
                 "sebastian/diff": "^3.0",
-                "symfony/console": "^3.3||^4.0||^5.0",
+                "symfony/console": "^3.4.17 || ^4.1.6 || ^5.0",
                 "webmozart/glob": "^4.1",
                 "webmozart/path-util": "^2.3"
             },
@@ -5720,7 +5724,6 @@
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.2",
                 "ext-curl": "*",
-                "friendsofphp/php-cs-fixer": "^2.15",
                 "phpmyadmin/sql-parser": "^5.0",
                 "phpspec/prophecy": ">=1.9.0",
                 "phpunit/phpunit": "^7.5 || ^8.0",
@@ -5734,10 +5737,10 @@
             },
             "bin": [
                 "psalm",
-                "psalter",
                 "psalm-language-server",
                 "psalm-plugin",
-                "psalm-refactor"
+                "psalm-refactor",
+                "psalter"
             ],
             "type": "library",
             "extra": {
@@ -5772,7 +5775,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2019-12-29T16:11:07+00:00"
+            "time": "2020-01-15T03:46:19+00:00"
         },
         {
             "name": "webmozart/assert",
