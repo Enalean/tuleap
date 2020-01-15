@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PointsWithDate } from "../src/type";
+import { PointsWithDate } from "../type";
 import { getDisplayableData } from "./chart-data-service";
 
 describe("chartDataService", () => {

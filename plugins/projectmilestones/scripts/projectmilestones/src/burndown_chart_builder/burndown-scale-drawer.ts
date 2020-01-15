@@ -18,7 +18,7 @@
  */
 
 import { Selection } from "d3-selection";
-import { XYMinMaxCoordinates } from "../src/type";
+import { XYMinMaxCoordinates } from "../type";
 
 const OVERSIZE_LINE_SCALE = 10;
 
