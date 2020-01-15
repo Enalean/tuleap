@@ -173,7 +173,6 @@ class GitRepositoryFactory
     /**
      * Get a project repository by its id
      *
-     * @param int $id         The id of the repository to load
      *
      * @return GitRepository the repository or null if not found
      */

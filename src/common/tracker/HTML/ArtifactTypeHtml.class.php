@@ -2757,7 +2757,7 @@ EOS;
      * Display the dropdownlist (select list) of all available fieldsets of the tracker $artifact_group_id
      *
      * @param int $artifact_group_id the tracker id
-     * @param int $selected_field_set_id the id of the fieldset that must be selected, or false if no default fieldset is selected
+     * @param int|false $selected_fieldset_id the id of the fieldset that must be selected, or false if no default fieldset is selected
      */
     public function displayFieldSetDropDownList($artifact_group_id, $selected_fieldset_id = false)
     {

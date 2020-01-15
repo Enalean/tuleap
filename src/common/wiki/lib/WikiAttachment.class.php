@@ -104,7 +104,6 @@ class WikiAttachment /* implements UGroupPermission */
 
     /**
      * @access public
-     * @param  Iterator
      */
     public function getAttachmentIterator($gid = null)
     {
@@ -433,8 +432,6 @@ class WikiAttachment /* implements UGroupPermission */
      *
      *
      * @access
-     * @param
-     * @return
      */
     function createRevision($userfile_name, $userfile_size, $userfile_type, $userfile_tmpname)
     {
@@ -498,8 +495,6 @@ class WikiAttachment /* implements UGroupPermission */
 
     /**
      * @access
-     * @param
-     * @return
      */
     function validate()
     {

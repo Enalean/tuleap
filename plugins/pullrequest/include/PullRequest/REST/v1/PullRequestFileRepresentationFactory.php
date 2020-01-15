@@ -28,7 +28,7 @@ class PullRequestFileRepresentationFactory
 {
 
     /**
-     * @var GitExec;
+     * @var GitExec
      */
     private $executor;
 

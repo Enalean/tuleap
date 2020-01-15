@@ -130,7 +130,7 @@ class GitForkPermissionsManager
     /**
      * Prepare fork repository message
      *
-     * @param String $repos Comma separated repositories Ids selected for fork
+     * @param array $repository_ids Repositories Ids selected for fork
      *
      * @return String
      */

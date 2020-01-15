@@ -130,7 +130,7 @@ class PermissionItemUpdater
         $this->item_factory->breathFirst(
             $folder->getId(),
             /**
-             * @psalm-param array{item_id:int,title:string}
+             * @psalm-param array{item_id:int,title:string} $data
              */
             function (array $data) use ($user, $folder) : void {
                 $inspected_item_id = $data['item_id'];
@@ -219,7 +219,7 @@ class PermissionItemUpdater
      *
      * @psalm-param key-of<self::PERMISSIONS_DEFINITIONS> $wanted_permission
      * @psalm-param array<value-of<Docman_PermissionsManager::ITEM_PERMISSION_TYPES>,bool> $history
-     * @psalm-out array<value-of<Docman_PermissionsManager::ITEM_PERMISSION_TYPES>,bool> $history
+     * @param-out array<"PLUGIN_DOCMAN_MANAGE"|"PLUGIN_DOCMAN_READ"|"PLUGIN_DOCMAN_WRITE"|value-of<Docman_PermissionsManager::ITEM_PERMISSION_TYPES>, bool> $history
      *
      * @access protected
      */

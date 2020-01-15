@@ -101,7 +101,7 @@ class Tracker_Report_Session extends Codendi_Session
     //                  CRITERIA SESSION METHODS
     /**
      * remove a criterion (field) from session
-     * @param <type> $field_id
+     * @param int $field_id
      */
     public function removeCriterion($field_id)
     {
@@ -201,7 +201,7 @@ class Tracker_Report_Session extends Codendi_Session
 
    /**
     * move a renderer in session
-    * @param int $renderer_id
+    * @param array $renderers_rank
     */
     public function moveRenderer($renderers_rank)
     {

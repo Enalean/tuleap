@@ -496,12 +496,14 @@ class Tracker_RulesManager
         $target_field = $this->form_element_factory->getFieldById($target_field_id);
         //Display creation form
         echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
+        $source_field_label = $source_field === null ? '' : $source_field->getLabel();
+        $target_field_label = $target_field === null ? '' : $target_field->getLabel();
         echo '<p>'. $GLOBALS['Language']->getText(
             'plugin_tracker_field_dependencies',
             'dependencies_matrix_help',
             array(
-                    $hp->purify($source_field->getlabel()),
-                    $hp->purify($target_field->getlabel())
+                    $source_field_label,
+                    $target_field_label
                 )
         ) .'</p>';
 

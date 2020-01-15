@@ -23,7 +23,7 @@ namespace Tuleap\Velocity\Semantic;
 class ChildrenRequiredTrackerCollection
 {
     /**
-     * @var []
+     * @var array
      */
     private $children_trackers = [];
 
@@ -85,7 +85,7 @@ class ChildrenRequiredTrackerCollection
     }
 
     /**
-     * @return []
+     * @return array
      */
     public function getChildrenMisconfiguredTrackers()
     {

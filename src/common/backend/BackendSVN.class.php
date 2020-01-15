@@ -218,8 +218,8 @@ class BackendSVN extends Backend
 
      /**
      * Check if repository of given project exists
-     * @param Project
-     * @return true is repository already exists, false otherwise
+     * @param Project $project
+     * @return bool true is repository already exists, false otherwise
      */
     function repositoryExists(Project $project)
     {

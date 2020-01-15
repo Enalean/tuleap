@@ -290,7 +290,7 @@ class Docman_VersionFactory
      *
      * @param Docman_Item $item
      *
-     * @return Array()
+     * @return array|false
      */
     function listVersionsToPurgeForItem($item)
     {

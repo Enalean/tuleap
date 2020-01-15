@@ -63,8 +63,6 @@ class Cardwall_SingleCardBuilder
     /**
      * Return a new card controller
      *
-     * @param Codendi_Request $request
-     *
      * @return Cardwall_SingleCard
      *
      * @throws Exception

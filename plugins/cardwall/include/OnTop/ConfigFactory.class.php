@@ -38,8 +38,6 @@ class Cardwall_OnTop_ConfigFactory
     }
 
     /**
-     * @param Tracker $tracker
-     *
      * @return \Cardwall_OnTop_Config
      */
     public function getOnTopConfigByTrackerId($tracker_id)

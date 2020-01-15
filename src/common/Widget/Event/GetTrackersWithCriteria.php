@@ -142,9 +142,6 @@ class GetTrackersWithCriteria implements Dispatchable
         return $this->trackers_with_criteria;
     }
 
-    /**
-     * @param array
-     */
     public function addTrackersWithCriteria(array $trackers)
     {
         $this->trackers_with_criteria = array_merge($this->trackers_with_criteria, $trackers);

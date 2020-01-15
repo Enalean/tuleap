@@ -72,7 +72,7 @@ class Encoding_SupportedXmlCharEncoding
     }
 
    /**
-    * @return UTF-8 string. All unrecognized characters are stripped-out
+    * @return string UTF-8 string. All unrecognized characters are stripped-out
     */
     private static function convertToUTF8($string)
     {

@@ -35,7 +35,7 @@ class referencealias_corePlugin extends Plugin
     private $dao;
 
     /**
-     * @var ReferencesBuilder;
+     * @var ReferencesBuilder
      */
     private $references_builder;
 

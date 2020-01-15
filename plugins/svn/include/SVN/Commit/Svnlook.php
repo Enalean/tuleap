@@ -69,7 +69,7 @@ class Svnlook
     }
 
     /**
-     * @return array: the commit message split on new lines
+     * @return array the commit message split on new lines
      */
     public function getMessageFromTransaction(Repository $repository, $transaction)
     {

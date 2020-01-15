@@ -822,7 +822,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     /**
      * Get the field data for artifact submission
      *
-     * @param string $value
+     * @param string $csv_values
      *
      * @return mixed the field data corresponding to the value for artifact submision
      */

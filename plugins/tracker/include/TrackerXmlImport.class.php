@@ -714,7 +714,7 @@ class TrackerXmlImport
      * @param string $description the description of the tracker
      * @param string $itemname the short name of the tracker
      *
-     * @return Tracker, or null if error
+     * @return null|Tracker or null if error
      * @throws TrackerFromXmlException
      * @throws Tracker_Exception
      */

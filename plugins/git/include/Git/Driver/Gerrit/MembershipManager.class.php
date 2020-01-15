@@ -328,7 +328,7 @@ class Git_Driver_Gerrit_MembershipManager
      * Returns gerrit user group uuid
      *
      * @param Git_RemoteServer_GerritServer $server
-     * @param String                        $ugroup
+     * @param string                        $gerrit_group_name
      * @return String
      * @throws Exception
      */

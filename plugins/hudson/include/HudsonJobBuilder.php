@@ -57,7 +57,7 @@ class HudsonJobBuilder
     }
 
     /**
-     * @param MinimalHudsonJob[]
+     * @param MinimalHudsonJob[] $minimal_hudson_jobs
      * @return HudsonJobLazyExceptionHandler[]
      */
     public function getHudsonJobsWithException(array $minimal_hudson_jobs)

@@ -39,8 +39,6 @@ class Git_Driver_Gerrit_Template_TemplateFactory
     /**
      * Get all templates of a project
      *
-     * @param Project
-     *
      * @return Git_Driver_Gerrit_Template_Template[]
      */
     public function getAllTemplatesOfProject(Project $project)
@@ -133,8 +131,8 @@ class Git_Driver_Gerrit_Template_TemplateFactory
     /**
      * Instatiate a Template from a SQL row
      *
-     * @param array
-     * @return Git_Driver_Gerrit_Template_Template[] | false -where the array is in DAR format
+     * @param array $row
+     * @return Git_Driver_Gerrit_Template_Template -where the array is in DAR format
      */
     private function instantiateTemplateFromRow(array $row)
     {

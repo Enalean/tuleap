@@ -675,7 +675,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
     * loginAs allows the siteadmin to log as someone else
     *
-    * @param string $username
+    * @param string $name
     *
     * @return string a session hash
     */

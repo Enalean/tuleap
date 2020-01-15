@@ -59,8 +59,6 @@ class PasswordStrategy
     * validate
     *
     * validate a password with the help of validators
-    *
-    * @param  pwd
     */
     function validate($pwd)
     {
@@ -74,11 +72,6 @@ class PasswordStrategy
         return $valid;
     }
 
-    /**
-    * add
-    *
-    * @param  v
-    */
     public function add($v)
     {
         $this->validators[] = $v;

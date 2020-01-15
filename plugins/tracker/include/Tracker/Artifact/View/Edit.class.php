@@ -102,8 +102,6 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
     /**
      * Returns HTML code to display the artifact follow-up comments
      *
-     * @param PFUser $current_user the current user
-     *
      * @return string The HTML code for artifact follow-up comments
      */
     private function fetchFollowUps($submitted_comment = '')

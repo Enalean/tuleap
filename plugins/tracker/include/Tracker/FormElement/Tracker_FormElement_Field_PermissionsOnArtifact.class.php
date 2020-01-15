@@ -854,7 +854,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * Adds permissions in the database
      *
      * @param Array $ugroups the list of ugroups
-     * @param int          $artifact  The id of the artifact
+     * @param int          $artifact_id  The id of the artifact
      *
      * @return bool
      */

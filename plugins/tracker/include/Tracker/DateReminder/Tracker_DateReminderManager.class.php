@@ -291,7 +291,7 @@ class Tracker_DateReminderManager
      *
      * @param Tracker_DateReminder $reminder     Reminder that will send notifications
      * @param Tracker_Artifact     $artifact     ???
-     * @param String               $recipient    The recipient who will receive the notification
+     * @param PFUser               $recipient    The recipient who will receive the notification
      * @param BaseLanguage         $language     The language of the message
      *
      * @return String
@@ -316,7 +316,7 @@ class Tracker_DateReminderManager
      *
      * @param Tracker_DateReminder $reminder Reminder that will send notifications
      * @param Tracker_Artifact $artifact
-     * @param String  $recipient    The recipient who will receive the notification
+     * @param PFUser  $recipient    The recipient who will receive the notification
      * @param BaseLanguage $language The language of the message
      *
      * @return String

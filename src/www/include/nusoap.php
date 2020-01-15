@@ -675,7 +675,7 @@ class nusoap_base
     /**
     * expands (changes prefix to namespace) a qualified name
     *
-    * @param    string $string qname
+    * @param    string $qname qname
     * @return    string expanded qname
     * @access   private
     */
@@ -1647,7 +1647,7 @@ class XMLSchema extends nusoap_base
     *
     *   For simpleType or element, the array has different keys.
     *
-    * @param string
+    * @param string $type
     * @return mixed
     * @access public
     * @see addComplexType
@@ -1818,19 +1818,19 @@ class XMLSchema extends nusoap_base
     *     array('myVar'=> array('name'=>'myVar','type'=>'string')
     * );
     *
-    * @param name
-    * @param typeClass (complexType|simpleType|attribute)
-    * @param phpType: currently supported are array and struct (php assoc array)
-    * @param compositor (all|sequence|choice)
-    * @param restrictionBase namespace:name (http://schemas.xmlsoap.org/soap/encoding/:Array)
-    * @param elements = array ( name = array(name=>'',type=>'') )
-    * @param attrs = array(
+    * @@param name
+    * @@param typeClass (complexType|simpleType|attribute)
+    * @@param phpType: currently supported are array and struct (php assoc array)
+    * @@param compositor (all|sequence|choice)
+    * @@param restrictionBase namespace:name (http://schemas.xmlsoap.org/soap/encoding/:Array)
+    * @@param elements = array ( name = array(name=>'',type=>'') )
+    * @@param attrs = array(
     *     array(
     *        'ref' => "http://schemas.xmlsoap.org/soap/encoding/:arrayType",
     *        "http://schemas.xmlsoap.org/wsdl/:arrayType" => "string[]"
     *     )
     * )
-    * @param arrayType: namespace:name (http://www.w3.org/2001/XMLSchema:string)
+    * @@param arrayType: namespace:name (http://www.w3.org/2001/XMLSchema:string)
     * @access public
     * @see getTypeDef
     */
@@ -2291,7 +2291,7 @@ class soap_transport_http extends nusoap_base
     /**
     * send the SOAP message via HTTPS 1.0 using CURL
     *
-    * @param    string $msg message data
+    * @param    string $data message data
     * @param int $timeout set connection timeout in seconds
     * @param int $response_timeout set response timeout in seconds
     * @param    array $cookies cookies to send
@@ -6468,7 +6468,7 @@ class soap_client extends nusoap_base
     /**
     * calls method, returns PHP native type
     *
-    * @param    string $method SOAP server URL or path
+    * @param    string $operation SOAP server URL or path
     * @param    mixed $params An array, associative or simple, of the parameters
     *                          for the method call, or a string that is the XML
     *                          for the call.  For rpc style, this call will

@@ -89,9 +89,9 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
     /**
      * Check if a post action on field_id already exists
      *
-     * @param $request_field_id the field_id from the request
+     * @param mixed $request_field_id the field_id from the request
      *
-     * @return int, a field id
+     * @return int a field id
      */
     public function getFieldIdOfPostActionToUpdate($request_field_id)
     {

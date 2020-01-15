@@ -43,7 +43,7 @@ class ProjectMilestonesPresenter
      */
     public $nb_backlog_items;
     /**
-     * @var []
+     * @var string
      */
     public $json_trackers_agile_dashboard;
     /**

@@ -426,7 +426,7 @@ class ArtifactType
     /**
      * getStopNotification - get notification status in this tracker (1 for stopped or 0 for active)
      *
-     * @return bool : true if notification stopped, false if notification is active
+     * @return bool true if notification stopped, false if notification is active
      */
     function getStopNotification()
     {
@@ -1711,7 +1711,7 @@ class ArtifactType
      * @param multiple_queries (OUT):
      * @param all_queries (OUT):
      *
-     * @return string: the sql query
+     * @return string|null the sql query
      */
     function buildExportQuery(&$fields, &$col_list, &$lbl_list, &$dsc_list, &$select, &$from, &$where, &$multiple_queries, &$all_queries, $constraint = false)
     {
@@ -1775,7 +1775,7 @@ class ArtifactType
     /**
      * Return the artifact data with all fields set to default values. (for export)
      *
-     * @return array: the sql query
+     * @return array the sql query
      */
     function buildDefaultRecord()
     {

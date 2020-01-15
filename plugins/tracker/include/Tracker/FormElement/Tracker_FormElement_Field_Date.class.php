@@ -930,7 +930,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     }
 
     /**
-     * @return array()
+     * @return array
      */
     private function getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, $second)
     {

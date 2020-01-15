@@ -347,7 +347,7 @@ final class EmailNotificationTask implements PostCreationTask
      * Get the text body for notification
      *
      * @param bool $is_update It is an update, not a new artifact
-     * @param String  $recipient    The recipient who will receive the notification
+     * @param \PFUser  $recipient_user    The recipient who will receive the notification
      * @param \BaseLanguage $language The language of the message
      * @param bool $ignore_perms indicates if permissions have to be ignored
      *
@@ -387,7 +387,7 @@ final class EmailNotificationTask implements PostCreationTask
      * Get the html body for notification
      *
      * @param bool $is_update It is an update, not a new artifact
-     * @param String  $recipient    The recipient who will receive the notification
+     * @param \PFUser $recipient_user    The recipient who will receive the notification
      * @param \BaseLanguage $language The language of the message
      * @param bool $ignore_perms ???
      *

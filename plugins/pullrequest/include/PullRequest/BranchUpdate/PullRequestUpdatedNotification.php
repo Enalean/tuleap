@@ -85,7 +85,7 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
      * @param PFUser[] $owners
      * @param string[] $new_commit_references
      *
-     * @psalm-params non-empty-array<string> $new_commit_references
+     * @psalm-param non-empty-array<string> $new_commit_references
      */
     public static function fromOwnersAndReferences(
         UserHelper $user_helper,

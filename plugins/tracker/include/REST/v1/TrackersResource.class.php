@@ -817,7 +817,7 @@ class TrackersResource extends AuthenticatedResource
     }
 
     /**
-     * @param array $new_properties
+     * @param array $set_transitions_rules_query
      * @param Tracker $tracker
      *
      * @return int Created workflow id

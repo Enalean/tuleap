@@ -92,7 +92,7 @@ class FRSFileFactory
     /**
      * get the files of the release.
      *
-     * @param int $relase_id the ID of the release the files belong to
+     * @param int $release_id the ID of the release the files belong to
      */
     function &getFRSFilesFromDb($release_id)
     {
@@ -385,7 +385,7 @@ class FRSFileFactory
      *
      * @param string $file_name the file name we want to resolve it
      *
-     * @return string : the created filename
+     * @return string the created filename
      */
     function getResolvedFileName($file_name)
     {

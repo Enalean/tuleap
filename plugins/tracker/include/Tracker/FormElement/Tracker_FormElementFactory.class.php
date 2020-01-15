@@ -206,7 +206,7 @@ class Tracker_FormElementFactory
 
     /**
      * Get a formElement by id
-     * @param int $id the id of the formElement to retrieve
+     * @param int $form_element_id the id of the formElement to retrieve
      * @return Tracker_FormElement_Field
      */
     function getFormElementById($form_element_id)
@@ -297,7 +297,7 @@ class Tracker_FormElementFactory
      * @param int    $tracker_id the id of the tracker
      * @param string $name       the name of the field (short name)
      *
-     * @return Tracker_FormElement_Field, or null if not found
+     * @return null|Tracker_FormElement_Field or null if not found
      */
     function getUsedFieldByName($tracker_id, $name)
     {
@@ -483,7 +483,7 @@ class Tracker_FormElementFactory
      *
      * @todo Check the type of the field.
      *
-     * @return Tracker_FormElement_Field or null if not found or not a Field
+     * @return null|Tracker_FormElement_Field or null if not found or not a Field
      */
     public function getFieldById($id)
     {
@@ -504,14 +504,15 @@ class Tracker_FormElementFactory
     }
 
     /**
-     * @return Tracker_FormElement_Field_Shareable or null
+     * @return null|Tracker_FormElement_Field_Shareable or null
      */
     public function getShareableFieldById($id)
     {
         $field = $this->getFieldById($id);
-        if (is_a($field, 'Tracker_FormElement_Field_Shareable')) {
+        if ($field instanceof Tracker_FormElement_Field_Shareable) {
             return $field;
         }
+        return null;
     }
 
     /**
@@ -938,7 +939,7 @@ class Tracker_FormElementFactory
             $has_workflow = false;
             if (in_array($from_row['formElement_type'], array('sb', 'rb'))) {
                 $field = $this->getFieldById($from_row['id']);
-                if ($field->fieldHasDefineWorkflow()) {
+                if ($field !== null && $field->fieldHasDefineWorkflow()) {
                     $has_workflow = true;
                 }
             }
@@ -1275,6 +1276,9 @@ class Tracker_FormElementFactory
     private function fixSharedFieldOriginalValueIds($field_id, $old_original_field_id, $field_mapping)
     {
         $field         = $this->getShareableFieldById($field_id);
+        if ($field === null) {
+            return;
+        }
         $value_mapping = $this->getValueMappingFromFieldMapping($old_original_field_id, $field_mapping);
 
         $field->fixOriginalValueIds($value_mapping);
@@ -1373,9 +1377,8 @@ class Tracker_FormElementFactory
 
     /**
      * Change formElement type
-     * @param formElement
-     * @param type : the new formElement type
-     * @return true on success
+     * @param mixed $type the new formElement type
+     * @return bool true on success
      */
     public function changeFormElementType($form_element, $type)
     {
@@ -1757,11 +1760,11 @@ class Tracker_FormElementFactory
     /**
      * Creates new Tracker_Form element in the database
      *
-     * @param tracker $tracker of the created tracker
+     * @param Tracker $tracker of the created tracker
      * @param Object $form_element
      * @param int $parent_id the id of the newly created parent formElement (0 when no parent)
      *
-     * @return the id of the newly created FormElement
+     * @return mixed the id of the newly created FormElement
      */
     public function saveObject(Tracker $tracker, $form_element, $parent_id, $tracker_is_empty, $force_absolute_ranking)
     {
@@ -1789,7 +1792,7 @@ class Tracker_FormElementFactory
      *
      * @param Tracker_FormElement $element
      *
-     * @return Tracker_FormElement null if not found
+     * @return Tracker_FormElement|null null if not found
      */
     public function getNextSibling($element)
     {

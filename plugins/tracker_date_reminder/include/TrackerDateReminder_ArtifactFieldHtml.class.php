@@ -25,7 +25,6 @@ class TrackerDateReminder_ArtifactFieldHtml
     /**
      *  Display Date Field Notification Settings form
      *
-     * @param
      * @return void
      */
     function displayDateFieldNotificationSettings(ArtifactType $at, ArtifactField $field)

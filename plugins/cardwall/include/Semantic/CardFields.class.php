@@ -371,7 +371,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     }
 
     /**
-     * @return Tracker_FormElement_Field
+     * @return Tracker_FormElement_Field|null
      */
     public function instantiateFieldFromRow(array $row)
     {

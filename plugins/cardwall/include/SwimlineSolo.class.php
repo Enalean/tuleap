@@ -23,11 +23,6 @@
  */
 class Cardwall_SwimlineSolo extends Cardwall_Swimline
 {
-
-    /**
-     * @param string $title
-     * @param array  $cells
-     */
     public function __construct($swimline_id, array $cells)
     {
         $this->swimline_id = $swimline_id;

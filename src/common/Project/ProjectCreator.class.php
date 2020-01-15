@@ -474,7 +474,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     /**
      * for testing purpose
-     * @return int, the group id created
+     * @return int|false the group id created
      */
     protected function createGroupEntry(ProjectCreationData $data)
     {

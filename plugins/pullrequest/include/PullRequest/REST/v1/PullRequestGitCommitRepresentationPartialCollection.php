@@ -34,7 +34,7 @@ class PullRequestGitCommitRepresentationPartialCollection
     private $total_size;
 
     /**
-     * @param GitCommitRepresentation[]
+     * @param GitCommitRepresentation[] $commits_representations
      * @param int      $total_size
      */
     public function __construct(array $commits_representations, $total_size)

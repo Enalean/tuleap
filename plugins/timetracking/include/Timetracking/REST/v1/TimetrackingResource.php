@@ -197,8 +197,8 @@ class TimetrackingResource extends AuthenticatedResource
      *
      * @url PUT {id}
      * @status 201
-     * @param int $time_id Id of the time
-     * @param TimetrackingPUTRepresentation $item_representation The edited Time {@from body} {@type Tuleap\Timetracking\REST\v1\TimetrackingPUTRepresentation}
+     * @param int $id Id of the time
+     * @param TimetrackingPUTRepresentation $item The edited Time {@from body} {@type Tuleap\Timetracking\REST\v1\TimetrackingPUTRepresentation}
      *
      * @return TimetrackingRepresentation
      *

@@ -38,7 +38,7 @@ class HudsonJobLazyExceptionHandler
     }
 
     /**
-     * @return \HudsonJob|null
+     * @return \HudsonJob
      * @throws \Exception
      */
     public function getHudsonJob()

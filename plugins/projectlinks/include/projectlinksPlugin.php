@@ -898,8 +898,7 @@ class ProjectLinksPlugin extends Plugin
     /**
      * Display the project linked by the current projet to update or delete them
      *
-     * @param int $group_id Group id
-     * @return String
+     * @return string
      */
     function _admin_links_table($link_type_id)
     {

@@ -174,7 +174,6 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
     /**
      *
      * Fetch the colors, and initialize an empty result array. => $tempData[timestamp][label_id] = 0
-     * @param int $field_id ID of the observed field
      * @return array $resultArray Initialized array for this graph
      */
     private function initEmptyColumns($engine)
@@ -218,7 +217,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
     /**
      *
      * Get the the last changeset BEFORE the timestamp for each artifact
-     * @param int $beforeTimestamp
+     * @param int $timestamp
      * @return array $changesets array of changeset_id
      */
     private function getLastChangesetsBefore($timestamp)

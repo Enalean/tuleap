@@ -148,6 +148,9 @@ class Tracker_DateReminderFactory
     {
         $tff              = Tracker_FormElementFactory::instance();
         $trackerDateField = $tff->getFieldById($fieldId);
+        if ($trackerDateField === null) {
+            return;
+        }
         $fieldType        = $tff->getType($trackerDateField);
         if ($fieldType == 'subon' && $notificationType == 0) {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before_submittedOn');

@@ -712,7 +712,7 @@ class SystemEventManager
      * is a match, it returns true.
      *
      * @param string $event_type
-     * @param string|number|bool $parameter
+     * @param string|int|bool $parameter
      * @return bool
      */
     public function isThereAnEventAlreadyOnGoingMatchingFirstParameter($event_type, $parameter)
@@ -792,7 +792,7 @@ class SystemEventManager
     /**
      * Return true if there is no pending rename event of this project, otherwise false
      *
-     * @param PFUser $user
+     * @param Project $project
      * @return bool
      */
     public function canRenameProject($project)
@@ -803,7 +803,7 @@ class SystemEventManager
 
     /**
      * Return true if there is no pending rename user event on this new name
-     * @param String $new_name
+     * @param string $newName
      * @return bool
      */
     public function isUserNameAvailable($newName)
@@ -818,7 +818,7 @@ class SystemEventManager
 
     /**
      * Return true if there is no pending rename project event on this new name
-     * @param String $new_name
+     * @param string $newName
      * @return bool
      */
     public function isProjectNameAvailable($newName)

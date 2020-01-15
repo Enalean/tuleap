@@ -476,7 +476,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     /**
      *This callback make SystemEvent manager knows about git plugin System Events
-     * @param <type> $params
      */
     public function getSystemEventClass($params)
     {

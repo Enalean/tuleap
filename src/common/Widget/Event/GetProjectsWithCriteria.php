@@ -96,7 +96,7 @@ class GetProjectsWithCriteria
     }
 
     /**
-     * @param Project[]
+     * @param Project[] $projects
      */
     public function addProjectsWithCriteria(array $projects)
     {

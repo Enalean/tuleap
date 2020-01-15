@@ -29,7 +29,7 @@ class ConfigNotificationEmailCustomSenderDao extends DataAccessObject
 {
 
     /**
-     * @return array(array(format, enabled),...)
+     * @return array array(array(format, enabled),...)
      * */
     public function searchCustomSender($tracker_id)
     {

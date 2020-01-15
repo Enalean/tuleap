@@ -54,7 +54,7 @@ class CrossTrackerArtifactReportRepresentation
     public $submitted_by;
 
     /**
-     * @var []MinimalUserRepresentation
+     * @var MinimalUserRepresentation[]
      */
     public $assigned_to;
 

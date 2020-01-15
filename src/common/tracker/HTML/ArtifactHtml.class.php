@@ -364,10 +364,6 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         * _getSection
         *
         * Display an html toggable fieldset
-        *
-        * @param  title
-        * @param  content
-        * @param  help
         */
     protected function _getSection($id, $title, $content, $is_open, $alternate_text = '') // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {

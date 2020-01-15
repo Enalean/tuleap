@@ -1684,7 +1684,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     /**
      * Transforms Report into a SimpleXMLElement
      *
-     * @param SimpleXMLElement $root the node to which the Report is attached (passed by reference)
+     * @param SimpleXMLElement $roott the node to which the Report is attached (passed by reference)
      */
     public function exportToXml(SimpleXMLElement $roott, $xmlMapping)
     {

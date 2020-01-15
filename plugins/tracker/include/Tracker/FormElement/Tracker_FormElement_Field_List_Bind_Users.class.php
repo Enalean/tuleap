@@ -204,7 +204,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Get the list of of ugroups used in this field     *
      *
-     * @return array, the list of all ugroups with id and name
+     * @return array the list of all ugroups with id and name
      */
     protected function getRESTBindingList()
     {

@@ -393,7 +393,7 @@ class TransitionFactory
      * @param Array $transitions the transitions to duplicate
      * @param Array $field_mapping the field mapping
      * @param Array $ugroup_mapping the ugroup mapping
-     * @param bool  $duplicate_static_perms true if duplicate static perms, false otherwise
+     * @param bool  $duplicate_type true if duplicate static perms, false otherwise
      *
      * @return void
      */

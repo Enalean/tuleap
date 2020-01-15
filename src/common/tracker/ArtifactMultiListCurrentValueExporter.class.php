@@ -37,7 +37,7 @@ class ArtifactMultiListCurrentValueExporter
     /** @var array */
     private $user_names = array();
 
-     /** @var array() */
+     /** @var array */
     private $labels = array();
 
     /** @var ArtifactXMLExporterDao */

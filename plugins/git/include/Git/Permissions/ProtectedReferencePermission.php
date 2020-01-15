@@ -41,7 +41,7 @@ class ProtectedReferencePermission implements Permission
     }
 
     /**
-     * @return []
+     * @return array
      */
     public function getWritersUgroup()
     {
@@ -49,7 +49,7 @@ class ProtectedReferencePermission implements Permission
     }
 
     /**
-     * @return []
+     * @return array
      */
     public function getRewindersUgroup()
     {

@@ -286,7 +286,7 @@ class WebDAVFRSFile extends Sabre_DAV_File
     /**
      * Logs the download in the Log system
      *
-     * @param int $userId
+     * @param PFUser $user
      *
      * @return bool
      */

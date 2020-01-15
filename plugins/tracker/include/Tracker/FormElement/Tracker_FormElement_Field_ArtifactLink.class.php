@@ -492,7 +492,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @param Tracker_Artifact $artifact               Artifact on which we operate
      * @param string           $name                   The name, if any
-     * @param array            $artifact_links         The current artifact links
      * @param string           $prefill_new_values     Prefill new values field (what the user has submitted, if any)
      * @param array            $prefill_removed_values Pre-remove values (what the user has submitted, if any)
      * @param string           $prefill_parent         Prefilled parent (what the user has submitted, if any) - Only valid on submit
@@ -1232,7 +1231,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @param PFUser                          $user             The user who will receive the email
      * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
      *
      * @return string
      */
@@ -1809,6 +1807,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             return new Tracker_Artifact_PaginatedArtifacts(array(), 0);
         }
 
+        assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
         $artifact_ids = $changeset_value->getArtifactIds();
         $size = count($artifact_ids);
 

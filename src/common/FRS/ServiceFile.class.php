@@ -51,7 +51,7 @@ class ServiceFile extends Service
     * getSummaryPageContent
     *
     * Return the text to display on the summary page
-    * @return arr[title], arr[content]
+    * @return array arr[title], arr[content]
     */
     public function getSummaryPageContent()
     {
@@ -127,8 +127,6 @@ class ServiceFile extends Service
     * _getPackagesForUser
     *
     * return the packages the user can see
-    *
-    * @param  user_id
     */
     function _getPackagesForUser($user_id)
     {

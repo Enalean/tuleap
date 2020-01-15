@@ -38,7 +38,7 @@ interface LegacyDataAccessInterface
      *
      * @deprecated
      *
-     * @return int, or 0 if the previous query does not generate an AUTO_INCREMENT value, or FALSE if no MySQL connection was established
+     * @return false|int or 0 if the previous query does not generate an AUTO_INCREMENT value, or FALSE if no MySQL connection was established
      */
     public function lastInsertId();
 

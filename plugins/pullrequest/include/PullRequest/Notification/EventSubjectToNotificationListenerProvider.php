@@ -37,7 +37,7 @@ final class EventSubjectToNotificationListenerProvider implements ListenerProvid
 
     /**
      * @param callable[][] $mapping
-     * @psalm-param array<class-string<EventSubjectToNotification>,non-empty-array<callable():EventSubjectToNotificationListener>>
+     * @psalm-param array<class-string<EventSubjectToNotification>,non-empty-array<callable():EventSubjectToNotificationListener>> $mapping
      */
     public function __construct(array $mapping)
     {
