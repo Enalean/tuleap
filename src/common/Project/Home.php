@@ -163,35 +163,20 @@ class Home implements DispatchableWithRequest
                 );
                 $router->route($request);
             } else {
-                $val = array_values($project->getServices());
-                foreach ($val as $containedSrv) {
+                $service = null;
+
+                foreach ($project->getServices() as $containedSrv) {
                     if ($containedSrv->isUsed()) {
                         $service = $containedSrv;
                         break;
                     }
                 }
-                if ($service->isIFrame()) {
-                    $label = $service->getLabel();
-                    if ($label == "service_" . $service->getShortName() . "_lbl_key") {
-                        $label = $GLOBALS['Language']->getText('project_admin_editservice', $label);
-                    } elseif (preg_match('/(.*):(.*)/', $label, $matches)) {
-                        $label = $GLOBALS['Language']->getText($matches[1], $matches[2]);
-                    }
-                    $title = $label . ' - ' . $project->getPublicName();
-                    site_project_header(array(
-                        'title'  => $title,
-                        'group'  => $request->get('group_id'),
-                        'toptab' => $service->getId()
-                    ));
 
-                    $GLOBALS['HTML']->iframe(
-                        $service->getUrl(),
-                        array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px')
-                    );
-
-                    site_project_footer(array());
+                if ($service === null || $service->isIFrame()) {
+                    $layout->addFeedback(\Feedback::ERROR, _('A service displayed in a iframe cannot be the first service of a project'));
+                    $layout->redirect('/project/' . urlencode((string) $project->getID()) . '/admin/services');
                 } else {
-                    $GLOBALS['Response']->redirect($service->getUrl());
+                    $layout->redirect($service->getUrl());
                 }
             }
         } else {

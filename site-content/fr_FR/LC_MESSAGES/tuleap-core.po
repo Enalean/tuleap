@@ -109,6 +109,12 @@ msgstr ""
 msgid "A project cannot be its own parent."
 msgstr "Un projet ne peut être son propre parent."
 
+msgid ""
+"A service displayed in a iframe cannot be the first service of a project"
+msgstr ""
+"Un service affiché dans un contexte de navigation imbriqué ne peut pas être "
+"le premier service d'un projet"
+
 msgid "Access"
 msgstr "Accès"
 
