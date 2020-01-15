@@ -19,12 +19,12 @@
 
 import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
 import CardInfo from "./CardInfo.vue";
-import { Card, User } from "../../../../../type";
+import { Card, Tracker, User } from "../../../../../type";
 import CardAssignees from "./CardAssignees.vue";
 
 function getWrapper(card: Card, slots: Slots = {}): Wrapper<CardInfo> {
     return shallowMount(CardInfo, {
-        propsData: { card },
+        propsData: { card, tracker: {} as Tracker },
         slots
     });
 }
