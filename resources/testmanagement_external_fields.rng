@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element name="externalField" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <attribute name="type">
+    <value>ttmstepdef</value>
+  </attribute>
+  <attribute name="ID">
+    <data type="ID"/>
+  </attribute>
+  <attribute name="rank">
+    <data type="int"/>
+  </attribute>
+  <element name="name">
+    <data type="string"/>
+  </element>
+  <element name="label">
+    <data type="string"/>
+  </element>
+  <element name="description">
+    <data type="string"/>
+  </element>
+  <element name="permissions">
+    <zeroOrMore>
+      <element name="permission">
+        <optional>
+          <attribute name="REF">
+            <data type="IDREF"/>
+          </attribute>
+        </optional>
+        <attribute name="scope">
+          <value>field</value>
+        </attribute>
+        <attribute name="ugroup">
+          <data type="string"/>
+        </attribute>
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </element>
+    </zeroOrMore>
+  </element>
+</element>

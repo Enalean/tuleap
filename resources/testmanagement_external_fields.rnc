@@ -1,0 +1,20 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+
+element externalField {
+    attribute type { 'ttmstepdef' },
+    attribute ID { xsd:ID },
+    attribute rank { xsd:int },
+    element name { xsd:string },
+    element label { xsd:string },
+    element description { xsd:string },
+
+    element permissions {
+        element permission {
+            attribute REF { xsd:IDREF }?,
+            attribute scope { "field" },
+            attribute ugroup { xsd:string },
+            attribute type { xsd:string }
+        }*
+    }
+}
