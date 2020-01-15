@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionMatchingIdsRetriever;
@@ -77,6 +78,8 @@ use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionFactory;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
@@ -112,6 +115,7 @@ use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\TrackerCrumbInContext;
+use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryQuickLink;
 use Tuleap\User\History\HistoryRetriever;
@@ -227,6 +231,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(TrackerMasschangeGetExternalActionsEvent::NAME);
             $this->addHook(TrackerMasschangeProcessExternalActionsEvent::NAME);
             $this->addHook(TrackerReportProcessAdditionalQuery::NAME);
+            $this->addHook(GetExternalSubFactoriesEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2120,5 +2125,17 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $event->getRequest(),
             $event->getMasschangeAids()
         );
+    }
+
+    public function getExternalSubFactoriesEvent(GetExternalSubFactoriesEvent $event)
+    {
+        $event->addFactory(new AddToTopBacklogPostActionFactory(
+            new AddToTopBacklogPostActionDao(),
+            new UnplannedArtifactsAdder(
+                new ExplicitBacklogDao(),
+                new ArtifactsInExplicitBacklogDao(),
+                new PlannedArtifactDao()
+            )
+        ));
     }
 }

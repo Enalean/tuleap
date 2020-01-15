@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,14 +26,16 @@
  * common behaviors (deleteWorkflow, duplicate, ...) are silently aggregated
  * without having to heavily modify the PostActionFactory.
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostActionSubFactories
 {
 
-    /** @var array of Transition_PostActionSubFactory */
+    /** @var Transition_PostActionSubFactory[] */
     private $factories;
 
     /**
-     * @param array of Transition_PostActionSubFactory
+     * @param Transition_PostActionSubFactory[]
      */
     public function __construct(array $factories)
     {
