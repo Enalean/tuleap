@@ -35,7 +35,7 @@ class Transition_PostActionSubFactories
     private $factories;
 
     /**
-     * @param Transition_PostActionSubFactory[]
+     * @param Transition_PostActionSubFactory[] $factories
      */
     public function __construct(array $factories)
     {
