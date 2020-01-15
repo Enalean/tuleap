@@ -64,3 +64,4 @@ tests/phpunit/phpunit_test_results.xml
 test-results.xml
 coverage/
 .phpunit.result.cache
+ENTERPRISE_BUILD

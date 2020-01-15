@@ -24,6 +24,7 @@ use ForgeConfig;
 use PFUser;
 use Project;
 use Codendi_HTMLPurifier;
+use Tuleap\BuildVersion\VersionPresenter;
 
 class ProjectSidebarPresenter
 {
@@ -57,7 +58,7 @@ class ProjectSidebarPresenter
      */
     public $project_is_private_incl_restricted;
 
-    public function __construct(PFUser $current_user, Project $project, \Generator $sidebar, $project_privacy)
+    public function __construct(PFUser $current_user, Project $project, \Generator $sidebar, $project_privacy, VersionPresenter $version)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -69,7 +70,7 @@ class ProjectSidebarPresenter
         $this->project_name           = $project->getUnconvertedPublicName();
         $this->project_id             = $project->getID();
 
-        $this->version       = $this->getVersion();
+        $this->version       = $version;
         $this->has_copyright = $GLOBALS['Language']->hasText('global', 'copyright');
         $this->copyright     = '';
 
@@ -84,10 +85,5 @@ class ProjectSidebarPresenter
             $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
             $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
         }
-    }
-
-    private function getVersion()
-    {
-        return trim(file_get_contents($GLOBALS['codendi_dir'] . '/VERSION'));
     }
 }

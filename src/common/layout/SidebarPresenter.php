@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,33 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Layout;
 
-use ForgeConfig;
+use Tuleap\BuildVersion\VersionPresenter;
 
-class SidebarPresenter
+final class SidebarPresenter
 {
     public $classname;
     public $content;
+    /**
+     * @var VersionPresenter
+     */
     public $version;
     public $copyright;
     public $has_copyright;
 
-    public function __construct($classname, $content)
+    public function __construct(string $classname, string $content, VersionPresenter $version)
     {
         $this->classname     = $classname;
         $this->content       = $content;
-        $this->version       = $this->getForgeVersion();
+        $this->version       = $version;
         $this->has_copyright = $GLOBALS['Language']->hasText('global', 'copyright');
         $this->copyright     = '';
 
         if ($this->has_copyright) {
             $this->copyright = $GLOBALS['Language']->getOverridableText('global', 'copyright');
         }
-    }
-
-    private function getForgeVersion()
-    {
-        return trim(file_get_contents(ForgeConfig::get('codendi_dir').'/VERSION'));
     }
 }
