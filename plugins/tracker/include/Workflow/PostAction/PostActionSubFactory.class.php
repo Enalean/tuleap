@@ -27,13 +27,6 @@ interface Transition_PostActionSubFactory
 {
 
     /**
-     * Get html code to let someone choose a post action for a transition
-     *
-     * @return string html
-     */
-    public function fetchPostActions();
-
-    /**
      * @param Transition $transition
      * @param string     $requested_postaction
      */
