@@ -23,6 +23,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Project\Registration;
 
+use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Registration\Template\CompanyTemplate;
@@ -76,10 +77,22 @@ class ProjectRegistrationPresenterBuilder
             $default_project_template_presenter = new TemplatePresenter($default_project_template);
         }
 
+        $formatted_field = [];
+        $fields          = $this->fields_factory->getAllDescriptionFields();
+        foreach ($fields as $field) {
+            $formatted_field[] = [
+                'group_desc_id'    => $field['group_desc_id'],
+                'desc_name'        => DescriptionFieldLabelBuilder::getFieldTranslatedTextLabel($field['desc_name']),
+                'desc_type'        => $field['desc_type'],
+                'desc_description' => DescriptionFieldLabelBuilder::getFieldTranslatedTextLabel($field['desc_description']),
+                'desc_required'    => $field['desc_required']
+            ];
+        }
+
         return new ProjectRegistrationPresenter(
             $this->default_project_visibility_retriever->getDefaultProjectVisibility(),
             $this->trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren(),
-            $this->fields_factory->getAllDescriptionFields(),
+            $formatted_field,
             $company_templates,
             $default_project_template_presenter,
             ...array_map(
