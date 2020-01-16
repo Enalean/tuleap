@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+  - Copyright (c) Enalean, 2020 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,15 +18,26 @@
   -->
 
 <template>
-    <div>
-        <release-badges-displayer-if-open-sprints
-            v-if="open_sprints_exist"
+    <div
+        class="project-release-infos-badges"
+        v-bind:class="{ 'on-open-sprints-details': open_sprints_details }"
+    >
+        <release-badges-all-sprints
+            v-if="display_badge_all_sprint"
+            v-bind:release_data="release_data"
+            v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
+            data-test="badge-sprint"
+        />
+        <release-badges-closed-sprints
+            v-if="open_sprints_details"
             v-bind:release_data="release_data"
         />
-        <release-badges-displayer-if-only-closed-sprints
-            v-else
-            v-bind:release_data="release_data"
+        <hr
+            v-if="open_sprints_details"
+            data-test="line-displayed"
+            class="milestone-badges-sprints-separator"
         />
+        <release-others-badges v-bind:release_data="release_data" />
     </div>
 </template>
 
@@ -37,24 +48,26 @@ import { MilestoneData } from "../../../type";
 import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
-import ReleaseBadgesDisplayerIfOpenSprints from "./ReleaseBadgesDisplayerIfOpenSprints.vue";
-import ReleaseBadgesDisplayerIfOnlyClosedSprints from "./ReleaseBadgesDisplayerIfOnlyClosedSprints.vue";
+import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
 import { openSprintsExist } from "../../../helpers/milestones-sprints-helper";
 @Component({
-    components: {
-        ReleaseBadgesDisplayerIfOnlyClosedSprints,
-        ReleaseBadgesDisplayerIfOpenSprints,
-        ReleaseBadgesClosedSprints,
-        ReleaseOthersBadges,
-        ReleaseBadgesAllSprints
-    }
+    components: { ReleaseBadgesClosedSprints, ReleaseOthersBadges, ReleaseBadgesAllSprints }
 })
-export default class ReleaseBadgesDisplayer extends Vue {
+export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
 
-    get open_sprints_exist(): boolean {
-        return openSprintsExist(this.release_data);
+    open_sprints_details = false;
+
+    on_click_open_sprints_details(): void {
+        this.open_sprints_details = !this.open_sprints_details;
+    }
+
+    get display_badge_all_sprint(): boolean {
+        return (
+            openSprintsExist(this.release_data) &&
+            getTrackerSubmilestoneLabel(this.release_data) !== ""
+        );
     }
 }
 </script>

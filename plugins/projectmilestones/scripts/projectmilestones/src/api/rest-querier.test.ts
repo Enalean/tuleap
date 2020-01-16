@@ -19,7 +19,7 @@
 
 import {
     getCurrentMilestones,
-    getNbOfSprints,
+    getOpenSprints,
     getMilestonesContent,
     getBurndownData,
     getNbOfClosedSprints
@@ -74,30 +74,38 @@ describe("getProject() -", () => {
     });
 
     it("the REST API will be queried and all the content of a milestone returned", async () => {
-        const tlpGetMock = jest.spyOn(tlp, "get");
-        mockFetchSuccess(tlpGetMock, {
-            headers: {
-                // X-PAGINATION-SIZE
-                get: (): number => 2
+        const sprints: MilestoneData[] = [
+            {
+                id: 1,
+                start_date: new Date().toDateString(),
+                number_of_artifact_by_trackers: []
             }
-        });
+        ];
 
-        const result = await getNbOfSprints(milestone_id, {
+        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        tlpRecursiveGetMock.mockReturnValue(Promise.resolve([sprints]));
+
+        const result = await getOpenSprints(milestone_id, {
             limit,
             offset
         });
 
-        expect(tlpGetMock).toHaveBeenCalledWith(
+        const query = JSON.stringify({
+            status: "open"
+        });
+
+        expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
             "/api/v1/milestones/" + milestone_id + "/milestones",
             {
                 params: {
                     limit,
-                    offset
+                    offset,
+                    query
                 }
             }
         );
 
-        expect(result).toEqual(2);
+        expect(result).toEqual([sprints]);
     });
 
     it("the REST API will be queried and the total of user stories of a release returned", async () => {

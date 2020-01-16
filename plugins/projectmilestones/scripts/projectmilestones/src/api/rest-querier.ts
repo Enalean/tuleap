@@ -28,7 +28,7 @@ import {
 
 export {
     getCurrentMilestones,
-    getNbOfSprints,
+    getOpenSprints,
     getMilestonesContent,
     getBurndownData,
     getNbOfClosedSprints
@@ -61,21 +61,20 @@ function getCurrentMilestones({
     return recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
 }
 
-async function getNbOfSprints(
+function getOpenSprints(
     milestone_id: number,
     { limit, offset }: ParametersRequestWithoutId
-): Promise<number> {
-    const response = await get(
-        `/api/v1/milestones/${encodeURIComponent(milestone_id)}/milestones`,
-        {
-            params: {
-                limit,
-                offset
-            }
+): Promise<MilestoneData[]> {
+    const query = JSON.stringify({
+        status: "open"
+    });
+    return recursiveGet(`/api/v1/milestones/${encodeURIComponent(milestone_id)}/milestones`, {
+        params: {
+            limit,
+            offset,
+            query
         }
-    );
-
-    return getPaginationSizeFromHeader(response.headers);
+    });
 }
 
 async function getNbOfClosedSprints(milestone_id: number): Promise<number> {

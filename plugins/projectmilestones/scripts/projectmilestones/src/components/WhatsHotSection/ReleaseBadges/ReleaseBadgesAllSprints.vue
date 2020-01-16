@@ -35,25 +35,15 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import { MilestoneData } from "../../../type";
-import { State } from "vuex-class";
+import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
 
 @Component
 export default class ReleaseBadgesAllSprints extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-    @State
-    readonly project_id!: number;
 
     get tracker_submilestone_label(): string {
-        if (!this.release_data.resources) {
-            return "";
-        }
-        const submilestone_tracker = this.release_data.resources.milestones.accept.trackers[0];
-
-        if (!submilestone_tracker) {
-            return "";
-        }
-        return submilestone_tracker.label;
+        return getTrackerSubmilestoneLabel(this.release_data);
     }
 }
 </script>
