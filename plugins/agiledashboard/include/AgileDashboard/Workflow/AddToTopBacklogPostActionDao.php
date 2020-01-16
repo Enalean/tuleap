@@ -52,4 +52,18 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
             $tracker_ids_in_condition->values()
         );
     }
+
+    public function deleteWorkflowPostActions(int $workflow_id)
+    {
+        $sql = "DELETE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.*
+                FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
+                    INNER JOIN tracker_workflow_transition ON (plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
+                    INNER JOIN tracker_workflow ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
+                WHERE tracker_workflow.workflow_id = ?";
+
+        return $this->getDB()->run(
+            $sql,
+            $workflow_id
+        );
+    }
 }

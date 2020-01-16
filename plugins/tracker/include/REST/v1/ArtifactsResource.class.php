@@ -217,7 +217,8 @@ class ArtifactsResource extends AuthenticatedResource
         $transition_retriever = new TransitionRetriever(
             new StateFactory(
                 new TransitionFactory(
-                    Workflow_Transition_ConditionFactory::build()
+                    Workflow_Transition_ConditionFactory::build(),
+                    $this->event_manager
                 ),
                 new SimpleWorkflowDao()
             ),

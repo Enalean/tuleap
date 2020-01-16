@@ -1603,7 +1603,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             new TransitionRetriever(
                 new StateFactory(
                     new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build()
+                        Workflow_Transition_ConditionFactory::build(),
+                        EventManager::instance()
                     ),
                     new SimpleWorkflowDao()
                 ),

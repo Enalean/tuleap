@@ -30,13 +30,22 @@ class TransitionFactory_BaseTest extends TuleapTestCase
     /** @var Workflow_Transition_ConditionFactory */
     protected $condition_factory;
 
+    /**
+     * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    protected $event_manager;
+
     public function setUp()
     {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->condition_factory  = \Mockery::spy(\Workflow_Transition_ConditionFactory::class);
         $this->postaction_factory = \Mockery::spy(\Transition_PostActionFactory::class);
-        $this->factory            = \Mockery::mock(\TransitionFactory::class, [$this->condition_factory])
+        $this->event_manager      = \Mockery::spy(\EventManager::class);
+        $this->factory            = \Mockery::mock(
+            \TransitionFactory::class,
+            [$this->condition_factory, $this->event_manager]
+        )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -108,7 +117,10 @@ class TransitionFactory_duplicateTest extends TransitionFactory_BaseTest
         $t3  = new Transition(3, 1, $field_value_analyzed, $field_value_new);
         $transitions = array($t1, $t2, $t3);
 
-        $tf = \Mockery::mock(\TransitionFactory::class, [$this->condition_factory])
+        $tf = \Mockery::mock(
+            \TransitionFactory::class,
+            [$this->condition_factory, $this->event_manager]
+        )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 

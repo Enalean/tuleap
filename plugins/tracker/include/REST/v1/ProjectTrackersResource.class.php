@@ -178,7 +178,8 @@ class ProjectTrackersResource
         $transition_retriever = new TransitionRetriever(
             new StateFactory(
                 new TransitionFactory(
-                    Workflow_Transition_ConditionFactory::build()
+                    Workflow_Transition_ConditionFactory::build(),
+                    EventManager::instance()
                 ),
                 new SimpleWorkflowDao()
             ),

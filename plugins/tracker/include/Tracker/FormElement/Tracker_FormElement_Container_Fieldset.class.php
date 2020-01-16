@@ -88,7 +88,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
                 new TransitionRetriever(
                     new StateFactory(
                         new TransitionFactory(
-                            Workflow_Transition_ConditionFactory::build()
+                            Workflow_Transition_ConditionFactory::build(),
+                            EventManager::instance()
                         ),
                         new SimpleWorkflowDao()
                     ),
@@ -119,7 +120,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
 
         $html  = '';
         $html .= "<fieldset class=\"tracker_artifact_fieldset $purified_extra_class\">";
-        $html .= '<legend title="'. $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) .'" 
+        $html .= '<legend title="'. $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) .'"
                           class="'. Toggler::getClassName('fieldset_'. $this->getId(), $fieldset_is_expanded, true) .'"
                           id="fieldset_'. $this->getId() .'"
                           data-id="'. $this->getId() .'">';

@@ -3527,7 +3527,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             new TransitionRetriever(
                 new StateFactory(
                     new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build()
+                        Workflow_Transition_ConditionFactory::build(),
+                        EventManager::instance()
                     ),
                     new SimpleWorkflowDao()
                 ),

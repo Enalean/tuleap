@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use EventManager;
 use Luracast\Restler\RestException;
 use PermissionsManager;
 use PFUser;
@@ -172,7 +173,8 @@ class TrackersResource extends AuthenticatedResource
         $transition_retriever = new TransitionRetriever(
             new StateFactory(
                 new TransitionFactory(
-                    Workflow_Transition_ConditionFactory::build()
+                    Workflow_Transition_ConditionFactory::build(),
+                    EventManager::instance()
                 ),
                 new SimpleWorkflowDao()
             ),
@@ -683,7 +685,8 @@ class TrackersResource extends AuthenticatedResource
             $transition_retriever = new TransitionRetriever(
                 new StateFactory(
                     new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build()
+                        Workflow_Transition_ConditionFactory::build(),
+                        EventManager::instance()
                     ),
                     new SimpleWorkflowDao()
                 ),

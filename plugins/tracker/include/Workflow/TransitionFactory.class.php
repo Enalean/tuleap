@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use Tuleap\Tracker\Workflow\TransitionDeletionException;
 
@@ -28,15 +29,17 @@ class TransitionFactory
 
     /** @var Workflow_Transition_ConditionFactory */
     private $condition_factory;
-
     /**
-     * Should use the singleton instance()
-     *
-     * @param Workflow_Transition_ConditionFactory $condition_factory
+     * @var EventManager
      */
-    public function __construct(Workflow_Transition_ConditionFactory $condition_factory)
-    {
+    private $event_manager;
+
+    public function __construct(
+        Workflow_Transition_ConditionFactory $condition_factory,
+        EventManager $event_manager
+    ) {
         $this->condition_factory = $condition_factory;
+        $this->event_manager     = $event_manager;
     }
 
     /**
@@ -49,11 +52,13 @@ class TransitionFactory
      *
      * @return TransitionFactory
      */
-    public static function instance()
+    public static function instance(): self
     {
         if (!isset(self::$_instance)) {
-            $c = self::class;
-            self::$_instance = new $c(Workflow_Transition_ConditionFactory::build());
+            self::$_instance = new self(
+                Workflow_Transition_ConditionFactory::build(),
+                EventManager::instance()
+            );
         }
         return self::$_instance;
     }
@@ -61,7 +66,7 @@ class TransitionFactory
     /**
      * Build a Transition instance
      *
-     * @param Array    $row      The data describing the transition
+     * @param array    $row      The data describing the transition
      * @param Workflow $workflow Workflow the transition belongs to
      *
      * @return Transition
@@ -111,7 +116,7 @@ class TransitionFactory
      */
     public function getPostActionFactory()
     {
-        return new Transition_PostActionFactory(EventManager::instance());
+        return new Transition_PostActionFactory($this->event_manager);
     }
 
     /**
@@ -263,7 +268,7 @@ class TransitionFactory
      *
      * @return bool
      */
-    public function deleteWorkflow($workflow)
+    public function deleteWorkflow(Workflow $workflow)
     {
         $transitions = $this->getTransitions($workflow);
         $workflow_id = $workflow->getId();
@@ -281,6 +286,10 @@ class TransitionFactory
                 false
             );
         }
+
+        $event = new WorkflowDeletionEvent($workflow);
+        $this->event_manager->processEvent($event);
+
         $result = $this->getDao()->deleteWorkflowTransitions($workflow_id);
         if ($result === false) {
             $this->getDao()->rollBack();
@@ -388,11 +397,11 @@ class TransitionFactory
     /**
      * Duplicate the transitions
      *
-     * @param Array $values array of old and new values of the field
+     * @param array $values array of old and new values of the field
      * @param int   $workflow_id the workflow id
-     * @param Array $transitions the transitions to duplicate
-     * @param Array $field_mapping the field mapping
-     * @param Array $ugroup_mapping the ugroup mapping
+     * @param array $transitions the transitions to duplicate
+     * @param array $field_mapping the field mapping
+     * @param array $ugroup_mapping the ugroup mapping
      * @param bool  $duplicate_type true if duplicate static perms, false otherwise
      *
      * @return void
