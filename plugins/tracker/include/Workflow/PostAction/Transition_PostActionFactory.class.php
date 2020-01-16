@@ -64,19 +64,6 @@ class Transition_PostActionFactory
     private $hidden_fieldsets_factory;
 
     /**
-     * Create a new post action for the transition
-     *
-     * @param Transition $transition           On wich transition we should add the post action
-     * @param string     $requested_postaction The type of post action
-     *
-     * @return void
-     */
-    public function addPostAction(Transition $transition, $requested_postaction)
-    {
-        $this->getSubFactory($requested_postaction)->addPostAction($transition, $requested_postaction);
-    }
-
-    /**
      * Load the post actions that belong to a transition
      *
      * @param Transition $transition The transition

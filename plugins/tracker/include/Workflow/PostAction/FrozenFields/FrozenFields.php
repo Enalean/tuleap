@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
-use Codendi_Request;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
 use Transition_PostAction;
@@ -79,18 +78,6 @@ class FrozenFields extends Transition_PostAction
     {
         // Since we do not support the legacy UI, it is always well defined
         return true;
-    }
-
-    /**
-     * Update/Delete action
-     *
-     * @param Codendi_Request $request The request
-     *
-     * @return void
-     */
-    public function process(Codendi_Request $request)
-    {
-        // Not implemented. We do not support the legacy UI for this new post action
     }
 
     /**

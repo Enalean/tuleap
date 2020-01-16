@@ -40,35 +40,6 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase
         stub($this->post_action)->isDefined()->returns($this->field);
     }
 
-    public function itHandlesUpdateRequests()
-    {
-        $new_field_id = 4572;
-        $new_value    = 1.5;
-        $request      = aRequest()->with('workflow_postaction_field_float', array($this->post_action_id => $new_field_id))
-                                  ->with('workflow_postaction_field_float_value', array($this->post_action_id => $new_value))
-                                  ->with('remove_postaction', array())
-                                  ->build();
-
-        $field = stub('Tracker_FormElement_Field_Float')->getId()->returns(4572);
-        stub($this->post_action)->getFieldIdOfPostActionToUpdate()->returns($new_field_id);
-
-        $this->factory->setReturnReference('getUsedFormElementById', $field, array($new_field_id));
-        $this->post_action->setReturnReference('getFormElementFactory', $this->factory);
-
-        stub('Tracker_FormElement_Field_Float')->validateValue()->returns(true);
-        $this->dao->expectOnce('updatePostAction', array($this->post_action_id, $new_field_id, $new_value));
-        $this->post_action->process($request);
-    }
-
-    public function itHandlesDeleteRequests()
-    {
-        $request = aRequest()->with('remove_postaction', array($this->post_action_id => 1))
-                             ->build();
-
-        $this->dao->expectOnce('deletePostAction', array($this->post_action_id));
-        $this->post_action->process($request);
-    }
-
     public function testBeforeShouldSetTheFloatField()
     {
         $user = mock('PFUser');

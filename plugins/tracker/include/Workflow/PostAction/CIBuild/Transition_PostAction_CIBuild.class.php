@@ -125,16 +125,6 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
         return !empty($this->job_url);
     }
 
-    public function process(Codendi_Request $request)
-    {
-        if ($request->getInArray('remove_postaction', $this->id)) {
-            $this->getDao()->deletePostAction($this->id);
-        } else {
-            $value = $request->getInArray('workflow_postaction_ci_build', $this->id);
-            $this->updateJobUrl($value);
-        }
-    }
-
     /**
      * Export postactions to XML
      *

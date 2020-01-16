@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,10 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 /**
  * Set the date of a field
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeric
-{//phpcs:ignore
+{
 
     public const XML_TAG_NAME = 'postaction_field_int';
     public const SHORT_NAME   = 'field_int';
@@ -86,33 +88,6 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
 
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'change_value_int_field_to', array($select_field, $input_value));
         return $html;
-    }
-
-    /**
-     * @see Transition_PostAction
-     */
-    public function process(Codendi_Request $request)
-    {
-        if ($request->getInArray('remove_postaction', $this->id)) {
-            $this->getDao()->deletePostAction($this->id);
-        } else {
-            $field_id = $this->getFieldId();
-            $value    = $request->getInArray('workflow_postaction_field_int_value', $this->id);
-
-            if ($request->validInArray('workflow_postaction_field_int', new Valid_UInt($this->id))) {
-                $new_field_id = $request->getInArray('workflow_postaction_field_int', $this->id);
-                $field_id = $this->getFieldIdOfPostActionToUpdate($new_field_id);
-                //Check if value is an int
-                $field = $this->getFormElementFactory()->getUsedFormElementById($field_id);
-                if ($field) {
-                    $field->validateValue($value);
-                }
-            }
-            // Update if something changed
-            if ($field_id != $this->getFieldId() || $value != $this->value) {
-                $this->getDao()->updatePostAction($this->id, $field_id, $value);
-            }
-        }
     }
 
     /**

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow;
 
-use Codendi_Request;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
@@ -68,11 +67,6 @@ class AddToTopBacklog extends Transition_PostAction
     {
         // Since we do not support the legacy UI, it is always well defined
         return true;
-    }
-
-    public function process(Codendi_Request $request)
-    {
-        // Not implemented. We do not support the legacy UI for this new post action
     }
 
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)

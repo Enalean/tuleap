@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,10 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 /**
  * Set the date of a field
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostAction_Field_Date extends Transition_PostAction_Field
-{//phpcs:ignore
+{
 
     /**
      * @const Clear the date.
@@ -150,40 +152,6 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'change_value_date_field_to', array($select_field, $select_value_type));
 
         return $html;
-    }
-
-    /**
-     * Update/Delete action
-     *
-     * @param Codendi_Request $request The user's request
-     *
-     * @return void
-     */
-    public function process(Codendi_Request $request)
-    {
-        if ($request->getInArray('remove_postaction', $this->id)) {
-            $this->getDao()->deletePostAction($this->id);
-        } else {
-            $field_id     = $this->getFieldId();
-            $value_type   = $this->value_type;
-
-            // Target field
-            if ($request->validInArray('workflow_postaction_field_date', new Valid_UInt($this->id))) {
-                $new_field_id = $request->getInArray('workflow_postaction_field_date', $this->id);
-                $field_id = $this->getFieldIdOfPostActionToUpdate($new_field_id);
-            }
-
-            // Value Type
-            $valid_value_type = new Valid_WhiteList($this->id, array(self::CLEAR_DATE, self::FILL_CURRENT_TIME));
-            if ($request->validInArray('workflow_postaction_field_date_value_type', $valid_value_type)) {
-                $value_type = $request->getInArray('workflow_postaction_field_date_value_type', $this->id);
-            }
-
-            // Update if something changed
-            if ($field_id != $this->getFieldId() || $value_type != $this->value_type) {
-                $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
-            }
-        }
     }
 
     /**
