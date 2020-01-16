@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 namespace Tuleap\Admin;
 
 use ForgeConfig;
+use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\VersionPresenter;
 use UserManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\SidebarPresenter;
@@ -42,7 +44,11 @@ class AdminPageRenderer
                 'title'        => $title,
                 'body_class'   => $body_class,
                 'main_classes' => $is_framed ? array('tlp-framed') : array(),
-                'sidebar'      => new SidebarPresenter('siteadmin-sidebar', $this->renderSideBar())
+                'sidebar'      => new SidebarPresenter(
+                    'siteadmin-sidebar',
+                    $this->renderSideBar(),
+                    VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())
+                )
             )
         );
     }

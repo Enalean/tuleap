@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 
 class FlamingParrot_ContainerPresenter
@@ -54,6 +55,9 @@ class FlamingParrot_ContainerPresenter
     /** @var string */
     private $feedback_content;
 
+    /**
+     * @var VersionPresenter
+     */
     public $version;
 
     /** @var bool */
@@ -97,7 +101,7 @@ class FlamingParrot_ContainerPresenter
         $project_tabs,
         $feedback,
         $feedback_content,
-        $version,
+        VersionPresenter $version,
         $sidebar_collapsable,
         ?BannerDisplay $banner,
         PFUser $current_user,

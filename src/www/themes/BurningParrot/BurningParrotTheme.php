@@ -26,6 +26,8 @@ use PFUser;
 use Project;
 use ProjectManager;
 use TemplateRendererFactory;
+use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
@@ -47,6 +49,11 @@ class BurningParrotTheme extends BaseLayout
 
     /** @var \MustacheRenderer */
     private $renderer;
+
+    /**
+     * @var VersionPresenter
+     */
+    private $version;
 
     /** @var PFUser */
     private $user;
@@ -71,6 +78,7 @@ class BurningParrotTheme extends BaseLayout
         $this->event_manager   = EventManager::instance();
         $this->request         = HTTPRequest::instance();
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->version         = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
 
         $this->project_flags_builder    = new ProjectFlagsBuilder(new ProjectFlagsDao());
 
@@ -199,7 +207,7 @@ class BurningParrotTheme extends BaseLayout
         $footer = new FooterPresenter(
             $this->javascript_in_footer,
             $this->canShowFooter($params),
-            $this->getTuleapVersion()
+            $this->version->getFullDescriptiveVersion()
         );
         $this->renderer->renderToPage('footer', $footer);
 
@@ -245,11 +253,6 @@ class BurningParrotTheme extends BaseLayout
         return (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
     }
 
-    private function getTuleapVersion()
-    {
-        return trim(file_get_contents(ForgeConfig::get('tuleap_dir') . '/VERSION'));
-    }
-
     private function getSidebarFromParams(array $params)
     {
         if (isset($params['sidebar'])) {
@@ -264,18 +267,20 @@ class BurningParrotTheme extends BaseLayout
         return false;
     }
 
-    private function getSidebarPresenterForProject(Project $project, array $params)
+    private function getSidebarPresenterForProject(Project $project, array $params): SidebarPresenter
     {
         $project_sidebar_presenter = new ProjectSidebarPresenter(
             $this->getUser(),
             $project,
             $this->getProjectSidebar($params, $project),
-            $this->getProjectPrivacy($project)
+            $this->getProjectPrivacy($project),
+            $this->version
         );
 
         return new SidebarPresenter(
             'project-sidebar',
-            $this->renderer->renderToString('project-sidebar', $project_sidebar_presenter)
+            $this->renderer->renderToString('project-sidebar', $project_sidebar_presenter),
+            $this->version
         );
     }
 

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
@@ -357,7 +359,7 @@ class FlamingParrot_Theme extends Layout
             $project_tabs,
             $this->_feedback,
             $this->_getFeedback(),
-            $this->getForgeVersion(),
+            VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence()),
             $sidebar_collapsable,
             $banner,
             $current_user,
@@ -365,11 +367,6 @@ class FlamingParrot_Theme extends Layout
         ));
 
         $this->keyboardModal();
-    }
-
-    private function getForgeVersion()
-    {
-        return trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
     }
 
     private function keyboardModal()

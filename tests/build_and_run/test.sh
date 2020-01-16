@@ -31,4 +31,4 @@ docker cp "$UNIQUE_NAME-rpm-installer":/var/log/nginx "$WORKSPACE/results/build-
 docker cp "$UNIQUE_NAME-rpm-installer":/var/opt/remi/php73/log/php-fpm "$WORKSPACE/results/build-and-run-$OS/fpm"
 docker cp "$UNIQUE_NAME-rpm-installer":/var/log/tuleap "$WORKSPACE/results/build-and-run-$OS/tuleap"
 
-grep "Tuleap $(cat "$WORKSPACE"/sources/VERSION)" "$WORKSPACE/results/build-and-run-$OS/index.html"
+grep "Dev Build $(cat "$WORKSPACE"/sources/VERSION)" "$WORKSPACE/results/build-and-run-$OS/index.html"
