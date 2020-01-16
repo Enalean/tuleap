@@ -24,6 +24,7 @@
 
 namespace Tuleap\Timetracking\REST\v1;
 
+use EventManager;
 use Luracast\Restler\RestException;
 use Project;
 use Tracker_FormElementFactory;
@@ -91,7 +92,8 @@ class ProjectResource
         $transition_retriever = new TransitionRetriever(
             new StateFactory(
                 new TransitionFactory(
-                    Workflow_Transition_ConditionFactory::build()
+                    Workflow_Transition_ConditionFactory::build(),
+                    EventManager::instance()
                 ),
                 new SimpleWorkflowDao()
             ),

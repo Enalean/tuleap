@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -236,7 +236,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
                     new TransitionRetriever(
                         new StateFactory(
                             new TransitionFactory(
-                                Workflow_Transition_ConditionFactory::build()
+                                Workflow_Transition_ConditionFactory::build(),
+                                EventManager::instance()
                             ),
                             new SimpleWorkflowDao()
                         ),

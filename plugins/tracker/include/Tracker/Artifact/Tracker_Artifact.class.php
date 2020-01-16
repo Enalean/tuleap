@@ -2214,7 +2214,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             new TransitionRetriever(
                 new StateFactory(
                     new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build()
+                        Workflow_Transition_ConditionFactory::build(),
+                        EventManager::instance()
                     ),
                     new SimpleWorkflowDao()
                 ),
@@ -2234,7 +2235,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             new TransitionRetriever(
                 new StateFactory(
                     new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build()
+                        Workflow_Transition_ConditionFactory::build(),
+                        EventManager::instance()
                     ),
                     new SimpleWorkflowDao()
                 ),

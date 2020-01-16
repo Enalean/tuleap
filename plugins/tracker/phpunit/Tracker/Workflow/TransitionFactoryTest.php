@@ -48,13 +48,22 @@ class TransitionFactoryTest extends TestCase
     private $to_value;
     private $xml_mapping;
 
+    /**
+     * @var \EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $event_manager;
+
     protected function setUp() : void
     {
         parent::setUp();
 
         $this->condition_factory  = \Mockery::spy(\Workflow_Transition_ConditionFactory::class);
         $this->postaction_factory = \Mockery::spy(\Transition_PostActionFactory::class);
-        $this->factory            = \Mockery::mock(\TransitionFactory::class, [$this->condition_factory])
+        $this->event_manager      = \Mockery::mock(\EventManager::class);
+        $this->factory            = \Mockery::mock(
+            \TransitionFactory::class,
+            [$this->condition_factory, $this->event_manager]
+        )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
