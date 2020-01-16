@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use Tuleap\Tracker\Workflow\TransitionDeletionException;
@@ -465,12 +466,14 @@ class TransitionFactory
     public function delete(Transition $transition)
     {
         try {
-            if (!$this->getDao()->deleteTransition(
+            $event = new TransitionDeletionEvent($transition);
+            $this->event_manager->processEvent($event);
+
+            if (! $this->getDao()->deleteTransition(
                 $transition->getWorkflow()->getId(),
                 $transition->getIdFrom(),
                 $transition->getIdTo()
-            )
-            ) {
+            )) {
                 throw new TransitionDeletionException();
             }
         } catch (DataAccessQueryException $exception) {
