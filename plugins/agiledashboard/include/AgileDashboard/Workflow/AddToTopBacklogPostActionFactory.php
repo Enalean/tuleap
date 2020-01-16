@@ -85,11 +85,6 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         return false;
     }
 
-    public function deleteWorkflow($workflow_id)
-    {
-        //Does nothing
-    }
-
     public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
     {
         //Does nothing

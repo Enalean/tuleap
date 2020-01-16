@@ -21,6 +21,8 @@
 /**
  * Interface to define the factory for a dedicated type of PostAction.
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 interface Transition_PostActionSubFactory
 {
 
@@ -63,14 +65,6 @@ interface Transition_PostActionSubFactory
      * @return bool
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field);
-
-    /**
-     * Delete a workflow
-     *
-     * @param int $workflow_id the id of the workflow
-     *
-     */
-    public function deleteWorkflow($workflow_id);
 
     /**
      * Duplicate postactions of a transition

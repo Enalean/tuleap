@@ -64,21 +64,6 @@ class Transition_PostActionFactory
     private $hidden_fieldsets_factory;
 
     /**
-     * Get html code to let someone choose a post action for a transition
-     *
-     * @return string html
-     */
-    public function fetchPostActions()
-    {
-        $html  = '';
-        $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin', 'add_new_action');
-        $html .= '<select name="add_postaction">';
-        $html .= $this->getSubFactories()->fetchPostActions();
-        $html .= '</select>';
-        return $html;
-    }
-
-    /**
      * Create a new post action for the transition
      *
      * @param Transition $transition           On wich transition we should add the post action
@@ -133,17 +118,6 @@ class Transition_PostActionFactory
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
     {
         return $this->getSubFactories()->isFieldUsedInPostActions($field);
-    }
-
-    /**
-     * Delete a workflow
-     *
-     * @param int $workflow_id the id of the workflow
-     *
-     */
-    public function deleteWorkflow($workflow_id)
-    {
-        return $this->getSubFactories()->deleteWorkflow($workflow_id);
     }
 
     /**

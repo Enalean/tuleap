@@ -299,21 +299,6 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
     }
 }
 
-class Transition_PostActionFactory_DeleteWorkflowTest extends Transition_PostActionFactory_BaseTest
-{
-
-    public function itDeletesAllPostActions()
-    {
-        $workflow_id = 10;
-        stub($this->field_factory)->deleteWorkflow($workflow_id)->once()->returns(true);
-        stub($this->cibuild_factory)->deleteWorkflow($workflow_id)->once()->returns(true);
-
-        $this->event_manager->shouldReceive('processEvent')->once();
-
-        $this->factory->deleteWorkflow($workflow_id);
-    }
-}
-
 class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transition_PostActionFactory_BaseTest
 {
 

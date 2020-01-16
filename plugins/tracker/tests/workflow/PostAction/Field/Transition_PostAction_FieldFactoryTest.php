@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -290,39 +290,6 @@ class Transition_PostActionFieldFactory_SaveObjectTest extends Transition_PostAc
                                                ->build();
         $this->float_dao->expectOnce('save', array(123, 456, 0));
         $this->factory->saveObject($post_action);
-    }
-}
-
-class Transition_PostActionFieldFactory_DeleteWorkflowTest extends Transition_PostAction_FieldFactory_BaseTest
-{
-
-    private $workflow_id = 1;
-
-    public function itDeletesAllFieldsPostActions()
-    {
-        $this->date_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
-        $this->int_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
-        $this->float_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
-
-        $this->factory->deleteWorkflow($this->workflow_id);
-    }
-
-    public function itReturnsTrueWhenAllDeletionsSucceed()
-    {
-        stub($this->date_dao)->deletePostActionsByWorkflowId('*')->returns(true);
-        stub($this->int_dao)->deletePostActionsByWorkflowId('*')->returns(true);
-        stub($this->float_dao)->deletePostActionsByWorkflowId('*')->returns(true);
-
-        $this->assertTrue($this->factory->deleteWorkflow($this->workflow_id));
-    }
-
-    public function itReturnsFalseWhenAnyDeletionFails()
-    {
-        stub($this->date_dao)->deletePostActionsByWorkflowId('*')->returns(true);
-        stub($this->int_dao)->deletePostActionsByWorkflowId('*')->returns(false);
-        stub($this->float_dao)->deletePostActionsByWorkflowId('*')->returns(true);
-
-        $this->assertFalse($this->factory->deleteWorkflow($this->workflow_id));
     }
 }
 

@@ -173,20 +173,6 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     }
 
     /**
-     * @see Transition_PostActionSubFactory::deleteWorkflow()
-     */
-    public function deleteWorkflow($workflow_id)
-    {
-        $result = true;
-        $post_actions_classes = $this->post_actions_classes;
-        foreach (array_keys($post_actions_classes) as $shortname) {
-            $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
-        }
-
-        return $result;
-    }
-
-    /**
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)

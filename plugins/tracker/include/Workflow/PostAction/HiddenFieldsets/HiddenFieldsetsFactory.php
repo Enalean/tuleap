@@ -140,17 +140,6 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
     }
 
     /**
-     * Delete a workflow
-     *
-     * @param int $workflow_id the id of the workflow
-     *
-     */
-    public function deleteWorkflow($workflow_id)
-    {
-        // This is dead code and should be removed.
-    }
-
-    /**
      * Duplicate postactions of a transition
      *
      * @param Transition $from_transition the template transition

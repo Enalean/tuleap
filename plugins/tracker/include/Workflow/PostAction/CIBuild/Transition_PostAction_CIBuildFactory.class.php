@@ -99,14 +99,6 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     }
 
     /**
-     * @see Transition_PostActionSubFactory::deleteWorkflow()
-     */
-    public function deleteWorkflow($workflow_id)
-    {
-        return $this->dao->deletePostActionsByWorkflowId($workflow_id);
-    }
-
-    /**
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
