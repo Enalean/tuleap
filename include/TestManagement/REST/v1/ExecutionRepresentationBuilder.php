@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -83,6 +83,10 @@ class ExecutionRepresentationBuilder
      * @var StepsResultsRepresentationBuilder
      */
     private $steps_results_representation_builder;
+    /**
+     * @var \Codendi_HTMLPurifier
+     */
+    private $purifier;
 
     public function __construct(
         UserManager $user_manager,
@@ -94,7 +98,8 @@ class ExecutionRepresentationBuilder
         RequirementRetriever $requirement_retriever,
         DefinitionForExecutionRetriever $definition_retriever,
         ExecutionDao $execution_dao,
-        StepsResultsRepresentationBuilder $steps_results_representation_builder
+        StepsResultsRepresentationBuilder $steps_results_representation_builder,
+        \Codendi_HTMLPurifier $purifier
     ) {
         $this->user_manager                         = $user_manager;
         $this->tracker_form_element_factory         = $tracker_form_element_factory;
@@ -106,6 +111,7 @@ class ExecutionRepresentationBuilder
         $this->definition_retriever                 = $definition_retriever;
         $this->execution_dao                        = $execution_dao;
         $this->steps_results_representation_builder = $steps_results_representation_builder;
+        $this->purifier                             = $purifier;
     }
 
     /**
@@ -259,7 +265,7 @@ class ExecutionRepresentationBuilder
         Tracker_Artifact $definition,
         array $definitions_changeset_ids
     ) {
-        $definition_representation = new DefinitionRepresentation();
+        $definition_representation = new DefinitionRepresentation($this->purifier);
         $definition_representation->build(
             $definition,
             $this->tracker_form_element_factory,

@@ -155,7 +155,8 @@ class ExecutionsResource
             $requirement_retriever,
             $this->definition_retriever,
             $this->execution_dao,
-            $steps_results_representation_builder
+            $steps_results_representation_builder,
+            \Codendi_HTMLPurifier::instance()
         );
 
         $this->node_js_client         = new NodeJSClient(
