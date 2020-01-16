@@ -1,7 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ProjectInformationInputPrivacySwitch Spawns the ProjectInformationInputPrivacySwitch component 1`] = `
-<div class="tlp-form-element"><label for="project-information-input-privacy-switch-label" class="tlp-label"><span data-msgid="Privacy" data-current-language="en_US">Privacy</span> <span data-tlp-tooltip="Project privacy set to public. By default, its content is available to all authenticated. Please note that more restrictive permissions might exist on some items." data-test="project-information-input-privacy-tooltip" class="tlp-tooltip tlp-tooltip-top"><i aria-hidden="true" class="fa fa-question-circle project-information-input-privacy-icon"></i></span></label>
-  <div class="tlp-switch"><input type="checkbox" id="project-information-input-privacy-switch-label" data-test="project-information-input-privacy-switch" class="tlp-switch-checkbox project-information-input-privacy-switch-checkbox"> <label for="project-information-input-privacy-switch-label" aria-hidden="" class="tlp-switch-button project-information-input-privacy-switch-button"></label></div>
+<div class="tlp-form-element"><label for="project-information-input-privacy-switch-label" class="tlp-label"><span data-msgid="Privacy" data-current-language="en_US">Privacy</span> <i aria-hidden="true" data-placement="top" class="fa fa-question-circle project-information-input-privacy-icon"></i></label>
+  <section class="tlp-popover">
+    <div class="tlp-popover-arrow"></div>
+    <div class="tlp-popover-header">
+      <h1 class="tlp-popover-title" data-msgid="Information about privacy" data-current-language="en_US">Information about privacy</h1>
+    </div>
+    <div class="tlp-popover-body">
+      <p data-test="project-information-input-privacy-text">
+        Project privacy set to public. By default, its content is available to all authenticated. Please note that more restrictive permissions might exist on some items.
+      </p>
+    </div>
+  </section>
+  <div class="tlp-switch tlp-switch-large"><input type="checkbox" id="project-information-input-privacy-switch-label" data-test="project-information-input-privacy-switch" class="tlp-switch-checkbox project-information-input-privacy-switch-checkbox"> <label for="project-information-input-privacy-switch-label" aria-hidden="" class="tlp-switch-button project-information-input-privacy-switch-button"></label></div>
 </div>
 `;

@@ -26,21 +26,23 @@
         </label>
         <input
             type="text"
-            class="tlp-input"
+            class="tlp-input tlp-input-large"
             v-bind:placeholder="field.desc_description"
             v-bind:id="`input-${field.group_desc_id}`"
             v-if="field.desc_type === 'line'"
             v-bind:required="isRequired"
             v-on:input="updateField(field.group_desc_id, $event.target.value)"
+            size="50"
         />
         <textarea
-            class="tlp-textarea"
+            class="tlp-textarea tlp-textarea-large"
             v-bind:placeholder="field.desc_description"
             v-bind:id="`textaarea-${field.group_desc_id}`"
             v-bind:required="isRequired"
             v-else-if="field.desc_type === 'text'"
             v-on:input="updateField(field.group_desc_id, $event.target.value)"
             data-test="project-field-text"
+            cols="75"
         ></textarea>
     </div>
 </template>

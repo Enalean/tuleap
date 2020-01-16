@@ -46,8 +46,18 @@ describe("ProjectName", () => {
         wrapper = shallowMount(ProjectName, component_options);
     });
 
-    it(`Displays an error if project name has less than minimal requried size`, () => {
+    it(`Should not yields again user, if he just started to type its new project short name, even if the minimal length is not reached`, () => {
         wrapper = shallowMount(ProjectName, component_options);
+        wrapper.vm.$data.written_chars = 0;
+        wrapper.find("[data-test=new-project-name]").setValue("t");
+        expect(wrapper.vm.$data.has_error).toBe(false);
+
+        expect(wrapper.contains("[data-test=project-name-is-invalid]")).toBe(false);
+    });
+
+    it(`Should yields error when user has write more than 3 character ans when minimal project length is not reached`, () => {
+        wrapper = shallowMount(ProjectName, component_options);
+        wrapper.vm.$data.written_chars = 4;
         wrapper.find("[data-test=new-project-name]").setValue("t");
         expect(wrapper.vm.$data.has_error).toBe(true);
 

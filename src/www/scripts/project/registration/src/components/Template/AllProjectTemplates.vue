@@ -38,9 +38,9 @@
                 <company-templates-list />
                 <tuleap-template-list />
                 <advanced-template-list />
+                <template-footer />
             </div>
         </div>
-        <template-footer />
     </div>
 </template>
 

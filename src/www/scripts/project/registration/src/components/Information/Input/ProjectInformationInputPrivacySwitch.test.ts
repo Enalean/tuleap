@@ -24,6 +24,8 @@ import ProjectInformationInputPrivacySwitch from "./ProjectInformationInputPriva
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import { State } from "../../../store/type";
 import { TemplateData } from "../../../type";
+import * as tlp from "tlp";
+jest.mock("tlp");
 
 describe("ProjectInformationInputPrivacySwitch", () => {
     let factory: Wrapper<ProjectInformationInputPrivacySwitch>;
@@ -46,6 +48,8 @@ describe("ProjectInformationInputPrivacySwitch", () => {
             localVue: await createProjectRegistrationLocalVue(),
             mocks: { $store: store }
         });
+
+        jest.spyOn(tlp, "createPopover");
     });
 
     it("Spawns the ProjectInformationInputPrivacySwitch component", () => {
@@ -72,17 +76,17 @@ describe("ProjectInformationInputPrivacySwitch", () => {
         wrapper.vm.$store.state.is_project_approval_required = false;
         wrapper.vm.$store.state.are_anonymous_allowed = false;
 
-        const tooltip: HTMLSpanElement = wrapper.find(
-            "[data-test=project-information-input-privacy-tooltip]"
+        const popover_content: HTMLSpanElement = wrapper.find(
+            "[data-test=project-information-input-privacy-text]"
         ).element;
 
-        expect(tooltip.getAttribute("data-tlp-tooltip")).toBe(
+        expect(popover_content.innerHTML.trim()).toEqual(
             "Project privacy set to public. By default, its content is available to all authenticated. Please note that more restrictive permissions might exist on some items."
         );
 
         wrapper.find("[data-test=project-information-input-privacy-switch]").trigger("click");
 
-        expect(tooltip.getAttribute("data-tlp-tooltip")).toBe(
+        expect(popover_content.innerHTML.trim()).toEqual(
             "Project privacy set to private. Only project members can access its content."
         );
     });
@@ -97,11 +101,11 @@ describe("ProjectInformationInputPrivacySwitch", () => {
         wrapper.vm.$store.state.is_project_approval_required = false;
         wrapper.vm.$store.state.are_anonymous_allowed = false;
 
-        const tooltip: HTMLSpanElement = wrapper.find(
-            "[data-test=project-information-input-privacy-tooltip]"
+        const popover_content: HTMLSpanElement = wrapper.find(
+            "[data-test=project-information-input-privacy-text]"
         ).element;
 
-        expect(tooltip.getAttribute("data-tlp-tooltip")).toBe(
+        expect(popover_content.innerHTML.trim()).toEqual(
             "Project privacy set to public. By default, its content is available to all authenticated. Please note that more restrictive permissions might exist on some items."
         );
     });
@@ -117,11 +121,11 @@ describe("ProjectInformationInputPrivacySwitch", () => {
         wrapper.vm.$store.state.is_project_approval_required = false;
         wrapper.vm.$store.state.are_anonymous_allowed = true;
 
-        const tooltip: HTMLSpanElement = wrapper.find(
-            "[data-test=project-information-input-privacy-tooltip]"
+        const popover_content: HTMLSpanElement = wrapper.find(
+            "[data-test=project-information-input-privacy-text]"
         ).element;
 
-        expect(tooltip.getAttribute("data-tlp-tooltip")).toBe(
+        expect(popover_content.innerHTML.trim()).toEqual(
             "Project privacy set to public. By default, its content is available to everyone (authenticated or not). Please note that more restrictive permissions might exist on some items."
         );
     });

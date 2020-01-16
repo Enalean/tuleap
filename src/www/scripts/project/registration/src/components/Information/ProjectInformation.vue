@@ -24,12 +24,11 @@
             {{ error }}
         </div>
 
-        <h1 class="project-registration-title" v-translate>Start a new project</h1>
-
         <form v-on:submit.prevent="createProject" data-test="project-registration-form">
             <div class="register-new-project-section">
                 <project-information-svg />
                 <div class="register-new-project-list">
+                    <h1 class="project-registration-title" v-translate>Start a new project</h1>
                     <h2>
                         <span class="tlp-badge-primary register-new-project-section-badge">2</span>
                         <span v-translate>Project information</span>
@@ -68,9 +67,9 @@
                         v-bind:field="field"
                     />
                     <policy-agreement />
+                    <project-information-footer />
                 </div>
             </div>
-            <project-information-footer />
         </form>
     </div>
 </template>

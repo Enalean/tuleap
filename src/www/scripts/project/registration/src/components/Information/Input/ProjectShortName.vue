@@ -28,11 +28,14 @@
         >
             <span v-translate>Project shortname:</span>
             <div class="project-shortname-slugified">{{ slugified_project_name }}</div>
-            <i class="fa fa-pencil project-shortname-edit-icon" />
+            <i class="fa fa-pencil project-shortname-edit-icon"></i>
         </div>
         <div
             class="tlp-form-element"
-            v-bind:class="should_user_correct_shortname"
+            v-bind:class="[
+                has_slug_error ? 'tlp-form-element-error' : '',
+                should_user_correct_shortname
+            ]"
             data-test="project-shortname-edit-section"
         >
             <label class="tlp-label" for="project-short-name">
@@ -41,28 +44,30 @@
             </label>
             <input
                 type="text"
-                class="tlp-input"
+                class="tlp-input tlp-input-large"
                 id="project-short-name"
                 name="shortname"
                 ref="shortname"
-                v-bind:placeholder="$gettext('Project shortname')"
+                v-bind:placeholder="$gettext('project-shortname')"
                 v-bind:minlength="min_project_length"
                 v-bind:maxlength="max_project_length"
                 v-on:input="updateProjectShortName($refs.shortname.value)"
                 v-bind:value="slugified_project_name"
                 data-test="new-project-name"
+                size="50"
             />
+            <p class="tlp-text-info">
+                <i class="fa fa-fw fa-life-saver"></i>
+                <span v-translate>Must start with a letter, without spaces nor punctuation.</span>
+            </p>
             <p class="tlp-text-danger" v-if="has_slug_error">
+                <i class="fa fa-fw fa-exclamation-circle"></i>
                 <translate
                     v-bind:translate-params="{ min: min_project_length, max: max_project_length }"
                 >
                     Project short name must have between %{ min } and %{ max } characters length. It
                     can only contain alphanumerical characters and dashes. Must start with a letter.
                 </translate>
-            </p>
-            <p class="tlp-text-info">
-                <i class="fa fa-life-saver register-new-project-icon" />
-                <span v-translate>Must start with a letter, avoid spaces and punctuation.</span>
             </p>
         </div>
     </div>

@@ -19,7 +19,10 @@
   -->
 
 <template>
-    <div class="tlp-form-element project-information-name">
+    <div
+        class="tlp-form-element project-information-name"
+        v-bind:class="{ 'tlp-form-element-error': has_error }"
+    >
         <label class="tlp-label" for="project-name" v-translate>
             Name
             <i class="fa fa-asterisk"></i>
@@ -27,17 +30,18 @@
         <input
             id="project-name"
             type="text"
-            class="tlp-input"
+            class="tlp-input tlp-input-large"
             data-test="new-project-name"
             v-bind:placeholder="$gettext('My new project')"
             v-bind:minlength="min_project_length"
             v-bind:maxlength="max_project_length"
             ref="name"
             v-on:input="slugifiedProjectName()"
+            size="50"
             required
         />
         <p class="tlp-text-info">
-            <i class="fa fa-life-saver register-new-project-icon"></i>
+            <i class="fa fa-fw fa-life-saver"></i>
             <translate
                 v-bind:translate-params="{ min: min_project_length, max: max_project_length }"
             >
@@ -45,6 +49,7 @@
             </translate>
         </p>
         <p class="tlp-text-danger" v-if="has_error" data-test="project-name-is-invalid">
+            <i class="fa fa-fw fa-exclamation-circle"></i>
             <translate
                 v-bind:translate-params="{ min: min_project_length, max: max_project_length }"
             >
@@ -69,15 +74,18 @@ export default class ProjectName extends Vue {
         name: HTMLFormElement;
     };
 
+    written_chars = 0;
     has_error = false;
     min_project_length = 3;
     max_project_length = 40;
 
     slugifiedProjectName(): void {
+        this.written_chars++;
         const project_name = this.$refs.name.value;
         this.has_error =
-            project_name.length < this.min_project_length ||
-            project_name.length > this.max_project_length;
+            this.written_chars > 3 &&
+            (project_name.length < this.min_project_length ||
+                project_name.length > this.max_project_length);
 
         EventBus.$emit("slugify-project-name", project_name);
     }

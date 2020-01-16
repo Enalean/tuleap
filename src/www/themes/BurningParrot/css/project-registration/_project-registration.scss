@@ -61,12 +61,26 @@ $title-margin-left: $illustration-width + $illustration-spacing;
     margin: 0 5px 0 0;
 }
 
-.register-new-project-information-form-container {
+.project-registration-button-container {
     display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    padding: $tlp-spacing 0 0;
+    border-top: 1px solid $tlp-ui-border-dark;
 }
 
-.register-new-project-information-form-container-restricted-allowed {
-    align-items: baseline;
+.project-registration-back-button {
+    margin: 0 $tlp-spacing 0 0;
+    color: $tlp-ui-dimmed;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: none;
+
+        > .project-registration-back-button-text {
+            text-decoration: underline;
+        }
+    }
 }
 
 @media screen and (max-width: 1000px) {

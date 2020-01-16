@@ -22,18 +22,25 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="project-information-input-privacy-switch-label">
             <span v-translate>Privacy</span>
-            <span
-                class="tlp-tooltip tlp-tooltip-top"
-                v-bind:data-tlp-tooltip="translated_tooltip"
-                data-test="project-information-input-privacy-tooltip"
-            >
-                <i
-                    class="fa fa-question-circle project-information-input-privacy-icon"
-                    aria-hidden="true"
-                ></i>
-            </span>
+            <i
+                class="fa fa-question-circle project-information-input-privacy-icon"
+                aria-hidden="true"
+                data-placement="top"
+                ref="trigger"
+            ></i>
         </label>
-        <div class="tlp-switch">
+        <section class="tlp-popover" ref="container">
+            <div class="tlp-popover-arrow"></div>
+            <div class="tlp-popover-header">
+                <h1 class="tlp-popover-title" v-translate>Information about privacy</h1>
+            </div>
+            <div class="tlp-popover-body">
+                <p data-test="project-information-input-privacy-text">
+                    {{ translated_tooltip }}
+                </p>
+            </div>
+        </section>
+        <div class="tlp-switch tlp-switch-large">
             <input
                 type="checkbox"
                 id="project-information-input-privacy-switch-label"
@@ -53,6 +60,7 @@
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
+import { createPopover } from "tlp";
 import Vue from "vue";
 import { State } from "vuex-class";
 
@@ -62,6 +70,14 @@ export default class ProjectInformationInputPrivacySwitch extends Vue {
 
     @State
     are_anonymous_allowed!: boolean;
+
+    mounted(): void {
+        const trigger = this.$refs.trigger;
+        const container = this.$refs.container;
+        if (trigger instanceof Element && container instanceof Element) {
+            createPopover(trigger, container);
+        }
+    }
 
     get translated_tooltip(): string {
         if (this.is_checked) {

@@ -22,20 +22,27 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="project-information-input-privacy-list-label">
             <span v-translate>Privacy</span>
-            <span
-                class="tlp-tooltip tlp-tooltip-top"
-                v-bind:data-tlp-tooltip="translated_tooltip"
-                data-test="project-information-input-privacy-tooltip"
-            >
-                <i
-                    class="fa fa-question-circle project-information-input-privacy-icon"
-                    aria-hidden="true"
-                ></i>
-            </span>
+            <i
+                class="fa fa-question-circle project-information-input-privacy-icon"
+                aria-hidden="true"
+                data-placement="top"
+                ref="trigger"
+            ></i>
         </label>
+        <section class="tlp-popover" ref="container">
+            <div class="tlp-popover-arrow"></div>
+            <div class="tlp-popover-header">
+                <h1 class="tlp-popover-title" v-translate>Information about privacy</h1>
+            </div>
+            <div class="tlp-popover-body">
+                <p data-test="project-information-input-privacy-text">
+                    {{ translated_tooltip }}
+                </p>
+            </div>
+        </section>
         <select
             id="project-information-input-privacy-list-label"
-            class="tlp-select"
+            class="tlp-select tlp-select-large"
             name="privacy"
             v-on:change="$emit('input', selected_visibility)"
             data-test="project-information-input-privacy-list"
@@ -79,6 +86,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { createPopover } from "tlp";
 import { Component } from "vue-property-decorator";
 import {
     ACCESS_PRIVATE,
@@ -97,6 +105,12 @@ export default class ProjectInformationInputPrivacyList extends Vue {
 
     mounted(): void {
         this.selected_visibility = this.project_default_visibility;
+
+        const trigger = this.$refs.trigger;
+        const container = this.$refs.container;
+        if (trigger instanceof Element && container instanceof Element) {
+            createPopover(trigger, container);
+        }
     }
 
     get is_public_selected(): boolean {

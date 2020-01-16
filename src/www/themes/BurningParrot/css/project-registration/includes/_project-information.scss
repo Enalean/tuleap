@@ -18,10 +18,20 @@
  *
  */
 
+.register-new-project-information-form-container {
+    display: flex;
+}
+
+.register-new-project-information-form-container-restricted-allowed {
+    align-items: baseline;
+}
+
 .project-shortname-slugified-section {
     display: flex;
     margin: $tlp-half-spacing 0;
+    padding-left: $tlp-spacing;
     color: $tlp-ui-dimmed;
+    font-size: 13px;
 }
 
 .project-shortname-slugified {
@@ -29,18 +39,13 @@
     font-weight: bold;
 }
 
-.register-new-project-icon {
-    margin: 0 5px 0 0;
-}
-
 .project-information-name {
-    flex-grow: 1;
-    margin: 0 $tlp-spacing $tlp-spacing 0;
+    flex: 0;
+    margin: 0 $tlp-double-spacing $tlp-spacing 0;
 }
-
 
 .project-information-input-privacy-icon {
-    margin: 5px 0 0 5px;
+    margin: 0 0 0 5px;
 }
 
 .project-information-input-privacy-switch-checkbox:checked + .project-information-input-privacy-switch-button {
@@ -63,7 +68,7 @@
 .tlp-form-element {
     .project-short-name-edit-section {
         display: block;
-        margin: $tlp-half-spacing 0 0 0;
+        margin: $tlp-spacing 0 0 0;
     }
 }
 
