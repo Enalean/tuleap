@@ -50,17 +50,6 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
     }
 
     /**
-     * Get html code to let someone choose a post action for a transition
-     *
-     * @return string html
-     */
-    public function fetchPostActions()
-    {
-        // Not implemented. We do not support the legacy UI for this post action
-        return '';
-    }
-
-    /**
      * @param Transition $transition
      * @param string $requested_postaction
      */
@@ -144,7 +133,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      *
      * @param Transition $from_transition the template transition
      * @param int $to_transition_id the id of the transition
-     * @param Array $field_mapping the field mapping
+     * @param array $field_mapping the field mapping
      *
      */
     public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)

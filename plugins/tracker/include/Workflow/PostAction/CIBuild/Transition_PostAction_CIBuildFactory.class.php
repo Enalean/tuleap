@@ -85,20 +85,6 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     }
 
     /**
-     * @see Transition_PostActionSubFactory::fetchPostActions()
-     */
-    public function fetchPostActions()
-    {
-        $html = '';
-        $html .= '<option value="" selected>--</option>';
-        $html .= '<option value="'. Transition_PostAction_CIBuild::SHORT_NAME .'">';
-        $html .= Transition_PostAction_CIBuild::getLabel();
-        $html .= '</option>';
-
-        return $html;
-    }
-
-    /**
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)

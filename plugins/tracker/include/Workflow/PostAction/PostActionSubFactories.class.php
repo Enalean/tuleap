@@ -87,18 +87,4 @@ class Transition_PostActionSubFactories
             $factory->duplicate($from_transition, $to_transition_id, $field_mapping);
         }
     }
-
-    /**
-     * Get html code to let someone choose a post action for a transition
-     *
-     * @return string html
-     */
-    public function fetchPostActions()
-    {
-        $html  = '';
-        foreach ($this->factories as $factory) {
-            $html .= $factory->fetchPostActions();
-        }
-        return $html;
-    }
 }

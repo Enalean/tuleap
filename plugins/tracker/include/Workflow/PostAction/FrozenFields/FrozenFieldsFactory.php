@@ -44,17 +44,6 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
     }
 
     /**
-     * Get html code to let someone choose a post action for a transition
-     *
-     * @return string html
-     */
-    public function fetchPostActions()
-    {
-        // Not implemented. We do not support the legacy UI for this post action
-        return '';
-    }
-
-    /**
      * @param Transition $transition
      * @param string     $requested_postaction
      */
