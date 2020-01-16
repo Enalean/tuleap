@@ -1079,26 +1079,10 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *
      * Parameters:
      *   'project'         => Project
-     *   'new_ugroup_name' => String|null
-     *   'old_ugroup_name' => String|null
+     *   'new_ugroup_name' => string
+     *   'old_ugroup_name' => string
      */
-    public const UGROUP_MODIFY = 'ugroup_modify';
-
-    /**
-     * When a user is added to a project
-     *
-     * Paramters:
-     *   'project'         => Project
-     */
-    public const MEMBERSHIP_CREATE = 'membership_create';
-
-    /**
-     * When a user is removed to a project
-     *
-     * Paramters:
-     *   'project' => Project
-     */
-    public const MEMBERSHIP_DELETE = 'membership_delete';
+    public const UGROUP_RENAME = 'ugroup_rename';
 
     /**
      * Retrieve project_id for an artifact reference

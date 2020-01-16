@@ -79,11 +79,11 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
         parent::tearDown();
     }
 
-    public function testItWarnsOthersThatUGroupHasBeenModified()
+    public function testItWarnsOthersThatUGroupHasBeenModified(): void
     {
         $this->event_manager->shouldReceive('processEvent')
             ->with(
-                Event::UGROUP_MODIFY,
+                Event::UGROUP_RENAME,
                 array(
                     'project'         => $this->project,
                     'new_ugroup_name' => 'Amleth',

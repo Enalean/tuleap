@@ -76,57 +76,6 @@ class SystemEvent_UGROUP_MODIFY_Test extends TestCase
         $this->assertFalse($evt->process());
     }
 
-    /**
-     * ProjectUGroup modify SVN fail
-     *
-     * @return Void
-     */
-    public function testUgroupModifyProcessSVNFail(): void
-    {
-        $now = (new DateTimeImmutable())->getTimestamp();
-
-        $evt = \Mockery::mock(
-            \SystemEvent_UGROUP_MODIFY::class,
-            [
-                '1',
-                SystemEvent::TYPE_UGROUP_MODIFY,
-                SystemEvent::OWNER_ROOT,
-                '1',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                ''
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $evt->shouldReceive('getParametersAsArray')->andReturns(array(1, 2));
-
-        $evt->shouldReceive('processUgroupBinding')->andReturns(true);
-
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->once()->with(1)->andReturns($project);
-
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('updateSVNAccess')->once()->andReturns(false);
-
-        $evt->shouldReceive('getBackend')->with('SVN')->once()->andReturns($backendSVN);
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not update SVN access file (1)")->once();
-
-        // Launch the event
-        $this->assertFalse($evt->process());
-    }
-
-    /**
-     * ProjectUGroup modify Success
-     *
-     * @return Void
-     */
     public function testUgroupModifyProcessSuccess(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();
@@ -157,10 +106,10 @@ class SystemEvent_UGROUP_MODIFY_Test extends TestCase
         $project->shouldReceive('usesSVN')->andReturns(true);
         $evt->shouldReceive('getProject')->with(1)->andReturns($project);
 
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('updateSVNAccess')->once()->andReturns(true);
+        $scheduler = Mockery::mock(\Tuleap\svn\Event\UpdateProjectAccessFilesScheduler::class);
+        $scheduler->shouldReceive('scheduleUpdateOfProjectAccessFiles')->once();
+        $evt->injectDependencies($scheduler);
 
-        $evt->shouldReceive('getBackend')->with('SVN')->once()->andReturns($backendSVN);
         $evt->shouldReceive('done')->once();
         $evt->shouldReceive('error')->never();
 
@@ -206,10 +155,10 @@ class SystemEvent_UGROUP_MODIFY_Test extends TestCase
         $ugroupbinding->shouldReceive('getUGroupsByBindingSource')->andReturns($projects);
         $evt->shouldReceive('getUgroupBinding')->andReturns($ugroupbinding);
 
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $scheduler = Mockery::mock(\Tuleap\svn\Event\UpdateProjectAccessFilesScheduler::class);
+        $scheduler->shouldReceive('scheduleUpdateOfProjectAccessFiles')->times(3);
+        $evt->injectDependencies($scheduler);
 
-        $backendSVN->shouldReceive('updateSVNAccess')->times(3)->andReturns(true);
         $evt->shouldReceive('done')->once();
         $evt->shouldReceive('error')->never();
 

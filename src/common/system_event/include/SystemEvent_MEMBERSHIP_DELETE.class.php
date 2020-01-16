@@ -1,25 +1,27 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  *
  */
 
+use Tuleap\svn\Event\UpdateProjectAccessFilesScheduler;
 
 /**
 * System Event classes
@@ -66,19 +68,7 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent
             }
 
             // SVN access file
-            if ($project->usesSVN()) {
-                if (!Backend::instance('SVN')->updateSVNAccess($group_id, $project->getSVNRootPath())) {
-                    $this->error("Could not update SVN access file ($group_id)");
-                    return false;
-                }
-            }
-
-            EventManager::instance()->processEvent(
-                Event::MEMBERSHIP_DELETE,
-                array(
-                    'project' => $project
-                )
-            );
+            (new UpdateProjectAccessFilesScheduler(SystemEventManager::instance()))->scheduleUpdateOfProjectAccessFiles($project);
 
             // Need to update system group cache
             Backend::instance('System')->setNeedRefreshGroupCache();
