@@ -103,6 +103,8 @@ class UnplannedArtifactsAdderTest extends TestCase
 
         $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
 
+        $this->expectException(ArtifactAlreadyPlannedException::class);
+
         $this->adder->addArtifactToTopBacklog($this->artifact);
     }
 
@@ -119,5 +121,20 @@ class UnplannedArtifactsAdderTest extends TestCase
         $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->once();
 
         $this->adder->addArtifactToTopBacklog($this->artifact);
+    }
+
+    public function testItAddsArtifactInTopBacklogFromIds(): void
+    {
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->with(101)
+            ->andReturnTrue();
+
+        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')
+            ->with(1, 101)
+            ->andReturnFalse();
+
+        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->once();
+
+        $this->adder->addArtifactToTopBacklogFromIds(1, 101);
     }
 }

@@ -26,8 +26,8 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
-use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
@@ -48,10 +48,7 @@ class MilestoneElementAdderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DBTransactionExecutorWithConnection
      */
     private $transaction_executor;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
      */
@@ -81,13 +78,18 @@ class MilestoneElementAdderTest extends TestCase
      */
     private $artifact;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnplannedArtifactsAdder
+     */
+    private $unplanned_artifact_adder;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->resources_patcher                   = Mockery::mock(ResourcesPatcher::class);
         $this->explicit_backlog_dao                = Mockery::mock(ExplicitBacklogDao::class);
-        $this->artifacts_in_explicit_backlog_dao   = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->unplanned_artifact_adder            = Mockery::mock(UnplannedArtifactsAdder::class);
         $this->db_connection                       = Mockery::mock(DBConnection::class);
         $this->top_backlog_elements_to_add_checker = Mockery::mock(TopBacklogElementsToAddChecker::class);
 
@@ -95,7 +97,7 @@ class MilestoneElementAdderTest extends TestCase
 
         $this->adder = new MilestoneElementAdder(
             $this->explicit_backlog_dao,
-            $this->artifacts_in_explicit_backlog_dao,
+            $this->unplanned_artifact_adder,
             $this->resources_patcher,
             $this->top_backlog_elements_to_add_checker,
             $this->transaction_executor
@@ -119,7 +121,7 @@ class MilestoneElementAdderTest extends TestCase
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->once();
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->once();
+        $this->unplanned_artifact_adder->shouldReceive('addArtifactToTopBacklogFromIds')->once();
         $this->resources_patcher->shouldReceive('removeArtifactFromSource')->once();
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
@@ -167,7 +169,7 @@ class MilestoneElementAdderTest extends TestCase
             ->once()
             ->andThrow(new ProvidedAddedIdIsNotInPartOfTopBacklogException([]));
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->never();
+        $this->unplanned_artifact_adder->shouldReceive('addArtifactToTopBacklogFromIds')->never();
         $this->resources_patcher->shouldReceive('removeArtifactFromSource')->never();
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->never();
 
@@ -189,7 +191,7 @@ class MilestoneElementAdderTest extends TestCase
             ->once()
             ->andThrow(new NoRootPlanningException());
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->never();
+        $this->unplanned_artifact_adder->shouldReceive('addArtifactToTopBacklogFromIds')->never();
         $this->resources_patcher->shouldReceive('removeArtifactFromSource')->never();
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->never();
 

@@ -2125,7 +2125,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         $processor = new AdditionalMasschangeActionProcessor(
             new ArtifactsInExplicitBacklogDao(),
-            new PlannedArtifactDao()
+            new PlannedArtifactDao(),
+            $this->getUnplannedArtifactsAdder()
         );
 
         $processor->processAction(
@@ -2140,18 +2141,23 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         $event->addFactory(new AddToTopBacklogPostActionFactory(
             new AddToTopBacklogPostActionDao(),
-            new UnplannedArtifactsAdder(
-                new ExplicitBacklogDao(),
-                new ArtifactsInExplicitBacklogDao(),
-                new PlannedArtifactDao()
-            )
+            $this->getUnplannedArtifactsAdder()
         ));
     }
 
     public function workflowDeletionEvent(WorkflowDeletionEvent $event): void
     {
-        $workflow_id = (int) $event->getWorkflow()->getId();
+        $workflow_id = (int)$event->getWorkflow()->getId();
 
         (new AddToTopBacklogPostActionDao())->deleteWorkflowPostActions($workflow_id);
+    }
+
+    private function getUnplannedArtifactsAdder(): UnplannedArtifactsAdder
+    {
+        return new UnplannedArtifactsAdder(
+            new ExplicitBacklogDao(),
+            new ArtifactsInExplicitBacklogDao(),
+            new PlannedArtifactDao()
+        );
     }
 }

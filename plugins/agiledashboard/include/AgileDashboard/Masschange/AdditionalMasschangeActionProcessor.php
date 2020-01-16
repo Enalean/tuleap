@@ -27,7 +27,9 @@ use Feedback;
 use PFUser;
 use Tracker;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 
 class AdditionalMasschangeActionProcessor
 {
@@ -41,12 +43,19 @@ class AdditionalMasschangeActionProcessor
      */
     private $planned_artifact_dao;
 
+    /**
+     * @var UnplannedArtifactsAdder
+     */
+    private $unplanned_artifacts_adder;
+
     public function __construct(
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PlannedArtifactDao $planned_artifact_dao
+        PlannedArtifactDao $planned_artifact_dao,
+        UnplannedArtifactsAdder $unplanned_artifacts_adder
     ) {
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
         $this->planned_artifact_dao              = $planned_artifact_dao;
+        $this->unplanned_artifacts_adder         = $unplanned_artifacts_adder;
     }
 
     public function processAction(
@@ -108,9 +117,13 @@ class AdditionalMasschangeActionProcessor
     {
         foreach ($masschange_aids as $masschange_aid) {
             $artifact_id = (int) $masschange_aid;
-            if (! $this->planned_artifact_dao->isArtifactPlannedInAMilestoneOfTheProject($artifact_id, $project_id)) {
-                $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog($project_id, $artifact_id);
-            } else {
+
+            try {
+                $this->unplanned_artifacts_adder->addArtifactToTopBacklogFromIds(
+                    $artifact_id,
+                    $project_id
+                );
+            } catch (ArtifactAlreadyPlannedException $exception) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
                     sprintf(

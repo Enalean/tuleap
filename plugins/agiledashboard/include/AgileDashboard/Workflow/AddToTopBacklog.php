@@ -28,6 +28,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
@@ -98,6 +99,10 @@ class AddToTopBacklog extends Transition_PostAction
      */
     public function after(Tracker_Artifact_Changeset $changeset)
     {
-        $this->unplanned_artifacts_adder->addArtifactToTopBacklog($changeset->getArtifact());
+        try {
+            $this->unplanned_artifacts_adder->addArtifactToTopBacklog($changeset->getArtifact());
+        } catch (ArtifactAlreadyPlannedException $exception) {
+            //Do nothing
+        }
     }
 }

@@ -54,9 +54,9 @@ final class XMLImporterTest extends TestCase
     private $top_backlog_elements_to_add_checker;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnplannedArtifactsAdder
      */
-    private $artifacts_in_explicit_backlog_dao;
+    private $unplanned_artifacts_adder;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
@@ -79,12 +79,12 @@ final class XMLImporterTest extends TestCase
 
         $this->explicit_backlog_dao                = Mockery::mock(ExplicitBacklogDao::class);
         $this->top_backlog_elements_to_add_checker = Mockery::mock(TopBacklogElementsToAddChecker::class);
-        $this->artifacts_in_explicit_backlog_dao   = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->unplanned_artifacts_adder           = Mockery::mock(UnplannedArtifactsAdder::class);
 
         $this->importer = new XMLImporter(
             $this->explicit_backlog_dao,
             $this->top_backlog_elements_to_add_checker,
-            $this->artifacts_in_explicit_backlog_dao
+            $this->unplanned_artifacts_adder
         );
 
         $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('101')->getMock();
@@ -142,7 +142,7 @@ final class XMLImporterTest extends TestCase
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><agiledashboard/>');
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
 
         $this->importer->importContent(
             $xml,
@@ -161,7 +161,7 @@ final class XMLImporterTest extends TestCase
             ->with(101)
             ->andReturnFalse();
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
 
         $this->logger->shouldReceive('warn')->once();
 
@@ -188,7 +188,7 @@ final class XMLImporterTest extends TestCase
             ->with(101)
             ->andReturnTrue();
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
 
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->once()
@@ -223,12 +223,12 @@ final class XMLImporterTest extends TestCase
             ->with(101)
             ->andReturnTrue();
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')
+        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
             ->once()
-            ->with(101, 225);
+            ->with(225, 101);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog')
-            ->with(101, 226);
+        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds')
+            ->with(226, 101);
 
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')->once();
 
@@ -261,12 +261,12 @@ final class XMLImporterTest extends TestCase
             ->with(101)
             ->andReturnTrue();
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')
+        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
             ->once()
-            ->with(101, 225);
+            ->with(225, 101);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog')
-            ->with(101, 226);
+        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds')
+            ->with(226, 101);
 
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->with(
@@ -306,13 +306,13 @@ final class XMLImporterTest extends TestCase
             ->with(101)
             ->andReturnTrue();
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')
+        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
             ->once()
-            ->with(101, 225);
+            ->with(225, 101);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')
+        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
             ->once()
-            ->with(101, 226);
+            ->with(226, 101);
 
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 

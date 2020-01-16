@@ -80,6 +80,11 @@ class ConfigurationUpdaterTest extends TestCase
      */
     private $request;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnplannedArtifactsAdder
+     */
+    private $unplanned_artifacts_adder;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -89,6 +94,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->backlog_item_dao                  = Mockery::mock(AgileDashboard_BacklogItemDao::class);
         $this->milestone_factory                 = Mockery::mock(Planning_MilestoneFactory::class);
         $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->unplanned_artifacts_adder         = Mockery::mock(UnplannedArtifactsAdder::class);
         $this->db_transaction_executor           = new DBTransactionExecutorPassthrough();
 
         $this->updater = new ConfigurationUpdater(
@@ -97,6 +103,7 @@ class ConfigurationUpdaterTest extends TestCase
             $this->backlog_item_dao,
             $this->milestone_factory,
             $this->artifacts_in_explicit_backlog_dao,
+            $this->unplanned_artifacts_adder,
             $this->db_transaction_executor
         );
 
@@ -125,7 +132,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->explicit_backlog_dao->shouldNotReceive('setProjectUsingExplicitBacklog');
         $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
         $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
 
         $this->updater->updateScrumConfiguration($request);
     }
@@ -139,7 +146,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->explicit_backlog_dao->shouldNotReceive('setProjectUsingExplicitBacklog');
         $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
         $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
@@ -157,7 +164,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->explicit_backlog_dao->shouldNotReceive('setProjectUsingExplicitBacklog');
         $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
         $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
@@ -180,7 +187,7 @@ class ConfigurationUpdaterTest extends TestCase
                 ['id' => '202']
             )
         );
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->times(2);
+        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')->times(2);
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
@@ -198,7 +205,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->explicit_backlog_dao->shouldNotReceive('setProjectIsUsingExplicitBacklog');
         $this->milestone_report_criterion_dao->shouldReceive('updateAllUnplannedValueToAnyInProject')->once();
         $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('addArtifactToProjectBacklog');
+        $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()

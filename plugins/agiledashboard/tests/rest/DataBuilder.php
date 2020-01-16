@@ -36,7 +36,6 @@ use SystemEvent;
 use SystemEventManager;
 use SystemEventProcessor_Factory;
 use TruncateLevelLogger;
-use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\Project\SystemEventRunner;
 
@@ -106,7 +105,6 @@ class DataBuilder extends REST_TestDataBuilder
     {
         $this->createKanbanCumulativeFlow();
         $this->generateBurnupCache();
-        $this->setExplicitBacklog();
     }
 
     private function createKanbanCumulativeFlow()
@@ -144,15 +142,5 @@ class DataBuilder extends REST_TestDataBuilder
         );
 
         $this->system_event_runner->runSystemEvents();
-    }
-
-    private function setExplicitBacklog(): void
-    {
-        $project_explicit_backlog = $this->project_manager->getProjectByUnixName(
-            self::EXPLICIT_BACKLOG_PROJECT_SHORTNAME
-        );
-
-        $dao = new ExplicitBacklogDao();
-        $dao->setProjectIsUsingExplicitBacklog((int) $project_explicit_backlog->getID());
     }
 }

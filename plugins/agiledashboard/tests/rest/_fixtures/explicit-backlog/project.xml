@@ -2307,6 +2307,11 @@
     <nature>_is_child</nature>
   </natures>
   <agiledashboard>
+    <admin>
+        <scrum>
+            <explicit_backlog is_used="1"/>
+        </scrum>
+    </admin>
     <plannings>
       <planning name="Release Planning" plan_title="Release Plan" planning_tracker_id="T156" backlog_title="Product Backlog">
         <backlogs>

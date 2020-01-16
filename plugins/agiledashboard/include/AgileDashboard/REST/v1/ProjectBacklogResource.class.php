@@ -41,8 +41,10 @@ use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
@@ -280,7 +282,11 @@ class ProjectBacklogResource
             try {
                 $adder = new MilestoneElementAdder(
                     new ExplicitBacklogDao(),
-                    new ArtifactsInExplicitBacklogDao(),
+                    new UnplannedArtifactsAdder(
+                        new ExplicitBacklogDao(),
+                        new ArtifactsInExplicitBacklogDao(),
+                        new PlannedArtifactDao()
+                    ),
                     $this->resources_patcher,
                     new TopBacklogElementsToAddChecker(
                         $this->planning_factory,

@@ -46,18 +46,18 @@ class XMLImporter
     private $top_backlog_elements_to_add_checker;
 
     /**
-     * @var ArtifactsInExplicitBacklogDao
+     * @var UnplannedArtifactsAdder
      */
-    private $artifacts_in_explicit_backlog_dao;
+    private $unplanned_artifacts_adder;
 
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         TopBacklogElementsToAddChecker $top_backlog_elements_to_add_checker,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+        UnplannedArtifactsAdder $unplanned_artifacts_adder
     ) {
         $this->explicit_backlog_dao                = $explicit_backlog_dao;
         $this->top_backlog_elements_to_add_checker = $top_backlog_elements_to_add_checker;
-        $this->artifacts_in_explicit_backlog_dao   = $artifacts_in_explicit_backlog_dao;
+        $this->unplanned_artifacts_adder           = $unplanned_artifacts_adder;
     }
 
     public function importConfiguration(SimpleXMLElement $xml, Project $project): void
@@ -117,7 +117,14 @@ class XMLImporter
         }
 
         foreach ($added_artifact_ids as $added_artifact_id) {
-            $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog($project_id, $added_artifact_id);
+            try {
+                $this->unplanned_artifacts_adder->addArtifactToTopBacklogFromIds(
+                    $added_artifact_id,
+                    $project_id
+                );
+            } catch (ArtifactAlreadyPlannedException $exception) {
+                //Do nothing
+            }
         }
     }
 }
