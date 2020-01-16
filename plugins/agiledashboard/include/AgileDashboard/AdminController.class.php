@@ -43,11 +43,13 @@ use ProjectXMLImporter;
 use Tracker_ReportFactory;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
@@ -268,6 +270,11 @@ class AdminController extends BaseController
                     new AgileDashboard_BacklogItemDao(),
                     Planning_MilestoneFactory::build(),
                     new ArtifactsInExplicitBacklogDao(),
+                    new UnplannedArtifactsAdder(
+                        new ExplicitBacklogDao(),
+                        new ArtifactsInExplicitBacklogDao(),
+                        new PlannedArtifactDao()
+                    ),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 )
             );

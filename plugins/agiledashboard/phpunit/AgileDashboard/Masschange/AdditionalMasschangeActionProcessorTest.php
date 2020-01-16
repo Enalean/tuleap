@@ -31,6 +31,7 @@ use Project;
 use Tracker;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\GlobalResponseMock;
 
 class AdditionalMasschangeActionProcessorTest extends TestCase
@@ -62,16 +63,23 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
      */
     private $planned_artifact_dao;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnplannedArtifactsAdder
+     */
+    private $unplanned_artifacts_adder;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->planned_artifact_dao              = Mockery::mock(PlannedArtifactDao::class);
+        $this->unplanned_artifacts_adder         = Mockery::mock(UnplannedArtifactsAdder::class);
 
         $this->processor = new AdditionalMasschangeActionProcessor(
             $this->artifacts_in_explicit_backlog_dao,
-            $this->planned_artifact_dao
+            $this->planned_artifact_dao,
+            $this->unplanned_artifacts_adder
         );
 
         $this->user    = Mockery::mock(PFUser::class);
@@ -186,48 +194,13 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
         $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
 
         $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')
-            ->with(101, 125)
-            ->once();
-
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')
-            ->with(101, 144)
-            ->once();
-
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')->andReturnFalse();
-
-        $this->processor->processAction(
-            $this->user,
-            $this->tracker,
-            $request,
-            ['125', '144']
-        );
-    }
-
-    public function testItDoesNotAddArtifactsToTopBacklogIfArtifactIsAlreadyPlanned(): void
-    {
-        $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'add']);
-
-        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
-
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')
-            ->with(101, 125)
-            ->once();
-
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')
-            ->with(101, 144)
-            ->never();
-
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')
+        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
             ->with(125, 101)
-            ->once()
-            ->andReturnFalse();
+            ->once();
 
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')
+        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')
             ->with(144, 101)
-            ->once()
-            ->andReturnTrue();
+            ->once();
 
         $this->processor->processAction(
             $this->user,

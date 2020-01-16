@@ -62,12 +62,18 @@ class ConfigurationUpdater
      */
     private $artifacts_in_explicit_backlog_dao;
 
+    /**
+     * @var UnplannedArtifactsAdder
+     */
+    private $unplanned_artifacts_adder;
+
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         MilestoneReportCriterionDao $milestone_report_criterion_dao,
         AgileDashboard_BacklogItemDao $backlog_item_dao,
         Planning_MilestoneFactory $milestone_factory,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        UnplannedArtifactsAdder $unplanned_artifacts_adder,
         DBTransactionExecutor $db_transaction_executor
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
@@ -76,6 +82,7 @@ class ConfigurationUpdater
         $this->backlog_item_dao                  = $backlog_item_dao;
         $this->milestone_factory                 = $milestone_factory;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
+        $this->unplanned_artifacts_adder         = $unplanned_artifacts_adder;
     }
 
     public function updateScrumConfiguration(Codendi_Request $request): void
@@ -108,10 +115,14 @@ class ConfigurationUpdater
             );
 
             foreach ($backlog_items_rows as $backlog_items_row) {
-                $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog(
-                    $project_id,
-                    (int) $backlog_items_row['id']
-                );
+                try {
+                    $this->unplanned_artifacts_adder->addArtifactToTopBacklogFromIds(
+                        (int) $backlog_items_row['id'],
+                        $project_id
+                    );
+                } catch (ArtifactAlreadyPlannedException $exception) {
+                    //Do nothing
+                }
             }
         });
     }

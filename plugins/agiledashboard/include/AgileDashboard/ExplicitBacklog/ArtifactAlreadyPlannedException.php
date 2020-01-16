@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,24 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Tuleap\DB\DataAccessObject;
+use Exception;
 
-class ExplicitBacklogDao extends DataAccessObject
+class ArtifactAlreadyPlannedException extends Exception
 {
-    public function isProjectUsingExplicitBacklog(int $project_id): bool
-    {
-        $sql  = 'SELECT NULL FROM plugin_agiledashboard_planning_explicit_backlog_usage WHERE project_id = ?';
-        $rows = $this->getDB()->run($sql, $project_id);
-
-        return count($rows) > 0;
-    }
-
-    public function setProjectIsUsingExplicitBacklog(int $project_id): void
-    {
-        $sql  = 'INSERT INTO plugin_agiledashboard_planning_explicit_backlog_usage (project_id)
-                 VALUES (?)
-                 ON DUPLICATE KEY UPDATE project_id=?';
-
-        $this->getDB()->run($sql, $project_id, $project_id);
-    }
 }

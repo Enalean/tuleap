@@ -26,8 +26,9 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
-use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
@@ -40,10 +41,12 @@ class MilestoneElementAdder
      * @var ExplicitBacklogDao
      */
     private $explicit_backlog_dao;
+
     /**
-     * @var ArtifactsInExplicitBacklogDao
+     * @var UnplannedArtifactsAdder
      */
-    private $artifacts_in_explicit_backlog_dao;
+    private $unplanned_artifacts_adder;
+
     /**
      * @var ResourcesPatcher
      */
@@ -61,13 +64,13 @@ class MilestoneElementAdder
 
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        UnplannedArtifactsAdder $unplanned_artifacts_adder,
         ResourcesPatcher $resources_patcher,
         TopBacklogElementsToAddChecker $top_backlog_elements_to_add_checker,
         DBTransactionExecutor $db_transaction_executor
     ) {
         $this->explicit_backlog_dao                = $explicit_backlog_dao;
-        $this->artifacts_in_explicit_backlog_dao   = $artifacts_in_explicit_backlog_dao;
+        $this->unplanned_artifacts_adder           = $unplanned_artifacts_adder;
         $this->resources_patcher                   = $resources_patcher;
         $this->db_transaction_executor             = $db_transaction_executor;
         $this->top_backlog_elements_to_add_checker = $top_backlog_elements_to_add_checker;
@@ -118,13 +121,17 @@ class MilestoneElementAdder
     {
         $this->db_transaction_executor->execute(
             function () use ($user, $add, $project_id) {
-                foreach ($add as $added_artifact) {
-                    $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog(
-                        $project_id,
-                        (int) $added_artifact->id
-                    );
-                }
                 $this->resources_patcher->removeArtifactFromSource($user, $add);
+                foreach ($add as $added_artifact) {
+                    try {
+                        $this->unplanned_artifacts_adder->addArtifactToTopBacklogFromIds(
+                            (int) $added_artifact->id,
+                            $project_id
+                        );
+                    } catch (ArtifactAlreadyPlannedException $exception) {
+                        //Do nothing
+                    }
+                }
             }
         );
     }

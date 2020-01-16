@@ -19,11 +19,13 @@
  */
 
 use Tuleap\AgileDashboard\AdminController;
+use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
@@ -252,7 +254,11 @@ class AgileDashboardRouter
                     PlanningFactory::build(),
                     Tracker_ArtifactFactory::instance()
                 ),
-                new ArtifactsInExplicitBacklogDao()
+                new UnplannedArtifactsAdder(
+                    new ExplicitBacklogDao(),
+                    new ArtifactsInExplicitBacklogDao(),
+                    new PlannedArtifactDao()
+                )
             ),
             $this->plugin->getThemePath(),
             $external_field_extractor

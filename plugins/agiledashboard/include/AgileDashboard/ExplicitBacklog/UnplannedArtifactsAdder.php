@@ -52,17 +52,28 @@ class UnplannedArtifactsAdder
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
     }
 
+    /**
+     * @throws ArtifactAlreadyPlannedException
+     */
     public function addArtifactToTopBacklog(Tracker_Artifact $artifact): void
     {
         $artifact_id = (int) $artifact->getId();
         $project_id  = (int) $artifact->getTracker()->getGroupId();
 
+        $this->addArtifactToTopBacklogFromIds($artifact_id, $project_id);
+    }
+
+    /**
+     * @throws ArtifactAlreadyPlannedException
+     */
+    public function addArtifactToTopBacklogFromIds(int $artifact_id, int $project_id): void
+    {
         if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
             return;
         }
 
         if ($this->planned_artifact_dao->isArtifactPlannedInAMilestoneOfTheProject($artifact_id, $project_id)) {
-            return;
+            throw new ArtifactAlreadyPlannedException();
         }
 
         $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog($project_id, $artifact_id);
