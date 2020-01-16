@@ -24,6 +24,7 @@ use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
@@ -52,6 +53,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
+use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
@@ -85,6 +87,7 @@ class testmanagementPlugin extends Plugin
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(ImportValidateExternalFields::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
+        $this->addHook(ImportExternalElement::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
@@ -483,8 +486,19 @@ class testmanagementPlugin extends Plugin
     {
         $xml = $validate_external_fields->getXml();
         if ((string)$xml->attributes()['type'] === 'ttmstepdef') {
-            $validator = new ImportXMLFromTracker(new XML_RNGValidator());
+            $validator = $this->getImportXmlFromTracker();
             $validator->validateXMLImport($xml);
+        }
+    }
+
+    public function importExternalElement(ImportExternalElement $event): void
+    {
+        $xml = $event->getXml();
+        if ((string)$xml->attributes()['type'] === 'ttmstepdef') {
+            $validator = $this->getImportXmlFromTracker();
+            $event->setFormElement(
+                $validator->getInstanceFromXML($xml, $event->getProject(), $event->getFeedbackCollector())
+            );
         }
     }
 
@@ -748,5 +762,13 @@ class testmanagementPlugin extends Plugin
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceByName($this->getServiceShortname());
+    }
+
+    /**
+     * @return ImportXMLFromTracker
+     */
+    private function getImportXmlFromTracker(): ImportXMLFromTracker
+    {
+        return new ImportXMLFromTracker(new XML_RNGValidator(), new UGroupRetrieverWithLegacy(new UGroupManager()));
     }
 }
