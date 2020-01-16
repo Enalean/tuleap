@@ -25,6 +25,7 @@ use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Config;
@@ -46,14 +47,14 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
@@ -83,6 +84,7 @@ class testmanagementPlugin extends Plugin
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(ImportValidateExternalFields::NAME);
+        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
@@ -744,5 +746,10 @@ class testmanagementPlugin extends Plugin
                 $event->setErrorMessage($message);
             }
         }
+    }
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
+    {
+        $event->addServiceByName($this->getServiceShortname());
     }
 }
