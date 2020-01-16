@@ -26,6 +26,7 @@ namespace Tuleap\Project\Registration\Template;
 use ProjectManager;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\XML\ConsistencyChecker;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\XML\ProjectXMLMerger;
 
@@ -74,8 +75,9 @@ class TemplateFactory
             ),
             new ProjectXMLMerger(),
             new ConsistencyChecker(
-                \ServiceManager::instance(),
-                new XMLFileContentRetriever()
+                new XMLFileContentRetriever(),
+                \EventManager::instance(),
+                new ServiceEnableForXmlImportRetriever()
             ),
             new TemplateDao(),
             \ProjectManager::instance()

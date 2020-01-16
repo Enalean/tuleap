@@ -150,6 +150,7 @@ use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
@@ -315,6 +316,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(StatisticsCollectionCollector::NAME);
         $this->addHook(CLICommandsCollector::NAME);
         $this->addHook(AccessKeyScopeBuilderCollector::NAME);
+        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2956,5 +2958,10 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return new AccessKeyScopeBuilderFromClassNames(
             GitRepositoryAccessKeyScope::class
         );
+    }
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
+    {
+        $event->addServiceByName($this->getServiceShortname());
     }
 }

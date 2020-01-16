@@ -53,12 +53,25 @@ use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\XML\ProjectXMLMerger;
 
 class RestProjectCreatorTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|ServiceEnableForXmlImportRetriever
+     */
+    private $retriever;
+    /**
+     * @var \EventManager|M\LegacyMockInterface|M\MockInterface
+     */
+    private $event_manager;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|ServiceManager
+     */
+    private $service_manager;
 
     /**
      * @var M\LegacyMockInterface|M\MockInterface|FieldUpdator
@@ -69,7 +82,7 @@ class RestProjectCreatorTest extends TestCase
     private $user;
     private $project;
     private $project_creator;
-    private $service_manager;
+    private $plugin_manager;
     private $project_XML_importer;
     /**
      * @var string
@@ -106,7 +119,9 @@ class RestProjectCreatorTest extends TestCase
         $this->field_updator->shouldReceive('updateFromArray')->byDefault();
         $this->field_updator->shouldReceive('checkFieldConsistency')->byDefault();
 
-        $this->creator              = new RestProjectCreator(
+        $this->event_manager = \Mockery::mock(\EventManager::class);
+        $this->retriever     = \Mockery::mock(ServiceEnableForXmlImportRetriever::class);
+        $this->creator       = new RestProjectCreator(
             $this->project_manager,
             $this->project_creator,
             new XMLFileContentRetriever(),
@@ -120,8 +135,9 @@ class RestProjectCreatorTest extends TestCase
                 ),
                 new ProjectXMLMerger(),
                 new ConsistencyChecker(
-                    $this->service_manager,
                     new XMLFileContentRetriever(),
+                    $this->event_manager,
+                    $this->retriever
                 ),
                 $this->template_dao,
                 M::mock(ProjectManager::class)
@@ -236,7 +252,16 @@ class RestProjectCreatorTest extends TestCase
             M::mock(Service::class, ['getShortName' => \trackerPlugin::SERVICE_SHORTNAME, 'getId' => 15]),
         ];
 
-        $this->service_manager->shouldReceive('getListOfServicesAvailableAtSiteLevel')->andReturns($services);
+        $this->retriever->shouldReceive('addServiceByName');
+        $this->retriever->shouldReceive('getAvailableServices')->andReturn(
+            [
+                "summary"                               => true,
+                "admin"                                 => true,
+                \AgileDashboardPlugin::PLUGIN_SHORTNAME => true,
+                \trackerPlugin::SERVICE_SHORTNAME       => true,
+            ]
+        );
+        $this->event_manager->shouldReceive('processEvent');
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')
             ->with(\Mockery::on(
                 static function (Project $project): bool {

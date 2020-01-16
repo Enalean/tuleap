@@ -23,45 +23,54 @@ namespace Tuleap\Project\XML;
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
-use Service;
-use ServiceManager;
 
 class ConsistencyCheckerTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    private $event;
 
     /**
      * @var ConsistencyChecker
      */
     private $checker;
     /**
-     * @var \EventManager
+     * @var M\LegacyMockInterface|M\MockInterface|\EventManager
      */
-    private $service_manager;
+    private $event_manager;
 
     protected function setUp(): void
     {
-        $this->service_manager = M::mock(ServiceManager::class);
-        $this->checker         = new ConsistencyChecker($this->service_manager, new XMLFileContentRetriever());
+        $this->event_manager = M::mock(\EventManager::class);
+        $this->event         = M::mock(ServiceEnableForXmlImportRetriever::class);
+        $this->event->shouldReceive('addServiceByName');
+
+        $this->checker = new ConsistencyChecker(new XMLFileContentRetriever(), $this->event_manager, $this->event);
     }
 
     public function testAreAllServicesAvailable(): void
     {
-        $this->service_manager->shouldReceive('getListOfServicesAvailableAtSiteLevel')->andReturns([
-            M::mock(Service::class, ['getShortName' => \trackerPlugin::SERVICE_SHORTNAME]),
-            M::mock(Service::class, ['getShortName' => \GitPlugin::SERVICE_SHORTNAME]),
-            M::mock(Service::class, ['getShortName' => \AgileDashboardPlugin::PLUGIN_SHORTNAME]),
-        ]);
+        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
+        $this->event->shouldReceive('getAvailableServices')->andReturn(
+            [
+                \trackerPlugin::SERVICE_SHORTNAME       => true,
+                \GitPlugin::SERVICE_SHORTNAME           => true,
+                \AgileDashboardPlugin::PLUGIN_SHORTNAME => true
+            ]
+        );
 
         $this->assertTrue($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml'));
     }
 
     public function testAgileDashboardIsNotAvailable(): void
     {
-        $this->service_manager->shouldReceive('getListOfServicesAvailableAtSiteLevel')->andReturns([
-            M::mock(Service::class, ['getShortName' => \trackerPlugin::SERVICE_SHORTNAME]),
-            M::mock(Service::class, ['getShortName' => \GitPlugin::SERVICE_SHORTNAME]),
-        ]);
+        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
+        $this->event->shouldReceive('getAvailableServices')->andReturn(
+            [
+                \trackerPlugin::SERVICE_SHORTNAME => true,
+                \GitPlugin::SERVICE_SHORTNAME     => true
+            ]
+        );
 
         $this->assertFalse($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml'));
     }

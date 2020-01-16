@@ -89,6 +89,7 @@ use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
@@ -231,6 +232,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
             $this->addHook(TrackerMasschangeGetExternalActionsEvent::NAME);
             $this->addHook(TrackerMasschangeProcessExternalActionsEvent::NAME);
+            $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
             $this->addHook(TrackerReportProcessAdditionalQuery::NAME);
             $this->addHook(GetExternalSubFactoriesEvent::NAME);
             $this->addHook(WorkflowDeletionEvent::NAME);
@@ -2112,6 +2114,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         if ($additional_action !== null) {
             $event->addExternalActions($additional_action);
         }
+    }
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
+    {
+        $event->addServiceByName($this->getServiceShortname());
     }
 
     public function trackerMasschangeProcessExternalActionsEvent(TrackerMasschangeProcessExternalActionsEvent $event): void
