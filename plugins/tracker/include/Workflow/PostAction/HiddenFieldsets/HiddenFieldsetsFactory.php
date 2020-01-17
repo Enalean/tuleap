@@ -50,15 +50,6 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
     }
 
     /**
-     * @param Transition $transition
-     * @param string $requested_postaction
-     */
-    public function addPostAction(Transition $transition, $requested_postaction)
-    {
-        // Not implemented. We do not support the legacy UI for this post action
-    }
-
-    /**
      * Instanciate the post actions of a given transition
      *
      * @param Transition $transition The transition

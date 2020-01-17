@@ -48,11 +48,6 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         $this->unplanned_artifacts_adder = $unplanned_artifacts_adder;
     }
 
-    public function addPostAction(Transition $transition, $requested_postaction)
-    {
-        //Does nothing
-    }
-
     public function loadPostActions(Transition $transition)
     {
         $post_actions = [];
