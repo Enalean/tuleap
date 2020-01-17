@@ -116,6 +116,7 @@ use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\TrackerCrumbInContext;
+use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\User\History\HistoryEntryCollection;
@@ -236,6 +237,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(TrackerReportProcessAdditionalQuery::NAME);
             $this->addHook(GetExternalSubFactoriesEvent::NAME);
             $this->addHook(WorkflowDeletionEvent::NAME);
+            $this->addHook(TransitionDeletionEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2159,5 +2161,12 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             new ArtifactsInExplicitBacklogDao(),
             new PlannedArtifactDao()
         );
+    }
+
+    public function transitionDeletionEvent(TransitionDeletionEvent $event)
+    {
+        $transition_id = (int)$event->getTransition()->getId();
+
+        (new AddToTopBacklogPostActionDao())->deleteTransitionPostActions($transition_id);
     }
 }
