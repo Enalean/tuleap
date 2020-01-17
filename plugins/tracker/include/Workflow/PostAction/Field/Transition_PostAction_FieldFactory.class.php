@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -52,16 +52,6 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
             Transition_PostAction_Field_Int::SHORT_NAME   => $int_dao,
             Transition_PostAction_Field_Float::SHORT_NAME => $float_dao,
         );
-    }
-
-    /**
-     * @see Transition_PostActionSubFactory::addPostAction()
-     */
-    public function addPostAction(Transition $transition, $requested_postaction)
-    {
-        if (isset($this->post_actions_classes[$requested_postaction])) {
-            $this->getDao($requested_postaction)->create($transition->getId());
-        }
     }
 
     /**

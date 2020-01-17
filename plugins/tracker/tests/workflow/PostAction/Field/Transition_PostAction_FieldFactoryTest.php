@@ -126,28 +126,6 @@ class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_Field
     }
 }
 
-class Transition_PostActionFieldFactory_AddPostActionTest extends Transition_PostAction_FieldFactory_BaseTest
-{
-
-    public function itCanAddAPostActionToAnIntField()
-    {
-        $this->int_dao->expectOnce('create', array($this->transition_id));
-        $this->factory->addPostAction($this->transition, 'field_int');
-    }
-
-    public function itCanAddAPostActionToAFloatField()
-    {
-        $this->float_dao->expectOnce('create', array($this->transition_id));
-        $this->factory->addPostAction($this->transition, 'field_float');
-    }
-
-    public function itCanAddAPostActionToADateField()
-    {
-        $this->date_dao->expectOnce('create', array($this->transition_id));
-        $this->factory->addPostAction($this->transition, 'field_date');
-    }
-}
-
 class Transition_PostActionFieldFactory_DuplicateTest extends Transition_PostAction_FieldFactory_BaseTest
 {
 

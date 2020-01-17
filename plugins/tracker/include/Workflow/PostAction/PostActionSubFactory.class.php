@@ -25,13 +25,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 interface Transition_PostActionSubFactory
 {
-
-    /**
-     * @param Transition $transition
-     * @param string     $requested_postaction
-     */
-    public function addPostAction(Transition $transition, $requested_postaction);
-
     /**
      * Instanciate the post actions of a given transition
      *

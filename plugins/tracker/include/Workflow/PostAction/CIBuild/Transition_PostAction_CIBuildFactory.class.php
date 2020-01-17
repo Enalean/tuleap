@@ -46,15 +46,6 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     }
 
     /**
-     * @see Transition_PostActionSubFactory::addPostAction()
-     */
-    public function addPostAction(Transition $transition, $requested_postaction)
-    {
-        $job_url = '';
-        $this->dao->create($transition->getId(), $job_url);
-    }
-
-    /**
      * @see Transition_PostActionSubFactory::loadPostActions()
      */
     public function loadPostActions(Transition $transition)
