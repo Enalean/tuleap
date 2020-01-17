@@ -20,7 +20,6 @@
 
 <template>
     <div>
-        <hr />
         <div class="project-registration-button-container">
             <router-link
                 to="/new"
@@ -28,8 +27,8 @@
                 class="project-registration-back-button"
                 data-test="project-registration-back-button"
             >
-                <i class="fa fa-long-arrow-left" />
-                <span v-translate>Back</span>
+                <i class="fa fa-long-arrow-left"></i>
+                <span class="project-registration-back-button-text" v-translate>Back</span>
             </router-link>
             <button
                 type="submit"

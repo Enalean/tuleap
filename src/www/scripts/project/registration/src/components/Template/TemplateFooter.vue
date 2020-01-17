@@ -20,7 +20,6 @@
 
 <template>
     <div>
-        <hr />
         <div class="project-registration-button-container">
             <button
                 type="button"

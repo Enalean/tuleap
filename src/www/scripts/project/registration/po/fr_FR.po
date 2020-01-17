@@ -47,8 +47,11 @@ msgstr "Aller à ma page personnelle"
 msgid "I agree to the <a href=\"/tos/tos.php\">policy agreement</a>"
 msgstr "J'accepte les <a href=\"/tos/tos.php\">conditions d'utilisation</a>"
 
-msgid "Must start with a letter, avoid spaces and punctuation."
-msgstr "Doit commencer par une lettre, éviter les espaces et la ponctuation."
+msgid "Information about privacy"
+msgstr "Information sur la visibilité"
+
+msgid "Must start with a letter, without spaces nor punctuation."
+msgstr "Doit commencer par une lettre, sans espace ni ponctuation."
 
 msgid "My new project"
 msgstr "Mon nouveau projet"
@@ -158,9 +161,9 @@ msgid ""
 "                can only contain alphanumerical characters and dashes. Must "
 "start with a letter."
 msgstr ""
-"Le nom court de project doit comprendre entre %{ min } et %{ max } "
-"caractères. Il peut seulement contenir des caractères alphanumériques. Il "
-"doit commencer par une lettre."
+"Le nom court de projet doit comprendre entre %{ min } et %{ max } "
+"caractères. Il ne peut seulement contenir des caractères alphanumériques, "
+"des tirets et doit commencer par une lettre."
 
 msgid "Project shortname"
 msgstr "Nom court de projet"
@@ -215,3 +218,6 @@ msgstr "Vous êtes administrateur d'aucun projet."
 
 msgid "Your project has been submitted to the administrators for validation"
 msgstr "Votre projet a été soumis aux administrateurs pour validation"
+
+msgid "project-shortname"
+msgstr "nom-court-de-projet"

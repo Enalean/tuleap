@@ -100,22 +100,6 @@ $card-border-margin: 150px;
     margin: 0 0 0 ($card-border-margin - $tlp-spacing);
 }
 
-.project-registration-button-container {
-    display: flex;
-    align-items: baseline;
-    justify-content: flex-end;
-}
-
-.project-registration-back-button {
-    margin: 0 $tlp-spacing 0 0;
-    color: $tlp-swatch-chrome-silver;
-    cursor: pointer;
-}
-
-.project-registration-next-button {
-    margin: $tlp-spacing 0 0;
-}
-
 .project-registration-template-glyph {
     display: flex;
     position: absolute;

@@ -27,13 +27,14 @@
 
         <textarea
             type="text"
-            class="tlp-textarea"
+            class="tlp-textarea tlp-textarea-large"
             id="field_description"
             name="description"
             v-bind:placeholder="$gettext('My useful project description')"
             v-bind:required="is_description_required"
             v-on:input="$emit('input', $event.target.value)"
             data-test="project-description"
+            cols="75"
         />
     </div>
 </template>

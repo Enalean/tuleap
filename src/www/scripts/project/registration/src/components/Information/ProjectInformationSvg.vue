@@ -19,7 +19,7 @@
   -->
 
 <template functional>
-    <div class="register-new-project-box-spacing">
+    <div class="register-new-project-boxes">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -136,7 +136,7 @@
                 d="M103.93 99.3927L108.091 94.5942H77.7332L85.6509 90.6371H111.523L114.84 86.8117L127.795 86.8267L124.346 90.6371H171.265L167.815 86.8267L180.771 86.8117L184.088 90.6371H209.96L217.878 94.5942H187.52L191.681 99.3927H179.191L174.847 94.5942H120.764L116.42 99.3927H103.93Z"
                 clip-rule="evenodd"
                 fill-rule="evenodd"
-                class="tlp-illustration-primary-box"
+                class="tlp-illustration-primary-fill"
             ></path>
             <rect
                 stroke-width="2.7648"
