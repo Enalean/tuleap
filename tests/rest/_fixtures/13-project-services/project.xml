@@ -3,9 +3,10 @@
     unix-name="project-services" full-name="Project to test services" description="For test" access="private">
     <long-description>A test project</long-description>
     <services>
-        <service shortname="summary" enabled="1"/>
-        <service shortname="plugin_tracker" enabled="1"/>
-        <service shortname="file" enabled="0"/>
+        <service shortname="admin" enabled="true"/>
+        <service shortname="summary" enabled="true"/>
+        <service shortname="plugin_tracker" enabled="true"/>
+        <service shortname="file" enabled="false"/>
     </services>
     <ugroups>
         <ugroup name="project_members" description="">

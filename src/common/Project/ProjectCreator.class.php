@@ -44,6 +44,7 @@ use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
+use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
@@ -268,7 +269,13 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 new \Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO(),
                 new ProjectXMLImporterLogger()
             ),
-            new ProjectServiceActivator(new ServiceCreator($service_dao), $event_manager, $service_dao),
+            new ProjectServiceActivator(
+                new ServiceCreator($service_dao),
+                $event_manager,
+                $service_dao,
+                ServiceManager::instance(),
+                new ServiceLinkDataBuilder()
+            ),
             $force_activation
         );
     }

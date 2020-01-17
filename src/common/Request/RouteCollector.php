@@ -107,6 +107,7 @@ use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
 use Tuleap\Project\Service\IndexController;
 use Tuleap\Project\Service\ServiceCreator;
+use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\Service\ServicePOSTDataBuilder;
 use Tuleap\Project\Service\ServicesPresenterBuilder;
 use Tuleap\Project\Service\ServiceUpdator;
@@ -313,6 +314,11 @@ class RouteCollector
     public static function postLogoutAccount() : LogoutController
     {
         return new LogoutController(\UserManager::instance());
+    }
+
+    public static function getServicePOSTDataBuilder(): ServicePOSTDataBuilder
+    {
+        return new ServicePOSTDataBuilder(EventManager::instance(), ServiceManager::instance(), new ServiceLinkDataBuilder());
     }
 
     public function postDisableLegacyBrowsersWarningMessage() : DisableLegacyBrowsersWarningMessageController
@@ -601,7 +607,7 @@ class RouteCollector
     {
         return new AddController(
             new ServiceCreator(new ServiceDao(), ProjectManager::instance()),
-            new ServicePOSTDataBuilder(EventManager::instance(), ServiceManager::instance()),
+            self::getServicePOSTDataBuilder(),
             ProjectManager::instance(),
             IndexController::getCSRFTokenSynchronizer()
         );
@@ -611,7 +617,7 @@ class RouteCollector
     {
         return new EditController(
             new ServiceUpdator(new ServiceDao(), ProjectManager::instance(), ServiceManager::instance()),
-            new ServicePOSTDataBuilder(EventManager::instance(), ServiceManager::instance()),
+            self::getServicePOSTDataBuilder(),
             ServiceManager::instance(),
             ProjectManager::instance(),
             IndexController::getCSRFTokenSynchronizer()
