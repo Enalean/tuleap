@@ -1632,14 +1632,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     background-image: url('../../default/images/ic/arrow-turn-090-left.png');
 }
 
-.workflow_actions .pc_check_unchecked {
-    background-image: url('../../../../../src/www/themes/common/images/ic/bin_closed.png');
-}
-
-.workflow_actions .pc_check_checked {
-    background-image: url('../../../../../src/www/themes/common/images/ic/bin.png');
-}
-
 .workflow_rules {
     display: inline-block;
 }
@@ -1647,11 +1639,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 .workflow_existing_rules {
     padding-left: 0;
     list-style: none;
-}
-
-.workflow_rule {
-    margin: 5px 0;
-    clear: both;
 }
 
 .workflow_existing_rules .pc_check_unchecked {
@@ -1664,21 +1651,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     background-image: url('../../../../../src/www/themes/common/images/ic/bin.png');
 }
 
-.workflow_action.deleted,
-.workflow_rule.deleted {
-    text-decoration: line-through;
-}
-
-.add_new_rule {
-    line-height: 2em;
-}
-
-.workflow_actions,
-.workflow_conditions {
-    list-style-type: none;
-}
-
-.workflow_rule,
 .workflow_action {
     padding: 1em 2em 1em 3em;
     border: 1px solid #cccccc;
@@ -1688,24 +1660,8 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     background-position: 1em 1em;
 }
 
-.workflow_action_field {
-    background-image: url('../../default/images/ic/ui-text-field-change.png');
-}
-
 .workflow_action_ci_build {
     background-image: url('../../default/images/ic/ci_build/server.png');
-}
-
-.workflow_conditions_perms {
-    list-style-image: url('../../../../../src/www/themes/common/images/ic/lock.png');
-}
-
-.workflow_conditions_notempty {
-    list-style-image: url('../../default/images/ic/ui-text-field--exclamation-red.png');
-}
-
-.workflow_conditions_commentnotempty {
-    list-style-image: url('../../../../../src/www/themes/common/images/ic/comment.png');
 }
 
 .workflow_conditions_commentnotempty_label {
@@ -1715,7 +1671,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
         margin: 2px 0 0;
     }
 }
-
 
 /* }}} */
 
@@ -2129,10 +2084,6 @@ td.first-column {
 
 .tracker_create_mode {
     padding-left: 1em;
-}
-
-.workflow_rule_date_comparator {
-    margin: auto .5em;
 }
 
 .artifact-children-table {

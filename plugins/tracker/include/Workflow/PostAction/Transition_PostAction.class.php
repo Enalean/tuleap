@@ -67,26 +67,6 @@ abstract class Transition_PostAction
     }
 
     /**
-     * Return all the relevant concatenated CSS classes for this PostAction.
-     *
-     * @return string
-     */
-    public function getCssClasses()
-    {
-        return 'workflow_action '.$this->getCssClass();
-    }
-
-    /**
-     * Return the most specific CSS class for this PostAction.
-     *
-     * @return string
-     */
-    public function getCssClass()
-    {
-        return 'workflow_action_'.$this->getShortName();
-    }
-
-    /**
      * Return the transition
      *
      * @return Transition
@@ -149,13 +129,6 @@ abstract class Transition_PostAction
      * @return string
      */
     abstract public static function getLabel();
-
-    /**
-     * Get the html code needed to display the post action in workflow admin
-     *
-     * @return string html
-     */
-    abstract public function fetch();
 
     /**
      * Say if the action is well defined

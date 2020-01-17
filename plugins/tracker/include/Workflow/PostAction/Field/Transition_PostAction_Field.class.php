@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 /**
  * Base class for field post actions.
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Transition_PostAction_Field extends Transition_PostAction
 {
 
@@ -40,14 +42,6 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
     {
         parent::__construct($transition, $id);
         $this->field = $field;
-    }
-
-    /**
-     * @see Transition_PostAction
-     */
-    public function getCssClasses()
-    {
-        return 'workflow_action_field '.parent::getCssClasses();
     }
 
     /**

@@ -75,17 +75,6 @@ class HiddenFieldsets extends Transition_PostAction
     }
 
     /**
-     * Get the html code needed to display the post action in workflow admin
-     *
-     * @return string html
-     */
-    public function fetch()
-    {
-        /// Not implemented. We do not support the legacy UI for this new post action
-        return '';
-    }
-
-    /**
      * Say if the action is well defined
      *
      * @return bool

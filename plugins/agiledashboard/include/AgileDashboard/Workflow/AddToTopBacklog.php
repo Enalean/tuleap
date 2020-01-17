@@ -58,12 +58,6 @@ class AddToTopBacklog extends Transition_PostAction
         return '';
     }
 
-    public function fetch()
-    {
-        // Not implemented. We do not support the legacy UI for this new post action
-        return '';
-    }
-
     public function isDefined()
     {
         // Since we do not support the legacy UI, it is always well defined
