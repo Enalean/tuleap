@@ -21,11 +21,11 @@
 namespace Tuleap\TestManagement;
 
 use BackendLogger;
+use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use PFUser;
 use Plugin;
-use Codendi_Request;
 use Project;
 use ProjectManager;
 use TrackerFactory;
@@ -152,17 +152,8 @@ class Router
                 break;
             case 'create-config':
                 $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
-                $controller = new StartTestManagementController(
-                    $this->tracker_factory,
-                    new BackendLogger(),
-                    TrackerXmlImport::build(
-                        new XMLImportHelper(UserManager::instance())
-                    ),
-                    $this->artifact_links_usage_updater,
-                    $csrf_token,
-                    $this->tracker_checker
-                );
-                $this->executeAction($controller, 'createConfig', array($request));
+                $controller = $this->getTestManagementController($csrf_token);
+                $this->executeAction($controller, 'createConfig', [$request]);
                 $this->renderIndex($request);
                 break;
             default:
@@ -177,16 +168,7 @@ class Router
 
     private function renderStartTestManagement(Codendi_Request $request, CSRFSynchronizerToken $csrf_token)
     {
-        $controller = new StartTestManagementController(
-            $this->tracker_factory,
-            new BackendLogger(),
-            TrackerXmlImport::build(
-                new XMLImportHelper(UserManager::instance())
-            ),
-            $this->artifact_links_usage_updater,
-            $csrf_token,
-            $this->tracker_checker
-        );
+        $controller = $this->getTestManagementController($csrf_token);
 
         $this->renderAction(
             $controller,
@@ -345,5 +327,20 @@ class Router
         if (! $user->isAdmin($project->getId())) {
             throw new UserIsNotAdministratorException();
         }
+    }
+
+    private function getTestManagementController(CSRFSynchronizerToken $csrf_token): StartTestManagementController
+    {
+        return new StartTestManagementController(
+            $this->tracker_factory,
+            new BackendLogger(),
+            TrackerXmlImport::build(
+                new XMLImportHelper(UserManager::instance())
+            ),
+            $this->artifact_links_usage_updater,
+            $csrf_token,
+            $this->tracker_checker,
+            $this->config
+        );
     }
 }

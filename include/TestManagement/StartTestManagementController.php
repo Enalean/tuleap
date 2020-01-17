@@ -60,14 +60,19 @@ class StartTestManagementController
      * @var TrackerChecker
      */
     private $tracker_checker;
+    /**
+     * @var Config
+     */
+    private $config;
 
     public function __construct(
-        TrackerFactory        $tracker_factory,
-        BackendLogger         $backend_logger,
-        TrackerXmlImport      $tracker_xml_import,
+        TrackerFactory $tracker_factory,
+        BackendLogger $backend_logger,
+        TrackerXmlImport $tracker_xml_import,
         ArtifactLinksUsageUpdater $artifact_link_usage_updater,
         \CSRFSynchronizerToken $csrf_token,
-        TrackerChecker $tracker_checker
+        TrackerChecker $tracker_checker,
+        Config $config
     ) {
         $this->tracker_factory             = $tracker_factory;
         $this->tracker_xml_import          = $tracker_xml_import;
@@ -75,6 +80,7 @@ class StartTestManagementController
         $this->artifact_link_usage_updater = $artifact_link_usage_updater;
         $this->csrf_token                  = $csrf_token;
         $this->tracker_checker             = $tracker_checker;
+        $this->config                      = $config;
     }
 
     public function misconfiguration(HTTPRequest $request)
@@ -95,11 +101,10 @@ class StartTestManagementController
     public function createConfig(\HTTPRequest $request)
     {
         $this->csrf_token->check();
-        $config  = new Config(new Dao());
         $project = $request->getProject();
 
         $config_creator = new FirstConfigCreator(
-            $config,
+            $this->config,
             $this->tracker_factory,
             $this->tracker_xml_import,
             $this->tracker_checker,

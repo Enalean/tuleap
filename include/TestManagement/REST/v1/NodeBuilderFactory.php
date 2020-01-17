@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,7 @@ class NodeBuilderFactory
     public function __construct()
     {
         $this->dao = new TestManagementDao();
-        $config    = new Config($this->dao);
+        $config    = new Config($this->dao, \TrackerFactory::instance());
 
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $config,

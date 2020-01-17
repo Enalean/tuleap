@@ -215,7 +215,7 @@ class testmanagementPlugin extends Plugin
             $to_artifact             = $params['to_artifact'];
             $new_linked_artifact_ids = explode(',', $params['submitted_value']['new_values']);
 
-            $overrider        = new NatureCoveredByOverrider(new Config(new Dao()), new ArtifactLinksUsageDao());
+            $overrider        = new NatureCoveredByOverrider($this->getConfig(), new ArtifactLinksUsageDao());
             $overridingNature = $overrider->getOverridingNature($project, $to_artifact, $new_linked_artifact_ids);
 
             if (! empty($overridingNature)) {
@@ -332,7 +332,7 @@ class testmanagementPlugin extends Plugin
 
         static $config = null;
         if ($config === null) {
-            $config = new Config(new Dao());
+            $config = $this->getConfig();
         }
 
         if ((int) $config->getCampaignTrackerId($project) === (int) $tracker_id ||
@@ -452,7 +452,7 @@ class testmanagementPlugin extends Plugin
 
     public function import_xml_project_tracker_done(array $params)
     {
-        $importer = new XMLImport(new Config(new Dao()), $this->getTrackerChecker());
+        $importer = new XMLImport($this->getConfig(), $this->getTrackerChecker());
         $importer->import($params['project'], $params['extraction_path'], $params['mapping']);
     }
 
@@ -566,12 +566,9 @@ class testmanagementPlugin extends Plugin
         $this->displayStepExecutionBadUsageWarnings($step_field_usage, $tracker, $response);
     }
 
-    /**
-     * @return Config
-     */
-    private function getConfig()
+    private function getConfig(): Config
     {
-        return new Config(new Dao());
+        return new Config(new Dao(), TrackerFactory::instance());
     }
 
     private function displayStepDefinitionBadUsageWarnings(

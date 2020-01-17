@@ -117,7 +117,7 @@ class ExecutionsResource
 
     public function __construct()
     {
-        $this->config          = new Config(new Dao());
+        $this->config          = new Config(new Dao(), TrackerFactory::instance());
         $conformance_validator = new ConfigConformanceValidator($this->config);
 
         $this->user_manager                    = UserManager::instance();

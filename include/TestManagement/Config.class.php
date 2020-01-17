@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use Project;
+use TrackerFactory;
 
 class Config
 {
@@ -31,11 +32,16 @@ class Config
     /**
      * @var array
      */
-    private $properties = array();
+    private $properties = [];
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
 
-    public function __construct(Dao $dao)
+    public function __construct(Dao $dao, TrackerFactory $tracker_factory)
     {
-        $this->dao = $dao;
+        $this->dao             = $dao;
+        $this->tracker_factory = $tracker_factory;
     }
 
     public function setProjectConfiguration(
@@ -98,7 +104,12 @@ class Config
             return $id;
         }
 
-        return (int) $id;
+        $tracker = $this->tracker_factory->getTrackerById($id);
+        if ($tracker->isActive()) {
+            return (int)$id;
+        }
+
+        return false;
     }
 
     public function isConfigNeeded(Project $project)

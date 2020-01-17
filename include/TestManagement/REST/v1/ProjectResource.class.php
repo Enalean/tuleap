@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -77,7 +77,7 @@ class ProjectResource
 
     public function __construct()
     {
-        $this->config          = new Config(new Dao());
+        $this->config          = new Config(new Dao(), TrackerFactory::instance());
         $conformance_validator = new ConfigConformanceValidator($this->config);
         $this->project_manager = ProjectManager::instance();
         $this->tracker_factory = TrackerFactory::instance();

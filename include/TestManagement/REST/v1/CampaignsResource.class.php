@@ -147,7 +147,7 @@ class CampaignsResource
         $this->tracker_factory       = TrackerFactory::instance();
         $this->artifact_factory      = Tracker_ArtifactFactory::instance();
         $this->formelement_factory   = Tracker_FormElementFactory::instance();
-        $this->config                = new Config(new Dao());
+        $this->config                = new Config(new Dao(), $this->tracker_factory);
         $this->conformance_validator = new ConfigConformanceValidator(
             $this->config
         );

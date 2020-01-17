@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,7 +46,7 @@ class DefinitionsResource
 
     public function __construct()
     {
-        $config                = new Config(new Dao());
+        $config                = new Config(new Dao(), \TrackerFactory::instance());
         $conformance_validator = new ConfigConformanceValidator($config);
         $artifact_dao          = new ArtifactDao();
         $artifact_factory      = Tracker_ArtifactFactory::instance();
