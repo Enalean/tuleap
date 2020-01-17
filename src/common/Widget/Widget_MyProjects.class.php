@@ -90,7 +90,7 @@ class Widget_MyProjects extends Widget
         } else {
             $html .= '<table cellspacing="0" class="tlp-table widget_my_projects">';
             $i     = 0;
-            $prevIsPublic = -1;
+            $prevIsPublic = false;
             $disable_contact = (bool) ForgeConfig::get(self::CONFIG_DISABLE_CONTACT);
             while ($row = db_fetch_array($result)) {
                 if ($row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
@@ -101,7 +101,7 @@ class Widget_MyProjects extends Widget
                 }
                 $tdClass = '';
                 if ($display_privacy
-                    && $prevIsPublic == 0
+                    && $prevIsPublic
                     && ! in_array($row['access'], [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)
                 ) {
                     $tdClass .= ' widget_my_projects_first_public';

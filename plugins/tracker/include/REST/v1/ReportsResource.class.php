@@ -26,6 +26,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Luracast\Restler\RestException;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\ReportRepresentation;
@@ -189,7 +190,7 @@ class ReportsResource extends AuthenticatedResource
     }
 
     /**
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]
+     * @return ArtifactRepresentation[]
      */
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values)
     {

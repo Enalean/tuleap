@@ -1168,7 +1168,7 @@ class ArtifactType
      *
      * Get artifacts by age
      *
-     * @return bool
+     * @return array
      */
     function getOpenArtifactsByAge()
     {
@@ -1195,17 +1195,14 @@ class ArtifactType
             }
         }
 
-        $results['names'] = $names;
-        $results['values'] = $values;
-
-        return $results;
+        return ['names' => $names, 'values' => $values];
     }
 
     /**
      *
      * Get artifacts by age
      *
-     * @return bool
+     * @return array
      */
     function getArtifactsByAge()
     {
@@ -1230,10 +1227,7 @@ class ArtifactType
             }
         }
 
-        $results['names'] = $names;
-        $results['values'] = $values;
-
-        return $results;
+        return ['names' => $names, 'values' => $values];
     }
 
     /**
