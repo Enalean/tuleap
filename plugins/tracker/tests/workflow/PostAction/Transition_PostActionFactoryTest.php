@@ -83,26 +83,6 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase
     }
 }
 
-class Transition_PostActionFactory_AddPostActionTest extends Transition_PostActionFactory_BaseTest
-{
-
-    public function itCanAddAPostActionToAnIntField()
-    {
-        stub($this->field_factory)->addPostAction()->once();
-        stub($this->cibuild_factory)->addPostAction()->never();
-
-        $this->factory->addPostAction($this->transition, Transition_PostAction_Field_Int::SHORT_NAME);
-    }
-
-    public function itCanAddAPostActionToAFloatField()
-    {
-        stub($this->field_factory)->addPostAction()->once();
-        stub($this->cibuild_factory)->addPostAction()->never();
-
-        $this->factory->addPostAction($this->transition, Transition_PostAction_Field_Float::SHORT_NAME);
-    }
-}
-
 class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFactory_BaseTest
 {
 

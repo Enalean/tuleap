@@ -24,8 +24,10 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
  *
  * Post action occuring when transition is run
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Transition_PostAction
-{ //phpcs:ignore
+{
 
     /**
      * @var Transition the transition
@@ -115,7 +117,7 @@ abstract class Transition_PostAction
     /**
      * Execute actions before transition happens
      *
-     * @param Array  &$fields_data Request field data (array[field_id] => data)
+     * @param array  &$fields_data Request field data (array[field_id] => data)
      * @param PFUser $current_user The user who are performing the update
      *
      * @return void
@@ -161,15 +163,6 @@ abstract class Transition_PostAction
      * @return bool
      */
     abstract public function isDefined();
-
-    /**
-     * Update/Delete action
-     *
-     * @param Codendi_Request $request The request
-     *
-     * @return void
-     */
-    abstract public function process(Codendi_Request $request);
 
     /**
      * Export postactions to XML

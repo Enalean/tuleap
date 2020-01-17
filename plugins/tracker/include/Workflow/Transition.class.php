@@ -202,7 +202,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Execute actions before transition happens
      *
-     * @param Array $fields_data Request field data (array[field_id] => data)
+     * @param array $fields_data Request field data (array[field_id] => data)
      * @param PFUser  $current_user The user who are performing the update
      *
      * @return void
@@ -232,7 +232,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Validate that transition can occur
      *
-     * @param Array $fields_data Request field data (array[field_id] => data)
+     * @param array $fields_data Request field data (array[field_id] => data)
      *
      * @return bool true if the transition can occur, false otherwise
      */
@@ -244,7 +244,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Set Post Actions for the transition
      *
-     * @param Array $post_actions array of Transition_PostAction
+     * @param array $post_actions array of Transition_PostAction
      *
      * @return void
      */
@@ -256,7 +256,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Get Post Actions for the transition
      *
-     * @return Array
+     * @return array
      */
     public function getPostActions()
     {
@@ -266,7 +266,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Get Post Actions for the transition
      *
-     * @return Array
+     * @return Transition_PostAction[]
      */
     public function getAllPostActions()
     {
@@ -276,7 +276,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Get Post Actions for the transition
      *
-     * @return Array
+     * @return array
      */
     public function getPostActionsAfter()
     {
