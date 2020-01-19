@@ -230,11 +230,11 @@ psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch,
 
 phpcs: ## Execute PHPCS with the "strict" ruleset. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@$(PHP) -d memory_limit=256M ./src/vendor/bin/phpcs --extensions=php --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -s -p $(FILES)
+	@$(PHP) -d memory_limit=512M ./src/vendor/bin/phpcs --extensions=php --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -s -p $(FILES)
 
 phpcbf: ## Execute PHPCBF with the "strict" ruleset enforced on all the codebase. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@$(PHP) -d memory_limit=256M ./src/vendor/bin/phpcbf --extensions=php --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -p $(FILES)
+	@$(PHP) -d memory_limit=512M ./src/vendor/bin/phpcbf --extensions=php --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -p $(FILES)
 
 eslint: ## Execute eslint. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
