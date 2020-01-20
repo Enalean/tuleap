@@ -101,63 +101,9 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
     }
 
     /**
-     * Get the html code needed to display the post action in workflow admin
-     *
-     * @return string html
-     */
-    public function fetch()
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '';
-
-        //define the selectbox for value_type
-        $select_value_type = '<select name="workflow_postaction_field_date_value_type['. $this->id .']">';
-        if ($this->value_type !== self::CLEAR_DATE && $this->value_type !== self::FILL_CURRENT_TIME) {
-            $select_value_type .= '<option value="0" '. ($this->value_type == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
-        }
-        // clear
-        $selected = ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '');
-        $select_value_type .= '<option value="'. (int)self::CLEAR_DATE .'" '. $selected .'>';
-        $select_value_type .= $GLOBALS['Language']->getText('workflow_admin', 'post_action_field_date_empty');
-        $select_value_type .= '</option>';
-        // current time
-        $selected = ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '');
-        $select_value_type .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. $selected .'>';
-        $select_value_type .= $GLOBALS['Language']->getText('workflow_admin', 'post_action_field_date_current_time');
-        $select_value_type .= '</option>';
-        $select_value_type .= '</select>';
-
-        //define the selectbox for date fields
-        $tracker = $this->transition->getWorkflow()->getTracker();
-        $tff = $this->getFormElementFactory();
-        $fields_date = $tff->getUsedFormElementsByType($tracker, array('date'));
-
-        $select_field  = '<select name="workflow_postaction_field_date['.$purifier->purify($this->id).']">';
-        $options_field = '';
-        $one_selected  = false;
-        foreach ($fields_date as $field_date) {
-            $selected = '';
-            if ($this->field && ($this->field->getId() == $field_date->getId())) {
-                $selected     = 'selected="selected"';
-                $one_selected = true;
-            }
-            $options_field .= '<option value="'. $purifier->purify($field_date->getId()) .'" '. $selected.'>'.$purifier->purify($field_date->getLabel()).'</option>';
-        }
-        if (!$one_selected) {
-            $select_field .= '<option value="0" '. ($this->field ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
-        }
-        $select_field .= $options_field;
-        $select_field .= '</select>';
-
-        $html .= $GLOBALS['Language']->getText('workflow_admin', 'change_value_date_field_to', array($select_field, $select_value_type));
-
-        return $html;
-    }
-
-    /**
      * Execute actions before transition happens
      *
-     * @param Array &$fields_data Request field data (array[field_id] => data)
+     * @param array &$fields_data Request field data (array[field_id] => data)
      * @param PFUser  $current_user The user who are performing the update
      *
      * @return void

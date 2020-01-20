@@ -83,42 +83,6 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
         return $GLOBALS['Language']->getText('workflow_postaction', 'ci_build');
     }
 
-    /** @return string html */
-    public function fetch()
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $html  = '';
-        $title = $GLOBALS['Language']->getText('workflow_admin', 'ci_url');
-        $text_field = '<input type="text"
-            title="'. $purifier->purify($title) .'"
-            required
-            class="required"
-            pattern="' . $purifier->purify(self::JOB_URL_PATTERN) . '"
-            name="workflow_postaction_ci_build['. $purifier->purify($this->id) .']"
-            value="'. $purifier->purify($this->getJobUrl()) .'"
-            size="50"
-            maxsize="255" />';
-        $html    .= $GLOBALS['Language']->getText('workflow_admin', 'ci_build', array($text_field));
-
-        $trigger_field_value_label = $GLOBALS['Language']->getText(
-            'workflow_admin',
-            'ci_build_help_trigger_field_value',
-            array(
-                $purifier->purify($this->getTransition()->getFieldValueTo()->getLabel())
-            )
-        );
-
-        $html    .= '<p class="help">'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help', array(ForgeConfig::get('sys_name'))).'
-            <ul class="help">
-            <li>'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help_userid', array(ForgeConfig::get('sys_name'))).'</li>
-            <li>'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help_projectid', array($this->getTransition()->getGroupId())).'</li>
-            <li>'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help_trackerid', array($this->getTransition()->getWorkflow()->getTrackerId())).'</li>
-            <li>'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help_artifactid').'</li>
-            <li>'. $trigger_field_value_label .'</li>
-            </ul></p>';
-        return $html;
-    }
-
     /** @return bool */
     public function isDefined()
     {
@@ -172,22 +136,6 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
     protected function getDao()
     {
         return new Transition_PostAction_CIBuildDao();
-    }
-
-    private function urlIsValid($url)
-    {
-        return preg_match('#' . self::JOB_URL_PATTERN . '#', $url) > 0;
-    }
-
-    private function updateJobUrl($new_job_url)
-    {
-        if ($new_job_url != $this->job_url) {
-            if ($this->urlIsValid($new_job_url)) {
-                $this->getDao()->updatePostAction($this->id, $new_job_url);
-            } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_postaction', 'invalid_job_url', array($new_job_url)));
-            }
-        }
     }
 
     public function bypassPermissions(Tracker_FormElement_Field $field)

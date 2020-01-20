@@ -66,13 +66,6 @@ class FrozenFields extends Transition_PostAction
         return '';
     }
 
-    /** @return string html */
-    public function fetch()
-    {
-        // Not implemented. We do not support the legacy UI for this new post action
-        return '';
-    }
-
     /** @return bool */
     public function isDefined()
     {

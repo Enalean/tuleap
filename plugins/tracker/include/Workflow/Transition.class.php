@@ -284,45 +284,6 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     }
 
     /**
-     * Get the html code needed to display the post actions in workflow admin
-     *
-     * @return string html
-     */
-    public function fetchPostActions()
-    {
-        $hp   = Codendi_HTMLPurifier::instance();
-        $html = '';
-        if ($post_actions = $this->getAllPostActions()) {
-            $html .= '<table class="workflow_actions" width="100%" cellpadding="0" cellspacing="10">';
-            foreach ($post_actions as $pa) {
-                $classnames = $pa->getCssClasses();
-                $html .= '<tr><td>';
-
-                // the action itself
-                $html .= '<div class="'. $hp->purify($classnames) .'">';
-                if (!$pa->isDefined()) {
-                    $html .= '<div class="alert-message block-message warning">'. $GLOBALS['Language']->getText('workflow_admin', 'post_action_not_defined') .'</div>';
-                }
-                $html .= $pa->fetch();
-                $html .= '</div>';
-                $html .= '</td><td>';
-
-                // the delete buttton
-                $html .= '<input type="hidden" name="remove_postaction['. (int)$pa->getId() .']" value="0" />';
-                $html .= '<label class="pc_checkbox" title="'. $hp->purify($GLOBALS['Language']->getText('workflow_admin', 'remove_postaction')) .'">&nbsp';
-                $html .= '<input type="checkbox" name="remove_postaction['. (int)$pa->getId() .']" value="1" />';
-                $html .= '</label>';
-
-                $html .= '</td></tr>';
-            }
-            $html .= '</table>';
-        } else {
-            $html .= '<p><i>'. $GLOBALS['Language']->getText('workflow_admin', 'no_postaction') .'</i></p>';
-        }
-        return $html;
-    }
-
-    /**
      * @return string html permission form for the transition
      */
     public function fetchConditions()

@@ -1436,33 +1436,16 @@ workflow_admin	label_define_transition_permissions	Groups that may make the tran
 workflow_admin	label_define_transition_required_field	Field that must not be empty
 workflow_admin	label_define_transition_required_comment	Comment must not be empty.
 workflow_admin	permissions_transition	Can make the transition
-workflow_admin	change_value_date_field_to	The date field $1 is set to $2
-workflow_admin	change_value_int_field_to	The integer field $1 is set to $2
-workflow_admin	change_value_float_field_to	The float field $1 is set to $2
-workflow_admin	ci_build	The following job $1 will be launched
-workflow_admin	ci_build_help	$1 will automatically pass following parameters to the job:
-workflow_admin	ci_build_help_userid	userId: Identifier (integer) of $1 user who made the transition
-workflow_admin	ci_build_help_projectid	projectId: Identifier (integer) of the current project (ie. $1)
-workflow_admin	ci_build_help_trackerid	trackerId: Identifier (integer) of the current tracker (ie. $1)
-workflow_admin	ci_build_help_artifactid	artifactId: Identifier (integer) of the artifact where the transition happens
-workflow_admin	ci_build_help_trigger_field_value	triggerFieldValue: Value (string) of current transition target (ie. $1)
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
 workflow_admin	post_action_change_value_int_field	Change the value of an int field
 workflow_admin	post_action_change_value_float_field	Change the value of a float field
 workflow_admin	add_new_action	Add a new action:
-workflow_admin	remove_postaction	Remove the action
 workflow_admin	postaction_on_field_already_exist	An action on the field '$1' already exists.
-workflow_admin	no_postaction	There isn't any post action defined yet.
-workflow_admin	post_action_field_date_empty	""
-workflow_admin	post_action_field_date_current_time	the current time
-workflow_admin	post_action_not_defined	This action will be inactive until it is completely configured
 workflow_admin	the_field	The field
 workflow_admin	field_not_empty	must not be empty
-workflow_admin	ci_url	Hudson or Jenkins job url: http://CI_URL/job/JOBNAME
 
 workflow_postaction	field_value_set	The field '$1' will be automatically set to $2
 workflow_postaction	field_clear	The field '$1' will be automatically cleared
-workflow_postaction	invalid_job_url	The continuous integration job URL '$1' is not valid.
 workflow_postaction	ci_build	Launch a continuous integration build
 workflow_postaction	ci_build_succeeded	Job build launch succeeded ($1)
 

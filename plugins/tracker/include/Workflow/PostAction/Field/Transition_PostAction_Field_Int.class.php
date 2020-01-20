@@ -52,45 +52,6 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
     }
 
     /**
-     * Get the html code needed to display the post action in workflow admin
-     *
-     * @return string html
-     */
-    public function fetch()
-    {
-        $purifier    = Codendi_HTMLPurifier::instance();
-        $html        = '';
-        $input_value = '<input type="text" name="workflow_postaction_field_int_value['. $purifier->purify($this->id) .
-            ']" value="'.$purifier->purify($this->getValue()).'"/>';
-
-        //define the selectbox for date fields
-        $tracker = $this->transition->getWorkflow()->getTracker();
-        $tff = $this->getFormElementFactory();
-        $fields_int = $tff->getUsedFormElementsByType($tracker, array('int'));
-
-        $select_field  = '<select name="workflow_postaction_field_int['.$purifier->purify($this->id).']">';
-        $options_field = '';
-        $one_selected  = false;
-        foreach ($fields_int as $field_int) {
-            $selected = '';
-            if ($this->field && ($this->field->getId() == $field_int->getId())) {
-                $selected     = 'selected="selected"';
-                $one_selected = true;
-            }
-            $options_field .= '<option value="'. $purifier->purify($field_int->getId()) .'" '. $selected.'>'.
-                $purifier->purify($field_int->getLabel()).'</option>';
-        }
-        if (!$one_selected) {
-            $select_field .= '<option value="0" '. ($this->field ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
-        }
-        $select_field .= $options_field;
-        $select_field .= '</select>';
-
-        $html .= $GLOBALS['Language']->getText('workflow_admin', 'change_value_int_field_to', array($select_field, $input_value));
-        return $html;
-    }
-
-    /**
      * Export postactions date to XML
      *
      * @param SimpleXMLElement &$root     the node to which the postaction is attached (passed by reference)
