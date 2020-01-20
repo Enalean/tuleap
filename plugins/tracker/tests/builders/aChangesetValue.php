@@ -19,11 +19,6 @@
  */
 require_once __DIR__.'/../bootstrap.php';
 
-function aChangesetValueArtifactLink()
-{
-    return new Test_Tracker_ChangesetValue_ArtifactLink_Builder();
-}
-
 function aChangesetValueList()
 {
     return new Test_Tracker_ChangesetValue_List_Builder();
