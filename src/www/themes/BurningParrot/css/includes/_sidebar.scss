@@ -49,7 +49,7 @@
         text-decoration: none;
 
         > .sidebar-about-logo > path {
-            fill: lighten($tlp-theme-color, 5%);
+            fill: lighten($tlp-theme-orange, 5%);
         }
 
         > .sidebar-about-version {
@@ -64,7 +64,7 @@
 
     > .sidebar-about-logo > path {
         transition: fill 100ms;
-        fill: $tlp-theme-color;
+        fill: $tlp-theme-orange;
     }
 
     > .sidebar-about-version {
