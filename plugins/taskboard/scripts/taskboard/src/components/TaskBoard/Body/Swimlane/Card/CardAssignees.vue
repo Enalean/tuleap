@@ -53,17 +53,13 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
+import { namespace } from "vuex-class";
 import { Card, Tracker } from "../../../../../type";
 import UserAvatar from "./UserAvatar.vue";
 import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
-import { get } from "tlp";
-import { UserForPeoplePicker } from "./Editor/Assignees/type";
+import { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
 
-interface UserAjaxRepresentation {
-    id: string;
-    label: string;
-    avatar_url: string;
-}
+const swimlane = namespace("swimlane");
 
 @Component({
     components: { PeoplePicker, UserAvatar }
@@ -74,6 +70,12 @@ export default class CardAssignees extends Vue {
 
     @Prop({ required: true })
     readonly tracker!: Tracker;
+
+    @swimlane.Action
+    loadPossibleAssignees!: (tracker: Tracker) => void;
+
+    @swimlane.Getter
+    readonly assignable_users!: (tracker: Tracker) => UserForPeoplePicker[];
 
     private is_in_edit_mode = false;
     private users: UserForPeoplePicker[] = [];
@@ -150,16 +152,6 @@ export default class CardAssignees extends Vue {
         return this.is_user_edit_displayed ? 0 : -1;
     }
 
-    get url(): string {
-        if (this.tracker.assigned_to_field === null) {
-            return "";
-        }
-
-        return `/plugins/tracker/?func=get-values&formElement=${encodeURIComponent(
-            this.tracker.assigned_to_field.id
-        )}`;
-    }
-
     async editAssignees(): Promise<void> {
         if (this.is_in_edit_mode) {
             return;
@@ -171,10 +163,10 @@ export default class CardAssignees extends Vue {
 
     async loadUsers(): Promise<void> {
         this.is_loading_users = true;
-        const response = await get(this.url);
-        const users: UserAjaxRepresentation[] = await response.json();
 
-        this.users = users.map((user): UserForPeoplePicker => ({ ...user, text: user.label }));
+        await this.loadPossibleAssignees(this.tracker);
+        this.users = this.assignable_users(this.tracker);
+
         this.is_loading_users = false;
     }
 }

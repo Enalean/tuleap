@@ -22,9 +22,10 @@ import CardAssignees from "./CardAssignees.vue";
 import { Card, Tracker, User } from "../../../../../type";
 import UserAvatar from "./UserAvatar.vue";
 import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
-import { mockFetchSuccess } from "../../../../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
-import * as tlp from "tlp";
 import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
+import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { RootState } from "../../../../../store/type";
+import { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
 
 jest.mock("tlp");
 jest.useFakeTimers();
@@ -35,6 +36,14 @@ async function getWrapper(
 ): Promise<Wrapper<CardAssignees>> {
     return shallowMount(CardAssignees, {
         localVue: await createTaskboardLocalVue(),
+        mocks: {
+            $store: createStoreMock({
+                state: { swimlane: {} } as RootState
+            }),
+            getters: {
+                "swimlane/assignable_users": (): UserForPeoplePicker[] => []
+            }
+        },
         propsData: {
             card,
             tracker
@@ -126,21 +135,23 @@ describe("CardAssignees", () => {
     });
 
     it("Loads users and displays a spinner when assignees are editable and user clicks on them", async () => {
+        const tracker = { assigned_to_field: { id: 123 } } as Tracker;
         const wrapper = await getWrapper(
             {
                 assignees: [] as User[],
                 is_in_edit_mode: true
             } as Card,
-            { assigned_to_field: { id: 123 } } as Tracker
+            tracker
         );
-
-        const tlpGet = jest.spyOn(tlp, "get");
-        mockFetchSuccess(tlpGet, {
-            return_json: []
-        });
+        wrapper.vm.$store.getters["swimlane/assignable_users"] = (): UserForPeoplePicker[] =>
+            [{ id: 1, label: "Steeve" }] as UserForPeoplePicker[];
 
         wrapper.trigger("click");
 
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
+            "swimlane/loadPossibleAssignees",
+            tracker
+        );
         expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
         expect(wrapper.classes()).toContain("taskboard-card-assignees-editable");
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");

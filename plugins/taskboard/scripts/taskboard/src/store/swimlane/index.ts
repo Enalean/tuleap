@@ -23,6 +23,7 @@ import * as getters from "./swimlane-getters";
 import { SwimlaneState } from "./type";
 import { Module } from "vuex";
 import { RootState } from "../type";
+import { UserForPeoplePicker } from "./card/type";
 
 const swimlane_module_default: Module<SwimlaneState, RootState> = {
     namespaced: true,
@@ -32,7 +33,8 @@ const swimlane_module_default: Module<SwimlaneState, RootState> = {
     state: {
         swimlanes: [],
         is_loading_swimlanes: false,
-        is_card_creation_blocked_due_to_ongoing_creation: false
+        is_card_creation_blocked_due_to_ongoing_creation: false,
+        possible_assignees: new Map<number, UserForPeoplePicker[]>()
     }
 };
 export default swimlane_module_default;

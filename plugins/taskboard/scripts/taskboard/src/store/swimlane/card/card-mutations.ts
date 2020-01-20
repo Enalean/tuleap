@@ -19,7 +19,11 @@
 
 import { Card } from "../../../type";
 import { SwimlaneState } from "../type";
-import { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
+import {
+    UpdateCardPayload,
+    NewRemainingEffortPayload,
+    TrackerAssignableUsersPayload
+} from "./type";
 import { findCard } from "../swimlane-helpers";
 
 export function addCardToEditMode(state: SwimlaneState, card: Card): void {
@@ -91,4 +95,11 @@ function setSavedFlagsOnCard(card: Card): void {
     setTimeout(() => {
         card.is_just_saved = false;
     }, 1000);
+}
+
+export function setPossibleAssigneesForFieldId(
+    state: SwimlaneState,
+    payload: TrackerAssignableUsersPayload
+): void {
+    state.possible_assignees.set(payload.assigned_to_field_id, payload.users);
 }

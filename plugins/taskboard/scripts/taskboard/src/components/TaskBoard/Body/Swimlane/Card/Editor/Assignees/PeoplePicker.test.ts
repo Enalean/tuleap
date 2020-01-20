@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import PeoplePicker from "./PeoplePicker.vue";
 import { createTaskboardLocalVue } from "../../../../../../../helpers/local-vue-for-test";
-import { UserForPeoplePicker } from "./type";
+import { UserForPeoplePicker } from "../../../../../../../store/swimlane/card/type";
 
 const select2 = jest.fn();
 jest.mock("jquery", () => {
