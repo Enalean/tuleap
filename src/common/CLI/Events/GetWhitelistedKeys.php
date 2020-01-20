@@ -28,6 +28,7 @@ use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Mail\AutomaticMailsSender;
+use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\System\ServiceControl;
 use Widget_MyProjects;
 
@@ -54,7 +55,8 @@ class GetWhitelistedKeys implements Dispatchable
         DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME => true,
         ServiceControl::FORGECONFIG_INIT_MODE => true,
         AutomaticMailsSender::CONFIG_NOTIFICATION_DELAY => true,
-        Widget_MyProjects::CONFIG_DISABLE_CONTACT => true
+        Widget_MyProjects::CONFIG_DISABLE_CONTACT => true,
+        ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE => true,
     ];
 
     public function addPluginsKeys($key_name)
