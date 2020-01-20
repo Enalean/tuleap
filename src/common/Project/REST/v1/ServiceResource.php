@@ -28,6 +28,7 @@ use Service;
 use ServiceDao;
 use ServiceNotAllowedForProjectException;
 use Tuleap\Project\Service\ServiceCannotBeUpdatedException;
+use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\Service\ServiceNotFoundException;
 use Tuleap\Project\Service\ServicePOSTData;
 use Tuleap\Project\Service\ServicePOSTDataBuilder;
@@ -155,7 +156,11 @@ class ServiceResource extends AuthenticatedResource
 
     private function getServicePOSTDataFromBody(Service $service, ServiceRepresentation $body): ServicePOSTData
     {
-        $builder = new ServicePOSTDataBuilder(\EventManager::instance(), \ServiceManager::instance());
+        $builder = new ServicePOSTDataBuilder(
+            \EventManager::instance(),
+            \ServiceManager::instance(),
+            new ServiceLinkDataBuilder()
+        );
 
         return $builder->buildFromService($service, $body->is_enabled);
     }

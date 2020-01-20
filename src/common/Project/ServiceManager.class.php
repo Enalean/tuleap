@@ -207,7 +207,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @return Service
      * @throws ServiceNotAllowedForProjectException
      */
-    public function getService(int $id)
+    public function getService(int $id): Service
     {
         $row = $this->dao->searchById($id)->getRow();
         if (! $row) {

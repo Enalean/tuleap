@@ -143,7 +143,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      * @return array with:
      *     is_used => boolean telling if the service is used
      */
-    public function getServiceInfo($service_id)
+    public function getServiceInfo($service_id): ?array
     {
         return isset($this->data_services[$service_id]) ?
             $this->data_services[$service_id] :
@@ -362,5 +362,10 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     public function isIsBuiltFromXml(): bool
     {
         return $this->is_built_from_xml;
+    }
+
+    public function getDataServices(): ?array
+    {
+        return $this->data_services;
     }
 }

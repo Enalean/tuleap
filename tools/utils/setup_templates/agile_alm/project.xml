@@ -2,6 +2,7 @@
 <project unix-name="agilealm" full-name="Agile ALM" description="Template used to create a project providing ALM tools through Scrum methodology" access="public">
   <long-description></long-description>
   <services>
+    <service shortname="admin" enabled="1"/>
     <service shortname="summary" enabled="1"/>
     <service shortname="docman" enabled="1"/>
     <service shortname="plugin_agiledashboard" enabled="1"/>

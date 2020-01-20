@@ -58,6 +58,7 @@ class ProjectServicesTest extends ProjectBase
         $services = $response->json();
 
         $expected = [
+            'admin' => ['is_enabled' => true],
             'summary' => ['is_enabled' => true],
             'plugin_tracker' => ['is_enabled' => true],
             'file' => ['is_enabled' => false],

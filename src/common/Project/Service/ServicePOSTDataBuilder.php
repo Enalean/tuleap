@@ -22,7 +22,6 @@ namespace Tuleap\Project\Service;
 
 use Codendi_Request;
 use Feedback;
-use ForgeConfig;
 use Project;
 use Service;
 use ServiceManager;
@@ -39,11 +38,19 @@ class ServicePOSTDataBuilder
      * @var ServiceManager
      */
     private $service_manager;
+    /**
+     * @var ServiceLinkDataBuilder
+     */
+    private $link_data_builder;
 
-    public function __construct(\EventManager $event_manager, ServiceManager $service_manager)
-    {
-        $this->event_manager   = $event_manager;
-        $this->service_manager = $service_manager;
+    public function __construct(
+        \EventManager $event_manager,
+        ServiceManager $service_manager,
+        ServiceLinkDataBuilder $link_data_builder
+    ) {
+        $this->event_manager     = $event_manager;
+        $this->service_manager   = $service_manager;
+        $this->link_data_builder = $link_data_builder;
     }
 
     /**
@@ -163,7 +170,7 @@ class ServicePOSTDataBuilder
         $link = '';
         if (! $service_url_collector->hasUrl() && $submitted_link) {
             $this->checkLink($submitted_link);
-            $link = $this->substituteVariablesInLink($project, $submitted_link);
+            $link = $this->link_data_builder->substituteVariablesInLink($project, $submitted_link);
         }
 
         return new ServicePOSTData(
@@ -181,33 +188,6 @@ class ServicePOSTDataBuilder
             $is_in_iframe,
             $is_in_new_tab
         );
-    }
-
-    /**
-     * @param Project $project
-     * @param $link
-     * @return mixed
-     */
-    private function substituteVariablesInLink(Project $project, $link)
-    {
-        if ((int) $project->getID() !== 100) {
-            // NOTE: if you change link variables here, change them also below, and
-            // in src/common/Project/RegisterProjectStep_Confirmation.class.php and src/www/include/Layout.class.php
-            if (strstr($link, '$projectname')) {
-                // Don't check project name if not needed.
-                // When it is done here, the service bar will not appear updated on the current page
-                $link = str_replace('$projectname', $project->getUnixName(), $link);
-            }
-            $link                 = str_replace('$sys_default_domain', $GLOBALS['sys_default_domain'], $link);
-            $sys_default_protocol = 'http';
-            if (ForgeConfig::get('sys_https_host')) {
-                $sys_default_protocol = 'https';
-            }
-            $link = str_replace('$sys_default_protocol', $sys_default_protocol, $link);
-            $link = str_replace('$group_id', $project->getID(), $link);
-        }
-
-        return $link;
     }
 
     /**

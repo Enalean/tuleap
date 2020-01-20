@@ -53,9 +53,11 @@ final class ServicePOSTDataBuilderTest extends TestCase
     {
         $this->event_manager            = M::mock(\EventManager::class);
         $this->service_manager          = M::mock(\ServiceManager::class);
+        $link_data_builder = new ServiceLinkDataBuilder();
         $this->service_postdata_builder = new ServicePOSTDataBuilder(
             $this->event_manager,
-            $this->service_manager
+            $this->service_manager,
+            $link_data_builder
         );
 
         $GLOBALS['sys_default_domain'] = 'whatever';
