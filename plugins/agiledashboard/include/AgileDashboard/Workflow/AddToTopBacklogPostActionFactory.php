@@ -76,7 +76,12 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
 
     public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
     {
-        //Does nothing
+        $postactions = $this->loadPostActions($from_transition);
+        if (count($postactions) > 0) {
+            $this->add_to_top_backlog_post_action_dao->createPostActionForTransitionId(
+                (int) $to_transition_id
+            );
+        }
     }
 
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
