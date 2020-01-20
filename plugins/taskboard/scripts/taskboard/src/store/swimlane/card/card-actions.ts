@@ -18,7 +18,12 @@
  */
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
-import { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
+import {
+    NewCardPayload,
+    NewRemainingEffortPayload,
+    UpdateCardPayload,
+    UserAjaxRepresentation
+} from "./type";
 import { get, patch, post, put } from "tlp";
 import { SwimlaneState } from "../type";
 import {
@@ -27,8 +32,9 @@ import {
     getPutArtifactBodyToAddChild
 } from "../../../helpers/update-artifact";
 import { injectDefaultPropertiesInCard } from "../../../helpers/card-default";
-import { Card, Swimlane } from "../../../type";
+import { Card, Swimlane, Tracker } from "../../../type";
 import pRetry from "p-retry";
+import { UserForPeoplePicker } from "./type";
 
 const headers = {
     "Content-Type": "application/json"
@@ -164,5 +170,29 @@ async function tryToLinkCardToItsParent(
                 values
             )
         )
+    });
+}
+
+export async function loadPossibleAssignees(
+    context: ActionContext<SwimlaneState, RootState>,
+    tracker: Tracker
+): Promise<void> {
+    if (
+        tracker.assigned_to_field === null ||
+        context.getters.have_possible_assignees_been_loaded_for_tracker(tracker)
+    ) {
+        return;
+    }
+
+    const response = await get(
+        `/plugins/tracker/?func=get-values&formElement=${encodeURIComponent(
+            tracker.assigned_to_field.id
+        )}`
+    );
+    const users: UserAjaxRepresentation[] = await response.json();
+
+    context.commit("setPossibleAssigneesForFieldId", {
+        assigned_to_field_id: tracker.assigned_to_field.id,
+        users: users.map((user): UserForPeoplePicker => ({ ...user, text: user.label }))
     });
 }

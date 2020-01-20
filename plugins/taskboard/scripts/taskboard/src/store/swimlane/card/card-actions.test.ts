@@ -55,7 +55,10 @@ describe("Card actions", () => {
                         artifact_link_field: { id: 111 }
                     } as Tracker
                 ]
-            } as RootState
+            } as RootState,
+            getters: {
+                have_possible_assignees_been_loaded_for_tracker: (): boolean => false
+            }
         } as unknown) as ActionContext<SwimlaneState, RootState>;
     });
 
@@ -330,6 +333,75 @@ describe("Card actions", () => {
                         root: true
                     }
                 );
+            });
+        });
+    });
+
+    describe("loadPossibleAssignees", () => {
+        let tlpGetMock: jest.SpyInstance<Promise<Response>>;
+
+        beforeEach(() => {
+            tlpGetMock = jest.spyOn(tlp, "get");
+        });
+
+        it("Does nothing if the tracker has no assigned_to field", async () => {
+            const tracker = {
+                assigned_to_field: null
+            } as Tracker;
+
+            await actions.loadPossibleAssignees(context, tracker);
+
+            expect(tlpGetMock).not.toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalled();
+        });
+
+        it("Does nothing if potential assignees are already in cache", async () => {
+            const tracker = {
+                assigned_to_field: {
+                    id: 1234
+                }
+            } as Tracker;
+
+            context.getters.have_possible_assignees_been_loaded_for_tracker = (): boolean => true;
+
+            await actions.loadPossibleAssignees(context, tracker);
+
+            expect(tlpGetMock).not.toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalled();
+        });
+
+        it("Loads assignees otherwise", async () => {
+            const tracker = {
+                assigned_to_field: {
+                    id: 1234
+                }
+            } as Tracker;
+
+            context.getters.have_possible_assignees_been_loaded_for_tracker = (): boolean => false;
+
+            mockFetchSuccess(tlpGetMock, {
+                return_json: [{ label: "John" }, { label: "Steeve" }, { label: "Bob" }]
+            });
+
+            await actions.loadPossibleAssignees(context, tracker);
+
+            expect(tlpGetMock).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("setPossibleAssigneesForFieldId", {
+                assigned_to_field_id: 1234,
+                users: [
+                    {
+                        label: "John",
+                        text: "John"
+                    },
+                    {
+                        label: "Steeve",
+                        text: "Steeve"
+                    },
+                    {
+                        label: "Bob",
+                        text: "Bob"
+                    }
+                ]
             });
         });
     });

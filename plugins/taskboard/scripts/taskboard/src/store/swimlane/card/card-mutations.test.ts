@@ -21,6 +21,7 @@ import { Card, Swimlane, Tracker } from "../../../type";
 import * as mutations from "./card-mutations";
 import { SwimlaneState } from "../type";
 import { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
+import { UserForPeoplePicker } from "../../../store/swimlane/card/type";
 
 jest.useFakeTimers();
 
@@ -206,6 +207,36 @@ describe(`Card mutations`, () => {
             jest.advanceTimersByTime(1000);
 
             expect(state.swimlanes[0].card.is_just_saved).toBe(false);
+        });
+    });
+
+    describe("setPossibleAssigneesForFieldId", () => {
+        it("Caches the assignees indexed by the assigned_to field id", () => {
+            const state: SwimlaneState = {
+                possible_assignees: new Map<number, UserForPeoplePicker[]>()
+            } as SwimlaneState;
+
+            mutations.setPossibleAssigneesForFieldId(state, {
+                assigned_to_field_id: 1234,
+                users: [
+                    { id: 1, label: "John" },
+                    { id: 2, label: "Steeve" },
+                    { id: 3, label: "Bob" }
+                ] as UserForPeoplePicker[]
+            });
+
+            expect(state.possible_assignees).toEqual(
+                new Map([
+                    [
+                        1234,
+                        [
+                            { id: 1, label: "John" },
+                            { id: 2, label: "Steeve" },
+                            { id: 3, label: "Bob" }
+                        ]
+                    ]
+                ])
+            );
         });
     });
 });

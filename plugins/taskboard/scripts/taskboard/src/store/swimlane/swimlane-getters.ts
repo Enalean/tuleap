@@ -24,6 +24,8 @@ import { getColumnOfCard } from "../../helpers/list-value-to-column-mapper";
 import { RootState } from "../type";
 import { findSwimlane } from "./swimlane-helpers";
 
+export * from "./card/card-getters";
+
 export const cards_in_cell = (state: SwimlaneState, getters: [], root_state: RootState) => (
     current_swimlane: Swimlane,
     current_column: ColumnDefinition
