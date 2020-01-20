@@ -404,5 +404,25 @@ describe("Card actions", () => {
                 ]
             });
         });
+
+        it("Error modal is shown on error", async () => {
+            const tracker = {
+                assigned_to_field: {
+                    id: 1234
+                }
+            } as Tracker;
+
+            context.getters.have_possible_assignees_been_loaded_for_tracker = (): boolean => false;
+
+            mockFetchError(tlpGetMock, {});
+
+            await actions.loadPossibleAssignees(context, tracker);
+
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "error/handleModalError",
+                expect.anything(),
+                { root: true }
+            );
+        });
     });
 });
