@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
@@ -89,7 +91,10 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
                     new StateFactory(
                         new TransitionFactory(
                             Workflow_Transition_ConditionFactory::build(),
-                            EventManager::instance()
+                            EventManager::instance(),
+                            new DBTransactionExecutorWithConnection(
+                                DBFactory::getMainTuleapDBConnection()
+                            )
                         ),
                         new SimpleWorkflowDao()
                     ),

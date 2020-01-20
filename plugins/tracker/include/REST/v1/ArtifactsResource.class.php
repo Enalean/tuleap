@@ -218,7 +218,10 @@ class ArtifactsResource extends AuthenticatedResource
             new StateFactory(
                 new TransitionFactory(
                     Workflow_Transition_ConditionFactory::build(),
-                    $this->event_manager
+                    $this->event_manager,
+                    new DBTransactionExecutorWithConnection(
+                        DBFactory::getMainTuleapDBConnection()
+                    )
                 ),
                 new SimpleWorkflowDao()
             ),

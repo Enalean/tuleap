@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
 use TransitionFactory;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
 
@@ -62,7 +63,11 @@ class TransitionFactoryTest extends TestCase
         $this->event_manager      = \Mockery::mock(\EventManager::class);
         $this->factory            = \Mockery::mock(
             \TransitionFactory::class,
-            [$this->condition_factory, $this->event_manager]
+            [
+                $this->condition_factory,
+                $this->event_manager,
+                new DBTransactionExecutorPassthrough()
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();

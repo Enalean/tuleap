@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
@@ -237,7 +239,10 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
                         new StateFactory(
                             new TransitionFactory(
                                 Workflow_Transition_ConditionFactory::build(),
-                                EventManager::instance()
+                                EventManager::instance(),
+                                new DBTransactionExecutorWithConnection(
+                                    DBFactory::getMainTuleapDBConnection()
+                                )
                             ),
                             new SimpleWorkflowDao()
                         ),

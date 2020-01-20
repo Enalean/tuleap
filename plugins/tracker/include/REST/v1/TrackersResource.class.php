@@ -174,7 +174,10 @@ class TrackersResource extends AuthenticatedResource
             new StateFactory(
                 new TransitionFactory(
                     Workflow_Transition_ConditionFactory::build(),
-                    EventManager::instance()
+                    EventManager::instance(),
+                    new DBTransactionExecutorWithConnection(
+                        DBFactory::getMainTuleapDBConnection()
+                    )
                 ),
                 new SimpleWorkflowDao()
             ),
@@ -686,7 +689,10 @@ class TrackersResource extends AuthenticatedResource
                 new StateFactory(
                     new TransitionFactory(
                         Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance()
+                        EventManager::instance(),
+                        new DBTransactionExecutorWithConnection(
+                            DBFactory::getMainTuleapDBConnection()
+                        )
                     ),
                     new SimpleWorkflowDao()
                 ),

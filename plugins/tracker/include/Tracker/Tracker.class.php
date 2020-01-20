@@ -3528,7 +3528,10 @@ class Tracker implements Tracker_Dispatchable_Interface
                 new StateFactory(
                     new TransitionFactory(
                         Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance()
+                        EventManager::instance(),
+                        new DBTransactionExecutorWithConnection(
+                            DBFactory::getMainTuleapDBConnection()
+                        )
                     ),
                     new SimpleWorkflowDao()
                 ),
