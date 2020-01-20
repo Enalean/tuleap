@@ -19,19 +19,34 @@
   -->
 
 <template>
-    <div class="taskboard-card-assignees" v-bind:class="classes">
-        <i
-            class="fa"
-            v-bind:class="user_edit_classes"
-            v-if="is_user_edit_displayed"
-            data-test="icon"
-        ></i>
-        <user-avatar
-            v-for="assignee in card.assignees"
-            class="taskboard-card-assignees-avatars"
-            v-bind:user="assignee"
-            v-bind:key="assignee.id"
+    <div
+        class="taskboard-card-assignees"
+        v-bind:class="classes"
+        v-bind:role="role"
+        v-bind:tabindex="tabindex"
+        v-bind:aria-label="edit_assignees_label"
+        v-bind:title="edit_assignees_label"
+        v-on:click="editAssignees"
+    >
+        <people-picker
+            v-bind:is_multiple="is_multiple"
+            v-bind:data="users"
+            v-if="is_in_edit_mode"
         />
+        <template v-else>
+            <i
+                class="fa"
+                v-bind:class="user_edit_classes"
+                v-if="is_user_edit_displayed"
+                data-test="icon"
+            ></i>
+            <user-avatar
+                v-for="assignee in card.assignees"
+                class="taskboard-card-assignees-avatars"
+                v-bind:user="assignee"
+                v-bind:key="assignee.id"
+            />
+        </template>
     </div>
 </template>
 
@@ -40,8 +55,18 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Card, Tracker } from "../../../../../type";
 import UserAvatar from "./UserAvatar.vue";
+import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
+import { get } from "tlp";
+import { UserForPeoplePicker } from "./Editor/Assignees/type";
+
+interface UserAjaxRepresentation {
+    id: string;
+    label: string;
+    avatar_url: string;
+}
+
 @Component({
-    components: { UserAvatar }
+    components: { PeoplePicker, UserAvatar }
 })
 export default class CardAssignees extends Vue {
     @Prop({ required: true })
@@ -50,14 +75,31 @@ export default class CardAssignees extends Vue {
     @Prop({ required: true })
     readonly tracker!: Tracker;
 
+    private is_in_edit_mode = false;
+    private users: UserForPeoplePicker[] = [];
+    private is_loading_users = false;
+
+    mounted(): void {
+        this.$watch(
+            () => this.card.is_in_edit_mode,
+            function(is_in_edit_mode: boolean) {
+                if (!is_in_edit_mode) {
+                    this.is_in_edit_mode = false;
+                }
+            }
+        );
+    }
+
     get classes(): string[] {
         if (!this.card.is_in_edit_mode) {
             return [];
         }
 
-        const classes = ["taskboard-card-assignees-edit-mode"];
+        const classes = ["taskboard-card-edit-mode-assignees"];
 
-        if (this.is_updatable) {
+        if (this.is_in_edit_mode) {
+            classes.push("taskboard-card-assignees-edit-mode");
+        } else if (this.is_updatable) {
             classes.push("taskboard-card-assignees-editable");
         }
 
@@ -65,6 +107,10 @@ export default class CardAssignees extends Vue {
     }
 
     get user_edit_classes(): string[] {
+        if (this.is_loading_users) {
+            return ["fa-circle-o-notch", "fa-spin", "taskboard-card-assignees-loading-icon"];
+        }
+
         if (this.card.assignees.length >= 1) {
             return ["fa-tlp-user-pencil", "taskboard-card-assignees-edit-icon"];
         }
@@ -78,6 +124,58 @@ export default class CardAssignees extends Vue {
 
     get is_updatable(): boolean {
         return this.tracker.assigned_to_field !== null;
+    }
+
+    get is_multiple(): boolean {
+        return Boolean(this.tracker.assigned_to_field?.is_multiple);
+    }
+
+    get edit_assignees_label(): string {
+        if (!this.is_user_edit_displayed) {
+            return "";
+        }
+
+        if (this.tracker.assigned_to_field?.is_multiple) {
+            return this.$gettext("Edit assignees");
+        }
+
+        return this.$gettext("Edit assignee");
+    }
+
+    get role(): string | undefined {
+        return this.is_user_edit_displayed ? "button" : undefined;
+    }
+
+    get tabindex(): number {
+        return this.is_user_edit_displayed ? 0 : -1;
+    }
+
+    get url(): string {
+        if (this.tracker.assigned_to_field === null) {
+            return "";
+        }
+
+        return `/plugins/tracker/?func=get-values&formElement=${encodeURIComponent(
+            this.tracker.assigned_to_field.id
+        )}`;
+    }
+
+    async editAssignees(): Promise<void> {
+        if (this.is_in_edit_mode) {
+            return;
+        }
+
+        await this.loadUsers();
+        this.is_in_edit_mode = true;
+    }
+
+    async loadUsers(): Promise<void> {
+        this.is_loading_users = true;
+        const response = await get(this.url);
+        const users: UserAjaxRepresentation[] = await response.json();
+
+        this.users = users.map((user): UserForPeoplePicker => ({ ...user, text: user.label }));
+        this.is_loading_users = false;
     }
 }
 </script>

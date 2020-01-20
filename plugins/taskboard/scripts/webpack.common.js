@@ -34,7 +34,8 @@ module.exports = [
             extensions: [".js", ".ts", ".vue"]
         },
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
+            jquery: "jQuery"
         },
         module: {
             rules: [

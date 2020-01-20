@@ -219,6 +219,7 @@ a.taskboard-card-xref {
 
 .taskboard-card-info {
     display: flex;
+    flex-grow: 1;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-end;

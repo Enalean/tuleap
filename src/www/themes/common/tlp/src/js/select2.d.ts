@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./js/fetch-wrapper";
-export * from "./js/modal";
-export * from "./js/dropdowns";
-export * from "./js/popovers";
-export * from "./js/select2";
+import {
+    Options,
+    Select2Plugin,
+    DataFormat,
+    LoadingData,
+    IdTextPair,
+    GroupedDataFormat
+} from "select2";
 
-import flatpickr from "flatpickr";
-import { Options } from "flatpickr/dist/types/options";
-export function datePicker(
-    element: Element,
-    options?: Omit<Options, "enableTime" | "dateFormat"> & {
-        weekNumbers?: true;
-        time_24hr?: true;
-        monthSelectorType?: "static";
-    }
-): flatpickr.Instance;
+export { Options, Select2Plugin, DataFormat, LoadingData, IdTextPair, GroupedDataFormat };
 
-export as namespace tlp;
+export function select2(element: Element, options?: Options): Select2Plugin;

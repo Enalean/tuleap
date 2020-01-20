@@ -26,7 +26,7 @@
     margin: $tlp-half-spacing 0 0;
 }
 
-.taskboard-card-assignees-edit-mode {
+.taskboard-card-edit-mode-assignees {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
@@ -45,11 +45,39 @@
             color: darken($tlp-theme-color, 5%);
         }
     }
+
+    &.taskboard-card-assignees-edit-mode {
+        position: absolute;
+        z-index: 1;
+        bottom: calc(100% - 30px);
+        left: 12px;
+        width: calc(100% - 2 * #{$tlp-half-spacing} - 2px);
+
+        .select2-search__field { /* stylelint-disable-line selector-class-pattern */
+            width: 100% !important;
+        }
+
+        .select2-selection--multiple > .select2-selection__rendered > .select2-selection__choice { /* stylelint-disable-line selector-class-pattern */
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+    }
+}
+
+.taskboard-cell:last-child .taskboard-card-edit-mode-assignees.taskboard-card-assignees-edit-mode {
+    right: 10px;
+    left: auto;
+}
+
+.taskboard-card-assignees-loading-icon {
+    margin: -10px 0 0;
+    font-size: 14px;
 }
 
 .taskboard-card-assignees-add-icon,
 .taskboard-card-assignees-edit-icon {
     height: 25px;
+    font-size: 14px;
 }
 
 :not(.gu-mirror) > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
