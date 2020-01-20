@@ -70,6 +70,7 @@ use Tuleap\SVN\DiskUsage\DiskUsageCollector;
 use Tuleap\SVN\DiskUsage\DiskUsageDao;
 use Tuleap\SVN\DiskUsage\DiskUsageRetriever;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
+use Tuleap\svn\Event\UpdateProjectAccessFilesEvent;
 use Tuleap\SVN\Events\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\SVN\Events\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
@@ -155,9 +156,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
-        $this->addHook(Event::UGROUP_MODIFY);
-        $this->addHook(Event::MEMBERSHIP_CREATE);
-        $this->addHook(Event::MEMBERSHIP_DELETE);
+        $this->addHook(Event::UGROUP_RENAME);
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
@@ -203,6 +202,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         $this->addHook(StatisticsCollectorSVN::NAME);
         $this->addHook(LastMonthStatisticsCollectorSVN::NAME);
+        $this->addHook(\Tuleap\svn\Event\UpdateProjectAccessFilesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -281,32 +281,12 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $this->getPluginInfo()->getPropertyValueForName($key);
     }
 
-    /** @see Event::UGROUP_MODIFY */
-    public function ugroup_modify(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    /** @see Event::UGROUP_RENAME */
+    public function ugroupRename(array $params): void
     {
         $project         = $params['project'];
 
         $this->updateAllAccessFileOfProject($project, $params['new_ugroup_name'], $params['old_ugroup_name']);
-    }
-
-    /** @see Event::MEMBERSHIP_CREATE */
-    public function membership_create(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
-    {
-        $project         = $params['project'];
-        $new_ugroup_name = null;
-        $old_ugroup_name = null;
-
-        $this->updateAllAccessFileOfProject($project, $new_ugroup_name, $old_ugroup_name);
-    }
-
-    /** @see Event::MEMBERSHIP_DELETE */
-    public function membership_delete(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
-    {
-        $project         = $params['project'];
-        $new_ugroup_name = null;
-        $old_ugroup_name = null;
-
-        $this->updateAllAccessFileOfProject($project, $new_ugroup_name, $old_ugroup_name);
     }
 
     /** @see SystemEvent_PROJECT_IS_PRIVATE */
@@ -329,6 +309,11 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         foreach ($projects as $project) {
             $this->updateAllAccessFileOfProject($project, $new_ugroup_name, $old_ugroup_name);
         }
+    }
+
+    public function updateProjectAccessFiles(UpdateProjectAccessFilesEvent $event): void
+    {
+        $this->updateAllAccessFileOfProject($event->getProject(), null, null);
     }
 
     private function updateAllAccessFileOfProject(Project $project, $new_ugroup_name, $old_ugroup_name)

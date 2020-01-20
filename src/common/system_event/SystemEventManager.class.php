@@ -21,6 +21,8 @@
 
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
+use Tuleap\svn\Event\UpdateProjectAccessFilesScheduler;
+use Tuleap\svn\Event\UpdateProjectAccessFileSystemEvent;
 use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
@@ -275,7 +277,7 @@ class SystemEventManager
                 break;
             case 'project_admin_ugroup_edition':
                 $parameters = $this->concatParameters($params, array('group_id', 'ugroup_id', 'ugroup_name', 'ugroup_old_name'));
-                if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::UGROUP_MODIFY, $parameters)) {
+                if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
                     $this->createEvent(
                         SystemEvent::TYPE_UGROUP_MODIFY,
                         $parameters,
@@ -289,7 +291,7 @@ class SystemEventManager
             case 'project_admin_ugroup_deletion':
             case 'project_admin_ugroup_bind_modified':
                 $parameters = $this->concatParameters($params, array('group_id', 'ugroup_id'));
-                if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::UGROUP_MODIFY, $parameters)) {
+                if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
                     $this->createEvent(
                         SystemEvent::TYPE_UGROUP_MODIFY,
                         $parameters,
@@ -305,7 +307,7 @@ class SystemEventManager
                 foreach ($params['ugroups'] as $ugroup_id) {
                     $params['ugroup_id'] = $ugroup_id;
                     $parameters          = $this->concatParameters($params, array('group_id', 'ugroup_id'));
-                    if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::UGROUP_MODIFY, $parameters)) {
+                    if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
                         $this->createEvent(
                             SystemEvent::TYPE_UGROUP_MODIFY,
                             $parameters,
@@ -449,6 +451,8 @@ class SystemEventManager
                 return \Tuleap\SystemEvent\SystemEventProjectActive::class;
             case SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE:
                 return SystemEventUserActiveStatusChange::class;
+            case SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES:
+                return UpdateProjectAccessFileSystemEvent::class;
             default:
                 return 'SystemEvent_' . $type;
         }
@@ -524,7 +528,6 @@ class SystemEventManager
             case SystemEvent::TYPE_PROJECT_RENAME:
             case SystemEvent::TYPE_MEMBERSHIP_CREATE:
             case SystemEvent::TYPE_MEMBERSHIP_DELETE:
-            case SystemEvent::TYPE_UGROUP_MODIFY:
             case SystemEvent::TYPE_USER_DELETE:
             case SystemEvent::TYPE_USER_RENAME:
             case SystemEvent::TYPE_MAILING_LIST_CREATE:
@@ -536,12 +539,20 @@ class SystemEventManager
             case SystemEvent::TYPE_MASSMAIL:
                 $klass = $this->getClassForType($row['type']);
                 break;
+            case SystemEvent::TYPE_UGROUP_MODIFY:
+                $klass = $this->getClassForType($row['type']);
+                $klass_params = [new UpdateProjectAccessFilesScheduler($this)];
+                break;
             case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
             case SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS:
             case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
             case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
                 $klass = $this->getClassForType($row['type']);
                 $klass_params = array(Backend::instance(Backend::SVN));
+                break;
+            case SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES:
+                $klass = $this->getClassForType($row['type']);
+                $klass_params = [ProjectManager::instance(), EventManager::instance()];
                 break;
             case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
                 $klass          = $this->getClassForType($row['type']);

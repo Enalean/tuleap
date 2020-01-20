@@ -67,6 +67,7 @@ abstract class SystemEvent
     public const TYPE_SVN_AUTH_CACHE_CHANGE                    = "SVN_AUTH_CACHE_CHANGE";
     public const TYPE_MOVE_FRS_FILE                            = "MOVE_FRS_FILE";
     public const TYPE_UPDATE_ALIASES                           = "UPDATE_ALIASES";
+    public const TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES          = 'UPDATE_SVN_ACCESS_FILE';
 
     // Define status value (in sync with DB enum)
     public const STATUS_NONE       = "NONE";
