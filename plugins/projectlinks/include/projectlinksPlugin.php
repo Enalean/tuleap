@@ -1028,8 +1028,7 @@ class ProjectLinksPlugin extends Plugin
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
     {
         if ($get_widget_event->getName() === 'projectlinkshomepage') {
-            include_once 'ProjectLinks_Widget_HomePageLinks.class.php';
-            $get_widget_event->setWidget(new ProjectLinks_Widget_HomePageLinks($this));
+            $get_widget_event->setWidget(new ProjectLinks_Widget_HomePageLinks($this, Codendi_HTMLPurifier::instance()));
         }
     }
 
