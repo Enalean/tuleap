@@ -19,8 +19,8 @@
   -->
 
 <template>
-    <div>
-        <div class="project-registration-button-container">
+    <div class="project-registration-button-container">
+        <div class="project-registration-content">
             <router-link
                 to="/new"
                 v-on:click.native="resetSelectedTemplate"

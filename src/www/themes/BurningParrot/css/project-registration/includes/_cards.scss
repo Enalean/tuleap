@@ -97,6 +97,7 @@ $card-border-margin: 150px;
 .project-registration-template-content {
     display: flex;
     flex-direction: column;
+    width: 100%;
     margin: 0 0 0 ($card-border-margin - $tlp-spacing);
 }
 

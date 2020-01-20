@@ -19,8 +19,12 @@
   -->
 
 <template>
-    <div>
-        <div class="project-registration-button-container">
+    <div
+        class="project-registration-button-container"
+        data-test="project-template-footer"
+        v-bind:class="pinned_class"
+    >
+        <div class="project-registration-content">
             <button
                 type="button"
                 class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
@@ -39,14 +43,54 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { Getter } from "vuex-class";
+import { isElementInViewport } from "../../helpers/is-element-in-viewport";
 
 @Component
 export default class TemplateFooter extends Vue {
     @Getter
     is_template_selected!: boolean;
 
+    private is_footer_in_viewport = false;
+    private ticking = false;
+
+    mounted(): void {
+        this.is_footer_in_viewport = isElementInViewport(this.$el);
+        document.addEventListener("scroll", this.checkFooterIsInViewport);
+        window.addEventListener("resize", this.checkFooterIsInViewport);
+    }
+
+    destroyed(): void {
+        this.removeFooterListener();
+    }
+
+    removeFooterListener(): void {
+        document.removeEventListener("scroll", this.checkFooterIsInViewport);
+        window.removeEventListener("resize", this.checkFooterIsInViewport);
+    }
+
     goToInformationPage(): void {
         this.$router.push({ name: "information" });
+    }
+
+    checkFooterIsInViewport(): void {
+        if (!this.ticking) {
+            requestAnimationFrame(() => {
+                this.is_footer_in_viewport = isElementInViewport(this.$el);
+                this.ticking = false;
+            });
+
+            this.ticking = true;
+        }
+    }
+
+    get pinned_class(): string {
+        if (!this.is_footer_in_viewport && this.is_template_selected) {
+            this.removeFooterListener();
+
+            return "pinned";
+        }
+
+        return "";
     }
 }
 </script>
