@@ -34,6 +34,7 @@ class AgileALMTemplate implements TuleapTemplate
 
     private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/project.xml';
     private const AGILE_ALM_XML = __DIR__.'/../../../../../tools/utils/setup_templates/agile_alm/agile_alm_template.xml';
+    private const TEST_MANAGEMENT_XML = __DIR__.'/../../../../../tools/utils/setup_templates/agile_alm/testmanagement.xml';
 
     /**
      * @var string
@@ -90,6 +91,11 @@ class AgileALMTemplate implements TuleapTemplate
                 self::AGILE_ALM_XML,
                 $this->xml_path,
             );
+
+            $testmanagment_file = \ForgeConfig::getCacheDir() . '/agile_alm_template/testmanagement.xml';
+            if (! copy(self::TEST_MANAGEMENT_XML, $testmanagment_file)) {
+                throw new \RuntimeException("Can not copy TTM file for tuleap template import");
+            }
         }
         return $this->xml_path;
     }
