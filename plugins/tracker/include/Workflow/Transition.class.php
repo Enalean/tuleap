@@ -284,14 +284,6 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     }
 
     /**
-     * @return string html permission form for the transition
-     */
-    public function fetchConditions()
-    {
-        return $this->getConditions()->fetch();
-    }
-
-    /**
      * @deprecated use ConditionFactory get*Condition methods
      * @return Workflow_Transition_ConditionsCollection
      */

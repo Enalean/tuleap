@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,6 @@ use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition
 {
-
     /** @var string */
     public $identifier = 'perms';
 
@@ -39,24 +38,6 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     {
         parent::__construct($transition);
         $this->permission_manager = PermissionsManager::instance();
-    }
-
-    /**
-     * @see Workflow_Transition_Condition::fetch()
-     */
-    public function fetch()
-    {
-        $html  = '';
-        $html .= $GLOBALS['Language']->getText('workflow_admin', 'label_define_transition_permissions');
-        $html .= '<br />';
-        $html .= '<p>';
-        $html .= plugin_tracker_permission_fetch_selection_field(
-            self::PERMISSION_TRANSITION,
-            $this->transition->getId(),
-            $this->transition->getGroupId()
-        );
-        $html .= '</p>';
-        return $html;
     }
 
     /**

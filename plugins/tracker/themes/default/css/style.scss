@@ -1664,14 +1664,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     background-image: url('../../default/images/ic/ci_build/server.png');
 }
 
-.workflow_conditions_commentnotempty_label {
-    font-size: inherit;
-
-    > .workflow_conditions_commentnotempty_checkbox {
-        margin: 2px 0 0;
-    }
-}
-
 /* }}} */
 
 /* {{{ Palette */
@@ -2865,11 +2857,6 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
     font-size: 10px;
     vertical-align: super;
 }
-
-select[name='add_notempty_condition[]'] {
-    vertical-align: top;
-}
-
 
 .tracker-deprecated-fields {
     max-width: 960px;

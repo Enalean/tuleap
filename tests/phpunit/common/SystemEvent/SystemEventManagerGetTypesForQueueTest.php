@@ -64,6 +64,13 @@ class SystemEventManagerGetTypesForQueueTest extends TestCase
         EventManager::setInstance($this->event_manager);
     }
 
+    protected function tearDown(): void
+    {
+        EventManager::clearInstance();
+
+        parent::tearDown();
+    }
+
     public function testItReturnsEmptyArrayIfFantasyQueueIsPassed(): void
     {
         $manager = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();

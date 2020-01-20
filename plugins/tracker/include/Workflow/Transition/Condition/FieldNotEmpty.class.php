@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,9 @@
 
 use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Condition
-{ //phpcs:ignore
-
+{
     /** @var string */
     public $identifier = 'notempty';
 
@@ -37,43 +37,6 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         parent::__construct($transition);
         $this->dao                = $dao;
         $this->formElementFactory = Tracker_FormElementFactory::instance();
-    }
-
-    /**
-     * @see Workflow_Transition_Condition::fetch()
-     * @return string The field wrapped in Html
-     */
-    public function fetch()
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '';
-        $html    .= $GLOBALS['Language']->getText('workflow_admin', 'label_define_transition_required_field');
-        $html    .= '<br />';
-        $html    .= $GLOBALS['Language']->getText('workflow_admin', 'the_field') . ' ';
-        $html    .= '<select multiple name="add_notempty_condition[]">';
-
-        $selected = '';
-        if (empty($this->fields)) {
-            $selected = 'selected="selected"';
-        }
-        $html .= '<option value="0" '. $selected .'>';
-        $html .= $GLOBALS['Language']->getText('global', 'please_choose_dashed');
-        $html .= '</option>';
-
-        foreach ($this->getSelectableFields() as $field) {
-            $selected = '';
-            if (in_array($field, $this->fields)) {
-                $selected .= 'selected="selected"';
-            }
-
-            $html .= '<option value="' . $purifier->purify($field->getId()) . '" '. $selected .'>';
-            $html .= $purifier->purify($field->getLabel());
-            $html .= '</option>';
-        }
-        $html .= '</select>';
-        $html .= ' ' . $GLOBALS['Language']->getText('workflow_admin', 'field_not_empty');
-
-        return $html;
     }
 
     /**

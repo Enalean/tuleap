@@ -98,6 +98,13 @@ class TrackerFormElementFactoryTest extends TestCase
         ];
     }
 
+    public function tearDown(): void
+    {
+        EventManager::clearInstance();
+
+        parent::tearDown();
+    }
+
     public function testImportFormElement() : void
     {
         $mapping = [];

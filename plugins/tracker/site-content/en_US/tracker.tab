@@ -1432,8 +1432,6 @@ workflow_admin	enabled	Enforce transition rules
 workflow_admin	delete	Delete all transitions
 workflow_admin	updated	Transitions updated
 workflow_admin	not_updated	Nothing to update
-workflow_admin	label_define_transition_permissions	Groups that may make the transition:
-workflow_admin	label_define_transition_required_field	Field that must not be empty
 workflow_admin	label_define_transition_required_comment	Comment must not be empty.
 workflow_admin	permissions_transition	Can make the transition
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
@@ -1441,8 +1439,6 @@ workflow_admin	post_action_change_value_int_field	Change the value of an int fie
 workflow_admin	post_action_change_value_float_field	Change the value of a float field
 workflow_admin	add_new_action	Add a new action:
 workflow_admin	postaction_on_field_already_exist	An action on the field '$1' already exists.
-workflow_admin	the_field	The field
-workflow_admin	field_not_empty	must not be empty
 
 workflow_postaction	field_value_set	The field '$1' will be automatically set to $2
 workflow_postaction	field_clear	The field '$1' will be automatically cleared
