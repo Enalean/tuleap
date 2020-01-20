@@ -163,4 +163,22 @@ describe("CardAssignees", () => {
         expect(icon.classes()).toContain("fa-spin");
         expect(icon.classes()).toContain("taskboard-card-assignees-loading-icon");
     });
+
+    it("Does not switch the assignees to edit mode if the card is not in edit mode and user click on them", async () => {
+        const wrapper = await getWrapper(
+            {
+                assignees: [] as User[],
+                is_in_edit_mode: false
+            } as Card,
+            { assigned_to_field: { id: 123 } } as Tracker
+        );
+
+        wrapper.trigger("click");
+
+        expect(wrapper.classes()).toContain("taskboard-card-assignees");
+        expect(wrapper.classes()).not.toContain("taskboard-card-edit-mode-assignees");
+        expect(wrapper.classes()).not.toContain("taskboard-card-assignees-editable");
+        expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
+        expect(wrapper.contains("[data-test=icon]")).toBe(false);
+    });
 });

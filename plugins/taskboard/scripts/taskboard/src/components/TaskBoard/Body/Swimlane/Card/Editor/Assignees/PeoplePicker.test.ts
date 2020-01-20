@@ -35,7 +35,7 @@ describe("PeoplePicker", () => {
             localVue: await createTaskboardLocalVue(),
             propsData: {
                 is_multiple: true,
-                data: [
+                users: [
                     {
                         id: 101,
                         avatar_url: "steeve.png",
