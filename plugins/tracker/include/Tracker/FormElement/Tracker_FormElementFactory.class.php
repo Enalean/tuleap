@@ -20,6 +20,7 @@
  */
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -1144,22 +1145,28 @@ class Tracker_FormElementFactory
     ) {
         $att = $xml->attributes();
         assert($att !== null);
-        $row = array(
-            'formElement_type' => (string)$att['type'],
-            'name'             => (string)$xml->name,
-            'label'            => (string)$xml->label,
-            'rank'             => (int)$att['rank'],
-            'use_it'           => isset($att['use_it'])   ? (int)$att['use_it']        : 1,
-            'scope'            => isset($att['scope'])    ? (string)$att['scope']         : 'P',
-            'required'         => isset($att['required']) ? (int)$att['required'] : 0,
-            'notifications'    => isset($att['notifications']) ? (int)$att['notifications'] : 0,
-            'description'      => (string)$xml->description,
-            'id'               => 0,
-            'tracker_id'       => 0,
-            'parent_id'        => 0,
-            'original_field_id'=> null,
-        );
-        $curElem = $this->getInstanceFromRow($row);
+        if ($xml->getName() === 'externalField') {
+            $external_element_event = new ImportExternalElement($xml, $tracker->getProject());
+            $this->getEventManager()->processEvent($external_element_event);
+            $curElem = $external_element_event->getFormElement();
+        } else {
+            $row = [
+                'formElement_type'  => (string)$att['type'],
+                'name'              => (string)$xml->name,
+                'label'             => (string)$xml->label,
+                'rank'              => (int)$att['rank'],
+                'use_it'            => isset($att['use_it']) ? (int)$att['use_it'] : 1,
+                'scope'             => isset($att['scope']) ? (string)$att['scope'] : 'P',
+                'required'          => isset($att['required']) ? (int)$att['required'] : 0,
+                'notifications'     => isset($att['notifications']) ? (int)$att['notifications'] : 0,
+                'description'       => (string)$xml->description,
+                'id'                => 0,
+                'tracker_id'        => 0,
+                'parent_id'         => 0,
+                'original_field_id' => null,
+            ];
+            $curElem = $this->getInstanceFromRow($row);
+        }
         if ($curElem) {
             $curElem->setTracker($tracker);
             $xmlMapping[(string)$xml['ID']] = $curElem;

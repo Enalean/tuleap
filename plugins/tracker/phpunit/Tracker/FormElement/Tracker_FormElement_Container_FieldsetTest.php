@@ -67,6 +67,16 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
                         <label>date</label>
                         <description>date</description>
                     </formElement>
+                    <externalField type="ttmstepdef" ID="F1602" rank="2">
+                        <name>steps</name>
+                        <label><![CDATA[Steps definition]]></label>
+                        <description><![CDATA[Definition of the test\'s steps]]></description>
+                    <permissions>
+                        <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                        <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                        <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                    </permissions>
+                    </externalField>
                 </formElements>
             </formElement>'
         );
@@ -76,7 +86,8 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
         $a_formelement = Mockery::mock(Tracker_FormElement_Field_Date::class);
 
         $factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $factory->shouldReceive('getInstanceFromXML')->andReturn($a_formelement);
+        $factory->shouldReceive('getInstanceFromXML')->andReturn($a_formelement)->once();
+        $factory->shouldReceive('getInstanceFromXML')->andReturn(null)->once();
 
         $container_fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
             ->makePartial()

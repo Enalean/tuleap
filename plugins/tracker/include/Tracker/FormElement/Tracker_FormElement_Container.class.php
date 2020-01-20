@@ -349,17 +349,32 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder, $feedback_collector);
         // add children
         if ($xml->formElements) {
-            foreach ($xml->formElements->formElement as $elem) {
-                $form_element = $this->getFormElementFactory()->getInstanceFromXML(
-                    $this->getTracker(),
-                    $elem,
-                    $xmlMapping,
-                    $user_finder,
-                    $feedback_collector
-                );
-                if ($form_element) {
-                    $this->formElements[] = $form_element;
-                }
+            $this->getFormElementsFromXml($xml->formElements->formElement, $xmlMapping, $user_finder, $feedback_collector);
+            $this->getFormElementsFromXml($xml->formElements->externalField, $xmlMapping, $user_finder, $feedback_collector);
+        }
+    }
+
+    private function getFormElementsFromXml(
+        SimpleXMLElement $elements,
+        &$xmlMapping,
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
+        TrackerXmlImportFeedbackCollector $feedback_collector
+    ): void {
+        $tracker = $this->getTracker();
+        if (!$tracker) {
+            return;
+        }
+        foreach ($elements as $elem) {
+            $form_element = $this->getFormElementFactory()->getInstanceFromXML(
+                $tracker,
+                $elem,
+                $xmlMapping,
+                $user_finder,
+                $feedback_collector
+            );
+
+            if ($form_element) {
+                $this->formElements[] = $form_element;
             }
         }
     }
