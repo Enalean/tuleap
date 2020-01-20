@@ -95,6 +95,7 @@ $border-width-px: 13px;
 }
 
 .on-open-sprints-details .project-release-info-badge-open-sprint {
+    margin: 0 $tlp-spacing $tlp-spacing 0;
     border-radius: 15px 0 0 15px;
 }
 
@@ -115,4 +116,34 @@ $border-width-px: 13px;
     border: 0;
     background-color: $tlp-ui-border-light;
     color: $tlp-ui-border-light;
+}
+
+.project-release-closed-sprint-badge {
+    position: relative;
+    width: min-content;
+    background: $tlp-ui-border-dark;
+    color: $tlp-ui-dimmed;
+}
+
+.project-release-closed-sprint-badge::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: round($tlp-half-spacing) + 1;
+    left: -20px;
+    width: 20px;
+    height: 2px;
+    background: $tlp-ui-dimmed;
+}
+
+.project-release-closed-sprint-badge::before {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: round(($tlp-half-spacing - 3) / 2);
+    left: -32px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: $tlp-ui-dimmed;
 }

@@ -21,7 +21,8 @@ import {
     getCurrentMilestones,
     getNbOfSprints,
     getMilestonesContent,
-    getBurndownData
+    getBurndownData,
+    getNbOfClosedSprints
 } from "./rest-querier";
 
 import * as tlp from "tlp";
@@ -177,5 +178,49 @@ describe("getProject() -", () => {
         );
 
         expect(result).toEqual(burndown_data);
+    });
+
+    it("the REST API will be queried and the total of closed sprints returned", async () => {
+        const sprints: MilestoneData[] = [
+            {
+                id: 1,
+                start_date: new Date().toDateString(),
+                number_of_artifact_by_trackers: []
+            },
+            {
+                id: 2,
+                start_date: new Date().toDateString(),
+                number_of_artifact_by_trackers: []
+            }
+        ];
+
+        const tlpGetMock = jest.spyOn(tlp, "get");
+
+        mockFetchSuccess(tlpGetMock, {
+            headers: {
+                // X-PAGINATION-SIZE
+                get: (): number => 2
+            },
+            return_json: sprints
+        });
+
+        const result = await getNbOfClosedSprints(milestone_id);
+
+        const query = JSON.stringify({
+            status: "closed"
+        });
+
+        expect(tlpGetMock).toHaveBeenCalledWith(
+            "/api/v1/milestones/" + project_id + "/milestones",
+            {
+                params: {
+                    limit: 1,
+                    offset: 0,
+                    query
+                }
+            }
+        );
+
+        expect(result).toEqual(sprints.length);
     });
 });

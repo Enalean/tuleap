@@ -31,6 +31,7 @@ export interface MilestoneData {
     remaining_effort?: number | null;
     initial_effort?: number | null;
     total_sprint?: number | null;
+    total_closed_sprint?: number | null;
     burndown_data?: BurndownData | null;
     description?: string | null;
     resources?: {

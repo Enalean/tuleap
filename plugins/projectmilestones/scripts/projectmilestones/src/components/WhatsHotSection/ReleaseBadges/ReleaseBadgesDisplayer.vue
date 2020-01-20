@@ -28,6 +28,10 @@
             v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
             data-test="badge-sprint"
         />
+        <release-badges-closed-sprints
+            v-if="open_sprints_details"
+            v-bind:release_data="release_data"
+        />
         <hr
             v-if="open_sprints_details"
             data-test="line-displayed"
@@ -44,8 +48,9 @@ import { MilestoneData } from "../../../type";
 import { State } from "vuex-class";
 import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
+import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 @Component({
-    components: { ReleaseOthersBadges, ReleaseBadgesAllSprints }
+    components: { ReleaseBadgesClosedSprints, ReleaseOthersBadges, ReleaseBadgesAllSprints }
 })
 export default class ReleaseBadgesDisplayer extends Vue {
     @Prop()
