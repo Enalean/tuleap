@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow;
 
+use Feedback;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
@@ -95,8 +96,22 @@ class AddToTopBacklog extends Transition_PostAction
     {
         try {
             $this->unplanned_artifacts_adder->addArtifactToTopBacklog($changeset->getArtifact());
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext(
+                    'tuleap-agiledashboard',
+                    'This artifact has been successfully added to the top backlog of the project.',
+                )
+            );
         } catch (ArtifactAlreadyPlannedException $exception) {
             //Do nothing
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                dgettext(
+                    'tuleap-agiledashboard',
+                    "This artifact has not been added to the top backlog of the project because it's already planned in sub milestone of the project."
+                )
+            );
         }
     }
 }
