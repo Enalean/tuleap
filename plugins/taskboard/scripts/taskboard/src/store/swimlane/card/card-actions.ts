@@ -184,15 +184,19 @@ export async function loadPossibleAssignees(
         return;
     }
 
-    const response = await get(
-        `/plugins/tracker/?func=get-values&formElement=${encodeURIComponent(
-            tracker.assigned_to_field.id
-        )}`
-    );
-    const users: UserAjaxRepresentation[] = await response.json();
+    try {
+        const response = await get(
+            `/plugins/tracker/?func=get-values&formElement=${encodeURIComponent(
+                tracker.assigned_to_field.id
+            )}`
+        );
+        const users: UserAjaxRepresentation[] = await response.json();
 
-    context.commit("setPossibleAssigneesForFieldId", {
-        assigned_to_field_id: tracker.assigned_to_field.id,
-        users: users.map((user): UserForPeoplePicker => ({ ...user, text: user.label }))
-    });
+        context.commit("setPossibleAssigneesForFieldId", {
+            assigned_to_field_id: tracker.assigned_to_field.id,
+            users: users.map((user): UserForPeoplePicker => ({ ...user, text: user.label }))
+        });
+    } catch (error) {
+        await context.dispatch("error/handleModalError", error, { root: true });
+    }
 }
