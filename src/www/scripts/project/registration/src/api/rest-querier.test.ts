@@ -17,21 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    postProject,
-    getProjectUserIsAdminOf,
-    getTermOfService,
-    getServices
-} from "./rest-querier";
+import { postProject, getProjectUserIsAdminOf, getTermOfService } from "./rest-querier";
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
-import {
-    MinimalProjectRepresentation,
-    ProjectProperties,
-    TemplateData,
-    ServiceData
-} from "../type";
+import { MinimalProjectRepresentation, ProjectProperties, TemplateData } from "../type";
 
 jest.mock("tlp");
 
@@ -112,36 +102,5 @@ describe("rest-querier", () => {
         await getTermOfService();
 
         expect(response_text).toHaveBeenCalled();
-    });
-
-    it("getServices - retrieves the services used by a given project", async () => {
-        const service_a: ServiceData = {
-            id: "101",
-            uri: "/plugins/document",
-            name: "Document",
-            label: "Document",
-            is_enabled: true,
-            icon: "fa-folder"
-        };
-
-        const service_b: ServiceData = {
-            id: "102",
-            uri: "/plugins/taskboard",
-            name: "Taskboard",
-            label: "Taskboard",
-            is_enabled: false,
-            icon: "fa-gird"
-        };
-
-        const service_list = [service_a, service_b];
-
-        const recursiveGet = jest
-            .spyOn(tlp, "recursiveGet")
-            .mockReturnValue(Promise.resolve(service_list));
-
-        const services = await getServices("101");
-        expect(recursiveGet).toHaveBeenCalled();
-
-        expect(services).toEqual([service_a]);
     });
 });

@@ -42,7 +42,6 @@
                 {{ project.title }}
             </option>
         </select>
-        <project-services v-if="selected_project !== ''" v-bind:project="selected_project" />
     </div>
 </template>
 
@@ -50,11 +49,8 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import { TemplateData } from "../../../type";
-import ProjectServices from "../Services/ProjectServices.vue";
 
-@Component({
-    components: { ProjectServices }
-})
+@Component({})
 export default class UserProjectList extends Vue {
     @Prop({ required: true })
     readonly projectList!: Array<TemplateData>;

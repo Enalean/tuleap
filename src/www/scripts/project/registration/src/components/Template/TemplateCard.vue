@@ -46,11 +46,6 @@
                     <span class="project-registration-template-card-description">
                         {{ template.description }}
                     </span>
-
-                    <project-services
-                        v-bind:project="template"
-                        v-if="template.is_built_in === false"
-                    />
                 </div>
             </div>
         </label>
@@ -61,11 +56,8 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { TemplateData } from "../../type";
-import ProjectServices from "./Services/ProjectServices.vue";
 
-@Component({
-    components: { ProjectServices }
-})
+@Component({})
 export default class TemplateCard extends Vue {
     @Prop({ required: true })
     readonly template!: TemplateData;

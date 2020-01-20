@@ -11,7 +11,5 @@ exports[`UserProjectList Spawns the UserProjectList component 1`] = `
     <option data-test="select-project-102" value="[object Object]">
       My B project
     </option>
-  </select>
-  <!---->
-</div>
+  </select></div>
 `;
