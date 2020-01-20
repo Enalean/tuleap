@@ -274,11 +274,11 @@ describe("ProjectShortName", () => {
             };
             const wrapper = await createWrapper(data);
 
-            wrapper.find("[data-test=new-project-name]").setValue("Original");
+            wrapper.find("[data-test=new-project-shortname]").setValue("Original");
 
             wrapper.find("[data-test=project-shortname-slugified-section]").trigger("click");
 
-            wrapper.find("[data-test=new-project-name]").setValue("Accentué ç è é ù ë");
+            wrapper.find("[data-test=new-project-shortname]").setValue("Accentué ç è é ù ë");
             expect(wrapper.vm.$data.slugified_project_name).toBe("Accentué ç è é ù ë");
             expect(wrapper.vm.$data.has_slug_error).toBe(true);
 

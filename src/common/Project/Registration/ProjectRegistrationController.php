@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-use ForgeConfig;
 use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
@@ -78,10 +77,6 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
             $this->permission_checker->checkUserCreateAProject($request->getCurrentUser());
         } catch (RegistrationForbiddenException $exception) {
             throw new ForbiddenException();
-        }
-
-        if (! ForgeConfig::get('can_use_new_project_creation')) {
-            $layout->redirect("/project/register.php");
         }
 
         $layout->includeFooterJavascriptFile($this->javascript_assets->getFileURL('project-registration.js'));

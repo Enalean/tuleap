@@ -196,14 +196,6 @@ msgstr ""
 "services. Ne vous inquiétez pas, vous pourrez toujours modifier votre espace "
 "projet, une fois que celui-ci aura été créé."
 
-msgid ""
-"This space is under construction. You can still use the current registration "
-"process in the\n"
-"    meantime."
-msgstr ""
-"Cet espace est en cours de construction. Vous pouvez toujours utiliser le "
-"processus courant d'enregistrement de projet pendant ce temps."
-
 msgid "Tuleap templates"
 msgstr "Modèles de projet Tuleap"
 

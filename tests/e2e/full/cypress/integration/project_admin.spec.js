@@ -29,13 +29,18 @@ describe("Project admin", function() {
 
     context("project basic administration", function() {
         it("should be able to create a new public project", function() {
-            cy.visit("/project/register.php");
-            cy.get("[data-test=project_full_name]").type("project admin public project");
-            cy.get("[data-test=project_description]").type("publicproject");
-            cy.get("[data-test=project_short_description]").type("project admin public project");
+            cy.visit("/project/new");
+
+            cy.get("[data-test=project-registration-card-label")
+                .first()
+                .click();
+
+            cy.get("[data-test=project-registration-next-button").click();
+
+            cy.get("[data-test=new-project-name]").type("project admin test");
             cy.get("[data-test=approve_tos]").check();
 
-            cy.get("[data-test=project-creation-submit]").click();
+            cy.get("[data-test=project-registration-next-button]").click();
         });
 
         it("should be able to add users to a public project", function() {

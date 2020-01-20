@@ -34,7 +34,6 @@
                     can always modify your project workspace after your project has been created.
                 </p>
 
-                <under-construction-information />
                 <company-templates-list />
                 <tuleap-template-list />
                 <advanced-template-list />
@@ -48,7 +47,6 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
-import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
 import TemplateFooter from "./TemplateFooter.vue";
 import CompanyTemplatesList from "./Company/CompanyTemplateList.vue";
@@ -60,7 +58,6 @@ import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
         CompanyTemplatesList,
         TemplateFooter,
         NewProjectBoxes,
-        UnderConstructionInformation,
         TuleapTemplateList
     }
 })

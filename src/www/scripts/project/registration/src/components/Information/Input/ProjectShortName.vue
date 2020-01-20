@@ -53,7 +53,7 @@
                 v-bind:maxlength="max_project_length"
                 v-on:input="updateProjectShortName($refs.shortname.value)"
                 v-bind:value="slugified_project_name"
-                data-test="new-project-name"
+                data-test="new-project-shortname"
                 size="50"
             />
             <p class="tlp-text-info">

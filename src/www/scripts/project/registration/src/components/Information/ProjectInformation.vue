@@ -33,7 +33,6 @@
                         <span class="tlp-badge-primary register-new-project-section-badge">2</span>
                         <span v-translate>Project information</span>
                     </h2>
-                    <under-construction-information />
 
                     <div
                         class="register-new-project-information-form-container"
@@ -77,7 +76,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
@@ -118,8 +116,7 @@ const DEFAULT_PROJECT_ID = "100";
         ProjectName,
         ProjectInformationInputPrivacySwitch,
         ProjectInformationFooter,
-        ProjectInformationSvg,
-        UnderConstructionInformation
+        ProjectInformationSvg
     }
 })
 export default class ProjectInformation extends Vue {

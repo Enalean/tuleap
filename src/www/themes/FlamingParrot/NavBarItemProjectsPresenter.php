@@ -34,6 +34,10 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
     public $menu_projects_text;
     public $register_new_proj;
     public $browse_projects_text;
+    /**
+     * @var string
+     */
+    public $project_registration_url;
 
     public function __construct($id, $is_active, bool $is_project_registration_enabled, PFUser $user, array $projects)
     {
@@ -50,6 +54,11 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
 
         $this->is_trove_cat_enabled            = ForgeConfig::get('sys_use_trove');
         $this->is_project_registration_enabled = $is_project_registration_enabled;
+
+        $this->project_registration_url = '/project/register.php';
+        if (ForgeConfig::get(\ProjectManager::FORCE_NEW_PROJECT_CREATION_USAGE) === '1') {
+            $this->project_registration_url = '/project/new';
+        }
 
         $this->display_only_trovemap =
             $this->is_trove_cat_enabled
