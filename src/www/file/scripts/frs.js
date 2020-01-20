@@ -277,7 +277,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         $("type_" + id).name = "ftp_file_type[]";
         $("reference_md5_" + id).name = "ftp_reference_md5[]";
         cell_trash.appendChild(image);
-        $("td_file_" + id).innerHTML += select.options[select.selectedIndex].value;
+        $("td_file_" + id).textContent += select.options[select.selectedIndex].value;
 
         //remove entry from other select boxes
         $H(selects)
