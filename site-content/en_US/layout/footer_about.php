@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@
     Tuleap, 100% open source agile and software development tool. <a href="https://www.tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge">www.tuleap.org</a>.
 </p>
 <p class="footer-paragraph">
-    <a href="https://www.tuleap.org/resources/release-notes?utm_source=forge&utm_medium=forge&utm_campaign=forge">
+    <a href="https://www.tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge">
         Tuleap <?php echo $version ?>
     </a>
     <?php if ($GLOBALS['Language']->hasText('global', 'copyright')) { ?>
