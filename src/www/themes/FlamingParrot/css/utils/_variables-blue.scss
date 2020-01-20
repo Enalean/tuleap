@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import "variables-color-common";
+
 $color-name: 'blue';
-$white: #ffffff;
 $main: #1593c4;
 $dark-main: #137fa8;
 $navbar-color: $main;
 $navbar-color-hover: $dark-main;
-$light-grey: #ebebeb;
-$grey: #a9a9a9;
-$medium-grey: #686868;
-$dark-grey: #303030;
 $sidebar-background: #293e45;
 $main-background: #f0f1f8;
 

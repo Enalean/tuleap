@@ -175,7 +175,7 @@
         text-decoration: none;
 
         > .sidebar-about-logo > path {
-            fill: lighten($main, 5%);
+            fill: lighten($main-color-tuleap-orange, 5%);
         }
     }
 
@@ -185,7 +185,7 @@
 
     > .sidebar-about-logo > path {
         transition: fill 100ms;
-        fill: $main;
+        fill: $main-color-tuleap-orange;
     }
 
     > .sidebar-about-version {
