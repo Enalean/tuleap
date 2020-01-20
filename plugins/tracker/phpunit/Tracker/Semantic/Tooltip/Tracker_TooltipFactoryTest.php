@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,46 +18,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once('bootstrap.php');
-Mock::generate('Tracker');
 
-class Tracker_TooltipFactoryTest extends TuleapTestCase
+namespace Tuleap\Tracker\Semantic;
+
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tracker;
+use Tracker_TooltipFactory;
+
+class Tracker_TooltipFactoryTest extends TestCase
 {
-
-    /** @var XML_Security */
-    protected $xml_security;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->xml_security = new XML_Security();
-        $this->xml_security->enableExternalLoadOfEntities();
-    }
-
-    public function tearDown()
-    {
-        $this->xml_security->disableExternalLoadOfEntities();
-
-        parent::tearDown();
-    }
+    use MockeryPHPUnitIntegration;
 
     //testing Tooltip import
     public function testImport()
     {
-        $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTooltipTest.xml');
+        $xml = simplexml_load_string(
+            file_get_contents(__DIR__ . '/../../_fixtures/ImportTrackerSemanticTooltipTest.xml')
+        );
+        $tracker = Mockery::mock(Tracker::class);
 
-        $tracker = new MockTracker();
-
-        $mapping = array(
+        $mapping = [
                     'F8'  => 108,
                     'F9'  => 109,
                     'F16' => 116,
                     'F14' => 114
-                    );
+        ];
         $tooltip = Tracker_TooltipFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
 
-        $this->assertEqual(count($tooltip->getFields()), 3);
+        $this->assertEquals(3, count($tooltip->getFields()));
         $fields = $tooltip->getFields();
         $this->assertTrue(in_array(108, $fields));
         $this->assertTrue(in_array(109, $fields));
