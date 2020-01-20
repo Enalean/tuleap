@@ -77,7 +77,7 @@ class TemplateFactory
             new ConsistencyChecker(
                 new XMLFileContentRetriever(),
                 \EventManager::instance(),
-                new ServiceEnableForXmlImportRetriever()
+                new ServiceEnableForXmlImportRetriever(\PluginFactory::instance())
             ),
             new TemplateDao(),
             \ProjectManager::instance()
