@@ -218,7 +218,7 @@ final class ProjectServiceActivatorTest extends TestCase
         $data = \Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn(['is_used' => true]);
         $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
-        $data->shouldReceive('getDataServices')->andReturn([10 => true]);
+        $data->shouldReceive('getDataServices')->andReturn([10 => ['is_used' => true]]);
 
         $service = Mockery::mock(\Service::class);
         $service->shouldReceive('getShortName')->andReturn('tracker');
@@ -249,7 +249,7 @@ final class ProjectServiceActivatorTest extends TestCase
                 $service->getShortName(),
                 '/tracker/group_id=101',
                 1,
-                0,
+                1,
                 $service->getScope(),
                 $service->getRank(),
                 $service->isOpenedInNewTab()
@@ -311,7 +311,7 @@ final class ProjectServiceActivatorTest extends TestCase
         $data = \Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn(['is_used' => true]);
         $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
-        $data->shouldReceive('getDataServices')->andReturn([10 => true]);
+        $data->shouldReceive('getDataServices')->andReturn([10 => ['is_used' => true]]);
 
         $service = Mockery::mock(\Service::class);
         $service->shouldReceive('getShortName')->andReturn('svn');
@@ -342,7 +342,7 @@ final class ProjectServiceActivatorTest extends TestCase
                 $service->getShortName(),
                 '/svn/group_id=101',
                 1,
-                0,
+                1,
                 $service->getScope(),
                 $service->getRank(),
                 $service->isOpenedInNewTab()
@@ -404,7 +404,7 @@ final class ProjectServiceActivatorTest extends TestCase
         $data = Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn([]);
         $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
-        $data->shouldReceive('getDataServices')->andReturn([10 => true]);
+        $data->shouldReceive('getDataServices')->andReturn([10 => ['is_used' => true]]);
 
         $service = Mockery::mock(\Service::class);
         $service->shouldReceive('getShortName')->andReturn('document');
@@ -435,7 +435,7 @@ final class ProjectServiceActivatorTest extends TestCase
                 $service->getShortName(),
                 '/document/test-name',
                 1,
-                0,
+                1,
                 $service->getScope(),
                 $service->getRank(),
                 $service->isOpenedInNewTab()
