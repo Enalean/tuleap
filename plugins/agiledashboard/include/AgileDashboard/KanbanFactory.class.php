@@ -98,20 +98,27 @@ class AgileDashboard_KanbanFactory
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getKanbanIdByTrackerId($tracker_id)
     {
-        return $this->getKanbanByTrackerId($tracker_id)->getId();
+        $kanban = $this->getKanbanByTrackerId($tracker_id);
+        if ($kanban === null) {
+            return null;
+        }
+        return $kanban->getId();
     }
 
-    public function getKanbanByTrackerId(int $tracker_id): AgileDashboard_Kanban
+    public function getKanbanByTrackerId(int $tracker_id): ?AgileDashboard_Kanban
     {
         $row = $this->dao->getKanbanByTrackerId($tracker_id)->getRow();
+        if ($row === false) {
+            return null;
+        }
         return $this->instantiateFromRow($row);
     }
 
-    private function instantiateFromRow($kanban_data) : AgileDashboard_Kanban
+    private function instantiateFromRow(array $kanban_data) : AgileDashboard_Kanban
     {
         return new AgileDashboard_Kanban(
             $kanban_data['id'],

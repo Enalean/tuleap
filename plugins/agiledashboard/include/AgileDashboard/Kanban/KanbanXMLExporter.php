@@ -69,10 +69,13 @@ class KanbanXMLExporter
 
         $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($project->getID());
         foreach ($kanban_tracker_ids as $tracker_id) {
-            $kanban_node = $kanban_list_node->addChild(self::NODE_KANBAN);
-
             $kanban = $this->kanban_factory->getKanbanByTrackerId($tracker_id);
 
+            if ($kanban === null) {
+                continue;
+            }
+
+            $kanban_node = $kanban_list_node->addChild(self::NODE_KANBAN);
             $kanban_node->addAttribute('tracker_id', $this->getFormattedTrackerId($tracker_id));
             $kanban_node->addAttribute('name', $kanban->getName());
             $kanban_node->addAttribute('ID', $this->getFormattedKanbanId((int) $kanban->getId()));
