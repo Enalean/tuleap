@@ -194,7 +194,9 @@ export async function loadPossibleAssignees(
 
         context.commit("setPossibleAssigneesForFieldId", {
             assigned_to_field_id: tracker.assigned_to_field.id,
-            users: users.map((user): UserForPeoplePicker => ({ ...user, text: user.label }))
+            users: users.map(
+                (user): UserForPeoplePicker => ({ ...user, text: user.label, id: Number(user.id) })
+            )
         });
     } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });

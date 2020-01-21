@@ -26,13 +26,13 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import {
-    select2,
-    Select2Plugin,
-    Options,
     DataFormat,
-    LoadingData,
+    GroupedDataFormat,
     IdTextPair,
-    GroupedDataFormat
+    LoadingData,
+    Options,
+    select2,
+    Select2Plugin
 } from "tlp";
 import $ from "jquery";
 import { sanitize } from "dompurify";
@@ -45,17 +45,17 @@ export default class PeoplePicker extends Vue {
     readonly is_multiple!: boolean;
 
     @Prop({ required: true })
-    readonly data!: UserForPeoplePicker[];
+    readonly users!: UserForPeoplePicker[];
 
     select2_people_picker: Select2Plugin | null = null;
 
     mounted(): void {
         const configuration: Options = {
             allowClear: true,
-            data: this.data,
-            multiple: this.is_multiple,
-            minimumInputLength: 3,
-            placeholder: this.$gettext("John"),
+            data: this.users,
+            multiple: true,
+            maximumSelectionLength: this.is_multiple ? 0 : 1,
+            placeholder: { text: this.$gettext("John"), id: "0" },
             escapeMarkup: sanitize,
             templateResult: this.formatUser,
             templateSelection: this.formatUserWhenSelected
@@ -91,19 +91,14 @@ export default class PeoplePicker extends Vue {
     }
 
     isForPeoplePicker(
-        user: DataFormat | GroupedDataFormat | LoadingData // eslint-disable-line @typescript-eslint/no-unused-vars
+        user: IdTextPair | DataFormat | GroupedDataFormat | LoadingData
     ): user is UserForPeoplePicker {
         // This is a trick to fool TypeScript so that we can have avatar on users.
         // Default types definition of select2 forces us to have only "DataFormat" (basically: id, text) whereas
         // we can deal with values with more attribute (for example: avatar_url).
         //
         // The chosen solution is to rely on user-defined type guards of TypeScript.
-        //
-        // Here we assume that:
-        // * we are not in LoadingData since there is no remote call (no ajax options to select2)
-        // * we are not in GroupedDataFormat since we didn't ask to group our users
-        // => user is DataFormat, however this.data is UserForPeoplePicker, therefore we can always return true
-        return true;
+        return "avatar_url" in user;
     }
 
     formatUserWhenSelected(

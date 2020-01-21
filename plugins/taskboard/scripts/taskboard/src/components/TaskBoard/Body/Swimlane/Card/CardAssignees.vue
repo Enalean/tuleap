@@ -30,7 +30,7 @@
     >
         <people-picker
             v-bind:is_multiple="is_multiple"
-            v-bind:data="users"
+            v-bind:users="users"
             v-if="is_in_edit_mode"
         />
         <template v-else>
@@ -78,7 +78,7 @@ export default class CardAssignees extends Vue {
     readonly assignable_users!: (tracker: Tracker) => UserForPeoplePicker[];
 
     private is_in_edit_mode = false;
-    private users: UserForPeoplePicker[] = [];
+    private possible_users: UserForPeoplePicker[] = [];
     private is_loading_users = false;
 
     mounted(): void {
@@ -153,7 +153,7 @@ export default class CardAssignees extends Vue {
     }
 
     async editAssignees(): Promise<void> {
-        if (this.is_in_edit_mode) {
+        if (!this.card.is_in_edit_mode || this.is_in_edit_mode) {
             return;
         }
 
@@ -165,9 +165,21 @@ export default class CardAssignees extends Vue {
         this.is_loading_users = true;
 
         await this.loadPossibleAssignees(this.tracker);
-        this.users = this.assignable_users(this.tracker);
+        this.possible_users = this.assignable_users(this.tracker);
 
         this.is_loading_users = false;
+    }
+
+    get users(): UserForPeoplePicker[] {
+        return this.possible_users.map(
+            (user): UserForPeoplePicker => {
+                const selected = this.card.assignees.some(
+                    selected_user => selected_user.id === user.id
+                );
+
+                return { ...user, selected };
+            }
+        );
     }
 }
 </script>

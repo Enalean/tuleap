@@ -370,7 +370,7 @@ describe("Card actions", () => {
             expect(context.commit).not.toHaveBeenCalled();
         });
 
-        it("Loads assignees otherwise", async () => {
+        it("Loads assignees otherwise, and cast their ids to number", async () => {
             const tracker = {
                 assigned_to_field: {
                     id: 1234
@@ -380,7 +380,11 @@ describe("Card actions", () => {
             context.getters.have_possible_assignees_been_loaded_for_tracker = (): boolean => false;
 
             mockFetchSuccess(tlpGetMock, {
-                return_json: [{ label: "John" }, { label: "Steeve" }, { label: "Bob" }]
+                return_json: [
+                    { label: "John", id: "123" },
+                    { label: "Steeve", id: "124" },
+                    { label: "Bob", id: "125" }
+                ]
             });
 
             await actions.loadPossibleAssignees(context, tracker);
@@ -390,14 +394,17 @@ describe("Card actions", () => {
                 assigned_to_field_id: 1234,
                 users: [
                     {
+                        id: 123,
                         label: "John",
                         text: "John"
                     },
                     {
+                        id: 124,
                         label: "Steeve",
                         text: "Steeve"
                     },
                     {
+                        id: 125,
                         label: "Bob",
                         text: "Bob"
                     }
