@@ -1024,65 +1024,6 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     }
 
     /**
-     * Check user account validity against several rules
-     * - Account expiry date
-     * - Last user access
-     * - User not member of a project
-     */
-    public function checkUserAccountValidity()
-    {
-        // All rules applies at midnight
-        $current_date = format_date('Y-m-d', $_SERVER['REQUEST_TIME']);
-        $date_list    = explode("-", $current_date, 3);
-        $midnightTime = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
-
-        $this->suspendExpiredAccounts($midnightTime);
-        $this->suspendInactiveAccounts($midnightTime);
-        $this->suspendUserNotProjectMembers($midnightTime);
-    }
-
-    /**
-     * Change account status to suspended when the account expiry date is passed
-     *
-     * @param int $time Timestamp of the date when this apply
-     *
-     * @return bool
-     */
-    private function suspendExpiredAccounts($time)
-    {
-        return $this->getDao()->suspendExpiredAccounts($time);
-    }
-
-    /**
-     * Suspend accounts that without activity since date defined in configuration
-     *
-     * @param int $time Timestamp of the date when this apply
-     *
-     * @return bool
-     */
-    public function suspendInactiveAccounts($time)
-    {
-        if (isset($GLOBALS['sys_suspend_inactive_accounts_delay']) && $GLOBALS['sys_suspend_inactive_accounts_delay'] > 0) {
-            $lastValidAccess = $time - ($GLOBALS['sys_suspend_inactive_accounts_delay'] * 24 * 3600);
-            return $this->getDao()->suspendInactiveAccounts($lastValidAccess);
-        }
-        return true;
-    }
-
-    /**
-     * Change account status to suspended when user is no more member of any project
-     * @return bool
-     *
-     */
-    public function suspendUserNotProjectMembers($time)
-    {
-        if (isset($GLOBALS['sys_suspend_non_project_member_delay']) && $GLOBALS['sys_suspend_non_project_member_delay'] > 0) {
-            $lastRemove = $time - ($GLOBALS['sys_suspend_non_project_member_delay'] * 24 * 3600);
-            return $this->getDao()->suspendUserNotProjectMembers($lastRemove);
-        }
-    }
-
-    /**
      * Update user name in different tables containing the old user name
      * @param PFUser $user
      * @param String $newName

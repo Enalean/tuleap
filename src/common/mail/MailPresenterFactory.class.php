@@ -280,13 +280,12 @@ class MailPresenterFactory
     /**
      * Creates a presenter for the account suspension notification email
      *
-     * @param int          $last_access_date Unix timestamp of the last acces date of the idle user
-     * @param int          $suspension_date  Unix timestamp of the suspension forecasted day
-     * @param BaseLanguage $language         Email language
-     *
+     * @param DateTimeImmutable $last_access_date
+     * @param DateTimeImmutable $suspension_date
+     * @param BaseLanguage $language
      * @return MailAccountSuspensionAlertPresenter
      */
-    public function createMailAccountSuspensionAlertPresenter(int $last_access_date, int $suspension_date, BaseLanguage $language) : MailAccountSuspensionAlertPresenter
+    public function createMailAccountSuspensionAlertPresenter(DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language) : MailAccountSuspensionAlertPresenter
     {
         $color_logo = "#000";
         $this->setColorTheme($color_logo);

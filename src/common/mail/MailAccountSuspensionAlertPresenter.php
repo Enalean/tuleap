@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Mail;
 
 use BaseLanguage;
+use DateTimeImmutable;
 use MailOutlinePresenter;
 use DateHelper;
 use ForgeConfig;
@@ -37,17 +38,17 @@ class MailAccountSuspensionAlertPresenter extends MailOutlinePresenter
     /**
      * Constructor
      *
-     * @param string       $logo_url         URL of the organization logo
-     * @param string       $color_logo       Logo/email tone color in hex notation
-     * @param int          $last_access_date Last login Unix timestamp
-     * @param int          $suspension_date  Date of suspension Unix timestamp
-     * @param BaseLanguage $language         Email language
+     * @param string $logo_url URL of the organization logo
+     * @param string $color_logo Logo/email tone color in hex notation
+     * @param DateTimeImmutable $last_access_date
+     * @param DateTimeImmutable $suspension_date
+     * @param BaseLanguage $language
      */
-    public function __construct($logo_url, $color_logo, $last_access_date, $suspension_date, $language)
+    public function __construct(string $logo_url, string $color_logo, DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language)
     {
         parent::__construct($logo_url, '', '', '', $color_logo);
-        $this->last_access_date =  DateHelper::formatForLanguage($language, $last_access_date, true);
-        $this->suspension_date = DateHelper::formatForLanguage($language, $suspension_date, true);
+        $this->last_access_date =  DateHelper::formatForLanguage($language, $last_access_date->getTimeStamp(), true);
+        $this->suspension_date = DateHelper::formatForLanguage($language, $suspension_date->getTimeStamp(), true);
         $this->organization_name = ForgeConfig::get('sys_org_name');
         $this->tuleap_server_name = ForgeConfig::get('sys_name');
     }
