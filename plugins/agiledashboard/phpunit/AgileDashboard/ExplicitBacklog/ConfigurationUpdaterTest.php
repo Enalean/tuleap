@@ -33,6 +33,7 @@ use Planning;
 use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
 use Project;
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
@@ -85,17 +86,23 @@ class ConfigurationUpdaterTest extends TestCase
      */
     private $unplanned_artifacts_adder;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AddToTopBacklogPostActionDao
+     */
+    private $add_to_top_backlog_post_action_dao;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
-        $this->milestone_report_criterion_dao    = Mockery::mock(MilestoneReportCriterionDao::class);
-        $this->backlog_item_dao                  = Mockery::mock(AgileDashboard_BacklogItemDao::class);
-        $this->milestone_factory                 = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->unplanned_artifacts_adder         = Mockery::mock(UnplannedArtifactsAdder::class);
-        $this->db_transaction_executor           = new DBTransactionExecutorPassthrough();
+        $this->explicit_backlog_dao               = Mockery::mock(ExplicitBacklogDao::class);
+        $this->milestone_report_criterion_dao     = Mockery::mock(MilestoneReportCriterionDao::class);
+        $this->backlog_item_dao                   = Mockery::mock(AgileDashboard_BacklogItemDao::class);
+        $this->milestone_factory                  = Mockery::mock(Planning_MilestoneFactory::class);
+        $this->artifacts_in_explicit_backlog_dao  = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->unplanned_artifacts_adder          = Mockery::mock(UnplannedArtifactsAdder::class);
+        $this->add_to_top_backlog_post_action_dao = Mockery::mock(AddToTopBacklogPostActionDao::class);
+        $this->db_transaction_executor            = new DBTransactionExecutorPassthrough();
 
         $this->updater = new ConfigurationUpdater(
             $this->explicit_backlog_dao,
@@ -104,6 +111,7 @@ class ConfigurationUpdaterTest extends TestCase
             $this->milestone_factory,
             $this->artifacts_in_explicit_backlog_dao,
             $this->unplanned_artifacts_adder,
+            $this->add_to_top_backlog_post_action_dao,
             $this->db_transaction_executor
         );
 
@@ -133,6 +141,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
         $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
         $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
 
         $this->updater->updateScrumConfiguration($request);
     }
@@ -147,6 +156,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
         $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
         $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
@@ -165,6 +175,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
         $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
         $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
@@ -181,6 +192,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeExplicitBacklogOfProject');
         $this->explicit_backlog_dao->shouldReceive('setProjectIsUsingExplicitBacklog')->once();
         $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
+        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
         $this->backlog_item_dao->shouldReceive('getOpenUnplannedTopBacklogArtifacts')->andReturn(
             \TestHelper::arrayToDar(
                 ['id' => '201'],
@@ -206,6 +218,8 @@ class ConfigurationUpdaterTest extends TestCase
         $this->milestone_report_criterion_dao->shouldReceive('updateAllUnplannedValueToAnyInProject')->once();
         $this->backlog_item_dao->shouldNotReceive('getOpenUnplannedTopBacklogArtifacts');
         $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->shouldReceive('deleteAllPostActionsInProject')->once();
+        $this->add_to_top_backlog_post_action_dao->shouldReceive('isAtLeastOnePostActionDefinedInProject')->once();
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()

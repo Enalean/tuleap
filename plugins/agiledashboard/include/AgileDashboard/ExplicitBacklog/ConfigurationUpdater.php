@@ -28,6 +28,7 @@ use MilestoneReportCriterionDao;
 use PFUser;
 use Planning_MilestoneFactory;
 use Project;
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBTransactionExecutor;
 
 class ConfigurationUpdater
@@ -67,6 +68,11 @@ class ConfigurationUpdater
      */
     private $unplanned_artifacts_adder;
 
+    /**
+     * @var AddToTopBacklogPostActionDao
+     */
+    private $add_to_top_backlog_post_action_dao;
+
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         MilestoneReportCriterionDao $milestone_report_criterion_dao,
@@ -74,15 +80,17 @@ class ConfigurationUpdater
         Planning_MilestoneFactory $milestone_factory,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         UnplannedArtifactsAdder $unplanned_artifacts_adder,
+        AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
         DBTransactionExecutor $db_transaction_executor
     ) {
-        $this->explicit_backlog_dao              = $explicit_backlog_dao;
-        $this->milestone_report_criterion_dao    = $milestone_report_criterion_dao;
-        $this->db_transaction_executor           = $db_transaction_executor;
-        $this->backlog_item_dao                  = $backlog_item_dao;
-        $this->milestone_factory                 = $milestone_factory;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
-        $this->unplanned_artifacts_adder         = $unplanned_artifacts_adder;
+        $this->explicit_backlog_dao               = $explicit_backlog_dao;
+        $this->milestone_report_criterion_dao     = $milestone_report_criterion_dao;
+        $this->db_transaction_executor            = $db_transaction_executor;
+        $this->backlog_item_dao                   = $backlog_item_dao;
+        $this->milestone_factory                  = $milestone_factory;
+        $this->artifacts_in_explicit_backlog_dao  = $artifacts_in_explicit_backlog_dao;
+        $this->unplanned_artifacts_adder          = $unplanned_artifacts_adder;
+        $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
     }
 
     public function updateScrumConfiguration(Codendi_Request $request): void
@@ -129,9 +137,13 @@ class ConfigurationUpdater
 
     private function deactivateExplicitBacklogManagement(int $project_id): void
     {
+        $project_used_add_to_top_backlog_workflow_action = $this->add_to_top_backlog_post_action_dao
+            ->isAtLeastOnePostActionDefinedInProject($project_id);
+
         $this->db_transaction_executor->execute(function () use ($project_id) {
             $this->artifacts_in_explicit_backlog_dao->removeExplicitBacklogOfProject($project_id);
             $this->milestone_report_criterion_dao->updateAllUnplannedValueToAnyInProject($project_id);
+            $this->add_to_top_backlog_post_action_dao->deleteAllPostActionsInProject($project_id);
         });
 
         $GLOBALS['Response']->addFeedback(
@@ -141,6 +153,16 @@ class ConfigurationUpdater
                 'All tracker reports using "Unplanned" option for "In milestone" report criterion will now use "Any".'
             )
         );
+
+        if ($project_used_add_to_top_backlog_workflow_action) {
+            $GLOBALS['Response']->addFeedback(
+                \Feedback::INFO,
+                dgettext(
+                    'tuleap-agiledashboard',
+                    'All tracker workflow post-actions "AddToTopBacklog" have been removed.'
+                )
+            );
+        }
     }
 
     private function mustBeDeactivated(bool $use_explicit_top_backlog, int $project_id): bool

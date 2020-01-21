@@ -55,6 +55,11 @@ msgstr ""
 "\" pour le critère \"Dans le jalon\" utiliseront l'option \"Tous\"."
 
 msgid ""
+"All tracker workflow post-actions \"AddToTopBacklog\" have been removed."
+msgstr ""
+"Les actions workflow de type \"AddToTopBacklog\" ont été supprimées."
+
+msgid ""
 "An artifact could be considered <strong>done</strong> only if a semantic "
 "status is defined."
 msgstr ""
@@ -73,6 +78,13 @@ msgstr "Une erreur est survenue lors de la suppression des valeurs finies."
 
 msgid "An error occurred while updating done values."
 msgstr "Une erreur est survenue lors de la mise à jour des valeurs finies."
+
+msgid ""
+"Any \"AddToTopBacklog\" workflow post-actions defined in the project will be "
+"removed."
+msgstr ""
+"Les actions workflow de type \"AddToTopBacklog\" définies dans le projet seront "
+"supprimées."
 
 #, php-format
 msgid ""
@@ -314,8 +326,8 @@ msgid ""
 "This artifact has not been added to the top backlog of the project because "
 "it's already planned in sub milestone of the project."
 msgstr ""
-"Cet artéfact n'a pas été ajouté à la planification générale car il est "
-"déjà présent dans un sous jalon."
+"Cet artéfact n'a pas été ajouté à la planification générale car il est déjà "
+"présent dans un sous jalon."
 
 msgid ""
 "This is an experimental feature. It's explained <a href=\"https://tuleap.net/"

@@ -160,7 +160,8 @@ class AgileDashboardRouterBuilder
                 $mono_milestone_checker,
                 $event_manager,
                 $this->getPlanningFactory(),
-                new ExplicitBacklogDao()
+                new ExplicitBacklogDao(),
+                new AddToTopBacklogPostActionDao()
             ),
             $event_manager,
             new PlanningUpdater($planning_factory, new ArtifactsInExplicitBacklogDao()),

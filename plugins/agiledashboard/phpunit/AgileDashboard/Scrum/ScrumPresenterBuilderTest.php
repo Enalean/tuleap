@@ -34,6 +34,7 @@ use Planning_PlanningAdminPresenter;
 use PlanningFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalLanguageMock;
 
 class ScrumPresenterBuilderTest extends TestCase
@@ -65,23 +66,32 @@ class ScrumPresenterBuilderTest extends TestCase
      */
     private $config_manager;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AddToTopBacklogPostActionDao
+     */
+    private $add_to_top_backlog_post_action_dao;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->config_manager               = Mockery::mock(AgileDashboard_ConfigurationManager::class);
-        $this->scrum_mono_milestone_checker = Mockery::mock(ScrumForMonoMilestoneChecker::class);
-        $this->event_manager                = Mockery::mock(EventManager::class);
-        $this->planning_factory             = Mockery::mock(PlanningFactory::class);
-        $this->explicit_backlog_dao         = Mockery::mock(ExplicitBacklogDao::class);
+        $this->config_manager                     = Mockery::mock(AgileDashboard_ConfigurationManager::class);
+        $this->scrum_mono_milestone_checker       = Mockery::mock(ScrumForMonoMilestoneChecker::class);
+        $this->event_manager                      = Mockery::mock(EventManager::class);
+        $this->planning_factory                   = Mockery::mock(PlanningFactory::class);
+        $this->explicit_backlog_dao               = Mockery::mock(ExplicitBacklogDao::class);
+        $this->add_to_top_backlog_post_action_dao = Mockery::mock(AddToTopBacklogPostActionDao::class);
 
         $this->scrum_presenter_builder = new ScrumPresenterBuilder(
             $this->config_manager,
             $this->scrum_mono_milestone_checker,
             $this->event_manager,
             $this->planning_factory,
-            $this->explicit_backlog_dao
+            $this->explicit_backlog_dao,
+            $this->add_to_top_backlog_post_action_dao
         );
+
+        $this->add_to_top_backlog_post_action_dao->shouldReceive('isAtLeastOnePostActionDefinedInProject')->andReturnTrue();
     }
 
     public function testItBuildsPresenterWhenNoRootPlanning(): void
@@ -124,6 +134,7 @@ class ScrumPresenterBuilderTest extends TestCase
             true,
             "",
             false,
+            true,
             false
         );
 
@@ -180,6 +191,7 @@ class ScrumPresenterBuilderTest extends TestCase
             false,
             "",
             false,
+            true,
             false
         );
 
@@ -239,6 +251,7 @@ class ScrumPresenterBuilderTest extends TestCase
             true,
             "",
             false,
+            true,
             false
         );
 
@@ -294,6 +307,7 @@ class ScrumPresenterBuilderTest extends TestCase
             false,
             false,
             "",
+            true,
             true,
             false
         );
