@@ -18,14 +18,9 @@
  */
 
 import { post, recursiveGet, get } from "tlp";
-import {
-    ProjectProperties,
-    MinimalProjectRepresentation,
-    TemplateData,
-    ServiceData
-} from "../type";
+import { ProjectProperties, MinimalProjectRepresentation, TemplateData } from "../type";
 
-export { postProject, getProjectUserIsAdminOf, getTermOfService, getServices };
+export { postProject, getProjectUserIsAdminOf, getTermOfService };
 
 async function postProject(project_properties: ProjectProperties): Promise<string> {
     const headers = {
@@ -72,20 +67,4 @@ async function getTermOfService(): Promise<string> {
     const response = await get("/tos/tos_text.php");
 
     return response.text();
-}
-
-async function getServices(project_id: string): Promise<ServiceData[]> {
-    const services_representations: Array<ServiceData> = await recursiveGet(
-        `/api/projects/${encodeURIComponent(project_id)}/project_services`,
-        {
-            params: {
-                limit: 50,
-                offset: 0
-            }
-        }
-    );
-
-    return services_representations.filter(
-        service => service.is_enabled && service.name !== "admin" && service.name !== "summary"
-    );
 }
