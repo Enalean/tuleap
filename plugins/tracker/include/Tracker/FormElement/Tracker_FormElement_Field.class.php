@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
@@ -1604,7 +1606,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 new StateFactory(
                     new TransitionFactory(
                         Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance()
+                        EventManager::instance(),
+                        new DBTransactionExecutorWithConnection(
+                            DBFactory::getMainTuleapDBConnection()
+                        )
                     ),
                     new SimpleWorkflowDao()
                 ),

@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+
 require_once __DIR__.'/../bootstrap.php';
 
 class TransitionFactory_BaseTest extends TuleapTestCase
@@ -44,7 +46,11 @@ class TransitionFactory_BaseTest extends TuleapTestCase
         $this->event_manager      = \Mockery::spy(\EventManager::class);
         $this->factory            = \Mockery::mock(
             \TransitionFactory::class,
-            [$this->condition_factory, $this->event_manager]
+            [
+                $this->condition_factory,
+                $this->event_manager,
+                new DBTransactionExecutorPassthrough()
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -119,7 +125,11 @@ class TransitionFactory_duplicateTest extends TransitionFactory_BaseTest
 
         $tf = \Mockery::mock(
             \TransitionFactory::class,
-            [$this->condition_factory, $this->event_manager]
+            [
+                $this->condition_factory,
+                $this->event_manager,
+                new DBTransactionExecutorPassthrough()
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();

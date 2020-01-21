@@ -28,6 +28,8 @@ use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
 use TransitionFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
@@ -179,7 +181,10 @@ class ProjectTrackersResource
             new StateFactory(
                 new TransitionFactory(
                     Workflow_Transition_ConditionFactory::build(),
-                    EventManager::instance()
+                    EventManager::instance(),
+                    new DBTransactionExecutorWithConnection(
+                        DBFactory::getMainTuleapDBConnection()
+                    )
                 ),
                 new SimpleWorkflowDao()
             ),

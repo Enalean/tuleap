@@ -25,7 +25,9 @@
 
 require_once __DIR__ .'/../../constants.php';
 
+use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -2215,7 +2217,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 new StateFactory(
                     new TransitionFactory(
                         Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance()
+                        EventManager::instance(),
+                        new DBTransactionExecutorWithConnection(
+                            DBFactory::getMainTuleapDBConnection()
+                        )
                     ),
                     new SimpleWorkflowDao()
                 ),
@@ -2236,7 +2241,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 new StateFactory(
                     new TransitionFactory(
                         Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance()
+                        EventManager::instance(),
+                        new DBTransactionExecutorWithConnection(
+                            DBFactory::getMainTuleapDBConnection()
+                        )
                     ),
                     new SimpleWorkflowDao()
                 ),

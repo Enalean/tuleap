@@ -31,6 +31,8 @@ use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
 use TransitionFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
@@ -93,7 +95,10 @@ class ProjectResource
             new StateFactory(
                 new TransitionFactory(
                     Workflow_Transition_ConditionFactory::build(),
-                    EventManager::instance()
+                    EventManager::instance(),
+                    new DBTransactionExecutorWithConnection(
+                        DBFactory::getMainTuleapDBConnection()
+                    )
                 ),
                 new SimpleWorkflowDao()
             ),

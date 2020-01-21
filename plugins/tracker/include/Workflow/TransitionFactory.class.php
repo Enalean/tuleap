@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
@@ -27,20 +30,27 @@ use Tuleap\Tracker\Workflow\TransitionDeletionException;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class TransitionFactory
 {
-
     /** @var Workflow_Transition_ConditionFactory */
     private $condition_factory;
+
     /**
      * @var EventManager
      */
     private $event_manager;
 
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $db_transaction_executor;
+
     public function __construct(
         Workflow_Transition_ConditionFactory $condition_factory,
-        EventManager $event_manager
+        EventManager $event_manager,
+        DBTransactionExecutor $db_transaction_executor
     ) {
-        $this->condition_factory = $condition_factory;
-        $this->event_manager     = $event_manager;
+        $this->condition_factory       = $condition_factory;
+        $this->event_manager           = $event_manager;
+        $this->db_transaction_executor = $db_transaction_executor;
     }
 
     /**
@@ -58,7 +68,10 @@ class TransitionFactory
         if (!isset(self::$_instance)) {
             self::$_instance = new self(
                 Workflow_Transition_ConditionFactory::build(),
-                EventManager::instance()
+                EventManager::instance(),
+                new DBTransactionExecutorWithConnection(
+                    DBFactory::getMainTuleapDBConnection()
+                )
             );
         }
         return self::$_instance;
@@ -465,19 +478,21 @@ class TransitionFactory
      */
     public function delete(Transition $transition)
     {
-        try {
-            $event = new TransitionDeletionEvent($transition);
-            $this->event_manager->processEvent($event);
+        $this->db_transaction_executor->execute(function () use ($transition) {
+            try {
+                $event = new TransitionDeletionEvent($transition);
+                $this->event_manager->processEvent($event);
 
-            if (! $this->getDao()->deleteTransition(
-                $transition->getWorkflow()->getId(),
-                $transition->getIdFrom(),
-                $transition->getIdTo()
-            )) {
-                throw new TransitionDeletionException();
+                if (! $this->getDao()->deleteTransition(
+                    $transition->getWorkflow()->getId(),
+                    $transition->getIdFrom(),
+                    $transition->getIdTo()
+                )) {
+                    throw new TransitionDeletionException();
+                }
+            } catch (DataAccessQueryException $exception) {
+                throw new TransitionDeletionException($exception);
             }
-        } catch (DataAccessQueryException $exception) {
-            throw new TransitionDeletionException($exception);
-        }
+        });
     }
 }
