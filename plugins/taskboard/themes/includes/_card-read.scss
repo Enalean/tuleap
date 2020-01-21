@@ -106,21 +106,6 @@
 .taskboard-draggable-item {
     cursor: move;
 
-    &.gu-mirror {
-        opacity: 1;
-
-        > .taskboard-card {
-            box-shadow:
-                0 20px 40px rgba(0, 0, 0, .08),
-                0 5px 15px rgba(0, 0, 0, .1),
-                0 -1px 0 rgba(0, 0, 0, .03);
-
-            > .taskboard-card-edit-trigger {
-                display: none;
-            }
-        }
-    }
-
     &:last-child {
         margin-bottom: $tlp-double-spacing;
     }
@@ -142,8 +127,7 @@
         z-index: 2;
     }
 
-    &.gu-transit,
-    &.gu-mirror {
+    &.drek-ghost {
         > .taskboard-card-remaining-effort {
             z-index: 0;
             transform: translate(0, -40px);

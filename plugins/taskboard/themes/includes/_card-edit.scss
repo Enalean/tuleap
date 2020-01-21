@@ -84,7 +84,7 @@
     font-size: 14px;
 }
 
-:not(.gu-mirror) > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
+.taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
     > .taskboard-card-edit-trigger {
         @include pencil-background(var(--secondary-color, #{$tlp-ui-white}));
         display: flex;
@@ -168,7 +168,7 @@
 }
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card,
-:not(.gu-mirror) > .taskboard-card {
+.taskboard-card {
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
 
     &.taskboard-card-is-being-saved {

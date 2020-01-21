@@ -27,7 +27,7 @@
 @import 'includes/error';
 @import 'includes/swimlane-sticky-header';
 @import 'includes/button-bar';
-@import '../scripts/node_modules/dragula/dist/dragula.min.css';
+@import '../scripts/taskboard/src/helpers/drag-and-drop/drekkenov';
 
 .taskboard-under-construction {
     color: $tlp-ui-dimmed;

@@ -43,9 +43,9 @@ describe(`drag-drop helper`, () => {
             expect(drag_drop.canMove(element)).toBe(false);
         });
 
-        it(`Given a element with a is-draggable flag, it will return true`, () => {
+        it(`Given a element with a draggable flag, it will return true`, () => {
             const element = createElement("taskboard-card", "taskboard-card-collapsed");
-            element.setAttribute("data-is-draggable", "true");
+            element.setAttribute("draggable", "true");
 
             expect(drag_drop.canMove(element)).toBe(true);
         });

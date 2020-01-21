@@ -50,6 +50,7 @@
 .taskboard-cell {
     flex: 1;
     min-width: 250px;
+    min-height: 40px;
     padding: $tlp-half-spacing;
     border-right: 1px solid $tlp-ui-border-normal;
     border-bottom: 3px solid $tlp-ui-border-normal;
@@ -96,8 +97,7 @@
         background: mix($tlp-theme-color, $tlp-ui-white, 7%);
     }
 
-    > .gu-transit,
-    > .gu-mirror,
+    > .drek-ghost,
     > .taskboard-draggable-item {
         opacity: 0;
         white-space: nowrap;
