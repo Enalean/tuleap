@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -72,11 +72,6 @@ function aSelectBoxField()
 function aMultiSelectBoxField()
 {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_MultiSelectbox');
-}
-
-function aCheckboxField()
-{
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Checkbox');
 }
 
 function aRadiobuttonField()
