@@ -1425,15 +1425,11 @@ workflow_admin	enabled	Appliquer les règles sur les transitions.
 workflow_admin	delete	Supprimer toutes les transitions
 workflow_admin	updated	Transitions mises à jour
 workflow_admin	not_updated	Aucune mise à jour effectuée
-workflow_admin	label_define_transition_permissions	Groupes autorisés à effectuer la transition :
-workflow_admin	label_define_transition_required_field	Champ qui doit être rempli :
 workflow_admin	label_define_transition_required_comment	Le commentaire doit être rempli.
 workflow_admin	permissions_transition	Peut effectuer la transition
 workflow_admin	post_action_change_value_date_field	Mettre à jour la valeur d'un champ date
 workflow_admin	post_action_change_value_int_field	Mettre à jour la valeur d'un champ de type entier
 workflow_admin	post_action_change_value_float_field	Mettre à jour la valeur d'un champ de type flottant
-workflow_admin	the_field	Le champ
-workflow_admin	field_not_empty	doit être rempli
 
 workflow_admin	add_new_action	Ajouter une nouvelle action :
 workflow_admin	postaction_on_field_already_exist	Une action sur le champ '$1' existe déjà.

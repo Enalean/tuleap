@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Transition_ConditionsCollection implements ArrayAccess
 {
 
     /** @var array of Workflow_Transition_Condition */
     private $conditions = array();
-
-    /** @var int */
-    private $current;
 
     // {{{ ArrayAccess
     public function offsetSet($offset, $value)
@@ -81,27 +79,6 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess
         foreach ($this->conditions as $condition) {
             $condition->saveObject();
         }
-    }
-
-    /**
-     * @return string html permission form for the transition
-     */
-    public function fetch()
-    {
-        $html  = '';
-        $html .= '<ul class="workflow_conditions">';
-        foreach ($this->conditions as $condition) {
-            $content = $condition->fetch();
-            if (! $content) {
-                continue;
-            }
-
-            $html .= '<li class="workflow_conditions_'. $condition->identifier .'">';
-            $html .= $content;
-            $html .= '</li>';
-        }
-        $html .= '</ul>';
-        return $html;
     }
 
     /**

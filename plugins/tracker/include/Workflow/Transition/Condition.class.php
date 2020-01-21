@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,9 +23,10 @@ use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 /**
  * Condition on a transition
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Workflow_Transition_Condition
 {
-
     /** @var string */
     public $identifier = 'generic_condition';
 
@@ -51,13 +52,6 @@ abstract class Workflow_Transition_Condition
      * @return void
      */
     abstract public function exportToXml(SimpleXMLElement $root, $xmlMapping);
-
-    /**
-     * Get the html code needed to display the condition in workflow admin
-     *
-     * @return string html
-     */
-    abstract public function fetch();
 
     /**
      * Validate the condition
