@@ -19,23 +19,28 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\TestCase;
+use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Users;
+use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
-use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use UserManager;
 
 require_once __DIR__.'/../../../../../bootstrap.php';
 
-class ListFieldCheckerWithBindUsersTest extends TuleapTestCase
+class ListFieldCheckerWithBindUsersTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var ListFieldChecker */
     private $list_field_checker;
     /** @var Tracker_FormElement_Field_List */
@@ -49,16 +54,16 @@ class ListFieldCheckerWithBindUsersTest extends TuleapTestCase
     /** @var  PFUser */
     private $current_user;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->current_user = aUser()->withId(101)->withUserName('admin')->build();
-        $this->user_manager = mock('UserManager');
+        $this->current_user = (new \UserTestBuilder())->withId(101)->withUserName('admin')->build();
+        $this->user_manager = \Mockery::spy(\UserManager::class);
 
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
-        $ugroup_label_converter           = mock('Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter');
-        stub($ugroup_label_converter)->isASupportedDynamicUgroup()->returns(false);
+        $ugroup_label_converter           = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter::class);
+        $ugroup_label_converter->shouldReceive('isASupportedDynamicUgroup')->andReturns(false);
 
         $this->list_field_checker = new ListFieldChecker(
             new EmptyStringAllowed(),
@@ -71,69 +76,94 @@ class ListFieldCheckerWithBindUsersTest extends TuleapTestCase
             $ugroup_label_converter
         );
 
-        $this->comparison = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
-        $this->bind       = partial_mock('Tracker_FormElement_Field_List_Bind_Users', array(
-            'getAllValues'
-        ));
-        $this->field      = aCheckboxField()->withBind($this->bind)->build();
+        $this->comparison = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison::class);
+        $this->bind       = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_Users::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->field      = $this->buildCheckboxField();
+
+        $value_101 = new Tracker_FormElement_Field_List_Bind_UsersValue(101, 'admin');
+        $value_103 = new Tracker_FormElement_Field_List_Bind_UsersValue(101, 'mandrew');
+
         $list_values      = array(
-            101 => aBindUsersValue()->withId(101)->withUserName('admin')->build(),
-            103 => aBindUsersValue()->withId(103)->withUserName('mandrew')->build()
+            101 => $value_101,
+            103 => $value_103
         );
-        stub($this->bind)->getAllValues()->returns($list_values);
+
+        $this->bind->shouldReceive('getAllValues')->andReturns($list_values);
     }
 
-    public function itDoesNotThrowWhenEmptyValueIsAllowed()
+    private function buildCheckboxField(): Tracker_FormElement_Field_Checkbox
+    {
+        $field =  new Tracker_FormElement_Field_Checkbox(
+            1,
+            101,
+            null,
+            'checkbox',
+            'Checkbox',
+            null,
+            true,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+        $field->setBind($this->bind);
+
+        return $field;
+    }
+
+    public function testItDoesNotThrowWhenEmptyValueIsAllowed(): void
     {
         $value_wrapper = new SimpleValueWrapper('');
 
-        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
+        $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->pass();
+        $this->doesNotPerformAssertions();
     }
 
-    public function itDoesNotThrowWhenValueExists()
+    public function testItDoesNotThrowWhenValueExists(): void
     {
-        stub($this->user_manager)->getCurrentUser()->returns($this->current_user);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->current_user);
         $value_wrapper = new SimpleValueWrapper('admin');
 
-        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
+        $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->pass();
+        $this->doesNotPerformAssertions();
     }
 
-    public function itDoesNotThrowWithMyselfValueAndCurrentUserIsLoggedIn()
+    public function testItDoesNotThrowWithMyselfValueAndCurrentUserIsLoggedIn(): void
     {
-        stub($this->user_manager)->getCurrentUser()->returns($this->current_user);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->current_user);
         $value_wrapper = new CurrentUserValueWrapper($this->user_manager);
 
-        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
+        $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->pass();
+        $this->doesNotPerformAssertions();
     }
 
-    public function itThrowsWithMyselfValueAndCurrentUserIsAnonymous()
+    public function testItThrowsWithMyselfValueAndCurrentUserIsAnonymous(): void
     {
-        stub($this->user_manager)->getCurrentUser()->returns(null);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturns(null);
         $value_wrapper = new CurrentUserValueWrapper($this->user_manager);
 
-        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
+        $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
-        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListToMySelfForAnonymousComparisonException');
+        $this->expectException(\Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListToMySelfForAnonymousComparisonException::class);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
     }
 
-    public function itThrowsWhenValueDoesNotExist()
+    public function testItThrowsWhenValueDoesNotExist(): void
     {
         $value_wrapper = new SimpleValueWrapper('c');
 
-        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
+        $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
-        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListValueDoNotExistComparisonException');
+        $this->expectException(\Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListValueDoNotExistComparisonException::class);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
     }

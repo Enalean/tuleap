@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,20 +19,25 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
-use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
 require_once __DIR__.'/../../../../../bootstrap.php';
 
-class ListFieldCheckerWithBindStaticTest extends TuleapTestCase
+class ListFieldCheckerWithBindStaticTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var ListFieldChecker */
     private $list_field_checker;
     /** @var Tracker_FormElement_Field_List */
@@ -42,13 +47,13 @@ class ListFieldCheckerWithBindStaticTest extends TuleapTestCase
     /** @var Tracker_FormElement_Field_List_Bind_Static */
     private $bind;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
-        $ugroup_label_converter           = mock('Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter');
-        stub($ugroup_label_converter)->isASupportedDynamicUgroup()->returns(false);
+        $ugroup_label_converter           = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter::class);
+        $ugroup_label_converter->shouldReceive('isASupportedDynamicUgroup')->andReturns(false);
 
         $this->list_field_checker = new ListFieldChecker(
             new EmptyStringAllowed(),
@@ -61,45 +66,70 @@ class ListFieldCheckerWithBindStaticTest extends TuleapTestCase
             $ugroup_label_converter
         );
 
-        $this->comparison = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
-        $this->bind       = partial_mock('Tracker_FormElement_Field_List_Bind_Static', array(
-            'getAllValues'
-        ));
-        $this->field              = aCheckboxField()->withBind($this->bind)->build();
-        $list_values              = array(
-            100 => aFieldListStaticValue()->withId(100)->withLabel('a')->build(),
-            101 => aFieldListStaticValue()->withId(101)->withLabel('b')->build()
+        $this->comparison = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison::class);
+        $this->bind       = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->field      = $this->buildCheckboxField();
+
+        $value_100 = new Tracker_FormElement_Field_List_Bind_StaticValue(100, 'a', null, null, null);
+        $value_101 = new Tracker_FormElement_Field_List_Bind_StaticValue(101, 'b', null, null, null);
+
+        $list_values = array(
+            100 => $value_100,
+            101 => $value_101
         );
-        stub($this->bind)->getAllValues()->returns($list_values);
+
+        $this->bind->shouldReceive('getAllValues')->andReturns($list_values);
     }
 
-    public function itDoesNotThrowWhenEmptyValueIsAllowed()
+    private function buildCheckboxField(): Tracker_FormElement_Field_Checkbox
+    {
+        $field =  new Tracker_FormElement_Field_Checkbox(
+            1,
+            101,
+            null,
+            'checkbox',
+            'Checkbox',
+            null,
+            true,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+        $field->setBind($this->bind);
+
+        return $field;
+    }
+
+    public function testItDoesNotThrowWhenEmptyValueIsAllowed(): void
     {
         $value_wrapper = new SimpleValueWrapper('');
 
-        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
+        $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->pass();
+        $this->doesNotPerformAssertions();
     }
 
-    public function itDoesNotThrowWhenValueExists()
+    public function testItDoesNotThrowWhenValueExists(): void
     {
         $value_wrapper = new SimpleValueWrapper('a');
 
-        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
+        $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->pass();
+        $this->doesNotPerformAssertions();
     }
 
-    public function itThrowsWhenValueDoNotExist()
+    public function testItThrowsWhenValueDoNotExist(): void
     {
         $value_wrapper = new SimpleValueWrapper('c');
 
-        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
+        $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
-        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListValueDoNotExistComparisonException');
+        $this->expectException(\Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListValueDoNotExistComparisonException::class);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
     }
