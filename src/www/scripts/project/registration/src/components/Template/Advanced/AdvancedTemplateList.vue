@@ -62,7 +62,7 @@
                             v-else-if="is_loading_project_list && !has_error"
                             data-test="user-project-spinner"
                         >
-                            <i class="fa fa-spinner fa-circle-o-notch"></i>
+                            <i class="fa fa-spinner fa-spin fa-circle-o-notch"></i>
                         </div>
                         <div
                             v-else-if="has_error"
