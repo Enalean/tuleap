@@ -158,7 +158,9 @@ class ArtifactLinkValueSaver
         Tracker $to_tracker,
         $existing_nature
     ) {
-        if (in_array($to_tracker, $from_tracker->getChildren())) {
+        $is_child = $this->isTrackerChildrenOfTheOtherTracker($to_tracker, $from_tracker);
+
+        if ($is_child) {
             if ($this->artifact_links_usage_dao->isTypeDisabledInProject(
                 $from_tracker->getProject()->getID(),
                 Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
@@ -172,7 +174,7 @@ class ArtifactLinkValueSaver
         }
 
         if ($from_tracker->getChildren()
-            && ! in_array($to_tracker, $from_tracker->getChildren())
+            && ! $is_child
             && $existing_nature === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
         ) {
             $this->warnForceUsageOfNoneType($artifactlinkinfo, $from_tracker);
@@ -181,6 +183,17 @@ class ArtifactLinkValueSaver
         }
 
         return null;
+    }
+
+    private function isTrackerChildrenOfTheOtherTracker(Tracker $to_tracker, Tracker $from_tracker): bool
+    {
+        foreach ($from_tracker->getChildren() as $child_tracker) {
+            if ((int) $child_tracker->getId() === (int) $to_tracker->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function warnForceUsageOfNoneType(Tracker_ArtifactLinkInfo $artifactlinkinfo, Tracker $from_tracker)

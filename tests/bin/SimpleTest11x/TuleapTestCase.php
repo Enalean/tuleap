@@ -20,7 +20,6 @@
 
 require_once __DIR__.'/../../simpletest/common/User/UserTestBuilder.php';
 require_once __DIR__.'/../../simpletest/common/include/builders/aRequest.php';
-require_once __DIR__.'/../../simpletest/common/Project/aMockProject.php';
 require_once __DIR__.'/../../lib/SimpleMockOngoingInterlligentStub.php';
 require_once __DIR__.'/../../lib/MockeryOngoingIntelligentStub.php';
 require_once __DIR__.'/../../lib/TestHelper.class.php';

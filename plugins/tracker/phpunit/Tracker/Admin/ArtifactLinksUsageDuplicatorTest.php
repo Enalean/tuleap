@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,6 +46,8 @@ final class ArtifactLinksUsageDuplicatorTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->dao        = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
         $this->duplicator = new ArtifactLinksUsageDuplicator($this->dao);
 
@@ -56,7 +58,6 @@ final class ArtifactLinksUsageDuplicatorTest extends TestCase
     public function testItActivatesTheArtifactLinkTypesIfTemplateAlreadyUseThem(): void
     {
         $this->dao->shouldReceive('isProjectUsingArtifactLinkTypes')->with(101)->andReturns(true);
-
         $this->dao->shouldReceive('duplicate')->with(101, 102)->once();
 
         $this->duplicator->duplicate($this->template, $this->project);

@@ -161,7 +161,10 @@ class Planning_ControllerNewTest extends TuleapTestCase
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', TRACKER_BASE_DIR . '/../../..');
         $this->group_id               = 123;
-        $project_manager              = Mockery::spy(ProjectManager::class, ['getProject' => aMockProject()->withId($this->group_id)->build()]);
+        $project_manager              = Mockery::spy(
+            ProjectManager::class,
+            ['getProject' => Mockery::mock(Project::class)->shouldReceive('getId')->andReturn($this->group_id)->getMock()]
+        );
         $this->request                = aRequest()->withProjectManager($project_manager)->with('group_id', "$this->group_id")->build();
         $this->planning_factory       = mock('PlanningFactory');
         $this->tracker_factory        = mock('TrackerFactory');

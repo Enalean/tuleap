@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,16 @@
 
 namespace Tuleap\AgileDashboard\Kanban;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-require_once __DIR__ . '/../../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
-class KanbanXmlImporterTest extends \TuleapTestCase
+class KanbanXmlImporterTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var \Project
      */
@@ -63,20 +67,19 @@ class KanbanXmlImporterTest extends \TuleapTestCase
      */
     private $kanban_factory;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->dashboard_kanban_column_factory       = \Mockery::spy(\AgileDashboard_KanbanColumnFactory::class);
         $this->agile_dashboard_configuration_manager = \Mockery::spy(\AgileDashboard_ConfigurationManager::class);
         $this->kanban_column_manager                 = \Mockery::spy(\AgileDashboard_KanbanColumnManager::class);
         $this->kanban_manager                        = \Mockery::spy(\AgileDashboard_KanbanManager::class);
-        $this->kanban_factory                        = mock(\AgileDashboard_KanbanFactory::class);
-        $this->mappings_registry = new \Tuleap\XML\MappingsRegistry;
+        $this->kanban_factory                        = \Mockery::spy(\AgileDashboard_KanbanFactory::class);
+        $this->mappings_registry                     = new \Tuleap\XML\MappingsRegistry;
 
-        $this->user                = aUser()->withId(101)->build();
-        $this->project             = aMockProject()->withId(100)->build();
+        $this->user                = (new \UserTestBuilder())->withId(101)->build();
+        $this->project             = \Mockery::spy(\Project::class, ['getID' => 100, 'getUnixName' => false, 'isPublic' => false]);
         $this->kanban_xml_importer = new KanbanXmlImporter(
             \Mockery::spy(\Logger::class),
             $this->kanban_manager,
@@ -87,7 +90,7 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         );
     }
 
-    public function itDontContinueImportWhenKanbanNodeIsNotFound()
+    public function testItDontContinueImportWhenKanbanNodeIsNotFound(): void
     {
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -126,7 +129,7 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         );
     }
 
-    public function itImportsAKanbanWithItsOwnConfiguration()
+    public function testItImportsAKanbanWithItsOwnConfiguration(): void
     {
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -145,10 +148,10 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         $field_mapping = \Mockery::spy(\TrackerXmlFieldsMapping::class);
 
         $this->agile_dashboard_configuration_manager->shouldReceive('updateConfiguration')->once();
-        expect($this->kanban_manager)->createKanban('My personal kanban', 50)->once();
-        expect($this->kanban_column_manager)->updateWipLimit()->count(3);
+        $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
+        $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
 
-        stub($this->kanban_factory)->getKanbanForXmlImport()->returns(\Mockery::spy(\AgileDashboard_Kanban::class));
+        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(\Mockery::spy(\AgileDashboard_Kanban::class));
         $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
             ->times(3)
             ->andReturn(\Mockery::spy(\AgileDashboard_KanbanColumn::class));
@@ -165,7 +168,7 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         );
     }
 
-    public function itImportsAKanbanWithASimpleConfiguration()
+    public function testItImportsAKanbanWithASimpleConfiguration(): void
     {
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -180,7 +183,7 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         $field_mapping = \Mockery::spy(\TrackerXmlFieldsMapping::class);
 
         $this->agile_dashboard_configuration_manager->shouldReceive('updateConfiguration')->once();
-        expect($this->kanban_manager)->createKanban('My personal kanban', 50)->once();
+        $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
 
         $this->kanban_xml_importer->import(
             $xml,
@@ -194,7 +197,7 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         );
     }
 
-    public function itImportsMultipleKanban()
+    public function testItImportsMultipleKanban(): void
     {
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -214,10 +217,10 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         $field_mapping = \Mockery::spy(\TrackerXmlFieldsMapping::class);
 
         $this->agile_dashboard_configuration_manager->shouldReceive('updateConfiguration')->once();
-        expect($this->kanban_manager)->createKanban()->count(2);
-        expect($this->kanban_column_manager)->updateWipLimit()->count(3);
+        $this->kanban_manager->shouldReceive('createKanban')->times(2)->andReturn(9, 10);
+        $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
 
-        stub($this->kanban_factory)->getKanbanForXmlImport()->returns(\Mockery::spy(\AgileDashboard_Kanban::class));
+        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(\Mockery::spy(\AgileDashboard_Kanban::class));
         $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
             ->times(3)
             ->andReturn(\Mockery::spy(\AgileDashboard_KanbanColumn::class));
@@ -235,7 +238,7 @@ class KanbanXmlImporterTest extends \TuleapTestCase
         );
     }
 
-    public function itSetsKanbanIdInWidgetRegistry()
+    public function testItSetsKanbanIdInWidgetRegistry(): void
     {
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -253,10 +256,12 @@ class KanbanXmlImporterTest extends \TuleapTestCase
             </project>'
         );
 
-        stub($this->kanban_factory)->getKanbanForXmlImport()->returns(new \AgileDashboard_Kanban(11221, -1, ''));
+        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(new \AgileDashboard_Kanban(11221, -1, ''));
         $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
             ->times(3)
             ->andReturn(\Mockery::spy(\AgileDashboard_KanbanColumn::class));
+
+        $this->kanban_manager->shouldReceive('createKanban')->times(2)->andReturn(9, 10);
 
         $this->kanban_xml_importer->import(
             $xml,
@@ -270,6 +275,6 @@ class KanbanXmlImporterTest extends \TuleapTestCase
             $this->mappings_registry
         );
 
-        $this->assertEqual($this->mappings_registry->getReference('K03')->getId(), 11221);
+        $this->assertEquals(11221, $this->mappings_registry->getReference('K03')->getId());
     }
 }
