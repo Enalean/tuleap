@@ -72,6 +72,10 @@
 .taskboard-card-assignees-loading-icon {
     margin: -10px 0 0;
     font-size: 14px;
+
+    &:first-child {
+        margin: 0 2px 11px 0;
+    }
 }
 
 .taskboard-card-assignees-add-icon,
