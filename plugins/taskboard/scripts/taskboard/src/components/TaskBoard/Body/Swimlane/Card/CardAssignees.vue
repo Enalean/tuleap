@@ -137,11 +137,9 @@ export default class CardAssignees extends Vue {
             return "";
         }
 
-        if (this.tracker.assigned_to_field?.is_multiple) {
-            return this.$gettext("Edit assignees");
-        }
+        const number = this.is_multiple ? 2 : 1;
 
-        return this.$gettext("Edit assignee");
+        return this.$ngettext("Edit assignee", "Edit assignees", number);
     }
 
     get role(): string | undefined {

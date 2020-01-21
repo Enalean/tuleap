@@ -37,10 +37,9 @@ msgid "Define columns"
 msgstr "Définir les colonnes"
 
 msgid "Edit assignee"
-msgstr "Éditer l'assigné"
-
-msgid "Edit assignees"
-msgstr "Éditer les assignés"
+msgid_plural "Edit assignees"
+msgstr[0] "Éditer l'assigné"
+msgstr[1] "Éditer les assignés"
 
 msgid "Expand"
 msgstr "Étendre"
