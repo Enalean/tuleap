@@ -34,6 +34,7 @@ use Tracker_RuleFactory;
 use Tracker_SemanticFactory;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -99,6 +100,7 @@ class TrackerXmlImportTest extends TestCase
             \Mockery::spy(\Tracker_Artifact_XMLImport::class),
             \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class),
             \Mockery::spy(\UGroupManager::class),
+            \Mockery::spy(UGroupRetrieverWithLegacy::class),
             \Mockery::spy(Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),

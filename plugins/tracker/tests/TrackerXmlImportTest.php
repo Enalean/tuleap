@@ -170,6 +170,7 @@ class TrackerXmlImportTest extends TuleapTestCase
             $this->xml_import,
             \Mockery::spy(User\XML\Import\IFindUserFromXMLReference::class),
             $this->ugroup_manager,
+            \Mockery::spy(\Tuleap\Project\UGroupRetrieverWithLegacy::class),
             $this->logger,
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
@@ -354,6 +355,7 @@ class TrackerXmlImportTest extends TuleapTestCase
             $this->xml_import,
             \Mockery::spy(User\XML\Import\IFindUserFromXMLReference::class),
             $this->ugroup_manager,
+            \Mockery::spy(\Tuleap\Project\UGroupRetrieverWithLegacy::class),
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
@@ -395,6 +397,7 @@ class TrackerXmlImportTest extends TuleapTestCase
             $this->xml_import,
             \Mockery::spy(User\XML\Import\IFindUserFromXMLReference::class),
             $this->ugroup_manager,
+            \Mockery::spy(\Tuleap\Project\UGroupRetrieverWithLegacy::class),
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             $artifact_links_usage_dao,
@@ -478,6 +481,7 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase
             $this->xml_import,
             \Mockery::spy(User\XML\Import\IFindUserFromXMLReference::class),
             $this->ugroup_manager,
+            \Mockery::spy(\Tuleap\Project\UGroupRetrieverWithLegacy::class),
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
@@ -565,6 +569,7 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
             \Mockery::spy(\Tracker_Artifact_XMLImport::class),
             \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class),
             \Mockery::spy(\UGroupManager::class),
+            \Mockery::spy(\Tuleap\Project\UGroupRetrieverWithLegacy::class),
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
@@ -649,6 +654,7 @@ XML;
             \Mockery::spy(\Tracker_Artifact_XMLImport::class),
             \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class),
             \Mockery::spy(\UGroupManager::class),
+            \Mockery::spy(\Tuleap\Project\UGroupRetrieverWithLegacy::class),
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
@@ -903,6 +909,7 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase
             \Mockery::spy(\Tracker_Artifact_XMLImport::class),
             \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class),
             \Mockery::spy(\UGroupManager::class),
+            \Mockery::spy(\Tuleap\Project\UGroupRetrieverWithLegacy::class),
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
@@ -953,6 +960,10 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
      */
     private $external_validator;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Project\UGroupRetrieverWithLegacy
+     */
+    private $ugroup_retriever_with_legacy;
 
     public function setUp()
     {
@@ -981,6 +992,7 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase
         $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
 
         $this->external_validator   = \Mockery::mock(ExternalFieldsExtractor::class);
+        $this->ugroup_retriever_with_legacy = \Mockery::spy(\Tuleap\Project\UGroupRetrieverWithLegacy::class);
 
         $this->tracker_xml_importer = new TrackerXmlImport(
             $this->tracker_factory,
@@ -997,6 +1009,7 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase
             \Mockery::spy(\Tracker_Artifact_XMLImport::class),
             \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class),
             $this->ugroup_manager,
+            $this->ugroup_retriever_with_legacy,
             \Mockery::spy(\Logger::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
@@ -1063,6 +1076,10 @@ XML;
         $this->external_validator->shouldReceive('extractExternalFieldFromProjectElement')->andReturn($xml_input);
         $this->external_validator->shouldReceive('extractExternalFieldsFromFormElements')->andReturn($xml_input);
 
+        $this->ugroup_retriever_with_legacy->shouldReceive('getUGroupId')->andReturn($this->contributors_ugroup_id)->once();
+        $this->ugroup_retriever_with_legacy->shouldReceive('getUGroupId')->andReturn(3)->once();
+        $this->ugroup_retriever_with_legacy->shouldReceive('getUGroupId')->andReturn(4)->once();
+
         stub($this->tracker)->testImport()->returns(true);
         stub($this->tracker_factory)->validMandatoryInfoOnCreate()->returns(true);
         stub($this->tracker_factory)->getInstanceFromRow()->returns($this->tracker);
@@ -1111,6 +1128,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase
             \Mockery::spy(\Tracker_Artifact_XMLImport::class),
             \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class),
             \Mockery::spy(\UGroupManager::class),
+            \Mockery::spy(\Tuleap\Project\UGroupRetrieverWithLegacy::class),
             \Mockery::spy(\Logger::class),
             $this->artifact_link_usage_updater,
             $this->artifact_link_usage_dao,

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -101,6 +102,11 @@ class TrackerXmlImport
     /** @var UGroupManager */
     private $ugroup_manager;
 
+    /**
+     * @var UGroupRetrieverWithLegacy
+     */
+    private $ugroup_retriever_with_legacy;
+
     /** @var Logger */
     private $logger;
 
@@ -144,6 +150,7 @@ class TrackerXmlImport
         Tracker_Artifact_XMLImport $xml_import,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         UGroupManager $ugroup_manager,
+        UGroupRetrieverWithLegacy $ugroup_retriever_with_legacy,
         Logger $logger,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
@@ -165,6 +172,7 @@ class TrackerXmlImport
         $this->xml_import                     = $xml_import;
         $this->user_finder                    = $user_finder;
         $this->ugroup_manager                 = $ugroup_manager;
+        $this->ugroup_retriever_with_legacy   = $ugroup_retriever_with_legacy;
         $this->logger                         = $logger;
         $this->artifact_links_usage_updater   = $artifact_links_usage_updater;
         $this->artifact_links_usage_dao       = $artifact_links_usage_dao;
@@ -190,6 +198,7 @@ class TrackerXmlImport
         $artifact_links_usage_dao     = new ArtifactLinksUsageDao();
         $artifact_links_usage_updater = new ArtifactLinksUsageUpdater($artifact_links_usage_dao);
         $event_manager                = EventManager::instance();
+        $ugroup_manager               = new UGroupManager();
 
         return new TrackerXmlImport(
             $tracker_factory,
@@ -210,7 +219,8 @@ class TrackerXmlImport
                 $logger
             ),
             $user_finder,
-            new UGroupManager(),
+            $ugroup_manager,
+            new UGroupRetrieverWithLegacy($ugroup_manager),
             new WrapperLogger($logger, 'TrackerXMLImport'),
             $artifact_links_usage_updater,
             $artifact_links_usage_dao,
@@ -944,7 +954,7 @@ class TrackerXmlImport
 
             foreach ($xml->permissions->permission as $permission) {
                 $ugroup_name = (string) $permission['ugroup'];
-                $ugroup_id = $this->getUGroupId($project, $ugroup_name);
+                $ugroup_id = $this->ugroup_retriever_with_legacy->getUGroupId($project, $ugroup_name);
                 if (is_null($ugroup_id)) {
                     $this->logger->error("Custom ugroup '$ugroup_name' does not seem to exist for '{$project->getPublicName()}' project.");
                     continue;
@@ -983,22 +993,6 @@ class TrackerXmlImport
 
         return $tracker;
     }
-
-    private function getUGroupId(Project $project, $ugroup_name)
-    {
-        if (isset($GLOBALS['UGROUPS'][$ugroup_name])) {
-            $ugroup_id = $GLOBALS['UGROUPS'][$ugroup_name];
-        } else {
-            $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
-            if (is_null($ugroup)) {
-                $ugroup_id = null;
-            } else {
-                $ugroup_id = $ugroup->getId();
-            }
-        }
-        return $ugroup_id;
-    }
-
 
     /**
      *
