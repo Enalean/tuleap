@@ -181,4 +181,37 @@ describe("CardAssignees", () => {
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
         expect(wrapper.contains("[data-test=icon]")).toBe(false);
     });
+
+    describe("role/tabindex/aria-label", () => {
+        describe("When the card is in edit mode and assignees are updatable", () => {
+            let card: Card, tracker: Tracker, wrapper: Wrapper<CardAssignees>;
+
+            beforeEach(async () => {
+                card = { assignees: [] as User[], is_in_edit_mode: true } as Card;
+                tracker = { assigned_to_field: { id: 1234 } } as Tracker;
+
+                wrapper = await getWrapper(card, tracker);
+            });
+
+            it("is a button", () => expect(wrapper.attributes("role")).toEqual("button"));
+            it("is focusable", () => expect(wrapper.attributes("tabindex")).toEqual("0"));
+            it("has an aria label", () =>
+                expect(wrapper.attributes("aria-label")).toEqual("Edit assignee"));
+        });
+
+        describe("When the card is not in edit mode or assignees are not updatable", () => {
+            let card: Card, tracker: Tracker, wrapper: Wrapper<CardAssignees>;
+
+            beforeEach(async () => {
+                card = { assignees: [] as User[], is_in_edit_mode: false } as Card;
+                tracker = { assigned_to_field: null } as Tracker;
+
+                wrapper = await getWrapper(card, tracker);
+            });
+
+            it("is not a button", () => expect(wrapper.attributes("role")).toEqual(undefined));
+            it("is not focusable", () => expect(wrapper.attributes("tabindex")).toEqual("-1"));
+            it("has no aria label", () => expect(wrapper.attributes("aria-label")).toEqual(""));
+        });
+    });
 });
