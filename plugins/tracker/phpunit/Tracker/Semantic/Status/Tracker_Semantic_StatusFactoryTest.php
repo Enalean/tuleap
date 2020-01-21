@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,45 +19,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('bootstrap.php');
-Mock::generate('Tracker');
+namespace Tuleap\Tracker\Semantic\Status;
 
-Mock::generate('Tracker_FormElement_Field_List');
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tracker;
+use Tracker_FormElement_Field_List;
+use Tracker_Semantic_StatusFactory;
 
-class Tracker_Semantic_StatusFactoryTest extends TuleapTestCase
+class Tracker_Semantic_StatusFactoryTest extends TestCase
 {
-
-    private $xml_security;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->xml_security = new XML_Security();
-        $this->xml_security->enableExternalLoadOfEntities();
-    }
-
-    public function tearDown()
-    {
-        $this->xml_security->disableExternalLoadOfEntities();
-
-        parent::tearDown();
-    }
+    use MockeryPHPUnitIntegration;
 
     public function testImport()
     {
-        $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticStatusTest.xml');
+        $xml = simplexml_load_string(
+            file_get_contents(__DIR__ . '/../../_fixtures/Status/ImportTrackerSemanticStatusTest.xml')
+        );
 
-        $tracker = new MockTracker();
+        $tracker = Mockery::mock(Tracker::class);
 
-        $f1 = new MockTracker_FormElement_Field_List();
-        $f1->setReturnValue('getId', 111);
-        $f2 = new MockTracker_FormElement_Field_List();
-        $f2->setReturnValue('getId', 112);
-        $f3 = new MockTracker_FormElement_Field_List();
-        $f3->setReturnValue('getId', 113);
+        $f1 = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $f1->shouldReceive('getId')->andReturns(111);
+        $f2 = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $f2->shouldReceive('getId')->andReturns(112);
+        $f3 = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $f3->shouldReceive('getId')->andReturns(113);
 
-        $mapping = array(
+        $mapping = [
                     'F9'  => $f1,
                     'F14' => $f3,
                     'F13' => $f2,
@@ -70,12 +60,12 @@ class Tracker_Semantic_StatusFactoryTest extends TuleapTestCase
                     'F14-V67' => 807,
                     'F14-V68' => 808,
                     'F14-V69' => 809
-                  );
+        ];
         $semantic_status = Tracker_Semantic_StatusFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
 
-        $this->assertEqual($semantic_status->getShortName(), 'status');
-        $this->assertEqual($semantic_status->getFieldId(), 113);
-        $this->assertEqual(count($semantic_status->getOpenValues()), 4);
+        $this->assertEquals('status', $semantic_status->getShortName());
+        $this->assertEquals(113, $semantic_status->getFieldId());
+        $this->assertEquals(4, count($semantic_status->getOpenValues()));
         $this->assertTrue(in_array(806, $semantic_status->getOpenValues()));
         $this->assertTrue(in_array(809, $semantic_status->getOpenValues()));
         $this->assertTrue(in_array(807, $semantic_status->getOpenValues()));
