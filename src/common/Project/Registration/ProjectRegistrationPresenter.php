@@ -39,10 +39,6 @@ class ProjectRegistrationPresenter
     /**
      * @var bool
      */
-    public $has_templates;
-    /**
-     * @var bool
-     */
     public $are_restricted_users_allowed;
     /**
      * @var string
@@ -94,7 +90,6 @@ class ProjectRegistrationPresenter
         TemplatePresenter ...$tuleap_templates
     ) {
         $this->tuleap_templates                      = json_encode($tuleap_templates);
-        $this->has_templates                         = count($tuleap_templates) > 0;
         $this->are_restricted_users_allowed          = (bool)ForgeConfig::areRestrictedUsersAllowed();
         $this->project_default_visibility            = $project_default_visibility;
         $this->projects_must_be_approved             = (bool)ForgeConfig::get(

@@ -19,10 +19,13 @@
   -->
 
 <template>
-    <div class="project-registration-templates">
+    <div class="project-registration-templates" v-if="tuleap_templates.length > 0">
         <h3 v-translate>Tuleap templates</h3>
 
-        <section class="project-registration-default-templates-section">
+        <section
+            class="project-registration-default-templates-section"
+            data-test="tuleap-templates-section"
+        >
             <template-card
                 v-for="template of tuleap_templates"
                 v-bind:key="template.id"
