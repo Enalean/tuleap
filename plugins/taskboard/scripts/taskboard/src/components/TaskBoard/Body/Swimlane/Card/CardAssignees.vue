@@ -31,6 +31,7 @@
         <people-picker
             v-bind:is_multiple="is_multiple"
             v-bind:users="users"
+            v-model="new_assignees_ids"
             v-if="is_in_edit_mode"
         />
         <template v-else>
@@ -65,6 +66,9 @@ const swimlane = namespace("swimlane");
     components: { PeoplePicker, UserAvatar }
 })
 export default class CardAssignees extends Vue {
+    @Prop({ required: true })
+    readonly value!: number[];
+
     @Prop({ required: true })
     readonly card!: Card;
 
@@ -178,6 +182,14 @@ export default class CardAssignees extends Vue {
                 return { ...user, selected };
             }
         );
+    }
+
+    get new_assignees_ids(): number[] {
+        return this.value;
+    }
+
+    set new_assignees_ids(value) {
+        this.$emit("input", value);
     }
 }
 </script>

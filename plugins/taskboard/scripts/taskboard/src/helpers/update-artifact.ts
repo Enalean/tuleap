@@ -19,6 +19,7 @@
 
 import { NewCardPayload, UpdateCardPayload } from "../store/swimlane/card/type";
 import {
+    Field,
     Link,
     LinkField,
     ListField,
@@ -29,15 +30,23 @@ import {
     TextValue,
     Values
 } from "../store/swimlane/card/api-artifact-type";
-import { AddInPlace, Card, TitleField, Tracker } from "../type";
+import { AddInPlace, AssignedToField, Card, TitleField, Tracker } from "../type";
 
 export function getPutArtifactBody(payload: UpdateCardPayload): PutBody {
     if (!payload.tracker.title_field) {
         throw new Error("Unable to update the card title");
     }
 
+    const values: Field[] = [getTextFieldForLabel(payload.tracker.title_field, payload.label)];
+
+    if (payload.tracker.assigned_to_field) {
+        values.push(
+            getListFieldForAssignee(payload.tracker.assigned_to_field, payload.assignees_ids)
+        );
+    }
+
     return {
-        values: [getTextFieldForLabel(payload.tracker.title_field, payload.label)]
+        values
     };
 }
 
@@ -109,6 +118,16 @@ function getParentTracker(card: Card, trackers: Tracker[]): Tracker {
 
 function getTextFieldForLabel(title_field: TitleField, label: string): TextField {
     return getTextField(title_field, getValueForLabel(title_field, label));
+}
+
+function getListFieldForAssignee(
+    assigned_to_field: AssignedToField,
+    assignees_ids: number[]
+): ListField {
+    return {
+        field_id: assigned_to_field.id,
+        bind_value_ids: assignees_ids
+    };
 }
 
 function getTextField(title_field: TitleField, value: TextValue | string): TextField {

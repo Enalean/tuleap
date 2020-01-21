@@ -24,7 +24,7 @@ import CardAssignees from "./CardAssignees.vue";
 
 function getWrapper(card: Card, slots: Slots = {}): Wrapper<CardInfo> {
     return shallowMount(CardInfo, {
-        propsData: { card, tracker: {} as Tracker },
+        propsData: { card, tracker: {} as Tracker, value: [] as number[] },
         slots
     });
 }

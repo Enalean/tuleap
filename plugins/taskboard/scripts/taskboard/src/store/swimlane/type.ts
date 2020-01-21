@@ -65,6 +65,5 @@ export interface RefreshCardActionPayload {
 }
 
 export interface RefreshCardMutationPayload {
-    readonly swimlane: Swimlane;
     readonly refreshed_card: Card;
 }

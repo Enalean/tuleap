@@ -46,7 +46,8 @@ async function getWrapper(
         },
         propsData: {
             card,
-            tracker
+            tracker,
+            value: [] as number[]
         }
     });
 }

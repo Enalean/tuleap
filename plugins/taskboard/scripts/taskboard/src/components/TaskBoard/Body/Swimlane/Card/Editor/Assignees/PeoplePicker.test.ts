@@ -17,36 +17,124 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import PeoplePicker from "./PeoplePicker.vue";
 import { createTaskboardLocalVue } from "../../../../../../../helpers/local-vue-for-test";
 import { UserForPeoplePicker } from "../../../../../../../store/swimlane/card/type";
 
-const select2 = jest.fn();
+const mocked_jquery = {
+    select2: jest.fn(),
+    on: jest.fn(),
+    off: jest.fn(),
+    val: jest.fn()
+};
+
 jest.mock("jquery", () => {
-    return (): object => ({
-        select2
-    });
+    return (): object => mocked_jquery;
 });
 
-describe("PeoplePicker", () => {
-    it("Display a select2 element", async () => {
-        const wrapper = shallowMount(PeoplePicker, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: {
-                is_multiple: true,
-                users: [
-                    {
-                        id: 101,
-                        avatar_url: "steeve.png",
-                        label: "Steeve"
-                    } as UserForPeoplePicker
-                ]
-            }
-        });
+async function getWrapper(): Promise<Wrapper<PeoplePicker>> {
+    return shallowMount(PeoplePicker, {
+        localVue: await createTaskboardLocalVue(),
+        propsData: {
+            is_multiple: true,
+            users: [
+                {
+                    id: 101,
+                    avatar_url: "steeve.png",
+                    label: "Steeve"
+                } as UserForPeoplePicker
+            ],
+            value: []
+        }
+    });
+}
 
-        expect(select2).toBeCalledWith("open");
+describe("PeoplePicker", () => {
+    beforeEach(() => {
+        mocked_jquery.on.mockImplementation(() => mocked_jquery);
+        mocked_jquery.off.mockImplementation(() => mocked_jquery);
+        mocked_jquery.select2.mockImplementation(() => mocked_jquery);
+    });
+
+    it("Display a select2 element", async () => {
+        const wrapper = await getWrapper();
+
+        expect(mocked_jquery.select2).toBeCalledWith("open");
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Destroys the select2", async () => {
+        const wrapper = await getWrapper();
+        wrapper.destroy();
+
+        expect(mocked_jquery.select2).toBeCalledWith("destroy");
+    });
+
+    it("Listens to changes", async () => {
+        await getWrapper();
+
+        expect(mocked_jquery.on).toBeCalledWith("change", expect.any(Function));
+    });
+
+    describe("onchange", () => {
+        let onchange_callback = (): number[] => [];
+        beforeEach(() => {
+            mocked_jquery.on.mockImplementation((event, callback) => {
+                onchange_callback = callback;
+                return mocked_jquery;
+            });
+        });
+
+        it("Emits input event on change with selected ids as number", async () => {
+            const wrapper = await getWrapper();
+
+            mocked_jquery.val.mockImplementation(() => ["123", "234"]);
+            onchange_callback();
+
+            expect(wrapper.emitted().input).toBeTruthy();
+            expect(wrapper.emitted().input[0]).toStrictEqual([[123, 234]]);
+        });
+
+        it("Emits input event on change with empty array if val() returns null", async () => {
+            const wrapper = await getWrapper();
+
+            mocked_jquery.val.mockImplementation(() => null);
+            onchange_callback();
+
+            expect(wrapper.emitted().input).toBeTruthy();
+            expect(wrapper.emitted().input[0]).toStrictEqual([[]]);
+        });
+
+        it("Emits input event on change with empty array if val() returns undefined", async () => {
+            const wrapper = await getWrapper();
+
+            mocked_jquery.val.mockImplementation(() => undefined);
+            onchange_callback();
+
+            expect(wrapper.emitted().input).toBeTruthy();
+            expect(wrapper.emitted().input[0]).toStrictEqual([[]]);
+        });
+
+        it("Emits input event on change with array of one element if val() returns a string", async () => {
+            const wrapper = await getWrapper();
+
+            mocked_jquery.val.mockImplementation(() => "123");
+            onchange_callback();
+
+            expect(wrapper.emitted().input).toBeTruthy();
+            expect(wrapper.emitted().input[0]).toStrictEqual([[123]]);
+        });
+
+        it("Emits input event on change with array of one element if val() returns a number", async () => {
+            const wrapper = await getWrapper();
+
+            mocked_jquery.val.mockImplementation(() => 123);
+            onchange_callback();
+
+            expect(wrapper.emitted().input).toBeTruthy();
+            expect(wrapper.emitted().input[0]).toStrictEqual([[123]]);
+        });
     });
 });

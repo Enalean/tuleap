@@ -195,7 +195,8 @@ describe("BaseCard", () => {
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
                 card,
                 label,
-                tracker: { title_field: { id: 1212 } } as Tracker
+                tracker: { title_field: { id: 1212 } } as Tracker,
+                assignees_ids: []
             } as UpdateCardPayload);
         });
 
@@ -215,11 +216,12 @@ describe("BaseCard", () => {
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
                 card,
                 label,
-                tracker: { title_field: { id: 1212 } } as Tracker
+                tracker: { title_field: { id: 1212 } } as Tracker,
+                assignees_ids: []
             } as UpdateCardPayload);
         });
 
-        it(`Does not save the new label if it is identical to the former one`, () => {
+        it(`Does not save the card if new label and assignees are identical to the former ones`, () => {
             const card = getCard({ label: "toto", is_in_edit_mode: true } as Card);
             const wrapper = getWrapper(card);
 
@@ -232,6 +234,23 @@ describe("BaseCard", () => {
                 card
             );
             expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+        });
+
+        it(`Save the card if label is identical to the former one but assignees are not`, () => {
+            const card = getCard({ label: "toto", is_in_edit_mode: true } as Card);
+            const wrapper = getWrapper(card);
+
+            wrapper.setData({ label: "toto" });
+            wrapper.setData({ new_assignees_ids: [123, 234] });
+            const edit_label = wrapper.find(LabelEditor);
+            edit_label.vm.$emit("save");
+
+            expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
+                card,
+                label: "toto",
+                tracker: { title_field: { id: 1212 } } as Tracker,
+                assignees_ids: [123, 234]
+            } as UpdateCardPayload);
         });
 
         it("displays a card in edit mode", () => {

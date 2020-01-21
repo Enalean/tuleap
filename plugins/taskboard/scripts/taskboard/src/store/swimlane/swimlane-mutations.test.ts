@@ -172,7 +172,7 @@ describe(`Swimlane state mutations`, () => {
                 initial_effort: 4,
                 remaining_effort: { value: 3 }
             } as Card;
-            mutations.refreshCard(state, { swimlane, refreshed_card: card });
+            mutations.refreshCard(state, { refreshed_card: card });
 
             expect(state.swimlanes[1].card).toStrictEqual(card);
         });
@@ -207,7 +207,7 @@ describe(`Swimlane state mutations`, () => {
                 initial_effort: 2,
                 remaining_effort: { value: 0.5 }
             } as Card;
-            mutations.refreshCard(state, { swimlane, refreshed_card: card });
+            mutations.refreshCard(state, { refreshed_card: card });
 
             expect(state.swimlanes[1].children_cards[1]).toStrictEqual(card);
         });
@@ -242,7 +242,7 @@ describe(`Swimlane state mutations`, () => {
                 initial_effort: 2,
                 remaining_effort: null
             } as Card;
-            mutations.refreshCard(state, { swimlane, refreshed_card: card });
+            mutations.refreshCard(state, { refreshed_card: card });
 
             expect(state.swimlanes[1].children_cards[1]).toStrictEqual(card);
         });
@@ -276,7 +276,7 @@ describe(`Swimlane state mutations`, () => {
                 initial_effort: 1,
                 remaining_effort: { value: 0 }
             } as Card;
-            mutations.refreshCard(state, { swimlane, refreshed_card: card });
+            mutations.refreshCard(state, { refreshed_card: card });
 
             expect(state.swimlanes[1].card).toStrictEqual(card);
         });
@@ -314,7 +314,7 @@ describe(`Swimlane state mutations`, () => {
                 initial_effort: 2,
                 remaining_effort: { value: 0, can_update: true }
             } as Card;
-            mutations.refreshCard(state, { swimlane, refreshed_card: card });
+            mutations.refreshCard(state, { refreshed_card: card });
 
             const state_swimlane = state.swimlanes[1];
             expect(state_swimlane.card.remaining_effort).not.toBeNull();

@@ -29,7 +29,7 @@
         </span>
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label" />
-            <card-info v-bind:card="card" v-bind:tracker="tracker">
+            <card-info v-bind:card="card" v-bind:tracker="tracker" v-model="new_assignees_ids">
                 <template v-slot:initial_effort>
                     <slot name="initial_effort" />
                 </template>
@@ -51,6 +51,7 @@ import EventBus from "../../../../../helpers/event-bus";
 import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
 import LabelEditor from "./Editor/Label/LabelEditor.vue";
 import CardInfo from "./CardInfo.vue";
+import { haveAssigneesChanged } from "../../../../../helpers/have-assignees-changed";
 
 const user = namespace("user");
 const swimlane = namespace("swimlane");
@@ -82,9 +83,11 @@ export default class BaseCard extends Vue {
     readonly saveCard!: (payload: UpdateCardPayload) => Promise<void>;
 
     private label = "";
+    private new_assignees_ids: number[] = [];
 
     mounted(): void {
         this.label = this.card.label;
+        this.new_assignees_ids = this.card.assignees.map(user => user.id);
         EventBus.$on(TaskboardEvent.CANCEL_CARD_EDITION, this.cancelButtonCallback);
         EventBus.$on(TaskboardEvent.SAVE_CARD_EDITION, this.saveButtonCallback);
     }
@@ -107,7 +110,10 @@ export default class BaseCard extends Vue {
     }
 
     save(): void {
-        if (this.label === this.card.label) {
+        if (
+            !this.is_label_changed &&
+            !haveAssigneesChanged(this.card.assignees, this.new_assignees_ids)
+        ) {
             this.cancel();
             return;
         }
@@ -115,6 +121,7 @@ export default class BaseCard extends Vue {
         const payload: UpdateCardPayload = {
             card: this.card,
             label: this.label,
+            assignees_ids: this.new_assignees_ids,
             tracker: this.tracker
         };
         this.saveCard(payload);
@@ -135,6 +142,10 @@ export default class BaseCard extends Vue {
         }
 
         this.addCardToEditMode(this.card);
+    }
+
+    get is_label_changed(): boolean {
+        return this.label !== this.card.label;
     }
 
     get additional_classnames(): string {

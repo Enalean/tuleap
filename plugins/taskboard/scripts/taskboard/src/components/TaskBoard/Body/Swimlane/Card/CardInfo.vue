@@ -21,7 +21,7 @@
 <template>
     <div class="taskboard-card-info">
         <slot name="initial_effort" v-if="!card.is_in_edit_mode" />
-        <card-assignees v-bind:card="card" v-bind:tracker="tracker" />
+        <card-assignees v-bind:card="card" v-bind:tracker="tracker" v-model="new_assignees_ids" />
     </div>
 </template>
 
@@ -38,9 +38,20 @@ import { Card, Tracker } from "../../../../../type";
 })
 export default class CardInfo extends Vue {
     @Prop({ required: true })
+    readonly value!: number[];
+
+    @Prop({ required: true })
     readonly card!: Card;
 
     @Prop({ required: true })
     readonly tracker!: Tracker;
+
+    get new_assignees_ids(): number[] {
+        return this.value;
+    }
+
+    set new_assignees_ids(value) {
+        this.$emit("input", value);
+    }
 }
 </script>

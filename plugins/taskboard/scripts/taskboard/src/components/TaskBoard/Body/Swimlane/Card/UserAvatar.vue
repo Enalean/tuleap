@@ -30,7 +30,7 @@ import { User } from "../../../../../type";
 import { Component, Prop } from "vue-property-decorator";
 
 @Component
-export default class CardInfo extends Vue {
+export default class UserAvatar extends Vue {
     @Prop({ required: true })
     readonly user!: User;
 }

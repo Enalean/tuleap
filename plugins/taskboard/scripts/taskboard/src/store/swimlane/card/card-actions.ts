@@ -25,7 +25,7 @@ import {
     UserAjaxRepresentation
 } from "./type";
 import { get, patch, post, put } from "tlp";
-import { SwimlaneState } from "../type";
+import { RefreshCardMutationPayload, SwimlaneState } from "../type";
 import {
     getPostArtifactBody,
     getPutArtifactBody,
@@ -76,6 +76,12 @@ export async function saveCard(
             body: JSON.stringify(getPutArtifactBody(payload))
         });
         context.commit("finishSavingCard", payload);
+        const refreshed_card_response = await get(`/api/v1/taskboard_cards/${card.id}`, {
+            params: { milestone_id: context.rootState.milestone_id }
+        });
+        const refreshed_card = await refreshed_card_response.json();
+        const refresh_payload: RefreshCardMutationPayload = { refreshed_card };
+        context.commit("refreshCard", refresh_payload);
     } catch (error) {
         context.commit("resetSavingCard", card);
         await context.dispatch("error/handleModalError", error, { root: true });
