@@ -1318,7 +1318,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(201, $created_file->getStatusCode());
-        $this->assertEmpty($created_file->json()['file_properties']['upload_href']);
+        $this->assertNull($created_file->json()['file_properties']);
 
         $file_item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,

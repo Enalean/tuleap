@@ -68,6 +68,21 @@ class TuleapWeb
         );
     }
 
+    public static function buildForPHP74(
+        LoggerInterface $logger,
+        string $application_user,
+        bool $development
+    ) : self {
+        return new self(
+            $logger,
+            $application_user,
+            $development,
+            '/etc/opt/remi/php74',
+            '/usr/share/tuleap/src/etc/fpm74',
+            []
+        );
+    }
+
     public function configure() : void
     {
         $this->logger->info("Start configuration in $this->php_configuration_folder/php-fpm.d/");

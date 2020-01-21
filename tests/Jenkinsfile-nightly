@@ -65,6 +65,12 @@ pipeline {
                         stage('REST PHP 7.3 MariaDB 10.3') {
                             steps { script { actions.runRESTTests('mariadb103', '73') } }
                         }
+                        stage('REST PHP 7.4 MariaDB 10.3') {
+                            steps { script { actions.runRESTTests('mariadb103', '74') } }
+                        }
+                        stage('REST PHP 7.4 MySQL 5.7') {
+                            steps { script { actions.runRESTTests('mysql57', '74') } }
+                        }
                     }
                     post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                 }
