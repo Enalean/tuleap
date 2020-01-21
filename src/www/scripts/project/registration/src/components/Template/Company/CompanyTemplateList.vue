@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="project-registration-templates">
+    <div class="project-registration-templates" v-if="company_templates.length > 0">
         <h3 data-test="project-registration-company-template-title">
             {{ platform_template_name }}
         </h3>
