@@ -35,17 +35,22 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
 {
     protected $pluginPath;
     protected $themePath;
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    private $html_purifier;
 
     /**
      * Constructor
      *
      * @param Plugin $plugin The plugin
      */
-    public function __construct(Plugin $plugin)
+    public function __construct(Plugin $plugin, Codendi_HTMLPurifier $html_purifier)
     {
         parent::__construct('projectlinkshomepage');
-        $this->pluginPath = $plugin->getPluginPath();
-        $this->themePath  = $plugin->getThemePath();
+        $this->pluginPath    = $plugin->getPluginPath();
+        $this->themePath     = $plugin->getThemePath();
+        $this->html_purifier = $html_purifier;
     }
 
     /**
@@ -86,9 +91,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * Get HTML display of all links from and to given project.
      *
      * @param int $groupId Group id
-     * @return String
      */
-    private function getAllLinks($groupId)
+    private function getAllLinks($groupId): string
     {
         $dao      = $this->getProjectLinksDao();
         $html     = '';
@@ -111,16 +115,18 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      *
      * @param  String $way Either 'links' or 'back_links'
      * @param  String $sql The SQL to get the links
-     * @return String
      */
-    private function getLinksByLinkType($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar)
+    private function getLinksByLinkType($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar): string
     {
         $html = '';
         if ($dar->rowCount() > 0) {
             $linkTypeCmdId   = 'plugin_project_links_type_'.$way;
 
             $cssClass = Toggler::getClassName($linkTypeCmdId);
-            $titleSpan = "<span id=\"".$linkTypeCmdId."\" class=\"".$cssClass."\">".$GLOBALS['Language']->getText('plugin_plinks', $way).'</span>';
+            $titleSpan = "<span id=\"" . $this->html_purifier->purify($linkTypeCmdId) .
+                "\" class=\"" . $this->html_purifier->purify($cssClass) . "\">".
+                $this->html_purifier->purify($GLOBALS['Language']->getText('plugin_plinks', $way)) .
+                '</span>';
 
             $html .= "<li>".$titleSpan;
             $links = $this->getLinks($way, $dar);
@@ -143,9 +149,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      *
      * @param  String $way Either 'links' or 'back_links'
      * @param  String $res One row of link
-     * @return String
      */
-    private function getLinks($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar)
+    private function getLinks($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar): string
     {
         $html = '';
         $previousLinkName = '';
@@ -162,7 +167,10 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
                 $cssClass = Toggler::getClassName($spanId);
 
                 // Link name title
-                $html     .= "  <li class='project-link-list'><span id=\"" . $spanId . "\" class=\"" . $cssClass . "\">" . $row['link_name'] . "</span>\n";
+                $html     .= "  <li class='project-link-list'><span id=\""
+                    . $this->html_purifier->purify($spanId) .
+                    "\" class=\"" . $this->html_purifier->purify($cssClass) . "\">" .
+                    $this->html_purifier->purify($row['link_name']) . "</span>\n";
                 $html     .= "    <ul class='project-link-list'>\n";
                 $ulClosed = false;
             }
@@ -186,19 +194,17 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * Build url for one link.
      *
      * @param  array $row One row for a link
-     * @return String
      */
-    private function getOneLink(array $row)
+    private function getOneLink(array $row): string
     {
         $url = str_replace('$projname', $row['unix_group_name'], $row['uri_plus']);
         $ic = '';
         if ($row['type'] == 2) {
-            $path = $this->themePath."/images/template.png";
-            $alt = $GLOBALS['Language']->getText('plugin_plinks', 'template_marker');
-            $ic = '<img src="'.$path.'" alt="'.$alt.'" title="'.$alt.'" /> ';
+            $path = $this->html_purifier->purify($this->themePath."/images/template.png");
+            $alt  = $this->html_purifier->purify($GLOBALS['Language']->getText('plugin_plinks', 'template_marker'));
+            $ic   = '<img src="'.$path.'" alt="'.$alt.'" title="'.$alt.'" /> ';
         }
-        $html = '<a href="'.$url.'">'.$ic.$row['group_name'].'</a>';
-        return $html;
+        return '<a href="'.$this->html_purifier->purify($url).'">'.$ic . $this->html_purifier->purify(html_entity_decode($row['group_name'])).'</a>';
     }
 
     /**
