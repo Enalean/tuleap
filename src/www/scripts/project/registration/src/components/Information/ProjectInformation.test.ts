@@ -22,7 +22,6 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectInformation from "./ProjectInformation.vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
-import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
 import ProjectName from "./Input/ProjectName.vue";
@@ -90,7 +89,6 @@ describe("ProjectInformation -", () => {
         wrapper.vm.$store.getters.has_error = false;
 
         expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
-        expect(wrapper.contains(UnderConstructionInformation)).toBe(true);
         expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
         expect(wrapper.contains(ProjectInformationInputPrivacySwitch)).toBe(true);
         expect(wrapper.contains(ProjectName)).toBe(true);
@@ -104,7 +102,6 @@ describe("ProjectInformation -", () => {
         wrapper.vm.$store.getters.has_error = true;
 
         expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
-        expect(wrapper.contains(UnderConstructionInformation)).toBe(true);
         expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
         expect(wrapper.contains(ProjectInformationInputPrivacySwitch)).toBe(true);
         expect(wrapper.contains(ProjectInformationInputPrivacyList)).toBe(false);

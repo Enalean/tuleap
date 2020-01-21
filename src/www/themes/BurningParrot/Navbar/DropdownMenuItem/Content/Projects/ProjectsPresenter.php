@@ -37,6 +37,10 @@ class ProjectsPresenter extends Presenter
     public $filter;
     public $is_project_registration_enabled;
     public $is_trove_cat_enabled;
+    /**
+     * @var string
+     */
+    public $project_registration_url;
 
     public function __construct(
         $id,
@@ -51,6 +55,11 @@ class ProjectsPresenter extends Presenter
         $this->browse_all  = $GLOBALS['Language']->getText('include_menu', 'browse_all');
         $this->add_project = $GLOBALS['Language']->getText('include_menu', 'add_project');
         $this->filter      = $GLOBALS['Language']->getText('include_menu', 'filter_projects');
+
+        $this->project_registration_url = '/project/register.php';
+        if (ForgeConfig::get(\ProjectManager::FORCE_NEW_PROJECT_CREATION_USAGE) === '1') {
+            $this->project_registration_url = '/project/new';
+        }
 
         $this->is_trove_cat_enabled              = ForgeConfig::get('sys_use_trove');
         $this->is_member_of_at_least_one_project = count($this->projects) > 0;
