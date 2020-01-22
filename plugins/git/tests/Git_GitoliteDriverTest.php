@@ -154,7 +154,9 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase
     public function itCanRenameProject()
     {
         $new_name = 'newone';
-        stub($this->project_manager)->getProjectByUnixName($new_name)->returns(aMockProject()->withUnixName($new_name)->build());
+        stub($this->project_manager)->getProjectByUnixName($new_name)->returns(
+            Mockery::mock(Project::class)->shouldReceive('getUnixName')->andReturn($new_name)->getMock()
+        );
         $this->gitExec->expectOnce('push');
 
         $this->assertTrue(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));

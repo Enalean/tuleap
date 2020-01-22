@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -27,6 +27,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 /**
  * I find the suitable submilestone for planning
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
 {
 
@@ -90,13 +92,14 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
 
                 $planning_backlog_trackers = $planning->getBacklogTrackers();
                 foreach ($planning_backlog_trackers as $planning_backlog_tracker) {
-                    if ($milestone_backlog_tracker == $planning_backlog_tracker) {
+                    if ((int) $milestone_backlog_tracker->getId() === (int) $planning_backlog_tracker->getId()) {
                         return $tracker;
                     }
 
-                    $backlog_tracker_ancestors = $this->hierarchy_factory->getAllParents($planning_backlog_tracker);
-                    if (in_array($milestone_backlog_tracker, $backlog_tracker_ancestors)) {
-                        return $tracker;
+                    foreach ($this->hierarchy_factory->getAllParents($planning_backlog_tracker) as $backlog_tracker_ancestor) {
+                        if ((int) $milestone_backlog_tracker->getId() === (int) $backlog_tracker_ancestor->getId()) {
+                            return $tracker;
+                        }
                     }
                 }
             }
