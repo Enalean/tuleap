@@ -26,6 +26,7 @@ use Project;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 class ImportExternalElement implements Dispatchable
 {
@@ -46,10 +47,21 @@ class ImportExternalElement implements Dispatchable
      */
     private $project;
 
-    public function __construct(SimpleXMLElement $xml, Project $project)
+    /**
+     * @var TrackerXmlImportFeedbackCollector
+     */
+    private $feedback_collector;
+
+    public function __construct(SimpleXMLElement $xml, Project $project, TrackerXmlImportFeedbackCollector $feedback_collector)
     {
         $this->xml     = $xml;
         $this->project = $project;
+        $this->feedback_collector = $feedback_collector;
+    }
+
+    public function getFeedbackCollector(): TrackerXmlImportFeedbackCollector
+    {
+        return $this->feedback_collector;
     }
 
     public function getXml(): SimpleXMLElement

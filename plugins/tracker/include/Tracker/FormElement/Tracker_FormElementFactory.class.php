@@ -1146,7 +1146,7 @@ class Tracker_FormElementFactory
         $att = $xml->attributes();
         assert($att !== null);
         if ($xml->getName() === 'externalField') {
-            $external_element_event = new ImportExternalElement($xml, $tracker->getProject());
+            $external_element_event = new ImportExternalElement($xml, $tracker->getProject(), $feedback_collector);
             $this->getEventManager()->processEvent($external_element_event);
             $curElem = $external_element_event->getFormElement();
         } else {
