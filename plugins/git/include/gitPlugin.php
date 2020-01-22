@@ -2962,6 +2962,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
     {
-        $event->addServiceByName($this->getServiceShortname());
+        $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
     }
 }

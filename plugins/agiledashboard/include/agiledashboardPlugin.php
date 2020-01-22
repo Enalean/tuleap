@@ -2120,7 +2120,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
     {
-        $event->addServiceByName($this->getServiceShortname());
+        $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
     }
 
     public function trackerMasschangeProcessExternalActionsEvent(TrackerMasschangeProcessExternalActionsEvent $event): void

@@ -1579,6 +1579,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
     {
-        $event->addServiceByName($this->getServiceShortname());
+        $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
     }
 }
