@@ -48,7 +48,8 @@
     &:hover {
         text-decoration: none;
 
-        > .sidebar-about-logo > path {
+        > .sidebar-about-logo > .tuleap-logo,
+        > .sidebar-about-logo-without-product-name > .tuleap-logo {
             fill: lighten($tlp-theme-orange, 5%);
         }
 
@@ -62,9 +63,16 @@
         margin: $tlp-spacing 0;
     }
 
-    > .sidebar-about-logo > path {
-        transition: fill 100ms;
-        fill: $tlp-theme-orange;
+    > .sidebar-about-logo, .sidebar-about-logo-without-product-name {
+        height: 25px;
+        > .tuleap-logo {
+            transition: fill 100ms;
+            fill: $tlp-theme-orange;
+        }
+    }
+
+    > .sidebar-about-logo-without-product-name {
+        display: none;
     }
 
     > .sidebar-about-version {

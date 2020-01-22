@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,6 +42,11 @@
         left: auto;
     }
 
+    .sidebar-about-logo-without-product-name {
+        display: inline;
+    }
+
+    .sidebar-about-logo,
     .sidebar-about-version,
     .sidebar-about-copyright {
         display: none;
