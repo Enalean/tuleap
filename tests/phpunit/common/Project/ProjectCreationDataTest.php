@@ -29,7 +29,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 
-class ProjectCreationDataTest extends TestCase
+final class ProjectCreationDataTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -60,8 +60,22 @@ class ProjectCreationDataTest extends TestCase
 
         $this->xml_rngvalidator = M::mock(XML_RNGValidator::class);
         $this->xml_rngvalidator->shouldReceive('validate');
-        $this->service_manager  = M::mock(ServiceManager::class);
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturns([]);
+
+        $admin_service = \Mockery::mock(Service::class);
+        $admin_service->shouldReceive('getShortName')->andReturn('admin');
+        $admin_service->shouldReceive('getId')->andReturn(1);
+        $git_service = \Mockery::mock(Service::class);
+        $git_service->shouldReceive('getShortName')->andReturn('plugin_git');
+        $git_service->shouldReceive('getId')->andReturn(10);
+
+        $this->service_manager = M::mock(ServiceManager::class);
+        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturns(
+            [
+                $admin_service,
+                $git_service
+            ]
+        );
+
         $this->project_manager  = M::mock(ProjectManager::class);
         $this->project_manager->shouldReceive('getProject')->with(100)->andReturns(M::mock(Project::class));
         $this->logger           = M::spy(LoggerInterface::class);
@@ -73,7 +87,7 @@ class ProjectCreationDataTest extends TestCase
         ForgeConfig::restore();
     }
 
-    public function testItHasBasicMetadataFromProject()
+    public function testItHasBasicMetadataFromProject(): void
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
@@ -83,7 +97,7 @@ class ProjectCreationDataTest extends TestCase
         $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
-    public function testItLoadsPrivateProjects()
+    public function testItLoadsPrivateProjects(): void
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private';
@@ -94,7 +108,7 @@ class ProjectCreationDataTest extends TestCase
         $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 
-    public function testItLoadsPublicWithRestrictedProjects()
+    public function testItLoadsPublicWithRestrictedProjects(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
@@ -104,7 +118,7 @@ class ProjectCreationDataTest extends TestCase
         $this->assertEquals(Project::ACCESS_PUBLIC_UNRESTRICTED, $project_data->getAccess());
     }
 
-    public function testItLoadsPrivateWithRestrictedProjects()
+    public function testItLoadsPrivateWithRestrictedProjects(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
@@ -114,7 +128,7 @@ class ProjectCreationDataTest extends TestCase
         $this->assertEquals(Project::ACCESS_PRIVATE_WO_RESTRICTED, $project_data->getAccess());
     }
 
-    public function testItThrowAnExceptionWithUnrestrictedProjectsOnNonRestrictedPlatform()
+    public function testItThrowAnExceptionWithUnrestrictedProjectsOnNonRestrictedPlatform(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -126,7 +140,7 @@ class ProjectCreationDataTest extends TestCase
         ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
     }
 
-    public function testItThrowAnExceptionWithPrivateWoRestrictedProjectsOnNonRestrictedPlatform()
+    public function testItThrowAnExceptionWithPrivateWoRestrictedProjectsOnNonRestrictedPlatform(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -138,7 +152,7 @@ class ProjectCreationDataTest extends TestCase
         ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
     }
 
-    public function testItCreatesProjectWithDefaultPlatformAccessWhenDataNotInXML()
+    public function testItCreatesProjectWithDefaultPlatformAccessWhenDataNotInXML(): void
     {
         ForgeConfig::set('sys_is_project_public', 1);
 
@@ -199,7 +213,7 @@ class ProjectCreationDataTest extends TestCase
     }
 
 
-    public function testItCreatesAPublicProjectFromWebPayload()
+    public function testItCreatesAPublicProjectFromWebPayload(): void
     {
         ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
 
@@ -216,7 +230,7 @@ class ProjectCreationDataTest extends TestCase
         $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
-    public function testItTakesPublicWhenSiteAdminDecidedToMakeAllProjectsPublicByDefault()
+    public function testItTakesPublicWhenSiteAdminDecidedToMakeAllProjectsPublicByDefault(): void
     {
         ForgeConfig::set('sys_user_can_choose_project_privacy', 0);
         ForgeConfig::set('sys_is_project_public', 1);
@@ -234,7 +248,7 @@ class ProjectCreationDataTest extends TestCase
         $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
-    public function testItTakesPrivateWhenSiteAdminDecidedToMakeAllProjectsPrivateByDefault()
+    public function testItTakesPrivateWhenSiteAdminDecidedToMakeAllProjectsPrivateByDefault(): void
     {
         ForgeConfig::set('sys_user_can_choose_project_privacy', 0);
         ForgeConfig::set('sys_is_project_public', 0);
@@ -252,7 +266,7 @@ class ProjectCreationDataTest extends TestCase
         $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 
-    public function testItTakesPlatformConfigWhenNoDataSent()
+    public function testItTakesPlatformConfigWhenNoDataSent(): void
     {
         ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
         ForgeConfig::set('sys_is_project_public', 0);

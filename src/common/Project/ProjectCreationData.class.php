@@ -18,6 +18,7 @@
  */
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 
@@ -233,7 +234,8 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         SimpleXMLElement $xml,
         ?XML_RNGValidator $xml_validator = null,
         ?ServiceManager $service_manager = null,
-        ?ExternalFieldsExtractor $external_fields_extractor = null
+        ?ExternalFieldsExtractor $external_fields_extractor = null,
+        ?ProjectCreationDataServiceFromXmlInheritor $service_inheritor = null
     ) {
         if (empty($xml_validator)) {
             $xml_validator = new XML_RNGValidator();
@@ -243,6 +245,10 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         }
         if (empty($external_fields_extractor)) {
             $external_fields_extractor = new ExternalFieldsExtractor(new EventManager());
+        }
+
+        if (empty($service_inheritor)) {
+            $service_inheritor = new ProjectCreationDataServiceFromXmlInheritor($service_manager);
         }
 
         $this->logger->debug("Start import from XML, validate RNG");
@@ -291,43 +297,10 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                 $this->access = $this->default_project_visibility_retriever->getDefaultProjectVisibility();
         }
 
-        $this->markUsedServicesFromXML($xml, $this->built_from_template->getProject(), $service_manager);
+        $this->data_services = $service_inheritor->markUsedServicesFromXML($xml, $this->built_from_template->getProject());
 
         $this->inherit_from_template = isset($attrs['inherit-from-template']) && (bool) $attrs['inherit-from-template'] === true;
         $this->logger->debug("Data gathered from XML");
-    }
-
-    /**
-     * Read the template and XML and mark services as being in use if they are
-     * allowed in the template and enabled in the XML.
-     */
-    private function markUsedServicesFromXML(
-        SimpleXMLElement $xml,
-        Project $template,
-        ServiceManager $service_manager
-    ) {
-        $services_by_name = array();
-        foreach ($service_manager->getListOfAllowedServicesForProject($template) as $service) {
-            $services_by_name[$service->getShortName()] = $service;
-        }
-
-        foreach ($xml->services->children() as $service) {
-            if (!($service instanceof SimpleXMLElement)) {
-                continue;
-            }
-            if ($service->getName() !== "service") {
-                continue;
-            }
-            $attrs   = $service->attributes();
-            $name    = (string) $attrs['shortname'];
-            $enabled = \Tuleap\XML\PHPCast::toBoolean($attrs['enabled']);
-            if (isset($services_by_name[$name])) {
-                $service_id = $services_by_name[$name]->getId();
-                $this->data_services[$service_id] = array(
-                    'is_used' => $enabled
-                );
-            }
-        }
     }
 
     public function unsetProjectServiceUsage($service_id)
