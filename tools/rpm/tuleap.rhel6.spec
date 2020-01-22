@@ -29,6 +29,8 @@
 %define ftp_group        ftp
 %define ftp_user         ftp
 
+%bcond_with enterprise
+
 Summary: The Tuleap forge
 Name: %{PKG_NAME}
 Version: @@VERSION@@
@@ -513,6 +515,9 @@ BurningParrot, default theme starting Tuleap 10
 for i in tools plugins site-content src VERSION LICENSE; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
+%if %{with enterprise}
+cp -a ENTERPRISE_BUILD $RPM_BUILD_ROOT/%{APP_DIR}
+%endif
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
@@ -1027,6 +1032,9 @@ fi
 %{APP_DIR}/site-content
 %{APP_DIR}/VERSION
 %{APP_DIR}/LICENSE
+%if %{with enterprise}
+%{APP_DIR}/ENTERPRISE_BUILD
+%endif
 # Split src for src/www/themes
 %dir %{APP_DIR}/src
 %{APP_DIR}/src/glyphs
