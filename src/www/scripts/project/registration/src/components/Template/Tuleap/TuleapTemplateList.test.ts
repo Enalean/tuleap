@@ -25,30 +25,16 @@ import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-fo
 import TemplateCardContent from "../TemplateCard.vue";
 import TuleapTemplateList from "./TuleapTemplateList.vue";
 import { State } from "../../../store/type";
+import { TemplateData } from "../../../type";
 
 describe("TuleapTemplateList", () => {
     let local_vue = createLocalVue();
     let store: Store;
     let wrapper: Wrapper<TuleapTemplateList>;
 
-    beforeEach(async () => {
-        const tuleap_templates = [
-            {
-                title: "scrum",
-                description: "scrum desc",
-                id: "scrum",
-                glyph: "<svg></svg>",
-                is_built_in: true
-            },
-            {
-                title: "kanban",
-                description: "kanban desc",
-                id: "kanban",
-                glyph: "<svg>kanban</svg>",
-                is_built_in: true
-            }
-        ];
-
+    async function createWrapper(
+        tuleap_templates: TemplateData[]
+    ): Promise<Wrapper<TuleapTemplateList>> {
         const state: State = {
             tuleap_templates: tuleap_templates
         } as State;
@@ -59,14 +45,41 @@ describe("TuleapTemplateList", () => {
         store = createStoreMock(store_options);
         local_vue = await createProjectRegistrationLocalVue();
 
-        wrapper = shallowMount(TuleapTemplateList, {
+        return shallowMount(TuleapTemplateList, {
             localVue: local_vue,
             mocks: { $store: store }
         });
-    });
+    }
 
-    it(`spawns the component and sub component`, () => {
+    it(`spawns the component and sub component`, async () => {
+        const tuleap_templates = [
+            {
+                title: "scrum",
+                description: "scrum desc",
+                id: "scrum",
+                glyph: "<svg></svg>",
+                is_built_in: true
+            } as TemplateData,
+            {
+                title: "kanban",
+                description: "kanban desc",
+                id: "kanban",
+                glyph: "<svg>kanban</svg>",
+                is_built_in: true
+            } as TemplateData
+        ];
+
+        wrapper = await createWrapper(tuleap_templates);
+
         expect(wrapper.contains(TemplateCardContent)).toBe(true);
         expect(wrapper.findAll(TemplateCardContent)).toHaveLength(2);
+    });
+
+    it(`does not display anything if no tuleap templates are found`, async () => {
+        const tuleap_templates: TemplateData[] = [];
+
+        wrapper = await createWrapper(tuleap_templates);
+
+        expect(wrapper.contains("[data-test=tuleap-templates-section]")).toBe(false);
     });
 });

@@ -19,27 +19,19 @@
   */
 }}
 
-{{# has_templates }}
-    <div id="project-registration"
-         data-available-tuleap-templates="{{ tuleap_templates }}"
-         data-are-restricted-users-allowed="{{ are_restricted_users_allowed }}"
-         data-project-default-visibility="{{ project_default_visibility }}"
-         data-projects-must-be-approved="{{ projects_must_be_approved }}"
-         data-is-description-mandatory="{{ is_description_mandatory }}"
-         data-trove-cat="{{ trove_categories }}"
-         data-field-list="{{ field_list }}"
-         data-company-templates="{{ company_templates }}"
-         data-company-name = "{{ company_name }}"
-         data-are-anonymous-allowed= "{{ are_anonymous_allowed }}"
-         {{# is_default_project_template_available }}
-            data-default-project-template= "{{ default_project_template }}"
-         {{/is_default_project_template_available}}
-    >
-    </div>
-{{/has_templates}}
-
-{{^ has_templates }}
-    <div class="tlp-alert-danger">
-        {{# gettext }} No project template found! {{/ gettext }}
-    </div>
-{{/has_templates}}
+<div id="project-registration"
+     data-available-tuleap-templates="{{ tuleap_templates }}"
+     data-are-restricted-users-allowed="{{ are_restricted_users_allowed }}"
+     data-project-default-visibility="{{ project_default_visibility }}"
+     data-projects-must-be-approved="{{ projects_must_be_approved }}"
+     data-is-description-mandatory="{{ is_description_mandatory }}"
+     data-trove-cat="{{ trove_categories }}"
+     data-field-list="{{ field_list }}"
+     data-company-templates="{{ company_templates }}"
+     data-company-name = "{{ company_name }}"
+     data-are-anonymous-allowed= "{{ are_anonymous_allowed }}"
+     {{# is_default_project_template_available }}
+        data-default-project-template= "{{ default_project_template }}"
+     {{/is_default_project_template_available}}
+>
+</div>
