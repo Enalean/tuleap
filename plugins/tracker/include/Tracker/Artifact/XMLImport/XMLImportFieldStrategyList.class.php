@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -81,7 +81,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         return $data;
     }
 
-    private function getStaticListDataValue(Tracker_FormElement_Field $field, $value)
+    private function getStaticListDataValue(Tracker_FormElement_Field $field, $value): ?int
     {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
             return $this->xml_fields_mapping->getNewValueId((int) $value);
@@ -89,6 +89,11 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
 
         $result = $this->static_value_dao->searchValueByLabel($field->getId(), (string) $value);
         $row    = $result->getRow();
+
+        if ($row === false) {
+            return null;
+        }
+
         return (int) $row['id'];
     }
 
