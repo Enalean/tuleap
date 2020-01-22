@@ -47,6 +47,9 @@ export default class PeoplePicker extends Vue {
     @Prop({ required: true })
     readonly users!: UserForPeoplePicker[];
 
+    @Prop({ required: true })
+    readonly value!: number[];
+
     select2_people_picker: Select2Plugin | null = null;
 
     mounted(): void {
@@ -63,7 +66,9 @@ export default class PeoplePicker extends Vue {
 
         this.select2_people_picker = select2(this.$el, configuration);
 
-        $(this.$el).select2("open");
+        $(this.$el)
+            .on("change", this.onChange)
+            .select2("open");
     }
 
     destroyed(): void {
@@ -72,6 +77,22 @@ export default class PeoplePicker extends Vue {
                 .off()
                 .select2("destroy");
         }
+    }
+
+    onChange(): void {
+        let selected_ids: string[];
+        const val: string | number | string[] | undefined = $(this.$el).val();
+        if (!val) {
+            selected_ids = [];
+        } else if (typeof val === "string" || typeof val === "number") {
+            selected_ids = [`${val}`];
+        } else {
+            selected_ids = val;
+        }
+
+        const selected_ids_as_number: number[] = selected_ids.map(id => Number(id));
+
+        this.$emit("input", selected_ids_as_number);
     }
 
     formatUser(user: DataFormat | GroupedDataFormat | LoadingData): string {

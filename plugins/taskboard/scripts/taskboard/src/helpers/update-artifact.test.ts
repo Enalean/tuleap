@@ -24,7 +24,7 @@ import {
 } from "./update-artifact";
 import { NewCardPayload, UpdateCardPayload } from "../store/swimlane/card/type";
 import { ListValue, Mapping, Tracker } from "../type";
-import { Values } from "../store/swimlane/card/api-artifact-type";
+import { ListField, TextField, Values } from "../store/swimlane/card/api-artifact-type";
 
 describe("update-artifact", () => {
     describe("getPutArtifactBody", () => {
@@ -100,6 +100,33 @@ describe("update-artifact", () => {
                             format: "text"
                         }
                     }
+                ]
+            });
+        });
+
+        it("Sets the value of assigned to field", () => {
+            const body = getPutArtifactBody({
+                tracker: {
+                    title_field: { id: 123, is_string_field: false },
+                    assigned_to_field: { id: 124 }
+                } as Tracker,
+                assignees_ids: [1001, 1002],
+                label: "Lorem ipsum"
+            } as UpdateCardPayload);
+
+            expect(body).toStrictEqual({
+                values: [
+                    {
+                        field_id: 123,
+                        value: {
+                            content: "Lorem ipsum",
+                            format: "text"
+                        }
+                    } as TextField,
+                    {
+                        field_id: 124,
+                        bind_value_ids: [1001, 1002]
+                    } as ListField
                 ]
             });
         });

@@ -295,7 +295,6 @@ describe("Swimlane state actions", () => {
                     params: { milestone_id: 42 }
                 });
                 expect(context.commit).toHaveBeenCalledWith("refreshCard", {
-                    swimlane,
                     refreshed_card
                 });
             });
@@ -347,7 +346,6 @@ describe("Swimlane state actions", () => {
                     params: { milestone_id: 42 }
                 });
                 expect(context.commit).toHaveBeenCalledWith("refreshCard", {
-                    swimlane,
                     refreshed_card: refreshed_child_card
                 });
 
@@ -355,7 +353,6 @@ describe("Swimlane state actions", () => {
                     params: { milestone_id: 42 }
                 });
                 expect(context.commit).toHaveBeenCalledWith("refreshCard", {
-                    swimlane,
                     refreshed_card: refreshed_parent_card
                 });
             });

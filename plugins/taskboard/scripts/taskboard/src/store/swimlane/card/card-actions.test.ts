@@ -21,13 +21,14 @@ import { ActionContext } from "vuex";
 import { RootState } from "../../type";
 import { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
 import * as tlp from "tlp";
-import { SwimlaneState } from "../type";
+import { RefreshCardMutationPayload, SwimlaneState } from "../type";
 import { Card, Swimlane, Tracker } from "../../../type";
 import * as actions from "./card-actions";
 import {
     mockFetchError,
     mockFetchSuccess
 } from "../../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
+import { ListField, TextField } from "./api-artifact-type";
 
 jest.mock("tlp");
 
@@ -113,14 +114,25 @@ describe("Card actions", () => {
     describe("saveCard", () => {
         it("saves the new value", async () => {
             const card: Card = { id: 123, tracker_id: 1 } as Card;
-            const tracker = { id: 1, title_field: { id: 1355, is_string_field: true } } as Tracker;
+            const tracker = {
+                id: 1,
+                title_field: { id: 1355, is_string_field: true },
+                assigned_to_field: { id: 1356 }
+            } as Tracker;
             const payload: UpdateCardPayload = {
                 card,
                 label: "Lorem",
+                assignees_ids: [123],
                 tracker: tracker
             };
 
             const tlpPutMock = jest.spyOn(tlp, "put");
+            const tlpGetMock = jest.spyOn(tlp, "get");
+
+            const refreshed_card = { id: 123 } as Card;
+            mockFetchSuccess(tlpGetMock, {
+                return_json: refreshed_card
+            });
 
             await actions.saveCard(context, payload);
 
@@ -133,10 +145,22 @@ describe("Card actions", () => {
                         {
                             field_id: 1355,
                             value: "Lorem"
-                        }
+                        } as TextField,
+                        {
+                            field_id: 1356,
+                            bind_value_ids: [123]
+                        } as ListField
                     ]
                 })
             });
+            expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/123", {
+                params: {
+                    milestone_id: 42
+                }
+            });
+            expect(context.commit).toHaveBeenCalledWith("refreshCard", {
+                refreshed_card
+            } as RefreshCardMutationPayload);
             expect(context.commit).toHaveBeenCalledWith("startSavingCard", card);
             expect(context.commit).toHaveBeenCalledWith("finishSavingCard", payload);
         });
@@ -147,6 +171,7 @@ describe("Card actions", () => {
             const payload: UpdateCardPayload = {
                 card,
                 label: "Lorem",
+                assignees_ids: [],
                 tracker
             };
 

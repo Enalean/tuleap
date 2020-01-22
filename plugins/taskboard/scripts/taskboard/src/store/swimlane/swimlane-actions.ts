@@ -138,7 +138,7 @@ export function refreshCardAndParent(
     payload: RefreshCardActionPayload
 ): Promise<void> {
     const refreshCard = (refreshed_card: Card): void =>
-        context.commit("refreshCard", { swimlane: payload.swimlane, refreshed_card });
+        context.commit("refreshCard", { refreshed_card });
     if (isSoloCard(payload.swimlane)) {
         return getUpdatedCard(payload.card.id, context.rootState.milestone_id).then(
             refreshCard,

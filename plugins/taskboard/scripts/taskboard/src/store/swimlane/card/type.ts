@@ -28,6 +28,7 @@ export interface NewRemainingEffortPayload {
 export interface UpdateCardPayload {
     readonly card: Card;
     readonly label: string;
+    readonly assignees_ids: number[];
     readonly tracker: Tracker;
 }
 

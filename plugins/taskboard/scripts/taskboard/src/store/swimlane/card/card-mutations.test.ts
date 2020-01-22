@@ -149,7 +149,12 @@ describe(`Card mutations`, () => {
             const state: SwimlaneState = {
                 swimlanes: [{ card } as Swimlane]
             } as SwimlaneState;
-            const payload: UpdateCardPayload = { card, label: "Lorem", tracker: {} as Tracker };
+            const payload: UpdateCardPayload = {
+                card,
+                label: "Lorem",
+                tracker: {} as Tracker,
+                assignees_ids: []
+            };
 
             mutations.finishSavingCard(state, payload);
 
