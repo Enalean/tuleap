@@ -58,6 +58,10 @@ RPMBUILD = rpmbuild --define "%_topdir $(RPM_TMP)" \
 	--define "%_buildroot %{_tmppath}/%{name}-root" \
 	--define "%_sysconfdir /etc" \
 
+ifneq ("$(wildcard $(BASE_DIR)/ENTERPRISE_BUILD)","")
+	RPMBUILD += --with enterprise
+endif
+
 ifeq ($(strip $(OS)),rhel6)
 DIST=
 SPEC_FILE=tuleap.rhel6.spec
