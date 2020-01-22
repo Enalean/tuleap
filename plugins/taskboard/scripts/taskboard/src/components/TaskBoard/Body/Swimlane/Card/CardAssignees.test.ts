@@ -188,7 +188,7 @@ describe("CardAssignees", () => {
 
             beforeEach(async () => {
                 card = { assignees: [] as User[], is_in_edit_mode: true } as Card;
-                tracker = { assigned_to_field: { id: 1234 } } as Tracker;
+                tracker = { assigned_to_field: { id: 1234, is_multiple: false } } as Tracker;
 
                 wrapper = await getWrapper(card, tracker);
             });
@@ -197,6 +197,20 @@ describe("CardAssignees", () => {
             it("is focusable", () => expect(wrapper.attributes("tabindex")).toEqual("0"));
             it("has an aria label", () =>
                 expect(wrapper.attributes("aria-label")).toEqual("Edit assignee"));
+        });
+
+        describe("When the field assigned_to is multiple, then aria-label is plural", () => {
+            let card: Card, tracker: Tracker, wrapper: Wrapper<CardAssignees>;
+
+            beforeEach(async () => {
+                card = { assignees: [] as User[], is_in_edit_mode: true } as Card;
+                tracker = { assigned_to_field: { id: 1234, is_multiple: true } } as Tracker;
+
+                wrapper = await getWrapper(card, tracker);
+            });
+
+            it("has an aria label", () =>
+                expect(wrapper.attributes("aria-label")).toEqual("Edit assignees"));
         });
 
         describe("When the card is not in edit mode or assignees are not updatable", () => {
