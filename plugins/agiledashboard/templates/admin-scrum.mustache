@@ -103,14 +103,21 @@
                                 <p class="tlp-text-warning">
                                     <i class="fa fa-warning"></i> {{# dgettext }}tuleap-agiledashboard | This is an experimental feature. It's explained <a href="https://tuleap.net/plugins/tracker/?aid=13997">here</a>.{{/ dgettext }}
                                 </p>
-                                <p class="tlp-text-warning">
-                                    {{^ explicit_top_backlog_enabled }}
+                                {{^ explicit_top_backlog_enabled }}
+                                    <p class="tlp-text-warning">
                                         {{# dgettext }}tuleap-agiledashboard | Once activated, you will start with a copy of the previous top backlog.{{/ dgettext }}
+                                    </p>
                                     {{/ explicit_top_backlog_enabled }}
                                     {{# explicit_top_backlog_enabled }}
+                                    <p class="tlp-text-warning">
                                         {{# dgettext }}tuleap-agiledashboard | If you switch back to the old mode, some tracker reports could be updated to not use anymore the "unplanned" value for "In milestone" criterion.{{/ dgettext }}
-                                    {{/ explicit_top_backlog_enabled }}
-                                </p>
+                                    </p>
+                                    {{# has_workflow_action_add_to_top_backlog_defined }}
+                                    <p class="tlp-text-warning">
+                                        {{# dgettext }}tuleap-agiledashboard | Any "AddToTopBacklog" workflow post-actions defined in the project will be removed.{{/ dgettext }}
+                                    </p>
+                                    {{/ has_workflow_action_add_to_top_backlog_defined }}
+                                {{/ explicit_top_backlog_enabled }}
                             </div>
                         {{/ must_display_explicit_top_backlog_switch }}
 

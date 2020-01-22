@@ -87,4 +87,33 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
             ["transition_id" => $transition_id]
         );
     }
+
+    public function isAtLeastOnePostActionDefinedInProject(int $project_id): bool
+    {
+        $sql = "SELECT NULL
+                FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
+                    INNER JOIN tracker_workflow_transition ON (plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
+                    INNER JOIN tracker_workflow ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
+                    INNER JOIN tracker ON (tracker_workflow.tracker_id = tracker.id)
+                WHERE tracker.group_id = ?";
+
+        $rows = $this->getDB()->run($sql, $project_id);
+
+        return count($rows) > 0;
+    }
+
+    public function deleteAllPostActionsInProject(int $project_id): void
+    {
+        $sql = "DELETE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.*
+                FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
+                    INNER JOIN tracker_workflow_transition ON (plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
+                    INNER JOIN tracker_workflow ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
+                    INNER JOIN tracker ON (tracker_workflow.tracker_id = tracker.id)
+                WHERE tracker.group_id = ?";
+
+        $this->getDB()->run(
+            $sql,
+            $project_id
+        );
+    }
 }

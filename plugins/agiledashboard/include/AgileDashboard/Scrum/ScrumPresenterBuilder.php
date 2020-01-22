@@ -34,6 +34,7 @@ use Project;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 
 class ScrumPresenterBuilder
 {
@@ -58,18 +59,25 @@ class ScrumPresenterBuilder
      */
     private $explicit_backlog_dao;
 
+    /**
+     * @var AddToTopBacklogPostActionDao
+     */
+    private $add_to_top_backlog_post_action_dao;
+
     public function __construct(
         AgileDashboard_ConfigurationManager $config_manager,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         EventManager $event_manager,
         PlanningFactory $planning_factory,
-        ExplicitBacklogDao $explicit_backlog_dao
+        ExplicitBacklogDao $explicit_backlog_dao,
+        AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao
     ) {
-        $this->config_manager               = $config_manager;
-        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
-        $this->event_manager                = $event_manager;
-        $this->planning_factory             = $planning_factory;
-        $this->explicit_backlog_dao         = $explicit_backlog_dao;
+        $this->config_manager                     = $config_manager;
+        $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
+        $this->event_manager                      = $event_manager;
+        $this->planning_factory                   = $planning_factory;
+        $this->explicit_backlog_dao               = $explicit_backlog_dao;
+        $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
     }
 
     public function getAdminScrumPresenter(PFUser $user, Project $project)
@@ -90,6 +98,9 @@ class ScrumPresenterBuilder
             $potential_planning_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $group_id);
         }
 
+        $has_workflow_action_add_to_top_backlog_defined = $this->add_to_top_backlog_post_action_dao
+            ->isAtLeastOnePostActionDefinedInProject($group_id);
+
         return new AdminScrumPresenter(
             $this->getPlanningAdminPresenterList($user, $project, $root_planning_name),
             $group_id,
@@ -105,6 +116,7 @@ class ScrumPresenterBuilder
             $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
             $this->getAdditionalContent(),
             $this->doesProjectUseExplicitBacklog($project),
+            $has_workflow_action_add_to_top_backlog_defined,
             (bool) $user->useLabFeatures()
         );
     }

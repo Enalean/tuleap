@@ -60,6 +60,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -275,6 +276,7 @@ class AdminController extends BaseController
                         new ArtifactsInExplicitBacklogDao(),
                         new PlannedArtifactDao()
                     ),
+                    new AddToTopBacklogPostActionDao(),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 )
             );
