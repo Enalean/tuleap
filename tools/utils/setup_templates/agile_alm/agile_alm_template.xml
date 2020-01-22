@@ -1862,11 +1862,16 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                             <description><![CDATA[A full description of the artifact]]></description>
                             <properties rows="10" cols="103"/>
                         </formElement>
-                        <formElement type="ttmstepdef" ID="F12746" rank="2">
+                        <externalField type="ttmstepdef" ID="F12746" rank="2">
                             <name>steps</name>
                             <label><![CDATA[Steps definition]]></label>
                             <description><![CDATA[Definition of the test's steps]]></description>
-                        </formElement>
+                            <permissions>
+                                <permission scope="field" REF="F12746" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                                <permission scope="field" REF="F12746" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                                <permission scope="field" REF="F12746" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                            </permissions>
+                        </externalField>
                         <formElement type="string" ID="F12747" rank="3">
                             <name>automated_tests</name>
                             <label><![CDATA[Automated tests]]></label>
@@ -2109,9 +2114,6 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                 <permission scope="field" REF="F12745" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F12745" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F12745" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-                <permission scope="field" REF="F12746" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F12746" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-                <permission scope="field" REF="F12746" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
                 <permission scope="field" REF="F12747" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F12747" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F12747" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
