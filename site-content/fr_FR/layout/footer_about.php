@@ -24,7 +24,7 @@
 </p>
 <p class="footer-paragraph">
     <a href="https://www.tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge">
-        Tuleap <?php echo $version ?>
+        <?php echo $version ?>
     </a>
     <?php if ($GLOBALS['Language']->hasText('global', 'copyright')) { ?>
         <br><?php echo $GLOBALS['Language']->getOverridableText('global', 'copyright'); ?>.
