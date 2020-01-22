@@ -25,10 +25,7 @@ document.observe("dom:loaded", function() {
         var r = new codendi.RTE(elem); //eslint-disable-line @typescript-eslint/no-unused-vars
     });
 
-    $$(
-        "input[type=checkbox][name^=remove_postaction]",
-        "input[type=checkbox][name^=remove_rule]"
-    ).each(function(elem) {
+    $$("input[type=checkbox][name^=remove_rule]").each(function(elem) {
         elem.observe("click", function() {
             if (elem.checked) {
                 elem.up("tr")
