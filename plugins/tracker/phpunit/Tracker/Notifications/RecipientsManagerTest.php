@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,23 +22,25 @@
 namespace Tuleap\Tracker\Notifications;
 
 use Mockery;
+use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
+use UserManager;
 
-require_once __DIR__.'/../../bootstrap.php';
-
-class RecipientsManagerTest extends \TuleapTestCase
+class RecipientsManagerTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
-     * @var UserNotificationOnlyStatusChangeDAO
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserNotificationOnlyStatusChangeDAO
      */
     private $user_status_change_only_dao;
-
     /**
-     * @var UserNotificationSettingsRetriever
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserNotificationSettingsRetriever
      */
     private $notification_settings_retriever;
     /**
@@ -46,15 +48,15 @@ class RecipientsManagerTest extends \TuleapTestCase
      */
     private $recipients_manager;
     /**
-     * @var \UserManager
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
      */
     private $user_manager;
     /**
-     * @var \Tracker_FormElementFactory
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_FormElementFactory
      */
     private $formelement_factory;
     /**
-     * @var UnsubscribersNotificationDAO
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnsubscribersNotificationDAO
      */
     private $unsubscribers_notification_dao;
 
@@ -63,15 +65,13 @@ class RecipientsManagerTest extends \TuleapTestCase
      */
     private $user_notification_settings;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->user_manager                    = mock('\UserManager');
-        $this->formelement_factory             = mock('\Tracker_FormElementFactory');
-        $this->unsubscribers_notification_dao  = \Mockery::mock(UnsubscribersNotificationDAO::class);
-        $this->notification_settings_retriever = mock(UserNotificationSettingsRetriever::class);
-        $this->user_status_change_only_dao     = \Mockery::spy(UserNotificationOnlyStatusChangeDAO::class);
+        $this->user_manager                    = Mockery::spy(UserManager::class);
+        $this->formelement_factory             = Mockery::spy(Tracker_FormElementFactory::class);
+        $this->unsubscribers_notification_dao  = Mockery::mock(UnsubscribersNotificationDAO::class);
+        $this->notification_settings_retriever = Mockery::spy(UserNotificationSettingsRetriever::class);
+        $this->user_status_change_only_dao     = Mockery::spy(UserNotificationOnlyStatusChangeDAO::class);
         $this->recipients_manager              = new RecipientsManager(
             $this->formelement_factory,
             $this->user_manager,
@@ -80,28 +80,22 @@ class RecipientsManagerTest extends \TuleapTestCase
             $this->user_status_change_only_dao
         );
 
-        stub($this->user_manager)->getUserByUserName('recipient1')->returns(
-            aUser()->withId(101)->build()
-        );
-        stub($this->user_manager)->getUserByUserName('recipient2')->returns(
-            aUser()->withId(102)->build()
-        );
-        stub($this->user_manager)->getUserByUserName('recipient3')->returns(
-            aUser()->withId(103)->build()
-        );
+        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient1')->andReturns((new \UserTestBuilder())->withId(101)->build());
+        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient2')->andReturns((new \UserTestBuilder())->withId(102)->build());
+        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient3')->andReturns((new \UserTestBuilder())->withId(103)->build());
 
         $this->user_notification_settings = Mockery::mock(UserNotificationSettings::class);
-        stub($this->notification_settings_retriever)->getUserNotificationSettings()->returns($this->user_notification_settings);
+        $this->notification_settings_retriever->shouldReceive('getUserNotificationSettings')->andReturns($this->user_notification_settings);
     }
 
-    public function itReturnsRecipientsFromField(): void
+    public function testItReturnsRecipientsFromField(): void
     {
-        $field = mock(Tracker_FormElement_Field_Selectbox::class);
-        stub($field)->isNotificationsSupported()->returns(true);
-        stub($field)->hasNotifications()->returns(true);
-        stub($field)->getRecipients()->returns(['recipient1']);
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $field = $this->getSelectBox();
+        $field->shouldReceive('isNotificationsSupported')->andReturns(true);
+        $field->shouldReceive('hasNotifications')->andReturns(true);
+        $field->shouldReceive('getRecipients')->andReturns(['recipient1']);
+        $field->shouldReceive('userCanRead')->andReturns(true);
+        $this->formelement_factory->shouldReceive('getFieldById')->with(1)->andReturns($field);
 
         $changeset = $this->getAMockedChangeset(
             true,
@@ -112,18 +106,18 @@ class RecipientsManagerTest extends \TuleapTestCase
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient1' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itReturnsRecipientsFromCommentators(): void
+    public function testItReturnsRecipientsFromCommentators(): void
     {
         $this->mockADateField(false, true);
 
@@ -136,18 +130,18 @@ class RecipientsManagerTest extends \TuleapTestCase
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient2' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itReturnsRecipientsFromTrackerConfig(): void
+    public function testItReturnsRecipientsFromTrackerConfig(): void
     {
         $this->mockADateField(false, true);
 
@@ -166,18 +160,18 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itCleansUserFromRecipientsWhenUserCantReadAtLeastOneChangedField(): void
+    public function testItCleansUserFromRecipientsWhenUserCantReadAtLeastOneChangedField(): void
     {
         $this->mockADateField(false, false);
 
@@ -190,25 +184,26 @@ class RecipientsManagerTest extends \TuleapTestCase
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             true,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
+        $changeset->shouldReceive('hasChanged')->andReturn(true);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             [],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itCleansUserFromRecipientsWhenUserHasUnsubscribedFromArtifact(): void
+    public function testItCleansUserFromRecipientsWhenUserHasUnsubscribedFromArtifact(): void
     {
-        $field = mock('\Tracker_FormElement_Field_SelectBox');
-        stub($field)->isNotificationsSupported()->returns(true);
-        stub($field)->hasNotifications()->returns(true);
-        stub($field)->getRecipients()->returns(array('recipient1'));
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $field = $this->getSelectBox();
+        $field->shouldReceive('isNotificationsSupported')->andReturns(true);
+        $field->shouldReceive('hasNotifications')->andReturns(true);
+        $field->shouldReceive('getRecipients')->andReturns(array('recipient1'));
+        $field->shouldReceive('userCanRead')->andReturns(true);
+        $this->formelement_factory->shouldReceive('getFieldById')->with(1)->andReturns($field);
 
         $changeset = $this->getAMockedChangeset(
             true,
@@ -225,18 +220,18 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient1' => true, 'recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilterWhenTrackerIsNotInModeStatusUpdateOnly(): void
+    public function testItDoesNotFilterWhenTrackerIsNotInModeStatusUpdateOnly(): void
     {
         $this->mockADateField(false, true);
 
@@ -255,18 +250,18 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilerWhenStatusChangedAndTrackerIsInStatusChangeOnlyMode(): void
+    public function testItDoesNotFilerWhenStatusChangedAndTrackerIsInStatusChangeOnlyMode(): void
     {
         $this->mockADateField(false, true);
 
@@ -285,18 +280,18 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilterAtArtifactCreation(): void
+    public function testItDoesNotFilterAtArtifactCreation(): void
     {
         $this->mockADateField(false, true);
 
@@ -320,13 +315,13 @@ class RecipientsManagerTest extends \TuleapTestCase
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, false)
         );
     }
 
-    public function itDoesNotFilterUsersWhoAreInGlobalNotificationWithNotificationInEveryStatusChangeChecked(): void
+    public function testItDoesNotFilterUsersWhoAreInGlobalNotificationWithNotificationInEveryStatusChangeChecked(): void
     {
         $this->mockADateField(false, true);
 
@@ -345,19 +340,19 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnTrue();
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilterUsersWhoAreInInvolvedNotificationWithNotificationInEveryStatusChangeChecked(): void
+    public function testItDoesNotFilterUsersWhoAreInInvolvedNotificationWithNotificationInEveryStatusChangeChecked(): void
     {
         $this->mockADateField(false, true);
 
@@ -376,67 +371,59 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
         $this->user_notification_settings->shouldReceive('isInNoGlobalNotificationMode')->andReturnTrue();
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itFilterUsersWhoAreInGlobalNotification(): void
+    public function testItFilterUsersWhoAreInGlobalNotification(): void
     {
         $this->mockADateField(false, true);
 
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(
-            [
-                1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns(true),
-            ]
-        );
+        $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getValues')->andReturns([
+            1 => Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('hasChanged')->andReturns(true),
+        ]);
 
-        $artifact = stub('\Tracker_Artifact')->getCommentators()->returns(['recipient3']);
-        $previous_changeset = mock(Tracker_Artifact_Changeset::class);
-        stub($artifact)->getPreviousChangeset()->returns($previous_changeset);
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns([]);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-        stub($artifact)->getStatusForChangeset()->returns('On going');
-        stub($artifact)->getStatus()->returns('On going');
+        $artifact = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getCommentators')->andReturns(['recipient3'])->getMock();
+        $previous_changeset = Mockery::spy(Tracker_Artifact_Changeset::class);
+        $artifact->shouldReceive('getPreviousChangeset')->andReturns($previous_changeset);
+        $this->unsubscribers_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID')->andReturns([]);
+        $changeset->shouldReceive('getArtifact')->andReturns($artifact);
+        $artifact->shouldReceive('getStatusForChangeset')->andReturns('On going');
+        $artifact->shouldReceive('getStatus')->andReturns('On going');
 
-        $tracker = Mock(Tracker::class);
-        stub($tracker)->getId()->returns(888);
-        stub($tracker)->getRecipients()->returns(
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturns(888);
+        $tracker->shouldReceive('getRecipients')->andReturns([
             [
-                [
-                    'on_updates'        => true,
-                    'check_permissions' => true,
-                    'recipients'        => []
-                ]
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => []
             ]
-        );
-        stub($tracker)->getNotificationsLevel()->returns(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
-        stub($changeset)->getTracker()->returns($tracker);
+        ]);
+        $tracker->shouldReceive('getNotificationsLevel')->andReturns(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
+        $changeset->shouldReceive('getTracker')->andReturns($tracker);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnFalse();
         $this->user_notification_settings->shouldReceive('isInNoGlobalNotificationMode')->andReturnFalse();
 
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
-        );
+        $changeset->shouldReceive('getComment')->andReturns(Mockery::spy(\Tracker_Artifact_Changeset_Comment::class)->shouldReceive('hasEmptyBody')->andReturns(false)->getMock());
 
-        $this->assertEqual(
+        $this->assertEquals(
             [],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilterIfNoStatusChangeAndTrackerIsInStatusChangeOnlyAndUserSubscribeAllNotifications(): void
+    public function testItDoesNotFilterIfNoStatusChangeAndTrackerIsInStatusChangeOnlyAndUserSubscribeAllNotifications(): void
     {
         $this->mockADateField(false, true);
 
@@ -455,19 +442,19 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnTrue();
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itFilterUsersWhoOnlyWantSeeStatusChangeWhenStatusIsNotUpdated(): void
+    public function testItFilterUsersWhoOnlyWantSeeStatusChangeWhenStatusIsNotUpdated(): void
     {
         $this->mockADateField(false, true);
 
@@ -486,21 +473,21 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
-        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(102, 36)->returns(true);
-        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(103, 36)->returns(false);
+        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->andReturns(true);
+        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->andReturns(false);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilterWhenStatusIsUpdated(): void
+    public function testItDoesNotFilterWhenStatusIsUpdated(): void
     {
         $this->mockADateField(false, true);
 
@@ -519,21 +506,21 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
-        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(102, 36)->returns(true);
-        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(103, 36)->returns(false);
+        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->andReturns(true);
+        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->andReturns(false);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient2' => true, 'recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itFiltersUsersWhoOnlyWantSeeNewArtifactsWhenArtifactIsUpdatedAndUserIsInvolved(): void
+    public function testItFiltersUsersWhoOnlyWantSeeNewArtifactsWhenArtifactIsUpdatedAndUserIsInvolved(): void
     {
         $this->mockADateField(false, true);
 
@@ -552,15 +539,15 @@ class RecipientsManagerTest extends \TuleapTestCase
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             false,
-            mock(Tracker_Artifact_Changeset::class)
+            Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
-        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(102, 36)->returns(false);
-        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(103, 36)->returns(false);
+        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->andReturns(false);
+        $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->andReturns(false);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturn(true, false);
 
-        $this->assertEqual(
+        $this->assertEquals(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
@@ -568,12 +555,15 @@ class RecipientsManagerTest extends \TuleapTestCase
 
     private function mockADateField($is_notification_supported, $user_can_read)
     {
-        $field = mock('\Tracker_FormElement_Field_Date');
-        stub($field)->isNotificationsSupported()->returns($is_notification_supported);
-        stub($field)->userCanRead()->returns($user_can_read);
-        stub($this->formelement_factory)->getFieldById(1)->returns($field);
+        $field = Mockery::spy(\Tracker_FormElement_Field_Date::class);
+        $field->shouldReceive('isNotificationsSupported')->andReturns($is_notification_supported);
+        $field->shouldReceive('userCanRead')->andReturns($user_can_read);
+        $this->formelement_factory->shouldReceive('getFieldById')->with(1)->andReturns($field);
     }
 
+    /**
+     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact_Changeset
+     */
     private function getAMockedChangeset(
         $has_changed,
         array $artifact_commentators,
@@ -585,35 +575,29 @@ class RecipientsManagerTest extends \TuleapTestCase
         $has_empty_body,
         $previous_changeset
     ) {
-        $changeset = mock('\Tracker_Artifact_Changeset');
-        stub($changeset)->getValues()->returns(
-            [
-                1 => stub('\Tracker_Artifact_ChangesetValue_List')->hasChanged()->returns($has_changed),
-            ]
-        );
+        $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset_value      = Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class);
+        $changeset_value->shouldReceive('hasChanged')->andReturns($has_changed);
+        $changeset->shouldReceive('getValues')->andReturns([1 => $changeset_value]);
 
-        $artifact           = stub('\Tracker_Artifact')->getCommentators()->returns($artifact_commentators);
-        stub($artifact)->getPreviousChangeset()->returns($previous_changeset);
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID()->returns($notifications_unsubscribers);
-        stub($changeset)->getArtifact()->returns(
-            $artifact
-        );
-        stub($artifact)->getStatusForChangeset()->returns($previeous_changeset_status);
-        stub($artifact)->getStatus()->returns($artifact_status);
+        $artifact           = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getCommentators')->andReturns($artifact_commentators)->getMock();
+        $artifact->shouldReceive('getPreviousChangeset')->andReturns($previous_changeset);
+        $this->unsubscribers_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID')->andReturns($notifications_unsubscribers);
+        $changeset->shouldReceive('getArtifact')->andReturns($artifact);
+        $artifact->shouldReceive('getStatusForChangeset')->andReturns($previeous_changeset_status);
+        $artifact->shouldReceive('getStatus')->andReturns($artifact_status);
 
-        $tracker = Mock(Tracker::class);
-        stub($tracker)->getId()->returns(36);
-        stub($tracker)->getRecipients()->returns($tracker_recipients);
-        stub($tracker)->getNotificationsLevel()->returns($tracker_notification_level);
-        stub($changeset)->getTracker()->returns($tracker);
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturns(36);
+        $tracker->shouldReceive('getRecipients')->andReturns($tracker_recipients);
+        $tracker->shouldReceive('getNotificationsLevel')->andReturns($tracker_notification_level);
+        $changeset->shouldReceive('getTracker')->andReturns($tracker);
 
-        stub($changeset)->getComment()->returns(
-            stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns($has_empty_body)
-        );
+        $changeset->shouldReceive('getComment')->andReturns(Mockery::spy(\Tracker_Artifact_Changeset_Comment::class)->shouldReceive('hasEmptyBody')->andReturns($has_empty_body)->getMock());
         return $changeset;
     }
 
-    public function itBuildsAListOfUserIdsFromTheirTrackerNotificationsSettings(): void
+    public function testItBuildsAListOfUserIdsFromTheirTrackerNotificationsSettings(): void
     {
         $user_recipients_from_tracker = [
             [
@@ -627,18 +611,26 @@ class RecipientsManagerTest extends \TuleapTestCase
             ]
         ];
 
-        $tracker = mock(\Tracker::class);
-        stub($tracker)->getId()->returns(888);
-        stub($tracker)->getRecipients()->returns($user_recipients_from_tracker);
-        stub($this->user_manager)->getUserByEmail('noctali@example.com')->returns(aUser()->withId(101)->build());
-        stub($this->user_manager)->getUserByEmail('aquali@example.com')->returns(aUser()->withId(102)->build());
+        $tracker = Mockery::spy(\Tracker::class);
+        $tracker->shouldReceive('getId')->andReturns(888);
+        $tracker->shouldReceive('getRecipients')->andReturns($user_recipients_from_tracker);
+        $this->user_manager->shouldReceive('getUserByEmail')->with('noctali@example.com')->andReturns((new \UserTestBuilder())->withId(101)->build());
+        $this->user_manager->shouldReceive('getUserByEmail')->with('aquali@example.com')->andReturns((new \UserTestBuilder())->withId(102)->build());
 
-        stub($this->unsubscribers_notification_dao)->searchUserIDHavingUnsubcribedFromNotificationByTrackerID()->returns([103, 104]);
+        $this->unsubscribers_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerID')->andReturns([103, 104]);
 
-        stub($this->user_status_change_only_dao)->searchUserIdsHavingSubscribedForTrackerStatusChangedOnly()->returns([105, 106]);
+        $this->user_status_change_only_dao->shouldReceive('searchUserIdsHavingSubscribedForTrackerStatusChangedOnly')->andReturns([105, 106]);
 
         $all_user_ids = [101, 102, 103, 104, 105, 106];
 
-        $this->assertEqual($all_user_ids, $this->recipients_manager->getAllRecipientsWhoHaveCustomSettingsForATracker($tracker));
+        $this->assertEquals($all_user_ids, $this->recipients_manager->getAllRecipientsWhoHaveCustomSettingsForATracker($tracker));
+    }
+
+    /**
+     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
+     */
+    private function getSelectBox()
+    {
+        return Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
     }
 }
