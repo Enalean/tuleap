@@ -1428,16 +1428,6 @@ if [ -d "$INSTALL_DIR/plugins/svn" ]; then
 fi
 
 ##############################################
-# Templates
-#
-
-if [ -d "$INSTALL_DIR/plugins/agiledashboard" ]; then
-    echo "Creating Scrum template"
-    /usr/share/tuleap/tools/utils/setup_templates/create_scrum.sh
-fi
-
-
-##############################################
 # Register buckets in forgeupgrade
 #
 /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/$PROJECT_NAME/forgeupgrade/config.ini record-only
