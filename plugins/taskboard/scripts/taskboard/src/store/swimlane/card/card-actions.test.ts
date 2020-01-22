@@ -406,9 +406,9 @@ describe("Card actions", () => {
 
             mockFetchSuccess(tlpGetMock, {
                 return_json: [
-                    { label: "John", id: "123" },
-                    { label: "Steeve", id: "124" },
-                    { label: "Bob", id: "125" }
+                    { display_name: "John", id: "123" },
+                    { display_name: "Steeve", id: "124" },
+                    { display_name: "Bob", id: "125" }
                 ]
             });
 
@@ -420,17 +420,17 @@ describe("Card actions", () => {
                 users: [
                     {
                         id: 123,
-                        label: "John",
+                        display_name: "John",
                         text: "John"
                     },
                     {
                         id: 124,
-                        label: "Steeve",
+                        display_name: "Steeve",
                         text: "Steeve"
                     },
                     {
                         id: 125,
-                        label: "Bob",
+                        display_name: "Bob",
                         text: "Bob"
                     }
                 ]

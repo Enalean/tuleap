@@ -104,10 +104,13 @@ export interface Card {
     is_just_saved: boolean;
 }
 
-export interface User {
-    id: number;
+export interface UserProperties {
     avatar_url: string;
     display_name: string;
+}
+
+export interface User extends UserProperties {
+    id: number;
 }
 
 export interface CardPosition {

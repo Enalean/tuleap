@@ -54,6 +54,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends \PHPUnit\
         $user->shouldReceive('getUserName')->andReturn('neo');
         $user->shouldReceive('getRealName')->andReturn('Le roi arthur');
         $user->shouldReceive('getAvatarUrl')->andReturn('');
+        $user->shouldReceive('isNone')->andReturn(false);
 
         $user_manager = Mockery::mock(UserManager::class);
         $user_manager->shouldReceive('getUserById')->withArgs(array(12))->andReturn($user);
@@ -68,12 +69,13 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends \PHPUnit\
         $json = $value->fetchFormattedForJson();
         $this->assertEquals(
             [
-                'id'         => '12',
-                'label'      => 'Thomas A. Anderson (neo)',
-                'is_hidden'  => false,
-                'username'   => 'neo',
-                'realname'   => 'Le roi arthur',
-                'avatar_url' => ''
+                'id'           => '12',
+                'label'        => 'Thomas A. Anderson (neo)',
+                'is_hidden'    => false,
+                'username'     => 'neo',
+                'realname'     => 'Le roi arthur',
+                'avatar_url'   => '',
+                'display_name' => 'Le roi arthur (neo)'
             ],
             $json
         );
