@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,7 @@ use Tuleap\REST\JsonCast;
  * @see SetFieldValueRepresentation::forInt()
  * @see SetFieldValueRepresentation::forFloat()
  */
-class SetFieldValueRepresentation
+class SetFieldValueRepresentation extends PostActionRepresentation
 {
     public const TYPE = "set_field_value";
 
@@ -44,16 +44,6 @@ class SetFieldValueRepresentation
         Transition_PostAction_Field_Date::CLEAR_DATE => self::EMPTY_DATE_VALUE,
         Transition_PostAction_Field_Date::FILL_CURRENT_TIME => self::CURRENT_DATE_VALUE
     ];
-
-    /**
-     * @var string Action identifier (unique among actions with same type and same field type)
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $type = self::TYPE;
 
     /**
      * @var int
@@ -73,6 +63,7 @@ class SetFieldValueRepresentation
     private function __construct($id, $field_id, $field_type, $value)
     {
         $this->id         = $id;
+        $this->type       = self::TYPE;
         $this->field_id   = $field_id;
         $this->field_type = $field_type;
         $this->value      = $value;

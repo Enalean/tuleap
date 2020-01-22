@@ -25,18 +25,8 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 
-class HiddenFieldsetsRepresentation
+class HiddenFieldsetsRepresentation extends PostActionRepresentation
 {
-    /**
-     * @var int Post Action identifier (unique among actions with same type)
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $type = HiddenFieldsets::SHORT_NAME;
-
     /**
      * @var int[]
      */
@@ -49,6 +39,7 @@ class HiddenFieldsetsRepresentation
     private function __construct(int $id, array $field_ids)
     {
         $this->id           = $id;
+        $this->type         = HiddenFieldsets::SHORT_NAME;
         $this->fieldset_ids = $field_ids;
     }
 

@@ -77,7 +77,7 @@ class AddToTopBacklog extends Transition_PostAction
 
     public function accept(Visitor $visitor)
     {
-        //Does nothing for now
+        $visitor->visitExternalActions($this);
     }
 
     /**

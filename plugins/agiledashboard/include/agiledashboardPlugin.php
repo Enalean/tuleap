@@ -78,8 +78,10 @@ use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklog;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionFactory;
+use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogRepresentation;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
@@ -110,6 +112,7 @@ use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportProcessAdditionalQuery;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
+use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
@@ -238,6 +241,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(GetExternalSubFactoriesEvent::NAME);
             $this->addHook(WorkflowDeletionEvent::NAME);
             $this->addHook(TransitionDeletionEvent::NAME);
+            $this->addHook(PostActionVisitExternalActionsEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2168,5 +2172,17 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $transition_id = (int)$event->getTransition()->getId();
 
         (new AddToTopBacklogPostActionDao())->deleteTransitionPostActions($transition_id);
+    }
+
+    public function postActionVisitExternalActionsEvent(PostActionVisitExternalActionsEvent $event)
+    {
+        $post_action = $event->getPostAction();
+
+        if (! $post_action instanceof AddToTopBacklog) {
+            return;
+        }
+
+        $representation = AddToTopBacklogRepresentation::buildFromObject($post_action);
+        $event->setRepresentation($representation);
     }
 }

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction;
 
+use Transition_PostAction;
 use Transition_PostAction_CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
@@ -37,4 +38,6 @@ interface Visitor
     public function visitFrozenFields(FrozenFields $frozen_fields);
 
     public function visitHiddenFieldsets(HiddenFieldsets $hidden_fieldsets);
+
+    public function visitExternalActions(Transition_PostAction $post_action);
 }
