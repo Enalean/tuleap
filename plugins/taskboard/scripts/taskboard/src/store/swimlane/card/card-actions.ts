@@ -18,12 +18,7 @@
  */
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
-import {
-    NewCardPayload,
-    NewRemainingEffortPayload,
-    UpdateCardPayload,
-    UserAjaxRepresentation
-} from "./type";
+import { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
 import { get, patch, post, put } from "tlp";
 import { RefreshCardMutationPayload, SwimlaneState } from "../type";
 import {
@@ -32,7 +27,7 @@ import {
     getPutArtifactBodyToAddChild
 } from "../../../helpers/update-artifact";
 import { injectDefaultPropertiesInCard } from "../../../helpers/card-default";
-import { Card, Swimlane, Tracker } from "../../../type";
+import { Card, Swimlane, Tracker, User } from "../../../type";
 import pRetry from "p-retry";
 import { UserForPeoplePicker } from "./type";
 
@@ -196,12 +191,16 @@ export async function loadPossibleAssignees(
                 tracker.assigned_to_field.id
             )}`
         );
-        const users: UserAjaxRepresentation[] = await response.json();
+        const users: User[] = await response.json();
 
         context.commit("setPossibleAssigneesForFieldId", {
             assigned_to_field_id: tracker.assigned_to_field.id,
             users: users.map(
-                (user): UserForPeoplePicker => ({ ...user, text: user.label, id: Number(user.id) })
+                (user): UserForPeoplePicker => ({
+                    ...user,
+                    text: user.display_name,
+                    id: Number(user.id)
+                })
             )
         });
     } catch (error) {

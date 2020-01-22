@@ -42,7 +42,7 @@ async function getWrapper(): Promise<Wrapper<PeoplePicker>> {
                 {
                     id: 101,
                     avatar_url: "steeve.png",
-                    label: "Steeve"
+                    display_name: "Steeve"
                 } as UserForPeoplePicker
             ],
             value: []

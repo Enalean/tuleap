@@ -224,9 +224,9 @@ describe(`Card mutations`, () => {
             mutations.setPossibleAssigneesForFieldId(state, {
                 assigned_to_field_id: 1234,
                 users: [
-                    { id: 1, label: "John" },
-                    { id: 2, label: "Steeve" },
-                    { id: 3, label: "Bob" }
+                    { id: 1, display_name: "John" },
+                    { id: 2, display_name: "Steeve" },
+                    { id: 3, display_name: "Bob" }
                 ] as UserForPeoplePicker[]
             });
 
@@ -235,9 +235,9 @@ describe(`Card mutations`, () => {
                     [
                         1234,
                         [
-                            { id: 1, label: "John" },
-                            { id: 2, label: "Steeve" },
-                            { id: 3, label: "Bob" }
+                            { id: 1, display_name: "John" },
+                            { id: 2, display_name: "Steeve" },
+                            { id: 3, display_name: "Bob" }
                         ]
                     ]
                 ])

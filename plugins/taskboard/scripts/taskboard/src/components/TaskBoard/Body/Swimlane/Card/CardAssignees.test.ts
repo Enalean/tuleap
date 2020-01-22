@@ -145,7 +145,7 @@ describe("CardAssignees", () => {
             tracker
         );
         wrapper.vm.$store.getters["swimlane/assignable_users"] = (): UserForPeoplePicker[] =>
-            [{ id: 1, label: "Steeve" }] as UserForPeoplePicker[];
+            [{ id: 1, display_name: "Steeve" }] as UserForPeoplePicker[];
 
         wrapper.trigger("click");
 

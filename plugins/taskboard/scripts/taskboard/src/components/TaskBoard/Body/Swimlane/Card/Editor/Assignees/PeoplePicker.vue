@@ -105,7 +105,7 @@ export default class PeoplePicker extends Vue {
                 <div class="tlp-avatar select2-result-user__avatar">
                     <img src="{{ avatar_url }}">
                 </div>
-                {{ label }}
+                {{ display_name }}
             </div>`,
             user
         );
@@ -133,7 +133,7 @@ export default class PeoplePicker extends Vue {
             `<div class="tlp-avatar-mini">
                 <img src="{{ avatar_url }}">
             </div>
-            {{ label }}`,
+            {{ display_name }}`,
             user
         );
     }
