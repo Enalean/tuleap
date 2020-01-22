@@ -25,11 +25,13 @@ namespace Tuleap\Project\Registration;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Registration\Template\CompanyTemplate;
+use Tuleap\Project\Registration\Template\DefaultProjectTemplate;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\ConsistencyChecker;
@@ -37,7 +39,7 @@ use Tuleap\XML\ProjectXMLMerger;
 
 final class ProjectRegistrationPresenterBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
     /**
      * @var ProjectRegistrationPresenterBuilder
@@ -138,5 +140,67 @@ final class ProjectRegistrationPresenterBuilderTest extends TestCase
             '[{"group_desc_id":"1","desc_name":"Custom field","desc_type":"text","desc_description":"Custom description","desc_required":true}]',
             $result->field_list
         );
+    }
+
+    public function testItShouldAddTheDefaultSiteTemplateIfOptionIsSet(): void
+    {
+        \ForgeConfig::set(ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE, true);
+
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getGroupId')->andReturn(101);
+        $project->shouldReceive('getDescription')->andReturn('My awesome project');
+        $project->shouldReceive('getUnconvertedPublicName')->andReturn('project-shortname');
+
+        $glyph_finder = Mockery::mock(GlyphFinder::class);
+        $glyph        = Mockery::mock(Glyph::class);
+        $glyph->shouldReceive('getInlineString')->andReturn('<svg>');
+        $glyph_finder->shouldReceive('get')->andReturn($glyph);
+
+        $default_template_project = Mockery::mock(DefaultProjectTemplate::class);
+        $default_template_project->shouldReceive('getTitle')->andReturn('Default Site Template');
+        $default_template_project->shouldReceive('getDescription')->andReturn('Default Site Template');
+        $default_template_project->shouldReceive('getId')->andReturn(100);
+        $default_template_project->shouldReceive('getGlyph')->andReturn($glyph);
+        $default_template_project->shouldReceive('isBuiltIn')->andReturn(true);
+        $this->template_factory->shouldReceive('getDefaultProjectTemplate')->andReturn($default_template_project);
+
+        $this->template_factory->shouldReceive('getCompanyTemplateList')->andReturn([]);
+        $this->fields_factory->shouldReceive('getAllDescriptionFields')->andReturn([]);
+        $this->trove_cat_factory->shouldReceive(
+            'getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren'
+        )->andReturn([]);
+        $this->template_factory->shouldReceive('getValidTemplates')->andReturn([]);
+
+        $result = $this->builder->buildPresenter();
+
+        $this->assertNotNull($result->default_project_template);
+    }
+
+    public function testItShouldNotAddTheDefaultSiteTemplateIfOptionIsNotSet(): void
+    {
+        \ForgeConfig::set(ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE, false);
+
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getGroupId')->andReturn(101);
+        $project->shouldReceive('getDescription')->andReturn('My awesome project');
+        $project->shouldReceive('getUnconvertedPublicName')->andReturn('project-shortname');
+
+        $glyph_finder = Mockery::mock(GlyphFinder::class);
+        $glyph        = Mockery::mock(Glyph::class);
+        $glyph->shouldReceive('getInlineString')->andReturn('<svg>');
+        $glyph_finder->shouldReceive('get')->andReturn($glyph);
+
+        $this->template_factory->shouldReceive('getDefaultProjectTemplate')->andReturn(null);
+
+        $this->template_factory->shouldReceive('getCompanyTemplateList')->andReturn([]);
+        $this->fields_factory->shouldReceive('getAllDescriptionFields')->andReturn([]);
+        $this->trove_cat_factory->shouldReceive(
+            'getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren'
+        )->andReturn([]);
+        $this->template_factory->shouldReceive('getValidTemplates')->andReturn([]);
+
+        $result = $this->builder->buildPresenter();
+
+        $this->assertNull($result->default_project_template);
     }
 }

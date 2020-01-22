@@ -33,6 +33,8 @@ use Tuleap\Project\Registration\Template\TemplatePresenter;
 
 class ProjectRegistrationPresenterBuilder
 {
+    public const FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE = "can_use_default_site_template";
+
     /**
      * @var TemplateFactory
      */
@@ -71,11 +73,8 @@ class ProjectRegistrationPresenterBuilder
             $this->template_factory->getCompanyTemplateList()
         );
 
-        $default_project_template_presenter = null;
-        $default_project_template           = $this->template_factory->getDefaultProjectTemplate();
-        if ($default_project_template) {
-            $default_project_template_presenter = new TemplatePresenter($default_project_template);
-        }
+        $default_project_template_presenter = $this->getDefaultProjectTemplatePresenterIfApplicable();
+
 
         $formatted_field = [];
         $fields          = $this->fields_factory->getAllDescriptionFields();
@@ -102,5 +101,20 @@ class ProjectRegistrationPresenterBuilder
                 $this->template_factory->getValidTemplates()
             )
         );
+    }
+
+    private function getDefaultProjectTemplatePresenterIfApplicable(): ?TemplatePresenter
+    {
+        if (! \ForgeConfig::get(self::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE)) {
+            return null;
+        }
+
+        $default_project_template = $this->template_factory->getDefaultProjectTemplate();
+
+        if ($default_project_template) {
+            return new TemplatePresenter($default_project_template);
+        }
+
+        return null;
     }
 }
