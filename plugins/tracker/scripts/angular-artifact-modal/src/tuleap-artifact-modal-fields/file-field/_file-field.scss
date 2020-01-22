@@ -1,0 +1,99 @@
+.tuleap-artifact-modal-field-file {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+
+    &:hover {
+        .tuleap-artifact-modal-field-file-preview-link,
+        .tuleap-artifact-modal-field-file-preview-toggle {
+            opacity: 1;
+        }
+    }
+
+    &.marked-for-removal {
+        > .tuleap-artifact-modal-field-file-details {
+            opacity: .5;
+            text-decoration: line-through;
+        }
+    }
+}
+
+.tuleap-artifact-modal-field-file-preview {
+    display: flex;
+    flex: 0 0 auto;
+    width: 90px;
+    height: 90px;
+    margin: 0 $tlp-spacing 0 0;
+    border-radius: 3px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.tuleap-artifact-modal-field-file-preview-link {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 100ms;
+    border: 1px solid $tlp-theme-color;
+    border-radius: 3px;
+    opacity: 0;
+    background: transparentize($tlp-theme-color, .8);
+    font-size: 30px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tuleap-artifact-modal-field-file-details {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+
+    > a {
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.tuleap-artifact-modal-field-file-details-info {
+    flex: 1 1 auto;
+    margin: 5px 0 0;
+
+    > .tlp-text,
+    > .tlp-text-muted {
+        margin: 0 0 5px;
+        font-size: 14px;
+    }
+}
+
+.tuleap-artifact-modal-field-file-preview-toggle {
+    flex: 0 0 auto;
+    transition: opacity 100ms;
+    opacity: 0;
+}
+
+.tuleap-artifact-modal-field-file-new-file {
+    margin: 0 0 $tlp-spacing;
+
+    > input[type='file'] {
+        display: block;
+        margin: 0 0 5px;
+    }
+}
+
+.tuleap-artifact-modal-field-file-new-file-description {
+    display: flex;
+
+    > .tlp-input {
+        flex: 1 1 auto;
+        margin: 0 5px 0 0;
+    }
+
+    > button {
+        flex: 0 0 auto;
+    }
+}

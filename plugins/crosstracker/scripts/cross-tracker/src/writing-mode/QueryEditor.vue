@@ -65,11 +65,11 @@ import {
     TQL_cross_tracker_autocomplete_keywords,
     TQL_cross_tracker_mode_definition
 } from "./tql-configuration.js";
-import { insertAllowedFieldInCodeMirror } from "../../../../../tracker/www/scripts/report/TQL-CodeMirror/allowed-field-inserter.js";
+import { insertAllowedFieldInCodeMirror } from "../../../../../tracker/scripts/report/TQL-CodeMirror/allowed-field-inserter.js";
 import {
     initializeTQLMode,
     codeMirrorify
-} from "../../../../../tracker/www/scripts/report/TQL-CodeMirror/builder.js";
+} from "../../../../../tracker/scripts/report/TQL-CodeMirror/builder.js";
 
 export default {
     name: "QueryEditor",

@@ -150,7 +150,7 @@ const rule_ng_cache_loader = {
 
 const artifact_modal_vue_initializer_path = path.resolve(
     __dirname,
-    "../../../plugins/tracker/www/scripts/angular-artifact-modal/src/vue-initializer.js"
+    "../../../plugins/tracker/scripts/angular-artifact-modal/src/vue-initializer.js"
 );
 
 const rule_angular_gettext_loader = {

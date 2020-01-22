@@ -515,6 +515,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pullrequest/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/statistics/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_encryption/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/userlog/themes/

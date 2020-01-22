@@ -32,29 +32,29 @@
         "www/scripts/tracker-admin-notifications-popover.js",
         "www/scripts/tracker-webhooks.js"
     ],
-    "components": ["grammar/", "www/scripts/", "themes"],
+    "components": ["grammar/", "scripts/", "themes"],
     "gettext-js": {
         "burndown-chart": {
-            "src": "www/scripts/burndown-chart/src",
-            "po": "www/scripts/burndown-chart/po"
+            "src": "scripts/burndown-chart/src",
+            "po": "scripts/burndown-chart/po"
         }
     },
     "gettext-vue": {
         "colorpicker": {
-            "src": "www/scripts/colorpicker",
-            "po": "www/scripts/colorpicker/po"
+            "src": "scripts/colorpicker",
+            "po": "scripts/colorpicker/po"
         },
         "artifact-action-buttons": {
-            "src": "www/scripts/artifact-action-buttons",
-            "po": "www/scripts/artifact-action-buttons/po"
+            "src": "scripts/artifact-action-buttons",
+            "po": "scripts/artifact-action-buttons/po"
         },
         "permissions-per-group": {
-            "src": "www/scripts/permissions-per-group",
-            "po": "www/scripts/permissions-per-group/po"
+            "src": "scripts/permissions-per-group",
+            "po": "scripts/permissions-per-group/po"
         },
         "workflow-transitions": {
-            "src": "www/scripts/workflow-transitions",
-            "po": "www/scripts/workflow-transitions/po"
+            "src": "scripts/workflow-transitions",
+            "po": "scripts/workflow-transitions/po"
         }
     }
 }
