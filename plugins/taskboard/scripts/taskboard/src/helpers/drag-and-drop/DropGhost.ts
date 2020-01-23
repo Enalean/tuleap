@@ -19,11 +19,7 @@
 
 import { AfterDropEventSource, AfterDropListener, DrekkenovInitOptions } from "./types";
 import { GHOST_CSS_CLASS, HIDE_CSS_CLASS } from "./constants";
-import {
-    cloneHTMLElement,
-    findClosestElementBeforeYCoordinate,
-    insertAfter
-} from "./dom-manipulation";
+import { cloneHTMLElement, findNextGhostSibling, insertAfter } from "./dom-manipulation";
 import { OngoingDrag } from "./OngoingDrag";
 
 export class DropGhost implements AfterDropListener {
@@ -85,16 +81,7 @@ export class DropGhost implements AfterDropListener {
             target_dropzone.prepend(this.element);
             return;
         }
-        if (dropzone_children.length === 1) {
-            const only_child = dropzone_children[0];
-            if (only_child === this.element) {
-                return;
-            }
-        }
-        const next_ghost_sibling = findClosestElementBeforeYCoordinate(
-            y_coordinate,
-            dropzone_children
-        );
+        const next_ghost_sibling = findNextGhostSibling(y_coordinate, dropzone_children);
         if (next_ghost_sibling === null) {
             const last_child = dropzone_children[dropzone_children.length - 1];
             if (this.isUnchanged(last_child, this.element.previousElementSibling)) {

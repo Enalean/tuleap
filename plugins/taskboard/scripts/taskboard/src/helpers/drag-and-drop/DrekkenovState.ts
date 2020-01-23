@@ -25,14 +25,17 @@ import {
     DrekkenovInitOptions
 } from "./types";
 import { OngoingDrag } from "./OngoingDrag";
-import { DropGhost } from "./DragGhost";
+import { DropGhost } from "./DropGhost";
 import { DocumentEventsHandler } from "./DocumentEventsHandler";
 import { dragStartFactory, handlersFactory } from "./event-handler-factory";
 
 export class DrekkenovState implements AfterDropEventSource {
     private after_drop_listeners: AfterDropListener[] = [];
 
-    constructor(readonly options: DrekkenovInitOptions, readonly document: Document) {}
+    constructor(
+        private readonly options: DrekkenovInitOptions,
+        private readonly document: Document
+    ) {}
 
     public attachAfterDropListener(listener: AfterDropListener): void {
         this.after_drop_listeners.push(listener);
@@ -64,6 +67,5 @@ export class DrekkenovState implements AfterDropEventSource {
 
     public cleanup(): void {
         this.dispatchAfterDropEvent();
-        this.options.cleanupAfterDragCallback();
     }
 }

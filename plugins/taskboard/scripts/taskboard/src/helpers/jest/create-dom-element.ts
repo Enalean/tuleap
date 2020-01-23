@@ -23,12 +23,3 @@ export function createElement(...css_classes: string[]): HTMLElement {
     div.classList.add(...css_classes);
     return div;
 }
-
-export function createNonHTMLElement(): Element {
-    const local_document = document.implementation.createDocument(
-        "http://www.w3.org/2000/svg",
-        "svg",
-        null
-    );
-    return local_document.createElement("g");
-}

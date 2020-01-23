@@ -30,16 +30,10 @@ export function findClosestDraggable(
 ): HTMLElement | null {
     let current_element: Node | null = element;
     const handle = current_element;
-    if (!(handle instanceof HTMLElement)) {
+    if (!(handle instanceof HTMLElement) || options.isInvalidDragHandle(handle)) {
         return null;
     }
     do {
-        if (
-            current_element instanceof HTMLElement &&
-            options.isInvalidDragHandle(current_element, handle)
-        ) {
-            return null;
-        }
         if (current_element instanceof HTMLElement && options.isDraggable(current_element)) {
             return current_element;
         }
@@ -64,17 +58,16 @@ export function findClosestDropzone(
     return null;
 }
 
-export function findClosestElementBeforeYCoordinate(
-    y_coordinate: number,
-    children: Element[]
-): Element | null {
-    let candidate = null;
+export function findNextGhostSibling(y_coordinate: number, children: Element[]): Element | null {
+    if (children.length === 0) {
+        return null;
+    }
     for (const child of children) {
-        const rect = child.getBoundingClientRect();
-        if (rect.top > y_coordinate) {
-            return candidate;
+        const { top, bottom } = child.getBoundingClientRect();
+        const middle = top + (bottom - top) / 2;
+        if (middle > y_coordinate) {
+            return child;
         }
-        candidate = child;
     }
     return null;
 }
