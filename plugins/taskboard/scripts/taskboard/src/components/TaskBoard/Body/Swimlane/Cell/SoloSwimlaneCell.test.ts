@@ -73,7 +73,7 @@ describe(`SoloSwimlaneCell`, () => {
             const solo_card = wrapper.find(CardWithRemainingEffort);
 
             expect(solo_card.classes()).toContain("taskboard-draggable-item");
-            expect(solo_card.attributes("data-is-draggable")).toBe("true");
+            expect(solo_card.attributes("draggable")).toBe("true");
         });
 
         it("is not draggable when the card is in edit mode", () => {
@@ -84,7 +84,7 @@ describe(`SoloSwimlaneCell`, () => {
             const solo_card = wrapper.find(CardWithRemainingEffort);
 
             expect(solo_card.classes()).not.toContain("taskboard-draggable-item");
-            expect(solo_card.attributes("data-is-draggable")).toBeFalsy();
+            expect(solo_card.attributes("draggable")).toBeFalsy();
         });
     });
 });

@@ -97,7 +97,7 @@ describe("ChildCard", () => {
             const wrapper = getWrapper(card, true);
 
             expect(wrapper.classes()).toContain("taskboard-draggable-item");
-            expect(wrapper.attributes("data-is-draggable")).toBe("true");
+            expect(wrapper.attributes("draggable")).toBe("true");
         });
 
         it("is not draggable when the card is in edit mode", () => {
@@ -111,7 +111,7 @@ describe("ChildCard", () => {
             const wrapper = getWrapper(card, true);
 
             expect(wrapper.classes()).not.toContain("taskboard-draggable-item");
-            expect(wrapper.attributes("data-is-draggable")).toBeFalsy();
+            expect(wrapper.attributes("draggable")).toBe("false");
         });
     });
 });

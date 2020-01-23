@@ -20,26 +20,11 @@
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import TaskBoard from "./TaskBoard.vue";
 import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import EventBus from "../../helpers/event-bus";
-import { Swimlane, TaskboardEvent } from "../../type";
+import { Swimlane } from "../../type";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
 import { RootState } from "../../store/type";
-import * as dragula from "dragula";
+import * as drekkenov from "../../helpers/drag-and-drop/drekkenov";
 import ErrorModal from "../GlobalError/ErrorModal.vue";
-
-interface FakeDrake {
-    on: jest.SpyInstance;
-    destroy: jest.SpyInstance;
-}
-
-jest.mock("dragula", () => {
-    const fake_drake = {
-        on: jest.fn(),
-        destroy: jest.fn(),
-        cancel: jest.fn()
-    };
-    return jest.fn((): FakeDrake => fake_drake);
-});
 
 async function createWrapper(
     swimlanes: Swimlane[],
@@ -61,10 +46,6 @@ async function createWrapper(
 }
 
 describe("TaskBoard", () => {
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
     it("displays a table with header and body", () => {
         const wrapper = shallowMount(TaskBoard, {
             mocks: {
@@ -99,54 +80,25 @@ describe("TaskBoard", () => {
         expect(wrapper.contains(ErrorModal)).toBe(true);
     });
 
-    it(`will cancel dragging on "Escape"`, async () => {
-        const mock_drake = dragula.default();
-        jest.spyOn(mock_drake, "cancel").mockImplementation();
-
-        await createWrapper([], false);
-        EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
-
-        expect(mock_drake.cancel).toHaveBeenCalledWith(true);
-    });
-
     describe(`mounted()`, () => {
-        it(`will create a "drake"`, async () => {
+        it(`will create a "drek"`, async () => {
+            const init = jest.spyOn(drekkenov, "init");
             await createWrapper([], false);
 
-            expect(dragula.default).toHaveBeenCalled();
-        });
-
-        it(`will listen to esc-key-pressed event`, async () => {
-            const event_bus_on = jest.spyOn(EventBus, "$on");
-
-            await createWrapper([], false);
-
-            expect(event_bus_on).toHaveBeenCalledWith(
-                TaskboardEvent.ESC_KEY_PRESSED,
-                expect.any(Function)
-            );
+            expect(init).toHaveBeenCalled();
         });
     });
 
     describe(`destroy()`, () => {
-        it(`will destroy the "drake"`, async () => {
-            const mock_drake = dragula.default();
+        it(`will destroy the "drek"`, async () => {
+            const mock_drek = {
+                destroy: jest.fn()
+            };
+            jest.spyOn(drekkenov, "init").mockImplementation(() => mock_drek);
             const wrapper = await createWrapper([], false);
             wrapper.destroy();
 
-            expect(mock_drake.destroy).toHaveBeenCalled();
-        });
-
-        it(`will remove the esc-key-pressed listener`, async () => {
-            const event_bus_off = jest.spyOn(EventBus, "$off");
-
-            const wrapper = await createWrapper([], false);
-            wrapper.destroy();
-
-            expect(event_bus_off).toHaveBeenCalledWith(
-                TaskboardEvent.ESC_KEY_PRESSED,
-                expect.any(Function)
-            );
+            expect(mock_drek.destroy).toHaveBeenCalled();
         });
     });
 });

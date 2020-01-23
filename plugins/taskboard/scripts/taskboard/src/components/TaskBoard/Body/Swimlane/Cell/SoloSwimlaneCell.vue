@@ -27,7 +27,7 @@
             v-bind:class="{ 'taskboard-draggable-item': !swimlane.card.is_in_edit_mode }"
             v-bind:data-card-id="swimlane.card.id"
             v-bind:data-tracker-id="swimlane.card.tracker_id"
-            v-bind:data-is-draggable="!swimlane.card.is_in_edit_mode"
+            v-bind:draggable="!swimlane.card.is_in_edit_mode"
         />
     </drop-container-cell>
 </template>

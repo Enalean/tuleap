@@ -35,7 +35,7 @@ export function canMove(element?: Element): boolean {
         return false;
     }
 
-    return Boolean(element.dataset.isDraggable) === true;
+    return element.draggable === true;
 }
 
 export function invalid(element?: Element, handle?: Element): boolean {
@@ -44,6 +44,10 @@ export function invalid(element?: Element, handle?: Element): boolean {
     }
 
     return Boolean(handle.closest("[data-not-drag-handle]"));
+}
+
+export function isConsideredInDropzone(child: Element): boolean {
+    return child.hasAttribute("draggable");
 }
 
 export function checkCellAcceptsDrop(store: Store<RootState>, payload: HandleDragPayload): boolean {
