@@ -110,7 +110,7 @@ describe("update-artifact", () => {
                     title_field: { id: 123, is_string_field: false },
                     assigned_to_field: { id: 124 }
                 } as Tracker,
-                assignees_ids: [1001, 1002],
+                assignees: [{ id: 1001 }, { id: 1002 }],
                 label: "Lorem ipsum"
             } as UpdateCardPayload);
 

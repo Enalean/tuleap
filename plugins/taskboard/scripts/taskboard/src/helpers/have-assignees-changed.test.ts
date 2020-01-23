@@ -22,26 +22,26 @@ import { haveAssigneesChanged } from "./have-assignees-changed";
 
 describe("haveAssigneesChanged", () => {
     it("Returns true if a user is removed", () => {
-        const assignees = [{ id: 101 } as User, { id: 102 } as User];
-        const new_assignees_ids = [101];
-        expect(haveAssigneesChanged(assignees, new_assignees_ids)).toBe(true);
+        const assignees = [{ id: 101 }, { id: 102 }] as User[];
+        const new_assignees = [{ id: 101 }] as User[];
+        expect(haveAssigneesChanged(assignees, new_assignees)).toBe(true);
     });
 
     it("Returns true if a user is added", () => {
-        const assignees = [{ id: 101 } as User, { id: 102 } as User];
-        const new_assignees_ids = [101, 102, 103];
-        expect(haveAssigneesChanged(assignees, new_assignees_ids)).toBe(true);
+        const assignees = [{ id: 101 }, { id: 102 }] as User[];
+        const new_assignees = [{ id: 101 }, { id: 102 }, { id: 103 }] as User[];
+        expect(haveAssigneesChanged(assignees, new_assignees)).toBe(true);
     });
 
     it("Returns true if a user is added and another one is removed", () => {
-        const assignees = [{ id: 101 } as User, { id: 102 } as User];
-        const new_assignees_ids = [101, 103];
-        expect(haveAssigneesChanged(assignees, new_assignees_ids)).toBe(true);
+        const assignees = [{ id: 101 }, { id: 102 }] as User[];
+        const new_assignees = [{ id: 101 }, { id: 103 }] as User[];
+        expect(haveAssigneesChanged(assignees, new_assignees)).toBe(true);
     });
 
     it("Returns false if arrays are not in the same order", () => {
-        const assignees = [{ id: 101 } as User, { id: 102 } as User];
-        const new_assignees_ids = [102, 101];
-        expect(haveAssigneesChanged(assignees, new_assignees_ids)).toBe(false);
+        const assignees = [{ id: 101 }, { id: 102 }] as User[];
+        const new_assignees = [{ id: 102 }, { id: 101 }] as User[];
+        expect(haveAssigneesChanged(assignees, new_assignees)).toBe(false);
     });
 });

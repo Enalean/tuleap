@@ -21,7 +21,7 @@
 <template>
     <div class="taskboard-card-info">
         <slot name="initial_effort" v-if="!card.is_in_edit_mode" />
-        <card-assignees v-bind:card="card" v-bind:tracker="tracker" v-model="new_assignees_ids" />
+        <card-assignees v-bind:card="card" v-bind:tracker="tracker" v-model="new_assignees" />
     </div>
 </template>
 
@@ -29,7 +29,7 @@
 import CardAssignees from "./CardAssignees.vue";
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { Card, Tracker } from "../../../../../type";
+import { Card, Tracker, User } from "../../../../../type";
 
 @Component({
     components: {
@@ -38,7 +38,7 @@ import { Card, Tracker } from "../../../../../type";
 })
 export default class CardInfo extends Vue {
     @Prop({ required: true })
-    readonly value!: number[];
+    readonly value!: User[];
 
     @Prop({ required: true })
     readonly card!: Card;
@@ -46,11 +46,11 @@ export default class CardInfo extends Vue {
     @Prop({ required: true })
     readonly tracker!: Tracker;
 
-    get new_assignees_ids(): number[] {
+    get new_assignees(): User[] {
         return this.value;
     }
 
-    set new_assignees_ids(value) {
+    set new_assignees(value) {
         this.$emit("input", value);
     }
 }

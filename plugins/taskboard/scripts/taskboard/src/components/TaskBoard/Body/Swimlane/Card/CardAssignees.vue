@@ -55,7 +55,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { namespace } from "vuex-class";
-import { Card, Tracker } from "../../../../../type";
+import { Card, Tracker, User } from "../../../../../type";
 import UserAvatar from "./UserAvatar.vue";
 import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
 import { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
@@ -67,7 +67,7 @@ const swimlane = namespace("swimlane");
 })
 export default class CardAssignees extends Vue {
     @Prop({ required: true })
-    readonly value!: number[];
+    readonly value!: User[];
 
     @Prop({ required: true })
     readonly card!: Card;
@@ -185,11 +185,14 @@ export default class CardAssignees extends Vue {
     }
 
     get new_assignees_ids(): number[] {
-        return this.value;
+        return this.value.map(user => user.id);
     }
 
-    set new_assignees_ids(value) {
-        this.$emit("input", value);
+    set new_assignees_ids(value: number[]) {
+        this.$emit(
+            "input",
+            this.users.filter(user => value.some(id => id === user.id))
+        );
     }
 }
 </script>

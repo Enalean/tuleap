@@ -55,6 +55,7 @@ export function cardIsHalfwayCreated(state: SwimlaneState): void {
 export function finishSavingCard(state: SwimlaneState, payload: UpdateCardPayload): void {
     const state_card = findCard(state, payload.card);
     state_card.label = payload.label;
+    state_card.assignees = payload.assignees;
     setSavedFlagsOnCard(state_card);
 }
 

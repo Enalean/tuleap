@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Swimlane, Tracker, UserProperties } from "../../../type";
+import { Card, ColumnDefinition, Swimlane, Tracker, User, UserProperties } from "../../../type";
 import { DataFormat } from "tlp";
 
 export interface NewRemainingEffortPayload {
@@ -28,7 +28,7 @@ export interface NewRemainingEffortPayload {
 export interface UpdateCardPayload {
     readonly card: Card;
     readonly label: string;
-    readonly assignees_ids: number[];
+    readonly assignees: User[];
     readonly tracker: Tracker;
 }
 

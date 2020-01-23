@@ -19,12 +19,14 @@
 
 import { User } from "../type";
 
-export function haveAssigneesChanged(assignees: User[], new_assignees_ids: number[]): boolean {
-    if (assignees.length !== new_assignees_ids.length) {
+export function haveAssigneesChanged(assignees: User[], new_assignees: User[]): boolean {
+    if (assignees.length !== new_assignees.length) {
         return true;
     }
 
-    const sorted_ids = new_assignees_ids.sort();
+    const sorted_new_assignees = new_assignees.sort((a, b) => a.id - b.id);
 
-    return assignees.sort().some((assignee, index) => assignee.id !== sorted_ids[index]);
+    return assignees
+        .sort((a, b) => a.id - b.id)
+        .some((assignee, index) => assignee.id !== sorted_new_assignees[index].id);
 }

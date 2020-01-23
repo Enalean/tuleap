@@ -29,7 +29,7 @@
         </span>
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label" />
-            <card-info v-bind:card="card" v-bind:tracker="tracker" v-model="new_assignees_ids">
+            <card-info v-bind:card="card" v-bind:tracker="tracker" v-model="assignees">
                 <template v-slot:initial_effort>
                     <slot name="initial_effort" />
                 </template>
@@ -45,7 +45,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import CardXrefLabel from "./CardXrefLabel.vue";
-import { Card, TaskboardEvent, Tracker } from "../../../../../type";
+import { Card, TaskboardEvent, Tracker, User } from "../../../../../type";
 import { namespace, Getter } from "vuex-class";
 import EventBus from "../../../../../helpers/event-bus";
 import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
@@ -83,11 +83,11 @@ export default class BaseCard extends Vue {
     readonly saveCard!: (payload: UpdateCardPayload) => Promise<void>;
 
     private label = "";
-    private new_assignees_ids: number[] = [];
+    private assignees: User[] = [];
 
     mounted(): void {
         this.label = this.card.label;
-        this.new_assignees_ids = this.card.assignees.map(user => user.id);
+        this.assignees = this.card.assignees;
         EventBus.$on(TaskboardEvent.CANCEL_CARD_EDITION, this.cancelButtonCallback);
         EventBus.$on(TaskboardEvent.SAVE_CARD_EDITION, this.saveButtonCallback);
     }
@@ -110,10 +110,7 @@ export default class BaseCard extends Vue {
     }
 
     save(): void {
-        if (
-            !this.is_label_changed &&
-            !haveAssigneesChanged(this.card.assignees, this.new_assignees_ids)
-        ) {
+        if (!this.is_label_changed && !haveAssigneesChanged(this.card.assignees, this.assignees)) {
             this.cancel();
             return;
         }
@@ -121,7 +118,7 @@ export default class BaseCard extends Vue {
         const payload: UpdateCardPayload = {
             card: this.card,
             label: this.label,
-            assignees_ids: this.new_assignees_ids,
+            assignees: this.assignees,
             tracker: this.tracker
         };
         this.saveCard(payload);
