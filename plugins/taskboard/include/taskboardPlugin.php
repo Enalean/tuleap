@@ -30,6 +30,7 @@ use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPane;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
+use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDao;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
 use Tuleap\Taskboard\REST\ResourcesInjector;
@@ -173,6 +174,7 @@ class taskboardPlugin extends Plugin
     {
         return new MilestoneIsAllowedChecker(
             $this->getCardwallOnTopDao(),
+            new TaskboardUsageDao(),
             PluginManager::instance(),
             $this
         );
