@@ -29,15 +29,17 @@ class QueueInstrumentation
 {
     private const METRIC_NAME = 'queue_events_total';
 
-    public const STATUS_ENQUEUED = 'enqueued';
-    public const STATUS_DEQUEUED = 'dequeued';
-    public const STATUS_REQUEUED = 'requeued';
-    public const STATUS_DONE     = 'done';
+    public const STATUS_ENQUEUED  = 'enqueued';
+    public const STATUS_DEQUEUED  = 'dequeued';
+    public const STATUS_REQUEUED  = 'requeued';
+    public const STATUS_DISCARDED = 'discarded';
+    public const STATUS_DONE      = 'done';
 
     private const STATUS_VALUES = [
         self::STATUS_ENQUEUED,
         self::STATUS_DEQUEUED,
         self::STATUS_REQUEUED,
+        self::STATUS_DISCARDED,
         self::STATUS_DONE,
     ];
 
