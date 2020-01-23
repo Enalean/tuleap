@@ -55,6 +55,10 @@ class MilestoneIsAllowedCheckerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_Milestone
      */
     private $milestone;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TaskboardUsageDao
+     */
+    private $usage_dao;
 
     protected function setUp(): void
     {
@@ -69,8 +73,14 @@ class MilestoneIsAllowedCheckerTest extends TestCase
         $this->plugin_manager = Mockery::mock(PluginManager::class);
         $this->plugin         = Mockery::mock(taskboardPlugin::class);
         $this->dao            = Mockery::mock(Cardwall_OnTop_Dao::class);
+        $this->usage_dao      = Mockery::mock(TaskboardUsageDao::class);
 
-        $this->checker = new MilestoneIsAllowedChecker($this->dao, $this->plugin_manager, $this->plugin);
+        $this->checker = new MilestoneIsAllowedChecker(
+            $this->dao,
+            $this->usage_dao,
+            $this->plugin_manager,
+            $this->plugin
+        );
     }
 
     public function testItRaisesExceptionIfPluginIsNotAllowedToUseThePlugin(): void
@@ -101,6 +111,77 @@ class MilestoneIsAllowedCheckerTest extends TestCase
             ->andReturnFalse();
 
         $this->expectException(MilestoneIsNotAllowedException::class);
+
+        $this->checker->checkMilestoneIsAllowed($this->milestone);
+    }
+
+    public function testItRaisesExceptionIfBoardUsageIsNotTaskboard(): void
+    {
+        $this->plugin_manager
+            ->shouldReceive('isPluginAllowedForProject')
+            ->with($this->plugin, 102)
+            ->once()
+            ->andReturnTrue();
+
+        $this->dao
+            ->shouldReceive('isEnabled')
+            ->with(42)
+            ->once()
+            ->andReturnTrue();
+
+        $this->usage_dao
+            ->shouldReceive('searchBoardTypeByProjectId')
+            ->with(102)
+            ->once()
+            ->andReturn("cardwall");
+
+        $this->expectException(MilestoneIsNotAllowedException::class);
+
+        $this->checker->checkMilestoneIsAllowed($this->milestone);
+    }
+
+    public function testItDoesNotRaisesExceptionIfBoardUsageIsTaskboard(): void
+    {
+        $this->plugin_manager
+            ->shouldReceive('isPluginAllowedForProject')
+            ->with($this->plugin, 102)
+            ->once()
+            ->andReturnTrue();
+
+        $this->dao
+            ->shouldReceive('isEnabled')
+            ->with(42)
+            ->once()
+            ->andReturnTrue();
+
+        $this->usage_dao
+            ->shouldReceive('searchBoardTypeByProjectId')
+            ->with(102)
+            ->once()
+            ->andReturn("taskboard");
+
+        $this->checker->checkMilestoneIsAllowed($this->milestone);
+    }
+
+    public function testItDoesNotRaisesExceptionIfBoardUsageIsNotSet(): void
+    {
+        $this->plugin_manager
+            ->shouldReceive('isPluginAllowedForProject')
+            ->with($this->plugin, 102)
+            ->once()
+            ->andReturnTrue();
+
+        $this->dao
+            ->shouldReceive('isEnabled')
+            ->with(42)
+            ->once()
+            ->andReturnTrue();
+
+        $this->usage_dao
+            ->shouldReceive('searchBoardTypeByProjectId')
+            ->with(102)
+            ->once()
+            ->andReturnFalse();
 
         $this->checker->checkMilestoneIsAllowed($this->milestone);
     }
