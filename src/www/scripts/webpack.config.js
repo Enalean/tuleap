@@ -20,6 +20,11 @@
 const loadJsonFile = require("load-json-file");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 // eslint-disable-next-line import/no-extraneous-dependencies
+const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
+const {
+    SuppressNullNamedEntryPlugin
+} = require("../../../tools/utils/scripts/webpack-custom-plugins.js");
+// eslint-disable-next-line import/no-extraneous-dependencies
 const merge = require("webpack-merge");
 const path = require("path");
 const polyfills_for_fetch = require("../../../tools/utils/scripts/ie11-polyfill-names.js")
@@ -230,6 +235,108 @@ const webpack_config_for_project_registration_modal = {
     }
 };
 
+const fat_combined_files = [
+        "./prototype/prototype.js",
+        "./protocheck/protocheck.js",
+        "./scriptaculous/scriptaculous.js",
+        "./scriptaculous/builder.js",
+        "./scriptaculous/effects.js",
+        "./scriptaculous/dragdrop.js",
+        "./scriptaculous/controls.js",
+        "./scriptaculous/slider.js",
+        "./jquery/jquery-1.9.1.min.js",
+        "./jquery/jquery-ui.min.js",
+        "./jquery/jquery-noconflict.js",
+        "./tuleap/project-history.js",
+        "./bootstrap/bootstrap-dropdown.js",
+        "./bootstrap/bootstrap-button.js",
+        "./bootstrap/bootstrap-modal.js",
+        "./bootstrap/bootstrap-collapse.js",
+        "./bootstrap/bootstrap-tooltip.js",
+        "./bootstrap/bootstrap-tooltip-fix-prototypejs-conflict.js",
+        "./bootstrap/bootstrap-popover.js",
+        "./bootstrap/bootstrap-select/bootstrap-select.js",
+        "./bootstrap/bootstrap-tour/bootstrap-tour.min.js",
+        "./bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
+        "./bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker.fr.js",
+        "./bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker-fix-prototypejs-conflict.js",
+        "./jscrollpane/jquery.mousewheel.js",
+        "./jscrollpane/jquery.jscrollpane.min.js",
+        "./select2/select2.min.js",
+        "./vendor/at/js/caret.min.js",
+        "./vendor/at/js/atwho.min.js",
+        "./viewportchecker/viewport-checker.js",
+        "./clamp.js",
+        "./codendi/common.js",
+        "./tuleap/massmail_initialize_ckeditor.js",
+        "./tuleap/get-style-class-property.js",
+        "./tuleap/listFilter.js",
+        "./codendi/feedback.js",
+        "./codendi/CreateProject.js",
+        "./codendi/cross_references.js",
+        "./codendi/Tooltip.js",
+        "./codendi/Tooltip-loader.js",
+        "./codendi/Toggler.js",
+        "./codendi/DropDownPanel.js",
+        "./autocomplete.js",
+        "./textboxlist/multiselect.js",
+        "./tablekit/tablekit.js",
+        "./lytebox/lytebox.js",
+        "./lightwindow/lightwindow.js",
+        "./tuleap/escaper.js",
+        "./codendi/Tracker.js",
+        "./codendi/TreeNode.js",
+        "./tuleap/tuleap-modal.js",
+        "./tuleap/tuleap-tours.js",
+        "./tuleap/tuleap-standard-homepage.js",
+        "./tuleap/datetimepicker.js",
+        "./tuleap/svn.js",
+        "./tuleap/account-maintenance.js",
+        "./tuleap/search.js",
+        "./tuleap/tuleap-mention.js",
+        "./tuleap/project-privacy-tooltip.js",
+        "./tuleap/massmail_project_members.js",
+        "./tuleap/tuleap-ckeditor-toolbar.js"
+    ],
+    subset_combined_files = [
+        "./jquery/jquery-2.1.1.min.js",
+        "./bootstrap/bootstrap-tooltip.js",
+        "./bootstrap/bootstrap-popover.js",
+        "./bootstrap/bootstrap-button.js",
+        "./tuleap/project-privacy-tooltip.js"
+    ],
+    subset_combined_flamingparrot_files = [
+        "./bootstrap/bootstrap-dropdown.js",
+        "./bootstrap/bootstrap-modal.js",
+        "./bootstrap/bootstrap-tour/bootstrap-tour.min.js",
+        "./jscrollpane/jquery.mousewheel.js",
+        "./jscrollpane/jquery.jscrollpane.min.js",
+        "./tuleap/tuleap-tours.js",
+        "./tuleap/listFilter.js",
+        "./codendi/Tooltip.js"
+    ];
+
+const webpack_config_legacy_combined = {
+    entry: {
+        null: "null_entry"
+    },
+    output: webpack_configurator.configureOutput(assets_dir_path),
+    plugins: [
+        new SuppressNullNamedEntryPlugin(),
+        new MergeIntoSingleFilePlugin({
+            files: {
+                "tuleap.js": fat_combined_files,
+                "tuleap_subset.js": subset_combined_files,
+                "tuleap_subset_flamingparrot.js": subset_combined_files.concat(
+                    subset_combined_flamingparrot_files
+                )
+            },
+            hash: true
+        }),
+        manifest_plugin
+    ]
+};
+
 const configs_with_manifest = [
     webpack_config_for_vue_components,
     webpack_config_for_rich_text_editor,
@@ -245,6 +352,7 @@ module.exports = [
     webpack_config_for_vue_components_with_manifest,
     webpack_config_for_ckeditor,
     webpack_config_for_dashboards,
+    webpack_config_legacy_combined,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
     ...configs_with_manifest,
