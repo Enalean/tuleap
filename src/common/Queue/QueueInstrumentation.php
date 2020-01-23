@@ -33,6 +33,7 @@ class QueueInstrumentation
     public const STATUS_DEQUEUED  = 'dequeued';
     public const STATUS_REQUEUED  = 'requeued';
     public const STATUS_DISCARDED = 'discarded';
+    public const STATUS_TIMEDOUT  = 'timedout';
     public const STATUS_DONE      = 'done';
 
     private const STATUS_VALUES = [
@@ -40,6 +41,7 @@ class QueueInstrumentation
         self::STATUS_DEQUEUED,
         self::STATUS_REQUEUED,
         self::STATUS_DISCARDED,
+        self::STATUS_TIMEDOUT,
         self::STATUS_DONE,
     ];
 

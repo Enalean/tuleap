@@ -22,6 +22,7 @@
 namespace Tuleap\Queue\Redis;
 
 use Tuleap\Queue\QueueInstrumentation;
+use Tuleap\Queue\TaskWorker\TaskWorkerTimedOutException;
 use Tuleap\Redis;
 use RedisException;
 use Logger;
@@ -131,9 +132,14 @@ class RedisPersistentQueue implements PersistentQueue
             $topic        = $message_metadata->getTopic();
             $enqueue_time = $message_metadata->getEnqueueTime();
             QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DEQUEUED);
-            $callback($value);
+            try {
+                $callback($value);
+                QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DONE);
+            } catch (TaskWorkerTimedOutException $exception) {
+                $this->logger->error($exception->getMessage());
+                QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_TIMEDOUT);
+            }
             $redis->lRem($processing_queue, $value, 1);
-            QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DONE);
             if ($enqueue_time > 0) {
                 $elapsed_time = microtime(true) - $enqueue_time;
                 QueueInstrumentation::durationHistogram($elapsed_time);

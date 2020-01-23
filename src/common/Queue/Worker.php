@@ -29,6 +29,7 @@ use Log_ConsoleLogger;
 use ForgeConfig;
 use Exception;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcess;
+use Tuleap\Queue\TaskWorker\TaskWorkerTimedOutException;
 use Tuleap\System\DaemonLocker;
 
 class Worker
@@ -89,7 +90,11 @@ class Worker
         $queue = (new QueueFactory($this->logger))->getPersistentQueue(self::EVENT_QUEUE_NAME, QueueFactory::REDIS);
         $queue->listen($this->id, '*', function ($event) use ($task_worker) {
             $this->logger->info('Got message: ' .$event);
-            $task_worker->run($event);
+            try {
+                $task_worker->run($event);
+            } catch (TaskWorkerTimedOutException $exception) {
+                $this->logger->error($exception->getMessage());
+            }
         });
         $this->logger->info('All message processed, exiting');
         $this->locker->cleanExit();
