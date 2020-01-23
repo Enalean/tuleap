@@ -30,7 +30,7 @@ import {
     TextValue,
     Values
 } from "../store/swimlane/card/api-artifact-type";
-import { AddInPlace, AssignedToField, Card, TitleField, Tracker } from "../type";
+import { AddInPlace, AssignedToField, Card, TitleField, Tracker, User } from "../type";
 
 export function getPutArtifactBody(payload: UpdateCardPayload): PutBody {
     if (!payload.tracker.title_field) {
@@ -40,9 +40,7 @@ export function getPutArtifactBody(payload: UpdateCardPayload): PutBody {
     const values: Field[] = [getTextFieldForLabel(payload.tracker.title_field, payload.label)];
 
     if (payload.tracker.assigned_to_field) {
-        values.push(
-            getListFieldForAssignee(payload.tracker.assigned_to_field, payload.assignees_ids)
-        );
+        values.push(getListFieldForAssignee(payload.tracker.assigned_to_field, payload.assignees));
     }
 
     return {
@@ -120,13 +118,10 @@ function getTextFieldForLabel(title_field: TitleField, label: string): TextField
     return getTextField(title_field, getValueForLabel(title_field, label));
 }
 
-function getListFieldForAssignee(
-    assigned_to_field: AssignedToField,
-    assignees_ids: number[]
-): ListField {
+function getListFieldForAssignee(assigned_to_field: AssignedToField, assignees: User[]): ListField {
     return {
         field_id: assigned_to_field.id,
-        bind_value_ids: assignees_ids
+        bind_value_ids: assignees.map(user => user.id)
     };
 }
 

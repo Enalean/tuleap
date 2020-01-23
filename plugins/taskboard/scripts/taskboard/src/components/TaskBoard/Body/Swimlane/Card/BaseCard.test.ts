@@ -196,7 +196,7 @@ describe("BaseCard", () => {
                 card,
                 label,
                 tracker: { title_field: { id: 1212 } } as Tracker,
-                assignees_ids: []
+                assignees: []
             } as UpdateCardPayload);
         });
 
@@ -217,7 +217,7 @@ describe("BaseCard", () => {
                 card,
                 label,
                 tracker: { title_field: { id: 1212 } } as Tracker,
-                assignees_ids: []
+                assignees: []
             } as UpdateCardPayload);
         });
 
@@ -241,7 +241,7 @@ describe("BaseCard", () => {
             const wrapper = getWrapper(card);
 
             wrapper.setData({ label: "toto" });
-            wrapper.setData({ new_assignees_ids: [123, 234] });
+            wrapper.setData({ assignees: [{ id: 123 }, { id: 234 }] });
             const edit_label = wrapper.find(LabelEditor);
             edit_label.vm.$emit("save");
 
@@ -249,7 +249,7 @@ describe("BaseCard", () => {
                 card,
                 label: "toto",
                 tracker: { title_field: { id: 1212 } } as Tracker,
-                assignees_ids: [123, 234]
+                assignees: [{ id: 123 }, { id: 234 }]
             } as UpdateCardPayload);
         });
 

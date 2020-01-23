@@ -22,7 +22,7 @@ import { RootState } from "../../type";
 import { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
 import * as tlp from "tlp";
 import { RefreshCardMutationPayload, SwimlaneState } from "../type";
-import { Card, Swimlane, Tracker } from "../../../type";
+import { Card, Swimlane, Tracker, User } from "../../../type";
 import * as actions from "./card-actions";
 import {
     mockFetchError,
@@ -122,7 +122,7 @@ describe("Card actions", () => {
             const payload: UpdateCardPayload = {
                 card,
                 label: "Lorem",
-                assignees_ids: [123],
+                assignees: [{ id: 123 }] as User[],
                 tracker: tracker
             };
 
@@ -171,7 +171,7 @@ describe("Card actions", () => {
             const payload: UpdateCardPayload = {
                 card,
                 label: "Lorem",
-                assignees_ids: [],
+                assignees: [],
                 tracker
             };
 

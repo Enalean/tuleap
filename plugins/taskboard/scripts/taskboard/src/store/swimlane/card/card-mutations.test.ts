@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane, Tracker } from "../../../type";
+import { Card, Swimlane, Tracker, User } from "../../../type";
 import * as mutations from "./card-mutations";
 import { SwimlaneState } from "../type";
 import { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
@@ -144,7 +144,8 @@ describe(`Card mutations`, () => {
             const card: Card = {
                 label: "Lorem ipsum",
                 is_being_saved: true,
-                is_just_saved: false
+                is_just_saved: false,
+                assignees: [{ id: 123 }]
             } as Card;
             const state: SwimlaneState = {
                 swimlanes: [{ card } as Swimlane]
@@ -153,7 +154,7 @@ describe(`Card mutations`, () => {
                 card,
                 label: "Lorem",
                 tracker: {} as Tracker,
-                assignees_ids: []
+                assignees: [{ id: 234 }] as User[]
             };
 
             mutations.finishSavingCard(state, payload);
@@ -161,6 +162,7 @@ describe(`Card mutations`, () => {
             expect(state.swimlanes[0].card.label).toBe("Lorem");
             expect(state.swimlanes[0].card.is_being_saved).toBe(false);
             expect(state.swimlanes[0].card.is_just_saved).toBe(true);
+            expect(state.swimlanes[0].card.assignees[0].id).toBe(234);
 
             jest.advanceTimersByTime(1000);
 
