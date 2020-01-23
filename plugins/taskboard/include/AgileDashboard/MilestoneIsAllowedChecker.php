@@ -41,20 +41,20 @@ class MilestoneIsAllowedChecker
      */
     private $taskboard_plugin;
     /**
-     * @var TaskboardUsageDao
+     * @var TaskboardUsage
      */
-    private $taskboard_usage_dao;
+    private $taskboard_usage;
 
     public function __construct(
         Cardwall_OnTop_Dao $cardwall_on_top_dao,
-        TaskboardUsageDao $taskboard_usage_dao,
+        TaskboardUsage $taskboard_usage,
         PluginManager $plugin_manager,
         taskboardPlugin $taskboard_plugin
     ) {
         $this->cardwall_on_top_dao = $cardwall_on_top_dao;
         $this->plugin_manager      = $plugin_manager;
         $this->taskboard_plugin    = $taskboard_plugin;
-        $this->taskboard_usage_dao = $taskboard_usage_dao;
+        $this->taskboard_usage = $taskboard_usage;
     }
 
     public static function build(): self
@@ -64,7 +64,13 @@ class MilestoneIsAllowedChecker
         if (! $taskboard_plugin instanceof \taskboardPlugin) {
             throw new \RuntimeException('Cannot instantiate taskboard plugin');
         }
-        return new self(new Cardwall_OnTop_Dao(), new TaskboardUsageDao(), $plugin_manager, $taskboard_plugin);
+
+        return new self(
+            new Cardwall_OnTop_Dao(),
+            new TaskboardUsage(new TaskboardUsageDao()),
+            $plugin_manager,
+            $taskboard_plugin
+        );
     }
 
     /**
@@ -88,8 +94,7 @@ class MilestoneIsAllowedChecker
             throw new MilestoneIsNotAllowedException(dgettext('tuleap-taskboard', "Taskboard not found."));
         }
 
-        $board_type = $this->taskboard_usage_dao->searchBoardTypeByProjectId((int) $milestone->getProject()->getID());
-        if ($board_type && $board_type !== "taskboard") {
+        if (! $this->taskboard_usage->isTaskboardAllowed($milestone->getProject())) {
             throw new MilestoneIsNotAllowedException(
                 sprintf(
                     dgettext('tuleap-taskboard', "Taskboard is not activated in project %s."),

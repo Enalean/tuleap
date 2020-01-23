@@ -21,15 +21,18 @@
 declare(strict_types=1);
 
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
 use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
+use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPane;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
+use Tuleap\Taskboard\AgileDashboard\TaskboardUsage;
 use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDao;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
@@ -75,6 +78,10 @@ class taskboardPlugin extends Plugin
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
             $this->addHook(AdditionalPanesForMilestoneEvent::NAME);
+        }
+
+        if (defined('CARDWALL_BASE_URL')) {
+            $this->addHook(CardwallIsAllowedEvent::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -142,7 +149,13 @@ class taskboardPlugin extends Plugin
             $collector->setActivePane(new TaskboardPane($pane_info));
         }
 
-        $collector->addPaneAfter(CardwallPaneInfo::IDENTIFIER, $pane_info);
+        if ($collector->has(CardwallPaneInfo::IDENTIFIER)) {
+            $collector->addPaneAfter(CardwallPaneInfo::IDENTIFIER, $pane_info);
+
+            return;
+        }
+
+        $collector->addPaneAfter(PlanningV2PaneInfo::IDENTIFIER, $pane_info);
     }
 
     private function getCardwallOnTopDao(): Cardwall_OnTop_Dao
@@ -174,9 +187,21 @@ class taskboardPlugin extends Plugin
     {
         return new MilestoneIsAllowedChecker(
             $this->getCardwallOnTopDao(),
-            new TaskboardUsageDao(),
+            $this->getTaskboardUsage(),
             PluginManager::instance(),
             $this
         );
+    }
+
+    private function getTaskboardUsage(): TaskboardUsage
+    {
+        return new TaskboardUsage(new TaskboardUsageDao());
+    }
+
+    public function cardwallIsAllowedEvent(CardwallIsAllowedEvent $event): void
+    {
+        if (! $this->getTaskboardUsage()->isCardwallAllowed($event->getMilestone()->getProject())) {
+            $event->disallowCardwall();
+        }
     }
 }

@@ -381,6 +381,12 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
+        $event = new Tuleap\Cardwall\CardwallIsAllowedEvent($collector->getMilestone());
+        EventManager::instance()->processEvent($event);
+        if (! $event->isCardwallAllowed()) {
+            return;
+        }
+
         $pane_info = $this->getPaneInfo($collector->getMilestone());
 
         if (! $pane_info) {
@@ -555,6 +561,12 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function agiledashboard_event_rest_get_milestone($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
+        $event = new Tuleap\Cardwall\CardwallIsAllowedEvent($params['milestone']);
+        EventManager::instance()->processEvent($event);
+        if (! $event->isCardwallAllowed()) {
+            return;
+        }
+
         $config = $this->getConfigFactory()->getOnTopConfig($params['milestone']->getPlanning()->getPlanningTracker());
         if ($config && $config->isEnabled()) {
             $params['milestone_representation']->enableCardwall();

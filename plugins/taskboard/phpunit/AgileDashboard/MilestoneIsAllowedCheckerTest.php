@@ -56,9 +56,9 @@ class MilestoneIsAllowedCheckerTest extends TestCase
      */
     private $milestone;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TaskboardUsageDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TaskboardUsage
      */
-    private $usage_dao;
+    private $usage;
 
     protected function setUp(): void
     {
@@ -73,17 +73,17 @@ class MilestoneIsAllowedCheckerTest extends TestCase
         $this->plugin_manager = Mockery::mock(PluginManager::class);
         $this->plugin         = Mockery::mock(taskboardPlugin::class);
         $this->dao            = Mockery::mock(Cardwall_OnTop_Dao::class);
-        $this->usage_dao      = Mockery::mock(TaskboardUsageDao::class);
+        $this->usage          = Mockery::mock(TaskboardUsage::class);
 
         $this->checker = new MilestoneIsAllowedChecker(
             $this->dao,
-            $this->usage_dao,
+            $this->usage,
             $this->plugin_manager,
             $this->plugin
         );
     }
 
-    public function testItRaisesExceptionIfPluginIsNotAllowedToUseThePlugin(): void
+    public function testItRaisesExceptionIfProjectIsNotAllowedToUseThePlugin(): void
     {
         $this->plugin_manager
             ->shouldReceive('isPluginAllowedForProject')
@@ -115,7 +115,7 @@ class MilestoneIsAllowedCheckerTest extends TestCase
         $this->checker->checkMilestoneIsAllowed($this->milestone);
     }
 
-    public function testItRaisesExceptionIfBoardUsageIsNotTaskboard(): void
+    public function testItRaisesExceptionIfTaskboardIsNotAllowed(): void
     {
         $this->plugin_manager
             ->shouldReceive('isPluginAllowedForProject')
@@ -129,18 +129,17 @@ class MilestoneIsAllowedCheckerTest extends TestCase
             ->once()
             ->andReturnTrue();
 
-        $this->usage_dao
-            ->shouldReceive('searchBoardTypeByProjectId')
-            ->with(102)
+        $this->usage
+            ->shouldReceive('isTaskboardAllowed')
             ->once()
-            ->andReturn("cardwall");
+            ->andReturnFalse();
 
         $this->expectException(MilestoneIsNotAllowedException::class);
 
         $this->checker->checkMilestoneIsAllowed($this->milestone);
     }
 
-    public function testItDoesNotRaisesExceptionIfBoardUsageIsTaskboard(): void
+    public function testItDoesNotRaisesExceptionIfTaskboardIsAllowed(): void
     {
         $this->plugin_manager
             ->shouldReceive('isPluginAllowedForProject')
@@ -154,34 +153,10 @@ class MilestoneIsAllowedCheckerTest extends TestCase
             ->once()
             ->andReturnTrue();
 
-        $this->usage_dao
-            ->shouldReceive('searchBoardTypeByProjectId')
-            ->with(102)
-            ->once()
-            ->andReturn("taskboard");
-
-        $this->checker->checkMilestoneIsAllowed($this->milestone);
-    }
-
-    public function testItDoesNotRaisesExceptionIfBoardUsageIsNotSet(): void
-    {
-        $this->plugin_manager
-            ->shouldReceive('isPluginAllowedForProject')
-            ->with($this->plugin, 102)
+        $this->usage
+            ->shouldReceive('isTaskboardAllowed')
             ->once()
             ->andReturnTrue();
-
-        $this->dao
-            ->shouldReceive('isEnabled')
-            ->with(42)
-            ->once()
-            ->andReturnTrue();
-
-        $this->usage_dao
-            ->shouldReceive('searchBoardTypeByProjectId')
-            ->with(102)
-            ->once()
-            ->andReturnFalse();
 
         $this->checker->checkMilestoneIsAllowed($this->milestone);
     }
