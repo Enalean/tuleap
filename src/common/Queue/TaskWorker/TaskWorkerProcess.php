@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\TaskWorker;
 
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
 use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
 
@@ -42,6 +43,10 @@ final class TaskWorkerProcess implements TaskWorker
         );
         $process->setTimeout(self::PROCESS_TIMEOUT_SECONDS);
         $process->setInput($event);
-        $process->mustRun();
+        try {
+            $process->mustRun();
+        } catch (ProcessTimedOutException $exception) {
+            throw new TaskWorkerTimedOutException($event, self::PROCESS_TIMEOUT_SECONDS, $exception);
+        }
     }
 }

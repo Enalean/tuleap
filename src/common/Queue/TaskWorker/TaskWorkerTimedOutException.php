@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\TaskWorker;
 
-interface TaskWorker
+use Throwable;
+
+final class TaskWorkerTimedOutException extends \RuntimeException
 {
-    /**
-     * @throws TaskWorkerTimedOutException
-     */
-    public function run(string $event) : void;
+    public function __construct(string $event, int $timeout_seconds, ?Throwable $previous = null)
+    {
+        parent::__construct(
+            sprintf('Task "%s" exceeded the timeout of %d seconds', $event, $timeout_seconds),
+            0,
+            $previous
+        );
+    }
 }
