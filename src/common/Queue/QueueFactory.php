@@ -22,6 +22,7 @@
 namespace Tuleap\Queue;
 
 use Logger;
+use Tuleap\Queue\Redis\BackOffDelayFailedMessage;
 use Tuleap\Redis\ClientFactory as RedisClientFactory;
 
 class QueueFactory
@@ -44,7 +45,16 @@ class QueueFactory
     public function getPersistentQueue(string $queue_name, string $favor = '') : PersistentQueue
     {
         if (RedisClientFactory::canClientBeBuiltFromForgeConfig()) {
-            return new Redis\RedisPersistentQueue($this->logger, $queue_name);
+            return new Redis\RedisPersistentQueue(
+                $this->logger,
+                new BackOffDelayFailedMessage(
+                    $this->logger,
+                    static function (int $time_to_sleep): void {
+                        sleep($time_to_sleep);
+                    }
+                ),
+                $queue_name
+            );
         }
         if ($favor === self::REDIS) {
             throw new NoQueueSystemAvailableException();
