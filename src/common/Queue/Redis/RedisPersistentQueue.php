@@ -43,17 +43,21 @@ class RedisPersistentQueue implements PersistentQueue
      * @var Logger
      */
     private $logger;
-
+    /**
+     * @var BackOffDelayFailedMessage
+     */
+    private $back_off_delay_failed_message;
     /**
      * @var \Redis|null
      */
     private $redis;
     private $event_queue_name;
 
-    public function __construct(Logger $logger, $event_queue_name)
+    public function __construct(Logger $logger, BackOffDelayFailedMessage $back_off_delay_failed_message, $event_queue_name)
     {
-        $this->logger           = $logger;
-        $this->event_queue_name = $event_queue_name;
+        $this->logger                        = $logger;
+        $this->back_off_delay_failed_message = $back_off_delay_failed_message;
+        $this->event_queue_name              = $event_queue_name;
     }
 
     /**
@@ -115,6 +119,7 @@ class RedisPersistentQueue implements PersistentQueue
                     continue;
                 }
 
+                $this->back_off_delay_failed_message->delay($message);
                 $this->pushMessageIntoEventQueue($message);
                 QueueInstrumentation::increment($this->event_queue_name, $message->getTopic(), QueueInstrumentation::STATUS_REQUEUED);
             }

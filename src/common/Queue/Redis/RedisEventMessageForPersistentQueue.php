@@ -27,7 +27,7 @@ use JsonException;
 /**
  * @psalm-immutable
  */
-final class RedisEventMessageForPersistentQueue
+final class RedisEventMessageForPersistentQueue implements EventMessageForPersistentQueue
 {
     private const MESSAGE_FIELD_EVENT_NAME        = 'event_name';
     private const MESSAGE_FIELD_PAYLOAD           = 'payload';
