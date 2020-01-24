@@ -20,42 +20,43 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Cardwall;
 
-use Project;
+namespace Tuleap\AgileDashboard\Planning\Presenters;
+
+use Planning_Milestone;
 use Tuleap\Event\Dispatchable;
 
-class CardwallIsAllowedEvent implements Dispatchable
+class AlternativeBoardLinkEvent implements Dispatchable
 {
-    public const NAME = "cardwallIsAllowedEvent";
+    public const NAME = 'alternativeBoardLinkEvent';
 
     /**
-     * @var Project
+     * @var Planning_Milestone
      */
-    private $project;
-
-    private $is_allowed = true;
-
-    public function __construct(Project $project)
-    {
-        $this->project = $project;
-    }
+    private $milestone;
 
     /**
-     * @return Project
+     * @var AlternativeBoardLinkPresenter | null
      */
-    public function getProject()
+    private $alternative_board_link;
+
+    public function __construct(Planning_Milestone $milestone)
     {
-        return $this->project;
+        $this->milestone = $milestone;
     }
 
-    public function isCardwallAllowed(): bool
+    public function getMilestone(): Planning_Milestone
     {
-        return $this->is_allowed;
+        return $this->milestone;
     }
 
-    public function disallowCardwall(): void
+    public function getAlternativeBoardLinkPresenter(): ?AlternativeBoardLinkPresenter
     {
-        $this->is_allowed = false;
+        return $this->alternative_board_link;
+    }
+
+    public function setAlternativeBoardLink(AlternativeBoardLinkPresenter $alternative_board_link): void
+    {
+        $this->alternative_board_link = $alternative_board_link;
     }
 }

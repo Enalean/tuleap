@@ -121,9 +121,9 @@
                                                 </div>
                                                 <div class="footer">
                                                     <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=details"><i class="fa fa-bar-chart-o"></i> {{ content }}</a>
-                                                    {{# has_cardwall }}
-                                                        <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=cardwall"><i class="fa fa-th-large"></i> {{ cardwall }}</a>
-                                                    {{/ has_cardwall }}
+                                                    {{# alternative_board_link }}
+                                                        <a href="{{ url }}"><i class="fa {{ icon }}"></i> {{ label }}</a>
+                                                    {{/ alternative_board_link }}
                                                 </div>
                                             </div>
                                         {{/ milestone_summary_presenters }}

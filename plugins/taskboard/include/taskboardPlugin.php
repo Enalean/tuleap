@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
+use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
 use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
 use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
@@ -78,6 +80,7 @@ class taskboardPlugin extends Plugin
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
             $this->addHook(AdditionalPanesForMilestoneEvent::NAME);
+            $this->addHook(AlternativeBoardLinkEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -200,8 +203,22 @@ class taskboardPlugin extends Plugin
 
     public function cardwallIsAllowedEvent(CardwallIsAllowedEvent $event): void
     {
-        if (! $this->getTaskboardUsage()->isCardwallAllowed($event->getMilestone()->getProject())) {
+        if (! $this->getTaskboardUsage()->isCardwallAllowed($event->getProject())) {
             $event->disallowCardwall();
+        }
+    }
+
+    public function alternativeBoardLinkEvent(AlternativeBoardLinkEvent $event): void
+    {
+        $pane = $this->getPaneInfoForMilestone($event->getMilestone());
+        if ($pane !== null) {
+            $event->setAlternativeBoardLink(
+                new AlternativeBoardLinkPresenter(
+                    $pane->getUri(),
+                    $pane->getIconName(),
+                    $pane->getTitle()
+                )
+            );
         }
     }
 }

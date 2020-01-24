@@ -27,6 +27,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Planning\PlanningBacklogTrackerRemovalChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
+use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
+use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
 use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActionException;
@@ -339,20 +341,39 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->milestone_factory->addMilestoneAncestors($user, $milestone);
             $milestone = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
 
+            $event = new AlternativeBoardLinkEvent($milestone);
+            $this->event_manager->processEvent($event);
+            $alternative_board_link = $event->getAlternativeBoardLinkPresenter();
+            if ($alternative_board_link === null && $has_cardwall) {
+                $alternative_board_link = new AlternativeBoardLinkPresenter(
+                    '?' . http_build_query(
+                        [
+                            'group_id'    => $this->group_id,
+                            'planning_id' => $milestone->getPlanningId(),
+                            'action'      => 'show',
+                            'aid'         => $milestone->getArtifactId(),
+                            'pane'        => 'cardwall'
+                        ]
+                    ),
+                    'fa-th-large',
+                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'cardwall')
+                );
+            }
+
             if ($milestone->hasUsableBurndownField()) {
                 $burndown_data = $milestone->getBurndownData($user);
 
                 $presenters[] = new Planning_Presenter_MilestoneBurndownSummaryPresenter(
                     $milestone,
                     $this->plugin_path,
-                    $has_cardwall,
+                    $alternative_board_link,
                     $burndown_data
                 );
             } else {
                 $presenters[] = new Planning_Presenter_MilestoneSummaryPresenter(
                     $milestone,
                     $this->plugin_path,
-                    $has_cardwall,
+                    $alternative_board_link,
                     $this->milestone_factory->getMilestoneStatusCount($user, $milestone)
                 );
             }

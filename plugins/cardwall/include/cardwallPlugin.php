@@ -381,9 +381,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
-        $event = new Tuleap\Cardwall\CardwallIsAllowedEvent($collector->getMilestone());
-        EventManager::instance()->processEvent($event);
-        if (! $event->isCardwallAllowed()) {
+        if (! $this->isCardwallAllowed($collector->getMilestone()->getProject())) {
             return;
         }
 
@@ -561,13 +559,14 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function agiledashboard_event_rest_get_milestone($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $event = new Tuleap\Cardwall\CardwallIsAllowedEvent($params['milestone']);
-        EventManager::instance()->processEvent($event);
-        if (! $event->isCardwallAllowed()) {
+        $milestone = $params['milestone'];
+        assert($milestone instanceof \Planning_Milestone);
+
+        if (! $this->isCardwallAllowed($milestone->getProject())) {
             return;
         }
 
-        $config = $this->getConfigFactory()->getOnTopConfig($params['milestone']->getPlanning()->getPlanningTracker());
+        $config = $this->getConfigFactory()->getOnTopConfig($milestone->getPlanning()->getPlanningTracker());
         if ($config && $config->isEnabled()) {
             $params['milestone_representation']->enableCardwall();
         }
@@ -607,8 +606,21 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function agiledashboard_event_is_cardwall_enabled($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker = $params['tracker'];
+        assert($tracker instanceof Tracker);
+
+        if (! $this->isCardwallAllowed($tracker->getProject())) {
+            return;
+        }
+
         $params['enabled'] = $this->getConfigFactory()
             ->isOnTopConfigEnabledForPlanning($tracker);
+    }
+
+    private function isCardwallAllowed(Project $project): bool
+    {
+        $event = new Tuleap\Cardwall\CardwallIsAllowedEvent($project);
+        EventManager::instance()->processEvent($event);
+        return $event->isCardwallAllowed();
     }
 
     /**

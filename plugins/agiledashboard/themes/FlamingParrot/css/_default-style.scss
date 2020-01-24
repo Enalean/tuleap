@@ -304,6 +304,8 @@ body.agiledashboard_homepage .main .content {
         }
 
         .footer {
+            display: flex;
+            align-items: stretch;
             padding: 0;
 
             a {
