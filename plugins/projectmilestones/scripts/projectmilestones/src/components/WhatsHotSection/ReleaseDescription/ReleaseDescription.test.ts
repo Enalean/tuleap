@@ -69,7 +69,8 @@ describe("ReleaseDescription", () => {
                         trackers: []
                     }
                 },
-                additional_panes: []
+                additional_panes: [],
+                cardwall: null
             }
         };
 

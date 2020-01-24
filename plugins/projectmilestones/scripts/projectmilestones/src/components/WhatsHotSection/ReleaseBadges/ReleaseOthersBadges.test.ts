@@ -78,7 +78,8 @@ describe("ReleaseOthersBadges", () => {
                     }
                 },
                 additional_panes: [],
-                burndown: null
+                burndown: null,
+                cardwall: null
             }
         };
 

@@ -49,7 +49,8 @@ describe("Tracker Label Helper", () => {
                         accept: {
                             trackers: []
                         }
-                    }
+                    },
+                    cardwall: null
                 }
             };
 
@@ -79,7 +80,8 @@ describe("Tracker Label Helper", () => {
                                 }
                             ]
                         }
-                    }
+                    },
+                    cardwall: null
                 }
             };
 

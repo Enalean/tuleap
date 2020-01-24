@@ -102,7 +102,8 @@ describe("ReleaseBadgesClosedSprints", () => {
                                 }
                             ]
                         }
-                    }
+                    },
+                    cardwall: null
                 }
             };
 
@@ -145,7 +146,8 @@ describe("ReleaseBadgesClosedSprints", () => {
                                 }
                             ]
                         }
-                    }
+                    },
+                    cardwall: null
                 }
             };
 
@@ -188,7 +190,8 @@ describe("ReleaseBadgesClosedSprints", () => {
                                 }
                             ]
                         }
-                    }
+                    },
+                    cardwall: null
                 }
             };
 
@@ -242,7 +245,8 @@ describe("ReleaseBadgesClosedSprints", () => {
                         accept: {
                             trackers: []
                         }
-                    }
+                    },
+                    cardwall: null
                 }
             };
 

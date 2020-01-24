@@ -112,6 +112,15 @@ export default class ReleaseButtonsDescription extends Vue {
         if (!this.release_data.planning) {
             return null;
         }
+
+        if (!this.release_data.resources) {
+            return null;
+        }
+
+        if (!this.release_data.resources.cardwall) {
+            return null;
+        }
+
         return (
             "/plugins/agiledashboard/?group_id=" +
             encodeURIComponent(this.project_id) +
