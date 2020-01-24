@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,18 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class SOAPRequestTest extends TuleapTestCase
+class SOAPRequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-
-    function testInit()
+    public function testInit()
     {
         $request = new SOAPRequest(array(
            'param_1' => 'value_1',
            'param_2' => 'value_2'));
-        $this->assertEqual($request->get('param_1'), 'value_1');
-        $this->assertEqual($request->get('param_2'), 'value_2');
+        $this->assertEquals('value_1', $request->get('param_1'));
+        $this->assertEquals('value_2', $request->get('param_2'));
         $this->assertFalse($request->get('does_not_exist'));
     }
 }
