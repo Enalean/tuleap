@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,11 @@
 
 namespace Tuleap\Svn;
 
-class SHA1CollisionDetectorTest extends \TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+final class SHA1CollisionDetectorTest extends TestCase
 {
-    public function itFindsAKnownCollision()
+    public function testDetectsKnownCollision(): void
     {
         $sha1_collision_detector = new SHA1CollisionDetector();
         $colliding_resource      = fopen(__DIR__ . '/_fixtures/tuleap-shattered.pdf', 'rb');
@@ -32,7 +34,7 @@ class SHA1CollisionDetectorTest extends \TuleapTestCase
         fclose($colliding_resource);
     }
 
-    public function itDoesNotFindACollisionOnANonCollidingResource()
+    public function testDoesNotDetectACollisionOnANonCollidingResource(): void
     {
         $sha1_collision_detector = new SHA1CollisionDetector();
         $non_colliding_resource  = fopen('php://memory', 'rb+');
