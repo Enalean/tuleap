@@ -86,6 +86,17 @@ class PaneInfoCollector implements Dispatchable
         $this->panes[$pane->getIdentifier()] = $pane;
     }
 
+    public function has(string $pane_identifier): bool
+    {
+        foreach ($this->panes as $pane) {
+            if ($pane->getIdentifier() === $pane_identifier) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function addPaneAfter(string $sibling_identifier, PaneInfo $pane): void
     {
         $sibling_position = 0;

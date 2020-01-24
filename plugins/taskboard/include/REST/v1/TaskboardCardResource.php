@@ -36,6 +36,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
+use Tuleap\Taskboard\AgileDashboard\TaskboardUsage;
 use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDao;
 use Tuleap\Taskboard\REST\v1\Card\CardPatcher;
 use Tuleap\Taskboard\REST\v1\Card\CardPatchRepresentation;
@@ -85,7 +86,7 @@ class TaskboardCardResource extends AuthenticatedResource
         }
         $this->milestone_checker = new MilestoneIsAllowedChecker(
             new Cardwall_OnTop_Dao(),
-            new TaskboardUsageDao(),
+            new TaskboardUsage(new TaskboardUsageDao()),
             $plugin_manager,
             $taskboard_plugin
         );
