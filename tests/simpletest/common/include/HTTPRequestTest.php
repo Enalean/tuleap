@@ -19,16 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generatePartial('Valid', 'MockValid', array('isValid', 'getKey', 'validate', 'required'));
-Mock::generate('Rule');
-Mock::generatePartial('Valid_File', 'Valid_FileTest', array('getKey', 'validate'));
-
 class HTTPRequestTest extends TuleapTestCase
 {
 
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $_REQUEST['exists'] = '1';
         $_REQUEST['exists_empty'] = '';
         $_SERVER['server_exists'] = '1';
@@ -121,235 +118,215 @@ class HTTPRequestTest extends TuleapTestCase
 
     function testValidKeyTrue()
     {
-        $v = new MockRule($this);
-        $v->setReturnValue('isValid', true);
+        $v = \Mockery::spy(\Rule::class);
+        $v->shouldReceive('isValid')->andReturns(true);
         $r = new HTTPRequest();
         $this->assertTrue($r->validKey('testkey', $v));
     }
 
     function testValidKeyFalse()
     {
-        $v = new MockRule($this);
-        $v->setReturnValue('isValid', false);
+        $v = \Mockery::spy(\Rule::class);
+        $v->shouldReceive('isValid')->andReturns(false);
         $r = new HTTPRequest();
         $this->assertFalse($r->validKey('testkey', $v));
     }
 
     function testValidKeyScalar()
     {
-        $v = new MockRule($this);
-        $v->expectOnce('isValid', array('testvalue'));
+        $v = \Mockery::spy(\Rule::class);
+        $v->shouldReceive('isValid')->with('testvalue')->once();
         $r = new HTTPRequest();
         $r->validKey('testkey', $v);
     }
 
     function testValid()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey');
-        $v->setReturnValue('validate', true);
-        $v->expectAtLeastOnce('getKey');
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('validate')->andReturns(true);
+        $v->shouldReceive('getKey')->once()->andReturns('testkey');
         $r = new HTTPRequest();
         $r->valid($v);
     }
 
     function testValidTrue()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey');
-        $v->setReturnValue('validate', true);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->andReturns('testkey');
+        $v->shouldReceive('validate')->andReturns(true);
         $r = new HTTPRequest();
         $this->assertTrue($r->valid($v));
     }
 
     function testValidFalse()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey');
-        $v->setReturnValue('validate', false);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->andReturns('testkey');
+        $v->shouldReceive('validate')->andReturns(false);
         $r = new HTTPRequest();
         $this->assertFalse($r->valid($v));
     }
 
     function testValidScalar()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey');
-        $v->expectAtLeastOnce('getKey');
-        $v->expectOnce('validate', array('testvalue'));
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->once()->andReturns('testkey');
+        $v->shouldReceive('validate')->with('testvalue')->once();
         $r = new HTTPRequest();
         $r->valid($v);
     }
 
     function testValidArray()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey_array');
-        $v->setReturnValue('validate', true);
-        $v->expectAtLeastOnce('getKey');
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('validate')->andReturns(true);
+        $v->shouldReceive('getKey')->once()->andReturns('testkey_array');
         $r = new HTTPRequest();
         $r->validArray($v);
     }
 
     function testValidArrayTrue()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey_array');
-        $v->setReturnValue('validate', true);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->andReturns('testkey_array');
+        $v->shouldReceive('validate')->andReturns(true);
         $r = new HTTPRequest();
         $this->assertTrue($r->validArray($v));
     }
 
     function testValidArrayFalse()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey_array');
-        $v->setReturnValue('validate', false);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->andReturns('testkey_array');
+        $v->shouldReceive('validate')->andReturns(false);
         $r = new HTTPRequest();
         $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayScalar()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey_array');
-        $v->expectAtLeastOnce('getKey');
-        $v->expectAt(0, 'validate', array('testvalue1'));
-        $v->expectAt(1, 'validate', array('testvalue2'));
-        $v->expectAt(2, 'validate', array('testvalue3'));
-        $v->expectCallCount('validate', 3);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->once()->andReturns('testkey_array');
+        $v->shouldReceive('validate')->with('testvalue1')->ordered();
+        $v->shouldReceive('validate')->with('testvalue2')->ordered();
+        $v->shouldReceive('validate')->with('testvalue3')->ordered();
         $r = new HTTPRequest();
         $r->validArray($v);
     }
 
     function testValidArrayArgNotArray()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey');
-        $v->expectAtLeastOnce('getKey');
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->once()->andReturns('testkey');
         $r = new HTTPRequest();
         $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayArgEmptyArrayRequired()
     {
-        $v = new MockValid($this);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $v->required();
-        $v->expectAtLeastOnce('required');
-        $v->setReturnValue('getKey', 'testkey_array_empty');
-        $v->expectAtLeastOnce('getKey');
-        $v->setReturnValue('validate', false, array(null));
-        $v->expectAtLeastOnce('validate', array(null));
+        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_empty');
+        $v->shouldReceive('validate')->with(null)->andReturns(false)->once();
         $r = new HTTPRequest();
         $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayArgEmptyArrayNotRequired()
     {
-        $v = new MockValid($this);
-        $v->expectNever('required');
-        $v->setReturnValue('getKey', 'testkey_array_empty');
-        $v->expectAtLeastOnce('getKey');
-        $v->setReturnValue('validate', true, array(null));
-        $v->expectAtLeastOnce('validate', array(null));
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('required')->never();
+        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_empty');
+        $v->shouldReceive('validate')->with(null)->andReturns(true)->once();
         $r = new HTTPRequest();
         $this->assertTrue($r->validArray($v));
     }
 
     function testValidArrayArgNotEmptyArrayRequired()
     {
-        $v = new MockValid($this);
-        $v->expectAtLeastOnce('required');
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->once()->andReturns('testkey_array');
+        $v->shouldReceive('validate');
         $v->required();
-        $v->setReturnValue('getKey', 'testkey_array');
-        $v->expectAtLeastOnce('getKey');
         $r = new HTTPRequest();
         $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayFirstArgFalse()
     {
-        $v = new MockValid($this);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
         $v->required();
-        $v->expectAtLeastOnce('required');
-        $v->setReturnValue('getKey', 'testkey_array_mixed1');
-        $v->expectAtLeastOnce('getKey');
+        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_mixed1');
         $r = new HTTPRequest();
         $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayMiddleArgFalse()
     {
-        $v = new MockValid($this);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
         $v->required();
-        $v->expectAtLeastOnce('required');
-        $v->setReturnValue('getKey', 'testkey_array_mixed2');
-        $v->expectAtLeastOnce('getKey');
+        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_mixed2');
         $r = new HTTPRequest();
         $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayLastArgFalse()
     {
-        $v = new MockValid($this);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
         $v->required();
-        $v->expectAtLeastOnce('required');
-        $v->setReturnValue('getKey', 'testkey_array_mixed3');
-        $v->expectAtLeastOnce('getKey');
+        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_mixed3');
         $r = new HTTPRequest();
         $this->assertFalse($r->validArray($v));
     }
 
     function testValidInArray()
     {
-        $v = new MockValid($this);
-        $v->setReturnValue('getKey', 'key1');
-        $v->expectAtLeastOnce('getKey');
-        $v->expectOnce('validate', array('valuekey1'));
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->once()->andReturns('key1');
+        $v->shouldReceive('validate')->with('valuekey1')->once();
         $r = new HTTPRequest();
         $r->validInArray('testarray', $v);
     }
 
     function testValidFileNoFileValidator()
     {
-        $v = new MockValid($this);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r = new HTTPRequest();
         $this->assertFalse($r->validFile($v));
     }
 
     function testValidFileOk()
     {
-        $v = new Valid_FileTest($this);
-        $v->setReturnValue('getKey', 'file1');
-        $v->expectAtLeastOnce('getKey');
-        $v->expectOnce('validate', array(array('file1' => array('name' => 'Test file 1')), 'file1'));
+        $v = \Mockery::mock(\Valid_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v->shouldReceive('getKey')->times(2)->andReturns('file1');
+        $v->shouldReceive('validate')->with(array('file1' => array('name' => 'Test file 1')), 'file1')->once();
         $r = new HTTPRequest();
         $r->validFile($v);
     }
 
     function testGetValidated()
     {
-        $v1 = new MockValid($this);
-        $v1->setReturnValue('getKey', 'testkey');
-        $v1->setReturnValue('validate', true);
+        $v1 = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v1->shouldReceive('getKey')->andReturns('testkey');
+        $v1->shouldReceive('validate')->andReturns(true);
 
-        $v2 = new MockValid($this);
-        $v2->setReturnValue('getKey', 'testkey');
-        $v2->setReturnValue('validate', false);
+        $v2 = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v2->shouldReceive('getKey')->andReturns('testkey');
+        $v2->shouldReceive('validate')->andReturns(false);
 
-        $v3 = new MockValid($this);
-        $v3->setReturnValue('getKey', 'does_not_exist');
-        $v3->setReturnValue('validate', false);
+        $v3 = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v3->shouldReceive('getKey')->andReturns('does_not_exist');
+        $v3->shouldReceive('validate')->andReturns(false);
 
-        $v4 = new MockValid($this);
-        $v4->setReturnValue('getKey', 'does_not_exist');
-        $v4->setReturnValue('validate', true);
+        $v4 = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v4->shouldReceive('getKey')->andReturns('does_not_exist');
+        $v4->shouldReceive('validate')->andReturns(true);
 
         $r = new HTTPRequest();
         //If valid, should return the submitted value...
@@ -370,7 +347,6 @@ class HTTPRequestTest extends TuleapTestCase
         $this->assertEqual($r->getValidated('testkey', 'uint', 'default value'), 'default value');
     }
 }
-
 class HTTPRequest_BrowserTests extends TuleapTestCase
 {
 
@@ -386,13 +362,14 @@ class HTTPRequest_BrowserTests extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->preserveServer('HTTP_USER_AGENT');
 
-        $this->setText($this->msg_ie_deprecated, array('*', 'ie_deprecated'));
-        $this->setText($this->msg_ie_deprecated_button, array('*', 'ie_deprecated_button'));
+        $GLOBALS['Language']->shouldReceive('getText')->with(Mockery::any(), 'ie_deprecated')->andReturns($this->msg_ie_deprecated);
+        $GLOBALS['Language']->shouldReceive('getText')->with(Mockery::any(), 'ie_deprecated_button')->andReturns($this->msg_ie_deprecated_button);
 
-        $this->user   = mock('PFUser');
-        $user_manager = stub('UserManager')->getCurrentUser()->returns($this->user);
+        $this->user   = \Mockery::spy(\PFUser::class);
+        $user_manager = \Mockery::spy(\UserManager::class)->shouldReceive('getCurrentUser')->andReturns($this->user)->getMock();
         UserManager::setInstance($user_manager);
 
         $this->request = new HTTPRequest();
@@ -452,7 +429,7 @@ class HTTPRequest_BrowserTests extends TuleapTestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0';
         $browser = $this->request->getBrowser();
 
-        expect($GLOBALS['Language'])->getText()->never();
+        $GLOBALS['Language']->shouldReceive('getText')->never();
 
         $browser->getDeprecatedMessage();
     }
@@ -475,7 +452,7 @@ class HTTPRequest_BrowserTests extends TuleapTestCase
 
     public function testIE7IsDeprecatedButUserChoseToNotDisplayTheWarning()
     {
-        stub($this->user)->getPreference(PFUser::PREFERENCE_DISABLE_IE7_WARNING)->returns(1);
+        $this->user->shouldReceive('getPreference')->with(PFUser::PREFERENCE_DISABLE_IE7_WARNING)->andReturns(1);
 
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
         $browser = $this->request->getBrowser();
@@ -485,7 +462,7 @@ class HTTPRequest_BrowserTests extends TuleapTestCase
 
     public function itDisplaysOkButtonToDisableIE7Warning()
     {
-        stub($this->user)->isAnonymous()->returns(false);
+        $this->user->shouldReceive('isAnonymous')->andReturns(false);
 
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
         $browser = $this->request->getBrowser();
@@ -495,7 +472,7 @@ class HTTPRequest_BrowserTests extends TuleapTestCase
 
     public function itDoesNotDisplayOkButtonForAnonymousUser()
     {
-        stub($this->user)->isAnonymous()->returns(true);
+        $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
         $browser = $this->request->getBrowser();
@@ -519,7 +496,6 @@ class HTTPRequest_BrowserTests extends TuleapTestCase
         $this->assertFalse($browser->isIE11());
     }
 }
-
 abstract class HTTPRequest_getServerURLTests extends TuleapTestCase
 {
     protected $request;
@@ -527,6 +503,7 @@ abstract class HTTPRequest_getServerURLTests extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->preserveServer('HTTPS');
         $this->preserveServer('HTTP_X_FORWARDED_PROTO');
         $this->preserveServer('HTTP_HOST');
@@ -545,7 +522,6 @@ abstract class HTTPRequest_getServerURLTests extends TuleapTestCase
         parent::tearDown();
     }
 }
-
 // Tests inspired from From Symfony\Component\HttpFoundation\Tests\IpUtilsTest @ 3.2-dev
 class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerURLTests
 {
@@ -553,6 +529,7 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $_SERVER['HTTPS']       = 'on';
 
@@ -677,14 +654,13 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
     }
 }
-
-
 class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests
 {
 
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->request->setTrustedProxies(array('17.18.19.20'));
         $_SERVER['HTTP_HOST'] = 'example.com';
@@ -750,13 +726,13 @@ class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests
         $this->assertEqual('https://example.com', $this->request->getServerUrl());
     }
 }
-
 class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServerURLTests
 {
 
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->request->setTrustedProxies(array('17.18.19.20'));
         ForgeConfig::set('sys_default_domain', 'example.clear.test');
