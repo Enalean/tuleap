@@ -19,16 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('SimpleSanitizerTestCase.class.php');
-
-class SimpleSanitizerTest extends SimpleSanitizerTestCase
+class SimpleSanitizerTest extends TuleapTestCase
 {
-
-    /**
-     * initialize variables for tests
-     */
-    function setUp()
+    function testSanitize()
     {
-        $this->sanitizer = new SimpleSanitizer();
+        $bad_tag   = "<tag";
+        $html      = "Lorem ipsum dolor sit amet,".$bad_tag." consectetuer adipiscing elit.";
+        $result    = SimpleSanitizer::sanitize($html);
+
+        $this->assertNoPattern("/".$bad_tag."/", $result);
     }
 }
