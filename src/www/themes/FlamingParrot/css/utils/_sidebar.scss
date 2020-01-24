@@ -174,7 +174,8 @@
     &:hover {
         text-decoration: none;
 
-        > .sidebar-about-logo > path {
+        > .sidebar-about-logo > .tuleap-logo,
+        > .sidebar-about-logo-without-product-name > .tuleap-logo {
             fill: lighten($main-color-tuleap-orange, 5%);
         }
     }
@@ -183,9 +184,16 @@
         padding: 20px 0;
     }
 
-    > .sidebar-about-logo > path {
-        transition: fill 100ms;
-        fill: $main-color-tuleap-orange;
+    > .sidebar-about-logo, .sidebar-about-logo-without-product-name {
+        height: 25px;
+        > .tuleap-logo {
+            transition: fill 100ms;
+            fill: $main-color-tuleap-orange;
+        }
+    }
+
+    > .sidebar-about-logo-without-product-name {
+        display: none;
     }
 
     > .sidebar-about-version {
