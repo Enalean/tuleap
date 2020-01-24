@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ class SiteCacheTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         ForgeConfig::store();
         $this->global_language = $GLOBALS['Language'];
         $this->global_html     = $GLOBALS['HTML'];
@@ -47,10 +48,10 @@ class SiteCacheTest extends TuleapTestCase
         $lang_dir     = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tuleap_lang_dir';
 
         ForgeConfig::set('codendi_cache_dir', $cache_dir);
-        $logger              = mock('Logger');
-        $language            = stub('BaseLanguage')->getCacheDirectory()->returns($lang_dir);
+        $logger              = \Mockery::spy(\Logger::class);
+        $language            = \Mockery::spy(\BaseLanguage::class)->shouldReceive('getCacheDirectory')->andReturns($lang_dir)->getMock();
         $GLOBALS['Language'] = $language;
-        $html                = mock('Layout');
+        $html                = \Mockery::spy(\Layout::class);
         $GLOBALS['HTML']     = $html;
 
         $site_cache = new SiteCache($logger);

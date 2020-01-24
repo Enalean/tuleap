@@ -23,8 +23,8 @@ class ResponseTest extends TuleapTestCase
 
     public function itSendsJSON()
     {
-        $response = partial_mock('Response', array('setContentType'));
-        stub($response)->setContentType('application/json')->once();
+        $response = \Mockery::mock(\Response::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $response->shouldReceive('setContentType')->with('application/json')->once();
 
         ob_start();
         $response->sendJSON(array("toto"));

@@ -27,8 +27,9 @@ class Codendi_RequestTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->project         = mock('Project');
-        $this->project_manager = stub('ProjectManager')->getProject(123)->returns($this->project);
+        $this->setUpGlobalsMockery();
+        $this->project         = \Mockery::spy(\Project::class);
+        $this->project_manager = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->with(123)->andReturns($this->project)->getMock();
     }
 
     public function itReturnsTheProject()
