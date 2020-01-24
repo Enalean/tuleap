@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,4 +26,13 @@
 .select2-result-user__avatar {
     flex: 0 0 auto;
     margin: 0 $tlp-half-spacing 0 0;
+
+    &.tlp-avatar-mini {
+        align-self: flex-start;
+    }
+
+    &.tlp-avatar-mini,
+    &.tlp-avatar-small {
+        margin: 0 7px 0 0;
+    }
 }

@@ -77,6 +77,9 @@ msgstr ""
 "Merci <a href=\"%s\">d'ajuster la configuration</a> afin d'utiliser une "
 "bonne couleur."
 
+msgid "Please choose…"
+msgstr "Veuillez choisir…"
+
 msgid "Please edit the card to change the status, or add children if possible."
 msgstr ""
 "Veuillez éditer la carte pour changer son statut, ou ajouter des enfants si "
