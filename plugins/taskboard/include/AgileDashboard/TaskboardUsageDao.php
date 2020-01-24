@@ -35,4 +35,32 @@ class TaskboardUsageDao extends DataAccessObject
 
         return $this->getDB()->cell($statement, $project_id);
     }
+
+    public function updateBoardTypeByProjectId(int $project_id, string $board_type): void
+    {
+        $statement = '
+            UPDATE plugin_taskboard_usage
+            SET board_type = ?
+            WHERE project_id = ?
+        ';
+
+        $this->getDB()->run($statement, $board_type, $project_id);
+    }
+
+    public function createBoardTypeByProjectId(int $project_id, string $board_type): void
+    {
+        $statement = '
+            INSERT INTO plugin_taskboard_usage(project_id, board_type)
+            VALUE(?, ?)
+        ';
+
+        $this->getDB()->run($statement, $project_id, $board_type);
+    }
+
+    public function deleteBoardTypeByProjectId(int $project_id): void
+    {
+        $statement = 'DELETE FROM plugin_taskboard_usage WHERE project_id = ?';
+
+        $this->getDB()->run($statement, $project_id);
+    }
 }

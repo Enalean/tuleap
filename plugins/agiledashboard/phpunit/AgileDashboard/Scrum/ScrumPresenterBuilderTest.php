@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_PlanningAdminPresenter;
 use PlanningFactory;
+use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
@@ -135,10 +136,13 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             false,
             true,
-            false
+            false,
+            []
         );
 
-        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project);
+        $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
+
+        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
 
         $this->assertEquals($expected_presenter, $presenter);
     }
@@ -192,10 +196,13 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             false,
             true,
-            false
+            false,
+            []
         );
 
-        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project);
+        $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
+
+        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
 
         $this->assertEquals($expected_presenter, $presenter);
     }
@@ -252,10 +259,13 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             false,
             true,
-            false
+            false,
+            []
         );
 
-        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project);
+        $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
+
+        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
 
         $this->assertEquals($expected_presenter, $presenter);
     }
@@ -309,10 +319,13 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             true,
             true,
-            false
+            false,
+            []
         );
 
-        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project);
+        $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
+
+        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
 
         $this->assertEquals($expected_presenter, $presenter);
     }

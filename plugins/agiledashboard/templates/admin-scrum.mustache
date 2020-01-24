@@ -84,6 +84,10 @@
                             </p>
                         </div>
 
+                        {{# additional_scrum_sections_controllers }}
+                            {{{ content }}}
+                        {{/ additional_scrum_sections_controllers }}
+
                         {{# must_display_explicit_top_backlog_switch }}
                             <input type="hidden" name="use-explicit-top-backlog" value="0">
                             <div class="tlp-form-element">

@@ -32,6 +32,7 @@ use Planning_PlanningOutOfHierarchyAdminPresenter;
 use PlanningFactory;
 use Project;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
+use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
@@ -80,7 +81,7 @@ class ScrumPresenterBuilder
         $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
     }
 
-    public function getAdminScrumPresenter(PFUser $user, Project $project)
+    public function getAdminScrumPresenter(PFUser $user, Project $project, GetAdditionalScrumAdminSection $additional_scrum_sections)
     {
         $group_id                    = (int) $project->getID();
         $can_create_planning         = true;
@@ -117,7 +118,8 @@ class ScrumPresenterBuilder
             $this->getAdditionalContent(),
             $this->doesProjectUseExplicitBacklog($project),
             $has_workflow_action_add_to_top_backlog_defined,
-            (bool) $user->useLabFeatures()
+            (bool) $user->useLabFeatures(),
+            $additional_scrum_sections->getAdditionalSectionsControllers()
         );
     }
 

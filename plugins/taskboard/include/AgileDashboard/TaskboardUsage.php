@@ -26,6 +26,10 @@ use Project;
 
 class TaskboardUsage
 {
+    public const OPTION_CARDWALL_AND_TASKBOARD = 'both';
+    public const OPTION_CARDWALL = 'cardwall';
+    public const OPTION_TASKBOARD = 'taskboard';
+
     /**
      * @var TaskboardUsageDao
      */
@@ -40,13 +44,13 @@ class TaskboardUsage
     {
         $board_type = $this->dao->searchBoardTypeByProjectId((int) $project->getID());
 
-        return $board_type === false || $board_type === 'taskboard';
+        return $board_type === false || $board_type === self::OPTION_TASKBOARD;
     }
 
     public function isCardwallAllowed(Project $project): bool
     {
         $board_type = $this->dao->searchBoardTypeByProjectId((int) $project->getID());
 
-        return $board_type === false || $board_type === 'cardwall';
+        return $board_type === false || $board_type === self::OPTION_CARDWALL;
     }
 }
