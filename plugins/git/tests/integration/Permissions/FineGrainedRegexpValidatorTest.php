@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,11 @@
 
 namespace Tuleap\Git\Permissions;
 
-use TuleapTestCase;
+use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ .'/../../bootstrap.php';
-
-class FineGrainedRegexpValidatorTest extends TuleapTestCase
+final class FineGrainedRegexpValidatorTest extends TestCase
 {
-    public function itValidatesPattern()
+    public function testValidatesPattern(): void
     {
         $pattern_01 = '*';
         $pattern_02 = '/*';
