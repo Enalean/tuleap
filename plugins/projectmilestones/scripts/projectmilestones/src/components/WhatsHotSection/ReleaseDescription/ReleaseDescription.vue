@@ -32,7 +32,23 @@
             >
                 <div class="release-description" v-dompurify-html="release_data.description"></div>
             </div>
-            <release-buttons-description v-bind:release_data="release_data" />
+            <release-buttons-description v-bind:release_data="release_data">
+                <a
+                    v-if="get_planning_link"
+                    v-bind:href="get_planning_link"
+                    data-test="planning-link"
+                    class="release-planning-link"
+                >
+                    <i class="release-description-link-icon fa fa-sign-in" />
+                    <translate
+                        v-bind:translate-params="{
+                            label_submilestone: tracker_submilestone_label
+                        }"
+                    >
+                        %{label_submilestone} Planning
+                    </translate>
+                </a>
+            </release-buttons-description>
         </div>
     </div>
 </template>
@@ -44,6 +60,7 @@ import { MilestoneData } from "../../../type";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 import ReleaseButtonsDescription from "./ReleaseButtonsDescription.vue";
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";
+import { State } from "vuex-class";
 
 @Component({
     components: {
@@ -55,5 +72,37 @@ import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 export default class ReleaseDescription extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @State
+    readonly project_id!: number;
+    @State
+    readonly user_can_view_sub_milestones_planning!: boolean;
+
+    get get_planning_link(): string | null {
+        if (
+            !this.user_can_view_sub_milestones_planning ||
+            this.release_data.resources.milestones.accept.trackers.length === 0
+        ) {
+            return null;
+        }
+
+        return (
+            "/plugins/agiledashboard/?group_id=" +
+            encodeURIComponent(this.project_id) +
+            "&planning_id=" +
+            encodeURIComponent(this.release_data.planning.id) +
+            "&action=show&aid=" +
+            encodeURIComponent(this.release_data.id) +
+            "&pane=planning-v2"
+        );
+    }
+
+    get tracker_submilestone_label(): string {
+        const submilestone_tracker = this.release_data.resources.milestones.accept.trackers[0];
+
+        if (!submilestone_tracker) {
+            return "";
+        }
+        return submilestone_tracker.label;
+    }
 }
 </script>

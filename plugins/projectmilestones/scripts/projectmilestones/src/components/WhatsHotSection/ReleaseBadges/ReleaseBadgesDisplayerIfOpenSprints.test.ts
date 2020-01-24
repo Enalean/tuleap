@@ -29,6 +29,8 @@ import {
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
+import ReleaseBadgesOpenSprint from "./ReleaseBadgesOpenSprint.vue";
+import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
 
 let release_data: MilestoneData;
 const total_sprint = 10;
@@ -224,10 +226,48 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
         wrapper.setData({ open_sprints_details: true });
-        expect(wrapper.contains("[data-test=button-to-close-sprint-details]")).toBe(true);
+        expect(wrapper.contains("[data-test=button-to-close]")).toBe(true);
 
         wrapper.find("[data-test=button-to-close]").trigger("click");
 
-        expect(wrapper.contains("[data-test=button-to-close-sprint-details]")).toBe(false);
+        expect(wrapper.contains("[data-test=button-to-close]")).toBe(false);
+    });
+
+    it("When sprints details is open, Then ReleaseBadgesOpenSprint is rendered", async () => {
+        release_data = {
+            id: 22,
+            total_sprint: 10,
+            open_sprints: [
+                {
+                    id: 10
+                } as MilestoneData
+            ],
+            resources: {
+                milestones: {
+                    accept: {
+                        trackers: [
+                            {
+                                label: "Sprint1"
+                            }
+                        ]
+                    }
+                }
+            }
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data
+        };
+
+        store_options.state.user_can_view_sub_milestones_planning = true;
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.contains(ReleaseBadgesOpenSprint)).toBe(false);
+        expect(wrapper.contains(ReleaseBadgesAllSprints)).toBe(true);
+
+        wrapper.setData({ open_sprints_details: true });
+        expect(wrapper.contains(ReleaseBadgesOpenSprint)).toBe(true);
+        expect(wrapper.contains(ReleaseBadgesAllSprints)).toBe(false);
     });
 });

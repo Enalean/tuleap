@@ -25,17 +25,7 @@
                 Overview
             </translate>
         </a>
-        <a
-            v-if="get_planning_link"
-            v-bind:href="get_planning_link"
-            data-test="planning-link"
-            class="release-planning-link"
-        >
-            <i class="release-description-link-icon fa fa-sign-in" />
-            <translate v-bind:translate-params="{ label_submilestone: tracker_submilestone_label }">
-                %{label_submilestone} Planning
-            </translate>
-        </a>
+        <slot></slot>
         <a
             v-if="get_cardwall_link"
             v-bind:href="get_cardwall_link"
@@ -75,10 +65,6 @@ export default class ReleaseButtonsDescription extends Vue {
     readonly release_data!: MilestoneData;
     @State
     readonly project_id!: number;
-    @State
-    readonly label_tracker_planning!: string;
-    @State
-    readonly user_can_view_sub_milestones_planning!: boolean;
 
     get get_overview_link(): string | null {
         return (
@@ -89,25 +75,6 @@ export default class ReleaseButtonsDescription extends Vue {
             "&action=show&aid=" +
             encodeURIComponent(this.release_data.id) +
             "&pane=details"
-        );
-    }
-
-    get get_planning_link(): string | null {
-        if (
-            !this.user_can_view_sub_milestones_planning ||
-            this.release_data.resources.milestones.accept.trackers.length === 0
-        ) {
-            return null;
-        }
-
-        return (
-            "/plugins/agiledashboard/?group_id=" +
-            encodeURIComponent(this.project_id) +
-            "&planning_id=" +
-            encodeURIComponent(this.release_data.planning.id) +
-            "&action=show&aid=" +
-            encodeURIComponent(this.release_data.id) +
-            "&pane=planning-v2"
         );
     }
 
@@ -125,15 +92,6 @@ export default class ReleaseButtonsDescription extends Vue {
             encodeURIComponent(this.release_data.id) +
             "&pane=cardwall"
         );
-    }
-
-    get tracker_submilestone_label(): string {
-        const submilestone_tracker = this.release_data.resources.milestones.accept.trackers[0];
-
-        if (!submilestone_tracker) {
-            return "";
-        }
-        return submilestone_tracker.label;
     }
 
     get get_taskboard_pane(): undefined | Pane {

@@ -18,11 +18,16 @@
  */
 
 $border-width-px: 13px;
+$heigh-bar-px: 35px;
+$top-compress-icon-px: 15px;
 @if $tlp-density == $tlp-density-condensed {
     $border-width-px: 11px;
+    $heigh-bar-px: 28px;
+    $top-compress-icon-px: 5px;
 }
 
 $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
+$width-bar-left-sprints: 17px;
 
 .project-release-infos-badges .project-release-info-badge-open-sprint {
     position: relative;
@@ -35,8 +40,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     position: absolute;
     z-index: 2;
     top: round($tlp-half-spacing) + 1;
-    left: -17px;
-    width: 17px;
+    left: -25px;
+    width: 25px;
     height: 2px;
     background: $tlp-theme-color;
 }
@@ -89,6 +94,14 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     }
 }
 
+.open-badges-sprints:hover .project-release-open-sprint-badge-icon-toggle {
+    display: none;
+}
+
+.open-badges-sprints:hover .project-release-open-sprint-badges {
+    margin: 0 #{$tlp-double-spacing - $width-bar-left-sprints} 0 0;
+}
+
 .on-open-sprints-details .project-release-info-badge-open-sprint::after {
     content: '';
     position: absolute;
@@ -102,9 +115,18 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .on-open-sprints-details .project-release-info-badge-open-sprint {
-    margin: 0 $tlp-spacing $tlp-spacing 0;
+    display: flex;
+    width: calc(100% - #{$width-bar-left-sprints});
+    margin: 0 0 $tlp-spacing 0;
     border-radius: 15px 0 0 15px;
     cursor: default;
+}
+
+.label-open-sprints {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .project-release-infos-badges hr {
@@ -114,8 +136,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .project-release-open-sprint-badges {
     display: inline-flex;
-    width: min-content;
-    margin: 0 0 0 -17px;
+    margin: 0 0 0 -#{$width-bar-left-sprints};
 }
 
 .milestone-badges-sprints-separator {
@@ -138,8 +159,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     position: absolute;
     z-index: 2;
     top: round($tlp-half-spacing) + 1;
-    left: -20px;
-    width: 20px;
+    left: -25px;
+    width: 25px;
     height: 2px;
     background: $tlp-ui-dimmed;
 }
@@ -156,6 +177,10 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     background: $tlp-ui-dimmed;
 }
 
+.open-badges-sprints:hover .project-release-closed-sprint-badge::before {
+    display: none;
+}
+
 .container-icon-badge-button-to-close {
     position: relative;
     top: -5px;
@@ -170,14 +195,17 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .icon-badge-sprint-to-close {
     content: '';
     display: flex;
-    position: relative;
-    top: round(($tlp-half-spacing - 3) / 2) + 8px;
+    position: absolute;
+    z-index: 5;
+    top: calc((100% + #{$top-compress-icon-px}) / 2);
+    left: 4px;
     align-items: center;
     justify-content: center;
     width: 17px;
-    height: 57px;
+    height: 17px;
     margin: -$tlp-spacing 0;
-    background: $timeline-color;
+    background: transparent;
+    color: $tlp-ui-white;
 
     &::before {
         content: '';
@@ -201,5 +229,53 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .project-release-badges-open-closed.open-badges-sprints {
+    position: relative;
     flex-direction: column;
+    margin: 0 0 0 -35px;
+    padding: 0 0 0 35px;
+}
+
+.project-release-badge-open-sprint {
+    display: flex;
+    width: 100%;
+}
+
+.on-open-sprints-details .project-release-open-sprint-badges {
+    min-width: 50%;
+    max-width: 50%;
+    margin: 0 $tlp-double-spacing 0 -#{$width-bar-left-sprints};
+}
+
+.project-release-badge-open-sprint-buttons {
+    margin: calc(#{$tlp-half-spacing} / 2) 0 0 0;
+}
+
+.project-release-infos-badges-all-sprint-badges {
+    display: flex;
+    flex-direction: column;
+}
+
+.open-badges-sprints:hover {
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        top: round($tlp-half-spacing) + 2px;
+        left: 11px;
+        width: 2px;
+        height: calc(100% - #{$heigh-bar-px});
+        background: $tlp-theme-color;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        top: calc(calc(100% - 25px) / 2);
+        left: 4px;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        background: $tlp-theme-color;
+    }
 }

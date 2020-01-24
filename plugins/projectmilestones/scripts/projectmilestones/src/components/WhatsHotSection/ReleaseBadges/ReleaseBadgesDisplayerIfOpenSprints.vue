@@ -26,23 +26,29 @@
             class="project-release-badges-open-closed"
             v-bind:class="{ 'open-badges-sprints': open_sprints_details }"
         >
-            <release-badges-all-sprints
-                v-if="display_badge_all_sprint"
-                v-bind:release_data="release_data"
-                v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
-                data-test="badge-sprint"
-            />
             <div
-                v-if="open_sprints_details"
-                class="container-icon-badge-button-to-close"
-                data-test="button-to-close-sprint-details"
+                v-if="display_badge_all_sprint"
+                class="project-release-infos-badges-all-sprint-badges"
             >
-                <i
-                    v-on:click="on_click_close_sprints_details"
-                    class="icon-badge-sprint-to-close fa"
-                    data-test="button-to-close"
+                <release-badges-all-sprints
+                    v-if="!open_sprints_details"
+                    v-bind:release_data="release_data"
+                    v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
+                    data-test="badge-sprint"
+                />
+                <release-badges-open-sprint
+                    v-else
+                    v-for="sprint in release_data.open_sprints"
+                    v-bind:key="sprint.id"
+                    v-bind:sprint_data="sprint"
                 />
             </div>
+            <i
+                v-if="open_sprints_details"
+                v-on:click="on_click_close_sprints_details"
+                class="icon-badge-sprint-to-close fa"
+                data-test="button-to-close"
+            />
             <release-badges-closed-sprints
                 v-if="open_sprints_details && user_can_view_sub_milestones_planning"
                 v-bind:release_data="release_data"
@@ -67,8 +73,14 @@ import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
 import { openSprintsExist } from "../../../helpers/milestones-sprints-helper";
 import { State } from "vuex-class";
+import ReleaseBadgesOpenSprint from "./ReleaseBadgesOpenSprint.vue";
 @Component({
-    components: { ReleaseBadgesClosedSprints, ReleaseOthersBadges, ReleaseBadgesAllSprints }
+    components: {
+        ReleaseBadgesOpenSprint,
+        ReleaseBadgesClosedSprints,
+        ReleaseOthersBadges,
+        ReleaseBadgesAllSprints
+    }
 })
 export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     @Prop()
