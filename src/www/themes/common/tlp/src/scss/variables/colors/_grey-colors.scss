@@ -27,11 +27,16 @@ $tlp-ui-dimmed       : #677983;
 
 $tlp-ui-border-light : #f3f3f3;
 $tlp-ui-border-normal: #e3e5ed;
-$tlp-ui-border-dark  : #d4d7e1;
+$tlp-ui-border-dark : #d4d7e1;
 
 $tlp-theme-color                   : $tlp-theme-grey;
 $tlp-theme-background-color        : $tlp-theme-background-grey;
 $tlp-theme-sidebar-background-color: $tlp-theme-sidebar-background-grey;
+
+$tlp-table-header-background : #ffffff;
+$tlp-table-row-background-even : mix($tlp-theme-background-color, $tlp-table-header-background, 50%);
+$tlp-table-row-background-odd : #ffffff;
+$tlp-table-row-background-empty: #fcfcfc;
 
 $tlp-illustration-primary-color        : #a7c0d2;
 $tlp-illustration-secondary-light-color: #e2ecf3;

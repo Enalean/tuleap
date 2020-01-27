@@ -98,7 +98,7 @@ $tlp-table-cell-padding: 10px;
 
         > tr > td {
             padding: $tlp-table-cell-padding;
-            border-bottom: 1px solid $tlp-ui-border-normal;
+            border-bottom: 1px solid transparent;
             line-height: normal;
             vertical-align: middle;
 
