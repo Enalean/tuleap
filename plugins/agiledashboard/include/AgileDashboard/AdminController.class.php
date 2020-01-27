@@ -46,6 +46,7 @@ use TrackerXmlImport;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
@@ -107,6 +108,11 @@ class AdminController extends BaseController
      */
     private $scrum_presenter_builder;
 
+    /**
+     * @var GetAdditionalScrumAdminSection
+     */
+    private $additional_scrum_sections;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -134,6 +140,9 @@ class AdminController extends BaseController
         $this->admin_crumb_builder         = $admin_crumb_builder;
         $this->count_elements_mode_checker = $count_elements_mode_checker;
         $this->scrum_presenter_builder     = $scrum_presenter_builder;
+
+        $this->additional_scrum_sections = new GetAdditionalScrumAdminSection($this->project);
+        $this->event_manager->dispatch($this->additional_scrum_sections);
     }
 
     /**
@@ -167,7 +176,8 @@ class AdminController extends BaseController
             'admin-scrum',
             $this->scrum_presenter_builder->getAdminScrumPresenter(
                 $this->getCurrentUser(),
-                $this->project
+                $this->project,
+                $this->additional_scrum_sections
             )
         );
     }
@@ -206,7 +216,7 @@ class AdminController extends BaseController
         );
     }
 
-    public function updateConfiguration()
+    public function updateConfiguration(): void
     {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         $token->check();
@@ -282,7 +292,8 @@ class AdminController extends BaseController
             );
         }
 
-        return $updater->updateConfiguration();
+        $this->additional_scrum_sections->notifyAdditionalSectionsControllers(\HTTPRequest::instance());
+        $updater->updateConfiguration();
     }
 
     public function createKanban()

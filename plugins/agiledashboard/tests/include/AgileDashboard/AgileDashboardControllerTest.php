@@ -101,6 +101,7 @@ class AgileDashboardControllerTest extends TuleapTestCase
         stub($this->request)->exist('activate-ad-service')->returns(true);
         stub($this->request)->get('activate-ad-service')->returns('');
         stub($this->request)->get('group_id')->returns(123);
+        stub($this->request)->getProject()->returns(Mockery::mock(Project::class));
         stub($this->request)->getCurrentUser()->returns($user);
         stub($this->user_manager)->getCurrentUser()->returns($user);
 
@@ -125,31 +126,11 @@ class AgileDashboardControllerTest extends TuleapTestCase
 
     public function itDoesNotCreateAKanbanIfTrackerIsUsedInScrumBacklog()
     {
-        $tracker    = mock('Tracker');
-        $admin_user = stub('PFUser')->isAdmin(789)->returns(true);
+        $tracker = mock('Tracker');
 
-        stub($this->request)->get('kanban-name')->returns('My Kanban');
-        stub($this->request)->get('group_id')->returns(789);
-        stub($this->request)->get('tracker-kanban')->returns(123);
-        stub($this->request)->getCurrentUser()->returns($admin_user);
-        stub($this->tracker_factory)->getTrackerById(123)->returns($tracker);
-        stub($this->kanban_manager)->doesKanbanExistForTracker($tracker)->returns(true);
         stub($this->planning_factory)->getPlanningsByBacklogTracker($tracker)->returns(array());
-        stub($this->user_manager)->getCurrentUser()->returns($admin_user);
 
-        $controller = new AdminController(
-            $this->request,
-            $this->planning_factory,
-            $this->kanban_manager,
-            $this->kanban_factory,
-            $this->config_manager,
-            $this->tracker_factory,
-            $this->event_manager,
-            $this->service_crumb_builder,
-            $this->admin_crumb_builder,
-            $this->count_element_mode_checker,
-            Mockery::mock(ScrumPresenterBuilder::class)
-        );
+        $controller = $this->getMockedController($tracker);
 
         expect($this->kanban_manager)->createKanban()->never();
 
@@ -158,19 +139,31 @@ class AgileDashboardControllerTest extends TuleapTestCase
 
     public function itDoesNotCreateAKanbanIfTrackerIsUsedInScrumPlanning()
     {
-        $tracker    = mock('Tracker');
+        $tracker = mock('Tracker');
+
+        stub($this->planning_factory)->getPlanningByPlanningTracker($tracker)->returns(array());
+
+        $controller = $this->getMockedController($tracker);
+
+        expect($this->kanban_manager)->createKanban()->never();
+
+        $controller->createKanban();
+    }
+
+    private function getMockedController(Tracker $tracker) : AdminController
+    {
         $admin_user = stub('PFUser')->isAdmin(789)->returns(true);
 
         stub($this->request)->get('kanban-name')->returns('My Kanban');
         stub($this->request)->get('group_id')->returns(789);
         stub($this->request)->get('tracker-kanban')->returns(123);
         stub($this->request)->getCurrentUser()->returns($admin_user);
+        stub($this->request)->getProject()->returns(Mockery::mock(Project::class));
         stub($this->tracker_factory)->getTrackerById(123)->returns($tracker);
         stub($this->kanban_manager)->doesKanbanExistForTracker($tracker)->returns(true);
-        stub($this->planning_factory)->getPlanningByPlanningTracker($tracker)->returns(array());
         stub($this->user_manager)->getCurrentUser()->returns($admin_user);
 
-        $controller = new AdminController(
+        return new AdminController(
             $this->request,
             $this->planning_factory,
             $this->kanban_manager,
@@ -183,9 +176,5 @@ class AgileDashboardControllerTest extends TuleapTestCase
             $this->count_element_mode_checker,
             Mockery::mock(ScrumPresenterBuilder::class)
         );
-
-        expect($this->kanban_manager)->createKanban()->never();
-
-        $controller->createKanban();
     }
 }

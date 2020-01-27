@@ -36,6 +36,12 @@
     display: flex;
 }
 
+.agiledashboard-administration-scrum-additional-section {
+    > .tlp-label > .fa {
+        margin: 0 3px 0 0;
+    }
+}
+
 .agiledashboard-administration-scrum-main {
     flex: 1 1 auto;
     margin: 0 $tlp-spacing 0 0;

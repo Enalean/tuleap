@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Event\IScrumAdminSectionControllers;
+
 class AdminScrumPresenter
 {
 
@@ -72,6 +74,11 @@ class AdminScrumPresenter
      */
     public $has_workflow_action_add_to_top_backlog_defined;
 
+    /**
+     * @var IScrumAdminSectionControllers[]
+     */
+    public $additional_scrum_sections_controllers;
+
     public function __construct(
         array $plannings,
         $group_id,
@@ -88,7 +95,8 @@ class AdminScrumPresenter
         $additional_content,
         bool $explicit_top_backlog_enabled,
         bool $has_workflow_action_add_to_top_backlog_defined,
-        bool $user_lab_feature
+        bool $user_lab_feature,
+        array $additional_scrum_sections_controllers
     ) {
         $this->plannings                                   = $plannings;
         $this->group_id                                    = $group_id;
@@ -115,6 +123,7 @@ class AdminScrumPresenter
         $this->explicit_top_backlog_enabled              = $explicit_top_backlog_enabled;
         $this->must_display_explicit_top_backlog_switch  = (bool) $explicit_top_backlog_enabled || $user_lab_feature;
         $this->has_workflow_action_add_to_top_backlog_defined = $has_workflow_action_add_to_top_backlog_defined;
+        $this->additional_scrum_sections_controllers          = $additional_scrum_sections_controllers;
     }
 
     public function has_plannings()

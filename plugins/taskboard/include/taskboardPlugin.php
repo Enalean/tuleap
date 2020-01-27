@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
@@ -30,6 +31,7 @@ use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Taskboard\Admin\ScrumBoardTypeSelectorController;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPane;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
@@ -76,6 +78,7 @@ class taskboardPlugin extends Plugin
     {
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(GetAdditionalScrumAdminSection::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
@@ -208,6 +211,7 @@ class taskboardPlugin extends Plugin
         }
     }
 
+
     public function alternativeBoardLinkEvent(AlternativeBoardLinkEvent $event): void
     {
         $pane = $this->getPaneInfoForMilestone($event->getMilestone());
@@ -220,5 +224,16 @@ class taskboardPlugin extends Plugin
                 )
             );
         }
+    }
+
+    public function getAdditionalScrumAdminSection(GetAdditionalScrumAdminSection $event): void
+    {
+        $event->addAdditionalSectionController(
+            new ScrumBoardTypeSelectorController(
+                $event->getProject(),
+                new TaskboardUsageDao(),
+                \TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates/Admin")
+            )
+        );
     }
 }

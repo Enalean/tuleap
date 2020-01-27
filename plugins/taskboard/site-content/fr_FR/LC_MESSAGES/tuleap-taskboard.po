@@ -15,6 +15,15 @@ msgstr ""
 msgid "Artifact to add %d must be a child of swimlane %d."
 msgstr "L'artéfact à ajouter %d doit être enfant de la swimlane %d."
 
+msgid "Board"
+msgstr "Tableau"
+
+msgid "Cardwall"
+msgstr "Cardwall"
+
+msgid "Cardwall & Taskboard"
+msgstr "Cardwall & Tableau des tâches"
+
 #, php-format
 msgid "Could not find artifact to add with id %d."
 msgstr "L'artéfact à ajouter d'id %d n'a pas été trouvé."
