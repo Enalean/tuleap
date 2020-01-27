@@ -20,7 +20,7 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseButtonsDescription from "./ReleaseButtonsDescription.vue";
 import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { MilestoneData, Pane, StoreOptions } from "../../../type";
+import { MilestoneData, Pane, StoreOptions, TrackerProjectLabel } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
@@ -207,6 +207,32 @@ describe("ReleaseButtonsDescription", () => {
 
     it("When the user can't see the subplanning, Then he can't see the planning link", async () => {
         store_options.state.user_can_view_sub_milestones_planning = false;
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains("[data-test=planning-link]")).toBe(false);
+    });
+
+    it("When there isn't sub-planning, Then there isn't any link to sub-planning", async () => {
+        store_options.state.user_can_view_sub_milestones_planning = true;
+
+        release_data = {
+            id: 2,
+            planning: {
+                id: "100"
+            },
+            resources: {
+                milestones: {
+                    accept: {
+                        trackers: [] as TrackerProjectLabel[]
+                    }
+                },
+                additional_panes: [] as Pane[]
+            }
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data
+        };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains("[data-test=planning-link]")).toBe(false);

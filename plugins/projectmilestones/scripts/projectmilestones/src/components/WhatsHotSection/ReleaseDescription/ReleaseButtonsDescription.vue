@@ -93,7 +93,10 @@ export default class ReleaseButtonsDescription extends Vue {
     }
 
     get get_planning_link(): string | null {
-        if (!this.user_can_view_sub_milestones_planning) {
+        if (
+            !this.user_can_view_sub_milestones_planning ||
+            this.release_data.resources.milestones.accept.trackers.length === 0
+        ) {
             return null;
         }
 
