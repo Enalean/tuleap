@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
+use Tuleap\Tracker\Workflow\Update\PostAction;
 
 interface PostActionVisitor
 {
@@ -41,4 +42,6 @@ interface PostActionVisitor
     public function visitFrozenFieldsValue(FrozenFieldsValue $frozen_fields);
 
     public function visitHiddenFieldsetsValue(HiddenFieldsetsValue $hidden_fieldsets_value);
+
+    public function visitExternalPostActionValue(PostAction $post_action_value);
 }

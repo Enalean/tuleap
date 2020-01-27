@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode;
 
+use EventManager;
 use Tracker_FormElementFactory;
 use Tracker_RuleFactory;
 use Transition_PostAction_CIBuildDao;
@@ -33,6 +34,7 @@ use Transition_PostAction_FieldFactory;
 use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
@@ -70,7 +72,10 @@ class TransitionReplicatorBuilder
         $form_element_factory = Tracker_FormElementFactory::instance();
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
-        $post_action_collection_updater = new PostActionCollectionUpdater(
+        $event = new GetWorkflowExternalPostActionsValueUpdater();
+        EventManager::instance()->processEvent($event);
+
+        $value_updaters = [
             new CIBuildValueUpdater(
                 new CIBuildValueRepository(
                     new Transition_PostAction_CIBuildDao()
@@ -112,7 +117,14 @@ class TransitionReplicatorBuilder
                     $form_element_factory
                 )
             )
+        ];
+
+        $value_updaters = array_merge(
+            $value_updaters,
+            $event->getValueUpdaters()
         );
+
+        $post_action_collection_updater = new PostActionCollectionUpdater(...$value_updaters);
 
         return new TransitionReplicator(
             Workflow_Transition_ConditionFactory::build(),

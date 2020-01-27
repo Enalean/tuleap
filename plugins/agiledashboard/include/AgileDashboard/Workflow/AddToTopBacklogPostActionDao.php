@@ -69,10 +69,9 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
 
     public function deleteTransitionPostActions(int $transition_id): void
     {
-        $sql = "DELETE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.*
+        $sql = "DELETE
                 FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog
-                    INNER JOIN tracker_workflow_transition ON (plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
-                WHERE tracker_workflow_transition.transition_id = ?";
+                WHERE plugin_agiledashboard_tracker_workflow_action_add_top_backlog.transition_id = ?";
 
         $this->getDB()->run(
             $sql,

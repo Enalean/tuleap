@@ -106,7 +106,7 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
             ->with(101)
             ->andReturnFalse();
 
-        $this->expectException(UnplannedReportCriterionProjectNotUsingExplicitBacklogException::class);
+        $this->expectException(ProjectNotUsingExplicitBacklogException::class);
 
         $this->retriever->getMatchingIds($this->tracker, $this->user);
     }

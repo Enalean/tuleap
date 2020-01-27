@@ -62,7 +62,7 @@ class UnplannedReportCriterionMatchingIdsRetriever
     /**
      * @psalm-return array<int, true>
      *
-     * @throws UnplannedReportCriterionProjectNotUsingExplicitBacklogException
+     * @throws ProjectNotUsingExplicitBacklogException
      */
     public function getMatchingIds(Tracker $tracker, PFUser $user): array
     {
@@ -72,7 +72,7 @@ class UnplannedReportCriterionMatchingIdsRetriever
         $tracker_id   = (int) $tracker->getId();
 
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id) === false) {
-            throw new UnplannedReportCriterionProjectNotUsingExplicitBacklogException();
+            throw new ProjectNotUsingExplicitBacklogException();
         }
 
         foreach ($this->getUnplannedArtifactIds($tracker_id, $project_id) as $unplanned_artifact_id) {

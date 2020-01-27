@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\ExplicitBacklog;
+namespace Tuleap\AgileDashboard\Workflow\PostAction\Update;
 
-use RuntimeException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
+use Tuleap\Tracker\Workflow\Update\PostAction;
 
-class UnplannedReportCriterionProjectNotUsingExplicitBacklogException extends RuntimeException
+final class AddToTopBacklogValue implements PostAction
 {
+    public function accept(PostActionVisitor $visitor)
+    {
+        $visitor->visitExternalPostActionValue($this);
+    }
 }
