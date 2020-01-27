@@ -22,6 +22,7 @@ import { createPopover, modal as createModal } from "tlp";
 document.addEventListener("DOMContentLoaded", () => {
     canNotCreatePlanningPopover();
     removePlanningButton();
+    displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce();
 });
 
 function canNotCreatePlanningPopover(): void {
@@ -61,4 +62,93 @@ function removePlanningButton(): void {
             modal.show();
         });
     }
+}
+
+export function displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce(): void {
+    const explicit_backlog_usage_button = document.getElementById("ad-service-submit");
+    if (
+        !explicit_backlog_usage_button ||
+        !explicit_backlog_usage_button.dataset.canUseExplicitBacklog
+    ) {
+        return;
+    }
+
+    const explicit_backlog_usage_button_with_modal = document.getElementById(
+        "scrum-configuration-edit-options-button"
+    );
+    if (
+        !explicit_backlog_usage_button_with_modal ||
+        !explicit_backlog_usage_button_with_modal.dataset ||
+        !explicit_backlog_usage_button_with_modal.dataset.targetModal
+    ) {
+        return;
+    }
+
+    const explicit_backlog_usage_switch = document.getElementById("use-explicit-top-backlog");
+    if (!explicit_backlog_usage_switch || !explicit_backlog_usage_button_with_modal.dataset) {
+        return;
+    }
+
+    explicit_backlog_usage_switch.addEventListener("click", () => {
+        if (explicit_backlog_usage_button_with_modal.dataset.explicitBacklogValue === "1") {
+            explicit_backlog_usage_button_with_modal.dataset.explicitBacklogValue = "0";
+        } else {
+            explicit_backlog_usage_button_with_modal.dataset.explicitBacklogValue = "1";
+        }
+
+        explicit_backlog_usage_button.classList.add("scrum-administration-submit-hidden");
+        explicit_backlog_usage_button_with_modal.classList.remove(
+            "scrum-administration-submit-hidden"
+        );
+    });
+
+    addModalListeners(explicit_backlog_usage_button_with_modal);
+}
+
+export function addModalListeners(explicit_backlog_usage_button_with_modal: HTMLElement): void {
+    if (
+        !explicit_backlog_usage_button_with_modal ||
+        !explicit_backlog_usage_button_with_modal.dataset ||
+        !explicit_backlog_usage_button_with_modal.dataset.targetModal
+    ) {
+        return;
+    }
+
+    const modal_element = document.getElementById(
+        explicit_backlog_usage_button_with_modal.dataset.targetModal
+    );
+    if (!modal_element) {
+        return;
+    }
+
+    const modal = createModal(modal_element);
+
+    const legacy_mode_text = document.getElementById("legacy-mode-text");
+    const explicit_mode_text = document.getElementById("explicit-mode-text");
+    if (!legacy_mode_text || !explicit_mode_text) {
+        return;
+    }
+
+    explicit_backlog_usage_button_with_modal.addEventListener("click", () => {
+        const explicit_backlog_usage_button_with_modal = document.getElementById(
+            "scrum-configuration-edit-options-button"
+        );
+
+        if (
+            !explicit_backlog_usage_button_with_modal ||
+            !explicit_backlog_usage_button_with_modal.dataset
+        ) {
+            return;
+        }
+
+        if (explicit_backlog_usage_button_with_modal.dataset.explicitBacklogValue === "1") {
+            legacy_mode_text.classList.add("scrum-administration-submit-hidden");
+            explicit_mode_text.classList.remove("scrum-administration-submit-hidden");
+        } else {
+            legacy_mode_text.classList.remove("scrum-administration-submit-hidden");
+            explicit_mode_text.classList.add("scrum-administration-submit-hidden");
+        }
+
+        modal.show();
+    });
 }
