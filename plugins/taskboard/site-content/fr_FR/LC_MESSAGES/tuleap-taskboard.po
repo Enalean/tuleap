@@ -15,14 +15,14 @@ msgstr ""
 msgid "Artifact to add %d must be a child of swimlane %d."
 msgstr "L'artéfact à ajouter %d doit être enfant de la swimlane %d."
 
-msgid "Board"
-msgstr "Tableau"
-
-msgid "Cardwall"
-msgstr "Cardwall"
+msgid "Board type"
+msgstr "Type de tableau"
 
 msgid "Cardwall & Taskboard"
-msgstr "Cardwall & Tableau des tâches"
+msgstr "Cardwall & Tableau de tâches"
+
+msgid "Cardwall (legacy, for backward compatibility)"
+msgstr "Cardwall (ancien, pour rétrocompatibilité)"
 
 #, php-format
 msgid "Could not find artifact to add with id %d."
@@ -35,14 +35,17 @@ msgid "Please specify 'add' and/or 'order' in the payload."
 msgstr "Veuillez fournir 'add' et/ou 'order' dans la requête."
 
 msgid "Taskboard"
-msgstr "Tableau des tâches"
+msgstr "Tableau de tâches"
+
+msgid "Taskboard (new, recommended)"
+msgstr "Tableau de tâches (nouveau, recommandé)"
 
 #, php-format
 msgid "Taskboard is not activated in project %s."
-msgstr "Le tableau des tâches n'est pas activé pour le projet %s."
+msgstr "Le tableau de tâches n'est pas activé pour le projet %s."
 
 msgid "Taskboard not found."
-msgstr "Le tableau des tâches n'a pas été trouvé."
+msgstr "Le tableau de tâches n'a pas été trouvé."
 
 msgid "The artifact does not have a remaining effort numeric field"
 msgstr "L'artéfact n'a pas de champs numérique pour l'effort restant"
