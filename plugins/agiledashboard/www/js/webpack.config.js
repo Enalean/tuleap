@@ -44,7 +44,6 @@ const webpack_config_for_overview_and_vue = {
     entry: {
         "scrum-header": "./scrum-header.js",
         "permission-per-group": "./permissions-per-group/src/index.js",
-        administration: "./administration.js",
         "planning-admin": "./planning-admin.js"
     },
     context: path.resolve(__dirname),
@@ -70,15 +69,19 @@ const webpack_config_for_overview_and_vue = {
     }
 };
 
-const webpack_config_for_artifact_additional_action = {
+const webpack_config_for_typescript_scripts = {
     entry: {
-        "artifact-additional-action": "./artifact-additional-action/src/index.ts"
+        "artifact-additional-action": "./artifact-additional-action/src/index.ts",
+        administration: "./administration/administration.ts"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(
         assets_dir_path,
         "/plugins/agiledashboard/assets/"
     ),
+    externals: {
+        tlp: "tlp"
+    },
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(
@@ -97,5 +100,5 @@ const webpack_config_for_artifact_additional_action = {
 module.exports = [
     webpack_config_for_charts,
     webpack_config_for_overview_and_vue,
-    webpack_config_for_artifact_additional_action
+    webpack_config_for_typescript_scripts
 ];
