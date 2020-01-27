@@ -97,6 +97,10 @@ if [ ${tuleap_installed:-false} = "false" ] || \
             "${file_sql}"
     done
 
+    tuleap_installed_version=$(cat "${install_dir}/VERSION")
+    _mysqlExecute "${mysql_user}" "${mysql_password:-NULL}" \
+        "INSERT INTO tuleap.tuleap_installed_version VALUES ('${tuleap_installed_version}')"
+
     _setupInitValues $(_phpPasswordHasher "${admin_password}") "${server_name}" \
         "${sql_init}" | \
         $(_mysqlConnectDb "${mysql_user}" "${mysql_password}" "${sys_db_name}")
