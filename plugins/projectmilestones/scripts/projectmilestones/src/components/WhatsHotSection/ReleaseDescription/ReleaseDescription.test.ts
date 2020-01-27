@@ -49,31 +49,6 @@ describe("ReleaseDescription", () => {
             }
         };
 
-        release_data = {
-            id: 2,
-            planning: {
-                id: "100"
-            },
-            number_of_artifact_by_trackers: [],
-            resources: {
-                burndown: {
-                    uri: "/burndown/"
-                },
-                milestones: {
-                    accept: {
-                        trackers: [{ label: "bug" }]
-                    }
-                },
-                content: {
-                    accept: {
-                        trackers: []
-                    }
-                },
-                additional_panes: [],
-                cardwall: null
-            }
-        };
-
         component_options.propsData = {
             release_data
         };
@@ -85,12 +60,11 @@ describe("ReleaseDescription", () => {
 
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
-            number_of_artifact_by_trackers: [],
-            description
-        };
+            description,
+            resources: {
+                burndown: null
+            }
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -103,11 +77,10 @@ describe("ReleaseDescription", () => {
     it("When there isn't any burndown, Then the BurndownChart is not rendered", async () => {
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
-            number_of_artifact_by_trackers: []
-        };
+            resources: {
+                burndown: null
+            }
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -115,5 +88,23 @@ describe("ReleaseDescription", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains(BurndownChart)).toBe(false);
+    });
+
+    it("When there is a burndown, Then the BurndownChart is rendered", async () => {
+        release_data = {
+            id: 2,
+            resources: {
+                burndown: {
+                    uri: "/burndown"
+                }
+            }
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains(BurndownChart)).toBe(true);
     });
 });

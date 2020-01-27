@@ -50,9 +50,8 @@ describe("ReleaseHeader", () => {
             label: "mile",
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            end_date: new Date("2019-10-05T13:42:08+02:00").toDateString(),
-            number_of_artifact_by_trackers: []
-        };
+            end_date: new Date("2019-10-05T13:42:08+02:00").toDateString()
+        } as MilestoneData;
 
         component_options = {
             propsData: {
@@ -72,11 +71,9 @@ describe("ReleaseHeader", () => {
 
         it("When there isn't a start date of a release, Then there isn't an arrow", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                start_date: null,
-                number_of_artifact_by_trackers: []
-            };
+                start_date: null
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -89,11 +86,8 @@ describe("ReleaseHeader", () => {
 
     it("When the widget is loading, Then there is a skeleton instead of points", async () => {
         release_data = {
-            label: "mile",
-            id: 2,
-            start_date: null,
-            number_of_artifact_by_trackers: []
-        };
+            id: 2
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data,
@@ -107,10 +101,8 @@ describe("ReleaseHeader", () => {
     it("When release's title contains '>', Then '>' is displayed", async () => {
         release_data = {
             label: "1 > 2",
-            id: 2,
-            start_date: null,
-            number_of_artifact_by_trackers: []
-        };
+            id: 2
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data,

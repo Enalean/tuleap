@@ -18,41 +18,31 @@
  */
 
 import { getTrackerSubmilestoneLabel } from "./tracker-label-helper";
-import { MilestoneData } from "../type";
+import {
+    MilestoneData,
+    MilestoneResourcesData,
+    TrackerProjectLabel,
+    TrackerProjectWithoutColor
+} from "../type";
 
 describe("Tracker Label Helper", () => {
     describe("getTrackerSubmilestoneLabel", () => {
-        it("When there is no resources, Then empty string returns", () => {
-            const release: MilestoneData = {
-                id: 100,
-                number_of_artifact_by_trackers: []
-            };
-
-            const label = getTrackerSubmilestoneLabel(release);
-
-            expect(label).toEqual("");
-        });
-
         it("When there is no tracker, Then empty string returns", () => {
             const release: MilestoneData = {
                 id: 100,
-                number_of_artifact_by_trackers: [],
                 resources: {
                     content: {
                         accept: {
-                            trackers: []
+                            trackers: [] as TrackerProjectWithoutColor[]
                         }
                     },
-                    additional_panes: [],
-                    burndown: null,
                     milestones: {
                         accept: {
-                            trackers: []
+                            trackers: [] as TrackerProjectLabel[]
                         }
-                    },
-                    cardwall: null
-                }
-            };
+                    }
+                } as MilestoneResourcesData
+            } as MilestoneData;
 
             const label = getTrackerSubmilestoneLabel(release);
 
@@ -63,30 +53,25 @@ describe("Tracker Label Helper", () => {
             const label_tracker = "sprint";
             const release: MilestoneData = {
                 id: 100,
-                number_of_artifact_by_trackers: [],
                 resources: {
                     content: {
                         accept: {
-                            trackers: []
+                            trackers: [] as TrackerProjectWithoutColor[]
                         }
                     },
-                    additional_panes: [],
-                    burndown: null,
                     milestones: {
                         accept: {
                             trackers: [
                                 {
                                     label: label_tracker
                                 }
-                            ]
+                            ] as TrackerProjectLabel[]
                         }
-                    },
-                    cardwall: null
+                    }
                 }
-            };
+            } as MilestoneData;
 
             const label = getTrackerSubmilestoneLabel(release);
-
             expect(label).toEqual(label_tracker);
         });
     });

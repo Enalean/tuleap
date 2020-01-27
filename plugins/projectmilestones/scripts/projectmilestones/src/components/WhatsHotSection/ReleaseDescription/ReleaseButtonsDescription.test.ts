@@ -20,7 +20,7 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseButtonsDescription from "./ReleaseButtonsDescription.vue";
 import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { MilestoneData, StoreOptions } from "../../../type";
+import { MilestoneData, Pane, StoreOptions } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
@@ -54,7 +54,6 @@ describe("ReleaseButtonsDescription", () => {
             planning: {
                 id: "100"
             },
-            number_of_artifact_by_trackers: [],
             resources: {
                 milestones: {
                     accept: {
@@ -65,11 +64,6 @@ describe("ReleaseButtonsDescription", () => {
                         ]
                     }
                 },
-                content: {
-                    accept: {
-                        trackers: []
-                    }
-                },
                 additional_panes: [
                     {
                         icon_name: "fa-tlp-taskboard",
@@ -78,12 +72,11 @@ describe("ReleaseButtonsDescription", () => {
                         identifier: "taskboard"
                     }
                 ],
-                burndown: null,
                 cardwall: {
                     uri: "/cardwall/"
                 }
             }
-        };
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -151,7 +144,6 @@ describe("ReleaseButtonsDescription", () => {
             planning: {
                 id: "100"
             },
-            number_of_artifact_by_trackers: [],
             resources: {
                 milestones: {
                     accept: {
@@ -162,11 +154,6 @@ describe("ReleaseButtonsDescription", () => {
                         ]
                     }
                 },
-                content: {
-                    accept: {
-                        trackers: []
-                    }
-                },
                 additional_panes: [
                     {
                         title: "random",
@@ -175,10 +162,9 @@ describe("ReleaseButtonsDescription", () => {
                         uri: "/project/random"
                     }
                 ],
-                burndown: null,
                 cardwall: null
             }
-        };
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -194,7 +180,6 @@ describe("ReleaseButtonsDescription", () => {
             planning: {
                 id: "100"
             },
-            number_of_artifact_by_trackers: [],
             resources: {
                 milestones: {
                     accept: {
@@ -205,16 +190,10 @@ describe("ReleaseButtonsDescription", () => {
                         ]
                     }
                 },
-                content: {
-                    accept: {
-                        trackers: []
-                    }
-                },
-                additional_panes: [],
-                burndown: null,
+                additional_panes: [] as Pane[],
                 cardwall: null
             }
-        };
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -222,23 +201,5 @@ describe("ReleaseButtonsDescription", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains("[data-test=cardwall-link]")).toBe(false);
-    });
-
-    it("When there aren't resources, Then there aren't any link to cardwall and taskboard", async () => {
-        release_data = {
-            id: 2,
-            planning: {
-                id: "100"
-            },
-            number_of_artifact_by_trackers: []
-        };
-
-        component_options.propsData = {
-            release_data
-        };
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=cardwall-link]")).toBe(false);
-        expect(wrapper.contains("[data-test=taskboard-link]")).toBe(false);
     });
 });

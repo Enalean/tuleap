@@ -68,14 +68,17 @@ export default class ReleaseHeaderRemainingPoints extends Vue {
     readonly release_data!: MilestoneData;
 
     disabled_points =
-        (!this.release_data.remaining_effort && this.release_data.remaining_effort !== 0) ||
+        typeof this.release_data.remaining_effort !== "number" ||
         !this.release_data.initial_effort ||
         this.release_data.initial_effort < this.release_data.remaining_effort;
 
     formatPoints = (pts: number): number => (pts ? pts : 0);
 
     get are_all_effort_defined(): boolean {
-        if (!this.release_data.remaining_effort || !this.release_data.initial_effort) {
+        if (
+            typeof this.release_data.remaining_effort !== "number" ||
+            typeof this.release_data.initial_effort !== "number"
+        ) {
             return false;
         }
         return (
@@ -89,11 +92,11 @@ export default class ReleaseHeaderRemainingPoints extends Vue {
         const remaining_effort = this.release_data.remaining_effort;
         const initial_effort = this.release_data.initial_effort;
 
-        if (!remaining_effort && remaining_effort !== 0) {
+        if (typeof remaining_effort !== "number") {
             return this.$gettext("No remaining effort defined.");
         }
 
-        if (!initial_effort && initial_effort !== 0) {
+        if (typeof initial_effort !== "number") {
             return this.$gettext("No initial effort defined.");
         }
 

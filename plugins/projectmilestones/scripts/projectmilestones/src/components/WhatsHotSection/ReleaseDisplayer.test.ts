@@ -54,9 +54,8 @@ describe("ReleaseDisplayer", () => {
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             capacity: 10,
             total_sprint: 20,
-            initial_effort: 10,
-            number_of_artifact_by_trackers: []
-        };
+            initial_effort: 10
+        } as MilestoneData;
 
         component_options = {
             propsData: {

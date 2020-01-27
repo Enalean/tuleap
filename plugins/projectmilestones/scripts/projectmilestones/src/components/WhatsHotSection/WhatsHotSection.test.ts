@@ -67,15 +67,13 @@ describe("What'sHotSection", () => {
     it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", async () => {
         const release1: MilestoneData = {
             label: "release_1",
-            id: 1,
-            number_of_artifact_by_trackers: []
-        };
+            id: 1
+        } as MilestoneData;
 
         const release2: MilestoneData = {
             label: "release_2",
-            id: 2,
-            number_of_artifact_by_trackers: []
-        };
+            id: 2
+        } as MilestoneData;
 
         store_options.state.current_milestones = [release1, release2];
         const wrapper = await getPersonalWidgetInstance(store_options);

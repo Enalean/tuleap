@@ -79,9 +79,6 @@ export default class ReleaseButtonsDescription extends Vue {
     readonly label_tracker_planning!: string;
 
     get get_overview_link(): string | null {
-        if (!this.release_data.planning) {
-            return null;
-        }
         return (
             "/plugins/agiledashboard/?group_id=" +
             encodeURIComponent(this.project_id) +
@@ -94,9 +91,6 @@ export default class ReleaseButtonsDescription extends Vue {
     }
 
     get get_planning_link(): string | null {
-        if (!this.release_data.planning) {
-            return null;
-        }
         return (
             "/plugins/agiledashboard/?group_id=" +
             encodeURIComponent(this.project_id) +
@@ -109,14 +103,6 @@ export default class ReleaseButtonsDescription extends Vue {
     }
 
     get get_cardwall_link(): string | null {
-        if (!this.release_data.planning) {
-            return null;
-        }
-
-        if (!this.release_data.resources) {
-            return null;
-        }
-
         if (!this.release_data.resources.cardwall) {
             return null;
         }
@@ -133,9 +119,6 @@ export default class ReleaseButtonsDescription extends Vue {
     }
 
     get tracker_submilestone_label(): string {
-        if (!this.release_data.resources) {
-            return "";
-        }
         const submilestone_tracker = this.release_data.resources.milestones.accept.trackers[0];
 
         if (!submilestone_tracker) {
@@ -145,10 +128,6 @@ export default class ReleaseButtonsDescription extends Vue {
     }
 
     get get_taskboard_pane(): undefined | Pane {
-        if (!this.release_data.resources) {
-            return undefined;
-        }
-
         return this.release_data.resources.additional_panes.find(
             pane => pane.identifier === "taskboard"
         );

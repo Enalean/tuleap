@@ -56,10 +56,6 @@ export default class ReleaseDescription extends Vue {
     readonly release_data!: MilestoneData;
 
     get burndown_exits(): boolean {
-        if (!this.release_data.resources) {
-            return false;
-        }
-
         return this.release_data.resources.burndown !== null;
     }
 }

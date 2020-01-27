@@ -53,10 +53,8 @@ describe("ReleaseBadgesDisplayerIfOnlyClosedSprints", () => {
         };
 
         release_data = {
-            label: "mile",
-            id: 2,
-            number_of_artifact_by_trackers: []
-        };
+            id: 2
+        } as MilestoneData;
 
         component_options.propsData = { release_data };
     });

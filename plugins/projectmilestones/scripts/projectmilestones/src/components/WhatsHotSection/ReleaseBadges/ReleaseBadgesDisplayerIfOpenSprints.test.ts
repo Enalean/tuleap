@@ -20,14 +20,18 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseBadgesDisplayerIfOpenSprints from "./ReleaseBadgesDisplayerIfOpenSprints.vue";
 import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { MilestoneData, StoreOptions } from "../../../type";
+import {
+    MilestoneData,
+    MilestoneResourcesData,
+    StoreOptions,
+    TrackerProjectLabel
+} from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 
 let release_data: MilestoneData;
 const total_sprint = 10;
-const initial_effort = 10;
 const component_options: ShallowMountOptions<ReleaseBadgesDisplayerIfOpenSprints> = {};
 
 const project_id = 102;
@@ -55,15 +59,8 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         };
 
         release_data = {
-            label: "mile",
             id: 2,
-            planning: {
-                id: "100"
-            },
-            capacity: 10,
             total_sprint,
-            initial_effort,
-            number_of_artifact_by_trackers: [],
             resources: {
                 milestones: {
                     accept: {
@@ -73,17 +70,9 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                             }
                         ]
                     }
-                },
-                content: {
-                    accept: {
-                        trackers: []
-                    }
-                },
-                additional_panes: [],
-                burndown: null,
-                cardwall: null
+                }
             }
-        };
+        } as MilestoneData;
 
         component_options.propsData = { release_data };
     });
@@ -97,15 +86,9 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
     describe("Display number of sprint", () => {
         it("When there are not sprints, Then ReleaseBadgesSprints is not rendered", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                total_sprint: 0,
-                initial_effort,
-                number_of_artifact_by_trackers: []
-            };
+                total_sprint: 0
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -118,15 +101,9 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
         it("When total_sprints is null, Then ReleaseBadgesSprints is not rendered", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                total_sprint: null,
-                initial_effort,
-                number_of_artifact_by_trackers: []
-            };
+                total_sprint: null
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -139,19 +116,13 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
         it("When there are some open sprints, Then ReleaseBadgesSprints is rendered", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
                 total_sprint: 10,
-                initial_effort,
                 open_sprints: [
                     {
                         id: 10
                     } as MilestoneData
                 ],
-                number_of_artifact_by_trackers: [],
                 resources: {
                     milestones: {
                         accept: {
@@ -161,17 +132,9 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                                 }
                             ]
                         }
-                    },
-                    content: {
-                        accept: {
-                            trackers: []
-                        }
-                    },
-                    additional_panes: [],
-                    burndown: null,
-                    cardwall: null
+                    }
                 }
-            };
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -184,30 +147,16 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
         it("When there is no tracker of sprint, Then ReleasesBasgesSprints is not rendered", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
                 total_sprint: null,
-                initial_effort,
-                number_of_artifact_by_trackers: [],
                 resources: {
                     milestones: {
                         accept: {
-                            trackers: []
+                            trackers: [] as TrackerProjectLabel[]
                         }
-                    },
-                    content: {
-                        accept: {
-                            trackers: []
-                        }
-                    },
-                    additional_panes: [],
-                    burndown: null,
-                    cardwall: null
-                }
-            };
+                    }
+                } as MilestoneResourcesData
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data

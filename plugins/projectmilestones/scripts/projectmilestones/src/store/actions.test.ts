@@ -19,7 +19,7 @@
 
 import * as actions from "./actions";
 import { mockFetchError } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
-import { TrackerAgileDashboard, Context, MilestoneData } from "../type";
+import { TrackerAgileDashboard, Context, MilestoneData, TrackerProjectLabel } from "../type";
 import * as rest_querier from "../api/rest-querier";
 
 describe("Store actions", () => {
@@ -98,33 +98,8 @@ describe("Store actions", () => {
 
                 const milestones: MilestoneData[] = [
                     {
-                        id: 1,
-                        resources: {
-                            content: {
-                                accept: {
-                                    trackers: [
-                                        {
-                                            id: 1,
-                                            label: "one"
-                                        }
-                                    ]
-                                }
-                            },
-                            milestones: {
-                                accept: {
-                                    trackers: [
-                                        {
-                                            label: "Sprints"
-                                        }
-                                    ]
-                                }
-                            },
-                            additional_panes: [],
-                            burndown: null,
-                            cardwall: null
-                        },
-                        number_of_artifact_by_trackers: []
-                    }
+                        id: 1
+                    } as MilestoneData
                 ];
 
                 jest.spyOn(rest_querier, "getCurrentMilestones").mockReturnValue(
@@ -189,19 +164,11 @@ describe("Store actions", () => {
                     },
                     milestones: {
                         accept: {
-                            trackers: [
-                                {
-                                    label: "Sprints"
-                                }
-                            ]
+                            trackers: [] as TrackerProjectLabel[]
                         }
-                    },
-                    additional_panes: [],
-                    burndown: null,
-                    cardwall: null
-                },
-                number_of_artifact_by_trackers: []
-            };
+                    }
+                }
+            } as MilestoneData;
 
             const sprint = {
                 id: 10
