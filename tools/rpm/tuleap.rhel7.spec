@@ -427,7 +427,9 @@ BurningParrot, default theme starting Tuleap 10
 #
 # Build
 %build
-# Nothing to do
+%if %{with enterprise}
+echo '@@VERSION@@-@@RELEASE@@' > VERSION
+%endif
 
 #
 # Install
@@ -441,7 +443,7 @@ for i in tools plugins site-content src VERSION LICENSE; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 %if %{with enterprise}
-cp -a ENTERPRISE_BUILD $RPM_BUILD_ROOT/%{APP_DIR}
+%{__cp} -a ENTERPRISE_BUILD $RPM_BUILD_ROOT/%{APP_DIR}
 %endif
 # Remove old scripts: not used and add unneeded perl depedencies to the package
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanUploader.pl
