@@ -84,9 +84,9 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("0.00%");
-            expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
+            expect(remaining_day_text.classes()).toContain("release-remaining-value-success");
             expect(remaining_day_value.classes()).toContain(
-                "release-remaining-progress-value-danger"
+                "release-remaining-progress-value-success"
             );
             expect(remaining_day_text.text()).toEqual("10");
         });
@@ -231,8 +231,12 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("100.00%");
             expect(wrapper.classes()).not.toContain("release-remaining-value-danger");
+            expect(wrapper.classes()).not.toContain("release-remaining-value-success");
             expect(remaining_day_value.classes()).not.toContain(
                 "release-remaining-progress-value-danger"
+            );
+            expect(remaining_day_value.classes()).not.toContain(
+                "release-remaining-progress-value-success"
             );
             expect(remaining_day_text.text()).toEqual("0");
         });
@@ -290,11 +294,71 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("50.00%");
+            expect(remaining_day_text.classes()).toContain("release-remaining-value-success");
+            expect(remaining_day_value.classes()).toContain(
+                "release-remaining-progress-value-success"
+            );
+            expect(remaining_day_text.text()).toEqual("5");
+        });
+
+        it("When the progress is at least 80%, Then remaining days is displayed in red and percent in tooltip", async () => {
+            release_data = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: "100"
+                },
+                start_date: null,
+                number_days_until_end: 2,
+                number_days_since_start: 8,
+                number_of_artifact_by_trackers: []
+            };
+
+            component_options.propsData = {
+                release_data
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("80.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
             expect(remaining_day_value.classes()).toContain(
                 "release-remaining-progress-value-danger"
             );
-            expect(remaining_day_text.text()).toEqual("5");
+            expect(remaining_day_text.text()).toEqual("2");
+        });
+
+        it("When the progress is between 80% and 100%, Then remaining days is displayed in red and percent in tooltip", async () => {
+            release_data = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: "100"
+                },
+                start_date: null,
+                number_days_until_end: 1,
+                number_days_since_start: 10,
+                number_of_artifact_by_trackers: []
+            };
+
+            component_options.propsData = {
+                release_data
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("90.91%");
+            expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
+            expect(remaining_day_value.classes()).toContain(
+                "release-remaining-progress-value-danger"
+            );
+            expect(remaining_day_text.text()).toEqual("1");
         });
     });
 });

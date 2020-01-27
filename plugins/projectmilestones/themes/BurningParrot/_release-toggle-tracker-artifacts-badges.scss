@@ -55,6 +55,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 @each $color-name, $colors in $tlp-swatch-color-map {
     .release-number-artifacts-tracker-#{$color-name} > .release-number-artifacts-value {
+        border: 1px solid map-get($colors, 'secondary');
         background: transparentize(map-get($colors, 'secondary'), .5);
         color: map-get($colors, 'primary');
     }
