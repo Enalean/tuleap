@@ -197,11 +197,11 @@
     }
 
     > .sidebar-about-version {
-        margin: 10px 0 5px;
+        margin: 7px 0 5px;
         text-align: center;
 
         &:last-child {
-            margin: 10px 0 0;
+            margin: 7px 0 0;
         }
     }
 }
@@ -217,12 +217,12 @@
     transition: color 100ms;
     color: transparentize($grey, .2);
     font-size: 13px;
-    line-height: normal;
+    line-height: 20px;
 }
 
 .sidebar-about:hover > .sidebar-about-version,
 .sidebar-copyright a:hover {
-    color: lighten($main, 5%);
+    color: transparentize($white, .2);
     text-decoration: none;
 }
 

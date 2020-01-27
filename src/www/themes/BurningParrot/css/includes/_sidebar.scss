@@ -76,8 +76,8 @@
     }
 
     > .sidebar-about-version {
+        margin: 7px 0 0;
         text-align: center;
-        margin: 10px 0 0;
     }
 }
 
@@ -92,12 +92,12 @@
     transition: color 100ms;
     color: transparentize($tlp-ui-border-dark, .4);
     font-size: 13px;
-    line-height: normal;
+    line-height: 20px;
 }
 
 .sidebar-about:hover > .sidebar-about-version,
 .sidebar-copyright a:hover {
-    color: lighten($tlp-theme-color, 5%);
+    color: transparentize($tlp-ui-white, .2);
     text-decoration: none;
 }
 
