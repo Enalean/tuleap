@@ -25,15 +25,18 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\TestManagement\Administration\InvalidTrackerIdProvidedException;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
 use Tuleap\TestManagement\Event\GetMilestone;
+use Valid_UInt;
 
 class AdminControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalResponseMock;
 
     private $globals;
     /** @var Project */
@@ -85,7 +88,8 @@ class AdminControllerTest extends TestCase
             $this->event_manager,
             $this->csrf_token,
             $this->step_field_usage_detector,
-            $this->tracker_checker
+            $this->tracker_checker,
+            new Valid_UInt()
         );
     }
 
@@ -222,5 +226,45 @@ class AdminControllerTest extends TestCase
             ->once();
 
         $this->admin_controller->update();
+    }
+
+    public function testUpdateReturnWrongIdFeedbackIfTrackerIdIsInvalid()
+    {
+        $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn('oui');
+        $this->request->shouldReceive('get')->with('test_definition_tracker_id')->andReturn(
+            self::DEFINITION_TRACKER_ID
+        );
+        $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
+            self::EXECUTION_TRACKER_ID
+        );
+        $this->request->shouldReceive('get')->with('issue_tracker_id')->andReturn(self::ISSUE_TRACKER_ID);
+
+        $this->config->shouldReceive(
+            [
+                'getCampaignTrackerId'       => self::CAMPAIGN_TRACKER_ID,
+                'getTestDefinitionTrackerId' => self::DEFINITION_TRACKER_ID,
+                'getTestExecutionTrackerId'  => self::EXECUTION_TRACKER_ID,
+                'getIssueTrackerId'          => self::ISSUE_TRACKER_ID
+            ]
+        );
+
+        $this->step_field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(false);
+
+        $this->csrf_token->shouldReceive('check');
+        $this->config->shouldReceive('setProjectConfiguration')->withArgs(
+            [
+                $this->project,
+                self::CAMPAIGN_TRACKER_ID,
+                self::DEFINITION_TRACKER_ID,
+                self::EXECUTION_TRACKER_ID,
+                self::ISSUE_TRACKER_ID
+            ]
+        );
+
+        $this->tracker_checker->shouldReceive('checkTrackerIsInProject')->times(1);
+        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
+
+        $this->admin_controller->update();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['warning', 'The tracker id oui is not a valid id']);
     }
 }

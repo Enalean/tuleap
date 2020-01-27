@@ -24,6 +24,7 @@ use Codendi_HTMLPurifier;
 use DataAccessObject;
 use PFUser;
 use ReferenceManager;
+use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
@@ -36,6 +37,7 @@ use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
+use UserXMLExporter;
 
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
@@ -622,5 +624,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         }
 
         return $steps;
+    }
+
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context, UserXMLExporter $user_xml_exporter)
+    {
+        parent::exportToXML($root, $xmlMapping, $project_export_context, $user_xml_exporter);
     }
 }

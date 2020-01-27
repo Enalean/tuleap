@@ -24,12 +24,16 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
+use Tuleap\TestManagement\Administration\InvalidTrackerIdProvidedException;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
+use Tuleap\TestManagement\Administration\TrackerDoesntExistException;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneHiddenFieldsetsPostActionException;
+use Tuleap\TestManagement\Administration\TrackerIsDeletedException;
 use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
 use Tuleap\TestManagement\Breadcrumbs\AdmininistrationBreadcrumbs;
+use Valid_UInt;
 
 class AdminController extends TestManagementController
 {
@@ -48,18 +52,25 @@ class AdminController extends TestManagementController
      */
     private $tracker_checker;
 
+    /**
+     * @var Valid_UInt
+     */
+    private $int_validator;
+
     public function __construct(
         Codendi_Request $request,
         Config $config,
         EventManager $event_manager,
         CSRFSynchronizerToken $csrf_token,
         StepFieldUsageDetector $step_field_usage_detector,
-        TrackerChecker $tracker_checker
+        TrackerChecker $tracker_checker,
+        Valid_UInt $int_validator
     ) {
         parent::__construct($request, $config, $event_manager);
         $this->csrf_token                = $csrf_token;
         $this->step_field_usage_detector = $step_field_usage_detector;
         $this->tracker_checker           = $tracker_checker;
+        $this->int_validator             = $int_validator;
     }
 
     public function admin()
@@ -106,7 +117,7 @@ class AdminController extends TestManagementController
             true
         );
 
-        $issue_tracker_id = $this->checkTrackerIdForProject(
+        $issue_tracker_id = $this->checkIssueTrackerIdForProject(
             $this->request->get('issue_tracker_id'),
             $this->config->getIssueTrackerId($this->project),
             false
@@ -155,13 +166,27 @@ class AdminController extends TestManagementController
         );
     }
 
-    private function checkTrackerIdForProject($submitted_id, $original_id, $must_check_frozen_fields)
-    {
-        if (! $submitted_id) {
-            return $original_id;
+    private function checkIssueTrackerIdForProject(
+        ?string $submitted_id,
+        ?string $original_id,
+        bool $must_check_frozen_fields
+    ): ? string {
+        if ($submitted_id === '') {
+            return null;
         }
 
+        return $this->checkTrackerIdForProject($submitted_id, $original_id, $must_check_frozen_fields);
+    }
+
+    private function checkTrackerIdForProject($submitted_id, $original_id, $must_check_frozen_fields)
+    {
         try {
+            $this->checkIdProvidedValidity($submitted_id);
+
+            if (! $submitted_id) {
+                return $original_id;
+            }
+
             if ($must_check_frozen_fields) {
                 $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
             } else {
@@ -171,7 +196,40 @@ class AdminController extends TestManagementController
         } catch (TrackerNotInProjectException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                sprintf(dgettext('tuleap-testmanagement', 'The tracker id %1$s is not part of this project'), $submitted_id)
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'The tracker id %1$s is not part of this project'),
+                    $submitted_id
+                )
+            );
+
+            return $original_id;
+        } catch (InvalidTrackerIdProvidedException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'The tracker id %1$s is not a valid id'),
+                    $submitted_id
+                )
+            );
+
+            return $original_id;
+        } catch (TrackerIsDeletedException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'The tracker id %1$s is deleted'),
+                    $submitted_id
+                )
+            );
+
+            return $original_id;
+        }  catch (TrackerDoesntExistException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'The tracker id %1$s not found'),
+                    $submitted_id
+                )
             );
 
             return $original_id;
@@ -201,5 +259,16 @@ class AdminController extends TestManagementController
     public function getBreadcrumbs()
     {
         return new AdmininistrationBreadcrumbs();
+    }
+
+    /**
+     * @throws InvalidTrackerIdProvidedException
+     */
+    private function checkIdProvidedValidity(string $submited_id): void
+    {
+        if (!$submited_id || $this->int_validator->validate($submited_id)) {
+            return;
+        }
+        throw new InvalidTrackerIdProvidedException();
     }
 }

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS plugin_testmanagement(
     campaign_tracker_id INT(11) NOT NULL,
     test_definition_tracker_id INT(11) NOT NULL,
     test_execution_tracker_id INT(11) NOT NULL,
-    issue_tracker_id INT(11) NOT NULL
+    issue_tracker_id INT(11)
 );
 
 CREATE TABLE IF NOT EXISTS plugin_testmanagement_campaign(

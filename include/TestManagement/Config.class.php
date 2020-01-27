@@ -87,11 +87,16 @@ class Config
     }
 
     /**
-     * @return int|false
+     * @return int|null
      */
     public function getIssueTrackerId(Project $project)
     {
-        return $this->getTrackerID($project, 'issue_tracker_id');
+        $tacker_id =  $this->getTrackerID($project, 'issue_tracker_id');
+        if (! $tacker_id) {
+            return null;
+        }
+
+        return $tacker_id;
     }
 
     /**
@@ -116,8 +121,7 @@ class Config
     {
         return (! $this->getCampaignTrackerId($project)) ||
             (! $this->getTestDefinitionTrackerId($project)) ||
-            (! $this->getTestExecutionTrackerId($project)) ||
-            (! $this->getIssueTrackerId($project));
+            (! $this->getTestExecutionTrackerId($project));
     }
 
     private function getProperty(Project $project, $key)

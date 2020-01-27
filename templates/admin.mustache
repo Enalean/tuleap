@@ -17,6 +17,7 @@
                 class="tlp-input"
                 size="20"
                 placeholder="{{ placeholder }}"
+                pattern="[0-9]*"
                 required
             />
         </div>
@@ -35,6 +36,7 @@
                 class="tlp-input"
                 size="20"
                 placeholder="{{ placeholder }}"
+                pattern="[0-9]*"
                 required
                 {{# is_definition_disabled }}disabled{{/ is_definition_disabled }}
             />
@@ -62,6 +64,7 @@
                 class="tlp-input"
                 size="20"
                 placeholder="{{ placeholder }}"
+                pattern="[0-9]*"
                 required
                {{# is_execution_disabled }}disabled{{/ is_execution_disabled }}
             />
@@ -78,16 +81,17 @@
         <div class="tlp-form-element">
             <label class="tlp-label" for="issue_id">
                 {{ issues }}
-                <i class="fa fa-asterisk"></i>
             </label>
             <input type="text"
-                name="issue_tracker_id"
-                id="issue_id"
-                value="{{ issue_tracker_id }}"
-                class="tlp-input"
-                size="20"
-                placeholder="{{ placeholder }}"
-                required
+                   name="issue_tracker_id"
+                   id="issue_id"
+                {{# issue_tracker_id}}
+                   value="{{ issue_tracker_id }}"
+                {{/issue_tracker_id}}
+                   class="tlp-input"
+                   size="20"
+                   placeholder="{{ placeholder }}"
+                   pattern="[0-9]*"
             />
         </div>
         <div class="tlp-form-element">

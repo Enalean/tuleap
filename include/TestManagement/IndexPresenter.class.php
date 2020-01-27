@@ -41,7 +41,7 @@ class IndexPresenter
     /** @var int */
     public $test_execution_tracker_id;
 
-    /** @var int */
+    /** @var int|null */
     public $issue_tracker_id;
 
     /** @var string */
@@ -91,7 +91,7 @@ class IndexPresenter
         $this->test_definition_tracker_id = intval($test_definition_tracker_id);
         $this->test_execution_tracker_id  = intval($test_execution_tracker_id);
         $this->campaign_tracker_id        = intval($campaign_tracker_id);
-        $this->issue_tracker_id           = intval($issue_tracker_id);
+        $this->issue_tracker_id           = $issue_tracker_id ? intval($issue_tracker_id) : null;
         $this->nodejs_server              = TuleapConfig::get('nodejs_server');
         $this->tracker_ids                = json_encode(array(
             'definition_tracker_id' => $this->test_definition_tracker_id,

@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
+use TrackerFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 
@@ -53,6 +54,30 @@ class TrackerCheckerTest extends TestCase
      */
     private $tracker_checker;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
+     */
+    private $tracker_from_other_project;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
+     */
+    private $tracker_factory;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FrozenFieldsDao
+     */
+    private $frozen_field_dao;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HiddenFieldsetsDao
+     */
+    private $hidden_fieldset_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
+     */
+    private $deleted_tracker;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -65,23 +90,40 @@ class TrackerCheckerTest extends TestCase
         $this->execution_tracker->shouldReceive('getId')->andReturn(3);
         $this->issue_tracker = Mockery::mock(Tracker::class);
         $this->issue_tracker->shouldReceive('getId')->andReturn(4);
+        $this->tracker_from_other_project = Mockery::mock(Tracker::class);
+        $this->tracker_from_other_project->shouldReceive('getId')->andReturn(5);
+        $this->deleted_tracker = Mockery::mock(Tracker::class);
+        $this->deleted_tracker->shouldReceive('getId')->andReturn(6);
 
         $this->project = Mockery::mock(Project::class);
         $this->project->shouldReceive('getID')->andReturn(101);
 
-        $tracker_factory = Mockery::mock(\TrackerFactory::class);
-        $tracker_factory->shouldReceive('getTrackersByGroupId')->with(101)->andReturn([
+        $this->tracker_factory = Mockery::mock(\TrackerFactory::class);
+        $this->tracker_factory->shouldReceive('getTrackersByGroupId')->with(101)->andReturn([
             $this->campaign_tracker,
             $this->definition_tracker,
             $this->execution_tracker,
             $this->issue_tracker
         ]);
 
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn($this->campaign_tracker);
+        $this->campaign_tracker->shouldReceive('isDeleted')->andReturnFalse();
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturn($this->definition_tracker);
+        $this->definition_tracker->shouldReceive('isDeleted')->andReturnFalse();
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(3)->andReturn($this->execution_tracker);
+        $this->execution_tracker->shouldReceive('isDeleted')->andReturnFalse();
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(4)->andReturn($this->issue_tracker);
+        $this->issue_tracker->shouldReceive('isDeleted')->andReturnFalse();
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(5)->andReturn($this->tracker_from_other_project);
+        $this->tracker_from_other_project->shouldReceive('isDeleted')->andReturnFalse();
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(6)->andReturn($this->deleted_tracker);
+        $this->deleted_tracker->shouldReceive('isDeleted')->andReturnTrue();
+
         $this->frozen_field_dao    = Mockery::mock(FrozenFieldsDao::class);
         $this->hidden_fieldset_dao = Mockery::mock(HiddenFieldsetsDao::class);
 
         $this->tracker_checker = new TrackerChecker(
-            $tracker_factory,
+            $this->tracker_factory,
             $this->frozen_field_dao,
             $this->hidden_fieldset_dao
         );
@@ -111,6 +153,7 @@ class TrackerCheckerTest extends TestCase
     public function testItThrowsAnExceptionIfProvidedTrackerIdIsNotInProject()
     {
         $submitted_id = 5;
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(5);
 
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
 
@@ -118,6 +161,34 @@ class TrackerCheckerTest extends TestCase
         $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
 
         $this->expectException(TrackerNotInProjectException::class);
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+    }
+
+    public function testItThrowsAnExceptionIfProvidedTrackerDoesntExist()
+    {
+        $submitted_id = 7;
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(7);
+
+        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
+
+        $this->expectException(TrackerDoesntExistException::class);
+        $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
+
+        $this->expectException(TrackerDoesntExistException::class);
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+    }
+
+    public function testItThrowsAnExceptionIfProvidedTrackerIdIsDeleted()
+    {
+        $submitted_id = 6;
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(6);
+
+        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
+
+        $this->expectException(TrackerIsDeletedException::class);
+        $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
+
+        $this->expectException(TrackerIsDeletedException::class);
         $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
     }
 
