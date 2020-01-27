@@ -80,7 +80,8 @@ describe("ReleaseBadgesDisplayer", () => {
                     }
                 },
                 additional_panes: [],
-                burndown: null
+                burndown: null,
+                cardwall: null
             }
         };
 
@@ -162,7 +163,8 @@ describe("ReleaseBadgesDisplayer", () => {
                         }
                     },
                     additional_panes: [],
-                    burndown: null
+                    burndown: null,
+                    cardwall: null
                 }
             };
 
@@ -197,7 +199,8 @@ describe("ReleaseBadgesDisplayer", () => {
                         }
                     },
                     additional_panes: [],
-                    burndown: null
+                    burndown: null,
+                    cardwall: null
                 }
             };
 

@@ -78,7 +78,10 @@ describe("ReleaseButtonsDescription", () => {
                         identifier: "taskboard"
                     }
                 ],
-                burndown: null
+                burndown: null,
+                cardwall: {
+                    uri: "/cardwall/"
+                }
             }
         };
 
@@ -172,7 +175,8 @@ describe("ReleaseButtonsDescription", () => {
                         uri: "/project/random"
                     }
                 ],
-                burndown: null
+                burndown: null,
+                cardwall: null
             }
         };
 
@@ -181,6 +185,60 @@ describe("ReleaseButtonsDescription", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains("[data-test=taskboard-link]")).toBe(false);
+    });
+
+    it("When there isn't cardwall in resources, Then there isn't any link to cardwall", async () => {
+        release_data = {
+            id: 2,
+            planning: {
+                id: "100"
+            },
+            number_of_artifact_by_trackers: [],
+            resources: {
+                milestones: {
+                    accept: {
+                        trackers: [
+                            {
+                                label: "Sprint1"
+                            }
+                        ]
+                    }
+                },
+                content: {
+                    accept: {
+                        trackers: []
+                    }
+                },
+                additional_panes: [],
+                burndown: null,
+                cardwall: null
+            }
+        };
+
+        component_options.propsData = {
+            release_data
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains("[data-test=cardwall-link]")).toBe(false);
+    });
+
+    it("When there aren't resources, Then there aren't any link to cardwall and taskboard", async () => {
+        release_data = {
+            id: 2,
+            planning: {
+                id: "100"
+            },
+            number_of_artifact_by_trackers: []
+        };
+
+        component_options.propsData = {
+            release_data
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains("[data-test=cardwall-link]")).toBe(false);
         expect(wrapper.contains("[data-test=taskboard-link]")).toBe(false);
     });
 });

@@ -49,6 +49,7 @@ export interface MilestoneData {
         };
         additional_panes: Pane[];
         burndown: null | { uri: string };
+        cardwall: null | { uri: string };
     };
     number_of_artifact_by_trackers: TrackerNumberArtifacts[];
 }

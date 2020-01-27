@@ -120,7 +120,8 @@ describe("Store actions", () => {
                                 }
                             },
                             additional_panes: [],
-                            burndown: null
+                            burndown: null,
+                            cardwall: null
                         },
                         number_of_artifact_by_trackers: []
                     }
@@ -196,7 +197,8 @@ describe("Store actions", () => {
                         }
                     },
                     additional_panes: [],
-                    burndown: null
+                    burndown: null,
+                    cardwall: null
                 },
                 number_of_artifact_by_trackers: []
             };
