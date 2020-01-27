@@ -125,9 +125,10 @@
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card.taskboard-card-edit-mode,
 .taskboard-card.taskboard-card-edit-mode {
+    z-index: 11;
     margin: 0;
     border: 1px solid $tlp-theme-color;
-    background: transparentize($tlp-theme-color, .9);
+    background: mix($tlp-theme-background-color, $tlp-theme-color, 90%);
 
     &::before,
     >.taskboard-card-progress {

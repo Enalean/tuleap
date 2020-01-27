@@ -19,7 +19,9 @@
   -->
 
 <template>
-    <select class="tlp-input" style="width: 100%;"></select>
+    <select class="tlp-input" style="width: 100%;">
+        <option v-if="!is_multiple"></option>
+    </select>
 </template>
 
 <script lang="ts">
@@ -53,12 +55,15 @@ export default class PeoplePicker extends Vue {
     select2_people_picker: Select2Plugin | null = null;
 
     mounted(): void {
+        const placeholder = this.is_multiple
+            ? { text: this.$gettext("John"), id: "0" }
+            : this.$gettext("Please choose…");
+
         const configuration: Options = {
             allowClear: true,
             data: this.users,
-            multiple: true,
-            maximumSelectionLength: this.is_multiple ? 0 : 1,
-            placeholder: { text: this.$gettext("John"), id: "0" },
+            multiple: this.is_multiple,
+            placeholder,
             escapeMarkup: sanitize,
             templateResult: this.formatUser,
             templateSelection: this.formatUserWhenSelected
@@ -102,7 +107,7 @@ export default class PeoplePicker extends Vue {
 
         return render(
             `<div class="select2-result-user">
-                <div class="tlp-avatar select2-result-user__avatar">
+                <div class="tlp-avatar-mini select2-result-user__avatar">
                     <img src="{{ avatar_url }}">
                 </div>
                 {{ display_name }}

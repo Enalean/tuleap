@@ -301,6 +301,8 @@ $tlp-form-element-select-small-background-size: 6px;
 // scss-lint:disable NestingDepth
 // scss-lint:disable PlaceholderInExtend
 %tlp-select2 {
+    z-index: 2003;
+
     &.select2-container--disabled .select2-selection--single:focus,
     &.select2-container--disabled .select2-selection--multiple:focus {
         border-color: $tlp-form-element-border-color;
@@ -445,12 +447,11 @@ $tlp-form-element-select-small-background-size: 6px;
         }
 
         .select2-results__option {
-            padding: 6px $tlp-form-element-padding-horizontal;
+            padding: 6px $tlp-form-element-padding-horizontal 6px ($tlp-form-element-padding-horizontal + 20px);
             font-size: $tlp-form-element-small-font-size;
             line-height: normal;
 
             &[role="group"] {
-                margin: $tlp-form-element-padding-horizontal 0 0;
                 padding: 0;
 
                 &:first-child {
@@ -461,19 +462,16 @@ $tlp-form-element-select-small-background-size: 6px;
                     padding: 6px $tlp-form-element-padding-horizontal;
                     color: $tlp-ui-dimmed;
                     font-size: $tlp-form-element-small-font-size;
+                    line-height: 30px;
                     font-weight: 600;
                     text-transform: uppercase;
                 }
 
                 .select2-results__options--nested > .select2-results__option {
-                    padding: 6px $tlp-form-element-padding-horizontal 6px $tlp-form-element-padding-horizontal * 2;
+                    padding: 6px $tlp-form-element-padding-horizontal 6px ($tlp-form-element-padding-horizontal + 20px);
 
-                    &[aria-selected="true"] {
-                        padding: 6px $tlp-form-element-padding-horizontal 6px 44px;
-
-                        &::before {
-                            left: $tlp-form-element-padding-horizontal * 2;
-                        }
+                    &[aria-selected="true"]::before {
+                        left: $tlp-form-element-padding-horizontal;
                     }
                 }
             }
@@ -491,9 +489,10 @@ $tlp-form-element-select-small-background-size: 6px;
                 &::before {
                     content: '\f00c'; // fa-check
                     position: absolute;
-                    top: 8px;
+                    top: 9px;
                     left: $tlp-form-element-padding-horizontal;
                     font-family: 'FontAwesome';
+                    font-size: 12px;
                 }
 
                 &.select2-results__option--highlighted {
@@ -514,7 +513,7 @@ $tlp-form-element-select-small-background-size: 6px;
         }
 
         .select2-search--hide + .select2-results .select2-results__option:first-child[role="group"] {
-            padding: $tlp-form-element-padding-horizontal 0 0;
+            padding: 6px 0 0;
         }
     }
 }

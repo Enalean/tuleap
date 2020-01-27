@@ -33,11 +33,11 @@ jest.mock("jquery", () => {
     return (): object => mocked_jquery;
 });
 
-async function getWrapper(): Promise<Wrapper<PeoplePicker>> {
+async function getWrapper(is_multiple = true): Promise<Wrapper<PeoplePicker>> {
     return shallowMount(PeoplePicker, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
-            is_multiple: true,
+            is_multiple,
             users: [
                 {
                     id: 101,
@@ -63,6 +63,16 @@ describe("PeoplePicker", () => {
         expect(mocked_jquery.select2).toBeCalledWith("open");
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Display a select2 element with an empty option if it is not multiple", async () => {
+        const wrapper = await getWrapper(false);
+
+        expect(mocked_jquery.select2).toBeCalledWith("open");
+
+        const options = wrapper.findAll("option");
+        expect(options.length).toBe(1);
+        expect(options.at(0)).toMatchInlineSnapshot("<option></option>");
     });
 
     it("Destroys the select2", async () => {
