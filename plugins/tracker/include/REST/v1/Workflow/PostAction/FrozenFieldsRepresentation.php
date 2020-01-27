@@ -25,18 +25,8 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 
-class FrozenFieldsRepresentation
+class FrozenFieldsRepresentation extends PostActionRepresentation
 {
-    /**
-     * @var int Post Action identifier (unique among actions with same type)
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $type = FrozenFields::SHORT_NAME;
-
     /**
      * @var int[]
      */
@@ -49,6 +39,7 @@ class FrozenFieldsRepresentation
     private function __construct(int $id, array $field_ids)
     {
         $this->id   = $id;
+        $this->type = FrozenFields::SHORT_NAME;
         $this->field_ids = $field_ids;
     }
 

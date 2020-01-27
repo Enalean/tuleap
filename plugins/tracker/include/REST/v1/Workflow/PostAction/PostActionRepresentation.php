@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,37 +16,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
-use Tuleap\REST\JsonCast;
-
-class RunJobRepresentation extends PostActionRepresentation
+abstract class PostActionRepresentation
 {
+    /**
+     * @var int Action identifier (unique among actions with same type and same field type)
+     */
+    public $id;
+
     /**
      * @var string
      */
-    public $job_url;
-
-    private function __construct($id, $job_url)
-    {
-        $this->id      = $id;
-        $this->type    = "run_job";
-        $this->job_url = $job_url;
-    }
-
-    /**
-     * @param int $id Action identifier (unique among actions with same type)
-     * @param string $job_url
-     * @return RunJobRepresentation
-     */
-    public static function build($id, $job_url)
-    {
-        return new self(
-            JsonCast::toInt($id),
-            $job_url
-        );
-    }
+    public $type;
 }

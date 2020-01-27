@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
+use EventManager;
 use Luracast\Restler\RestException;
 use Tracker_RuleFactory;
 use TrackerFactory;
@@ -331,7 +332,12 @@ class TransitionsResource extends AuthenticatedResource
         }
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt($current_user, $project);
 
-        return (new PostActionsRepresentationBuilder($transition->getAllPostActions()))->build();
+        $post_actions_representation_builder = new PostActionsRepresentationBuilder(
+            EventManager::instance(),
+            $transition->getAllPostActions()
+        );
+
+        return $post_actions_representation_builder->build();
     }
 
     /**
@@ -413,7 +419,7 @@ class TransitionsResource extends AuthenticatedResource
                 ProjectStatusVerificator::build(),
                 $this->getPostActionCollectionJsonParser(),
                 $this->getPostActionCollectionUpdater(),
-                new TrackerChecker(\EventManager::instance()),
+                new TrackerChecker(EventManager::instance()),
                 $this->getTransactionExecutor(),
                 $this->getStateFactory(),
                 $this->getTransitionUpdater()

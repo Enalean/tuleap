@@ -45,7 +45,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         UnplannedArtifactsAdder $unplanned_artifacts_adder
     ) {
         $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
-        $this->unplanned_artifacts_adder = $unplanned_artifacts_adder;
+        $this->unplanned_artifacts_adder          = $unplanned_artifacts_adder;
     }
 
     public function loadPostActions(Transition $transition)

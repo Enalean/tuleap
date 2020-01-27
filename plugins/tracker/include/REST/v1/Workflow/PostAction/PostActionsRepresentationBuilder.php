@@ -20,18 +20,19 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
+use EventManager;
 use Transition_PostAction;
 use Transition_PostAction_CIBuild;
 use Transition_PostAction_Field_Date;
 use Transition_PostAction_Field_Float;
 use Transition_PostAction_Field_Int;
+use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class PostActionsRepresentationBuilder implements Visitor
 {
-
     /**
      * @var Transition_PostAction[]
      */
@@ -43,11 +44,13 @@ class PostActionsRepresentationBuilder implements Visitor
     private $post_action_representations;
 
     /**
-     *
-     * @param Transition_PostAction[] $post_actions
+     * @var EventManager
      */
-    public function __construct(array $post_actions)
+    private $event_manager;
+
+    public function __construct(EventManager $event_manager, array $post_actions)
     {
+        $this->event_manager               = $event_manager;
         $this->post_actions                = $post_actions;
         $this->post_action_representations = [];
     }
@@ -120,5 +123,18 @@ class PostActionsRepresentationBuilder implements Visitor
             $hidden_fieldsets->getId(),
             $fieldset_ids
         );
+    }
+
+    public function visitExternalActions(Transition_PostAction $post_action)
+    {
+        $event = new PostActionVisitExternalActionsEvent($post_action);
+        $this->event_manager->processEvent($event);
+
+        $external_post_action = $event->getRepresentation();
+        if ($external_post_action === null) {
+            return;
+        }
+
+        $this->post_action_representations[] = $external_post_action;
     }
 }

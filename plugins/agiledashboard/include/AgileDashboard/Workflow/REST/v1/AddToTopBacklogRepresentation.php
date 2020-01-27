@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,37 +16,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
+declare(strict_types=1);
 
-use Tuleap\REST\JsonCast;
+namespace Tuleap\AgileDashboard\Workflow\REST\v1;
 
-class RunJobRepresentation extends PostActionRepresentation
+use Tuleap\AgileDashboard\Workflow\AddToTopBacklog;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionRepresentation;
+
+class AddToTopBacklogRepresentation extends PostActionRepresentation
 {
-    /**
-     * @var string
-     */
-    public $job_url;
-
-    private function __construct($id, $job_url)
+    public function __construct(int $id)
     {
-        $this->id      = $id;
-        $this->type    = "run_job";
-        $this->job_url = $job_url;
+        $this->id   = $id;
+        $this->type = AddToTopBacklog::SHORT_NAME;
     }
 
-    /**
-     * @param int $id Action identifier (unique among actions with same type)
-     * @param string $job_url
-     * @return RunJobRepresentation
-     */
-    public static function build($id, $job_url)
+    public static function buildFromObject(AddToTopBacklog $add_to_top_backlog): self
     {
         return new self(
-            JsonCast::toInt($id),
-            $job_url
+            $add_to_top_backlog->getId()
         );
     }
 }
