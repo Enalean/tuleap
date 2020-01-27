@@ -203,6 +203,10 @@ describe("Store actions", () => {
                 number_of_artifact_by_trackers: []
             };
 
+            const sprint = {
+                id: 10
+            } as MilestoneData;
+
             const enriched_milestones = {
                 ...milestone,
                 number_of_artifact_by_trackers: [
@@ -220,8 +224,9 @@ describe("Store actions", () => {
                     }
                 ],
                 initial_effort: 15,
-                total_sprint: 15,
-                total_closed_sprint: 10
+                total_sprint: 11,
+                total_closed_sprint: 10,
+                open_sprints: [sprint]
             };
 
             const milestone_content = [
@@ -254,7 +259,7 @@ describe("Store actions", () => {
             jest.spyOn(rest_querier, "getMilestonesContent").mockReturnValue(
                 Promise.resolve(milestone_content)
             );
-            jest.spyOn(rest_querier, "getNbOfSprints").mockReturnValue(Promise.resolve(15));
+            jest.spyOn(rest_querier, "getOpenSprints").mockReturnValue(Promise.resolve([sprint]));
             jest.spyOn(rest_querier, "getNbOfClosedSprints").mockReturnValue(Promise.resolve(10));
 
             const enriched_milestones_received = await actions.getEnhancedMilestones(
