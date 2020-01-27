@@ -98,10 +98,10 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
     public function removeExplicitBacklogOfProject(int $project_id): void
     {
         $sql = 'DELETE plugin_agiledashboard_planning_artifacts_explicit_backlog, plugin_agiledashboard_planning_explicit_backlog_usage
-                FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
-                INNER JOIN plugin_agiledashboard_planning_explicit_backlog_usage
+                FROM plugin_agiledashboard_planning_explicit_backlog_usage
+                LEFT JOIN plugin_agiledashboard_planning_artifacts_explicit_backlog
                     ON (plugin_agiledashboard_planning_artifacts_explicit_backlog.project_id = plugin_agiledashboard_planning_explicit_backlog_usage.project_id)
-                WHERE plugin_agiledashboard_planning_artifacts_explicit_backlog.project_id = ?';
+                WHERE plugin_agiledashboard_planning_explicit_backlog_usage.project_id = ?';
 
         $this->getDB()->run($sql, $project_id);
     }
