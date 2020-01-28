@@ -92,7 +92,7 @@ class ScrumBoardTypeSelectorControllerTest extends TestCase
         $request = m::mock(\HTTPRequest::class);
         $request->shouldReceive('get')->with('scrum-board-type')->andReturn('taskboard')->once();
 
-        $this->dao->shouldReceive('createBoardTypeByProjectId')->with(150, 'taskboard')->once();
+        $this->dao->shouldReceive('create')->with(150, 'taskboard')->once();
 
         $this->getController()->onSubmitCallback($request);
     }
@@ -104,7 +104,7 @@ class ScrumBoardTypeSelectorControllerTest extends TestCase
         $request = m::mock(\HTTPRequest::class);
         $request->shouldReceive('get')->with('scrum-board-type')->andReturn('cardwall')->once();
 
-        $this->dao->shouldReceive('createBoardTypeByProjectId')->with(150, 'taskboard')->never();
+        $this->dao->shouldReceive('create')->with(150, 'taskboard')->never();
 
         $this->getController()->onSubmitCallback($request);
     }

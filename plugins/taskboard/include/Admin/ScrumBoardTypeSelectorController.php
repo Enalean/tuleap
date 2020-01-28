@@ -68,7 +68,7 @@ class ScrumBoardTypeSelectorController implements IScrumAdminSectionControllers
         if ($board_type !== TaskboardUsage::OPTION_CARDWALL_AND_TASKBOARD &&
             $current_board_type === TaskboardUsage::OPTION_CARDWALL_AND_TASKBOARD
         ) {
-            $this->dao->createBoardTypeByProjectId($project_id, $board_type);
+            $this->dao->create($project_id, $board_type);
         } else {
             $this->updateBoardType($project_id, $board_type);
         }

@@ -38,6 +38,7 @@ use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
 use Tuleap\Taskboard\AgileDashboard\TaskboardUsage;
 use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDao;
+use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDuplicator;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
 use Tuleap\Taskboard\REST\ResourcesInjector;
@@ -79,6 +80,7 @@ class taskboardPlugin extends Plugin
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(GetAdditionalScrumAdminSection::NAME);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
@@ -235,5 +237,15 @@ class taskboardPlugin extends Plugin
                 \TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates/Admin")
             )
         );
+    }
+
+    /** @see Event::REGISTER_PROJECT_CREATION */
+    public function registerProjectCreation(array $params): void
+    {
+        $project_id  = (int) $params['group_id'];
+        $template_id = (int) $params['template_id'];
+
+        $duplicator = new TaskboardUsageDuplicator(new TaskboardUsageDao());
+        $duplicator->duplicateUsage($project_id, $template_id);
     }
 }
