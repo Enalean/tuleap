@@ -27,11 +27,12 @@ describe("Chart Helpers", () => {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString()
             } as BurndownData;
 
+            const label = "Burndown";
             const artifact = {
                 values: [
                     {
                         field_id: 10,
-                        label: "burndown",
+                        label,
                         value: burndown_data,
                         type: "burndown"
                     }
@@ -40,7 +41,7 @@ describe("Chart Helpers", () => {
 
             const burndown = getBurndownDataFromType(artifact);
 
-            expect(burndown).toBe(burndown_data);
+            expect(burndown).toStrictEqual({ ...burndown_data, label });
         });
     });
 });

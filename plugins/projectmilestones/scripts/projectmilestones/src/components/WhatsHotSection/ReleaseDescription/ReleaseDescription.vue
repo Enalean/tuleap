@@ -21,10 +21,10 @@
     <div>
         <div class="release-content-description">
             <release-description-badges-tracker v-bind:release_data="release_data" />
-            <div v-if="burndown_exits" class="release-chart-burndown-row">
-                <h2 class="tlp-pane-subtitle" v-translate>Burndown</h2>
-                <burndown-chart v-bind:release_data="release_data" />
-            </div>
+            <chart-displayer
+                class="release-chart-burndown-row"
+                v-bind:release_data="release_data"
+            />
         </div>
         <div class="release-description-row">
             <div
@@ -45,18 +45,18 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../type";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
-import BurndownChart from "./Chart/BurndownChart.vue";
 import ReleaseButtonsDescription from "./ReleaseButtonsDescription.vue";
+import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 
 @Component({
-    components: { ReleaseButtonsDescription, ReleaseDescriptionBadgesTracker, BurndownChart }
+    components: {
+        ChartDisplayer,
+        ReleaseButtonsDescription,
+        ReleaseDescriptionBadgesTracker
+    }
 })
 export default class ReleaseDescription extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-
-    get burndown_exits(): boolean {
-        return this.release_data.resources.burndown !== null;
-    }
 }
 </script>

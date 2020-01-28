@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+  - Copyright (c) Enalean, 2020 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -25,13 +25,13 @@
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../../type";
+import { MilestoneData } from "../../../../../type";
 import Vue from "vue";
-import { createBurndownChart } from "../../../../burndown_chart_builder/burndown-chart-drawer";
-import { ChartPropsBurndownWhithoutTooltip } from "../../../../../../../../../src/www/scripts/charts-builders/type";
+import { createBurndownChart } from "../../../../../burndown_chart_builder/burndown-chart-drawer";
+import { ChartPropsBurndownWhithoutTooltip } from "../../../../../../../../../../src/www/scripts/charts-builders/type";
 
 @Component
-export default class BurndownChartDisplayer extends Vue {
+export default class Burndown extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
 

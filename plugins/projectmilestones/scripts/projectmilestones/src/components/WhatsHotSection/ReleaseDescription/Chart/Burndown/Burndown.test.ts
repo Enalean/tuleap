@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,28 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MilestoneData, StoreOptions } from "../../../../type";
+import { MilestoneData, StoreOptions } from "../../../../../type";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
-import BurndownChartDisplayer from "./BurndownChartDisplayer.vue";
+import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
+import Burndown from "./Burndown.vue";
 
-const component_options: ShallowMountOptions<BurndownChartDisplayer> = {};
+const component_options: ShallowMountOptions<Burndown> = {};
 let release_data: MilestoneData;
 
-describe("BurndownChartDisplayer", () => {
+describe("Burndown", () => {
     let store_options: StoreOptions;
     let store;
 
     async function getPersonalWidgetInstance(
         store_options: StoreOptions
-    ): Promise<Wrapper<BurndownChartDisplayer>> {
+    ): Promise<Wrapper<Burndown>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
-        return shallowMount(BurndownChartDisplayer, component_options);
+        return shallowMount(Burndown, component_options);
     }
 
     beforeEach(() => {

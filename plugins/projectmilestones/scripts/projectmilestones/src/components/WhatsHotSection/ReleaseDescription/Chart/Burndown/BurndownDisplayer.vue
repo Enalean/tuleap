@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+  - Copyright (c) Enalean, 2020 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -19,9 +19,8 @@
 
 <template>
     <div>
-        <div v-if="is_loading" class="release-loader" data-test="loading-data"></div>
-        <burndown-chart-error
-            v-else-if="
+        <burndown-error
+            v-if="
                 has_error_rest || has_error_duration || has_error_start_date || is_under_calculation
             "
             v-bind:has_error_rest="has_error_rest"
@@ -35,27 +34,26 @@
                 $gettext('Burndown is under calculation. It will be available in a few minutes.')
             "
         />
-        <burndown-chart-displayer v-else v-bind:release_data="release_data" />
+        <burndown v-else v-bind:release_data="release_data" />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../../type";
+import { MilestoneData } from "../../../../../type";
 import Vue from "vue";
-import BurndownChartError from "./BurndownChartError.vue";
-import BurndownChartDisplayer from "./BurndownChartDisplayer.vue";
-import { FetchWrapperError } from "tlp";
-import { getBurndownData } from "../../../../api/rest-querier";
+import BurndownError from "./BurndownError.vue";
+import Burndown from "./Burndown.vue";
 import { State } from "vuex-class";
 import { sprintf } from "sprintf-js";
-import { getBurndownDataFromType } from "../../../../helpers/chart-helper";
 @Component({
-    components: { BurndownChartError, BurndownChartDisplayer }
+    components: { BurndownError, Burndown }
 })
-export default class BurndownChart extends Vue {
+export default class BurndownDisplayer extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @Prop()
+    readonly message_error_rest!: string | null;
     @State
     readonly is_timeframe_duration!: boolean;
     @State
@@ -63,27 +61,8 @@ export default class BurndownChart extends Vue {
     @State
     readonly label_timeframe!: string;
 
-    is_loading = true;
-    message_error_rest: string | null = null;
-
     get has_error_rest(): boolean {
         return this.message_error_rest !== null;
-    }
-
-    async created(): Promise<void> {
-        if (!this.release_data.burndown_data) {
-            try {
-                const burndown_values = await getBurndownData(this.release_data.id);
-
-                this.release_data.burndown_data = getBurndownDataFromType(burndown_values);
-            } catch (rest_error) {
-                await this.handle_error(rest_error);
-            } finally {
-                this.is_loading = false;
-            }
-        } else {
-            this.is_loading = false;
-        }
     }
 
     get message_error_duration(): string {
@@ -119,19 +98,6 @@ export default class BurndownChart extends Vue {
         }
 
         return this.release_data.burndown_data.is_under_calculation;
-    }
-
-    async handle_error(rest_error: FetchWrapperError): Promise<void> {
-        if (rest_error.response === undefined) {
-            this.message_error_rest = this.$gettext("Oops, an error occurred!");
-            throw rest_error;
-        }
-        try {
-            const { error } = await rest_error.response.json();
-            this.message_error_rest = error.code + " " + error.message;
-        } catch (error) {
-            this.message_error_rest = this.$gettext("Oops, an error occurred!");
-        }
     }
 }
 </script>

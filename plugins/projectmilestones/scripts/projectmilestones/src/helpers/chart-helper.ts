@@ -23,7 +23,8 @@ export function getBurndownDataFromType(chart_data: ArtifactMilestone): null | B
 
     for (const chart of iterator_milestone_chart) {
         if (chart.type === "burndown") {
-            return chart.value;
+            const burndown_data = chart.value;
+            return { ...burndown_data, label: chart.label };
         }
     }
 
