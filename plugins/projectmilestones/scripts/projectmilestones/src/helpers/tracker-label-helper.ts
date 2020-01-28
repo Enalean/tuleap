@@ -20,9 +20,6 @@
 import { MilestoneData } from "../type";
 
 export function getTrackerSubmilestoneLabel(release_data: MilestoneData): string {
-    if (!release_data.resources) {
-        return "";
-    }
     const submilestone_tracker = release_data.resources.milestones.accept.trackers[0];
 
     if (!submilestone_tracker) {

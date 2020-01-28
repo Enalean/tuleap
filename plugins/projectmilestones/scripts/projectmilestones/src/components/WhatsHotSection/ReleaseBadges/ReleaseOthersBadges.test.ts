@@ -53,35 +53,11 @@ describe("ReleaseOthersBadges", () => {
         };
 
         release_data = {
-            label: "mile",
             id: 2,
-            planning: {
-                id: "100"
-            },
             capacity: 10,
             total_sprint,
-            initial_effort,
-            number_of_artifact_by_trackers: [],
-            resources: {
-                milestones: {
-                    accept: {
-                        trackers: [
-                            {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
-                },
-                content: {
-                    accept: {
-                        trackers: []
-                    }
-                },
-                additional_panes: [],
-                burndown: null,
-                cardwall: null
-            }
-        };
+            initial_effort
+        } as MilestoneData;
 
         component_options.propsData = { release_data };
     });
@@ -96,39 +72,13 @@ describe("ReleaseOthersBadges", () => {
 
         it("When there is initial effort but null, Then the points of initial effort are 'N/A'", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
                 capacity: 10,
                 total_sprint,
-                initial_effort: null,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort: null
+            } as MilestoneData;
 
             component_options.propsData = { release_data };
-            const wrapper = await getPersonalWidgetInstance(store_options);
-
-            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBe(false);
-            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBe(true);
-        });
-
-        it("When there isn't initial effort, Then the points of initial effort are 'N/A'", async () => {
-            release_data = {
-                label: "mile",
-                id: 2,
-                planning: {
-                    id: "100"
-                },
-                capacity: null,
-                total_sprint,
-                number_of_artifact_by_trackers: []
-            };
-
-            component_options.propsData = {
-                release_data
-            };
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBe(false);
@@ -146,38 +96,11 @@ describe("ReleaseOthersBadges", () => {
 
         it("When there are points of capacity but null, Then the points of capacity are 'N/A'", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
                 capacity: null,
                 total_sprint,
-                initial_effort,
-                number_of_artifact_by_trackers: []
-            };
-
-            component_options.propsData = {
-                release_data
-            };
-
-            const wrapper = await getPersonalWidgetInstance(store_options);
-
-            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBe(false);
-            expect(wrapper.contains("[data-test=capacity-empty]")).toBe(true);
-        });
-
-        it("When there aren't points of capacity, Then the points of capacity are 'N/A'", async () => {
-            release_data = {
-                label: "mile",
-                id: 2,
-                planning: {
-                    id: "100"
-                },
-                total_sprint,
-                initial_effort,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MilestoneData, StoreOptions } from "../../../../type";
+import { BurndownData, MilestoneData, StoreOptions } from "../../../../type";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import BurndownChart from "./BurndownChart.vue";
@@ -56,11 +56,7 @@ describe("BurndownChart", () => {
 
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            number_of_artifact_by_trackers: [],
             burndown_data: {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 10,
@@ -69,8 +65,8 @@ describe("BurndownChart", () => {
                 is_under_calculation: true,
                 opening_days: [],
                 points_with_date: []
-            }
-        };
+            } as BurndownData
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -92,11 +88,7 @@ describe("BurndownChart", () => {
     it("When there isn't start date, Then BurndownChartError component is rendered", async () => {
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
             start_date: null,
-            number_of_artifact_by_trackers: [],
             burndown_data: {
                 start_date: "",
                 duration: 10,
@@ -105,8 +97,8 @@ describe("BurndownChart", () => {
                 is_under_calculation: false,
                 opening_days: [],
                 points_with_date: []
-            }
-        };
+            } as BurndownData
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -121,14 +113,10 @@ describe("BurndownChart", () => {
         expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
-    it("When there isn't duration, Then BurndownChartError component is rendered", async () => {
+    it("When there duration is equal to 0, Then BurndownChartError component is rendered", async () => {
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            number_of_artifact_by_trackers: [],
             burndown_data: {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 0,
@@ -137,8 +125,8 @@ describe("BurndownChart", () => {
                 is_under_calculation: false,
                 opening_days: [],
                 points_with_date: []
-            }
-        };
+            } as BurndownData
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -156,11 +144,7 @@ describe("BurndownChart", () => {
     it("When duration is null, Then BurndownChartError component is rendered", async () => {
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            number_of_artifact_by_trackers: [],
             burndown_data: {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: null,
@@ -169,8 +153,8 @@ describe("BurndownChart", () => {
                 is_under_calculation: false,
                 opening_days: [],
                 points_with_date: []
-            }
-        };
+            } as BurndownData
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -185,14 +169,10 @@ describe("BurndownChart", () => {
         expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
-    it("When duration is null and there isn't start date, Then BurndownChartError component is rendered", async () => {
+    it("When duration is null and start date is null, Then BurndownChartError component is rendered", async () => {
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
             start_date: null,
-            number_of_artifact_by_trackers: [],
             burndown_data: {
                 start_date: "",
                 duration: null,
@@ -201,8 +181,8 @@ describe("BurndownChart", () => {
                 is_under_calculation: false,
                 opening_days: [],
                 points_with_date: []
-            }
-        };
+            } as BurndownData
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -220,11 +200,7 @@ describe("BurndownChart", () => {
     it("When duration is null and it is under calculation, Then BurndownChartError component is rendered", async () => {
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            number_of_artifact_by_trackers: [],
             burndown_data: {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: null,
@@ -233,8 +209,8 @@ describe("BurndownChart", () => {
                 is_under_calculation: true,
                 opening_days: [],
                 points_with_date: []
-            }
-        };
+            } as BurndownData
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -252,11 +228,7 @@ describe("BurndownChart", () => {
     it("When the burndown can be created, Then component BurndownChartDisplayer is rendered", async () => {
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            number_of_artifact_by_trackers: [],
             burndown_data: {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 10,
@@ -265,8 +237,8 @@ describe("BurndownChart", () => {
                 is_under_calculation: false,
                 opening_days: [],
                 points_with_date: []
-            }
-        };
+            } as BurndownData
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -292,13 +264,9 @@ describe("BurndownChart", () => {
 
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            number_of_artifact_by_trackers: [],
             burndown_data: null
-        };
+        } as MilestoneData;
 
         component_options.data = (): DefaultData<BurndownChart> => {
             return {
@@ -363,12 +331,8 @@ describe("BurndownChart", () => {
         store_options.state.is_timeframe_duration = false;
         release_data = {
             id: 2,
-            planning: {
-                id: "100"
-            },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             end_date: null,
-            number_of_artifact_by_trackers: [],
             burndown_data: {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 10,
@@ -377,38 +341,8 @@ describe("BurndownChart", () => {
                 is_under_calculation: false,
                 opening_days: [],
                 points_with_date: []
-            }
-        };
-
-        component_options.propsData = {
-            release_data
-        };
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownChartError);
-
-        expect(burndown_error.attributes("has_error_duration")).toBeTruthy();
-    });
-
-    it("When the timeframe is not on duration field and there isn't end date, Then there is an error", async () => {
-        store_options.state.is_timeframe_duration = false;
-        release_data = {
-            id: 2,
-            planning: {
-                id: "100"
-            },
-            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            number_of_artifact_by_trackers: [],
-            burndown_data: {
-                start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-                duration: 10,
-                capacity: 10,
-                points: [],
-                is_under_calculation: false,
-                opening_days: [],
-                points_with_date: []
-            }
-        };
+            } as BurndownData
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data
@@ -429,7 +363,6 @@ describe("BurndownChart", () => {
             },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             end_date: new Date("2019-02-05T11:41:01+02:00").toDateString(),
-            number_of_artifact_by_trackers: [],
             burndown_data: {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 10,
@@ -438,8 +371,8 @@ describe("BurndownChart", () => {
                 is_under_calculation: false,
                 opening_days: [],
                 points_with_date: []
-            }
-        };
+            } as BurndownData
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data

@@ -72,16 +72,14 @@ export default class ReleaseHeaderRemainingDays extends Vue {
     readonly project_id!: number;
 
     disabled_date =
-        (!this.release_data.number_days_since_start &&
-            this.release_data.number_days_since_start !== 0) ||
-        (!this.release_data.number_days_until_end && this.release_data.number_days_until_end !== 0);
+        typeof this.release_data.number_days_since_start !== "number" ||
+        typeof this.release_data.number_days_until_end !== "number";
 
     formatDate = (date: number): number => (date && date > 0 ? date : 0);
 
     get are_dates_correctly_set(): boolean {
         if (
-            this.release_data.number_days_since_start === null ||
-            typeof this.release_data.number_days_since_start === "undefined" ||
+            typeof this.release_data.number_days_since_start !== "number" ||
             !this.release_data.number_days_until_end
         ) {
             return false;
@@ -120,11 +118,11 @@ export default class ReleaseHeaderRemainingDays extends Vue {
         const days_since_start = this.release_data.number_days_since_start;
         const days_until_end = this.release_data.number_days_until_end;
 
-        if (!days_since_start && days_since_start !== 0) {
+        if (typeof days_since_start !== "number") {
             return this.$gettext("No start date defined.");
         }
 
-        if (!days_until_end && days_until_end !== 0) {
+        if (typeof days_until_end !== "number") {
             return this.$gettext("No end date defined.");
         }
 

@@ -20,7 +20,7 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
 import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { MilestoneData, StoreOptions } from "../../../type";
+import { MilestoneData, StoreOptions, TrackerProjectLabel } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
@@ -53,15 +53,9 @@ describe("ReleaseBadgesAllSprints", () => {
         };
 
         release_data = {
-            label: "mile",
             id: 2,
-            planning: {
-                id: "100"
-            },
-            capacity: 10,
             total_sprint,
             initial_effort,
-            number_of_artifact_by_trackers: [],
             resources: {
                 milestones: {
                     accept: {
@@ -71,17 +65,9 @@ describe("ReleaseBadgesAllSprints", () => {
                             }
                         ]
                     }
-                },
-                content: {
-                    accept: {
-                        trackers: []
-                    }
-                },
-                additional_panes: [],
-                burndown: null,
-                cardwall: null
+                }
             }
-        };
+        } as MilestoneData;
 
         component_options.propsData = { release_data };
     });
@@ -95,15 +81,17 @@ describe("ReleaseBadgesAllSprints", () => {
 
         it("When there isn't tracker, Then there is no link", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
                 total_sprint,
                 initial_effort,
-                number_of_artifact_by_trackers: []
-            };
+                resources: {
+                    milestones: {
+                        accept: {
+                            trackers: [] as TrackerProjectLabel[]
+                        }
+                    }
+                }
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data

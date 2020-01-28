@@ -41,9 +41,8 @@ describe("getProject() -", () => {
         const milestones: MilestoneData[] = [
             {
                 id: 1,
-                start_date: new Date().toDateString(),
-                number_of_artifact_by_trackers: []
-            }
+                start_date: new Date().toDateString()
+            } as MilestoneData
         ];
 
         const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
@@ -77,9 +76,8 @@ describe("getProject() -", () => {
         const sprints: MilestoneData[] = [
             {
                 id: 1,
-                start_date: new Date().toDateString(),
-                number_of_artifact_by_trackers: []
-            }
+                start_date: new Date().toDateString()
+            } as MilestoneData
         ];
 
         const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
@@ -192,14 +190,12 @@ describe("getProject() -", () => {
         const sprints: MilestoneData[] = [
             {
                 id: 1,
-                start_date: new Date().toDateString(),
-                number_of_artifact_by_trackers: []
-            },
+                start_date: new Date().toDateString()
+            } as MilestoneData,
             {
                 id: 2,
-                start_date: new Date().toDateString(),
-                number_of_artifact_by_trackers: []
-            }
+                start_date: new Date().toDateString()
+            } as MilestoneData
         ];
 
         const tlpGetMock = jest.spyOn(tlp, "get");

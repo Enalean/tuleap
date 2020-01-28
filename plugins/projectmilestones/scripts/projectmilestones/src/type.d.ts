@@ -18,41 +18,41 @@
  */
 
 export interface MilestoneData {
-    label?: string;
+    label: string;
     id: number;
-    capacity?: number | null;
-    start_date?: string | null;
-    end_date?: string | null;
-    planning?: {
+    capacity: number | null;
+    start_date: string | null;
+    end_date: string | null;
+    planning: {
         id: string;
     };
-    number_days_until_end?: number | null;
-    number_days_since_start?: number | null;
-    remaining_effort?: number | null;
-    initial_effort?: number | null;
-    total_sprint?: number | null;
-    total_closed_sprint?: number | null;
-    open_sprints?: MilestoneData[] | null;
-    burndown_data?: BurndownData | null;
-    description?: string | null;
-    resources?: {
-        content: {
-            accept: {
-                trackers: TrackerProjectWithoutColor[];
-            };
-        };
-        milestones: {
-            accept: {
-                trackers: {
-                    label: string;
-                }[];
-            };
-        };
-        additional_panes: Pane[];
-        burndown: null | { uri: string };
-        cardwall: null | { uri: string };
-    };
+    number_days_until_end: number | null;
+    number_days_since_start: number | null;
+    remaining_effort: number | null;
+    initial_effort: number | null;
+    total_sprint: number | null;
+    total_closed_sprint: number | null;
+    open_sprints: MilestoneData[] | null;
+    burndown_data: BurndownData | null;
+    description: string | null;
+    resources: MilestoneResourcesData;
     number_of_artifact_by_trackers: TrackerNumberArtifacts[];
+}
+
+export interface MilestoneResourcesData {
+    content: {
+        accept: {
+            trackers: TrackerProjectWithoutColor[];
+        };
+    };
+    milestones: {
+        accept: {
+            trackers: TrackerProjectLabel[];
+        };
+    };
+    additional_panes: Pane[];
+    burndown: null | { uri: string };
+    cardwall: null | { uri: string };
 }
 
 export interface Pane {
@@ -71,6 +71,10 @@ export interface TrackerNumberArtifacts {
 
 export interface TrackerProjectWithoutColor {
     id: number;
+    label: string;
+}
+
+export interface TrackerProjectLabel {
     label: string;
 }
 

@@ -24,7 +24,7 @@ import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-t
 import BurndownChartDisplayer from "./BurndownChartDisplayer.vue";
 
 const component_options: ShallowMountOptions<BurndownChartDisplayer> = {};
-let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
+let release_data: MilestoneData;
 
 describe("BurndownChartDisplayer", () => {
     let store_options: StoreOptions;
@@ -47,12 +47,8 @@ describe("BurndownChartDisplayer", () => {
         };
 
         release_data = {
-            id: 2,
-            planning: {
-                id: "100"
-            },
-            number_of_artifact_by_trackers: []
-        };
+            id: 2
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data

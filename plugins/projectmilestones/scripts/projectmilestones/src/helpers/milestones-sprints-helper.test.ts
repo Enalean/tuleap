@@ -24,9 +24,8 @@ describe("Milestones Sprints Helper", () => {
     describe("openSprintsExists", () => {
         it("When total_sprints is undefined, Then false returned", () => {
             const release_data: MilestoneData = {
-                id: 10,
-                number_of_artifact_by_trackers: []
-            };
+                id: 10
+            } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
             expect(exists).toBe(false);
@@ -34,9 +33,8 @@ describe("Milestones Sprints Helper", () => {
         it("When total_sprints is null, Then false returned", () => {
             const release_data: MilestoneData = {
                 id: 10,
-                number_of_artifact_by_trackers: [],
                 total_sprint: null
-            };
+            } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
             expect(exists).toBe(false);
@@ -44,9 +42,8 @@ describe("Milestones Sprints Helper", () => {
         it("When total_sprints is defined but open_sprints is undefined, Then false returned", () => {
             const release_data: MilestoneData = {
                 id: 10,
-                number_of_artifact_by_trackers: [],
                 total_sprint: 10
-            };
+            } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
             expect(exists).toBe(false);
@@ -54,10 +51,9 @@ describe("Milestones Sprints Helper", () => {
         it("When total_sprints is defined but open_sprints is null, Then false returned", () => {
             const release_data: MilestoneData = {
                 id: 10,
-                number_of_artifact_by_trackers: [],
                 total_sprint: 10,
                 open_sprints: null
-            };
+            } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
             expect(exists).toBe(false);
@@ -65,10 +61,9 @@ describe("Milestones Sprints Helper", () => {
         it("When total_sprints is defined but open_sprints is an empty array, Then false returned", () => {
             const release_data: MilestoneData = {
                 id: 10,
-                number_of_artifact_by_trackers: [],
                 total_sprint: 10,
-                open_sprints: []
-            };
+                open_sprints: [] as MilestoneData[]
+            } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
             expect(exists).toBe(false);
@@ -76,10 +71,9 @@ describe("Milestones Sprints Helper", () => {
         it("When total_sprints is defined but there are open_sprints, Then true returned", () => {
             const release_data: MilestoneData = {
                 id: 10,
-                number_of_artifact_by_trackers: [],
                 total_sprint: 10,
-                open_sprints: [{ id: 1, number_of_artifact_by_trackers: [] }]
-            };
+                open_sprints: [{ id: 1 } as MilestoneData]
+            } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
             expect(exists).toBe(true);

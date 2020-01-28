@@ -26,8 +26,6 @@ import ReleaseBadgesDisplayerIfOpenSprints from "./ReleaseBadgesDisplayerIfOpenS
 import ReleaseBadgesDisplayerIfOnlyClosedSprints from "./ReleaseBadgesDisplayerIfOnlyClosedSprints.vue";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
-const total_sprint = 10;
-const initial_effort = 10;
 const component_options: ShallowMountOptions<ReleaseBadgesDisplayer> = {};
 
 const project_id = 102;
@@ -54,53 +52,16 @@ describe("ReleaseBadgesDisplayer", () => {
             }
         };
 
-        release_data = {
-            label: "mile",
-            id: 2,
-            planning: {
-                id: "100"
-            },
-            capacity: 10,
-            total_sprint,
-            initial_effort,
-            number_of_artifact_by_trackers: [],
-            resources: {
-                milestones: {
-                    accept: {
-                        trackers: [
-                            {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
-                },
-                content: {
-                    accept: {
-                        trackers: []
-                    }
-                },
-                additional_panes: [],
-                burndown: null,
-                cardwall: null
-            }
-        };
-
         component_options.propsData = { release_data };
     });
 
     describe("Display number of sprint", () => {
         it("When there are not open sprints, Then ReleaseBadgesDisplayerIfOpenSprints is not rendered", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
                 total_sprint: 0,
-                open_sprints: [],
-                initial_effort,
-                number_of_artifact_by_trackers: []
-            };
+                open_sprints: [] as MilestoneData[]
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -114,15 +75,9 @@ describe("ReleaseBadgesDisplayer", () => {
 
         it("When total_sprints is null, Then ReleaseBadgesDisplayerIfOpenSprints is not rendered", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                total_sprint: null,
-                initial_effort,
-                number_of_artifact_by_trackers: []
-            };
+                total_sprint: null
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -136,39 +91,14 @@ describe("ReleaseBadgesDisplayer", () => {
 
         it("When there are some open sprints, Then ReleaseBadgesDisplayerIfOpenSprints is rendered", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
                 total_sprint: 10,
-                initial_effort,
                 open_sprints: [
                     {
                         id: 10
                     } as MilestoneData
-                ],
-                number_of_artifact_by_trackers: [],
-                resources: {
-                    milestones: {
-                        accept: {
-                            trackers: [
-                                {
-                                    label: "Sprint1"
-                                }
-                            ]
-                        }
-                    },
-                    content: {
-                        accept: {
-                            trackers: []
-                        }
-                    },
-                    additional_panes: [],
-                    burndown: null,
-                    cardwall: null
-                }
-            };
+                ]
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data

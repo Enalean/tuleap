@@ -20,12 +20,11 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { MilestoneData, StoreOptions } from "../../../type";
+import { MilestoneData, StoreOptions, TrackerProjectLabel } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
-const initial_effort = 10;
 const component_options: ShallowMountOptions<ReleaseBadgesClosedSprints> = {};
 
 const project_id = 102;
@@ -52,35 +51,15 @@ describe("ReleaseBadgesClosedSprints", () => {
             }
         };
 
-        release_data = {
-            label: "mile",
-            id: 2,
-            planning: {
-                id: "100"
-            },
-            capacity: 15,
-            total_sprint,
-            total_closed_sprint: 5,
-            initial_effort,
-            number_of_artifact_by_trackers: []
-        };
-
         component_options.propsData = { release_data };
     });
 
     describe("Display total of closed sprints", () => {
         it("When there are some closed sprints, Then the total is displayed", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                capacity: 10,
                 total_sprint,
                 total_closed_sprint: 6,
-                initial_effort: null,
-                number_of_artifact_by_trackers: [],
                 resources: {
                     milestones: {
                         accept: {
@@ -90,22 +69,9 @@ describe("ReleaseBadgesClosedSprints", () => {
                                 }
                             ]
                         }
-                    },
-                    burndown: null,
-                    additional_panes: [],
-                    content: {
-                        accept: {
-                            trackers: [
-                                {
-                                    id: 2,
-                                    label: "sprints"
-                                }
-                            ]
-                        }
-                    },
-                    cardwall: null
+                    }
                 }
-            };
+            } as MilestoneData;
 
             component_options.propsData = { release_data };
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -115,16 +81,9 @@ describe("ReleaseBadgesClosedSprints", () => {
 
         it("When the total of closed sprints is null, Then the total is not displayed", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                capacity: 10,
                 total_sprint,
                 total_closed_sprint: null,
-                initial_effort: null,
-                number_of_artifact_by_trackers: [],
                 resources: {
                     milestones: {
                         accept: {
@@ -134,22 +93,9 @@ describe("ReleaseBadgesClosedSprints", () => {
                                 }
                             ]
                         }
-                    },
-                    burndown: null,
-                    additional_panes: [],
-                    content: {
-                        accept: {
-                            trackers: [
-                                {
-                                    id: 2,
-                                    label: "sprints"
-                                }
-                            ]
-                        }
-                    },
-                    cardwall: null
+                    }
                 }
-            };
+            } as MilestoneData;
 
             component_options.propsData = { release_data };
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -159,16 +105,9 @@ describe("ReleaseBadgesClosedSprints", () => {
 
         it("When the total of closed sprints is 0, Then the total is displayed", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                capacity: 10,
                 total_sprint,
                 total_closed_sprint: 0,
-                initial_effort: null,
-                number_of_artifact_by_trackers: [],
                 resources: {
                     milestones: {
                         accept: {
@@ -178,22 +117,9 @@ describe("ReleaseBadgesClosedSprints", () => {
                                 }
                             ]
                         }
-                    },
-                    burndown: null,
-                    additional_panes: [],
-                    content: {
-                        accept: {
-                            trackers: [
-                                {
-                                    id: 2,
-                                    label: "sprints"
-                                }
-                            ]
-                        }
-                    },
-                    cardwall: null
+                    }
                 }
-            };
+            } as MilestoneData;
 
             component_options.propsData = { release_data };
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -203,52 +129,17 @@ describe("ReleaseBadgesClosedSprints", () => {
 
         it("When there is no trackers of sprints, Then the total is not displayed", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                capacity: 10,
                 total_sprint,
                 total_closed_sprint: 0,
-                initial_effort: null,
-                number_of_artifact_by_trackers: []
-            };
-
-            component_options.propsData = { release_data };
-            const wrapper = await getPersonalWidgetInstance(store_options);
-
-            expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(false);
-        });
-
-        it("When there are resources but no trackers of sprints, Then the total is not displayed", async () => {
-            release_data = {
-                label: "mile",
-                id: 2,
-                planning: {
-                    id: "100"
-                },
-                capacity: 10,
-                total_sprint,
-                total_closed_sprint: 0,
-                initial_effort: null,
-                number_of_artifact_by_trackers: [],
                 resources: {
                     milestones: {
                         accept: {
-                            trackers: []
+                            trackers: [] as TrackerProjectLabel[]
                         }
-                    },
-                    burndown: null,
-                    additional_panes: [],
-                    content: {
-                        accept: {
-                            trackers: []
-                        }
-                    },
-                    cardwall: null
+                    }
                 }
-            };
+            } as MilestoneData;
 
             component_options.propsData = { release_data };
             const wrapper = await getPersonalWidgetInstance(store_options);

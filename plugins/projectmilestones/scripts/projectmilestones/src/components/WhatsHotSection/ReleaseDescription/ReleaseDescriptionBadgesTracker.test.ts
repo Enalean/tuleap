@@ -59,7 +59,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
                     color_name: "red-fiesta"
                 }
             ]
-        };
+        } as MilestoneData;
 
         component_options.propsData = {
             release_data

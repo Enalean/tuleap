@@ -46,14 +46,6 @@ describe("ReleaseHeaderRemainingEffort", () => {
             state: {}
         };
 
-        release_data = {
-            label: "mile",
-            id: 2,
-            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            capacity: 10,
-            number_of_artifact_by_trackers: []
-        };
-
         component_options.propsData = {
             release_data
         };
@@ -62,16 +54,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
     describe("Display remaining points", () => {
         it("When there is negative remaining points, Then it displays and percent in tooltip", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
                 remaining_effort: -1,
-                initial_effort: 10,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort: 10
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -94,47 +80,12 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("-1");
         });
 
-        it("When there isn't remaining effort points, Then 0 is displayed and message in tooltip", async () => {
-            release_data = {
-                label: "mile",
-                id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
-                initial_effort: 10,
-                number_of_artifact_by_trackers: []
-            };
-
-            component_options.propsData = {
-                release_data
-            };
-
-            const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const remaining_point_text = wrapper.find("[data-test=points-remaining-value]");
-            const remaining_point_value = wrapper.find("[data-test=points-progress-value]");
-
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No remaining effort defined.");
-            expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
-            expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
-            );
-            expect(remaining_point_text.text()).toEqual("0");
-        });
-
         it("When there is remaining effort point and is null, Then 0 is displayed and message in tooltip", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
                 remaining_effort: null,
-                initial_effort: 10,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort: 10
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -155,16 +106,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
         it("When there is remaining effort point, not null and greater than 0, Then it's displayed and percent in tooltip", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
                 remaining_effort: 5,
-                initial_effort: 10,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort: 10
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -185,16 +130,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
         it("When there is remaining effort point, equal at 0, Then it's displayed and percent in tooltip", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
                 remaining_effort: 0,
-                initial_effort: 5,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort: 5
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -216,47 +155,12 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("0");
         });
 
-        it("When there isn't initial effort point, Then remaining effort is displayed and message in tooltip", async () => {
-            release_data = {
-                label: "mile",
-                id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
-                remaining_effort: 5,
-                number_of_artifact_by_trackers: []
-            };
-
-            component_options.propsData = {
-                release_data
-            };
-
-            const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const remaining_point_text = wrapper.find("[data-test=points-remaining-value]");
-            const remaining_point_value = wrapper.find("[data-test=points-progress-value]");
-
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No initial effort defined.");
-            expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
-            expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
-            );
-            expect(remaining_point_text.text()).toEqual("5");
-        });
-
         it("When there is initial effort point but null, Then remaining effort is displayed and message in tooltip", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
                 remaining_effort: 5,
-                initial_effort: null,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort: null
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -277,16 +181,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
         it("When there is initial effort point but equal at 0, Then remaining effort is displayed and message in tooltip", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
                 remaining_effort: 5,
-                initial_effort: 0,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort: 0
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -307,16 +205,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
         it("When remaining effort > initial effort, Then remaining effort is displayed and message in tooltip", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
                 remaining_effort: 100,
-                initial_effort: 10,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort: 10
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
@@ -339,16 +231,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
         it("When remaining effort == initial effort, Then remaining effort is displayed and marked as success", async () => {
             release_data = {
-                label: "mile",
                 id: 2,
-                planning: {
-                    id: "100"
-                },
-                start_date: null,
                 remaining_effort: 100,
-                initial_effort: 100,
-                number_of_artifact_by_trackers: []
-            };
+                initial_effort: 100
+            } as MilestoneData;
 
             component_options.propsData = {
                 release_data
