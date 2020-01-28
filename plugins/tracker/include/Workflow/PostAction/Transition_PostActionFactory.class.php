@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
+use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
+use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
@@ -90,8 +93,11 @@ class Transition_PostActionFactory
             $this->getFrozenFieldsFactory()->saveObject($post_action);
         } elseif ($post_action instanceof HiddenFieldsets) {
             $this->getHiddenFieldsetsFactory()->saveObject($post_action);
-        } else {
+        } elseif ($post_action instanceof Transition_PostAction_CIBuild) {
             $this->getCIBuildFactory()->saveObject($post_action);
+        } else {
+            $event = new ExternalPostActionSaveObjectEvent($post_action);
+            $this->event_manager->processEvent($event);
         }
     }
 
@@ -163,7 +169,10 @@ class Transition_PostActionFactory
         $this->hidden_fieldsets_factory = $hidden_fieldsets_factory;
     }
 
-    /** @return Transition_PostActionSubFactory */
+    /**
+     * @return Transition_PostActionSubFactory
+     * @throws Transition_PostAction_NotFoundException
+     */
     private function getSubFactory($post_action_short_name)
     {
         $field_factory = $this->getFieldFactory();
@@ -179,6 +188,15 @@ class Transition_PostActionFactory
         if (isset($factories[$post_action_short_name])) {
             return $factories[$post_action_short_name];
         }
+
+        $event = new GetExternalSubFactoryByNameEvent($post_action_short_name);
+        $this->event_manager->processEvent($event);
+
+        $factory = $event->getFactory();
+        if ($factory !== null) {
+            return $factory;
+        }
+
         throw new Transition_PostAction_NotFoundException('Invalid Post Action type');
     }
 
@@ -252,6 +270,13 @@ class Transition_PostActionFactory
     {
         if (isset($this->shortnames_by_xml_tag_name[$xml_tag_name])) {
             return $this->shortnames_by_xml_tag_name[$xml_tag_name];
+        }
+
+        $event = new GetPostActionShortNameFromXmlTagNameEvent($xml_tag_name);
+        $this->event_manager->processEvent($event);
+
+        if ($event->getPostActionShortName() !== '') {
+            return $event->getPostActionShortName();
         }
     }
 }

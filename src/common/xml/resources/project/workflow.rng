@@ -142,6 +142,11 @@
           </attribute>
         </element>
       </zeroOrMore>
+      <optional>
+        <element name="postaction_add_to_top_backlog">
+          <empty/>
+        </element>
+      </optional>
     </interleave>
   </define>
   <define name="preConditionsContent">
