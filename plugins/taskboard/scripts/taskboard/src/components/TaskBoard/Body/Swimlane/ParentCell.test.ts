@@ -80,4 +80,34 @@ describe("ParentCell", () => {
         expect(wrapper.contains(CardWithRemainingEffort)).toBe(true);
         expect(wrapper.contains(NoMappingMessage)).toBe(true);
     });
+
+    it("the parent card has an 'edit-mode' class when it is being edited", () => {
+        const wrapper = shallowMount(ParentCell, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: false
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": ""
+                    }
+                })
+            },
+            propsData: {
+                swimlane: {
+                    card: {
+                        id: 43,
+                        has_children: false,
+                        is_in_edit_mode: true
+                    }
+                } as Swimlane
+            }
+        });
+
+        expect(wrapper.find(CardWithRemainingEffort).classes()).toContain(
+            "taskboard-cell-parent-card-edit-mode"
+        );
+    });
 });

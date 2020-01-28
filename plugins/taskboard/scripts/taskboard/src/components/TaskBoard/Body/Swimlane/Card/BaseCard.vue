@@ -52,9 +52,11 @@ import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
 import LabelEditor from "./Editor/Label/LabelEditor.vue";
 import CardInfo from "./CardInfo.vue";
 import { haveAssigneesChanged } from "../../../../../helpers/have-assignees-changed";
+import { scrollToItemIfNeeded } from "../../../../../helpers/scroll-to-item";
 
 const user = namespace("user");
 const swimlane = namespace("swimlane");
+const fullscreen = namespace("fullscreen");
 
 @Component({
     components: {
@@ -81,6 +83,9 @@ export default class BaseCard extends Vue {
 
     @swimlane.Action
     readonly saveCard!: (payload: UpdateCardPayload) => Promise<void>;
+
+    @fullscreen.State
+    readonly is_taskboard_in_fullscreen_mode!: boolean;
 
     private label = "";
     private assignees: User[] = [];
@@ -139,6 +144,16 @@ export default class BaseCard extends Vue {
         }
 
         this.addCardToEditMode(this.card);
+
+        setTimeout((): void => {
+            let fullscreen_element = null;
+
+            if (this.is_taskboard_in_fullscreen_mode) {
+                fullscreen_element = document.querySelector(".taskboard");
+            }
+
+            scrollToItemIfNeeded(this.$el, fullscreen_element);
+        }, 100);
     }
 
     get is_label_changed(): boolean {

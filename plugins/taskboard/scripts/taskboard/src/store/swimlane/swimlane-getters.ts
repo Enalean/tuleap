@@ -90,3 +90,23 @@ function isCardInEditMode(card: Card): boolean {
 
     return card.remaining_effort.is_in_edit_mode;
 }
+
+export function taskboard_cell_swimlane_header_classes(
+    state: SwimlaneState,
+    getters: [],
+    root_state: RootState
+): string[] {
+    const fullscreen_class = root_state.fullscreen.is_taskboard_in_fullscreen_mode
+        ? "taskboard-fullscreen"
+        : "";
+
+    if (is_a_parent_card_in_edit_mode(state)) {
+        return [fullscreen_class, "taskboard-cell-swimlane-header-edit-mode"];
+    }
+
+    return [fullscreen_class];
+}
+
+export function is_a_parent_card_in_edit_mode(state: SwimlaneState): boolean {
+    return state.swimlanes.some(swimlane => swimlane.card.is_in_edit_mode);
+}

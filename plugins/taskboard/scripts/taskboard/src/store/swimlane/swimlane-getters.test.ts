@@ -337,4 +337,30 @@ describe("Swimlane state getters", () => {
             expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(true);
         });
     });
+
+    describe("is_a_parent_card_in_edit_mode", () => {
+        it("returns false if no parent card is in edit mode", () => {
+            const state: SwimlaneState = {
+                swimlanes: [
+                    { card: { is_in_edit_mode: false } },
+                    { card: { is_in_edit_mode: false } },
+                    { card: { is_in_edit_mode: false } }
+                ]
+            } as SwimlaneState;
+
+            expect(getters.is_a_parent_card_in_edit_mode(state)).toBe(false);
+        });
+
+        it("returns true if a parent card is in edit mode", () => {
+            const state: SwimlaneState = {
+                swimlanes: [
+                    { card: { is_in_edit_mode: false } },
+                    { card: { is_in_edit_mode: true } },
+                    { card: { is_in_edit_mode: false } }
+                ]
+            } as SwimlaneState;
+
+            expect(getters.is_a_parent_card_in_edit_mode(state)).toBe(true);
+        });
+    });
 });

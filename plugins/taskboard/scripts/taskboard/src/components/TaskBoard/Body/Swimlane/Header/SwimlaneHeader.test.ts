@@ -41,7 +41,9 @@ async function createWrapper(is_fullscreen: boolean): Promise<Wrapper<SwimlaneHe
                     fullscreen: {} as FullscreenState
                 },
                 getters: {
-                    "fullscreen/fullscreen_class": is_fullscreen ? "taskboard-fullscreen" : ""
+                    "swimlane/taskboard_cell_swimlane_header_classes": is_fullscreen
+                        ? ["taskboard-fullscreen"]
+                        : [""]
                 }
             })
         },

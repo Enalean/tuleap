@@ -48,7 +48,7 @@
 
     &.taskboard-card-assignees-edit-mode {
         position: absolute;
-        z-index: 1;
+        z-index: 11;
         bottom: calc(100% - 30px);
         left: 12px;
         width: calc(100% - 2 * #{$tlp-half-spacing} - 2px);
@@ -125,7 +125,6 @@
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card.taskboard-card-edit-mode,
 .taskboard-card.taskboard-card-edit-mode {
-    z-index: 11;
     margin: 0;
     border: 1px solid $tlp-theme-color;
     background: mix($tlp-theme-background-color, $tlp-theme-color, 90%);
