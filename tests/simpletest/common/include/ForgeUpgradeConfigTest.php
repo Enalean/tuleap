@@ -27,11 +27,12 @@ class ForgeUpgradeConfigTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->fixtures = $this->getTmpDir();
         $source      = escapeshellarg(dirname(__FILE__).'/_fixtures');
         $destination = escapeshellarg($this->fixtures);
         exec("cp -a $source/* $destination/");
-        $this->command = mock('System_Command');
+        $this->command = \Mockery::spy(\System_Command::class);
     }
 
     public function testPluginPathIsInConfig()
@@ -102,13 +103,14 @@ class ForgeUpgradeConfig_InstallPluginTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->command = mock('System_Command');
+        $this->setUpGlobalsMockery();
+        $this->command = \Mockery::spy(\System_Command::class);
         $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, dirname(__FILE__).'/_fixtures/forgeupgrade-config-docman.ini');
     }
 
     public function itRecordsOnlyThePathOfThePlugin()
     {
-        expect($this->command)->exec("/usr/lib/forgeupgrade/bin/forgeupgrade --dbdriver='/usr/share/tuleap/src/forgeupgrade/ForgeUpgrade_Db_Driver_Codendi.php' --path='/usr/share/tuleap/plugins/agiledashboard' record-only")->once();
+        $this->command->shouldReceive('exec')->with("/usr/lib/forgeupgrade/bin/forgeupgrade --dbdriver='/usr/share/tuleap/src/forgeupgrade/ForgeUpgrade_Db_Driver_Codendi.php' --path='/usr/share/tuleap/plugins/agiledashboard' record-only")->once();
 
         $this->forgeupgrade_config->recordOnlyPath('/usr/share/tuleap/plugins/agiledashboard');
     }
@@ -123,40 +125,36 @@ class ForgeUpgradeConfig_IsSystemUpToDateTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->command             = mock('System_Command');
+        $this->setUpGlobalsMockery();
+        $this->command             = \Mockery::spy(\System_Command::class);
         $this->config_file         = dirname(__FILE__).'/_fixtures/forgeupgrade-config-docman.ini';
         $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, $this->config_file);
     }
 
     public function itCallsForgeUpgrade()
     {
-        expect($this->command)->exec("/usr/lib/forgeupgrade/bin/forgeupgrade --config='{$this->config_file}' 'check-update'")->once();
-        stub($this->command)->exec()->returns(array());
+        $this->command->shouldReceive('exec')->with("/usr/lib/forgeupgrade/bin/forgeupgrade --config='{$this->config_file}' 'check-update'")->once()->andReturns(array());
 
         $this->forgeupgrade_config->isSystemUpToDate();
     }
 
     public function itReturnsTrueWhenForgeUpgradeTellsThatSystemIsUpToDate()
     {
-        stub($this->command)->exec()->returns(
-            array(
-                '[32mINFO - System up-to-date',
-                '[0m',
-            )
-        );
+        $this->command->shouldReceive('exec')->andReturns(array(
+            '[32mINFO - System up-to-date',
+            '[0m',
+        ));
 
         $this->assertTrue($this->forgeupgrade_config->isSystemUpToDate());
     }
 
     public function itReturnsFalseWhenForgeUpgradeTellsThereArePendingBuckets()
     {
-        stub($this->command)->exec()->returns(
-            array(
-                '/usr/share/tuleap/plugins/tracker/db/mysql/updates/2015/201510131648_add_emailgateway_column_to_tracker.php',
-                'Add enable_emailgateway column to tracker table',
-                '1 migrations pending',
-            )
-        );
+        $this->command->shouldReceive('exec')->andReturns(array(
+            '/usr/share/tuleap/plugins/tracker/db/mysql/updates/2015/201510131648_add_emailgateway_column_to_tracker.php',
+            'Add enable_emailgateway column to tracker table',
+            '1 migrations pending',
+        ));
 
         $this->assertFalse($this->forgeupgrade_config->isSystemUpToDate());
     }

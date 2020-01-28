@@ -30,6 +30,7 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         ForgeConfig::store();
         $this->storage = array();
     }
@@ -100,7 +101,7 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
 
     public function itDoesNothingWhenAValidTokenIsChecked()
     {
-        $GLOBALS['Response']->expectCallCount('redirect', 0);
+        $GLOBALS['Response']->shouldReceive('redirect')->never();
 
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -108,8 +109,8 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
             $this->storage
         );
 
-        $request = mock('Codendi_Request');
-        stub($request)->get(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->returns($csrf_token->getToken());
+        $request = \Mockery::spy(\Codendi_Request::class);
+        $request->shouldReceive('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->andReturns($csrf_token->getToken());
 
         $csrf_token->check('/path/to/url', $request);
     }
@@ -117,8 +118,8 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
     public function itRedirectsWhenAnInvalidTokenIsChecked()
     {
         $uri = '/path/to/uri';
-        $GLOBALS['Response']->expectCallCount('redirect', 1);
-        $GLOBALS['Response']->expectAt(0, 'redirect', array($uri));
+        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->with($uri)->ordered();
 
         $csrf_token = new CSRFSynchronizerToken(
             $uri,
@@ -126,8 +127,8 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
             $this->storage
         );
 
-        $request = mock('Codendi_Request');
-        stub($request)->get(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->returns('invalid_token');
+        $request = \Mockery::spy(\Codendi_Request::class);
+        $request->shouldReceive('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->andReturns('invalid_token');
 
         $csrf_token->check($uri, $request);
     }
@@ -135,8 +136,8 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
     public function itRedirectsWhenNoTokenIsProvidedInTheRequest()
     {
         $uri = '/path/to/uri';
-        $GLOBALS['Response']->expectCallCount('redirect', 1);
-        $GLOBALS['Response']->expectAt(0, 'redirect', array($uri));
+        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->with($uri)->ordered();
 
         $csrf_token = new CSRFSynchronizerToken(
             $uri,
@@ -144,8 +145,8 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
             $this->storage
         );
 
-        $request = mock('Codendi_Request');
-        stub($request)->get(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->returns(false);
+        $request = \Mockery::spy(\Codendi_Request::class);
+        $request->shouldReceive('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->andReturns(false);
 
         $csrf_token->check($uri, $request);
     }
