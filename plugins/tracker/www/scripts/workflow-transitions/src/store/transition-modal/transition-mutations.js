@@ -19,7 +19,6 @@
 
 import Vue from "vue";
 import { INT_FIELD, FLOAT_FIELD } from "../../../../constants/fields-constants.js";
-import { POST_ACTION_TYPE } from "../../constants/workflow-constants.js";
 
 export {
     clearModalShown,
@@ -101,9 +100,7 @@ function savePostActions(state, actions) {
     const post_actions = {};
     actions.forEach(post_action => {
         const presented_post_action = presentPostAction(post_action);
-        if (Object.values(POST_ACTION_TYPE).includes(post_action.type)) {
-            post_actions[presented_post_action.unique_id] = presented_post_action;
-        }
+        post_actions[presented_post_action.unique_id] = presented_post_action;
     });
     state.post_actions_by_unique_id = post_actions;
 }

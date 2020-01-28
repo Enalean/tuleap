@@ -129,10 +129,6 @@ describe("Transition mutations", () => {
             id: 2,
             type: "run_job"
         });
-        const new_action_unknown = create("post_action", {
-            id: 1,
-            type: "unknown"
-        });
 
         beforeEach(() => {
             state = {
@@ -150,9 +146,6 @@ describe("Transition mutations", () => {
                 ...new_action,
                 unique_id: "run_job_2"
             });
-        });
-        it("does not add action if type is not known", () => {
-            expect(state.post_actions_by_unique_id).not.toContain(new_action_unknown);
         });
 
         describe("when given post actions are field set", () => {

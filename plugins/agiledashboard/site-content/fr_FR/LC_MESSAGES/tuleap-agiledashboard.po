@@ -56,8 +56,7 @@ msgstr ""
 
 msgid ""
 "All tracker workflow post-actions \"AddToTopBacklog\" have been removed."
-msgstr ""
-"Les actions workflow de type \"AddToTopBacklog\" ont été supprimées."
+msgstr "Les actions workflow de type \"AddToTopBacklog\" ont été supprimées."
 
 msgid ""
 "An artifact could be considered <strong>done</strong> only if a semantic "
@@ -83,8 +82,8 @@ msgid ""
 "Any \"AddToTopBacklog\" workflow post-actions defined in the project will be "
 "removed."
 msgstr ""
-"Les actions workflow de type \"AddToTopBacklog\" définies dans le projet seront "
-"supprimées."
+"Les actions workflow de type \"AddToTopBacklog\" définies dans le projet "
+"seront supprimées."
 
 #, php-format
 msgid ""
@@ -232,6 +231,13 @@ msgstr "La planning a été créé."
 
 msgid "Planning succesfully updated."
 msgstr "Le planning a été mis à jour."
+
+#, php-format
+msgid ""
+"PostAction of type %s cannot be defined without explicit backlog management."
+msgstr ""
+"la PostAction de type %s ne peut être définie sans la gestion explicite de la "
+"planification générale."
 
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"

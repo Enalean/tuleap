@@ -37,6 +37,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\RESTLogger;
+use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionNonEligibleForTrackerException;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionsRepresentationBuilder;
@@ -50,6 +51,7 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetDateValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueRepository;
@@ -482,14 +484,24 @@ class TransitionsResource extends AuthenticatedResource
 
     private function getPostActionCollectionJsonParser(): PostActionCollectionJsonParser
     {
-        return new PostActionCollectionJsonParser(
+        $parsers = [
             new CIBuildJsonParser(),
             new SetDateValueJsonParser(),
             new SetIntValueJsonParser(),
             new SetFloatValueJsonParser(),
             new FrozenFieldsJsonParser(),
-            new HiddenFieldsetsJsonParser()
+            new HiddenFieldsetsJsonParser(),
+        ];
+
+        $event = new GetExternalPostActionJsonParserEvent();
+        EventManager::instance()->processEvent($event);
+
+        $parsers = array_merge(
+            $parsers,
+            $event->getParsers()
         );
+
+        return new PostActionCollectionJsonParser(...$parsers);
     }
 
     private function getTransactionExecutor(): DBTransactionExecutor
@@ -503,7 +515,10 @@ class TransitionsResource extends AuthenticatedResource
         $form_element_factory = \Tracker_FormElementFactory::instance();
         $transaction_executor = $this->getTransactionExecutor();
 
-        return new PostActionCollectionUpdater(
+        $event = new GetWorkflowExternalPostActionsValueUpdater();
+        EventManager::instance()->processEvent($event);
+
+        $value_updaters = [
             new CIBuildValueUpdater(
                 new CIBuildValueRepository(
                     $this->getCIBuildDao()
@@ -545,7 +560,14 @@ class TransitionsResource extends AuthenticatedResource
                     $form_element_factory
                 )
             )
+        ];
+
+        $value_updaters = array_merge(
+            $value_updaters,
+            $event->getValueUpdaters()
         );
+
+        return new PostActionCollectionUpdater(...$value_updaters);
     }
 
     private function getCIBuildDao(): Transition_PostAction_CIBuildDao

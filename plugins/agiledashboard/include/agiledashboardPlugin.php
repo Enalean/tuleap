@@ -29,7 +29,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionMatchingIdsRetriever;
-use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionProjectNotUsingExplicitBacklogException;
+use Tuleap\AgileDashboard\ExplicitBacklog\ProjectNotUsingExplicitBacklogException;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
@@ -81,6 +81,9 @@ use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklog;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionFactory;
+use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogValueRepository;
+use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogValueUpdater;
+use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogJsonParser;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogRepresentation;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
@@ -112,6 +115,7 @@ use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportProcessAdditionalQuery;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
+use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
@@ -119,6 +123,7 @@ use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\TrackerCrumbInContext;
+use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
@@ -242,6 +247,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(WorkflowDeletionEvent::NAME);
             $this->addHook(TransitionDeletionEvent::NAME);
             $this->addHook(PostActionVisitExternalActionsEvent::NAME);
+            $this->addHook(GetExternalPostActionJsonParserEvent::NAME);
+            $this->addHook(GetWorkflowExternalPostActionsValueUpdater::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -406,7 +413,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             try {
                 $event->addResult($retriever->getMatchingIds($backlog_tracker, $user));
                 $event->setSearchIsPerformed();
-            } catch (UnplannedReportCriterionProjectNotUsingExplicitBacklogException $exception) {
+            } catch (ProjectNotUsingExplicitBacklogException $exception) {
                 //Do nothing
             } finally {
                 return;
@@ -2184,5 +2191,23 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
         $representation = AddToTopBacklogRepresentation::buildFromObject($post_action);
         $event->setRepresentation($representation);
+    }
+
+    public function getExternalPostActionJsonParserEvent(GetExternalPostActionJsonParserEvent $event): void
+    {
+        $event->addParser(
+            new AddToTopBacklogJsonParser(new ExplicitBacklogDao())
+        );
+    }
+
+    public function getWorkflowExternalPostActionsValueUpdater(GetWorkflowExternalPostActionsValueUpdater $event): void
+    {
+        $event->addValueUpdater(
+            new AddToTopBacklogValueUpdater(
+                new AddToTopBacklogValueRepository(
+                    new AddToTopBacklogPostActionDao()
+                )
+            )
+        );
     }
 }
