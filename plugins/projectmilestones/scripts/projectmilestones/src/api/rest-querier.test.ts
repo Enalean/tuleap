@@ -27,7 +27,7 @@ import {
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
-import { BurndownData, MilestoneContent, MilestoneData } from "../type";
+import { ArtifactMilestone, BurndownData, MilestoneContent, MilestoneData } from "../type";
 
 jest.mock("tlp");
 
@@ -158,6 +158,10 @@ describe("getProject() -", () => {
             points_with_date: []
         };
 
+        const artifact_chart = {
+            values: [{ value: burndown_data }]
+        } as ArtifactMilestone;
+
         const tlpGetMock = jest.spyOn(tlp, "get");
 
         mockFetchSuccess(tlpGetMock, {
@@ -165,25 +169,16 @@ describe("getProject() -", () => {
                 // X-PAGINATION-SIZE
                 get: (): number => 2
             },
-            return_json: burndown_data
+            return_json: artifact_chart
         });
 
-        const result = await getBurndownData(milestone_id, {
-            limit,
-            offset
-        });
+        const result = await getBurndownData(milestone_id);
 
         expect(tlpGetMock).toHaveBeenCalledWith(
-            `/api/v1/milestones/` + encodeURIComponent(milestone_id) + `/burndown`,
-            {
-                params: {
-                    limit,
-                    offset
-                }
-            }
+            `/api/v1/artifacts/${encodeURIComponent(milestone_id)}`
         );
 
-        expect(result).toEqual(burndown_data);
+        expect(result).toEqual(artifact_chart);
     });
 
     it("the REST API will be queried and the total of closed sprints returned", async () => {

@@ -23,7 +23,7 @@ import {
     MilestoneData,
     ParametersRequestWithId,
     ParametersRequestWithoutId,
-    BurndownData
+    ArtifactMilestone
 } from "../type";
 
 export {
@@ -115,19 +115,8 @@ function getPaginationSizeFromHeader(header: Headers): number {
     return Number.parseInt(pagination_size_header, 10);
 }
 
-async function getBurndownData(
-    milestone_id: number,
-    { limit, offset }: ParametersRequestWithoutId
-): Promise<BurndownData> {
-    const burndown_data = await get(
-        `/api/v1/milestones/${encodeURIComponent(milestone_id)}/burndown`,
-        {
-            params: {
-                limit,
-                offset
-            }
-        }
-    );
+async function getBurndownData(milestone_id: number): Promise<ArtifactMilestone> {
+    const burndown_data = await get(`/api/v1/artifacts/${encodeURIComponent(milestone_id)}`);
 
     return burndown_data.json();
 }

@@ -49,6 +49,7 @@ import { FetchWrapperError } from "tlp";
 import { getBurndownData } from "../../../../api/rest-querier";
 import { State } from "vuex-class";
 import { sprintf } from "sprintf-js";
+import { getBurndownDataFromType } from "../../../../helpers/chart-helper";
 @Component({
     components: { BurndownChartError, BurndownChartDisplayer }
 })
@@ -72,10 +73,9 @@ export default class BurndownChart extends Vue {
     async created(): Promise<void> {
         if (!this.release_data.burndown_data) {
             try {
-                this.release_data.burndown_data = await getBurndownData(
-                    this.release_data.id,
-                    this.$store.state
-                );
+                const burndown_values = await getBurndownData(this.release_data.id);
+
+                this.release_data.burndown_data = getBurndownDataFromType(burndown_values);
             } catch (rest_error) {
                 await this.handle_error(rest_error);
             } finally {

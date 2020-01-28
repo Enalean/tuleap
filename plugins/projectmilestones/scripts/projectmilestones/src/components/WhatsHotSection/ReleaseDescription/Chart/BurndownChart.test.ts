@@ -250,17 +250,22 @@ describe("BurndownChart", () => {
     });
 
     it("When the burndown is recovering, Then component BurndownChartDisplayer is rendered", async () => {
-        const burndown_data = {
-            start_date: new Date().toString(),
-            duration: 10,
-            capacity: 10,
-            points: [],
-            is_under_calculation: false,
-            opening_days: [],
-            points_with_date: []
-        };
+        const burndown_data: BurndownData = {
+            start_date: new Date().toString()
+        } as BurndownData;
 
-        jest.spyOn(rest_querier, "getBurndownData").mockReturnValue(Promise.resolve(burndown_data));
+        jest.spyOn(rest_querier, "getBurndownData").mockReturnValue(
+            Promise.resolve({
+                values: [
+                    {
+                        value: burndown_data,
+                        field_id: 10,
+                        label: "burndown",
+                        type: "burndown"
+                    }
+                ]
+            })
+        );
 
         release_data = {
             id: 2,
