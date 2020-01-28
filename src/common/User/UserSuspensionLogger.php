@@ -20,13 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Mail;
+namespace Tuleap\User;
 
 use TruncateLevelLogger;
 use BackendLogger;
 use ForgeConfig;
 
-class AutomaticMailsLogger extends TruncateLevelLogger
+class UserSuspensionLogger extends TruncateLevelLogger
 {
     public function __construct()
     {

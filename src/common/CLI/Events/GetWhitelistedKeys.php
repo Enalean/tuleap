@@ -27,8 +27,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Mail\AutomaticMailsSender;
-use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
+use Tuleap\User\UserSuspensionManager;
 use Tuleap\System\ServiceControl;
 use Widget_MyProjects;
 
@@ -44,7 +43,6 @@ class GetWhitelistedKeys implements Dispatchable
         \ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER => true,
         \ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION => true,
         \ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS => true,
-        \ProjectManager::FORCE_NEW_PROJECT_CREATION_USAGE => true,
         \ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT => true,
         \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,
         ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
@@ -54,9 +52,8 @@ class GetWhitelistedKeys implements Dispatchable
         StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS => true,
         DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME => true,
         ServiceControl::FORGECONFIG_INIT_MODE => true,
-        AutomaticMailsSender::CONFIG_NOTIFICATION_DELAY => true,
-        Widget_MyProjects::CONFIG_DISABLE_CONTACT => true,
-        ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE => true,
+        UserSuspensionManager::CONFIG_NOTIFICATION_DELAY => true,
+        Widget_MyProjects::CONFIG_DISABLE_CONTACT => true
     ];
 
     public function addPluginsKeys($key_name)

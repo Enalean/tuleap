@@ -30,8 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\DB\DBConnection;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
-use UserManager;
-use Tuleap\Mail\AutomaticMailsSender;
+use Tuleap\User\UserSuspensionManager;
 
 class DailyJobCommand extends Command
 {
@@ -41,10 +40,6 @@ class DailyJobCommand extends Command
      * @var EventManager
      */
     private $event_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
     /**
      * @var DBConnection
      */
@@ -60,25 +55,23 @@ class DailyJobCommand extends Command
     private $access_key_revoker;
 
     /**
-     * @var AutomaticMailsSender
+     * @var UserSuspensionManager
      */
-    private $auto_mails_sender;
+    private $user_suspension_manager;
 
     public function __construct(
         EventManager $event_manager,
-        UserManager $user_manager,
         AccessKeyRevoker $access_key_revoker,
         DBConnection $db_connection,
         ExecutionDelayedLauncher $execution_delayed_launcher,
-        AutomaticMailsSender $auto_mails_sender
+        UserSuspensionManager $user_suspension_manager
     ) {
         parent::__construct(self::NAME);
         $this->event_manager              = $event_manager;
-        $this->user_manager               = $user_manager;
         $this->db_connection              = $db_connection;
         $this->execution_delayed_launcher = $execution_delayed_launcher;
         $this->access_key_revoker         = $access_key_revoker;
-        $this->auto_mails_sender = $auto_mails_sender;
+        $this->user_suspension_manager = $user_suspension_manager;
     }
 
     protected function configure() : void
@@ -91,8 +84,8 @@ class DailyJobCommand extends Command
         $this->execution_delayed_launcher->execute(function () {
             $this->db_connection->reconnectAfterALongRunningProcess();
             $this->event_manager->processEvent('codendi_daily_start');
-            $this->user_manager->checkUserAccountValidity();
-            $this->auto_mails_sender->sendNotificationMailToIdleAccounts();
+            $this->user_suspension_manager->sendNotificationMailToIdleAccounts();
+            $this->user_suspension_manager->checkUserAccountValidity(new \DateTimeImmutable('today'));
 
             $now = new \DateTimeImmutable();
             $this->access_key_revoker->revokeUnusableUserAccessKeys($now);

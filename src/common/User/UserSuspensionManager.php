@@ -20,19 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Mail;
+namespace Tuleap\User;
 
 use BaseLanguage;
 use BaseLanguageFactory;
 use Codendi_Mail;
+use DateTimeImmutable;
 use ForgeConfig;
 use MailPresenterFactory;
 use PFUser;
 use TemplateRenderer;
-use Tuleap\User\IdleUsersDao;
+use Tuleap\Dao\UserSuspensionDao;
 use UserManager;
 
-class AutomaticMailsSender
+class UserSuspensionManager
 {
     public const CONFIG_NOTIFICATION_DELAY = 'sys_suspend_inactive_accounts_notification_delay';
     public const CONFIG_INACTIVE_DELAY = 'sys_suspend_inactive_accounts_delay';
@@ -58,7 +59,7 @@ class AutomaticMailsSender
     private $mail ;
 
     /**
-     * @var IdleUsersDao
+     * @var UserSuspensionDao
      */
     private $dao;
 
@@ -73,7 +74,7 @@ class AutomaticMailsSender
     private $lang_factory;
 
     /**
-     * @var AutomaticMailsLogger
+     * @var UserSuspensionLogger
      */
     private $logger;
 
@@ -84,19 +85,20 @@ class AutomaticMailsSender
      * @param TemplateRenderer $renderer
      * @param string $template
      * @param Codendi_Mail $mail
-     * @param IdleUsersDao $dao
+     * @param UserSuspensionDao $dao
      * @param UserManager $user_manager
      * @param BaseLanguageFactory $lang_factory
+     * @param UserSuspensionLogger $logger
      */
     public function __construct(
         MailPresenterFactory $mail_presenter_factory,
         TemplateRenderer $renderer,
         string $template,
         Codendi_Mail $mail,
-        IdleUsersDao $dao,
+        UserSuspensionDao $dao,
         UserManager $user_manager,
         BaseLanguageFactory $lang_factory,
-        AutomaticMailsLogger $logger
+        UserSuspensionLogger $logger
     ) {
         $this->mail_presenter_factory = $mail_presenter_factory;
         $this->renderer = $renderer;
@@ -131,9 +133,11 @@ class AutomaticMailsSender
             foreach ($idle_users as $idle_user) {
                 $user = $this->user_manager->getUserbyId($idle_user['user_id']);
                 if ($user) {
-                    $suspension_date = $this->getSuspensionDate($notification_delay, $inactive_delay);
+                    $suspension_date = $this->getSuspensionDate($notification_delay);
+                    $last_access_date = new DateTimeImmutable();
+                    $last_access_date->setTimestamp($idle_user['last_access_date']);
                     $language = $this->lang_factory->getBaseLanguage(ForgeConfig::get('sys_lang'));
-                    $status = $this->sendNotificationMail($user, $idle_user['last_access_date'], $suspension_date, $language);
+                    $status = $this->sendNotificationMail($user, $last_access_date, $suspension_date, $language);
                     if ($status) {
                         $this->logger->info(
                             "Suspension notification is sent to user: ID=" .
@@ -145,7 +149,7 @@ class AutomaticMailsSender
                         $this->logger->error(
                             "Unable to send suspension notification to user: ID=" .
                             $user->getId() . " username=" . $user->getUserName() .
-                            " email=" .$user->getEmail()
+                            " email=" . $user->getEmail()
                         );
                     }
                     $result = $result && $status;
@@ -158,14 +162,14 @@ class AutomaticMailsSender
     /**
      * Sends suspension notification to user
      *
-     * @param PFUser $user User Object
-     * @param int $last_access_date Unix timestamp
-     * @param int $suspension_date Unix timestamp
+     * @param PFUser $user
+     * @param DateTimeImmutable $last_access_date
+     * @param DateTimeImmutable $suspension_date
      * @param BaseLanguage $language
      *
      * @return bool True if sent, false otherwise
      */
-    private function sendNotificationMail(PFUser $user, int $last_access_date, int $suspension_date, BaseLanguage $language) : bool
+    private function sendNotificationMail(PFUser $user, DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language) : bool
     {
         $presenter = $this->mail_presenter_factory->createMailAccountSuspensionAlertPresenter($last_access_date, $suspension_date, $language);
         $this->mail->setFrom(ForgeConfig::get('sys_noreply'));
@@ -177,14 +181,12 @@ class AutomaticMailsSender
     }
 
     /**
-     * Returns an array of idle users or false if none are found
-     *
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
-     * @param int $inactive_delay   Inactive accounts delay (number of days after last login)
+     * @param int $inactive_delay Inactive accounts delay (number of days after since login)
      *
-     * @return array Returned by DB query
+     * @return array
      */
-    private function getIdleAccounts(int $notification_delay, int $inactive_delay) : array
+    private function getIdleAccounts(int $notification_delay, int $inactive_delay)
     {
         $start_date = $this->getLastAccessDate($notification_delay, $inactive_delay);
         $end_date = $start_date->modify('+23hours 59 minutes 59 seconds');
@@ -192,7 +194,7 @@ class AutomaticMailsSender
             "Querying users that last accessed " . ForgeConfig::get('sys_name') .
             " between " . $start_date->format('Y-m-d\TH:i:sO') . " and " . $end_date->format('Y-m-d\TH:i:sO')
         );
-        return $this->dao->getIdleAccounts($start_date->getTimestamp(), $end_date->getTimestamp());
+        return $this->dao->getIdleAccounts($start_date, $end_date);
     }
 
     /**
@@ -200,27 +202,77 @@ class AutomaticMailsSender
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
      * @param int $inactive_delay   Inactive accounts delay (number of days after last login)
      *
-     * @return \DateTimeImmutable
+     * @return DateTimeImmutable
      */
-    private function getLastAccessDate(int $notification_delay, int $inactive_delay) : \DateTimeImmutable
+    private function getLastAccessDate(int $notification_delay, int $inactive_delay) : DateTimeImmutable
     {
-        $date = new \DateTimeImmutable('today');
+        $date = new DateTimeImmutable('today');
         $date_param = '- ' . ($inactive_delay - $notification_delay) . ' day';
         return $date->modify($date_param);
     }
 
     /**
-     *
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
-     * @param int $inactive_delay   Inactive accounts delay (number of days after last login)
-     *
-     * @return int
+     * @return DateTimeImmutable
      */
-    private function getSuspensionDate(int $notification_delay, int $inactive_delay) : int
+    private function getSuspensionDate(int $notification_delay) : DateTimeImmutable
     {
-        $date = new \DateTimeImmutable('today');
+        $date = new DateTimeImmutable('today');
         $date_param = '+ ' .  $notification_delay . ' day';
-        $date_final = $date->modify($date_param);
-        return (int)$date_final->format('U');
+        return $date->modify($date_param);
+    }
+
+    /**
+     * Check user account validity against several rules
+     * - Account expiry date
+     * - Last user access
+     * - User not member of a project
+     * All rules apply at midnight
+     * @param DateTimeImmutable $date
+     */
+    public function checkUserAccountValidity(DateTimeImmutable $date)
+    {
+        $this->suspendExpiredAccounts($date);
+        $this->suspendInactiveAccounts($date);
+        $this->suspendUserNotProjectMembers($date);
+    }
+
+    /**
+     * Change account status to suspended when the account expiry date is passed
+     *
+     * @param DateTimeImmutable $time
+     */
+    private function suspendExpiredAccounts(DateTimeImmutable $time)
+    {
+        return $this->dao->suspendExpiredAccounts($time);
+    }
+
+    /**
+     * Suspend accounts that without activity since date defined in configuration
+     *
+     * @param DateTimeImmutable $time
+     */
+    private function suspendInactiveAccounts(DateTimeImmutable $time)
+    {
+        if (ForgeConfig::exists('sys_suspend_inactive_accounts_delay') && ForgeConfig::get('sys_suspend_inactive_accounts_delay') > 0) {
+            $date_param = '- ' . ForgeConfig::get('sys_suspend_inactive_accounts_delay') . ' day';
+            $lastValidAccess = $time->modify($date_param);
+            return $this->dao->suspendInactiveAccounts($lastValidAccess);
+        }
+        return true;
+    }
+
+    /**
+     * Change account status to suspended when user is no more member of any project
+     *
+     * @param DateTimeImmutable $time
+     */
+    private function suspendUserNotProjectMembers(DateTimeImmutable $time)
+    {
+        if (ForgeConfig::exists('sys_suspend_non_project_member_delay') && ForgeConfig::get('sys_suspend_non_project_member_delay') > 0) {
+            $date_param = '- ' . ForgeConfig::get('sys_suspend_non_project_member_delay') . ' day';
+            $lastRemove = $time->modify($date_param);
+            return $this->dao->suspendUserNotProjectMembers($lastRemove);
+        }
     }
 }

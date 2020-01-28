@@ -38,13 +38,13 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
-use Tuleap\Mail\AutomaticMailsLogger;
-use Tuleap\Mail\AutomaticMailsSender;
+use Tuleap\User\UserSuspensionLogger;
+use Tuleap\User\UserSuspensionManager;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
-use Tuleap\User\IdleUsersDao;
+use Tuleap\Dao\UserSuspensionDao;
 use TuleapCfg\Command\ProcessFactory;
 
 (static function () {
@@ -162,7 +162,6 @@ $CLI_command_collector->addCommand(
     static function () use ($event_manager, $user_manager) : DailyJobCommand {
         return new DailyJobCommand(
             $event_manager,
-            $user_manager,
             new AccessKeyRevoker(
                 new AccessKeyDAO()
             ),
@@ -172,15 +171,15 @@ $CLI_command_collector->addCommand(
                     new ExecutionDelayerRandomizedSleep(1799)
                 )
             ),
-            new AutomaticMailsSender(
+            new UserSuspensionManager(
                 new MailPresenterFactory(),
                 TemplateRendererFactory::build()->getRenderer(__DIR__ .'/../templates/mail/'),
                 'mail-suspension-alert',
                 new Codendi_Mail,
-                new IdleUsersDao(),
+                new UserSuspensionDao(new UserSuspensionLogger()),
                 $user_manager,
                 new BaseLanguageFactory(),
-                new AutomaticMailsLogger()
+                new UserSuspensionLogger()
             )
         );
     }
