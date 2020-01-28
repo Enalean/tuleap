@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,30 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-class CSRFSynchronizerTokenTest extends TuleapTestCase
+class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\ForgeConfigSandbox, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock, \Tuleap\TemporaryTestDirectory;
+
     /**
      * @var array
      */
     private $storage;
 
-
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-        ForgeConfig::store();
-        $this->storage = array();
+        $this->storage = [];
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
-        parent::tearDown();
-        ForgeConfig::restore();
+        unset($GLOBALS['_SESSION']);
     }
 
-    public function itVerifiesIfATokenIsValid()
+    public function testItVerifiesIfATokenIsValid()
     {
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -53,7 +49,7 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
         $this->assertTrue($csrf_token->isValid($token));
     }
 
-    public function itVerifiesIfATokenIsValidForASpecificUrl()
+    public function testItVerifiesIfATokenIsValidForASpecificUrl()
     {
         $csrf_token_creator = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -70,7 +66,7 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
         $this->assertTrue($csrf_token_verifier->isValid($token));
     }
 
-    public function itValidatesTheSameTokenMultipleTimes()
+    public function testItValidatesTheSameTokenMultipleTimes()
     {
         $csrf_token_1 = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -89,7 +85,7 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
         $this->assertTrue($csrf_token_2->isValid($token));
     }
 
-    public function itDoesNotValidateInvalidToken()
+    public function testItDoesNotValidateInvalidToken()
     {
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -99,7 +95,7 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
         $this->assertFalse($csrf_token->isValid('invalid_token'));
     }
 
-    public function itDoesNothingWhenAValidTokenIsChecked()
+    public function testItDoesNothingWhenAValidTokenIsChecked()
     {
         $GLOBALS['Response']->shouldReceive('redirect')->never();
 
@@ -115,11 +111,10 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
         $csrf_token->check('/path/to/url', $request);
     }
 
-    public function itRedirectsWhenAnInvalidTokenIsChecked()
+    public function testItRedirectsWhenAnInvalidTokenIsChecked()
     {
         $uri = '/path/to/uri';
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->with($uri)->ordered();
+        $GLOBALS['Response']->shouldReceive('redirect')->with($uri)->once();
 
         $csrf_token = new CSRFSynchronizerToken(
             $uri,
@@ -133,11 +128,10 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
         $csrf_token->check($uri, $request);
     }
 
-    public function itRedirectsWhenNoTokenIsProvidedInTheRequest()
+    public function testItRedirectsWhenNoTokenIsProvidedInTheRequest()
     {
         $uri = '/path/to/uri';
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->with($uri)->ordered();
+        $GLOBALS['Response']->shouldReceive('redirect')->with($uri)->once();
 
         $csrf_token = new CSRFSynchronizerToken(
             $uri,
@@ -151,9 +145,10 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
         $csrf_token->check($uri, $request);
     }
 
-    public function itGeneratesHTMLInput()
+    public function testItGeneratesHTMLInput()
     {
-        ForgeConfig::set('codendi_dir', '/usr/share/tuleap');
+        ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../');
+        ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
 
         $token1  = new CSRFSynchronizerToken(
             '/path/to/uri/1',
@@ -161,13 +156,13 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
             $this->storage
         );
 
-        $this->assertEqual(
+        $this->assertEquals(
             '<input type="hidden" name="' . CSRFSynchronizerToken::DEFAULT_TOKEN_NAME . '" value="' . $token1->getToken() . '" />',
             $token1->fetchHTMLInput()
         );
     }
 
-    public function itLimitsTheNumberOfStoredCSRFTokens()
+    public function testItLimitsTheNumberOfStoredCSRFTokens()
     {
         $first_token           = new CSRFSynchronizerToken(
             'first_token_created',
@@ -180,9 +175,9 @@ class CSRFSynchronizerTokenTest extends TuleapTestCase
             new CSRFSynchronizerToken('/' . $i, CSRFSynchronizerToken::DEFAULT_TOKEN_NAME, $this->storage);
         }
 
-        $this->assertEqual(
+        $this->assertCount(
             CSRFSynchronizerToken::MAX_TOKEN_PER_STORAGE,
-            count($this->storage[CSRFSynchronizerToken::STORAGE_PREFIX])
+            $this->storage[CSRFSynchronizerToken::STORAGE_PREFIX],
         );
 
         $token = new CSRFSynchronizerToken(

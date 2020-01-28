@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,29 +16,29 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class Codendi_RequestTest extends TuleapTestCase
+class Codendi_RequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $project_manager;
     private $project;
 
-    public function setUp()
+    public function setUp() : void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->project         = \Mockery::spy(\Project::class);
         $this->project_manager = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->with(123)->andReturns($this->project)->getMock();
     }
 
-    public function itReturnsTheProject()
+    public function testItReturnsTheProject()
     {
         $request = new Codendi_Request(array('group_id' => '123'), $this->project_manager);
-        $this->assertEqual($this->project, $request->getProject());
+        $this->assertEquals($this->project, $request->getProject());
     }
 
-    public function itReturnsNullIfInvalidRequestedGroupId()
+    public function testItReturnsNullIfInvalidRequestedGroupId()
     {
         $request = new Codendi_Request(array('group_id' => 'stuff'), $this->project_manager);
         $this->assertNull($request->getProject());
