@@ -26,7 +26,7 @@ $illustration-spacing: (2 * $tlp-double-spacing);
 $title-margin-left: $illustration-width + $illustration-spacing;
 
 .project-registration {
-    padding: $tlp-double-spacing;
+    padding: $tlp-double-spacing $tlp-double-spacing 100px;
     background: linear-gradient(180deg, $tlp-ui-white 0, $tlp-theme-background-color 400px);
 }
 
@@ -46,6 +46,7 @@ $title-margin-left: $illustration-width + $illustration-spacing;
 }
 
 .register-new-project-list {
+    width: 100%;
     margin: 0 0 0 $illustration-spacing;
 }
 
@@ -62,11 +63,37 @@ $title-margin-left: $illustration-width + $illustration-spacing;
 }
 
 .project-registration-button-container {
-    display: flex;
-    align-items: baseline;
-    justify-content: flex-end;
     padding: $tlp-spacing 0 0;
     border-top: 1px solid $tlp-ui-border-dark;
+
+    > .project-registration-content {
+        display: flex;
+        align-items: baseline;
+        justify-content: flex-end;
+    }
+
+    &.pinned {
+        @keyframes footerAppear {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        padding: $tlp-spacing $tlp-double-spacing;
+        animation: footerAppear ease-out 150ms;
+        border-top: 0;
+        background: transparentize($tlp-ui-white, .1);
+        box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .1);
+
+        > .project-registration-content {
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+        }
+    }
 }
 
 .project-registration-back-button {
