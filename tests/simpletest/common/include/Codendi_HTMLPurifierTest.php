@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
@@ -14,70 +14,38 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generatePartial(
-    'Codendi_HTMLPurifier',
-    'Codendi_HTMLPurifierTestVersion2',
-    array('getReferenceManager')
-);
-Mock::generate('ReferenceManager');
-
-
-class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier
-{
-    private static $Codendi_HTMLPurifier_testversion_instance;
-    // Need to redfine this method too because the parent one return a
-    // 'Codendi_HTMLPurifier' object.
-
-    protected function __construct()
-    {
-    }
-
-    public static function instance()
-    {
-        if (!isset(self::$Codendi_HTMLPurifier_testversion_instance)) {
-            $c = self::class;
-            self::$Codendi_HTMLPurifier_testversion_instance = new $c;
-        }
-        return self::$Codendi_HTMLPurifier_testversion_instance;
-    }
-}
-
-class ReferenceManagerTestMakeLinks extends MockReferenceManager
-{
-    function insertReferences(&$data, $group_id)
-    {
-        $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
-    }
-}
-
-/**
- * Tests the class CodendiHTMLPurifier
- */
-class Codendi_HTMLPurifierTest extends TuleapTestCase
+class Codendi_HTMLPurifierTest extends TuleapTestCase // phpcs:ignore
 {
 
-    function testPurifySimple()
+    private function getHTMLPurifier()
     {
-        $p = Codendi_HTMLPurifier::instance();
+        return new class extends Codendi_HTMLPurifier {
+            public function __construct()
+            {
+            }
+        };
+    }
+
+    public function testPurifySimple()
+    {
+        $p = $this->getHTMLPurifier();
         $this->assertEqual('&lt;script&gt;alert(1);&lt;/script&gt;', $p->purify('<script>alert(1);</script>'));
     }
 
-    function testStripLightForibdden()
+    public function testStripLightForibdden()
     {
-        $p = new Codendi_HTMLPurifierTestVersion2($this);
-        $rm = new MockReferenceManager();
+        $p = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $rm = \Mockery::spy(\ReferenceManager::class);
         $val = 'bugtest #123';
-        $rm->setReturnValue('insertReferences', $val);
-        $p->setReturnValue('getReferenceManager', $rm);
+        $rm->shouldReceive('insertReferences')->andReturns($val);
+        $p->shouldReceive('getReferenceManager')->andReturns($rm);
 
         $this->assertEqual('', $p->purify('<script>alert(1);</script>', CODENDI_PURIFIER_LIGHT));
         $this->assertEqual('Bolded', $p->purify('<s>Bolded</s>', CODENDI_PURIFIER_LIGHT));
@@ -87,9 +55,9 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase
         $this->anchorJsInjection(CODENDI_PURIFIER_LIGHT);
     }
 
-    function anchorJsInjection($level)
+    private function anchorJsInjection($level)
     {
-        $p = Codendi_HTMLPurifierTestVersion::instance();
+        $p = $this->getHTMLPurifier();
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onblur="evil">Text</a>', $level));
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onclick="evil">Text</a>', $level));
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" ondbclick="evil">Text</a>', $level));
@@ -104,9 +72,9 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmouseup="evil">Text</a>', $level));
     }
 
-    function testStripLightAllowed()
+    public function testStripLightAllowed()
     {
-        $p = Codendi_HTMLPurifierTestVersion::instance();
+        $p = $this->getHTMLPurifier();
 
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text</p>', CODENDI_PURIFIER_LIGHT));
         $this->assertEqual('Text<br />', $p->purify('Text<br />', CODENDI_PURIFIER_LIGHT));
@@ -116,18 +84,18 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase
         $this->assertEqual('<strong>Text</strong>', $p->purify('<strong>Text</strong>', CODENDI_PURIFIER_LIGHT));
     }
 
-    function testStripLightTidy()
+    public function testStripLightTidy()
     {
-        $p = Codendi_HTMLPurifierTestVersion::instance();
+        $p = $this->getHTMLPurifier();
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text', CODENDI_PURIFIER_LIGHT));
         $this->assertEqual('Text<br />', $p->purify('Text<br>', CODENDI_PURIFIER_LIGHT));
 
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href=\'http://php.net\'>Text', CODENDI_PURIFIER_LIGHT));
     }
 
-    function testPurifyArraySimple()
+    public function testPurifyArraySimple()
     {
-        $p = Codendi_HTMLPurifier::instance();
+        $p = $this->getHTMLPurifier();
 
         $vRef = array('<script>alert(1);</script>',
                       'toto',
@@ -140,7 +108,7 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase
         $this->assertIdentical($vExpect, $p->purifyMap($vRef));
     }
 
-    function testSingleton()
+    public function testSingleton()
     {
         $p1 = Codendi_HTMLPurifier::instance();
         $p2 = Codendi_HTMLPurifier::instance();
@@ -148,7 +116,7 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase
         $this->assertIsA($p1, 'Codendi_HTMLPurifier');
     }
 
-    function testPurifyJsQuoteAndDQuote()
+    public function testPurifyJsQuoteAndDQuote()
     {
         $p = Codendi_HTMLPurifier::instance();
         $this->assertEqual('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_DQUOTE));
@@ -165,16 +133,16 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase
         $this->assertEqual('100', $p->purify(100, CODENDI_PURIFIER_JS_QUOTE));
     }
 
-    function testBasicNobr()
+    public function testBasicNobr()
     {
-        $p = Codendi_HTMLPurifierTestVersion::instance();
+        $p = $this->getHTMLPurifier();
         $this->assertEqual("a<br />\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC));
         $this->assertEqual("a\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC_NOBR));
     }
 
-    function testMakeLinks()
+    public function testMakeLinks()
     {
-        $p = new Codendi_HTMLPurifierTestVersion2($this);
+        $p = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertEqual('', $p->purify('', CODENDI_PURIFIER_BASIC));
         $this->assertEqual('<a href="https://www.example.com">https://www.example.com</a>', $p->purify('https://www.example.com', CODENDI_PURIFIER_BASIC));
         $this->assertEqual('"<a href="https://www.example.com">https://www.example.com</a>"', $p->purify('"https://www.example.com"', CODENDI_PURIFIER_BASIC));
@@ -185,23 +153,31 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase
         $this->assertEqual('\'<a href="mailto:john.doe@example.com">john.doe@example.com</a>\'', $p->purify('\'john.doe@example.com\'', CODENDI_PURIFIER_BASIC));
         $this->assertEqual('&lt;<a href="mailto:john.doe@example.com">john.doe@example.com</a>&gt;', $p->purify('<john.doe@example.com>', CODENDI_PURIFIER_BASIC));
         $this->assertEqual('<a href="ssh://gitolite@example.com/tuleap/stable.git">ssh://gitolite@example.com/tuleap/stable.git</a>', $p->purify('ssh://gitolite@example.com/tuleap/stable.git', CODENDI_PURIFIER_BASIC));
-        $rm = new ReferenceManagerTestMakeLinks();
-        $p->setReturnValue('getReferenceManager', $rm);
+        $reference_manager = Mockery::mock(ReferenceManager::class);
+        $reference_manager->shouldReceive('insertReferences')->withArgs(function (&$data, $group_id) {
+            $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
+            return true;
+        });
+        $p->shouldReceive('getReferenceManager')->andReturns($reference_manager);
         $this->assertPattern('/link-to-art-1/', $p->purify('art #1', CODENDI_PURIFIER_BASIC, 1));
     }
 
-    function testPurifierLight()
+    public function testPurifierLight()
     {
         $p = Codendi_HTMLPurifier::instance();
         $this->assertEqual("foo\nbar", $p->purify("foo\nbar", CODENDI_PURIFIER_LIGHT));
         $this->assertEqual("foo\nbar", $p->purify("foo\r\nbar", CODENDI_PURIFIER_LIGHT));
     }
 
-    public function itDoesNotDoubleEscapeLinks()
+    public function testItDoesNotDoubleEscapeLinks()
     {
-        $reference_manager = new ReferenceManagerTestMakeLinks();
-        $p = partial_mock('Codendi_HTMLPurifier', array('getReferenceManager'));
-        stub($p)->getReferenceManager()->returns($reference_manager);
+        $reference_manager = Mockery::mock(ReferenceManager::class);
+        $reference_manager->shouldReceive('insertReferences')->withArgs(function (&$data, $group_id) {
+            $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
+            return true;
+        });
+        $p = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $p->shouldReceive('getReferenceManager')->andReturns($reference_manager);
 
         $html = 'Text with <a href="http://tuleap.net/">link</a> and a reference to art #1';
         $expected = 'Text with <a href="http://tuleap.net/">link</a> and a reference to <a href="link-to-art-1">art #1</a>';
