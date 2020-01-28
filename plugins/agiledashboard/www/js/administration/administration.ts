@@ -20,23 +20,45 @@
 import { createPopover, modal as createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
+    canNotCreatePlanningPopover();
+    removePlanningButton();
+});
+
+function canNotCreatePlanningPopover(): void {
     const trigger = document.getElementById(
         "agiledashboard-administration-cannot-create-planning-popover-trigger"
     );
-
-    if (trigger) {
-        createPopover(
-            trigger,
-            document.getElementById("agiledashboard-administration-cannot-create-planning-popover")
-        );
+    if (!trigger) {
+        return;
     }
 
+    const popover = document.getElementById(
+        "agiledashboard-administration-cannot-create-planning-popover"
+    );
+    if (!popover) {
+        return;
+    }
+    createPopover(trigger, popover);
+}
+
+function removePlanningButton(): void {
     const button = document.getElementById("agiledashboard-administration-remove-planning-button");
-    if (button) {
-        const modal = createModal(document.getElementById(button.dataset.targetModalId));
+
+    if (button && button.dataset) {
+        const modal_target_id = button.dataset.targetModalId;
+
+        if (!modal_target_id) {
+            return;
+        }
+
+        const modal_element = document.getElementById(modal_target_id);
+        if (!modal_element) {
+            return;
+        }
+        const modal = createModal(modal_element);
 
         button.addEventListener("click", () => {
             modal.show();
         });
     }
-});
+}
