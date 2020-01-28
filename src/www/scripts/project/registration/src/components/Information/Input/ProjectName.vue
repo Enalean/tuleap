@@ -23,8 +23,8 @@
         class="tlp-form-element project-information-name"
         v-bind:class="{ 'tlp-form-element-error': has_error }"
     >
-        <label class="tlp-label" for="project-name" v-translate>
-            Name
+        <label class="tlp-label" for="project-name">
+            <span v-translate>Name</span>
             <i class="fa fa-asterisk"></i>
         </label>
         <input
@@ -37,7 +37,6 @@
             v-bind:maxlength="max_project_length"
             ref="name"
             v-on:input="slugifiedProjectName()"
-            size="50"
             required
         />
         <p class="tlp-text-info">

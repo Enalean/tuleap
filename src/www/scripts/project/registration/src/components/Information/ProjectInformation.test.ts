@@ -23,7 +23,6 @@ import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-t
 import ProjectInformation from "./ProjectInformation.vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
-import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
 import { State } from "../../store/type";
@@ -90,7 +89,6 @@ describe("ProjectInformation -", () => {
 
         expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
         expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
-        expect(wrapper.contains(ProjectInformationInputPrivacySwitch)).toBe(true);
         expect(wrapper.contains(ProjectName)).toBe(true);
 
         expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(false);
@@ -103,36 +101,10 @@ describe("ProjectInformation -", () => {
 
         expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
         expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
-        expect(wrapper.contains(ProjectInformationInputPrivacySwitch)).toBe(true);
-        expect(wrapper.contains(ProjectInformationInputPrivacyList)).toBe(false);
+        expect(wrapper.contains(ProjectInformationInputPrivacyList)).toBe(true);
         expect(wrapper.contains(ProjectName)).toBe(true);
 
         expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(true);
-    });
-    it("displays the switch when restricted users are NOT allowed in the plateform", () => {
-        const wrapper = factory;
-
-        wrapper.vm.$store.state.are_restricted_users_allowed = false;
-
-        expect(wrapper.contains("[data-test=register-new-project-information-switch]")).toBe(true);
-
-        const form = wrapper.find("[data-test=register-new-project-information-form]");
-        expect(
-            form.classes("register-new-project-information-form-container-restricted-allowed")
-        ).toBe(false);
-        expect(wrapper.contains("[data-test=register-new-project-information-list]")).toBe(false);
-    });
-    it("displays the privacy list when restricted users are allowed in the plateform", () => {
-        const wrapper = factory;
-        wrapper.vm.$store.state.are_restricted_users_allowed = true;
-
-        expect(wrapper.contains("[data-test=register-new-project-information-switch]")).toBe(false);
-
-        const form = wrapper.find("[data-test=register-new-project-information-form]");
-        expect(
-            form.classes("register-new-project-information-form-container-restricted-allowed")
-        ).toBe(true);
-        expect(wrapper.contains("[data-test=register-new-project-information-list]")).toBe(true);
     });
 
     it("redirects user on /new when he does not have all needed information to start his project creation", async () => {

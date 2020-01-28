@@ -31,7 +31,8 @@ module.exports = {
         "/assets/project-registration/scripts/"
     ),
     externals: {
-        tlp: "tlp"
+        tlp: "tlp",
+        jquery: "jQuery"
     },
     module: {
         rules: [

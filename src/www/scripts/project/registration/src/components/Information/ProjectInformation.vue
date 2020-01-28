@@ -25,34 +25,23 @@
         </div>
 
         <form v-on:submit.prevent="createProject" data-test="project-registration-form">
-            <div class="register-new-project-section">
+            <div class="register-new-project-section ">
                 <project-information-svg />
-                <div class="register-new-project-list">
+                <div class="register-new-project-list register-new-project-information">
                     <h1 class="project-registration-title" v-translate>Start a new project</h1>
                     <h2>
                         <span class="tlp-badge-primary register-new-project-section-badge">2</span>
                         <span v-translate>Project information</span>
                     </h2>
-
                     <div
                         class="register-new-project-information-form-container"
-                        v-bind:class="{
-                            'register-new-project-information-form-container-restricted-allowed': are_restricted_users_allowed
-                        }"
                         data-test="register-new-project-information-form"
-                    >
-                        <project-name v-model="name_properties" />
-                        <project-information-input-privacy-list
-                            v-if="are_restricted_users_allowed"
-                            v-model="selected_visibility"
-                            data-test="register-new-project-information-list"
-                        />
-                        <project-information-input-privacy-switch
-                            v-else
-                            v-model="is_private"
-                            data-test="register-new-project-information-switch"
-                        />
-                    </div>
+                    ></div>
+                    <project-name v-model="name_properties" />
+                    <project-information-input-privacy-list
+                        v-model="selected_visibility"
+                        data-test="register-new-project-information-list"
+                    />
                     <field-description v-model="field_description" />
                     <trove-category-list
                         v-model="trove_cats"
@@ -79,7 +68,6 @@ import { Component } from "vue-property-decorator";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
-import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
 import {
     FieldData,
@@ -114,7 +102,6 @@ const DEFAULT_PROJECT_ID = "100";
         TroveCategoryList,
         ProjectInformationInputPrivacyList,
         ProjectName,
-        ProjectInformationInputPrivacySwitch,
         ProjectInformationFooter,
         ProjectInformationSvg
     }
@@ -150,7 +137,7 @@ export default class ProjectInformation extends Vue {
     @State
     selected_company_template!: TemplateData;
 
-    selected_visibility = "public";
+    selected_visibility = "";
 
     name_properties: ProjectNameProperties = {
         slugified_name: "",

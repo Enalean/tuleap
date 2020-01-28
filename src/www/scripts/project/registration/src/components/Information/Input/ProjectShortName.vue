@@ -54,7 +54,6 @@
                 v-on:input="updateProjectShortName($refs.shortname.value)"
                 v-bind:value="slugified_project_name"
                 data-test="new-project-shortname"
-                size="50"
             />
             <p class="tlp-text-info">
                 <i class="fa fa-fw fa-life-saver"></i>

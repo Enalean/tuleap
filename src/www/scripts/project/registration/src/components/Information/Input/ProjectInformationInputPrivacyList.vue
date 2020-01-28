@@ -21,34 +21,19 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" for="project-information-input-privacy-list-label">
-            <span v-translate>Privacy</span>
-            <i
-                class="fa fa-question-circle project-information-input-privacy-icon"
-                aria-hidden="true"
-                data-placement="top"
-                ref="trigger"
-            ></i>
+            <span v-translate>Visibility</span>
+            <i class="fa fa-asterisk"></i>
         </label>
-        <section class="tlp-popover" ref="container">
-            <div class="tlp-popover-arrow"></div>
-            <div class="tlp-popover-header">
-                <h1 class="tlp-popover-title" v-translate>Information about privacy</h1>
-            </div>
-            <div class="tlp-popover-body">
-                <p data-test="project-information-input-privacy-text">
-                    {{ translated_tooltip }}
-                </p>
-            </div>
-        </section>
         <select
             id="project-information-input-privacy-list-label"
             class="tlp-select tlp-select-large"
             name="privacy"
-            v-on:change="$emit('input', selected_visibility)"
             data-test="project-information-input-privacy-list"
             v-model="selected_visibility"
+            ref="visibility_selector"
         >
             <option
+                v-if="are_restricted_users_allowed"
                 value="unrestricted"
                 v-bind:selected="is_public_included_restricted_selected"
                 v-translate
@@ -65,6 +50,7 @@
                 Public
             </option>
             <option
+                v-if="are_restricted_users_allowed"
                 value="private"
                 v-bind:selected="is_private_selected"
                 data-test="private"
@@ -86,8 +72,20 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { createPopover } from "tlp";
+import {
+    DataFormat,
+    GroupedDataFormat,
+    LoadingData,
+    IdTextPair,
+    Options,
+    select2,
+    Select2Plugin
+} from "tlp";
+import { VisibilityForVisibilitySelector } from "./type";
+import { sanitize } from "dompurify";
+import { render } from "mustache";
 import { Component } from "vue-property-decorator";
+import $ from "jquery";
 import {
     ACCESS_PRIVATE,
     ACCESS_PRIVATE_WO_RESTRICTED,
@@ -101,24 +99,69 @@ export default class ProjectInformationInputPrivacyList extends Vue {
     @State
     project_default_visibility!: string;
 
-    selected_visibility = ACCESS_PRIVATE;
+    @State
+    are_restricted_users_allowed!: boolean;
+
+    select2_visibility_select: Select2Plugin | null = null;
+
+    selected_visibility = ACCESS_PRIVATE_WO_RESTRICTED;
 
     mounted(): void {
         this.selected_visibility = this.project_default_visibility;
 
-        const trigger = this.$refs.trigger;
-        const container = this.$refs.container;
-        if (trigger instanceof Element && container instanceof Element) {
-            createPopover(trigger, container);
+        const configuration: Options = {
+            minimumResultsForSearch: Infinity,
+            templateResult: this.formatVisibilityOption,
+            escapeMarkup: sanitize
+        };
+
+        setTimeout(() => {
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+            const select = this.$refs.visibility_selector as Element;
+            this.select2_visibility_select = select2(select, configuration);
+        }, 10);
+    }
+
+    destroyed(): void {
+        if (this.select2_visibility_select !== null) {
+            $(this.$refs.visibility_selector).select2("destroy");
         }
     }
 
-    get is_public_selected(): boolean {
-        return this.selected_visibility === ACCESS_PUBLIC;
+    formatVisibilityOption(visibility: DataFormat | GroupedDataFormat | LoadingData): string {
+        if (!this.isForVisibilitySelector(visibility)) {
+            return "";
+        }
+
+        return render(
+            `<div>
+                <span class="project-information-input-privacy-list-option-label">{{ label }}</span>
+                <p class="project-information-input-privacy-list-option-description">{{ description }}</p>
+            </div>`,
+            {
+                label: visibility.text,
+                description: this.translatedVisibilityDetails(visibility.element.value)
+            }
+        );
+    }
+
+    isForVisibilitySelector(
+        visibility: IdTextPair | DataFormat | GroupedDataFormat | LoadingData
+    ): visibility is VisibilityForVisibilitySelector {
+        // This is a trick to fool TypeScript so that we can have description on project visibility.
+        // Default types definition of select2 forces us to have only "DataFormat" (basically: id, text) whereas
+        // we can deal with values with more attribute (for example: description).
+        //
+        // The chosen solution is to rely on visibility-defined type guards of TypeScript.
+        return "element" in visibility;
     }
 
     get is_public_included_restricted_selected(): boolean {
         return this.selected_visibility === ACCESS_PUBLIC_UNRESTRICTED;
+    }
+
+    get is_public_selected(): boolean {
+        return this.selected_visibility === ACCESS_PUBLIC;
     }
 
     get is_private_selected(): boolean {
@@ -129,24 +172,27 @@ export default class ProjectInformationInputPrivacyList extends Vue {
         return this.selected_visibility === ACCESS_PRIVATE_WO_RESTRICTED;
     }
 
-    get translated_tooltip(): string {
-        switch (this.selected_visibility) {
-            case ACCESS_PUBLIC:
-                return this.$gettext(
-                    "Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items."
-                );
+    translatedVisibilityDetails(visibility: string): string {
+        switch (visibility) {
             case ACCESS_PUBLIC_UNRESTRICTED:
                 return this.$gettext(
-                    "Project privacy set to public including restricted. By default, its content is available to all authenticated users. Please note that more restrictive permissions might exist on some items."
+                    "Project content is available to all authenticated users, including restricted users. Please note that more restrictive permissions might exist on some items."
+                );
+            case ACCESS_PUBLIC:
+                return this.$gettext(
+                    "Project content is available to all authenticated users. Please note that more restrictive permissions might exist on some items."
                 );
             case ACCESS_PRIVATE:
                 return this.$gettext(
-                    "Project privacy set to private including restricted. Only project members can access its content. Restricted users are allowed in this project."
+                    "Only project members can access project content. Restricted users are allowed in this project."
                 );
             case ACCESS_PRIVATE_WO_RESTRICTED:
-                return this.$gettext(
-                    "Project privacy set to private. Only project members can access its content. Restricted users are not allowed in this project."
-                );
+                if (this.are_restricted_users_allowed) {
+                    return this.$gettext(
+                        "Only project members can access project content. Restricted users are NOT allowed in this project."
+                    );
+                }
+                return this.$gettext("Only project members can access project content.");
             default:
                 throw new Error("Unable to retrieve the selected visibility type");
         }
