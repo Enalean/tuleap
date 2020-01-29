@@ -47,7 +47,7 @@ class TaskboardUsageDao extends DataAccessObject
         $this->getDB()->run($statement, $board_type, $project_id);
     }
 
-    public function createBoardTypeByProjectId(int $project_id, string $board_type): void
+    public function create(int $project_id, string $board_type): void
     {
         $statement = '
             INSERT INTO plugin_taskboard_usage(project_id, board_type)
@@ -62,5 +62,17 @@ class TaskboardUsageDao extends DataAccessObject
         $statement = 'DELETE FROM plugin_taskboard_usage WHERE project_id = ?';
 
         $this->getDB()->run($statement, $project_id);
+    }
+
+    public function duplicate(int $project_id, int $template_id): void
+    {
+        $statement = '
+            INSERT INTO plugin_taskboard_usage(project_id, board_type)
+            SELECT ?, board_type
+            FROM plugin_taskboard_usage
+            WHERE project_id = ?
+        ';
+
+        $this->getDB()->run($statement, $project_id, $template_id);
     }
 }
