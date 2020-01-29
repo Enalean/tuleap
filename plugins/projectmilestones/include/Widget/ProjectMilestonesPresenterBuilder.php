@@ -197,7 +197,8 @@ class ProjectMilestonesPresenterBuilder
             $this->getLabelTrackerPlanning(),
             $this->isTimeframeDurationField(),
             $this->getLabelStartDateField(),
-            $this->getLabelTimeframeField()
+            $this->getLabelTimeframeField(),
+            $this->userCanViewSubMilestonesPlanning()
         );
     }
 
@@ -249,6 +250,15 @@ class ProjectMilestonesPresenterBuilder
     private function getLabelTrackerPlanning(): string
     {
         return $this->root_planning->getPlanningTracker()->getName();
+    }
+
+    private function userCanViewSubMilestonesPlanning(): bool
+    {
+        if (count($this->root_planning->getPlanningTracker()->getChildren()) === 0) {
+            return false;
+        }
+
+        return $this->root_planning->getPlanningTracker()->getChildren()[0]->userCanView();
     }
 
     private function isTimeframeDurationField(): bool

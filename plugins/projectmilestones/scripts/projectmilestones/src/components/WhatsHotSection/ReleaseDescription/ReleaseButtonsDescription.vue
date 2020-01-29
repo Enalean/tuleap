@@ -77,6 +77,8 @@ export default class ReleaseButtonsDescription extends Vue {
     readonly project_id!: number;
     @State
     readonly label_tracker_planning!: string;
+    @State
+    readonly user_can_view_sub_milestones_planning!: boolean;
 
     get get_overview_link(): string | null {
         return (
@@ -91,6 +93,10 @@ export default class ReleaseButtonsDescription extends Vue {
     }
 
     get get_planning_link(): string | null {
+        if (!this.user_can_view_sub_milestones_planning) {
+            return null;
+        }
+
         return (
             "/plugins/agiledashboard/?group_id=" +
             encodeURIComponent(this.project_id) +

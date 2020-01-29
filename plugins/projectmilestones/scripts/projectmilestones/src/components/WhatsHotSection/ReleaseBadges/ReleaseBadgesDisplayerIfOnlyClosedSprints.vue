@@ -19,7 +19,10 @@
 
 <template>
     <div class="project-release-infos-badges">
-        <release-badges-closed-sprints v-bind:release_data="release_data" />
+        <release-badges-closed-sprints
+            v-if="user_can_view_sub_milestones_planning"
+            v-bind:release_data="release_data"
+        />
         <release-others-badges v-bind:release_data="release_data" />
     </div>
 </template>
@@ -30,11 +33,14 @@ import { Component, Prop } from "vue-property-decorator";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import { MilestoneData } from "../../../type";
+import { State } from "vuex-class";
 @Component({
     components: { ReleaseBadgesClosedSprints, ReleaseOthersBadges }
 })
 export default class ReleaseBadgesDisplayerIfOnlyClosedSprints extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @State
+    readonly user_can_view_sub_milestones_planning!: boolean;
 }
 </script>

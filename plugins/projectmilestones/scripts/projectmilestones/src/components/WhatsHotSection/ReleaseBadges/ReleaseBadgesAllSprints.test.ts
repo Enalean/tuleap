@@ -74,6 +74,7 @@ describe("ReleaseBadgesAllSprints", () => {
 
     describe("Display number of sprint", () => {
         it("When there is a tracker, Then number of sprint is displayed", async () => {
+            store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.find("[data-test=badge-sprint]").text()).toEqual("10 Sprint1");
@@ -96,7 +97,14 @@ describe("ReleaseBadgesAllSprints", () => {
             component_options.propsData = {
                 release_data
             };
+            store_options.state.user_can_view_sub_milestones_planning = true;
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
+            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+        });
+
+        it("When the user can't see the tracker, Then number of sprint is not displayed", async () => {
+            store_options.state.user_can_view_sub_milestones_planning = false;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);

@@ -140,6 +140,8 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 release_data
             };
 
+            store_options.state.user_can_view_sub_milestones_planning = true;
+
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=badge-sprint]")).toBe(true);
@@ -166,6 +168,39 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
             expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
         });
+
+        it("When the user can't see the tracker, Then ReleasesBasgesAllSprints is not rendered", async () => {
+            release_data = {
+                id: 2,
+                total_sprint: 10,
+                open_sprints: [
+                    {
+                        id: 10
+                    } as MilestoneData
+                ],
+                resources: {
+                    milestones: {
+                        accept: {
+                            trackers: [
+                                {
+                                    label: "Sprint1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            } as MilestoneData;
+
+            component_options.propsData = {
+                release_data
+            };
+
+            store_options.state.user_can_view_sub_milestones_planning = false;
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+        });
     });
 
     it("When the user clicked on sprints, Then a line is displayed", async () => {
@@ -176,6 +211,8 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
     });
 
     it("When the user clicked on sprints, Then ReleaseBadgesClosedSprints is rendered", async () => {
+        store_options.state.user_can_view_sub_milestones_planning = true;
+
         const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(false);

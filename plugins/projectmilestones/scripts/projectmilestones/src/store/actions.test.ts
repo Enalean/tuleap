@@ -19,7 +19,7 @@
 
 import * as actions from "./actions";
 import { mockFetchError } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
-import { TrackerAgileDashboard, Context, MilestoneData, TrackerProjectLabel } from "../type";
+import { TrackerAgileDashboard, Context, MilestoneData, TrackerProjectLabel, State } from "../type";
 import * as rest_querier from "../api/rest-querier";
 
 describe("Store actions", () => {
@@ -34,15 +34,15 @@ describe("Store actions", () => {
                 nb_upcoming_releases: 0,
                 offset: 0,
                 limit: 50,
-                current_milestones: [],
+                current_milestones: [] as MilestoneData[],
                 error_message: null,
                 is_loading: false,
-                trackers_agile_dashboard: [],
+                trackers_agile_dashboard: [] as TrackerAgileDashboard[],
                 label_tracker_planning: "Release",
                 is_timeframe_duration: true,
                 label_start_date: "start date",
                 label_timeframe: "duration"
-            }
+            } as State
         };
     });
 
@@ -86,7 +86,7 @@ describe("Store actions", () => {
                     nb_upcoming_releases: 0,
                     error_message: null,
                     is_loading: false,
-                    current_milestones: [],
+                    current_milestones: [] as MilestoneData[],
                     offset: 0,
                     limit: 50,
                     trackers_agile_dashboard: trackers,
@@ -94,7 +94,7 @@ describe("Store actions", () => {
                     is_timeframe_duration: true,
                     label_start_date: "start date",
                     label_timeframe: "duration"
-                };
+                } as State;
 
                 const milestones: MilestoneData[] = [
                     {
@@ -135,7 +135,7 @@ describe("Store actions", () => {
                 nb_upcoming_releases: 0,
                 error_message: null,
                 is_loading: false,
-                current_milestones: [],
+                current_milestones: [] as MilestoneData[],
                 offset: 0,
                 limit: 50,
                 trackers_agile_dashboard: trackers,
@@ -143,7 +143,7 @@ describe("Store actions", () => {
                 is_timeframe_duration: true,
                 label_start_date: "start date",
                 label_timeframe: "duration"
-            };
+            } as State;
 
             const milestone: MilestoneData = {
                 id: 1,
