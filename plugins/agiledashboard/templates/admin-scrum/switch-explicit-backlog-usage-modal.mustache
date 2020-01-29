@@ -1,0 +1,47 @@
+<div class="tlp-modal"
+     role="dialog"
+     aria-labelledby="switch-explicit-backlog-usage-modal"
+     id="scrum-explicit-backlog-switch-usage-modal"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="switch-explicit-backlog-usage-modal">
+            <i class="fa fa-cogs tlp-modal-title-icon"></i> {{# dgettext }} tuleap-agiledashboard | Switch backlog mode {{/ dgettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal"
+             aria-label="{{# dgettext }} tuleap-agiledashboard | Close {{/ dgettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <div id="legacy-mode-text">
+            <p>
+                {{# dgettext }}
+                    tuleap-agiledashboard |
+                    If you switch back to the old mode, some tracker reports could be updated to not use anymore the "unplanned" value for "In milestone" criterion.
+                {{/ dgettext }}
+            </p>
+            {{# has_workflow_action_add_to_top_backlog_defined }}
+                <p class="tlp-alert-warning">
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        Any "AddToTopBacklog" workflow post-actions defined in the project will be removed.
+                    {{/ dgettext }}
+                </p>
+            {{/ has_workflow_action_add_to_top_backlog_defined }}
+        </div>
+        <p id="explicit-mode-text">
+            {{# dgettext }}
+                tuleap-agiledashboard |
+                Once activated, you will start with a copy of the previous top backlog.
+            {{/ dgettext }}
+        </p>
+
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal">{{# dgettext }} tuleap-agiledashboard | Cancel {{/ dgettext }}</button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action"><i
+                class="fa fa-save tlp-button-icon"></i> {{# dgettext }} tuleap-agiledashboard | Continue {{/ dgettext }}
+        </button>
+    </div>
+</div>

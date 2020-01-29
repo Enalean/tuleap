@@ -127,6 +127,9 @@ msgstr "Graphiques"
 msgid "Charts configuration"
 msgstr "Configuration des graphiques"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -236,8 +239,8 @@ msgstr "Le planning a été mis à jour."
 msgid ""
 "PostAction of type %s cannot be defined without explicit backlog management."
 msgstr ""
-"la PostAction de type %s ne peut être définie sans la gestion explicite de la "
-"planification générale."
+"la PostAction de type %s ne peut être définie sans la gestion explicite de "
+"la planification générale."
 
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"
@@ -280,6 +283,9 @@ msgstr "Statut"
 
 msgid "Submit"
 msgstr "Valider"
+
+msgid "Switch backlog mode"
+msgstr "Basculer le mode de planification"
 
 #, php-format
 msgid ""
