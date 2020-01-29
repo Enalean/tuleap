@@ -22,16 +22,32 @@
         class="project-release-infos-badges"
         v-bind:class="{ 'on-open-sprints-details': open_sprints_details }"
     >
-        <release-badges-all-sprints
-            v-if="display_badge_all_sprint"
-            v-bind:release_data="release_data"
-            v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
-            data-test="badge-sprint"
-        />
-        <release-badges-closed-sprints
-            v-if="open_sprints_details && user_can_view_sub_milestones_planning"
-            v-bind:release_data="release_data"
-        />
+        <div
+            class="project-release-badges-open-closed"
+            v-bind:class="{ 'open-badges-sprints': open_sprints_details }"
+        >
+            <release-badges-all-sprints
+                v-if="display_badge_all_sprint"
+                v-bind:release_data="release_data"
+                v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
+                data-test="badge-sprint"
+            />
+            <div
+                v-if="open_sprints_details"
+                class="container-icon-badge-button-to-close"
+                data-test="button-to-close-sprint-details"
+            >
+                <i
+                    v-on:click="on_click_close_sprints_details"
+                    class="icon-badge-sprint-to-close fa"
+                    data-test="button-to-close"
+                />
+            </div>
+            <release-badges-closed-sprints
+                v-if="open_sprints_details && user_can_view_sub_milestones_planning"
+                v-bind:release_data="release_data"
+            />
+        </div>
         <hr
             v-if="open_sprints_details"
             data-test="line-displayed"
@@ -63,7 +79,11 @@ export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     open_sprints_details = false;
 
     on_click_open_sprints_details(): void {
-        this.open_sprints_details = !this.open_sprints_details;
+        this.open_sprints_details = true;
+    }
+
+    on_click_close_sprints_details(): void {
+        this.open_sprints_details = false;
     }
 
     get display_badge_all_sprint(): boolean {
