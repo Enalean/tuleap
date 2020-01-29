@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueOpenListRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueOpenListFullRepresentation;
 
 /**
  * Manage values in changeset for string fields
@@ -64,9 +64,10 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
             $labels[]      = $this->getLabel($list_value);
         }
 
-        $representation           = new ArtifactFieldValueOpenListRepresentation();
+        $representation           = new ArtifactFieldValueOpenListFullRepresentation();
         $representation->build(
             $this->field->getId(),
+            Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
             $this->field->getBind()->getType(),
             array_values($full_values),

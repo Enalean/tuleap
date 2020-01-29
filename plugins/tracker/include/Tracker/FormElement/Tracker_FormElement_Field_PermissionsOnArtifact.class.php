@@ -886,7 +886,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     {
         $value = $changeset->getValue($this);
         if ($value) {
-            return $value->getRESTValue($user);
+            return $value->getFullRESTValue($user);
         }
     }
 

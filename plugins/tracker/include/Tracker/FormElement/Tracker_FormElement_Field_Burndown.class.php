@@ -36,7 +36,7 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForREST;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForLegacy;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -344,10 +344,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $artifact = $changeset->getArtifact();
+        $form_element = $this->getFormElementFactory()->getFormElementById($this->getId());
 
-        $artifact_field_value_representation = new ArtifactFieldValueRepresentation();
+        $artifact_field_value_representation = new ArtifactFieldValueFullRepresentation();
         $artifact_field_value_representation->build(
             $this->getId(),
+            $this->getFormElementFactory()->getType($form_element),
             $this->getLabel(),
             $this->getBurndownDataForREST(
                 $artifact,
