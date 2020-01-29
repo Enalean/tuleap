@@ -54,9 +54,9 @@ export interface HandleDropPayload {
 }
 
 export interface HandleDragPayload {
-    readonly dropped_card?: Element;
-    readonly target_cell?: Element;
-    readonly source_cell?: Element;
+    readonly dropped_card: HTMLElement;
+    readonly target_cell: HTMLElement;
+    readonly source_cell: HTMLElement;
 }
 
 export interface RefreshCardActionPayload {

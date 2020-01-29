@@ -26,7 +26,7 @@ import {
 } from "./types";
 import { OngoingDrag } from "./OngoingDrag";
 import { findClosestDraggable, findClosestDropzone } from "./dom-manipulation";
-import { DropGhost } from "./DragGhost";
+import { DropGhost } from "./DropGhost";
 import { DREKKENOV_DRAG_DROP_TYPE, DREKKENOV_DRAG_DROP_VALUE } from "./constants";
 import { DrekkenovState } from "./DrekkenovState";
 
@@ -55,7 +55,7 @@ export function dragStartFactory(
         const internal_context: DragStartContext = {
             dragged_element: closest_draggable,
             source_dropzone: closest_dropzone,
-            initial_sibling: element.nextElementSibling
+            initial_sibling: closest_draggable.nextElementSibling
         };
         state.startDrag(internal_context);
         event.dataTransfer.setData(DREKKENOV_DRAG_DROP_TYPE, DREKKENOV_DRAG_DROP_VALUE);

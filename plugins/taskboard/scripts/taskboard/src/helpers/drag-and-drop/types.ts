@@ -51,7 +51,7 @@ export interface DrekkenovInitOptions {
     mirror_container: Element;
     isDraggable: HTMLElementPredicate;
     isDropZone: HTMLElementPredicate;
-    isInvalidDragHandle: (element: HTMLElement, handle: HTMLElement) => boolean;
+    isInvalidDragHandle: HTMLElementPredicate;
     isConsideredInDropzone: HTMLElementPredicate;
     doesDropzoneAcceptDraggable: PossibleDropPredicate;
     onDragStart: DragHandlerCallback;

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import * as drag_drop from "./drag-drop";
-import { createElement, createNonHTMLElement } from "./jest/create-dom-element";
+import { createElement } from "./jest/create-dom-element";
 import { SwimlaneState } from "../store/swimlane/type";
 import * as item_finder from "./html-to-item";
 import { Store } from "vuex";
@@ -25,8 +25,10 @@ import { RootState } from "../store/type";
 
 describe(`drag-drop helper`, () => {
     describe(`isContainer()`, () => {
-        it(`Given an undefined element, it will return false`, () => {
-            expect(drag_drop.isContainer(undefined)).toBe(false);
+        it(`Given an element without a data-is-container flag, it will return false`, () => {
+            const element = createElement("taskboard-card");
+
+            expect(drag_drop.isContainer(element)).toBe(false);
         });
 
         it(`Given a taskboard cell with a data-is-container flag, it will return true`, () => {
@@ -38,8 +40,9 @@ describe(`drag-drop helper`, () => {
     });
 
     describe(`canMove()`, () => {
-        it(`Given an undefined element, it will return false`, () => {
-            const element = undefined;
+        it(`Given an element with no draggable attribute, it will return false`, () => {
+            const element = createElement("taskboard-cell");
+
             expect(drag_drop.canMove(element)).toBe(false);
         });
 
@@ -53,35 +56,24 @@ describe(`drag-drop helper`, () => {
 
     describe("invalid", () => {
         it(`Given a handle with a not-drag-handle flag, it will return true`, () => {
-            const element = createElement("taskboard-card");
             const handle = createElement();
             handle.setAttribute("data-not-drag-handle", "true");
 
-            expect(drag_drop.invalid(element, handle)).toBe(true);
+            expect(drag_drop.invalid(handle)).toBe(true);
         });
 
         it(`Given a handle whose a parent has a not-drag-handle flag, it will return true`, () => {
-            const element = createElement("taskboard-card");
             const handle = createElement();
-
             const parent = createElement();
             handle.setAttribute("data-not-drag-handle", "true");
+            parent.appendChild(handle);
 
-            parent.appendChild(element);
-
-            expect(drag_drop.invalid(element, handle)).toBe(true);
+            expect(drag_drop.invalid(handle)).toBe(true);
         });
 
         it(`Given a regular handle, it will return false`, () => {
-            const element = createElement("taskboard-card");
             const handle = createElement("taskboard-stuff");
-            expect(drag_drop.invalid(element, handle)).toBe(false);
-        });
-
-        it(`Given no handle, it will return true`, () => {
-            const element = createElement("taskboard-card");
-            const handle = undefined;
-            expect(drag_drop.invalid(element, handle)).toBe(true);
+            expect(drag_drop.invalid(handle)).toBe(false);
         });
     });
 
@@ -101,72 +93,6 @@ describe(`drag-drop helper`, () => {
                 },
                 commit: jest.fn()
             } as unknown) as Store<RootState>;
-        });
-
-        it(`Given an undefined target, it will return false`, () => {
-            const dropped_card = createElement();
-            const target_cell = undefined;
-            const source_cell = createElement();
-            expect(
-                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
-            ).toBe(false);
-        });
-
-        it(`Given an undefined source_cell, it will return false`, () => {
-            const dropped_card = createElement();
-            const target_cell = createElement();
-            const source_cell = undefined;
-            expect(
-                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
-            ).toBe(false);
-        });
-
-        it(`Given an undefined dropped_card, it will return false`, () => {
-            const dropped_card = undefined;
-            const target_cell = createElement();
-            const source_cell = createElement();
-            expect(
-                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
-            ).toBe(false);
-        });
-
-        it(`Given a target_cell that is not a HTMLElement, it will return false`, () => {
-            const dropped_card = createElement();
-            const non_html_target_cell = createNonHTMLElement();
-            const source_cell = createElement();
-            expect(
-                drag_drop.checkCellAcceptsDrop(store, {
-                    dropped_card,
-                    target_cell: non_html_target_cell,
-                    source_cell
-                })
-            ).toBe(false);
-        });
-
-        it(`Given a source_cell that is not a HTMLElement, it will return false`, () => {
-            const dropped_card = createElement();
-            const target_cell = createElement();
-            const non_html_source_cell = createNonHTMLElement();
-            expect(
-                drag_drop.checkCellAcceptsDrop(store, {
-                    dropped_card,
-                    target_cell,
-                    source_cell: non_html_source_cell
-                })
-            ).toBe(false);
-        });
-
-        it(`Given an dropped_card that is not a HTMLElement, it will return false`, () => {
-            const non_html_dropped_card = createNonHTMLElement();
-            const target_cell = createElement();
-            const source_cell = createElement();
-            expect(
-                drag_drop.checkCellAcceptsDrop(store, {
-                    dropped_card: non_html_dropped_card,
-                    target_cell,
-                    source_cell
-                })
-            ).toBe(false);
         });
 
         it(`When the card has been dropped in another swimlane, then it will return false`, () => {
