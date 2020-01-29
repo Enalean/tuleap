@@ -58,9 +58,9 @@ class TemplateFactory
     ) {
         $this->template_dao    = $template_dao;
         $this->templates       = [
+            AgileALMTemplate::NAME => new AgileALMTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
             ScrumTemplate::NAME => new ScrumTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
             KanbanTemplate::NAME => new KanbanTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
-            AgileALMTemplate::NAME => new AgileALMTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
             IssuesTemplate::NAME => new IssuesTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
         ];
         $this->project_manager = $project_manager;

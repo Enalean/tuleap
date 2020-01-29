@@ -70,9 +70,9 @@ class TemplateFactoryTest extends TestCase
     {
         $templates = $this->factory->getValidTemplates();
         $this->assertCount(4, $templates);
-        $this->assertInstanceOf(ScrumTemplate::class, $templates[0]);
-        $this->assertInstanceOf(KanbanTemplate::class, $templates[1]);
-        $this->assertInstanceOf(AgileALMTemplate::class, $templates[2]);
+        $this->assertInstanceOf(AgileALMTemplate::class, $templates[0]);
+        $this->assertInstanceOf(ScrumTemplate::class, $templates[1]);
+        $this->assertInstanceOf(KanbanTemplate::class, $templates[2]);
         $this->assertInstanceOf(IssuesTemplate::class, $templates[3]);
     }
 
