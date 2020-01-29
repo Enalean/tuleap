@@ -20,14 +20,26 @@
 
 namespace Tuleap\Tracker\Workflow;
 
+use Tuleap\Tracker\Workflow\PostAction\JSONPCallback;
+use Tuleap\Tracker\Workflow\PostAction\JSONPCallbackPresenter;
+
 class WorkflowMenuTabPresenter
 {
     public $tabs_menu;
     public $tracker_id;
+    /** @var string */
+    public $jsonp_callbacks;
 
-    public function __construct(array $tabs_menu, $tracker_id)
+    public function __construct(array $tabs_menu, $tracker_id, array $jsonp_callbacks)
     {
-        $this->tabs_menu                = $tabs_menu;
-        $this->tracker_id               = $tracker_id;
+        $this->tabs_menu       = $tabs_menu;
+        $this->tracker_id      = $tracker_id;
+        $presenters            = array_map(
+            function (JSONPCallback $callback) {
+                return new JSONPCallbackPresenter($callback);
+            },
+            $jsonp_callbacks
+        );
+        $this->jsonp_callbacks = json_encode($presenters);
     }
 }

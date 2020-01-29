@@ -44,6 +44,7 @@
                     >
                         {{ hidden_fieldsets_information.option }}
                     </option>
+                    <add-to-backlog-post-action-option v-if="has_add_to_backlog_option_component" />
                 </optgroup>
                 <optgroup v-bind:label="other_actions_title">
                     <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>
@@ -76,18 +77,23 @@
 <script>
 import { POST_ACTION_TYPE } from "../../../constants/workflow-constants.js";
 import {
+    CONTAINER_FIELDSET,
     DATE_FIELD,
     FLOAT_FIELD,
     INT_FIELD,
     READ_ONLY_FIELDS,
-    STRUCTURAL_FIELDS,
-    CONTAINER_FIELDSET
+    STRUCTURAL_FIELDS
 } from "../../../../../constants/fields-constants.js";
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { compare } from "../../../support/string.js";
+import { getComponentByName } from "../../../helpers/external-component-state.js";
 
 export default {
     name: "PostAction",
+    components: {
+        AddToBacklogPostActionOption: () =>
+            Promise.resolve(getComponentByName("AddToBacklogPostActionOption"))
+    },
     props: {
         post_action: {
             type: Object,
@@ -124,6 +130,9 @@ export default {
                     .sort((field1, field2) => compare(field1.label, field2.label));
             }
         }),
+        has_add_to_backlog_option_component() {
+            return getComponentByName("AddToBacklogPostActionOption") !== undefined;
+        },
         frozen_fields_information() {
             if (this.frozen_fields_is_valid) {
                 return {
