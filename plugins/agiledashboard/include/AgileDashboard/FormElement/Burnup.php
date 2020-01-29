@@ -53,7 +53,7 @@ use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -308,9 +308,10 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         }
 
         $burnup_representation = new BurnupRepresentation($capacity, $burnup_data);
+        $formelement_field = $this->getFormElementFactory()->getFormElementById($this->getId());
 
-        $field_representation = new ArtifactFieldValueRepresentation();
-        $field_representation->build($this->getId(), $this->getLabel(), $burnup_representation);
+        $field_representation = new ArtifactFieldValueFullRepresentation();
+        $field_representation->build($this->getId(), $this->getFormElementFactory()->getType($formelement_field), $this->getLabel(), $burnup_representation);
 
         return $field_representation;
     }
