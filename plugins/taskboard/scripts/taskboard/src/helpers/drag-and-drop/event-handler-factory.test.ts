@@ -146,6 +146,7 @@ describe(`event-handler-factory`, () => {
                 source_dropzone
             } as unknown) as OngoingDrag;
             drop_ghost = ({
+                contains: jest.fn(),
                 revertAtInitialPlace: jest.fn(),
                 update: jest.fn()
             } as unknown) as DropGhost;
@@ -198,6 +199,23 @@ describe(`event-handler-factory`, () => {
             expect(event.preventDefault).not.toHaveBeenCalled();
         });
 
+        it(`when the drop ghost contains the event target,
+            it does nothing to avoid triggering too many events`, () => {
+            const target = doc.createElement("span");
+            const dataTransfer = { types: [DREKKENOV_DRAG_DROP_TYPE] };
+            const event = ({
+                target,
+                dataTransfer,
+                preventDefault: jest.fn()
+            } as unknown) as DragEvent;
+            jest.spyOn(drop_ghost, "contains").mockReturnValue(true);
+
+            dragEnterHandler(event);
+
+            expect(options.onDragEnter).not.toHaveBeenCalled();
+            expect(event.preventDefault).not.toHaveBeenCalled();
+        });
+
         it(`when the event target has no dropzone ancestor,
             it will revert the drop ghost at its initial place
             to let the user know they are going to cancel the drop`, () => {
@@ -208,6 +226,7 @@ describe(`event-handler-factory`, () => {
                 dataTransfer,
                 preventDefault: jest.fn()
             } as unknown) as DragEvent;
+            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
             jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
 
             dragEnterHandler(event);
@@ -227,6 +246,7 @@ describe(`event-handler-factory`, () => {
                 dataTransfer,
                 preventDefault: jest.fn()
             } as unknown) as DragEvent;
+            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
             const target_dropzone = doc.createElement("div");
             jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
             jest.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(false);
@@ -250,6 +270,7 @@ describe(`event-handler-factory`, () => {
                 clientY: 200,
                 preventDefault: jest.fn()
             } as unknown) as DragEvent;
+            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
             const target_dropzone = doc.createElement("div");
             jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
             jest.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(true);
@@ -267,7 +288,10 @@ describe(`event-handler-factory`, () => {
     });
 
     describe(`dragLeaveFactory()`, () => {
-        let options: DrekkenovInitOptions, ongoing_drag: OngoingDrag, dragLeaveHandler: DragHandler;
+        let options: DrekkenovInitOptions,
+            ongoing_drag: OngoingDrag,
+            drop_ghost: DropGhost,
+            dragLeaveHandler: DragHandler;
 
         beforeEach(() => {
             options = ({
@@ -276,7 +300,9 @@ describe(`event-handler-factory`, () => {
             const dragged_element = doc.createElement("div");
             ongoing_drag = ({ dragged_element } as unknown) as OngoingDrag;
             const event_source = {} as AfterDropEventSource;
-            const drop_ghost = {} as DropGhost;
+            drop_ghost = ({
+                contains: jest.fn()
+            } as unknown) as DropGhost;
             dragLeaveHandler = handlersFactory(options, event_source, ongoing_drag, drop_ghost)
                 .dragLeaveHandler;
         });
@@ -290,9 +316,21 @@ describe(`event-handler-factory`, () => {
             expect(options.onDragLeave).not.toHaveBeenCalled();
         });
 
+        it(`when the drop ghost contains the event target,
+            it does nothing to avoid triggering too many events`, () => {
+            const target = doc.createElement("div");
+            const event = ({ target } as unknown) as DragEvent;
+            jest.spyOn(drop_ghost, "contains").mockReturnValue(true);
+
+            dragLeaveHandler(event);
+
+            expect(options.onDragLeave).not.toHaveBeenCalled();
+        });
+
         it(`when the event target has no dropzone ancestor, it does nothing`, () => {
             const target = doc.createElement("div");
             const event = ({ target } as unknown) as DragEvent;
+            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
             jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
 
             dragLeaveHandler(event);
@@ -303,6 +341,7 @@ describe(`event-handler-factory`, () => {
         it(`when all conditions are met, it will call the onDragLeave() callback from options`, () => {
             const target = doc.createElement("div");
             const event = ({ target } as unknown) as DragEvent;
+            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
             const target_dropzone = doc.createElement("div");
             jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
 

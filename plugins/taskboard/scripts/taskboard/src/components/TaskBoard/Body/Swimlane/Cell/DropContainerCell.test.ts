@@ -38,7 +38,11 @@ function getWrapper(
         },
         mocks: {
             $store: createStoreMock({
-                state: { column: {}, swimlane: {} } as RootState,
+                state: {
+                    card_being_dragged: null,
+                    column: {},
+                    swimlane: {}
+                } as RootState,
                 getters: {
                     "column/accepted_trackers_ids": (): number[] => [],
                     can_add_in_place: (): boolean => can_add_in_place
@@ -70,35 +74,49 @@ describe("DropContainerCell", () => {
         expect(wrapper.contains(".my-slot-content")).toBe(false);
     });
 
-    it(`informs the mouseenter when the column is collapsed`, () => {
+    it(`informs the pointerenter when the column is collapsed`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column, false);
 
-        wrapper.trigger("mouseenter");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseEntersColumn", column);
+        wrapper.trigger("pointerenter");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerEntersColumn", column);
     });
 
-    it(`does not inform the mouseenter when the column is expanded`, () => {
+    it(`does not inform the pointerenter when the column is expanded`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column, false);
 
-        wrapper.trigger("mouseenter");
+        wrapper.trigger("pointerenter");
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 
-    it(`informs the mouseout when the column is collapsed`, () => {
+    it(`informs the pointerleave when the column is collapsed`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column, false);
 
-        wrapper.trigger("mouseout");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseLeavesColumn", column);
+        wrapper.trigger("pointerleave");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerLeavesColumn", column);
     });
 
-    it(`does not inform the mouseout when the column is expanded`, () => {
+    it(`does not inform the pointerleave when the column is expanded`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column, false);
 
-        wrapper.trigger("mouseout");
+        wrapper.trigger("pointerleave");
+        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
+    });
+
+    it(`when the column is collapsed and a card is being dragged,
+        it won't inform the pointerleave
+        because too many events are triggered and we want to keep the collapsed column styling`, () => {
+        const column = { is_collapsed: true } as ColumnDefinition;
+        const wrapper = getWrapper(column, false);
+        wrapper.vm.$store.state.card_being_dragged = {
+            tracker_id: 12,
+            card_id: 15
+        };
+
+        wrapper.trigger("pointerleave");
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 

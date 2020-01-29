@@ -97,10 +97,9 @@
         background: mix($tlp-theme-color, $tlp-ui-white, 7%);
     }
 
-    > .drek-ghost,
+    // This includes drek-ghost
     > .taskboard-draggable-item {
-        opacity: 0;
-        white-space: nowrap;
+        display: none;
     }
 }
 

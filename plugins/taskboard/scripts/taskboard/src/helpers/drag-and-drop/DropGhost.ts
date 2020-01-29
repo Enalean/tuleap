@@ -96,6 +96,13 @@ export class DropGhost implements AfterDropListener {
         target_dropzone.insertBefore(this.element, next_ghost_sibling);
     }
 
+    private isUnchanged(
+        next_ghost_sibling: Element | null,
+        current_ghost_sibling: Element | null
+    ): boolean {
+        return next_ghost_sibling === current_ghost_sibling || next_ghost_sibling === this.element;
+    }
+
     public isAtDraggedElementInitialPlace(): boolean {
         return (
             this.ongoing_drag.source_dropzone === this.element.parentElement &&
@@ -103,11 +110,8 @@ export class DropGhost implements AfterDropListener {
         );
     }
 
-    private isUnchanged(
-        next_ghost_sibling: Element | null,
-        current_ghost_sibling: Element | null
-    ): boolean {
-        return next_ghost_sibling === current_ghost_sibling || next_ghost_sibling === this.element;
+    public contains(node: Node): boolean {
+        return this.element.contains(node);
     }
 
     public afterDrop(): void {
