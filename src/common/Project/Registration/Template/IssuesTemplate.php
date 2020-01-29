@@ -66,7 +66,7 @@ class IssuesTemplate implements TuleapTemplate
 
     public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker)
     {
-        $this->title               = _('Issues tracking');
+        $this->title               = _('Issue tracking');
         $this->description         = _('Trace and Track all types of activities.');
         $this->glyph_finder       = $glyph_finder;
         $this->project_xml_merger = $project_xml_merger;

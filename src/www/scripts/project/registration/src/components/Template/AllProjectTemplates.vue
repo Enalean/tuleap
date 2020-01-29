@@ -30,8 +30,8 @@
                 </h2>
 
                 <p v-translate>
-                    The project template you will select provides some services. Don’t worry, you
-                    can always modify your project workspace after your project has been created.
+                    The project template you will select provides pre-configured tools. Don’t worry,
+                    you can always modify your project workspace after it has been created.
                 </p>
 
                 <company-templates-list />

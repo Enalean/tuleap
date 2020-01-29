@@ -45,7 +45,7 @@
                     <div class="project-registration-template-glyph"><svg-template /></div>
                     <div class="project-registration-template-content">
                         <h4 class="project-registration-template-card-title" v-translate>
-                            From an other project I'm admin of
+                            From another project I'm admin of
                         </h4>
                         <div
                             v-if="
