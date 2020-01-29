@@ -126,7 +126,7 @@ export default class TaskBoard extends Vue {
             },
             onDragEnter: (context: PossibleDropCallbackParameter): void => {
                 const { target_dropzone } = context;
-                target_dropzone.dataset.drakeOver = "1";
+                target_dropzone.dataset.drekOver = "1";
 
                 if (!target_dropzone.classList.contains("taskboard-cell-collapsed")) {
                     return;
@@ -141,7 +141,7 @@ export default class TaskBoard extends Vue {
             },
             onDragLeave: (context: DropCallbackParameter): void => {
                 const { target_dropzone } = context;
-                delete target_dropzone.dataset.drakeOver;
+                delete target_dropzone.dataset.drekOver;
 
                 if (!target_dropzone.classList.contains("taskboard-cell-collapsed")) {
                     return;
