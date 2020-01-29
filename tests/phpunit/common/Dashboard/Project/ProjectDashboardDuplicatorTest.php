@@ -215,4 +215,33 @@ class ProjectDashboardDuplicatorTest extends TestCase
 
         $this->duplicator->duplicate($this->template_project, $this->new_project);
     }
+
+    public function testItDoesNotDuplicateUnknownWidgetForAColumn()
+    {
+        $dashboard = new ProjectDashboard(1, 101, 'dashboard');
+
+        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard));
+
+        $widget = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
+
+        $column = new DashboardWidgetColumn(1, 1, 1, array($widget));
+        $line   = new DashboardWidgetLine(
+            1,
+            1,
+            'project',
+            'one-column',
+            1,
+            array($column)
+        );
+
+        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns(array($line));
+
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectimageviewer')->andReturns(null);
+
+        $this->widget_dao->shouldReceive('duplicateWidget')->never();
+
+        $this->checker->shouldReceive('isWidgetDisabled')->never();
+
+        $this->duplicator->duplicate($this->template_project, $this->new_project);
+    }
 }
