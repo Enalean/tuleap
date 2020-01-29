@@ -534,9 +534,11 @@ EOF
     pass_opt="-u$mysql_user --password=$rt_passwd"
 
     if [ $freshdb -eq 1 ]; then
+        tuleap_installed_version=$(cat "/usr/share/tuleap/VERSION")
         echo "Populating the Tuleap database..."
         cd $INSTALL_DIR/src/db/mysql/
         $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd < database_structure.sql   # create the DB
+        $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd -e "INSERT INTO tuleap.tuleap_installed_version VALUES ('${tuleap_installed_version}')"
         cp database_initvalues.sql /tmp/database_initvalues.sql
 	if [ ! -z "$siteadmin_password" ]; then
 	    admin_password_db=$("$PHP" "$INSTALL_DIR"/tools/utils/password_hasher.php -p "$siteadmin_password")

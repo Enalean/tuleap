@@ -28,6 +28,11 @@
 #-------------------------------------------------------
 # Server version	3.23.51-log
 
+CREATE TABLE tuleap_installed_version
+(
+    version VARCHAR(254) NULL
+);
+
 #
 # Table structure for table 'filedownload_log'
 #
