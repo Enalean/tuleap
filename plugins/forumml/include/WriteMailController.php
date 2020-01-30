@@ -93,7 +93,7 @@ class WriteMailController implements DispatchableWithRequest
         $params['title'] = 'ForumML';
         $params['group'] = $group_id;
         $params['toptab'] = 'mail';
-        $params['help'] = "communication.html#mailing-lists";
+        $params['help'] = "collaboration.html#mailing-lists";
         mail_header($params);
 
         $list_link = '<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">' . mail_get_listname_from_list_id($list_id) . '</a>';

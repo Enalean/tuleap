@@ -87,7 +87,7 @@ function commits_header($params)
         $params['help'] = "cvs.html";
     }
     $toolbar[] = array('title' => $GLOBALS['Language']->getText('global', 'help'),
-        'url'   => 'javascript:help_window(\'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
+        'url'   => 'javascript:help_window(\'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/code-versioning/'.$params['help'].'\');');
 
     $service->displayHeader(
         $params['title'],

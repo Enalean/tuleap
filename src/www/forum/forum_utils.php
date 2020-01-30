@@ -41,7 +41,7 @@ function forum_header($params)
 
     $params['group']=$group_id;
     $params['toptab']='forum';
-    $params['help'] = 'communication.html#web-forums';
+    $params['help'] = 'collaboration.html#web-forums';
 
     /*
 
@@ -585,7 +585,7 @@ function show_post_form($forum_id, $thread_id = 0, $is_followup_to = 0, $subject
         <FORM ACTION="/forum/forum.php" METHOD="POST">
         <TABLE>
           <TR>
-            <TD>        
+            <TD>
         <INPUT TYPE="HIDDEN" NAME="post_message" VALUE="y">
         <INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="<?php echo $forum_id; ?>">
         <INPUT TYPE="HIDDEN" NAME="thread_id" VALUE="<?php echo $thread_id; ?>">
@@ -628,7 +628,7 @@ function show_post_form($forum_id, $thread_id = 0, $is_followup_to = 0, $subject
           <TR><TD COLSPAN="2" ALIGN="center">
         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="<?php echo $Language->getText('forum_forum_utils', 'post_comment'); ?>">
              </TD>
-             <TD VALIGN="top">              
+             <TD VALIGN="top">
              </TD>
           </TR>
     </TABLE>

@@ -44,38 +44,3 @@ function help_button($type, $helpid = false, $prompt = '[?]')
     $prompt_purified = $purifier->purify($prompt);
     return ('<A href="javascript:help_window(\''.$script.'\')"><B>'.$prompt_purified.'</B></A>');
 }
-
-
-/**
-* help_header() - Show a help page header
-*
-* @param        string    Header title
-*/
-function help_header($title, $help_banner = true)
-{
-    global $Language;
-    ?>
-<HTML>
-<HEAD>
-<TITLE><?php print $title; ?></TITLE>
-<LINK rel="stylesheet" href="<?php echo util_get_css_theme(); ?>" type="text/css">
-</HEAD>
-<BODY class="bg_help">
-    <?php print ($help_banner ? '<H4>'.$GLOBALS['sys_name'].' '.$Language->getText('include_help', 'site_help_sys').'</H4>' : ''); ?>
-<H2><?php print $title; ?></H2>
-<HR>
-    <?php
-}
-
-/**
-* help_footer() - Show a help page footer
-*/
-function help_footer()
-{
-    ?>
-</BODY>
-</HTML>
-    <?php
-}
-
-?>
