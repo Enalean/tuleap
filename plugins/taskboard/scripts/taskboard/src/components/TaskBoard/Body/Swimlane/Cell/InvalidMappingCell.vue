@@ -21,8 +21,8 @@
     <div
         class="taskboard-cell"
         v-bind:class="classes"
-        v-on:mouseenter="mouseEntersCollapsedColumn"
-        v-on:mouseout="mouseLeavesCollapsedColumn"
+        v-on:pointerenter="pointerEntersCollapsedColumn"
+        v-on:pointerleave="pointerLeavesCollapsedColumn"
         v-on:click="expandCollapsedColumn"
     >
         <add-card v-if="is_add_card_rendered" v-bind:column="column" v-bind:swimlane="swimlane" />

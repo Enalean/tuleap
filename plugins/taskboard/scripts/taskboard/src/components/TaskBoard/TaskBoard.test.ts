@@ -20,7 +20,7 @@
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import TaskBoard from "./TaskBoard.vue";
 import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { Swimlane } from "../../type";
+import { ColumnDefinition, Swimlane } from "../../type";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
 import { RootState } from "../../store/type";
 import * as drekkenov from "../../helpers/drag-and-drop/drekkenov";
@@ -89,6 +89,119 @@ describe("TaskBoard", () => {
         });
     });
 
+    describe(`drag/drop callbacks`, () => {
+        let wrapper: Wrapper<TaskBoard>,
+            target_dropzone: HTMLElement,
+            doc: Document,
+            init: jest.SpyInstance;
+
+        beforeEach(async () => {
+            init = jest.spyOn(drekkenov, "init");
+            const getters = { column_of_cell: undefined };
+            const store = createStoreMock({
+                state: { column: {}, error: {} },
+                getters
+            });
+            wrapper = shallowMount(TaskBoard, {
+                localVue: await createTaskboardLocalVue(),
+                mocks: { $store: store }
+            });
+
+            doc = createLocalDocument();
+            target_dropzone = doc.createElement("div");
+        });
+
+        describe(`onDragEnter()`, () => {
+            let dragEnterCallback: (context: drekkenov.PossibleDropCallbackParameter) => void,
+                payload: drekkenov.PossibleDropCallbackParameter;
+
+            beforeEach(() => {
+                dragEnterCallback = init.mock.calls[0][0].onDragEnter;
+                payload = {
+                    dragged_element: doc.createElement("div"),
+                    source_dropzone: doc.createElement("div"),
+                    target_dropzone
+                };
+            });
+
+            it(`will set the drekOver data on the dropzone
+                to provide feedback that the drop in collapsed column is valid`, () => {
+                const column = { is_collapsed: false } as ColumnDefinition;
+                wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
+
+                dragEnterCallback(payload);
+
+                expect(target_dropzone.dataset.drekOver).toEqual("1");
+            });
+
+            it(`when the column of the dropzone is collapsed,
+                it will inform the pointerenter`, () => {
+                const column = { is_collapsed: true } as ColumnDefinition;
+                wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
+
+                dragEnterCallback(payload);
+
+                expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                    "column/pointerEntersColumn",
+                    column
+                );
+            });
+
+            it(`when the column of the dropzone is expanded,
+                it won't inform the pointerenter`, () => {
+                const column = { is_collapsed: false } as ColumnDefinition;
+                wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
+
+                dragEnterCallback(payload);
+
+                expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
+            });
+        });
+
+        describe(`onDragLeave()`, () => {
+            let dragLeaveCallback: (context: drekkenov.DragDropCallbackParameter) => void,
+                payload: drekkenov.DragDropCallbackParameter;
+
+            beforeEach(() => {
+                dragLeaveCallback = init.mock.calls[0][0].onDragLeave;
+                payload = { dragged_element: doc.createElement("div"), target_dropzone };
+            });
+
+            it(`will remove the drekOver data from the dropzone`, () => {
+                target_dropzone.dataset.drekOver = "1";
+                const column = { is_collapsed: false } as ColumnDefinition;
+                wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
+
+                dragLeaveCallback(payload);
+
+                expect(target_dropzone.dataset.drekOver).toBeUndefined();
+            });
+
+            it(`when the column of the dropzone is collapsed,
+                it will inform the pointerleave`, () => {
+                const column = { is_collapsed: true } as ColumnDefinition;
+                wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
+
+                dragLeaveCallback(payload);
+
+                expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                    "column/pointerLeavesColumn",
+                    column
+                );
+            });
+
+            it(`when the column of the dropzone is expanded,
+                it won't inform the pointerleave`, () => {
+                const column = { is_collapsed: false } as ColumnDefinition;
+                wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
+
+                dragLeaveCallback(payload);
+
+                expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
+            });
+        });
+    });
+
     describe(`destroy()`, () => {
         it(`will destroy the "drek"`, async () => {
             const mock_drek = {
@@ -102,3 +215,7 @@ describe("TaskBoard", () => {
         });
     });
 });
+
+function createLocalDocument(): Document {
+    return document.implementation.createHTMLDocument();
+}

@@ -75,7 +75,8 @@ function dragEnterFactory(
         if (
             !(event.target instanceof Node) ||
             event.dataTransfer === null ||
-            !event.dataTransfer.types.includes(DREKKENOV_DRAG_DROP_TYPE)
+            !event.dataTransfer.types.includes(DREKKENOV_DRAG_DROP_TYPE) ||
+            drop_ghost.contains(event.target)
         ) {
             return;
         }
@@ -102,9 +103,13 @@ function dragEnterFactory(
     };
 }
 
-function dragLeaveFactory(options: DrekkenovInitOptions, ongoing_drag: OngoingDrag): DragHandler {
+function dragLeaveFactory(
+    options: DrekkenovInitOptions,
+    ongoing_drag: OngoingDrag,
+    drop_ghost: DropGhost
+): DragHandler {
     return (event: DragEvent): void => {
-        if (!(event.target instanceof Node)) {
+        if (!(event.target instanceof Node) || drop_ghost.contains(event.target)) {
             return;
         }
         const closest_dropzone = findClosestDropzone(options, event.target);
@@ -204,7 +209,7 @@ export function handlersFactory(
 ): DragDropHandlers {
     return {
         dragEnterHandler: dragEnterFactory(options, ongoing_drag, drop_ghost),
-        dragLeaveHandler: dragLeaveFactory(options, ongoing_drag),
+        dragLeaveHandler: dragLeaveFactory(options, ongoing_drag, drop_ghost),
         dragOverHandler: dragOverFactory(options, ongoing_drag, drop_ghost),
         dropHandler: dropFactory(options, after_drop_event_source, ongoing_drag, drop_ghost),
         dragEndHandler: dragEndFactory(options, after_drop_event_source)

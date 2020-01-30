@@ -24,7 +24,7 @@ export {
     Drekkenov,
     DrekkenovInitOptions,
     DragCallbackParameter,
-    DropCallbackParameter,
+    DragDropCallbackParameter,
     PossibleDropCallbackParameter,
     SuccessfulDropCallbackParameter
 } from "./types";

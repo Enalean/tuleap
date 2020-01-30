@@ -1,8 +1,8 @@
 <template>
     <div
         class="taskboard-header-collapsed-label"
-        v-on:mouseover="mouseEntersCollapsedColumn"
-        v-on:mouseout="mouseLeavesCollapsedColumn"
+        v-on:pointerenter="pointerEntersCollapsedColumn"
+        v-on:pointerleave="pointerLeavesCollapsedColumn"
         v-on:click="expandCollapsedColumn"
     >
         <cards-in-column-count v-bind:column="column" />

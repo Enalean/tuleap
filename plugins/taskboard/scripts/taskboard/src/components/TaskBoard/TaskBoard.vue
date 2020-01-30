@@ -33,8 +33,8 @@ import { Component } from "vue-property-decorator";
 import { Getter, Mutation, namespace } from "vuex-class";
 import {
     DragCallbackParameter,
+    DragDropCallbackParameter,
     Drekkenov,
-    DropCallbackParameter,
     init,
     PossibleDropCallbackParameter,
     SuccessfulDropCallbackParameter
@@ -65,10 +65,10 @@ export default class TaskBoard extends Vue {
     readonly has_modal_error!: boolean;
 
     @column.Mutation
-    readonly mouseEntersColumn!: (column: ColumnDefinition) => void;
+    readonly pointerEntersColumn!: (column: ColumnDefinition) => void;
 
     @column.Mutation
-    readonly mouseLeavesColumn!: (column: ColumnDefinition) => void;
+    readonly pointerLeavesColumn!: (column: ColumnDefinition) => void;
 
     @swimlane.Getter
     readonly cards_in_cell!: (
@@ -127,32 +127,24 @@ export default class TaskBoard extends Vue {
             onDragEnter: (context: PossibleDropCallbackParameter): void => {
                 const { target_dropzone } = context;
                 target_dropzone.dataset.drekOver = "1";
-
-                if (!target_dropzone.classList.contains("taskboard-cell-collapsed")) {
-                    return;
-                }
-
                 const column = this.column_of_cell(target_dropzone);
                 if (!column) {
                     return;
                 }
-
-                this.mouseEntersColumn(column);
+                if (column.is_collapsed) {
+                    this.pointerEntersColumn(column);
+                }
             },
-            onDragLeave: (context: DropCallbackParameter): void => {
+            onDragLeave: (context: DragDropCallbackParameter): void => {
                 const { target_dropzone } = context;
                 delete target_dropzone.dataset.drekOver;
-
-                if (!target_dropzone.classList.contains("taskboard-cell-collapsed")) {
-                    return;
-                }
-
                 const column = this.column_of_cell(target_dropzone);
                 if (!column) {
                     return;
                 }
-
-                this.mouseLeavesColumn(column);
+                if (column.is_collapsed) {
+                    this.pointerLeavesColumn(column);
+                }
             },
             onDrop: (context: SuccessfulDropCallbackParameter): void => {
                 const sibling_card =

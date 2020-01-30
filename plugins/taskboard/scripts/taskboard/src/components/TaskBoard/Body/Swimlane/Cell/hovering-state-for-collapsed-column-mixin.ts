@@ -19,8 +19,9 @@
 
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 import { ColumnDefinition } from "../../../../../type";
+import { DraggedCard } from "../../../../../store/type";
 
 const column_store = namespace("column");
 
@@ -29,21 +30,26 @@ export default class HoveringStateForCollapsedColumnMixin extends Vue {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
-    @column_store.Mutation
-    readonly mouseEntersColumn!: (column: ColumnDefinition) => void;
+    @State
+    readonly card_being_dragged!: DraggedCard | null;
 
     @column_store.Mutation
-    readonly mouseLeavesColumn!: (column: ColumnDefinition) => void;
+    readonly pointerEntersColumn!: (column: ColumnDefinition) => void;
 
-    mouseEntersCollapsedColumn(): void {
+    @column_store.Mutation
+    readonly pointerLeavesColumn!: (column: ColumnDefinition) => void;
+
+    pointerEntersCollapsedColumn(): void {
         if (this.column.is_collapsed) {
-            this.mouseEntersColumn(this.column);
+            this.pointerEntersColumn(this.column);
         }
     }
 
-    mouseLeavesCollapsedColumn(): void {
-        if (this.column.is_collapsed) {
-            this.mouseLeavesColumn(this.column);
+    pointerLeavesCollapsedColumn(): void {
+        // When a card is being dragged, it also triggers those events.
+        // We should ignore them to keep collapsed column styling.
+        if (this.column.is_collapsed && this.card_being_dragged === null) {
+            this.pointerLeavesColumn(this.column);
         }
     }
 }

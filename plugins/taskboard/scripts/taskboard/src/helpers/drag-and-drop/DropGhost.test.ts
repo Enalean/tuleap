@@ -394,6 +394,30 @@ describe(`DropGhost`, () => {
             expect(ghost.isAtDraggedElementInitialPlace()).toBe(true);
         });
     });
+
+    describe(`contains()`, () => {
+        let doc: Document, ongoing_drag: OngoingDrag, ghost_element: Element;
+        beforeEach(() => {
+            doc = createLocalDocument();
+            ghost_element = doc.createElement("div");
+            ongoing_drag = {} as OngoingDrag;
+        });
+
+        it(`returns true if the ghost element contains given node`, () => {
+            const node = doc.createTextNode("I am inside ghost element");
+            ghost_element.append(node);
+            const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
+
+            expect(ghost.contains(node)).toBe(true);
+        });
+
+        it(`returns false if the ghost element does not contain given node`, () => {
+            const node = doc.createTextNode("I am NOT inside ghost element");
+            const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
+
+            expect(ghost.contains(node)).toBe(false);
+        });
+    });
 });
 
 function createOngoingDrag(doc: Document): OngoingDrag {
