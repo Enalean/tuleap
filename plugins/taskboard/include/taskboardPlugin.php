@@ -147,6 +147,10 @@ class taskboardPlugin extends Plugin
 
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
+        if ($this->isIE11()) {
+            return;
+        }
+
         $pane_info = $this->getPaneInfoForMilestone($collector->getMilestone());
         if ($pane_info === null) {
             return;
@@ -173,6 +177,10 @@ class taskboardPlugin extends Plugin
 
     public function additionalPanesForMilestoneEvent(AdditionalPanesForMilestoneEvent $event): void
     {
+        if ($this->isIE11()) {
+            return;
+        }
+
         $milestone = $event->getMilestone();
 
         $pane = $this->getPaneInfoForMilestone($milestone);
@@ -184,14 +192,14 @@ class taskboardPlugin extends Plugin
         }
     }
 
-    public function getPaneInfoForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo
+    private function getPaneInfoForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo
     {
         $pane_builder = new TaskboardPaneInfoBuilder($this->getMilestoneIsAllowedChecker());
 
         return $pane_builder->getPaneForMilestone($milestone);
     }
 
-    public function getMilestoneIsAllowedChecker(): MilestoneIsAllowedChecker
+    private function getMilestoneIsAllowedChecker(): MilestoneIsAllowedChecker
     {
         return new MilestoneIsAllowedChecker(
             $this->getCardwallOnTopDao(),
@@ -208,11 +216,14 @@ class taskboardPlugin extends Plugin
 
     public function cardwallIsAllowedEvent(CardwallIsAllowedEvent $event): void
     {
+        if ($this->isIE11()) {
+            return;
+        }
+
         if (! $this->getTaskboardUsage()->isCardwallAllowed($event->getProject())) {
             $event->disallowCardwall();
         }
     }
-
 
     public function alternativeBoardLinkEvent(AlternativeBoardLinkEvent $event): void
     {
@@ -247,5 +258,10 @@ class taskboardPlugin extends Plugin
 
         $duplicator = new TaskboardUsageDuplicator(new TaskboardUsageDao());
         $duplicator->duplicateUsage($project_id, $template_id);
+    }
+
+    private function isIE11(): bool
+    {
+        return (new Browser())->isIE11();
     }
 }

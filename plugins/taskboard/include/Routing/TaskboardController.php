@@ -25,6 +25,7 @@ namespace Tuleap\Taskboard\Routing;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
@@ -107,14 +108,26 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
                 )
             );
         }
+        if ($request->getBrowser()->isIE11()) {
+            $layout->redirect(
+                '/plugins/agiledashboard/?' . http_build_query(
+                    [
+                        'group_id'    => $project->getID(),
+                        'planning_id' => $milestone->getPlanningId(),
+                        'action'      => 'show',
+                        'aid'         => $milestone->getArtifactId(),
+                        'pane'        => CardwallPaneInfo::IDENTIFIER
+                    ]
+                )
+            );
+            return;
+        }
 
         $this->visit_recorder->record($user, $milestone->getArtifact());
 
         $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
-        $is_ie_11 = $request->getBrowser()->isIE11();
-        if (! $is_ie_11) {
-            $layout->includeFooterJavascriptFile($this->taskboard_js_assets->getFileURL('taskboard.js'));
-        }
+        $layout->includeFooterJavascriptFile($this->taskboard_js_assets->getFileURL('taskboard.js'));
+
         $layout->addCssAsset(new CssAsset($this->taskboard_theme_assets, 'taskboard'));
 
         $service->displayHeader(
@@ -123,7 +136,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
             [],
             ['main_classes' => ['fluid-main']]
         );
-        $this->renderer->renderToPage('taskboard', $this->presenter_builder->getPresenter($milestone, $user, $is_ie_11));
+        $this->renderer->renderToPage('taskboard', $this->presenter_builder->getPresenter($milestone, $user));
         $service->displayFooter();
     }
 }
