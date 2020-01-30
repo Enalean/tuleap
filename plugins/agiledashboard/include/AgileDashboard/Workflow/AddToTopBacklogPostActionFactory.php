@@ -26,6 +26,7 @@ use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Transition_PostActionSubFactory;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 
 class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactory
@@ -40,17 +41,30 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
      */
     private $unplanned_artifacts_adder;
 
+    /**
+     * @var ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
+
     public function __construct(
         AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
-        UnplannedArtifactsAdder $unplanned_artifacts_adder
+        UnplannedArtifactsAdder $unplanned_artifacts_adder,
+        ExplicitBacklogDao $explicit_backlog_dao
     ) {
         $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
         $this->unplanned_artifacts_adder          = $unplanned_artifacts_adder;
+        $this->explicit_backlog_dao               = $explicit_backlog_dao;
     }
 
     public function loadPostActions(Transition $transition)
     {
         $post_actions = [];
+
+        $project_id = (int) $transition->getGroupId();
+        if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
+            return $post_actions;
+        }
+
         $row = $this->add_to_top_backlog_post_action_dao->searchByTransitionId((int) $transition->getId());
         if ($row !== null) {
             $post_actions[] = new AddToTopBacklog(

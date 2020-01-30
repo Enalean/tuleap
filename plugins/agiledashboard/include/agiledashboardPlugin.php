@@ -2251,7 +2251,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         return new AddToTopBacklogPostActionFactory(
             new AddToTopBacklogPostActionDao(),
-            $this->getUnplannedArtifactsAdder()
+            $this->getUnplannedArtifactsAdder(),
+            new ExplicitBacklogDao()
         );
     }
 
