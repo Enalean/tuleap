@@ -24,7 +24,7 @@ $tlp-modal-transition: 100ms ease-out;
 .tlp-modal {
     display: none;
     position: fixed;
-    z-index: 2001;
+    z-index: 2006;
     top: 0;
     right: 0;
     left: 0;
@@ -202,7 +202,7 @@ $tlp-modal-transition: 100ms ease-out;
 
 #tlp-modal-backdrop {
     position: fixed;
-    z-index: 2000;
+    z-index: 2005;
     top: 0;
     right: 0;
     bottom: 0;

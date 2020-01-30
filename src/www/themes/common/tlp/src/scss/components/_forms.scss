@@ -608,6 +608,12 @@ span.select2-container--tlp-select2-large {
     }
 }
 
+
+.tlp-modal-backdrop-shown + span.select2-container--open {
+    z-index: 2007; // Prevent the dropdown to be hidden behind the modal when it is open
+}
+
+
 .tlp-checkbox {
     line-height: 14px;
 }
