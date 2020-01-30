@@ -130,21 +130,6 @@ describe("AddCard", () => {
         expect(wrapper.contains(AddButton)).toBe(false);
     });
 
-    it("Scrolls the viewport so that the form is visible", () => {
-        const wrapper = getWrapper();
-
-        wrapper.find(AddButton).vm.$emit("click");
-        wrapper.setData({ label: "Lorem ipsum" });
-
-        expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
-        wrapper.find(LabelEditor).vm.$emit("save");
-
-        jest.spyOn(window, "scrollTo").mockImplementation();
-
-        jest.runAllTimers();
-        expect(window.scrollTo).toHaveBeenCalled();
-    });
-
     it("Blocks the creation of a new card if one is ongoing", () => {
         const wrapper = getWrapper({
             is_card_creation_blocked_due_to_ongoing_creation: true

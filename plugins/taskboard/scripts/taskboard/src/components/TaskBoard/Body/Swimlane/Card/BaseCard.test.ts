@@ -24,6 +24,7 @@ import { Card, TaskboardEvent, Tracker, User } from "../../../../../type";
 import EventBus from "../../../../../helpers/event-bus";
 import LabelEditor from "./Editor/Label/LabelEditor.vue";
 import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
+import * as scroll_helper from "../../../../../helpers/scroll-to-item";
 
 function getWrapper(
     card: Card,
@@ -36,7 +37,8 @@ function getWrapper(
             $store: createStoreMock({
                 state: {
                     user: { user_has_accessibility_mode },
-                    swimlane: {}
+                    swimlane: {},
+                    fullscreen: {}
                 },
                 getters: {
                     tracker_of_card: (): Tracker => tracker_of_card
@@ -290,6 +292,25 @@ describe("BaseCard", () => {
             expect(wrapper.classes()).not.toContain("taskboard-card-edit-mode");
             expect(wrapper.classes()).not.toContain("taskboard-card-is-being-saved");
             expect(wrapper.classes()).toContain("taskboard-card-is-just-saved");
+        });
+
+        it("scrolls to the card when it is ouside the viewport in edit mode", () => {
+            const card = getCard({
+                is_in_edit_mode: false,
+                is_being_saved: false,
+                is_just_saved: true
+            } as Card);
+
+            jest.useFakeTimers();
+
+            const wrapper = getWrapper(card);
+
+            jest.spyOn(scroll_helper, "scrollToItemIfNeeded").mockImplementation();
+
+            wrapper.find(".taskboard-card-edit-trigger").trigger("click");
+
+            jest.runAllTimers();
+            expect(scroll_helper.scrollToItemIfNeeded).toHaveBeenCalled();
         });
     });
 });

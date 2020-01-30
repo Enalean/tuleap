@@ -18,13 +18,31 @@
  */
 
 .taskboard-cell-swimlane-header {
-    position: sticky;
-    z-index: 9;
+    position: initial;
     left: $sidebar-expanded-width;
     max-width: calc(100vw - #{$sidebar-expanded-width});
 
+    &:not(.taskboard-cell-swimlane-header-edit-mode) {
+        position: sticky;
+        z-index: 9;
+    }
+
+    > .taskboard-cell-parent-card {
+        &:not(.taskboard-cell-parent-card-edit-mode):not(.taskboard-cell-parent-card-no-mapping) {
+            position: sticky;
+            z-index: 9;
+            top: calc(#{$navbar-height} + #{$taskboard-header-height} + 10px);
+        }
+    }
+
     &.taskboard-fullscreen {
         left: 0;
+
+        > .taskboard-cell-parent-card {
+            &:not(.taskboard-cell-parent-card-edit-mode) {
+                top: calc(#{$taskboard-header-height} + 10px);
+            }
+        }
     }
 }
 

@@ -49,12 +49,10 @@ describe("TaskBoardHeader", () => {
                         column: {
                             columns: [todo, ongoing, done]
                         },
-                        fullscreen: {
-                            is_taskboard_in_fullscreen_mode: false
-                        }
+                        swimlane: {}
                     },
                     getters: {
-                        "fullscreen/fullscreen_class": ""
+                        "swimlane/taskboard_cell_swimlane_header_classes": []
                     }
                 })
             }
@@ -71,30 +69,5 @@ describe("TaskBoardHeader", () => {
 
         expect(children.at(4).is(CollapsedHeaderCell)).toBe(true);
         expect(children.at(4).props("column")).toStrictEqual(done);
-    });
-
-    it("toggles the fullscreen class if taskboard is in fullscreen mode", () => {
-        const wrapper = shallowMount(TaskBoardHeader, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        column: {
-                            columns: [
-                                { id: 2, label: "To do" },
-                                { id: 3, label: "Done" }
-                            ]
-                        },
-                        fullscreen: {
-                            is_taskboard_in_fullscreen_mode: true
-                        }
-                    },
-                    getters: {
-                        "fullscreen/fullscreen_class": "taskboard-fullscreen"
-                    }
-                })
-            }
-        });
-
-        expect(wrapper.contains(".taskboard-fullscreen")).toBe(true);
     });
 });

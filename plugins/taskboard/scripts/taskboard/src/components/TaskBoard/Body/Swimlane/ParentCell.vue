@@ -22,6 +22,7 @@
     <swimlane-header v-bind:swimlane="swimlane">
         <card-with-remaining-effort
             class="taskboard-cell-parent-card"
+            v-bind:class="edit_mode_class"
             v-bind:card="swimlane.card"
         />
         <no-mapping-message
@@ -52,6 +53,20 @@ export default class ParentCell extends Vue {
 
     get should_no_mapping_message_be_displayed(): boolean {
         return !this.swimlane.card.has_children;
+    }
+
+    get edit_mode_class(): string[] {
+        const classes = [];
+
+        if (this.should_no_mapping_message_be_displayed) {
+            classes.push("taskboard-cell-parent-card-no-mapping");
+        }
+
+        if (this.swimlane.card.is_in_edit_mode) {
+            classes.push("taskboard-cell-parent-card-edit-mode");
+        }
+
+        return classes;
     }
 }
 </script>

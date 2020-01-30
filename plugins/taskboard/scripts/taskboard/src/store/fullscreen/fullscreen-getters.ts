@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,6 @@
 
 import { FullscreenState } from "./type";
 
-export function fullscreen_class(state: FullscreenState): string {
+export const fullscreen_class = (state: FullscreenState): string => {
     return state.is_taskboard_in_fullscreen_mode ? "taskboard-fullscreen" : "";
-}
+};
