@@ -33,15 +33,22 @@ describe(`OngoingDrag`, () => {
 
     describe(`constructor()`, () => {
         it(`assigns properties from DragStartContext
-            and attaches itself to the AfterDropEventSource parameter`, () => {
+            and attaches itself to the AfterDropEventSource parameter
+            and pins the source dropzone's height
+            to avoid having a flickering height due to flex when users drag over collapsed columns`, () => {
             const doc = createLocalDocument();
             const drag_start_context = createDragStartContext(doc, true);
+            const rect = { height: 100 } as DOMRect;
+            jest.spyOn(drag_start_context.source_dropzone, "getBoundingClientRect").mockReturnValue(
+                rect
+            );
             const ongoing_drag = new OngoingDrag(mock_event_source, drag_start_context);
 
             expect(ongoing_drag.dragged_element).toBe(drag_start_context.dragged_element);
             expect(ongoing_drag.source_dropzone).toBe(drag_start_context.source_dropzone);
             expect(ongoing_drag.initial_sibling).toBe(drag_start_context.initial_sibling);
             expect(mock_event_source.attachAfterDropListener).toHaveBeenCalledWith(ongoing_drag);
+            expect(ongoing_drag.source_dropzone.style.height).toEqual("100px");
         });
     });
 
@@ -117,6 +124,14 @@ describe(`OngoingDrag`, () => {
             ongoing_drag.afterDrop();
 
             expect(ongoing_drag.dragged_element.classList.contains("custom-css-class")).toBe(true);
+        });
+
+        it(`restores the source dropzone's height`, () => {
+            ongoing_drag.source_dropzone.style.height = "100px";
+
+            ongoing_drag.afterDrop();
+
+            expect(ongoing_drag.source_dropzone.style.height).toEqual("");
         });
     });
 });
