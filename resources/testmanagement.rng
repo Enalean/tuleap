@@ -3,9 +3,11 @@
   <start>
     <element name="testmanagement">
       <element name="configuration">
-        <element name="issues">
-          <data type="string"/>
-        </element>
+        <optional>
+          <element name="issues">
+            <data type="string"/>
+          </element>
+        </optional>
         <element name="campaigns">
           <data type="string"/>
         </element>

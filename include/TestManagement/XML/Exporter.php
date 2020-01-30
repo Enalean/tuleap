@@ -65,8 +65,11 @@ class Exporter
 
         $configuration_xml_content = $testmanagement_xml_content->addChild('configuration');
 
+
         $issue_tracker_id = $this->config->getIssueTrackerId($project);
-        $configuration_xml_content->addChild(self::ISSUES, "T$issue_tracker_id");
+        if ($issue_tracker_id) {
+            $configuration_xml_content->addChild(self::ISSUES, "T$issue_tracker_id");
+        }
 
         $campaign_tracker_id = $this->config->getCampaignTrackerId($project);
         $configuration_xml_content->addChild(self::CAMPAIGNS, "T$campaign_tracker_id");

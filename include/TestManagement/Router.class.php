@@ -35,6 +35,7 @@ use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use UserManager;
+use Valid_UInt;
 use XMLImportHelper;
 
 class Router
@@ -90,6 +91,10 @@ class Router
      * @var VisitRecorder
      */
     private $visit_recorder;
+    /**
+     * @var Valid_UInt
+     */
+    private $int_validator;
 
     public function __construct(
         Plugin $plugin,
@@ -101,7 +106,8 @@ class Router
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
         StepFieldUsageDetector $step_field_usage_detector,
         TrackerChecker $tracker_checker,
-        VisitRecorder $visit_recorder
+        VisitRecorder $visit_recorder,
+        Valid_UInt $int_validator
     ) {
         $this->config                       = $config;
         $this->plugin                       = $plugin;
@@ -113,6 +119,7 @@ class Router
         $this->step_field_usage_detector    = $step_field_usage_detector;
         $this->tracker_checker              = $tracker_checker;
         $this->visit_recorder               = $visit_recorder;
+        $this->int_validator               = $int_validator;
     }
 
     public function route(Codendi_Request $request)
@@ -129,7 +136,8 @@ class Router
                     $this->event_manager,
                     $csrf_token,
                     $this->step_field_usage_detector,
-                    $this->tracker_checker
+                    $this->tracker_checker,
+                    $this->int_validator
                 );
                 $this->renderAction($controller, 'admin', $request);
                 break;
@@ -141,7 +149,8 @@ class Router
                     $this->event_manager,
                     $csrf_token,
                     $this->step_field_usage_detector,
-                    $this->tracker_checker
+                    $this->tracker_checker,
+                    $this->int_validator
                 );
                 $this->executeAction($controller, 'update');
                 if ($this->config->isConfigNeeded($request->getProject())) {

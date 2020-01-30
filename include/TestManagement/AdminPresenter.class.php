@@ -34,7 +34,7 @@ class AdminPresenter
     /** @var int */
     public $test_execution_tracker_id;
 
-    /** @var int */
+    /** @var int | null */
     public $issue_tracker_id;
 
     /** @var string */

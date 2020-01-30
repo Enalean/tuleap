@@ -63,6 +63,24 @@ class ExporterTest extends TestCase
         $this->assertEquals((string) $xml_content->configuration->executions, 'T4');
     }
 
+    public function testItExportsTTMConfigurationInXMLWithoutIssueTracker(): void
+    {
+        $this->config->shouldReceive([
+            'getIssueTrackerId'          => null,
+            'getCampaignTrackerId'       => 2,
+            'getTestDefinitionTrackerId' => 3,
+            'getTestExecutionTrackerId'  => 4,
+            'isConfigNeeded'             => false
+        ]);
+
+        $xml_content = $this->exporter->exportToXML($this->project);
+
+        $this->assertEquals((string) $xml_content->configuration->issues, '');
+        $this->assertEquals((string) $xml_content->configuration->campaigns, 'T2');
+        $this->assertEquals((string) $xml_content->configuration->definitions, 'T3');
+        $this->assertEquals((string) $xml_content->configuration->executions, 'T4');
+    }
+
     public function testItDoesNotExportTTMConfigurationInXMLIfATrackerIsNotSet()
     {
         $this->config->shouldReceive([

@@ -79,8 +79,11 @@ class XMLImport
                 $execution_tracker_id  = $this->getXMLRef($xml, $tracker_mapping, self::EXECUTIONS);
                 $issue_tracker_id      = $this->getXMLRef($xml, $tracker_mapping, self::ISSUES);
 
+                if ($issue_tracker_id !== '') {
+                    $this->tracker_checker->checkTrackerIsInProject($project, $issue_tracker_id);
+                }
+
                 $this->tracker_checker->checkTrackerIsInProject($project, $campaign_tracker_id);
-                $this->tracker_checker->checkTrackerIsInProject($project, $issue_tracker_id);
                 $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $definition_tracker_id);
                 $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $execution_tracker_id);
 
@@ -103,6 +106,11 @@ class XMLImport
     private function getXMLRef(SimpleXMLElement $xml, $tracker_mapping, $tracker_name)
     {
         $reference = (string) $xml->configuration->{$tracker_name};
+
+        if (! isset($tracker_mapping[$reference])) {
+            return '';
+        }
+
         return $tracker_mapping[$reference];
     }
 }

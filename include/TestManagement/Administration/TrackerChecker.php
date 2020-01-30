@@ -61,11 +61,20 @@ class TrackerChecker
 
     /**
      * @throws TrackerNotInProjectException
+     * @throws TrackerDoesntExistException
+     * @throws TrackerIsDeletedException
      */
     public function checkTrackerIsInProject(Project $project, int $submitted_id) : void
     {
         $this->initTrackerIds($project);
 
+        $tracker = $this->tracker_factory->getTrackerById($submitted_id);
+        if (! $tracker) {
+            throw new TrackerDoesntExistException();
+        }
+        if ($tracker->isDeleted()) {
+            throw new TrackerIsDeletedException();
+        }
         if (! array_key_exists($submitted_id, $this->project_trackers[$project->getID()])) {
             throw new TrackerNotInProjectException();
         }

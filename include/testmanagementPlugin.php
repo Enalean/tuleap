@@ -401,7 +401,8 @@ class testmanagementPlugin extends Plugin
             $this->getArtifactLinksUsageUpdater(),
             $step_field_usage_detector,
             $this->getTrackerChecker(),
-            new VisitRecorder(new RecentlyVisitedDao())
+            new VisitRecorder(new RecentlyVisitedDao()),
+            new Valid_UInt()
         );
 
         return new LegacyRoutingController(
