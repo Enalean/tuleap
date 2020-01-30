@@ -134,8 +134,7 @@ class UserSuspensionManager
                 $user = $this->user_manager->getUserbyId($idle_user['user_id']);
                 if ($user) {
                     $suspension_date = $this->getSuspensionDate($notification_delay);
-                    $last_access_date = new DateTimeImmutable();
-                    $last_access_date->setTimestamp($idle_user['last_access_date']);
+                    $last_access_date = new DateTimeImmutable('@' . $idle_user['last_access_date']);
                     $language = $this->lang_factory->getBaseLanguage(ForgeConfig::get('sys_lang'));
                     $status = $this->sendNotificationMail($user, $last_access_date, $suspension_date, $language);
                     if ($status) {
