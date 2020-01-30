@@ -34,6 +34,7 @@ export class OngoingDrag implements AfterDropListener {
         this.dragged_element = drag_start_context.dragged_element;
         this.source_dropzone = drag_start_context.source_dropzone;
         this.initial_sibling = drag_start_context.initial_sibling;
+        this.pinSourceDropzoneHeightToAvoidFlickerOverCollapsedColumns();
         event_source.attachAfterDropListener(this);
     }
 
@@ -44,9 +45,15 @@ export class OngoingDrag implements AfterDropListener {
         }
     }
 
+    private pinSourceDropzoneHeightToAvoidFlickerOverCollapsedColumns(): void {
+        const { height } = this.source_dropzone.getBoundingClientRect();
+        this.source_dropzone.style.height = height + "px";
+    }
+
     public afterDrop(): void {
         // Restore the element at its original place, otherwise Vue is confused and swaps elements
         this.source_dropzone.insertBefore(this.dragged_element, this.initial_sibling);
         this.dragged_element.classList.remove(HIDE_CSS_CLASS);
+        this.source_dropzone.style.height = "";
     }
 }
