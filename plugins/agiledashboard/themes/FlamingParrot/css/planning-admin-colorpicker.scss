@@ -28,3 +28,18 @@
 .colorpicker-circular-color {
     font-size: 12.6px;
 }
+
+.old-color-picker-preview {
+    border: 1px solid #e3e5ed;
+}
+
+.table {
+    /* stylelint-disable-next-line selector-no-qualifying-type */
+    thead:first-child tr:first-child td.colorpicker-squared-shade {
+        border: 1px solid #000000;
+    }
+
+    .colorpicker-squared-shade {
+        padding: 0;
+    }
+}

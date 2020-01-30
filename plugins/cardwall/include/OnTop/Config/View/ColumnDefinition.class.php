@@ -54,8 +54,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
     private function fetchMappings()
     {
         $html  = '';
-        $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="top">';
-        $html .= '<td></td>';
+        $html .= '<table class="table table-bordered cardwall_admin_ontop_mappings"><thead><tr valign="top">';
+        $html .= '<th></th>';
         foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<th>';
             if ($column->isHeaderATLPColor()) {
@@ -72,9 +72,9 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
             $html .= $this->fetchColumnHeader($column);
             $html .= '</th>';
         }
-        $html .= '<td>';
+        $html .= '<th>';
         $html .= $this->fetchAdditionalColumnHeader();
-        $html .= '</td>';
+        $html .= '</th>';
         $html .= '</tr></thead>';
         $html .= '<tbody>';
         $row_number = 0;
@@ -219,8 +219,10 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
 
     protected function fetchColumnHeader(Cardwall_Column $column)
     {
-        $html  = '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
+        $html = '<div class="planning-admin-color-picker">';
+        $html .= '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
         $html .= $this->decorateEdit($column);
+        $html .= '</div>';
 
         return $html;
     }
