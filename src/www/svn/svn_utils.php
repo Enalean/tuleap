@@ -75,7 +75,7 @@ function svn_header(Project $project, $params)
         $params['help'] = "svn.html";
     }
     $toolbar[] = array('title' => $Language->getText('global', 'help'),
-                       'url'   => 'javascript:help_window(\'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
+                       'url'   => 'javascript:help_window(\'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/code-versioning/'.$params['help'].'\');');
 
     $service->displayHeader(
         $params['title'],
@@ -121,7 +121,7 @@ function svn_header_admin($params)
         $params['help'] = "svn.html#subversion-administration-interface";
     }
     $toolbar[] = array('title' => $Language->getText('global', 'help'),
-                       'url' => 'javascript:help_window(\'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
+                       'url' => 'javascript:help_window(\'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/code-versioning/'.$params['help'].'\');');
 
     $service->displayHeader($params['title'], array(array('title' => $params['title'], 'url' => '/svn/?group_id='.$group_id)), $toolbar);
 }

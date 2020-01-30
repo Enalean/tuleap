@@ -76,11 +76,6 @@ include_exit	project_suspended_cutom_message	All access to its resources are tem
 include_group	g_not_found	Group Not Found
 #
 #-----------------------------------------------
-# Script: SF/www/include/help.php
-#
-include_help	site_help_sys	Site Help System
-#
-#-----------------------------------------------
 # Script: SF/www/include/html.php
 #
 include_html	lowest	Lowest

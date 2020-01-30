@@ -106,7 +106,7 @@ class ChooseNewsItemController
         news_header(
             array(
                 'title'      => $GLOBALS['Language']->getText('news_admin_index', 'title'),
-                'help'       => 'communication.html#news-service',
+                'help'       => 'collaboration.html#news-service',
                 'project_id' => $this->request->get('project_id')
             )
         );

@@ -96,7 +96,7 @@ class ServiceFile extends Service
                   <td>
                     <b>' .  $hp->purify(util_unconvert_htmlspecialchars($package['package_name']), CODENDI_PURIFIER_CONVERT_HTML)  . '</b>&nbsp;
                     <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '&group_id='.$this->getGroupId().'">'.
-                        $monitor_img . '     
+                        $monitor_img . '
                     </a>
                   </td>';
                 // Releases to display
@@ -191,7 +191,7 @@ class ServiceFile extends Service
 
         $toolbar[] = array(
             'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
-            'url'   => "javascript:help_window('/doc/".$user->getShortLocale()."/user-guide/frs.html')"
+            'url'   => "javascript:help_window('/doc/".$user->getShortLocale()."/user-guide/documents-and-files/frs.html')"
         );
 
         $breadcrumbs = array();

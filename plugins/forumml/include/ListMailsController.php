@@ -175,7 +175,7 @@ class ListMailsController implements DispatchableWithRequest
         }
         $params['group']  = $group_id;
         $params['toptab'] = 'mail';
-        $params['help']   = "communication.html#mailing-lists";
+        $params['help']   = "collaboration.html#mailing-lists";
         if ($request->valid(new Valid_Pv('pv'))) {
             $params['pv'] = $request->get('pv');
         }

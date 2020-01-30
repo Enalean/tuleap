@@ -70,11 +70,6 @@ include_exit	project_suspended_cutom_message	Tous les accès à ses ressources s
 include_group	g_not_found	Groupe introuvable
 #
 #-----------------------------------------------
-# Script: SF/www/include/help.php
-#
-include_help	site_help_sys	Système d'aide du site
-#
-#-----------------------------------------------
 # Script: SF/www/include/html.php
 #
 include_html	lowest	Minimum

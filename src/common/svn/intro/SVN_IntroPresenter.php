@@ -51,7 +51,7 @@ class SVN_IntroPresenter
 
     public function help_link()
     {
-        return "javascript:help_window('/doc/".$this->user->getShortLocale()."/user-guide/svn.html')";
+        return "javascript:help_window('/doc/".$this->user->getShortLocale()."/user-guide/code-versioning/svn.html')";
     }
 
     public function svn_intro_title()

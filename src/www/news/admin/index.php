@@ -102,7 +102,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
     }
 
     news_header(array('title'=>$Language->getText('news_admin_index', 'title'),
-              'help'=>'communication.html#news-service'));
+              'help'=>'collaboration.html#news-service'));
 
     echo '<H3>'.$Language->getText('news_admin_index', 'news_admin').'</H3>';
     echo '<a href="/news/admin/choose_items.php?project_id='.$group_id.'">'.$Language->getText('news_admin_index', 'choose_display').'</a>';
@@ -146,11 +146,11 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
  		<B>'.$Language->getText('global', 'status').':</B><BR>
                 <INPUT TYPE="RADIO" NAME="status" VALUE="0" CHECKED> '.$Language->getText('news_admin_index', 'displayed').'<BR>
                 <INPUT TYPE="RADIO" NAME="status" VALUE="4"> '.$Language->getText('news_admin_index', 'delete').'<BR>
-	        
-		<B>'.$Language->getText('news_submit', 'news_privacy').':</B><BR> 
+
+		<B>'.$Language->getText('news_submit', 'news_privacy').':</B><BR>
 		<INPUT TYPE="RADIO" NAME="is_private" VALUE="0" '.$check_public.'> '.$Language->getText('news_submit', 'public_news').'<BR>
 		<INPUT TYPE="RADIO" NAME="is_private" VALUE="1" '.$check_private.'> '.$Language->getText('news_submit', 'private_news').'<BR>
-		
+
 		<B>'.$Language->getText('news_admin_index', 'subject').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.$purifier->purify(db_result($result, 0, 'summary')).'"><BR>
 		<B>'.$Language->getText('news_admin_index', 'details').':</B><BR>

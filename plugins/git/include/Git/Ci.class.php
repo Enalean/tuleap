@@ -94,7 +94,7 @@ class Git_Ci
                 $this->getEventManager()->processEvent('display_hudson_addition_info', $parameters);
                 if ($intalled) {
                     $warning = '<div class="alert alert-warning"> '.
-                        dgettext('tuleap-git', 'Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/doc/en/git.html?#jenkins-webhooks">Hudson Git Plugin</a>.').
+                        dgettext('tuleap-git', 'Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/doc/en/user-guide/code-versioning/git.html?#jenkins-webhooks">Hudson Git Plugin</a>.').
                         ' </div>';
                 }
 

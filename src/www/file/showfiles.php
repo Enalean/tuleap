@@ -132,7 +132,7 @@ if ($pv) {
     $html .= '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ':</h3>';
 } else {
     $html .= "<TABLE width='100%'><TR><TD>";
-    $html .= '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ' ' . help_button('frs.html#delivery-manager-jargon') . '</h3>';
+    $html .= '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ' ' . help_button('documents-and-files/frs.html#delivery-manager-jargon') . '</h3>';
     $html .= "</TD>";
     $html .= "<TD align='left'> ( <A HREF='showfiles.php?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
     $html .= "</TR></TABLE>";
