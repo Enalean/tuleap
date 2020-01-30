@@ -25,6 +25,7 @@ namespace Tuleap\PrometheusMetrics;
 
 use SystemEvent;
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
+use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Queue\Worker;
@@ -54,6 +55,10 @@ class MetricsCollector
      */
     private $event_manager;
     /**
+     * @var VersionPresenter
+     */
+    private $version_presenter;
+    /**
      * @var \Redis|null
      */
     private $redis;
@@ -63,13 +68,15 @@ class MetricsCollector
         MetricsCollectorDao $dao,
         NbUsersByStatusBuilder $nb_user_builder,
         \EventManager $event_manager,
+        VersionPresenter $version_presenter,
         ?\Redis $redis
     ) {
-        $this->prometheus      = $prometheus;
-        $this->dao             = $dao;
-        $this->nb_user_builder = $nb_user_builder;
-        $this->event_manager   = $event_manager;
-        $this->redis           = $redis;
+        $this->prometheus        = $prometheus;
+        $this->dao               = $dao;
+        $this->nb_user_builder   = $nb_user_builder;
+        $this->event_manager     = $event_manager;
+        $this->version_presenter = $version_presenter;
+        $this->redis             = $redis;
     }
 
     public function collect(): void
@@ -78,6 +85,7 @@ class MetricsCollector
         $this->setProjectsByStatus();
         $this->setWorkerStatus();
         $this->setSystemEventsStatus();
+        $this->setBuildInfo();
         $this->event_manager->processEvent(new CollectTuleapComputedMetrics($this->prometheus));
     }
 
@@ -130,5 +138,18 @@ class MetricsCollector
         foreach ($all_status as $status => $count) {
             $this->prometheus->gaugeSet('system_events_count', 'Actual number (as in the database) of system_events per type', $count, ['status' => $status]);
         }
+    }
+
+    private function setBuildInfo(): void
+    {
+        $this->prometheus->gaugeSet(
+            'build_info',
+            "A metric with a constant '1' value labelled by flavor and version",
+            1,
+            [
+                'flavor'  => $this->version_presenter->flavor_name,
+                'version' => $this->version_presenter->version_number,
+            ]
+        );
     }
 }

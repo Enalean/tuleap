@@ -44,6 +44,7 @@ final class VersionPresenterTest extends TestCase
         $full_descriptive_version = $version->getFullDescriptiveVersion();
         $this->assertStringContainsString($version->flavor_name, $full_descriptive_version);
         $this->assertStringContainsString($version->version_identifier, $full_descriptive_version);
+        $this->assertEquals(trim(file_get_contents(__DIR__ . '/../../../../VERSION')), $version->version_number);
     }
 
     public function testBuildsCommunityVersionPresenter(): void
@@ -64,5 +65,6 @@ final class VersionPresenterTest extends TestCase
         $full_descriptive_version = $version->getFullDescriptiveVersion();
         $this->assertStringContainsString($version->flavor_name, $full_descriptive_version);
         $this->assertStringContainsString($version->version_identifier, $full_descriptive_version);
+        $this->assertEquals(trim(file_get_contents(__DIR__ . '/../../../../VERSION')), $version->version_number);
     }
 }
