@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Transition;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 
 class AddToTopBacklogPostActionFactoryTest extends TestCase
@@ -52,24 +53,37 @@ class AddToTopBacklogPostActionFactoryTest extends TestCase
      */
     private $transition;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->add_to_top_backlog_post_action_dao = Mockery::mock(AddToTopBacklogPostActionDao::class);
-        $this->unplanned_artifacts_adder = Mockery::mock(UnplannedArtifactsAdder::class);
+        $this->unplanned_artifacts_adder          = Mockery::mock(UnplannedArtifactsAdder::class);
+        $this->explicit_backlog_dao               = Mockery::mock(ExplicitBacklogDao::class);
 
         $this->factory = new AddToTopBacklogPostActionFactory(
             $this->add_to_top_backlog_post_action_dao,
-            $this->unplanned_artifacts_adder
+            $this->unplanned_artifacts_adder,
+            $this->explicit_backlog_dao
         );
 
         $this->transition = Mockery::mock(Transition::class);
         $this->transition->shouldReceive('getId')->andReturn('923');
+        $this->transition->shouldReceive('getGroupId')->andReturn('101');
     }
 
     public function testItBuildsThePostAction()
     {
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->with(101)
+            ->once()
+            ->andReturnTrue();
+
         $this->add_to_top_backlog_post_action_dao->shouldReceive('searchByTransitionId')
             ->with(923)
             ->andReturn([
@@ -81,5 +95,18 @@ class AddToTopBacklogPostActionFactoryTest extends TestCase
         $this->assertCount(1, $post_actions);
 
         $this->assertInstanceOf(AddToTopBacklog::class, $post_actions[0]);
+    }
+
+    public function testItDoesNotBuildThePostActionIfProjectDoesNotUseExplicitTopBacklogManagement()
+    {
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->with(101)
+            ->once()
+            ->andReturnFalse();
+
+        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('searchByTransitionId');
+
+        $post_actions = $this->factory->loadPostActions($this->transition);
+        $this->assertEmpty($post_actions);
     }
 }
