@@ -96,6 +96,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\layout\ScriptAsset;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
@@ -261,8 +262,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(ExternalPostActionSaveObjectEvent::NAME);
             $this->addHook(GetPostActionShortNameFromXmlTagNameEvent::NAME);
             $this->addHook(CreateTrackerFromXMLEvent::NAME);
-            $this->addHook(Event::IMPORT_XML_IS_PROJECT_VALID);
             $this->addHook(ExternalWorkflowAssetsPathsRetrieverEvent::NAME);
+            $this->addHook(ProjectXMLImportPreChecksEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2272,15 +2273,15 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         );
     }
 
-    public function import_xml_is_project_valid($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function projectXMLImportPreChecksEvent(ProjectXMLImportPreChecksEvent $event): void
     {
-        $xml_content = $params['xml_content'];
+        $xml_content = $event->getXmlElement();
         $checker = new CreateTrackerFromXMLChecker(new ExplicitBacklogDao());
 
         try {
             $checker->checkTrackersCanBeCreatedInProjectImportContext($xml_content);
         } catch (ProjectNotUsingExplicitBacklogException $exception) {
-            $params['error'] = true;
+            $event->setXmlElementIsInError();
         }
     }
 
