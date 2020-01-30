@@ -18,9 +18,6 @@
  */
 
 const gulp = require("gulp");
-const merge = require("merge2");
-// eslint-disable-next-line you-dont-need-lodash-underscore/map
-const map = require("lodash.map");
 const concat = require("gulp-concat");
 const rev = require("gulp-rev");
 const del = require("del");
@@ -46,28 +43,6 @@ function getAllPluginsFromManifestFiles() {
             var manifest_path = path.join(plugins_path, plugin, "build-manifest.json");
             return JSON.parse(fs.readFileSync(manifest_path), "utf8");
         });
-}
-
-function concat_all_js_files(files_hash) {
-    var streams = map(files_hash, function(files_to_concat, dest_file_name) {
-        return gulp.src(files_to_concat).pipe(concat(dest_file_name + ".js"));
-    });
-
-    return merge(streams);
-}
-
-function concatCoreJs(files_hash, target_dir) {
-    var merged_stream = concat_all_js_files(files_hash);
-    return merged_stream
-        .pipe(rev())
-        .pipe(gulp.dest(target_dir))
-        .pipe(
-            rev.manifest(path.join(target_dir, "manifest.json"), {
-                base: target_dir,
-                merge: true
-            })
-        )
-        .pipe(gulp.dest(target_dir));
 }
 
 function getCleanJsTask(plugin_name, plugin_assets_path) {
@@ -178,7 +153,6 @@ function getPluginsWatchTasks(asset_dir) {
 }
 
 module.exports = {
-    concatCoreJs,
     getPluginTasks,
     getPluginsWatchTasks
 };

@@ -1,7 +1,0 @@
-Alias /scripts/combined "/var/tmp/tuleap_cache/combined"
-<Directory "/var/tmp/tuleap_cache/combined">
-    Options None
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</Directory>
