@@ -61,6 +61,19 @@ class ScrumBoardTypeSelectorControllerTest extends TestCase
         );
     }
 
+    public function testItDoesNothingIfUserDidNotSubmitBoardType(): void
+    {
+        $this->mockDefaultBoardType("cardwall");
+
+        $request = m::mock(\HTTPRequest::class);
+        $request->shouldReceive('get')->with('scrum-board-type')->andReturn(false)->once();
+
+        $this->dao->shouldReceive('deleteBoardTypeByProjectId')->never();
+        $this->dao->shouldReceive('updateBoardTypeByProjectId')->never();
+
+        $this->getController()->onSubmitCallback($request);
+    }
+
     public function testItDeletesWhenUserUsesTheTwoBoards(): void
     {
         $this->mockDefaultBoardType("cardwall");
