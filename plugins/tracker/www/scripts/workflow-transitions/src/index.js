@@ -1,5 +1,5 @@
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2020-present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -28,18 +28,42 @@ import GettextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
+import { fetchCrossPluginComponents } from "./helpers/cross-plugin-component-importer.js";
+import { setExternalComponents } from "./helpers/external-component-state.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+/* Define Vue on window so that components find it
+It will also avoid to the external component to embed a whole vue instance
+ */
+window.Vue = Vue;
+
+async function addExternalComponents(jsonp_callbacks) {
+    const modules = await fetchCrossPluginComponents(jsonp_callbacks);
+
+    let all_translations = french_translations.messages;
+    for (const module of modules) {
+        setExternalComponents(module.components);
+        all_translations = Object.assign(all_translations, module.french_translations.messages);
+    }
+    return all_translations;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-workflow-transitions");
-
     if (!vue_mount_point) {
         return;
     }
 
+    const data_callbacks = vue_mount_point.dataset.jsonpCallbacks;
+    if (!data_callbacks) {
+        return;
+    }
+    const jsonp_callbacks = JSON.parse(data_callbacks);
+    const all_translations = await addExternalComponents(jsonp_callbacks);
+
     Vue.use(Vuex);
     Vue.use(GettextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: all_translations
         },
         silent: true
     });

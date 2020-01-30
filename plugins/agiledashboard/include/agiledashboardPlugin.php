@@ -26,11 +26,11 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\CreateTrackerFromXMLChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ProjectNotUsingExplicitBacklogException;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionMatchingIdsRetriever;
-use Tuleap\AgileDashboard\ExplicitBacklog\ProjectNotUsingExplicitBacklogException;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
@@ -93,6 +93,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\ScriptAsset;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
@@ -129,9 +130,11 @@ use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
+use Tuleap\Tracker\Workflow\PostAction\ExternalWorkflowAssetsPathsRetrieverEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
+use Tuleap\Tracker\Workflow\PostAction\JSONPCallback;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryQuickLink;
 use Tuleap\User\History\HistoryRetriever;
@@ -259,6 +262,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(GetPostActionShortNameFromXmlTagNameEvent::NAME);
             $this->addHook(CreateTrackerFromXMLEvent::NAME);
             $this->addHook(Event::IMPORT_XML_IS_PROJECT_VALID);
+            $this->addHook(ExternalWorkflowAssetsPathsRetrieverEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2278,5 +2282,24 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         } catch (ProjectNotUsingExplicitBacklogException $exception) {
             $params['error'] = true;
         }
+    }
+
+    public function externalWorkflowAssetsPathsRetrieverEvent(ExternalWorkflowAssetsPathsRetrieverEvent $event): void
+    {
+        $is_agile_dashboard_used  = $this->isAllowed($event->getProject()->getGroupId());
+        $is_explicit_backlog_used = (new ExplicitBacklogDao())->isProjectUsingExplicitBacklog(
+            $event->getProject()->getGroupId()
+        );
+        if (!$is_agile_dashboard_used || !$is_explicit_backlog_used) {
+            return;
+        }
+        $script_asset = new ScriptAsset(
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/agiledashboard/workflow',
+                '/assets/agiledashboard/workflow'
+            ),
+            "agile-dashboard-components.js"
+        );
+        $event->addCallback(new JSONPCallback("WorkflowExternalComponents", $script_asset));
     }
 }
