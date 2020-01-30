@@ -21,6 +21,8 @@
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
+use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\PrometheusMetrics\MetricsAuthentication;
 use Tuleap\PrometheusMetrics\MetricsCollectorDao;
@@ -76,6 +78,7 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
             new MetricsCollectorDao(),
             new NbUsersByStatusBuilder(new UserCounterDao()),
             EventManager::instance(),
+            VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence()),
             $redis_client,
             new MetricsAuthentication(
                 $response_factory,

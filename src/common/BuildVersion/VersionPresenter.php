@@ -37,11 +37,16 @@ final class VersionPresenter
     /**
      * @var string
      */
+    public $version_number;
+    /**
+     * @var string
+     */
     public $version_identifier;
 
-    private function __construct(string $flavor_name, string $version_identifier)
+    private function __construct(string $flavor_name, string $version_number, string $version_identifier)
     {
         $this->flavor_name        = $flavor_name;
+        $this->version_number     = $version_number;
         $this->version_identifier = $version_identifier;
     }
 
@@ -52,12 +57,14 @@ final class VersionPresenter
         if ($flavor_finder->isEnterprise()) {
             return new self(
                 self::ENTERPRISE_EDITION_FLAVOR_NAME,
+                $version_number,
                 $version_number
             );
         }
 
         return new self(
             self::COMMUNITY_EDITION_FLAVOR_NAME,
+            $version_number,
             'Dev Build ' . $version_number
         );
     }

@@ -30,6 +30,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Redis;
 use Tuleap\Admin\Homepage\NbUsersByStatus;
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
+use Tuleap\BuildVersion\FlavorFinder;
+use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Queue\Worker;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
@@ -40,10 +42,18 @@ final class MetricsControllerTest extends TestCase
 
     public function testMetricsAreRendered() : void
     {
-        $dao             = Mockery::mock(MetricsCollectorDao::class);
-        $nb_user_builder = Mockery::mock(NbUsersByStatusBuilder::class);
-        $event_manager   = Mockery::mock(EventManager::class);
-        $redis_client    = Mockery::mock(Redis::class);
+        $dao               = Mockery::mock(MetricsCollectorDao::class);
+        $nb_user_builder   = Mockery::mock(NbUsersByStatusBuilder::class);
+        $event_manager     = Mockery::mock(EventManager::class);
+        $redis_client      = Mockery::mock(Redis::class);
+        $version_presenter = VersionPresenter::fromFlavorFinder(
+            new class implements FlavorFinder {
+                public function isEnterprise(): bool
+                {
+                    return false;
+                }
+            }
+        );
         $controller      = new MetricsController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
@@ -51,6 +61,7 @@ final class MetricsControllerTest extends TestCase
             $dao,
             $nb_user_builder,
             $event_manager,
+            $version_presenter,
             $redis_client,
         );
 

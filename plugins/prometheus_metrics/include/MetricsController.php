@@ -32,6 +32,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Redis;
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
+use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -62,6 +63,10 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
      */
     private $event_manager;
     /**
+     * @var VersionPresenter
+     */
+    private $version_presenter;
+    /**
      * @var Redis|null
      */
     private $redis;
@@ -73,16 +78,18 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         MetricsCollectorDao $dao,
         NbUsersByStatusBuilder $nb_user_builder,
         EventManager $event_manager,
+        VersionPresenter $version_presenter,
         ?Redis $redis,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->response_factory = $response_factory;
-        $this->stream_factory   = $stream_factory;
-        $this->dao              = $dao;
-        $this->nb_user_builder  = $nb_user_builder;
-        $this->event_manager    = $event_manager;
-        $this->redis            = $redis;
+        $this->response_factory  = $response_factory;
+        $this->stream_factory    = $stream_factory;
+        $this->dao               = $dao;
+        $this->nb_user_builder   = $nb_user_builder;
+        $this->event_manager     = $event_manager;
+        $this->version_presenter = $version_presenter;
+        $this->redis             = $redis;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -106,7 +113,14 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
     private function getTuleapComputedMetrics() : string
     {
         $prometheus = Prometheus::getInMemory();
-        $collector  = new MetricsCollector($prometheus, $this->dao, $this->nb_user_builder, $this->event_manager, $this->redis);
+        $collector  = new MetricsCollector(
+            $prometheus,
+            $this->dao,
+            $this->nb_user_builder,
+            $this->event_manager,
+            $this->version_presenter,
+            $this->redis
+        );
 
         $collector->collect();
 
