@@ -222,7 +222,7 @@ class GitRepositoryManager
         );
 
         $this->system_command->exec(
-            "chown -R gitolite:gitolite $tmp_git_import_folder_arg"
+            "chgrp -R gitolite $tmp_git_import_folder_arg"
         );
     }
 
