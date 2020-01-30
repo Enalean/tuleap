@@ -52,8 +52,8 @@ class DefaultProjectTemplate implements ProjectTemplate
     public function __construct(\Project $project, GlyphFinder $glyph_finder)
     {
         $this->template_id = $project->getGroupId();
-        $this->description = $project->getDescription();
-        $this->title       = $project->getUnconvertedPublicName();
+        $this->description = _('The legacy default template. No more available soon. To be recreated as a "Custom template"');
+        $this->title       = _('Legacy default template');
         $this->glyph       = $glyph_finder->get(self::NAME);
     }
 

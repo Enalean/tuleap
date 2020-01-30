@@ -793,7 +793,7 @@ msgstr "Par défaut ?"
 msgid "Is used?"
 msgstr "Utilisé ?"
 
-msgid "Issues tracking"
+msgid "Issue tracking"
 msgstr "Suivi des tickets"
 
 #, php-format
@@ -826,6 +826,9 @@ msgstr "Utilisée pour la dernière fois par"
 
 msgid "Last used on"
 msgstr "Utilisée pour la dernière fois le"
+
+msgid "Legacy default template"
+msgstr "Modèle par défaut (déprécié)"
 
 #, php-format
 msgid "License \"%s\" was successfully deleted"
@@ -1554,6 +1557,13 @@ msgstr ""
 msgid "The last project administrator cannot be removed."
 msgstr ""
 "Il n'est pas possible de supprimer le dernier administrateur du projet."
+
+msgid ""
+"The legacy default template. No more available soon. To be recreated as a "
+"\"Custom template\""
+msgstr ""
+"L'ancien modèle par défaut. Ne sera bientôt plus disponible. A recréer en "
+"tant que \"Modèle de projet personnalisé\""
 
 #, php-format
 msgid ""
