@@ -105,4 +105,47 @@ describe("ProjectInformationInputPrivacyList", () => {
             ).toBe(true);
         });
     });
+
+    describe("Displayed options depends on platform configuration -", () => {
+        it("Displays only public and private when platform does not allow restricted", async () => {
+            const state = {
+                project_default_visibility: "private",
+                are_restricted_users_allowed: false
+            } as State;
+
+            const store_options = { state };
+
+            const store = createStoreMock(store_options);
+
+            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store }
+            });
+            expect(wrapper.contains("[data-test=unrestricted]")).toBe(false);
+            expect(wrapper.contains("[data-test=private]")).toBe(false);
+            expect(wrapper.contains("[data-test=private-wo-restr]")).toBe(true);
+            expect(wrapper.contains("[data-test=public]")).toBe(true);
+        });
+
+        it("Displays all options when restricted are allowed", async () => {
+            const state = {
+                project_default_visibility: "private",
+                are_restricted_users_allowed: true
+            } as State;
+
+            const store_options = { state };
+
+            const store = createStoreMock(store_options);
+
+            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store }
+            });
+
+            expect(wrapper.contains("[data-test=private]")).toBe(true);
+            expect(wrapper.contains("[data-test=private-wo-restr]")).toBe(true);
+            expect(wrapper.contains("[data-test=unrestricted]")).toBe(true);
+            expect(wrapper.contains("[data-test=public]")).toBe(true);
+        });
+    });
 });
