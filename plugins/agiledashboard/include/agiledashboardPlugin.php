@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\CreateTrackerFromXMLChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
@@ -103,6 +104,7 @@ use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
@@ -126,7 +128,10 @@ use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
+use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
+use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
+use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryQuickLink;
 use Tuleap\User\History\HistoryRetriever;
@@ -249,6 +254,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(PostActionVisitExternalActionsEvent::NAME);
             $this->addHook(GetExternalPostActionJsonParserEvent::NAME);
             $this->addHook(GetWorkflowExternalPostActionsValueUpdater::NAME);
+            $this->addHook(GetExternalSubFactoryByNameEvent::NAME);
+            $this->addHook(ExternalPostActionSaveObjectEvent::NAME);
+            $this->addHook(GetPostActionShortNameFromXmlTagNameEvent::NAME);
+            $this->addHook(CreateTrackerFromXMLEvent::NAME);
+            $this->addHook(Event::IMPORT_XML_IS_PROJECT_VALID);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2152,10 +2162,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function getExternalSubFactoriesEvent(GetExternalSubFactoriesEvent $event)
     {
-        $event->addFactory(new AddToTopBacklogPostActionFactory(
-            new AddToTopBacklogPostActionDao(),
-            $this->getUnplannedArtifactsAdder()
-        ));
+        $event->addFactory(
+            $this->getAddToTopBacklogPostActionFactory()
+        );
     }
 
     public function workflowDeletionEvent(WorkflowDeletionEvent $event): void
@@ -2209,5 +2218,64 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 )
             )
         );
+    }
+
+    public function getExternalSubFactoryByNameEvent(GetExternalSubFactoryByNameEvent $event): void
+    {
+        if ($event->getPostActionShortName() === AddToTopBacklog::SHORT_NAME) {
+            $event->setFactory(
+                $this->getAddToTopBacklogPostActionFactory()
+            );
+        }
+    }
+
+    public function externalPostActionSaveObjectEvent(ExternalPostActionSaveObjectEvent $event): void
+    {
+        $post_action = $event->getPostAction();
+        if (! $post_action instanceof AddToTopBacklog) {
+            return;
+        }
+
+        $factory = $this->getAddToTopBacklogPostActionFactory();
+        $factory->saveObject($post_action);
+    }
+
+    public function getPostActionShortNameFromXmlTagNameEvent(GetPostActionShortNameFromXmlTagNameEvent $event): void
+    {
+        if ($event->getXmlTagName() === AddToTopBacklog::XML_TAG_NAME) {
+            $event->setPostActionShortName(AddToTopBacklog::SHORT_NAME);
+        }
+    }
+
+    private function getAddToTopBacklogPostActionFactory(): AddToTopBacklogPostActionFactory
+    {
+        return new AddToTopBacklogPostActionFactory(
+            new AddToTopBacklogPostActionDao(),
+            $this->getUnplannedArtifactsAdder()
+        );
+    }
+
+    /**
+     * @throws TrackerFromXmlException
+     */
+    public function createTrackerFromXMLEvent(CreateTrackerFromXMLEvent $event): void
+    {
+        $checker = new CreateTrackerFromXMLChecker(new ExplicitBacklogDao());
+        $checker->checkTrackerCanBeCreatedInTrackerCreationContext(
+            $event->getProject(),
+            $event->getTrackerXml()
+        );
+    }
+
+    public function import_xml_is_project_valid($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $xml_content = $params['xml_content'];
+        $checker = new CreateTrackerFromXMLChecker(new ExplicitBacklogDao());
+
+        try {
+            $checker->checkTrackersCanBeCreatedInProjectImportContext($xml_content);
+        } catch (ProjectNotUsingExplicitBacklogException $exception) {
+            $params['error'] = true;
+        }
     }
 }

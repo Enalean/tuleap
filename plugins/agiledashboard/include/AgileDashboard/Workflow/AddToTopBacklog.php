@@ -34,7 +34,8 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class AddToTopBacklog extends Transition_PostAction
 {
-    public const SHORT_NAME = 'add_to_top_backlog';
+    public const SHORT_NAME   = 'add_to_top_backlog';
+    public const XML_TAG_NAME = 'postaction_add_to_top_backlog';
 
     /**
      * @var UnplannedArtifactsAdder

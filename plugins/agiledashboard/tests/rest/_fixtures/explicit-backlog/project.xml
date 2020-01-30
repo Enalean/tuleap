@@ -2051,6 +2051,9 @@
           <transition>
             <from_id REF="V2218"/>
             <to_id REF="V2219"/>
+            <postactions>
+              <postaction_add_to_top_backlog/>
+            </postactions>
             <conditions>
               <condition type="perms">
                 <permissions>

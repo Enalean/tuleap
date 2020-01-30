@@ -12,6 +12,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.3\n"
 
+msgid ""
+"\"AddToTopBacklog\" post action cannot be used because the project does not "
+"use the explicit top backlog management."
+msgstr ""
+"la PostAction de type \"AddToTopBacklog\" ne peut être utilisée car le projet "
+"n'utilise pas la planification générale."
+
 #, php-format
 msgid "%s Kanban"
 msgstr "Kanban %s"

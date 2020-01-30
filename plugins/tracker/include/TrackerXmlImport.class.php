@@ -23,6 +23,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
@@ -710,6 +711,9 @@ class TrackerXmlImport
         $xml_security = new XML_Security();
         $tracker_xml  = $xml_security->loadFile($filepath);
         if ($tracker_xml) {
+            $event = new CreateTrackerFromXMLEvent($project, $tracker_xml);
+            $this->event_manager->processEvent($event);
+
             return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name);
         }
     }

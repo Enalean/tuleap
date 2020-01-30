@@ -65,7 +65,11 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
 
     public function saveObject(Transition_PostAction $post_action)
     {
-        //Does nothing
+        $to_transition_id = (int) $post_action->getTransition()->getId();
+
+        $this->add_to_top_backlog_post_action_dao->createPostActionForTransitionId(
+            $to_transition_id
+        );
     }
 
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
@@ -86,6 +90,10 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
 
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
-        //Does nothing
+        return new AddToTopBacklog(
+            $transition,
+            0,
+            $this->unplanned_artifacts_adder
+        );
     }
 }

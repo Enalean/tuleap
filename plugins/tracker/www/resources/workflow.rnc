@@ -68,7 +68,8 @@ advancedActions =
     }* &
     element postaction_ci_build {
         attribute job_url { xsd:string }
-    }*
+    }* &
+    element postaction_add_to_top_backlog { empty }?
 
 preConditionsContent =
     (
