@@ -32,6 +32,7 @@ use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
+use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\SystemEventRunnerInterface;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
@@ -546,17 +547,10 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      */
     private function assertXMLisValid(SimpleXMLElement $xml_element): void
     {
-        $error  = false;
-        $params = [
-            'xml_content' => $xml_element,
-            'error'       => &$error,
-        ];
-        $this->event_manager->processEvent(
-            Event::IMPORT_XML_IS_PROJECT_VALID,
-            $params
-        );
+        $event = new ProjectXMLImportPreChecksEvent($xml_element);
+        $this->event_manager->processEvent($event);
 
-        if ($params['error']) {
+        if ($event->isXmlElementInError()) {
             throw new ImportNotValidException();
         }
     }

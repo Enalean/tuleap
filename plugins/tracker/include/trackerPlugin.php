@@ -37,6 +37,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
+use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -210,7 +211,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
         $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
         $this->addHook(Event::IMPORT_XML_PROJECT);
-        $this->addHook(Event::IMPORT_XML_IS_PROJECT_VALID);
+        $this->addHook(ProjectXMLImportPreChecksEvent::NAME);
         $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->addHook('plugin_statistics_service_usage');
@@ -1041,10 +1042,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $import_spotter->endImport();
     }
 
-    public function import_xml_is_project_valid($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function projectXMLImportPreChecksEvent(ProjectXMLImportPreChecksEvent $event): void
     {
-        if (! $this->checkNaturesExistsOnPlateform($params['xml_content'])) {
-            $params['error'] = true;
+        if (! $this->checkNaturesExistsOnPlateform($event->getXmlElement())) {
+            $event->setXmlElementIsInError();
         }
     }
 
