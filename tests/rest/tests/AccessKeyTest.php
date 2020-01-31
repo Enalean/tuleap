@@ -87,6 +87,28 @@ class AccessKeyTest extends RestBase
         $this->assertEmpty($this->getAccessKeys());
     }
 
+    public function testAccessKeyInformationRetrieval(): void
+    {
+        $access_key_identifier = $this->createAccessKey();
+
+        $request = $this->client->get('access_keys/self');
+        $request->setHeader('X-Auth-AccessKey', $access_key_identifier);
+        $response = $request->send();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $access_key_self = $response->json();
+
+        $response = $this->getResponse(
+            $this->client->get(
+                'access_keys/' . urlencode((string) $access_key_self['id'])
+            )
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals($access_key_self, $response->json());
+
+        $this->revokeAccessKeys([$access_key_self]);
+    }
+
     public function testAccessKeyCannotBeCreatedWithoutSpecifyingAScope(): void
     {
         $body_content = json_encode(
