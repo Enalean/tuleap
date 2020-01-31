@@ -130,6 +130,7 @@ use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
+use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
@@ -260,6 +261,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(GetPostActionShortNameFromXmlTagNameEvent::NAME);
             $this->addHook(CreateTrackerFromXMLEvent::NAME);
             $this->addHook(ProjectXMLImportPreChecksEvent::NAME);
+            $this->addHook(GetExternalPostActionPluginsEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2279,5 +2281,17 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         } catch (ProjectNotUsingExplicitBacklogException $exception) {
             $event->setXmlElementIsInError();
         }
+    }
+
+    public function getExternalPostActionPluginsEvent(GetExternalPostActionPluginsEvent $event): void
+    {
+        $is_agile_dashboard_used  = $this->isAllowed($event->getProject()->getGroupId());
+        $is_explicit_backlog_used = (new ExplicitBacklogDao())->isProjectUsingExplicitBacklog(
+            $event->getProject()->getGroupId()
+        );
+        if (!$is_agile_dashboard_used || !$is_explicit_backlog_used) {
+            return;
+        }
+        $event->addServiceNameUsed('agile_dashboard');
     }
 }

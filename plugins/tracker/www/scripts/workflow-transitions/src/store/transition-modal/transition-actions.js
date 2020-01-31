@@ -32,7 +32,8 @@ export {
     loadTransition,
     loadUserGroupsIfNotCached,
     loadPostActions,
-    saveTransitionRules
+    saveTransitionRules,
+    setUsedServiceName
 };
 
 async function showTransitionConfigurationModal({ dispatch, commit }, transition) {
@@ -93,4 +94,8 @@ async function saveTransitionRules({ commit, state, getters }) {
     } finally {
         commit("endModalSave");
     }
+}
+
+function setUsedServiceName({ commit }, used_service_name) {
+    commit("setUsedServiceName", used_service_name);
 }

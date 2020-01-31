@@ -82,6 +82,10 @@ export default {
         trackerId: {
             type: Number,
             mandatory: true
+        },
+        used_services_names: {
+            type: Array,
+            mandatory: true
         }
     },
 
@@ -111,6 +115,7 @@ export default {
 
     mounted() {
         this.$store.dispatch("loadTracker", this.trackerId);
+        this.$store.dispatch("transitionModal/setUsedServiceName", this.used_services_names);
     }
 };
 </script>

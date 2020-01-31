@@ -1,5 +1,5 @@
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2020-present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -36,6 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const service_name_list = vue_mount_point.dataset.usedServicesNames;
+    if (!service_name_list) {
+        return;
+    }
+    const used_services_names = JSON.parse(service_name_list);
+
     Vue.use(Vuex);
     Vue.use(GettextPlugin, {
         translations: {
@@ -54,6 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     new RootComponent({
         store,
-        propsData: { trackerId }
+        propsData: { trackerId, used_services_names }
     }).$mount(vue_mount_point);
 });

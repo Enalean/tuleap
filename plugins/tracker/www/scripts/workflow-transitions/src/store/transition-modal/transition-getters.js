@@ -46,3 +46,7 @@ function set_value_action_fields(state, getters, root_state) {
     });
     return fields;
 }
+
+export function is_agile_dashboard_used(state) {
+    return state.used_services_names.indexOf("agile_dashboard") !== -1;
+}

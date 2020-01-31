@@ -25,6 +25,12 @@ msgstr "Ajouter une action"
 msgid "Add another action"
 msgstr "Ajouter une nouvelle action"
 
+msgid "Add to the Top Backlog"
+msgstr "Ajouter à la Planification Générale"
+
+msgid "Add to the Top Backlog (already used)"
+msgstr "Ajouter à la Plannification Générale (déjà utilisé)"
+
 msgid "Advanced configuration is incompatible with this post-action"
 msgstr "La configuration avancée est incompatible avec cette post-action"
 
@@ -240,6 +246,9 @@ msgstr "Passer à la configuration avancée"
 
 msgid "Switch to simple configuration"
 msgstr "Passer à la configuration simple"
+
+msgid "The artifact is automatically added to the Top Backlog."
+msgstr "L'artéfact est automatiquement ajouté au  Planification Générale"
 
 msgid "The field on which the transitions are based has no selectable value"
 msgstr ""

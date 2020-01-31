@@ -23,6 +23,7 @@ import localVue from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 import PostAction from "./PostAction.vue";
 import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import AddToBacklogPostActionOption from "../Externals/AddToBacklogPostActionOption.vue";
 
 describe("PostAction", () => {
     let store;
@@ -131,5 +132,12 @@ describe("PostAction", () => {
         store.state.transitionModal.is_modal_save_running = true;
         const post_action_type_select = wrapper.find("[data-test=post-action-type-select]");
         expect(post_action_type_select.attributes("disabled")).toBeTruthy();
+    });
+
+    describe("Spawning of the component", () => {
+        it("displays the content of the PostAction component", () => {
+            expect(wrapper.contains("[data-test=post-action-action-card]")).toBe(true);
+            expect(wrapper.contains(AddToBacklogPostActionOption)).toBe(true);
+        });
     });
 });

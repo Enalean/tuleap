@@ -57,7 +57,8 @@ describe("SetValueAction", () => {
                 "transitionModal/set_value_action_fields": [date_field, int_field, float_field],
                 "transitionModal/post_actions": [],
                 current_workflow_field: create("field", { field_id: 455, type: "sb" }),
-                is_workflow_advanced: false
+                is_workflow_advanced: false,
+                "transitionModal/is_agile_dashboard_used": false
             }
         };
 

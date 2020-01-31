@@ -25,9 +25,13 @@ const POST_ACTION_TYPE = {
     HIDDEN_FIELDSETS: "hidden_fieldsets"
 };
 
+const EXTERNAL_POST_ACTION_TYPE = {
+    ADD_TO_BACKLOG: "add_to_backlog"
+};
+
 const DATE_FIELD_VALUE = {
     CLEAR: "",
     CURRENT: "current"
 };
 
-export { POST_ACTION_TYPE, DATE_FIELD_VALUE };
+export { POST_ACTION_TYPE, DATE_FIELD_VALUE, EXTERNAL_POST_ACTION_TYPE };
