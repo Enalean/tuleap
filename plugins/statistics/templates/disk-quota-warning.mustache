@@ -17,12 +17,12 @@
                 {{> csrf_token_input }}
             {{/ csrf_token }}
             <div class="tlp-form-element">
-                <label class="tlp-label" for="subject">{{ subject_label }}</label>
-                <input class="disk-quota-message-label tlp-input" type="text" id="subject" name="subject" value="{{ subject_content }}" required/>
+                <label class="tlp-label" for="subject_{{ project_id }}">{{ subject_label }}</label>
+                <input class="disk-quota-message-label tlp-input" type="text" id="subject_{{ project_id }}" name="subject" value="{{ subject_content }}" required/>
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="editor_{{ project_id }}">{{ body_label }}</label>
-                <textarea class="tlp-textarea project-over-quota-massmail-body" id="editor_{{ project_id }}" rows="10" name="body_{{ project_id }}">{{ body_content }}</textarea>
+                <textarea class="tlp-textarea project-over-quota-massmail-body" id="editor_{{ project_id }}" rows="10" name="body">{{ body_content }}</textarea>
             </div>
         </div>
         <div class="tlp-modal-footer">
