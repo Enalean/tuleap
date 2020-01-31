@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-label-color: #666666;
+$tlp-label-color: darken($tlp-ui-dimmed, 3.5%);
 $tlp-form-element-font-size: 14px;
 $tlp-form-element-height: 38px;
 $tlp-form-element-padding-horizontal: 12px;
@@ -28,9 +28,9 @@ $tlp-form-element-large-font-size: 18px;
 $tlp-form-element-large-height: 46px;
 $tlp-form-element-large-padding-horizontal: 16px;
 $tlp-form-element-border-radius: 3px;
-$tlp-form-element-border-color: #cccccc;
-$tlp-form-element-background: #ffffff;
-$tlp-form-element-placeholder-color: #bbbbbb;
+$tlp-form-element-border-color: darken($tlp-ui-border-dark, 5%);
+$tlp-form-element-background: $tlp-ui-white;
+$tlp-form-element-placeholder-color: darken($tlp-ui-border-dark, 10%);
 $tlp-form-element-border-transition-duration: 150ms;
 
 $tlp-form-element-select-background-size: 8px;
