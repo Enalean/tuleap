@@ -34,7 +34,6 @@
             v-bind:required="is_description_required"
             v-on:input="$emit('input', $event.target.value)"
             data-test="project-description"
-            cols="75"
         />
     </div>
 </template>

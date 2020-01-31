@@ -31,6 +31,8 @@ $title-margin-left: $illustration-width + $illustration-spacing;
 }
 
 .project-registration-content {
+    display: flex;
+    justify-content: center;
     max-width: 1400px;
     margin: 0 auto;
 }

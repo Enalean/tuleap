@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "./type";
+import { DataFormat } from "tlp";
 
-const state: State = {
-    tuleap_templates: [],
-    selected_tuleap_template: null,
-    selected_company_template: null,
-    are_restricted_users_allowed: false,
-    are_anonymous_allowed: false,
-    project_default_visibility: "",
-    error: null,
-    is_creating_project: false,
-    is_project_approval_required: false,
-    trove_categories: [],
-    is_description_required: false,
-    project_fields: [],
-    company_templates: [],
-    default_project_template: null,
-    company_name: ""
-};
-
-export default state;
+export interface VisibilityForVisibilitySelector extends DataFormat {
+    text: string;
+    element: HTMLOptionElement;
+}
