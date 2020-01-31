@@ -29,10 +29,6 @@ export function findClosestDraggable(
     element: Node
 ): HTMLElement | null {
     let current_element: Node | null = element;
-    const handle = current_element;
-    if (!(handle instanceof HTMLElement) || options.isInvalidDragHandle(handle)) {
-        return null;
-    }
     do {
         if (current_element instanceof HTMLElement && options.isDraggable(current_element)) {
             return current_element;
