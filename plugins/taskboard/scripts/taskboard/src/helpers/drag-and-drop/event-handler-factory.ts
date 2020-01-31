@@ -44,6 +44,12 @@ export function dragStartFactory(
             // Dropzones cannot also be Draggables
             return;
         }
+        if (options.isInvalidDragHandle(element)) {
+            // Prevent dragging invalid handles, even when they would be draggable (for example links)
+            event.preventDefault();
+            return;
+        }
+
         const closest_draggable = findClosestDraggable(options, element);
         if (closest_draggable === null) {
             return;

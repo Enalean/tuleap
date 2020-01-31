@@ -44,11 +44,7 @@ describe(`dom-manipulation`, () => {
 
     describe(`findClosestDraggable()`, () => {
         it(`when element is not an HTMLElement and has no parent, it will return null`, () => {
-            const options = ({
-                isInvalidDragHandle() {
-                    return true;
-                }
-            } as unknown) as DrekkenovInitOptions;
+            const options = {} as DrekkenovInitOptions;
             const element = doc.createTextNode("I am a text node");
 
             const closest_draggable = findClosestDraggable(options, element);
@@ -56,26 +52,10 @@ describe(`dom-manipulation`, () => {
             expect(closest_draggable).toBeNull();
         });
 
-        it(`when element is an HTMLElement but is an invalid handle, it will return null`, () => {
-            const options = ({
-                isInvalidDragHandle() {
-                    return true;
-                }
-            } as unknown) as DrekkenovInitOptions;
-            const element = doc.createElement("div");
-
-            const closest_draggable = findClosestDraggable(options, element);
-
-            expect(closest_draggable).toBeNull();
-        });
-
-        it(`when element is an HTMLElement and a valid handle
+        it(`when element is an HTMLElement
             but is not a draggable and has no parent,
             it will return null`, () => {
             const options = ({
-                isInvalidDragHandle() {
-                    return false;
-                },
                 isDraggable() {
                     return false;
                 }
@@ -87,13 +67,10 @@ describe(`dom-manipulation`, () => {
             expect(closest_draggable).toBeNull();
         });
 
-        it(`when element is an HTMLElement and a valid handle
+        it(`when element is an HTMLElement
             and is a draggable,
             it will return element`, () => {
             const options = ({
-                isInvalidDragHandle() {
-                    return false;
-                },
                 isDraggable() {
                     return true;
                 }
@@ -111,9 +88,6 @@ describe(`dom-manipulation`, () => {
             const child = doc.createElement("div");
             parent.append(child);
             const options = ({
-                isInvalidDragHandle() {
-                    return false;
-                },
                 isDraggable(element: HTMLElement): boolean {
                     return element === parent;
                 }
@@ -131,9 +105,6 @@ describe(`dom-manipulation`, () => {
             parent.append(child);
             grandpa.append(parent);
             const options = ({
-                isInvalidDragHandle() {
-                    return false;
-                },
                 isDraggable(element: HTMLElement): boolean {
                     return element === grandpa;
                 }

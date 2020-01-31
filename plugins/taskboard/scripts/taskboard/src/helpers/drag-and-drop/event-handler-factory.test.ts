@@ -37,6 +37,7 @@ describe(`event-handler-factory`, () => {
 
         beforeEach(() => {
             options = ({
+                isInvalidDragHandle: jest.fn(),
                 isDropZone: jest.fn(),
                 onDragStart: jest.fn()
             } as unknown) as DrekkenovInitOptions;
@@ -72,6 +73,23 @@ describe(`event-handler-factory`, () => {
             dragStartHandler(event);
 
             expect(state.startDrag).not.toHaveBeenCalled();
+        });
+
+        it(`when the event target is an invalid drag handle,
+            it prevents the default handler to forbid dragging
+            so that links that are invalid handles won't be draggable`, () => {
+            const target = doc.createElement("div");
+            jest.spyOn(options, "isInvalidDragHandle").mockReturnValue(true);
+            const event = ({
+                dataTransfer: {},
+                target,
+                preventDefault: jest.fn()
+            } as unknown) as DragEvent;
+
+            dragStartHandler(event);
+
+            expect(state.startDrag).not.toHaveBeenCalled();
+            expect(event.preventDefault).toHaveBeenCalled();
         });
 
         it(`when the event target has no draggable ancestor, it does nothing`, () => {
