@@ -176,3 +176,14 @@ export interface XYSizeElement {
     x: number;
     y: number;
 }
+
+export interface ArtifactMilestone {
+    values: [ArtifactMilestoneChartBurndown];
+}
+
+export interface ArtifactMilestoneChartBurndown {
+    value: BurndownData;
+    field_id: number;
+    label: string;
+    type: "burndown";
+}
