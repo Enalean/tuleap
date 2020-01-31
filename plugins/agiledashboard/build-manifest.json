@@ -8,7 +8,6 @@
         "www/js",
         "www/js/kanban",
         "www/js/planning-v2",
-        "scripts/agiledashboard-workflow/",
         "themes"
     ],
     "gettext-js": {
@@ -38,10 +37,6 @@
         "permissions-per-group": {
             "src": "www/js/permissions-per-group/src/",
             "po": "www/js/permissions-per-group/po"
-        },
-        "agiledasboard-workflow": {
-            "src": "scripts/agiledashboard-workflow/src/",
-            "po": "scripts/agiledashboard-workflow/po"
         }
     }
 }
