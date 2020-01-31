@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var ckeditor_selector = document.querySelectorAll(".project-over-quota-massmail-body");
 
     [].forEach.call(ckeditor_selector, function(ckeditor_element) {
-        CKEDITOR.replace(ckeditor_element.name, {
+        CKEDITOR.replace(ckeditor_element.id, {
             toolbar: tuleap.ckeditor.toolbar
         });
     });
