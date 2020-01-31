@@ -64,11 +64,9 @@
             display: none;
         }
 
-        > .taskboard-card-content
-        > .taskboard-card-info {
+        > .taskboard-card-content > .taskboard-card-info {
             margin: 0 5px 0 0;
         }
-
     }
 
     &.taskboard-card-parent {
@@ -122,24 +120,8 @@
     align-items: flex-end;
 }
 
-.taskboard-cell-solo-card {
-    > .taskboard-card-parent {
-        z-index: 2;
-    }
-
-    &.drek-ghost {
-        > .taskboard-card-remaining-effort {
-            z-index: 0;
-            transform: translate(0, -40px);
-            transition: transform 100ms ease-in-out;
-        }
-    }
-
-    > .taskboard-card-remaining-effort {
-        z-index: 1;
-        transform: translate(0, 0);
-        transition: transform 100ms ease-in-out;
-    }
+.taskboard-cell-solo-card.drek-ghost > .taskboard-card-remaining-effort {
+    display: none;
 }
 
 .taskboard-cell-parent-card > .taskboard-card-parent {
@@ -191,7 +173,6 @@ a.taskboard-card-xref {
     line-height: 18px;
     word-break: break-word;
 }
-
 
 .taskboard-card-accessibility {
     position: absolute;
@@ -269,12 +250,11 @@ a.taskboard-card-xref {
         top: 50%;
         margin: $tlp-spacing 0;
 
-        >.taskboard-drop-not-accepted-icon {
+        > .taskboard-drop-not-accepted-icon {
             font-size: 2em;
         }
     }
 }
-
 
 .taskboard-drop-not-accepted {
     display: flex;
