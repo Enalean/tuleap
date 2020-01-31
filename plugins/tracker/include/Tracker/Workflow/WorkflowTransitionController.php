@@ -19,18 +19,16 @@
 */
 namespace Tuleap\Tracker\Workflow;
 
-use EventManager;
 use HTTPRequest;
 use TemplateRendererFactory;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Workflow\PostAction\ExternalWorkflowAssetsPathsRetrieverEvent;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssAsset;
 
 class WorkflowTransitionController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -41,27 +39,15 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
      * @var WorkflowMenuTabPresenterBuilder
      */
     private $presenter_builder;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
 
     public function __construct(
         TrackerFactory $tracker_factory,
         TrackerManager $tracker_manager,
-        WorkflowMenuTabPresenterBuilder $presenter_builder,
-        EventManager $event_manager,
-        \ProjectManager $project_manager
+        WorkflowMenuTabPresenterBuilder $presenter_builder
     ) {
-        $this->tracker_factory   = $tracker_factory;
-        $this->tracker_manager   = $tracker_manager;
-        $this->presenter_builder = $presenter_builder;
-        $this->event_manager     = $event_manager;
-        $this->project_manager = $project_manager;
+        $this->tracker_factory    = $tracker_factory;
+        $this->tracker_manager    = $tracker_manager;
+        $this->presenter_builder  = $presenter_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -83,11 +69,6 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         );
         $layout->includeFooterJavascriptFile($javascriptAssets->getFileURL('tracker-workflow-transitions.js'));
 
-        $event = new ExternalWorkflowAssetsPathsRetrieverEvent(
-            $this->project_manager->getProject($tracker->getGroupId())
-        );
-        $this->event_manager->processEvent($event);
-
         $cssAssets = new IncludeAssets(
             __DIR__ . '/../../../../../src/www/assets/tracker/themes',
             '/assets/tracker/themes'
@@ -101,8 +82,8 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
             ['main_classes' => ['fluid-main']]
         );
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/workflow-transitions');
-        $presenter = $this->presenter_builder->build($tracker, WorkflowMenuTabPresenterBuilder::TAB_TRANSITIONS, $event->getCallbacks());
+        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/workflow-transitions');
+        $presenter = $this->presenter_builder->build($tracker, WorkflowMenuTabPresenterBuilder::TAB_TRANSITIONS);
         $renderer->renderToPage('workflow-transitions', $presenter);
 
         $tracker->displayFooter($this->tracker_manager);
