@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap tv3 to tv5 migration system events
+
+[Service]
+Type=simple
+User=codendiadm
+ExecStart=/usr/bin/tuleap process-system-event tv3_tv5_migration
+
+[Install]
+WantedBy=multi-user.target

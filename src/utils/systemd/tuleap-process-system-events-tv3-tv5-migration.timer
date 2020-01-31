@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap tv3 to tv5 migration system events
+
+[Timer]
+OnCalendar=*:*:00
+RandomizedDelaySec=1min
+Unit=tuleap-process-system-events-tv3-tv5-migration.service
+
+[Install]
+WantedBy=timers.target

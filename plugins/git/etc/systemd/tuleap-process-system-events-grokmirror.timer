@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap git Grokmirror system events
+
+[Timer]
+OnCalendar=*:*:00
+RandomizedDelaySec=1min
+Unit=tuleap-process-system-events-grokmirror.service
+
+[Install]
+WantedBy=timers.target
