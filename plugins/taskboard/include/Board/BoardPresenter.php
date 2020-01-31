@@ -55,10 +55,6 @@ class BoardPresenter
     /**
      * @var bool
      */
-    public $is_ie_11;
-    /**
-     * @var bool
-     */
     public $are_closed_items_displayed;
 
     public function __construct(
@@ -67,8 +63,7 @@ class BoardPresenter
         Planning_Milestone $milestone,
         array $columns,
         array $tracker_structures,
-        bool $has_content,
-        bool $is_ie_11
+        bool $has_content
     ) {
         $project = $milestone->getProject();
 
@@ -86,7 +81,6 @@ class BoardPresenter
         $this->json_encoded_columns  = (string) json_encode($columns, JSON_THROW_ON_ERROR);
         $this->json_encoded_trackers = (string) json_encode($tracker_structures, JSON_THROW_ON_ERROR);
         $this->has_content           = $has_content;
-        $this->is_ie_11              = $is_ie_11;
 
         $hide_preference_name             = 'plugin_taskboard_hide_closed_items_' . $milestone->getArtifactId();
         $this->are_closed_items_displayed = empty($user->getPreference($hide_preference_name));
