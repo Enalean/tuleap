@@ -32,9 +32,6 @@ setup_tuleap() {
 	-e 's#/home/groups##' \
 	> /etc/tuleap/conf/local.inc
 
-	cp /usr/share/tuleap/src/utils/svn/Tuleap.pm /usr/share/perl5/vendor_perl/Apache/Tuleap.pm
-	install -m 00440 -o root -g root /usr/share/tuleap/src/utils/sudoers.d/tuleap_fileforge /etc/sudoers.d/tuleap_fileforge
-
 	install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
 	ln -s /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php /usr/bin/tuleap-cfg
 
