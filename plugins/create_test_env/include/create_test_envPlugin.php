@@ -21,9 +21,11 @@
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\CreateTestEnv\ActivitiesAnalytics\DisplayUserActivities;
 use Tuleap\CreateTestEnv\ActivityLogger\ActivityLoggerDao;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\CreateTestEnv\ActivitiesAnalytics\ListActivitiesController;
 use Tuleap\CreateTestEnv\NotificationBotDao;
 use Tuleap\CreateTestEnv\NotificationBotIndexController;
 use Tuleap\CreateTestEnv\NotificationBotSaveController;
@@ -33,8 +35,10 @@ use Tuleap\Project\ServiceAccessEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CreateTestEnv\Notifier;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
+use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\Admin\AdminPageRenderer;
@@ -80,6 +84,8 @@ class create_test_envPlugin extends Plugin
         $this->addHook(ArtifactUpdated::NAME);
         $this->addHook(ServiceAccessEvent::NAME);
 
+        $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
+
         $this->addHook('codendi_daily_start');
 
         return parent::getHooksAndCallbacks();
@@ -119,11 +125,24 @@ class create_test_envPlugin extends Plugin
         );
     }
 
+    public function routeGetActivities(): DispatchableWithRequest
+    {
+        return new ListActivitiesController(
+            TemplateRendererFactory::build(),
+            new ActivityLoggerDao(),
+            new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao()
+            )
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
             $r->get('/notification-bot', $this->getRouteHandler('routeGetNotificationBot'));
             $r->post('/notification-bot', $this->getRouteHandler('routePostNotificationBot'));
+
+            $r->get('/daily-activities', $this->getRouteHandler('routeGetActivities'));
         });
     }
 
@@ -259,5 +278,10 @@ class create_test_envPlugin extends Plugin
     {
         $str_value = $this->getPluginInfo()->getPropertyValueForName('create_test_env_daily_snapshot_email');
         return array_filter(array_map('trim', explode(',', $str_value)));
+    }
+
+    public function get_permission_delegation(array &$params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $params['plugins_permission'][DisplayUserActivities::ID] = new DisplayUserActivities();
     }
 }
