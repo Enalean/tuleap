@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch } from "../../../../../../src/www/themes/common/tlp/src/js/fetch-wrapper";
-import { initGettext } from "../../../../../../src/www/scripts/tuleap/gettext/gettext-init";
-import { addFeedback, clearAllFeedbacks } from "../../../../../../src/www/scripts/tuleap/feedback";
+import { patch } from "../../../../../src/www/themes/common/tlp/src/js/fetch-wrapper";
+import { initGettext } from "../../../../../src/www/scripts/tuleap/gettext/gettext-init";
+import { addFeedback, clearAllFeedbacks } from "../../../../../src/www/scripts/tuleap/feedback";
 
 export function initArtifactAdditionalAction(mount_point: Document): void {
     const action_button = mount_point.getElementById("artifact-explicit-backlog-action");

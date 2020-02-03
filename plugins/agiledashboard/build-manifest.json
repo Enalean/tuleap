@@ -8,6 +8,7 @@
         "www/js",
         "www/js/kanban",
         "www/js/planning-v2",
+        "scripts",
         "themes"
     ],
     "gettext-js": {
@@ -18,8 +19,8 @@
     },
     "gettext-ts": {
         "artifact-additional-action": {
-            "src": "www/js/artifact-additional-action/src",
-            "po": "www/js/artifact-additional-action/po"
+            "src": "scripts/artifact-additional-action/src",
+            "po": "scripts/artifact-additional-action/po"
         }
     },
     "gettext-angularjs": {

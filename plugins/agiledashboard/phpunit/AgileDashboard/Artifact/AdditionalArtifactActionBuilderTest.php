@@ -32,7 +32,7 @@ use Tracker;
 use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\ScriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 
 final class AdditionalArtifactActionBuilderTest extends TestCase
@@ -85,9 +85,9 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
     private $planned_artifact_dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ScriptAsset
      */
-    private $include_assets;
+    private $script_asset;
 
     protected function setUp(): void
     {
@@ -98,7 +98,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
         $this->planning_permissions_manager   = Mockery::mock(PlanningPermissionsManager::class);
         $this->artifacts_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->planned_artifact_dao           = Mockery::mock(PlannedArtifactDao::class);
-        $this->include_assets                 = Mockery::mock(IncludeAssets::class);
+        $this->script_asset                   = Mockery::mock(ScriptAsset::class);
 
         $this->builder = new AdditionalArtifactActionBuilder(
             $this->explicit_backlog_dao,
@@ -106,7 +106,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             $this->planning_permissions_manager,
             $this->artifacts_explicit_backlog_dao,
             $this->planned_artifact_dao,
-            $this->include_assets
+            $this->script_asset
         );
 
         $project = Mockery::mock(Project::class);
@@ -253,7 +253,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
         $this->artifacts_explicit_backlog_dao->shouldReceive('isArtifactInTopBacklogOfProject')
             ->once();
 
-        $this->include_assets->shouldReceive('getFileURL')->once()->andReturn('url_of_file.js');
+        $this->script_asset->shouldReceive('getFileURL')->once()->andReturn('url_of_file.js');
 
         $this->assertInstanceOf(
             AdditionalButtonAction::class,

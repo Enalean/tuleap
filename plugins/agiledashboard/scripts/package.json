@@ -1,0 +1,22 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/agiledashboard",
+  "version": "0.0.1",
+  "homepage": "https://www.tuleap.org",
+  "license": "MIT",
+  "private": true,
+  "config": {
+    "bin": "../../../node_modules/.bin"
+  },
+  "dependencies": {
+    "node-gettext": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node-gettext": "^2.0.1"
+  },
+  "scripts": {
+    "build": "rm -rf ../../../src/www/assets/agiledashboard/js/ && $npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "test": "BABEL_ENV=test $npm_package_config_bin/jest --config=jest.projects.config.js"
+  }
+}
