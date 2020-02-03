@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction;
 
+use Tracker;
 use Tuleap\Event\Dispatchable;
 
 class GetExternalPostActionPluginsEvent implements Dispatchable
@@ -30,17 +31,18 @@ class GetExternalPostActionPluginsEvent implements Dispatchable
     public const NAME = 'getExternalPostActionPluginsEvent';
 
     /**
-     * @var \Project
-     */
-    private $project;
-    /**
      * @var string[]
      */
     private $service_name_used = [];
 
-    public function __construct(\Project $project)
+    /**
+     * @var Tracker
+     */
+    private $tracker;
+
+    public function __construct(Tracker $tracker)
     {
-        $this->project = $project;
+        $this->tracker = $tracker;
     }
 
     public function addServiceNameUsed(string $service_name): void
@@ -54,11 +56,9 @@ class GetExternalPostActionPluginsEvent implements Dispatchable
     {
         return $this->service_name_used;
     }
-    /**
-     * @return \Project
-     */
-    public function getProject(): \Project
+
+    public function getTracker(): Tracker
     {
-        return $this->project;
+        return $this->tracker;
     }
 }

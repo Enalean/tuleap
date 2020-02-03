@@ -33,6 +33,7 @@ use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\layout\ScriptAsset;
+use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 
 final class AdditionalArtifactActionBuilderTest extends TestCase
@@ -89,6 +90,11 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
      */
     private $script_asset;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningTrackerBacklogChecker
+     */
+    private $planning_tracker_backlog_checker;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -98,7 +104,8 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
         $this->planning_permissions_manager   = Mockery::mock(PlanningPermissionsManager::class);
         $this->artifacts_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->planned_artifact_dao           = Mockery::mock(PlannedArtifactDao::class);
-        $this->script_asset                   = Mockery::mock(ScriptAsset::class);
+        $this->script_asset                    = Mockery::mock(ScriptAsset::class);
+        $this->planning_tracker_backlog_checker = Mockery::mock(PlanningTrackerBacklogChecker::class);
 
         $this->builder = new AdditionalArtifactActionBuilder(
             $this->explicit_backlog_dao,
@@ -106,7 +113,8 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             $this->planning_permissions_manager,
             $this->artifacts_explicit_backlog_dao,
             $this->planned_artifact_dao,
-            $this->script_asset
+            $this->script_asset,
+            $this->planning_tracker_backlog_checker
         );
 
         $project = Mockery::mock(Project::class);
@@ -164,9 +172,9 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             ->with($this->user, 101)
             ->andReturn($this->root_planning);
 
-        $this->root_planning->shouldReceive('getBacklogTrackersIds')
+        $this->planning_tracker_backlog_checker->shouldReceive('isTrackerBacklogOfProjectPlanning')
             ->once()
-            ->andReturn([149]);
+            ->andReturnFalse();
 
         $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
@@ -183,9 +191,9 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             ->with($this->user, 101)
             ->andReturn($this->root_planning);
 
-        $this->root_planning->shouldReceive('getBacklogTrackersIds')
+        $this->planning_tracker_backlog_checker->shouldReceive('isTrackerBacklogOfProjectPlanning')
             ->once()
-            ->andReturn([148]);
+            ->andReturnTrue();
 
         $this->planning_permissions_manager->shouldReceive('userHasPermissionOnPlanning')
             ->once()
@@ -207,9 +215,9 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             ->with($this->user, 101)
             ->andReturn($this->root_planning);
 
-        $this->root_planning->shouldReceive('getBacklogTrackersIds')
+        $this->planning_tracker_backlog_checker->shouldReceive('isTrackerBacklogOfProjectPlanning')
             ->once()
-            ->andReturn([148]);
+            ->andReturnTrue();
 
         $this->planning_permissions_manager->shouldReceive('userHasPermissionOnPlanning')
             ->once()
@@ -236,9 +244,9 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             ->with($this->user, 101)
             ->andReturn($this->root_planning);
 
-        $this->root_planning->shouldReceive('getBacklogTrackersIds')
+        $this->planning_tracker_backlog_checker->shouldReceive('isTrackerBacklogOfProjectPlanning')
             ->once()
-            ->andReturn([148]);
+            ->andReturnTrue();
 
         $this->planning_permissions_manager->shouldReceive('userHasPermissionOnPlanning')
             ->once()

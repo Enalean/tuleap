@@ -17,6 +17,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
+
 namespace Tuleap\Tracker\Workflow;
 
 use EventManager;
@@ -45,23 +46,17 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
      * @var EventManager
      */
     private $event_manager;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
 
     public function __construct(
         TrackerFactory $tracker_factory,
         TrackerManager $tracker_manager,
         WorkflowMenuTabPresenterBuilder $presenter_builder,
-        EventManager $event_manager,
-        \ProjectManager $project_manager
+        EventManager $event_manager
     ) {
         $this->tracker_factory   = $tracker_factory;
         $this->tracker_manager   = $tracker_manager;
         $this->presenter_builder = $presenter_builder;
         $this->event_manager     = $event_manager;
-        $this->project_manager   = $project_manager;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -86,9 +81,8 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         );
         $layout->includeFooterJavascriptFile($javascriptAssets->getFileURL('tracker-workflow-transitions.js'));
 
-        $event = new GetExternalPostActionPluginsEvent(
-            $this->project_manager->getProject($tracker->getGroupId())
-        );
+        $event = new GetExternalPostActionPluginsEvent($tracker);
+
         $this->event_manager->processEvent($event);
         $cssAssets = new IncludeAssets(
             __DIR__ . '/../../../../../src/www/assets/tracker/themes',

@@ -27,6 +27,7 @@ use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\layout\ScriptAsset;
+use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 
@@ -62,13 +63,19 @@ class AdditionalArtifactActionBuilder
      */
     private $include_assets;
 
+    /**
+     * @var PlanningTrackerBacklogChecker
+     */
+    private $planning_tracker_backlog_checker;
+
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         PlanningFactory $planning_factory,
         PlanningPermissionsManager $planning_permissions_manager,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         PlannedArtifactDao $planned_artifact_dao,
-        ScriptAsset $include_assets
+        ScriptAsset $include_assets,
+        PlanningTrackerBacklogChecker $planning_tracker_backlog_checker
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->planning_factory                  = $planning_factory;
@@ -76,6 +83,7 @@ class AdditionalArtifactActionBuilder
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
         $this->planned_artifact_dao              = $planned_artifact_dao;
         $this->include_assets                    = $include_assets;
+        $this->planning_tracker_backlog_checker  = $planning_tracker_backlog_checker;
     }
 
     public function buildArtifactAction(Tracker_Artifact $artifact, PFUser $user): ?AdditionalButtonAction
@@ -95,7 +103,7 @@ class AdditionalArtifactActionBuilder
             return null;
         }
 
-        if (! in_array($tracker->getId(), $root_planning->getBacklogTrackersIds())) {
+        if (! $this->planning_tracker_backlog_checker->isTrackerBacklogOfProjectPlanning($root_planning, $tracker)) {
             return null;
         }
 
