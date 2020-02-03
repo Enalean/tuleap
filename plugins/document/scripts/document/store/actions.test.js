@@ -2511,18 +2511,6 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("toggleQuickLook", true);
             expect(context.commit).toHaveBeenCalledWith("stopLoadingCurrentlyPreviewedItem");
         });
-
-        it("does not load item if it's already loaded in store", async () => {
-            await toggleQuickLook(context, 100);
-
-            expect(context.commit).not.toHaveBeenCalledWith("beginLoadingCurrentlyPreviewedItem");
-            expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", {
-                id: 100,
-                type: TYPE_FILE
-            });
-            expect(context.commit).toHaveBeenCalledWith("toggleQuickLook", true);
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingCurrentlyPreviewedItem");
-        });
     });
     describe("createNewVersionFromEmpty -", () => {
         let context,
