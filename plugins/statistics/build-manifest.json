@@ -1,4 +1,4 @@
 {
     "name": "statistics",
-    "components": ["www/js", "themes"]
+    "components": ["./"]
 }

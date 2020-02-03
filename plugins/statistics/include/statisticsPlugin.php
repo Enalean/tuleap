@@ -253,11 +253,7 @@ class StatisticsPlugin extends Plugin
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            $css_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/statistics/themes',
-                '/assets/statistics/themes'
-            );
-            echo '<link rel="stylesheet" type="text/css" href="' . $css_assets->getFileURL('style-fp.css') . '" />' . "\n";
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('style-fp.css') . '" />' . "\n";
         }
     }
 
@@ -365,19 +361,16 @@ class StatisticsPlugin extends Plugin
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $variant    = $params['variant'];
-            $css_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/statistics/themes',
-                '/assets/statistics/themes'
-            );
-
-            $params['stylesheets'][] = $css_assets->getFileURL('style-bp-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('style-bp-' . $variant->getName() . '.css');
         }
     }
 
     public function burning_parrot_get_javascript_files(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['javascript_files'][] = $this->getPluginPath() . '/js/admin.js';
+            $ckeditor_assets = new IncludeAssets(__DIR__. '/../../../src/www/assets', '/assets');
+            $params['javascript_files'][] = $ckeditor_assets->getFileURL('ckeditor.js');
+            $params['javascript_files'][] = $this->getAssets()->getFileURL('admin.js');
         }
     }
 
@@ -393,6 +386,14 @@ class StatisticsPlugin extends Plugin
                 $project_quota_manager->getProjectAuthorizedQuota($project->getID()),
                 $disk_usage_manager->returnTotalProjectSize($project->getID())
             )
+        );
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/statistics',
+            '/assets/statistics'
         );
     }
 }

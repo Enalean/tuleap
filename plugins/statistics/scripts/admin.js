@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global tlp:readonly CKEDITOR:readonly tuleap:readonly */
+import * as tlp from "tlp";
+import CKEDITOR from "ckeditor";
+import tuleap from "tuleap";
 
 document.addEventListener("DOMContentLoaded", function() {
     var date_picker_elements = document.querySelectorAll(".tlp-input-date");

@@ -585,6 +585,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/proftpd/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectlinks/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pullrequest/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/statistics/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/statistics/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/themes/
