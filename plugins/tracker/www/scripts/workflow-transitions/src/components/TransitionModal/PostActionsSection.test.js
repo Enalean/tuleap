@@ -153,7 +153,7 @@ describe("PostActionsSection", () => {
                     unique_id: "new_6"
                 },
                 {
-                    type: "add_to_backlog",
+                    type: "add_to_top_backlog",
                     unique_id: "new_10"
                 }
             ];
