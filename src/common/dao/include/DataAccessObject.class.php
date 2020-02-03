@@ -256,6 +256,8 @@ class DataAccessObject
      * @param   string $primary_key the column name of the primary key. Default 'id'
      * @param   string $parent_key the column key used to groups items. Default 'parent_id'
      * @param   string $rank_key the column key used to rank items. Default 'rank'
+     * @param   string|null $parent_group_key
+     * @param   int|null $parent_group_id
      *
      * @deprecated
      *
@@ -263,16 +265,35 @@ class DataAccessObject
      *          value of the new rank of the item. If return 'null' it means
      *          that sth wrong happended.
      */
-    protected function prepareRanking($id, $parent_id, $rank, $primary_key = 'id', $parent_key = 'parent_id', $rank_key = 'rank')
-    {
+    protected function prepareRanking(
+        $id,
+        $parent_id,
+        $rank,
+        $primary_key = 'id',
+        $parent_key = 'parent_id',
+        $rank_key = 'rank',
+        ?string $parent_group_key = null,
+        ?int $parent_group_id = null
+    ) {
         $newRank = null;
+
+        $additional_where_statement = '';
+        if ($parent_group_key !== null && $parent_group_id !== null) {
+            $additional_where_statement = sprintf(
+                ' AND %s = %d',
+                $this->da->quoteSmartSchema($parent_group_key),
+                $parent_group_id
+            );
+        }
 
         // First, check if there is already some items
         $sql = sprintf(
             'SELECT NULL'.
                        ' FROM '. $this->table_name .
-                       ' WHERE '. $parent_key .' = %d',
-            $parent_id
+                       ' WHERE '. $parent_key .' = %d '.
+                       ' %s',
+            $parent_id,
+            $additional_where_statement
         );
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
@@ -299,8 +320,10 @@ class DataAccessObject
                     $sql = sprintf(
                         'SELECT MAX('. $rank_key .')+1 as '. $rank_key .
                                ' FROM '. $this->table_name .
-                               ' WHERE '. $parent_key .' = %d',
-                        $parent_id
+                               ' WHERE '. $parent_key .' = %d '.
+                               ' %s',
+                        $parent_id,
+                        $additional_where_statement
                     );
                     $dar = $this->retrieve($sql);
                     if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
@@ -378,8 +401,10 @@ class DataAccessObject
                     $sql = sprintf(
                         'SELECT MIN('. $rank_key .') as '. $rank_key .
                                ' FROM '. $this->table_name .
-                               ' WHERE '. $parent_key .' = %d',
-                        $parent_id
+                               ' WHERE '. $parent_key .' = %d '.
+                               ' %s',
+                        $parent_id,
+                        $additional_where_statement
                     );
                     $dar = $this->retrieve($sql);
                     if ($dar && !$dar->isError()) {
@@ -399,9 +424,11 @@ class DataAccessObject
                         'UPDATE '. $this->table_name .
                                ' SET '. $rank_key .' = '. $rank_key .' + 1'.
                                ' WHERE '. $parent_key .' = %d'.
-                               '  AND '. $rank_key .' >= %d',
+                               '  AND '. $rank_key .' >= %d '.
+                               ' %s',
                         $parent_id,
-                        $rank
+                        $rank,
+                        $additional_where_statement
                     );
                     $updated = $this->update($sql);
                     if ($updated) {

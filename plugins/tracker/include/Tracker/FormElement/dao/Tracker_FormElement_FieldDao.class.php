@@ -318,7 +318,16 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
 
     public function save($field)
     {
-        $rank = (int)$this->prepareRanking($field->id, $field->parent_id, $field->rank, 'id', 'parent_id');
+        $rank = (int) $this->prepareRanking(
+            $field->id,
+            $field->parent_id,
+            $field->rank,
+            'id',
+            'parent_id',
+            'rank',
+            'tracker_id',
+            (int) $field->tracker_id
+        );
 
         $sql = "UPDATE $this->table_name
                 SET parent_id         = ". $this->da->escapeInt($field->parent_id) .",
@@ -504,7 +513,16 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         if ($force_absolute_ranking) {
             $rank = (int) $rank;
         } else {
-            $rank = (int) $this->prepareRanking(0, $parent_id, $rank, 'id', 'parent_id');
+            $rank = (int) $this->prepareRanking(
+                0,
+                $parent_id,
+                $rank,
+                'id',
+                'parent_id',
+                'rank',
+                'tracker_id',
+                (int) $tracker_id
+            );
         }
         $original_field_id = $this->da->escapeInt($original_field_id);
 
