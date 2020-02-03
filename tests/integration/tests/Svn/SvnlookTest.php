@@ -70,7 +70,7 @@ final class SvnlookTest extends TestCase
 
         $expected = array('/', 'tags/', 'tags/2.0/', 'tags/1.0/');
 
-        $this->assertEquals($expected, $tree);
+        $this->assertEqualsCanonicalizing($expected, $tree);
     }
 
     public function testItGetsHistoryOfAPath(): void
