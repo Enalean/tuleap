@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,7 +45,7 @@ class Common
         if (! file_exists($cert_filepath)) {
             $this->logger->info("Generate self-signed certificate in $cert_filepath");
             $exec = new Exec();
-            $exec->command('openssl req -batch -nodes -x509 -newkey rsa:4096 -keyout '.$key_filepath.' -out '.$cert_filepath.' -days 365 -subj "/C=XX/ST=SomeState/L=SomeCity/O=SomeOrganization/OU=SomeDepartment/CN='.$server_name.'" 2>/dev/null');
+            $exec->command('( cat /etc/pki/tls/openssl.cnf; echo "[SAN]" ; echo "subjectAltName=DNS:'.$server_name.'" ) | openssl req -batch -nodes -x509 -newkey rsa:4096 -keyout '.$key_filepath.' -out '.$cert_filepath.' -days 365 -subj "/C=XX/ST=SomeState/L=SomeCity/O=SomeOrganization/OU=SomeDepartment/CN='.$server_name.'" -extensions SAN -config /dev/stdin 2> /dev/null');
         }
     }
 
