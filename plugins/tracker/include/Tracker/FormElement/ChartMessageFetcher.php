@@ -96,7 +96,7 @@ class ChartMessageFetcher
         }
 
         if ($usage->getUseCapacity()) {
-            $warning_message = $this->fetchMissingFieldWarning(
+            $warning_message = $this->fetchMissingCapacityFieldWarning(
                 $tracker,
                 ChartConfigurationFieldRetriever::CAPACITY_FIELD_NAME,
                 array('int', 'computed')
@@ -125,14 +125,10 @@ class ChartMessageFetcher
         return null;
     }
 
-    /**
-     * @return String
-     */
-    public function fetchMissingFieldWarning(Tracker $tracker, $name, $type)
+    public function fetchMissingCapacityFieldWarning(Tracker $tracker, string $name, array $type): ?string
     {
         if (! $tracker->hasFormElementWithNameAndType($name, $type)) {
-            $key     = "burndown_missing_${name}_warning";
-            $warning = $GLOBALS['Language']->getText('plugin_tracker', $key);
+            $warning = dgettext('tuleap-tracker', 'The tracker doesn\'t have a "capacity" Integer or Computed field or you don\'t have the permission to access it.');
 
             return '<li>' . $warning . '</li>';
         }
