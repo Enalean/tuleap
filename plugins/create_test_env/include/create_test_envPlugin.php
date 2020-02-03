@@ -34,6 +34,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CreateTestEnv\Notifier;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\Admin\AdminPageRenderer;
@@ -76,7 +77,7 @@ class create_test_envPlugin extends Plugin
         $this->addHook(UserConnectionUpdateEvent::NAME);
         $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook(ArtifactCreated::NAME);
-        $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
+        $this->addHook(ArtifactUpdated::NAME);
         $this->addHook(ServiceAccessEvent::NAME);
 
         $this->addHook('codendi_daily_start');
@@ -147,15 +148,14 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Created artifact #".$artifact->getId());
     }
 
-    // @codingStandardsIgnoreLine
-    public function tracker_event_artifact_post_update(array $params)
+    public function trackerArtifactUpdated(ArtifactUpdated $event)
     {
         $request      = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
         if ($current_user->isSuperUser()) {
             return;
         }
-        $artifact     = $params['artifact'];
+        $artifact     = $event->getArtifact();
         $project      = $artifact->getTracker()->getProject();
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Updated artifact #".$artifact->getId());
     }
