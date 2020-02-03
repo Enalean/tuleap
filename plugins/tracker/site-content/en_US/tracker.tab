@@ -1476,7 +1476,6 @@ plugin_tracker_widget_myartifacts	description	List artifacts you have submitted 
 plugin_tracker_widget_myartifacts	no_artifacts	You don't have any </br> artifacts yet
 
 plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field or you have not the permission to modify it, please reconfigure your tracker
-plugin_tracker	burndown_missing_start_date_warning	The tracker doesn't have a "start_date" Date field or you don't have the permission to access it.
 plugin_tracker	burndown_no_linked_artifacts	There are no artifacts linked or those artifacts have no 'remaining_effort' field.
 plugin_tracker	burndown_email_as_of_today	Please note that the image above is rendered in real time so it represents burndown as of today, not as when the email was sent.
 plugin_tracker	unable_to_render_the_chart	Unable to render the chart
