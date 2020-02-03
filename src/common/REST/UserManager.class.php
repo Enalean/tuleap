@@ -19,9 +19,7 @@
 
 namespace Tuleap\REST;
 
-use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
@@ -53,9 +51,9 @@ class UserManager
     private $login_manager;
 
     /**
-     * @var SplitTokenIdentifierTranslator
+     * @var AccessKeyHeaderExtractor
      */
-    private $access_key_identifier_unserializer;
+    private $access_key_header_extractor;
 
     /**
      * @var AccessKeyVerifier
@@ -69,7 +67,6 @@ class UserManager
     public const PHP_HTTP_USER_HEADER  = 'HTTP_X_AUTH_USERID';
 
     public const HTTP_ACCESS_KEY_HEADER     = 'X-Auth-AccessKey';
-    public const PHP_HTTP_ACCESS_KEY_HEADER = 'HTTP_X_AUTH_ACCESSKEY';
 
     /**
      * @var RestReadOnlyAdminUserBuilder
@@ -79,13 +76,13 @@ class UserManager
     public function __construct(
         \UserManager $user_manager,
         User_LoginManager $login_manager,
-        SplitTokenIdentifierTranslator $access_key_identifier_unserializer,
+        AccessKeyHeaderExtractor $access_key_header_extractor,
         AccessKeyVerifier $access_key_verifier,
         RestReadOnlyAdminUserBuilder $read_only_admin_user_builder
     ) {
         $this->user_manager                       = $user_manager;
         $this->login_manager                      = $login_manager;
-        $this->access_key_identifier_unserializer = $access_key_identifier_unserializer;
+        $this->access_key_header_extractor        = $access_key_header_extractor;
         $this->access_key_verifier                = $access_key_verifier;
         $this->read_only_admin_user_builder       = $read_only_admin_user_builder;
     }
@@ -103,7 +100,7 @@ class UserManager
                 new User_PasswordExpirationChecker(),
                 $password_handler
             ),
-            new AccessKeySerializer(),
+            new AccessKeyHeaderExtractor(new AccessKeySerializer(), $_SERVER),
             new AccessKeyVerifier(
                 new AccessKeyDAO(),
                 new SplitTokenVerificationStringHasher(),
@@ -188,12 +185,9 @@ class UserManager
         return null;
     }
 
-    /**
-     * @return bool
-     */
-    private function isTryingToUseAccessKeyAuthentication()
+    private function isTryingToUseAccessKeyAuthentication(): bool
     {
-        return isset($_SERVER[self::PHP_HTTP_ACCESS_KEY_HEADER]);
+        return $this->access_key_header_extractor->isAccessKeyHeaderPresent();
     }
 
     /**
@@ -204,14 +198,12 @@ class UserManager
         return isset($_SERVER[self::PHP_HTTP_TOKEN_HEADER]);
     }
 
-    private function getUserFromAccessKey()
+    private function getUserFromAccessKey(): \PFUser
     {
-        if (! isset($_SERVER[self::PHP_HTTP_ACCESS_KEY_HEADER])) {
+        $access_key = $this->access_key_header_extractor->extractAccessKey();
+        if ($access_key === null) {
             throw new NoAuthenticationHeadersException(self::HTTP_ACCESS_KEY_HEADER);
         }
-
-        $access_key_identifier = $_SERVER[self::PHP_HTTP_ACCESS_KEY_HEADER];
-        $access_key            = $this->access_key_identifier_unserializer->getSplitToken(new ConcealedString($access_key_identifier));
 
         $request = \HTTPRequest::instance();
         return $this->access_key_verifier->getUser($access_key, RESTAccessKeyScope::fromItself(), $request->getIPAddress());

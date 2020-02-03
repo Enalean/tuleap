@@ -29,17 +29,20 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\REST\AccessKeyHeaderExtractor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\AccessKey\AccessKeyAlreadyExpiredException;
 use Tuleap\User\AccessKey\AccessKeyCreationNotifier;
 use Tuleap\User\AccessKey\AccessKeyCreator;
 use Tuleap\User\AccessKey\AccessKeyDAO;
+use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
 use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
@@ -157,10 +160,50 @@ class AccessKeyResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}
      * @access protected
+     * @param string|int $id
      */
-    public function optionsId(int $id): void
+    public function optionsId($id): void
     {
-        Header::allowOptionsDelete();
+        Header::allowOptionsPostDelete();
+    }
+
+    /**
+     * Get information about an access key
+     *
+     * @url GET {id}
+     *
+     * @access protected
+     *
+     * @param string $id ID of the access key or "self" to get information about the access key currently used
+     *
+     * @throws RestException 404
+     */
+    public function get(string $id): UserAccessKeyRepresentation
+    {
+        $this->optionsId($id);
+        $current_user = \UserManager::instance()->getCurrentUser();
+
+        $user_access_key_representation_retriever = new UserAccessKeyRepresentationRetriever(
+            new AccessKeyHeaderExtractor(new AccessKeySerializer(), $_SERVER),
+            new AccessKeyMetadataRetriever(
+                new AccessKeyDAO(),
+                new AccessKeyScopeRetriever(
+                    new AccessKeyScopeDAO(),
+                    AggregateAccessKeyScopeBuilder::fromBuildersList(
+                        CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
+                        AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+                    )
+                )
+            )
+        );
+
+        $representation = $user_access_key_representation_retriever->getByUserAndID($current_user, $id);
+
+        if ($representation === null) {
+            throw new RestException(404);
+        }
+
+        return $representation;
     }
 
     /**
