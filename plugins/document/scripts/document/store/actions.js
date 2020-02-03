@@ -907,11 +907,8 @@ export const loadProjectUserGroupsIfNeeded = async context => {
 
 export const toggleQuickLook = async (context, item_id) => {
     try {
-        let item = context.state.folder_content.find(({ id }) => id === item_id);
-        if (!item) {
-            context.commit("beginLoadingCurrentlyPreviewedItem");
-            item = await getItem(item_id);
-        }
+        context.commit("beginLoadingCurrentlyPreviewedItem");
+        const item = await getItem(item_id);
 
         context.commit("updateCurrentlyPreviewedItem", item);
         context.commit("toggleQuickLook", true);
