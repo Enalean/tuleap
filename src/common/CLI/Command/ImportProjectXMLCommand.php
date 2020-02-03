@@ -220,7 +220,7 @@ class ImportProjectXMLCommand extends Command
             if ($exception->getMessage() !== '') {
                 $broker_log->error($exception->getMessage());
             } else {
-                $broker_log->error("Some natures used in trackers are not created on plateform.");
+                $broker_log->error("There are some errors in the XML content that prevent the project to be created.");
             }
         } catch (\Exception $exception) {
             $broker_log->error(get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());

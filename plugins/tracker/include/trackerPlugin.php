@@ -42,6 +42,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
+use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
@@ -1042,10 +1043,15 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $import_spotter->endImport();
     }
 
+    /**
+     * @throws ImportNotValidException
+     */
     public function projectXMLImportPreChecksEvent(ProjectXMLImportPreChecksEvent $event): void
     {
         if (! $this->checkNaturesExistsOnPlateform($event->getXmlElement())) {
-            $event->setXmlElementIsInError();
+            throw new ImportNotValidException(
+                "Some natures used in trackers are not created on plateform."
+            );
         }
     }
 

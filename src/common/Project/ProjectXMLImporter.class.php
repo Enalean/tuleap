@@ -198,6 +198,9 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         );
     }
 
+    /**
+     * @throws ImportNotValidException
+     */
     public function importWithProjectData(
         ImportConfig $configuration,
         ArchiveInterface $archive,
@@ -216,6 +219,9 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         return $project;
     }
 
+    /**
+     * @throws ImportNotValidException
+     */
     public function importNewFromArchive(
         ImportConfig $configuration,
         ArchiveInterface $archive,
@@ -274,6 +280,9 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         return $project;
     }
 
+    /**
+     * @throws ImportNotValidException
+     */
     public function importFromArchive(ImportConfig $configuration, $project_id, ArchiveInterface $archive)
     {
         $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
@@ -549,9 +558,5 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     {
         $event = new ProjectXMLImportPreChecksEvent($xml_element);
         $this->event_manager->processEvent($event);
-
-        if ($event->isXmlElementInError()) {
-            throw new ImportNotValidException();
-        }
     }
 }
