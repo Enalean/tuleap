@@ -22,6 +22,7 @@ namespace Tuleap\Upload;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -49,16 +50,22 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $stream_factory;
 
     private function __construct(
         TusServer $tus_server,
         UserManager $user_manager,
+        StreamFactoryInterface $stream_factory,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->tus_server   = $tus_server;
-        $this->user_manager = $user_manager;
+        $this->tus_server     = $tus_server;
+        $this->user_manager   = $user_manager;
+        $this->stream_factory = $stream_factory;
     }
 
     public static function build(TusDataStore $data_store): self
@@ -67,6 +74,7 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
         return new self(
             new TusServer($response_factory, $data_store),
             UserManager::instance(),
+            HTTPFactoryBuilder::streamFactory(),
             new SapiEmitter(),
             new SessionWriteCloseMiddleware(),
             new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
@@ -82,6 +90,8 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
             throw new ForbiddenException();
         }
 
-        return $this->tus_server->handle($request);
+        return $this->tus_server->handle(
+            $request->withBody($this->stream_factory->createStreamFromFile('php://input'))
+        );
     }
 }
