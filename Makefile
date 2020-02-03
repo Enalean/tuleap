@@ -35,6 +35,7 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 .PHONY: build
 build:
 	cd /build/src && npm install && \
+	cd /build/src/src/www/themes/common/tlp && npm install && npm run build && \
 	cd /build/src/src/www/scripts && npm install && npm run build && \
 	cd /build/src/plugins/tracker/www/scripts && npm install && npm run build && \
 	cd /build/src/plugins/testmanagement/scripts && npm install && npm run build && \
