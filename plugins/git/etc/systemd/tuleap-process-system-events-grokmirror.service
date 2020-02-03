@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap git Grokmirror system events
+
+[Service]
+Type=simple
+User=codendiadm
+ExecStart=/usr/bin/tuleap process-system-event grokmirror
+
+[Install]
+WantedBy=multi-user.target

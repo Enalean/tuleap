@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap statistics system events
+
+[Timer]
+OnCalendar=*:*:00
+RandomizedDelaySec=1min
+Unit=tuleap-process-system-events-statistics.service
+
+[Install]
+WantedBy=timers.target

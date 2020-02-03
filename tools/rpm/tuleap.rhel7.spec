@@ -544,8 +544,10 @@ done
 %{__install} src/utils/systemd/tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-default.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-default.service $RPM_BUILD_ROOT/%{_unitdir}
-%{__install} src/utils/systemd/tuleap-process-system-events-git.timer $RPM_BUILD_ROOT/%{_unitdir}
-%{__install} src/utils/systemd/tuleap-process-system-events-git.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-process-system-events-statistics.timer $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-process-system-events-statistics.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-process-system-events-tv3-tv5-migration.timer $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-process-system-events-tv3-tv5-migration.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-launch-system-check.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-launch-system-check.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-launch-daily-event.timer $RPM_BUILD_ROOT/%{_unitdir}
@@ -636,6 +638,10 @@ done
 %{__perl} -pi -e "s~%app_path%~/usr/share/tuleap~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
 %{__install} -D plugins/git/etc/sudoers.d/gitolite-access-command $RPM_BUILD_ROOT/etc/sudoers.d/gitolite-access-command
 %{__install} -D plugins/git/bin/TULEAP_MAX_NEWBIN_SIZE $RPM_BUILD_ROOT/usr/share/gitolite3/VREF/TULEAP_MAX_NEWBIN_SIZE
+%{__install} plugins/git/etc/systemd/tuleap-process-system-events-git.timer $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} plugins/git/etc/systemd/tuleap-process-system-events-git.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} plugins/git/etc/systemd/tuleap-process-system-events-grokmirror.timer $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} plugins/git/etc/systemd/tuleap-process-system-events-grokmirror.service $RPM_BUILD_ROOT/%{_unitdir}
 
 #
 ##codendiadm > gitolite sudo
@@ -970,6 +976,10 @@ fi
 %attr(00644,root,root) %{_unitdir}/tuleap-php-fpm.service
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-default.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-default.service
+%attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-statistics.timer
+%attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-statistics.service
+%attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-tv3-tv5-migration.timer
+%attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-tv3-tv5-migration.service
 %attr(00644,root,root) %{_unitdir}/tuleap-launch-system-check.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-launch-system-check.service
 %attr(00644,root,root) %{_unitdir}/tuleap-launch-daily-event.timer
@@ -1029,6 +1039,8 @@ fi
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/gitolite-access-command
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-git.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-git.service
+%attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-grokmirror.timer
+%attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-grokmirror.service
 %attr(00755,root,root) /usr/share/gitolite3/VREF/TULEAP_MAX_NEWBIN_SIZE
 
 %files plugin-gitlfs
