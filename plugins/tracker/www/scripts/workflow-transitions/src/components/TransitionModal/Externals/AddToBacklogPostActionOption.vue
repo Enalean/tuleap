@@ -21,7 +21,7 @@
 <template>
     <option
         v-if="is_agile_dashboard_used"
-        v-bind:value="'add_to_backlog'"
+        v-bind:value="'add_to_top_backlog'"
         v-bind:disabled="!add_to_backlog_information.valid"
         v-bind:title="add_to_backlog_information.title"
         data-test="add-to-backlog"
@@ -32,6 +32,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { EXTERNAL_POST_ACTION_TYPE } from "../../../constants/workflow-constants.js";
 
 export default {
     name: "AddToBacklogPostActionOption",
@@ -43,7 +44,7 @@ export default {
         add_to_backlog_information() {
             if (
                 this.add_to_top_backlog_is_already_present &&
-                this.post_action_type !== "add_to_backlog"
+                this.post_action_type !== EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG
             ) {
                 return {
                     valid: false,
@@ -52,15 +53,16 @@ export default {
                 };
             }
             return {
-                valid: false,
+                valid: true,
                 option: this.$gettext("Add to the Top Backlog"),
                 title: ""
             };
         },
         add_to_top_backlog_is_already_present() {
             return (
-                this.post_actions.filter(post_action => post_action.type === "add_to_backlog")
-                    .length > 0
+                this.post_actions.filter(
+                    post_action => post_action.type === EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG
+                ).length > 0
             );
         }
     }
