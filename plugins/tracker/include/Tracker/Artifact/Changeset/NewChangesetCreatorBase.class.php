@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -199,7 +200,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                 $artifact->getChangeset($new_changeset->getId())->executePostCreationActions();
             }
 
-            $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, ['artifact' => $artifact]);
+            $this->event_manager->processEvent(new ArtifactUpdated($artifact, $submitter));
 
             return $new_changeset;
         } catch (PDOException $exception) {

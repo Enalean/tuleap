@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\CreateTrackerFromXMLChecker;
+use Tuleap\AgileDashboard\ExplicitBacklog\DirectArtifactLinkCleaner;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
@@ -102,6 +103,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
+use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -225,7 +227,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(Event::USER_HISTORY_CLEAR);
             $this->addHook(ArtifactCreated::NAME);
             $this->addHook(ArtifactsReordered::NAME);
-            $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
+            $this->addHook(ArtifactUpdated::NAME);
             $this->addHook(TrackerReportDeleted::NAME);
             $this->addHook(TrackerReportSetToPrivate::NAME);
             $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
@@ -1570,22 +1572,38 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function trackerArtifactCreated(ArtifactCreated $event)
     {
-        $artifact  = $event->getArtifact();
+        $artifact = $event->getArtifact();
         $this->getRealtimeMessageController()->sendMessageForKanban(
             $this->getCurrentUser(),
             $artifact,
             RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_CREATED
         );
+
+        $cleaner = new DirectArtifactLinkCleaner(
+            $this->getMilestoneFactory(),
+            new ExplicitBacklogDao(),
+            new ArtifactsInExplicitBacklogDao()
+        );
+
+        $cleaner->cleanDirectlyMadeArtifactLinks($artifact, $this->getCurrentUser());
     }
 
-    public function tracker_event_artifact_post_update(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function trackerArtifactUpdated(ArtifactUpdated $event)
     {
-        $artifact  = $params['artifact'];
+        $artifact = $event->getArtifact();
         $this->getRealtimeMessageController()->sendMessageForKanban(
             $this->getCurrentUser(),
             $artifact,
             RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_UPDATED
         );
+
+        $cleaner = new DirectArtifactLinkCleaner(
+            $this->getMilestoneFactory(),
+            new ExplicitBacklogDao(),
+            new ArtifactsInExplicitBacklogDao()
+        );
+
+        $cleaner->cleanDirectlyMadeArtifactLinks($artifact, $event->getUser());
     }
 
     public function trackerArtifactsReordered(ArtifactsReordered $event)

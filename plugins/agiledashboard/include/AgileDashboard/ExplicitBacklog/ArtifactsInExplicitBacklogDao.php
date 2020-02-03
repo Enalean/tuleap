@@ -154,4 +154,23 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
 
         return $this->getDB()->single($sql, [$project_id]);
     }
+
+    public function cleanUpDirectlyPlannedItemsInArtifact(
+        int $milestone_artifact_id,
+        array $linked_artifact_ids
+    ) {
+        $where_condition = EasyStatement::open()
+            ->in('plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id IN (?*)', $linked_artifact_ids)
+            ->andWith('tracker_artifact.id = ?');
+
+        $sql = "DELETE plugin_agiledashboard_planning_artifacts_explicit_backlog.*
+                FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
+                    INNER JOIN tracker
+                        ON (tracker.group_id = plugin_agiledashboard_planning_artifacts_explicit_backlog.project_id)
+                    INNER JOIN tracker_artifact
+                        ON (tracker_artifact.tracker_id = tracker.id)
+                WHERE $where_condition";
+
+        $this->getDB()->safeQuery($sql, array_merge($where_condition->values(), [$milestone_artifact_id]));
+    }
 }
