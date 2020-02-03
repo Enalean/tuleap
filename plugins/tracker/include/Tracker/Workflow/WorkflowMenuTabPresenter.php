@@ -24,10 +24,13 @@ class WorkflowMenuTabPresenter
 {
     public $tabs_menu;
     public $tracker_id;
+    /** @var string */
+    public $used_services_names;
 
-    public function __construct(array $tabs_menu, $tracker_id)
+    public function __construct(array $tabs_menu, $tracker_id, array $used_services_names)
     {
-        $this->tabs_menu                = $tabs_menu;
-        $this->tracker_id               = $tracker_id;
+        $this->tabs_menu           = $tabs_menu;
+        $this->tracker_id          = $tracker_id;
+        $this->used_services_names = json_encode($used_services_names);
     }
 }

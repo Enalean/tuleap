@@ -19,7 +19,10 @@
   -->
 
 <template>
-    <div class="tlp-card tracker-workflow-transition-modal-action-card">
+    <div
+        class="tlp-card tracker-workflow-transition-modal-action-card"
+        data-test="post-action-action-card"
+    >
         <div class="tlp-form-element tracker-workflow-transition-modal-action-type">
             <select
                 class="tlp-select"
@@ -44,6 +47,7 @@
                     >
                         {{ hidden_fieldsets_information.option }}
                     </option>
+                    <add-to-backlog-post-action-option v-bind:post_action_type="post_action_type" />
                 </optgroup>
                 <optgroup v-bind:label="other_actions_title">
                     <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>
@@ -76,18 +80,20 @@
 <script>
 import { POST_ACTION_TYPE } from "../../../constants/workflow-constants.js";
 import {
+    CONTAINER_FIELDSET,
     DATE_FIELD,
     FLOAT_FIELD,
     INT_FIELD,
     READ_ONLY_FIELDS,
-    STRUCTURAL_FIELDS,
-    CONTAINER_FIELDSET
+    STRUCTURAL_FIELDS
 } from "../../../../../constants/fields-constants.js";
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { compare } from "../../../support/string.js";
+import AddToBacklogPostActionOption from "../Externals/AddToBacklogPostActionOption.vue";
 
 export default {
     name: "PostAction",
+    components: { AddToBacklogPostActionOption },
     props: {
         post_action: {
             type: Object,

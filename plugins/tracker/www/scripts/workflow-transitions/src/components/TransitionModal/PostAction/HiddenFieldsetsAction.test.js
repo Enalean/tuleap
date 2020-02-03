@@ -53,7 +53,8 @@ describe("HiddenFieldsetsAction", () => {
                 "transitionModal/set_value_action_fields": [float_field],
                 "transitionModal/post_actions": [],
                 current_workflow_field: status_field,
-                is_workflow_advanced: false
+                is_workflow_advanced: false,
+                "transitionModal/is_agile_dashboard_used": false
             }
         };
 

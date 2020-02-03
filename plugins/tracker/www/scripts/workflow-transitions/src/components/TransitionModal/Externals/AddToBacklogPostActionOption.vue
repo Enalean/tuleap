@@ -1,0 +1,68 @@
+<!--
+  - Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
+  -
+  -->
+
+<template>
+    <option
+        v-if="is_agile_dashboard_used"
+        v-bind:value="'add_to_backlog'"
+        v-bind:disabled="!add_to_backlog_information.valid"
+        v-bind:title="add_to_backlog_information.title"
+        data-test="add-to-backlog"
+    >
+        {{ add_to_backlog_information.option }}
+    </option>
+</template>
+
+<script>
+import { mapGetters } from "vuex";
+
+export default {
+    name: "AddToBacklogPostActionOption",
+    props: {
+        post_action_type: String
+    },
+    computed: {
+        ...mapGetters("transitionModal", ["is_agile_dashboard_used", "post_actions"]),
+        add_to_backlog_information() {
+            if (
+                this.add_to_top_backlog_is_already_present &&
+                this.post_action_type !== "add_to_backlog"
+            ) {
+                return {
+                    valid: false,
+                    option: this.$gettext("Add to the Top Backlog (already used)"),
+                    title: this.$gettext("You can only have this post-action once.")
+                };
+            }
+            return {
+                valid: false,
+                option: this.$gettext("Add to the Top Backlog"),
+                title: ""
+            };
+        },
+        add_to_top_backlog_is_already_present() {
+            return (
+                this.post_actions.filter(post_action => post_action.type === "add_to_backlog")
+                    .length > 0
+            );
+        }
+    }
+};
+</script>

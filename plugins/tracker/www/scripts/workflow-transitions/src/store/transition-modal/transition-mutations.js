@@ -40,7 +40,8 @@ export {
     deletePostAction,
     updatePostActionType,
     updateFrozenFieldsPostActionFieldIds,
-    updateHiddenFieldsetsPostActionFieldsetIds
+    updateHiddenFieldsetsPostActionFieldsetIds,
+    setUsedServiceName
 };
 
 function showModal(state) {
@@ -189,4 +190,8 @@ function addPostAction(state) {
 
 function deletePostAction(state, post_action) {
     Vue.delete(state.post_actions_by_unique_id, post_action.unique_id);
+}
+
+function setUsedServiceName(state, used_service_name) {
+    state.used_services_names = used_service_name;
 }
