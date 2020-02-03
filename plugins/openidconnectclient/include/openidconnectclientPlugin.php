@@ -118,14 +118,14 @@ class openidconnectclientPlugin extends Plugin
     public function javascript_file($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/open-id-connect-client.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getAssets()->getFileURL('open-id-connect-client.js').'"></script>';
         }
     }
 
     public function cssfile()
     {
         if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemeIncludeAssets()->getFileURL('fp-style.css') .'" />';
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getAssets()->getFileURL('fp-style.css') .'" />';
         }
     }
 
@@ -133,22 +133,22 @@ class openidconnectclientPlugin extends Plugin
     {
         if ($this->isInBurningParrotCompatiblePage()) {
             $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemeIncludeAssets()->getFileURL('bp-style-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('bp-style-' . $variant->getName() . '.css');
         }
     }
 
-    private function getThemeIncludeAssets(): IncludeAssets
+    private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/openidconnectclient/themes',
-            '/assets/openidconnectclient/themes'
+            __DIR__ . '/../../../src/www/assets/openidconnectclient',
+            '/assets/openidconnectclient'
         );
     }
 
     public function burning_parrot_get_javascript_files($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['javascript_files'][] = $this->getPluginPath().'/scripts/open-id-connect-client.js';
+            $params['javascript_files'][] = $this->getAssets()->getFileURL('open-id-connect-client.js');
         }
     }
 

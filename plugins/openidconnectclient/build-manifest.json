@@ -1,6 +1,4 @@
 {
     "name": "openidconnectclient",
-    "components": [
-        "themes/"
-    ]
+    "components": ["./"]
 }

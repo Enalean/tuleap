@@ -18,17 +18,18 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 const entry_points = {
-    default: "./default/css/style.scss",
-    "fp-style": "./FlamingParrot/css/style.scss"
+    default: "./themes/default/css/style.scss",
+    "fp-style": "./themes/FlamingParrot/css/style.scss",
+    "open-id-connect-client": "./scripts/open-id-connect-client.js"
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
-    entry_points[`bp-style-${color}`] = `./BurningParrot/css/style-${color}.scss`;
-    entry_points[`bp-style-${color}`] = `./BurningParrot/css/style-${color}-condensed.scss`;
+    entry_points[`bp-style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
+    entry_points[`bp-style-${color}`] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
 }
 
 module.exports = [
@@ -36,8 +37,12 @@ module.exports = [
         entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/openidconnectclient/themes/")
+            path.resolve(__dirname, "../../src/www/assets/openidconnectclient/")
         ),
+        externals: {
+            tlp: "tlp",
+            jquery: "jQuery"
+        },
         module: {
             rules: [webpack_configurator.rule_scss_loader]
         },

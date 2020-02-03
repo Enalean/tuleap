@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global tlp:readonly */
+import * as tlp from "tlp";
+import jQuery from "jquery";
+
 !(function($) {
     function formatOptionIcon(option) {
         return $('<i class="fa fa-' + option.id + '"></i>');
@@ -150,4 +152,4 @@
         initUpdateModals();
         initDeleteModals();
     });
-})(window.jQuery);
+})(jQuery);
