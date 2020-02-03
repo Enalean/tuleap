@@ -180,26 +180,6 @@ describe("ProjectShortName", () => {
             });
         });
 
-        it(`Has an error when shortname contains invalid characters`, async () => {
-            const event_bus_emit = jest.spyOn(EventBus, "$emit");
-
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false
-            };
-            const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "******");
-
-            expect(wrapper.vm.$data.slugified_project_name).toBe("******");
-            expect(wrapper.vm.$data.has_slug_error).toBe(true);
-
-            expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
-                name: "******"
-            });
-        });
-
         it(`Store and validate the project name`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
@@ -237,6 +217,26 @@ describe("ProjectShortName", () => {
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
                 slugified_name: wrapper.vm.$data.slugified_project_name,
                 name: "Accentué ç è é ù ë"
+            });
+        });
+
+        it(`Slugified project name handle correctly the special characters`, async () => {
+            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            const data = {
+                slugified_project_name: "",
+                has_slug_error: false,
+                is_in_edit_mode: false
+            };
+            const wrapper = await createWrapper(data);
+            EventBus.$emit("slugify-project-name", "Valid 11.11");
+
+            expect(wrapper.vm.$data.slugified_project_name).toBe("Valid-11-11");
+            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+
+            expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
+                slugified_name: wrapper.vm.$data.slugified_project_name,
+                name: "Valid 11.11"
             });
         });
 

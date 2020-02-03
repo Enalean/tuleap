@@ -119,6 +119,20 @@ export default class ProjectShortName extends Vue {
         this.has_slug_error = false;
         this.project_name = value;
 
+        slugify.extend({
+            ".": "-",
+            "~": "-",
+            "(": "-",
+            ")": "-",
+            "!": "-",
+            ":": "-",
+            "@": "-",
+            '"': "-",
+            "'": "-",
+            "*": "-",
+            "©": "-",
+            "®": "-"
+        });
         this.slugified_project_name = slugify(value);
         this.checkValidity(this.slugified_project_name);
 
