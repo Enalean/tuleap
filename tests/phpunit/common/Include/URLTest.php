@@ -19,35 +19,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class URLTest extends TuleapTestCase
+class URLTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         $GLOBALS['sys_news_group'] = 46;
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($GLOBALS['sys_news_group']);
         unset($_REQUEST['forum_id']);
         unset($_REQUEST['artifact_id']);
-        parent::tearDown();
     }
 
     function testProjectsSvnExist()
     {
         $url = new URL();
-        $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group_name'), 'group_name');
-        $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group.name'), 'group.name');
-        $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?root=group_name&roottype=svn'), 'group_name');
-        $this->assertEqual(
+        $this->assertEquals('group_name', $url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group_name'));
+        $this->assertEquals('group.name', $url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group.name'));
+        $this->assertEquals('group_name', $url->getGroupNameFromSVNUrl('/viewvc.php/?root=group_name&roottype=svn'));
+        $this->assertEquals(
+            'group_name',
             $url->getGroupNamefromSVNUrl('/viewvc.php/?root=group_name&action=co&roottype=svn'),
-            'group_name'
         );
-        $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?roo=group_name&roottype=svn'), false);
+        $this->assertFalse($url->getGroupNameFromSVNUrl('/viewvc.php/?roo=group_name&roottype=svn'));
     }
 
     function testProjectsDontExist()
@@ -91,8 +89,8 @@ class URLTest extends TuleapTestCase
         $dao->shouldReceive('searchByUnixGroupName')->andReturns($exists1)->ordered();
 
         $url->shouldReceive('getProjectDao')->andReturns($dao);
-        $this->assertEqual($url->getGroupIdFromURL('/projects/exist/'), 1);
-        $this->assertNotEqual($url->getGroupIdFromURL('/toto/projects/exist/'), 1);
+        $this->assertEquals(1, $url->getGroupIdFromURL('/projects/exist/'));
+        $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/projects/exist/'));
     }
 
     function testViewVcDontExist()
@@ -126,7 +124,7 @@ class URLTest extends TuleapTestCase
         $rule->shouldReceive('containsIllegalChars')->andReturns(false);
 
         $url->shouldReceive('getProjectDao')->andReturns($dao);
-        $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=exist'), 1);
+        $this->assertEquals($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=exist'), 1);
     }
 
     function testViewVcNotValidProjectName()
@@ -136,7 +134,7 @@ class URLTest extends TuleapTestCase
         $url->shouldReceive('getProjectNameRule')->andReturns($rule);
         $rule->shouldReceive('containsIllegalChars')->andReturns(true);
 
-        $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=ex(ist'), false);
+        $this->assertEquals($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=ex(ist'), false);
     }
 
     function testViewVcExistForProjectWithPoint()
@@ -153,7 +151,7 @@ class URLTest extends TuleapTestCase
         $dao->shouldReceive('searchByUnixGroupName')->with('test.svn')->once()->andReturns($exists);
 
         $url->shouldReceive('getProjectDao')->andReturns($dao);
-        $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=test.svn'), 1);
+        $this->assertEquals($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=test.svn'), 1);
     }
 
     function testForumDontExist()
@@ -165,7 +163,7 @@ class URLTest extends TuleapTestCase
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists);
 
         $url->shouldReceive('getForumDao')->andReturns($dao);
-        $this->assertFalse($url->getGroupIdFromURL('/forum/forum.php?forum_id=dontexist'));
+        $this->assertNull($url->getGroupIdFromURL('/forum/forum.php?forum_id=dontexist'));
     }
 
     function testForumExist()
@@ -182,8 +180,8 @@ class URLTest extends TuleapTestCase
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists1)->ordered();
         $_REQUEST['forum_id']=1;
         $url->shouldReceive('getForumDao')->andReturns($dao);
-        $this->assertEqual($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), 1);
-        $this->assertNotEqual($url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'), 1);
+        $this->assertEquals(1, $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
+        $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'));
     }
 
     function testNewsBytesDontExist()
@@ -196,8 +194,8 @@ class URLTest extends TuleapTestCase
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists);
         $_REQUEST['forum_id']=1;
-        $group_id = $url->shouldReceive('getForumDao')->andReturns($dao);
-        $this->assertNotEqual($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), $GLOBALS['sys_news_group']);
+        $url->shouldReceive('getForumDao')->andReturns($dao);
+        $this->assertNotEquals($GLOBALS['sys_news_group'], $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
     }
 
     function testNewsBytesExist()
@@ -218,7 +216,7 @@ class URLTest extends TuleapTestCase
         $exists2->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao2->shouldReceive('searchByForumId')->andReturns($exists2)->ordered();
         $url->shouldReceive('getNewsBytesDao')->andReturns($dao2);
-        $this->assertEqual($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), $GLOBALS['sys_news_group']);
+        $this->assertEquals($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), $GLOBALS['sys_news_group']);
     }
 
     function testArtifactDontExist()
@@ -230,7 +228,7 @@ class URLTest extends TuleapTestCase
         $dao->shouldReceive('searchArtifactId')->andReturns($exists);
 
         $url->shouldReceive('getArtifactDao')->andReturns($dao);
-        $this->assertFalse($url->getGroupIdFromURL('/tracker/download.php?artifact_id=dontexist'));
+        $this->assertNull($url->getGroupIdFromURL('/tracker/download.php?artifact_id=dontexist'));
     }
 
     function testArtifactExist()
@@ -249,7 +247,7 @@ class URLTest extends TuleapTestCase
         $dao->shouldReceive('searchArtifactId')->andReturns($exists1)->ordered();
         $_REQUEST['artifact_id']=1;
         $url->shouldReceive('getArtifactDao')->andReturns($dao);
-        $this->assertEqual($url->getGroupIdFromURL('/tracker/download.php?artifact_id=exist'), 1);
-        $this->assertNotEqual($url->getGroupIdFromURL('/toto/tracker/download.php?artifact_id=exist'), 1);
+        $this->assertEquals(1, $url->getGroupIdFromURL('/tracker/download.php?artifact_id=exist'));
+        $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/tracker/download.php?artifact_id=exist'));
     }
 }

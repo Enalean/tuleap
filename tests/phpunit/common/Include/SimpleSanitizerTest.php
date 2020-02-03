@@ -1,7 +1,6 @@
 <?php
 /**
  * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class SimpleSanitizerTest extends TuleapTestCase
+class SimpleSanitizerTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     function testSanitize()
     {
@@ -27,6 +27,6 @@ class SimpleSanitizerTest extends TuleapTestCase
         $html      = "Lorem ipsum dolor sit amet,".$bad_tag." consectetuer adipiscing elit.";
         $result    = SimpleSanitizer::sanitize($html);
 
-        $this->assertNoPattern("/".$bad_tag."/", $result);
+        $this->assertStringNotContainsString($bad_tag, $result);
     }
 }

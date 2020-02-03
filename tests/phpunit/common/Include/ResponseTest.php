@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,12 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class ResponseTest extends TuleapTestCase
+class ResponseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function itSendsJSON()
+    public function testItSendsJSON()
     {
         $response = \Mockery::mock(\Response::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $response->shouldReceive('setContentType')->with('application/json')->once();
@@ -29,6 +31,6 @@ class ResponseTest extends TuleapTestCase
         ob_start();
         $response->sendJSON(array("toto"));
         $output = ob_get_clean();
-        $this->assertEqual($output, '["toto"]');
+        $this->assertEquals('["toto"]', $output);
     }
 }
