@@ -43,6 +43,7 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\DirectoryArchive;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 
 class RestProjectCreator
@@ -150,9 +151,19 @@ class RestProjectCreator
             throw new RestException(400, $exception->getMessage());
         } catch (MissingMandatoryFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
+        } catch (ImportNotValidException $exception) {
+            throw new RestException(400, $exception->getMessage());
         }
     }
 
+    /**
+     * @throws ImportNotValidException
+     * @throws InvalidTemplateException
+     * @throws \Project_Creation_Exception
+     * @throws \Project_InvalidFullName_Exception
+     * @throws \Project_InvalidShortName_Exception
+     * @throws \Tuleap\Project\ProjectDescriptionMandatoryException
+     */
     public function createProjectWithSelectedTemplate(PFUser $user, ProjectPostRepresentation $post_representation): Project
     {
         if ($post_representation->template_id !== null) {
@@ -202,6 +213,7 @@ class RestProjectCreator
      * @param ProjectPostRepresentation $post_representation
      * @return Project
      * @throws InvalidTemplateException
+     * @throws ImportNotValidException
      */
     private function createProjectFromSystemTemplate(ProjectPostRepresentation $post_representation): Project
     {

@@ -97,6 +97,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
+use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
@@ -2289,6 +2290,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         );
     }
 
+    /**
+     * @throws ImportNotValidException
+     */
     public function projectXMLImportPreChecksEvent(ProjectXMLImportPreChecksEvent $event): void
     {
         $xml_content = $event->getXmlElement();
@@ -2297,7 +2301,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         try {
             $checker->checkTrackersCanBeCreatedInProjectImportContext($xml_content);
         } catch (ProjectNotUsingExplicitBacklogException $exception) {
-            $event->setXmlElementIsInError();
+            throw new ImportNotValidException(
+                'Explicit backlog management is not used and some "AddToTopBacklog" workflow post actions are defined.'
+            );
         }
     }
 
