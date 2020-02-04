@@ -48,13 +48,13 @@ export default {
             ) {
                 return {
                     valid: false,
-                    option: this.$gettext("Add to the Top Backlog (already used)"),
+                    option: this.$gettext("Add to the top backlog (already used)"),
                     title: this.$gettext("You can only have this post-action once.")
                 };
             }
             return {
                 valid: true,
-                option: this.$gettext("Add to the Top Backlog"),
+                option: this.$gettext("Add to the top backlog"),
                 title: ""
             };
         },

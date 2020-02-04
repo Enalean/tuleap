@@ -49,7 +49,7 @@ describe("AddToBacklogPostActionOption", () => {
     it("returns the option", () => {
         store.getters["transitionModal/post_actions"] = [];
         expect(wrapper.vm.add_to_backlog_information).toEqual({
-            option: "Add to the Top Backlog",
+            option: "Add to the top backlog",
             title: "",
             valid: true
         });
@@ -60,7 +60,7 @@ describe("AddToBacklogPostActionOption", () => {
             create("post_action", { type: "add_to_top_backlog" })
         ];
         expect(wrapper.vm.add_to_backlog_information).toEqual({
-            option: "Add to the Top Backlog (already used)",
+            option: "Add to the top backlog (already used)",
             title: "You can only have this post-action once.",
             valid: false
         });

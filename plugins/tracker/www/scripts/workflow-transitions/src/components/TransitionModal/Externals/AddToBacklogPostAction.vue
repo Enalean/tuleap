@@ -24,12 +24,9 @@
             class="tracker-workflow-transition-modal-action-details-element tlp-form-element"
             data-test="add-to-backlog-post-action-description"
         >
-            <label class="tlp-label">
-                <translate>Add to the Top Backlog</translate>
-                <i class="fa fa-asterisk"></i>
-            </label>
             <p class="tlp-text-info" v-translate>
-                The artifact is automatically added to the Top Backlog.
+                The artifact is added to Scrum top backlog (Agile Dashboard). If it's already
+                present, nothing is done.
             </p>
         </div>
     </post-action>
@@ -37,6 +34,7 @@
 
 <script>
 import PostAction from "../PostAction/PostAction.vue";
+
 export default {
     name: "AddToBackLogPostAction",
     components: { PostAction },
