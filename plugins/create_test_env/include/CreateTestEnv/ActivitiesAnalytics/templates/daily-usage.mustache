@@ -1,0 +1,27 @@
+<h1>Create Test Environment Daily Activites</h1>
+<table class="tlp-table">
+    <thead>
+    <tr>
+        <th>Real name</th>
+        <th>Login</th>
+        <th>Email</th>
+        <th>Actions</th>
+        <th>Connexions</th>
+        <th>Last seen</th>
+        <th>Elapsed time</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{# users }}
+        <tr>
+            <td>{{ real_name }}</td>
+            <td>{{ login }}</td>
+            <td>{{ email }}</td>
+            <td>{{ actions }}</td>
+            <td>{{ connexions }}</td>
+            <td>{{ last_seen }}</td>
+            <td>{{ elapsed_time }}</td>
+        </tr>
+    {{/ users }}
+    </tbody>
+</table>
