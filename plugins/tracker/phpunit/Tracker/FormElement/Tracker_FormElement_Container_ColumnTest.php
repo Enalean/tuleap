@@ -61,7 +61,7 @@ class Tracker_FormElement_Container_ColumnTest extends TestCase //phpcs:ignore
         $this->assertTrue($container_column->canBeRemovedFromUsage());
     }
 
-    public function itCallsExportPermissionsToXMLForEachSubfield()
+    public function testItCallsExportPermissionsToXMLForEachSubfield()
     {
         $container_column = Mockery::mock(Tracker_FormElement_Container_Column::class)
             ->makePartial()
@@ -71,11 +71,17 @@ class Tracker_FormElement_Container_ColumnTest extends TestCase //phpcs:ignore
         $field_02 = Mockery::mock(Tracker_FormElement_Field_Float::class);
         $field_03 = Mockery::mock(Tracker_FormElement_Field_Text::class);
 
-        $container_column->shouldReceive('getAllFormElements')->andReturn([
+        $field_01->shouldReceive('getTagNameForXMLExport')->andReturn('formElement');
+        $field_02->shouldReceive('getTagNameForXMLExport')->andReturn('formElement');
+        $field_03->shouldReceive('getTagNameForXMLExport')->andReturn('formElement');
+
+        $container_column->shouldReceive('getAllFormElements')->andReturn(
+            [
             $field_01,
             $field_02,
-            $field_03
-        ]);
+                $field_03
+            ]
+        );
 
         $data    = '<?xml version="1.0" encoding="UTF-8"?>
                     <permissions/>';
@@ -84,6 +90,41 @@ class Tracker_FormElement_Container_ColumnTest extends TestCase //phpcs:ignore
         $ugroups = [];
 
         $field_01->shouldReceive('exportPermissionsToXML')->once();
+        $field_02->shouldReceive('exportPermissionsToXML')->once();
+        $field_03->shouldReceive('exportPermissionsToXML')->once();
+
+        $container_column->exportPermissionsToXML($xml, $ugroups, $mapping);
+    }
+
+    public function testItNotCallsExportPermissionsIfSubfieldIsExternalElement()
+    {
+        $container_column = Mockery::mock(Tracker_FormElement_Container_Column::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $field_01 = Mockery::mock(Tracker_FormElement_Field_String::class);
+        $field_02 = Mockery::mock(Tracker_FormElement_Field_Float::class);
+        $field_03 = Mockery::mock(Tracker_FormElement_Field_Text::class);
+
+        $field_01->shouldReceive('getTagNameForXMLExport')->andReturn('externalField');
+        $field_02->shouldReceive('getTagNameForXMLExport')->andReturn('formElement');
+        $field_03->shouldReceive('getTagNameForXMLExport')->andReturn('formElement');
+
+        $container_column->shouldReceive('getAllFormElements')->andReturn(
+            [
+                $field_01,
+                $field_02,
+                $field_03
+            ]
+        );
+
+        $data    = '<?xml version="1.0" encoding="UTF-8"?>
+                    <permissions/>';
+        $xml     = new SimpleXMLElement($data);
+        $mapping = [];
+        $ugroups = [];
+
+        $field_01->shouldReceive('exportPermissionsToXML')->never();
         $field_02->shouldReceive('exportPermissionsToXML')->once();
         $field_03->shouldReceive('exportPermissionsToXML')->once();
 

@@ -174,7 +174,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         $subfields = $this->getAllFormElements();
         $child = $root->addChild('formElements');
         foreach ($subfields as $subfield) {
-            $grandchild = $child->addChild('formElement');
+            $grandchild = $child->addChild($subfield->getTagNameForXMLExport());
             $subfield->exportToXML($grandchild, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
     }
@@ -184,6 +184,9 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         parent::exportPermissionsToXML($node_perms, $ugroups, $xmlMapping);
         $subfields = $this->getAllFormElements();
         foreach ($subfields as $subfield) {
+            if ($subfield->getTagNameForXMLExport() === Tracker_FormElement::XML_TAG_EXTERNAL_FIELD) {
+                continue;
+            }
             $subfield->exportPermissionsToXML($node_perms, $ugroups, $xmlMapping);
         }
     }
