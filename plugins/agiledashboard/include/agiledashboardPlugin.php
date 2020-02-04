@@ -94,6 +94,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\ScriptAsset;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
@@ -2137,7 +2138,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->getPlanningPermissionsManager(),
             new ArtifactsInExplicitBacklogDao(),
             new PlannedArtifactDao(),
-            $this->getIncludeAssets()
+            $this->getScriptAssetByName('artifact-additional-action.js')
         );
 
         $action = $builder->buildArtifactAction($artifact, $user);
@@ -2317,5 +2318,16 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             return;
         }
         $event->addServiceNameUsed('agile_dashboard');
+    }
+
+    private function getScriptAssetByName(string $name): ScriptAsset
+    {
+        return new ScriptAsset(
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/agiledashboard/js',
+                '/assets/agiledashboard/js/'
+            ),
+            $name
+        );
     }
 }

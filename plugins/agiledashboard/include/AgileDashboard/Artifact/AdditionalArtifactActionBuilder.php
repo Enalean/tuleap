@@ -26,7 +26,7 @@ use PlanningPermissionsManager;
 use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\ScriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 
@@ -58,7 +58,7 @@ class AdditionalArtifactActionBuilder
     private $planned_artifact_dao;
 
     /**
-     * @var IncludeAssets
+     * @var ScriptAsset
      */
     private $include_assets;
 
@@ -68,7 +68,7 @@ class AdditionalArtifactActionBuilder
         PlanningPermissionsManager $planning_permissions_manager,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         PlannedArtifactDao $planned_artifact_dao,
-        IncludeAssets $include_assets
+        ScriptAsset $include_assets
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->planning_factory                  = $planning_factory;
@@ -148,7 +148,7 @@ class AdditionalArtifactActionBuilder
 
         return new AdditionalButtonAction(
             $link,
-            $this->include_assets->getFileURL('artifact-additional-action.js')
+            $this->include_assets->getFileURL()
         );
     }
 }
