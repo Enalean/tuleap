@@ -36,6 +36,7 @@ use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_PerTrackerArtifactId;
+use Tracker_FormElement_Field_Priority;
 use Tracker_FormElement_Field_Radiobutton;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_String;
@@ -192,5 +193,10 @@ class GreaterThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, 
     public function visitExternalField(TrackerFormElementExternalField $element)
     {
         throw new FieldIsNotSupportedAtAllException($element);
+    }
+
+    public function visitPriority(Tracker_FormElement_Field_Priority $field)
+    {
+        throw new FieldIsNotSupportedAtAllException($field);
     }
 }

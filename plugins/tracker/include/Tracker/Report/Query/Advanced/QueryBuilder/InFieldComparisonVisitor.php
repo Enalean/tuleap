@@ -38,6 +38,7 @@ use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_PerTrackerArtifactId;
+use Tracker_FormElement_Field_Priority;
 use Tracker_FormElement_Field_Radiobutton;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_String;
@@ -213,6 +214,11 @@ class InFieldComparisonVisitor implements
     }
 
     public function visitExternalField(TrackerFormElementExternalField $element)
+    {
+        return null;
+    }
+
+    public function visitPriority(Tracker_FormElement_Field_Priority $field)
     {
         return null;
     }

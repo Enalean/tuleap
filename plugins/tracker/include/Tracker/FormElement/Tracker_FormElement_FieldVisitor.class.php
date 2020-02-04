@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,4 +51,5 @@ interface Tracker_FormElement_FieldVisitor
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field);
     public function visitComputed(Tracker_FormElement_Field_Computed $field);
     public function visitExternalField(TrackerFormElementExternalField $element);
+    public function visitPriority(Tracker_FormElement_Field_Priority $field);
 }

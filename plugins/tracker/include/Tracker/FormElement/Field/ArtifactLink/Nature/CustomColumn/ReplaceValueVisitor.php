@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn;
 
+use Tracker_FormElement_Field_Priority;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_PerTrackerArtifactId;
@@ -215,6 +216,11 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
     }
 
     public function visitExternalField(TrackerFormElementExternalField $element)
+    {
+        throw new UnsupportedFieldException();
+    }
+
+    public function visitPriority(Tracker_FormElement_Field_Priority $field)
     {
         throw new UnsupportedFieldException();
     }

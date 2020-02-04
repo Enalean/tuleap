@@ -40,6 +40,7 @@ use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_PerTrackerArtifactId;
+use Tracker_FormElement_Field_Priority;
 use Tracker_FormElement_Field_Radiobutton;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_String;
@@ -63,12 +64,10 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field): void
     {
-        return;
     }
 
     public function visitDate(Tracker_FormElement_Field_Date $field): void
     {
-        return;
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field): void
@@ -86,106 +85,85 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitFloat(Tracker_FormElement_Field_Float $field): void
     {
-        return;
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field): void
     {
-        return;
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field): void
     {
-        return;
     }
 
     public function visitPermissionsOnArtifact(Tracker_FormElement_Field_PermissionsOnArtifact $field): void
     {
-        return;
     }
 
     public function visitString(Tracker_FormElement_Field_String $field): void
     {
-        return;
     }
 
     public function visitText(Tracker_FormElement_Field_Text $field): void
     {
-        return;
     }
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field): void
     {
-        return;
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field): void
     {
-        return;
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field): void
     {
-        return;
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field): void
     {
-        return;
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field): void
     {
-        return;
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field): void
     {
-        return;
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field): void
     {
-        return;
     }
 
     public function visitPerTrackerArtifactId(Tracker_FormElement_Field_PerTrackerArtifactId $field): void
     {
-        return;
     }
 
     public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $field): void
     {
-        return;
     }
 
     public function visitBurndown(Tracker_FormElement_Field_Burndown $field): void
     {
-        return;
     }
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field): void
     {
-        return;
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field): void
     {
-        return;
     }
 
     public function visitComputed(Tracker_FormElement_Field_Computed $field): void
     {
-        return;
     }
 
     public function visitExternalField(TrackerFormElementExternalField $element): void
     {
-        return;
     }
 
-    public function visitPriority(): void
+    public function visitPriority(Tracker_FormElement_Field_Priority $field): void
     {
-        return;
     }
 }
