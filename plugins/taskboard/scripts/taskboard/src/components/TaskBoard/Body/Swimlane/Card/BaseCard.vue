@@ -24,6 +24,7 @@
             v-if="can_user_update_card"
             class="taskboard-card-edit-trigger"
             v-on:click="switchToEditMode"
+            data-test="card-edit-button"
         >
             <i class="fa fa-pencil"></i>
         </span>

@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <form class="taskboard-add-card-form">
+    <form class="taskboard-add-card-form" data-test="add-in-place-form">
         <div class="taskboard-add-card-form-editor-container" v-if="is_in_add_mode">
             <label-editor
                 v-model="label"

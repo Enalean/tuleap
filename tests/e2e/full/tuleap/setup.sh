@@ -103,6 +103,7 @@ seed_data() {
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php docman" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php mediawiki" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php document" -l codendiadm
+    su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php taskboard" -l codendiadm
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
 
     load_project /usr/share/tuleap/tests/e2e/_fixtures/permission_project
@@ -115,6 +116,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/e2e/_fixtures/platform_allows_anonymous
     load_project /usr/share/tuleap/tests/e2e/_fixtures/platform_allows_restricted
     load_project /usr/share/tuleap/tests/e2e/_fixtures/tracker_project
+    load_project /usr/share/tuleap/tests/e2e/_fixtures/taskboard_project
 
     chown -R codendiadm:codendiadm /var/log/tuleap
 }

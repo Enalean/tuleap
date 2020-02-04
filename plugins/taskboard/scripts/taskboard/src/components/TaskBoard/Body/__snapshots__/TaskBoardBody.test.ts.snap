@@ -3,6 +3,7 @@
 exports[`TaskBoardBody displays swimlanes for solo cards or cards with children 1`] = `
 <div
   class="taskboard-body"
+  data-test="taskboard-body"
 >
   <solo-swimlane-stub
     swimlane="[object Object]"

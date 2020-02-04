@@ -26,6 +26,7 @@
         v-bind:data-tlp-tooltip="title"
         v-bind:aria-label="title"
         v-on:click="$emit('click')"
+        data-test="add-in-place-button"
     >
         <i class="fa" v-bind:class="icon_class" aria-hidden="true"></i>
         <span v-if="label">{{ label }}</span>

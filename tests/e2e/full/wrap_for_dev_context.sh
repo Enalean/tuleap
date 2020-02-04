@@ -20,6 +20,9 @@ rm -rf "$test_results_folder/*" || true
 
 clean_env
 
-echo "$DOCKERCOMPOSE up -d --build"
+$DOCKERCOMPOSE up -d --build
 
 TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
+
+TULEAP_IP="$(docker inspect "$($DOCKERCOMPOSE ps -q tuleap)" --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')"
+echo "Please set in /etc/hosts: $TULEAP_IP tuleap"
