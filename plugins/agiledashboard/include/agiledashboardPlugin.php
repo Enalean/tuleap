@@ -61,6 +61,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
@@ -83,6 +84,7 @@ use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklog;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionFactory;
+use Tuleap\AgileDashboard\Workflow\PostAction\Update\AddToTopBacklogValue;
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogValueRepository;
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogValueUpdater;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogJsonParser;
@@ -124,6 +126,7 @@ use Tuleap\Tracker\Report\Event\TrackerReportProcessAdditionalQuery;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
@@ -266,6 +269,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(CreateTrackerFromXMLEvent::NAME);
             $this->addHook(ProjectXMLImportPreChecksEvent::NAME);
             $this->addHook(GetExternalPostActionPluginsEvent::NAME);
+            $this->addHook(CheckPostActionsForTracker::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1377,7 +1381,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         );
     }
 
-    private function getCurrentUser()
+    private function getCurrentUser(): PFUser
     {
         return UserManager::instance()->getCurrentUser();
     }
@@ -2138,7 +2142,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->getPlanningPermissionsManager(),
             new ArtifactsInExplicitBacklogDao(),
             new PlannedArtifactDao(),
-            $this->getScriptAssetByName('artifact-additional-action.js')
+            $this->getScriptAssetByName('artifact-additional-action.js'),
+            new PlanningTrackerBacklogChecker($this->getPlanningFactory())
         );
 
         $action = $builder->buildArtifactAction($artifact, $user);
@@ -2310,13 +2315,22 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function getExternalPostActionPluginsEvent(GetExternalPostActionPluginsEvent $event): void
     {
-        $is_agile_dashboard_used  = $this->isAllowed($event->getProject()->getGroupId());
-        $is_explicit_backlog_used = (new ExplicitBacklogDao())->isProjectUsingExplicitBacklog(
-            $event->getProject()->getGroupId()
+        $tracker    = $event->getTracker();
+        $project_id = (int) $tracker->getGroupId();
+
+        $is_agile_dashboard_used  = $this->isAllowed($project_id);
+        $is_explicit_backlog_used = (new ExplicitBacklogDao())->isProjectUsingExplicitBacklog($project_id);
+
+        $planning_tracker_backlog_checker = new PlanningTrackerBacklogChecker($this->getPlanningFactory());
+        $is_tracker_backlog_of_root_planning = $planning_tracker_backlog_checker->isTrackerBacklogOfProjectRootPlanning(
+            $tracker,
+            $this->getCurrentUser()
         );
-        if (!$is_agile_dashboard_used || !$is_explicit_backlog_used) {
+
+        if (! $is_agile_dashboard_used || ! $is_explicit_backlog_used || ! $is_tracker_backlog_of_root_planning) {
             return;
         }
+
         $event->addServiceNameUsed('agile_dashboard');
     }
 
@@ -2329,5 +2343,28 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             ),
             $name
         );
+    }
+
+    public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
+    {
+        $planning_tracker_backlog_checker = new PlanningTrackerBacklogChecker($this->getPlanningFactory());
+        $tracker = $event->getTracker();
+        $external_post_actions = $event->getPostActions()->getExternalPostActionsValue();
+        foreach ($external_post_actions as $post_action) {
+            if ($post_action instanceof AddToTopBacklogValue &&
+                ! $planning_tracker_backlog_checker->isTrackerBacklogOfProjectRootPlanning(
+                    $tracker,
+                    $this->getCurrentUser(),
+                )
+            ) {
+                $message = dgettext(
+                    'tuleap-agiledashboard',
+                    'The post actions cannot be saved because this tracker not a top backlog tracker and a "AddToTopBacklog" is defined.'
+                );
+
+                $event->setErrorMessage($message);
+                $event->setPostActionsNonEligible();
+            }
+        }
     }
 }

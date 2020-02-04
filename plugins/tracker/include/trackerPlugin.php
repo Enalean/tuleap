@@ -1787,8 +1787,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getTrackerFactory(),
             new TrackerManager,
             new WorkflowMenuTabPresenterBuilder(),
-            EventManager::instance(),
-            ProjectManager::instance()
+            EventManager::instance()
         );
     }
 
