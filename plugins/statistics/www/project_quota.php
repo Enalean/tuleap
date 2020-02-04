@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -17,6 +18,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Statistics\AdminHeaderPresenter;
 use Tuleap\Statistics\ProjectQuotaPresenter;
 
@@ -38,7 +40,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 $csrf = new CSRFSynchronizerToken('project_quota.php');
 
 $request = HTTPRequest::instance();
-$pqHtml  = new ProjectQuotaHtml();
+$pqHtml  = new ProjectQuotaHtml(new InstanceBaseURLBuilder(), Codendi_HTMLPurifier::instance());
 $pqHtml->HandleRequest($request);
 
 $project_quota_manager = new ProjectQuotaManager();

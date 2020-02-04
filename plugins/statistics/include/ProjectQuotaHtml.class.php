@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 – Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
- * Copyright (c) Enalean, 2015 – 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,15 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Statistics\AdminHeaderPresenter;
 use Tuleap\Statistics\ProjectsOverQuotaPresenter;
-
-require_once('ProjectQuotaManager.class.php');
 
 /**
  * Management of custom quota by project
  */
 class ProjectQuotaHtml
 {
-
     /**
      * ProjectManager instance
      */
@@ -43,19 +41,24 @@ class ProjectQuotaHtml
 
     /** @var UserManager */
     private $user_manager;
-
     /**
-     * Constructor of the class
-     *
-     * @return Void
+     * @var InstanceBaseURLBuilder
      */
-    public function __construct()
+    private $instance_url_builder;
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    private $html_purifier;
+
+    public function __construct(InstanceBaseURLBuilder $instance_url_builder, Codendi_HTMLPurifier $html_purifier)
     {
-        $this->dao                 = new Statistics_ProjectQuotaDao();
-        $this->projectManager      = ProjectManager::instance();
-        $this->projectQuotaManager = new ProjectQuotaManager();
-        $this->csrf                = new CSRFSynchronizerToken('project_quota.php');
-        $this->user_manager        = UserManager::instance();
+        $this->dao                  = new Statistics_ProjectQuotaDao();
+        $this->projectManager       = ProjectManager::instance();
+        $this->projectQuotaManager  = new ProjectQuotaManager();
+        $this->csrf                 = new CSRFSynchronizerToken('project_quota.php');
+        $this->user_manager         = UserManager::instance();
+        $this->instance_url_builder = $instance_url_builder;
+        $this->html_purifier        = $html_purifier;
     }
 
     /**
@@ -301,10 +304,7 @@ class ProjectQuotaHtml
         );
     }
 
-    /**
-     * @return array
-     */
-    private function enhanceWithModalValues(array $exceeding_projects)
+    private function enhanceWithModalValues(array $exceeding_projects): array
     {
         $new_values['csrf_token']  = new CSRFSynchronizerToken('');
         $enhanced_projects         = array();
@@ -318,7 +318,11 @@ class ProjectQuotaHtml
             $new_values['body_content']    = $GLOBALS['Language']->getText(
                 'plugin_statistics',
                 'disk_quota_warning_body',
-                array($project['project_name'], $project['current_disk_space'])
+                [
+                    $this->html_purifier->purify($this->instance_url_builder->build() . '/projects/' . urlencode($project['project_unix_name'])),
+                    $this->html_purifier->purify($project['project_name']),
+                    $this->html_purifier->purify($project['current_disk_space'])
+                ]
             );
 
             $enhanced_projects[] = array_merge($project, $new_values);
