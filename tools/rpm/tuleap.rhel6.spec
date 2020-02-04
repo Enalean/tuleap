@@ -573,6 +573,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/frs/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/git/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/git/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphontrackersv5/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson/themes/

@@ -110,15 +110,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
         $event = new ProjectProviderEvent($this->project);
         $this->event_manager->processEvent($event);
 
-        $layout->addCssAsset(
-            new CssAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../../../src/www/assets/git/themes',
-                    '/assets/git/themes'
-                ),
-                'bp-style'
-            )
-        );
+        $layout->addCssAsset(new CssAsset($this->include_assets, 'bp-style'));
 
         $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repositories-list.js'));
         $this->displayHeader(dgettext('tuleap-git', 'Git repositories'), $this->project);

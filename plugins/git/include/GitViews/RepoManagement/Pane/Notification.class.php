@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,12 +21,13 @@
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
 use Codendi_Request;
+use EventManager;
 use GitRepository;
 use TemplateRendererFactory;
 use Tuleap\Git\GitPresenters\RepositoryPaneNotificationPresenter;
-use EventManager;
-use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
+use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Layout\IncludeAssets;
 
 class Notification extends Pane
 {
@@ -89,8 +90,9 @@ class Notification extends Pane
             )
         );
         $html    .= $this->getPluginNotifications();
+        $assets = new IncludeAssets(__DIR__ . "/../../../../../../src/www/assets/git", "/assets/git");
         $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
-        $GLOBALS['Response']->includeFooterJavascriptFile(GIT_BASE_URL .'/scripts/admin-notifications.js');
+        $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('repo-admin-notifications.js'));
 
         return $html;
     }

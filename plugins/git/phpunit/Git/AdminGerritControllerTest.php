@@ -28,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Response;
+use Tuleap\Layout\IncludeAssets;
 use User_SSHKeyValidator;
 
 class AdminGerritControllerTest extends TestCase
@@ -114,7 +115,8 @@ class AdminGerritControllerTest extends TestCase
             $this->admin_page_renderer,
             \Mockery::spy(GerritServerResourceRestrictor::class),
             \Mockery::spy(RemoteServer\Gerrit\Restrictor::class),
-            new AdminGerritBuilder(\Mockery::spy(User_SSHKeyValidator::class))
+            new AdminGerritBuilder(\Mockery::spy(User_SSHKeyValidator::class)),
+            \Mockery::mock(IncludeAssets::class)
         );
     }
 

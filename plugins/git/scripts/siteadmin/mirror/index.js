@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,4 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../node_modules/prismjs/themes/prism';
+import { initAddModal } from "./modal-add-mirror";
+import { initConfigurationModal } from "./modal-mirror-configuration";
+
+document.addEventListener("DOMContentLoaded", () => {
+    initAddModal();
+    initConfigurationModal();
+});

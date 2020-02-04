@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,28 +14,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global tlp:readonly */
+import * as tlp from "tlp";
 
-(function() {
-    "use strict";
-
-    var button_selectors =
+export function initConfigurationModal() {
+    const button_selectors =
             "#button-modal-mirror-configuration, .mirror-show-repositories, .mirror-action-delete-button, .mirror-action-edit-button",
         matching_buttons = document.querySelectorAll(button_selectors);
 
     [].forEach.call(matching_buttons, function(button) {
-        var modal_element = document.getElementById(button.dataset.modalId);
+        const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
-            var modal = tlp.modal(modal_element);
+            const modal = tlp.modal(modal_element);
 
             button.addEventListener("click", function() {
                 modal.toggle();
             });
         }
     });
-})();
+}

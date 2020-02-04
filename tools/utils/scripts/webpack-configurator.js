@@ -27,6 +27,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
+const { SuppressNullNamedEntryPlugin } = require("./webpack-custom-plugins.js");
 
 const rule_configurations = require("./webpack-rule-configs.js");
 const aliases = require("./webpack-aliases.js");
@@ -106,6 +108,13 @@ function getCSSOptimizerPlugin() {
     });
 }
 
+function getLegacyConcatenatedScriptsPlugins(concatenated_files_configuration) {
+    return [
+        new SuppressNullNamedEntryPlugin(),
+        new MergeIntoSingleFilePlugin({ files: concatenated_files_configuration, hash: true })
+    ];
+}
+
 function extendDevConfiguration(webpack_configs) {
     return webpack_configs.map(webpack_config =>
         merge(webpack_config, {
@@ -141,6 +150,7 @@ const configurator = {
     getTypescriptCheckerPlugin,
     getCleanWebpackPlugin,
     getCSSExtractionPlugins,
+    getLegacyConcatenatedScriptsPlugins,
     extendDevConfiguration,
     extendProdConfiguration
 };

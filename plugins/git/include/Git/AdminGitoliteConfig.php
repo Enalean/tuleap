@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,8 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Tuleap\Admin\AdminPageRenderer;
@@ -25,9 +24,8 @@ use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Layout\IncludeAssets;
 
-class Git_AdminGitoliteConfig
+class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     public const ACTION_UPDATE_CONFIG                      = 'update_config';
     public const ACTION_MIGRATE_SSH_KEY_MANAGEMENT         = 'migrate_to_tuleap_ssh_keys_management';
     public const ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS = "update-big-objects-allowed-projects";
@@ -219,7 +217,7 @@ class Git_AdminGitoliteConfig
         $title    = dgettext('tuleap-git', 'Git');
         $template_path = dirname(GIT_BASE_DIR).'/templates';
 
-        $GLOBALS['HTML']->includeFooterJavascriptFile($this->include_assets->getFileURL('admin-gitolite.js'));
+        $GLOBALS['HTML']->includeFooterJavascriptFile($this->include_assets->getFileURL('siteadmin-gitolite.js'));
 
         $admin_presenter = new Git_AdminGitoliteConfigPresenter(
             $title,
