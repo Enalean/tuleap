@@ -22,6 +22,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\CreateTestEnv\ActivitiesAnalytics\DisplayUserActivities;
+use Tuleap\CreateTestEnv\ActivitiesAnalytics\WeeklySummaryController;
 use Tuleap\CreateTestEnv\ActivityLogger\ActivityLoggerDao;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
@@ -59,7 +60,7 @@ class create_test_envPlugin extends Plugin
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
@@ -67,7 +68,7 @@ class create_test_envPlugin extends Plugin
 
     public function getDependencies()
     {
-        return [ 'botmattermost', 'tracker' ];
+        return ['botmattermost', 'tracker'];
     }
 
     public function getHooksAndCallbacks()
@@ -132,7 +133,18 @@ class create_test_envPlugin extends Plugin
             new ActivityLoggerDao(),
             new User_ForgeUserGroupPermissionsManager(
                 new User_ForgeUserGroupPermissionsDao()
-            )
+            ),
+        );
+    }
+
+    public function routeGetWeeklySummary(): DispatchableWithRequest
+    {
+        return new WeeklySummaryController(
+            TemplateRendererFactory::build(),
+            new ActivityLoggerDao(),
+            new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao()
+            ),
         );
     }
 
@@ -143,6 +155,7 @@ class create_test_envPlugin extends Plugin
             $r->post('/notification-bot', $this->getRouteHandler('routePostNotificationBot'));
 
             $r->get('/daily-activities', $this->getRouteHandler('routeGetActivities'));
+            $r->get('/weekly-summary', $this->getRouteHandler('routeGetWeeklySummary'));
         });
     }
 

@@ -1,0 +1,27 @@
+<h1>Create Test Environment - Weekly Summary</h1>
+<table class="tlp-table">
+    <thead>
+    <tr>
+        <th>Week</th>
+        <th>Total users</th>
+        <th>Total actions</th>
+        <th>&lt= 10 actions</th>
+        <th>11 - 50</th>
+        <th>51 - 100</th>
+        <th>100+</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{# weeks }}
+        <tr>
+            <td>{{ week }}</td>
+            <td>{{ total_users }}</td>
+            <td>{{ total_actions }}</td>
+            <td>{{ less_than_10 }}</td>
+            <td>{{ between_11_and_50 }}</td>
+            <td>{{ between_51_and_100 }}</td>
+            <td>{{ more_than_100 }}</td>
+        </tr>
+    {{/ weeks }}
+    </tbody>
+</table>

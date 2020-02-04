@@ -80,4 +80,24 @@ class ActivityLoggerDao extends DataAccessObject
             $user_id
         );
     }
+
+    public function getMinMaxTimeFromLogs(): array
+    {
+        return $this->getDB()->row(
+            <<<EOT
+            SELECT min(time) as min_time, max(time) as max_time
+            FROM plugin_create_test_env_activity
+            EOT
+        );
+    }
+
+    public function getActionCountBetweenDates(\DateTimeImmutable $start, \DateTimeImmutable $end): int
+    {
+        return (int) $this->getDB()->cell('select count(*) from plugin_create_test_env_activity WHERE time >= ? AND time < ?', $start->getTimestamp(), $end->getTimestamp());
+    }
+
+    public function getActionCountPerUsersBetweenDates(\DateTimeImmutable $start, \DateTimeImmutable $end)
+    {
+        return $this->getDB()->run('select user_id, count(*) nb FROM plugin_create_test_env_activity WHERE time >= ? AND time < ? group by user_id', $start->getTimestamp(), $end->getTimestamp());
+    }
 }
