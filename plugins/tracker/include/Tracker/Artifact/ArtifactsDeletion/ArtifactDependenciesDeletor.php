@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -79,12 +79,19 @@ class ArtifactDependenciesDeletor
 
     public function cleanDependencies(Tracker_Artifact $artifact)
     {
+        $artifact_deletor_visitor = new ArtifactFilesDeletorVisitor($artifact);
         $this->permissions_manager->clearPermission(Tracker_Artifact::PERMISSION_ACCESS, $artifact->getId());
+        $tracker = $artifact->getTracker();
         $this->cross_reference_manager->deleteEntity(
             $artifact->getId(),
             Tracker_Artifact::REFERENCE_NATURE,
-            $artifact->getTracker()->getGroupId()
+            $tracker->getGroupId()
         );
+
+        foreach ($tracker->getFormElementFields() as $form_element) {
+            $form_element->accept($artifact_deletor_visitor);
+        }
+
         $this->dao->deleteArtifactLinkReference($artifact->getId());
         $this->dao->deleteUnsubscribeNotificationForArtifact($artifact->getId());
         // We do not keep trace of the history change here because it doesn't have any sense
