@@ -88,7 +88,7 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
         $update           = $request->get('update_desc');
         $add_desc         = $request->get('add_desc');
         $desc_name        = $request->get('form_name');
-        $desc_description = $request->get('form_desc');
+        $desc_description = trim($request->get('form_desc'));
         $desc_type        = $request->get('form_type');
         $desc_rank        = $request->get('form_rank');
         $desc_required    = $request->get('form_required');
@@ -96,7 +96,7 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
         if (($add_desc || $update)) {
             //data validation
             $valid_data = 1;
-            if (!trim($desc_name) || !trim($desc_description)) {
+            if (!trim($desc_name)) {
                 $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'info_missed'));
                 $valid_data = 0;
             }
