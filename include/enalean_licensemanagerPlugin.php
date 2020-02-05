@@ -245,7 +245,7 @@ class enalean_licensemanagerPlugin extends Plugin
 
         $warning = '
                 <div class="tlp-alert-warning alert alert-warning alert-block">
-                    <h4><i class="fa fa-warning tlp-alert-icon"></i> ' . $purifier->purify($title) . '</h4>
+                    <h4>' . $purifier->purify($title) . '</h4>
                     <p>
                         ' . $purifier->purify($message, CODENDI_PURIFIER_BASIC) . '
                     </p>
@@ -275,7 +275,7 @@ class enalean_licensemanagerPlugin extends Plugin
 
         $warning = '
                 <div class="tlp-alert-danger alert alert-danger alert-block">
-                    <h4><i class="fa fa-frown-o tlp-alert-icon"></i> ' . $purifier->purify($title) . '</h4>
+                    <h4>' . $purifier->purify($title) . '</h4>
                     <p>
                         ' . $purifier->purify($message, CODENDI_PURIFIER_BASIC) . '
                     </p>
