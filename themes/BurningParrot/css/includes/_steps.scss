@@ -79,10 +79,6 @@
     margin: $tlp-spacing 0;
 }
 
-.steps-step-description-text {
-    white-space: pre-line;
-}
-
 .steps-step-expected {
     display: flex;
     align-items: baseline;
@@ -94,6 +90,7 @@
 }
 
 .steps-step-expected-arrow {
+    flex: 0 0 auto;
     margin: 0 5px 0 0;
 }
 
