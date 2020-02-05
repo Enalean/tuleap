@@ -34,16 +34,10 @@
     ]]></value>
                         </preference>
                     </widget>
-                </column>
-                <column>
-                    <widget name="projectheartbeat" />
-                </column>
-            </line>
-            <line>
-                <column>
                     <widget name="projectmembers" />
                 </column>
                 <column>
+                    <widget name="projectheartbeat" />
                     <widget name="projectcontact" />
                 </column>
             </line>
@@ -69,10 +63,6 @@
                             <value name="title">New bugs not assigned</value>
                         </preference>
                     </widget>
-                </column>
-            </line>
-            <line>
-                <column>
                     <widget name="plugin_tracker_projectrenderer">
                         <preference name="renderer">
                             <reference name="id" REF="R1735"></reference>
