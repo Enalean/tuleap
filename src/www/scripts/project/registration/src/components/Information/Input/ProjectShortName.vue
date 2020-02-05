@@ -120,6 +120,7 @@ export default class ProjectShortName extends Vue {
         this.project_name = value;
 
         slugify.extend({
+            "+": "-",
             ".": "-",
             "~": "-",
             "(": "-",
