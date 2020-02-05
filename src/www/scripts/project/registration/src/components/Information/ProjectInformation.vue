@@ -19,46 +19,50 @@
   -->
 
 <template>
-    <div class="project-registration-content">
+    <div>
         <div class="tlp-alert-danger" v-if="has_error" data-test="project-creation-failed">
             {{ error }}
         </div>
 
-        <form v-on:submit.prevent="createProject" data-test="project-registration-form">
-            <div class="register-new-project-section ">
-                <project-information-svg />
-                <div class="register-new-project-list register-new-project-information">
-                    <h1 class="project-registration-title" v-translate>Start a new project</h1>
-                    <h2>
-                        <span class="tlp-badge-primary register-new-project-section-badge">2</span>
-                        <span v-translate>Project information</span>
-                    </h2>
-                    <div
-                        class="register-new-project-information-form-container"
-                        data-test="register-new-project-information-form"
-                    ></div>
-                    <project-name v-model="name_properties" />
-                    <project-information-input-privacy-list
-                        v-model="selected_visibility"
-                        data-test="register-new-project-information-list"
-                    />
-                    <field-description v-model="field_description" />
-                    <trove-category-list
-                        v-model="trove_cats"
-                        v-for="trovecat in trove_categories"
-                        v-bind:key="trovecat.id"
-                        v-bind:trovecat="trovecat"
-                    />
-                    <fields-list
-                        v-for="field in project_fields"
-                        v-bind:key="field.group_desc_id + field.desc_name"
-                        v-bind:field="field"
-                    />
-                    <policy-agreement />
-                    <project-information-footer />
+        <div class="project-registration-content">
+            <form v-on:submit.prevent="createProject" data-test="project-registration-form">
+                <div class="register-new-project-section ">
+                    <project-information-svg />
+                    <div class="register-new-project-list register-new-project-information">
+                        <h1 class="project-registration-title" v-translate>Start a new project</h1>
+                        <h2>
+                            <span class="tlp-badge-primary register-new-project-section-badge">
+                                2
+                            </span>
+                            <span v-translate>Project information</span>
+                        </h2>
+                        <div
+                            class="register-new-project-information-form-container"
+                            data-test="register-new-project-information-form"
+                        ></div>
+                        <project-name v-model="name_properties" />
+                        <project-information-input-privacy-list
+                            v-model="selected_visibility"
+                            data-test="register-new-project-information-list"
+                        />
+                        <field-description v-model="field_description" />
+                        <trove-category-list
+                            v-model="trove_cats"
+                            v-for="trovecat in trove_categories"
+                            v-bind:key="trovecat.id"
+                            v-bind:trovecat="trovecat"
+                        />
+                        <fields-list
+                            v-for="field in project_fields"
+                            v-bind:key="field.group_desc_id + field.desc_name"
+                            v-bind:field="field"
+                        />
+                        <policy-agreement />
+                        <project-information-footer />
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </template>
 
