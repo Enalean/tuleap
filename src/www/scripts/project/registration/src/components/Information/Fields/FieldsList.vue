@@ -22,27 +22,30 @@
     <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="`input-${field.group_desc_id}`">
             {{ field.desc_name }}
-            <i class="fa fa-asterisk" v-if="isRequired" />
+            <i class="fa fa-asterisk" v-if="isRequired" data-test="asterisk"></i>
         </label>
         <input
             type="text"
             class="tlp-input tlp-input-large"
-            v-bind:placeholder="field.desc_description"
             v-bind:id="`input-${field.group_desc_id}`"
             v-if="field.desc_type === 'line'"
             v-bind:required="isRequired"
             v-on:input="updateField(field.group_desc_id, $event.target.value)"
-            size="50"
         />
         <textarea
             class="tlp-textarea tlp-textarea-large"
-            v-bind:placeholder="field.desc_description"
             v-bind:id="`textaarea-${field.group_desc_id}`"
             v-bind:required="isRequired"
             v-else-if="field.desc_type === 'text'"
             v-on:input="updateField(field.group_desc_id, $event.target.value)"
             data-test="project-field-text"
         ></textarea>
+        <p
+            class="tlp-text-info"
+            v-dompurify-html="field.desc_description"
+            v-if="field.desc_description"
+            data-test="text-info"
+        ></p>
     </div>
 </template>
 

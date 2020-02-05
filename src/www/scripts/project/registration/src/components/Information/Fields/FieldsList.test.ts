@@ -22,34 +22,67 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldsList from "./FieldsList.vue";
 import EventBus from "../../../helpers/event-bus";
+import { FieldData } from "../../../type";
+
+async function getWrapper(field: FieldData): Promise<Wrapper<FieldsList>> {
+    return shallowMount(FieldsList, {
+        localVue: await createProjectRegistrationLocalVue(),
+        propsData: { field }
+    });
+}
 
 describe("FieldsList -", () => {
-    let factory: Wrapper<FieldsList>;
-    beforeEach(async () => {
-        const field = {
+    it("Display correctly a text field", async () => {
+        const wrapper = await getWrapper({
             group_desc_id: "1",
             desc_name: "custom field",
             desc_type: "text",
             desc_description: "a helpful description",
-            desc_required: true
-        };
-
-        factory = shallowMount(FieldsList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            propsData: { field: field }
+            desc_required: "1"
         });
-    });
-
-    it("Display correctly the component", () => {
-        const wrapper = factory;
 
         expect(wrapper).toMatchSnapshot();
     });
 
-    it("Send an event when user chooses a category", () => {
+    it("Display correctly a string field", async () => {
+        const wrapper = await getWrapper({
+            group_desc_id: "1",
+            desc_name: "custom field",
+            desc_type: "line",
+            desc_description: "a helpful description",
+            desc_required: "1"
+        });
+
+        expect(wrapper).toMatchSnapshot();
+    });
+
+    it("Does not display a text-info if there is no description", async () => {
+        const wrapper = await getWrapper({
+            group_desc_id: "1",
+            desc_type: "line",
+            desc_description: ""
+        } as FieldData);
+
+        expect(wrapper.contains("[data-test=text-info]")).toBe(false);
+    });
+
+    it("Does not display an asterisk if field is not required", async () => {
+        const wrapper = await getWrapper({
+            group_desc_id: "1",
+            desc_type: "line",
+            desc_required: "0"
+        } as FieldData);
+
+        expect(wrapper.contains("[data-test=asterisk]")).toBe(false);
+    });
+
+    it("Send an event when user chooses a new value for the field", async () => {
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-        const wrapper = factory;
+        const wrapper = await getWrapper({
+            group_desc_id: "1",
+            desc_type: "text"
+        } as FieldData);
 
         wrapper.find("[data-test=project-field-text]").setValue("my new value");
 
