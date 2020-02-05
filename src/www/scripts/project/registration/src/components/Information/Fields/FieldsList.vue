@@ -42,7 +42,6 @@
             v-else-if="field.desc_type === 'text'"
             v-on:input="updateField(field.group_desc_id, $event.target.value)"
             data-test="project-field-text"
-            cols="75"
         ></textarea>
     </div>
 </template>
