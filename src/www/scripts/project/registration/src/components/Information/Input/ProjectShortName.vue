@@ -133,7 +133,7 @@ export default class ProjectShortName extends Vue {
             "©": "-",
             "®": "-"
         });
-        this.slugified_project_name = slugify(value);
+        this.slugified_project_name = slugify(value, { lower: true });
         this.checkValidity(this.slugified_project_name);
 
         this.$refs.shortname.value = this.slugified_project_name;

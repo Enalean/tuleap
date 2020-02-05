@@ -106,7 +106,7 @@ describe("ProjectShortName", () => {
 
             EventBus.$emit("slugify-project-name", "My");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("My");
+            expect(wrapper.vm.$data.slugified_project_name).toBe("my");
             expect(wrapper.vm.$data.has_slug_error).toBe(true);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
@@ -171,7 +171,7 @@ describe("ProjectShortName", () => {
 
             EventBus.$emit("slugify-project-name", "0My project");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("0My-project");
+            expect(wrapper.vm.$data.slugified_project_name).toBe("0my-project");
             expect(wrapper.vm.$data.has_slug_error).toBe(true);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
@@ -189,14 +189,14 @@ describe("ProjectShortName", () => {
                 is_in_edit_mode: false
             };
             const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "My project name");
+            EventBus.$emit("slugify-project-name", "my project name");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("My-project-name");
+            expect(wrapper.vm.$data.slugified_project_name).toBe("my-project-name");
             expect(wrapper.vm.$data.has_slug_error).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
                 slugified_name: wrapper.vm.$data.slugified_project_name,
-                name: "My project name"
+                name: "my project name"
             });
         });
 
@@ -209,14 +209,34 @@ describe("ProjectShortName", () => {
                 is_in_edit_mode: false
             };
             const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "Accentué ç è é ù ë");
+            EventBus.$emit("slugify-project-name", "accentué ç è é ù ë");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("Accentue-c-e-e-u-e");
+            expect(wrapper.vm.$data.slugified_project_name).toBe("accentue-c-e-e-u-e");
             expect(wrapper.vm.$data.has_slug_error).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
                 slugified_name: wrapper.vm.$data.slugified_project_name,
-                name: "Accentué ç è é ù ë"
+                name: "accentué ç è é ù ë"
+            });
+        });
+
+        it(`Slugified project name should be lower case`, async () => {
+            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            const data = {
+                slugified_project_name: "",
+                has_slug_error: false,
+                is_in_edit_mode: false
+            };
+            const wrapper = await createWrapper(data);
+            EventBus.$emit("slugify-project-name", "My Project Short Name");
+
+            expect(wrapper.vm.$data.slugified_project_name).toBe("my-project-short-name");
+            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+
+            expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
+                slugified_name: wrapper.vm.$data.slugified_project_name,
+                name: "My Project Short Name"
             });
         });
 
@@ -229,14 +249,14 @@ describe("ProjectShortName", () => {
                 is_in_edit_mode: false
             };
             const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "Valid 11.11");
+            EventBus.$emit("slugify-project-name", "valid 11.11");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("Valid-11-11");
+            expect(wrapper.vm.$data.slugified_project_name).toBe("valid-11-11");
             expect(wrapper.vm.$data.has_slug_error).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
                 slugified_name: wrapper.vm.$data.slugified_project_name,
-                name: "Valid 11.11"
+                name: "valid 11.11"
             });
         });
 
