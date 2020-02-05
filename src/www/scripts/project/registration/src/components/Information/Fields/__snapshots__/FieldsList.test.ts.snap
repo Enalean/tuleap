@@ -3,5 +3,5 @@
 exports[`FieldsList - Display correctly the component 1`] = `
 <div class="tlp-form-element"><label for="input-1" class="tlp-label">
     custom field
-    <!----></label> <textarea placeholder="a helpful description" id="textaarea-1" data-test="project-field-text" cols="75" class="tlp-textarea tlp-textarea-large"></textarea></div>
+    <!----></label> <textarea placeholder="a helpful description" id="textaarea-1" data-test="project-field-text" class="tlp-textarea tlp-textarea-large"></textarea></div>
 `;
