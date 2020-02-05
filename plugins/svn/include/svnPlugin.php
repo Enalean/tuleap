@@ -648,10 +648,10 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return new RedirectOldViewVCUrls($this->getPluginPath());
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
-            $r->get('/index.php/{path:.*}', $this->getRouteHandler('redirectOldViewVcRoutes'));
+            $r->get('/index.php{path:.*}', $this->getRouteHandler('redirectOldViewVcRoutes'));
             $r->addRoute(['GET', 'POST'], '[/{path:.*}]', $this->getRouteHandler('routeSvnPlugin'));
         });
     }
