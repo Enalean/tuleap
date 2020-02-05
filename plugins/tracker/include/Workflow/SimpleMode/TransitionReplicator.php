@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode;
 
+use EventManager;
 use Transition;
+use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValuesForUpdate;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\NoFrozenFieldsPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\NoHiddenFieldsetsPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
@@ -45,18 +47,25 @@ class TransitionReplicator
     /** @var PostActionsMapper */
     private $post_action_mapper;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         \Workflow_Transition_ConditionFactory $condition_factory,
         ConditionsUpdater $conditions_updater,
         PostActionsRetriever $post_actions_retriever,
         PostActionCollectionUpdater $post_actions_updater,
-        PostActionsMapper $post_action_mapper
+        PostActionsMapper $post_action_mapper,
+        EventManager $event_manager
     ) {
         $this->condition_factory      = $condition_factory;
         $this->conditions_updater     = $conditions_updater;
         $this->post_actions_retriever = $post_actions_retriever;
         $this->post_actions_updater   = $post_actions_updater;
         $this->post_action_mapper     = $post_action_mapper;
+        $this->event_manager          = $event_manager;
     }
 
     /**
@@ -137,6 +146,10 @@ class TransitionReplicator
             $hidden_fieldsets_value = [];
         }
 
+        $event = new GetWorkflowExternalPostActionsValuesForUpdate($transition);
+        $this->event_manager->processEvent($event);
+        $external_post_actions_value = $event->getExternalValues();
+
         return new PostActionCollection(
             ...array_merge(
                 $update_ci_builds,
@@ -144,7 +157,8 @@ class TransitionReplicator
                 $update_float_values,
                 $update_int_values,
                 $frozen_fields_value,
-                $hidden_fieldsets_value
+                $hidden_fieldsets_value,
+                $external_post_actions_value
             )
         );
     }
