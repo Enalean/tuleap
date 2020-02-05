@@ -150,7 +150,8 @@ class TransitionReplicatorBuilder
                 )
             ),
             $post_action_collection_updater,
-            new PostActionsMapper()
+            new PostActionsMapper(),
+            EventManager::instance()
         );
     }
 }

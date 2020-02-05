@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode;
 
+use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -68,7 +69,8 @@ class TransitionReplicatorTest extends TestCase
             $this->conditions_updater,
             $this->post_actions_retriever,
             $this->post_actions_updater,
-            $this->post_actions_mapper
+            $this->post_actions_mapper,
+            Mockery::mock(EventManager::class)->shouldReceive('processEvent')->once()->getMock()
         );
     }
 

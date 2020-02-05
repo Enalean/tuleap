@@ -133,6 +133,7 @@ use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\TrackerCrumbInContext;
+use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValuesForUpdate;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
@@ -270,6 +271,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(ProjectXMLImportPreChecksEvent::NAME);
             $this->addHook(GetExternalPostActionPluginsEvent::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
+            $this->addHook(GetWorkflowExternalPostActionsValuesForUpdate::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2365,6 +2367,22 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 $event->setErrorMessage($message);
                 $event->setPostActionsNonEligible();
             }
+        }
+    }
+
+    public function getWorkflowExternalPostActionsValuesForUpdate(GetWorkflowExternalPostActionsValuesForUpdate $event): void
+    {
+        $project_id = (int) $event->getTransition()->getGroupId();
+        if (! (new ExplicitBacklogDao())->isProjectUsingExplicitBacklog($project_id)) {
+            return;
+        }
+
+        $add_to_top_backlog_post_actions = $this->getAddToTopBacklogPostActionFactory()->loadPostActions(
+            $event->getTransition()
+        );
+
+        if (count($add_to_top_backlog_post_actions) > 0) {
+            $event->addExternalValue(new AddToTopBacklogValue());
         }
     }
 }

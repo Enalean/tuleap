@@ -56,7 +56,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         $this->explicit_backlog_dao               = $explicit_backlog_dao;
     }
 
-    public function loadPostActions(Transition $transition)
+    public function loadPostActions(Transition $transition): array
     {
         $post_actions = [];
 
