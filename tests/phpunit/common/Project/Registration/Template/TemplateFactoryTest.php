@@ -98,11 +98,17 @@ class TemplateFactoryTest extends TestCase
         $this->factory->getTemplate('stuff');
     }
 
-    public function testItDoesntReturnTheTemplatesWhoseServicesAreNotAvailable(): void
+    public function testItDoesntReturnEmptyTemplateWhenNoTemplatesAreAvailable(): void
     {
         $this->consistency_checker->shouldReceive('areAllServicesAvailable')->andReturnFalse();
 
-        $this->assertEmpty($this->factory->getValidTemplates());
+        $glyph_finder   = new GlyphFinder(\Mockery::mock(\EventManager::class));
+        $empty_template = new EmptyTemplate($glyph_finder);
+
+        $available_templates = $this->factory->getValidTemplates();
+
+        $this->assertEquals($empty_template->getId(), $available_templates[0]->getId());
+        $this->assertEquals($empty_template->getTitle(), $available_templates[0]->getTitle());
     }
 
     public function testItDoesntReturnTheTemplateThatIsNotAvailable(): void

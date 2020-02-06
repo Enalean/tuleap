@@ -115,6 +115,9 @@ msgstr ""
 "Un service affiché dans un contexte de navigation imbriqué ne peut pas être "
 "le premier service d'un projet"
 
+msgid "A template without any service enabled."
+msgstr "Un template sans aucun service activé."
+
 msgid "Access"
 msgstr "Accès"
 
@@ -629,6 +632,9 @@ msgstr "Le formal de l'e-mail n'est pas valide"
 
 msgid "Emergency"
 msgstr "Urgent"
+
+msgid "Empty"
+msgstr "Vide"
 
 msgid "Empty group"
 msgstr "Groupe vide"
