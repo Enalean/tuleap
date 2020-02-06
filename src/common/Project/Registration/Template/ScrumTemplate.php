@@ -116,6 +116,10 @@ class ScrumTemplate implements TuleapTemplate
 
     public function isAvailable(): bool
     {
+        if (! file_exists(self::AGILEDASHBOARD_XML)) {
+            return false;
+        }
+
         if ($this->available === null) {
             $this->available = $this->consistency_checker->areAllServicesAvailable($this->getXMLPath());
         }
