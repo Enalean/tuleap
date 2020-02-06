@@ -21,7 +21,7 @@
 class Git_Mirror_ManifestFileGenerator
 {
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var string */
@@ -32,7 +32,7 @@ class Git_Mirror_ManifestFileGenerator
 
     public const FILE_PREFIX = 'manifest_mirror_';
 
-    public function __construct(Logger $logger, $manifest_directory)
+    public function __construct(\Psr\Log\LoggerInterface $logger, $manifest_directory)
     {
         $this->manifest_directory = $manifest_directory;
         $this->logger             = $logger;

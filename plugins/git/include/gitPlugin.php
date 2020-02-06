@@ -174,7 +174,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 {
     /**
      *
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -1877,7 +1877,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     /**
      * @return FineGrainedPermissionFactory
      */
-    private function getFineGrainedFactoryWithLogger(Logger $logger)
+    private function getFineGrainedFactoryWithLogger(\Psr\Log\LoggerInterface $logger)
     {
         $dao = $this->getFineGrainedDao();
         return new FineGrainedPermissionFactory(
@@ -1992,7 +1992,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     /**
      *
-     * @return Logger
+     * @return \Psr\Log\LoggerInterface
      */
     public function getLogger()
     {
@@ -2005,9 +2005,9 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     /**
      *
-     * @param Logger $logger
+     * @param \Psr\Log\LoggerInterface $logger
      */
-    public function setLogger(Logger $logger)
+    public function setLogger(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -2677,7 +2677,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     /**
      * @return HTTPAccessControl
      */
-    public function getHTTPAccessControl(Logger $logger)
+    public function getHTTPAccessControl(\Psr\Log\LoggerInterface $logger)
     {
         $password_handler = \PasswordHandlerFactory::getPasswordHandler();
         return new HTTPAccessControl(

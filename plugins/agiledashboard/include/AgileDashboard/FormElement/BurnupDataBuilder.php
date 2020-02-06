@@ -21,7 +21,7 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use DateTime;
-use Logger;
+use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
@@ -34,7 +34,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 class BurnupDataBuilder
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -74,7 +74,7 @@ class BurnupDataBuilder
     private $count_elements_calculator;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         BurnupCacheChecker $cache_checker,
         ChartConfigurationValueRetriever $chart_configuration_value_retriever,
         BurnupCacheDao $burnup_cache_dao,

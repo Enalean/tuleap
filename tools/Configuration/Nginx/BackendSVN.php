@@ -20,7 +20,7 @@
 
 namespace Tuleap\Configuration\Nginx;
 
-use Tuleap\Configuration\Logger\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Configuration\Logger\Wrapper;
 
 class BackendSVN
@@ -50,7 +50,7 @@ class BackendSVN
     private function replaceDefaultNginxConfig()
     {
         if (file_exists($this->nginx_base_dir.'/nginx.conf.orig')) {
-            $this->logger->warn($this->nginx_base_dir.'/nginx.conf.orig already exists, skip nginx configuration');
+            $this->logger->warning($this->nginx_base_dir.'/nginx.conf.orig already exists, skip nginx configuration');
         }
         $this->backupOriginalFile($this->nginx_base_dir.'/nginx.conf');
         copy($this->tuleap_base_dir.'/tools/distlp/backend-svn/nginx.conf', $this->nginx_base_dir.'/nginx.conf');

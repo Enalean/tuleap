@@ -23,7 +23,7 @@ namespace Tuleap\Svn;
 
 use Backend;
 use ForgeConfig;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
@@ -37,7 +37,7 @@ class SvnrootUpdater
     public const TOPIC        = 'tuleap.svn.svnroot.update';
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -46,7 +46,7 @@ class SvnrootUpdater
      */
     private $queue;
 
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = new WrapperLogger($logger, 'svnroot_updater');
         $this->queue  = (new QueueFactory($this->logger))->getPersistentQueue(self::QUEUE_PREFIX);

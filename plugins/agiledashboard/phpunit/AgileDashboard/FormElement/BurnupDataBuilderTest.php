@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
@@ -68,7 +67,7 @@ class BurnupDataBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->logger                              = Mockery::mock(Logger::class);
+        $this->logger                              = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->burnup_cache_checker                = Mockery::mock(BurnupCacheChecker::class);
         $this->chart_configuration_value_retriever = Mockery::mock(ChartConfigurationValueRetriever::class);
         $this->burnup_cache_dao                    = Mockery::mock(BurnupCacheDao::class);

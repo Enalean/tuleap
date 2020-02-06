@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Password\HaveIBeenPwned;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -42,11 +42,11 @@ class PwnedPasswordRangeRetriever
      */
     private $request_factory;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(ClientInterface $http_client, RequestFactoryInterface $request_factory, Logger $logger)
+    public function __construct(ClientInterface $http_client, RequestFactoryInterface $request_factory, LoggerInterface $logger)
     {
         $this->http_client     = $http_client;
         $this->request_factory = $request_factory;

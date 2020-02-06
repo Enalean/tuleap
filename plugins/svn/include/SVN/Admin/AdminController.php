@@ -23,7 +23,7 @@ namespace Tuleap\SVN\Admin;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Project;
 use Rule_Email;
 use Tuleap\SVN\Notifications\CannotAddUgroupsNotificationException;
@@ -83,7 +83,7 @@ class AdminController
         MailHeaderManager $mail_header_manager,
         RepositoryManager $repository_manager,
         MailNotificationManager $mail_notification_manager,
-        Logger $logger,
+        LoggerInterface $logger,
         NotificationListBuilder $notification_list_builder,
         NotificationsEmailsBuilder $emails_builder,
         UserManager $user_manager,

@@ -60,7 +60,7 @@ class GitRepositoryImplTest extends TestCase
         return new Git_Backend_Gitolite(
             \Mockery::spy(\Git_GitoliteDriver::class),
             Mockery::mock(GitoliteAccessURLGenerator::class),
-            \Mockery::spy(\Logger::class)
+            \Mockery::spy(\Psr\Log\LoggerInterface::class)
         );
     }
 }

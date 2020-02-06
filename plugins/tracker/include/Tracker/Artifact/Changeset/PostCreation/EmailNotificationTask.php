@@ -41,7 +41,7 @@ final class EmailNotificationTask implements PostCreationTask
     ];
 
     /**
-     * @var \Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     /**

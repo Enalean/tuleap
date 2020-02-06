@@ -41,14 +41,14 @@ class HTTPUserAccessKeyAuthenticator
      */
     private $access_key_verifier;
     /**
-     * @var \Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
     public function __construct(
         SplitTokenIdentifierTranslator $access_key_identifier_unserializer,
         AccessKeyVerifier $access_key_verifier,
-        \Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->access_key_identifier_unserializer = $access_key_identifier_unserializer;
         $this->access_key_verifier                = $access_key_verifier;

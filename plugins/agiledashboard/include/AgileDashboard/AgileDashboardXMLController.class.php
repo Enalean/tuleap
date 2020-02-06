@@ -136,7 +136,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
      */
     public function importProject(
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->checkUserIsAdmin();
 

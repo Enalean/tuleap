@@ -48,7 +48,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->archive            = \Mockery::spy(\ZipArchive::class);
         $node_helper              = new ArtifactXMLNodeHelper($this->dom);
         $attachment_exporter      = new ArtifactAttachmentXMLZipper($node_helper, $this->dao, $this->archive, false);
-        $this->logger             = \Mockery::spy(\Logger::class);
+        $this->logger             = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->exporter           = new ArtifactXMLExporter($this->dao, $attachment_exporter, $node_helper, $this->logger);
         $this->fixtures_dir       = __DIR__ .'/_fixtures/';
         $this->expected_open_date = $this->toExpectedDate($this->open_date);
@@ -987,7 +987,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasAZeroValue() : void
     {
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('warning')->once();
 
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_0');
         $this->assertCount(3, $this->xml->artifact->changeset);
@@ -1048,7 +1048,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasALabelWithAComma() : void
     {
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('warning')->once();
 
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_a_comma_in_a_label');
         $this->assertCount(3, $this->xml->artifact->changeset);

@@ -32,7 +32,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TestCase
     {
         parent::setUp();
         $this->dao    = Mockery::spy(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
-        $this->logger = \Mockery::spy(\Logger::class);
+        $this->logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->gitgc = \Mockery::mock(
             \Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc::class,
@@ -60,7 +60,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TestCase
     {
         $this->dao->shouldReceive('isGitGcEnabled')->andReturns(false);
 
-        $this->logger->shouldReceive('warn')->with('Cannot run git gc on gitolite admin working copy. '.
+        $this->logger->shouldReceive('warning')->with('Cannot run git gc on gitolite admin working copy. '.
         'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh '.
         '/usr/share/tuleap/plugins/git/bin/gl-admin-housekeeping.php')->once();
         $this->gitgc->shouldReceive('execGitGcAsAppAdm')->never();

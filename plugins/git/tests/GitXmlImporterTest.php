@@ -115,7 +115,7 @@ class GitXmlImporterTest extends TuleapTestCase
         ProjectManager::clearInstance();
         $this->project_manager = ProjectManager::instance();
 
-        $this->logger = mock('Logger');
+        $this->logger = mock(\Psr\Log\LoggerInterface::class);
         $this->git_plugin = new GitPlugin(1);
         $this->git_factory = new GitRepositoryFactory($this->git_dao, $this->project_manager);
 

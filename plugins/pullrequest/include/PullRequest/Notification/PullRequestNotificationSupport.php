@@ -383,7 +383,7 @@ final class PullRequestNotificationSupport
         );
     }
 
-    public static function buildDispatcher(\Logger $logger): EventDispatcherInterface
+    public static function buildDispatcher(\Psr\Log\LoggerInterface $logger): EventDispatcherInterface
     {
         return new EventDispatcherWithFallback(
             $logger,

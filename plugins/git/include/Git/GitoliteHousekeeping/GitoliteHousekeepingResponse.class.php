@@ -28,10 +28,10 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingResponse
 
     public const LOG_PREFIX = '[GITOLITE_HOUSEKEEPING] ';
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    public function __construct(Logger $logger)
+    public function __construct(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

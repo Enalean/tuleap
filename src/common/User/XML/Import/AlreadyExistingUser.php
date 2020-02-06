@@ -20,7 +20,7 @@
 namespace User\XML\Import;
 
 use PFUser;
-use Logger;
+use Psr\Log\LoggerInterface;
 use UserManager;
 
 class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImportedUser
@@ -55,7 +55,7 @@ class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImp
         return in_array($action, self::$ALLOWED_ACTIONS);
     }
 
-    public function process(UserManager $user_manager, Logger $logger)
+    public function process(UserManager $user_manager, LoggerInterface $logger)
     {
         $logger->info("Nothing to do for $this->username");
     }

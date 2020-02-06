@@ -29,7 +29,7 @@ use Tuleap\Git\Driver\GerritHTTPClientFactory;
  */
 class Git_Driver_Gerrit_GerritDriverFactory
 {
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
     /**
      * @var GerritHTTPClientFactory
@@ -48,7 +48,7 @@ class Git_Driver_Gerrit_GerritDriverFactory
         GerritHTTPClientFactory $gerrit_http_client_factory,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->gerrit_http_client_factory = $gerrit_http_client_factory;
         $this->request_factory            = $request_factory;

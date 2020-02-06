@@ -114,7 +114,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
-        $this->mail_logger->shouldReceive('warn')->once();
+        $this->mail_logger->shouldReceive('warning')->once();
         $this->mail_logger->shouldReceive('info')->never();
 
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_active->getEmail()));
@@ -130,7 +130,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_suspended, $this->project);
 
-        $this->mail_logger->shouldReceive('warn')->once();
+        $this->mail_logger->shouldReceive('warning')->once();
         $this->mail_logger->shouldReceive('info')->never();
 
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_suspended->getEmail()));
@@ -193,7 +193,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
     {
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array());
 
-        $this->mail_logger->shouldReceive('warn')->once();
+        $this->mail_logger->shouldReceive('warning')->once();
         $this->mail_logger->shouldReceive('info')->never();
 
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));

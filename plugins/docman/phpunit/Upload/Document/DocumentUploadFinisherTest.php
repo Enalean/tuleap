@@ -55,7 +55,7 @@ final class DocumentUploadFinisherTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->logger                      = \Mockery::mock(\Logger::class);
+        $this->logger                      = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->item_factory                = \Mockery::mock(Docman_ItemFactory::class);
         $this->version_factory             = \Mockery::mock(Docman_VersionFactory::class);
         $this->event_manager               = \Mockery::mock(\EventManager::class);

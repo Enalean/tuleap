@@ -25,7 +25,7 @@ use Tuleap\Queue\QueueInstrumentation;
 use Tuleap\Queue\TaskWorker\TaskWorkerTimedOutException;
 use Tuleap\Redis;
 use RedisException;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueServerConnectionException;
 
@@ -40,7 +40,7 @@ class RedisPersistentQueue implements PersistentQueue
     private const MAX_RETRY_PROCESSING_EVENT = 3;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -53,7 +53,7 @@ class RedisPersistentQueue implements PersistentQueue
     private $redis;
     private $event_queue_name;
 
-    public function __construct(Logger $logger, BackOffDelayFailedMessage $back_off_delay_failed_message, $event_queue_name)
+    public function __construct(LoggerInterface $logger, BackOffDelayFailedMessage $back_off_delay_failed_message, $event_queue_name)
     {
         $this->logger                        = $logger;
         $this->back_off_delay_failed_message = $back_off_delay_failed_message;

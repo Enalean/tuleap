@@ -51,7 +51,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase
             array('getRuleStrategy'),
             array(
                 new Tracker_Workflow_WorkflowUser(),
-                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG)
+                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG)
             )
         );
 

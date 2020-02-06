@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\RealTime;
 
 use ForgeConfig;
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -41,7 +40,7 @@ final class NodeJSClientTest extends TestCase
         ForgeConfig::set('nodejs_server_int', '');
 
         $http_client   = new \Http\Mock\Client();
-        $logger        = Mockery::mock(Logger::class);
+        $logger        = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $nodejs_client = new NodeJSClient(
             $http_client,
             HTTPFactoryBuilder::requestFactory(),

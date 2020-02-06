@@ -41,7 +41,7 @@ class Git_GitoliteDriver
 {
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -102,7 +102,7 @@ class Git_GitoliteDriver
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
     public function __construct(
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         Git_SystemEventManager $git_system_event_manager,
         Git_GitRepositoryUrlManager $url_manager,
         GitDao $git_dao,
@@ -481,7 +481,7 @@ class Git_GitoliteDriver
             $this->logger->error('[Gitolite][Restore] Unable to activate repository after restore: '.$repository->getName());
         }
         if (!$repository->getBackend()->updateRepoConf($repository)) {
-            $this->logger->warn('[Gitolite][Restore] Unable to update repository configuration after restore : '.$repository->getName());
+            $this->logger->warning('[Gitolite][Restore] Unable to update repository configuration after restore : '.$repository->getName());
         }
 
         $this->logger->info('[Gitolite] Restore of repository "'.$repository->getName().'" completed');

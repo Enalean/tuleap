@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Statistics;
 
-use Log_NoopLogger;
 use PHPUnit\Framework\TestCase;
 use Statistics_DiskUsageDao;
 use Statistics_DiskUsagePurger;
@@ -35,7 +34,7 @@ class DiskUsagePurgerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->disk_data_purger = new Statistics_DiskUsagePurger(new Statistics_DiskUsageDao(), new Log_NoopLogger());
+        $this->disk_data_purger = new Statistics_DiskUsagePurger(new Statistics_DiskUsageDao(), new \Psr\Log\NullLogger());
     }
 
     public function testItReturnsFirstDayOfEachMonthsBetweenTwoDates()

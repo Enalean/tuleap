@@ -42,7 +42,7 @@ class Git_Gitolite_ProjectSerializer
      */
     private $repository_factory;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /**
@@ -56,7 +56,7 @@ class Git_Gitolite_ProjectSerializer
     private $version_detector;
 
     public function __construct(
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         GitRepositoryFactory $repository_factory,
         Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
         Git_GitRepositoryUrlManager $url_manager,

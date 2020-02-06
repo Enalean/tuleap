@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use GitRepository;
 use GitRepositoryFactory;
-use Logger;
 use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -103,7 +102,7 @@ final class StatusPatcherTest extends TestCase
         $this->pull_request_permissions_checker = Mockery::mock(PullRequestPermissionChecker::class);
         $this->pull_request_closer              = Mockery::mock(PullRequestCloser::class);
         $this->url_verification                 = Mockery::mock(URLVerification::class);
-        $logger                                 = Mockery::mock(Logger::class);
+        $logger                                 = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $this->patcher = new StatusPatcher(
             $this->git_repository_factory,

@@ -33,10 +33,10 @@ class SystemEventProcessor_Factory
     /** @var SystemEventManager */
     private $system_event_manager;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    public function __construct(Logger $logger, SystemEventManager $system_event_manager, EventManager $event_manager)
+    public function __construct(\Psr\Log\LoggerInterface $logger, SystemEventManager $system_event_manager, EventManager $event_manager)
     {
         $this->logger               = $logger;
         $this->system_event_manager = $system_event_manager;

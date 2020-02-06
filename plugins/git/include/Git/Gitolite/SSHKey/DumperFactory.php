@@ -23,7 +23,7 @@ namespace Tuleap\Git\Gitolite\SSHKey;
 use Git_Exec;
 use Git_Gitolite_SSHKeyDumper;
 use Git_Gitolite_SSHKeyMassDumper;
-use Logger;
+use Psr\Log\LoggerInterface;
 use System_Command;
 use UserManager;
 
@@ -55,7 +55,7 @@ class DumperFactory
     private $user_manager;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -66,7 +66,7 @@ class DumperFactory
         Git_Exec $git_exec,
         $admin_path,
         UserManager $user_manager,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->management_detector          = $management_detector;
         $this->authorized_keys_file_creator = $authorized_keys_file_creator;

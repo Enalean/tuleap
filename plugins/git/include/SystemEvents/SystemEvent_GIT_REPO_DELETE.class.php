@@ -35,7 +35,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var Git_SystemEventManager */
@@ -49,7 +49,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
 
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         Git_SystemEventManager $system_event_manager,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
         UsersToNotifyDao $users_to_notify_dao,

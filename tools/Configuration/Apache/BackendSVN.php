@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\Configuration\Apache;
 
-use Tuleap\Configuration\Logger\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Configuration\Logger\Wrapper;
 
 class BackendSVN
@@ -54,7 +54,7 @@ class BackendSVN
     private function apacheListenOnLocalAsApplicationUser()
     {
         if (file_exists('/etc/httpd/conf/httpd.conf.orig')) {
-            $this->logger->warn('/etc/httpd/conf/httpd.conf.orig already exists, skip apache configuration');
+            $this->logger->warning('/etc/httpd/conf/httpd.conf.orig already exists, skip apache configuration');
             return;
         }
         $this->backupOriginalFile('/etc/httpd/conf/httpd.conf');

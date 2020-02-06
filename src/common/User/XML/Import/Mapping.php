@@ -21,7 +21,7 @@ namespace User\XML\Import;
 
 use SimpleXMLElement;
 use UserManager;
-use Logger;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class Mapping implements IFindUserFromXMLReference
@@ -38,7 +38,7 @@ class Mapping implements IFindUserFromXMLReference
     public function __construct(
         UserManager $user_manager,
         ReadyToBeImportedUsersCollection $collection,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->user_manager = $user_manager;
         $this->collection   = $collection;

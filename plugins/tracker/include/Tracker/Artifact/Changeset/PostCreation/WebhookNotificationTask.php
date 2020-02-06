@@ -27,7 +27,7 @@ use Tuleap\Tracker\Webhook\WebhookFactory;
 final class WebhookNotificationTask implements PostCreationTask
 {
     /**
-     * @var \Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     /**
@@ -39,7 +39,7 @@ final class WebhookNotificationTask implements PostCreationTask
      */
     private $webhook_factory;
 
-    public function __construct(\Logger $logger, WebhookEmitter $webhook_emitter, WebhookFactory $webhook_factory)
+    public function __construct(\Psr\Log\LoggerInterface $logger, WebhookEmitter $webhook_emitter, WebhookFactory $webhook_factory)
     {
         $this->logger          = $logger;
         $this->webhook_emitter = $webhook_emitter;

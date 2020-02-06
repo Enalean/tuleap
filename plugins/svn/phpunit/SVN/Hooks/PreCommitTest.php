@@ -27,6 +27,7 @@ namespace Tuleap\SVN\Hooks;
 use ForgeConfig;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SVN_CommitToTagDeniedException;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\ImmutableTagDao;
@@ -122,7 +123,7 @@ class PreCommitTest extends TestCase
             $this->immutable_tag_factory,
             $svn_look,
             \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class),
-            \Mockery::spy(\BackendLogger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             Mockery::mock(HookConfigRetriever::class)
         );
         $pre_commit->assertCommitToTagIsAllowed();
@@ -324,7 +325,7 @@ class PreCommitTest extends TestCase
             Mockery::mock(ImmutableTagFactory::class),
             $svn_look,
             Mockery::mock(SHA1CollisionDetector::class),
-            Mockery::mock('Logger'),
+            Mockery::mock(LoggerInterface::class),
             $hook_config
         );
 
@@ -356,7 +357,7 @@ class PreCommitTest extends TestCase
             Mockery::mock(ImmutableTagFactory::class),
             $svn_look,
             Mockery::mock(SHA1CollisionDetector::class),
-            Mockery::mock('Logger'),
+            Mockery::mock(LoggerInterface::class),
             $hook_config_retriever
         );
 
@@ -396,7 +397,7 @@ class PreCommitTest extends TestCase
             Mockery::mock(ImmutableTagFactory::class),
             $svn_look,
             Mockery::mock(SHA1CollisionDetector::class),
-            Mockery::mock('Logger'),
+            Mockery::mock(LoggerInterface::class),
             $hook_config_retriever
         );
 

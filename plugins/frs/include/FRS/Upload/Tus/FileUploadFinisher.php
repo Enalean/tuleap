@@ -25,7 +25,7 @@ namespace Tuleap\FRS\Upload\Tus;
 use FRSFile;
 use FRSFileDao;
 use FRSLogDao;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\UploadPathAllocator;
@@ -59,7 +59,7 @@ class FileUploadFinisher implements TusFinisherDataStore
      */
     private $file_dao;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -72,7 +72,7 @@ class FileUploadFinisher implements TusFinisherDataStore
     private $frs_file_builder;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         UploadPathAllocator $path_allocator,
         \FRSFileFactory $file_factory,
         \FRSReleaseFactory $release_factory,

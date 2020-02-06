@@ -24,7 +24,7 @@ namespace Tuleap\Plugin;
 use Backend;
 use EventManager;
 use ForgeConfig;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\VarExporter\VarExporter;
 use Webimpress\SafeWriter\Exception\ExceptionInterface;
 use Webimpress\SafeWriter\FileWriter;
@@ -44,11 +44,11 @@ class PluginLoader
     private $plugin_factory;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(EventManager $event_manager, \PluginFactory $plugin_factory, Logger $logger)
+    public function __construct(EventManager $event_manager, \PluginFactory $plugin_factory, LoggerInterface $logger)
     {
         $this->event_manager  = $event_manager;
         $this->plugin_factory = $plugin_factory;
@@ -129,7 +129,7 @@ class PluginLoader
         return $proxy;
     }
 
-    public static function restoreOwnershipOnCacheFile(Logger $logger, Backend $backend)
+    public static function restoreOwnershipOnCacheFile(LoggerInterface $logger, Backend $backend)
     {
         $plugin_cache_file = self::getHooksCacheFile();
         if (! file_exists($plugin_cache_file)) {

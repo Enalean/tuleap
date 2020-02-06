@@ -24,17 +24,17 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tuleap\SVN\Dao;
 
 class Destructor
 {
     /** @var Dao */
     private $dao;
-    /** @var  Logger */
+    /** @var  LoggerInterface */
     private $logger;
 
-    public function __construct(Dao $dao, Logger $logger)
+    public function __construct(Dao $dao, LoggerInterface $logger)
     {
         $this->dao    = $dao;
         $this->logger = $logger;

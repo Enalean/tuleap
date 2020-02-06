@@ -74,7 +74,7 @@ class MembershipManagerNoGerritTest extends TestCase
             $this->driver_factory,
             $this->gerrit_user_manager,
             $this->remote_server_factory_without_gerrit,
-            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             \Mockery::spy(\UGroupManager::class),
             $this->project_manager
         );

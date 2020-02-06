@@ -25,7 +25,6 @@ namespace Tuleap\Project\REST\v1;
 
 use ForgeAccess;
 use ForgeConfig;
-use Logger;
 use Luracast\Restler\RestException;
 use Mockery as M;
 use org\bovigo\vfs\vfsStream;
@@ -126,7 +125,7 @@ class RestProjectCreatorTest extends TestCase
             $this->project_creator,
             new XMLFileContentRetriever(),
             $this->service_manager,
-            M::spy(Logger::class),
+            M::spy(\Psr\Log\LoggerInterface::class),
             new \XML_RNGValidator(),
             $this->project_XML_importer,
             new TemplateFactory(

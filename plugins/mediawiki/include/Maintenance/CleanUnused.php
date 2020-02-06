@@ -24,7 +24,7 @@ namespace Tuleap\Mediawiki\Maintenance;
 use Project;
 use Backend;
 use ProjectManager;
-use Logger;
+use Psr\Log\LoggerInterface;
 use WrapperLogger;
 use MediawikiDao;
 use Tuleap\Mediawiki\MediawikiDataDir;
@@ -33,7 +33,7 @@ class CleanUnused
 {
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -62,7 +62,7 @@ class CleanUnused
      */
     private $data_dir;
 
-    public function __construct(Logger $logger, CleanUnusedDao $dao, ProjectManager $project_manager, Backend $backend, MediawikiDao $mediawiki_dao, MediawikiDataDir $data_dir)
+    public function __construct(LoggerInterface $logger, CleanUnusedDao $dao, ProjectManager $project_manager, Backend $backend, MediawikiDao $mediawiki_dao, MediawikiDataDir $data_dir)
     {
         $this->logger          = new WrapperLogger($logger, 'MW Purge');
         $this->dao             = $dao;
@@ -131,7 +131,7 @@ class CleanUnused
             if ($project && ($this->isEmpty($project) || $this->isForced($project, $projects_forced))) {
                 $this->purgeOneProject($project, $row, $dry_run);
             } else {
-                $this->logger->warn("Project {$project->getUnixName()} ({$project->getID()}) has mediawiki content but service is desactivated. You should check with project admins");
+                $this->logger->warning("Project {$project->getUnixName()} ({$project->getID()}) has mediawiki content but service is desactivated. You should check with project admins");
             }
         }
         $this->logger->info("Purge of unused services completed");
@@ -147,7 +147,7 @@ class CleanUnused
                     $this->purgeOneProject($project, $row, $dry_run);
                     $this->dao->desactivateService($project->getID(), $dry_run);
                 } else {
-                    $this->logger->warn("Project {$project->getUnixName()} ({$project->getID()}) has service activated but no content. You should check with project admins");
+                    $this->logger->warning("Project {$project->getUnixName()} ({$project->getID()}) has service activated but no content. You should check with project admins");
                 }
             }
         }
@@ -168,7 +168,7 @@ class CleanUnused
                     $this->purgeOneProject($project, $row, $dry_run);
                     $this->dao->desactivateService($project->getID(), $dry_run);
                 } else {
-                    $this->logger->warn("Project {$project->getUnixName()} ({$project->getID()}) is a template. Skipped.");
+                    $this->logger->warning("Project {$project->getUnixName()} ({$project->getID()}) is a template. Skipped.");
                 }
             }
         }
@@ -224,7 +224,7 @@ class CleanUnused
                     if (! $this->dao->doesDatabaseNameCorrespondToAnActiveProject($row['name'])) {
                         $this->dao->dropDatabase($row['name'], $dry_run);
                     } else {
-                        $this->logger->warn("Database {$row['name']} exists but cannot be associated to an active project. It's probably unused. Please check and delete it manually");
+                        $this->logger->warning("Database {$row['name']} exists but cannot be associated to an active project. It's probably unused. Please check and delete it manually");
                     }
                 }
             }

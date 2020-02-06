@@ -32,10 +32,10 @@ class ArtifactXMLExporter
     /** @var ArtifactXMLNodeHelper */
     private $node_helper;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    public function __construct(ArtifactXMLExporterDao $dao, ArtifactAttachmentXMLExporter $attachment_exporter, ArtifactXMLNodeHelper $node_helper, Logger $logger)
+    public function __construct(ArtifactXMLExporterDao $dao, ArtifactAttachmentXMLExporter $attachment_exporter, ArtifactXMLNodeHelper $node_helper, \Psr\Log\LoggerInterface $logger)
     {
         $this->dao                  = $dao;
         $this->node_helper          = $node_helper;

@@ -168,7 +168,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $this->group_id                   = 145;
         $this->event_manager              = \Mockery::mock(\EventManager::class);
         $this->xml_validator              = \Mockery::spy(\XML_RNGValidator::class);
-        $this->logger                     = \Mockery::mock(\Logger::class);
+        $this->logger                     = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->artifact_id_mapping        = new Tracker_XML_Importer_ArtifactImportedMapping();
 
         $this->cardwall_config_xml_import = new CardwallConfigXmlImport(

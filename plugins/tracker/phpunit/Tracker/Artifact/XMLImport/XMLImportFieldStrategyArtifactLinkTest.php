@@ -52,7 +52,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
     {
         $this->field            = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
         $this->submitted_by     = \Mockery::spy(\PFUser::class);
-        $this->logger           = \Mockery::mock(\Logger::class);
+        $this->logger           = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->nature_dao       = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class);
         $this->nature_creator   = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator::class);

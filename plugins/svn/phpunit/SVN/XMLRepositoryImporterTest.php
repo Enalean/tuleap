@@ -162,7 +162,7 @@ class XMLRepositoryImporterTest extends TestCase
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->configuration              = \Mockery::mock(ImportConfig::class);
-        $this->logger                     = \Mockery::mock(Logger::class);
+        $this->logger                     = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->project                    = \Mockery::mock(Project::class);
         $this->accessfile_history_creator = \Mockery::mock(AccessFileHistoryCreator::class);
         $this->mail_notification_manager  = \Mockery::mock(MailNotificationManager::class);

@@ -74,7 +74,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
 
         $sync = \Mockery::mock(
             \LDAP_DirectorySynchronization::class,
-            [$ldap, \Mockery::spy(\TruncateLevelLogger::class)]
+            [$ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class)]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -108,7 +108,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $ldap->shouldReceive('getErrno')->andReturns(15);
         $ldap->shouldReceive('search')->times(3)->andReturns($lri);
         $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\TruncateLevelLogger::class));
+        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
 
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('updateDb')->never();
@@ -142,7 +142,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
 
         $sync = \Mockery::mock(
             \LDAP_DirectorySynchronization::class,
-            [$ldap, \Mockery::spy(\TruncateLevelLogger::class)]
+            [$ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class)]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -200,7 +200,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $ldap->shouldReceive('getErrno')->andReturns(LDAP::ERR_SUCCESS);
         $ldap->shouldReceive('search')->once()->andReturns($lri);
         $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\TruncateLevelLogger::class));
+        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
 
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('updateDb')->never();
@@ -239,7 +239,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $ldap->shouldReceive('getErrno')->andReturns(LDAP::ERR_SUCCESS);
         $ldap->shouldReceive('search')->once()->andReturns($lri);
         $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\TruncateLevelLogger::class));
+        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
 
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('updateDb')->once();
@@ -282,7 +282,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $ldap->shouldReceive('getErrno')->andReturns(LDAP::ERR_SUCCESS);
         $ldap->shouldReceive('search')->once()->andReturns($lri);
         $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\TruncateLevelLogger::class));
+        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
 
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('updateDb')->never();
@@ -327,7 +327,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $param2 = ' ou=Intranet,dc=st,dc=com ';
         $ldap->shouldReceive('search')->andReturns($empty_lri, $lri, $empty_lri);
         $ldap->shouldReceive('getLDAPParam')->andReturns('ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap, \Mockery::spy(\TruncateLevelLogger::class));
+        $sync->__construct($ldap, \Mockery::spy(\Psr\Log\LoggerInterface::class));
 
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('updateDb')->never();

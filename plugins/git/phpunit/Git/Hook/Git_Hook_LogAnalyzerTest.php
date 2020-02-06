@@ -43,7 +43,7 @@ class Git_Hook_LogAnalyzerTest extends \PHPUnit\Framework\TestCase
         $this->git_exec   = \Mockery::spy(\Git_Exec::class);
         $this->repository = \Mockery::spy(\GitRepository::class);
         $this->user       = \Mockery::spy(\PFUser::class);
-        $this->logger     = \Mockery::spy(\Logger::class);
+        $this->logger     = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->log_analyzer = new Git_Hook_LogAnalyzer($this->git_exec, $this->logger);
     }

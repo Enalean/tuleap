@@ -22,7 +22,7 @@ namespace Tuleap\MediaWiki;
 
 use DirectoryIterator;
 use ForgeConfig;
-use Logger;
+use Psr\Log\LoggerInterface;
 use MediawikiLanguageManager;
 use MediawikiManager;
 use Project;
@@ -50,7 +50,7 @@ class XMLMediaWikiExporter
      */
     private $ugroup_manager;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -70,7 +70,7 @@ class XMLMediaWikiExporter
         Project $project,
         MediawikiManager $manager,
         UGroupManager $ugroup_manager,
-        Logger $logger,
+        LoggerInterface $logger,
         MediawikiMaintenanceWrapper $maintenance_wrapper,
         MediawikiLanguageManager $language_manager,
         MediawikiDataDir $mediawiki_data_dir

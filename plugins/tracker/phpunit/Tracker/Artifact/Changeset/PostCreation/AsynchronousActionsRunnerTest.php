@@ -62,9 +62,9 @@ class AsynchronousActionsRunnerTest extends TestCase
         $worker_event->shouldReceive('getPayload')->andReturns([]);
         $worker_event->shouldReceive('getEventName')->andReturns('Event name');
 
-        $logger = \Mockery::mock(\Logger::class);
+        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $worker_event->shouldReceive('getLogger')->andReturns($logger);
-        $logger->shouldReceive('warn')->atLeast()->once();
+        $logger->shouldReceive('warning')->atLeast()->once();
         $logger->shouldReceive('debug')->atLeast()->once();
         $this->actions_runner->shouldReceive('processAsyncPostCreationActions')->never();
 
@@ -81,7 +81,7 @@ class AsynchronousActionsRunnerTest extends TestCase
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns(null);
 
-        $logger = \Mockery::mock(\Logger::class);
+        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $worker_event->shouldReceive('getLogger')->andReturns($logger);
         $logger->shouldReceive('info')->atLeast()->once();
 
@@ -102,7 +102,7 @@ class AsynchronousActionsRunnerTest extends TestCase
         $artifact->shouldReceive('getChangeset')->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($artifact);
 
-        $logger = \Mockery::mock(\Logger::class);
+        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $worker_event->shouldReceive('getLogger')->andReturns($logger);
         $logger->shouldReceive('info')->atLeast()->once();
 

@@ -230,7 +230,7 @@ class WorkflowTest extends TuleapTestCase
 
         $global_rules_manager  = mock('Tracker_RulesManager');
         $trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
-        $logger                = new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG);
+        $logger                = new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG);
 
         $workflow = TestHelper::getPartialMock('Workflow', array('getPermissionsManager'));
         $workflow->__construct($global_rules_manager, $trigger_rules_manager, $logger, 1, 2, 103, 1, $transitions);
@@ -310,7 +310,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase
             array(
                 mock('Tracker_RulesManager'),
                 $this->trigger_rules_manager,
-                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
+                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
                 $workflow_id,
                 $tracker_id,
                 $field_id,
@@ -327,7 +327,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase
             array(
                 mock('Tracker_RulesManager'),
                 $this->trigger_rules_manager,
-                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
+                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
                 $workflow_id,
                 $tracker_id,
                 $field_id,
@@ -344,7 +344,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase
             array(
                 mock('Tracker_RulesManager'),
                 $this->trigger_rules_manager,
-                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
+                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
                 $workflow_id,
                 $tracker_id,
                 $field_id,

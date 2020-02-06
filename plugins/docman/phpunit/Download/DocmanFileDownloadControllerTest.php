@@ -25,7 +25,6 @@ namespace Tuleap\Docman\Download;
 use Docman_File;
 use Docman_Item;
 use Docman_ItemFactory;
-use Log_NoopLogger;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
@@ -65,7 +64,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
-            new Log_NoopLogger()
+            new \Psr\Log\NullLogger()
         );
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(null);
@@ -83,7 +82,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
-            new Log_NoopLogger()
+            new \Psr\Log\NullLogger()
         );
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_Item::class));
@@ -101,7 +100,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
-            new Log_NoopLogger()
+            new \Psr\Log\NullLogger()
         );
 
         $docman_file = Mockery::mock(Docman_File::class);
@@ -127,7 +126,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
-            new Log_NoopLogger()
+            new \Psr\Log\NullLogger()
         );
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_File::class));
@@ -152,7 +151,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
-            new Log_NoopLogger()
+            new \Psr\Log\NullLogger()
         );
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_File::class));

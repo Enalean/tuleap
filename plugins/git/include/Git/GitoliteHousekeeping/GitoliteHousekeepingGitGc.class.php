@@ -27,7 +27,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc
     /** @var Git_GitoliteHousekeeping_GitoliteHousekeepingDao */
     private $dao;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var string */
@@ -35,7 +35,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc
 
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingDao $dao,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         $gitolite_admin_working_copy
     ) {
         $this->dao                         = $dao;
@@ -49,7 +49,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc
             $this->logger->info('Running git gc on gitolite admin working copy.');
             $this->execGitGcAsAppAdm();
         } else {
-            $this->logger->warn(
+            $this->logger->warning(
                 'Cannot run git gc on gitolite admin working copy. '.
                 'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh '.
                 '/usr/share/tuleap/plugins/git/bin/gl-admin-housekeeping.php'

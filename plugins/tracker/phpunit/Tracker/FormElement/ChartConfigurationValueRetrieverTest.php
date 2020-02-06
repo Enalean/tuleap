@@ -119,7 +119,7 @@ class ChartConfigurationValueRetrieverTest extends TestCase
         $this->configuration_value_retriever = new ChartConfigurationValueRetriever(
             $this->field_retriever,
             Mockery::mock(TimeframeBuilder::class),
-            \Mockery::mock(\Logger::class)
+            \Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
     }
 

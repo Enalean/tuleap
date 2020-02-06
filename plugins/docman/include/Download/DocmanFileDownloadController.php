@@ -24,7 +24,7 @@ namespace Tuleap\Docman\Download;
 
 use Docman_File;
 use Docman_ItemFactory;
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,7 +46,7 @@ final class DocmanFileDownloadController extends DispatchablePSR15Compatible imp
      */
     private $file_download_response_generator;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -54,7 +54,7 @@ final class DocmanFileDownloadController extends DispatchablePSR15Compatible imp
         EmitterInterface $emitter,
         Docman_ItemFactory $item_factory,
         DocmanFileDownloadResponseGenerator $file_download_response_generator,
-        Logger $logger,
+        LoggerInterface $logger,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct(

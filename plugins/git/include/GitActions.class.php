@@ -73,7 +73,7 @@ class GitActions extends PluginActions
     private $mirror_updater;
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -178,7 +178,7 @@ class GitActions extends PluginActions
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
         Git_GitRepositoryUrlManager $url_manager,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         ProjectHistoryDao $history_dao,
         GitRepositoryMirrorUpdater $mirror_updater,
@@ -1169,7 +1169,7 @@ class GitActions extends PluginActions
         try {
             $this->migration_handler->migrate($repository, $remote_server_id, $gerrit_template_id, $user);
         } catch (Exception $e) {
-            $this->logger->log($e->getMessage(), Feedback::ERROR);
+            $this->logger->error($e->getMessage());
         }
     }
 

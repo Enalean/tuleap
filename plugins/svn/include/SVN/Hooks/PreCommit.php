@@ -24,7 +24,7 @@
 
 namespace Tuleap\SVN\Hooks;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use SVN_CommitToTagDeniedException;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
@@ -71,7 +71,7 @@ class PreCommit
         ImmutableTagFactory $immutable_tag_factory,
         Svnlook $svnlook,
         SHA1CollisionDetector $sha1_collision_detector,
-        Logger $logger,
+        LoggerInterface $logger,
         HookConfigRetriever $hook_config_retriever
     ) {
         $this->repository_manager      = $repository_manager;

@@ -32,7 +32,7 @@ class FRSXMLImporter
     /** @var XML_RNGValidator */
     private $xml_validator;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var FRSPackageFactory */
@@ -67,7 +67,7 @@ class FRSXMLImporter
     private $links_updater;
 
     public function __construct(
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         XML_RNGValidator $xml_validator,
         FRSPackageFactory $package_factory,
         FRSReleaseFactory $release_factory,
@@ -190,7 +190,7 @@ class FRSXMLImporter
             $ugroup_name = (string)$ugroup;
             $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
             if ($ugroup === null) {
-                $this->logger->warn("Could not find any ugroup named $ugroup_name, skip it.");
+                $this->logger->warning("Could not find any ugroup named $ugroup_name, skip it.");
                 continue;
             }
             array_push($ugroup_ids, $ugroup->getId());

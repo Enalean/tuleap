@@ -73,7 +73,7 @@ final class UserGroupManagerTest extends TestCase
         $this->ldap_user_manager = \Mockery::spy(\LDAP_UserManager::class);
         $this->ldap_user_dao     = \Mockery::spy(\LDAP_UserGroupDao::class);
         $this->project_manager   = \Mockery::spy(\ProjectManager::class);
-        $logger                  = \Mockery::spy(\Logger::class);
+        $logger                  = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->manager = new LDAP_UserGroupManager(
             $ldap,

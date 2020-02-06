@@ -20,6 +20,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LogLevel;
 
 class TruncateLevelLoggerTest extends TestCase
 {
@@ -29,66 +30,66 @@ class TruncateLevelLoggerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->logger = \Mockery::spy(\Logger::class);
+        $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
     }
 
     public function testItLogEverythingByDefault(): void
     {
-        $truncate_logger = new TruncateLevelLogger($this->logger, Logger::DEBUG);
+        $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::DEBUG);
 
-        $this->logger->shouldReceive('debug')->with("debug message")->once();
-        $this->logger->shouldReceive('info')->with("info message")->once();
-        $this->logger->shouldReceive('warn')->with("warn message", \Mockery::any())->once();
-        $this->logger->shouldReceive('error')->with("error message", \Mockery::any())->once();
+        $this->logger->shouldReceive('debug')->with("debug message", [])->once();
+        $this->logger->shouldReceive('info')->with("info message", [])->once();
+        $this->logger->shouldReceive('warning')->with("warn message", [])->once();
+        $this->logger->shouldReceive('error')->with("error message", [])->once();
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
-        $truncate_logger->warn("warn message");
+        $truncate_logger->warning("warn message");
         $truncate_logger->error("error message");
     }
 
     public function testItSkipsDebugWhenLevelIsInfo(): void
     {
-        $truncate_logger = new TruncateLevelLogger($this->logger, Logger::INFO);
+        $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::INFO);
 
         $this->logger->shouldReceive('debug')->never();
-        $this->logger->shouldReceive('info')->with("info message")->once();
-        $this->logger->shouldReceive('warn')->with("warn message", \Mockery::any())->once();
-        $this->logger->shouldReceive('error')->with("error message", \Mockery::any())->once();
+        $this->logger->shouldReceive('info')->with("info message", [])->once();
+        $this->logger->shouldReceive('warning')->with("warn message", [])->once();
+        $this->logger->shouldReceive('error')->with("error message", [])->once();
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
-        $truncate_logger->warn("warn message");
+        $truncate_logger->warning("warn message");
         $truncate_logger->error("error message");
     }
 
     public function testItSkipsDebugAndInfoWhenLevelIsWarn(): void
     {
-        $truncate_logger = new TruncateLevelLogger($this->logger, Logger::WARN);
+        $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::WARNING);
 
         $this->logger->shouldReceive('debug')->never();
         $this->logger->shouldReceive('info')->never();
-        $this->logger->shouldReceive('warn')->with("warn message", \Mockery::any())->once();
-        $this->logger->shouldReceive('error')->with("error message", \Mockery::any())->once();
+        $this->logger->shouldReceive('warning')->with("warn message", [])->once();
+        $this->logger->shouldReceive('error')->with("error message", [])->once();
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
-        $truncate_logger->warn("warn message");
+        $truncate_logger->warning("warn message");
         $truncate_logger->error("error message");
     }
 
     public function testItSkipsDebugInfoAndWarnWhenLevelIsWarn(): void
     {
-        $truncate_logger = new TruncateLevelLogger($this->logger, Logger::ERROR);
+        $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::ERROR);
 
         $this->logger->shouldReceive('debug')->never();
         $this->logger->shouldReceive('info')->never();
         $this->logger->shouldReceive('warn')->never();
-        $this->logger->shouldReceive('error')->with("error message", \Mockery::any())->once();
+        $this->logger->shouldReceive('error')->with("error message", [])->once();
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
-        $truncate_logger->warn("warn message");
+        $truncate_logger->warning("warn message");
         $truncate_logger->error("error message");
     }
 }

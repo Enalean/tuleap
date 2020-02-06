@@ -21,8 +21,8 @@
 namespace Tuleap\Configuration\Nginx;
 
 use DirectoryIterator;
+use Psr\Log\LoggerInterface;
 use Tuleap\Configuration\Common\Exec;
-use Tuleap\Configuration\Logger\LoggerInterface;
 
 class Common
 {

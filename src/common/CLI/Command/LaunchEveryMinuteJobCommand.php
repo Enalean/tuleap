@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\Command;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,11 +40,11 @@ final class LaunchEveryMinuteJobCommand extends Command
      */
     private $event_dispatcher;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(EventDispatcherInterface $event_dispatcher, Logger $logger, DBConnection $db_connection)
+    public function __construct(EventDispatcherInterface $event_dispatcher, LoggerInterface $logger, DBConnection $db_connection)
     {
         parent::__construct(self::NAME);
         $this->event_dispatcher = $event_dispatcher;

@@ -47,7 +47,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends \PHPUnit\Framework\TestCase
         $this->event->injectDependencies(
             $this->repository_factory,
             $this->system_event_dao,
-            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             $this->system_event_manager
         );
     }

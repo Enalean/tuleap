@@ -53,7 +53,7 @@ class CardwallConfigXmlImport
     private $column_dao;
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -73,7 +73,7 @@ class CardwallConfigXmlImport
         Cardwall_OnTop_ColumnMappingFieldValueDao $mapping_field_value_dao,
         EventManager $event_manager,
         XML_RNGValidator $xml_validator,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->mapping                 = $mapping;
         $this->field_mapping           = $field_mapping;

@@ -39,7 +39,7 @@ class ProjectDashboardXMLImporter
      */
     private $project_dashboard_saver;
     /**
-     * @var \Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     /**
@@ -64,7 +64,7 @@ class ProjectDashboardXMLImporter
         ProjectDashboardSaver $project_dashboard_saver,
         WidgetFactory $widget_factory,
         DashboardWidgetDao $widget_dao,
-        \Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         \EventManager $event_manager,
         DisabledProjectWidgetsChecker $disabled_project_widgets_checker
     ) {
@@ -88,11 +88,11 @@ class ProjectDashboardXMLImporter
                     $dashboard = new Dashboard($dashboard_id, $dashboard_name);
                     $this->importWidgets($dashboard, $project, $dashboard_xml, $mapping_registry);
                 } catch (UserCanNotUpdateProjectDashboardException $e) {
-                    $this->logger->warn($e->getMessage());
+                    $this->logger->warning($e->getMessage());
                 } catch (NameDashboardDoesNotExistException $e) {
-                    $this->logger->warn($e->getMessage());
+                    $this->logger->warning($e->getMessage());
                 } catch (NameDashboardAlreadyExistsException $e) {
-                    $this->logger->warn($e->getMessage());
+                    $this->logger->warning($e->getMessage());
                 }
             }
         }
@@ -129,7 +129,7 @@ class ProjectDashboardXMLImporter
             $layout = (string) $line['layout'];
             if (! $dashboard->isLayoutValid($layout, $nb_columns)) {
                 $layout = '';
-                $this->logger->warn("Invalid layout $layout for $nb_columns columns");
+                $this->logger->warning("Invalid layout $layout for $nb_columns columns");
             }
         }
         if ($layout !== '') {
@@ -159,11 +159,11 @@ class ProjectDashboardXMLImporter
                     $this->widget_dao->insertWidgetInColumnWithRank($widget->getId(), $content_id, $column_id, $widget_rank);
                     $all_widgets[$widget->getId()] = true;
                 } else {
-                    $this->logger->warn("Impossible to create line or column, widget {$widget->getId()} not added");
+                    $this->logger->warning("Impossible to create line or column, widget {$widget->getId()} not added");
                 }
                 $widget_rank++;
             } catch (\Exception $exception) {
-                $this->logger->warn("Impossible to create widget: ".$exception->getMessage());
+                $this->logger->warning("Impossible to create widget: ".$exception->getMessage());
             }
         }
     }
@@ -205,7 +205,7 @@ class ProjectDashboardXMLImporter
 
         $widget->setOwner($project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         if ($widget->isUnique() && isset($all_widgets[$widget->getId()])) {
-            $this->logger->warn("Impossible to instantiate twice widget named '".$widget_name."'.  Widget skipped");
+            $this->logger->warning("Impossible to instantiate twice widget named '".$widget_name."'.  Widget skipped");
             return [null, null];
         }
         $event = new ConfigureAtXMLImport($widget, $widget_xml, $mapping_registry);

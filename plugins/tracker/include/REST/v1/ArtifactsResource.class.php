@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\REST\v1;
 
 use EventManager;
 use FeedbackDao;
-use Log_NoopLogger;
+use Psr\Log\NullLogger;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project_AccessException;
@@ -1097,7 +1097,7 @@ class ArtifactsResource extends AuthenticatedResource
             ),
             $xml_import_builder->build(
                 $user_finder,
-                new Log_NoopLogger()
+                new NullLogger()
             ),
             new Tracker_Artifact_PriorityManager(
                 new Tracker_Artifact_PriorityDao(),

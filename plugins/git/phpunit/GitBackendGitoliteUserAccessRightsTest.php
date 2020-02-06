@@ -40,7 +40,7 @@ class GitBackendGitoliteUserAccessRightsTest extends TestCase
     {
         parent::setUp();
         $driver        = \Mockery::spy(\Git_GitoliteDriver::class);
-        $this->backend = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), \Mockery::spy(\Logger::class));
+        $this->backend = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), \Mockery::spy(\Psr\Log\LoggerInterface::class));
 
         $this->user       = \Mockery::spy(\PFUser::class);
         $this->repository = \Mockery::spy(\GitRepository::class);

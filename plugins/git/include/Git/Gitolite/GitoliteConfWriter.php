@@ -38,7 +38,7 @@ class Git_Gitolite_GitoliteConfWriter
     /** @var Git_Mirror_MirrorDataMapper */
     private $mirror_data_mapper;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var ProjectManager */
@@ -49,7 +49,7 @@ class Git_Gitolite_GitoliteConfWriter
         Git_Gitolite_ProjectSerializer $project_serializer,
         Git_Gitolite_GitoliteRCReader $gitoliterc_reader,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         ProjectManager $project_manager,
         $gitolite_administration_path
     ) {

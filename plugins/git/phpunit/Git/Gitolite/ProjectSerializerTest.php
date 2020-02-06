@@ -92,7 +92,7 @@ class ProjectSerializerTest extends TestCase
             Mockery::spy(EventManager::class)
         );
 
-        $this->logger = Mockery::spy(\Logger::class);
+        $this->logger = Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->big_object_authorization_manager = Mockery::mock(BigObjectAuthorizationManager::class);
         $this->version_detector                 = Mockery::mock(VersionDetector::class);

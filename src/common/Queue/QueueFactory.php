@@ -21,7 +21,7 @@
 
 namespace Tuleap\Queue;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tuleap\Queue\Redis\BackOffDelayFailedMessage;
 use Tuleap\Redis\ClientFactory as RedisClientFactory;
 
@@ -30,11 +30,11 @@ class QueueFactory
     public const REDIS = 'redis';
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

@@ -40,7 +40,7 @@ class LauncherTest extends TestCase
     {
         parent::setUp();
 
-        $this->logger      = \Mockery::spy(\Tuleap\HudsonSvn\SvnBackendLogger::class);
+        $this->logger      = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->project     = \Mockery::spy(\Project::class);
         $this->repository  = new Repository(1, "repository_name", '', '', $this->project);
         $this->commit_info = new CommitInfo();

@@ -20,7 +20,7 @@
 namespace User\XML\Import;
 
 use UserManager;
-use Logger;
+use Psr\Log\LoggerInterface;
 
 class ReadyToBeImportedUsersCollection
 {
@@ -69,7 +69,7 @@ class ReadyToBeImportedUsersCollection
         return $this->users_by_ldap_id[$ldap_id];
     }
 
-    public function process(UserManager $user_manager, Logger $logger)
+    public function process(UserManager $user_manager, LoggerInterface $logger)
     {
         foreach ($this->users_by_name as $user) {
             $user->process($user_manager, $logger);

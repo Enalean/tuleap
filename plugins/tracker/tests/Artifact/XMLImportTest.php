@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -104,7 +104,7 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase
 
         $this->static_value_dao = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
 
-        $this->logger = \Mockery::spy(\Logger::class);
+        $this->logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->response = \Mockery::spy(\Response::class);
         $GLOBALS['Response'] = $this->response;
@@ -521,7 +521,7 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
 
         $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($artifact);
 
-        expect($this->logger)->warn()->once();
+        $this->logger->shouldReceive('log')->with(\Psr\Log\LogLevel::WARNING, Mockery::any(), Mockery::any())->once();
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -558,7 +558,7 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             $this->formelement_factory,
             $this->xml_import_helper,
             $this->static_value_dao,
-            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             false,
             \Mockery::spy(\Tracker_ArtifactFactory::class),
             \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
@@ -2247,7 +2247,7 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
         $artlink_strategy = \Mockery::mock(\Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         stub($artlink_strategy)->getLastChangeset()->returns(false);
 
-        expect($this->logger)->error()->count(1);
+        $this->logger->shouldReceive('log')->with(\Psr\Log\LogLevel::ERROR, Mockery::any(), Mockery::any())->once();
         $this->importer->importFromXML($this->tracker, $xml_element, $this->extraction_path, $this->xml_mapping, $this->url_mapping, $this->config);
     }
 }
@@ -2285,7 +2285,7 @@ class Tracker_Artifact_XMLImport_BadDateTest extends Tracker_Artifact_XMLImportB
     {
         expect($this->artifact_creator)->create()->never();
         expect($this->artifact_creator)->createBare()->never();
-        expect($this->logger)->error()->once();
+        $this->logger->shouldReceive('log')->with(\Psr\Log\LogLevel::ERROR, Mockery::any(), Mockery::any())->once();
 
         $this->importer->importFromXML(
             $this->tracker,

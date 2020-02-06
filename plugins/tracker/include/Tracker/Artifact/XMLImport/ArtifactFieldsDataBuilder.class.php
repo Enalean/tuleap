@@ -56,7 +56,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategy[] */
     private $strategies;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     public function __construct(
@@ -66,7 +66,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer,
         $extraction_path,
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         TrackerXmlFieldsMapping $xml_fields_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
         Tracker_ArtifactFactory $tracker_artifact_factory,
@@ -160,10 +160,10 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
                 } else {
                     $invalid_submitted_value = (string)$submitted_value;
                 }
-                $this->logger->warn("Skipped invalid value $invalid_submitted_value for field ".$field->getName());
+                $this->logger->warning("Skipped invalid value $invalid_submitted_value for field ".$field->getName());
             }
         } catch (Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException $exception) {
-            $this->logger->warn("Skipped invalid value for field ".$field->getName().': '.$exception->getMessage());
+            $this->logger->warning("Skipped invalid value for field ".$field->getName().': '.$exception->getMessage());
         }
     }
 

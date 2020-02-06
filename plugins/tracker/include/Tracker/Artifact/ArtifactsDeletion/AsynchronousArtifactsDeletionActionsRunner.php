@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Exception;
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use Tracker_Artifact;
 use Tuleap\Queue\QueueFactory;
@@ -36,7 +36,7 @@ class AsynchronousArtifactsDeletionActionsRunner
      */
     private $pending_artifact_removal_dao;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -50,7 +50,7 @@ class AsynchronousArtifactsDeletionActionsRunner
 
     public function __construct(
         PendingArtifactRemovalDao $pending_artifact_removal_dao,
-        Logger $logger,
+        LoggerInterface $logger,
         \UserManager $user_manager,
         QueueFactory $queue_factory
     ) {

@@ -46,7 +46,7 @@ class FileCopier
 
         if (file_exists($destination_file)) {
             if ($skip_duplicated) {
-                $this->logger->warn("Destination file $destination_file already exists. Skipping");
+                $this->logger->warning("Destination file $destination_file already exists. Skipping");
                 return true;
             } else {
                 $this->logger->error("Destination file $destination_file already exists");

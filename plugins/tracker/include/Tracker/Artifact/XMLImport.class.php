@@ -87,7 +87,7 @@ class Tracker_Artifact_XMLImport
         Tracker_FormElementFactory $formelement_factory,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         $send_notifications,
         Tracker_ArtifactFactory $tracker_artifact_factory,
         NatureDao $nature_dao,
@@ -352,7 +352,7 @@ class Tracker_Artifact_XMLImport
             return $this->getExistingBareArtifact($existing_artifact_id);
         }
 
-        $this->logger->warn("No correspondence between existings artifacts and the new XML artifact. New artifact created.");
+        $this->logger->warning("No correspondence between existings artifacts and the new XML artifact. New artifact created.");
         return $this->importNewBareArtifact($tracker, $xml_artifact);
     }
 
@@ -507,9 +507,9 @@ class Tracker_Artifact_XMLImport
                     $this->importRemainingChangeset($artifact, $xml_changeset, $fields_data_builder, $url_mapping);
                 }
             } catch (Tracker_NoChangeException $exception) {
-                $this->logger->warn("No Change for changeset $count");
+                $this->logger->warning("No Change for changeset $count");
             } catch (Exception $exception) {
-                $this->logger->warn("Unexpected error at changeset $count: ".$exception->getMessage());
+                $this->logger->warning("Unexpected error at changeset $count: ".$exception->getMessage());
             }
             $count++;
         }
@@ -576,7 +576,7 @@ class Tracker_Artifact_XMLImport
     ) {
         $submitted_by = $this->getSubmittedBy($xml_changeset);
 
-        $this->logger->warn("Failed to create artifact with first changeset, create a fake one instead: ".$GLOBALS['Response']->getAndClearRawFeedback());
+        $this->logger->warning("Failed to create artifact with first changeset, create a fake one instead: ".$GLOBALS['Response']->getAndClearRawFeedback());
         return $this->artifact_creator->createFirstChangeset(
             $artifact->getTracker(),
             $artifact,
@@ -624,7 +624,7 @@ class Tracker_Artifact_XMLImport
         if ($changeset) {
             $this->updateComments($changeset, $xml_changeset);
         } else {
-            $this->logger->warn("Impossible to create changeset: ".$GLOBALS['Response']->getAndClearRawFeedback());
+            $this->logger->warning("Impossible to create changeset: ".$GLOBALS['Response']->getAndClearRawFeedback());
         }
     }
 

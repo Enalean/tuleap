@@ -121,7 +121,7 @@ class Git_Backend_GitoliteTest extends TestCase
             [
                 $driver,
                 \Mockery::spy(GitoliteAccessURLGenerator::class),
-                \Mockery::spy(\Logger::class)
+                \Mockery::spy(\Psr\Log\LoggerInterface::class)
             ]
         )
             ->makePartial()
@@ -161,7 +161,7 @@ class Git_Backend_GitoliteTest extends TestCase
             [
                 $driver,
                 \Mockery::spy(GitoliteAccessURLGenerator::class),
-                \Mockery::spy(\Logger::class)
+                \Mockery::spy(\Psr\Log\LoggerInterface::class)
             ]
         )
             ->makePartial()
@@ -195,7 +195,7 @@ class Git_Backend_GitoliteTest extends TestCase
             [
                 $driver,
                 \Mockery::spy(GitoliteAccessURLGenerator::class),
-                \Mockery::spy(\Logger::class)
+                \Mockery::spy(\Psr\Log\LoggerInterface::class)
             ]
         )
             ->makePartial()
@@ -284,7 +284,7 @@ class Git_Backend_GitoliteTest extends TestCase
         $dao                = \Mockery::spy(GitDao::class);
         $permissionsManager = \Mockery::spy(\PermissionsManager::class);
         $gitPlugin          = \Mockery::mock(GitPlugin::class);
-        $backend = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), \Mockery::spy(\Logger::class));
+        $backend = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), \Mockery::spy(\Psr\Log\LoggerInterface::class));
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
         $backend->setGitPlugin($gitPlugin);

@@ -21,7 +21,7 @@
 
 namespace Tracker\Artifact;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Valid_HTTPURI;
@@ -29,7 +29,7 @@ use Valid_HTTPURI;
 class XMLArtifactSourcePlatformExtractor
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -38,7 +38,7 @@ class XMLArtifactSourcePlatformExtractor
      */
     private $valid_HTTPURI;
 
-    public function __construct(Valid_HTTPURI $valid_HTTPURI, Logger $logger)
+    public function __construct(Valid_HTTPURI $valid_HTTPURI, LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->valid_HTTPURI = $valid_HTTPURI;
@@ -48,7 +48,7 @@ class XMLArtifactSourcePlatformExtractor
     {
         if (! isset($xml_artifacts->attributes()['source_platform'])) {
             if ($config->isUpdate()) {
-                $this->logger->warn("No attribute source_platform in XML. New artifact created.");
+                $this->logger->warning("No attribute source_platform in XML. New artifact created.");
             }
             return null;
         }
@@ -57,7 +57,7 @@ class XMLArtifactSourcePlatformExtractor
 
         if (! $this->valid_HTTPURI->validate($source_platform)) {
             if ($config->isUpdate()) {
-                $this->logger->warn("Source platform is not a valid URI. New artifact created.");
+                $this->logger->warning("Source platform is not a valid URI. New artifact created.");
             }
             return null;
         }

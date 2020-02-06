@@ -20,6 +20,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LogLevel;
 
 class WrapperLoggerTest extends TestCase
 {
@@ -30,14 +31,14 @@ class WrapperLoggerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->logger = \Mockery::spy(\Logger::class);
+        $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
     }
 
     public function testItAppendAPrefix(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'stuff');
 
-        $this->logger->shouldReceive('info')->with('[stuff] bla')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[stuff] bla', [])->once();
 
         $wrapper->info('bla');
     }
@@ -48,7 +49,7 @@ class WrapperLoggerTest extends TestCase
 
         $wrapper2 = new WrapperLogger($wrapper1, 'artifact');
 
-        $this->logger->shouldReceive('info')->with('[tracker] [artifact] bla')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker] [artifact] bla', [])->once();
 
         $wrapper2->info('bla');
     }
@@ -57,7 +58,7 @@ class WrapperLoggerTest extends TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -67,9 +68,8 @@ class WrapperLoggerTest extends TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('info')->times(2);
-        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->ordered();
-        $this->logger->shouldReceive('info')->with('[tracker][53] coin')->ordered();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] coin', [])->once();
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -80,9 +80,8 @@ class WrapperLoggerTest extends TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('info')->times(2);
-        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->ordered();
-        $this->logger->shouldReceive('info')->with('[tracker][53][field] coin')->ordered();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53][field] coin', [])->once();
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -94,9 +93,8 @@ class WrapperLoggerTest extends TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('info')->times(2);
-        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->ordered();
-        $this->logger->shouldReceive('info')->with('[tracker] coin')->ordered();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker] coin', [])->once();
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -108,10 +106,9 @@ class WrapperLoggerTest extends TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('info')->times(3);
-        $this->logger->shouldReceive('info')->with('[tracker] stuff')->ordered();
-        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->ordered();
-        $this->logger->shouldReceive('info')->with('[tracker][54] coin')->ordered();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker] stuff', [])->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][54] coin', [])->once();
 
         $wrapper->info('stuff');
         $wrapper->push('53');

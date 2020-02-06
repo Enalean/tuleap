@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Queue\TaskWorker;
 
 use JsonException;
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
@@ -48,7 +47,7 @@ final class TaskWorkerProcessCommandTest extends TestCase
     public function testEventIsDispatchedForProcessing() : void
     {
         $event_dispatcher = Mockery::mock(EventDispatcherInterface::class);
-        $logger           = Mockery::mock(Logger::class);
+        $logger           = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $command          = new TaskWorkerProcessCommand($event_dispatcher, $logger);
 
         $path_to_file            = $this->filesystem_root->url() . '/event';
@@ -66,7 +65,7 @@ final class TaskWorkerProcessCommandTest extends TestCase
 
     public function testEventNotProperlyJSONSerializedIsRejected() : void
     {
-        $logger           = Mockery::mock(Logger::class);
+        $logger           = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $command          = new TaskWorkerProcessCommand(Mockery::mock(EventDispatcherInterface::class), $logger);
 
         $path_to_file            = $this->filesystem_root->url() . '/event';

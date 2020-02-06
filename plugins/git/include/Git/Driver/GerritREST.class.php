@@ -52,14 +52,14 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
      * @var StreamFactoryInterface
      */
     private $stream_factory;
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     public function __construct(
         GerritHTTPClientFactory $client_factory,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->client_factory  = $client_factory;
         $this->request_factory = $request_factory;

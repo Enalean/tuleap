@@ -150,7 +150,7 @@ class XMLDocmanImport
         }
 
         if (!@$dom->validate()) {
-            $this->logger->warn("DTD Validation failed.");
+            $this->logger->warning("DTD Validation failed.");
         }
 
         $this->doc = simplexml_import_dom($dom);
@@ -332,7 +332,7 @@ class XMLDocmanImport
             if (count($absentUsers) != 0) {
                 $msg = "Can't find the users referenced by the following identifiers: ".implode(', ', $absentUsers);
                 if ($this->force) {
-                    $this->logger->warn($msg);
+                    $this->logger->warning($msg);
 
                     // Record item owners loss
                     foreach ($absentUsers as $absentUser) {
@@ -526,13 +526,13 @@ class XMLDocmanImport
                     $user_name = (string)$member;
                     $members[] = $user_name;
                     if (!isset($this->ugroupMap[$ugroup_id]['members'][$user_name])) {
-                        $this->logger->warn("The user '$user_name' is not a member of the ugroup '$ugroup_name' on the target project.");
+                        $this->logger->warning("The user '$user_name' is not a member of the ugroup '$ugroup_name' on the target project.");
                     }
                 }
 
                 foreach ($this->ugroupMap[$ugroup_id]['members'] as $user_name => $member) {
                     if (!in_array($user_name, $members)) {
-                        $this->logger->warn("The user '$user_name' is a member of the ugroup '$ugroup_name' on the target project, but he's not inside the ugroup definition in the XML document.");
+                        $this->logger->warning("The user '$user_name' is a member of the ugroup '$ugroup_name' on the target project, but he's not inside the ugroup definition in the XML document.");
                     }
                 }
             } else {
@@ -1164,7 +1164,7 @@ class XMLDocmanImport
 
     private function adjustChunkSize()
     {
-        $this->logger->warn("Request entity too large, need to adjust upload chunk size");
+        $this->logger->warning("Request entity too large, need to adjust upload chunk size");
         $this->chunk_size = floor($this->chunk_size / 2);
         if ($this->chunk_size > 1000) {
             $this->logger->info("New chunk size: ".$this->chunk_size);

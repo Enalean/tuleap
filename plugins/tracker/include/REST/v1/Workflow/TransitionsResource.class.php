@@ -329,7 +329,7 @@ class TransitionsResource extends AuthenticatedResource
         try {
             $project = $transition->getWorkflow()->getTracker()->getProject();
         } catch (OrphanTransitionException $exception) {
-            $this->getRESTLogger()->error('Cannot return transition post actions', $exception);
+            $this->getRESTLogger()->error('Cannot return transition post actions', ['exception' => $exception]);
             throw new RestException(520);
         }
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt($current_user, $project);
@@ -429,7 +429,7 @@ class TransitionsResource extends AuthenticatedResource
 
             $handler->handle($current_user, $transition, $post_actions_representation);
         } catch (OrphanTransitionException $exception) {
-            $this->getRESTLogger()->error('Cannot update transition post actions', $exception);
+            $this->getRESTLogger()->error('Cannot update transition post actions', ['exception' => $exception]);
             throw new RestException(520);
         } catch (InvalidPostActionException |
                  UnknownPostActionIdsException |

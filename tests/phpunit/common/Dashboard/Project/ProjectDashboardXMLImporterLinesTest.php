@@ -25,6 +25,7 @@ namespace Tuleap\Dashboard\Project;
 
 require_once __DIR__ . '/ProjectDashboardXMLImporterBase.php';
 
+use Psr\Log\LogLevel;
 use SimpleXMLElement;
 
 class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBase
@@ -186,7 +187,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), [])->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -217,7 +218,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), [])->once();
 
         $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnTrue();
 
@@ -250,7 +251,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), [])->once();
 
         $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
@@ -278,7 +279,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->logger->shouldReceive('error')->never();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
 
         $this->widget_dao->shouldReceive('createLine')->andReturns(12);
         $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
@@ -326,7 +327,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $widget->shouldReceive('isUnique')->andReturns(true);
         $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns($widget);
 
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, \Mockery::any(), [])->once();
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(1);
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1);
 
@@ -369,8 +370,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $widget->shouldReceive('isUnique')->andReturns(true);
         $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns($widget);
 
-        $this->logger->shouldReceive('warn')->never();
-        $this->logger->shouldReceive('error')->never();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, \Mockery::any(), \Mockery::any())->never();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1)->ordered();
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 222, 1)->ordered();
@@ -433,7 +434,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->widget_dao->shouldReceive('createColumn')->never();
         $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('myprojects')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('myprojects')->getMock());
 
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), [])->once();
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
         $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
@@ -464,7 +465,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->logger->shouldReceive('error')->never();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
 
         $this->widget_dao->shouldReceive('createLine')->andReturns(12);
         $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
@@ -508,7 +509,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $this->dao->shouldReceive('save')->andReturns(144);
 
-        $this->logger->shouldReceive('error')->never();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
 
         $this->widget_dao->shouldReceive('createLine')->andReturns(12);
         $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
@@ -550,8 +551,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->logger->shouldReceive('error')->never();
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, \Mockery::any(), [])->once();
 
         $this->widget_dao->shouldReceive('createLine')->andReturns(12);
         $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();

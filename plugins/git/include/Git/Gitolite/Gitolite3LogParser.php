@@ -25,7 +25,7 @@ use DirectoryIterator;
 use Git;
 use GitRepositoryFactory;
 use GitRepositoryGitoliteAdmin;
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use System_Command;
 use Tuleap\Git\History\Dao;
@@ -43,7 +43,7 @@ class Gitolite3LogParser
     public const EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE = 8;
 
 
-    /** @var Logger */
+    /** @var LoggerInterface */
     private $logger;
 
     /** @var System_Command */
@@ -95,7 +95,7 @@ class Gitolite3LogParser
     private $user_last_access_cache = [];
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         System_Command $system_command,
         HttpUserValidator $user_validator,
         Dao $history_dao,
@@ -178,7 +178,7 @@ class Gitolite3LogParser
             );
 
             if (! $repository) {
-                $this->logger->warn(
+                $this->logger->warning(
                     "Git repository $line[3] seems deleted. Skipping."
                 );
 

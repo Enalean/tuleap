@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Workflow;
 
-use Exception;
 use TruncateLevelLogger;
 
 /**
@@ -47,24 +46,24 @@ final class WorkflowBackendLogger extends TruncateLevelLogger
     /** @var string|int */
     private $fingerprint = '';
 
-    public function debug($message) : void
+    public function debug($message, array $context = []) : void
     {
-        parent::debug($this->getDecoratedMessage($message));
+        parent::debug($this->getDecoratedMessage($message), $context);
     }
 
-    public function info($message) : void
+    public function info($message, array $context = []) : void
     {
-        parent::info($this->getDecoratedMessage($message));
+        parent::info($this->getDecoratedMessage($message), $context);
     }
 
-    public function warn($message, ?Exception $exception = null) : void
+    public function warning($message, array $context = []) : void
     {
-        parent::warn($this->getDecoratedMessage($message), $exception);
+        parent::warning($this->getDecoratedMessage($message), $context);
     }
 
-    public function error($message, ?Exception $exception = null) : void
+    public function error($message, array $context = []) : void
     {
-        parent::error($this->getDecoratedMessage($message), $exception);
+        parent::error($this->getDecoratedMessage($message), $context);
     }
 
     private function getDecoratedMessage(string $message) : string

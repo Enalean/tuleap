@@ -78,7 +78,7 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase
                 mock('TrackerFactory'),
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
-                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
+                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
                 \Mockery::mock(FrozenFieldsDao::class),
                 Mockery::mock(StateFactory::class)
             )
@@ -131,7 +131,7 @@ class WorkflowFactory_CacheTest extends TuleapTestCase
                 stub('TrackerFactory')->getTrackerById()->returns(aMockTracker()->build()),
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
-                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
+                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
                 \Mockery::mock(FrozenFieldsDao::class),
                 Mockery::mock(StateFactory::class)
             )

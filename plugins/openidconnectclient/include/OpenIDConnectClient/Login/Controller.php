@@ -21,7 +21,7 @@
 namespace Tuleap\OpenIDConnectClient\Login;
 
 use Feedback;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDataAccessException;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
@@ -64,7 +64,7 @@ class Controller
      */
     private $flow;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -74,7 +74,7 @@ class Controller
         UnlinkedAccountManager $unlinked_account_manager,
         AutomaticUserRegistration $automatic_user_registration,
         Flow $flow,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->user_manager                = $user_manager;
         $this->user_mapping_manager        = $user_mapping_manager;

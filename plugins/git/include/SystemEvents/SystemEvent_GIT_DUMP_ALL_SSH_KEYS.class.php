@@ -25,7 +25,7 @@ class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent
 {
     public const NAME = 'GIT_DUMP_ALL_SSH_KEYS';
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var MassDumper */
@@ -33,7 +33,7 @@ class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent
 
     public function injectDependencies(
         MassDumper $mass_dumper,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->mass_dumper      = $mass_dumper;
         $this->logger           = $logger;

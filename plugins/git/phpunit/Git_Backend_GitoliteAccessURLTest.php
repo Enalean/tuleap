@@ -35,7 +35,7 @@ class Git_Backend_GitoliteAccessURLTest extends TestCase
         $backend       = new Git_Backend_Gitolite(
             Mockery::mock(Git_GitoliteDriver::class),
             $url_generator,
-            Mockery::mock(Logger::class)
+            Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
 
         $url_generator->shouldReceive('getSSHURL')->andReturns('');
@@ -52,7 +52,7 @@ class Git_Backend_GitoliteAccessURLTest extends TestCase
         $backend       = new Git_Backend_Gitolite(
             Mockery::mock(Git_GitoliteDriver::class),
             $url_generator,
-            Mockery::mock(Logger::class)
+            Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
 
         $url_generator->shouldReceive('getSSHURL')->andReturns('ssh://gitolite@example.com/');
@@ -69,7 +69,7 @@ class Git_Backend_GitoliteAccessURLTest extends TestCase
         $backend       = new Git_Backend_Gitolite(
             Mockery::mock(Git_GitoliteDriver::class),
             $url_generator,
-            Mockery::mock(Logger::class)
+            Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
 
         $url_generator->shouldReceive('getSSHURL')->andReturns('');
@@ -86,7 +86,7 @@ class Git_Backend_GitoliteAccessURLTest extends TestCase
         $backend       = new Git_Backend_Gitolite(
             Mockery::mock(Git_GitoliteDriver::class),
             $url_generator,
-            Mockery::mock(Logger::class)
+            Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
 
         $url_generator->shouldReceive('getSSHURL')->andReturns('ssh://gitolite@example.com/');

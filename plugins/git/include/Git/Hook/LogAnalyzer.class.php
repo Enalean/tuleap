@@ -33,10 +33,10 @@ class Git_Hook_LogAnalyzer
     /** @var Git_Exec */
     private $exec_repo;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    public function __construct(Git_Exec $git_exec, Logger $logger)
+    public function __construct(Git_Exec $git_exec, \Psr\Log\LoggerInterface $logger)
     {
         $this->exec_repo = $git_exec;
         $this->logger    = $logger;

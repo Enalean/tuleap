@@ -32,7 +32,7 @@ class Git_SystemCheck
     private $git_plugin;
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 

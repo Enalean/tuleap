@@ -51,7 +51,7 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase
     /** @var Git_Mirror_MirrorDataMapper */
     protected $mirror_data_mapper;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     protected $logger;
 
     public function setUp()
@@ -105,7 +105,7 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase
         );
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');
-        $this->logger                   = mock('Logger');
+        $this->logger                   = mock(\Psr\Log\LoggerInterface::class);
 
         $this->driver = new Git_GitoliteDriver(
             $this->logger,

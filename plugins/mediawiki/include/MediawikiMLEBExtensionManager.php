@@ -84,7 +84,7 @@ class MediawikiMLEBExtensionManager
         return $this->extension_dao->saveMLEBActivationForProjectID($project->getID());
     }
 
-    public function activateMLEBForCompatibleProjects(Logger $logger)
+    public function activateMLEBForCompatibleProjects(\Psr\Log\LoggerInterface $logger)
     {
         foreach ($this->getProjectsEligibleToMLEBExtensionActivation() as $project) {
             if ($this->activateMLEBForProject($project)) {

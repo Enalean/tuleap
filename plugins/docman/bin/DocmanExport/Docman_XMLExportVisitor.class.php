@@ -217,7 +217,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
             $res = copy($version->getPath(), $this->dataPath.'/'.$fileName);
             if (!$res) {
                 echo $version->getPath()." not copied to ".$this->dataPath.'/'.$fileName."<br>";
-                $this->logger->warn($version->getPath()." not copied to [".$this->dataPath."]");
+                $this->logger->warning($version->getPath()." not copied to [".$this->dataPath."]");
             } else {
                 $this->logger->info($version->getPath()." copied to [".$this->dataPath."]");
             }

@@ -22,7 +22,7 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent
 {
     public const NAME = 'GIT_PROJECTS_UPDATE';
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var Git_SystemEventManager */
@@ -35,7 +35,7 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent
     private $gitolite_driver;
 
     public function injectDependencies(
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         Git_SystemEventManager $system_event_manager,
         ProjectManager $project_manager,
         Git_GitoliteDriver $gitolite_driver

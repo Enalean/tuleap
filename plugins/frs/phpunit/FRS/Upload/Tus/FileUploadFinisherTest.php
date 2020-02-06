@@ -92,7 +92,7 @@ final class FileUploadFinisherTest extends TestCase
         $this->tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
 
-        $this->logger           = \Mockery::mock(Logger::class);
+        $this->logger           = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->log_dao          = \Mockery::mock(FRSLogDao::class);
         $this->file_dao         = \Mockery::mock(FRSFileDao::class);
         $this->release_factory  = \Mockery::mock(FRSReleaseFactory::class);

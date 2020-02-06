@@ -65,7 +65,7 @@ class ManifestFileGeneratorTest extends TestCase
         $this->manifest_file_for_singapour = $this->manifest_directory
             . "/manifest_mirror_{$this->singapour_mirror_id}.js.gz";
 
-        $this->logger = \Mockery::spy(\Logger::class);
+        $this->logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->generator = new Git_Mirror_ManifestFileGenerator($this->logger, $this->manifest_directory);
     }

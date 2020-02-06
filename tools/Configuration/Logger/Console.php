@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,32 +21,15 @@
 
 namespace Tuleap\Configuration\Logger;
 
-class Console implements LoggerInterface
+use Psr\Log\AbstractLogger;
+use Psr\Log\LogLevel;
+
+class Console extends AbstractLogger
 {
     public const RED     = "\033[31m";
     public const GREEN   = "\033[32m";
     public const YELLOW  = "\033[33m";
     public const NOCOLOR = "\033[0m";
-
-    public function debug($message, array $context = array())
-    {
-        $this->log(LoggerInterface::DEBUG, $message, $context);
-    }
-
-    public function error($message, array $context = array())
-    {
-        $this->log(LoggerInterface::ERROR, $message, $context);
-    }
-
-    public function info($message, array $context = array())
-    {
-        $this->log(LoggerInterface::INFO, $message, $context);
-    }
-
-    public function warn($message, array $context = array())
-    {
-        $this->log(LoggerInterface::WARN, $message, $context);
-    }
 
     public function log($level, $message, array $context = array())
     {
@@ -66,13 +49,17 @@ class Console implements LoggerInterface
     {
         $color = null;
         switch ($level) {
-            case LoggerInterface::INFO:
+            case LogLevel::INFO:
+            case LogLevel::NOTICE:
                 $color = self::GREEN;
                 break;
-            case LoggerInterface::WARN:
+            case LogLevel::WARNING:
                 $color = self::YELLOW;
                 break;
-            case LoggerInterface::ERROR:
+            case LogLevel::ERROR:
+            case LogLevel::CRITICAL:
+            case LogLevel::ALERT:
+            case LogLevel::EMERGENCY:
                 $color = self::RED;
                 break;
         }

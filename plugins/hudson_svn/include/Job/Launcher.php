@@ -25,7 +25,7 @@ use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Commit\CommitInfo;
 use Jenkins_Client;
 use Jenkins_ClientUnableToLaunchBuildException;
-use Logger;
+use Psr\Log\LoggerInterface;
 
 class Launcher
 {
@@ -33,7 +33,7 @@ class Launcher
     public const ROOT_DIRECTORY = '/';
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -50,7 +50,7 @@ class Launcher
 
     private $launched_jobs = array();
 
-    public function __construct(Factory $factory, Logger $logger, Jenkins_Client $ci_client, BuildParams $build_params)
+    public function __construct(Factory $factory, LoggerInterface $logger, Jenkins_Client $ci_client, BuildParams $build_params)
     {
         $this->factory      = $factory;
         $this->logger       = $logger;

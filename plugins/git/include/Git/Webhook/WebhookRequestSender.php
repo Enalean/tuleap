@@ -22,7 +22,7 @@ namespace Tuleap\Git\Webhook;
 
 use GitRepository;
 use PFUser;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tuleap\Webhook\Emitter;
 
 class WebhookRequestSender
@@ -32,7 +32,7 @@ class WebhookRequestSender
      */
     private $webhook_emitter;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -43,7 +43,7 @@ class WebhookRequestSender
     public function __construct(
         Emitter $webhook_emitter,
         WebhookFactory $webhook_factory,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->webhook_emitter = $webhook_emitter;
         $this->webhook_factory = $webhook_factory;

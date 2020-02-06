@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SystemEvent;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tuleap\Event\Dispatchable;
 
 class RootDailyStartEvent implements Dispatchable
@@ -31,7 +31,7 @@ class RootDailyStartEvent implements Dispatchable
     public const NAME = 'rootDailyStart';
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -40,15 +40,15 @@ class RootDailyStartEvent implements Dispatchable
      */
     private $warnings = [];
 
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
     /**
-     * @return Logger
+     * @return LoggerInterface
      */
-    public function getLogger(): Logger
+    public function getLogger(): LoggerInterface
     {
         return $this->logger;
     }

@@ -106,7 +106,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Fr
             $this->artifact_factory,
             \Mockery::spy(\EventManager::class),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->factory),
-            new Log_NoopLogger()
+            new \Psr\Log\NullLogger()
         );
 
         $this->submitted_on = $_SERVER['REQUEST_TIME'];

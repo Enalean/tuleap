@@ -68,7 +68,7 @@ final class UpdateProjectAccessFileSystemEventTest extends TestCase
             10,
             0,
             0,
-            new \Log_NoopLogger()
+            new \Psr\Log\NullLogger()
         );
         $this->system_event->injectDependencies($this->project_manager, $this->event_dispatcher);
     }

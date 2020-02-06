@@ -118,7 +118,7 @@ final class XMLImporterTest extends TestCase
         $this->arpath = vfsStream::setup()->url();
 
         $this->user_manager = \Mockery::spy(\UserManager::class);
-        $this->logger       = \Mockery::spy(\Logger::class);
+        $this->logger       = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->user         = \Mockery::spy(\PFUser::class);
         $this->project      = Mockery::mock(Project::class);
 

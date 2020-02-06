@@ -93,7 +93,7 @@ $restler->onComplete(static function () use ($restler, $request_instrumentation)
         return;
     }
     $logger = new \Tuleap\REST\RESTLogger();
-    $logger->error('Unhandled exception', $initial_exception);
+    $logger->error('Unhandled exception', ['exception' => $initial_exception]);
 });
 
 // Do not let Restler find itself the domain, when behind a reverse proxy, it's

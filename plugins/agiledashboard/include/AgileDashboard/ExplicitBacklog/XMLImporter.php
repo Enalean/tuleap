@@ -23,7 +23,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use Project;
 use SimpleXMLElement;
@@ -76,7 +76,7 @@ class XMLImporter
         Project $project,
         PFUser $user,
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        Logger $logger
+        LoggerInterface $logger
     ): void {
         if (! isset($xml->top_backlog)) {
             return;
@@ -85,7 +85,7 @@ class XMLImporter
         $project_id = (int) $project->getID();
 
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id) === false) {
-            $logger->warn('The imported project does not use explicit backlog management. Skipping.');
+            $logger->warning('The imported project does not use explicit backlog management. Skipping.');
             return;
         }
 
@@ -93,7 +93,7 @@ class XMLImporter
         foreach ($xml->top_backlog->artifact as $xml_backlog_item) {
             $base_artifact_id = (string)$xml_backlog_item['artifact_id'];
             if (! $artifact_id_mapping->containsSource($base_artifact_id)) {
-                $logger->warn("Artifact #$base_artifact_id not found in XML. Skipping.");
+                $logger->warning("Artifact #$base_artifact_id not found in XML. Skipping.");
                 continue;
             }
 
@@ -111,7 +111,7 @@ class XMLImporter
             $logger->error($no_root_planning_exception->getMessage());
             return;
         } catch (ProvidedAddedIdIsNotInPartOfTopBacklogException $exception) {
-            $logger->warn($exception->getMessage(). "They are not added in the top backlog.");
+            $logger->warning($exception->getMessage(). "They are not added in the top backlog.");
 
             $added_artifact_ids = array_diff($added_artifact_ids, $exception->getArtifactIds());
         }

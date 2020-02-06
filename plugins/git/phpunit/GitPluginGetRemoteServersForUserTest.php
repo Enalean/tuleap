@@ -51,7 +51,7 @@ class GitPluginGetRemoteServersForUserTest extends TestCase
         $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         $this->plugin->shouldReceive('getGerritServerFactory')->andReturns($this->gerrit_server_factory);
 
-        $this->logger = \Mockery::spy(\BackendLogger::class);
+        $this->logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->plugin->setLogger($this->logger);
 
         $this->user = \Mockery::spy(\PFUser::class);

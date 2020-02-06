@@ -109,7 +109,7 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
 
         $this->semantic_timeframe_builder = \Mockery::mock(SemanticTimeframeBuilder::class);
 
-        $this->logger = \Mockery::mock(\Logger::class);
+        $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->configuration_retriever = new ChartConfigurationFieldRetriever(
             $this->form_element_field_factoy,
             $this->semantic_timeframe_builder,

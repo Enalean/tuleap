@@ -24,7 +24,6 @@ namespace Tuleap\LDAP;
 
 use ForgeConfig;
 use LDAP;
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -58,7 +57,7 @@ class LDAPRetrieveAllArgumentsTest extends TestCase
     {
         parent::setUp();
         ForgeConfig::set('sys_logger_level', 'debug');
-        $this->logger = Mockery::mock(Logger::class);
+        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->ldap = \Mockery::mock(
             \LDAP::class,
             [$this->ldap_params, $this->logger]

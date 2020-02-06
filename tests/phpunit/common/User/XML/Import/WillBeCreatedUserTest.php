@@ -45,7 +45,7 @@ final class WillBeCreatedUserTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
 
         $this->user_manager = \Mockery::spy(UserManager::class);
-        $this->logger       = \Mockery::spy(Logger::class);
+        $this->logger       = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->user = new WillBeCreatedUser(
             'cstevens',

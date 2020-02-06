@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Log_ConsoleLogger implements Logger
+class Log_ConsoleLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
 {
     public const BLACK   = "\033[30m";
     public const RED     = "\033[31m";
@@ -28,43 +28,10 @@ class Log_ConsoleLogger implements Logger
     public const BG_RED  = "\033[41m";
     public const NOCOLOR = "\033[0m";
 
-    private $log = array();
-
-    public function debug($message)
-    {
-        $this->log($message, Logger::DEBUG);
-    }
-
-    public function error($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException($message, $e), Logger::ERROR);
-    }
-
-    public function info($message)
-    {
-        $this->log($message, Logger::INFO);
-    }
-
-    public function log($message, $level = null)
+    public function log($level, $message, array $context = [])
     {
         fwrite(STDERR, $this->colorize($level, $level.' '.$message).PHP_EOL);
         fflush(STDERR);
-    }
-
-    public function warn($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException($message, $e), Logger::WARN);
-    }
-
-    private function generateLogWithException($message, ?Exception $e = null)
-    {
-        $log_string = $message;
-        if (!empty($e)) {
-            $error_message  = $e->getMessage();
-            $stack_trace    = $e->getTraceAsString();
-            $log_string    .= ": $error_message:\n$stack_trace";
-        }
-        return $log_string;
     }
 
     /**
@@ -79,13 +46,17 @@ class Log_ConsoleLogger implements Logger
     {
         $color = null;
         switch ($level) {
-            case Logger::INFO:
+            case \Psr\Log\LogLevel::INFO:
+            case \Psr\Log\LogLevel::NOTICE:
                 $color = self::GREEN;
                 break;
-            case Logger::WARN:
+            case \Psr\Log\LogLevel::WARNING:
                 $color = self::YELLOW;
                 break;
-            case Logger::ERROR:
+            case \Psr\Log\LogLevel::ERROR:
+            case \Psr\Log\LogLevel::EMERGENCY:
+            case \Psr\Log\LogLevel::ALERT:
+            case \Psr\Log\LogLevel::CRITICAL:
                 $color = self::RED;
                 break;
         }

@@ -24,7 +24,6 @@ namespace Tuleap\SVN\Repository;
 use Backend;
 use EventManager;
 use HTTPRequest;
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -72,7 +71,7 @@ class RepositoryManagerTest extends TestCase
         $this->dao                   = Mockery::mock(Dao::class);
         $this->project_manager       = Mockery::mock(ProjectManager::class);
         $svn_admin                   = Mockery::mock(SvnAdmin::class);
-        $logger                      = Mockery::mock(Logger::class);
+        $logger                      = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $system_command              = Mockery::mock(System_Command::class);
         $destructor                  = Mockery::mock(Destructor::class);
         $event_manager               = Mockery::mock(EventManager::class);

@@ -31,7 +31,7 @@ use Tuleap\Upload\UploadPathAllocator;
 final class DocumentUploadFinisher implements TusFinisherDataStore
 {
     /**
-     * @var \Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     /**
@@ -84,7 +84,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
     private $project_manager;
 
     public function __construct(
-        \Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         UploadPathAllocator $document_upload_path_allocator,
         \Docman_ItemFactory $docman_item_factory,
         \Docman_VersionFactory $version_factory,
@@ -132,7 +132,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
     {
         $this->transaction_executor->execute(function () use ($uploaded_document_path, $item_id) {
             if ($this->docman_item_factory->getItemFromDb($item_id) !== null) {
-                $this->logger->warn("Item #$item_id was already marked as uploaded");
+                $this->logger->warning("Item #$item_id was already marked as uploaded");
                 return;
             }
 

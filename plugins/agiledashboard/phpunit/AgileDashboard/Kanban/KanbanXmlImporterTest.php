@@ -81,7 +81,7 @@ class KanbanXmlImporterTest extends TestCase
         $this->user                = (new \UserTestBuilder())->withId(101)->build();
         $this->project             = \Mockery::spy(\Project::class, ['getID' => 100, 'getUnixName' => false, 'isPublic' => false]);
         $this->kanban_xml_importer = new KanbanXmlImporter(
-            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             $this->kanban_manager,
             $this->agile_dashboard_configuration_manager,
             $this->kanban_column_manager,

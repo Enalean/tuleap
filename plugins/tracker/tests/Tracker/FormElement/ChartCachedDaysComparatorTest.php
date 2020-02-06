@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
 use TuleapTestCase;
 
@@ -35,7 +36,7 @@ class ChartCachedDaysComparatorTest extends TuleapTestCase
 
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $cache_days_comparator = new ChartCachedDaysComparator(mock('Logger'));
+        $cache_days_comparator = new ChartCachedDaysComparator(mock(LoggerInterface::class));
         $this->assertTrue($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
     }
 
@@ -47,7 +48,7 @@ class ChartCachedDaysComparatorTest extends TuleapTestCase
 
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $cache_days_comparator = new ChartCachedDaysComparator(mock('Logger'));
+        $cache_days_comparator = new ChartCachedDaysComparator(mock(LoggerInterface::class));
         $this->assertFalse($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
     }
 }

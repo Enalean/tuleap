@@ -20,7 +20,7 @@
 
 namespace Tuleap\ArtifactsFolders\Converter;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
@@ -40,7 +40,7 @@ class ArtifactsFoldersToScrumV2Converter
      */
     private $hierarchy_of_folder_builder;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -52,7 +52,7 @@ class ArtifactsFoldersToScrumV2Converter
         ConverterDao $converter_dao,
         Tracker_ArtifactFactory $artifact_factory,
         HierarchyOfFolderBuilder $hierarchy_of_folder_builder,
-        Logger $logger,
+        LoggerInterface $logger,
         AncestorFolderChecker $ancestor_folder_checker
     ) {
         $this->converter_dao               = $converter_dao;
@@ -67,7 +67,7 @@ class ArtifactsFoldersToScrumV2Converter
         $folder_trackers = $this->converter_dao->getFolderConfigurationForProject($project_id);
 
         if (count($folder_trackers) === 0) {
-            $this->logger->warn("No artifactsfolders configuration found for project $project_id, stopping");
+            $this->logger->warning("No artifactsfolders configuration found for project $project_id, stopping");
             return;
         }
         /**
@@ -105,13 +105,13 @@ class ArtifactsFoldersToScrumV2Converter
 
             $folder_artifact = $this->artifact_factory->getArtifactById($folder_id);
             if (! $folder_artifact) {
-                $this->logger->warn("Folder artifact with id $folder_id not found, skipping");
+                $this->logger->warning("Folder artifact with id $folder_id not found, skipping");
                 continue;
             }
 
             $item_artifact = $this->artifact_factory->getArtifactById($item_id);
             if (! $item_artifact) {
-                $this->logger->warn("Item artifact with id $item_id not found, skipping");
+                $this->logger->warning("Item artifact with id $item_id not found, skipping");
                 continue;
             }
 

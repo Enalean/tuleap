@@ -64,7 +64,7 @@ class SystemEvent_GIT_REPO_DELETETest extends \PHPUnit\Framework\TestCase
         $this->event->setParameters($this->project_id . SystemEvent::PARAMETER_SEPARATOR . $this->repository_id);
         $this->event->injectDependencies(
             $this->repository_factory,
-            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             $this->system_event_manager,
             $this->ugroups_to_notify_dao,
             $this->users_to_notify_dao,

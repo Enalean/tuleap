@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use CrossReferenceManager;
 use EventManager;
 use ForgeConfig;
-use Logger;
+use Psr\Log\LoggerInterface;
 use PermissionsDao;
 use PermissionsManager;
 use Tracker_Artifact_PriorityDao;
@@ -57,7 +57,7 @@ use XML_SimpleXMLCDATAFactory;
 
 class ArchiveAndDeleteArtifactTaskBuilder
 {
-    public function build(Logger $logger)
+    public function build(LoggerInterface $logger)
     {
         $user_manager             = UserManager::instance();
         $tracker_artifact_factory = Tracker_ArtifactFactory::instance();

@@ -490,8 +490,8 @@ class BackendCVSTest extends TuleapTestCase
         $backend->setReturnValue('getHTTPUserUID', $stat['uid']);
 
         $backend->expectCallCount('log', 2);
-        $backend->expectAt(0, 'log', array('File not found in cvsroot: '.$cvsdir.'/CVSROOT/commitinfo', 'warn'));
-        $backend->expectAt(1, 'log', array('File not found in cvsroot: '.$cvsdir.'/CVSROOT/config', 'warn'));
+        $backend->expectAt(0, 'log', array('File not found in cvsroot: '.$cvsdir.'/CVSROOT/commitinfo', \Psr\Log\LogLevel::WARNING));
+        $backend->expectAt(1, 'log', array('File not found in cvsroot: '.$cvsdir.'/CVSROOT/config', \Psr\Log\LogLevel::WARNING));
 
         $this->assertTrue($backend->checkCVSMode($project));
 

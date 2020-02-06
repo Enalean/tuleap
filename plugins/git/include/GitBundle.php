@@ -22,7 +22,7 @@ namespace Tuleap;
 
 use ForgeConfig;
 use GitRepository;
-use Logger;
+use Psr\Log\LoggerInterface;
 use System_Command;
 use System_Command_CommandException;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -35,11 +35,11 @@ class GitBundle
     private $system_command;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(System_Command $system_command, Logger $logger)
+    public function __construct(System_Command $system_command, LoggerInterface $logger)
     {
         $this->system_command = $system_command;
         $this->logger         = $logger;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Importer_CopyArtifactInformationsAggregator implements Logger
-{
+use Psr\Log\LogLevel;
 
-    /** @var Array */
+class Tracker_XML_Importer_CopyArtifactInformationsAggregator extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
+{
+    /** @var string[] */
     private $logs_stack = array();
 
     /** @var BackendLogger */
@@ -37,37 +38,12 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregator implements Logger
         return $this->logs_stack;
     }
 
-    public function log($message, $level = Feedback::INFO)
+    public function log($level, $message, array $context = [])
     {
-        $this->logs_stack[] = "[$level] $message";
-        $this->backend_logger->log($message, $level);
-    }
-
-    public function debug($message)
-    {
-        $this->backend_logger->log($message, Feedback::DEBUG);
-    }
-
-    public function info($message)
-    {
-        $this->backend_logger->log($message, Feedback::INFO);
-    }
-
-    public function error($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException($message, $e), Feedback::ERROR);
-    }
-
-    public function warn($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException($message, $e), Feedback::WARN);
-    }
-
-    private function generateLogWithException($message, $e)
-    {
-        if (! $e) {
-            return $message;
+        if ($level === LogLevel::WARNING || $level === LogLevel::ERROR || $level === LogLevel::CRITICAL ||
+            $level === LogLevel::EMERGENCY || $level === LogLevel::ALERT) {
+            $this->logs_stack[] = "[$level] $message";
         }
-        return $message . $e->getMessage();
+        $this->backend_logger->log($level, $message, $context);
     }
 }

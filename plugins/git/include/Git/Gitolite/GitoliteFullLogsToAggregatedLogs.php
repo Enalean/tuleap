@@ -22,18 +22,18 @@ namespace Tuleap\Git\Gitolite;
 
 use DateTime;
 use DateInterval;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Exception;
 
 class GitoliteFullLogsToAggregatedLogs extends \DataAccessObject
 {
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         parent::__construct();
         $this->logger = $logger;

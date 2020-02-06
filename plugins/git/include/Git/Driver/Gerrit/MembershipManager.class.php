@@ -48,7 +48,7 @@ class Git_Driver_Gerrit_MembershipManager
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserAccountManager  $gerrit_usermanager,
         Git_RemoteServer_GerritServerFactory  $gerrit_server_factory,
-        Logger                                $logger,
+        \Psr\Log\LoggerInterface                                $logger,
         UGroupManager                         $ugroup_manager,
         ProjectManager                        $project_manager
     ) {

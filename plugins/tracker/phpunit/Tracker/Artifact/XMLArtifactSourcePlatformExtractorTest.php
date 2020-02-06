@@ -53,7 +53,7 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
     {
         $this->config = \Mockery::mock(ImportConfig::class);
 
-        $this->logger = \Mockery::mock(Logger::class);
+        $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $this->xml_source_platform_extractor = new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $this->logger);
     }
@@ -65,7 +65,7 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
         $xml_field_mapping = file_get_contents(__DIR__."/_fixtures/testImportChangesetInArtifactWithoutSourcePlatformAttribute.xml");
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-        $this->logger->shouldReceive('warn')->with("No attribute source_platform in XML. New artifact created.");
+        $this->logger->shouldReceive('warning')->with("No attribute source_platform in XML. New artifact created.");
 
         $source_platform =$this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
         $this->assertEquals(null, $source_platform);
@@ -78,7 +78,7 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
         $xml_field_mapping = file_get_contents(__DIR__."/_fixtures/testImportChangesetInArtifactWithWrongSourcePlatformAttribute.xml");
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-        $this->logger->shouldReceive('warn')->with("Source platform is not a valid URI. New artifact created.");
+        $this->logger->shouldReceive('warning')->with("Source platform is not a valid URI. New artifact created.");
 
         $source_platform =$this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
         $this->assertEquals(null, $source_platform);

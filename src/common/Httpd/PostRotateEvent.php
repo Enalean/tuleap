@@ -22,7 +22,7 @@
 namespace Tuleap\Httpd;
 
 use Tuleap\Event\Dispatchable;
-use Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Event emitted after HTTP log rotation
@@ -32,11 +32,11 @@ class PostRotateEvent implements Dispatchable
     public const NAME = 'httpdPostRotate';
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

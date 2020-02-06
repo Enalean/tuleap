@@ -20,17 +20,17 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
 
 class ChartCachedDaysComparator
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

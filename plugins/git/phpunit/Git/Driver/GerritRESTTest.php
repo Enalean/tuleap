@@ -65,7 +65,7 @@ final class GerritRESTTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logger      = \Mockery::mock(Logger::class);
+        $this->logger      = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->http_client = new Client();
 
         $this->response_factory = HTTPFactoryBuilder::responseFactory();

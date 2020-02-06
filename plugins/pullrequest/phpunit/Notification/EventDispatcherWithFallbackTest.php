@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use Log_NoopLogger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -34,7 +33,7 @@ final class EventDispatcherWithFallbackTest extends TestCase
     public function testDoNotDispatchOnSecondaryDispatcherIfTheFirstDispatcherSucceeds(): void
     {
         $dispatcher_with_fallback = new EventDispatcherWithFallback(
-            new Log_NoopLogger(),
+            new \Psr\Log\NullLogger(),
             new class implements EventDispatcherInterface {
                 public function dispatch(object $event): object
                 {
@@ -58,7 +57,7 @@ final class EventDispatcherWithFallbackTest extends TestCase
 
     public function testEventGetsDispatchedToSecondaryDispatcherWhenTheFirstFails(): void
     {
-        $logger = \Mockery::mock(\Logger::class);
+        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $dispatcher_with_fallback = new EventDispatcherWithFallback(
             $logger,

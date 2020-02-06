@@ -31,6 +31,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
+use Psr\Log\LogLevel;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 
@@ -90,7 +91,7 @@ class CleanUnusedTest extends TestCase
 
     public function setUp(): void
     {
-        $this->logger = Mockery::mock(Logger::class);
+        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->initLogger();
 
         $this->project_1 = Mockery::mock(Project::class);
@@ -130,14 +131,14 @@ class CleanUnusedTest extends TestCase
 
     private function initLogger(): void
     {
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Start purge"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Start purge of orphan bases"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] End purge of orphan bases"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Purge completed"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] x database(s) deleted"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] x table(s) deleted in central DB"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] 0 directories deleted"])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of orphan bases", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] End purge of orphan bases", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Purge completed", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] x database(s) deleted", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] x table(s) deleted in central DB", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] 0 directories deleted", []])->once();
     }
 
     private function initDao(): void
@@ -149,10 +150,10 @@ class CleanUnusedTest extends TestCase
 
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateTwoPurgeWhenEmpty(): void
     {
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Found candidate mediawiki_102"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Found candidate mediawiki_103"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Delete data dir"])->twice();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Found candidate mediawiki_102", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Found candidate mediawiki_103", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Delete data dir", []])->twice();
 
         $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')
                   ->andReturn(
@@ -209,10 +210,10 @@ class CleanUnusedTest extends TestCase
 
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateOnePurgeWhenEmptyWithOneTemplate(): void
     {
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Found candidate mediawiki_103"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Delete data dir"])->once();
-        $this->logger->shouldReceive('warn')->withArgs(["[MW Purge] Project project_2 (102) is a template. Skipped.", null])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Found candidate mediawiki_103", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Delete data dir", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::WARNING, "[MW Purge] Project project_2 (102) is a template. Skipped.", []])->once();
 
         $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')
                   ->once()
@@ -264,10 +265,10 @@ class CleanUnusedTest extends TestCase
 
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateOnePurgeWhenEmptyWithOneTemplateWithLimit(): void
     {
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Start purge of 3 used but empty mediawiki on projects which are not defined as template"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Found candidate mediawiki_103"])->once();
-        $this->logger->shouldReceive('info')->withArgs(["[MW Purge] Delete data dir"])->once();
-        $this->logger->shouldReceive('warn')->withArgs(["[MW Purge] Project project_2 (102) is a template. Skipped.", null])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of 3 used but empty mediawiki on projects which are not defined as template", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Found candidate mediawiki_103", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Delete data dir", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::WARNING, "[MW Purge] Project project_2 (102) is a template. Skipped.", []])->once();
 
         $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')
                  ->once()

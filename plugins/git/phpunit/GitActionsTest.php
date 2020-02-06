@@ -62,7 +62,7 @@ class GitActionsTest extends TestCase
                 \Mockery::spy(\ProjectManager::class),
                 \Mockery::spy(\GitPermissionsManager::class),
                 $url_manager,
-                \Mockery::spy(\Logger::class),
+                \Mockery::spy(\Psr\Log\LoggerInterface::class),
                 \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
                 Mockery::spy(ProjectHistoryDao::class),
                 \Mockery::spy(\GitRepositoryMirrorUpdater::class),

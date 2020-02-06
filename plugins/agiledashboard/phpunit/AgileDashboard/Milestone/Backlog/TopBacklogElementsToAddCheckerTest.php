@@ -95,7 +95,7 @@ class TopBacklogElementsToAddCheckerTest extends TestCase
             $this->artifact_factory
         );
 
-        $this->logger  = Mockery::mock(Logger::class);
+        $this->logger  = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->project = Mockery::mock(Project::class);
         $this->user    = Mockery::mock(PFUser::class);
 

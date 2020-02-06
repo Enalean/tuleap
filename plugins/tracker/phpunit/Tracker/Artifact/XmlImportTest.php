@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LogLevel;
 use Response;
 use Tracker;
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
@@ -223,9 +224,9 @@ class XmlImportTest extends TestCase
 
         $this->extraction_path = $this->getTmpDir();
 
-        $this->logger = Mockery::mock(Logger::class);
-        $this->logger->shouldReceive('info');
-        $this->logger->shouldReceive('debug');
+        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger->shouldReceive('log')->with(LogLevel::INFO, Mockery::any(), Mockery::any());
+        $this->logger->shouldReceive('log')->with(LogLevel::DEBUG, Mockery::any(), Mockery::any());
 
         $this->rng_validator =  Mockery::mock(XML_RNGValidator::class);
         $this->rng_validator->shouldReceive('validate');

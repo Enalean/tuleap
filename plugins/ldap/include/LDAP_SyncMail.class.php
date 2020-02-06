@@ -88,7 +88,7 @@ class LDAP_SyncMail
                 $notificationStatus = false;
             }
         } catch (InvalidArgumentException $e) {
-            $this->logger->warn("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail().":".$e->getMessage());
+            $this->logger->warning("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail().":".$e->getMessage());
             $notificationStatus = false;
         }
         return $notificationStatus;

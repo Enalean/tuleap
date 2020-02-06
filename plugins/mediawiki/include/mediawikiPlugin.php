@@ -838,7 +838,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $params['plugins_permission'][MediawikiAdminAllProjects::ID] = $permission;
     }
 
-    public function getCleanUnused(Logger $logger)
+    public function getCleanUnused(\Psr\Log\LoggerInterface $logger)
     {
         return new CleanUnused(
             $logger,
