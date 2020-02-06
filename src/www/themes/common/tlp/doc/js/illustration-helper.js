@@ -95,7 +95,7 @@ function injectClasses(elements) {
             } else if (String(stroke).toLowerCase() === tertiary_color) {
                 element.classList.add("tlp-illustration-tertiary-stroke");
             } else if (String(fill).toLowerCase() === primary_color) {
-                element.classList.add("tlp-illustration-primary-box");
+                element.classList.add("tlp-illustration-primary-fill");
             } else if (String(fill).toLowerCase() === secondary_light_color) {
                 element.classList.add("tlp-illustration-secondary-light-fill");
             } else if (String(fill).toLowerCase() === secondary_dark_color) {
