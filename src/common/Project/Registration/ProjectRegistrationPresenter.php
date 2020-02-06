@@ -24,6 +24,7 @@ declare(strict_types = 1);
 namespace Tuleap\Project\Registration;
 
 use ForgeConfig;
+use ProjectManager;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\Registration\Template\TemplatePresenter;
 
@@ -80,6 +81,10 @@ class ProjectRegistrationPresenter
      * @var bool
      */
     public $is_default_project_template_available;
+    /**
+     * @var bool
+     */
+    public $can_user_choose_privacy;
 
     public function __construct(
         string $project_default_visibility,
@@ -93,7 +98,7 @@ class ProjectRegistrationPresenter
         $this->are_restricted_users_allowed          = (bool)ForgeConfig::areRestrictedUsersAllowed();
         $this->project_default_visibility            = $project_default_visibility;
         $this->projects_must_be_approved             = (bool)ForgeConfig::get(
-            \ProjectManager::CONFIG_PROJECT_APPROVAL,
+            ProjectManager::CONFIG_PROJECT_APPROVAL,
             true
         );
         $this->trove_categories                      = json_encode($trove_categories, JSON_THROW_ON_ERROR);
@@ -101,7 +106,10 @@ class ProjectRegistrationPresenter
         $this->field_list                            = json_encode($field_list);
         $this->company_templates                     = json_encode($company_templates);
         $this->company_name                          = ForgeConfig::get('sys_org_name');
-        $this->are_anonymous_allowed                 = (bool)ForgeConfig::areAnonymousAllowed();
+        $this->are_anonymous_allowed                 = (bool) ForgeConfig::areAnonymousAllowed();
+        $this->can_user_choose_privacy               = (bool) ForgeConfig::get(
+            ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY
+        );
         $this->is_default_project_template_available = $default_project_template !== null;
         if ($default_project_template) {
             $this->default_project_template = json_encode($default_project_template);

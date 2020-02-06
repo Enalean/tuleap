@@ -34,7 +34,8 @@ const state: State = {
     project_fields: [],
     company_templates: [],
     default_project_template: null,
-    company_name: ""
+    company_name: "",
+    can_user_choose_project_visibility: false
 };
 
 export default state;

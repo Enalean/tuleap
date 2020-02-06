@@ -64,6 +64,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_project_approval_required = Boolean(vue_mount_point.dataset.projectsMustBeApproved);
     const is_description_required = Boolean(vue_mount_point.dataset.isDescriptionMandatory);
     const are_anonymous_allowed = Boolean(vue_mount_point.dataset.areAnonymousAllowed);
+    const can_user_choose_project_visibility = Boolean(
+        vue_mount_point.dataset.canUserChoosePrivacy
+    );
 
     const company_templates_json = vue_mount_point.dataset.companyTemplates;
     if (!company_templates_json) {
@@ -96,7 +99,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_fields,
         company_templates,
         default_project_template,
-        company_name
+        company_name,
+        can_user_choose_project_visibility
     };
 
     Vue.use(VueDOMPurifyHTML, {

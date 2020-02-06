@@ -36,6 +36,7 @@ export interface State {
     company_templates: TemplateData[];
     default_project_template: TemplateData | null;
     company_name: string;
+    can_user_choose_project_visibility: boolean;
 }
 
 export interface Context {

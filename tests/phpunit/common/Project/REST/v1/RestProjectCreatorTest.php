@@ -235,7 +235,7 @@ class RestProjectCreatorTest extends TestCase
 
     public function testCreateFromXMLTemplate()
     {
-        ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
+        ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
         $this->project->xml_template_name = ScrumTemplate::NAME;

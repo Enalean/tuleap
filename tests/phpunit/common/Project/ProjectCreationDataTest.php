@@ -165,7 +165,7 @@ final class ProjectCreationDataTest extends TestCase
 
     public function testItCreatesAPrivateProjectFromWebPayload() : void
     {
-        ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
+        ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
 
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
@@ -191,7 +191,7 @@ final class ProjectCreationDataTest extends TestCase
         bool $allow_restricted,
         string $expected_visibility
     ) : void {
-        ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
+        ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
         $web_payload = [
@@ -215,7 +215,7 @@ final class ProjectCreationDataTest extends TestCase
 
     public function testItCreatesAPublicProjectFromWebPayload(): void
     {
-        ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
+        ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
 
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
@@ -232,7 +232,7 @@ final class ProjectCreationDataTest extends TestCase
 
     public function testItTakesPublicWhenSiteAdminDecidedToMakeAllProjectsPublicByDefault(): void
     {
-        ForgeConfig::set('sys_user_can_choose_project_privacy', 0);
+        ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 0);
         ForgeConfig::set('sys_is_project_public', 1);
 
         $project_data = ProjectCreationData::buildFromFormArray(
@@ -250,7 +250,7 @@ final class ProjectCreationDataTest extends TestCase
 
     public function testItTakesPrivateWhenSiteAdminDecidedToMakeAllProjectsPrivateByDefault(): void
     {
-        ForgeConfig::set('sys_user_can_choose_project_privacy', 0);
+        ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 0);
         ForgeConfig::set('sys_is_project_public', 0);
 
         $project_data = ProjectCreationData::buildFromFormArray(
@@ -268,7 +268,7 @@ final class ProjectCreationDataTest extends TestCase
 
     public function testItTakesPlatformConfigWhenNoDataSent(): void
     {
-        ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
+        ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
         ForgeConfig::set('sys_is_project_public', 0);
 
         $project_data = ProjectCreationData::buildFromFormArray(
