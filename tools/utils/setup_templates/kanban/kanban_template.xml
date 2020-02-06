@@ -19,12 +19,8 @@ Need professional support to help you adapt your workspace? Get in touch with ou
 ]]></value>
                         </preference>
                     </widget>
-                </column>
-                <column>
                     <widget name="projectmembers" />
                 </column>
-            </line>
-            <line>
                 <column>
                     <widget name="plugin_agiledashboard_projects_kanban">
                         <preference name="kanban">

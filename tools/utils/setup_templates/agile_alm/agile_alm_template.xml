@@ -19,14 +19,10 @@ Need professional support to help you adapt your workspace? Get in touch with ou
 ]]></value>
                         </preference>
                     </widget>
+                    <widget name="projectheartbeat" />
                 </column>
                 <column>
                     <widget name="projectmembers" />
-                </column>
-            </line>
-            <line>
-                <column>
-                    <widget name="projectheartbeat" />
                 </column>
             </line>
         </dashboard>
@@ -64,8 +60,6 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                         </preference>
                     </widget>
                 </column>
-            </line>
-            <line>
                 <column>
                     <widget name="plugin_tracker_projectrenderer">
                         <preference name="renderer">
