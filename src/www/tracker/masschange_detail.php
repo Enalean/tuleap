@@ -30,7 +30,6 @@ if ($request->exist('advsrch')) {
 $params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$Language->getText('tracker_index', 'mass_change'),
               'pagename'=>'tracker',
               'atid'=>$ath->getID(),
-              'sectionvals'=>array($group->getPublicName()),
               'pv'=>$pv,
               'help' => 'tracker-v3.html#artifact-mass-change');
 

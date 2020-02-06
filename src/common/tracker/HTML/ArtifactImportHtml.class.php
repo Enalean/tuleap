@@ -71,7 +71,7 @@ class ArtifactImportHtml extends ArtifactImport
         );
 
         $this->ath->header(array ('title'=>$Language->getText('tracker_import', 'art_import').$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
-        'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
+        'atid'=>$this->ath->getID(),
         'help' => 'tracker-v3.html#tracker-artifact-import'));
         echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
 
@@ -285,7 +285,7 @@ class ArtifactImportHtml extends ArtifactImport
       // project_export_utils is using $at instead of $ath
         $at = $this->ath;
         $this->ath->header(array ('title'=>$Language->getText('tracker_import', 'art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
-        'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
+        'atid'=>$this->ath->getID(),
         'help' => 'tracker-v3.html#tracker-artifact-import'));
         echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
 
@@ -349,7 +349,7 @@ class ArtifactImportHtml extends ArtifactImport
         global $Language,$sys_max_size_upload;
 
         $this->ath->header(array ('title'=>$Language->getText('tracker_import', 'art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
-        'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
+        'atid'=>$this->ath->getID(),
         'help' => 'tracker-v3.html#tracker-artifact-import'));
         echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
 
@@ -364,8 +364,8 @@ class ArtifactImportHtml extends ArtifactImport
 
         echo '
 	    <FORM NAME="importdata" id="tracker-import-data" action="" method="POST" enctype="multipart/form-data">
-            <INPUT TYPE="hidden" name="group_id" value="'.(int)$this->group->group_id.'">            
-            <INPUT TYPE="hidden" name="atid" value="'.(int)$atid.'">            
+            <INPUT TYPE="hidden" name="group_id" value="'.(int)$this->group->group_id.'">
+            <INPUT TYPE="hidden" name="atid" value="'.(int)$atid.'">
             <INPUT TYPE="hidden" name="func" value="import">
             <INPUT TYPE="hidden" name="mode" value="parse">
 

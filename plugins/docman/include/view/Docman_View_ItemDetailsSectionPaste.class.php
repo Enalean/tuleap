@@ -53,6 +53,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
 
     function checkMdDifferences(&$mdDiffers)
     {
+        $purifier = Codendi_HTMLPurifier::instance();
         $html = '';
 
         $mdCmp = new Docman_MetadataComparator(
@@ -71,7 +72,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
             } else {
                 $mdDiffers = 'user';
                 $docmanIcons = $this->_getDocmanIcons();
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_mddiff_noadmin', array($this->srcGo->getPublicName(), $this->dstGo->getPublicName(), $docmanIcons->getThemeIcon('warning.png')));
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_mddiff_noadmin', array($purifier->purify($this->srcGo->getPublicName()), $purifier->purify($this->dstGo->getPublicName()), $docmanIcons->getThemeIcon('warning.png')));
             }
         }
 
@@ -109,9 +110,10 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         $content .= $itemRanking->getDropDownWidget($this->item);
         $content .= '</p>';
 
+        $purifier = Codendi_HTMLPurifier::instance();
         if ($this->mode == 'copy' && $mdDiffers == 'admin') {
             $content .= '<p>';
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_importmd', array($this->srcGo->getPublicName()));
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_importmd', array($purifier->purify($this->srcGo->getPublicName())));
             $content .= ' ';
             $content .= '<input type="checkbox" checked="checked" name="import_md" value="1" />';
             $content .= '</p>';

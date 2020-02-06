@@ -348,11 +348,12 @@ class Docman_ApprovalTableReminder
      */
     private function getBodyHtml(Docman_ApprovalTable $table, Docman_Item $docmanItem)
     {
+        $purifier = Codendi_HTMLPurifier::instance();
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
         $body  = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_header').'<br><br><b>';
         $body .= $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_title').'</b> '.$docmanItem->getTitle().'<br><b>';
-        $body .= $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_group_name').'</b> '.$group->getPublicName().'<br><b>';
+        $body .= $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_group_name').'</b> '.$purifier->purify($group->getPublicName()).'<br><b>';
         $body .= $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_owner_name').'</b><a href="'.$owner->getEmail().'">'.$owner->getRealName().'</a><br>';
         $body .= '<a href="'.$this->getItemUrl($docmanItem).'">'.$GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_direct_link').' </a><br>';
         $body .= '<br>'.$this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_HTML).'<br><br>';

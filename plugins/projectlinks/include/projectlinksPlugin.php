@@ -622,6 +622,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     //========================================================================
     function _adminPage_ResyncTemplate($group_id, $template_id)
     {
+        $hp = Codendi_HTMLPurifier::instance();
         // re-synchronise project links and types with originating template
         global $HTML, $Language;
 
@@ -832,8 +833,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     );
                 }
                 print "</td>";
-                print "<td $cls>" . htmlentities($row_templLinks['link_name']) . "</td>";
-                print "<td $cls>" . htmlentities($row_templLinks['group_name']) . "</td>";
+                print "<td $cls>" . $hp->purify($row_templLinks['link_name']) . "</td>";
+                print "<td $cls>" . $hp->purify($row_templLinks['group_name']) . "</td>";
                 print "</tr>";
             }
             print "</TABLE>\n";
@@ -863,6 +864,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         // update link, but check the change would not create a duplicate
         // (same target project and link type)
         global $Language;
+        $hp = Codendi_HTMLPurifier::instance();
 
         $targetProject = ProjectManager::instance()->getProject($target_group_id);
 
@@ -879,7 +881,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             $feedback = $Language->getText(
                 'plugin_plinks',
                 'project_link_change_makes_duplicate',
-                $targetProject->getPublicName()
+                $hp->purify($targetProject->getPublicName())
             );
         } else {
             $updates = array(
@@ -897,12 +899,12 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $updates,
                 is_null($link_id) ? "" : "link_id=$link_id"
             )) {
-                $feedback = $Language->getText('plugin_plinks', 'update_ok_named', $targetProject->getPublicName()) . ' ';
+                $feedback = $Language->getText('plugin_plinks', 'update_ok_named', $hp->purify($targetProject->getPublicName())) . ' ';
             } else {
                 $feedback = $Language->getText(
                     'plugin_plinks',
                     'update_failed_named',
-                    array(db_error(), $targetProject->getPublicName())
+                    array(db_error(), $hp->purify($targetProject->getPublicName()))
                 );
             }
         }
@@ -916,6 +918,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
      */
     function _admin_links_table($link_type_id)
     {
+        $hp = Codendi_HTMLPurifier::instance();
         $html = '';
 
         $dao   = $this->getProjectLinksDao();
@@ -934,7 +937,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $html .= '<tr>';
 
                 // Name
-                $html .= '<td>' . $row['group_name'] . '</td>';
+                $html .= '<td>' . $hp->purify($row['group_name']) . '</td>';
 
                 // Delete
                 $url  = "?func=pl_link_delete&amp;disp=edit_link_type&amp;link_type_id=" . $link_type_id . "&amp;group_id=" . $row['master_group_id'] . "&amp;link_id=" . $row['link_id'];

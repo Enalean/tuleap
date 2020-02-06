@@ -67,7 +67,7 @@ class Docman_SOAPController extends Docman_Controller
     }
     /* protected */ function _set_doesnot_belong_to_project_error($item, $group)
     {
-        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), util_unconvert_htmlspecialchars($group->getPublicName()))));
+        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), $group->getPublicName())));
         $this->_setView('SOAP');
     }
 

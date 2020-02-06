@@ -188,7 +188,7 @@ class FlamingParrot_ContainerPresenter
 
     public function projectName()
     {
-        return util_unconvert_htmlspecialchars($this->project_name);
+        return $this->project_name;
     }
 
     public function projectLink()

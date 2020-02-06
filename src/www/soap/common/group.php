@@ -154,7 +154,7 @@ if (defined('NUSOAP')) {
         'encoded',
         'Returns the Ugroups associated to the given project:
      <pre>
-       [ 
+       [
          ["ugroup_id" => 120,
           "name"      => "my custom group",
           "members"   => [ ["user_id"   => 115,
@@ -210,9 +210,9 @@ if (defined('NUSOAP')) {
     {
         $soap_group = array(
         'group_id' => $group->getGroupId(),
-        'group_name' => util_unconvert_htmlspecialchars($group->getPublicName()),
+        'group_name' => $group->getPublicName(),
         'unix_group_name' => $group->getUnixName(),
-        'description' => util_unconvert_htmlspecialchars($group->getDescription())
+        'description' => $group->getDescription()
         );
         return $soap_group;
     }

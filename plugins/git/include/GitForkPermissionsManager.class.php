@@ -120,7 +120,10 @@ class GitForkPermissionsManager
     {
         if ($params['scope'] == 'project') {
             $project         = $this->getProjectManager()->getProject($params['group_id']);
-            $destinationHTML = sprintf(dgettext('tuleap-git', 'Into project <b>%1$s</b>'), $project->getPublicName());
+            $destinationHTML = sprintf(
+                dgettext('tuleap-git', 'Into project <b>%1$s</b>'),
+                Codendi_HTMLPurifier::instance()->purify($project->getPublicName())
+            );
         } else {
             $destinationHTML = dgettext('tuleap-git', 'As personal fork');
         }

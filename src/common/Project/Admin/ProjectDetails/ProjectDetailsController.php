@@ -519,7 +519,7 @@ class ProjectDetailsController
         foreach ($project->getProjectsCreatedFrom() as $subproject) {
             $projects[] = array(
                 'unix_group_name' => $subproject['unix_group_name'],
-                'group_name'      => util_unconvert_htmlspecialchars($subproject['group_name'])
+                'group_name'      => $subproject['group_name']
             );
         }
         return $projects;

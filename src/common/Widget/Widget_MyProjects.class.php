@@ -44,6 +44,7 @@ class Widget_MyProjects extends Widget
 
     public function getContent()
     {
+        $hp = Codendi_HTMLPurifier::instance();
         $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
         $include_assets = new IncludeAssets($assets_path, '/assets');
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
@@ -132,7 +133,9 @@ class Widget_MyProjects extends Widget
                 }
 
                 // Project name
-                $html .= '<td class="widget_my_projects_project_name'.$tdClass.'"><a href="/projects/'.$row['unix_group_name'].'/">'.$row['group_name'].'</a></td>';
+                $html .= '<td class="widget_my_projects_project_name'.$tdClass.'"><a href="/projects/'.urlencode($row['unix_group_name']).'/">';
+                $html .= Codendi_HTMLPurifier::instance()->purify($row['group_name']);
+                $html .= '</a></td>';
 
                 // Admin link
                 $html .= '<td class="widget_my_projects_actions'.$tdClass.'">';
@@ -146,7 +149,7 @@ class Widget_MyProjects extends Widget
                 if ($disable_contact === false) {
                     // Mailing tool
                     $html .= '<td class="'.$tdClass.'">';
-                    $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index', 'send_mail', $row['group_name']).'" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
+                    $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index', 'send_mail', $hp->purify($row['group_name'])).'" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
                     $html .= '</td>';
                 }
 
@@ -207,6 +210,7 @@ class Widget_MyProjects extends Widget
     }
     public function displayRss()
     {
+        $hp = Codendi_HTMLPurifier::instance();
         $server_url = HTTPRequest::instance()->getServerUrl();
         $rss        = new RSS(array(
             'title'       => 'Codendi - MyProjects',
@@ -246,7 +250,7 @@ class Widget_MyProjects extends Widget
                 }
 
                 $rss->addItem(array(
-                    'title'       => $title,
+                    'title'       => $hp->purify($title),
                     'description' => $desc,
                     'link'        => $server_url .'/projects/'. db_result($result, $i, 'unix_group_name')
                 ));

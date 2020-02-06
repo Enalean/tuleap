@@ -2690,7 +2690,7 @@ class Artifact
         if ($ok) {
             $project = ProjectManager::instance()->getProject($group_id);
             $breadcrumbs = array();
-            $breadcrumbs[] = '<a href="'. $server_url .'/projects/'. $project->getUnixName($tolower = true) .'" />'. $project->getPublicName() .'</a>';
+            $breadcrumbs[] = '<a href="'. $server_url .'/projects/'. $project->getUnixName($tolower = true) .'" />'. $hp->purify($project->getPublicName()) .'</a>';
             $breadcrumbs[] = '<a href="'. $server_url .'/tracker/?group_id='. (int)$group_id .'&amp;atid='. (int)$group_artifact_id .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())) .'</a>';
             $breadcrumbs[] = '<a href="'. $artifact_href .'" />'. $hp->purify($this->ArtifactType->getItemName().' #'.$this->getID()) .'</a>';
 
@@ -2805,7 +2805,7 @@ class Artifact
 
         // We write the name of the project
         $pm = ProjectManager::instance();
-        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] ."", $Language->getText('tracker_include_artifact', 'project').' '.util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()));
+        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] ."", $Language->getText('tracker_include_artifact', 'project').' '.$pm->getProject($group_id)->getPublicName());
 
         // Write all the fields, grouped by fieldsetset and ordered by rank.
         $left = 1;
@@ -3596,7 +3596,7 @@ class Artifact
                     $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML),
                     $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML),
                     $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODENDI_PURIFIER_CONVERT_HTML),
-                    $hp->purify(util_unconvert_htmlspecialchars($group_label), CODENDI_PURIFIER_CONVERT_HTML),
+                    $hp->purify($group_label, CODENDI_PURIFIER_CONVERT_HTML),
                     $html_delete
                 );
             } // for

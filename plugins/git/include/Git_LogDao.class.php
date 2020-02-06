@@ -25,7 +25,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
     public function getLastPushForRepository($repositoryId)
     {
         $sql = 'SELECT log.*
-                FROM plugin_git_log log 
+                FROM plugin_git_log log
                 WHERE repository_id = ?
                 ORDER BY push_date DESC
                 LIMIT 1';
@@ -117,7 +117,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
      */
     public function getLastPushesRepositories($userId, $date)
     {
-        $sql = "SELECT DISTINCT(r.repository_id), g.group_name, r.repository_name, r.repository_namespace, g.group_id
+        $sql = "SELECT DISTINCT(r.repository_id), g.group_name, g.unix_group_name, r.repository_name, r.repository_namespace, g.group_id
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id
@@ -160,10 +160,10 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
             $filter->andWith('project_id = ?', $projectId);
         }
         $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(push_date), '%M') AS month,
-                    YEAR(FROM_UNIXTIME(push_date)) AS year, 
+                    YEAR(FROM_UNIXTIME(push_date)) AS year,
                     COUNT(*) AS pushes_count,
-                    COUNT(DISTINCT(repository_id)) AS repositories, 
-                    SUM(commits_number) AS commits_count, 
+                    COUNT(DISTINCT(repository_id)) AS repositories,
+                    SUM(commits_number) AS commits_count,
                     COUNT(DISTINCT(user_id)) AS users
                 FROM plugin_git_log JOIN plugin_git USING(repository_id)
                 WHERE $filter

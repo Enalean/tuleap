@@ -107,7 +107,7 @@ class WebDAVProject extends Sabre_DAV_Directory
     {
 
         $utils = $this->getUtils();
-        return $utils->unconvertHTMLSpecialChars($this->getProject()->getUnixName());
+        return $this->getProject()->getUnixName();
     }
 
     /**

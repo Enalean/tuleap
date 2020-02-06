@@ -29,17 +29,6 @@ function html_feedback_bottom($feedback)
     echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
 }
 
-function html_a_group($grp)
-{
-    $pm = ProjectManager::instance();
-    print '<A /project/?group_id='.$grp.'>' . $pm->getProject($grp)->getPublicName() . '</A>';
-}
-
-function html_blankimage($height, $width)
-{
-    return html_image('blank.png', array('height'=>$height,'width'=>$width,'alt'=>' '));
-}
-
 function html_image($src, $args, $display = 1)
 {
     global $img_size;
@@ -563,24 +552,6 @@ function html_buildpriority_select_box($name = 'priority', $checked_val = '5')
                      } ?>>9 - <?php echo $Language->getText('include_html', 'highest'); ?></OPTION>
     </SELECT>
     <?php
-}
-
-function html_buildcheckboxarray($options, $name, $checked_array)
-{
-    $option_count  = count($options);
-    $checked_count = count($checked_array);
-    $purifier      = Codendi_HTMLPurifier::instance();
-
-    for ($i=1; $i<=$option_count; $i++) {
-        echo '
-			<BR><INPUT type="checkbox" name="'.$purifier->purify($name).'" value="'.$i.'"';
-        for ($j=0; $j<$checked_count; $j++) {
-            if ($i == $checked_array[$j]) {
-                echo ' CHECKED';
-            }
-        }
-        echo '> '.$purifier->purify($options[$i]);
-    }
 }
 
 /*!     @function site_user_header

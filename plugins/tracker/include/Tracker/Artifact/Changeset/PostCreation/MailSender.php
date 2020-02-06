@@ -71,7 +71,7 @@ class MailSender
 
         $server_url = HTTPRequest::instance()->getServerUrl();
 
-        $breadcrumbs[] = '<a href="'. $server_url .'/projects/'. $project_unix_name .'" />'. $project->getPublicName() .'</a>';
+        $breadcrumbs[] = '<a href="'. $server_url .'/projects/'. $project_unix_name .'" />'. $hp->purify($project->getPublicName()) .'</a>';
         $breadcrumbs[] = '<a href="'. $server_url .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify($changeset->getTracker()->getName()) .'</a>';
         $breadcrumbs[] = '<a href="'. $server_url.'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($changeset->getTracker()->getName().' #'.$artifactId) .'</a>';
 

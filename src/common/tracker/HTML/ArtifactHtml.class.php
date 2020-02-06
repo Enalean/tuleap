@@ -220,7 +220,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $title .= '</script>';
         $title .= ' <a href="/tracker/?func=rss&aid='. (int)$this->getId() .'&atid='. (int)$this->ArtifactType->getID() .'&group_id='. (int)$this->ArtifactType->getGroupId() .'" ';
         $hp = Codendi_HTMLPurifier::instance();
-        $title .= ' title="'. $hp->purify(util_unconvert_htmlspecialchars($group->getPublicName()).' '.SimpleSanitizer::unsanitize($this->ArtifactType->getName()) .' #'. $this->getId() .' - '. util_unconvert_htmlspecialchars($this->getValue('summary')), CODENDI_PURIFIER_CONVERT_HTML) .' - '. $Language->getText('tracker_include_artifact', 'follow_ups') .'">';
+        $title .= ' title="'. $hp->purify($group->getPublicName().' '.SimpleSanitizer::unsanitize($this->ArtifactType->getName()) .' #'. $this->getId() .' - '. util_unconvert_htmlspecialchars($this->getValue('summary')), CODENDI_PURIFIER_CONVERT_HTML) .' - '. $Language->getText('tracker_include_artifact', 'follow_ups') .'">';
         $title .= '[xml]</a> ';
         echo $this->_getSection(
             'artifact_section_followups',
@@ -391,7 +391,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                 if (element) {
                     Element.toggle(element);
                     Element.toggle($('". $id ."_alternate'));
-                    
+
                     //replace image
                     var src_search = 'toggle_minus';
                     var src_replace = 'toggle_plus';
@@ -510,7 +510,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $pm = ProjectManager::instance();
         $html .= '
             <table width="100%">
-              <tr><td colspan="'.(int)$columns_number.'"><B>'.$Language->getText('tracker_include_artifact', 'group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML) .'</TD></tr>';
+              <tr><td colspan="'.(int)$columns_number.'"><B>'.$Language->getText('tracker_include_artifact', 'group').':</B>&nbsp;'. $hp->purify($pm->getProject($group_id)->getPublicName(), CODENDI_PURIFIER_CONVERT_HTML) .'</TD></tr>';
 
         // Now display the variable part of the field list (depend on the project)
 
@@ -845,7 +845,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                     $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML),
                     $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML),
                     $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODENDI_PURIFIER_CONVERT_HTML),
-                    $hp->purify(util_unconvert_htmlspecialchars($group_label), CODENDI_PURIFIER_CONVERT_HTML)
+                    $hp->purify($group_label, CODENDI_PURIFIER_CONVERT_HTML)
                 );
             } // for
         }
@@ -892,7 +892,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $html = '';
         $html .= '  <TABLE width="100%">
                 <TR><TD VALIGN="TOP" COLSPAN="'.($columns_number).'">
-                          <B>'.$Language->getText('tracker_include_artifact', 'group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML) .'</TD></TR>';
+                          <B>'.$Language->getText('tracker_include_artifact', 'group').':</B>&nbsp;'. $hp->purify($pm->getProject($group_id)->getPublicName(), CODENDI_PURIFIER_CONVERT_HTML) .'</TD></TR>';
 
 
 

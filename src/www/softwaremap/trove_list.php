@@ -67,7 +67,7 @@ if ($folders_len > 1) {
 
 $sub_categories = array();
 
-$sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects 
+$sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects
 FROM trove_cat AS t, trove_cat AS t2 LEFT JOIN (SELECT t.trove_cat_id AS trove_cat_id, count(t.group_id) AS nb
 FROM trove_group_link AS t INNER JOIN groups AS g USING(group_id)
 WHERE " .trove_get_visibility_for_user('g.access', $current_user). "
@@ -198,7 +198,7 @@ $collection_retriever = new \Tuleap\Trove\TroveCatCollectionRetriever($trove_cat
 $projects = array();
 while ($row = db_fetch_array($res_grp)) {
     $projects[]= array(
-        'longname'    => util_unconvert_htmlspecialchars($row['group_name']),
+        'longname'    => $row['group_name'],
         'shortname'   => strtolower($row['unix_group_name']),
         'description' => $row['short_description'],
         'trovecats'   => $collection_retriever->getCollection($row['group_id']),

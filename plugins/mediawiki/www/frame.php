@@ -27,7 +27,6 @@ $params['toptab']      = $pluginname;
 $params['group']       = $group_id;
 $params['title']       = _('wiki') ;
 $params['pagename']    = $pluginname;
-$params['sectionvals'] = array ($group->getPublicName());
 
 site_project_header($params);
 

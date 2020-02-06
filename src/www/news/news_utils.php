@@ -120,11 +120,11 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
                     news_bytes.date,
                     news_bytes.details,
                     count(forum.msg_id) AS num_comments
-            FROM news_bytes 
+            FROM news_bytes
                 INNER JOIN groups ON (news_bytes.group_id = groups.group_id)
                 LEFT JOIN forum ON (forum.group_forum_id = news_bytes.forum_id)
-            WHERE $wclause 
-              AND groups.status = 'A' 
+            WHERE $wclause
+              AND groups.status = 'A'
             GROUP BY news_bytes.forum_id
             ORDER BY date DESC LIMIT ". db_ei($limit + $tail_headlines);
 
@@ -196,7 +196,7 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
     $proj_name = '';
     if ($show_projectname && $limit) {
         //show the project name
-        $proj_name = ' &middot; <a href="/projects/'. strtolower($data['unix_group_name']) .'/">'. $data['group_name'] .'</a>';
+        $proj_name = ' &middot; <a href="/projects/'. strtolower($data['unix_group_name']) .'/">'. $purifier->purify($data['group_name']) .'</a>';
     }
 
     $forum_url = '/forum/forum.php?forum_id=' . urlencode($data['forum_id']);
@@ -271,7 +271,7 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
 
     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
     $new_id=forum_create_forum($GLOBALS['sys_news_group'], $summary, 1, 0, '', $need_feedback = false);
-    $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) 
+    $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details)
           VALUES (". db_ei($group_id) .", '". $db_escaped_user_id ."', ". db_ei($promote_news) .", '".time()."',
                  '$new_id', '". db_es($summary) ."', '". db_es($details) ."')";
     $result=db_query($sql);

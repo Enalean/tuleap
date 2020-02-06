@@ -162,13 +162,22 @@ class Tracker_FormElement_View_Admin
 
     public function fetchCustomHelpForShared()
     {
+        $hp = Codendi_HTMLPurifier::instance();
         $originalTrackerName = $this->formElement->getOriginalTracker()->getName();
         $originalProjectName = $this->formElement->getOriginalProject()->getPublicName();
         $originalEditUrl     = $this->formElement->getOriginalField()->getAdminEditUrl();
 
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_from', array($originalTrackerName, $originalProjectName, $originalEditUrl));
+        $html .= $GLOBALS['Language']->getText(
+            'plugin_tracker_include_type',
+            'field_copied_from',
+            [
+                $originalTrackerName,
+                $hp->purify($originalProjectName),
+                $originalEditUrl
+            ]
+        );
         $html .= '</span>';
         return $html;
     }
@@ -236,7 +245,7 @@ class Tracker_FormElement_View_Admin
         switch ($property['type']) {
             case 'string':
                 $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
-                $html .= '<input type="text" 
+                $html .= '<input type="text"
                              size="'. $purifier->purify($property['size']) .'"
                              name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
                              id="formElement_properties_'. $purifier->purify($key) .'"
@@ -259,7 +268,7 @@ class Tracker_FormElement_View_Admin
                 $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
                 $html .= '<textarea
                            class="tracker-field-richtext"
-                           cols="50" rows="10"  
+                           cols="50" rows="10"
                            name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
                            id="formElement_properties_'. $purifier->purify($key) .'">' .
                            $purifier->purify($property['value'], CODENDI_PURIFIER_FULL) . '</textarea>';
@@ -358,13 +367,14 @@ class Tracker_FormElement_View_Admin
 
     public function fetchSharedUsage()
     {
+        $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $fields = $this->formElement->getSharedTargets();
         if ($fields) {
             $trackers = array();
             foreach ($fields as $field) {
                 $t = $field->getTracker();
-                $trackers[$t->getId()] = '<a href="'. TRACKER_BASE_URL.'/?tracker='. $t->getId() .'&func=admin-formElements">'. $t->getName() .' ('. $t->getProject()->getPublicName() .')</a>';
+                $trackers[$t->getId()] = '<a href="'. TRACKER_BASE_URL.'/?tracker='. $t->getId() .'&func=admin-formElements">'. $t->getName() .' ('. $hp->purify($t->getProject()->getPublicName()) .')</a>';
             }
             $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_to');
             $html .= '<ul><li>';

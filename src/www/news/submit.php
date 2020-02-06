@@ -77,6 +77,7 @@ if (user_isloggedin()) {
         news_header(array('title'=>$Language->getText('news_index', 'news'),
               'help'=>'collaboration.html#news-service'));
 
+        $hp = Codendi_HTMLPurifier::instance();
         $pm = ProjectManager::instance();
         $project = $pm->getProject($group_id);
         /*
@@ -84,13 +85,13 @@ if (user_isloggedin()) {
          if one isn't already there
         */
         echo '
-        <H3>'.$Language->getText('news_submit', 'submit_news_for', $project->getPublicName()).'</H3>
+        <H3>'.$Language->getText('news_submit', 'submit_news_for', $hp->purify($project->getPublicName())).'</H3>
         <P>
         '.$Language->getText('news_submit', 'post_explain', $GLOBALS['sys_name']).'
         <P>
         <FORM ACTION="" METHOD="POST">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-        <B>'.$Language->getText('news_submit', 'for_project', $project->getPublicName()) .'</B>
+        <B>'.$Language->getText('news_submit', 'for_project', $hp->purify($project->getPublicName())) .'</B>
         <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
         <br><br>
         <div class="control-group">

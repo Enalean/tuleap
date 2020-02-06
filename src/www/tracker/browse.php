@@ -365,7 +365,6 @@ $params=array('title'=>$_title,
               'titlevals'=>array($ath->getName()),
               'pagename'=>'tracker_browse',
               'atid'=>$ath->getID(),
-              'sectionvals'=>array($group->getPublicName()),
               'pv'=> $pv,
               'help' => $_help);
 

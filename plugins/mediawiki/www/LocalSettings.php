@@ -107,7 +107,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     if (! is_dir($project_dir)) {
         $project_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $group->getUnixName();
         if (! is_dir($project_dir)) {
-            exit_error(sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), $group->getPublicName().' : '.$project_dir)) ;
+            exit_error(sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), Codendi_HTMLPurifier::instance()->purify($group->getPublicName()).' : '.$project_dir)) ;
         }
     }
     $path = array( $IP, "$IP/includes", "$IP/languages" );

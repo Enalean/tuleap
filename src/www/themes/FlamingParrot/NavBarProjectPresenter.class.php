@@ -29,7 +29,7 @@ class FlamingParrot_NavBarProjectPresenter
 
     public function __construct(Project $project)
     {
-        $this->project_name  = util_unconvert_htmlspecialchars($project->getPublicName());
+        $this->project_name  = $project->getPublicName();
         $this->project_uri   = '/projects/' . $project->getUnixName();
     }
 }

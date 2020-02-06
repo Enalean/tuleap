@@ -178,6 +178,7 @@ class Widget_MyArtifacts extends Widget
         $artifact_types = array();
 
         $pm = ProjectManager::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
         while ($trackers_array = db_fetch_array($list_trackers)) {
             $atid = $trackers_array['group_artifact_id'];
             $group_id = $trackers_array['group_id'];
@@ -298,7 +299,7 @@ class Widget_MyArtifacts extends Widget
             list($hide_now,$count_diff,$hide_url) = my_hide_url('artifact', $atid_old, $hide_item_id, $count_aids, $hide_artifact, $request->get('dashboard_id'));
             $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
               $hide_url.'<A HREF="/tracker/?group_id='.$group_id_old.'&atid='.$atid_old.'">'.
-              $group_name." - ".$tracker_name.'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
+              $purifier->purify($group_name)." - ".$tracker_name.'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
             $count_new = max(0, $count_diff);
 
             $html_hdr .= my_item_count($count_aids, $count_new).'</td></tr>';

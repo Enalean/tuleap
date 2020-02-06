@@ -173,6 +173,7 @@ class Docman_MetadataComparator
 
     function getMetadataCompareTable(&$sthToImport)
     {
+        $purifier = Codendi_HTMLPurifier::instance();
         $html = '';
 
         // True if there is sth to import in dst project.
@@ -191,17 +192,17 @@ class Docman_MetadataComparator
         $mdMap = array();
         $srcMdFactory->getMetadataMapping($this->dstGo->getGroupId(), $mdMap);
 
-        $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_desc', array($this->dstGo->getPublicName(), $this->srcGo->getPublicName()));
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_desc', array($purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName())));
 
         // Table
         $html .= "<table border=\"1\">\n";
 
         $html .= "<tr>\n";
         $html .= "<th colspan=\"2\">".$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_prop')."</th>\n";
-        $html .= "<th>".$this->srcGo->getPublicName()."</th>\n";
-        $html .= "<th>".$this->dstGo->getPublicName()."</th>\n";
-        $html .= "<th>".$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_diff', array($this->dstGo->getPublicName(), $this->srcGo->getPublicName()))."</th>\n";
-        $html .= "<th>".$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_action', array($this->dstGo->getPublicName()))."</th>\n";
+        $html .= "<th>".$purifier->purify($this->srcGo->getPublicName())."</th>\n";
+        $html .= "<th>".$purifier->purify($this->dstGo->getPublicName())."</th>\n";
+        $html .= "<th>".$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_diff', array($purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName())))."</th>\n";
+        $html .= "<th>".$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_action', array($purifier->purify($this->dstGo->getPublicName())))."</th>\n";
         $html .= "</tr>\n";
 
         $purifier = Codendi_HTMLPurifier::instance();
@@ -299,7 +300,7 @@ class Docman_MetadataComparator
                     }
                     $diffStr .= '</ul>';
 
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_update_md', array($purified_property_name, $this->dstGo->getPublicName(), $diffStr));
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_update_md', array($purified_property_name, $purifier->purify($this->dstGo->getPublicName()), $diffStr));
                     break;
                 case 'missing':
                     $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_md', array($purified_property_name));

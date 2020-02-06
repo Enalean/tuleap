@@ -53,6 +53,7 @@ function display_ml_details($group_id, $list_server, $result, $i)
 if ($group_id) {
     $list_server = get_list_server_url();
 
+    $hp = Codendi_HTMLPurifier::instance();
     $pm = ProjectManager::instance();
     $params=array('title'=>$Language->getText('mail_index', 'mail_list_for').$pm->getProject($group_id)->getPublicName(),
               'help'=>'collaboration.html#mailing-lists',
@@ -100,7 +101,7 @@ if ($group_id) {
         if (!$result || $rows < 1) {
             $pm = ProjectManager::instance();
             echo '
-                <H1>'.$Language->getText('mail_index', 'no_list_found_for').$pm->getProject($group_id)->getPublicName().'</H1>';
+                <H1>'.$Language->getText('mail_index', 'no_list_found_for').$hp->purify($pm->getProject($group_id)->getPublicName()).'</H1>';
             echo '
                 <P>'.$Language->getText('mail_index', 'proj_admin_use_admin_link');
                     mail_footer(array('pv'   => isset($pv)?$pv:false));

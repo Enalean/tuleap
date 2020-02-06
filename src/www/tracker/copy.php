@@ -27,7 +27,6 @@ if (!$request->exist('pv')) {
 $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
               'pagename'=>'tracker',
               'atid'=>$ath->getID(),
-              'sectionvals'=>array($group->getPublicName()),
               'pv'=>$pv,
               'help' => 'tracker-v3.html#artifact-update');
 

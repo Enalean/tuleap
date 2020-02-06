@@ -505,14 +505,14 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         // make group entry
         $insert_data = array(
-            'group_name'          => "'". db_es(htmlspecialchars($data->getFullName())) ."'",
+            'group_name'          => "'". db_es($data->getFullName()) ."'",
             'access'              => "'".$access."'",
             'unix_group_name'     => "'". db_es($data->getUnixName()) ."'",
             'http_domain'         => "'". db_es($http_domain) ."'",
             'status'              => "'P'",
             'unix_box'            => "'shell1'",
             'cvs_box'             => "'cvs1'",
-            'short_description'   => "'". db_es(htmlspecialchars($data->getShortDescription())) ."'",
+            'short_description'   => "'". db_es($data->getShortDescription()) ."'",
             'register_time'       => time(),
             'rand_hash'           => "'". md5($random_num) ."'",
             'built_from_template' => db_ei($data->getBuiltFromTemplateProject()->getProject()->getID()),

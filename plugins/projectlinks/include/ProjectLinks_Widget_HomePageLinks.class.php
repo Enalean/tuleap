@@ -204,7 +204,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
             $alt  = $this->html_purifier->purify($GLOBALS['Language']->getText('plugin_plinks', 'template_marker'));
             $ic   = '<img src="'.$path.'" alt="'.$alt.'" title="'.$alt.'" /> ';
         }
-        return '<a href="'.$this->html_purifier->purify($url).'">'.$ic . $this->html_purifier->purify(html_entity_decode($row['group_name'])).'</a>';
+        return '<a href="'.$this->html_purifier->purify($url).'">'.$ic . $this->html_purifier->purify($row['group_name']).'</a>';
     }
 
     /**
