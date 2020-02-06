@@ -18,6 +18,6 @@
  */
 
 const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+module.exports = webpack_configurator.extendDevConfiguration(common);
