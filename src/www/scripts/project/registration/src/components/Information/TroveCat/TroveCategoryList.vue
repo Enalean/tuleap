@@ -32,7 +32,7 @@
             v-on:change="updateTroveCategories(trovecat.id, $event.target.value)"
             data-test="trove-category-list"
         >
-            <option value="0"></option>
+            <option></option>
             <option
                 v-for="children in trovecat.children"
                 v-bind:value="children.id"
