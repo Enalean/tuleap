@@ -27,7 +27,8 @@ describe("ProjectInformationInputPrivacyList", () => {
     describe("The selected default project visibility when the component is mounted -", () => {
         it("Should select the 'Public' by default", async () => {
             const state = {
-                project_default_visibility: "public"
+                project_default_visibility: "public",
+                can_user_choose_project_visibility: true
             } as State;
 
             const store_options = { state };
@@ -49,7 +50,8 @@ describe("ProjectInformationInputPrivacyList", () => {
         it("Should select the 'Public incl. restricted' by default", async () => {
             const state = {
                 project_default_visibility: "unrestricted",
-                are_restricted_users_allowed: true
+                are_restricted_users_allowed: true,
+                can_user_choose_project_visibility: true
             } as State;
 
             const store_options = { state };
@@ -68,7 +70,8 @@ describe("ProjectInformationInputPrivacyList", () => {
 
         it("Should select the 'Private' by default", async () => {
             const state = {
-                project_default_visibility: "private-wo-restr"
+                project_default_visibility: "private-wo-restr",
+                can_user_choose_project_visibility: true
             } as State;
 
             const store_options = { state };
@@ -88,7 +91,8 @@ describe("ProjectInformationInputPrivacyList", () => {
         it("Should select the 'Private incl. restricted' by default", async () => {
             const state = {
                 project_default_visibility: "private",
-                are_restricted_users_allowed: true
+                are_restricted_users_allowed: true,
+                can_user_choose_project_visibility: true
             } as State;
 
             const store_options = { state };
@@ -110,7 +114,8 @@ describe("ProjectInformationInputPrivacyList", () => {
         it("Displays only public and private when platform does not allow restricted", async () => {
             const state = {
                 project_default_visibility: "private",
-                are_restricted_users_allowed: false
+                are_restricted_users_allowed: false,
+                can_user_choose_project_visibility: true
             } as State;
 
             const store_options = { state };
@@ -130,7 +135,8 @@ describe("ProjectInformationInputPrivacyList", () => {
         it("Displays all options when restricted are allowed", async () => {
             const state = {
                 project_default_visibility: "private",
-                are_restricted_users_allowed: true
+                are_restricted_users_allowed: true,
+                can_user_choose_project_visibility: true
             } as State;
 
             const store_options = { state };
@@ -146,6 +152,27 @@ describe("ProjectInformationInputPrivacyList", () => {
             expect(wrapper.contains("[data-test=private-wo-restr]")).toBe(true);
             expect(wrapper.contains("[data-test=unrestricted]")).toBe(true);
             expect(wrapper.contains("[data-test=public]")).toBe(true);
+        });
+
+        it("Displays nothing when user can not choose the privacy", async () => {
+            const state = {
+                project_default_visibility: "private",
+                are_restricted_users_allowed: true,
+                can_user_choose_project_visibility: false
+            } as State;
+
+            const store_options = { state };
+
+            const store = createStoreMock(store_options);
+
+            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store }
+            });
+
+            expect(wrapper.contains("[data-test=project-information-input-privacy-list]")).toBe(
+                false
+            );
         });
     });
 });

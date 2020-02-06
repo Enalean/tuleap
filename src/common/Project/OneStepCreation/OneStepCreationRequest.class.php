@@ -114,7 +114,7 @@ class Project_OneStepCreation_OneStepCreationRequest
         $this->request                         = $request;
         $this->is_public                       = $default_project_visibility === Project::ACCESS_PUBLIC ||
             $default_project_visibility === Project::ACCESS_PUBLIC_UNRESTRICTED;
-        $this->user_can_choose_project_privacy = ForgeConfig::get('sys_user_can_choose_project_privacy');
+        $this->user_can_choose_project_privacy = ForgeConfig::get(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY);
         $request_data                          = $request->params;
         $this->setFullName($request_data)
             ->setUnixName($request_data)

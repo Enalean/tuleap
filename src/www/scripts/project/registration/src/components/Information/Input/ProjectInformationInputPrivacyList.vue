@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
+    <div class="tlp-form-element" v-if="can_user_choose_project_visibility">
         <label class="tlp-label" for="project-information-input-privacy-list-label">
             <span v-translate>Visibility</span>
             <i class="fa fa-asterisk"></i>
@@ -101,6 +101,9 @@ export default class ProjectInformationInputPrivacyList extends Vue {
 
     @State
     are_restricted_users_allowed!: boolean;
+
+    @State
+    can_user_choose_project_visibility!: boolean;
 
     select2_visibility_select: Select2Plugin | null = null;
 
