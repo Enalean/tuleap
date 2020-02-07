@@ -231,23 +231,6 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     }
 
     /**
-     * getDescriptionText - the text of the description of this Tracker_FormElement_FieldSet
-     * The tracker descripiton can be internationalized.
-     * To do this, fill the description field with the ad-hoc format.
-     *
-     * @return string description, the description text if the description is not internationalized, or the localized text if so
-     */
-    function getDescriptionText()
-    {
-        global $Language;
-        if ($this->isDescriptionMustBeLocalized()) {
-            return $Language->getText('plugin_tracker_common_fieldset', $this->description);
-        } else {
-            return $this->description;
-        }
-    }
-
-    /**
      * Returns if the fieldset name must be localized or not.
      * The field set name must be localized if the name looks like fieldset_{$fieldset_id}_lbl_key
      *
@@ -257,18 +240,6 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     {
         $pattern = "/fieldset_(.*)_lbl_key/";
         return preg_match($pattern, $this->label);
-    }
-
-    /**
-     * Returns if the fieldset description must be localized or not.
-     * The field set description must be localized if the name looks like fieldset_{$fieldset_id}_desc_key
-     *
-     * @return true if the fieldset description must be localized, false otherwise.
-     */
-    public function isDescriptionMustBeLocalized()
-    {
-        $pattern = "/fieldset_(.*)_desc_key/";
-        return preg_match($pattern, $this->description);
     }
 
     /**
