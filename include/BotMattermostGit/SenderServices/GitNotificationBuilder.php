@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\BotMattermostGit\SenderServices;
 
 use GitRepository;
 use Git_GitRepositoryUrlManager;
-use Tuleap\BotMattermost\BotMattermostLogger;
+use Psr\Log\LoggerInterface;
 
 class GitNotificationBuilder
 {
@@ -30,7 +30,7 @@ class GitNotificationBuilder
     private $git_repository_url_manager;
     private $logger;
 
-    public function __construct(Git_GitRepositoryUrlManager $git_repository_url_manager, BotMattermostLogger $logger)
+    public function __construct(Git_GitRepositoryUrlManager $git_repository_url_manager, LoggerInterface $logger)
     {
         $this->git_repository_url_manager = $git_repository_url_manager;
         $this->logger                     = $logger;
