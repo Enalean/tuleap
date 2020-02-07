@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 namespace Tuleap\BotMattermost\SenderServices;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use Tuleap\BotMattermost\Bot\Bot;
-use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServicesException\Exception\HasNoMessageContentException;
 
 class Sender
@@ -37,7 +37,7 @@ class Sender
     public function __construct(
         EncoderMessage $encoder_message,
         ClientBotMattermost $client,
-        BotMattermostLogger $logger
+        LoggerInterface $logger
     ) {
         $this->encoder_message = $encoder_message;
         $this->client          = $client;
@@ -88,7 +88,7 @@ class Sender
             $this->client->sendMessage($post_string, $url);
             $this->logger->info('message send');
         } catch (Exception $ex) {
-            $this->logger->error('send Failed', $ex);
+            $this->logger->error('send Failed', ['exception' => $ex]);
         }
     }
 }
