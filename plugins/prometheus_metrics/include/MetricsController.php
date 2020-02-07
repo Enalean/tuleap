@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\PrometheusMetrics;
 
+use Enalean\Prometheus\Renderer\RenderTextFormat;
+use Enalean\Prometheus\Storage\FlushableStorage;
 use EventManager;
 use ForgeConfig;
-use Prometheus\RenderTextFormat;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -70,6 +71,10 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
      * @var Redis|null
      */
     private $redis;
+    /**
+     * @var FlushableStorage
+     */
+    private $flushable_storage;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
@@ -80,6 +85,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         EventManager $event_manager,
         VersionPresenter $version_presenter,
         ?Redis $redis,
+        FlushableStorage $flushable_storage,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
@@ -90,12 +96,13 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         $this->event_manager     = $event_manager;
         $this->version_presenter = $version_presenter;
         $this->redis             = $redis;
+        $this->flushable_storage = $flushable_storage;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->response_factory->createResponse()
-            ->withHeader('Content-Type', RenderTextFormat::MIME_TYPE)
+            ->withHeader('Content-Type', (new RenderTextFormat())->getMimeType())
             ->withBody(
                 $this->stream_factory->createStream(
                     $this->getTuleapMetrics() .
@@ -107,7 +114,16 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
 
     private function getTuleapMetrics() : string
     {
-        return Prometheus::instance()->renderText();
+        $instance = Prometheus::instance();
+
+        try {
+            return $instance->renderText();
+        } catch (\TypeError $error) {
+            // Try to cleanup the persistent datastore, the inconsistency might comes
+            // from an upgrade of the Prometheus library
+            $this->flushable_storage->flush();
+            return $instance->renderText();
+        }
     }
 
     private function getTuleapComputedMetrics() : string

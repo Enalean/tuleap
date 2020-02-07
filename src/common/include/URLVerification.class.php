@@ -26,6 +26,7 @@ use Tuleap\Error\PermissionDeniedRestrictedAccountController;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Error\PermissionDeniedRestrictedAccountProjectController;
 use Tuleap\Error\PlaceHolderBuilder;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\ProjectAccessChecker;
@@ -420,7 +421,7 @@ class URLVerification
                 }
                 $this->displayPrivateProjectError($user, $project);
             } catch (Project_AccessProjectNotFoundException $exception) {
-                RequestInstrumentation::increment(404);
+                (new RequestInstrumentation(Prometheus::instance()))->increment(404);
                 (new ErrorRendering())->rendersError(
                     $this->getThemeManager()->getBurningParrot($request->getCurrentUser()),
                     $request,

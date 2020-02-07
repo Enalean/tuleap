@@ -18,26 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\PrometheusMetrics;
 
-namespace Tuleap\Plugin;
-
-use Mockery;
+use Enalean\Prometheus\Storage\FlushableStorage;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Layout\BaseLayout;
+use Symfony\Component\Console\Tester\CommandTester;
 
-final class PluginLegacyControllerTest extends TestCase
+final class ClearPrometheusMetricsCommandTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
 
-    public function testLegacyPluginCanBeAccessed() : void
+    public function testCommandFlushesTheStorage() : void
     {
-        $plugin = Mockery::mock(PluginWithLegacyInternalRouting::class);
-        $plugin->shouldReceive('getName')->andReturn('test');
-        $controller = new PluginLegacyController($plugin);
+        $storage = \Mockery::mock(FlushableStorage::class);
+        $command = new ClearPrometheusMetricsCommand($storage);
 
-        $plugin->shouldReceive('process')->once();
+        $storage->shouldReceive('flush')->once();
 
-        $controller->process(Mockery::mock(\HTTPRequest::class), Mockery::mock(BaseLayout::class), []);
+        $command_tester = new CommandTester($command);
+        $command_tester->execute([]);
+
+        $this->assertEquals(0, $command_tester->getStatusCode());
     }
 }

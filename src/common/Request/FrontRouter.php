@@ -25,6 +25,7 @@ use Backend;
 use FastRoute;
 use HTTPRequest;
 use Logger;
+use PluginManager;
 use ThemeManager;
 use Tuleap\Layout\ErrorRendering;
 use URLVerificationFactory;
@@ -52,9 +53,14 @@ class FrontRouter
      */
     private $theme_manager;
     /**
-     * @var \PluginManager
+     * @var PluginManager
      */
     private $plugin_manager;
+    /**
+     * @var RequestInstrumentation
+     */
+    private $request_instrumentation;
+
 
     public function __construct(
         RouteCollector $route_collector,
@@ -62,7 +68,8 @@ class FrontRouter
         Logger $logger,
         ErrorRendering $error_rendering,
         ThemeManager $theme_manager,
-        \PluginManager $plugin_manager
+        PluginManager $plugin_manager,
+        RequestInstrumentation $request_instrumentation
     ) {
         $this->route_collector          = $route_collector;
         $this->url_verification_factory = $url_verification_factory;
@@ -70,6 +77,7 @@ class FrontRouter
         $this->error_rendering          = $error_rendering;
         $this->theme_manager            = $theme_manager;
         $this->plugin_manager           = $plugin_manager;
+        $this->request_instrumentation  = $request_instrumentation;
     }
 
     public function route(HTTPRequest $request)
@@ -107,9 +115,11 @@ class FrontRouter
                     }
                     break;
             }
-            RequestInstrumentation::increment(http_response_code());
+            $http_response_code = http_response_code();
+            assert(is_int($http_response_code));
+            $this->request_instrumentation->increment($http_response_code);
         } catch (NotFoundException $exception) {
-            RequestInstrumentation::increment(404);
+            $this->request_instrumentation->increment(404);
             $this->error_rendering->rendersError(
                 $this->getBurningParrotTheme($request),
                 $request,
@@ -118,7 +128,7 @@ class FrontRouter
                 $exception->getMessage()
             );
         } catch (ForbiddenException $exception) {
-            RequestInstrumentation::increment(403);
+            $this->request_instrumentation->increment(403);
             $this->error_rendering->rendersError(
                 $this->getBurningParrotTheme($request),
                 $request,
@@ -128,10 +138,11 @@ class FrontRouter
             );
         } catch (\Exception $exception) {
             $code = 500;
-            if ($exception->getCode() !== 0) {
-                $code = $exception->getCode();
+            $exception_code = (int) $exception->getCode();
+            if ($exception_code !== 0) {
+                $code = $exception_code;
             }
-            RequestInstrumentation::increment($code);
+            $this->request_instrumentation->increment($code);
             $this->logger->error('Caught exception', $exception);
             $this->error_rendering->rendersErrorWithException(
                 $this->getBurningParrotTheme($request),

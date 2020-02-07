@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\PrometheusMetrics;
 
-namespace Tuleap\Project;
+use Enalean\Prometheus\Storage\FlushableStorage;
+use Enalean\Prometheus\Storage\NullStore;
+use Enalean\Prometheus\Storage\RedisStore;
+use ForgeConfig;
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Redis\ClientFactory;
 
-final class ServiceInstrumentation
+final class PrometheusFlushableStorageProvider
 {
-    private const METRIC_NAME = 'project_service_access_total';
-
-    public static function increment(string $service) : void
+    public function getFlushableStorage() : FlushableStorage
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of project service access', ['service' => $service]);
-        \EventManager::instance()->processEvent(new ServiceAccessEvent($service));
+        if (ClientFactory::canClientBeBuiltFromForgeConfig() &&
+            ForgeConfig::exists(Prometheus::CONFIG_PROMETHEUS_PLATFORM)) {
+            return new RedisStore(ClientFactory::fromForgeConfig());
+        }
+        return new NullStore();
     }
 }

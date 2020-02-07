@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,54 +21,64 @@
 
 namespace Tuleap\Request;
 
+use Tuleap\Instrument\Prometheus\Prometheus;
+
 class RequestInstrumentation
 {
-    public const COUNT_NAME = 'http_responses_total';
-    public const COUNT_HELP = 'Total number of HTTP request';
+    private const COUNT_NAME = 'http_responses_total';
+    private const COUNT_HELP = 'Total number of HTTP request';
 
-    public const DURATION_NAME    = 'http_responses_duration';
-    public const DURATION_HELP    = 'Duration of http responses in microseconds';
-    public const DURATION_BUCKETS = [0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
+    private const DURATION_NAME    = 'http_responses_duration';
+    private const DURATION_HELP    = 'Duration of http responses in microseconds';
+    private const DURATION_BUCKETS = [0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
 
-    public static function increment($code)
+    /**
+     * @var Prometheus
+     */
+    private $prometheus;
+
+    public function __construct(Prometheus $prometheus)
     {
-        self::incrementCodeRouter($code, 'fastroute');
-        self::updateRequestDurationHistogram('fastroute');
+        $this->prometheus = $prometheus;
     }
 
-    public static function incrementLegacy()
+    public function increment(int $code) : void
     {
-        self::incrementCodeRouter(200, 'legacy');
+        $this->incrementCodeRouter((string) $code, 'fastroute');
+        $this->updateRequestDurationHistogram('fastroute');
     }
 
-    public static function incrementRest($code)
+    public function incrementLegacy() : void
+    {
+        $this->incrementCodeRouter('200', 'legacy');
+    }
+
+    public function incrementRest(?int $code) : void
     {
         if ($code === null) {
             $code = -1;
         }
-        self::incrementCodeRouter($code, 'rest');
-        self::updateRequestDurationHistogram('rest');
+        $this->incrementCodeRouter((string) $code, 'rest');
+        $this->updateRequestDurationHistogram('rest');
     }
 
     /**
      * Soap will also increment legacy router due to pre.php
      * It's not worth fixing it.
      */
-    public static function incrementSoap()
+    public function incrementSoap() : void
     {
-        self::incrementCodeRouter(200, 'soap');
+        $this->incrementCodeRouter('200', 'soap');
     }
 
-    private static function incrementCodeRouter($code, $router)
+    private function incrementCodeRouter(string $code, string $router) : void
     {
-        $prom = \Tuleap\Instrument\Prometheus\Prometheus::instance();
-        $prom->increment(self::COUNT_NAME, self::COUNT_HELP, ['code' => $code, 'router' => $router]);
+        $this->prometheus->increment(self::COUNT_NAME, self::COUNT_HELP, ['code' => $code, 'router' => $router]);
     }
 
-    private static function updateRequestDurationHistogram($router)
+    private function updateRequestDurationHistogram(string $router) : void
     {
-        $prom = \Tuleap\Instrument\Prometheus\Prometheus::instance();
-        $prom->histogram(
+        $this->prometheus->histogram(
             self::DURATION_NAME,
             self::DURATION_HELP,
             microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'],
