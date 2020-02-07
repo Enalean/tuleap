@@ -50,6 +50,10 @@ else
     cp -R "$SRC_DIR" "$clean_tuleap_sources/"
 fi
 
+if [ "$ENTERPRISE" == "1" ]; then
+    touch "$clean_tuleap_sources/ENTERPRISE_BUILD"
+fi
+
 docker run -i --rm -v "$clean_tuleap_sources":/tuleap -v "$clean_tuleap_sources":/output tuleap-generated-files-builder
 
 docker run -i --name rpm-builder -v "$clean_tuleap_sources":/tuleap:ro enalean/tuleap-buildrpms:"$OS"-without-srpms
