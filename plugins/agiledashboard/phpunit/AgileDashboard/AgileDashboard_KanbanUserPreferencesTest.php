@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase
+class AgileDashboard_KanbanUserPreferencesTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var PFUser */
     private $user;
@@ -34,72 +33,59 @@ class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase
 
     private $column_id = 10;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->user = mock('PFUser');
+        $this->user = Mockery::spy(\PFUser::class);
 
         $this->user_preferences = new AgileDashboard_KanbanUserPreferences();
         $this->kanban = new AgileDashboard_Kanban(1, 1, 'My first kanban');
     }
 
-    public function testDefaultBehavior()
+    public function testDefaultBehavior(): void
     {
         $this->assertFalse($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
         $this->assertFalse($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
         $this->assertTrue($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }
 
-    public function itOpensTheBacklog()
+    public function testItOpensTheBacklog(): void
     {
-        stub($this->user)
-            ->getPreference('kanban_collapse_backlog_1')
-            ->returns(AgileDashboard_KanbanUserPreferences::EXPAND);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturns(AgileDashboard_KanbanUserPreferences::EXPAND);
 
         $this->assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
 
-    public function itOpensTheArchive()
+    public function testItOpensTheArchive(): void
     {
-        stub($this->user)
-            ->getPreference('kanban_collapse_archive_1')
-            ->returns(AgileDashboard_KanbanUserPreferences::EXPAND);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_archive_1')->andReturns(AgileDashboard_KanbanUserPreferences::EXPAND);
 
         $this->assertTrue($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
     }
 
-    public function itOpensTheColumn()
+    public function testItOpensTheColumn(): void
     {
-        stub($this->user)
-            ->getPreference('kanban_collapse_column_1_10')
-            ->returns(AgileDashboard_KanbanUserPreferences::EXPAND);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_column_1_10')->andReturns(AgileDashboard_KanbanUserPreferences::EXPAND);
 
         $this->assertTrue($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }
 
-    public function itClosesTheBacklog()
+    public function testItClosesTheBacklog(): void
     {
-        stub($this->user)
-                ->getPreference('kanban_collapse_backlog_1')
-                ->returns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
 
         $this->assertFalse($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
 
-    public function itClosesTheArchive()
+    public function testItClosesTheArchive(): void
     {
-        stub($this->user)
-            ->getPreference('kanban_collapse_archive_1')
-            ->returns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_archive_1')->andReturns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
 
         $this->assertFalse($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
     }
 
-    public function itClosesTheColumn()
+    public function testItClosesTheColumn(): void
     {
-        stub($this->user)
-            ->getPreference('kanban_collapse_column_1_10')
-            ->returns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_column_1_10')->andReturns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
 
         $this->assertFalse($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }
