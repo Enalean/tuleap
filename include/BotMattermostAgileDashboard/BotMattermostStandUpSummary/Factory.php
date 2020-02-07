@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\BotMattermostLogger;
@@ -32,12 +33,15 @@ class Factory
 {
     private $dao;
     private $bot_factory;
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     public function __construct(
         Dao $dao,
         BotFactory $bot_factory,
-        BotMattermostLogger $logger
+        LoggerInterface $logger
     ) {
         $this->dao         = $dao;
         $this->bot_factory = $bot_factory;

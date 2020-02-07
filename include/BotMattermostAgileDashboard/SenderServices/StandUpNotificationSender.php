@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
 use HTTPRequest;
 use ProjectManager;
-use Tuleap\BotMattermost\BotMattermostLogger;
+use Psr\Log\LoggerInterface;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\SenderServices\Message;
 use Tuleap\BotMattermost\SenderServices\Sender;
@@ -34,6 +34,9 @@ class StandUpNotificationSender
     private $sender;
     private $notification_builder;
     private $project_manager;
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     public function __construct(
@@ -41,7 +44,7 @@ class StandUpNotificationSender
         Sender $sender,
         StandUpNotificationBuilder $notification_builder,
         ProjectManager $project_manager,
-        BotMattermostLogger $logger
+        LoggerInterface $logger
     ) {
         $this->bot_agiledashboard_factory = $bot_agiledashboard_factory;
         $this->sender                     = $sender;
@@ -68,13 +71,13 @@ class StandUpNotificationSender
                 $this->logger->info('start stand up notification in project '.$project->getPublicName());
                 $this->logger->debug('project: #'.$project_id.' '.$project->getPublicName());
                 if (! $message->hasText()) {
-                    $this->logger->warn('No text');
+                    $this->logger->warning('No text');
                 }
 
                 $this->sender->pushNotification($bot_assigned->getBot(), $message, $bot_assigned->getChannels());
             }
         } catch (BotNotFoundException $e) {
-            $this->logger->error('', $e);
+            $this->logger->error('', ['exception' => $e]);
         }
     }
 
