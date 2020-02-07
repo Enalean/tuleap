@@ -124,12 +124,8 @@ class taskboardPlugin extends Plugin
             ),
             $agiledashboard_plugin->getIncludeAssets(),
             new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/taskboard/themes',
-                '/assets/taskboard/themes'
-            ),
-            new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/taskboard/scripts',
-                '/assets/taskboard/scripts'
+                __DIR__ . '/../../../src/www/assets/taskboard',
+                '/assets/taskboard'
             ),
             new VisitRecorder(new RecentlyVisitedDao())
         );
