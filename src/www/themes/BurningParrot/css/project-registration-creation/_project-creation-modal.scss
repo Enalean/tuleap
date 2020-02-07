@@ -18,16 +18,66 @@
  *
  */
 
-.project-creation-success-modal-icon {
-    margin: 0 0 0 5px;
+#project-creation-success-modal {
+    width: 750px;
+    transition: opacity 100ms ease-out, transform 200ms ease-out, box-shadow 100ms ease-out;
+
+    &.tlp-modal-shown {
+        transform: translateY(50%);
+    }
 }
 
 .project-creation-success-modal-container {
     display: flex;
     align-items: center;
-    padding: $tlp-spacing 0 $tlp-half-spacing;
+    padding: 50px;
+    border-radius: 4px;
 }
 
-.project-creation-success-modal-text {
+.project-creation-success-modal-illustration {
+    flex: 0 1 auto;
+    max-width: 50%;
+
+    > svg {
+        width: 100%;
+    }
+}
+
+.project-creation-success-modal-content {
+    flex: 1 1 auto;
+    margin: 0 0 0 50px;
     text-align: center;
+}
+
+.project-creation-success-modal-content-title {
+    color: $tlp-ui-success;
+    font-size: 34px;
+}
+
+.project-creation-success-modal-content-welcome {
+    margin: 0 0 $tlp-double-spacing;
+    font-size: 18px;
+    line-height: 28px;
+}
+
+.project-creation-success-modal-content-welcome-project-name {
+    display: block;
+    font-weight: 600;
+}
+
+@keyframes moveStars {
+    from {
+        transform: scale(1);
+        opacity: .5;
+    }
+
+    to {
+        transform: scale(1.2);
+        opacity: .3;
+    }
+}
+
+.project-creation-success-modal-illustration-stars {
+    transform-origin: center bottom;
+    animation: 8s ease-out forwards moveStars;
 }
