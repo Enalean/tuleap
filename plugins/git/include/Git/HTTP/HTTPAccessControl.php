@@ -21,7 +21,7 @@
 
 namespace Tuleap\Git\HTTP;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use PermissionsManager;
 use PFUser;
 use Tuleap\Cryptography\ConcealedString;
@@ -32,7 +32,7 @@ use UserDao;
 class HTTPAccessControl
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -69,7 +69,7 @@ class HTTPAccessControl
     private $ask_basic_authentication_challenge;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         \ForgeAccess $forge_access,
         User_LoginManager $login_manager,
         ReplicationHTTPUserAuthenticator $replication_http_user_authenticator,

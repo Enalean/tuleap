@@ -138,7 +138,7 @@ class Git extends PluginController
     private $mirror_data_mapper;
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -286,7 +286,7 @@ class Git extends PluginController
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
         GitPermissionsManager $permissions_manager,
         Git_GitRepositoryUrlManager $url_manager,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,

@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class EventDispatcherWithFallback implements EventDispatcherInterface
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -41,7 +41,7 @@ final class EventDispatcherWithFallback implements EventDispatcherInterface
     private $secondary_dispatcher;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         EventDispatcherInterface $primary_dispatcher,
         EventDispatcherInterface $secondary_dispatcher
     ) {

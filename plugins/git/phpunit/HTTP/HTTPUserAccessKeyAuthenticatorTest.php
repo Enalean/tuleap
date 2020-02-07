@@ -57,7 +57,7 @@ final class HTTPUserAccessKeyAuthenticatorTest extends TestCase
         $this->authenticator = new  HTTPUserAccessKeyAuthenticator(
             $this->access_key_identifier_unserializer,
             $this->access_key_verifier,
-            new \Log_NoopLogger()
+            new \Psr\Log\NullLogger()
         );
     }
 

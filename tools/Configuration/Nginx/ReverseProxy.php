@@ -21,7 +21,7 @@
 
 namespace Tuleap\Configuration\Nginx;
 
-use Tuleap\Configuration\Logger\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Configuration\Logger\Wrapper;
 
 class ReverseProxy
@@ -52,7 +52,7 @@ class ReverseProxy
     {
         $this->logger->info("Configure Nginx as front Reverse Proxy");
         if (is_file($this->nginx_base_dir.'/nginx.conf.orig')) {
-            $this->logger->warn($this->nginx_base_dir.'/nginx.conf.orig already exists, skip configuration');
+            $this->logger->warning($this->nginx_base_dir.'/nginx.conf.orig already exists, skip configuration');
             return;
         }
         $this->backupOriginalFile($this->nginx_base_dir.'/nginx.conf');

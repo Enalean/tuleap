@@ -90,7 +90,7 @@ class Test_Workflow_Builder
         return new Workflow(
             $this->global_rules_manager,
             $this->trigger_rules_manager,
-            new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
+            new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
             $this->id,
             $this->tracker_id,
             $this->field_id,

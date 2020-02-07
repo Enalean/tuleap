@@ -24,7 +24,6 @@ namespace Tuleap\Password\HaveIBeenPwned;
 
 use Http\Client\Exception;
 use Http\Mock\Client;
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -46,7 +45,7 @@ class PwnedPasswordRangeRetrieverTest extends TestCase
         $retriever     = new PwnedPasswordRangeRetriever(
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
-            Mockery::mock(Logger::class)
+            Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
         $hash_suffixes = $retriever->getHashSuffixesMatchingPrefix('AAAAA');
 
@@ -58,7 +57,7 @@ class PwnedPasswordRangeRetrieverTest extends TestCase
         $retriever = new PwnedPasswordRangeRetriever(
             Mockery::mock(ClientInterface::class),
             Mockery::mock(RequestFactoryInterface::class),
-            Mockery::mock(Logger::class)
+            Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
 
         $this->expectException(\LengthException::class);
@@ -71,7 +70,7 @@ class PwnedPasswordRangeRetrieverTest extends TestCase
         $http_client = new Client();
         $response    = HTTPFactoryBuilder::responseFactory()->createResponse(504);
         $http_client->addResponse($response);
-        $logger = Mockery::mock(Logger::class);
+        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $retriever = new PwnedPasswordRangeRetriever(
             $http_client,
@@ -90,7 +89,7 @@ class PwnedPasswordRangeRetrieverTest extends TestCase
     {
         $http_client = new Client();
         $http_client->addException(Mockery::mock(Exception\RequestException::class));
-        $logger = Mockery::mock(Logger::class);
+        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $retriever = new PwnedPasswordRangeRetriever(
             $http_client,

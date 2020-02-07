@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Project;
 
 require_once __DIR__ . '/ProjectDashboardXMLImporterBase.php';
 
+use Psr\Log\LogLevel;
 use SimpleXMLElement;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
@@ -42,7 +43,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
         );
 
         $expected_exception = new UserCanNotUpdateProjectDashboardException();
-        $this->logger->shouldReceive('warn')->with('[Dashboards] '.$expected_exception->getMessage(), null)->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] '.$expected_exception->getMessage(), [])->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -61,7 +62,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
         );
 
         $expected_exception = new NameDashboardDoesNotExistException();
-        $this->logger->shouldReceive('warn')->with('[Dashboards] '.$expected_exception->getMessage(), null)->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] '.$expected_exception->getMessage(), [])->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -81,7 +82,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
         );
 
         $expected_exception = new NameDashboardAlreadyExistsException();
-        $this->logger->shouldReceive('warn')->with('[Dashboards] '.$expected_exception->getMessage(), null)->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] '.$expected_exception->getMessage(), [])->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -101,7 +102,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
               </project>'
         );
 
-        $this->logger->shouldReceive('warn')->never();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, \Mockery::any(), \Mockery::any())->never();
         $this->dao->shouldReceive('save')->times(2);
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }

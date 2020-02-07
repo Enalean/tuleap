@@ -28,7 +28,6 @@ use LDAP_ProjectGroupDao;
 use LDAP_UserManager;
 use LDAPResult;
 use LDAPResultIterator;
-use Logger;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
@@ -60,7 +59,7 @@ class LDAPGroupManagerTest extends TestCase
             \LDAP::class,
             [
                 ['server' => 'server'],
-                Mockery::mock(Logger::class)
+                Mockery::mock(\Psr\Log\LoggerInterface::class)
             ]
         )
             ->makePartial()

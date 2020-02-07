@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\Configuration\Apache;
 
-use Tuleap\Configuration\Logger\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 class LogrotateDeployer
 {
@@ -45,7 +45,7 @@ class LogrotateDeployer
             copy('/usr/share/tuleap/src/etc/logrotate.httpd.conf', $httpd_logrotate);
             chmod($httpd_logrotate, 0644);
         } else {
-            $this->logger->warn('Logrotate contains reference to postrotate.php, skip configuration');
+            $this->logger->warning('Logrotate contains reference to postrotate.php, skip configuration');
         }
     }
 

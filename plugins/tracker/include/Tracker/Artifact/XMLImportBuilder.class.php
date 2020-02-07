@@ -39,7 +39,7 @@ class Tracker_Artifact_XMLImportBuilder
      */
     public function build(
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $artifact_factory      = Tracker_ArtifactFactory::instance();
         $formelement_factory   = Tracker_FormElementFactory::instance();

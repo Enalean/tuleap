@@ -60,7 +60,7 @@ class Tracker_Migration_MigrationManager
     /** @var  Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var Tracker_Migration_MailLogger */
@@ -78,7 +78,7 @@ class Tracker_Migration_MigrationManager
         // Log everything in Backend
         // Only Warn and errors by email
         $backend_logger    = new BackendLogger($this->getLogFilePath());
-        $this->mail_logger = new Tracker_Migration_MailLogger($backend_logger);
+        $this->mail_logger = new Tracker_Migration_MailLogger();
         $this->logger      = new Tracker_Migration_MigrationLogger(
             $backend_logger,
             $this->mail_logger

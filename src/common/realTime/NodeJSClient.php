@@ -20,7 +20,7 @@
 namespace Tuleap\RealTime;
 
 use ForgeConfig;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -41,7 +41,7 @@ class NodeJSClient implements Client
      */
     private $stream_factory;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -53,7 +53,7 @@ class NodeJSClient implements Client
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->http_client     = $http_client;
         $this->request_factory = $request_factory;

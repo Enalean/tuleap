@@ -68,7 +68,7 @@ class MembershipManagerProjectAdminOwnerOfEverythingTest extends TestCase
                 $this->driver_factory,
                 $this->gerrit_user_manager,
                 Mockery::mock('Git_RemoteServer_GerritServerFactory'),
-                Mockery::mock('Logger'),
+                Mockery::mock(\Psr\Log\LoggerInterface::class),
                 $this->ugroup_manager,
                 $this->project_manager
             ]

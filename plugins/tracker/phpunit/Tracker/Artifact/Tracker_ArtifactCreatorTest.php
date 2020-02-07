@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\Artifact;
 
-use Log_NoopLogger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -115,7 +114,7 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->fields_validator,
             $this->changeset_creator,
             $this->visit_recorder,
-            new Log_NoopLogger(),
+            new \Psr\Log\NullLogger(),
             $this->db_transaction_executor
         );
     }

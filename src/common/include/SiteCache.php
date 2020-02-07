@@ -25,7 +25,7 @@ class SiteCache
 
     private $logger;
 
-    public function __construct(?Logger $logger = null)
+    public function __construct(?\Psr\Log\LoggerInterface $logger = null)
     {
         $this->logger = $logger ? $logger : new BackendLogger() ;
     }

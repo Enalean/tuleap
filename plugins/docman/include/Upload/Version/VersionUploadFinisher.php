@@ -46,7 +46,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      */
     private $items_event_adder;
     /**
-     * @var \Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     /**
@@ -103,7 +103,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
     private $approval_table_action_checker;
 
     public function __construct(
-        \Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         UploadPathAllocator $document_upload_path_allocator,
         \Docman_ItemFactory $docman_item_factory,
         \Docman_VersionFactory $version_factory,

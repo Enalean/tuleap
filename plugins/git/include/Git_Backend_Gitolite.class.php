@@ -27,7 +27,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 {
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -60,7 +60,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function __construct(
         Git_GitoliteDriver $driver,
         GitoliteAccessURLGenerator $gitolite_access_URL_generator,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->driver                        = $driver;
         $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
@@ -409,7 +409,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
                 return true;
             }
 
-            $this->logger->warn('Can not move the repository'.$repository->getName().' to the archiving area before purge');
+            $this->logger->warning('Can not move the repository'.$repository->getName().' to the archiving area before purge');
             return false;
         }
 

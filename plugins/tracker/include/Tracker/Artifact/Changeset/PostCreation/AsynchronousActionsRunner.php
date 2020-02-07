@@ -59,7 +59,7 @@ class AsynchronousActionsRunner
 
         if (! isset($message['artifact_id'], $message['changeset_id'])) {
             $event_name = $event->getEventName();
-            $event->getLogger()->warn("The payload for $event_name seems to be malformed, ignoring");
+            $event->getLogger()->warning("The payload for $event_name seems to be malformed, ignoring");
             $event->getLogger()->debug("Malformed payload for $event_name: " . var_export($event->getPayload(), true));
             return;
         }

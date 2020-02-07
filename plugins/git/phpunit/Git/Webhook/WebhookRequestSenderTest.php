@@ -45,7 +45,7 @@ class WebhookRequestSenderTest extends \PHPUnit\Framework\TestCase
     {
         $webhook_factory = \Mockery::mock(WebhookFactory::class);
         $webhook_emitter = \Mockery::mock(Emitter::class);
-        $logger          = \Mockery::mock(\Logger::class);
+        $logger          = \Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $sender = new WebhookRequestSender($webhook_emitter, $webhook_factory, $logger);
 

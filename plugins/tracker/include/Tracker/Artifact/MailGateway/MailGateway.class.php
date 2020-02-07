@@ -55,7 +55,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
     protected $tracker_artifactbyemail;
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -77,7 +77,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactByEmailStatus $tracker_artifactbyemail,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         MailGatewayFilter $mail_filter
     ) {
         $this->logger                   = $logger;

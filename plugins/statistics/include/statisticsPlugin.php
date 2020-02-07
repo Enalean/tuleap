@@ -154,7 +154,7 @@ class StatisticsPlugin extends Plugin
         );
     }
 
-    private function getDiskUsagePurger(Logger $logger)
+    private function getDiskUsagePurger(\Psr\Log\LoggerInterface $logger)
     {
         return new Statistics_DiskUsagePurger(
             new Statistics_DiskUsageDao(),

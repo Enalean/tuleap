@@ -50,7 +50,7 @@ class Gitolite3LogParserTest extends \PHPUnit\Framework\TestCase
     protected function setUp() : void
     {
         parent::setUp();
-        $this->logger         = \Mockery::spy(\GitBackendLogger::class);
+        $this->logger         = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->factory        = \Mockery::spy(\GitRepositoryFactory::class);
         $this->user_manager   = \Mockery::spy(\UserManager::class);
         $this->history_dao    = \Mockery::spy(Dao::class);

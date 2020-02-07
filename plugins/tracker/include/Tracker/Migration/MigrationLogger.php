@@ -32,7 +32,7 @@ class Tracker_Migration_MigrationLogger extends BrokerLogger
                 $backend_logger,
                 new TruncateLevelLogger(
                     $mail_logger,
-                    Logger::WARN
+                    \Psr\Log\LogLevel::WARNING
                 ),
             )
         );

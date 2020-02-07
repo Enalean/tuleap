@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\Redis;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 
 final class BackOffDelayFailedMessage
 {
@@ -30,7 +30,7 @@ final class BackOffDelayFailedMessage
     private const MAX_RETRIES_EXPONENT = 3;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -42,7 +42,7 @@ final class BackOffDelayFailedMessage
     /**
      * @psalm-param callable(int):void $delay_function
      */
-    public function __construct(Logger $logger, callable $delay_function)
+    public function __construct(LoggerInterface $logger, callable $delay_function)
     {
         $this->logger         = $logger;
         $this->delay_function = $delay_function;

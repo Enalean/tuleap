@@ -22,13 +22,13 @@ class Git_Mirror_MirrorSystemEventQueue extends SystemEventQueue
 {
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
     public const NAME = 'grokmirror';
 
-    public function __construct(Logger $logger)
+    public function __construct(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

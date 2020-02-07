@@ -61,7 +61,7 @@ class BatchSuccessfulResponseBuilder
      */
     private $lfs_object_retriever;
     /**
-     * @var \Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -85,7 +85,7 @@ class BatchSuccessfulResponseBuilder
         LFSObjectRetriever $lfs_object_retriever,
         AdminDao $admin_dao,
         ProjectQuotaChecker $project_quota_checker,
-        \Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         Prometheus $prometheus
     ) {
         $this->authorization_token_creator = $authorization_token_creator;

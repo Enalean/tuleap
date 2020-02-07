@@ -20,7 +20,7 @@
 namespace User\XML\Import;
 
 use PFUser;
-use Logger;
+use Psr\Log\LoggerInterface;
 use UserManager;
 
 class WillBeActivatedUser implements ReadyToBeImportedUser
@@ -53,7 +53,7 @@ class WillBeActivatedUser implements ReadyToBeImportedUser
         return $this->user;
     }
 
-    public function process(UserManager $user_manager, Logger $logger)
+    public function process(UserManager $user_manager, LoggerInterface $logger)
     {
         $logger->info($this->user->getUserName().' is not alive. Nothing to do.');
     }

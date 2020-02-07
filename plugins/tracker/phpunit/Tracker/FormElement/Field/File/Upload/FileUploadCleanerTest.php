@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
-use Logger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +36,7 @@ class FileUploadCleanerTest extends TestCase
     {
         $dao                  = \Mockery::mock(FileOngoingUploadDao::class);
         $form_element_factory = \Mockery::mock(Tracker_FormElementFactory::class);
-        $logger               = \Mockery::mock(Logger::class);
+        $logger               = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $field                = \Mockery::mock(\Tracker_FormElement_Field_File::class);
 
         $logger->shouldReceive('info');

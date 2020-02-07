@@ -25,7 +25,7 @@ use EventManager;
 use Exception;
 use ForgeConfig;
 use HTTPRequest;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Project;
 use ProjectManager;
 use System_Command;
@@ -49,7 +49,7 @@ class RepositoryManager
     private $project_manager;
      /** @var SvnAdmin */
     private $svnadmin;
-     /** @var Logger */
+     /** @var LoggerInterface */
     private $logger;
     /** @var System_Command */
     private $system_command;
@@ -66,7 +66,7 @@ class RepositoryManager
         Dao $dao,
         ProjectManager $project_manager,
         SvnAdmin $svnadmin,
-        Logger $logger,
+        LoggerInterface $logger,
         System_Command $system_command,
         Destructor $destructor,
         EventManager $event_manager,
@@ -292,7 +292,7 @@ class RepositoryManager
     public function purgeArchivedRepositories()
     {
         if (! ForgeConfig::exists('sys_file_deletion_delay')) {
-            $this->logger->warn("Purge of archived SVN repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
+            $this->logger->warning("Purge of archived SVN repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
             return;
         }
         $retention_period      = intval(ForgeConfig::get('sys_file_deletion_delay'));
@@ -368,8 +368,8 @@ class RepositoryManager
                 return true;
             }
 
-            $this->logger->warn('Can not move the repository ' . $repository->getName() . ' to the archiving area before purge.');
-            $this->logger->warn('An error occured while archiving SVN repository: ' . $repository->getName());
+            $this->logger->warning('Can not move the repository ' . $repository->getName() . ' to the archiving area before purge.');
+            $this->logger->warning('An error occured while archiving SVN repository: ' . $repository->getName());
             return false;
         }
 

@@ -28,6 +28,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SystemEventManager;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
@@ -115,7 +116,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $logger = \Mockery::spy(BurndownLogger::class);
+        $logger = \Mockery::spy(LoggerInterface::class);
         $this->burndown_field->shouldReceive('getLogger')->andReturn($logger);
         $this->burndown_field->shouldReceive('fetchBurndownReadOnly')
             ->with($this->artifact)
@@ -277,7 +278,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
             ->with($this->user, $this->sprint)
             ->andReturn($burndown_data);
 
-        $this->burndown_field->shouldReceive('getLogger')->andReturn(\Mockery::spy(BurndownLogger::class));
+        $this->burndown_field->shouldReceive('getLogger')->andReturn(\Mockery::spy(Burndown\Psr\Log\LoggerInterface::class));
 
         $start_date_field = Mockery::spy(\Tracker_FormElement_Field_Date::class);
         $this->form_element_factory->shouldReceive('getDateFieldByNameForUser')

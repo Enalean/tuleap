@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,59 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BrokerLogger implements Logger
+class BrokerLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
 {
-
+    /**
+     * @var \Psr\Log\LoggerInterface[]
+     */
     private $loggers = array();
 
+    /**
+     * @param \Psr\Log\LoggerInterface[] $loggers
+     */
     public function __construct(array $loggers)
     {
         $this->loggers = $loggers;
     }
 
-    public function debug($message)
+    public function log($level, $message, array $context = [])
     {
         foreach ($this->loggers as $logger) {
-            $logger->debug($message);
-        }
-    }
-
-    public function info($message)
-    {
-        foreach ($this->loggers as $logger) {
-            $logger->info($message);
-        }
-    }
-
-    public function warn($message, ?Exception $exception = null)
-    {
-        foreach ($this->loggers as $logger) {
-            $logger->warn($message, $exception);
-        }
-    }
-
-    public function error($message, ?Exception $exception = null)
-    {
-        foreach ($this->loggers as $logger) {
-            $logger->error($message, $exception);
-        }
-    }
-
-    public function log($message, $level = Logger::INFO)
-    {
-        switch ($level) {
-            case Logger::DEBUG:
-                $this->debug($message);
-                break;
-            case Logger::INFO:
-                $this->info($message);
-                break;
-            case Logger::WARN:
-                $this->warn($message);
-                break;
-            case Logger::ERROR:
-                $this->error($message);
-                break;
+            $logger->log($level, $message, $context);
         }
     }
 }

@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Statistics;
 
-use Log_NoopLogger;
 use ParagonIE\EasyDB\EasyDB;
 use PHPUnit\Framework\TestCase;
 use Statistics_DiskUsageDao;
@@ -44,7 +43,7 @@ class DiskUsagePurgerIntegrationTest extends TestCase
     public function setUp(): void
     {
         $this->disk_usage_dao   = new Statistics_DiskUsageDao();
-        $this->disk_data_purger = new Statistics_DiskUsagePurger($this->disk_usage_dao, new Log_NoopLogger());
+        $this->disk_data_purger = new Statistics_DiskUsagePurger($this->disk_usage_dao, new \Psr\Log\NullLogger());
     }
 
     public function testItFirstPurgeAllStatisticsTablesOnApr14()

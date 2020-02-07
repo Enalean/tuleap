@@ -42,7 +42,7 @@ class GitXmlImporter
     public const SERVICE_NAME = 'git';
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -121,7 +121,7 @@ class GitXmlImporter
     private $user_finder;
 
     public function __construct(
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         GitRepositoryManager   $repository_manager,
         GitRepositoryFactory   $repository_factory,
         Git_Backend_Gitolite   $gitolite_backend,
@@ -306,7 +306,7 @@ class GitXmlImporter
                 $this->regexp_fine_grained_enabler->enableForRepository($repository);
             }
         } else {
-            $this->logger->warn('Regexp permissions disabled at site level');
+            $this->logger->warning('Regexp permissions disabled at site level');
         }
 
         $this->importPatterns($repository, $fine_grained_xmlnode);
@@ -326,14 +326,14 @@ class GitXmlImporter
             );
 
             if (! $permission_representation) {
-                $this->logger->warn("The $pattern_type pattern $pattern_value is not valid, skipping.");
+                $this->logger->warning("The $pattern_type pattern $pattern_value is not valid, skipping.");
                 continue;
             } elseif ($pattern_type === self::BRANCH_PATTERN) {
                 $this->fine_grained_saver->saveBranchPermission($permission_representation);
             } elseif ($pattern_type === self::TAG_PATTERN) {
                 $this->fine_grained_saver->saveTagPermission($permission_representation);
             } else {
-                $this->logger->warn("Unknown type $pattern_type, skipping.");
+                $this->logger->warning("Unknown type $pattern_type, skipping.");
                 continue;
             }
         }

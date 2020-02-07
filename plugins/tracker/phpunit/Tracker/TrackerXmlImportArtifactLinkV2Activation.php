@@ -92,7 +92,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
             \Mockery::spy(\Tracker_Artifact_XMLImport::class),
             \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class),
             \Mockery::spy(\UGroupManager::class),
-            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             $this->artifact_link_usage_updater,
             $this->artifact_link_usage_dao,
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),

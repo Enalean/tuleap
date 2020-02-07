@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -79,7 +78,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
     {
         parent::setUp();
 
-        $logger = Mockery::mock(Logger::class);
+        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $logger->shouldReceive('debug');
         $this->cache_generator        = Mockery::mock(BurndownCacheGenerator::class);
         $this->event_manager          = Mockery::mock(\SystemEventManager::class);

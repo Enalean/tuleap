@@ -114,7 +114,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         return $system_event_purger->purgeSystemEventsDataOlderThanOneYear();
     }
 
-    private function runComputeAllDailyStats(Logger $logger, array &$warnings)
+    private function runComputeAllDailyStats(\Psr\Log\LoggerInterface $logger, array &$warnings)
     {
         $process = new Process([__DIR__.'/../../../utils/compute_all_daily_stats.sh']);
         $this->runCommand($process, $logger, $warnings);
@@ -124,7 +124,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
      * run the weekly stats for projects. Run it on Monday morning so that
      * it computes the stats for the week before
      */
-    private function runWeeklyStats(Logger $logger, array &$warnings)
+    private function runWeeklyStats(\Psr\Log\LoggerInterface $logger, array &$warnings)
     {
         $now = new DateTimeImmutable();
         if ($now->format('l') === self::DAY_OF_WEEKLY_STATS) {
@@ -133,7 +133,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         }
     }
 
-    private function runCommand(Process $process, Logger $logger, array &$warnings) : void
+    private function runCommand(Process $process, \Psr\Log\LoggerInterface $logger, array &$warnings) : void
     {
         $process->setTimeout(null);
         $process->run();

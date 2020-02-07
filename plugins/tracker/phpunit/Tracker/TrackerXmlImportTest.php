@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker;
 
 use ForgeConfig;
-use Logger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
@@ -101,7 +100,7 @@ class TrackerXmlImportTest extends TestCase
             \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class),
             \Mockery::spy(\UGroupManager::class),
             \Mockery::spy(UGroupRetrieverWithLegacy::class),
-            \Mockery::spy(Logger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),

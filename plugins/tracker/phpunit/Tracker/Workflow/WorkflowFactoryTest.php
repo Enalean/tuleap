@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use BackendLogger;
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
@@ -148,7 +146,7 @@ class WorkflowFactoryTest extends TestCase
             Mockery::mock(TrackerFactory::class),
             Mockery::mock(Tracker_FormElementFactory::class),
             Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
-            new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
+            new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
             Mockery::mock(FrozenFieldsDao::class),
             Mockery::mock(StateFactory::class)
         );
@@ -225,7 +223,7 @@ class WorkflowFactoryTest extends TestCase
             Mockery::mock(TrackerFactory::class),
             Mockery::mock(Tracker_FormElementFactory::class),
             Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
-            new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
+            new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
             Mockery::mock(FrozenFieldsDao::class),
             $state_factory
         );

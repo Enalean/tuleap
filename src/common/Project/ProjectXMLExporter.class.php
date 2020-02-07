@@ -40,7 +40,7 @@ class ProjectXMLExporter
     /** @var UserXMLExporter */
     private $user_xml_exporter;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
     /**
      * @var SynchronizedProjectMembershipDetector
@@ -53,7 +53,7 @@ class ProjectXMLExporter
         XML_RNGValidator $xml_validator,
         UserXMLExporter $user_xml_exporter,
         SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->event_manager                            = $event_manager;
         $this->ugroup_manager                           = $ugroup_manager;

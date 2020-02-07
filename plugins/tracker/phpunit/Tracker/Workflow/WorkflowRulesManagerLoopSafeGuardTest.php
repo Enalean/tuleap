@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use Logger;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
@@ -33,8 +32,8 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
 
     public function testAnArtifactIsProcessedOnlyOnceWhenARecursiveLoopIsDetectedInTheProcess() : void
     {
-        $logger          = Mockery::mock(Logger::class);
-        $workflow_logger = new WorkflowBackendLogger($logger, Logger::ERROR);
+        $logger          = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $workflow_logger = new WorkflowBackendLogger($logger, \Psr\Log\LogLevel::ERROR);
 
         $logger->shouldReceive('error');
 
@@ -76,8 +75,8 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
 
     public function testAnArtifactCanBeProcessedSequentiallyMultipleTimes() : void
     {
-        $logger          = Mockery::mock(Logger::class);
-        $workflow_logger = new WorkflowBackendLogger($logger, Logger::ERROR);
+        $logger          = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $workflow_logger = new WorkflowBackendLogger($logger, \Psr\Log\LogLevel::ERROR);
 
         $logger->shouldNotReceive('error');
 

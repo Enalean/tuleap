@@ -22,12 +22,12 @@ declare(strict_types = 1);
 
 namespace Tuleap\Tracker\XML;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 
 class TrackerXmlImportFeedbackCollector
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -36,7 +36,7 @@ class TrackerXmlImportFeedbackCollector
      */
     private $warns = [];
 
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -51,11 +51,11 @@ class TrackerXmlImportFeedbackCollector
         $this->warns[] = $warn;
     }
 
-    public function displayWarnings(Logger $logger) : void
+    public function displayWarnings(LoggerInterface $logger) : void
     {
         foreach ($this->warns as $warn) {
             $GLOBALS['Response']->addFeedback('warning', $warn);
-            $logger->warn($warn);
+            $logger->warning($warn);
         }
     }
 }

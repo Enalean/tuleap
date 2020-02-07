@@ -40,7 +40,7 @@ class XmlUgroupRetrieverTest extends TestCase
     {
         parent::setUp();
 
-        $this->logger   = \Mockery::spy(\Logger::class);
+        $this->logger   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $ugroup_manager = \Mockery::spy(\UGroupManager::class);
 
         $this->retriever = new XmlUgroupRetriever(
@@ -109,7 +109,7 @@ XML;
         $xml_node = new SimpleXMLElement($xml);
         $expected = array($this->ugroup_01, $this->ugroup_02);
 
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('warning')->once();
         $this->assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
     }
 

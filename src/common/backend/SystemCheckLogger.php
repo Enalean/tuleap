@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,11 +23,11 @@ class SystemCheckLogger extends WrapperLogger
 
     private $warning_messages = array();
 
-    public function warn($message, ?Exception $e = null)
+    public function warning($message, array $context = [])
     {
         $this->warning_messages[] = $message;
 
-        parent::warn($message, $e);
+        parent::warning($message, $context);
     }
 
     public function getAllWarnings()

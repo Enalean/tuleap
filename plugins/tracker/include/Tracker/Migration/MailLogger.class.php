@@ -22,45 +22,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_MailLogger implements Logger
+use Psr\Log\LogLevel;
+
+class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
 {
-
-    /**
-     * @var BackendLogger
-     */
-    private $backend_logger;
-
-    /** @var Array */
+    /** @var string[] */
     private $log_stack = array();
 
-    public function __construct(BackendLogger $backend_logger)
+    public function __construct()
     {
-        $this->backend_logger = $backend_logger;
     }
 
-    public function log($message, $level = Logger::INFO)
+    public function log($level, $message, array $context = [])
     {
-        $this->log_stack[] = "[$level] $message";
+        $this->log_stack[] = "[$level] " . $this->generateLogWithException($level, $message, $context);
     }
 
-    public function debug($message)
+    private function generateLogWithException($level, $message, array $context): string
     {
-        $this->log($message, Logger::DEBUG);
-    }
-
-    public function info($message)
-    {
-        $this->log($message, Logger::INFO);
-    }
-
-    public function error($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException('<strong>'.$message.'</strong>', $e), Logger::ERROR);
-    }
-
-    public function warn($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException($message, $e), Logger::WARN);
+        $log_string = $message;
+        if ($level === LogLevel::ERROR || $level === LogLevel::CRITICAL || $level === LogLevel::ALERT || $level === LogLevel::EMERGENCY) {
+            $log_string = "<strong>$message</strong>";
+        }
+        if (isset($context['exception']) && $context['exception'] instanceof Throwable) {
+            $exception      = $context['exception'];
+            $error_message  = $exception->getMessage();
+            $stack_trace    = $exception->getTraceAsString();
+            $log_string    .= ": $error_message:\n$stack_trace";
+        }
+        return $log_string;
     }
 
     public function sendMail(PFUser $user, Project $project, $tv3_id, $tracker_name)
@@ -100,10 +90,5 @@ class Tracker_Migration_MailLogger implements Logger
         $html .= "<p>Done!<p>";
 
         return $html;
-    }
-
-    private function generateLogWithException($message, ?Exception $exception = null)
-    {
-        return $this->backend_logger->generateLogWithException($message, $exception);
     }
 }

@@ -21,7 +21,7 @@ namespace User\XML\Import;
 
 use PFUser;
 use UserManager;
-use Logger;
+use Psr\Log\LoggerInterface;
 
 class WillBeMappedUser implements ReadyToBeImportedUser
 {
@@ -55,7 +55,7 @@ class WillBeMappedUser implements ReadyToBeImportedUser
         return $this->mapped_user;
     }
 
-    public function process(UserManager $user_manager, Logger $logger)
+    public function process(UserManager $user_manager, LoggerInterface $logger)
     {
         $logger->info($this->username .' will be mapped to '. $this->mapped_user->getUserName());
     }

@@ -44,7 +44,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
      */
     private $visit_recorder;
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     /**
@@ -57,7 +57,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator,
         VisitRecorder $visit_recorder,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         DBTransactionExecutor $db_transaction_executor
     ) {
         $this->artifact_dao      = $artifact_factory->getDao();

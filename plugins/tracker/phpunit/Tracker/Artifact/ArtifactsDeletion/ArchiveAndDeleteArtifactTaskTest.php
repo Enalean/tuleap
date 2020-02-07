@@ -38,7 +38,7 @@ final class ArchiveAndDeleteArtifactTaskTest extends TestCase
         $artifact_deletor  = \Mockery::mock(ArtifactDependenciesDeletor::class);
         $event_manager     = \Mockery::mock(\EventManager::class);
         $db_connection     = \Mockery::mock(DBConnection::class);
-        $logger            = \Mockery::mock(\Logger::class);
+        $logger            = \Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $task = new ArchiveAndDeleteArtifactTask($artifact_exporter, $artifact_deletor, $event_manager, $db_connection, $logger);
 

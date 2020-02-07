@@ -47,7 +47,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
     /** @var Tracker_XML_Importer_ArtifactImportedMapping */
     private $artifact_id_mapping;
 
-    /** @var Logger  */
+    /** @var \Psr\Log\LoggerInterface  */
     private $logger;
 
     /** @var Tracker_ArtifactFactory  */
@@ -61,7 +61,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
 
     public function __construct(
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         Tracker_ArtifactFactory $artifact_factory,
         NatureDao $nature_dao,
         NatureCreator $nature_creator

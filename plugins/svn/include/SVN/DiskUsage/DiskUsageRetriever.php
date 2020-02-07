@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\DiskUsage;
 
 use DateTime;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Project;
 use Statistics_DiskUsageManager;
 use SvnPlugin;
@@ -49,7 +49,7 @@ class DiskUsageRetriever
      */
     private $dao;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -58,7 +58,7 @@ class DiskUsageRetriever
         Statistics_DiskUsageManager $disk_usage_manager,
         DiskUsageDao $disk_usage_dao,
         \Statistics_DiskUsageDao $dao,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->repository_manager = $repository_manager;
         $this->disk_usage_manager = $disk_usage_manager;

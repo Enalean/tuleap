@@ -70,7 +70,7 @@ final class XMLExporterTest extends TestCase
             \Mockery::spy(\Tuleap\SVN\SvnAdmin::class),
             new XML_SimpleXMLCDATAFactory(),
             $mail_notification_manager,
-            \Mockery::spy(\Tuleap\SVN\SvnLogger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             $this->access_file_reader
         );
 

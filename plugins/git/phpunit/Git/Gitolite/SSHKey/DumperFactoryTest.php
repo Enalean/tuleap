@@ -39,7 +39,7 @@ class DumperFactoryTest extends TestCase
         $system_command               = \Mockery::spy(\System_Command::class);
         $git_exec                     = \Mockery::spy(\Git_Exec::class);
         $user_manager                 = \Mockery::spy(\UserManager::class);
-        $logger                       = \Mockery::mock(\Logger::class);
+        $logger                       = \Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $dumper_factory = new DumperFactory(
             $management_detector,
@@ -63,7 +63,7 @@ class DumperFactoryTest extends TestCase
         $system_command               = \Mockery::spy(\System_Command::class);
         $git_exec                     = \Mockery::spy(\Git_Exec::class);
         $user_manager                 = \Mockery::spy(\UserManager::class);
-        $logger                       = \Mockery::mock(\Logger::class);
+        $logger                       = \Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $dumper_factory = new DumperFactory(
             $management_detector,

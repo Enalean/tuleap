@@ -35,7 +35,7 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase
     {
         parent::setUp();
         $this->setUpGlobalsMockery();
-        $workflow_logger           = new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG);
+        $workflow_logger           = new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG);
         $this->target_value_id     = 789;
         $this->dao                 = \Mockery::spy(\Tracker_Workflow_Trigger_RulesDao::class);
         $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
@@ -58,7 +58,7 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
     {
         parent::setUp();
         $this->setUpGlobalsMockery();
-        $workflow_logger = new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG);
+        $workflow_logger = new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG);
 
         $this->manager = \Mockery::mock(
             \Tracker_Workflow_Trigger_RulesManager::class,
@@ -434,7 +434,7 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
 
     public function itProcessTheInvolvedTriggerRules()
     {
-        $workflow_logger = new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG);
+        $workflow_logger = new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG);
         $manager         = \Mockery::mock(
             \Tracker_Workflow_Trigger_RulesManager::class,
             array(

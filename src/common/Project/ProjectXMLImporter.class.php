@@ -66,7 +66,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     /** @var User\XML\Import\IFindUserFromXMLReference */
     private $user_finder;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var ProjectCreator */
@@ -112,7 +112,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         UGroupManager $ugroup_manager,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         ServiceManager $service_manager,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         FRSPermissionCreator $frs_permissions_creator,
         UserRemover $project_member_remover,
         ProjectMemberAdder $project_member_adder,

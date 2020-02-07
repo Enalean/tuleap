@@ -32,7 +32,7 @@ final class BackOffDelayFailedMessageTest extends TestCase
     public function testCallsDelayFunctionReceiveExpectedValue(int $nb_time_message_has_been_queued, int $expected_delay): void
     {
         $backoff_delay = new BackOffDelayFailedMessage(
-            new \Log_NoopLogger(),
+            new \Psr\Log\NullLogger(),
             function (int $time_to_sleep) use ($expected_delay): void {
                 $this->assertEquals($expected_delay, $time_to_sleep);
             }
@@ -46,7 +46,7 @@ final class BackOffDelayFailedMessageTest extends TestCase
         $this->expectException(CannotDelayMessageThatHasNotBeenQueuedException::class);
 
         $backoff_delay = new BackOffDelayFailedMessage(
-            new \Log_NoopLogger(),
+            new \Psr\Log\NullLogger(),
             static function (int $time_to_sleep): void {
                 throw new \LogicException('Should not called');
             }

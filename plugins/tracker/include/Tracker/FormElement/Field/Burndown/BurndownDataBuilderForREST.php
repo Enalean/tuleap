@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
@@ -30,7 +30,7 @@ use Tuleap\TimezoneRetriever;
 class BurndownDataBuilderForREST
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -45,7 +45,7 @@ class BurndownDataBuilderForREST
     private $common_data_builder;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         BurndownRemainingEffortAdderForREST $remaining_effort_adder,
         BurndownCommonDataBuilder $common_data_builder
     ) {

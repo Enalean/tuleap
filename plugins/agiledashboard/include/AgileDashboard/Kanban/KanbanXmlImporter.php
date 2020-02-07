@@ -25,7 +25,7 @@ use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanManager;
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use Project;
 use SimpleXMLElement;
@@ -35,7 +35,7 @@ use Tuleap\XML\MappingsRegistry;
 class KanbanXmlImporter
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -60,7 +60,7 @@ class KanbanXmlImporter
     private $dashboard_kanban_column_factory;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $agile_dashboard_configuration_manager,
         AgileDashboard_KanbanColumnManager $dashboard_kanban_column_manager,

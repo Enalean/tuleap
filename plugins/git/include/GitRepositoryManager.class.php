@@ -450,13 +450,13 @@ class GitRepositoryManager
      *
      * Purge archived Gitolite repositories
      *
-     * @param Logger $logger
+     * @param \Psr\Log\LoggerInterface $logger
      *
      */
-    public function purgeArchivedRepositories(Logger $logger)
+    public function purgeArchivedRepositories(\Psr\Log\LoggerInterface $logger)
     {
         if (!isset($GLOBALS['sys_file_deletion_delay'])) {
-            $logger->warn("Purge of archived Gitolite repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
+            $logger->warning("Purge of archived Gitolite repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
             return;
         }
         $retention_period      = intval($GLOBALS['sys_file_deletion_delay']);
@@ -470,7 +470,7 @@ class GitRepositoryManager
                     $logger->info('Purge of archived Gitolite repository: '.$repository->getName());
                     $backend->deleteArchivedRepository($repository);
                 } else {
-                    $logger->warn('An error occured while archiving Gitolite repository: '.$repository->getName());
+                    $logger->warning('An error occured while archiving Gitolite repository: '.$repository->getName());
                 }
             } catch (GitDriverErrorException $exception) {
                 $logger->error($exception->getMessage());

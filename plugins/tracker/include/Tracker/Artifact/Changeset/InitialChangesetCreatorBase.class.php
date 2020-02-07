@@ -32,7 +32,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
     /** @var Tracker_Artifact_ChangesetDao */
     protected $changeset_dao;
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -43,7 +43,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         parent::__construct(
             $fields_validator,

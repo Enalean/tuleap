@@ -90,7 +90,7 @@ final class XMLImporterTest extends TestCase
         $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('101')->getMock();
         $this->user    = Mockery::mock(PFUser::class);
 
-        $this->logger = Mockery::mock(Logger::class);
+        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
     }
 
     public function testItDoesNothingIfAdminNodeIsNotInXML(): void
@@ -163,7 +163,7 @@ final class XMLImporterTest extends TestCase
 
         $this->unplanned_artifacts_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
 
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('warning')->once();
 
         $this->importer->importContent(
             $xml,
@@ -232,7 +232,7 @@ final class XMLImporterTest extends TestCase
 
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')->once();
 
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('warning')->once();
 
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add('125', '225');
@@ -276,7 +276,7 @@ final class XMLImporterTest extends TestCase
             )
             ->andThrow(new ProvidedAddedIdIsNotInPartOfTopBacklogException([226]));
 
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('warning')->once();
 
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add('125', '225');

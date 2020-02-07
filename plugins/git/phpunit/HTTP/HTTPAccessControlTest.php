@@ -35,7 +35,7 @@ final class HTTPAccessControlTest extends TestCase
 
     public function testHTTPReplicationUserCanBeAuthenticated(): void
     {
-        $logger                              = \Mockery::mock(\Logger::class);
+        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
@@ -73,7 +73,7 @@ final class HTTPAccessControlTest extends TestCase
 
     public function testTuleapUserCanBeAuthenticated(): void
     {
-        $logger                              = \Mockery::mock(\Logger::class);
+        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
@@ -117,7 +117,7 @@ final class HTTPAccessControlTest extends TestCase
 
     public function testTuleapUserCanBeAuthenticatedFromAnAccessKey(): void
     {
-        $logger                              = \Mockery::mock(\Logger::class);
+        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
@@ -159,7 +159,7 @@ final class HTTPAccessControlTest extends TestCase
 
     public function testAuthenticationIsDeniedWhenAnAccessKeyMisusageIsDetected(): void
     {
-        $logger                              = \Mockery::mock(\Logger::class);
+        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
@@ -206,7 +206,7 @@ final class HTTPAccessControlTest extends TestCase
 
     public function testAuthenticationIsDeniedWhenNoValidUserIsFound(): void
     {
-        $logger                              = \Mockery::mock(\Logger::class);
+        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
@@ -251,7 +251,7 @@ final class HTTPAccessControlTest extends TestCase
 
     public function testAuthenticationIsRequestedWhenEmptyCredentialIsGiven(): void
     {
-        $logger                              = \Mockery::mock(\Logger::class);
+        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
@@ -290,7 +290,7 @@ final class HTTPAccessControlTest extends TestCase
 
     public function testNoAuthenticationIsRequiredForAReadAccessOfPublicRepoOnAnInstanceAccessibleToAnonymous(): void
     {
-        $logger                              = \Mockery::mock(\Logger::class);
+        $logger                              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);

@@ -35,10 +35,10 @@ class Git_Ci_Launcher
     /** @var Git_Ci_Dao */
     private $dao;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    public function __construct(Jenkins_Client $jenkins_client, Git_Ci_Dao $dao, Logger $logger)
+    public function __construct(Jenkins_Client $jenkins_client, Git_Ci_Dao $dao, \Psr\Log\LoggerInterface $logger)
     {
         $this->jenkins_client     = $jenkins_client;
         $this->dao                = $dao;

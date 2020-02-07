@@ -25,7 +25,6 @@
 namespace Tuleap\Date;
 
 use DateTime;
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -376,11 +375,11 @@ class TimePeriodWithoutWeekEndTest extends TestCase
         int $expected_duration,
         ?string $expected_error_message
     ): void {
-        $logger = Mockery::mock(Logger::class);
+        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
         if ($expected_error_message === null) {
-            $logger->shouldReceive('warn')->never();
+            $logger->shouldReceive('warning')->never();
         } else {
-            $logger->shouldReceive('warn')->with($expected_error_message)->once();
+            $logger->shouldReceive('warning')->with($expected_error_message)->once();
         }
 
         $start_date_timestamp = (new \DateTime($start_date))->getTimestamp();
@@ -444,7 +443,7 @@ class TimePeriodWithoutWeekEndTest extends TestCase
 
     public function testCreationFromEndDateWithNullValues(): void
     {
-        $logger = Mockery::mock(Logger::class);
+        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $logger->shouldReceive('error')->never();
 
         $a_date = (new \DateTimeImmutable('2019-08-05'))->getTimestamp();

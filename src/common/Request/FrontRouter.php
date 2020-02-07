@@ -24,8 +24,8 @@ namespace Tuleap\Request;
 use Backend;
 use FastRoute;
 use HTTPRequest;
-use Logger;
 use PluginManager;
+use Psr\Log\LoggerInterface;
 use ThemeManager;
 use Tuleap\Layout\ErrorRendering;
 use URLVerificationFactory;
@@ -41,7 +41,7 @@ class FrontRouter
      */
     private $route_collector;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -65,7 +65,7 @@ class FrontRouter
     public function __construct(
         RouteCollector $route_collector,
         URLVerificationFactory $url_verification_factory,
-        Logger $logger,
+        LoggerInterface $logger,
         ErrorRendering $error_rendering,
         ThemeManager $theme_manager,
         PluginManager $plugin_manager,
@@ -143,7 +143,7 @@ class FrontRouter
                 $code = $exception_code;
             }
             $this->request_instrumentation->increment($code);
-            $this->logger->error('Caught exception', $exception);
+            $this->logger->error('Caught exception', ['exception' => $exception]);
             $this->error_rendering->rendersErrorWithException(
                 $this->getBurningParrotTheme($request),
                 $request,
@@ -200,7 +200,7 @@ class FrontRouter
         return \ForgeConfig::getCacheDir() . '/web_routes.php';
     }
 
-    public static function restoreOwnership(Logger $logger, Backend $backend): void
+    public static function restoreOwnership(LoggerInterface $logger, Backend $backend): void
     {
         if (file_exists(self::getCacheFile())) {
             $logger->debug('Restore ownership on '.self::getCacheFile());

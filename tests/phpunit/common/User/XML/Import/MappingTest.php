@@ -52,7 +52,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         $this->user_manager->shouldReceive('getUserAnonymous')->andReturns(new \PFUser(['user_id' => 0, 'language_id' => 'en']));
         $this->user_manager->shouldReceive('getUserByUserName')->with('None')->andReturns($this->none_user);
 
-        $this->mapping = new Mapping($this->user_manager, $this->collection, \Mockery::spy(\Logger::class));
+        $this->mapping = new Mapping($this->user_manager, $this->collection, \Mockery::spy(\Psr\Log\LoggerInterface::class));
     }
 
     public function testItReturnsAUserReferencedById() : void

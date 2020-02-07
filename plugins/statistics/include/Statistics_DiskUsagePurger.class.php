@@ -26,7 +26,7 @@ class Statistics_DiskUsagePurger
 {
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -44,7 +44,7 @@ class Statistics_DiskUsagePurger
         'plugin_statistics_diskusage_user',
     );
 
-    public function __construct(Statistics_DiskUsageDao $disk_usage_dao, Logger $logger)
+    public function __construct(Statistics_DiskUsageDao $disk_usage_dao, \Psr\Log\LoggerInterface $logger)
     {
         $this->disk_usage_dao = $disk_usage_dao;
         $this->logger         = $logger;

@@ -21,7 +21,7 @@ namespace User\XML\Import;
 
 use PFUser;
 use UserManager;
-use Logger;
+use Psr\Log\LoggerInterface;
 use RandomNumberGenerator;
 
 class WillBeCreatedUser implements ReadyToBeImportedUser
@@ -96,7 +96,7 @@ class WillBeCreatedUser implements ReadyToBeImportedUser
         return $random_generator->getNumber();
     }
 
-    public function process(UserManager $user_manager, Logger $logger)
+    public function process(UserManager $user_manager, LoggerInterface $logger)
     {
 
         $fake_user = new PFUser();

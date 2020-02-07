@@ -20,7 +20,7 @@
 
 namespace Tuleap\ReferenceAliasTracker;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use Project;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -30,14 +30,14 @@ class ReferencesImporter
     /** @var Dao */
     private $dao;
 
-    /** @var Logger */
+    /** @var LoggerInterface */
     private $logger;
 
     public const XREF_TRACKER  = 'tracker';
     public const XREF_ARTF     = 'artf';
     public const XREF_PLAN     = 'plan';
 
-    public function __construct(Dao $dao, Logger $logger)
+    public function __construct(Dao $dao, LoggerInterface $logger)
     {
         $this->dao    = $dao;
         $this->logger = $logger;
@@ -63,21 +63,21 @@ class ReferencesImporter
             } elseif ($reference_keyword === self::XREF_PLAN) {
                 $object_type = 'artifact';
             } else {
-                $this->logger->warn("Cross reference kind '$reference_keyword' for $source not supported");
+                $this->logger->warning("Cross reference kind '$reference_keyword' for $source not supported");
                 continue;
             }
 
             if (isset($created_refs[$object_type][$target])) {
                 $target_on_system = $created_refs[$object_type][$target];
             } else {
-                $this->logger->warn("Could not find object for $source (wrong object type $object_type or missing imported object $target)");
+                $this->logger->warning("Could not find object for $source (wrong object type $object_type or missing imported object $target)");
                 continue;
             }
 
             if (! $configuration->isForce('references')) {
                 $row = $this->dao->getRef($source)->getRow();
                 if (!empty($row)) {
-                    $this->logger->warn("The source $source already exists in the database. It will not be imported.");
+                    $this->logger->warning("The source $source already exists in the database. It will not be imported.");
                     continue;
                 }
             }

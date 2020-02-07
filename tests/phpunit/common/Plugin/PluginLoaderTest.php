@@ -62,7 +62,7 @@ final class PluginLoaderTest extends TestCase
 
         $this->event_manager  = Mockery::mock(EventManager::class);
         $this->plugin_factory = Mockery::mock(PluginFactory::class);
-        $this->logger         = Mockery::mock(Logger::class);
+        $this->logger         = Mockery::mock(\Psr\Log\LoggerInterface::class);
     }
 
     public function testMissingHooksFileCacheIsCreated() : void

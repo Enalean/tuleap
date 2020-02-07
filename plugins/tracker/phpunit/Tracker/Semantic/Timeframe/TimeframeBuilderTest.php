@@ -70,7 +70,7 @@ final class TimeframeBuilderTest extends TestCase
         $this->formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);
         $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
 
-        $this->logger  = Mockery::mock(\BackendLogger::class);
+        $this->logger  = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->builder = new TimeframeBuilder(
             $this->formelement_factory,
             $this->semantic_timeframe_builder,
@@ -233,7 +233,7 @@ final class TimeframeBuilderTest extends TestCase
         $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $end_date_field->shouldReceive('userCanRead')->andReturn(false);
 
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('warning')->once();
 
         $this->semantic_timeframe_builder
             ->shouldReceive('getSemantic')
@@ -263,7 +263,7 @@ final class TimeframeBuilderTest extends TestCase
         $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $end_date_field->shouldReceive('userCanRead')->andReturn(true);
 
-        $this->logger->shouldReceive('warn')->once();
+        $this->logger->shouldReceive('warning')->once();
 
         $this->semantic_timeframe_builder
             ->shouldReceive('getSemantic')

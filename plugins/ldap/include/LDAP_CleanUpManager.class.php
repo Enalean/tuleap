@@ -97,7 +97,7 @@ class LDAP_CleanUpManager
                 $directoryCleanUpDao = $this->getLDAPDirectoryCleanUpDao();
                 $resetResult         = $directoryCleanUpDao->resetForecastDeletionDate($user->getId());
                 if (!$resetResult) {
-                    $this->getBackendLogger()->warn("[LDAP Clean Up] Unable to reset forecast deletion date for user ".$user->getUserName());
+                    $this->getBackendLogger()->warning("[LDAP Clean Up] Unable to reset forecast deletion date for user ".$user->getUserName());
                 }
                 $this->removeUserFromProjects($user);
                 $this->getBackendLogger()->info("[LDAP Clean Up] user ".$user->getUserName()."  have been deleted");
@@ -118,7 +118,7 @@ class LDAP_CleanUpManager
             $removal_result = $this->user_remover->removeUserFromProject($project->getID(), $user->getId());
 
             if (! $removal_result) {
-                $this->getBackendLogger()->warn("[LDAP Clean Up] Unable to remove user ".$user->getUserName())." from project ".$project->getId();
+                $this->getBackendLogger()->warning('[LDAP Clean Up] Unable to remove user ' .$user->getUserName()." from project ".$project->getID());
             }
         }
     }

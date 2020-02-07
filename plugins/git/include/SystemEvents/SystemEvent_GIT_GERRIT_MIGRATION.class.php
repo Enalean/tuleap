@@ -32,7 +32,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
     /** @var Git_RemoteServer_GerritServerFactory */
     private $server_factory;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var Git_Driver_Gerrit_ProjectCreator */
@@ -86,7 +86,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
     {
         $this->dao->setGerritMigrationError($repository->getId());
         $this->error($sysevent_prefix . $e->getMessage());
-        $this->logger->error($log_prefix . $this->verbalizeParameters(null), $e);
+        $this->logger->error($log_prefix . $this->verbalizeParameters(null), ['exception' => $e]);
         $this->sendErrorNotification($repository);
     }
 
@@ -178,7 +178,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
         GitDao $dao,
         GitRepositoryFactory $repository_factory,
         Git_RemoteServer_GerritServerFactory  $server_factory,
-        Logger  $logger,
+        \Psr\Log\LoggerInterface  $logger,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_GitRepositoryUrlManager $url_manager,
         UserManager $user_manager,

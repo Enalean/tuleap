@@ -97,7 +97,7 @@ class ProjectDashboardXMLImporterBase extends TestCase
         $this->event_manager             = \Mockery::spy(\EventManager::class);
         $this->disabled_widgets_checker  = \Mockery::mock(DisabledProjectWidgetsChecker::class);
 
-        $this->logger                     = \Mockery::spy(\Logger::class);
+        $this->logger                     = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
             $this->project_dashboard_saver,
             $this->widget_factory,

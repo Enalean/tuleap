@@ -21,7 +21,7 @@
 
 namespace Tuleap\Queue;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tuleap\Event\Dispatchable;
 
 class WorkerEvent implements Dispatchable
@@ -29,7 +29,7 @@ class WorkerEvent implements Dispatchable
     public const NAME = 'workerEvent';
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -43,7 +43,7 @@ class WorkerEvent implements Dispatchable
      */
     private $payload;
 
-    public function __construct(Logger $logger, array $event)
+    public function __construct(LoggerInterface $logger, array $event)
     {
         $this->logger     = $logger;
         $this->event_name = $event['event_name'];

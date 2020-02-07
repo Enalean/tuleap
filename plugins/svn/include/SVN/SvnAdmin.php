@@ -26,7 +26,7 @@ namespace Tuleap\SVN;
 
 use System_Command;
 use Tuleap\SVN\Repository\Repository;
-use Logger;
+use Psr\Log\LoggerInterface;
 use ForgeConfig;
 use System_Command_CommandException;
 use BackendSVN;
@@ -36,7 +36,7 @@ class SvnAdmin
     /** @var System_Command */
     private $system_command;
 
-    /** @var Logger */
+    /** @var LoggerInterface */
     private $logger;
 
     /**
@@ -46,7 +46,7 @@ class SvnAdmin
 
     public function __construct(
         System_Command $system_command,
-        Logger $logger,
+        LoggerInterface $logger,
         BackendSVN $backend_svn
     ) {
         $this->system_command = $system_command;

@@ -59,7 +59,7 @@ class GitPullRequestReferenceBulkConverterTest extends TestCase
         $this->pull_request_ref_updater = \Mockery::mock(GitPullRequestReferenceUpdater::class);
         $this->pull_request_factory     = \Mockery::mock(Factory::class);
         $this->git_repository_factory   = \Mockery::mock(\GitRepositoryFactory::class);
-        $this->logger                   = \Mockery::mock(\Logger::class);
+        $this->logger                   = \Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         \ForgeConfig::store();
         $tmp_dir = vfsStream::setup();

@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
@@ -34,7 +34,7 @@ class ChartConfigurationValueRetriever
      */
     private $configuration_field_retriever;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -45,7 +45,7 @@ class ChartConfigurationValueRetriever
     public function __construct(
         ChartConfigurationFieldRetriever $configuration_field_retriever,
         TimeframeBuilder $timeframe_builder,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->configuration_field_retriever = $configuration_field_retriever;
         $this->timeframe_builder = $timeframe_builder;

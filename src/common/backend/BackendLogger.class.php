@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BackendLogger implements Logger
+class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
 {
     public const FILENAME = 'codendi_syslog';
 
@@ -30,7 +30,7 @@ class BackendLogger implements Logger
     }
 
     /**
-     * @return Logger
+     * @return \Psr\Log\LoggerInterface
      */
     public static function getDefaultLogger()
     {
@@ -45,49 +45,22 @@ class BackendLogger implements Logger
         return $this->filepath;
     }
 
-    /**
-     * @deprecated use explicit methods info, debug, ...
-     *
-     * Log message in codendi_syslog
-     *
-     * @param string $message The error message that should be logged.
-     * @param string $level   The level of the message "info", "warning", ...
-     *
-     * @return bool true on success or false on failure
-     */
-    public function log($message, $level = Feedback::INFO)
+    public function log($level, $message, array $context = [])
     {
         $pid = getmypid();
 
-        return error_log(date('c')." [$pid] [$level] $message\n", 3, $this->filepath);
+        $message = $this->generateLogWithException($message, $context);
+
+        error_log(date('c')." [$pid] [$level] $message\n", 3, $this->filepath);
     }
 
-    public function debug($message)
-    {
-        $this->log($message, Feedback::DEBUG);
-    }
-
-    public function info($message)
-    {
-        $this->log($message, Feedback::INFO);
-    }
-
-    public function error($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException($message, $e), Feedback::ERROR);
-    }
-
-    public function warn($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException($message, $e), Feedback::WARN);
-    }
-
-    public function generateLogWithException($message, ?Exception $e = null)
+    private function generateLogWithException($message, array $context): string
     {
         $log_string = $message;
-        if (!empty($e)) {
-            $error_message  = $e->getMessage();
-            $stack_trace    = $e->getTraceAsString();
+        if (isset($context['exception']) && $context['exception'] instanceof Throwable) {
+            $exception      = $context['exception'];
+            $error_message  = $exception->getMessage();
+            $stack_trace    = $exception->getTraceAsString();
             $log_string    .= ": $error_message:\n$stack_trace";
         }
         return $log_string;

@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use EventManager;
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use Tracker_Artifact;
 use Tuleap\DB\DBConnection;
@@ -47,7 +47,7 @@ class ArchiveAndDeleteArtifactTask
      */
     private $db_connection;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -56,7 +56,7 @@ class ArchiveAndDeleteArtifactTask
         ArtifactDependenciesDeletor $dependencies_deletor,
         EventManager $event_manager,
         DBConnection $db_connection,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->artifact_with_tracker_structure_exporter = $artifact_with_tracker_structure_exporter;
         $this->dependencies_deletor                     = $dependencies_deletor;

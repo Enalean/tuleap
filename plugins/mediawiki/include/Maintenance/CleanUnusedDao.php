@@ -23,9 +23,9 @@ namespace Tuleap\Mediawiki\Maintenance;
 
 use DataAccessObject;
 use MediawikiDao;
-use Logger;
+use Psr\Log\LoggerInterface;
 use WrapperLogger;
-use Log_NoopLogger;
+use Psr\Log\NullLogger;
 use ForgeConfig;
 
 class CleanUnusedDao extends DataAccessObject
@@ -36,23 +36,23 @@ class CleanUnusedDao extends DataAccessObject
     private $central_database;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
     private $db_deleted = 0;
     private $tables_deleted = 0;
 
-    public function __construct(Logger $logger, $central_database)
+    public function __construct(LoggerInterface $logger, $central_database)
     {
         parent::__construct();
         $this->enableExceptionsOnError();
         $this->central_database = $central_database;
 
-        $this->logger = new Log_NoopLogger();
+        $this->logger = new NullLogger();
     }
 
-    public function setLogger(Logger $logger)
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = new WrapperLogger($logger, 'DB');
     }
@@ -244,9 +244,9 @@ class CleanUnusedDao extends DataAccessObject
     private function purgeIfOrphan($database_name, $dry_run)
     {
         if (! $this->doesDatabaseNameCorrespondToAnActiveProject($database_name)) {
-            $this->logger->warn("Project seems no longer referenced, please double check");
+            $this->logger->warning("Project seems no longer referenced, please double check");
         } else {
-            $this->logger->warn("Database $database_name cannot be associated to an active project, please check");
+            $this->logger->warning("Database $database_name cannot be associated to an active project, please check");
         }
     }
 

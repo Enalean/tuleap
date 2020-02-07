@@ -21,7 +21,7 @@
 
 namespace Tuleap\SVN\Logs;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use UserManager;
 use WrapperLogger;
 
@@ -32,18 +32,18 @@ class DBWriter
     private $db_writer_plugin;
     private $db_writer_core;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(Logger $logger, DBWriterPlugin $db_writer_plugin, DBWriterCore $db_writer_core)
+    public function __construct(LoggerInterface $logger, DBWriterPlugin $db_writer_plugin, DBWriterCore $db_writer_core)
     {
         $this->logger           = new WrapperLogger($logger, 'svn.log');
         $this->db_writer_plugin = $db_writer_plugin;
         $this->db_writer_core   = $db_writer_core;
     }
 
-    public static function build(Logger $logger)
+    public static function build(LoggerInterface $logger)
     {
         $user_cache = new DBWriterUserCache(UserManager::instance());
         return new DBWriter(

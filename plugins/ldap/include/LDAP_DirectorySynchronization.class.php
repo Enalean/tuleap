@@ -40,10 +40,10 @@ class LDAP_DirectorySynchronization
     protected $lum;
     protected $um;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    public function __construct(LDAP $ldap, Logger $logger)
+    public function __construct(LDAP $ldap, \Psr\Log\LoggerInterface $logger)
     {
         $this->ldapTime = 0;
         $this->ldap     = $ldap;
@@ -109,7 +109,7 @@ class LDAP_DirectorySynchronization
                     $this->getLdapUserManager()->updateLdapUid($user, $lr->getLogin());
                 }
             } elseif (count($lri) == 0 && $users_are_suspendable) {
-                $this->logger->warn('LDAP user to be suspended: '.$user->getId().' '. $user->getUserName());
+                $this->logger->warning('LDAP user to be suspended: '.$user->getId().' '. $user->getUserName());
 
                 $this->logger->debug(
                     ' *** PEOPLEDN: '.$PeopleDn.

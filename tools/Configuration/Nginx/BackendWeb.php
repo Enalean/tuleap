@@ -20,7 +20,7 @@
 
 namespace Tuleap\Configuration\Nginx;
 
-use Tuleap\Configuration\Logger\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 class BackendWeb
 {

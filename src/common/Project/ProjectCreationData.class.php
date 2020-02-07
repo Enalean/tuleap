@@ -49,10 +49,10 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     private $inherit_from_template = true;
     private $access;
 
-    public function __construct(DefaultProjectVisibilityRetriever $default_project_visibility_retriever, ?Logger $logger = null)
+    public function __construct(DefaultProjectVisibilityRetriever $default_project_visibility_retriever, ?\Psr\Log\LoggerInterface $logger = null)
     {
         if ($logger === null) {
-            $this->logger = new Log_NoopLogger();
+            $this->logger = new \Psr\Log\NullLogger();
         } else {
             $this->logger = new WrapperLogger($logger, self::class);
         }
@@ -219,7 +219,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         SimpleXMLElement $xml,
         ?XML_RNGValidator $xml_validator = null,
         ?ServiceManager $service_manager = null,
-        ?Logger $logger = null,
+        ?\Psr\Log\LoggerInterface $logger = null,
         ?DefaultProjectVisibilityRetriever $default_project_visibility_retriever = null,
         ?ExternalFieldsExtractor $external_fields_extractor = null
     ) {

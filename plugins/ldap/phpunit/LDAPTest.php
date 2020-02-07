@@ -35,16 +35,16 @@ final class LDAPTest extends TestCase
      */
     public function testCanTryToFailOverMultipleServersToConnect(string $sys_ldap_server): void
     {
-        $logger = \Mockery::mock(\Logger::class);
+        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $ldap = new \LDAP(
             ['server' => $sys_ldap_server],
             $logger
         );
 
-        $logger->shouldReceive('warn')->with(\Mockery::pattern('# ldaps://ldap1.example.com #'));
-        $logger->shouldReceive('warn')->with(\Mockery::pattern('# ldaps://ldap2.example.com #'));
-        $logger->shouldReceive('warn')->with(\Mockery::pattern('#Cannot connect to any LDAP server#'));
+        $logger->shouldReceive('warning')->with(\Mockery::pattern('# ldaps://ldap1.example.com #'));
+        $logger->shouldReceive('warning')->with(\Mockery::pattern('# ldaps://ldap2.example.com #'));
+        $logger->shouldReceive('warning')->with(\Mockery::pattern('#Cannot connect to any LDAP server#'));
         $logger->shouldReceive('error');
 
         $ldap->search('dc=example,dc=com', 'filter=something');

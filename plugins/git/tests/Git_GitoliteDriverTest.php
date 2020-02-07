@@ -78,7 +78,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase
             $this->a_gitolite_project_serializer,
             $this->gitoliterc_reader,
             $this->mirror_data_mapper,
-            mock('Logger'),
+            mock(\Psr\Log\LoggerInterface::class),
             $this->project_manager,
             $this->sys_data_dir . '/gitolite/admin'
         );

@@ -29,13 +29,13 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
     /** @var string */
     private $extraction_path;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact */
     private $files_importer;
 
-    public function __construct($extraction_path, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer, Logger $logger)
+    public function __construct($extraction_path, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer, \Psr\Log\LoggerInterface $logger)
     {
         $this->extraction_path = $extraction_path;
         $this->files_importer  = $files_importer;
@@ -64,7 +64,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         $files_infos = array();
 
         if ($this->isFieldChangeEmpty($values)) {
-            $this->logger->warn(
+            $this->logger->warning(
                 'Skipped attachment field ' . $field->getLabel() . ': field value is empty.'
             );
 
@@ -82,7 +82,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
                     $this->files_importer->markAsImported($file_id);
                 }
             } catch (Tracker_Artifact_XMLImport_Exception_FileNotFoundException $exception) {
-                $this->logger->warn('Skipped attachment field ' . $field->getLabel() . ': ' . $exception->getMessage());
+                $this->logger->warning('Skipped attachment field ' . $field->getLabel() . ': ' . $exception->getMessage());
             }
         }
 

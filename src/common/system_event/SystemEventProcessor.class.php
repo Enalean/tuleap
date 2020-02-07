@@ -42,7 +42,7 @@ abstract class SystemEventProcessor implements IRunInAMutex
     protected $dao;
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
 
@@ -50,7 +50,7 @@ abstract class SystemEventProcessor implements IRunInAMutex
         SystemEventProcess $process,
         SystemEventManager $system_event_manager,
         SystemEventDao $dao,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->process              = $process;
         $this->system_event_manager = $system_event_manager;

@@ -54,7 +54,7 @@ final class ReferencesImporterTest extends TestCase
     {
         parent::setUp();
         $this->dao           = \Mockery::spy(\Tuleap\ReferenceAliasTracker\Dao::class);
-        $this->logger        = \Mockery::spy(\Logger::class);
+        $this->logger        = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->importer      = new ReferencesImporter($this->dao, $this->logger);
         $this->configuration = new ImportConfig();
     }

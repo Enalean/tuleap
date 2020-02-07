@@ -25,7 +25,7 @@ use Git_LogDao;
 use GitPermissionsManager;
 use GitRepository;
 use GitRepositoryFactory;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Project;
 use ProjectUGroup;
 use SimpleXMLElement;
@@ -61,7 +61,7 @@ class GitXmlExporter
     private $repository_factory;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -91,7 +91,7 @@ class GitXmlExporter
         GitPermissionsManager $permission_manager,
         UGroupManager $ugroup_manager,
         GitRepositoryFactory $repository_factory,
-        Logger $logger,
+        LoggerInterface $logger,
         System_Command $command,
         GitBundle $git_bundle,
         Git_LogDao $git_log_dao,

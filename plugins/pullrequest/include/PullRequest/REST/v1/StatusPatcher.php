@@ -23,7 +23,7 @@ namespace Tuleap\PullRequest\REST\v1;
 use Git_Command_Exception;
 use GitRepository;
 use GitRepositoryFactory;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tuleap\Git\Permissions\AccessControlVerifier;
@@ -54,7 +54,7 @@ class StatusPatcher
     private $pull_request_closer;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -73,7 +73,7 @@ class StatusPatcher
         PullRequestPermissionChecker $pull_request_permission_checker,
         PullRequestCloser $pull_request_closer,
         URLVerification $url_verification,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->git_repository_factory          = $git_repository_factory;
         $this->access_control_verifier         = $access_control_verifier;

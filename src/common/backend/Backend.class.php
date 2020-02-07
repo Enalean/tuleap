@@ -28,10 +28,10 @@ use Tuleap\Backend\FileExtensionFilterIterator;
 class Backend
 {
 
-    public const LOG_INFO    = "info";
-    public const LOG_WARNING = "warn";
-    public const LOG_ERROR   = "error";
-    public const LOG_DEBUG   = "debug";
+    public const LOG_INFO    = \Psr\Log\LogLevel::INFO;
+    public const LOG_WARNING = \Psr\Log\LogLevel::WARNING;
+    public const LOG_ERROR   = \Psr\Log\LogLevel::ERROR;
+    public const LOG_DEBUG   = \Psr\Log\LogLevel::DEBUG;
 
     public const SVN         = 'SVN';
     public const CVS         = 'CVS';
@@ -333,13 +333,11 @@ class Backend
      *
      * @param string $message The error message that should be logged.
      * @param string $level   The level of the message "info", "warn", ...
-     *
-     * @return bool true on success or false on failure
      */
     public function log($message, $level = 'info')
     {
         $logger = new BackendLogger();
-        return $logger->log($message, $level);
+        $logger->log($level, $message);
     }
 
     /**

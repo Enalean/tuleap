@@ -44,7 +44,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
         $this->sshkey_dumper        = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
         $this->user_account_manager = \Mockery::spy(\Git_UserAccountManager::class);
         $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->logger               = \Mockery::spy(\BackendLogger::class);
+        $this->logger               = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->user_manager->shouldReceive('getUserById')->with(105)->andReturns($this->user);
     }

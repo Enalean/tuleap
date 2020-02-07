@@ -25,7 +25,7 @@ use ConfigNotificationAssignedTo;
 use ConfigNotificationAssignedToDao;
 use Exception;
 use ForgeConfig;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
 use Tracker_FormElementFactory;
@@ -55,7 +55,7 @@ use WrapperLogger;
 class ActionsRunner
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -72,7 +72,7 @@ class ActionsRunner
     private $post_creation_tasks;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         ActionsRunnerDao $actions_runner_dao,
         QueueFactory $queue_factory,
         PostCreationTask ...$post_creation_tasks
@@ -83,7 +83,7 @@ class ActionsRunner
         $this->post_creation_tasks = $post_creation_tasks;
     }
 
-    public static function build(Logger $logger)
+    public static function build(LoggerInterface $logger)
     {
         $webhook_dao = new WebhookDao();
 

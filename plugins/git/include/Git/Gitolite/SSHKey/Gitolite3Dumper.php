@@ -21,7 +21,7 @@
 namespace Tuleap\Git\Gitolite\SSHKey;
 
 use IHaveAnSSHKey;
-use Logger;
+use Psr\Log\LoggerInterface;
 use System_Command;
 use System_Command_CommandException;
 
@@ -40,14 +40,14 @@ class Gitolite3Dumper implements Dumper
     private $system_command;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
     public function __construct(
         AuthorizedKeysFileCreator $authorized_keys_file_creator,
         System_Command $system_command,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->authorized_keys_file_creator = $authorized_keys_file_creator;
         $this->system_command               = $system_command;

@@ -190,14 +190,14 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         }
     }
 
-    private function setFolderProperty(Project $project, $tracker_id, Logger $logger)
+    private function setFolderProperty(Project $project, $tracker_id, \Psr\Log\LoggerInterface $logger)
     {
         if (! $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($project)) {
             if (! $this->getDao()->create($tracker_id)) {
-                $logger->warn("Error while setting Folder flag for tracker $tracker_id.");
+                $logger->warning("Error while setting Folder flag for tracker $tracker_id.");
             }
         } else {
-            $logger->warn("Cannot set tracker $tracker_id as a Folder tracker because you already have one defined for this project");
+            $logger->warning("Cannot set tracker $tracker_id as a Folder tracker because you already have one defined for this project");
         }
     }
 

@@ -20,18 +20,18 @@
 
 namespace Tuleap\Configuration\Setup;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Configuration\Apache\LogrotateDeployer;
 use Tuleap\Configuration\Etc;
 use Tuleap\Configuration\FPM;
 use Tuleap\Configuration\Nginx;
 use Tuleap\Configuration\Apache;
-use Tuleap\Configuration\Logger;
 
 class PHP73CentOS6
 {
     private $logger;
 
-    public function __construct(Logger\LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->setErrorHandler($logger);
         $this->logger = $logger;
@@ -122,7 +122,7 @@ Configuration of Tuleap for usage of PHP 7.3 / FPM and Nginx
 EOT;
     }
 
-    private function setErrorHandler(Logger\LoggerInterface $logger) : void
+    private function setErrorHandler(LoggerInterface $logger) : void
     {
         // Make all warnings or notices fatal
         set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($logger) {

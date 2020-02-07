@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use PFUser;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
@@ -31,7 +31,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 class BurndownCommonDataBuilder
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -51,7 +51,7 @@ class BurndownCommonDataBuilder
     private $cache_checker;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         ChartConfigurationFieldRetriever $field_retriever,
         ChartConfigurationValueRetriever $value_retriever,
         BurndownCacheGenerationChecker $cache_checker

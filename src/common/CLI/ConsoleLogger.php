@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,11 +21,12 @@
 namespace Tuleap\CLI;
 
 use Exception;
-use Logger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\AbstractLogger;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConsoleLogger implements Logger
+class ConsoleLogger extends AbstractLogger implements LoggerInterface
 {
     /**
      * @var OutputInterface
@@ -37,29 +38,9 @@ class ConsoleLogger implements Logger
         $this->output = $output;
     }
 
-    public function debug($message)
-    {
-        $this->log($message, Logger::DEBUG);
-    }
-
-    public function error($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException($message, $e), Logger::ERROR);
-    }
-
-    public function info($message)
-    {
-        $this->log($message, Logger::INFO);
-    }
-
-    public function log($message, $level = null)
+    public function log($level, $message, array $context = [])
     {
         $this->output->writeln($this->colorize($level, $message));
-    }
-
-    public function warn($message, ?Exception $e = null)
-    {
-        $this->log($this->generateLogWithException($message, $e), Logger::WARN);
     }
 
     private function generateLogWithException($message, ?Exception $e = null)
@@ -77,11 +58,11 @@ class ConsoleLogger implements Logger
     {
         $color = null;
         switch ($level) {
-            case Logger::INFO:
+            case \Psr\Log\LogLevel::INFO:
                 return '<info>' . OutputFormatter::escape($message) . '</info>';
-            case Logger::WARN:
+            case \Psr\Log\LogLevel::WARNING:
                 return '<fg=yellow>' . OutputFormatter::escape($message) . '</>';
-            case Logger::ERROR:
+            case \Psr\Log\LogLevel::ERROR:
                 return '<error>' . OutputFormatter::escape($message) . '</error>';
             default:
                 return OutputFormatter::escape($message);

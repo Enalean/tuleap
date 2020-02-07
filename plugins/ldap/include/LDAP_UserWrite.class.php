@@ -40,7 +40,7 @@ class LDAP_UserWrite
 {
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -63,7 +63,7 @@ class LDAP_UserWrite
      */
     private $ldap_user_dao;
 
-    public function __construct(LDAP $ldap, UserManager $user_manager, UserDao $dao, LDAP_UserDao $ldap_user_dao, Logger $logger)
+    public function __construct(LDAP $ldap, UserManager $user_manager, UserDao $dao, LDAP_UserDao $ldap_user_dao, \Psr\Log\LoggerInterface $logger)
     {
         $this->ldap          = $ldap;
         $this->user_manager  = $user_manager;
@@ -91,7 +91,7 @@ class LDAP_UserWrite
         if ($user && $user->isAlive()) {
             $this->updateWithUser($user);
         } else {
-            $this->logger->warn('Do not write LDAP info about non existant or suspended users '.$user_id);
+            $this->logger->warning('Do not write LDAP info about non existant or suspended users '.$user_id);
         }
     }
 

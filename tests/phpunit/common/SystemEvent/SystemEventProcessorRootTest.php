@@ -29,7 +29,6 @@ use BackendSVN;
 use BackendSystem;
 use Exception;
 use ForgeConfig;
-use Logger;
 use Mockery as M;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
@@ -64,7 +63,7 @@ class SystemEventProcessorRootTest extends TestCase
     {
         $this->system_event_manager = M::mock(SystemEventManager::class);
         $this->system_event_dao     = M::mock(SystemEventDao::class);
-        $this->logger               = M::spy(Logger::class);
+        $this->logger               = M::spy(\Psr\Log\LoggerInterface::class);
         $this->site_cache           = M::mock(SiteCache::class);
 
         $this->processor = M::mock(

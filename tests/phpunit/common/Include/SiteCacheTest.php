@@ -34,7 +34,7 @@ class SiteCacheTest extends \PHPUnit\Framework\TestCase
         $lang_dir     = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'tuleap_lang_dir';
 
         ForgeConfig::set('codendi_cache_dir', $cache_dir);
-        $logger              = \Mockery::spy(\Logger::class);
+        $logger              = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class)->shouldReceive('getCacheDirectory')->andReturns($lang_dir)->getMock();
         $GLOBALS['HTML']     = \Mockery::spy(\Layout::class);
 

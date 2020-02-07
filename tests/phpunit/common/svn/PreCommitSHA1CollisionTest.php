@@ -40,7 +40,7 @@ class PreCommitSHA1CollisionTest extends TestCase
             $svnlook,
             \Mockery::spy(\SVN_Immutable_Tags_Handler::class),
             $sha1_collision_detector,
-            \Mockery::spy(\Logger::class)
+            \Mockery::spy(\Psr\Log\LoggerInterface::class)
         );
 
         $svnlook->shouldReceive('getTransactionPath')->andReturns(array('D   trunk/f1', 'A   trunk/f2'));
@@ -62,7 +62,7 @@ class PreCommitSHA1CollisionTest extends TestCase
             $svnlook,
             \Mockery::spy(\SVN_Immutable_Tags_Handler::class),
             $sha1_collision_detector,
-            \Mockery::spy(\Logger::class)
+            \Mockery::spy(\Psr\Log\LoggerInterface::class)
         );
 
         $svnlook->shouldReceive('getTransactionPath')->andReturns(array('A   trunk/f1'));

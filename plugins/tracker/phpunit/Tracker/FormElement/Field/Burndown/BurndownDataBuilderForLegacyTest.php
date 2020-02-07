@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -64,7 +63,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
         $timezone_retriever      = new TimezoneRetriever();
         $this->original_timezone = $timezone_retriever::getServerTimezone();
 
-        $logger = Mockery::mock(Logger::class);
+        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $logger->shouldReceive("debug");
         $logger->shouldReceive("info");
 

@@ -20,7 +20,7 @@
 
 namespace Tuleap\Configuration\FPM;
 
-use Tuleap\Configuration\Logger\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Configuration\Logger\Wrapper;
 
 class TuleapWeb

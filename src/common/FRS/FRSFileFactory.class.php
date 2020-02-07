@@ -29,7 +29,7 @@ class FRSFileFactory
     public const COMPUTE_MD5 = 0x0001;
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -38,16 +38,16 @@ class FRSFileFactory
      */
     private $fileforge = ['sudo', __DIR__ . '/../../utils/fileforge.pl'];
 
-    function __construct(?Logger $logger = null)
+    function __construct(?\Psr\Log\LoggerInterface $logger = null)
     {
         if ($logger === null) {
-            $this->logger = new Log_NoopLogger();
+            $this->logger = new \Psr\Log\NullLogger();
         } else {
             $this->setLogger($logger);
         }
     }
 
-    public function setLogger(Logger $logger)
+    public function setLogger(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = new WrapperLogger($logger, 'FRSFileFactory');
     }

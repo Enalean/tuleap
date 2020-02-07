@@ -42,7 +42,7 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends Tuleap
     public function itContainsAllTheLoggedMessages()
     {
         $this->logger->error("this is an error");
-        $this->logger->warn("this is a warning");
+        $this->logger->warning("this is a warning");
 
         $expected_logs = array(
             "[error] this is an error",
@@ -63,7 +63,7 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends Tuleap
         expect($this->backend_logger)->log()->count(4);
 
         $this->logger->error("this is an error");
-        $this->logger->warn("this is a warning");
+        $this->logger->warning("this is a warning");
         $this->logger->info("this is an info");
         $this->logger->debug("this is a debug");
 

@@ -38,7 +38,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
      */
     private $repository_factory;
     /**
-     * @var \Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     /**
@@ -68,7 +68,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
     private $http_command_factory;
 
     public function __construct(
-        \Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         \ProjectManager $project_manager,
         \GitRepositoryFactory $repository_factory,
         HTTPAccessControl $http_access_control

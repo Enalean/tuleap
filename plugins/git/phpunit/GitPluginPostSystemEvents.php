@@ -38,7 +38,7 @@ class GitPluginPostSystemEvents extends TestCase
 
         $this->plugin->shouldReceive('getGitSystemEventManager')->andReturns($this->system_event_manager);
         $this->plugin->shouldReceive('getGitoliteDriver')->andReturns($this->gitolite_driver);
-        $this->plugin->shouldReceive('getLogger')->andReturns(\Mockery::spy(\TruncateLevelLogger::class));
+        $this->plugin->shouldReceive('getLogger')->andReturns(\Mockery::spy(\TruncateLevel\Psr\Log\LoggerInterface::class));
     }
 
     public function testItProcessGrokmirrorManifestUpdateInPostSystemEventsActions(): void

@@ -64,13 +64,13 @@ class LDAP
     private $errorsTrapped;
     private $ldapParams;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /**
      * LDAP object constructor. Use gloabals for initialization.
      */
-    public function __construct(array $ldapParams, Logger $logger)
+    public function __construct(array $ldapParams, \Psr\Log\LoggerInterface $logger)
     {
         $this->ldapParams    =  $ldapParams;
         $this->bound         = false;
@@ -126,17 +126,17 @@ class LDAP
                         $this->logger->debug('Bound to LDAP server: '.$ldap_server);
                         return true;
                     } else {
-                        $this->logger->warn('Cannot bind to LDAP server: '.$ldap_server.
+                        $this->logger->warning('Cannot bind to LDAP server: '.$ldap_server.
                             ' ***ERROR MESSSAGE:'. ldap_error($this->ds).
                             ' ***ERROR no:'. $this->getErrno());
                     }
                 } else {
-                    $this->logger->warn('Cannot connect to LDAP server: '.$ldap_server.
+                    $this->logger->warning('Cannot connect to LDAP server: '.$ldap_server.
                         ' ***ERROR:'. ldap_error($this->ds) .
                         ' ***ERROR no:'. $this->getErrno());
                 }
             }
-            $this->logger->warn('Cannot connect to any LDAP server: '.$this->ldapParams['server'].
+            $this->logger->warning('Cannot connect to any LDAP server: '.$this->ldapParams['server'].
                 ' ***ERROR:'. ldap_error($this->ds).
                 ' ***ERROR no:'. $this->getErrno());
             return false;
@@ -335,7 +335,7 @@ class LDAP
                     return new LDAPResultIterator($entries, $this->ldapParams);
                 }
             } else {
-                $this->logger->warn('LDAP search error: '.$baseDn.' '.$filter.' '.$this->ldapParams['server'].
+                $this->logger->warning('LDAP search error: '.$baseDn.' '.$filter.' '.$this->ldapParams['server'].
                     ' ***ERROR:'. ldap_error($this->ds).
                     ' ***ERROR no:'. $this->getErrno());
             }

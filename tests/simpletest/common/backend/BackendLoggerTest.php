@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ class BackendLoggerTest extends TuleapTestCase
 
     public function itLogsToTheSyslog()
     {
-        $this->logger->log('toto tata');
+        $this->logger->log(\Psr\Log\LogLevel::INFO, 'toto tata');
 
         $this->assertPattern('/toto tata/', file_get_contents($this->log_file));
     }
@@ -46,44 +46,9 @@ class BackendLoggerTest extends TuleapTestCase
         $this->assertPattern('/\[info\] toto tata/', file_get_contents($this->log_file));
         $this->logger->debug('hej min van');
         $this->assertPattern('/\[debug\] hej min van/', file_get_contents($this->log_file));
-        $this->logger->warn('au dodo');
+        $this->logger->warning('au dodo');
         $this->assertPattern('/\[warning\] au dodo/', file_get_contents($this->log_file));
         $this->logger->error('arrete!');
         $this->assertPattern('/\[error\] arrete!/', file_get_contents($this->log_file));
-    }
-
-    public function testErrorAppendsStackTraceIfGivenAnError()
-    {
-        $message = 'an error occured';
-        $exception = new Exception('some error');
-        $this->logger->error($message, $exception);
-
-        $this->assertLogContainsStackTrace($exception);
-        $this->assertLogContainsErrorMessage($exception, $message);
-    }
-
-    public function testWarnAppendsStackTraceIfGivenAnError()
-    {
-        $message = 'an error occured';
-        $exception = new Exception('some error');
-        $this->logger->warn($message, $exception);
-
-        $this->assertLogContainsStackTrace($exception);
-        $this->assertLogContainsErrorMessage($exception, $message);
-    }
-
-    private function assertLogContainsStackTrace($exception)
-    {
-        $trace = $exception->getTraceAsString();
-        $this->assertNotEmpty($trace);
-        $quoted_trace = preg_quote("$trace");
-        $this->assertPattern("%$quoted_trace%m", file_get_contents($this->log_file));
-    }
-
-    private function assertLogContainsErrorMessage($exception, $message)
-    {
-        $error_message = $exception->getMessage();
-        $start_of_trace = substr($exception->getTraceAsString(), 0, 20);
-        $this->assertPattern("%$message: $error_message:\n$start_of_trace%m", file_get_contents($this->log_file));
     }
 }

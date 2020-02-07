@@ -60,7 +60,7 @@ class FrontRouterTest extends TestCase
         $this->url_verification_factory = Mockery::mock(\URLVerificationFactory::class);
         $this->request                  = Mockery::mock(\HTTPRequest::class);
         $this->layout                   = Mockery::mock(BaseLayout::class);
-        $this->logger                   = Mockery::mock(\Logger::class);
+        $this->logger                   = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->error_rendering          = Mockery::mock(ErrorRendering::class);
         $this->theme_manager            = Mockery::mock(\ThemeManager::class);
         $this->burning_parrot           = Mockery::mock(BurningParrotTheme::class);

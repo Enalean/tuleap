@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use Log_NoopLogger;
-use Logger;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
@@ -48,7 +46,7 @@ final class WorkflowRulesManagerTest extends TestCase
     {
         $rules_dao       = Mockery::mock(Tracker_Workflow_Trigger_RulesDao::class);
         $rules_processor = Mockery::mock(Tracker_Workflow_Trigger_RulesProcessor::class);
-        $logger          = new WorkflowBackendLogger(new Log_NoopLogger(), Logger::ERROR);
+        $logger          = new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::ERROR);
 
         $rules_manager = Mockery::mock(
             Tracker_Workflow_Trigger_RulesManager::class . '[getRuleById]',

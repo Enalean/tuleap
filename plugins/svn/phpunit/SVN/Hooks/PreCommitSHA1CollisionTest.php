@@ -67,7 +67,7 @@ class PreCommitSHA1CollisionTest extends TestCase
             Mockery::spy(\Tuleap\SVN\Admin\ImmutableTagFactory::class),
             $this->svnlook,
             $this->sha1_collision_detector,
-            Mockery::spy(\Logger::class),
+            Mockery::spy(\Psr\Log\LoggerInterface::class),
             Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class)
         );
     }

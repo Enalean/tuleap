@@ -20,7 +20,7 @@
 
 namespace Tuleap\ReferenceAliasMediawiki;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use Project;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -30,12 +30,12 @@ class ReferencesImporter
     /** @var CompatibilityDao */
     private $dao;
 
-    /** @var Logger */
+    /** @var LoggerInterface */
     private $logger;
 
     public const XREF_WIKI  = 'wiki';
 
-    public function __construct(CompatibilityDao $dao, Logger $logger)
+    public function __construct(CompatibilityDao $dao, LoggerInterface $logger)
     {
         $this->dao    = $dao;
         $this->logger = $logger;
@@ -56,14 +56,14 @@ class ReferencesImporter
             if ($reference_keyword === self::XREF_WIKI) {
                 $object_type = 'mediawiki';
             } else {
-                $this->logger->warn("Cross reference kind '$reference_keyword' for $source not supported");
+                $this->logger->warning("Cross reference kind '$reference_keyword' for $source not supported");
                 continue;
             }
 
             if (! $configuration->isForce('references')) {
                 $row = $this->dao->getRef($source)->getRow();
                 if (!empty($row)) {
-                    $this->logger->warn("The source $source already exists in the database. It will not be imported.");
+                    $this->logger->warning("The source $source already exists in the database. It will not be imported.");
                     continue;
                 }
             }

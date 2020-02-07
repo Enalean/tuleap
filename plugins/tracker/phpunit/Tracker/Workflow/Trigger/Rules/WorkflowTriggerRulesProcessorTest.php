@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\Trigger;
 
-use Log_NoopLogger;
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -47,7 +45,7 @@ final class WorkflowTriggerRulesProcessorTest extends TestCase
         $workflow_user = Mockery::mock(Tracker_Workflow_WorkflowUser::class);
         $processor     = new Tracker_Workflow_Trigger_RulesProcessor(
             $workflow_user,
-            new WorkflowBackendLogger(new Log_NoopLogger(), Logger::ERROR)
+            new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::ERROR)
         );
 
         $target_tracker = Mockery::mock(Tracker::class);
@@ -109,7 +107,7 @@ final class WorkflowTriggerRulesProcessorTest extends TestCase
         $workflow_user = Mockery::mock(Tracker_Workflow_WorkflowUser::class);
         $processor     = new Tracker_Workflow_Trigger_RulesProcessor(
             $workflow_user,
-            new WorkflowBackendLogger(new Log_NoopLogger(), Logger::ERROR)
+            new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::ERROR)
         );
 
         $target_tracker = Mockery::mock(Tracker::class);

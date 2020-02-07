@@ -31,13 +31,13 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
     /** @var Git_SystemEventManager */
     private $system_event_manager;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
         Git_SystemEventManager $system_event_manager,
-        Logger $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->repository_factory   = $repository_factory;
         $this->system_event_manager = $system_event_manager;

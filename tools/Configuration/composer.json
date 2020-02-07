@@ -4,5 +4,8 @@
     "psr-4": {
       "Tuleap\\Configuration\\": "."
     }
+  },
+  "require": {
+    "psr/log": "^1.1"
   }
 }

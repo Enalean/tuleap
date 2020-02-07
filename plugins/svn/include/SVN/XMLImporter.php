@@ -21,7 +21,7 @@
 namespace Tuleap\SVN;
 
 use Backend;
-use Logger;
+use Psr\Log\LoggerInterface;
 use Project;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -79,7 +79,7 @@ class XMLImporter
 
     public function import(
         ImportConfig $configuration,
-        Logger $logger,
+        LoggerInterface $logger,
         Project $project,
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,

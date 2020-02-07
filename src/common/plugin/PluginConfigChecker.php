@@ -22,12 +22,12 @@ class PluginConfigChecker
 {
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     private $app_user;
 
-    public function __construct(Logger $logger)
+    public function __construct(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger   = $logger;
         $this->app_user = ForgeConfig::get('sys_http_user');
@@ -40,7 +40,7 @@ class PluginConfigChecker
         try {
             $this->checkFolderOwnedByAppUser($plugin_etc_root);
         } catch (Exception $exception) {
-            $this->logger->warn($exception->getMessage());
+            $this->logger->warning($exception->getMessage());
         }
     }
 
@@ -49,7 +49,7 @@ class PluginConfigChecker
         try {
             $this->checkIncFileOwnedByAppUser($inc_file);
         } catch (Exception $exception) {
-            $this->logger->warn($exception->getMessage());
+            $this->logger->warning($exception->getMessage());
         }
     }
 

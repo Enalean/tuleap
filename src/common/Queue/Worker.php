@@ -21,7 +21,7 @@
 
 namespace Tuleap\Queue;
 
-use Logger;
+use Psr\Log\LoggerInterface;
 use BackendLogger;
 use TruncateLevelLogger;
 use BrokerLogger;
@@ -45,7 +45,7 @@ class Worker
     private $pid_file;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -157,7 +157,7 @@ EOT;
         }
     }
 
-    private function setLogger(Logger $logger)
+    private function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->setErrorHandler();

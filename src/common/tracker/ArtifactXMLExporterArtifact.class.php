@@ -24,7 +24,7 @@ class ArtifactXMLExporterArtifact
     /** @var ArtifactXMLExporterDao */
     private $dao;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /** @var DomElement */
@@ -51,7 +51,7 @@ class ArtifactXMLExporterArtifact
     /** @var ArtifactCommentXMLExporter */
     private $comment_exporter;
 
-    public function __construct(ArtifactXMLExporterDao $dao, ArtifactAttachmentXMLExporter $attachment_exporter, ArtifactXMLNodeHelper $node_helper, Logger $logger)
+    public function __construct(ArtifactXMLExporterDao $dao, ArtifactAttachmentXMLExporter $attachment_exporter, ArtifactXMLNodeHelper $node_helper, \Psr\Log\LoggerInterface $logger)
     {
         $this->dao                 = $dao;
         $this->logger              = $logger;
@@ -95,7 +95,7 @@ class ArtifactXMLExporterArtifact
                     $previous_changeset = $node;
                 }
             } catch (Exception_TV3XMLException $exception) {
-                $this->logger->warn("Artifact $artifact_id: skip changeset (".$row['field_name'].", ".$row['submitted_by'].", ".date('c', $row['date'])."): ".$exception->getMessage());
+                $this->logger->warning("Artifact $artifact_id: skip changeset (".$row['field_name'].", ".$row['submitted_by'].", ".date('c', $row['date'])."): ".$exception->getMessage());
             } catch (Exception_TV3XMLInvalidFieldTypeException $exception) {
                 $this->logger->error("Artifact $artifact_id: skip changeset (".$row['field_name'].", ".$row['submitted_by'].", ".date('c', $row['date'])."): ".$exception->getMessage());
             }
@@ -105,7 +105,7 @@ class ArtifactXMLExporterArtifact
             $current_fields_values = $this->getCurrentFieldsValues($tracker_id, $artifact_id, $artifact);
             $this->updateInitialChangesetVersusCurrentStatus($tracker_id, $artifact_id, $current_fields_values);
         } catch (Exception_TV3XMLException $exception) {
-            $this->logger->warn("Artifact $artifact_id: skip update of first changeset: ".$exception->getMessage());
+            $this->logger->warning("Artifact $artifact_id: skip update of first changeset: ".$exception->getMessage());
         } catch (Exception_TV3XMLInvalidFieldTypeException $exception) {
             $this->logger->error("Artifact $artifact_id: skip update of first changeset: ".$exception->getMessage());
         }
@@ -113,7 +113,7 @@ class ArtifactXMLExporterArtifact
         try {
             $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $tracker_id, $artifact_id, $current_fields_values ?? []);
         } catch (Exception_TV3XMLException $exception) {
-            $this->logger->warn("Artifact $artifact_id: skip last changeset if no history: ".$exception->getMessage());
+            $this->logger->warning("Artifact $artifact_id: skip last changeset if no history: ".$exception->getMessage());
         } catch (Exception_TV3XMLInvalidFieldTypeException $exception) {
             $this->logger->error("Artifact $artifact_id: skip last changeset if no history: ".$exception->getMessage());
         }
@@ -121,7 +121,7 @@ class ArtifactXMLExporterArtifact
         try {
             $this->addPermissionOnArtifactAtTheVeryEnd($artifact_node, $artifact_id);
         } catch (Exception_TV3XMLException $exception) {
-            $this->logger->warn("Artifact $artifact_id: skip permissions on artifact: ".$exception->getMessage());
+            $this->logger->warning("Artifact $artifact_id: skip permissions on artifact: ".$exception->getMessage());
         } catch (Exception_TV3XMLInvalidFieldTypeException $exception) {
             $this->logger->error("Artifact $artifact_id: skip permissions on artifact: ".$exception->getMessage());
         }
@@ -195,7 +195,7 @@ class ArtifactXMLExporterArtifact
                     $this->field_factory->getFieldValue($field_value)
                 );
             } catch (Exception_TV3XMLException $exception) {
-                $this->logger->warn("Artifact $artifact_id: skip update initial changeset (".$field_value['field_name']."): ".$exception->getMessage());
+                $this->logger->warning("Artifact $artifact_id: skip update initial changeset (".$field_value['field_name']."): ".$exception->getMessage());
             }
         }
     }
@@ -225,7 +225,7 @@ class ArtifactXMLExporterArtifact
             try {
                 $this->appendMissingValues($tracker_id, $artifact_id, $field_value);
             } catch (Exception_TV3XMLException $exception) {
-                $this->logger->warn("Artifact $artifact_id: skip fake last changeset (".$field_value['field_name']."): ".$exception->getMessage());
+                $this->logger->warning("Artifact $artifact_id: skip fake last changeset (".$field_value['field_name']."): ".$exception->getMessage());
             }
         }
         if ($this->last_changeset_for_truncated_history) {

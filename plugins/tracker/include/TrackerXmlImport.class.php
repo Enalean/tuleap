@@ -108,7 +108,7 @@ class TrackerXmlImport
      */
     private $ugroup_retriever_with_legacy;
 
-    /** @var Logger */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /**
@@ -152,7 +152,7 @@ class TrackerXmlImport
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         UGroupManager $ugroup_manager,
         UGroupRetrieverWithLegacy $ugroup_retriever_with_legacy,
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
         WebhookFactory $webhook_factory,
@@ -184,17 +184,17 @@ class TrackerXmlImport
 
     /**
      * @param \User\XML\Import\IFindUserFromXMLReference $user_finder
-     * @param Logger|null $logger
+     * @param \Psr\Log\LoggerInterface|null $logger
      * @return TrackerXmlImport
      */
     public static function build(
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        ?Logger $logger = null
+        ?\Psr\Log\LoggerInterface $logger = null
     ) {
         $builder         = new Tracker_Artifact_XMLImportBuilder();
         $tracker_factory = TrackerFactory::instance();
 
-        $logger = $logger === null ? new Log_NoopLogger() : $logger;
+        $logger = $logger === null ? new \Psr\Log\NullLogger() : $logger;
 
         $artifact_links_usage_dao     = new ArtifactLinksUsageDao();
         $artifact_links_usage_updater = new ArtifactLinksUsageUpdater($artifact_links_usage_dao);
@@ -340,7 +340,7 @@ class TrackerXmlImport
             $project->getID(),
             Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
         )) {
-            $this->logger->warn('Artifact link type _is_child is disabled, skipping the hierarchy');
+            $this->logger->warning('Artifact link type _is_child is disabled, skipping the hierarchy');
         } else {
             $this->importHierarchy($xml_input, $created_trackers_mapping);
         }
@@ -400,7 +400,7 @@ class TrackerXmlImport
                     $this->logger->info("Artifact link type $type_name will be deactivated.");
                     $this->artifact_links_usage_dao->disableTypeInProject($project->getID(), $type_name);
                 } else {
-                    $this->logger->warn($event->getMessage());
+                    $this->logger->warning($event->getMessage());
                 }
             }
         }
@@ -481,9 +481,9 @@ class TrackerXmlImport
         } elseif ($use_natures == 'false') {
             if ($this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
                 $this->artifact_links_usage_updater->forceDeactivationOfArtifactLinkTypes($project);
-                $this->logger->warn("This project used artifact links nature. It is now deactivated!!!");
+                $this->logger->warning("This project used artifact links nature. It is now deactivated!!!");
             } else {
-                $this->logger->warn("This project will not be able to use artifact links nature feature.");
+                $this->logger->warning("This project will not be able to use artifact links nature feature.");
             }
         } else {
             $this->artifact_links_usage_updater->forceUsageOfArtifactLinkTypes($project);

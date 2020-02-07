@@ -62,7 +62,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         SystemEventProcess  $process,
         SystemEventManager  $system_event_manager,
         SystemEventDao      $dao,
-        Logger              $logger,
+        \Psr\Log\LoggerInterface              $logger,
         BackendAliases      $backend_aliases,
         BackendCVS          $backend_cvs,
         BackendSVN          $backend_svn,

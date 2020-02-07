@@ -96,7 +96,7 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
         $links_updater  = new UploadedLinksUpdater($this->link_dao, \Mockery::spy(\FRSLog::class));
 
         $this->frs_importer = new FRSXMLImporter(
-            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             new XML_RNGValidator(),
             $this->package_factory,
             $this->release_factory,

@@ -25,6 +25,7 @@ require_once __DIR__.'/../../../../bootstrap.php';
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LogLevel;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 
@@ -43,7 +44,7 @@ class ActionsRunnerTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->logger = \Mockery::mock(\Logger::class);
+        $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->dao    = \Mockery::mock(ActionsRunnerDao::class);
         \ForgeConfig::store();
     }
@@ -107,7 +108,7 @@ class ActionsRunnerTest extends TestCase
 
         $this->dao->shouldReceive('addNewPostCreationEvent')->once();
         $this->dao->shouldReceive('addEndDate')->once();
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->once();
 
         $task->shouldReceive('execute')->once();
 

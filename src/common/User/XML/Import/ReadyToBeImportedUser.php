@@ -20,12 +20,12 @@
 namespace User\XML\Import;
 
 use UserManager;
-use Logger;
+use Psr\Log\LoggerInterface;
 
 interface ReadyToBeImportedUser extends User
 {
 
-    public function process(UserManager $user_manager, Logger $logger);
+    public function process(UserManager $user_manager, LoggerInterface $logger);
 
     /** @return PFUser */
     public function getRealUser(UserManager $user_manager);

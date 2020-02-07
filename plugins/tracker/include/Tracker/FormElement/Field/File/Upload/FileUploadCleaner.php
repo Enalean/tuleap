@@ -37,7 +37,7 @@ final class FileUploadCleaner
      */
     private $transaction_executor;
     /**
-     * @var \Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     /**
@@ -46,7 +46,7 @@ final class FileUploadCleaner
     private $form_element_factory;
 
     public function __construct(
-        \Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         FileOngoingUploadDao $dao,
         Tracker_FormElementFactory $form_element_factory,
         DBTransactionExecutor $transaction_executor

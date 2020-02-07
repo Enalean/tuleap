@@ -53,7 +53,7 @@ class MembershipManagerBindedUGroupsTest extends TestCase
                 $this->driver_factory,
                 $this->gerrit_user_manager,
                 $this->remote_server_factory,
-                Mockery::mock('Logger'),
+                Mockery::mock(\Psr\Log\LoggerInterface::class),
                 Mockery::mock('UGroupManager'),
                 $this->project_manager
             ]

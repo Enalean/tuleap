@@ -81,7 +81,7 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $this->token_formatter       = \Mockery::mock(SplitTokenFormatter::class);
         $this->object_retriever      = \Mockery::mock(LFSObjectRetriever::class);
         $this->admin_dao             = \Mockery::mock(AdminDao::class);
-        $this->logger                = \Mockery::mock(\Logger::class);
+        $this->logger                = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->prometheus            = \Mockery::mock(Prometheus::class);
         $this->project_quota_checker = \Mockery::mock(ProjectQuotaChecker::class);
         $this->repository            = \Mockery::mock(\GitRepository::class);

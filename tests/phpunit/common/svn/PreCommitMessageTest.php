@@ -61,7 +61,7 @@ class PreCommitMessageTest extends TestCase
             $this->svn_look,
             $this->handler,
             \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class),
-            \Mockery::spy(\BackendLogger::class)
+            \Mockery::spy(\Psr\Log\LoggerInterface::class)
         );
     }
 

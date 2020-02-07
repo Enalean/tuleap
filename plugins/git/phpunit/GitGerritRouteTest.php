@@ -115,7 +115,7 @@ class GitGerritRouteTest extends TestCase
                 $template_factory,
                 $this->git_permissions_manager,
                 $url_manager,
-                \Mockery::spy(\Logger::class),
+                \Mockery::spy(\Psr\Log\LoggerInterface::class),
                 $mirror_data_mapper,
                 \Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
                 $can_migrate_checker,

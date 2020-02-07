@@ -128,7 +128,7 @@ class GitXMLExporterTest extends TestCase
             $this->permission_manager,
             $ugroup_manager,
             $repository_factory,
-            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             \Mockery::spy(\System_Command::class),
             \Mockery::spy(\Tuleap\GitBundle::class),
             $this->git_log_dao,

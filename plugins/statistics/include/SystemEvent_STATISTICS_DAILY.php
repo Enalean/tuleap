@@ -22,7 +22,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent
 {
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -44,7 +44,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent
     public const NAME = 'STATISTICS_DAILY';
 
     public function injectDependencies(
-        Logger $logger,
+        \Psr\Log\LoggerInterface $logger,
         Statistics_ConfigurationManager $configuration_manager,
         Statistics_DiskUsagePurger $disk_usage_purger,
         Statistics_DiskUsageManager $disk_usage_manager

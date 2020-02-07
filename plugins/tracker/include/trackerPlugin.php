@@ -314,7 +314,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->getAsynchronousSupervisor($params['logger'])->runSystemCheck();
     }
 
-    private function getAsynchronousSupervisor(Logger $logger)
+    private function getAsynchronousSupervisor(\Psr\Log\LoggerInterface $logger)
     {
         return new AsynchronousSupervisor(
             $logger,
@@ -1657,7 +1657,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $event->addPane($admin_permission_pane, $rank_in_project);
     }
 
-    private function dailyCleanup(Logger $logger)
+    private function dailyCleanup(\Psr\Log\LoggerInterface $logger)
     {
         $deletions_remover = new ArtifactsDeletionRemover(new ArtifactsDeletionDAO());
         $deletions_remover->deleteOutdatedArtifactsDeletions();
