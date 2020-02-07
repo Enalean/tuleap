@@ -18,17 +18,25 @@
  *
  */
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+
+const entry_points = {
+    taskboard: "./scripts/taskboard/index.ts"
+};
+
+const colors = ["blue", "green", "grey", "orange", "purple", "red"];
+for (const color of colors) {
+    entry_points[`taskboard-${color}`] = `./themes/taskboard-${color}.scss`;
+    entry_points[`taskboard-${color}-condensed`] = `./themes/taskboard-${color}-condensed.scss`;
+}
 
 module.exports = [
     {
-        entry: {
-            taskboard: "./taskboard/index.ts"
-        },
+        entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/taskboard/scripts"),
-            "/assets/taskboard/scripts/"
+            path.resolve(__dirname, "../../src/www/assets/taskboard/"),
+            "/assets/taskboard/"
         ),
         resolve: {
             extensions: [".js", ".ts", ".vue"]
@@ -56,14 +64,16 @@ module.exports = [
                 ),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
-                webpack_configurator.rule_file_loader_images
+                webpack_configurator.rule_file_loader_images,
+                webpack_configurator.rule_scss_loader
             ]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(true)
+            webpack_configurator.getTypescriptCheckerPlugin(true),
+            ...webpack_configurator.getCSSExtractionPlugins()
         ],
         resolveLoader: {
             alias: webpack_configurator.easygettext_loader_alias
