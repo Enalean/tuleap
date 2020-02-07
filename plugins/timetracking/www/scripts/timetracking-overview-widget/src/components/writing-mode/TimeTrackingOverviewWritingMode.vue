@@ -32,7 +32,12 @@
             >
                 Cancel
             </button>
-            <button class="tlp-button-primary" v-on:click="loadTimes" v-translate>
+            <button
+                class="tlp-button-primary"
+                v-on:click="loadTimes"
+                v-translate
+                data-test="overview-search-times"
+            >
                 Search
             </button>
         </div>

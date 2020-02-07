@@ -66,7 +66,7 @@
             {{# dgettext }}tuleap-tracker | Notifications{{/ dgettext }}
         </a>
     </li>
-    <li class="dropdown {{# is_other_tab_active }}active{{/ is_other_tab_active }}">
+    <li class="dropdown {{# is_other_tab_active }}active{{/ is_other_tab_active }}" data-test="tracker-admin-more-options">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{{# dgettext }}tuleap-tracker | Others{{/ dgettext }}">
             <i class="fa fa-bars"></i>
             <b class="caret"></b>
@@ -89,7 +89,7 @@
             </li>
             {{# additional_items }}
             <li>
-                <a href="{{ url }}">
+                <a href="{{ url }}" {{# data-test }} data-test="{{ data-test}}" {{/data-test}}>
                     {{ title }}
                 </a>
             </li>

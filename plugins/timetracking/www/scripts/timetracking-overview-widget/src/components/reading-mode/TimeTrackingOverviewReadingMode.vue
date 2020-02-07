@@ -24,7 +24,11 @@
 
 <template>
     <div>
-        <div class="timetracking-reading-mode" v-on:click="toggleReadingMode()">
+        <div
+            class="timetracking-reading-mode"
+            data-test="overview-toggle-reading-mode"
+            v-on:click="toggleReadingMode()"
+        >
             <time-tracking-overview-reading-dates />
             <time-tracking-overview-tracker-list />
         </div>
@@ -36,7 +40,11 @@
             >
                 Cancel
             </button>
-            <button class="tlp-button-primary" v-on:click="saveReport()">
+            <button
+                class="tlp-button-primary"
+                v-on:click="saveReport()"
+                data-test="save-overview-report"
+            >
                 <i
                     v-if="is_loading"
                     class="tlp-button-icon fa fa-spinner fa-spin"

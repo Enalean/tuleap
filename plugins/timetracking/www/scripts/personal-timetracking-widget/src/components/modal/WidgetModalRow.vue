@@ -35,6 +35,7 @@
                 <button
                     class="tlp-button-primary tlp-button-outline tlp-button-small"
                     v-on:click="swapEditMode()"
+                    data-test="timetracking-edit-time"
                 >
                     <i class="fa fa-pencil"></i>
                 </button>
@@ -43,6 +44,7 @@
                     ref="popover_button"
                     data-placement="left"
                     data-trigger="click"
+                    data-test="timetracking-delete-time"
                 >
                     <i class="fa fa-trash"></i>
                 </button>

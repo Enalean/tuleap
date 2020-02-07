@@ -1378,7 +1378,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 ),
                 'url'        => $this->getSubmitUrl(),
                 'class'      => 'tracker-submit-new',
-                'submit-new' => 1
+                'submit-new' => 1,
+                'data-test' => "new-artifact"
         ];
 
         $artifact_by_email_status = $this->getArtifactByMailStatus();
@@ -1407,7 +1408,8 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($this->userIsAdmin()) {
             $toolbar[] = array(
                     'title' => $GLOBALS['Language']->getText('plugin_tracker', 'administration'),
-                    'url'   => $this->getAdministrationUrl()
+                    'url'   => $this->getAdministrationUrl(),
+                    'data-test' => "tracker-administration"
             );
         }
         $toolbar[] = array(

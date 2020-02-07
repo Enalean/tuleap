@@ -39,7 +39,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
     {
         return $this->fetchArtifactForm(
-            $this->fetchNewArtifactForm($request, $current_user)
+            $this->fetchNewArtifactForm($request)
         );
     }
 
@@ -63,7 +63,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         echo $this->fetchSubmitInstructions();
     }
 
-    private function fetchNewArtifactForm(Codendi_Request $request, PFUser $current_user)
+    private function fetchNewArtifactForm(Codendi_Request $request)
     {
         $html = '';
 
@@ -73,10 +73,10 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         $html .= '<input type="hidden" id="submit-type" />';
         $html .= '<div class="btn-group dropup">';
         $html .= '<button class="btn btn-large btn-primary" type="submit">'. $GLOBALS['Language']->getText('global', 'btn_submit') .'</button>';
-        $html .= '<button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
+        $html .= '<button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown" data-test="artifact-submit-options"><span class="caret"></span></button>';
         $html .= '<ul class="dropdown-menu">';
         $html .= '<li><input type="submit" name="submit_and_continue" class="btn btn-link" value="'.$GLOBALS['Language']->getText('global', 'btn_submit_and_continue').'" /></li>';
-        $html .= '<li><input type="submit" name="submit_and_stay" class="btn btn-link" value="'.$GLOBALS['Language']->getText('global', 'btn_submit_and_stay').'" /></li>';
+        $html .= '<li><input type="submit" name="submit_and_stay" class="btn btn-link" value="'.$GLOBALS['Language']->getText('global', 'btn_submit_and_stay').'" data-test="artifact-submit-and-stay" /></li>';
         $html .= '</ul>';
         $html .= '</div>';
         $html .= '</div>';

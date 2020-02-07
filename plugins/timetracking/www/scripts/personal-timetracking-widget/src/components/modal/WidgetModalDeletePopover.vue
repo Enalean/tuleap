@@ -42,6 +42,7 @@
                 class="tlp-button-danger"
                 v-on:click="removeTime"
                 data-dismiss="popover"
+                data-test="timetracking-confirm-time-deletion"
                 v-translate
             >
                 Confirm deletion

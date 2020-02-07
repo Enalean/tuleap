@@ -1,7 +1,11 @@
 <fieldset class="tracker_artifact_fieldset">
     <div class="tracker_artifact_fieldset_content timetracking-from">
         {{# user_can_add_time }}
-            <a class="btn btn-primary timetracking-add-button" href="#timetracking-add-time-modal" data-toggle="modal">
+            <a class="btn btn-primary timetracking-add-button"
+               href="#timetracking-add-time-modal"
+               data-toggle="modal"
+               data-test="timetracking-add-button"
+            >
                 <i class="fa fa-plus"></i> {{# dgettext }} tuleap-timetracking | Add {{/ dgettext }}
             </a>
         {{/ user_can_add_time }}
@@ -15,7 +19,7 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody data-test="timetracking-times">
                 {{# has_times }}
                     {{# times }}
                         <tr>
@@ -34,6 +38,7 @@
                                 <div>
                                     <a class="timetracking-edit-action {{^ time_belongs_to_user }} timetracking-action-not-clickable{{/ time_belongs_to_user }}"
                                        data-toggle="modal"
+                                       data-test="timetracking-update-time"
                                        href="#timetracking-edit-{{ id }}"
                                     >
                                         <i class="fa fa-pencil"></i> {{# dgettext }} tuleap-timetracking | Update {{/ dgettext }}
@@ -44,6 +49,7 @@
                                     <a {{^ time_belongs_to_user }}class="timetracking-action-not-clickable"{{/ time_belongs_to_user }}
                                         data-toggle="modal"
                                         href="#timetracking-delete-{{ id }}"
+                                        data-test="timetracking-delete-time"
                                     >
                                         <i class="fa fa-trash-o"></i> {{# dgettext }} tuleap-timetracking | Delete {{/ dgettext }}
                                     </a>
@@ -56,7 +62,7 @@
                     {{/ times }}
                     <tr>
                         <td colspan="3"></td>
-                        <td class="total-timetracking-row">∑ {{ total_time }}</td>
+                        <td class="total-timetracking-row" data-test="total-timetracking-row">∑ {{ total_time }}</td>
                         <td></td>
                     </tr>
                 {{/ has_times }}

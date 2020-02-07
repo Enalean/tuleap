@@ -34,6 +34,7 @@
                         ref="start_date"
                         v-model="start_date"
                         size="11"
+                        data-test="timetracking-start-date"
                     />
                 </div>
             </div>
@@ -52,6 +53,7 @@
                         ref="end_date"
                         v-model="end_date"
                         size="11"
+                        data-test="timetracking-end-date"
                     />
                 </div>
             </div>
@@ -68,6 +70,7 @@
             <button
                 class="tlp-button-primary timetracking-writing-search"
                 type="button"
+                data-test="timetracking-search-for-dates"
                 v-on:click="changeDates"
                 v-translate
             >

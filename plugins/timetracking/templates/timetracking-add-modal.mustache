@@ -15,13 +15,14 @@
                 {{> csrf_token_input }}
             {{/ csrf_token }}
             <label>{{# dgettext }} tuleap-timetracking | Step {{/ dgettext }}</label>
-            <input type="text" name="timetracking-new-time-step">
+            <input type="text" name="timetracking-new-time-step" data-test="timetracking-new-row-step">
 
             <label class="timetracking-add-time-mandatory-field">{{# dgettext }} tuleap-timetracking | Date {{/ dgettext }}</label>
             <div class="input-prepend dropdown input-append date">
                 <span class="tuleap_field_date">
                     <input name="timetracking-new-time-date"
                            id="timetracking-new-time-date"
+                           data-test="timetracking-new-row-date"
                            data-format="yyyy-MM-dd"
                            type="text"
                            value="{{ default_date_value }}">
@@ -35,6 +36,7 @@
             <label class="timetracking-add-time-mandatory-field">{{# dgettext }} tuleap-timetracking | Time {{/ dgettext }}</label>
             <input type="text"
                    name="timetracking-new-time-time"
+                   data-test="timetracking-new-row-time"
                    placeholder="{{# dgettext }} tuleap-timetracking | hh:mm {{/ dgettext }}"
                    pattern="{{ pattern }}"
                    required
@@ -46,6 +48,7 @@
             <input type="submit"
                    class="btn btn-primary"
                    name="timetracking-add-time"
+                   data-test="timetracking-add-time"
                    value="{{# dgettext }} tuleap-timetracking | Add time {{/ dgettext }}"
             >
         </div>
