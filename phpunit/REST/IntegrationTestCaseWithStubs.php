@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ use DI\Container;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\BaselineRepository;
@@ -45,7 +46,6 @@ use Tuleap\Baseline\Stub\FullAccessAuthorizationsStub;
 use Tuleap\Baseline\Stub\ProjectRepositoryStub;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
-use Tuleap\REST\RESTLogger;
 
 /**
  * Useful class to write integration test with full container
@@ -113,7 +113,7 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
                     CurrentUserProvider::class        => $this->current_user_provider,
                     Authorizations::class             => new FullAccessAuthorizationsStub(),
                     Clock::class                      => $this->clock,
-                    RESTLogger::class                 => Mockery::mock(RESTLogger::class)->shouldIgnoreMissing()
+                    LoggerInterface::class            => Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing()
                 ]
             )
             ->build();

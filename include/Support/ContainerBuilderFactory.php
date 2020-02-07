@@ -26,6 +26,7 @@ namespace Tuleap\Baseline\Support;
 use DI\ContainerBuilder;
 use ParagonIE\EasyDB\EasyDB;
 use ProjectManager;
+use Psr\Log\LoggerInterface;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
@@ -48,6 +49,7 @@ use Tuleap\Baseline\Domain\CurrentUserProvider;
 use Tuleap\Baseline\Domain\ProjectRepository;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 use Tuleap\DB\DBFactory;
+use Tuleap\REST\RESTLogger;
 use UserManager;
 use function DI\autowire;
 use function DI\factory;
@@ -80,7 +82,8 @@ class ContainerBuilderFactory
                     return DBFactory::getMainTuleapDBConnection()->getDB();
                 },
                 TrackerFactory::class                    => factory([TrackerFactory::class, 'instance']),
-                Tracker_FormElementFactory::class        => factory([Tracker_FormElementFactory::class, 'instance'])
+                Tracker_FormElementFactory::class        => factory([Tracker_FormElementFactory::class, 'instance']),
+                LoggerInterface::class                   => autowire(RESTLogger::class)
             ]
         );
     }

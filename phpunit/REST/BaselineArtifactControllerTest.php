@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tuleap\Baseline\Domain\BaselineArtifactNotFoundException;
 use Tuleap\Baseline\Domain\BaselineArtifactService;
 use Tuleap\Baseline\Domain\BaselineRepository;
@@ -38,7 +39,6 @@ use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
-use Tuleap\REST\RESTLogger;
 
 class BaselineArtifactControllerTest extends TestCase
 {
@@ -57,7 +57,7 @@ class BaselineArtifactControllerTest extends TestCase
     /** @var CurrentUserProvider|MockInterface */
     private $current_user_provider;
 
-    /** @var RESTLogger|MockInterface */
+    /** @var LoggerInterface|MockInterface */
     private $logger;
 
     /** @before */
@@ -70,7 +70,7 @@ class BaselineArtifactControllerTest extends TestCase
             ->shouldReceive('getUser')
             ->andReturn($this->current_user)
             ->byDefault();
-        $this->logger = Mockery::mock(RESTLogger::class);
+        $this->logger = Mockery::mock(LoggerInterface::class);
 
         $this->controller = new BaselineArtifactController(
             $this->baseline_repository,

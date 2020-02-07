@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\REST;
 
 use Luracast\Restler\RestException;
+use Psr\Log\LoggerInterface;
 use Tuleap\Baseline\Domain\BaselineArtifactNotFoundException;
 use Tuleap\Baseline\Domain\BaselineArtifactService;
 use Tuleap\Baseline\Domain\BaselineRepository;
@@ -34,7 +35,6 @@ use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
-use Tuleap\REST\RESTLogger;
 
 class BaselineArtifactController
 {
@@ -52,7 +52,7 @@ class BaselineArtifactController
     /** @var QueryParameterParser */
     private $query_parser;
 
-    /** @var RESTLogger */
+    /** @var LoggerInterface */
     private $logger;
 
     public function __construct(
@@ -60,7 +60,7 @@ class BaselineArtifactController
         BaselineArtifactService $baseline_artifact_service,
         CurrentUserProvider $current_user_provider,
         QueryParameterParser $query_parser,
-        RESTLogger $logger
+        LoggerInterface $logger
     ) {
         $this->baseline_repository       = $baseline_repository;
         $this->baseline_artifact_service = $baseline_artifact_service;
@@ -113,7 +113,7 @@ class BaselineArtifactController
             }
             return BaselineArtifactCollectionRepresentation::fromArtifacts($artifacts);
         } catch (BaselineRootArtifactNotFoundException $exception) {
-            $this->logger->error('Cannot get baseline artifacts', $exception);
+            $this->logger->error('Cannot get baseline artifacts', ['exception' => $exception]);
             throw new RestException(520);
         } catch (BaselineArtifactNotFoundException $exception) {
             throw new NotFoundRestException($exception->getMessage());
