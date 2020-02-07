@@ -23,6 +23,7 @@ namespace Tuleap\TestManagement;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Tracker;
 use TrackerFromXmlException;
 use Tuleap\TestManagement\Administration\TrackerChecker;
@@ -144,7 +145,7 @@ class FirstConfigCreatorTest extends TestCase
             $this->tracker_factory,
             $this->xml_import,
             $this->tracker_checker,
-            new \Log_NoopLogger()
+            new NullLogger()
         );
     }
 

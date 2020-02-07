@@ -21,9 +21,9 @@
 namespace Tuleap\TestManagement;
 
 use Project;
+use Psr\Log\LoggerInterface;
 use TrackerFactory;
 use TrackerXmlImport;
-use Logger;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
 use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
@@ -39,7 +39,7 @@ class FirstConfigCreator
     /** @var TrackerXmlImport */
     private $xml_import;
 
-    /** @var Logger */
+    /** @var LoggerInterface */
     private $logger;
 
     /**
@@ -52,7 +52,7 @@ class FirstConfigCreator
         TrackerFactory $tracker_factory,
         TrackerXmlImport $xml_import,
         TrackerChecker $tracker_checker,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->config           = $config;
         $this->tracker_factory  = $tracker_factory;
