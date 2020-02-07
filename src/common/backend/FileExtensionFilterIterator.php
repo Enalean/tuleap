@@ -36,10 +36,7 @@ class FileExtensionFilterIterator extends RecursiveFilterIterator
         $this->allowed_extensions = $allowed_extensions;
     }
 
-    /**
-     * @return bool
-     */
-    public function accept()
+    public function accept(): bool
     {
         $file = $this->current();
         if ($file->isDir() || empty($this->allowed_extensions)) {

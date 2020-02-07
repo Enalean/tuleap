@@ -32,6 +32,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
     public $width;
     public $legend;
     public $xaxis;
+    private $keys;
 
     /**
      * Builds bar chart object
