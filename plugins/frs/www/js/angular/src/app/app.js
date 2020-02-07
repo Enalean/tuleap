@@ -20,11 +20,11 @@
 import angular from "angular";
 import ui_router from "angular-ui-router";
 import ng_sanitize from "angular-sanitize";
+import angular_tlp_module from "angular-tlp";
 
 import "angular-gettext";
 import "angular-filter";
 import "ng-showdown";
-import "../../vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js";
 import translations from "../../po/fr.po";
 
 import AppController from "./app-controller.js";
@@ -51,7 +51,7 @@ export default angular
         "angular.filter",
         "gettext",
         "ng-showdown",
-        "ui.bootstrap",
+        angular_tlp_module,
         ng_sanitize,
         ui_router
     ])

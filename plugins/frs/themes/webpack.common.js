@@ -20,15 +20,20 @@
 const path = require("path");
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
+const entry_points = {};
+
+const colors = ["blue", "green", "grey", "orange", "purple", "red"];
+for (const color of colors) {
+    entry_points[`frs-${color}`] = `./BurningParrot/frs-${color}.scss`;
+    entry_points[`frs-${color}-condensed`] = `./BurningParrot/frs-${color}-condensed.scss`;
+}
+
 module.exports = [
     {
-        entry: {
-            "style-flamingparrot": "./FlamingParrot/style.scss",
-            "tuleap-frs": "./FlamingParrot/tuleap-frs.scss"
-        },
+        entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/frs/themes/")
+            path.resolve(__dirname, "../../../src/www/assets/frs/themes")
         ),
         module: {
             rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]

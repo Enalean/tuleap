@@ -27,17 +27,12 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\FRS\AdditionalInformationPresenter;
-use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
+use Tuleap\FRS\Events\GetReleaseNotesLink;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\Link\Updater;
 use Tuleap\FRS\PluginInfo;
-use Tuleap\FRS\ReleasePresenter;
 use Tuleap\FRS\REST\ResourcesInjector;
-use Tuleap\FRS\REST\v1\ReleasePermissionsForGroupsBuilder;
-use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\FileUploadCleaner;
 use Tuleap\FRS\Upload\Tus\FileBeingUploadedInformationProvider;
@@ -46,9 +41,6 @@ use Tuleap\FRS\Upload\Tus\FileUploadCanceler;
 use Tuleap\FRS\Upload\Tus\FileUploadFinisher;
 use Tuleap\FRS\Upload\Tus\ToBeCreatedFRSFileBuilder;
 use Tuleap\FRS\Upload\UploadPathAllocator;
-use Tuleap\FRS\UploadedLinksDao;
-use Tuleap\FRS\UploadedLinksRetriever;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
@@ -56,19 +48,8 @@ use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 
-class frsPlugin extends \Plugin //phpcs:ignore
+class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
-    /**
-     * Allow a plugin to display its own view instead of the release notes view
-     *
-     * Parameters:
-     *   'release'    => (Input)  FRSRelease    FRS Release
-     *   'user'       => (Input)  PFUser        Current user
-     *   'view'       => (Output) String        Rendered template of the view
-     */
-    public const FRS_RELEASE_VIEW = 'frs_release_view';
-
     public function __construct($id)
     {
         parent::__construct($id);
@@ -80,10 +61,8 @@ class frsPlugin extends \Plugin //phpcs:ignore
     {
         $this->addHook('frs_edit_form_additional_info');
         $this->addHook('frs_process_edit_form');
-        $this->addHook('cssfile');
-        $this->addHook('javascript_file');
         $this->addHook('codendi_daily_start');
-        $this->addHook(self::FRS_RELEASE_VIEW);
+        $this->addHook(GetReleaseNotesLink::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
@@ -152,6 +131,17 @@ class frsPlugin extends \Plugin //phpcs:ignore
             '/uploads/frs/file/{id:\d+}',
             $this->getRouteHandler('routeUploads')
         );
+        $event->getRouteCollector()->addGroup(
+            '/frs',
+            function (FastRoute\RouteCollector $r) {
+                $r->get('/release/{release_id:\d+}/release-notes', $this->getRouteHandler('routeGetReleaseNote'));
+            }
+        );
+    }
+
+    public function routeGetReleaseNote(): \Tuleap\FRS\ReleaseNotesController
+    {
+        return \Tuleap\FRS\ReleaseNotesController::buildSelf();
     }
 
     public function routeUploads(): FileUploadController
@@ -255,57 +245,10 @@ class frsPlugin extends \Plugin //phpcs:ignore
         return new Retriever(new Dao());
     }
 
-    public function cssfile($params)
+    public function getReleaseNotesLink(GetReleaseNotesLink $event): void
     {
-        if ($this->isAFRSrequest()) {
-            $asset = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/frs/themes',
-                '/assets/frs/themes'
-            );
-            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('tuleap-frs.css') . '" />';
-            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style-flamingparrot.css') . '" />';
-        }
-    }
-
-    public function javascript_file() //phpcs:ignore
-    {
-        if ($this->isAFRSrequest()) {
-            $include_assets = new IncludeAssets(
-                FRS_BASE_DIR . '/www/assets',
-                $this->getPluginPath() . '/assets'
-            );
-
-            echo $include_assets->getHTMLSnippet('tuleap-frs.js');
-        }
-    }
-
-    /**
-     * @see FRS_RELEASE_VIEW
-     */
-    public function frs_release_view($params) //phpcs:ignore
-    {
-        $release = $params['release'];
-        assert($release instanceof FRSRelease);
-        $user    = $params['user'];
-        assert($user instanceof PFUser);
-
-        $renderer       = $this->getTemplateRenderer();
-        $representation = new ReleaseRepresentation();
-        $representation->build($release, $this->getLinkRetriever(), $user, $this->getUploadedLinkRetriever(), $this->getReleasePermissionsForGroupsBuilder());
-        $license_agreement_factory = new LicenseAgreementFactory(new LicenseAgreementDao());
-        $license_agreement = $license_agreement_factory->getLicenseAgreementForPackage($release->getPackage());
-        $presenter = new ReleasePresenter(
-            $representation,
-            $user->getShortLocale(),
-            $license_agreement
-        );
-
-        $params['view'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
-    }
-
-    private function getTemplateRenderer()
-    {
-        return TemplateRendererFactory::build()->getRenderer(FRS_BASE_DIR . '/templates');
+        $release_id = urlencode((string) $event->getRelease()->getReleaseID());
+        $event->setUrl("/frs/release/$release_id/release-notes");
     }
 
     public function rest_resources($params) //phpcs:ignore
@@ -360,19 +303,6 @@ class frsPlugin extends \Plugin //phpcs:ignore
         }
     }
 
-    private function getUploadedLinkRetriever()
-    {
-        return new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
-    }
-
-    /**
-     * @return bool
-     */
-    private function isAFRSrequest()
-    {
-        return strpos($_SERVER['REQUEST_URI'], FRS_BASE_URL . '/') === 0;
-    }
-
     public function artifactPartialUpdate(ArtifactPartialUpdate $event)
     {
         $artifact   = $event->getArtifact();
@@ -390,14 +320,5 @@ class frsPlugin extends \Plugin //phpcs:ignore
         if ($release_id !== null) {
             $event->setCanNotBeMoveDueToExternalPlugin(dgettext('tuleap-frs', 'Artifact linked to a Files release cannot be moved'));
         }
-    }
-
-    private function getReleasePermissionsForGroupsBuilder()
-    {
-        return new ReleasePermissionsForGroupsBuilder(
-            FRSPermissionManager::build(),
-            PermissionsManager::instance(),
-            new UGroupManager()
-        );
     }
 }

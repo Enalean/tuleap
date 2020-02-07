@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,28 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default CustomLicenseModalController;
+@import '../../../src/www/themes/common/tlp/src/scss/variables/variables-blue';
 
-CustomLicenseModalController.$inject = [
-    "modal_instance",
-    "acceptCallback",
-    "SharedPropertiesService"
-];
-
-function CustomLicenseModalController(modal_instance, acceptCallback, SharedPropertiesService) {
-    const self = this;
-
-    const license_agreement = SharedPropertiesService.getCustomLicenseAgreement();
-
-    Object.assign(self, {
-        accept,
-
-        title: license_agreement.title,
-        content: license_agreement.content
-    });
-
-    function accept() {
-        modal_instance.tlp_modal.hide();
-        acceptCallback();
-    }
-}
+@import './frs';

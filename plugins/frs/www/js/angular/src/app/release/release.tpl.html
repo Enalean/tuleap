@@ -1,52 +1,54 @@
-<h4 class="package-name">
-    <i class="fa fa-archive" aria-hidden="true"></i>
-    <a ng-href="/file/?group_id={{ $ctrl.project_id }}">
-        <span translate>Package {{ $ctrl.release.package.name }}</span>
-    </a>
-</h4>
-<h1 class="release-name">
-    <i class="fa fa-level-up fa-rotate-90" aria-hidden="true"></i>
-    <span>{{ $ctrl.release.name }}</span>
-</h1>
+<div class="frs-release-block">
+    <h4 class="frs-package-name">
+        <i class="fa fa-archive" aria-hidden="true"></i>
+        <a ng-href="/file/?group_id={{ $ctrl.project_id }}">
+            <span>{{ $ctrl.translated_package_name }}</span>
+        </a>
+    </h4>
+    <h1>
+        <i class="fa fa-level-up fa-rotate-90 frs-release-icon" aria-hidden="true"></i>
+        <span>{{ $ctrl.release.name }}</span>
+    </h1>
+</div>
 
-<ul class="nav nav-tabs">
-    <li
+<nav class="tlp-tabs">
+    <a
+        href="javascript:;"
+        class="tlp-tab"
         ui-sref="files"
-        ui-sref-active="active"
+        ui-sref-active="tlp-tab-active"
+        translate
     >
-        <a
-            href="javascript:void(0)"
-            translate
-        >Release Note &amp; Files</a>
-    </li>
-    <li
+        Release Note &amp; Files
+    </a>
+    <a
+        href="javascript:;"
+        class="tlp-tab"
         ng-if="! $ctrl.error_no_release_artifact"
         ui-sref="linked-artifacts"
-        ui-sref-active="active"
+        ui-sref-active="tlp-tab-active"
+        translate
     >
-        <a
-            href="javascript:void(0)"
-            translate
-        >Linked Artifacts</a>
-    </li>
-    <li
-            ng-if="$ctrl.milestone"
+        Linked Artifacts
+    </a>
+    <a
+        ng-if="$ctrl.milestone"
+        class="tlp-tab"
+        ng-href="/plugins/agiledashboard/?group_id={{ $ctrl.milestone.project.id }}&planning_id={{ $ctrl.milestone.planning.id }}&action=show&aid={{ $ctrl.milestone.id }}"
     >
-        <a
-                ng-href="/plugins/agiledashboard/?group_id={{ $ctrl.milestone.project.id }}&planning_id={{ $ctrl.milestone.planning.id }}&action=show&aid={{ $ctrl.milestone.id }}"
-        >
-            <span translate>Milestone</span> <i class="fa fa-external-link"></i>
-        </a>
-    </li>
-    <li
+        <span translate>Milestone</span>
+        <i class="tlp-tab-icon fa fa-external-link"></i>
+    </a>
+    <a
+        ng-href="/plugins/tracker/?aid={{ $ctrl.release.artifact.id }}"
         ng-if="! $ctrl.error_no_release_artifact"
+        class="tlp-tab"
     >
-        <a
-            ng-href="/plugins/tracker/?aid={{ $ctrl.release.artifact.id }}"
-        >
-            <span translate>Artifact</span> <i class="fa fa-external-link"></i>
-        </a>
-    </li>
-</ul>
+        <span translate>Artifact</span>
+        <i class="tlp-tab-icon fa fa-external-link"></i>
+    </a>
+</nav>
 
-<ui-view></ui-view>
+<div class="tlp-framed-horizontally">
+    <ui-view></ui-view>
+</div>

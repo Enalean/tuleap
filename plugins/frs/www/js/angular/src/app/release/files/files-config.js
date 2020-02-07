@@ -5,6 +5,6 @@ FilesConfig.$inject = ["$stateProvider"];
 function FilesConfig($stateProvider) {
     $stateProvider.state("files", {
         url: "/",
-        template: '<div files id="files"></div>'
+        template: "<div files></div>"
     });
 }

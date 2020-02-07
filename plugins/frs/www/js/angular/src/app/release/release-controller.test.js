@@ -19,14 +19,16 @@
 
 import angular from "angular";
 import tuleap_frs_module from "../app.js";
-import release_controller from "./release-controller.js";
+import BaseController from "./release-controller.js";
 
 import "angular-mocks";
+import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("ReleaseController -", function() {
-    var $q, $controller, $rootScope, ReleaseController, ReleaseRestService, SharedPropertiesService;
+describe("ReleaseController", () => {
+    let wrapPromise, $q, ReleaseController, ReleaseRestService, SharedPropertiesService;
 
-    beforeEach(function() {
+    beforeEach(() => {
+        let $controller, $rootScope;
         angular.mock.module(tuleap_frs_module);
 
         angular.mock.inject(function(
@@ -46,14 +48,24 @@ describe("ReleaseController -", function() {
         jest.spyOn(SharedPropertiesService, "getProjectId").mockImplementation(() => {});
         jest.spyOn(SharedPropertiesService, "getRelease").mockImplementation(() => {});
         jest.spyOn(ReleaseRestService, "getMilestone").mockImplementation(() => {});
+
+        ReleaseController = $controller(BaseController);
+
+        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    describe("init() -", function() {
-        it("Given that SharedPropertiesService had been correctly initialized, when I initialize the release controller then the release will be retrieved from the SharedPropertiesService and will be bound to the controller", function() {
-            var project_id = 150;
-            var release = {
+    describe("init()", () => {
+        it(`Given that SharedPropertiesService had been correctly initialized,
+            when I initialize the release controller
+            then the release will be retrieved from the SharedPropertiesService
+            and will be bound to the controller`, () => {
+            const project_id = 150;
+            const release = {
                 id: 44,
                 name: "v0.1.5 priceable-disconnectedness",
+                package: {
+                    label: "Axopodium"
+                },
                 project: {
                     id: project_id
                 },
@@ -66,7 +78,7 @@ describe("ReleaseController -", function() {
             SharedPropertiesService.getRelease.mockReturnValue(release);
             ReleaseRestService.getMilestone.mockReturnValue($q.when());
 
-            ReleaseController = $controller(release_controller);
+            ReleaseController.$onInit();
 
             expect(SharedPropertiesService.getProjectId).toHaveBeenCalled();
             expect(SharedPropertiesService.getRelease).toHaveBeenCalled();
@@ -75,49 +87,61 @@ describe("ReleaseController -", function() {
             expect(ReleaseController.error_no_release_artifact).toBeFalsy();
         });
 
-        it("Given that no artifact had been bound to the FRS release, when I init the release controller then an error boolean will be set to true", function() {
-            var release = {
+        it(`Given that no artifact had been bound to the FRS release,
+            when I init the release controller
+            then an error boolean will be set to true`, () => {
+            const release = {
                 id: 92,
+                package: {
+                    label: "Axopodium"
+                },
                 artifact: null
             };
-
             SharedPropertiesService.getRelease.mockReturnValue(release);
 
-            ReleaseController = $controller(release_controller);
+            ReleaseController.$onInit();
 
             expect(ReleaseController.error_no_release_artifact).toBeTruthy();
         });
 
-        it("Given that no artifact had been bound to the FRS release, when I init the release controller then the milestone property is null", function() {
-            var release = {
+        it(`Given that no artifact had been bound to the FRS release,
+            when I init the release controller
+            then the milestone property is null`, () => {
+            const release = {
                 id: 92,
+                package: {
+                    label: "Axopodium"
+                },
                 artifact: null
             };
-
             SharedPropertiesService.getRelease.mockReturnValue(release);
 
-            ReleaseController = $controller(release_controller);
+            ReleaseController.$onInit();
 
             expect(ReleaseController.milestone).toBeFalsy();
         });
 
-        it("Given that the artifact bound to the FRS release is also a milestone, when I init the release controller then the milestone property is fed with the Milestone object", function() {
-            var release = {
+        it(`Given that the artifact bound to the FRS release is also a milestone,
+            when I init the release controller
+            then the milestone property is fed with the Milestone object`, async () => {
+            const release = {
                 id: 44,
+                package: {
+                    label: "Axopodium"
+                },
                 artifact: {
                     id: 230
                 }
             };
-
-            var milestone = {
+            const milestone = {
                 id: 230
             };
-
             SharedPropertiesService.getRelease.mockReturnValue(release);
-            ReleaseRestService.getMilestone.mockReturnValue($q.when(milestone));
+            const promise = $q.when(milestone);
+            ReleaseRestService.getMilestone.mockReturnValue(promise);
 
-            ReleaseController = $controller(release_controller);
-            $rootScope.$apply();
+            ReleaseController.$onInit();
+            await wrapPromise(promise);
 
             expect(ReleaseController.milestone.id).toEqual(230);
         });

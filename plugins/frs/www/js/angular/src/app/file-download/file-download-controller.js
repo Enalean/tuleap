@@ -19,28 +19,25 @@
 
 import "./license-modal/license-modal.tpl.html";
 import "./custom-license-modal/custom-license-modal.tpl.html";
+import LicenseModalController from "./license-modal/license-modal-controller";
+import CustomLicenseModalController from "./custom-license-modal/custom-license-modal-controller";
 
 export default FileDownloadController;
 
-FileDownloadController.$inject = ["$modal", "$window"];
+FileDownloadController.$inject = ["TlpModalService", "$window"];
 
-function FileDownloadController($modal, $window) {
+function FileDownloadController(TlpModalService, $window) {
     const self = this;
 
     Object.assign(self, {
-        init,
+        $onInit: init,
         downloadFile,
 
         file_download_url: null
     });
 
-    self.init();
-
     function init() {
-        if (
-            Object.prototype.hasOwnProperty.call(self, "file") &&
-            Object.prototype.hasOwnProperty.call(self.file, "download_url")
-        ) {
+        if ("file" in self && "download_url" in self.file) {
             self.file_download_url = decodeURIComponent(self.file.download_url);
         }
     }
@@ -52,38 +49,37 @@ function FileDownloadController($modal, $window) {
             return;
         }
 
-        let licenseModal = openLicenseModal;
         if (
             self.custom_license_agreement &&
             Object.prototype.hasOwnProperty.call(self.custom_license_agreement, "title")
         ) {
-            licenseModal = openCustomLicenseModal;
+            openCustomLicenseModal(openDownloadWindow);
+            return;
         }
-
-        licenseModal().result.then(openDownloadWindow);
+        openLicenseModal(openDownloadWindow);
     }
 
     function openDownloadWindow() {
         $window.open(self.file_download_url);
     }
 
-    function openLicenseModal() {
-        return $modal.open({
-            backdrop: "static",
-            keyboard: true,
+    function openLicenseModal(acceptCallback) {
+        return TlpModalService.open({
             templateUrl: "license-modal.tpl.html",
-            controller: "LicenseModalController as $ctrl",
-            windowClass: "license-modal"
+            controller: LicenseModalController,
+            controllerAs: "$ctrl",
+            tlpModalOptions: { destroy_on_hide: true },
+            resolve: { acceptCallback }
         });
     }
 
-    function openCustomLicenseModal() {
-        return $modal.open({
-            backdrop: "static",
-            keyboard: true,
+    function openCustomLicenseModal(acceptCallback) {
+        return TlpModalService.open({
             templateUrl: "custom-license-modal.tpl.html",
-            controller: "CustomLicenseModalController as $ctrl",
-            windowClass: "custom-license-modal"
+            controller: CustomLicenseModalController,
+            controllerAs: "$ctrl",
+            tlpModalOptions: { destroy_on_hide: true },
+            resolve: { acceptCallback }
         });
     }
 }

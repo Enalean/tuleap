@@ -23,16 +23,15 @@ import file_download_controller from "./file-download-controller.js";
 
 import "angular-mocks";
 
-describe("FileDownloadController -", function() {
-    var $controller, $modal, $q, $rootScope, $window, FileDownloadController;
+describe("FileDownloadController", () => {
+    let $controller, TlpModalService, $rootScope, $window, FileDownloadController;
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function(_$controller_, _$modal_, _$q_, _$rootScope_, _$window_) {
+        angular.mock.inject(function(_$controller_, _TlpModalService_, _$rootScope_, _$window_) {
             $controller = _$controller_;
-            $modal = _$modal_;
-            $q = _$q_;
+            TlpModalService = _TlpModalService_;
             $rootScope = _$rootScope_;
             $window = _$window_;
         });
@@ -53,6 +52,7 @@ describe("FileDownloadController -", function() {
                     file: file
                 }
             );
+            FileDownloadController.$onInit();
 
             var decoded_file_download = decodeURIComponent(
                 FileDownloadController.file.download_url
@@ -61,66 +61,84 @@ describe("FileDownloadController -", function() {
         });
     });
 
-    describe("downloadFile() -", function() {
-        beforeEach(function() {
-            jest.spyOn($modal, "open").mockReturnValue({
-                result: $q.when()
-            });
+    describe("downloadFile()", () => {
+        beforeEach(() => {
             jest.spyOn($window, "open").mockImplementation(() => {});
 
             FileDownloadController = $controller(file_download_controller, {
-                $modal: $modal,
+                TlpModalService,
                 $window: $window
             });
         });
 
-        it("Given a file had been bound to the controller and license approval was not mandatory, when I download the file then a new window will be opened", function() {
-            var file_download_url = "axilemma/ventrine?a=geoteuthis&b=autoxidizer#dithyramb";
+        it(`Given a file had been bound to the controller
+            and license approval was not mandatory,
+            when I download the file then a new window will be opened`, () => {
+            const modalOpen = jest.spyOn(TlpModalService, "open");
+            const file_download_url = "axilemma/ventrine?a=geoteuthis&b=autoxidizer#dithyramb";
             FileDownloadController.file_download_url = file_download_url;
             FileDownloadController.license_approval_mandatory = false;
 
             FileDownloadController.downloadFile();
 
-            expect($modal.open).not.toHaveBeenCalled();
+            expect(modalOpen).not.toHaveBeenCalled();
             expect($window.open).toHaveBeenCalledWith(file_download_url);
         });
 
-        it("Given a file had been bound to the controller and license approval was mandatory, when I download the file, then the license modal will be opened and when it is accepted a new window will be opened with the computed file_download_url", function() {
-            var file_download_url = "hsinfonie/mislayer?a=podatus&b=isocheim#psilosopher";
+        it(`Given a file had been bound to the controller
+            and license approval was mandatory,
+            when I download the file,
+            then the license modal will be opened
+            and when it is accepted a new window will be opened with the computed file_download_url`, () => {
+            const file_download_url = "hsinfonie/mislayer?a=podatus&b=isocheim#psilosopher";
             FileDownloadController.file_download_url = file_download_url;
             FileDownloadController.license_approval_mandatory = true;
             FileDownloadController.custom_license_agreement = {};
+            const modalOpen = jest
+                .spyOn(TlpModalService, "open")
+                .mockImplementation(({ resolve }) => {
+                    resolve.acceptCallback();
+                });
 
             FileDownloadController.downloadFile();
 
-            expect($modal.open).toHaveBeenCalledWith({
-                backdrop: "static",
-                keyboard: true,
+            expect(modalOpen).toHaveBeenCalledWith({
                 templateUrl: "license-modal.tpl.html",
-                controller: "LicenseModalController as $ctrl",
-                windowClass: "license-modal"
+                controller: expect.any(Function),
+                controllerAs: "$ctrl",
+                tlpModalOptions: { destroy_on_hide: true },
+                resolve: { acceptCallback: expect.any(Function) }
             });
             $rootScope.$apply();
             expect($window.open).toHaveBeenCalledWith(file_download_url);
         });
 
-        it("Given a file had been bound to the controller and a custom license approval was mandatory, when I download the file, then the license modal will be opened with the custom text and when it is accepted a new window will be opened with the computed file_download_url", function() {
-            var file_download_url = "hsinfonie/mislayer?a=podatus&b=isocheim#psilosopher";
+        it(`Given a file had been bound to the controller
+            and a custom license approval was mandatory,
+            when I download the file,
+            then the license modal will be opened with the custom text
+            and when it is accepted a new window will be opened with the computed file_download_url`, () => {
+            const file_download_url = "hsinfonie/mislayer?a=podatus&b=isocheim#psilosopher";
             FileDownloadController.file_download_url = file_download_url;
             FileDownloadController.license_approval_mandatory = true;
             FileDownloadController.custom_license_agreement = {
                 title: "A fine license agreement",
                 content: "A fine text"
             };
+            const modalOpen = jest
+                .spyOn(TlpModalService, "open")
+                .mockImplementation(({ resolve }) => {
+                    resolve.acceptCallback();
+                });
 
             FileDownloadController.downloadFile();
 
-            expect($modal.open).toHaveBeenCalledWith({
-                backdrop: "static",
-                keyboard: true,
+            expect(modalOpen).toHaveBeenCalledWith({
                 templateUrl: "custom-license-modal.tpl.html",
-                controller: "CustomLicenseModalController as $ctrl",
-                windowClass: "custom-license-modal"
+                controller: expect.any(Function),
+                controllerAs: "$ctrl",
+                tlpModalOptions: { destroy_on_hide: true },
+                resolve: { acceptCallback: expect.any(Function) }
             });
             $rootScope.$apply();
             expect($window.open).toHaveBeenCalledWith(file_download_url);
