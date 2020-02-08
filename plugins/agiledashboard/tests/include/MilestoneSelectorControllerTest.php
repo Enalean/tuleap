@@ -29,7 +29,7 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
         $this->planning_id       = '321';
-        $this->user              = aUser()->withId(12)->build();
+        $this->user              = new PFUser(['user_id' => 12, 'language_id' => 'en']);
         $this->request                 = aRequest()->with('planning_id', $this->planning_id)->withUser($this->user)->build();
         $this->milestone_factory = mock('Planning_MilestoneFactory');
 

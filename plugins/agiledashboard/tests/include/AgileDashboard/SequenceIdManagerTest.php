@@ -84,7 +84,7 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase
         $this->backlog_item_collection_factory = mock('AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory');
 
         $this->sequence_id_manager = new AgileDashboard_SequenceIdManager($this->backlog_factory, $this->backlog_item_collection_factory);
-        $this->user                = aUser()->build();
+        $this->user                = new PFUser(['language_id' => 'en']);
 
         $this->artifact_id_1  = 123;
         $this->artifact_id_2  = 456;

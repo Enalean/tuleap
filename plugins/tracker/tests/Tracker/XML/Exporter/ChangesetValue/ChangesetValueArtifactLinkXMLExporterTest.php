@@ -49,7 +49,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporterT
         $tracker_factory = mock('TrackerFactory');
         TrackerFactory::setInstance($tracker_factory);
 
-        $this->user = aUser()->build();
+        $this->user = new PFUser(['language_id' => 'en']);
 
         $story_tracker  = aTracker()->withId(100)->build();
         $task_tracker   = aTracker()->withId(101)->build();

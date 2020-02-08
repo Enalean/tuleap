@@ -24,7 +24,7 @@ class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestC
 
     public function itDelegatesRetrievalOfTheOldValueToTheDaoWhenNoTimestampGiven()
     {
-        $user           = aUser()->build();
+        $user           = new PFUser(['language_id' => 'en']);
         $value_dao      = stub('Tracker_FormElement_Field_Value_FloatDao')->getLastValue()->returns(array('value' => '123.45'));
         $artifact       = aMockArtifact()->build();
         $field          = partial_mock('Tracker_FormElement_Field_Float', array('getId', 'userCanRead', 'getValueDao'));
@@ -39,7 +39,7 @@ class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestC
     {
         $artifact_id    = 4528;
         $field_id       = 195;
-        $user           = aUser()->build();
+        $user           = new PFUser(['language_id' => 'en']);
         $artifact_value = stub('Tracker_Artifact_ChangesetValue_Float')->getValue()->returns(123.45);
         $value_dao      = mock('Tracker_FormElement_Field_Value_FloatDao');
         $artifact       = aMockArtifact()->withId($artifact_id)->withValue($artifact_value)->build();
@@ -57,7 +57,7 @@ class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestC
 
     public function itReturnsZeroWhenUserDoesntHavePermissions()
     {
-        $user           = aUser()->build();
+        $user           = new PFUser(['language_id' => 'en']);
         $artifact_value = stub('Tracker_Artifact_ChangesetValue_Float')->getValue()->returns(123.45);
         $artifact       = aMockArtifact()->withValue($artifact_value)->build();
         $field          = TestHelper::getPartialMock('Tracker_FormElement_Field_Float', array('userCanRead'));

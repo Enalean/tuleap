@@ -62,7 +62,7 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase
         stub($planning_factory)->getPlanningByPlanningTracker($product_tracker)->returns($product_planning);
         stub($planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
 
-        $this->user   = aUser()->build();
+        $this->user   = new PFUser(['language_id' => 'en']);
 
         $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 

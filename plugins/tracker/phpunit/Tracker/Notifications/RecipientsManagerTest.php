@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Notifications;
 
 use Mockery;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -80,9 +81,24 @@ class RecipientsManagerTest extends TestCase
             $this->user_status_change_only_dao
         );
 
-        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient1')->andReturns((new \UserTestBuilder())->withId(101)->build());
-        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient2')->andReturns((new \UserTestBuilder())->withId(102)->build());
-        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient3')->andReturns((new \UserTestBuilder())->withId(103)->build());
+        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient1')->andReturns(
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 101
+            ])
+        );
+        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient2')->andReturns(
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 102
+            ])
+        );
+        $this->user_manager->shouldReceive('getUserByUserName')->with('recipient3')->andReturns(
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 103
+            ])
+        );
 
         $this->user_notification_settings = Mockery::mock(UserNotificationSettings::class);
         $this->notification_settings_retriever->shouldReceive('getUserNotificationSettings')->andReturns($this->user_notification_settings);
@@ -614,8 +630,18 @@ class RecipientsManagerTest extends TestCase
         $tracker = Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturns(888);
         $tracker->shouldReceive('getRecipients')->andReturns($user_recipients_from_tracker);
-        $this->user_manager->shouldReceive('getUserByEmail')->with('noctali@example.com')->andReturns((new \UserTestBuilder())->withId(101)->build());
-        $this->user_manager->shouldReceive('getUserByEmail')->with('aquali@example.com')->andReturns((new \UserTestBuilder())->withId(102)->build());
+        $this->user_manager->shouldReceive('getUserByEmail')->with('noctali@example.com')->andReturns(
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 101
+            ])
+        );
+        $this->user_manager->shouldReceive('getUserByEmail')->with('aquali@example.com')->andReturns(
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 102
+            ])
+        );
 
         $this->unsubscribers_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerID')->andReturns([103, 104]);
 

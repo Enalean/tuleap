@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactLinkInfo;
 use Tracker_ArtifactFactory;
@@ -110,7 +111,10 @@ class ArtifactLinkValueSaverTest extends TestCase
         $this->previous_changesetvalue = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $this->previous_changesetvalue->shouldReceive('getArtifactIds')->andReturns(array(36));
 
-        $this->user = (new \UserTestBuilder())->withId(101)->build();
+        $this->user = new PFUser([
+            'language_id' => 'en',
+            'user_id' => 101
+        ]);
 
         $this->artifact_link_usage_dao = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
 

@@ -98,7 +98,12 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase
 
     public function itExportsTheComments()
     {
-        $user = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
+        $user = new PFUser([
+            'user_id' => 101,
+            'language_id' => 'en',
+            'user_name' => 'user_01',
+            'ldap_id' => 'ldap_01'
+        ]);
         $this->user_manager->shouldReceive('getUserById')->with(101)->andReturn($user);
 
         expect($this->values_exporter)->exportChangedFields($this->artifact_xml, '*', $this->artifact, $this->values)->once();

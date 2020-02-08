@@ -47,8 +47,19 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase
 
     public function itExportsArtifactsInXML()
     {
-        $user_01 = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
-        $user_02 = aUser()->withId(102)->withLdapId('ldap_02')->withUserName('user_02')->build();
+        $user_01 = new PFUser([
+            'user_id' => 101,
+            'language_id' => 'en',
+            'user_name' => 'user_01',
+            'ldap_id' => 'ldap_O1'
+        ]);
+
+        $user_02 = new PFUser([
+            'user_id' => 102,
+            'language_id' => 'en',
+            'user_name' => 'user_02',
+            'ldap_id' => 'ldap_O2'
+        ]);
 
         stub($this->user_manager)->getUserById(101)->returns($user_01);
         stub($this->user_manager)->getUserById(102)->returns($user_02);

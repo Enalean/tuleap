@@ -68,7 +68,7 @@ class Codendi_Request_TestBuilder
 
     private function buildUser()
     {
-        $user = $this->user ? $this->user : aUser()->build();
+        $user = $this->user ? $this->user : new PFUser(['language_id' => 'en']);
         return $user;
     }
 

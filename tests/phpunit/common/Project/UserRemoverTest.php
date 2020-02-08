@@ -23,6 +23,7 @@ namespace Tuleap\Project;
 require_once __DIR__ . '/../../../../src/www/include/exit.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -63,7 +64,10 @@ class UserRemoverTest extends TestCase
         );
 
         $this->project    = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
-        $this->user       = (new \UserTestBuilder())->withId(102)->build();
+        $this->user       = new PFUser([
+            'language_id' => 'en',
+            'user_id' => 102
+        ]);
         $this->tracker_v3 = \Mockery::spy(\ArtifactType::class);
     }
 

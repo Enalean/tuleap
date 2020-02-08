@@ -141,8 +141,14 @@ class MembershipManagerCreateGroupTest extends TestCase
         $this->driver->shouldReceive('createGroup')->with($this->remote_server, 'w3c/coders', 'w3c/project_admins')->once();
         $this->driver->shouldReceive('createGroup')->andReturns('w3c/coders');
 
-        $mary = (new \UserTestBuilder())->withId(12)->build();
-        $bob  = (new \UserTestBuilder())->withId(25)->build();
+        $mary = new PFUser([
+            'language_id' => 'en',
+            'user_id' => 12
+        ]);
+        $bob  = new PFUser([
+            'language_id' => 'en',
+            'user_id' => 25
+        ]);
         $this->ugroup->shouldReceive('getMembers')->andReturns(array($mary, $bob));
 
         $this->membership_manager->shouldReceive('addUserToGroupWithoutFlush')->times(2);

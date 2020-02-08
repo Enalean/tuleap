@@ -123,7 +123,10 @@ class MembershipManagerBindedUGroupsTest extends TestCase
 
     public function testItAddsMembersOfPreviousSourceAsHardCodedMembersOnRemove(): void
     {
-        $user = (new \UserTestBuilder())->withLdapId('blabla')->build();
+        $user = new PFUser([
+            'language_id' => 'en',
+            'ldap_id' => 'blabla'
+        ]);
         $gerrit_user = \Mockery::spy(\Git_Driver_Gerrit_User::class);
         $this->gerrit_user_manager->shouldReceive('getGerritUser')->with($user)->andReturns($gerrit_user);
 

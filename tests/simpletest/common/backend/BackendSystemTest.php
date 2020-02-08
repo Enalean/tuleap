@@ -83,7 +83,10 @@ class BackendSystemTest extends TuleapTestCase
     function testCreateUserHome()
     {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
-        $user = aUser()->withUserName('codendiadm')->build();
+        $user = new PFUser([
+            'language_id' => 'en',
+            'user_name' => 'codendiadm',
+        ]);
 
         $backend = new BackendTestVersion();
 
@@ -137,7 +140,10 @@ class BackendSystemTest extends TuleapTestCase
     function testArchiveUserHome()
     {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
-        $user = aUser()->withUserName('codendiadm')->build();
+        $user = new PFUser([
+            'language_id' => 'en',
+            'user_name' => 'codendiadm',
+        ]);
 
         $backend = new BackendTestVersion();
 
@@ -360,7 +366,10 @@ class BackendSystemTest extends TuleapTestCase
     public function testRenameUserHomeDirectory()
     {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
-        $user = aUser()->withUserName('codendiadm')->build();
+        $user = new PFUser([
+            'language_id' => 'en',
+            'user_name' => 'codendiadm',
+        ]);
 
         $backend = new BackendTestVersion($this);
 

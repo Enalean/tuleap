@@ -56,9 +56,24 @@ class PostReceiveMailsRetrieverTest extends \PHPUnit\Framework\TestCase
 
         $developers = Mockery::mock(\ProjectUGroup::class);
         $developers->shouldReceive('getMembers')->andReturn(array(
-            (new \UserTestBuilder())->withId(201)->withStatus(PFUser::STATUS_ACTIVE)->withEmail('jdoe@example.com')->build(),
-            (new \UserTestBuilder())->withId(202)->withStatus(PFUser::STATUS_RESTRICTED)->withEmail('charles@example.com')->build(),
-            (new \UserTestBuilder())->withId(203)->withStatus(PFUser::STATUS_SUSPENDED)->withEmail('suspended@example.com')->build()
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 201,
+                'status' => PFUser::STATUS_ACTIVE,
+                'email' => 'jdoe@example.com'
+            ]),
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 202,
+                'status' => PFUser::STATUS_RESTRICTED,
+                'email' => 'charles@example.com'
+            ]),
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 203,
+                'status' => PFUser::STATUS_SUSPENDED,
+                'email' => 'suspended@example.com'
+            ])
         ));
 
         $ugroup_manager = \Mockery::spy(\UGroupManager::class);

@@ -77,7 +77,7 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase
         $this->visitor             = mock('Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->updater             = new Tracker_XML_Updater_ChangesetXMLUpdater($this->visitor, $this->formelement_factory);
-        $this->user                = aUser()->withId($this->user_id)->build();
+        $this->user                = new PFUser(['user_id' => $this->user_id, 'language_id' => 'en']);
         $this->tracker             = aMockTracker()->withId($this->tracker_id)->build();
         $this->submitted_values    = array(
             1001 => 'Content of summary field',

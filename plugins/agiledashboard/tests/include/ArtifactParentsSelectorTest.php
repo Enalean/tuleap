@@ -75,7 +75,7 @@ class ArtifactParentsSelectorTest extends TuleapTestCase
         stub($planning_factory)->getPlanningByPlanningTracker($this->release_tracker)->returns($release_planning);
         stub($planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($sprint_planning);
 
-        $this->user   = aUser()->build();
+        $this->user   = new PFUser(['language_id' => 'en']);
 
         $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->milestone_factory = \Mockery::spy(\Planning_MilestoneFactory::class);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
@@ -39,7 +40,7 @@ class SizeValidatorTest extends TuleapTestCase
         parent::setUp();
 
         $this->tracker = aTracker()->withId(101)->build();
-        $this->user    = aUser()->build();
+        $this->user    = new PFUser(['language_id' => 'en']);
 
         $this->validator = new SizeValidatorVisitor(2);
     }

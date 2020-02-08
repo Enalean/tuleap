@@ -26,6 +26,7 @@ use ForgeConfig;
 use Git;
 use Git_LogDao;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
@@ -266,7 +267,9 @@ class GitXMLExporterTest extends TestCase
             'refname_type'   => "branch"
         ]);
 
-        $this->user_manager->shouldReceive('getUserById')->andReturns((new \UserTestBuilder())->withUserName('my user name')->build());
+        $this->user_manager->shouldReceive('getUserById')->andReturns(
+            new PFUser(['user_name' => 'my user name', 'language_id' => 'en'])
+        );
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 

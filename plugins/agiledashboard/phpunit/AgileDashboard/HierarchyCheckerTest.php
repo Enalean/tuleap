@@ -62,7 +62,7 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
         $this->tracker->shouldReceive('getId')->andReturn(12);
         $this->tracker->shouldReceive('getProject')->andReturn($project);
 
-        $this->user = (new \UserTestBuilder())->build();
+        $this->user = new PFUser(['language_id' => 'en']);
 
         $this->hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);

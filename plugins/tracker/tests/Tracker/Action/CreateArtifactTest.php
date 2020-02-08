@@ -127,7 +127,7 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
     {
         parent::setUp();
         $this->tracker_id   = 999;
-        $this->current_user = aUser()->build();
+        $this->current_user = new PFUser(['language_id' => 'en']);
         $this->new_artifact = aMockArtifact()->withId(123)->build();
 
         $this->hierarchy = \Mockery::spy(\Tracker_Hierarchy::class);

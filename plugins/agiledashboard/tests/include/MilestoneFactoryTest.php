@@ -483,7 +483,7 @@ class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends 
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $user      = aUser()->build();
+        $user      = new PFUser(['language_id' => 'en']);
         $project   = Mockery::mock(Project::class);
         $tracker   = \Mockery::spy(\Tracker::class);
         $artifact  = aMockArtifact()->withId(101)->withTracker($tracker)->build();
@@ -510,7 +510,7 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase
     {
         parent::setUp();
         $this->setUpGlobalsMockery();
-        $this->current_user     = aUser()->build();
+        $this->current_user     = new PFUser(['language_id' => 'en']);
         $this->milestone_factory = \Mockery::mock(\Planning_MilestoneFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->sprint_artifact  = \Mockery::spy(\Tracker_Artifact::class);
@@ -585,7 +585,7 @@ class MilestoneFactory_getLastMilestoneCreatedsTest extends TuleapTestCase
     {
         parent::setUp();
         $this->setUpGlobalsMockery();
-        $this->current_user      = aUser()->build();
+        $this->current_user      = new PFUser(['language_id' => 'en']);
         $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);
         $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->milestone_factory = \Mockery::mock(\Planning_MilestoneFactory::class, array(
@@ -798,7 +798,7 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase
             $this->timeframe_builder,
             \Mockery::spy(\Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker::class)
         );
-        $this->user = aUser()->build();
+        $this->user = new PFUser(['language_id' => 'en']);
         $this->artifact_id = 112;
     }
 
