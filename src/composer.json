@@ -94,6 +94,7 @@
     "php-http/mock-client": "^1.2",
     "phpcompatibility/php-compatibility": "^9.1",
     "phpunit/phpunit": "^8.0",
+    "sensiolabs-de/deptrac-shim": "^0.6.0",
     "simpletest/simpletest": "dev-master-tuleap#20190916",
     "slevomat/coding-standard": "^6.0",
     "squizlabs/php_codesniffer": "^3.4",

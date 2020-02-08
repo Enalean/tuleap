@@ -101,4 +101,13 @@ def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAn
     """
 }
 
+def runDeptrac(String configPath, String reportName) {
+    dir ('sources') {
+        sh """
+        mkdir -p ../results/deptrac/
+        src/vendor/bin/deptrac analyze --no-banner --formatter-junit=true --formatter-junit-dump-xml='../results/deptrac/${reportName}.xml' -- ${configPath}
+        """
+    }
+}
+
 return this;

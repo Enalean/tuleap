@@ -156,6 +156,17 @@ pipeline {
                                 }
                             }
                         }
+                        stage('Architecture') {
+                            agent {
+                                docker {
+                                    image 'php:7.4-cli-alpine'
+                                    reuseNode true
+                                    args '--network none'
+                                }
+                            }
+                            steps { script { actions.runDeptrac('tests/deptrac/core_on_plugins.yml', 'core_on_plugins') } }
+                            post { failure { junit 'results/deptrac/*.xml' } }
+                        }
                     }
                 }
             }
