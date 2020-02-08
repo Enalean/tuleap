@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -69,11 +69,12 @@ class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TuleapT
         stub($this->other_changeset_by_mail)->getArtifact()->returns($this->artifact_by_mail);
 
         $this->changeset_by_web = stub('Tracker_Artifact_Changeset')->getId()->returns(3);
+        $changeset_by_web_2     = stub('Tracker_Artifact_Changeset')->getId()->returns(4);
         $this->artifact_by_web  = anArtifact()
             ->withId(456)
             ->withChangesets(array(
                 $this->changeset_by_web,
-                aChangeset()->withId(4)->build()
+                $changeset_by_web_2
             ))
             ->build();
         stub($this->changeset_by_web)->getArtifact()->returns($this->artifact_by_web);

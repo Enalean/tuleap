@@ -33,8 +33,21 @@ class Transition_baseTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->from = aFieldListStaticValue()->withId(123)->build();
-        $this->to   = aFieldListStaticValue()->withId(456)->build();
+        $this->from = new Tracker_FormElement_Field_List_Bind_StaticValue(
+            123,
+            null,
+            null,
+            null,
+            null
+        );
+
+        $this->to   = new Tracker_FormElement_Field_List_Bind_StaticValue(
+            456,
+            null,
+            null,
+            null,
+            null
+        );
         PermissionsManager::setInstance(mock('PermissionsManager'));
     }
 

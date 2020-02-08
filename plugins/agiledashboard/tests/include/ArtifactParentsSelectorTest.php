@@ -24,7 +24,6 @@ require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class ArtifactParentsSelectorTest extends TuleapTestCase
 {
-
     protected $faq_id      = 13;
     protected $corp_id     = 42;
     protected $product_id  = 56;
@@ -93,20 +92,43 @@ class ArtifactParentsSelectorTest extends TuleapTestCase
         list($this->epic,     $this->epic_milestone)     = $this->getArtifact($this->epic_id, $this->epic_tracker, array($this->theme));
         list($this->epic2,    $this->epic2_milestone)    = $this->getArtifact($this->epic2_id, $this->epic_tracker, array($this->theme));
 
-        stub($this->corp_milestone)->getPlannedArtifacts()->returns(aNode()->withChildren(
-            aNode()->withObject($this->product),
-            aNode()->withObject($this->product2),
-            aNode()->withObject($this->theme),
-            aNode()->withObject($this->theme2)
-        )->build());
+        $corp_planned_artifact_node = new TreeNode();
+        $product_node = new TreeNode();
+        $product_node->setObject($this->product);
+        $product2_node = new TreeNode();
+        $product2_node->setObject($this->product2);
+        $theme_node = new TreeNode();
+        $theme_node->setObject($this->theme);
+        $theme2_node = new TreeNode();
+        $theme2_node->setObject($this->theme2);
+
+        $corp_planned_artifact_node->setChildren([
+            $product_node,
+            $product2_node,
+            $theme_node,
+            $theme2_node,
+        ]);
+        stub($this->corp_milestone)->getPlannedArtifacts()->returns($corp_planned_artifact_node);
+
         $this->themes_associated_to_corp = array($this->theme, $this->theme2);
         $this->subreleases_of_corp       = array($this->release, $this->release2);
 
-        stub($this->release_milestone)->getPlannedArtifacts()->returns(aNode()->withChildren(
-            aNode()->withObject($this->sprint),
-            aNode()->withObject($this->epic),
-            aNode()->withObject($this->epic2)
-        )->build());
+        $release_planned_artifact_node = new TreeNode();
+        $sprint_node = new TreeNode();
+        $sprint_node->setObject($this->sprint);
+        $epic_node = new TreeNode();
+        $epic_node->setObject($this->epic);
+        $epic2_node = new TreeNode();
+        $epic2_node->setObject($this->epic2);
+
+        $release_planned_artifact_node->setChildren([
+            $sprint_node,
+            $epic_node,
+            $epic2_node
+        ]);
+
+        stub($this->release_milestone)->getPlannedArtifacts()->returns($release_planned_artifact_node);
+
         $this->epics_associated_to_release = array($this->epic, $this->epic2);
 
         stub($this->corp)->getLinkedArtifactsOfHierarchy()->returns(array($this->product, $this->product2));

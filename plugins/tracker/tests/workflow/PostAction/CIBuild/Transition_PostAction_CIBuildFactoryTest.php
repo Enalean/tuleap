@@ -34,7 +34,12 @@ class Transition_PostAction_CIBuildFactory_BaseTest extends TuleapTestCase
         $this->transition_id  = 123;
         $this->post_action_id = 789;
 
-        $this->transition = aTransition()->withId($this->transition_id)->build();
+        $this->transition = new Transition(
+            $this->transition_id,
+            0,
+            null,
+            null
+        );
         $this->dao        = Mockery::mock('Transition_PostAction_CIBuildDao');
         $this->factory    = new Transition_PostAction_CIBuildFactory($this->dao);
     }

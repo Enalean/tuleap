@@ -59,10 +59,12 @@ class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest
         $backlog_tracker              = Mockery::spy(Tracker::class);
         $backlog_tracker->shouldReceive('getId')->andReturn($backlog_tracker_id);
         $planning_permissions_manager = stub('PlanningPermissionsManager')->savePlanningPermissionForUgroups()->returns(true);
-        $planning_factory             = aPlanningFactory()->withDao($planning_dao)
-                                                          ->withTrackerFactory($tracker_factory)
-                                                          ->withPlanningPermissionsManager($planning_permissions_manager)
-                                                          ->build();
+
+        $planning_factory = new PlanningFactory(
+            $planning_dao,
+            $tracker_factory,
+            $planning_permissions_manager
+        );
 
         $planning_rows = mock('DataAccessResult');
         $planning_row  = array('id'                  => $planning_id,
@@ -165,7 +167,12 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest
     public function itDoesNothingIfThereAreNoTrackerMappings()
     {
         $dao     = new MockPlanningDao();
-        $factory = aPlanningFactory()->withDao($dao)->build();
+        $factory = new PlanningFactory(
+            $dao,
+            Mockery::mock(TrackerFactory::class),
+            Mockery::mock(PlanningPermissionsManager::class)
+        );
+
         $group_id = 123;
         $empty_tracker_mapping = array();
 
@@ -282,7 +289,11 @@ class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFacto
         stub($tracker_factory)->getTrackerById(103)->returns($this->planning_tracker);
         stub($tracker_factory)->getTrackerById(104)->returns($this->backlog_tracker);
 
-        $this->factory   = aPlanningFactory()->withDao($dao)->withTrackerFactory($tracker_factory)->build();
+        $this->factory = $this->factory = new PlanningFactory(
+            $dao,
+            $tracker_factory,
+            Mockery::mock(PlanningPermissionsManager::class)
+        );
     }
 
     public function itReturnsNothingIfThereIsNoAssociatedPlanning()
@@ -290,7 +301,11 @@ class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFacto
         $tracker   = aMockTracker()->withId(99)->build();
         $empty_dar = TestHelper::arrayToDar();
         $dao       = stub('PlanningDao')->searchByPlanningTrackerId()->returns($empty_dar);
-        $factory   = aPlanningFactory()->withDao($dao)->build();
+        $factory   = new PlanningFactory(
+            $dao,
+            Mockery::mock(TrackerFactory::class),
+            Mockery::mock(PlanningPermissionsManager::class)
+        );
         $this->assertNull($factory->getPlanningByPlanningTracker($tracker));
     }
 
@@ -391,10 +406,11 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest
         stub($dao)->searchBacklogTrackersById(2)->returnsDar(array('tracker_id' => 104));
         stub($dao)->searchPlannings($this->project_id_without_planning)->returnsEmptyDar();
 
-        $this->factory = aPlanningFactory()
-            ->withDao($dao)
-            ->withTrackerFactory($tracker_factory)
-            ->build();
+        $this->factory = new PlanningFactory(
+            $dao,
+            $tracker_factory,
+            Mockery::mock(PlanningPermissionsManager::class)
+        );
 
         $this->release_planning = new Planning(2, 'Release Planning', 123, 'Product Backlog', 'Release Plan');
         $this->release_planning->setBacklogTrackers(array($this->epic_tracker));
@@ -440,7 +456,11 @@ class PlanningFactoryTest_getPlanningTrackerIdsByGroupIdTest extends PlanningFac
         $group_id     = 456;
         $expected_ids = array(1, 2, 3);
         $dao          = mock('PlanningDao');
-        $factory      = aPlanningFactory()->withDao($dao)->build();
+        $factory      = new PlanningFactory(
+            $dao,
+            Mockery::mock(TrackerFactory::class),
+            Mockery::mock(PlanningPermissionsManager::class)
+        );
 
         stub($dao)->searchPlanningTrackerIdsByGroupId($group_id)->returns($expected_ids);
 

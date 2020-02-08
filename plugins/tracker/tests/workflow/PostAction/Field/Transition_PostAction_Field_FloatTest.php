@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -96,7 +96,13 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase
 
     public function itAcceptsValue0()
     {
-        $post_action = aFloatFieldPostAction()->withValue(0.0)->build();
+        $post_action = new Transition_PostAction_Field_Float(
+            Mockery::mock(Transition::class),
+            0,
+            Mockery::mock(Tracker_FormElement_Field_Float::class),
+            0.0
+        );
+
         $this->assertTrue($post_action->isDefined());
     }
 }

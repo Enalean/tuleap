@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,8 +62,22 @@ class Tracker_XML_Exporter_ChildrenXMLExporter_BaseTest extends TuleapTestCase
         $artifact_2 = anArtifact()
             ->withId($this->artifact_id_2)
             ->build();
-        $this->last_changeset_1 = aChangeset()->withArtifact($artifact_1)->build();
-        $this->last_changeset_2 = aChangeset()->withArtifact($artifact_2)->build();
+
+        $this->last_changeset_1 = new Tracker_Artifact_Changeset(
+            null,
+            $artifact_1,
+            null,
+            null,
+            null
+        );
+
+        $this->last_changeset_2 = new Tracker_Artifact_Changeset(
+            null,
+            $artifact_2,
+            null,
+            null,
+            null
+        );
 
         $artifact_1->setChangesets(array($this->last_changeset_1));
         $artifact_2->setChangesets(array($this->last_changeset_2));

@@ -56,21 +56,20 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest ex
         $this->trigger_field = aSelectBoxField()->withId(965)->withTracker($this->task_tracker)->build();
         $this->trigger_value = aBindStaticValue()->withId(14)->build();
 
-        $this->rule = aTriggerRule()
-            ->applyValue(
-                new Tracker_Workflow_Trigger_FieldValue(
-                    $this->target_field,
-                    $this->target_value
-                )
-            )
-            ->whenAllOf()
-            ->childHas(
+        $this->rule = new Tracker_Workflow_Trigger_TriggerRule(
+            1,
+            new Tracker_Workflow_Trigger_FieldValue(
+                $this->target_field,
+                $this->target_value
+            ),
+            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
+            [
                 new Tracker_Workflow_Trigger_FieldValue(
                     $this->trigger_field,
                     $this->trigger_value
                 )
-            )
-            ->build();
+            ]
+        );
     }
 }
 
@@ -148,27 +147,24 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest ext
         $this->trigger_field_2 = aSelectBoxField()->withId(236)->withTracker($this->bug_tracker)->build();
         $this->trigger_value_2 = aBindStaticValue()->withId(28)->build();
 
-        $this->complex_rule = aTriggerRule()
-            ->applyValue(
-                new Tracker_Workflow_Trigger_FieldValue(
-                    $this->target_field,
-                    $this->target_value
-                )
-            )
-            ->whenAllOf()
-            ->childHas(
+        $this->complex_rule = new Tracker_Workflow_Trigger_TriggerRule(
+            1,
+            new Tracker_Workflow_Trigger_FieldValue(
+                $this->target_field,
+                $this->target_value
+            ),
+            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
+            [
                 new Tracker_Workflow_Trigger_FieldValue(
                     $this->trigger_field,
                     $this->trigger_value
-                )
-            )
-            ->childHas(
+                ),
                 new Tracker_Workflow_Trigger_FieldValue(
                     $this->trigger_field_2,
                     $this->trigger_value_2
                 )
-            )
-            ->build();
+            ]
+        );
 
         $this->strategy = new Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy($this->artifact, $this->complex_rule);
     }

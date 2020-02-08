@@ -96,7 +96,13 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase
 
     public function itAcceptsValue0()
     {
-        $post_action = anIntFieldPostAction()->withValue(0)->build();
+        $post_action = new Transition_PostAction_Field_Int(
+            Mockery::mock(Transition::class)->shouldReceive('getId')->andReturn(123)->getMock(),
+            0,
+            Mockery::mock(Tracker_FormElement_Field_Integer::class)->shouldReceive('getId')->andReturn(456)->getMock(),
+            0
+        );
+
         $this->assertTrue($post_action->isDefined());
     }
 }

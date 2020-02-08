@@ -129,8 +129,22 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase
             anArtifact()->withId(12)->withTracker($tracker)->build(),
         );
 
-        $artiafct_as_dar1 = anArtifactDar()->withId(55)->build();
-        $artiafct_as_dar2 = anArtifactDar()->withId(56)->build();
+        $artiafct_as_dar1 = array(
+            'id' => 55,
+            'tracker_id' => '',
+            'submitted_by' => '',
+            'submitted_on' => '',
+            'use_artifact_permissions' => false,
+        );
+
+        $artiafct_as_dar2 = array(
+            'id' => 56,
+            'tracker_id' => '',
+            'submitted_by' => '',
+            'submitted_on' => '',
+            'use_artifact_permissions' => false,
+        );
+
         stub($this->dao)->getChildrenForArtifacts(array(11, 12))->returnsDar(
             $artiafct_as_dar1,
             $artiafct_as_dar2
