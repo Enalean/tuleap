@@ -139,6 +139,14 @@ class Codendi_DiffEngine
 {
     private $xv;
     private $yv;
+    /**
+     * @var array
+     */
+    private $xchanged;
+    /**
+     * @var array
+     */
+    private $ychanged;
 
     function diff($from_lines, $to_lines)
     {

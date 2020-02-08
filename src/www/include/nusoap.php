@@ -2048,6 +2048,7 @@ class soap_transport_http extends nusoap_base
                                 // verifypeer: default is 1
                                 // verifyhost: default is 1
     private $fp;
+    private $errno;
 
     /**
     * constructor
