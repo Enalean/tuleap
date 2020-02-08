@@ -736,9 +736,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    /**
-     * @return HTMLURLBuilder
-     */
     private function getHTMLBuilder(): HTMLURLBuilder
     {
         return new HTMLURLBuilder(

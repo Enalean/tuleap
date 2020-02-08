@@ -55,9 +55,6 @@ class ServiceRepresentationBuilder
     }
 
     /**
-     * @param PFUser  $user
-     * @param Project $project
-     * @return ServiceRepresentation
      * @throws RestException
      */
     public function getServiceRepresentation(PFUser $user, Project $project): ServiceRepresentation

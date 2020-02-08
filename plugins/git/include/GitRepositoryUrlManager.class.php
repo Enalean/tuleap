@@ -37,7 +37,6 @@ class Git_GitRepositoryUrlManager
     }
 
     /**
-     * @param GitRepository $repository
      * @return string the base url to access the git repository regarding plugin configuration
      */
     public function getRepositoryBaseUrl(GitRepository $repository)

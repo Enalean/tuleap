@@ -63,8 +63,6 @@ class Prometheus
     }
 
     /**
-     * @param string $name
-     * @param string $help
      * @param string[] $labels
      */
     public function increment(string $name, string $help, array $labels = []) : void
@@ -73,9 +71,6 @@ class Prometheus
     }
 
     /**
-     * @param string $name
-     * @param string $help
-     * @param float $count
      * @param array $labels
      */
     public function incrementBy(string $name, string $help, float $count, array $labels = []) : void
@@ -89,9 +84,6 @@ class Prometheus
     }
 
     /**
-     * @param string $name
-     * @param string $help
-     * @param float $value
      * @param array $labels
      */
     public function gaugeSet(string $name, string $help, float $value, array $labels = []) : void
@@ -129,9 +121,6 @@ class Prometheus
      *
      * Example inspired by @see https://povilasv.me/prometheus-tracking-request-duration/
      *
-     * @param string $name
-     * @param string $help
-     * @param float  $time
      * @param array $labels
      * @param float[] $buckets
      */

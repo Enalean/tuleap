@@ -41,17 +41,11 @@ final class ReviewerChangePullRequestAssociation
         $this->pull_request    = $pull_request;
     }
 
-    /**
-     * @return ReviewerChange
-     */
     public function getReviewerChange() : ReviewerChange
     {
         return $this->reviewer_change;
     }
 
-    /**
-     * @return PullRequest
-     */
     public function getPullRequest() : PullRequest
     {
         return $this->pull_request;

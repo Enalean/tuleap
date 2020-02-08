@@ -32,14 +32,12 @@ class MailNotificationBuilder
     }
 
     /**
-     * @param Project $project
      * @param array $emails
      * @param $subject
      * @param $html_body
      * @param $text_body
      * @param $link
      * @param $truncated_service_name
-     * @param MailEnhancer $mail_enhancer
      *
      * @return bool
      */

@@ -46,9 +46,6 @@ class DashboardWidgetReorder
     }
 
     /**
-     * @param DashboardWidgetColumn $new_column
-     * @param DashboardWidgetColumn $old_column
-     * @param DashboardWidget $widget_to_update
      * @param $new_widget_rank
      */
     public function reorderWidgets(
@@ -65,10 +62,6 @@ class DashboardWidgetReorder
         $this->updateRankToEnterInColumn($widget_to_update, $new_widget_rank, $new_column);
     }
 
-    /**
-     * @param DashboardWidget $widget_to_update
-     * @param DashboardWidgetColumn $column
-     */
     private function updateWidgetRankToLeaveColumn(
         DashboardWidget $widget_to_update,
         DashboardWidgetColumn $column
@@ -78,9 +71,7 @@ class DashboardWidgetReorder
     }
 
     /**
-     * @param DashboardWidget $widget_to_update
      * @param $new_widget_rank
-     * @param DashboardWidgetColumn $column
      */
     private function updateRankToEnterInColumn(
         DashboardWidget $widget_to_update,

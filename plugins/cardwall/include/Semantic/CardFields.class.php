@@ -303,7 +303,6 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     /**
      * Load an instance of a Cardwall_Semantic_CardFields
      *
-     * @param Tracker $tracker
      * @return Cardwall_Semantic_CardFields
      */
     public static function load(Tracker $tracker)

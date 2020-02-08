@@ -31,8 +31,6 @@ class AgileDashboard_PaneRedirectionExtractor
 
     /**
      * Get the parameters to redirect to proper pane on the AgileDashboard
-     * @param Codendi_Request $request
-     * @param Project $project
      * @return array || null
      */
     public function getRedirectToParameters(Codendi_Request $request, Project $project)
@@ -48,7 +46,6 @@ class AgileDashboard_PaneRedirectionExtractor
 
     /**
      * Extract the redirection parameters contained in the request
-     * @param Codendi_Request $request
      * @return array || null containing pane, planning_id, artifact_id and action
      */
     public function extractParametersFromRequest(Codendi_Request $request)

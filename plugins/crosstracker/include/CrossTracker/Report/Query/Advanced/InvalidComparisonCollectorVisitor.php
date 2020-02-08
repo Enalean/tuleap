@@ -114,10 +114,7 @@ class InvalidComparisonCollectorVisitor implements Visitor
     }
 
     /**
-     * @param Visitable $parsed_query
-     * @param InvalidSearchablesCollection $invalid_searchables_collection
      * @param Tracker[] $trackers
-     * @param PFUser $user
      */
     public function collectErrors(
         Visitable $parsed_query,

@@ -37,7 +37,6 @@ class ExistingArtifactSourceIdFromTrackerExtractor
     }
 
     /**
-     * @param Tracker $tracker
      * @param $source_platform
      * @return array
      */

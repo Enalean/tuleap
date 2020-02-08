@@ -46,17 +46,11 @@ final class HitEvent implements Dispatchable
         $this->is_script = $is_script;
     }
 
-    /**
-     * @return HTTPRequest
-     */
     public function getRequest(): HTTPRequest
     {
         return $this->request;
     }
 
-    /**
-     * @return bool
-     */
     public function isScript(): bool
     {
         return $this->is_script;

@@ -43,7 +43,6 @@ class BackgroundColorFieldRetriever
     }
 
     /**
-     * @param Tracker $tracker
      * @return \Tracker_FormElement_Field_List
      * @throws BackgroundColorSemanticFieldNotFoundException
      */

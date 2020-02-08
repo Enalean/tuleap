@@ -36,8 +36,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
      * Check that the service is used and the plugin is allowed for project $project
      * if it is not the case then exit with an error
      *
-     * @param Project         $project
-     * @param Codendi_Request $request
      *
      * @return bool true if success. Otherwise the process terminates.
      */
@@ -60,7 +58,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
      *
      * @param Tracker         $tracker
      * @param PFUser            $user
-     * @param Codendi_Request $request
      *
      * @throws Tracker_CannotAccessTrackerException
      */
@@ -91,8 +88,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     /**
      * Propagate process dispatch to sub-tracker elements
      *
-     * @param Tracker_Dispatchable_Interface $object
-     * @param PFUser                           $user
      */
     protected function processSubElement(Tracker_Dispatchable_Interface $object, HTTPRequest $request, PFUser $user)
     {
@@ -412,11 +407,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     /**
      * Display tracker creation interface
      *
-     * @param Project $project
      * @param String $name
      * @param String $description
      * @param String $itemname
-     * @param Tracker      $tracker_template
      */
     public function displayCreateTracker(
         Project $project,
@@ -596,7 +589,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
     /**
      *
-     * @param Project          $project
      * @param XML_ParseError[] $parse_errors
      * @param array            $xml_file
      */

@@ -43,7 +43,6 @@ class SinglePagePresenterBuilder
 
     /**
      * @param array  $ordered_artifact_rows
-     * @param PFUser $current_user
      * @param string $server_url
      *
      * @return array
@@ -74,7 +73,6 @@ class SinglePagePresenterBuilder
     }
 
     /**
-     * @param PFUser $current_user
      *
      * @return bool|string
      */

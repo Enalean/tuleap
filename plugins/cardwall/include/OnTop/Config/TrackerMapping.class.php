@@ -54,7 +54,6 @@ abstract class Cardwall_OnTop_Config_TrackerMapping
     /**
      * Return true of the given status label belongs to the given column
      *
-     * @param Cardwall_Column $column
      * @param string|null $artifact_status
      *
      * @return bool

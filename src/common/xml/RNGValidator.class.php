@@ -39,7 +39,6 @@ class XML_RNGValidator
     /**
      * Create a dom document based on a SimpleXMLElement
      *
-     * @param SimpleXMLElement $xml_element
      *
      * @return \DOMDocument
      */
@@ -52,7 +51,6 @@ class XML_RNGValidator
     }
 
     /**
-     * @param DOMDocument $dom
      * @param             $rng_path
      * @throws XML_ParseException
      */

@@ -25,7 +25,6 @@ use SimpleXMLElement;
 class XMLConvertor
 {
     /**
-     * @param SimpleXMLElement $xml_element
      *
      * @return String
      */

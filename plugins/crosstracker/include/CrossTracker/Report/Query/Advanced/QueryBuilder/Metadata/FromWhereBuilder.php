@@ -28,8 +28,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 interface FromWhereBuilder
 {
     /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
      * @param Tracker[] $trackers
      * @return IProvideParametrizedFromAndWhereSQLFragments
      */

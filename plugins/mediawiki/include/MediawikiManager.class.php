@@ -227,8 +227,6 @@ class MediawikiManager
         );
     }
     /**
-     * @param PFUser $user
-     * @param Project $project
      * @return bool true if user can read
      */
     public function userCanRead(PFUser $user, Project $project)
@@ -250,8 +248,6 @@ class MediawikiManager
     }
 
     /**
-     * @param PFUser $user
-     * @param Project $project
      * @return bool true if user can write
      */
     public function userCanWrite(PFUser $user, Project $project)

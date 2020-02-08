@@ -69,7 +69,6 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
     }
 
     /**
-     * @param PFUser $current_user
      * @return Tracker_Artifact_Presenter_ArtifactLinkPresenter[]
      */
     private function fetchArtifactLinks(PFUser $current_user)

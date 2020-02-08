@@ -64,7 +64,6 @@ class Tracker_Action_CreateArtifact
     /**
      * Add an artefact in the tracker
      *
-     * @param Tracker_IDisplayTrackerLayout  $layout
      * @param Codendi_Request                $request
      * @param PFUser                         $user
      *

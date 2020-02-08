@@ -183,9 +183,6 @@ class UserNotificationSettingsTest extends TestCase
         $this->assertNotificationOnCreate($notification_settings);
     }
 
-    /**
-     * @param UserNotificationSettings $notification_settings
-     */
     private function assertNoNotification(UserNotificationSettings $notification_settings): void
     {
         $this->assertTrue($notification_settings->isInNoNotificationAtAllMode());
@@ -195,9 +192,6 @@ class UserNotificationSettingsTest extends TestCase
         $this->assertFalse($notification_settings->isInNotifyOnStatusChange());
     }
 
-    /**
-     * @param UserNotificationSettings $notification_settings
-     */
     private function assertNotificationIsInvolved(UserNotificationSettings $notification_settings): void
     {
         $this->assertFalse($notification_settings->isInNoNotificationAtAllMode());
@@ -207,9 +201,6 @@ class UserNotificationSettingsTest extends TestCase
         $this->assertFalse($notification_settings->isInNotifyOnStatusChange());
     }
 
-    /**
-     * @param UserNotificationSettings $notification_settings
-     */
     private function assertNotificationStatusUpdate(UserNotificationSettings $notification_settings): void
     {
         $this->assertFalse($notification_settings->isInNoNotificationAtAllMode());
@@ -219,9 +210,6 @@ class UserNotificationSettingsTest extends TestCase
         $this->assertTrue($notification_settings->isInNotifyOnStatusChange());
     }
 
-    /**
-     * @param UserNotificationSettings $notification_settings
-     */
     private function assertNotificationAllUpdates(UserNotificationSettings $notification_settings): void
     {
         $this->assertFalse($notification_settings->isInNoNotificationAtAllMode());
@@ -231,9 +219,6 @@ class UserNotificationSettingsTest extends TestCase
         $this->assertFalse($notification_settings->isInNotifyOnStatusChange());
     }
 
-    /**
-     * @param UserNotificationSettings $notification_settings
-     */
     private function assertNotificationOnCreate(UserNotificationSettings $notification_settings): void
     {
         $this->assertFalse($notification_settings->isInNoNotificationAtAllMode());

@@ -26,7 +26,6 @@ use Tuleap\Git\GitPHP\ProjectProvider;
 class GitPHPProjectRetriever
 {
     /**
-     * @param GitRepository $repository
      *
      * @return \Tuleap\Git\GitPHP\Project
      */

@@ -313,7 +313,6 @@ class ProjectResource extends AuthenticatedResource
 
     /**
      * @param string $query
-     * @param PFUser $user
      * @param int    $offset
      * @param int    $limit
      *
@@ -462,8 +461,6 @@ class ProjectResource extends AuthenticatedResource
     /**
      * Get a ProjectRepresentation
      *
-     * @param Project $project
-     * @param PFUser  $current_user
      *
      * @return ProjectRepresentation
      */
@@ -1453,7 +1450,6 @@ class ProjectResource extends AuthenticatedResource
       * @access hybrid
       *
       * @param int $id id of the project
-      * @return BannerRepresentation
       * @throws RestException
       */
     public function getBanner($id): BannerRepresentation
@@ -1703,7 +1699,6 @@ class ProjectResource extends AuthenticatedResource
     }
 
     /**
-     * @param PFUser $user
      * @return bool
      */
     private function isUserARestProjectManager(PFUser $user)

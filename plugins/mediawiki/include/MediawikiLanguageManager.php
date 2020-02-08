@@ -43,7 +43,6 @@ class MediawikiLanguageManager
     }
 
     /**
-     * @param Project $project
      *
      * @return string
      */

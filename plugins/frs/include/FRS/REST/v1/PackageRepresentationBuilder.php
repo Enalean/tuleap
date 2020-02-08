@@ -70,8 +70,6 @@ class PackageRepresentationBuilder
     }
 
     /**
-     * @param FRSPackage $package
-     * @param Project    $project
      * @return array
      */
     private function getPermissionsForGroups(FRSPackage $package, Project $project): array

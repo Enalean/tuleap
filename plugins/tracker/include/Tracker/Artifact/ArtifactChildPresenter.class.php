@@ -51,7 +51,6 @@ class Tracker_ArtifactChildPresenter
      * @param Tracker_Artifact        $artifact The child
      * @param Tracker_Artifact        $parent   The parent
      * @param Tracker_Semantic_Status $semantic The status semantic used by the corresponding tracker
-     * @param NatureIsChildLinkRetriever $retriever
      */
     public function __construct(
         Tracker_Artifact $artifact,

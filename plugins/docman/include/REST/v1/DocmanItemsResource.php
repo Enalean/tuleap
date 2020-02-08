@@ -228,7 +228,6 @@ class DocmanItemsResource extends AuthenticatedResource
     }
 
     /**
-     * @param \Project $project
      *
      * @return \Docman_PermissionsManager
      */

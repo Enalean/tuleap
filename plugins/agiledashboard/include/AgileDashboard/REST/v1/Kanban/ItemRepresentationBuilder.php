@@ -59,7 +59,6 @@ class ItemRepresentationBuilder
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return KanbanItemRepresentation
      */
     public function buildItemRepresentation(Tracker_Artifact $artifact)
@@ -86,8 +85,6 @@ class ItemRepresentationBuilder
     }
 
     /**
-     * @param ColumnIdentifier $column_identifier
-     * @param Tracker_Artifact $artifact
      * @return KanbanItemRepresentation
      */
     public function buildItemRepresentationInColumn(ColumnIdentifier $column_identifier, Tracker_Artifact $artifact)
@@ -98,8 +95,6 @@ class ItemRepresentationBuilder
     }
 
     /**
-     * @param ColumnIdentifier $column_identifier
-     * @param Tracker_Artifact $artifact
      * @param $time_info
      * @return KanbanItemRepresentation
      */
@@ -126,9 +121,6 @@ class ItemRepresentationBuilder
     }
 
     /**
-     * @param Cardwall_Semantic_CardFields $card_fields_semantic
-     * @param Tracker_Artifact $artifact
-     * @param PFUser $current_user
      * @return array
      */
     private function getCardFields(
@@ -152,7 +144,6 @@ class ItemRepresentationBuilder
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return Cardwall_Semantic_CardFields|null
      */
     private function getCardFieldsSemantic(Tracker_Artifact $artifact)

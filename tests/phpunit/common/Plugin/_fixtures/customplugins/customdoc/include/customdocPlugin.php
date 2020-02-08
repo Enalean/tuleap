@@ -32,9 +32,6 @@ class customdocPlugin // phpcs:ignore
         return $this->is_custom;
     }
 
-    /**
-     * @param bool $is_custom
-     */
     public function setIsCustom(bool $is_custom): void
     {
         $this->is_custom = $is_custom;

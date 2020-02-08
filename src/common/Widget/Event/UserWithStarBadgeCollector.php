@@ -35,7 +35,6 @@ class UserWithStarBadgeCollector implements Dispatchable
     private $badged_user;
 
     /**
-     * @param Project   $project
      * @param \PFUser[] $users
      */
     public function __construct(Project $project, array $users)

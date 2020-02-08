@@ -50,7 +50,6 @@ class SVN_Svnlook
     /**
      * Returns transaction path
      *
-     * @param Project $project
      * @param int $transaction
      *
      * @throw SVN_SvnlookException
@@ -71,7 +70,6 @@ class SVN_Svnlook
      *      'my message',   //log message
      *  );
      *
-     * @param Project $project
      * @param int $revision
      *
      * @throw SVN_SvnlookException

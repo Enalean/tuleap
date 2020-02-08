@@ -36,7 +36,6 @@ class Project_Service_ServiceUsageFactory
     }
 
     /**
-     * @param Project $project
      *
      * @return Project_Service_ServiceUsage[]
      */
@@ -51,7 +50,6 @@ class Project_Service_ServiceUsageFactory
     }
 
     /**
-     * @param Project $project
      * @param int     $service_id
      *
      * @return Project_Service_ServiceUsage

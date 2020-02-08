@@ -37,7 +37,6 @@ class GitCrumbBuilder
     private $plugin_path;
 
     /**
-     * @param GitPermissionsManager $permissions_manager
      * @param string                $plugin_path
      */
     public function __construct(GitPermissionsManager $permissions_manager, $plugin_path)
@@ -47,8 +46,6 @@ class GitCrumbBuilder
     }
 
     /**
-     * @param PFUser  $user
-     * @param Project $project
      *
      * @return BreadCrumb
      */

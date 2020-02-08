@@ -102,7 +102,6 @@ class Cardwall_Column
      * Return true if the given status can belong to current column
      *
      * @param string|null                          $artifact_status
-     * @param Cardwall_OnTop_Config_TrackerMapping $tracker_mapping
      *
      * @return bool
      */

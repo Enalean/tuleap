@@ -37,7 +37,6 @@ class LDAP_BackendSVN extends BackendSVN
     /**
      * Return a SVNAccessFile group definition based on given userids
      *
-     * @param Project  $project
      * @param string   $group_name
      * @param PFUser[] $users
      *
@@ -99,7 +98,6 @@ class LDAP_BackendSVN extends BackendSVN
      *
      * @see src/common/backend/BackendSVN#getSVNAccessUserGroupMembers()
      *
-     * @param Project $project
      *
      * @return String
      */

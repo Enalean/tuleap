@@ -71,9 +71,6 @@ class BacklogItemRepresentationFactory
     }
 
     /**
-     * @param Cardwall_Semantic_CardFields $card_fields_semantic
-     * @param Tracker_Artifact $artifact
-     * @param PFUser $current_user
      * @return array
      */
     private function getCardFields(
@@ -97,7 +94,6 @@ class BacklogItemRepresentationFactory
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return Cardwall_Semantic_CardFields
      */
     private function getCardFieldsSemantic(Tracker_Artifact $artifact)

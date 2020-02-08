@@ -289,9 +289,6 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \PHPUnit\Fram
         $this->assertTrue((bool) $values["F1-V0"]->isHidden());
     }
 
-    /**
-     * @return Tracker_FormElement_Field_List_Bind
-     */
     protected function getListBindFactory($ugroup_manager, $project, SimpleXMLElement $xml): Tracker_FormElement_Field_List_Bind
     {
         $bind_factory = new Tracker_FormElement_Field_List_BindFactory($ugroup_manager);

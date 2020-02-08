@@ -63,9 +63,6 @@ class ArtifactRepresentationBuilder
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser $user
-     * @param Tracker_Artifact $artifact
-     * @param TrackerRepresentation $tracker_representation
      * @return ArtifactRepresentation
      */
     public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
@@ -85,9 +82,6 @@ class ArtifactRepresentationBuilder
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser $user
-     * @param Tracker_Artifact $artifact
-     * @param TrackerRepresentation $tracker_representation
      * @return ArtifactRepresentation
      */
     public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
@@ -107,9 +101,6 @@ class ArtifactRepresentationBuilder
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser $user
-     * @param Tracker_Artifact $artifact
-     * @param TrackerRepresentation $tracker_representation
      * @return ArtifactRepresentation
      */
     public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
@@ -129,8 +120,6 @@ class ArtifactRepresentationBuilder
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser           $user
-     * @param Tracker_Artifact $artifact
      * @return ArtifactRepresentation
      */
     public function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact)
@@ -180,7 +169,6 @@ class ArtifactRepresentationBuilder
      * empty results and normalize the array
      *
      * @param array   $collection
-     * @param Closure $function
      * @return array
      */
     private function mapAndFilter(array $collection, Closure $function)
@@ -219,8 +207,6 @@ class ArtifactRepresentationBuilder
     /**
      * Returns REST representation of artifact history
      *
-     * @param PFUser           $user
-     * @param Tracker_Artifact $artifact
      * @param string           $fields
      * @param int              $offset
      * @param int              $limit

@@ -30,9 +30,6 @@ class Project_HierarchyManager
      */
     private $project_manager;
 
-    /**
-     * @param ProjectManager $project_manager
-     */
     public function __construct(ProjectManager $project_manager, ProjectHierarchyDao $dao)
     {
         $this->project_manager = $project_manager;

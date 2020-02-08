@@ -36,8 +36,6 @@ class Project_Service_ServiceUsageManager
     }
 
     /**
-     * @param Project                      $project
-     * @param Project_Service_ServiceUsage $service
      *
      * @return bool
      */
@@ -47,8 +45,6 @@ class Project_Service_ServiceUsageManager
     }
 
     /**
-     * @param Project                      $project
-     * @param Project_Service_ServiceUsage $service
      *
      * @return bool
      */

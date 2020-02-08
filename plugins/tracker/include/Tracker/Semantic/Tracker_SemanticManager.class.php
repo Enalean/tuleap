@@ -136,7 +136,6 @@ class Tracker_SemanticManager
     /**
      * Use an event to get semantics from other plugins.
      *
-     * @param Tracker_SemanticCollection $semantics
      */
     private function addOtherSemantics(Tracker_SemanticCollection $semantics)
     {

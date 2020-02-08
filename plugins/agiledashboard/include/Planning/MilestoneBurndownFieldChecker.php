@@ -40,11 +40,6 @@ class MilestoneBurndownFieldChecker
         $this->formelement_factory = $formelement_factory;
     }
 
-    /**
-     * @param PFUser                     $user
-     * @param Planning_ArtifactMilestone $milestone
-     * @return bool
-     */
     public function hasUsableBurndownField(PFUser $user, Planning_ArtifactMilestone $milestone): bool
     {
         $tracker = $milestone->getArtifact()->getTracker();

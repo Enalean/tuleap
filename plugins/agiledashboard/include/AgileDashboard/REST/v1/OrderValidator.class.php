@@ -31,7 +31,6 @@ class OrderValidator
     }
 
     /**
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order
      * @throws IdsFromBodyAreNotUniqueException
      * @throws OrderIdOutOfBoundException
      */

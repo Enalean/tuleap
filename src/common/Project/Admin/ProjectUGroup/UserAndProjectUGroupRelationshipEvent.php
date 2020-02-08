@@ -35,10 +35,6 @@ abstract class UserAndProjectUGroupRelationshipEvent implements Dispatchable
      */
     private $user;
 
-    /**
-     * @param Project $project
-     * @param PFUser $user
-     */
     public function __construct(Project $project, PFUser $user)
     {
         $this->project = $project;

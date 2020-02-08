@@ -60,7 +60,6 @@ class ArchiveDeletedArtifactProvider implements ArchiveDeletedItemProvider
      * This specific implementation was made to avoid generating a fat archive that takes ages to generate
      * while the archivedeleteditems plugin is not even installed on the server.
      *
-     * @return string
      * @throws \Tuleap\Project\XML\ArchiveException
      */
     public function getArchivePath(): string

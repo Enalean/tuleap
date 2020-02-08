@@ -415,7 +415,6 @@ class UserGroupResource extends AuthenticatedResource
     /**
      * Get the UserRepresentation of a user
      *
-     * @param PFUser $member
      *
      * @return \Tuleap\User\REST\UserRepresentation
      */
@@ -461,7 +460,6 @@ class UserGroupResource extends AuthenticatedResource
     }
 
     /**
-     * @param int $ugroup_id
      *
      * @throws RestException 404
      *

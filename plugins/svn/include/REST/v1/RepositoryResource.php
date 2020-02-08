@@ -553,8 +553,6 @@ class RepositoryResource extends AuthenticatedResource
     }
 
     /**
-     * @param Repository $repository
-     * @param \PFUser    $user
      *
      * @return \Tuleap\SVN\REST\v1\RepositoryRepresentation
      */

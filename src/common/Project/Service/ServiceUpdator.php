@@ -48,11 +48,6 @@ class ServiceUpdator
         $this->service_manager = $service_manager;
     }
 
-    /**
-     * @param Project $project
-     * @param ServicePOSTData $service_data
-     * @param PFUser $user
-     */
     public function updateService(Project $project, ServicePOSTData $service_data, PFUser $user): void
     {
         $this->dao->saveBasicInformation(

@@ -39,8 +39,6 @@ class ProjectDashboardSaver
     }
 
     /**
-     * @param PFUser $user
-     * @param Project $project
      * @param $name
      * @return int
      */
@@ -51,8 +49,6 @@ class ProjectDashboardSaver
     }
 
     /**
-     * @param PFUser $user
-     * @param Project $project
      * @param $id
      * @param $name
      * @return bool
@@ -64,8 +60,6 @@ class ProjectDashboardSaver
     }
 
     /**
-     * @param PFUser $user
-     * @param Project $project
      * @param $dashboard_id
      */
     public function delete(PFUser $user, Project $project, $dashboard_id)

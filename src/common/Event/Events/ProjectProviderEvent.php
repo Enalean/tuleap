@@ -40,9 +40,6 @@ class ProjectProviderEvent implements Dispatchable
         $this->project = $project;
     }
 
-    /**
-     * @return Project
-     */
     public function getProject(): Project
     {
         return $this->project;

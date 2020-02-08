@@ -50,9 +50,6 @@ class RepositoryByProjectCollection
         return new self($project, $repository_list);
     }
 
-    /**
-     * @return Project
-     */
     public function getProject(): Project
     {
         return $this->project;

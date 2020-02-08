@@ -146,7 +146,6 @@ class LatestHeartbeatsCollector
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return string
      */
     private function getTitle(Tracker_Artifact $artifact)

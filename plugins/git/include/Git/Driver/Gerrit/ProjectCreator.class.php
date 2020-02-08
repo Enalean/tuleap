@@ -286,7 +286,6 @@ class Git_Driver_Gerrit_ProjectCreator
 
     /**
      *
-     * @param Git_RemoteServer_GerritServer $gerrit_server
      * @param string $gerrit_project_url
      * @return string file contents
      *

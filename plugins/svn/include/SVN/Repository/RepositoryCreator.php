@@ -195,8 +195,6 @@ class RepositoryCreator
     }
 
     /**
-     * @param Repository $repository
-     * @param PFUser    $user
      *
      * @throws UserIsNotSVNAdministratorException
      */
@@ -210,7 +208,6 @@ class RepositoryCreator
     }
 
     /**
-     * @param Repository $repository
      *
      * @throws RepositoryNameIsInvalidException
      */
@@ -223,7 +220,6 @@ class RepositoryCreator
     }
 
     /**
-     * @param Repository $svn_repository
      *
      * @return Repository
      * @throws CannotCreateRepositoryException
@@ -241,10 +237,6 @@ class RepositoryCreator
         return $svn_repository;
     }
 
-    /**
-     * @param Repository $repository
-     * @param Settings   $settings
-     */
     private function addSettingsToRepository(Repository $repository, Settings $settings)
     {
         $this->createCommitRules($repository, $settings);

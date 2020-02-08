@@ -115,7 +115,6 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     }
 
     /**
-     * @param BaseLayout $layout
      * @param            $project
      */
     private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project)

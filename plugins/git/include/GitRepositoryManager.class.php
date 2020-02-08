@@ -88,8 +88,6 @@ class GitRepositoryManager
     private $event_manager;
 
     /**
-     * @param GitRepositoryFactory $repository_factory
-     * @param Git_SystemEventManager   $git_system_event_manager
      * @param string $backup_directory
      */
     public function __construct(
@@ -120,7 +118,6 @@ class GitRepositoryManager
     /**
      * Delete all project repositories (on project deletion).
      *
-     * @param Project $project
      */
     public function deleteProjectRepositories(Project $project)
     {
@@ -132,8 +129,6 @@ class GitRepositoryManager
     }
 
     /**
-     * @param GitRepository        $repository
-     * @param GitRepositoryCreator $creator
      *
      * @throws GitDaoException
      * @throws GitRepositoryAlreadyExistsException
@@ -154,8 +149,6 @@ class GitRepositoryManager
     }
 
     /**
-     * @param GitRepository        $repository
-     * @param GitRepositoryCreator $creator
      * @param array                $mirror_ids
      *
      * @throws GitDaoException
@@ -322,7 +315,6 @@ class GitRepositoryManager
     }
 
     /**
-     * @param GitRepository $repository
      *
      * @throws GitRepositoryAlreadyExistsException
      */
@@ -401,7 +393,6 @@ class GitRepositoryManager
      * @param Project $project
      * @param String  $name
      *
-     * @return bool
      */
     public function isRepositoryNameAlreadyUsed(GitRepository $new_repository): bool
     {
@@ -450,7 +441,6 @@ class GitRepositoryManager
      *
      * Purge archived Gitolite repositories
      *
-     * @param \Psr\Log\LoggerInterface $logger
      *
      */
     public function purgeArchivedRepositories(\Psr\Log\LoggerInterface $logger)

@@ -79,7 +79,6 @@ class RepoManagementController implements DispatchableWithRequest
     }
 
     /**
-     * @param HTTPRequest $request
      *
      * @return GitRepository
      * @throws \Tuleap\Request\ForbiddenException

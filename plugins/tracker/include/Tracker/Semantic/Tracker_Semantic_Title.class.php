@@ -229,7 +229,6 @@ class Tracker_Semantic_Title extends Tracker_Semantic
     /**
      * Load an instance of a Tracker_Semantic_Title
      *
-     * @param Tracker $tracker
      *
      * @return Tracker_Semantic_Title
      */

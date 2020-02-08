@@ -39,7 +39,6 @@ class ProftpdRouter
 
     /**
      * Routes the request to the correct controller
-     * @param HTTPRequest $request
      * @return void
      */
     public function route(HTTPRequest $request)
@@ -84,7 +83,6 @@ class ProftpdRouter
     /**
      * Retrieves the Proftpd Service instance matching the request group id.
      *
-     * @param HTTPRequest $request
      *
      * @return ServiceProFTPd
      */

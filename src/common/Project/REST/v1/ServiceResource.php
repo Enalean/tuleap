@@ -142,7 +142,6 @@ class ServiceResource extends AuthenticatedResource
     }
 
     /**
-     * @return PFUser
      * @throws I18NRestException
      */
     private function getUser(): PFUser

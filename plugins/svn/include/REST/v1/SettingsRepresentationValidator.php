@@ -23,7 +23,6 @@ namespace Tuleap\SVN\REST\v1;
 class SettingsRepresentationValidator
 {
     /**
-     * @param SettingsRepresentation $settings
      *
      * @return array
      */

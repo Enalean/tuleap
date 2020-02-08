@@ -218,7 +218,6 @@ class BackendSVN extends Backend
 
      /**
      * Check if repository of given project exists
-     * @param Project $project
      * @return bool true is repository already exists, false otherwise
      */
     function repositoryExists(Project $project)
@@ -609,7 +608,6 @@ class BackendSVN extends Backend
     /**
      * SVNAccessFile ugroups definitions
      *
-     * @param Project $project
      *
      * @return String
      */
@@ -901,7 +899,6 @@ class BackendSVN extends Backend
     /**
      * Rename svn repository (following project unix_name change)
      *
-     * @param Project $project
      * @param String  $newName
      *
      * @return bool

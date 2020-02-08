@@ -109,7 +109,6 @@ abstract class Transition_PostAction
     /**
      * Execute actions after transition happens
      *
-     * @param Tracker_Artifact_Changeset $changeset
      * @return void
      */
     public function after(Tracker_Artifact_Changeset $changeset)
@@ -150,7 +149,6 @@ abstract class Transition_PostAction
     /**
      * Get the value of bypass_permissions
      *
-     * @param Tracker_FormElement_Field $field
      *
      * @return bool
      */

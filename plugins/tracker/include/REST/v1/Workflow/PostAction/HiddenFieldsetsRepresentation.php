@@ -33,7 +33,6 @@ class HiddenFieldsetsRepresentation extends PostActionRepresentation
     public $fieldset_ids;
 
     /**
-     * @param int   $id
      * @param int[] $field_ids
      */
     private function __construct(int $id, array $field_ids)
@@ -44,9 +43,7 @@ class HiddenFieldsetsRepresentation extends PostActionRepresentation
     }
 
     /**
-     * @param int   $id
      * @param int[] $field_ids
-     * @return HiddenFieldsetsRepresentation
      */
     public static function build(int $id, array $field_ids): HiddenFieldsetsRepresentation
     {

@@ -257,7 +257,6 @@ final class EmailNotificationTask implements PostCreationTask
 
     /**
      * Looks for the custom sender setting and formats the name accordingly
-     * @param \Tracker_Artifact_Changeset $changeset
      * @return string containing the formatted name if setting enabled
      * */
     private function getSenderName(Tracker_Artifact_Changeset $changeset)
@@ -278,7 +277,6 @@ final class EmailNotificationTask implements PostCreationTask
 
     /**
      * Get the appropriate fields for putting into the email sender field
-     * @param \Tracker_Artifact_Changeset $changeset
      * @return array of kv pairs with the applicable fields
      * */
     private function getAppropriateSenderFields(Tracker_Artifact_Changeset $changeset)

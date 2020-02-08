@@ -47,8 +47,6 @@ class MemberRemover
     }
 
     /**
-     * @param PFUser        $user
-     * @param ProjectUGroup $ugroup
      * @throws CannotModifyBoundGroupException
      * @throws CannotRemoveUserMembershipToUserGroupException
      */

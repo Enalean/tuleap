@@ -244,7 +244,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * @see Tracker_FormElement_Field::getFieldDataFromRESTValue()
      * @param array $value
-     * @param Tracker_Artifact $artifact
      * @return array
      * @throws Exception
      */
@@ -287,7 +286,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * @param array $submitted_ids
      * @param array $submitted_values
-     * @param Tracker_Artifact|null $artifact
      *
      * @return array
      */
@@ -1197,7 +1195,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of the field
      *
      * @return string
@@ -1517,7 +1514,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * if empty new values and not empty last changeset values and not empty removed values have the same size: empty
      *
      * @param array            $submitted_value
-     * @param Tracker_Artifact $artifact
      *
      * @return bool true if the submitted value is empty
      */

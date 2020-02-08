@@ -385,7 +385,6 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     /**
      * Make project available
      *
-     * @param Project $project
      *
      * @return bool
      */

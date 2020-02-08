@@ -101,7 +101,6 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
     }
 
     /**
-     * @param PFUser $user
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
@@ -111,7 +110,6 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
     }
 
     /**
-     * @param PFUser $user
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */

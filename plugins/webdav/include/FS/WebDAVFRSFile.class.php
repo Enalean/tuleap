@@ -261,7 +261,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
     /**
      * Checks whether the user can download the file or not
      *
-     * @param PFUser $user
      *
      * @return bool
      */

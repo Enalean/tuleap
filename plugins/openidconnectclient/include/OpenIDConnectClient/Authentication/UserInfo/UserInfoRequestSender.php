@@ -35,7 +35,6 @@ class UserInfoRequestSender
     }
 
     /**
-     * @param UserInfoRequest $request
      * @return UserInfoResponse
      * @throws NotSupportedContentTypeUserInfoResponseException
      * @throws IncorrectlyFormattedUserInfoResponseException

@@ -652,9 +652,6 @@ class Tracker_NotificationsManager
         }
     }
 
-    /**
-     * @param HTTPRequest $request
-     */
     private function updateNotificationLevel(HTTPRequest $request)
     {
         if (! $this->notificationLevelMustBeUpdated($request)) {

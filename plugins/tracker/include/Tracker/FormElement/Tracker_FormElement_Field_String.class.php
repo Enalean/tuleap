@@ -235,7 +235,6 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_String $value The ChangesetValue_String
      * @return string The html code to display the field value in tooltip
      */

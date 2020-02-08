@@ -135,7 +135,6 @@ class SystemControlCommandDockerCentos7Test extends TestCase
     }
 
     /**
-     * @param string $action
      *
      * @testWith [ "mask" ]
      *           [ "is-active"]

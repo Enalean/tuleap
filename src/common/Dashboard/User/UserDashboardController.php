@@ -105,9 +105,6 @@ class UserDashboardController
         $this->assets_includer          = $assets_includer;
     }
 
-    /**
-     * @param HTTPRequest $request
-     */
     public function display(HTTPRequest $request)
     {
         $current_user    = $request->getCurrentUser();
@@ -150,7 +147,6 @@ class UserDashboardController
     }
 
     /**
-     * @param HTTPRequest $request
      * @return int|null
      */
     public function createDashboard(HTTPRequest $request)

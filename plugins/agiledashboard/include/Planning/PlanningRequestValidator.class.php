@@ -45,7 +45,6 @@ class Planning_RequestValidator
      *
      * Existing planning update validation is not implemented yet.
      *
-     * @param Codendi_Request $request
      *
      * @return bool
      */

@@ -575,8 +575,6 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     }
 
     /**
-     * @param int    $root_id
-     * @param string $query
      *
      * @return mixed
      */

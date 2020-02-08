@@ -28,7 +28,6 @@ class AgileDashboard_XMLImporter
 
     /**
      *
-     * @param SimpleXMLElement $xml_object
      * @param array $tracker_mappings
      *  These should be in the form of an array, e.g. :
      *    array(

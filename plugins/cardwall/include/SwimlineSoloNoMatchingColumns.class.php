@@ -31,8 +31,6 @@ class Cardwall_SwimlineSoloNoMatchingColumns extends Cardwall_Swimline
 
     /**
      *
-     * @param Cardwall_CardInCellPresenter $swimline_artifact_presenter
-     * @param Tracker_Artifact $artifact
      * @param array $cells
      */
     public function __construct(Cardwall_CardInCellPresenter $swimline_artifact_presenter, Tracker_Artifact $artifact, array $cells)

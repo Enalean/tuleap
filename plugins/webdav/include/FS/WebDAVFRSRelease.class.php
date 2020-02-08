@@ -305,9 +305,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
     /**
      * Checks whether the user can read the release or not
      *
-     * @param PFUser $user
      *
-     * @return bool
      */
     public function userCanRead(PFUser $user): bool
     {
@@ -318,7 +316,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
     /**
      * Returns if the user is superuser, project admin or File release admin
      *
-     * @return bool
      */
     public function userIsAdmin(PFUser $user): bool
     {

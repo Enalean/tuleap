@@ -178,7 +178,6 @@ class RestProjectCreator
     }
 
     /**
-     * @return Project
      * @throws \Project_Creation_Exception
      * @throws \Project_InvalidFullName_Exception
      * @throws \Project_InvalidShortName_Exception
@@ -210,8 +209,6 @@ class RestProjectCreator
     }
 
     /**
-     * @param ProjectPostRepresentation $post_representation
-     * @return Project
      * @throws InvalidTemplateException
      * @throws ImportNotValidException
      */

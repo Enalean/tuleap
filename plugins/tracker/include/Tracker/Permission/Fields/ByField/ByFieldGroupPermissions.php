@@ -109,33 +109,21 @@ class ByFieldGroupPermissions
         return $ugroups;
     }
 
-    /**
-     * @return int
-     */
     public function getFieldId(): int
     {
         return (int) $this->field->getId();
     }
 
-    /**
-     * @return string
-     */
     public function getFieldName(): string
     {
         return $this->field->getLabel();
     }
 
-    /**
-     * @return \Tracker_FormElement_Field
-     */
     public function getField(): \Tracker_FormElement_Field
     {
         return $this->field;
     }
 
-    /**
-     * @return bool
-     */
     public function getMightNotHaveAccess(): bool
     {
         return $this->might_not_have_access;

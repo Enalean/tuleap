@@ -107,7 +107,6 @@ class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFr
     }
 
     /**
-     * @param Comparison $comparison
      * @param            $value
      *
      * @return IProvideFromAndWhereSQLFragments

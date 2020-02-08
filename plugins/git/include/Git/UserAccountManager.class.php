@@ -96,7 +96,6 @@ class Git_UserAccountManager
 
     /**
      *
-     * @param Git_Driver_Gerrit_UserAccountManager $manager
      * @return Git_UserAccountManager
      */
     public function setGerritUserAccountManager(Git_Driver_Gerrit_UserAccountManager $manager)

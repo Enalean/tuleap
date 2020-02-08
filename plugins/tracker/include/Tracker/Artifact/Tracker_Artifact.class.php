@@ -192,7 +192,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Return true if given given artifact refer to the same DB object (basically same id).
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return bool
      */
@@ -1508,7 +1507,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param Tracker_FormElement_Field  $field     The field
      * @param Tracker_Artifact_Changeset $changeset The changeset. if null given take the last changeset of the artifact
      *
-     * @return Tracker_Artifact_ChangesetValue | null
      */
     function getValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_Changeset $changeset = null) : ?Tracker_Artifact_ChangesetValue
     {
@@ -1829,7 +1827,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Returns all ancestors of current artifact (from direct parent to oldest ancestor)
      *
-     * @param PFUser $user
      *
      * @return Tracker_Artifact[]
      */
@@ -1849,7 +1846,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Return the parent artifact of current artifact if any
      *
-     * @param PFUser $user
      *
      * @return Tracker_Artifact
      */

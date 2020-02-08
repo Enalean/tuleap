@@ -52,12 +52,6 @@ class Planning_VirtualTopMilestoneController extends BaseController
      * TODO:
      *   - pass $request to actions (e.g. show).
      *
-     * @param Codendi_Request $request
-     * @param Planning_MilestoneFactory $milestone_factory
-     * @param ProjectManager $project_manager
-     * @param Planning_VirtualTopMilestonePaneFactory $top_milestone_pane_factory
-     * @param AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder
-     * @param VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder
      */
     public function __construct(
         Codendi_Request $request,

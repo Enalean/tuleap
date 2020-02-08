@@ -76,7 +76,6 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     /**
      * Only for testing purpose
      *
-     * @param ServiceManager $service_manager
      */
     public function setInstance(ServiceManager $service_manager)
     {
@@ -204,7 +203,6 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @return Service
      * @throws ServiceNotAllowedForProjectException
      */
     public function getService(int $id): Service

@@ -778,7 +778,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     /**
      * Validate a value
-     * @param Tracker_Artifact $artifact
      * @param mixed $value data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
@@ -924,7 +923,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     /**
      *
-     * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
     public function getFirstValueFor(Tracker_Artifact_Changeset $changeset)
@@ -941,8 +939,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * @param string $id
-     * @param string $name
      * @param array  $selected_values
      * @param mixed  $submitted_values_for_this_list
      *
@@ -1135,7 +1131,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     /**
      * Fetch the html code to display the field value in tooltip
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_List $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
@@ -1238,7 +1233,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @param SimpleXMLElement                          $xml         containing the structure of the imported Tracker_FormElement
      * @param array                                     &$xmlMapping where the newly created formElements indexed by their XML IDs are stored (and values)
-     * @param User\XML\Import\IFindUserFromXMLReference $user_finder
      */
     public function continueGetInstanceFromXML(
         $xml,

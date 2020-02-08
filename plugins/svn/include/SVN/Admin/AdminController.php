@@ -486,9 +486,6 @@ class AdminController
         ));
     }
 
-    /**
-     * @param HTTPRequest $request
-     */
     private function redirectOnDisplayNotification(HTTPRequest $request)
     {
         $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(

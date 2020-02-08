@@ -34,7 +34,6 @@ class ProjectMembersPresenter
 
     /**
      *
-     * @param Project                  $project
      * @param AdministratorPresenter[] $administrators
      */
     public function __construct(Project $project, array $administrators)

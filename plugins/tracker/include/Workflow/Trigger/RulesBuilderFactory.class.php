@@ -34,7 +34,6 @@ class Tracker_Workflow_Trigger_RulesBuilderFactory
     /**
      * Return the trigger RulesBuilder data for a tracker
      *
-     * @param Tracker $tracker
      *
      * @return Tracker_Workflow_Trigger_RulesBuilderData
      */

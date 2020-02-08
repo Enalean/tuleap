@@ -1035,10 +1035,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $this->user_account_manager;
     }
 
-    /**
-     *
-     * @param Git_UserAccountManager $manager
-     */
     public function setUserAccountManager(Git_UserAccountManager $manager)
     {
         $this->user_account_manager = $manager;
@@ -1099,7 +1095,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      * Method called as a hook.
 
      * Copies all SSH Keys to Remote Git Servers
-     * @param PFUser $user
      */
     private function pushUserSSHKeysToRemoteServers(PFUser $user)
     {
@@ -1996,10 +1991,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $this->logger;
     }
 
-    /**
-     *
-     * @param \Psr\Log\LoggerInterface $logger
-     */
     public function setLogger(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = $logger;

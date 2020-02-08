@@ -37,7 +37,6 @@ class TreeNodeMapper
     /**
      * Create a new node by applying the function to the node and recursively over its children
      *
-     * @param TreeNode $node
      *
      * @return TreeNode
      */

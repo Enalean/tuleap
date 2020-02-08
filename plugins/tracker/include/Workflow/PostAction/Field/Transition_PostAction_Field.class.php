@@ -71,7 +71,6 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
     /**
      * Get the value of bypass_permissions
      *
-     * @param Tracker_FormElement_Field $field
      *
      * @return bool
      */

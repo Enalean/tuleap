@@ -254,7 +254,6 @@ class PermissionsManager implements IPermissionsManagerNG
     }
 
     /**
-     * @param Project $project
      * @param type $object_id
      * @param type $permission_type
      * @param array $ugroup_ids

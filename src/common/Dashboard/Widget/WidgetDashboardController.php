@@ -146,7 +146,6 @@ class WidgetDashboardController
     }
 
     /**
-     * @param HTTPRequest $request
      * @param $dashboard_type
      * @return bool
      */
@@ -220,7 +219,6 @@ class WidgetDashboardController
     }
 
     /**
-     * @param DashboardWidgetColumn $old_column
      * @param array $deleted_ids
      * @return array
      */
@@ -234,7 +232,6 @@ class WidgetDashboardController
     }
 
     /**
-     * @param DashboardWidgetColumn $old_column
      * @param array $deleted_ids
      * @return array
      */

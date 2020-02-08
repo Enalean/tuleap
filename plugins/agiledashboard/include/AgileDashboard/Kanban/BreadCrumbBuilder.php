@@ -47,9 +47,6 @@ class BreadCrumbBuilder
     }
 
     /**
-     * @param \PFUser $current_user
-     * @param int     $kanban_id
-     * @return BreadCrumb
      * @throws \AgileDashboard_KanbanCannotAccessException
      * @throws \AgileDashboard_KanbanNotFoundException
      */

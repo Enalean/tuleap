@@ -297,8 +297,6 @@ class GitActions extends PluginActions
      * Generates a list of GitRepositoryWithPermissions which are migrated to a
      * gerrit server and belong to the project or the project's parent.
      *
-     * @param Project $project
-     * @param PFUser $user
      * @param Project[] $parent_projects
      */
     public function generateGerritRepositoryAndTemplateList(Project $project, PFUser $user)
@@ -325,8 +323,6 @@ class GitActions extends PluginActions
      * (used in AJAX)
      *
      * @param int $repo_id
-     * @param PFUser $user
-     * @param Project $project
      * @return void if error
      */
     public function fetchGitConfig($repo_id, PFUser $user, Project $project)
@@ -359,8 +355,6 @@ class GitActions extends PluginActions
      * Delete a given template
      *
      * @param int the $template_id
-     * @param Project $project
-     * @param PFUser $user
      */
     public function deleteGerritTemplate($template_id, Project $project, PFUser $user)
     {
@@ -422,8 +416,6 @@ class GitActions extends PluginActions
      * Displays the content of a template (used in AJAX)
      *
      * @param int $template_id
-     * @param PFUser $user
-     * @param Project $project
      * @return void
      */
     public function fetchGitTemplate($template_id, PFUser $user, Project $project)
@@ -441,8 +433,6 @@ class GitActions extends PluginActions
     }
 
     /**
-     * @param  Project $project
-     * @param  PFUser  $user
      *
      * @throws GitUserNotAdminException
      */
@@ -456,9 +446,6 @@ class GitActions extends PluginActions
     }
 
     /**
-     * @param Git_Driver_Gerrit_Template_Template $template
-     * @param Project $project
-     * @param PFUser $user
      * @throws Git_TemplateNotInProjectHierarchyException
      */
     private function checkTemplateIsAccessible(Git_Driver_Gerrit_Template_Template $template, Project $project, PFUser $user)
@@ -478,8 +465,6 @@ class GitActions extends PluginActions
     }
 
     /**
-     * @param Project $project
-     * @param PFUser $user
      * @param string $template_content
      * @param int $template_id
      * @return void
@@ -519,8 +504,6 @@ class GitActions extends PluginActions
 
     /**
      *
-     * @param Project $project
-     * @param PFUser $user
      * @param string $template_content
      * @param string $template_name
      * @return void

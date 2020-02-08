@@ -63,13 +63,6 @@ class MediaWikiInstantiater
      */
     private $mleb_manager;
 
-    /**
-     * @param Project $project
-     * @param MediawikiManager $mediawiki_manager
-     * @param MediawikiLanguageManager $language_manager
-     * @param MediawikiVersionManager $version_manager
-     * @param MediawikiMLEBExtensionManager $mleb_manager
-     */
     public function __construct(
         Project $project,
         MediawikiManager $mediawiki_manager,

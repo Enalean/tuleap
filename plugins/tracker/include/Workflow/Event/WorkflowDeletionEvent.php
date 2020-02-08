@@ -37,9 +37,6 @@ class WorkflowDeletionEvent implements Dispatchable
         $this->workflow = $workflow;
     }
 
-    /**
-     * @return Workflow
-     */
     public function getWorkflow(): Workflow
     {
         return $this->workflow;

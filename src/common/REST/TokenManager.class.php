@@ -45,7 +45,6 @@ class Rest_TokenManager
     }
 
     /**
-     * @param Rest_Token $token
      * @return PFUser or null if the user is not found
      * @throws Rest_Exception_InvalidTokenException
      */

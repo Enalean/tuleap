@@ -172,7 +172,6 @@ class ProjectResource
     /**
      * @param array   $query
      * @param String  $representation
-     * @param Project $project
      * @param int     $limit
      * @param int     $offset
      *

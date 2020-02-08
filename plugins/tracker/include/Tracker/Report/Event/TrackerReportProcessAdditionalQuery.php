@@ -104,9 +104,6 @@ class TrackerReportProcessAdditionalQuery implements Dispatchable
         $this->result[] = $result;
     }
 
-    /**
-     * @return bool
-     */
     public function isSearchPerformed(): bool
     {
         return $this->search_performed;

@@ -253,7 +253,6 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     /**
      * Load an instance of a Tracker_Semantic_Contributor
      *
-     * @param Tracker $tracker
      *
      * @return Tracker_Semantic_Contributor
      */

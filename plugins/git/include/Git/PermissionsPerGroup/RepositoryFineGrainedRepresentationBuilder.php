@@ -143,7 +143,6 @@ class RepositoryFineGrainedRepresentationBuilder
 
     /**
      * @param FineGrainedPermission[] $permissions
-     * @param Project $project
      * @param bool $is_tag
      * @return FineGrainedPermissionRepresentation[]
      */

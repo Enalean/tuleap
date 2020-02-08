@@ -39,7 +39,6 @@ class ForgeConfig
      *
      * @access protected for testing purpose
      *
-     * @param ConfigValueProvider $value_provider
      */
     protected static function load(ConfigValueProvider $value_provider)
     {

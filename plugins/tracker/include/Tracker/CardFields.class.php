@@ -43,7 +43,6 @@ class Tracker_CardFields
 
     /**
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return Tracker_FormElement_Field[]
      */

@@ -131,7 +131,6 @@ class ActionsRunner
     /**
      * Manage notification for a changeset
      *
-     * @param Tracker_Artifact_Changeset $changeset
      */
     public function executePostCreationActions(Tracker_Artifact_Changeset $changeset)
     {
@@ -145,7 +144,6 @@ class ActionsRunner
     /**
      * Process notification when executed in background (should not be called by front-end)
      *
-     * @param Tracker_Artifact_Changeset $changeset
      */
     public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset)
     {

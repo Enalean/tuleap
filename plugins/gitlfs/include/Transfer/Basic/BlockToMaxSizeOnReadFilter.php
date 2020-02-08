@@ -69,17 +69,11 @@ final class BlockToMaxSizeOnReadFilter implements FilterInterface
     {
     }
 
-    /**
-     * @return bool
-     */
     public function hasMaximumSizeBeenExceeded() : bool
     {
         return $this->maximum_size_exceeded;
     }
 
-    /**
-     * @return int
-     */
     public function getReadDataSize() : int
     {
         return $this->read_data_size;

@@ -39,9 +39,6 @@ final class LargestObjectSizeGitRepository
         $this->largest_size = $largest_size;
     }
 
-    /**
-     * @return \GitRepository
-     */
     public function getRepository() : \GitRepository
     {
         return $this->repository;

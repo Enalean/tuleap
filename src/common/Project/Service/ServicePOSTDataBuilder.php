@@ -191,7 +191,6 @@ class ServicePOSTDataBuilder
     }
 
     /**
-     * @param Codendi_Request $request
      * @param string $short_name
      * @return bool
      */
@@ -231,7 +230,6 @@ class ServicePOSTDataBuilder
     }
 
     /**
-     * @param Project $project
      * @param string $short_name
      * @param int $rank
      * @throws InvalidServicePOSTDataException
@@ -254,7 +252,6 @@ class ServicePOSTDataBuilder
     }
 
     /**
-     * @param Project $project
      * @param string $short_name
      * @throws InvalidServicePOSTDataException
      */

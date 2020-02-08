@@ -99,7 +99,6 @@ class NavigationPresenterBuilder
     }
 
     /**
-     * @param Project $project
      * @param $current_pane_shortname
      * @param $project_id
      * @return array

@@ -75,7 +75,6 @@ class RepositoryRepresentationBuilder
     }
 
     /**
-     * @param PFUser $user
      * @param GitRepository[] $repositories
      * @param $fields
      * @return \Generator
@@ -120,8 +119,6 @@ class RepositoryRepresentationBuilder
 
     /**
      *
-     * @param PFUser $user
-     * @param GitRepository $repository
      * @param string $fields
      *
      * @return GitRepositoryRepresentation
@@ -186,7 +183,6 @@ class RepositoryRepresentationBuilder
     }
 
     /**
-     * @param GitRepository $repository
      * @return string
      */
     private function getLastUpdateDate(GitRepository $repository)

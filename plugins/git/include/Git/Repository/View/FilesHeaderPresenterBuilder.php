@@ -56,8 +56,6 @@ class FilesHeaderPresenterBuilder
     }
 
     /**
-     * @param HTTPRequest   $request
-     * @param GitRepository $repository
      *
      * @return FilesHeaderPresenter
      */
@@ -111,8 +109,6 @@ class FilesHeaderPresenterBuilder
     }
 
     /**
-     * @param HTTPRequest $request
-     * @param Commit      $commit
      *
      * @return array [string, bool]
      */
@@ -152,7 +148,6 @@ class FilesHeaderPresenterBuilder
     }
 
     /**
-     * @param Commit $commit
      *
      * @return array
      */
@@ -162,7 +157,6 @@ class FilesHeaderPresenterBuilder
     }
 
     /**
-     * @param Commit $commit
      *
      * @return array
      */
@@ -172,8 +166,6 @@ class FilesHeaderPresenterBuilder
     }
 
     /**
-     * @param HTTPRequest $request
-     * @param Commit      $commit
      *
      * @return array|null
      */
@@ -193,7 +185,6 @@ class FilesHeaderPresenterBuilder
     }
 
     /**
-     * @param HTTPRequest $request
      * @return array
      */
     private function getURLParameters(HTTPRequest $request)

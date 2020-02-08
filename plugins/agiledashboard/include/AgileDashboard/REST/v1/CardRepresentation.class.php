@@ -115,7 +115,6 @@ class AgileDashboard_CardRepresentation
      * empty results and normalize the array
      *
      * @param array $collection
-     * @param Closure $function
      * @return array
      */
     private function mapAndFilter(array $collection, Closure $function)

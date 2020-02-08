@@ -121,7 +121,6 @@ class Tracker_RuleFactory
     /**
      * called by TrackerFactory::saveObject();
      * @param array $rules
-     * @param Tracker $trackerDB
      */
     public function saveObject(array $rules, Tracker $trackerDB)
     {
@@ -252,7 +251,6 @@ class Tracker_RuleFactory
 
     /**
      *
-     * @param Tracker_Rule_List_Factory $factory
      * @return Tracker_RuleFactory
      */
     public function setListFactory(Tracker_Rule_List_Factory $factory)
@@ -278,7 +276,6 @@ class Tracker_RuleFactory
 
     /**
      *
-     * @param Tracker_Rule_Date_Factory $factory
      * @return Tracker_RuleFactory
      */
     public function setDateFactory(Tracker_Rule_Date_Factory $factory)
@@ -326,7 +323,6 @@ class Tracker_RuleFactory
 
     /**
      *
-     * @param Tracker_Rule_Date_Dao $dao
      * @return \Tracker_RuleFactory
      */
     public function setDateDao(Tracker_Rule_Date_Dao $dao)

@@ -784,7 +784,6 @@ class LdapPlugin extends Plugin
     /**
      * Collects additional modals to display in project-admin > members
      *
-     * @param ProjectMembersAdditionalModalCollectionPresenter $collector
      *
      * @return void
      */

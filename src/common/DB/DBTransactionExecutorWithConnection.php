@@ -36,7 +36,6 @@ final class DBTransactionExecutorWithConnection implements DBTransactionExecutor
     }
 
     /**
-     * @param callable $atomic_operations
      * @throws \Throwable
      * @return mixed
      */

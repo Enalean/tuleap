@@ -33,7 +33,6 @@ class TrackerXMLFieldMappingFromExistingTracker
     private $xml_fields_mapping = [];
 
     /**
-     * @param SimpleXMLElement $xml_tracker
      * @param Tracker_FormElement[] $form_elements_existing
      * @return array
      */
@@ -51,7 +50,6 @@ class TrackerXMLFieldMappingFromExistingTracker
     }
 
     /**
-     * @param SimpleXMLElement $xml_form_element
      * @param SimpleXMLElement[] &$all_form_elements
      */
     private function browseAllFormElementFromXML(SimpleXMLElement $xml_form_element, array &$all_form_elements)
@@ -68,7 +66,6 @@ class TrackerXMLFieldMappingFromExistingTracker
     }
 
     /**
-     * @param SimpleXMLElement $xml_form_elements
      * @param SimpleXMLElement[] &$all_form_elements
      */
     private function browseEachFormElementsFromXML(SimpleXMLElement $xml_form_elements, array &$all_form_elements)
@@ -78,10 +75,6 @@ class TrackerXMLFieldMappingFromExistingTracker
         }
     }
 
-    /**
-     * @param SimpleXMLElement $form_element_xml
-     * @param Tracker_FormElement $form_element_existing
-     */
     private function addFormElementsInFieldMapping(SimpleXMLElement $form_element_xml, Tracker_FormElement $form_element_existing)
     {
         $form_element_id = (String)$form_element_xml->attributes()['ID'];
@@ -92,10 +85,6 @@ class TrackerXMLFieldMappingFromExistingTracker
         }
     }
 
-    /**
-     * @param SimpleXMLElement $form_element_xml
-     * @param Tracker_FormElement_Field_Selectbox $form_element_existing
-     */
     private function addBindInFieldMapping(SimpleXMLElement $form_element_xml, Tracker_FormElement_Field_Selectbox $form_element_existing)
     {
         $items = [];

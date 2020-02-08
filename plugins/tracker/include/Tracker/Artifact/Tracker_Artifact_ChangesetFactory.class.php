@@ -54,7 +54,6 @@ class Tracker_Artifact_ChangesetFactory
     /**
      * Return a changeset
      *
-     * @param Tracker_Artifact $artifact
      * @param int $changeset_id
      * @return Tracker_Artifact_Changeset | null
      */
@@ -133,7 +132,6 @@ class Tracker_Artifact_ChangesetFactory
     /**
      * Return all the changesets of an artifact
      *
-     * @param Tracker_Artifact $artifact
      * @return Tracker_Artifact_Changeset[]
      */
     public function getChangesetsForArtifact(Tracker_Artifact $artifact)
@@ -208,7 +206,6 @@ class Tracker_Artifact_ChangesetFactory
     /**
      * Get all changesets in a format ready for json conversion
      *
-     * @param Tracker_Artifact $artifact
      * @param int $changeset_id
      * @return array
      */

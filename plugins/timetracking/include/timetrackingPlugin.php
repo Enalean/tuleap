@@ -261,7 +261,6 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     }
 
     /**
-     * @param \Tuleap\Widget\Event\GetProjectsWithCriteria $get_projects
      * @throws \Luracast\Restler\RestException
      */
     public function getProjectsWithCriteria(\Tuleap\Widget\Event\GetProjectsWithCriteria $get_projects)
@@ -279,7 +278,6 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     }
 
     /**
-     * @param \Tuleap\Widget\Event\GetTrackersWithCriteria $get_trackers
      * @throws Rest_Exception_InvalidTokenException
      * @throws User_PasswordExpiredException
      * @throws User_StatusInvalidException

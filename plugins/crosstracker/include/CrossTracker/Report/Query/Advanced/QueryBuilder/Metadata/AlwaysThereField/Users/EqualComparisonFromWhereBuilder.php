@@ -41,8 +41,6 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 
     /**
      *
-     * @param ListValueExtractor $extractor
-     * @param UserManager $user_manager
      * @param string $alias_field
      */
     public function __construct(
@@ -56,8 +54,6 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
     }
 
     /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
      * @param Tracker[] $trackers
      * @return IProvideParametrizedFromAndWhereSQLFragments
      */

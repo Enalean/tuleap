@@ -1258,9 +1258,6 @@ class MilestoneResource extends AuthenticatedResource
         Header::allowOptionsGet();
     }
 
-    /**
-     * @return MilestoneElementMover
-     */
     private function getMilestoneElementMover(): MilestoneElementMover
     {
         $db_transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());

@@ -171,9 +171,6 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
         $this->assertEquals('-', $bind->formatArtifactValue(0));
     }
 
-    /**
-     * @return \Tracker_FormElement_Field_List_BindValue
-     */
     protected function getFieldValueListWithLabel(string $label): \Tracker_FormElement_Field_List_BindValue
     {
         $value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);

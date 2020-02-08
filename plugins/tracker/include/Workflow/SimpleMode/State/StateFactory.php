@@ -46,9 +46,6 @@ class StateFactory
         $this->simple_workflow_dao = $simple_workflow_dao;
     }
 
-    /**
-     * @return State
-     */
     public function getStateFromValueId(Workflow $workflow, int $value_id) : State
     {
         $transitions = $this->transition_factory->getTransitionsForAGivenDestination(
@@ -72,9 +69,6 @@ class StateFactory
         return $states;
     }
 
-    /**
-     * @return State
-     */
     public function getInstanceFromXML(SimpleXMLElement $state_xml, array &$xml_mapping, Project $project) : State
     {
         $to_value = $xml_mapping[(string)$state_xml->to_id['REF']];

@@ -50,7 +50,6 @@ class ServiceTracker extends Service
      * @param int   $to_project_id  The target paroject Id
      * @param array $ugroup_mapping The ugroup mapping
      *
-     * @return void
      */
     public function duplicate(int $to_project_id, array $ugroup_mapping): void
     {

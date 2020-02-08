@@ -64,7 +64,6 @@ class ArtifactFilesResource
      * @param int $offset Where to start to read the file
      * @param int $limit  How much to read the file
      *
-     * @return \Tuleap\Tracker\REST\Artifact\FileDataRepresentation
      *
      * @throws RestException 401
      * @throws RestException 403

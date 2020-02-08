@@ -278,7 +278,6 @@ class TransitionFactory
     /**
      * Delete a workflow
      *
-     * @param Workflow $workflow
      *
      * @return bool
      */
@@ -472,7 +471,6 @@ class TransitionFactory
     }
 
     /**
-     * @param Transition $transition
      *
      * @throws TransitionDeletionException
      */

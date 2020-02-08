@@ -37,7 +37,6 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
      * Constructor of the class
      *
      * @param PFUser $user
-     * @param Project $project
      * @param Docman_Folder $item
      *
      * @return void

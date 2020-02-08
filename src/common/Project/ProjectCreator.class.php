@@ -834,7 +834,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @param ProjectCreationData $data
      *
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
@@ -857,8 +856,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @param ProjectCreationData $data
-     * @return Project
      * @throws Project_Creation_Exception
      *
      * protected for testing purpose

@@ -89,7 +89,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * Verify if the repository as already some content within
      *
      * @see    plugins/git/include/Git_Backend_Interface::isInitialized()
-     * @param  GitRepository $repository
      * @return bool
      */
     public function isInitialized(GitRepository $repository)
@@ -105,7 +104,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     /**
      *
-     * @param GitRepository $repository
      * @return bool
      */
     public function isCreated(GitRepository $repository)
@@ -116,7 +114,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     /**
      * Return URL to access the respository for remote git commands
      *
-     * @param  GitRepository $repository
      * @return array
      */
     public function getAccessURL(GitRepository $repository)
@@ -174,7 +171,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     /**
      * Save the permissions of the repository
      *
-     * @param GitRepository $repository
      * @param array         $perms
      *
      * @return bool true if success, false otherwise
@@ -391,7 +387,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     /**
      * Invoque 'archive deleted item' hook in order to make a backup of the git repository archive
      *
-     * @param GitRepository $repository
      *
      * @return bool
      */
@@ -536,7 +531,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     /**
      * Setter for tests
      *
-     * @param GitPlugin $gitPlugin
      */
     public function setGitPlugin(GitPlugin $gitPlugin)
     {
@@ -554,7 +548,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     /**
-     * @param GitRepository $repository
      * @param array $repositor_ids
      * @return array
      */
@@ -582,7 +575,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * Restore archived Gitolite repositories
      *
-     * @param GitRepository $repository
      *
      */
     public function restoreArchivedRepository(GitRepository $repository)

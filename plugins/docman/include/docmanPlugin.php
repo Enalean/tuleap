@@ -1544,9 +1544,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         );
     }
 
-    /**
-     * @return Docman_LockFactory
-     */
     private function getDocmanLockFactory(): Docman_LockFactory
     {
         return new \Docman_LockFactory(new \Docman_LockDao(), new Docman_Log());

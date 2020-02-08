@@ -86,7 +86,6 @@ class Tracker_FileInfoFactory
     }
 
     /**
-     * @return Tracker_Artifact
      * @throws Tracker_FileInfo_InvalidFileInfoException
      * @throws Tracker_FileInfo_UnauthorisedException
      */

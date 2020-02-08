@@ -272,7 +272,6 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue $value The changeset value for this field
      * @return string
      */

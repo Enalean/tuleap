@@ -49,8 +49,6 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
     /**
      *
      * @param Tracker_FormElement_Field $field
-     * @param SimpleXMLElement $artifact_xml
-     * @param SimpleXMLElement $changeset_xml
      * @param Tracker_Artifact_ChangesetValue[] $changeset_values
      */
     public function exportSnapshot(

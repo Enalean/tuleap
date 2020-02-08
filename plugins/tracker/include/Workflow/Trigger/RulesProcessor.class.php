@@ -46,8 +46,6 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
     /**
      * Apply $rule that was triggered by a change on $artifact
      *
-     * @param Tracker_Artifact $artifact
-     * @param Tracker_Workflow_Trigger_TriggerRule $rule
      */
     public function process(Tracker_Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule)
     {

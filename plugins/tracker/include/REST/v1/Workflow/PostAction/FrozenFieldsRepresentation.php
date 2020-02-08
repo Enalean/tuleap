@@ -33,7 +33,6 @@ class FrozenFieldsRepresentation extends PostActionRepresentation
     public $field_ids;
 
     /**
-     * @param int   $id
      * @param int[] $field_ids
      */
     private function __construct(int $id, array $field_ids)
@@ -44,9 +43,7 @@ class FrozenFieldsRepresentation extends PostActionRepresentation
     }
 
     /**
-     * @param int   $id
      * @param int[] $field_ids
-     * @return FrozenFieldsRepresentation
      */
     public static function build(int $id, array $field_ids): FrozenFieldsRepresentation
     {

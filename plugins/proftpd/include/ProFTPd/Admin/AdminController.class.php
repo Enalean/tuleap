@@ -49,7 +49,6 @@ class AdminController
     }
 
     /**
-     * @param HTTPRequest $request
      * @return bool
      */
     private function userIsAdmin(HTTPRequest $request)

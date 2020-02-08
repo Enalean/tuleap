@@ -49,8 +49,6 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param HTTPRequest $request
-     * @param BaseLayout $layout
      * @param array $variables
      * @return void
      */

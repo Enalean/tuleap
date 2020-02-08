@@ -702,7 +702,6 @@ class ReferenceManager
      * Return true if given text contains references
      *
      * @param String  $string
-     * @param Project $project
      *
      * @return bool
      */

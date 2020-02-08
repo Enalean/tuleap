@@ -47,7 +47,6 @@ class Cardwall_OnTop_ConfigFactory
     }
 
     /**
-     * @param Tracker $tracker
      *
      * @return \Cardwall_OnTop_Config
      */
@@ -80,7 +79,6 @@ class Cardwall_OnTop_ConfigFactory
     /**
      * Returns the cardwall configuration of the given planning
      *
-     * @param Planning $planning
      *
      * @return Cardwall_OnTop_Config | null
      */

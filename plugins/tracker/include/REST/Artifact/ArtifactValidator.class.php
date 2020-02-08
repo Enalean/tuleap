@@ -33,7 +33,6 @@ class Tracker_REST_Artifact_ArtifactValidator
 
     /**
      * @param ArtifactValuesRepresentation[] $values
-     * @param Tracker                        $tracker
      */
     public function getFieldsDataOnCreate(array $values, Tracker $tracker)
     {
@@ -72,7 +71,6 @@ class Tracker_REST_Artifact_ArtifactValidator
 
     /**
      * @param ArtifactValuesRepresentation[] $values
-     * @param Tracker_Artifact               $artifact
      */
     public function getFieldsDataOnUpdate(array $values, Tracker_Artifact $artifact)
     {

@@ -233,7 +233,6 @@ class AgileDashboardRouter
      *   - Use a 'resource' parameter to deduce the controller (e.g. someurl/?resource=planning&id=2 )
      *   - Pass $request to action methods
      *
-     * @param Codendi_Request $request
      */
     public function route(Codendi_Request $request)
     {
@@ -415,7 +414,6 @@ class AgileDashboardRouter
     /**
      * Retrieves the Agile Dashboard Service instance matching the request group id.
      *
-     * @param Codendi_Request $request
      *
      * @return Service
      */
@@ -465,7 +463,6 @@ class AgileDashboardRouter
     /**
      * Renders the bottom footer for all Agile Dashboard pages.
      *
-     * @param Codendi_Request $request
      */
     private function displayFooter(Codendi_Request $request)
     {
@@ -574,7 +571,6 @@ class AgileDashboardRouter
      * TODO:
      *   - merge into AgileDashboardRouter::route()
      *
-     * @param Codendi_Request $request
      */
     public function routeShowPlanning(Codendi_Request $request)
     {

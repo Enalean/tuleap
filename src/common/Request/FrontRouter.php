@@ -214,7 +214,6 @@ class FrontRouter
     }
 
     /**
-     * @param HTTPRequest $request
      * @param             $handler
      * @param array       $route_info
      * @throws ForbiddenException

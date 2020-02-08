@@ -56,9 +56,6 @@ class TimeframeChecker
             && $duration_field->isUsed();
     }
 
-    /**
-     * @return Tracker_FormElement_Field | null
-     */
     private function getStartDateField(Tracker $tracker) : ?Tracker_FormElement_Field
     {
         return $this->form_element_factory->getFormElementByName(
@@ -67,9 +64,6 @@ class TimeframeChecker
         );
     }
 
-    /**
-     * @return Tracker_FormElement_Field | null
-     */
     private function getDurationField(Tracker $tracker) : ?Tracker_FormElement_Field
     {
         return $this->form_element_factory->getFormElementByName(

@@ -25,7 +25,6 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     /**
      * Fetch the element for the update artifact form
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string html
      */

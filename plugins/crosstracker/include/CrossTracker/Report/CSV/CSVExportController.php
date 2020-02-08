@@ -95,8 +95,6 @@ class CSVExportController implements DispatchableWithRequest
     }
 
     /**
-     * @param HTTPRequest $request
-     * @param BaseLayout  $layout
      * @param array       $variables
      * @return void
      */
@@ -128,7 +126,6 @@ class CSVExportController implements DispatchableWithRequest
     }
 
     /**
-     * @param PFUser $current_user
      * @param int    $report_id
      * @param int    $limit
      * @param int    $offset
@@ -207,8 +204,6 @@ class CSVExportController implements DispatchableWithRequest
     }
 
     /**
-     * @param PFUser             $user
-     * @param CrossTrackerReport $report
      * @throws ForbiddenException
      * @throws NotFoundException
      */

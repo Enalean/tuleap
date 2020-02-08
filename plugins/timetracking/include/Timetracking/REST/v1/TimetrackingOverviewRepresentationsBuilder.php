@@ -68,8 +68,6 @@ class TimetrackingOverviewRepresentationsBuilder
     }
 
     /**
-     * @param PFUser  $user
-     * @param Project $project
      * @param int     $limit
      * @param int     $offset
      * @return array
@@ -98,8 +96,6 @@ class TimetrackingOverviewRepresentationsBuilder
     }
 
     /**
-     * @param PFUser  $user
-     * @param Project $project
      * @param int     $limit
      * @param int     $offset
      * @return array

@@ -57,7 +57,6 @@ class UGroupLiteralizer
     /**
      * Return User groups for a given user
      *
-     * @param PFUser $user
      *
      * @return array Ex: array('site_active', 'gpig1_project_members')
      */
@@ -76,7 +75,6 @@ class UGroupLiteralizer
     /**
      * Return User groups for a given user
      *
-     * @param PFUser $user
      *
      * @return array Ex: array('site_active', 'gpig1_project_members')
      */
@@ -90,7 +88,6 @@ class UGroupLiteralizer
     /**
      * Append project dynamic ugroups of user
      *
-     * @param PFUser  $user
      * @param array $user_ugroups
      *
      * @return array the new array of user's ugroup
@@ -112,7 +109,6 @@ class UGroupLiteralizer
     /**
      * Append project static ugroups of user
      *
-     * @param PFUser  $user
      * @param array $user_ugroups
      *
      * @return array the new array of user's ugroup

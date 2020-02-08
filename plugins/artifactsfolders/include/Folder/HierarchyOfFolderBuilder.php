@@ -80,7 +80,6 @@ class HierarchyOfFolderBuilder
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return null|Tracker_Artifact
      */
     public function getDirectFolderForArtifact(Tracker_Artifact $artifact)

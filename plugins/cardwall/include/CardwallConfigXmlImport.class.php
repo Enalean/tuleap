@@ -91,7 +91,6 @@ class CardwallConfigXmlImport
     /**
      * Import cardwall ontop from XML input
      *
-     * @param SimpleXMLElement $xml_input
      * @throws CardwallFromXmlImportCannotBeEnabledException
      */
     public function import(SimpleXMLElement $xml_input)

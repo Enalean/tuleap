@@ -103,9 +103,6 @@ class Controller
         return $presenters;
     }
 
-    /**
-     * @param \Codendi_Request $request
-     */
     public function addReference(\Codendi_Request $request)
     {
         $this->csrf_token->check();

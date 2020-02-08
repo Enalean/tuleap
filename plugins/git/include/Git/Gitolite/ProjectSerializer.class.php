@@ -74,7 +74,6 @@ class Git_Gitolite_ProjectSerializer
     /**
      * Save on filesystem all permission configuration for a project
      *
-     * @param Project $project
      */
     public function dumpProjectRepoConf(Project $project)
     {
@@ -176,7 +175,6 @@ class Git_Gitolite_ProjectSerializer
     }
 
     /**
-     * @param Project $project
      * @return string
      */
     private function fetchObjectSizeLimit(Project $project)
@@ -193,7 +191,6 @@ class Git_Gitolite_ProjectSerializer
     }
 
     /**
-     * @param Project $project
      * @return bool
      */
     private function bigObjectsAreAuthorizedForProject(Project $project)

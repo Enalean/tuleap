@@ -28,8 +28,6 @@ use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 class BindDecoratorRetriever
 {
     /**
-     * @param Tracker_FormElement_Field_List $field
-     * @param Tracker_Artifact $artifact
      * @return \Tracker_FormElement_Field_List_BindDecorator
      * @throws NoBindDecoratorException
      * @throws NoChangesetException

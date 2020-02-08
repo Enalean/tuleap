@@ -48,9 +48,6 @@ class PostActionVisitExternalActionsEvent implements Dispatchable
         return $this->post_action;
     }
 
-    /**
-     * @return PostActionRepresentation|null
-     */
     public function getRepresentation(): ?PostActionRepresentation
     {
         return $this->representation;

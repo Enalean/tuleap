@@ -202,7 +202,6 @@ class RepositoryManager
     }
 
     /**
-     * @param HTTPRequest $request
      *
      * @return Repository
      * @throws CannotFindRepositoryException

@@ -58,7 +58,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     /**
      * Accessor for visitors
      *
-     * @param Tracker_FormElement_Visitor $visitor
      */
     public function accept(Tracker_FormElement_Visitor $visitor)
     {
@@ -228,7 +227,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     /**
      * Fetch the element for the update artifact form
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string html
      */
@@ -253,7 +251,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     /**
      * Fetch the element for the update artifact form
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string html
      */

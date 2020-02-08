@@ -88,7 +88,6 @@ class GitRepositoryFactory
     /**
      * Return all git repositories of a project (gitshell, gitolite, personal forks)
      *
-     * @param Project $project
      *
      * @return GitRepository[]
      */
@@ -117,8 +116,6 @@ class GitRepositoryFactory
     }
 
     /**
-     * @param Project $project
-     * @param PFUser $user
      * @param string $scope
      * @param int $owner_id
      * @param string $order_by
@@ -218,9 +215,6 @@ class GitRepositoryFactory
     /**
      * @todo should be private
      *
-     * @param Project $project
-     * @param ProjectUGroup $ugroup
-     * @param PFUser $user
      * @return \GitRepositoryWithPermissions
      */
     public function getGerritRepositoriesWithPermissionsForUGroupAndProject(Project $project, ProjectUGroup $ugroup, PFUser $user)

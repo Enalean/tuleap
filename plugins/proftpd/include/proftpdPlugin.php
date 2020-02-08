@@ -259,9 +259,6 @@ class proftpdPlugin extends Plugin
         );
     }
 
-    /**
-     * @param PermissionPerGroupPaneCollector $event
-     */
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
     {
         $project = $event->getProject();

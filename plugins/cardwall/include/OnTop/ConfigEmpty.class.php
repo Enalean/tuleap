@@ -80,7 +80,6 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
     }
 
     /**
-     * @param Tracker $mapping_tracker
      *
      * @return Cardwall_OnTop_Config_TrackerMapping
      */

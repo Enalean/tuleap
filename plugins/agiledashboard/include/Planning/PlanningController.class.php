@@ -306,7 +306,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
     /**
      * @param Planning[] $last_plannings
-     * @param PFUser $user
      * @return Planning_Presenter_LastLevelMilestone[]
      */
     private function getLastLevelMilestonesPresenters($last_plannings, PFUser $user)
@@ -790,7 +789,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     }
 
     /**
-     * @param Planning $planning
      *
      * @return array
      */

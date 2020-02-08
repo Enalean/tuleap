@@ -204,7 +204,6 @@ class Search_SearchController
     }
 
     /**
-     * @param Search_SearchQuery $query
      * @return Search_SearchResults
      */
     private function doSearch(Search_SearchQuery $query)

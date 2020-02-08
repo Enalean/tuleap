@@ -75,7 +75,6 @@ class MediawikiUserGroupsMapper
     /**
      *
      * @param array $new_mapping_list
-     * @param Project $project
      */
     public function saveMapping(array $new_mapping_list, Project $project)
     {

@@ -304,8 +304,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @see fetchArtifactValue
      *
      * @param bool                            $is_read_only
-     * @param Tracker_Artifact                $artifact
-     * @param Tracker_Artifact_ChangesetValue $value
      * @param array                           $submitted_values
      *
      * @return string html
@@ -400,7 +398,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $value The changeset value for this field
      * @return string
      */
@@ -630,7 +627,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @param mixed            $value
      *
      * @return bool true if the value is considered ok
@@ -645,9 +641,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @param mixed $submitted_value
-     * @param Tracker_Artifact_ChangesetValue $last_changeset_value
      * @param bool $is_submission
      *
      * @return bool
@@ -877,8 +871,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * Return REST value of a field for a given changeset
      *
-     * @param PFUser                     $user
-     * @param Tracker_Artifact_Changeset $changeset
      *
      * @return mixed | null if no values
      */

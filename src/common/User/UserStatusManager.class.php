@@ -23,7 +23,6 @@ class User_UserStatusManager
     /**
      * Ensure user can use the platform
      *
-     * @param PFUser $user
      * @throws User_StatusDeletedException
      * @throws User_StatusSuspendedException
      * @throws User_StatusInvalidException
@@ -49,7 +48,6 @@ class User_UserStatusManager
      *
      * See src/www/account/login.php
      *
-     * @param PFUser $user
      *
      * @throws User_StatusDeletedException
      * @throws User_StatusSuspendedException
@@ -77,7 +75,6 @@ class User_UserStatusManager
     /**
      * Check user status validity
      *
-     * @param PFUser $user
      * @param bool $allowpending
      * @return bool
      * @throws User_StatusDeletedException

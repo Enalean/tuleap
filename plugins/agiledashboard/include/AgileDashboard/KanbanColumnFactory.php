@@ -41,7 +41,6 @@ class AgileDashboard_KanbanColumnFactory
     }
 
     /**
-     * @param AgileDashboard_Kanban $kanban
      *
      * @return AgileDashboard_KanbanColumn[]
      */
@@ -67,7 +66,6 @@ class AgileDashboard_KanbanColumnFactory
     }
 
     /**
-     * @param AgileDashboard_Kanban $kanban
      * @param int                   $column_id
      *
      * @return AgileDashboard_KanbanColumn

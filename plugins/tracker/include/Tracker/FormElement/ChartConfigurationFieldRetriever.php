@@ -58,7 +58,6 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @param Tracker $tracker
      * @return Tracker_FormElement_Field
      */
     public function getCapacityField(Tracker $tracker)
@@ -136,8 +135,6 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param PFUser $user
      * @return bool|Tracker_FormElement_Field
      */
     public function getBurndownRemainingEffortField(Tracker_Artifact $artifact, PFUser $user)
@@ -150,7 +147,6 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @param Tracker $tracker
      * @return bool
      */
     public function doesRemainingEffortFieldExists(Tracker $tracker)
@@ -162,7 +158,6 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @param Tracker $tracker
      * @return bool
      */
     public function doesCapacityFieldExist(Tracker $tracker)

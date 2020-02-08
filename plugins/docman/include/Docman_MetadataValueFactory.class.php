@@ -272,9 +272,6 @@ class Docman_MetadataValueFactory
         return $this->error_state;
     }
 
-    /**
-     * @return \Tuleap\Docman\Metadata\MetadataValueCreator
-     */
     private function getMetadataCreator(): MetadataValueCreator
     {
         return new Tuleap\Docman\Metadata\MetadataValueCreator(
@@ -287,9 +284,6 @@ class Docman_MetadataValueFactory
         );
     }
 
-    /**
-     * @return \Tuleap\Docman\Metadata\MetadataValueUpdator
-     */
     private function getMetadataUpdator(): MetadataValueUpdator
     {
         return new Tuleap\Docman\Metadata\MetadataValueUpdator(
@@ -303,9 +297,6 @@ class Docman_MetadataValueFactory
         );
     }
 
-    /**
-     * @return MetadataValueObjectFactory
-     */
     private function getMetadataTypeObjectFactory(): MetadataValueObjectFactory
     {
         return new MetadataValueObjectFactory(new DocmanMetadataTypeValueFactory());

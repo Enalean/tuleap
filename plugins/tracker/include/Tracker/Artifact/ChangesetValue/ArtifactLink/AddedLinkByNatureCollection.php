@@ -53,9 +53,6 @@ class AddedLinkByNatureCollection implements ICollectChangeOfLinksBetweenTwoChan
         $this->added[] = $artifactlinkinfo;
     }
 
-    /**
-     * @return string
-     */
     public function fetchFormatted(PFUser $user, $format, $ignore_perms) : string
     {
         if ($this->nature->shortname) {

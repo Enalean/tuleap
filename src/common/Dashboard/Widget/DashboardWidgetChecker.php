@@ -33,7 +33,6 @@ class DashboardWidgetChecker
     }
 
     /**
-     * @param DashboardWidgetColumn $column
      * @return bool
      */
     public function isEmptyColumn(DashboardWidgetColumn $column)
@@ -42,7 +41,6 @@ class DashboardWidgetChecker
     }
 
     /**
-     * @param DashboardWidgetColumn $column
      * @return bool
      */
     public function isEmptyLine(DashboardWidgetColumn $column)

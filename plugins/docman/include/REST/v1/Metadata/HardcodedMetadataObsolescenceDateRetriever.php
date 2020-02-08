@@ -39,7 +39,6 @@ class HardcodedMetadataObsolescenceDateRetriever
     }
 
     /**
-     * @return int
      * @throws HardCodedMetadataException
      */
     public function getTimeStampOfDate(?string $date): int

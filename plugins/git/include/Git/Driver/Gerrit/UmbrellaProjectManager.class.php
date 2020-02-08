@@ -56,7 +56,6 @@ class Git_Driver_Gerrit_UmbrellaProjectManager
     /**
      * Creates the Umbrella Projects of a given project
      * @param Git_RemoteServer_GerritServer[] $gerrit_servers
-     * @param Project $project
      */
     public function recursivelyCreateUmbrellaProjects(array $gerrit_servers, Project $project)
     {
@@ -94,7 +93,6 @@ class Git_Driver_Gerrit_UmbrellaProjectManager
 
     /**
      * @param array $gerrit_servers
-     * @param Project $project
      */
     private function resetProjectInheritanceOnServers(array $gerrit_servers, Project $project)
     {
@@ -110,7 +108,6 @@ class Git_Driver_Gerrit_UmbrellaProjectManager
 
     /**
      * @param array $gerrit_servers
-     * @param Project $project
      */
     private function createProjectOnServers(array $gerrit_servers, Project $project)
     {

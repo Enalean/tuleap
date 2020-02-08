@@ -100,7 +100,6 @@ class ScrumPlanningFilter
     }
 
     /**
-     * @param PFUser $user
      *
      * @return array
      */
@@ -113,7 +112,6 @@ class ScrumPlanningFilter
     }
 
     /**
-     * @param PFUser $user
      * @param $project_id
      *
      * @return array
@@ -138,7 +136,6 @@ class ScrumPlanningFilter
     }
 
     /**
-     * @param PFUser $user
      * @param $project_id
      *
      * @return array
@@ -163,7 +160,6 @@ class ScrumPlanningFilter
     /**
      * @param array $trackers
      * @param array $kanban_tracker_ids
-     * @param Planning $planning
      *
      * @return array
      */

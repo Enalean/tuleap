@@ -33,7 +33,6 @@ class StatusLogger implements \Tuleap\Webhook\StatusLogger
     }
 
     /**
-     * @param \Tuleap\Webhook\Webhook $webhook
      * @param $status
      * @throws WebhookLoggerDataAccessException
      */

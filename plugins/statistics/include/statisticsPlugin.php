@@ -225,7 +225,6 @@ class StatisticsPlugin extends Plugin
     /**
      * Instanciate the widget
      *
-     * @param \Tuleap\Widget\Event\GetWidget $get_wiget_event
      *
      * @return void
      */

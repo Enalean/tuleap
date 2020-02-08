@@ -47,8 +47,6 @@ class RepositorySimpleRepresentationBuilder
     }
 
     /**
-     * @param GitRepository $repository
-     * @param Project       $project
      * @param               $selected_ugroup_id
      *
      * @return RepositoryPermissionRepresentation

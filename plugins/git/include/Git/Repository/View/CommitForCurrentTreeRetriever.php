@@ -27,8 +27,6 @@ use Tuleap\Git\GitPHP\Project;
 class CommitForCurrentTreeRetriever
 {
     /**
-     * @param HTTPRequest $request
-     * @param Project     $gitphp_project
      *
      * @return Commit|null
      */

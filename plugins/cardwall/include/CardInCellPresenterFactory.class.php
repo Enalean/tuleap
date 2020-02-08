@@ -45,7 +45,6 @@ class Cardwall_CardInCellPresenterFactory
     /**
      * Instanciate a new Cardwall_CardInCellPresenter
      *
-     * @param Cardwall_CardPresenter $card_presenter
      *
      * @return Cardwall_CardInCellPresenter
      */

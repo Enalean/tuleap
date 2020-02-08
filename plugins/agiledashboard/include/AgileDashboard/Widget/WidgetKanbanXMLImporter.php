@@ -27,7 +27,6 @@ use Tuleap\XML\MappingsRegistry;
 class WidgetKanbanXMLImporter
 {
     /**
-     * @param ConfigureAtXMLImport $event
      * @throws \RuntimeException
      */
     public function configureWidget(ConfigureAtXMLImport $event)
@@ -38,7 +37,6 @@ class WidgetKanbanXMLImporter
     }
 
     /**
-     * @param ConfigureAtXMLImport $event
      * @throws \RuntimeException
      * @return \Codendi_Request
      */
@@ -50,8 +48,6 @@ class WidgetKanbanXMLImporter
     }
 
     /**
-     * @param \SimpleXMLElement $xml
-     * @param MappingsRegistry $mapping_registry
      * @throws \RuntimeException
      * @return string[][]
      */
@@ -75,8 +71,6 @@ class WidgetKanbanXMLImporter
     }
 
     /**
-     * @param \SimpleXMLElement $preference
-     * @param MappingsRegistry $mapping_registry
      * @param string $preference_name
      * @param array $params
      *

@@ -29,10 +29,6 @@ class ThemeVariation
 
     private $is_condensed_mode;
 
-    /**
-     * @param ThemeVariantColor $color
-     * @param PFUser            $current_user
-     */
     public function __construct(ThemeVariantColor $color, PFUser $current_user)
     {
         $this->color             = $color;

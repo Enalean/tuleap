@@ -56,8 +56,6 @@ class MilestoneCrumbBuilder
     }
 
     /**
-     * @param PFUser             $user
-     * @param Planning_Milestone $milestone
      *
      * @return BreadCrumb
      */
@@ -98,8 +96,6 @@ class MilestoneCrumbBuilder
     }
 
     /**
-     * @param PFUser             $user
-     * @param Planning_Milestone $milestone
      *
      * @return BreadCrumbSubItems
      */
@@ -112,10 +108,6 @@ class MilestoneCrumbBuilder
         return $sub_items;
     }
 
-    /**
-     * @param Planning_Milestone $milestone
-     * @param BreadCrumbSubItems $sub_items
-     */
     private function addDefaultSection(Planning_Milestone $milestone, BreadCrumbSubItems $sub_items)
     {
         $links = [];
@@ -139,11 +131,6 @@ class MilestoneCrumbBuilder
         );
     }
 
-    /**
-     * @param PFUser             $user
-     * @param Planning_Milestone $milestone
-     * @param BreadCrumbSubItems $sub_items
-     */
     private function addSiblingsSection(PFUser $user, Planning_Milestone $milestone, BreadCrumbSubItems $sub_items)
     {
         $links = $this->getFirstTenOpenSiblings($user, $milestone);
@@ -164,8 +151,6 @@ class MilestoneCrumbBuilder
     }
 
     /**
-     * @param PFUser             $user
-     * @param Planning_Milestone $milestone
      *
      * @return array
      */

@@ -30,9 +30,6 @@ class DefaultSettingsRouter extends RouterLink
      */
     private $index_controller;
 
-    /**
-     * @param IndexController $index_controller
-     */
     public function __construct(IndexController $index_controller)
     {
         $this->index_controller = $index_controller;

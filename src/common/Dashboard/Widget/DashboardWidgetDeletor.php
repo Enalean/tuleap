@@ -32,18 +32,12 @@ class DashboardWidgetDeletor
         $this->dao = $dao;
     }
 
-    /**
-     * @param DashboardWidgetColumn $column
-     */
     public function deleteLineByColumn(DashboardWidgetColumn $column)
     {
         $this->dao->removeLine($column->getLineId());
         $this->dao->reorderLines($column->getLineId());
     }
 
-    /**
-     * @param DashboardWidgetColumn $column
-     */
     public function deleteColumn(DashboardWidgetColumn $column)
     {
         $this->dao->removeColumn($column->getId());

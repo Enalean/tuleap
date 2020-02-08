@@ -42,7 +42,6 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      * Constuctor of the class
      *
      * @param PFUser $user
-     * @param Project $project
      * @param Docman_Document $item
      *
      * @return void

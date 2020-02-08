@@ -178,7 +178,6 @@ class Planning_MilestoneController extends BaseController
     }
 
     /**
-     * @param PanePresenterData $presenter_data
      * @return string
      */
     private function getTemplateName(PanePresenterData $presenter_data)

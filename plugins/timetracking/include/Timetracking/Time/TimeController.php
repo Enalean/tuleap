@@ -114,8 +114,6 @@ class TimeController
     }
 
     /**
-     * @param Codendi_Request $request
-     * @param PFUser $user
      * @return Time
      * @throws TimeTrackingNoTimeException
      */

@@ -34,9 +34,6 @@ class BackgroundColorBuilder
     /** @var BindDecoratorRetriever */
     private $decorator_retriever;
 
-    /**
-     * @param BindDecoratorRetriever $decorator_retriever
-     */
     public function __construct(BindDecoratorRetriever $decorator_retriever)
     {
         $this->decorator_retriever = $decorator_retriever;

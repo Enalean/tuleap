@@ -30,8 +30,6 @@ class Tracker_URLVerification extends URLVerification
     /**
      * Ensure given user can access given project
      *
-     * @param PFUser  $user
-     * @param Project $project
      * @return bool
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException

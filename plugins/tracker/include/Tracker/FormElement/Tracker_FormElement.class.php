@@ -693,7 +693,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     abstract public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values);
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return mixed
      */
     abstract public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values);
@@ -710,7 +709,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      *
-     * @param Tracker_Artifact $artifact
      * @return string
      */
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
@@ -730,10 +728,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      * Returns the value that will be displayed in a mail
-     * @param Tracker_Artifact $artifact
-     * @param PFUser $user
      * @param bool $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value
      * @param String $format
      *
      * @return String

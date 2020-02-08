@@ -42,8 +42,6 @@ class UserSuspensionDao extends DataAccessObject
     /**
      * Gets the user_id and last_access_date of idle users
      *
-     * @param DateTimeImmutable $start_date
-     * @param DateTimeImmutable $end_date
      *
      * @return array
      */
@@ -59,9 +57,6 @@ class UserSuspensionDao extends DataAccessObject
         return $this->getDB()->run($sql, $start_date_timestamp, $end_date_timestamp);
     }
 
-    /**
-     * @param int $user_id
-     */
     private function suspendAccount(int $user_id)
     {
         $sql = 'UPDATE user SET status = "S", unix_status = "S"' .
@@ -72,7 +67,6 @@ class UserSuspensionDao extends DataAccessObject
     /**
      * Suspend user account according to given date
      *
-     * @param DateTimeImmutable $date
      */
     public function suspendExpiredAccounts(DateTimeImmutable $date)
     {
@@ -86,7 +80,6 @@ class UserSuspensionDao extends DataAccessObject
     /**
      * Suspend account of users who didn't access the platform after given date
      *
-     * @param DateTimeImmutable $date
      */
     public function suspendInactiveAccounts(DateTimeImmutable $date)
     {
@@ -126,8 +119,6 @@ class UserSuspensionDao extends DataAccessObject
     /**
      * Return 1 row if delay allowed to  be subscribed without belonging to any project has expired
      * else 0 row
-     * @param int $user_id
-     * @param DateTimeImmutable $date
      * @return array
      */
     private function delayForBeingSubscribed(int $user_id, DateTimeImmutable $date)
@@ -140,9 +131,7 @@ class UserSuspensionDao extends DataAccessObject
 
     /**
      * Suspend account of user who is no more member of any project
-     * @param DateTimeImmutable $date
      *
-     * @return void
      */
     public function suspendUserNotProjectMembers(DateTimeImmutable $date) : void
     {

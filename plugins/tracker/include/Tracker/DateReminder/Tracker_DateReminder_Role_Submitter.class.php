@@ -43,7 +43,6 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role
     /**
      * Retrieve submitter recipients for a given artifact
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return Array of PFUser
      */

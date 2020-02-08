@@ -59,8 +59,6 @@ abstract class ComparisonChecker implements ValueWrapperVisitor
     abstract public function getOperator() : string;
 
     /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
      * @throws InvalidQueryException
      */
     public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison)

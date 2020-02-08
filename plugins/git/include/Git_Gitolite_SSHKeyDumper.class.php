@@ -89,7 +89,6 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
     /**
      * Dump user SSH key
      *
-     * @param IHaveAnSSHKey $user
      *
      * @return bool
      */

@@ -44,7 +44,6 @@ class Tracker_Permission_PermissionRetrieveAssignee
     /**
      * Retrieve users who are assigned to a given artifact
      *
-     * @param Tracker_Artifact $artifact
      * @return PFUser[]
      */
     public function getAssignees(Tracker_Artifact $artifact)

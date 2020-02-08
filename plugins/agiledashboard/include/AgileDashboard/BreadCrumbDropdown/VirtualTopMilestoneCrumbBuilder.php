@@ -38,7 +38,6 @@ class VirtualTopMilestoneCrumbBuilder
     }
 
     /**
-     * @param Project $project
      *
      * @return BreadCrumb
      */

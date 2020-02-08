@@ -277,7 +277,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     /**
      * Return URL to access the respository for remote git commands
      *
-     * @param  GitRepository $repository
      * @return array
      */
     public function getAccessURL(GitRepository $repository)
@@ -437,7 +436,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     /**
      * Move the archived gitolite repositories to the archiving area before purge
      *
-     * @param GitRepository $repository
      */
     public function archiveBeforePurge(GitRepository $repository)
     {

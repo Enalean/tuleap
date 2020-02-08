@@ -56,10 +56,6 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
      */
     private $planning;
 
-    /**
-     * @param Project  $project
-     * @param Planning $planning
-     */
     public function __construct(Project $project, Planning $planning)
     {
         $this->project  = $project;
@@ -100,7 +96,6 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
     }
 
     /**
-     * @param PFUser $user
      * @return bool
      */
     public function userCanView(PFUser $user)

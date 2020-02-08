@@ -36,9 +36,6 @@ class SemanticVelocityFactory
         $this->semantic_formatter = $semantic_formatter;
     }
 
-    /**
-     * @return SemanticVelocity
-     */
     public function getInstanceByTracker(Tracker $tracker) : SemanticVelocity
     {
         return SemanticVelocity::load($tracker);

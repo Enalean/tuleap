@@ -410,8 +410,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
 
     /**
-     * @param PFUser $user
-     * @param Tracker_Artifact $artifact
      * @return string | float
      */
     private function getSemanticEffortValue(PFUser $user, Tracker_Artifact $artifact)
@@ -470,7 +468,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     }
 
     /**
-     * @param Tracker $tracker
      * @return Tracker_FormElement_Field | null
      */
     protected function getInitialEffortField(Tracker $tracker)

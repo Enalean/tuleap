@@ -72,9 +72,6 @@ class AdditionalArtifactActionButtonsFetcher implements Dispatchable
         return $this->additional_links;
     }
 
-    /**
-     * @return PFUser
-     */
     public function getUser(): PFUser
     {
         return $this->user;

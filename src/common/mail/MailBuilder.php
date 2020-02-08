@@ -46,9 +46,6 @@ class MailBuilder
     }
 
     /**
-     * @param Project $project
-     * @param Notification $notification
-     * @param MailEnhancer $mail_enhancer
      *
      * @return bool
      */

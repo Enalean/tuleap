@@ -52,7 +52,6 @@ class User_LoginManager
     /**
      * Set user as a current if they are valid
      *
-     * @param PFUser $user
      * @throws User_StatusDeletedException
      * @throws User_StatusSuspendedException
      * @throws User_StatusInvalidException

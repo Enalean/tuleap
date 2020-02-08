@@ -30,11 +30,6 @@ class Cardwall_RawBoardBuilder
     /**
      * Build a Cardwall_Board taking account of Mapped Fieds
      *
-     * @param PFUser $user
-     * @param Tracker_ArtifactFactory $artifact_factory
-     * @param Planning_Milestone $milestone
-     * @param Cardwall_OnTop_Config $config
-     * @param Cardwall_OnTop_Config_ColumnCollection $columns
      *
      * @return Cardwall_Board
      */
@@ -86,8 +81,6 @@ class Cardwall_RawBoardBuilder
     /**
      * Get the display preferences of a user for a given milestone
      *
-     * @param Planning_Milestone $milestone
-     * @param PFUser $user
      *
      * @return Cardwall_UserPreferences_UserPreferencesDisplayUser
      */

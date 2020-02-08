@@ -109,7 +109,6 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
     /**
      * Fetch the element for the update artifact form
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string html
      */
@@ -123,7 +122,6 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
 
     /**
      *
-     * @param Tracker_Artifact $artifact
      * @return string html
      */
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
@@ -139,7 +137,6 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
     /**
      * Fetch the element for the artifact in read only mode
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string html
      */
@@ -228,7 +225,6 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
     /**
      * Accessor for visitors
      *
-     * @param Tracker_FormElement_Visitor $visitor
      */
     public function accept(Tracker_FormElement_Visitor $visitor)
     {

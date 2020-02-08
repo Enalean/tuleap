@@ -115,7 +115,6 @@ class SvnRouter implements DispatchableWithRequest
 
     /**
      * Routes the request to the correct controller
-     * @param HTTPRequest $request
      * @return void
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -261,9 +260,6 @@ class SvnRouter implements DispatchableWithRequest
         }
     }
 
-    /**
-     * @param HTTPRequest $request
-     */
     private function useDefaultRoute(HTTPRequest $request)
     {
         $this->explorer_controller->index($this->getService($request), $request);
@@ -272,7 +268,6 @@ class SvnRouter implements DispatchableWithRequest
     /**
      * Retrieves the SVN Service instance matching the request group id.
      *
-     * @param HTTPRequest $request
      *
      * @return ServiceSvn
      */
@@ -301,8 +296,6 @@ class SvnRouter implements DispatchableWithRequest
     }
 
     /**
-     * @param HTTPRequest $request
-     * @param BaseLayout  $layout
      * @throws CannotFindRepositoryException
      */
     private function checkAccessToProject(HTTPRequest $request, BaseLayout $layout): void

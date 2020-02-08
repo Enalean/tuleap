@@ -81,7 +81,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     /**
      * Update an artifact (means create a new changeset)
      *
-     * @return Tracker_Artifact_Changeset|null
      * @throws Tracker_NoChangeException In the validation
      * @throws FieldValidationException
      *

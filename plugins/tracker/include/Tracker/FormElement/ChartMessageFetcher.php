@@ -184,7 +184,6 @@ class ChartMessageFetcher
     /**
      * Renders a link to the given tracker.
      *
-     * @param Tracker $tracker
      * @return String
      */
     private function getLinkToTracker(Tracker $tracker)

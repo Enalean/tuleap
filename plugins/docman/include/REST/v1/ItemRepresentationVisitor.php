@@ -236,11 +236,6 @@ class ItemRepresentationVisitor implements ItemVisitor
         );
     }
 
-    /**
-     * @param Docman_Link $item
-     *
-     * @return LinkPropertiesRepresentation
-     */
     private function buildLinkProperties(Docman_Link $item): LinkPropertiesRepresentation
     {
         $latest_link_version = $this->docman_link_version_factory->getLatestVersion($item);

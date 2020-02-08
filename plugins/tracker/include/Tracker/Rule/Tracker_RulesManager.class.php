@@ -123,7 +123,6 @@ class Tracker_RulesManager
 
     /**
      *
-     * @param Tracker_Rule_Date_Factory $factory
      * @return \Tracker_RulesManager
      */
     public function setRuleDateFactory(Tracker_Rule_Date_Factory $factory)
@@ -147,7 +146,6 @@ class Tracker_RulesManager
 
     /**
      *
-     * @param Tracker_Rule_List_Factory $factory
      * @return \Tracker_RulesManager
      */
     public function setRuleListFactory(Tracker_Rule_List_Factory $factory)

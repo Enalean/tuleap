@@ -814,7 +814,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_Date $value The changeset value for this field
      * @return string
      */
@@ -1035,7 +1034,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      * Convert ISO8601 into internal date needed by createNewChangeset
      *
      * @param array $value
-     * @param Tracker_Artifact $artifact
      * @return type
      */
     public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
@@ -1059,7 +1057,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     /**
      * Return the field last value
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return Date
      */

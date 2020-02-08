@@ -63,7 +63,6 @@ class MailManager
     /**
      * Returns whether the user wants an HTML or a Text notification
      *
-     * @param PFUser $user
      *
      * @return String
      */

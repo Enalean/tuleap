@@ -46,7 +46,6 @@ class Git_ReferenceManager
 
     /**
      * Return a reference that match keyword and value
-     * @param Project $project
      * @param String $keyword
      * @param String $value
      * @return Reference

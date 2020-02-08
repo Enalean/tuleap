@@ -182,7 +182,6 @@ class Docman_VersionFactory
      *
      * @param Docman_Version $version Deleted docman item version
      *
-     * @return bool
      */
     public function archiveBeforePurge(Docman_Version $version) : bool
     {

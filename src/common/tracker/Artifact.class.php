@@ -2542,7 +2542,6 @@ class Artifact
     /**
      * Finalize & send mail to peple
      *
-     * @param Codendi_Mail_Interface $mail
      * @param String                 $subject
      * @param Array                  $to
      */

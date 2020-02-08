@@ -549,7 +549,6 @@ class PullRequestsResource extends AuthenticatedResource
      * @access protected
      *
      * @param int $id pull request ID
-     * @param LabelsPATCHRepresentation $body
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -1202,7 +1201,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @param int $id Pull request ID
      *
-     * @return ReviewersRepresentation
      *
      * @throws RestException 403
      * @throws RestException 404
@@ -1227,7 +1225,6 @@ class PullRequestsResource extends AuthenticatedResource
      * @status 204
      *
      * @param int $id Pull request ID
-     * @param ReviewersPUTRepresentation $representation
      *
      * @throws RestException 400
      * @throws RestException 403

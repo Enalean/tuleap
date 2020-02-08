@@ -34,8 +34,6 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringExceptio
 abstract class GreaterOrLesserThanComparisonChecker extends ComparisonChecker
 {
     /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
      * @throws InvalidQueryException
      */
     public function checkComparisonIsValid(Metadata $metadata, Comparison $comparison)

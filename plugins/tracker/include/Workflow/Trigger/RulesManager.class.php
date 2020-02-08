@@ -123,7 +123,6 @@ class Tracker_Workflow_Trigger_RulesManager
     /**
      * Add a new rule in the DB
      *
-     * @param Tracker_Workflow_Trigger_TriggerRule $rule
      */
     public function add(Tracker_Workflow_Trigger_TriggerRule $rule)
     {
@@ -147,8 +146,6 @@ class Tracker_Workflow_Trigger_RulesManager
     /**
      * Delete a rule in target tracker
      *
-     * @param Tracker $tracker
-     * @param Tracker_Workflow_Trigger_TriggerRule $rule
      * @throws Tracker_Workflow_Trigger_Exception_RuleException
      */
     public function delete(Tracker $tracker, Tracker_Workflow_Trigger_TriggerRule $rule)
@@ -184,7 +181,6 @@ class Tracker_Workflow_Trigger_RulesManager
     /**
      * Get all rules that applies on a given tracker
      *
-     * @param Tracker $tracker
      *
      * @return Tracker_Workflow_Trigger_TriggerRuleCollection
      */

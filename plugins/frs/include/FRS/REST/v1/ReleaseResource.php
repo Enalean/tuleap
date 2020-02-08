@@ -185,7 +185,6 @@ class ReleaseResource extends AuthenticatedResource
      *
      * @url POST
      *
-     * @param ReleasePOSTRepresentation $body
      *
      * @return \Tuleap\FRS\REST\v1\ReleaseRepresentation
      * @status 201
@@ -255,7 +254,6 @@ class ReleaseResource extends AuthenticatedResource
      * @url PATCH {id}
      *
      * @param int $id
-     * @param ReleasePATCHRepresentation $body
      *
      * @throws RestException 403
      */
@@ -352,7 +350,6 @@ class ReleaseResource extends AuthenticatedResource
 
     /**
      * @param $release
-     * @param ReleasePATCHRepresentation $body
      * @return array
      */
     private function getArrayForUpdateRelease($release, ReleasePATCHRepresentation $body)

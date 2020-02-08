@@ -47,8 +47,6 @@ class SourceOfAssociationDetector
      * And Release -> Sprint (in tracker hierarchy)
      * Then return True
      *
-     * @param Tracker_Artifact $artifact_to_check
-     * @param Tracker_Artifact $artifact_reference
      *
      * @return bool
      */

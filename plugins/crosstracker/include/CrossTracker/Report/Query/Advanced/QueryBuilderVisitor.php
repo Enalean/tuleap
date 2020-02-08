@@ -108,7 +108,6 @@ class QueryBuilderVisitor implements Visitor
     }
 
     /**
-     * @param Visitable $parsed_query
      * @param Tracker[] $trackers
      * @return IProvideParametrizedFromAndWhereSQLFragments
      */

@@ -84,10 +84,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
 
     /**
      * Fetch artifact value for email
-     * @param Tracker_Artifact $artifact
-     * @param PFUser $user
      * @param bool $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value
      * @param string $format
      *
      * @return string
@@ -159,7 +156,6 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */

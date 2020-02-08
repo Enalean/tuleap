@@ -67,7 +67,6 @@ trait TemporaryTestDirectory
      *
      * @param string $mypath Path to the directory
      *
-     * @return void
      */
     private function recurseDeleteInDir($mypath): void
     {

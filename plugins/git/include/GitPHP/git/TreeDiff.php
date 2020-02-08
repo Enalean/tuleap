@@ -305,7 +305,6 @@ class TreeDiff implements \Iterator, \Countable
     }
 
     /**
-     * @param GitExe $exe
      * @param array  $stat_args
      *
      * @return array

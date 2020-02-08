@@ -194,7 +194,6 @@ class SystemControlCommandTest extends TestCase
     }
 
     /**
-     * @param string $action
      *
      * @testWith [ "mask" ]
      *           [ "enable" ]

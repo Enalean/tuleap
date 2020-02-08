@@ -46,8 +46,6 @@ class Git_Hook_LogAnalyzer
      *
      * Behaviour extracted from official email hook prep_for_email() function
      *
-     * @param GitRepository $repository
-     * @param PFUser $user
      * @param type $oldrev
      * @param type $newrev
      * @param type $refname

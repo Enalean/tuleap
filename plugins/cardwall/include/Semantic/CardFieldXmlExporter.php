@@ -37,9 +37,7 @@ class CardFieldXmlExporter
     }
 
     /**
-     * @param SimpleXMLElement             $root
      * @param array                        $xml_mapping
-     * @param Cardwall_Semantic_CardFields $semantic
      */
     public function exportToXml(SimpleXMLElement $root, array $xml_mapping, Cardwall_Semantic_CardFields $semantic)
     {
@@ -49,7 +47,6 @@ class CardFieldXmlExporter
     }
 
     /**
-     * @param SimpleXMLElement              $semantic
      * @param                               $xml_mapping
      * @param  \Tracker_FormElement_Field[] $fields
      */

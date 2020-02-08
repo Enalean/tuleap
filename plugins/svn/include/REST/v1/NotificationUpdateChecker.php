@@ -46,7 +46,6 @@ class NotificationUpdateChecker
     }
 
     /**
-     * @param Repository $repository
      * @param MailNotification[] $new_notifications
      *
      * @return bool

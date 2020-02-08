@@ -219,7 +219,6 @@ class AddWidgetController
     }
 
     /**
-     * @param HTTPRequest $request
      * @param $dashboard_type
      * @param $dashboard_id
      */
@@ -234,7 +233,6 @@ class AddWidgetController
     }
 
     /**
-     * @param HTTPRequest $request
      * @param $dashboard_type
      * @return int
      */
@@ -275,7 +273,6 @@ class AddWidgetController
     }
 
     /**
-     * @param HTTPRequest $request
      * @param $dashboard_id
      * @param $dashboard_type
      */

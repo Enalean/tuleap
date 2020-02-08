@@ -86,7 +86,6 @@ class UsersToBeImportedCollectionBuilder
 
     /**
      *
-     * @param ArchiveInterface $archive
      * @return SimpleXMLElement
      * @throws UsersXMLNotFoundException
      */

@@ -56,7 +56,6 @@ class TransitionCreator
     }
 
     /**
-     * @return Transition
      * @throws \DataAccessQueryException
      * @throws \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
      * @throws \Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException

@@ -107,7 +107,6 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
 
     /**
      * @see Transition_PostAction::after()
-     * @param Tracker_Artifact_Changeset $changeset
      */
     public function after(Tracker_Artifact_Changeset $changeset)
     {

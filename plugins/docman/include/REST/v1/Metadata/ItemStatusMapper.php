@@ -89,7 +89,6 @@ class ItemStatusMapper
     }
 
     /**
-     * @param string|null $status_string
      *
      * @throws HardCodedMetadataException
      */

@@ -43,9 +43,6 @@ class DashboardWidgetColumn
         $this->widgets = $widgets;
     }
 
-    /**
-     * @param DashboardWidget $widget
-     */
     public function addWidget(DashboardWidget $widget)
     {
         $this->widgets[] = $widget;

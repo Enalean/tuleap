@@ -108,8 +108,6 @@ function ugroups_to_soap($ugroups)
  * like active users to people (otherwise it breaks Mylyn on trackers due to workflow manager)
  *
  * @param string $identifier
- * @param PFUser $user
- * @param PFUser $current_user
  * @return array
  */
 function user_to_soap($identifier, ?PFUser $user = null, PFUser $current_user)

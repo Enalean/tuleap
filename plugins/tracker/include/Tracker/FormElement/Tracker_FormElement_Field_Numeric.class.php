@@ -61,7 +61,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
 
     /**
      * @param PFUser             $user
-     * @param Tracker_Artifact $artifact
      * @param int              $timestamp
      *
      * @return mixed
@@ -74,7 +73,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
 
     /**
      * @param PFUser             $user
-     * @param Tracker_Artifact $artifact
      *
      * @return mixed
      */

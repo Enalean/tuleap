@@ -42,9 +42,7 @@ class SinglePageExporter
     }
 
     /**
-     * @param Tracker $tracker
      * @param array   $ordered_artifact_rows
-     * @param PFUser  $current_user
      * @param string  $server_url
      */
     public function exportAsSinglePage(

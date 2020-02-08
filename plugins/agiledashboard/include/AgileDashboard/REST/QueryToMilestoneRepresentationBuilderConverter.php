@@ -51,8 +51,6 @@ class QueryToMilestoneRepresentationBuilderConverter
     }
 
     /**
-     * @param string $query
-     * @return MilestoneRepresentationBuilderInterface
      * @throws MalformedQueryParameterException
      */
     public function convert(string $query): MilestoneRepresentationBuilderInterface

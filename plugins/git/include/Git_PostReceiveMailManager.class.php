@@ -80,7 +80,6 @@ class Git_PostReceiveMailManager
      * As repository is meant to be deleted, there is no need to propagate
      * change to backend.
      *
-     * @param GitRepository $repository
      *
      * @return bool
      */

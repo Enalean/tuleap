@@ -640,7 +640,6 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * error. Moreover, in case of errors, messages are displayed as warning
      * instead of info.
      *
-     * @param PFUser $user
      */
     private function warnUserAboutAuthenticationAttempts(PFUser $user)
     {
@@ -703,7 +702,6 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Open a session for user
      *
-     * @param PFUser $user
      * @return type
      * @throws UserNotExistException
      * @throws UserNotActiveException
@@ -818,7 +816,6 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     /**
      * Update db entry of 'user' table with values in object
-     * @param PFUser $user
      */
     public function updateDb(PFUser $user)
     {
@@ -884,7 +881,6 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * Should probably be merged with updateDb but I don't know the impact of
      * validating keys each time we update a user
      *
-     * @param PFUser $user
      * @param string[] $keys
      */
     public function updateUserSSHKeys(PFUser $user, array $keys)

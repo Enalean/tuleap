@@ -426,7 +426,6 @@ class DocmanItemCreator
     }
 
     /**
-     * @return CreatedItemRepresentation
      * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
@@ -474,7 +473,6 @@ class DocmanItemCreator
     }
 
     /**
-     * @return CreatedItemRepresentation
      * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException

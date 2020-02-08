@@ -46,9 +46,6 @@ class AllowedFieldTypeChangesRetriever implements Dispatchable
         return $this->field;
     }
 
-    /**
-     * @param \Tracker_FormElement $field
-     */
     public function setField(Tracker_FormElement $field)
     {
         $this->field = $field;
