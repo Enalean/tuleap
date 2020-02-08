@@ -204,10 +204,7 @@ class LdapPlugin extends Plugin
         );
     }
 
-    /**
-     * @return LdapLogger
-     */
-    public function getLogger()
+    public function getLogger(): \Psr\Log\LoggerInterface
     {
         return new LdapLogger();
     }

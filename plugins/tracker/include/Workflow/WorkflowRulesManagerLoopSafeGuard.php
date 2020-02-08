@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
+use Psr\Log\LoggerInterface;
 use Tracker_Artifact;
 
 final class WorkflowRulesManagerLoopSafeGuard
@@ -31,11 +32,11 @@ final class WorkflowRulesManagerLoopSafeGuard
      */
     private $already_processed_artifacts = [];
     /**
-     * @var WorkflowBackendLogger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(WorkflowBackendLogger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

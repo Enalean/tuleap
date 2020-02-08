@@ -82,7 +82,7 @@ class ProjectXMLImporterTest extends TestCase
         $this->ugroup_manager    = M::spy(\UGroupManager::class);
         $this->user_manager      = M::spy(\UserManager::class, [ 'getCurrentUser' => M::spy(\PFUser::class) ]);
         $this->user_finder       = new XMLImportHelper($this->user_manager);
-        $this->logger            = M::spy(\ProjectXMLImporterLogger::class);
+        $this->logger            = M::spy(\Psr\Log\LoggerInterface::class);
         $this->ugroup_duplicator = M::spy(\Tuleap\Project\UgroupDuplicator::class);
         $this->sync_members      = M::mock(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDao::class);
         $frs_permissions_creator = M::spy(\Tuleap\FRS\FRSPermissionCreator::class);

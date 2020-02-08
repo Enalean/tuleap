@@ -168,10 +168,8 @@ class LDAP_CleanUpManager
 
     /**
      * Wrapper for BackendLogger object
-     *
-     * @return BackendLogger
      */
-    private function getBackendLogger()
+    private function getBackendLogger(): \Psr\Log\LoggerInterface
     {
          return new BackendLogger();
     }

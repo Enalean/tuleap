@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,16 @@
 
 namespace Tuleap\ArchiveDeletedItems;
 
+use Psr\Log\LoggerInterface;
+
 class FileCopier
 {
     /**
-     * @var ArchiveLogger
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(ArchiveLogger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

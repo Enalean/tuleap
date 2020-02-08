@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,12 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends Tuleap
     /** @var Tracker_XML_Importer_CopyArtifactInformationsAggregator */
     private $logger;
 
-    /** @var BackendLogger */
+    /** @var \Psr\Log\LoggerInterface */
     private $backend_logger;
 
     public function setUp()
     {
-        $this->backend_logger = mock("BackendLogger");
+        $this->backend_logger = mock(\Psr\Log\LoggerInterface::class);
         $this->logger         = new Tracker_XML_Importer_CopyArtifactInformationsAggregator($this->backend_logger);
     }
 

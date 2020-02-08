@@ -26,6 +26,7 @@ use CrossReference;
 use Http\Mock\Client;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tuleap\Bugzilla\Reference\Reference;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\Cryptography\ConcealedString;
@@ -38,7 +39,7 @@ final class RESTReferenceCreatorTest extends TestCase
     public function testReferenceIsCommunicatedToTheBugzillaServer() : void
     {
         $http_client = new Client();
-        $logger      = Mockery::mock(BugzillaLogger::class);
+        $logger      = Mockery::mock(LoggerInterface::class);
         $creator     = new RESTReferenceCreator(
             $http_client,
             HTTPFactoryBuilder::requestFactory(),

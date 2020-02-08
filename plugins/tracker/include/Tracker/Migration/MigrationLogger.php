@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -22,10 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\Log\LoggerInterface;
+
 class Tracker_Migration_MigrationLogger extends BrokerLogger
 {
 
-    public function __construct(BackendLogger $backend_logger, Tracker_Migration_MailLogger $mail_logger)
+    public function __construct(LoggerInterface $backend_logger, LoggerInterface $mail_logger)
     {
         parent::__construct(
             array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\SystemEvent;
 
-use BackendLogger;
+use Psr\Log\LoggerInterface;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
 use Tracker_FormElement_Field_BurndownDao;
@@ -38,7 +38,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
     private $burndown_dao;
 
     /**
-     * @var BackendLogger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -66,7 +66,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
         Tracker_FormElement_Field_BurndownDao $burndown_dao,
         FieldCalculator $field_calculator,
         Tracker_FormElement_Field_ComputedDaoCache $cache_dao,
-        BackendLogger $logger,
+        LoggerInterface $logger,
         BurndownCacheDateRetriever $date_retriever
     ) {
         $this->burndown_dao     = $burndown_dao;

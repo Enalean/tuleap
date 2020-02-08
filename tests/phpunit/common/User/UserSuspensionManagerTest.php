@@ -30,6 +30,7 @@ use MailPresenterFactory;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use TemplateRenderer;
 use Tuleap\Dao\UserSuspensionDao;
 use Tuleap\ForgeConfigSandbox;
@@ -77,7 +78,7 @@ class UserSuspensionManagerTest extends TestCase
         $this->pf_user = Mockery::mock(PFUser::class);
         $this->user_manager = Mockery::mock(UserManager::class);
         $this->user_manager->shouldReceive('instance')->andReturn($this->user_manager);
-        $this->user_suspension_logger = Mockery::mock(UserSuspensionLogger::class);
+        $this->user_suspension_logger = Mockery::mock(LoggerInterface::class);
 
         $this->user_suspension_manager = new UserSuspensionManager(
             $this->mail_presenter_factory,

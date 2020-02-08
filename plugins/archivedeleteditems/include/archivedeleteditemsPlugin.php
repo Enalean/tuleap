@@ -42,7 +42,7 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
         bindtextdomain('tuleap-archivedeleteditems', __DIR__ . '/../site-content');
     }
 
-    private function getLogger()
+    private function getLogger(): \Psr\Log\LoggerInterface
     {
         return new ArchiveLogger();
     }

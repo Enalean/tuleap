@@ -26,6 +26,7 @@ use ForgeAccess;
 use ForgeConfig;
 use Mockery;
 use Project_AccessPrivateException;
+use Psr\Log\LoggerInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\ProjectAccessChecker;
 use UserManager;
@@ -55,7 +56,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
     private $project;
 
     /**
-     * @var \Tuleap\Mail\MailLogger
+     * @var LoggerInterface
      */
     private $mail_logger;
 
@@ -88,7 +89,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
 
         $this->user_manager           = \Mockery::spy(\UserManager::class);
         $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
-        $this->mail_logger            = \Mockery::spy(\Tuleap\Mail\MailLogger::class);
+        $this->mail_logger            = \Mockery::spy(LoggerInterface::class);
 
         $this->mail_filter = new MailFilter($this->user_manager, $this->project_access_checker, $this->mail_logger);
 

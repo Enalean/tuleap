@@ -30,6 +30,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_Date;
@@ -59,7 +60,7 @@ final class TimeframeBuilderTest extends TestCase
 
     private $semantic_timeframe_builder;
     /**
-     * @var \BackendLogger|Mockery\MockInterface
+     * @var LoggerInterface|Mockery\MockInterface
      */
     private $logger;
 
@@ -70,7 +71,7 @@ final class TimeframeBuilderTest extends TestCase
         $this->formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);
         $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
 
-        $this->logger  = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger  = Mockery::mock(LoggerInterface::class);
         $this->builder = new TimeframeBuilder(
             $this->formelement_factory,
             $this->semantic_timeframe_builder,

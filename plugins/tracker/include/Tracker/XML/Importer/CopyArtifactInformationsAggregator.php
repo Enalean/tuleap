@@ -18,17 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-class Tracker_XML_Importer_CopyArtifactInformationsAggregator extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
+class Tracker_XML_Importer_CopyArtifactInformationsAggregator extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
     /** @var string[] */
     private $logs_stack = array();
 
-    /** @var BackendLogger */
+    /** @var LoggerInterface */
     private $backend_logger;
 
-    public function __construct(BackendLogger $backend_logger)
+    public function __construct(LoggerInterface $backend_logger)
     {
         $this->backend_logger = $backend_logger;
     }

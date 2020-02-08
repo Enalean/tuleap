@@ -24,23 +24,23 @@ final class MigrationLoggerTest extends \PHPUnit\Framework\TestCase //phpcs:igno
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /**
-     * @var Tracker_Migration_MigrationLogger
+     * @var \Psr\Log\LoggerInterface
      */
     private $migration_logger;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Migration_MailLogger
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Psr\Log\LoggerInterface
      */
     private $mail_logger;
 
     /**
-     * @var BackendLogger|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var \Psr\Log\LoggerInterface|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $backend_logger;
 
     protected function setUp(): void
     {
-        $this->backend_logger   = \Mockery::spy(\BackendLogger::class);
-        $this->mail_logger      = \Mockery::spy(\Tracker_Migration_MailLogger::class);
+        $this->backend_logger   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->mail_logger      = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->migration_logger = new Tracker_Migration_MigrationLogger($this->backend_logger, $this->mail_logger);
     }
 

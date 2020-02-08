@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use ProjectXMLExporter;
-use ProjectXMLExporterLogger;
+use Psr\Log\LoggerInterface;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Test\Builders as B;
 use UGroupManager;
@@ -74,7 +74,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
             $xml_validator,
             $user_xml_exporter,
             $this->synch_detector,
-            M::spy(ProjectXMLExporterLogger::class)
+            M::spy(LoggerInterface::class)
         );
 
         $this->options = array(

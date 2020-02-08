@@ -22,16 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use BackendLogger;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 final class WorkflowBackendLoggerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var BackendLogger|Mockery\MockInterface
+     * @var LoggerInterface|Mockery\MockInterface
      */
     private $backend_logger;
 

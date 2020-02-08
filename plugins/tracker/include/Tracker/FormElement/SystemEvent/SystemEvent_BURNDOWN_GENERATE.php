@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\FormElement\SystemEvent;
 
-use BackendLogger;
 use DateTime;
+use Psr\Log\LoggerInterface;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
 use Tracker_ArtifactFactory;
@@ -41,7 +41,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
     private $burndown_dao;
 
     /**
-     * @var BackendLogger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -88,7 +88,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
         Tracker_FormElement_Field_BurndownDao $burndown_dao,
         FieldCalculator $field_calculator,
         Tracker_FormElement_Field_ComputedDaoCache $cache_dao,
-        BackendLogger $logger,
+        LoggerInterface $logger,
         BurndownCacheDateRetriever $date_retriever
     ) {
         $this->artifact_factory           = $artifact_factory;

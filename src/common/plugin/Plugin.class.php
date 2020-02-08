@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Layout\IncludeAssets;
 
 /**
@@ -26,7 +27,7 @@ use Tuleap\Layout\IncludeAssets;
  */
 class Plugin implements PFO_Plugin
 {
-    /** @var BackendLogger */
+    /** @var LoggerInterface */
     private $backend_logger;
 
     public $id;
@@ -386,10 +387,7 @@ class Plugin implements PFO_Plugin
         return '';
     }
 
-    /**
-     * @return BackendLogger
-     */
-    protected function getBackendLogger()
+    protected function getBackendLogger(): LoggerInterface
     {
         if (! $this->backend_logger) {
             $this->backend_logger = new BackendLogger();

@@ -54,7 +54,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
             $xml_validator,
             $user_xml_exporter,
             M::mock(SynchronizedProjectMembershipDetector::class, [ 'isSynchronizedWithProjectMembers' => false ]),
-            M::spy(ProjectXMLExporterLogger::class)
+            M::spy(\Psr\Log\LoggerInterface::class)
         );
 
         $this->options = array(
