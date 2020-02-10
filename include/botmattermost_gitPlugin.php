@@ -133,7 +133,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
             $pull_request_notification_sender = new PullRequestNotificationSender(
                 $this->getSender($logger),
                 $this->getFactory(),
-                new PullRequestNotificationBuilder($logger, $this->getGitRepositoryUrlManager()),
+                new PullRequestNotificationBuilder($this->getGitRepositoryUrlManager()),
                 $this->getLogger()
             );
 

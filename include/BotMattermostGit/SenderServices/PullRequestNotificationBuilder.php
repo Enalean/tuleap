@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,18 +26,14 @@ use HTTPRequest;
 use PFUser;
 use Project;
 use TemplateRendererFactory;
-use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\PullRequest\PullRequest;
 
 class PullRequestNotificationBuilder
 {
-
-    private $logger;
     private $repository_url_manager;
 
-    public function __construct(BotMattermostLogger $logger, Git_GitRepositoryUrlManager $repository_url_manager)
+    public function __construct(Git_GitRepositoryUrlManager $repository_url_manager)
     {
-        $this->logger                 = $logger;
         $this->repository_url_manager = $repository_url_manager;
     }
 
