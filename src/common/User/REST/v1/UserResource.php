@@ -99,11 +99,17 @@ class UserResource extends AuthenticatedResource
      * <pre> Note that when accessing this route without authentication certain properties<br>
      * will not be returned in the response.
      * </pre>
+     * <br>
+     * The user ID can be either:
+     * <ul>
+     *   <li>an integer value to get this specific user information</li>
+     *   <li>the "self" value to get our own user information</li>
+     * </ul>
      *
      * @url GET {id}
      * @access hybrid
      *
-     * @param int $id Id of the desired user
+     * @param string $id Id of the desired user
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -111,11 +117,22 @@ class UserResource extends AuthenticatedResource
      *
      * @return UserRepresentation {@type UserRepresentation}
      */
-    public function getId($id)
+    public function getId(string $id)
     {
         $this->checkAccess();
 
-        $user                = $this->getUserById($id);
+        $user_id = null;
+        if ($id === self::SELF_ID) {
+            $user_id = (int) $this->user_manager->getCurrentUser()->getId();
+        } elseif (ctype_digit($id)) {
+            $user_id = (int) $id;
+        }
+
+        if ($user_id === null) {
+            throw new RestException(400, 'Provided User Id is not well formed.');
+        }
+
+        $user                = $this->getUserById($user_id);
         $user_representation = ($this->is_authenticated) ? new UserRepresentation() : new MinimalUserRepresentation();
         return $user_representation->build($user);
     }

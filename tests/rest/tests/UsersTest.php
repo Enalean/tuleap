@@ -71,6 +71,16 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertGETId($response);
     }
 
+    public function testGETIdWithSelfKeyword()
+    {
+        $response = $this->getResponse(
+            $this->client->get('users/self'),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+
+        $this->assertGETId($response);
+    }
+
     private function assertGETId(\Guzzle\Http\Message\Response $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
