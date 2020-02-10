@@ -17,7 +17,7 @@ class XMLExport
     protected $packagePath;
     protected $logger;
 
-    public function __construct(Logger $logger)
+    public function __construct(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = new WrapperLogger($logger, 'Export Docman');
     }

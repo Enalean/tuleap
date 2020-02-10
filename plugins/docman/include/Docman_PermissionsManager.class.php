@@ -21,6 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+
 class Docman_PermissionsManager
 {
     public const PLUGIN_OPTION_DELETE = 'only_siteadmin_can_delete';
@@ -40,9 +43,9 @@ class Docman_PermissionsManager
      */
     private $project;
     /**
-     * @var URLVerification
+     * @var ProjectAccessChecker
      */
-    private $url_verification;
+    private $project_access_checker;
     protected $cache_access = array();
     protected $cache_read   = array();
     protected $cache_write  = array();
@@ -58,11 +61,11 @@ class Docman_PermissionsManager
     private static $instance = array();
     private $plugin;
 
-    private function __construct(Project $project, URLVerification $url_verification)
+    private function __construct(Project $project, ProjectAccessChecker $project_access_checker)
     {
-        $this->project          = $project;
-        $this->url_verification = $url_verification;
-        $this->plugin           = PluginManager::instance()->getPluginByName(DocmanPlugin::SERVICE_SHORTNAME);
+        $this->project                = $project;
+        $this->project_access_checker = $project_access_checker;
+        $this->plugin                 = PluginManager::instance()->getPluginByName(DocmanPlugin::SERVICE_SHORTNAME);
     }
 
     /**
@@ -76,7 +79,14 @@ class Docman_PermissionsManager
     {
         if (!isset(self::$instance[$groupId])) {
             $project = ProjectManager::instance()->getProject($groupId);
-            self::$instance[$groupId] = new Docman_PermissionsManager($project, new URLVerification());
+            self::$instance[$groupId] = new Docman_PermissionsManager(
+                $project,
+                new ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                )
+            );
         }
         return self::$instance[$groupId];
     }
@@ -191,11 +201,7 @@ class Docman_PermissionsManager
     function userCanRead($user, $item_id)
     {
         if (!isset($this->cache_read[$user->getId()][$item_id])) {
-            try {
-                $can_access_project = $this->getURLVerification()->userCanAccessProject($user, $this->getProject());
-            } catch (Project_AccessException $e) {
-                $can_access_project = false;
-            }
+            $can_access_project = $this->canUserAccessProject($user, $this->getProject());
             if (! $can_access_project) {
                 $this->_setCanRead($user->getId(), $item_id, $can_access_project);
                 return $can_access_project;
@@ -228,11 +234,7 @@ class Docman_PermissionsManager
     function userCanWrite($user, $item_id)
     {
         if (!isset($this->cache_write[$user->getId()][$item_id])) {
-            try {
-                $can_access_project = $this->getURLVerification()->userCanAccessProject($user, $this->getProject());
-            } catch (Project_AccessException $e) {
-                $can_access_project = false;
-            }
+            $can_access_project = $this->canUserAccessProject($user, $this->getProject());
             if (! $can_access_project) {
                 $this->_setCanWrite($user->getId(), $item_id, $can_access_project);
                 return $can_access_project;
@@ -334,11 +336,7 @@ class Docman_PermissionsManager
     public function userCanManage($user, $item_id)
     {
         if (!isset($this->cache_manage[$user->getId()][$item_id])) {
-            try {
-                $can_access_project = $this->getURLVerification()->userCanAccessProject($user, $this->getProject());
-            } catch (Project_AccessException $e) {
-                $can_access_project = false;
-            }
+            $can_access_project = $this->canUserAccessProject($user, $this->getProject());
             if (! $can_access_project) {
                 $this->cache_manage[$user->getId()][$item_id] = $can_access_project;
                 return $can_access_project;
@@ -387,11 +385,7 @@ class Docman_PermissionsManager
     public function userCanAdmin(PFUser $user)
     {
         if (! isset($this->cache_admin[$user->getId()][$this->getProject()->getID()])) {
-            try {
-                $can_access_project = $this->getURLVerification()->userCanAccessProject($user, $this->getProject());
-            } catch (Project_AccessException $e) {
-                $can_access_project = false;
-            }
+            $can_access_project = $this->canUserAccessProject($user, $this->getProject());
             if (! $can_access_project) {
                 $this->cache_admin[$user->getId()][$this->getProject()->getID()] = false;
                 return false;
@@ -742,8 +736,18 @@ class Docman_PermissionsManager
         return $this->project;
     }
 
-    protected function getURLVerification() : URLVerification
+    protected function getProjectAccessChecker() : ProjectAccessChecker
     {
-        return $this->url_verification;
+        return $this->project_access_checker;
+    }
+
+    private function canUserAccessProject(PFUser $user, Project $project): bool
+    {
+        try {
+            $this->getProjectAccessChecker()->checkUserCanAccessProject($user, $project);
+            return true;
+        } catch (Project_AccessException $e) {
+            return false;
+        }
     }
 }
