@@ -81,7 +81,6 @@ class UserSuspensionManager
 
     /**
      * Constructor
-     *
      */
     public function __construct(
         MailPresenterFactory $mail_presenter_factory,
@@ -105,7 +104,6 @@ class UserSuspensionManager
 
     /**
      * Sends email alerts for all idle user accounts
-     *
      */
     public function sendNotificationMailToIdleAccounts() : bool
     {
@@ -153,7 +151,6 @@ class UserSuspensionManager
     /**
      * Sends suspension notification to user
      *
-     *
      * @return bool True if sent, false otherwise
      */
     private function sendNotificationMail(PFUser $user, DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language) : bool
@@ -170,10 +167,8 @@ class UserSuspensionManager
     /**
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
      * @param int $inactive_delay Inactive accounts delay (number of days after since login)
-     *
-     * @return array
      */
-    private function getIdleAccounts(int $notification_delay, int $inactive_delay)
+    private function getIdleAccounts(int $notification_delay, int $inactive_delay) : array
     {
         $start_date = $this->getLastAccessDate($notification_delay, $inactive_delay);
         $end_date = $start_date->modify('+23hours 59 minutes 59 seconds');
@@ -185,10 +180,8 @@ class UserSuspensionManager
     }
 
     /**
-     *
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
      * @param int $inactive_delay   Inactive accounts delay (number of days after last login)
-     *
      */
     private function getLastAccessDate(int $notification_delay, int $inactive_delay) : DateTimeImmutable
     {
@@ -246,14 +239,61 @@ class UserSuspensionManager
 
     /**
      * Change account status to suspended when user is no more member of any project
-     *
      */
     private function suspendUserNotProjectMembers(DateTimeImmutable $time)
     {
         if (ForgeConfig::exists('sys_suspend_non_project_member_delay') && ForgeConfig::get('sys_suspend_non_project_member_delay') > 0) {
             $date_param = '- ' . ForgeConfig::get('sys_suspend_non_project_member_delay') . ' day';
             $lastRemove = $time->modify($date_param);
-            return $this->dao->suspendUserNotProjectMembers($lastRemove);
+
+            $timestamp = $lastRemove->getTimestamp();
+            $dar = $this->dao->returnNotProjectMembers();
+            if ($dar) {
+                //we should verify the delay for it user has been no more belonging to any project
+                foreach ($dar as $row) {
+                    $user_id = (int)$row['user_id'];
+                    $this->logger->debug("Checking user #$user_id");
+                    //we split the treatment in two methods to distinguish between 0 row returned
+                    //by the fact that there is no "removed user" entry for this user_id and the case
+                    //where it is the result of comparing the date
+                    $res = $this->dao->delayForBeingNotProjectMembers($user_id);
+                    if (count($res) == 0) {
+                        $this->logger->debug("User #$user_id never project member");
+                        //Verify add_date
+                        $result = $this->dao->delayForBeingSubscribed($user_id, $lastRemove);
+                        if ($result) {
+                            $this->suspendUser($user_id);
+                        } else {
+                            $this->logger->debug("User #$user_id not in delay, continue");
+                            continue;
+                        }
+                    } else {
+                        //verify if delay has not expired yet
+                        $rowLastRemove = $res[0];
+                        if ($rowLastRemove['date'] > $timestamp) {
+                            $this->logger->debug("User #$user_id not in delay, continue");
+                            continue;
+                        } else {
+                            $this->suspendUser($user_id);
+                        }
+                    }
+                }
+            }
+            return;
+        }
+    }
+
+    /**
+     *  Suspends and logs user suspension
+     */
+    private function suspendUser(int $user_id)
+    {
+        $this->dao->suspendAccount($user_id);
+
+        if (! $this->dao->verifySuspension($user_id)) {
+            $this->logger->error("Error while suspending user #$user_id");
+        } else {
+            $this->logger->debug("User #$user_id is suspended");
         }
     }
 }
