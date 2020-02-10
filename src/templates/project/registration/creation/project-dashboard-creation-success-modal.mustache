@@ -4,15 +4,18 @@
          role="dialog"
          aria-labelledby="project-creation-success-modal">
         <div class="tlp-modal-body project-creation-success-modal-container">
-            <div>
+            <div class="project-creation-success-modal-illustration">
                 {{> ../project/registration/creation/project-dashboard-creation-modal-svg }}
             </div>
-            <div>
-                <h2 class="tlp-text-success">{{#gettext}}Congratulations!{{/gettext}} </h2>
-                <p class ="project-creation-success-modal-text">{{#gettext}}Welcome to your new project {{/gettext}} "{{name}}"</p>
-                <button type="button" class="tlp-button-success tlp-modal-action" data-dismiss="modal">
+            <div class="project-creation-success-modal-content">
+                <h2 class="project-creation-success-modal-content-title">{{#gettext}}Congratulations!{{/gettext}} </h2>
+                <p class="project-creation-success-modal-content-welcome">
+                    {{#gettext}}Welcome to your new project {{/gettext}}
+                    <span class="project-creation-success-modal-content-welcome-project-name">{{name}}</span>
+                </p>
+                <button type="button" class="tlp-button-success tlp-button-large tlp-modal-action" data-dismiss="modal">
                     {{#gettext}} Start working {{/gettext}}
-                    <i class="fa fa-long-arrow-right project-creation-success-modal-icon"
+                    <i class="fa fa-long-arrow-right tlp-button-icon-right"
                        aria-hidden="true">
                     </i>
                 </button>
