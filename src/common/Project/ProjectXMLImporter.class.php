@@ -482,7 +482,6 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     }
 
     /**
-     * @param SimpleXMLElement $xml_element_ugroups
      *
      * @return array
      */
@@ -520,7 +519,6 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     }
 
     /**
-     * @param SimpleXMLElement $ugroup
      *
      * @return PFUser[]
      */

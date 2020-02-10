@@ -45,9 +45,6 @@ class Tracker_ReferenceManager
     /**
      * Create a cross reference on $source_artifact that point on $target_artifact
      *
-     * @param Tracker_Artifact $source_artifact
-     * @param Tracker_Artifact $target_artifact
-     * @param PFUser $user
      *
      * @return CrossReference
      */
@@ -69,9 +66,6 @@ class Tracker_ReferenceManager
     /**
      * Save in database a cross reference between $source_artifact and $target_artifact
      *
-     * @param Tracker_Artifact $source_artifact
-     * @param Tracker_Artifact $target_artifact
-     * @param PFUser $user
      *
      * @return bool
      */
@@ -85,9 +79,6 @@ class Tracker_ReferenceManager
     /**
      * Remove from database a cross reference between $source_artifact and $target_artifact
      *
-     * @param Tracker_Artifact $source_artifact
-     * @param Tracker_Artifact $target_artifact
-     * @param PFUser $user
      *
      * @return bool
      */

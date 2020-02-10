@@ -40,17 +40,11 @@ class AdditionalButtonAction
         $this->asset_link     = $asset_link;
     }
 
-    /**
-     * @return AdditionalButtonLinkPresenter
-     */
     public function getLinkPresenter(): AdditionalButtonLinkPresenter
     {
         return $this->link_presenter;
     }
 
-    /**
-     * @return string
-     */
     public function getAssetLink(): string
     {
         return $this->asset_link;

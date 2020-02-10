@@ -37,7 +37,6 @@ class UserDashboardSaver
     }
 
     /**
-     * @param PFUser $user
      * @param $name
      * @return bool
      * @throws NameDashboardAlreadyExistsException

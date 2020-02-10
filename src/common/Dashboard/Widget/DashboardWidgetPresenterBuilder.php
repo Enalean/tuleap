@@ -45,7 +45,6 @@ class DashboardWidgetPresenterBuilder
     }
 
     /**
-     * @param OwnerInfo $owner_info
      * @param DashboardWidgetLine[] $widgets_lines
      * @param bool $can_update_dashboards
      *

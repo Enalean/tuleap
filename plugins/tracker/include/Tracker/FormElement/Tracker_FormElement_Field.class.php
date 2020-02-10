@@ -409,7 +409,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Get the html code to display the field for the given artifact
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string html
      */
@@ -445,7 +444,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Get the html code to display the field for the given artifact in read only mode
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string html
      */
@@ -501,7 +499,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      *
-     * @param Tracker_Artifact $artifact
      * @return string
      */
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
@@ -727,7 +724,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Fetch the html code to display the field value in tooltip
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of the field
      * @return string
      */
@@ -736,7 +732,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Fetch the html code to display the field value in card
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string
      */
@@ -748,7 +743,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Fetch the html code to display the field in card
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string
      */
@@ -1337,8 +1331,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Return REST value of a field for a given changeset
      *
-     * @param PFUser                     $user
-     * @param Tracker_Artifact_Changeset $changeset
      *
      * @return mixed | null if no values
      */
@@ -1350,8 +1342,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Return full REST value of a field for a given changeset
      *
-     * @param PFUser                     $user
-     * @param Tracker_Artifact_Changeset $changeset
      *
      * @return mixed | null if no values
      */

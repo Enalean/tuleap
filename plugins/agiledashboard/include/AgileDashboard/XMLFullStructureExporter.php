@@ -36,7 +36,6 @@ class AgileDashboard_XMLFullStructureExporter
     }
 
     /**
-     * @param Project $project
      *
      * @return string A full XML document string
      */
@@ -82,7 +81,6 @@ class AgileDashboard_XMLFullStructureExporter
     }
 
     /**
-     * @param SimpleXMLElement $xml_element
      *
      * @return String
      */

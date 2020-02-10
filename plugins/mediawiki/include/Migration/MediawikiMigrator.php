@@ -24,7 +24,6 @@ class Mediawiki_Migration_MediawikiMigrator
     public const PATH_TO_LOCALSETTINGS    = "/plugins/mediawiki/www/LocalSettings.php";
 
     /**
-     * @param Project $project
      * @throws System_Command_CommandException
      */
     public function migrateProjectTo123(Project $project)

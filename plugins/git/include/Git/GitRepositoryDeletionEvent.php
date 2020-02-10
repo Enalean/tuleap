@@ -32,9 +32,6 @@ class GitRepositoryDeletionEvent implements Dispatchable
      */
     private $repository;
 
-    /**
-     * @param GitRepository $repository
-     */
     public function __construct(GitRepository $repository)
     {
         $this->repository = $repository;

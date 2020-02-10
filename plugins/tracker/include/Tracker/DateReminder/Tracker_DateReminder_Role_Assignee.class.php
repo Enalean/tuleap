@@ -43,7 +43,6 @@ class Tracker_DateReminder_Role_Assignee implements Tracker_DateReminder_Role
     /**
      * Retrieve assignee recipients for a given artifact
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return Array of PFUser
      */

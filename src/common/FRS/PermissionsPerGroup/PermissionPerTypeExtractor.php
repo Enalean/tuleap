@@ -60,8 +60,6 @@ class PermissionPerTypeExtractor
     }
 
     /**
-     * @param Project $project
-     * @param PermissionPerGroupCollection $permissions
      * @param                              $type
      *
      * @return array
@@ -116,7 +114,6 @@ class PermissionPerTypeExtractor
     }
 
     /**
-     * @param Project $project
      * @param         $type
      * @param         $selected_ugroup
      *

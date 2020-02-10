@@ -22,7 +22,6 @@ class Tracker_XML_Exporter_InArchiveFilePathXMLExporter implements Tracker_XML_E
 {
 
     /**
-     * @param Tracker_FileInfo $file_info
      *
      * @return string
      */

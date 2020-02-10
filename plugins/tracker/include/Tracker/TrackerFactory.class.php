@@ -64,7 +64,6 @@ class TrackerFactory
     /**
      * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
      *
-     * @param TrackerFactory $factory
      */
     public static function setInstance(TrackerFactory $factory)
     {

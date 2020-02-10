@@ -96,7 +96,6 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
     }
 
     /**
-     * @param Comparison $comparison
      * @param            $value
      *
      * @return IProvideFromAndWhereSQLFragments

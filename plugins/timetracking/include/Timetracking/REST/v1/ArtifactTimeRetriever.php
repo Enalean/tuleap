@@ -97,7 +97,6 @@ class ArtifactTimeRetriever
     }
 
     /**
-     * @param \PFUser $user
      * @param string $query
      *
      * @throws InvalidArgumentException

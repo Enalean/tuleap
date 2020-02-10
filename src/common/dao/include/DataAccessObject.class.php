@@ -256,8 +256,6 @@ class DataAccessObject
      * @param   string $primary_key the column name of the primary key. Default 'id'
      * @param   string $parent_key the column key used to groups items. Default 'parent_id'
      * @param   string $rank_key the column key used to rank items. Default 'rank'
-     * @param   string|null $parent_group_key
-     * @param   int|null $parent_group_id
      *
      * @deprecated
      *

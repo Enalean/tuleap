@@ -57,8 +57,6 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
     }
 
     /**
-     * @param HTTPRequest $request
-     * @param BaseLayout  $layout
      * @param array       $variables
      * @throws NotFoundException
      * @throws ForbiddenException

@@ -156,7 +156,6 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
     /**
      * Hook: event raised when widget are instanciated
      *
-     * @param \Tuleap\Widget\Event\GetWidget $get_widget_event
      */
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
     {
@@ -173,7 +172,6 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
     /**
      * Hook: event raised when user lists all available widget
      *
-     * @param \Tuleap\Widget\Event\GetUserWidgetList $get_user_widget_list_event
      */
     public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $get_user_widget_list_event)
     {

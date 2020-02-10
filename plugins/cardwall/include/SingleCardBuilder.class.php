@@ -202,10 +202,6 @@ class Cardwall_SingleCardBuilder
     }
 
     /**
-     * @param Cardwall_OnTop_Config                                $config
-     * @param Tracker_Artifact                                     $artifact
-     * @param Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider
-     * @param Cardwall_OnTop_Config_ColumnCollection               $columns
      *
      * @return Cardwall_CardInCellPresenterFactory
      */

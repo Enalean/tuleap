@@ -78,17 +78,11 @@ class SystemControlTuleapCron implements SystemControlInterface
         }
     }
 
-    /**
-     * @return bool
-     */
     public function isSuccessful(): bool
     {
         return $this->isSuccessful;
     }
 
-    /**
-     * @return int
-     */
     public function getExitCode(): int
     {
         return $this->exitCode;

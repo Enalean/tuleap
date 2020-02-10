@@ -49,7 +49,6 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
 
     /**
      *
-     * @param DOMElement $changeset_node
      * @param int $tracker_id
      * @param int $artifact_id
      * @param array $row

@@ -145,7 +145,6 @@ class Planning_MilestoneFactory
     /**
      * Return an empty milestone for given planning/project.
      *
-     * @param Project $project
      * @param int $planning_id
      *
      * @return Planning_NoMilestone
@@ -159,7 +158,6 @@ class Planning_MilestoneFactory
     /**
      * Create a milestone corresponding to an artifact
      *
-     * @param  PFUser $user
      * @param int $artifact_id
      *
      * @return Planning_Milestone|null
@@ -176,7 +174,6 @@ class Planning_MilestoneFactory
     /**
      * Create a milestone corresponding to an artifact
      *
-     * @param  PFUser $user
      * @param int $artifact_id
      *
      * @return Planning_Milestone|null
@@ -194,8 +191,6 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * @param PFUser $user
-     * @param Tracker_Artifact $artifact
      * @return Planning_Milestone|null
      */
     public function getBareMilestoneByArtifact(PFUser $user, Tracker_Artifact $artifact)
@@ -209,9 +204,6 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * @param PFUser $user
-     * @param Tracker_Artifact $artifact
-     * @param Planning $planning
      * @return Planning_Milestone
      */
     private function getBareMilestoneByArtifactAndPlanning(PFUser $user, Tracker_Artifact $artifact, Planning $planning)
@@ -235,8 +227,6 @@ class Planning_MilestoneFactory
      *
      * Only objects that should be visible for the given user are loaded.
      *
-     * @param PFUser $user
-     * @param Project $project
      * @param int $planning_id
      * @param int $artifact_id
      *
@@ -258,8 +248,6 @@ class Planning_MilestoneFactory
     /**
      * Build a fake milestone that catch all submilestones of root planning
      *
-     * @param PFUser $user
-     * @param Project $project
      *
      * @return Planning_VirtualTopMilestone
      */
@@ -274,8 +262,6 @@ class Planning_MilestoneFactory
     /**
      * Add some contextual information in the given milestone
      *
-     * @param PFUser $user
-     * @param Planning_Milestone $milestone
      *
      * @return Planning_Milestone
      */
@@ -308,7 +294,6 @@ class Planning_MilestoneFactory
      *
      * Only objects that should be visible for the given user are loaded.
      *
-     * @param PFUser $user
      *
      */
     public function updateMilestoneWithPlannedArtifacts(PFUser $user, Planning_Milestone $milestone)
@@ -322,9 +307,7 @@ class Planning_MilestoneFactory
     /**
      * Retrieves the artifacts planned for the given milestone artifact.
      *
-     * @param PFUser             $user
      * @param Planning         $planning
-     * @param Tracker_Artifact $milestone_artifact
      *
      * @return TreeNode
      */
@@ -378,7 +361,6 @@ class Planning_MilestoneFactory
     /**
      * Retrieve the sub-milestones of the given milestone.
      *
-     * @param Planning_Milestone $milestone
      *
      * @return Planning_Milestone[]
      */
@@ -394,7 +376,6 @@ class Planning_MilestoneFactory
     /**
      * Retrieve the sub-milestones of the given milestone.
      *
-     * @param Planning_Milestone $milestone
      *
      * @return Planning_Milestone[]
      */
@@ -633,8 +614,6 @@ class Planning_MilestoneFactory
     /**
      * Return the list of top most milestones
      *
-     * @param PFUser $user
-     * @param Planning_VirtualTopMilestone $top_milestone
      *
      * @return Planning_ArtifactMilestone[]
      */
@@ -690,8 +669,6 @@ class Planning_MilestoneFactory
     /**
      * Returns all open milestone without their content
      *
-     * @param PFUser   $user
-     * @param Planning $planning
      *
      * @return Planning_ArtifactMilestone[]
      */
@@ -718,8 +695,6 @@ class Planning_MilestoneFactory
     /**
      * Loads all open milestones for the given project and planning
      *
-     * @param PFUser   $user
-     * @param Planning $planning
      *
      * @return Array of Planning_Milestone
      */
@@ -734,8 +709,6 @@ class Planning_MilestoneFactory
     /**
      * Loads all milestones of a given planning without theirs planned elements
      *
-     * @param PFUser   $user
-     * @param Planning $planning
      *
      * @return Array of Planning_Milestone
      */
@@ -796,7 +769,6 @@ class Planning_MilestoneFactory
     /**
      * Create a Milestone corresponding to given artifact and loads the artifacts planned for this milestone
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return Planning_ArtifactMilestone
      */
@@ -809,7 +781,6 @@ class Planning_MilestoneFactory
     /**
      * Create a Milestone corresponding to given artifact
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return Planning_ArtifactMilestone
      */
@@ -855,8 +826,6 @@ class Planning_MilestoneFactory
      * The array starts with current milestone, until the "oldest" ancestor
      * 0 => Sprint, 1 => Release, 2=> Product
      *
-     * @param PFUser               $user
-     * @param Planning_Milestone $milestone
      *
      * @return Array of Planning_Milestone
      */
@@ -888,7 +857,6 @@ class Planning_MilestoneFactory
     /**
      * Get the top most recent milestone (last created artifact in planning tracker)
      *
-     * @param PFUser    $user
      * @param int $planning_id
      *
      * @return Planning_Milestone
@@ -1033,8 +1001,6 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * @param PFUser $user
-     * @param Planning $planning
      * @return Planning_ArtifactMilestone[]
      */
     public function getAllClosedMilestones(PFUser $user, Planning $planning)
@@ -1045,8 +1011,6 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * @param PFUser $user
-     * @param Planning $planning
      * @return Planning_ArtifactMilestone[]
      */
     public function getAllOpenMilestones(PFUser $user, Planning $planning)
@@ -1069,7 +1033,6 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return bool
      */
     private function isClosedMilestone(Tracker_Artifact $artifact)
@@ -1078,8 +1041,6 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param PFUser           $user
      * @return bool
      */
     public function notCurrentMilestoneHasStartDate(Tracker_Artifact $artifact, PFUser $user)
@@ -1088,8 +1049,6 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param PFUser           $user
      * @return bool
      */
     public function notFutureMilestoneHasStartDate(Tracker_Artifact $artifact, PFUser $user)

@@ -88,7 +88,6 @@ class Tracker_Migration_MigrationManager
     /**
      * Launch the migration of a TV3 to a TV5
      *
-     * @param Project $project
      * @param $tracker_id
      * @param $name
      * @param $description

@@ -43,8 +43,6 @@ class DateFieldChecker implements InvalidFieldChecker
     }
 
     /**
-     * @param Comparison $comparison
-     * @param Tracker_FormElement_Field $field
      * @throws InvalidFieldException
      */
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)

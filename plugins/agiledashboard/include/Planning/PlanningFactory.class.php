@@ -171,7 +171,6 @@ class PlanningFactory
     /**
      * Return a planning for a VirtualTopMilestone
      *
-     * @param PFUser  $user
      * @param int $group_id
      * @return \Planning
      * @throws Planning_NoPlanningsException
@@ -216,7 +215,6 @@ class PlanningFactory
      *
      * Note: if there are several parallel, we only return the fist one
      *
-     * @param PFUser  $user
      * @param int $group_id
      *
      * @return Planning | false
@@ -397,7 +395,6 @@ class PlanningFactory
      * - Given I pass Release tracker as parameter
      * - Then I should get the Release planning (for instance Epic -> Release)
      *
-     * @param Tracker $planning_tracker
      *
      * @return Planning|null
      */
@@ -442,7 +439,6 @@ class PlanningFactory
      * When getPlanningsByBacklogTracker(Epic) -> [Product, Release]
      * When getPlanningsByBacklogTracker(Story) -> [Sprint]
      *
-     * @param Tracker $backlog_tracker
      *
      * @return Planning
      */
@@ -528,7 +524,6 @@ class PlanningFactory
     /**
      * Get a list of trackers defined as backlog for a planning
      *
-     * @param Planning $planning
      *
      * @return array of Tracker
      */
@@ -572,7 +567,6 @@ class PlanningFactory
      * Create a new planning
      *
      * @param int $group_id
-     * @param PlanningParameters $planning_parameters
      */
     public function createPlanning($group_id, PlanningParameters $planning_parameters)
     {
@@ -587,7 +581,6 @@ class PlanningFactory
      * Update an existing planning
      *
      * @param int $planning_id
-     * @param PlanningParameters $planning_parameters
      */
     public function updatePlanning($planning_id, $group_id, PlanningParameters $planning_parameters)
     {
@@ -654,7 +647,6 @@ class PlanningFactory
      * a planning defined so we get the whole planning tracker family (children
      * and parents)
      *
-     * @param PFUser $user
      * @param int $group_id
      *
      * @return Tracker[]
@@ -675,7 +667,6 @@ class PlanningFactory
      * a planning defined so we get the whole planning tracker family (children
      * and parents)
      *
-     * @param PFUser $user
      * @param int $group_id
      *
      * @return int[]

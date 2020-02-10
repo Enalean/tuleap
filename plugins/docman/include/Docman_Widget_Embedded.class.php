@@ -192,7 +192,6 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
 
     /**
      * Create a new content for this widget
-     * @param Codendi_Request $request
      * @return int the id of the new content
      */
     public function create(Codendi_Request $request)
@@ -219,7 +218,6 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
 
     /**
      * Update the preferences
-     * @param Codendi_Request $request
      * @return bool true if something has been updated
      */
     function updatePreferences(Codendi_Request $request)

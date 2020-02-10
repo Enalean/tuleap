@@ -43,7 +43,6 @@ class Tracker_DateReminder_Role_Commenter implements Tracker_DateReminder_Role
     /**
      * Retrieve commentator recipients for a given artifact
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return Array of PFUser
      */

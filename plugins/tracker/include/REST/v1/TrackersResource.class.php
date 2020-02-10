@@ -747,7 +747,6 @@ class TrackersResource extends AuthenticatedResource
 
     /**
      * @param array $workflow_query
-     * @param Tracker $tracker
      *
      * @throws I18NRestException 500
      * @throws I18NRestException 400
@@ -795,9 +794,6 @@ class TrackersResource extends AuthenticatedResource
         throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
     }
 
-    /**
-     * @return ModeUpdater
-     */
     private function getModeUpdater() : ModeUpdater
     {
         return new ModeUpdater(
@@ -827,7 +823,6 @@ class TrackersResource extends AuthenticatedResource
 
     /**
      * @param array $set_transitions_rules_query
-     * @param Tracker $tracker
      *
      * @return int Created workflow id
      * @throws I18NRestException 500

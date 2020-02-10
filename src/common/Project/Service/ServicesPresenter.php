@@ -43,8 +43,6 @@ class ServicesPresenter
     public $allowed_icons;
 
     /**
-     * @param Project               $project
-     * @param CSRFSynchronizerToken $csrf
      * @param ServicePresenter[]    $services
      */
     public function __construct(Project $project, CSRFSynchronizerToken $csrf, array $services)

@@ -260,7 +260,6 @@ class Codendi_Request
     /**
      * Set a current user (should be used only for tests)
      *
-     * @param PFUser $user
      */
     public function setCurrentUser(PFUser $user)
     {

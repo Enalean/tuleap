@@ -38,9 +38,6 @@ final class AdditionalPanesForMilestoneEvent implements Dispatchable
      */
     private $milestone;
 
-    /**
-     * @param Planning_Milestone   $milestone
-     */
     public function __construct(Planning_Milestone $milestone)
     {
         $this->milestone = $milestone;

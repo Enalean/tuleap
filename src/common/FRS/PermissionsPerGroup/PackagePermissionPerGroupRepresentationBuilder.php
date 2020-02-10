@@ -64,7 +64,6 @@ class PackagePermissionPerGroupRepresentationBuilder
     }
 
     /**
-     * @param Project $project
      * @param null $selected_ugroup_id
      * @return PackagePermissionPerGroupRepresentation[]
      */

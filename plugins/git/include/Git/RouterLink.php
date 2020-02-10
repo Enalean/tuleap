@@ -38,7 +38,6 @@ abstract class RouterLink
     }
 
     /**
-     * @param RouterLink $next
      * @return RouterLink
      */
     public function chain(RouterLink $next)

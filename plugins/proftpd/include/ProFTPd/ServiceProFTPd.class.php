@@ -69,7 +69,6 @@ class ServiceProFTPd extends Service
     }
 
     /**
-     * @param HTTPRequest $request
      * @return bool
      */
     private function userIsAdmin(HTTPRequest $request)

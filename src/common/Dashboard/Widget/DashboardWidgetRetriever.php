@@ -108,9 +108,6 @@ class DashboardWidgetRetriever
         return null;
     }
 
-    /**
-     * @param DashboardWidgetLine $widget_line
-     */
     private function addColumnWidgetsByLine(DashboardWidgetLine $widget_line)
     {
         foreach ($this->dao->searchAllColumnsByLineIdOrderedByRank($widget_line->getId()) as $column) {
@@ -125,9 +122,6 @@ class DashboardWidgetRetriever
         }
     }
 
-    /**
-     * @param DashboardWidgetColumn $widget_column
-     */
     private function addWidgetsByColumn(DashboardWidgetColumn $widget_column)
     {
         foreach ($this->dao->searchAllWidgetByColumnId($widget_column->getId()) as $row) {

@@ -243,7 +243,6 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
     /**
      * Load an instance of a AgileDashBoard_Semantic_InitialEffort
      *
-     * @param Tracker $tracker
      *
      * @return AgileDashBoard_Semantic_InitialEffort
      */
@@ -257,7 +256,6 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
     }
 
     /**
-     * @param Tracker $tracker
      * @return Tracker_FormElement_Field | null
      */
     private static function getFieldFromTracker(Tracker $tracker)

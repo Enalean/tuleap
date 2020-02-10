@@ -34,7 +34,6 @@ class BreadCrumbPresenter
     /**
      *
      *
-     * @param BreadCrumbLinkPresenter    $link
      * @param SubItemsSectionPresenter[] $sections
      */
     public function __construct(BreadCrumbLinkPresenter $link, array $sections)

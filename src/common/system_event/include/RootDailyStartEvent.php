@@ -45,9 +45,6 @@ class RootDailyStartEvent implements Dispatchable
         $this->logger = $logger;
     }
 
-    /**
-     * @return LoggerInterface
-     */
     public function getLogger(): LoggerInterface
     {
         return $this->logger;

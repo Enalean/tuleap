@@ -35,7 +35,6 @@ class FieldUsedInSemanticObjectChecker
     }
 
     /**
-     * @param Tracker_FormElement_Field   $field
      * @param Tracker_FormElement_Field[] $card_fields
      *
      * @return bool
@@ -46,7 +45,6 @@ class FieldUsedInSemanticObjectChecker
     }
 
     /**
-     * @param Tracker_FormElement_Field $field
      * @param array                     $card_fields
      *
      * @return bool

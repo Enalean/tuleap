@@ -165,7 +165,6 @@ class ProjectXMLExporter
     }
 
     /**
-     * @param SimpleXMLElement $xml_element
      *
      * @return String
      */

@@ -49,9 +49,6 @@ class MetadataToUpdate
         return new self($metadata, $value, $recursion);
     }
 
-    /**
-     * @return \Docman_Metadata
-     */
     public function getMetadata(): \Docman_Metadata
     {
         return $this->metadata;
@@ -65,9 +62,6 @@ class MetadataToUpdate
         return $this->value;
     }
 
-    /**
-     * @return string
-     */
     public function getRecursion(): string
     {
         return $this->recursion;

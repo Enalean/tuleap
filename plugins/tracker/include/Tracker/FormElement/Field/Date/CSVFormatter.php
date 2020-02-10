@@ -26,7 +26,6 @@ class CSVFormatter
     public const DAY_MONTH_YEAR = 'day_month_year';
 
     /**
-     * @param \PFUser $user
      * @param int     $date
      * @param bool    $is_time_shown
      * @return string

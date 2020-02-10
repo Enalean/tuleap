@@ -207,9 +207,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return $this->planned_artifacts;
     }
 
-    /**
-     * @param ArtifactNode $node
-     */
     public function setPlannedArtifacts(ArtifactNode $node)
     {
         $this->planned_artifacts = $node;
@@ -217,7 +214,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
 
     /**
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
-     * @param PFUser $user
      * @return Tracker_Artifact[]
      */
     public function getLinkedArtifacts(PFUser $user)
@@ -328,7 +324,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
 
     /**
      * @param array $artifacts_ids
-     * @param PFUser $user
      * @return bool True if nothing went wrong
      */
     public function solveInconsistencies(PFUser $user, array $artifacts_ids)
@@ -380,7 +375,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     }
 
     /**
-     * @param PFUser $user
      * @return bool
      */
     public function hasBurdownField(PFUser $user)

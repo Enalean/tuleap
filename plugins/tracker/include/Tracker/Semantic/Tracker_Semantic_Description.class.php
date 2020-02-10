@@ -252,7 +252,6 @@ class Tracker_Semantic_Description extends Tracker_Semantic
     /**
      * Load an instance of a Tracker_Semantic_Description
      *
-     * @param Tracker $tracker
      *
      * @return Tracker_Semantic_Description
      */

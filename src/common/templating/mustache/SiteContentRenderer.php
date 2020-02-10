@@ -34,7 +34,6 @@ class SiteContentRenderer
     /**
      * Render mustache file according to user language preferences and available customization
      *
-     * @param PFUser $user
      * @param string $template_name
      * @param mixed  $presenter
      * @return string
@@ -57,7 +56,6 @@ class SiteContentRenderer
     /**
      * Render template with markdown syntax
      *
-     * @param PFUser $user
      * @param string $template_name
      * @param mixed  $presenter
      * @return string

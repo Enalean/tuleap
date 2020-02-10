@@ -39,7 +39,6 @@ class UploadedLinksRetriever
     }
 
     /**
-     * @param \FRSRelease $release
      *
      * @return UploadedLink[]
      */

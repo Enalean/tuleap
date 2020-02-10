@@ -282,7 +282,6 @@ class URLVerification
     /**
      * Test if given url is restricted for user
      *
-     * @param PFUser $user
      * @param Url $url
      * @param String $request_uri
      * @return bool False if user not allowed to see the content
@@ -449,8 +448,6 @@ class URLVerification
     /**
      * Ensure given user can access given project
      *
-     * @param PFUser $user
-     * @param Project $project
      * @return bool
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException
@@ -474,8 +471,6 @@ class URLVerification
     /**
      * Ensure given user can access given project and user is admin of the project
      *
-     * @param PFUser $user
-     * @param Project $project
      * @return bool
      *
      * @throws Project_AccessProjectNotFoundException
@@ -496,8 +491,6 @@ class URLVerification
     }
 
     /**
-     * @param PFUser $user
-     * @param Project $project
      * @return bool
      *
      * @throws Project_AccessProjectNotFoundException
@@ -555,9 +548,6 @@ class URLVerification
         exit;
     }
 
-    /**
-     * @param PFUser $user
-     */
     private function checkUserIsLoggedIn(PFUser $user)
     {
         if ($user->isAnonymous()) {

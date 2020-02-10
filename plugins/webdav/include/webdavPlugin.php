@@ -69,7 +69,6 @@ class WebDAVPlugin extends Plugin
      *
      * @param Array $params
      *
-     * @return void
      */
     public function urlVerification(&$params): void
     {

@@ -156,7 +156,6 @@ use Tuleap\Layout\CssAssetCollection;
     }
 
     /**
-     * @param Codendi_Request $request
      *
      * @return null|false|int
      */

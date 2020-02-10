@@ -101,7 +101,6 @@ class Docman_PermissionsManagerDao extends DataAccessObject
     /**
      * Returns docman admin ugroups
      *
-     * @param Project $project
      *
      * @return DataAccessResult
      */

@@ -35,7 +35,6 @@ class WidgetKanbanCreator
     }
 
     /**
-     * @param Codendi_Request $request
      * @param $owner_id
      * @param $owner_type
      */

@@ -123,8 +123,6 @@ class IndexController
     }
 
     /**
-     * @param Project     $project
-     * @param HTTPRequest $request
      * @param bool        $are_mirrors_defined
      *
      * @return Pane\Pane[]
@@ -168,7 +166,6 @@ class IndexController
     }
 
     /**
-     * @param HTTPRequest $request
      * @param             $presenter
      */
     private function render(HTTPRequest $request, $presenter)

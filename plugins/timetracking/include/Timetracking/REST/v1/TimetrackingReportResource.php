@@ -176,8 +176,6 @@ class TimetrackingReportResource extends AuthenticatedResource
      *
      * @param int $id Id of the report
      * @param string $query With a property "trackers_id","start_date" and "end_date" to search trackers' times. {@from path} {@required false}
-     * @param int $limit
-     * @param int $offset
      *
      * @return TimetrackingTrackerReportRepresentation[]
      *
@@ -288,7 +286,6 @@ class TimetrackingReportResource extends AuthenticatedResource
 
     /**
      * @param                    $query
-     * @param TimetrackingReport $report
      *
      * @throws RestException 400
      *
@@ -317,8 +314,6 @@ class TimetrackingReportResource extends AuthenticatedResource
     }
 
     /**
-     * @param PFUser             $user
-     * @param TimetrackingReport $report
      *
      * @throws RestException 403
      **/

@@ -25,7 +25,6 @@ interface Tracker_XML_Exporter_FilePathXMLExporter
 {
 
     /**
-     * @param Tracker_FileInfo $file_info
      *
      * @return string
      */

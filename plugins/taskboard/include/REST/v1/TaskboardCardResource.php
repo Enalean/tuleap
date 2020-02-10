@@ -174,7 +174,6 @@ class TaskboardCardResource extends AuthenticatedResource
      * @param int $id           Id of the card
      * @param int $milestone_id Id of the milestone {@from path}
      *
-     * @return CardRepresentation
      *
      * @throws RestException 401
      * @throws RestException 404

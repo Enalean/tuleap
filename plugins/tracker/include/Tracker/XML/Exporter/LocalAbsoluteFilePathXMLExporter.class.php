@@ -22,7 +22,6 @@ class Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter implements Tracker_X
 {
 
     /**
-     * @param Tracker_FileInfo $file_info
      *
      * @return string
      */

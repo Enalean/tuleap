@@ -39,10 +39,6 @@ class MetadataChecker implements ICheckMetadataForAComparison
     }
 
     /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
-     * @param InvalidComparisonCollectorParameters $collector_parameters
-     * @param ComparisonChecker $checker
      * @throws InvalidQueryException
      */
     public function checkMetadataIsValid(

@@ -102,8 +102,6 @@ class RepositoryCreator
     }
 
     /**
-     * @param Project $project
-     * @param PFUser  $creator
      * @param         $repository_name
      *
      * @return \GitRepository

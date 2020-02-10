@@ -32,10 +32,6 @@ class Tracker_Rule_List_Factory
      */
     protected $dao;
 
-    /**
-     *
-     * @param Tracker_Rule_List_Dao $dao
-     */
     public function __construct(Tracker_Rule_List_Dao $dao)
     {
         $this->dao = $dao;
@@ -62,7 +58,6 @@ class Tracker_Rule_List_Factory
 
     /**
      *
-     * @param Tracker_Rule_List $list_rule
      * @return bool
      */
     public function delete(Tracker_Rule_List $list_rule)
@@ -158,7 +153,6 @@ class Tracker_Rule_List_Factory
 
     /**
      *
-     * @param SimpleXMLElement $root
      * @param array $xmlMapping
      * @param Tracker_FormElementFactory $form_element_factory
      * @param int $tracker_id
@@ -194,7 +188,6 @@ class Tracker_Rule_List_Factory
 
     /**
      *
-     * @param Tracker_Rule_List $list_rule
      * @return int The ID of the tracker_Rule created
      */
     public function insert(Tracker_Rule_List $list_rule)
@@ -205,7 +198,6 @@ class Tracker_Rule_List_Factory
 
     /**
      *
-     * @param Tracker_Rule_List $list_rule
      * @param int $tracker_id
      * @param int $source_field_id
      * @param int $target_field_id

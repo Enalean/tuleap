@@ -46,7 +46,6 @@ class User_SSHKeyDumper
     /**
      * Write SSH authorized_keys into a user homedir
      *
-     * @param PFUser $user
      *
      * @return bool
      */

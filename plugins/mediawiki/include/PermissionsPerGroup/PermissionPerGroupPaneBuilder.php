@@ -158,9 +158,6 @@ class PermissionPerGroupPaneBuilder
     }
 
     /**
-     * @param Project                      $project
-     * @param PermissionPerGroupCollection $collection
-     * @param ProjectUGroup                $selected_ugroup
      * @param                              $current_mapping
      * @param                              $mw_group_name
      */
@@ -186,9 +183,6 @@ class PermissionPerGroupPaneBuilder
     }
 
     /**
-     * @param Project                      $project
-     * @param PermissionPerGroupCollection $collection
-     * @param ProjectUGroup                $selected_ugroup
      * @param                              $current_mapping
      * @param                              $mw_group_name
      */

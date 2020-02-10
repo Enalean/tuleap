@@ -66,8 +66,6 @@ class ProjectResource
     }
 
     /**
-     * @param Project $project
-     * @param PFUser $user
      * @param int $limit
      * @param int $offset
      * @param string $fields

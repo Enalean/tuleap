@@ -60,7 +60,6 @@ class ListPresenterBuilder
     }
 
     /**
-     * @param Project $project
      *
      * @return array
      */

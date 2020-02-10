@@ -39,7 +39,6 @@ class CollectionOfUGroupsRepresentationFormatter
 
     /**
      * @param array   $ugroup_ids
-     * @param Project $project
      *
      * @return PermissionPerGroupUGroupRepresentation[]
      */
@@ -55,7 +54,6 @@ class CollectionOfUGroupsRepresentationFormatter
 
     /**
      * @param ProjectUGroup[] $ugroups
-     * @param Project         $project
      *
      * @return PermissionPerGroupUGroupRepresentation[]
      */

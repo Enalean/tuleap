@@ -39,8 +39,6 @@ class Tracker_REST_Artifact_ArtifactCreator
 
     /**
      *
-     * @param PFUser $user
-     * @param Tuleap\Tracker\REST\TrackerReference $tracker_reference
      * @param array $values
      * @return Tuleap\Tracker\REST\Artifact\ArtifactReference
      * @throws \Luracast\Restler\RestException
@@ -60,8 +58,6 @@ class Tracker_REST_Artifact_ArtifactCreator
 
     /**
      *
-     * @param PFUser $user
-     * @param Tuleap\Tracker\REST\TrackerReference $tracker_reference
      * @param array $values
      * @return Tuleap\Tracker\REST\Artifact\ArtifactReference
      * @throws \Luracast\Restler\RestException

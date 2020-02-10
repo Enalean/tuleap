@@ -3290,7 +3290,6 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Set parent
      *
-     * @param Tracker $tracker
      */
     public function setParent(?Tracker $tracker = null)
     {

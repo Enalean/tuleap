@@ -111,7 +111,6 @@ class Docman_PermissionsItemManager
     /**
      * Returns ugroups of an item in a human readable format
      *
-     * @param Docman_Item $item
      *
      * @return array
      */

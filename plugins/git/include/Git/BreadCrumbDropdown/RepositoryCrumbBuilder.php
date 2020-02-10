@@ -39,8 +39,6 @@ class RepositoryCrumbBuilder
     private $plugin_path;
 
     /**
-     * @param \Git_GitRepositoryUrlManager $url_manager
-     * @param \GitPermissionsManager       $permissions_manager
      * @param string                       $plugin_path
      */
     public function __construct(

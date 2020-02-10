@@ -34,10 +34,6 @@ class CollectionOfUgroupsFormatter
      */
     private $ugroup_manager;
 
-    /**
-     * @param PermissionPerGroupUGroupFormatter $formatter
-     * @param UGroupManager                     $ugroup_manager
-     */
     public function __construct(PermissionPerGroupUGroupFormatter $formatter, UGroupManager $ugroup_manager)
     {
         $this->formatter      = $formatter;
@@ -46,7 +42,6 @@ class CollectionOfUgroupsFormatter
 
     /**
      * @param array $ugroup_ids
-     * @param Project $project
      * @return array
      */
     public function formatCollectionOfUgroupIds(array $ugroup_ids, Project $project)
@@ -56,7 +51,6 @@ class CollectionOfUgroupsFormatter
 
     /**
      * @param ProjectUGroup[] $ugroups
-     * @param Project $project
      * @return array
      */
     public function formatCollectionOfUgroups(array $ugroups, Project $project)

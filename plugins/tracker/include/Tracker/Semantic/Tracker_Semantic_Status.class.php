@@ -150,7 +150,6 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     /**
      * Get status label independent of language (hence english)
      *
-     * @param Tracker_Artifact $artifact
      * @return string
      */
     public function getNormalizedStatusLabel(Tracker_Artifact $artifact)
@@ -165,7 +164,6 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     /**
      * Get status label according to current user language preference
      *
-     * @param Tracker_Artifact $artifact
      * @return string
      */
     public function getLocalizedStatusLabel(Tracker_Artifact $artifact)
@@ -594,9 +592,6 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         self::$_instances = null;
     }
 
-    /**
-     * @param Codendi_Request $request
-     */
     private function processUpdate(Codendi_Request $request): void
     {
         $field = Tracker_FormElementFactory::instance()->getUsedListFieldById(

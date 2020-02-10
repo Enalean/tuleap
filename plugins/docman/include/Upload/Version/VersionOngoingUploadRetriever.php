@@ -36,9 +36,6 @@ class VersionOngoingUploadRetriever
         $this->dao = $dao;
     }
 
-    /**
-     * @return bool
-     */
     public function isThereAlreadyAnUploadOngoing(\Docman_Item $item, \DateTimeImmutable $current_time): bool
     {
         return ! empty($this->dao->searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(

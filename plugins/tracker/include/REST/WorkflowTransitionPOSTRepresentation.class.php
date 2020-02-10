@@ -37,9 +37,6 @@ class WorkflowTransitionPOSTRepresentation
      */
     public $uri;
 
-    /**
-     * @param Transition $transition
-     */
     public function build(Transition $transition)
     {
         $this->id             = JsonCast::toInt($transition->getId());

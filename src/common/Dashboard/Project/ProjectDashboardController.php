@@ -133,9 +133,6 @@ class ProjectDashboardController
         $this->css_asset                = $css_asset;
     }
 
-    /**
-     * @param HTTPRequest $request
-     */
     public function display(HTTPRequest $request)
     {
         $project            = $request->getProject();
@@ -433,8 +430,6 @@ class ProjectDashboardController
     }
 
     /**
-     * @param PFUser $user
-     * @param Project $project
      * @return bool
      */
     private function canUpdateDashboards(PFUser $user, Project $project)

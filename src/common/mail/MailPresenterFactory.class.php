@@ -280,10 +280,6 @@ class MailPresenterFactory
     /**
      * Creates a presenter for the account suspension notification email
      *
-     * @param DateTimeImmutable $last_access_date
-     * @param DateTimeImmutable $suspension_date
-     * @param BaseLanguage $language
-     * @return MailAccountSuspensionAlertPresenter
      */
     public function createMailAccountSuspensionAlertPresenter(DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language) : MailAccountSuspensionAlertPresenter
     {

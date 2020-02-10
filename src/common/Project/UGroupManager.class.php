@@ -93,7 +93,6 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     /**
      *
-     * @param Project $project
      * @param type $ugroup_id
      *
      * @return ProjectUGroup
@@ -131,7 +130,6 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @param Project $project
      * @return ProjectUGroup
      */
     public function getProjectAdminsUGroup(Project $project)
@@ -141,7 +139,6 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @param Project $project
      * @return ProjectUGroup
      */
     public function getProjectMembersUGroup(Project $project)
@@ -179,7 +176,6 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     /**
      * @see self::getUGroupsWithSystemUserGroups() returns same groups, except system user groups and Nobody.
      *
-     * @param Project $project
      * @param array $excluded_ugroups_id
      * @return ProjectUGroup[]
      */
@@ -394,7 +390,6 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @param PFUSer $user
      * @param int $ugroup_id
      * @param int $group_id
      * @return bool

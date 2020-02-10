@@ -444,9 +444,7 @@ class DocmanWikiResource extends AuthenticatedResource
     /**
      * @param              $project
      * @param              $current_user
-     * @param \Docman_Item $item
      *
-     * @return DocumentBeforeModificationValidatorVisitor
      */
     private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
@@ -458,9 +456,6 @@ class DocmanWikiResource extends AuthenticatedResource
         );
     }
 
-    /**
-     * @param \Project $project
-     */
     private function addAllEvent(\Project $project): void
     {
         $event_adder = $this->getDocmanItemsEventAdder();

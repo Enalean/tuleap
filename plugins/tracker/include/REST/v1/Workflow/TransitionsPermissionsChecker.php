@@ -47,8 +47,6 @@ class TransitionsPermissionsChecker
     /**
      * Checks if given use has permissions to create transition on given tracker.
      *
-     * @param PFUser $user
-     * @param Tracker $tracker
      * @throws \Luracast\Restler\RestException
      */
     public function checkCreate(PFUser $user, Tracker $tracker)
@@ -59,8 +57,6 @@ class TransitionsPermissionsChecker
     /**
      * Checks if given user has permissions to delete given transition.
      *
-     * @param PFUser $user
-     * @param Transition $transition
      * @throws \Luracast\Restler\RestException
      * @throws OrphanTransitionException
      */
@@ -72,8 +68,6 @@ class TransitionsPermissionsChecker
     /**
      * Checks if given user has permissions to read given transition.
      *
-     * @param PFUser $user
-     * @param Transition $transition
      * @throws OrphanTransitionException
      * @throws RestException 403
      * @throws RestException 404

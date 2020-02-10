@@ -40,7 +40,6 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      *
      * Enter description here ...
      *
-     * @param Docman_Folder $item
      * @param               $params
      *
      * @throws DeleteFailedException
@@ -171,7 +170,6 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * Delete a file (all versions of the file)
      *
-     * @param Docman_File $item
      * @param Array       $params
      *
      * @return bool
@@ -196,9 +194,6 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * Delete a version of a file
      *
-     * @param Docman_File    $item
-     * @param Docman_Version $version
-     * @param PFUser           $user
      *
      * @return bool
      */

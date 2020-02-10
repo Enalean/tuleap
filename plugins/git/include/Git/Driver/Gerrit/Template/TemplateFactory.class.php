@@ -93,7 +93,6 @@ class Git_Driver_Gerrit_Template_TemplateFactory
      * Get All templates for projects higher in hierarchy. Does not include
      * templates for project itself.
      *
-     * @param Project $project
      * @return Git_Driver_Gerrit_Template_Template[]
      */
     public function getTemplatesAvailableForParentProjects(Project $project)
@@ -145,7 +144,6 @@ class Git_Driver_Gerrit_Template_TemplateFactory
     }
 
     /**
-     * @param Git_Driver_Gerrit_Template_Template $template
      * @return bool
      */
     public function updateTemplate(Git_Driver_Gerrit_Template_Template $template)

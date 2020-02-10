@@ -26,7 +26,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 class OperatorToNowComparisonException extends InvalidQueryException
 {
     /**
-     * @param Metadata $metadata
      * @param string $operator
      */
     public function __construct(Metadata $metadata, $operator)

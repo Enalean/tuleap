@@ -103,7 +103,6 @@ class ItemRepresentationBuilder
     }
 
     /**
-     * @return ItemRepresentation|null
      * @throws UnknownMetadataException
      */
     public function buildRootId(Project $project, \PFUser $current_user) : ?ItemRepresentation

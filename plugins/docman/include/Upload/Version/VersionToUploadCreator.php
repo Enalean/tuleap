@@ -47,7 +47,6 @@ class VersionToUploadCreator
     }
 
     /**
-     * @return VersionToUpload
      * @throws UploadCreationConflictException
      * @throws UploadCreationFileMismatchException
      *

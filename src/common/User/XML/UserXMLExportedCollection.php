@@ -75,7 +75,6 @@ class UserXMLExportedCollection
     }
 
     /**
-     * @param SimpleXMLElement $xml_element
      *
      * @return String
      */

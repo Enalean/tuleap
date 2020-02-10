@@ -34,9 +34,6 @@ class GitViewHeader
      */
     private $event_manager;
 
-    /**
-     * @param EventManager $event_manager
-     */
     public function __construct(
         EventManager $event_manager
     ) {

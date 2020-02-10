@@ -63,7 +63,6 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
      * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
-     * @return string
      */
     public function verbalizeParameters($with_link) : string
     {

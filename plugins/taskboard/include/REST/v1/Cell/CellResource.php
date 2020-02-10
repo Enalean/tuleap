@@ -32,8 +32,6 @@ class CellResource extends AuthenticatedResource
     /**
      * @url OPTIONS {swimlane_id}/column/{column_id}
      *
-     * @param int $swimlane_id
-     * @param int $column_id
      */
     public function options(int $swimlane_id, int $column_id)
     {

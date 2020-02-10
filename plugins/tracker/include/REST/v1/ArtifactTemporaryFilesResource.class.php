@@ -270,7 +270,6 @@ class ArtifactTemporaryFilesResource
 
     /**
      *
-     * @param TemporaryFile $file
      * @return FileInfoRepresentation
      */
     private function buildFileRepresentation(TemporaryFile $file)

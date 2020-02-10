@@ -39,28 +39,17 @@ class DateTrackingTimesPeriod
      */
     private $end_date;
 
-    /**
-     *
-     * @param string $start_date
-     * @param string $end_date
-     */
     public function __construct(string $start_date, string $end_date)
     {
         $this->start_date = $start_date;
         $this->end_date   = $end_date;
     }
 
-    /**
-     * @return string
-     */
     public function getStartDate(): string
     {
         return $this->start_date;
     }
 
-    /**
-     * @return string
-     */
     public function getEndDate(): string
     {
         return $this->end_date;

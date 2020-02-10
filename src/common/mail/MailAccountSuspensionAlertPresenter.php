@@ -40,9 +40,6 @@ class MailAccountSuspensionAlertPresenter extends MailOutlinePresenter
      *
      * @param string $logo_url URL of the organization logo
      * @param string $color_logo Logo/email tone color in hex notation
-     * @param DateTimeImmutable $last_access_date
-     * @param DateTimeImmutable $suspension_date
-     * @param BaseLanguage $language
      */
     public function __construct(string $logo_url, string $color_logo, DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language)
     {

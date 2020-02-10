@@ -64,7 +64,6 @@ class Tracker_ArtifactFactory
     /**
      * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
      *
-     * @param Tracker_ArtifactFactory $factory
      */
     public static function setInstance(Tracker_ArtifactFactory $factory)
     {
@@ -103,7 +102,6 @@ class Tracker_ArtifactFactory
     /**
      * Return the artifact corresponding to $id the user can access
      *
-     * @param PFUser    $user
      * @param int $id
      *
      * @return Tracker_Artifact|null
@@ -221,7 +219,6 @@ class Tracker_ArtifactFactory
 
     /**
      *
-     * @param PFUser $user
      * @param type $tracker_id
      * @param type $limit
      * @param type $offset
@@ -432,7 +429,6 @@ class Tracker_ArtifactFactory
     /**
      * Return children of all given artifacts.
      *
-     * @param PFUser $user
      * @param Tracker_Artifact[] $artifacts
      * @return Tracker_Artifact[]
      */

@@ -207,7 +207,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
      *
      * @param String $releaseName
      *
-     * @return FRSRelease|null
      */
     public function getFRSReleaseFromName($releaseName): ?FRSRelease
     {

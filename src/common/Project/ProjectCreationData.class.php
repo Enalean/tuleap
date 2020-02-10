@@ -325,7 +325,6 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     /**
      * @param array $project
      *
-     * @return string
      */
     public function setAccessFromProjectData(array $project): string
     {

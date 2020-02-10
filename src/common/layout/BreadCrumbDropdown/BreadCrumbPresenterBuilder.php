@@ -23,7 +23,6 @@ namespace Tuleap\Layout\BreadCrumbDropdown;
 class BreadCrumbPresenterBuilder
 {
     /**
-     * @param BreadCrumbCollection $collection
      *
      * @return BreadCrumbPresenter[]
      */

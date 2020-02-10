@@ -150,11 +150,7 @@ class Tracker_Artifact_XMLImport
      * importBareArtifactsFromXML() first to generate the mapping for all the
      * trackers and then importArtifactChangesFromXML().
      *
-     * @param Tracker $tracker
-     * @param SimpleXMLElement $xml_element
      * @param $extraction_path
-     * @param TrackerXmlFieldsMapping $xml_fields_mapping
-     * @param ImportConfig $config
      * @return bool for success or failure
      */
     public function importFromXML(
@@ -198,12 +194,7 @@ class Tracker_Artifact_XMLImport
      * Import bare artifacts without any changeset
      * Fill up $artifacts_id_mapping with a mapping from old ids to new ids
      *
-     * @param Tracker $tracker
-     * @param SimpleXMLElement $xml_element
      * @param $extraction_path
-     * @param TrackerXmlFieldsMapping $xml_fields_mapping
-     * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
-     * @param ImportConfig $configuration
      * @return array of bare artifacts or null on error
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -234,13 +225,8 @@ class Tracker_Artifact_XMLImport
 
     /**
      * Import changesets from a n array of bare artifacts
-     * @param Tracker $tracker
-     * @param SimpleXMLElement $xml_element
      * @param $extraction_path
-     * @param TrackerXmlFieldsMapping $xml_fields_mapping
-     * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
      * @param array $artifacts
-     * @param ImportConfig $configuration
      * @return true
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -278,11 +264,7 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker $tracker
-     * @param SimpleXMLElement $artifact_xml
      * @param $extraction_path
-     * @param TrackerXmlFieldsMapping $xml_fields_mapping
-     * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
      * @return Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
      */
     public function createFieldsDataBuilder(
@@ -309,9 +291,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker $tracker
-     * @param SimpleXMLElement $xml_artifact
-     * @param ImportConfig $configuration
      * @return null|Tracker_Artifact
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -328,8 +307,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker $tracker
-     * @param SimpleXMLElement $xml_artifact
      * @return null|Tracker_Artifact
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -357,8 +334,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker $tracker
-     * @param SimpleXMLElement $xml_artifact
      * @return null|Tracker_Artifact
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -371,8 +346,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker $tracker
-     * @param SimpleXMLElement $xml_artifact
      * @return Tracker_Artifact|null
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -411,10 +384,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param SimpleXMLElement $xml_artifact
-     * @param Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
-     * @param ImportConfig $configuration
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     public function importChangesets(
@@ -446,7 +415,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param SimpleXMLElement $changesets
      * @return array
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -477,10 +445,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param SimpleXMLElement $xml_changesets
-     * @param Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
-     * @param ImportConfig $configuration
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importAllChangesetsBySubmitionDate(
@@ -516,8 +480,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param ImportConfig $configuration
      * @return int
      */
     private function getCountChangeset(Tracker_Artifact $artifact, ImportConfig $configuration)
@@ -534,9 +496,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param SimpleXMLElement $xml_changeset
-     * @param Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
      * @return false|Tracker_Artifact
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -564,8 +523,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param SimpleXMLElement $xml_changeset
      * @return Tracker_Artifact|false
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -589,9 +546,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param SimpleXMLElement $xml_changeset
-     * @param Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
      * @throws Tracker_Artifact_Exception_XMLImportException
      * @throws Tracker_Exception
      * @throws Tracker_NoChangeException
@@ -629,8 +583,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker_Artifact_Changeset $changeset
-     * @param SimpleXMLElement $xml_changeset
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function updateComments(Tracker_Artifact_Changeset $changeset, SimpleXMLElement $xml_changeset)
@@ -649,7 +601,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param SimpleXMLElement $xml_changeset
      * @return \PFUser
      */
     private function getSubmittedBy(SimpleXMLElement $xml_changeset)
@@ -658,7 +609,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param SimpleXMLElement $xml_changeset
      * @return int
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -672,8 +622,6 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @param Tracker $tracker
-     * @param SimpleXMLElement $xml_artifact
      * @return Tracker_Artifact|null
      * @throws Tracker_Artifact_Exception_XMLImportException
      */

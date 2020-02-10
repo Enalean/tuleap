@@ -47,7 +47,6 @@ class SimilarFieldsMatcher
     }
 
     /**
-     * @param CrossTrackerReport $report
      * @return SimilarFieldCollection
      */
     public function getSimilarFieldsCollection(CrossTrackerReport $report, \PFUser $user)

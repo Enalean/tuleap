@@ -151,7 +151,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
     /**
      * Returns encoded content chunk of file
      *
-     * @param Tracker_Artifact_Attachment_TemporaryFile $file
      * @param int $offset Where to start reading
      * @param int $size   How much to read
      *
@@ -175,7 +174,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
      * Append some content (base64 encoded) to the file
      *
      * @param String $content
-     * @param Tracker_Artifact_Attachment_TemporaryFile $file
      * @param int $offset
      *
      * @return bool

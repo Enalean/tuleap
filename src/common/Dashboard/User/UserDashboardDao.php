@@ -51,7 +51,6 @@ class UserDashboardDao extends DataAccessObject
     }
 
     /**
-     * @param PFUser $user
      * @param $name
      * @return bool
      */

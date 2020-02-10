@@ -24,11 +24,6 @@ declare(strict_types=1);
 class FRSFileOngoingUploadException extends \RuntimeException //phpcs:ignore
 {
 
-    /**
-     *
-     *
-     * @param FRSFile $file
-     */
     public function __construct(\FRSFile $file)
     {
         parent::__construct(

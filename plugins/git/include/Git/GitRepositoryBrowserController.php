@@ -114,8 +114,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param HTTPRequest $request
-     * @param BaseLayout  $layout
      * @param array       $variables
      *
      * @throws NotFoundException
@@ -224,8 +222,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     }
 
     /**
-     * @param HTTPRequest   $request
-     * @param GitRepository $repository
      *
      * @return Git_URL
      */

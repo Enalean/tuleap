@@ -43,8 +43,6 @@ class Tracker_Permission_PermissionChecker
     /**
      * Check if a user can view a given artifact
      *
-     * @param PFUser $user
-     * @param Tracker_Artifact $artifact
      * @return bool
      */
     public function userCanView(PFUser $user, Tracker_Artifact $artifact)

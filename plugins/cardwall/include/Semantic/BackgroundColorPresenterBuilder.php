@@ -84,7 +84,6 @@ class BackgroundColorPresenterBuilder
     }
 
     /**
-     * @param Tracker_FormElement_Field $field
      *
      * @return bool
      */

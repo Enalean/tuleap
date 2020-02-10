@@ -82,8 +82,6 @@ class MetadataValueStore
     }
 
     /**
-     * @param \Docman_MetadataValue $metadata_value
-     * @param int                   $project_id
      *
      * @throws MetadataDoesNotExistException
      */

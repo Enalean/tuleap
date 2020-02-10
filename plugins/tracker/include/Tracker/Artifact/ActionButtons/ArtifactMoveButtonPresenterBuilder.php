@@ -88,7 +88,6 @@ class ArtifactMoveButtonPresenterBuilder
     }
 
     /**
-     * @param PFUser $user
      *
      * @return string
      */

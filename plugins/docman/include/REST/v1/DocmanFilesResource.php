@@ -273,7 +273,6 @@ class DocmanFilesResource extends AuthenticatedResource
      * @param int                                 $id             Id of the file
      * @param DocmanFileVersionPOSTRepresentation $representation {@from body}
      *
-     * @return CreatedItemFilePropertiesRepresentation
      *
      * @status 201
      * @throws RestException 400
@@ -464,9 +463,6 @@ class DocmanFilesResource extends AuthenticatedResource
         );
     }
 
-    /**
-     * @param \Project $project
-     */
     private function addAllEvent(\Project $project): void
     {
         $event_adder = $this->getDocmanItemsEventAdder();
@@ -475,7 +471,6 @@ class DocmanFilesResource extends AuthenticatedResource
     }
 
     /**
-     * @return CreatedItemFilePropertiesRepresentation
      * @throws I18NRestException
      * @throws RestException
      */

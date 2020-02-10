@@ -56,25 +56,16 @@ class CheckPostActionsForTracker implements Dispatchable
         $this->post_actions = $post_actions;
     }
 
-    /**
-     * @return Tracker
-     */
     public function getTracker(): Tracker
     {
         return $this->tracker;
     }
 
-    /**
-     * @return PostActionCollection
-     */
     public function getPostActions(): PostActionCollection
     {
         return $this->post_actions;
     }
 
-    /**
-     * @return bool
-     */
     public function arePostActionsEligible(): bool
     {
         return $this->are_post_actions_eligible;
@@ -88,17 +79,11 @@ class CheckPostActionsForTracker implements Dispatchable
         $this->are_post_actions_eligible = false;
     }
 
-    /**
-     * @return string
-     */
     public function getErrorMessage(): string
     {
         return $this->error_message;
     }
 
-    /**
-     * @param string $error_message
-     */
     public function setErrorMessage(string $error_message): void
     {
         $this->error_message = $error_message;

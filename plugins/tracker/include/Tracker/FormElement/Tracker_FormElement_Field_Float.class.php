@@ -158,7 +158,6 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_Float $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */

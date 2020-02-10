@@ -69,7 +69,6 @@ class PlanningPermissionsRepresentationBuilder
     }
 
     /**
-     * @param Planning $planning
      *
      * @return array
      */

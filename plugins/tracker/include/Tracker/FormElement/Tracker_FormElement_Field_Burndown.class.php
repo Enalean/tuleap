@@ -276,7 +276,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     /**
      *
-     * @param Tracker_IDisplayTrackerLayout $layout
      * @param Codendi_Request               $request
      * @param PFUser                        $current_user
      */
@@ -305,7 +304,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Render a burndown image based on $artifact artifact links
      *
-     * @param Tracker_Artifact $artifact
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      * @throws BurndownCacheIsCurrentlyCalculatedException
@@ -568,7 +566,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Returns a Burndown rendering object for given data
      *
-     * @param Tracker_Chart_Data_Burndown $burndown_data
      *
      * @return \Tracker_Chart_BurndownView
      */
@@ -580,7 +577,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
@@ -606,7 +602,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Return the relative url to the burndown chart image.
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return String
      */

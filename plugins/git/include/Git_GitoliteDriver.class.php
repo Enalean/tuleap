@@ -251,7 +251,6 @@ class Git_GitoliteDriver
     /**
      * Save on filesystem all permission configuration for a project
      *
-     * @param Project $project
      */
     public function dumpProjectRepoConf(Project $project)
     {
@@ -453,7 +452,6 @@ class Git_GitoliteDriver
      *
      * Restore archived repository
      *
-     * @param GitRepository $repository
      * @param String git_root_path
      * @param String $backup_directory
      *

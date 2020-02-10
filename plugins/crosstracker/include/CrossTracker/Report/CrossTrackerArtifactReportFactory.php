@@ -71,8 +71,6 @@ class CrossTrackerArtifactReportFactory
     }
 
     /**
-     * @param CrossTrackerReport $report
-     * @param PFUser $current_user
      * @param int $limit
      * @param int $offset
      *
@@ -124,8 +122,6 @@ class CrossTrackerArtifactReportFactory
     }
 
     /**
-     * @param CrossTrackerReport $report
-     * @param PFUser $current_user
      * @param int $limit
      * @param int $offset
      *

@@ -44,9 +44,6 @@ class DocumentFooterPresenterBuilder
         $this->event_manager   = $event_manager;
     }
 
-    /**
-     * @return DocumentFooterPresenter
-     */
     public function build(
         array $params,
         int $project_id,

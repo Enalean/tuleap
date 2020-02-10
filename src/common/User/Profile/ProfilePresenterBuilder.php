@@ -54,7 +54,6 @@ class ProfilePresenterBuilder
     }
 
     /**
-     * @param PFUser $user
      *
      * @return array
      */
@@ -86,8 +85,6 @@ class ProfilePresenterBuilder
     }
 
     /**
-     * @param PFUser $user
-     * @param PFUser $current_user
      *
      * @return Project[]
      */

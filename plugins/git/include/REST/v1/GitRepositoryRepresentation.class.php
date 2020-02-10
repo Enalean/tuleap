@@ -28,7 +28,6 @@ use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 class GitRepositoryRepresentation extends GitRepositoryRepresentationBase
 {
     /**
-     * @param GitRepository $repository
      * @param string        $html_url
      * @param               $server_representation
      * @param string        $last_update_date

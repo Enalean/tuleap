@@ -41,7 +41,6 @@ class EventManager implements EventDispatcherInterface // phpcs:ignore
 
     /**
      * Set current instance of singleton.  DO NOT USE IT IN PRODUCTION CODE!
-     * @param EventManager $instance
      */
     public static function setInstance(EventManager $instance)
     {

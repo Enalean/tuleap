@@ -143,7 +143,6 @@ class Tracker_FormElementFactory
     /**
      * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
      *
-     * @param Tracker_FormElementFactory $factory
      */
     public static function setInstance(Tracker_FormElementFactory $factory)
     {
@@ -317,7 +316,6 @@ class Tracker_FormElementFactory
      *
      * @param int    $tracker_id
      * @param string $field_name
-     * @param PFUser   $user
      *
      * @return Tracker_FormElement_Field
      */
@@ -395,7 +393,6 @@ class Tracker_FormElementFactory
      *
      * @param int    $tracker_id
      * @param string $field_name
-     * @param PFUser   $user
      *
      * @return Tracker_FormElement_Field_Selectbox | null
      */
@@ -413,7 +410,6 @@ class Tracker_FormElementFactory
      *
      * @param int    $tracker_id
      * @param string $field_name
-     * @param PFUser   $user
      *
      * @return Tracker_FormElement_IComputeValues
      */
@@ -531,7 +527,6 @@ class Tracker_FormElementFactory
     /**
      * Returns FormElements used by a tracker, except those already in REST Basic Info
      *
-     * @param Tracker $tracker
      *
      * @return Tracker_FormElement_Field[]
      */
@@ -543,8 +538,6 @@ class Tracker_FormElementFactory
     /**
      * Augment fields_data with fields which have a default value defined
      *
-     * @param Tracker $tracker
-     * @param Array $fields_data
      *
      * @return Array $fields_data
      */
@@ -632,7 +625,6 @@ class Tracker_FormElementFactory
     }
 
     /**
-     * @param Tracker $tracker
      * @return Tracker_FormElement_Field[] All custom date formElements used by the tracker
      */
     public function getUsedCustomDateFields(Tracker $tracker)
@@ -641,7 +633,6 @@ class Tracker_FormElementFactory
     }
 
     /**
-     * @param Tracker $tracker
      * @return Tracker_FormElement_Field[] All core date formElements of the tracker
      */
     public function getCoreDateFields(Tracker $tracker)
@@ -650,7 +641,6 @@ class Tracker_FormElementFactory
     }
 
     /**
-     * @param Tracker $tracker
      * @param int     $field_id
      *
      * @return Tracker_FormElement_Field_Date|null
@@ -684,7 +674,6 @@ class Tracker_FormElementFactory
 
     /**
      * It retrieves simple value fields that can potentially contain numeric values
-     * @param Tracker $tracker
      * @return Tracker_FormElement_Field[] All numeric or computed formElements used by the tracker
      */
     public function getUsedPotentiallyContainingNumericValueFields(Tracker $tracker)
@@ -811,7 +800,6 @@ class Tracker_FormElementFactory
     }
 
     /**
-     * @param Tracker $tracker
      *
      * @return array<Tracker_FormElement_Field_Selectbox|Tracker_FormElement_Field_Checkbox|Tracker_FormElement_Field_MultiSelectbox|Tracker_FormElement_Field_Radiobutton>
      */
@@ -842,7 +830,6 @@ class Tracker_FormElementFactory
     /**
      * Return all selectbox and multiselectbox fields that bind to static values
      *
-     * @param Tracker $tracker
      *
      * @return DataAccessResult
      */
@@ -1229,7 +1216,6 @@ class Tracker_FormElementFactory
     /**
      * Returns the FormElements that are a copy of given element
      *
-     * @param Tracker_FormElement $element
      *
      * @return Array of Tracker_FormElement
      */

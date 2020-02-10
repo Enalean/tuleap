@@ -49,9 +49,6 @@ class DashboardWidgetLine
         $this->widget_columns = $widget_columns;
     }
 
-    /**
-     * @param DashboardWidgetColumn $column
-     */
     public function addWidgetColumn(DashboardWidgetColumn $column)
     {
         $this->widget_columns[] = $column;

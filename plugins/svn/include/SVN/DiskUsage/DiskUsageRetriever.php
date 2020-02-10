@@ -68,7 +68,6 @@ class DiskUsageRetriever
     }
 
     /**
-     * @param Project $project
      *
      * @return int
      */
@@ -97,7 +96,6 @@ class DiskUsageRetriever
     }
 
     /**
-     * @param Repository $repository
      *
      * @return bool
      */

@@ -29,14 +29,12 @@ interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_Fo
 
     /**
      * Display the field as a criteria
-     * @param Tracker_Report_Criteria $criteria
      * @return string
      */
     function fetchCriteria(Tracker_Report_Criteria $criteria);
 
     /**
      * Display the field as criteria but without been able to be switch to advanced mode
-     * @param Tracker_Report_Criteria $criteria
      * @return string
      */
     function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria);

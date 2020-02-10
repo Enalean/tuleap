@@ -43,8 +43,6 @@ class AgileDashboardCrumbBuilder
     }
 
     /**
-     * @param PFUser  $user
-     * @param Project $project
      *
      * @return BreadCrumb
      */
@@ -65,10 +63,6 @@ class AgileDashboardCrumbBuilder
         return $agile_breadcrumb;
     }
 
-    /**
-     * @param Project    $project
-     * @param BreadCrumb $agile_breadcrumb
-     */
     private function addAdministrationLink(Project $project, BreadCrumb $agile_breadcrumb)
     {
         $admin_url = AGILEDASHBOARD_BASE_URL . '/?' .

@@ -134,7 +134,6 @@ class HTTPAccessControl
     }
 
     /**
-     * @param \GitRepository $repository
      * @return \PFO_User
      */
     private function authenticate(\GitRepository $repository)

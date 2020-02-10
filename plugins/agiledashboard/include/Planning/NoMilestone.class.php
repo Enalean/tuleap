@@ -72,7 +72,6 @@ class Planning_NoMilestone implements Planning_Milestone
     }
 
     /**
-     * @param PFUser $user
      * @return bool
      */
     public function userCanView(PFUser $user)

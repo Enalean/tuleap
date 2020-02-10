@@ -61,8 +61,6 @@ class SVN_RepositoryListing
     /**
      * Returns array of svn paths with log details
      *
-     * @param PFUser  $user
-     * @param Project $project
      * @param string  $svn_path
      * @param String  $sort        The type of sort wanted: ASC or DESC
      *

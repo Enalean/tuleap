@@ -299,7 +299,6 @@ class Docman_PermissionsManager
      * Return true if there is no lock on the item or if there is one but user
      * is owner of the lock. This method doesn't check write permission.
      *
-     * @param PFUser    $user
      * @param int $item_id
      *
      * @return bool

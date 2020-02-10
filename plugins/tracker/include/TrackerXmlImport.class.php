@@ -183,8 +183,6 @@ class TrackerXmlImport
     }
 
     /**
-     * @param \User\XML\Import\IFindUserFromXMLReference $user_finder
-     * @param \Psr\Log\LoggerInterface|null $logger
      * @return TrackerXmlImport
      */
     public static function build(
@@ -246,7 +244,6 @@ class TrackerXmlImport
 
     /**
      *
-     * @param SimpleXMLElement $xml_tracker
      * @param type $attribute_name
      * @return String | bool the attribute value in String, False if this attribute does not exist
      */
@@ -260,11 +257,7 @@ class TrackerXmlImport
     }
 
     /**
-     * @param ImportConfig $configuration
-     * @param Project $project
-     * @param SimpleXMLElement $xml_input
      *
-     * @param MappingsRegistry $registery
      * @param $extraction_path
      * @return Tracker[]|void
      * @throws TrackerFromXmlException
@@ -407,7 +400,6 @@ class TrackerXmlImport
     }
 
     /**
-     * @param XMLImportArtifactLinkTypeCanBeDisabled $event
      * @return bool
      */
     private function typeCanBeDisabled(XMLImportArtifactLinkTypeCanBeDisabled $event)
@@ -417,8 +409,6 @@ class TrackerXmlImport
     }
 
     /**
-     * @param Project $project
-     * @param SimpleXMLElement $xml_input
      * @return string
      * @throws Tracker_Exception
      */
@@ -495,9 +485,6 @@ class TrackerXmlImport
      * @param array $xml_trackers
      * @param array $created_trackers_objects
      * @param $extraction_path
-     * @param TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping
-     * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
-     * @param ImportConfig $configuration
      * @return array of created artifacts
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -566,9 +553,6 @@ class TrackerXmlImport
 
     /**
      *
-     * @param Project $project
-     * @param SimpleXMLElement $xml_tracker
-     * @param ImportConfig $configuration
      * @return Tracker the link between xml id and new id given by Tuleap
      *
      * @throws TrackerFromXmlException
@@ -636,8 +620,6 @@ class TrackerXmlImport
     }
 
     /**
-     * @param Project $project
-     * @param SimpleXMLElement $xml_tracker
      * @return Tracker
      * @throws TrackerFromXmlImportCannotBeUpdatedException
      */
@@ -665,7 +647,6 @@ class TrackerXmlImport
 
     /**
      *
-     * @param Project $project
      * @param type $filepath
      *
      * @throws TrackerFromXmlException
@@ -696,7 +677,6 @@ class TrackerXmlImport
 
     /**
      *
-     * @param Project $project
      * @param type $filepath
      * @param type $name
      * @param type $description
@@ -1001,7 +981,6 @@ class TrackerXmlImport
     /**
      *
      * @param array $hierarchy
-     * @param SimpleXMLElement $xml_tracker
      * @param array $mapper
      * @return array The hierarchy array with new elements added
      */

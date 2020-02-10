@@ -74,17 +74,11 @@ class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryB
         return $this->tracker;
     }
 
-    /**
-     * @param Tracker $tracker
-     */
     public function setTracker(Tracker $tracker)
     {
         $this->tracker = $tracker;
     }
 
-    /**
-     * @param Tracker_FormElement_Visitor $visitor
-     */
     public function accept(Tracker_FormElement_Visitor $visitor)
     {
         $visitor->visit($this);

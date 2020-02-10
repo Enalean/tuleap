@@ -429,7 +429,6 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
      * @param int                                   $id             Id of the file
      * @param FilePropertiesPOSTPATCHRepresentation $representation {@from body}
      *
-     * @return CreatedItemFilePropertiesRepresentation
      *
      * @status 201
      * @throws RestException 400

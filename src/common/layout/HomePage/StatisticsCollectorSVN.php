@@ -38,9 +38,6 @@ class StatisticsCollectorSVN implements Dispatchable
         return $this->svn_commits;
     }
 
-    /**
-     * @param int $svn_commits
-     */
     public function setSvnCommits(int $svn_commits)
     {
         $this->svn_commits = $svn_commits;

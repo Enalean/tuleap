@@ -134,7 +134,6 @@ abstract class Tracker_Artifact_ChangesetValue
     /**
      * Return the REST value of this changeset value
      *
-     * @param PFUser $user
      *
      * @return ArtifactFieldValueRepresentationData
      */
@@ -143,7 +142,6 @@ abstract class Tracker_Artifact_ChangesetValue
     /**
      * Return the full REST value of this changeset value
      *
-     * @param PFUser $user
      *
      * @return ArtifactFieldValueRepresentationData
      */

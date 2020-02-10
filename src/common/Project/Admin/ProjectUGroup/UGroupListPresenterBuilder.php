@@ -123,7 +123,6 @@ class UGroupListPresenterBuilder
     }
 
     /**
-     * @param Project $project
      * @return UGroupPresenter[]
      */
     private function getDynamicUGroups(Project $project)
@@ -151,7 +150,6 @@ class UGroupListPresenterBuilder
     }
 
     /**
-     * @param Project $project
      * @param ProjectUGroup[] $static_ugroups
      * @return UGroupPresenter[]
      */
@@ -167,7 +165,6 @@ class UGroupListPresenterBuilder
     }
 
     /**
-     * @param Project $project
      * @return ProjectUGroup[]
      */
     private function getStaticUGroups(Project $project)

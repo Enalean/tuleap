@@ -113,7 +113,6 @@ class TrackerForceNotificationsLevelCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
      *
      * @return mixed
      */
@@ -131,7 +130,6 @@ class TrackerForceNotificationsLevelCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
      *
      * @return array
      */

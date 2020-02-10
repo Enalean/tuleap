@@ -53,8 +53,6 @@ abstract class Tracker_Artifact_ArtifactRenderer
     /**
      * Render artifact form
      *
-     * @param Codendi_Request $request
-     * @param PFUser $current_user
      */
     public function display(Codendi_Request $request, PFUser $current_user)
     {
@@ -79,8 +77,6 @@ abstract class Tracker_Artifact_ArtifactRenderer
     /**
      * Render artifact form content
      *
-     * @param Codendi_Request $request
-     * @param PFUser $current_user
      */
     abstract protected function fetchFormContent(Codendi_Request $request, PFUser $current_user);
 

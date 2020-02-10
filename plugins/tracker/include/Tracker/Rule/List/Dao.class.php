@@ -62,7 +62,6 @@ class Tracker_Rule_List_Dao extends DataAccessObject
 
     /**
      *
-     * @param Tracker_Rule_List $rule
      * @return int The ID of the saved tracker_rule
      */
     public function insert(Tracker_Rule_List $rule)

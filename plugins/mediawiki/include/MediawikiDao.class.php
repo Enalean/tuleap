@@ -275,7 +275,6 @@ class MediawikiDao extends DataAccessObject
     /**
      * Reset all user permissions for a given database according to mapping
      *
-     * @param Project $project
      * @return bool
      */
     public function resetUserGroups(Project $project)

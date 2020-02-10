@@ -53,9 +53,6 @@ class ReferenceGetTooltipContentEvent implements Dispatchable
     private $user;
 
     /**
-     * @param \Reference $reference
-     * @param \Project $project
-     * @param \PFUser $user
      * @param string $keyword
      * @param string $value
      */

@@ -184,8 +184,6 @@ class ProjectDashboardXMLImporter
     }
 
     /**
-     * @param Project $project
-     * @param \SimpleXMLElement $widget_xml
      * @return array
      */
     private function getWidget(Project $project, \SimpleXMLElement $widget_xml, array $all_widgets, MappingsRegistry $mapping_registry)
@@ -226,8 +224,6 @@ class ProjectDashboardXMLImporter
     }
 
     /**
-     * @param \Widget $widget
-     * @param \SimpleXMLElement $widget_xml
      *
      * @return null|false|int
      */

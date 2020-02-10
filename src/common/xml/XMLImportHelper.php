@@ -47,7 +47,6 @@ class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference
     }
 
     /**
-     * @param SimpleXMLElement $xml_element
      * @return PFUser
      */
     public function getUser(SimpleXMLElement $xml_element)

@@ -23,7 +23,6 @@ class User_PasswordExpirationChecker
 
     /**
      *
-     * @param PFUser $user
      * @throws User_PasswordExpiredException
      */
     public function checkPasswordLifetime(PFUser $user)

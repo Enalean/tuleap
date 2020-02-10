@@ -32,7 +32,6 @@ class ServiceFile extends Service
      * getPublicArea
      *
      * Return the link which will be displayed in public area in summary page
-     * @return string
      */
     public function getPublicArea(): string
     {

@@ -44,8 +44,6 @@ class ServiceCreator
     }
 
     /**
-     * @param Project $project
-     * @param ServicePOSTData $service_data
      * @throws UnableToCreateServiceException
      */
     public function createService(Project $project, ServicePOSTData $service_data)
@@ -94,18 +92,12 @@ class ServiceCreator
         return $link;
     }
 
-    /**
-     * @param Project $project
-     */
     private function forceRegenerationOfCacheInProjectManager(Project $project)
     {
         $this->project_manager->clear($project->getID());
         $this->project_manager->getProject($project->getID());
     }
 
-    /**
-     * @param ServicePOSTData $service_data
-     */
     private function addServiceToAllProjects(ServicePOSTData $service_data)
     {
         $link   = $service_data->getLink();

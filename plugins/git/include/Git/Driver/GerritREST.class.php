@@ -433,8 +433,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     /**
      *
-     * @param Git_RemoteServer_GerritServer $server
-     * @param Git_Driver_Gerrit_User $user
      *
      * @return array
      */

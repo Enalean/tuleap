@@ -77,7 +77,6 @@ class WebDAVAuthentication
     /**
      * Sets the authentication header
      *
-     * @return void
      */
     public function setHeader(): void
     {

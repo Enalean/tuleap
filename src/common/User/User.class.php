@@ -1579,7 +1579,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * Set LanguageFactory
      *
-     * @param BaseLanguageFactory $languageFactory
      */
     public function setLanguageFactory(BaseLanguageFactory $languageFactory)
     {

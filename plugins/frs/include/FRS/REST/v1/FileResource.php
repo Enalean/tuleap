@@ -76,7 +76,6 @@ class FileResource extends AuthenticatedResource
      *
      * @param int $id ID of the file
      *
-     * @return \Tuleap\FRS\REST\v1\FileRepresentation
      *
      * @throws RestException 403
      */
@@ -181,9 +180,7 @@ class FileResource extends AuthenticatedResource
      * to call this endpoint.
      * Note: If the file is empty, then no URL will be returned.
      *
-     * @param FilePOSTRepresentation $file_post_representation
      *
-     * @return CreatedFileRepresentation
      *
      * @status 201
      * @throws RestException 400

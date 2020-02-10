@@ -40,8 +40,6 @@ class Tracker_Workflow_Trigger_RulesFactory
      *
      * It ensures data and format correctness
      *
-     * @param Tracker $tracker
-     * @param stdClass $json
      *
      * @throws Tracker_FormElement_InvalidFieldException
      * @throws Tracker_FormElement_InvalidFieldValueException

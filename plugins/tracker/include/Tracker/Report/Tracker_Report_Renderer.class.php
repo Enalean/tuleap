@@ -100,7 +100,6 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      * @param array   $matching_ids
      * @param Request $request
      * @param bool    $report_can_be_modified
-     * @param PFUser    $user
      *
      * @return string
      */

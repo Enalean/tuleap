@@ -40,10 +40,6 @@ class Cardwall_PaneBoardBuilder
     /**
      * Get the board
      *
-     * @param PFUser $user
-     * @param Tracker_Artifact $milestone_artifact
-     * @param Cardwall_OnTop_Config_ColumnCollection $columns
-     * @param Cardwall_MappingCollection $mapping_collection
      * @return \Cardwall_Board
      */
     public function getBoard(PFUser $user, Tracker_Artifact $milestone_artifact, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mapping_collection)
@@ -58,9 +54,6 @@ class Cardwall_PaneBoardBuilder
     /**
      * Retrieves the artifacts planned for the given milestone artifact.
      *
-     * @param PFUser $user
-     * @param Tracker_Artifact $milestone_artifact
-     * @param Cardwall_OnTop_Config_ColumnCollection $columns
      *
      * @return Cardwall_Swimline[]
      */

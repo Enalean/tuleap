@@ -43,8 +43,6 @@ class GreaterThanComparisonFromWhereBuilder implements FromWhereBuilder
     private $extractor;
 
     /**
-     * @param DateValueExtractor $extractor
-     * @param DateTimeValueRounder $date_time_value_rounder
      * @param string $alias_field
      */
     public function __construct(
@@ -58,8 +56,6 @@ class GreaterThanComparisonFromWhereBuilder implements FromWhereBuilder
     }
 
     /**
-     * @param Metadata $metadata
-     * @param Comparison $comparison
      * @param Tracker[] $trackers
      * @return IProvideParametrizedFromAndWhereSQLFragments
      */

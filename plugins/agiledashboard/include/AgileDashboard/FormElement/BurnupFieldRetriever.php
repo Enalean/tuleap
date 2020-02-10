@@ -36,8 +36,6 @@ class BurnupFieldRetriever
     }
 
     /**
-     * @param \Tracker_Artifact $artifact
-     * @param PFUser $user
      * @return Burnup|null
      */
     public function getField(\Tracker_Artifact $artifact, PFUser $user)

@@ -308,7 +308,6 @@ class WebDAVUtils
     /**
      * Use Docman MVC model to perform webdav actions
      *
-     * @param WebDAV_Request $request
      */
     function processDocmanRequest(WebDAV_Request $request)
     {

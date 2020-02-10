@@ -37,7 +37,6 @@ class ExpertQueryValidator
 
     /**
      * @param string $expert_query
-     * @param IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
      */

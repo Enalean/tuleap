@@ -53,7 +53,6 @@ class ChartConfigurationValueRetriever
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      *
      * @return null|int
      */
@@ -73,7 +72,6 @@ class ChartConfigurationValueRetriever
     }
 
     /**
-     * @return TimePeriodWithoutWeekEnd
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      */

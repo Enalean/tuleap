@@ -41,8 +41,6 @@ class Cardwall_Board
 
     /**
      * @param array of Cardwall_Swimline             $swimlines
-     * @param Cardwall_OnTop_Config_ColumnCollection $columns
-     * @param Cardwall_MappingCollection             $mappings
      */
     public function __construct(array $swimlines, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mappings)
     {

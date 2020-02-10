@@ -478,7 +478,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
@@ -876,7 +875,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     /**
      * Fetch the html code to display the field in card
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string
      */

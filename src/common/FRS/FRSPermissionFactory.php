@@ -34,7 +34,6 @@ class FRSPermissionFactory
     }
 
     /**
-     * @param Project $project
      * @param         $permission_type
      *
      * @return FRSPermission[]

@@ -1115,11 +1115,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return ForgeConfig::get('sys_data_dir') . '/tracker/';
     }
 
-    /**
-     * @param FileOngoingUploadDao $ongoing_upload_dao
-     *
-     * @return FileInfoForTusUploadedFileReadyToBeAttachedProvider
-     */
     protected function getFileInfoForTusUploadedFileReadyToBeAttachedProvider(FileOngoingUploadDao $ongoing_upload_dao): FileInfoForTusUploadedFileReadyToBeAttachedProvider
     {
         return new FileInfoForTusUploadedFileReadyToBeAttachedProvider(

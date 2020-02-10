@@ -75,8 +75,6 @@ class MetadataUsageChecker
     }
 
     /**
-     * @param Metadata $metadata
-     * @param InvalidComparisonCollectorParameters $collector_parameters
      * @throws DescriptionIsMissingInAtLeastOneTrackerException
      * @throws StatusIsMissingInAtLeastOneTrackerException
      * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
@@ -175,7 +173,6 @@ class MetadataUsageChecker
 
     /**
      * @param Tracker[] $trackers
-     * @param PFUser $user
      * @throws SubmittedOnIsMissingInAtLeastOneTrackerException
      */
     private function checkSubmittedOnIsUsedByAllTrackers(array $trackers, PFUser $user)
@@ -188,7 +185,6 @@ class MetadataUsageChecker
 
     /**
      * @param Tracker[] $trackers
-     * @param PFUser $user
      * @throws LastUpdateDateIsMissingInAtLeastOneTrackerException
      */
     private function checkLastUpdateDateIsUsedByAllTrackers(array $trackers, PFUser $user)
@@ -230,7 +226,6 @@ class MetadataUsageChecker
 
     /**
      * @param \Tracker_FormElement[] $fields
-     * @param PFUser $user
      * @return bool
      */
     private function isThereAtLeastOneReadableField(array $fields, PFUser $user)
@@ -246,7 +241,6 @@ class MetadataUsageChecker
 
     /**
      * @param $trackers
-     * @param PFUser $user
      * @param $type
      * @return int
      */

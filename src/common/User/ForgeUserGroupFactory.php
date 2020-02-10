@@ -89,7 +89,6 @@ class User_ForgeUserGroupFactory
     }
 
     /**
-     * @param Project $project
      * @return User_ForgeUGroup[]
      */
     public function getAllForProject(Project $project)
@@ -131,7 +130,6 @@ class User_ForgeUserGroupFactory
     }
 
     /**
-     * @param Project $project
      * @return User_ForgeUGroup[]
      */
     private function getStaticByProject(Project $project)

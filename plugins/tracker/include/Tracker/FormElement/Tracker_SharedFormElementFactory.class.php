@@ -63,8 +63,6 @@ class Tracker_SharedFormElementFactory
     }
 
     /**
-     * @param Tracker_FormElement $field
-     * @param PFUser              $user
      *
      * @throws Exception
      */
@@ -109,7 +107,6 @@ class Tracker_SharedFormElementFactory
     }
 
     /**
-     * @param Project $project
      *
      * @throws Exception
      */

@@ -40,7 +40,6 @@ class Cardwall_RendererBoardBuilder
      * Get the board
      *
      * @param array $artifact_ids
-     * @param Cardwall_OnTop_Config_ColumnCollection $columns
      * @param Cardwall_MappingCollection $mappings_collection
      * @return \Cardwall_Board
      */

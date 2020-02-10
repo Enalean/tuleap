@@ -35,7 +35,6 @@ class SVN_LogFactory
      * Builds a new SVN_Log object representing the SVN log of the given
      * project.
      *
-     * @param Project $project
      */
     public function __construct(Project $project)
     {
@@ -102,7 +101,6 @@ class SVN_LogFactory
     /**
      * Return SVN path the user is not allowed to see
      *
-     * @param PFUser $user
      *
      * @return string
      */

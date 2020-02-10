@@ -36,9 +36,6 @@ final class ReplaceDataFilter implements FilterInterface
         $this->replacement_data = $replacement_data;
     }
 
-    /**
-     * @return string
-     */
     public function process($data_chunk) : string
     {
         if ($this->has_already_written_expected_data) {

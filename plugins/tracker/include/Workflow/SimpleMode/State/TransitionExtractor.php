@@ -28,7 +28,6 @@ use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 class TransitionExtractor
 {
     /**
-     * @return Transition
      * @throws NoTransitionForStateException
      */
     public function extractReferenceTransitionFromState(State $state) : Transition

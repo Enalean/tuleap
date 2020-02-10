@@ -34,10 +34,6 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
     public $settings;
 
     /**
-     * @param Repository         $repository
-     * @param HookConfig         $hook_config
-     * @param ImmutableTag       $immutable_tag
-     * @param AccessFileHistory  $access_file_history
      * @param MailNotification[] $notifications
      */
     public function fullBuild(

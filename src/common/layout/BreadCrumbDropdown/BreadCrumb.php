@@ -53,9 +53,6 @@ class BreadCrumb
         return $this->sub_items;
     }
 
-    /**
-     * @param BreadCrumbSubItems $sub_items
-     */
     public function setSubItems(BreadCrumbSubItems $sub_items)
     {
         $this->sub_items = $sub_items;

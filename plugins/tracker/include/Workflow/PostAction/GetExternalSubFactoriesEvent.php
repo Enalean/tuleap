@@ -42,9 +42,6 @@ class GetExternalSubFactoriesEvent implements Dispatchable
         return $this->factories;
     }
 
-    /**
-     * @param Transition_PostActionSubFactory $factory
-     */
     public function addFactory(Transition_PostActionSubFactory $factory): void
     {
         $this->factories[] = $factory;

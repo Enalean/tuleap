@@ -76,7 +76,6 @@ class Tracker_Workflow_Trigger_FieldValue
     /**
      * Return true if given artifact has the same value than current object
      *
-     * @param Tracker_Artifact $artifact
      * @return bool
      */
     public function isSetForArtifact(Tracker_Artifact $artifact)

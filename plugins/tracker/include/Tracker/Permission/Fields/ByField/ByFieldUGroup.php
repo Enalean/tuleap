@@ -45,25 +45,16 @@ class ByFieldUGroup
         $this->might_not_have_access = $might_not_have_access;
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function getMightNotHaveAccess(): bool
     {
         return $this->might_not_have_access;

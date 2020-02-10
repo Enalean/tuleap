@@ -116,10 +116,7 @@ class QueryParameterParser
     }
 
     /**
-     * @param string $query
-     * @param string $parameter_name
      *
-     * @return bool
      * @throws Exceptions\InvalidJsonException
      * @throws InvalidParameterTypeException
      * @throws MissingMandatoryParameterException

@@ -29,9 +29,6 @@ class DirectoryPathCollection
 
     private $collection = array();
 
-    /**
-     * @param DirectoryPathPart $path_part
-     */
     public function add(DirectoryPathPart $path_part)
     {
         $this->collection[] = $path_part;

@@ -183,7 +183,6 @@
     /**
      * Get the JS action for the item/user couple
      *
-     * @param Docman_Item $item
      */
     public function getActionForItem(Docman_Item $item)
     {

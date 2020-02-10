@@ -68,8 +68,6 @@ class OrderedColumnRepresentationsBuilder
     }
 
     /**
-     * @param AgileDashboard_Kanban $kanban
-     * @param PFUser $user
      * @param array $dates
      * @param $items_in_columns
      * @return array

@@ -38,7 +38,6 @@ class HookConfigRetriever
     }
 
     /**
-     * @param Repository $repository
      *
      * @return HookConfig
      */

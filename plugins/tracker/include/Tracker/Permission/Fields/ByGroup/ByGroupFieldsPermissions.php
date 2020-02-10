@@ -75,9 +75,6 @@ class ByGroupFieldsPermissions
         return array_values($this->ugroup_list);
     }
 
-    /**
-     * @return bool
-     */
     public function getMightNotHaveAccess(): bool
     {
         return $this->might_not_have_access;
@@ -121,17 +118,11 @@ class ByGroupFieldsPermissions
         return $this->fields;
     }
 
-    /**
-     * @return int
-     */
     public function getUgroupId(): int
     {
         return $this->ugroup_id;
     }
 
-    /**
-     * @return string
-     */
     public function getUgroupName(): string
     {
         return $this->ugroup_name;

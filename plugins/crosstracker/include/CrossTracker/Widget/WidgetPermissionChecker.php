@@ -42,7 +42,6 @@ class WidgetPermissionChecker
     }
 
     /**
-     * @param \PFUser $user
      * @param int $report_id
      *
      * @return bool

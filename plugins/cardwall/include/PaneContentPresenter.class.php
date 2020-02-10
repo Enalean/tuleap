@@ -62,7 +62,6 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
      * @param bool $is_display_avatar_selected
      * @param Planning                         $planning The concerned planning
      * @param Planning_Milestone               $milestone The milestone
-     * @param Cardwall_EffortProgressPresenter $progress_presenter
      */
     public function __construct(
         Cardwall_Board $board,

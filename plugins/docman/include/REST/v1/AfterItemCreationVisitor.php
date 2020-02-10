@@ -195,7 +195,6 @@ class AfterItemCreationVisitor implements ItemVisitor
     }
 
     /**
-     * @param Docman_Item                        $item
      * @param POSTCustomMetadataRepresentation[] $metadata_representations
      */
     private function storeCustomMetadata(Docman_Item $item, array $metadata_representations): void

@@ -44,7 +44,6 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param PFUser $user
      *
      * @return Git_Driver_Gerrit_User|null
      */
@@ -62,7 +61,6 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param PFUser $user
      * @return bool
      */
     private function isGerrit(PFUser $user)
@@ -147,9 +145,7 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param Git_RemoteServer_GerritServer $remote_server
      * @param array $keys
-     * @param Git_Driver_Gerrit_User $gerrit_user
      *
      * @return string[] List of errors
      */
@@ -168,9 +164,7 @@ class Git_Driver_Gerrit_UserAccountManager
 
     /**
      *
-     * @param Git_RemoteServer_GerritServer $remote_server
      * @param array $keys
-     * @param Git_Driver_Gerrit_User $gerrit_user
      *
      * @return string[] List of errors
      */

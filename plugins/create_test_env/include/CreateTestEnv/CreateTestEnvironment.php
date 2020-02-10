@@ -123,7 +123,6 @@ class CreateTestEnvironment
     }
 
     /**
-     * @param \SimpleXMLElement $xml
      * @param $filename
      * @throws Exception\UnableToCreateTemporaryDirectoryException
      * @throws Exception\UnableToWriteFileException

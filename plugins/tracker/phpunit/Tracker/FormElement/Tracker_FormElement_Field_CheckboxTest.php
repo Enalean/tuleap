@@ -92,9 +92,6 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
         );
     }
 
-    /**
-     * @return Tracker_FormElement_Field_Checkbox
-     */
     protected function getCheckboxField(): Tracker_FormElement_Field_Checkbox
     {
         return new Tracker_FormElement_Field_Checkbox(

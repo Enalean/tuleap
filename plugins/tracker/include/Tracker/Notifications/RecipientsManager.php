@@ -210,7 +210,6 @@ class RecipientsManager
     }
 
     /**
-     * @param Tracker_Artifact_Changeset $changeset
      *
      * @return bool
      */
@@ -220,7 +219,6 @@ class RecipientsManager
     }
 
     /**
-     * @param Tracker_Artifact_Changeset $changeset
      *
      * @return bool
      */
@@ -235,7 +233,6 @@ class RecipientsManager
     }
 
     /**
-     * @param Tracker_Artifact_Changeset $changeset
      * @param array                      $recipients
      *
      * @return array

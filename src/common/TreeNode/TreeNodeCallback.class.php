@@ -29,7 +29,6 @@ interface TreeNodeCallback
     /**
      * Returns a new TreeNode based on the given one. This function should return a perfectly new node
      *
-     * @param TreeNode $node
      * @return TreeNode
      */
     function apply(TreeNode $node);

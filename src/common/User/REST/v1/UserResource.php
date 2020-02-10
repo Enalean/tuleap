@@ -515,8 +515,6 @@ class UserResource extends AuthenticatedResource
 
     /**
      * Check if user has permission to update user details
-     * @param PFUser $watcher
-     * @param PFUser $watchee
      *
      * @return bool
      *

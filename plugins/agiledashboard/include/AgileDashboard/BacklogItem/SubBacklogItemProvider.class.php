@@ -83,9 +83,6 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
     /**
      * Return all indexed ids of artifacts linked on milestone that belong to backlog tracker
      *
-     * @param Planning_Milestone $milestone
-     * @param Tracker $backlog_tracker
-     * @param PFUser $user
      * @return array
      */
     public function getMatchingIds(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user)

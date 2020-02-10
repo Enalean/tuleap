@@ -143,8 +143,6 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
 
 /**
  * @param                 $path
- * @param string          $translated_plugin
- * @param DomainExtractor $gettext_in_mustache_extractor
  */
 function gettextPHP($path, string $translated_plugin, DomainExtractor $gettext_in_mustache_extractor): void
 {

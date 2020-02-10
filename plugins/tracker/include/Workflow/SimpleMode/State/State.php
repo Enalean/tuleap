@@ -50,9 +50,6 @@ class State
         return $this->transitions;
     }
 
-    /**
-     * @return int
-     */
     public function getValueId(): int
     {
         return $this->value_id;

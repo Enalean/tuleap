@@ -56,7 +56,6 @@ class Docman_XMLExport
 
     /**
      * Should be transfered in Docman_Metadata
-     * @param DOMDocument $doc
      * @return DOMNode
      */
     public function getMetadataDef(DOMDocument $doc)

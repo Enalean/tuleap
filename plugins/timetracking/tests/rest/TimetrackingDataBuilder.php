@@ -103,7 +103,6 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
 
     /**
      * @param Tracker_Artifact[] $artifacts
-     * @param PFUser $user
      */
     private function addTimes(array $artifacts, PFUser $user)
     {

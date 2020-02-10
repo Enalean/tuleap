@@ -55,9 +55,6 @@ class CodendiDataAccess
         return $data_access_mysql_instance;
     }
 
-    /**
-     * @param LegacyDataAccessInterface $instance
-     */
     public static function setInstance(LegacyDataAccessInterface $instance)
     {
         self::$_instance = $instance;

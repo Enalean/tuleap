@@ -164,10 +164,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
 
     /**
      * Fetch artifact value for email
-     * @param Tracker_Artifact $artifact
-     * @param PFUser $user
      * @param bool $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value
      * @param string $format
      *
      * @return string
@@ -243,7 +240,6 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
@@ -293,8 +289,6 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     /**
      * Return REST value of the priority
      *
-     * @param PFUser $user
-     * @param Tracker_Artifact_Changeset $changeset
      *
      * @return mixed | null if no values
      */
@@ -353,7 +347,6 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     /**
      * Fetch the html code to display the field value in card
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return string
      */

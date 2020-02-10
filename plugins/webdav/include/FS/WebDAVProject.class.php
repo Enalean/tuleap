@@ -40,8 +40,6 @@ class WebDAVProject extends Sabre_DAV_Directory
     /**
      * Constuctor of the class
      *
-     * @param PFUser $user
-     * @param Project $project
      * @param int $maxFileSize
      *
      * @return void

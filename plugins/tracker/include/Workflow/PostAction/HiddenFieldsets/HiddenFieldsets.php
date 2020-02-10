@@ -56,7 +56,6 @@ class HiddenFieldsets extends Transition_PostAction
     /**
      * Get the shortname of the post action
      *
-     * @return string
      */
     public function getShortName() : string
     {
@@ -109,7 +108,6 @@ class HiddenFieldsets extends Transition_PostAction
     /**
      * Get the value of bypass_permissions
      *
-     * @param Tracker_FormElement_Field $field
      *
      * @return bool
      */

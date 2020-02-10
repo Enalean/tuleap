@@ -32,7 +32,6 @@ class BacklogRequiredTracker
     private $is_initial_effort_semantic_missing;
 
     /**
-     * @param Tracker $tracker
      * @param bool $is_done_semantic_missing
      * @param bool $is_initial_effort_semantic_missing
      */

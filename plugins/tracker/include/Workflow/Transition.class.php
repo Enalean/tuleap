@@ -218,7 +218,6 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Execute actions after transition happenstype
      *
-     * @param Tracker_Artifact_Changeset $changeset
      * @return void
      */
     public function after(Tracker_Artifact_Changeset $changeset)
@@ -340,7 +339,6 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
    /**
     * Indicates if permissions on a field can be bypassed
     *
-    * @param Tracker_FormElement_Field $field
     *
     * @return bool true if the permissions on the field can be by passed, false otherwise
     */

@@ -59,7 +59,6 @@ class ThemeManager
     }
 
     /**
-     * @param PFUser $current_user
      * @return \Tuleap\Theme\BurningParrot\BurningParrotTheme
      */
     public function getBurningParrot(PFUser $current_user)

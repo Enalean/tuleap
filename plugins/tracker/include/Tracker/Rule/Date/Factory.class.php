@@ -198,7 +198,6 @@ class Tracker_Rule_Date_Factory
 
     /**
      *
-     * @param Tracker_Rule_Date $date_rule
      * @param int $tracker_id
      * @param int $source_field_id
      * @param int $target_field_id

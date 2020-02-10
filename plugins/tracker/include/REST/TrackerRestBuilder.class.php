@@ -100,7 +100,6 @@ class Tracker_REST_TrackerRestBuilder
      * requires a tracker as a parameter (I cannot pass it as constructor argument
      * because the tracker is an argument of the method, not the class).
      *
-     * @param Tracker $tracker
      * @return Tracker_SemanticManager
      */
     protected function getSemanticManager(Tracker $tracker)
@@ -126,7 +125,6 @@ class Tracker_REST_TrackerRestBuilder
     }
 
     /**
-     * @param PFUser $user
      * @return Tuleap\Tracker\REST\WorkflowRepresentation | null
      */
     private function getWorkflowRepresentation(Workflow $workflow, PFUser $user, $project_id)
@@ -207,7 +205,6 @@ class Tracker_REST_TrackerRestBuilder
 
     /**
      *
-     * @param Transition $transition
      *
      * @return Tuleap\Tracker\REST\WorkflowTransitionRepresentation
      */

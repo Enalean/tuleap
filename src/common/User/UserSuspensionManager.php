@@ -82,13 +82,6 @@ class UserSuspensionManager
     /**
      * Constructor
      *
-     * @param MailPresenterFactory $mail_presenter_factory
-     * @param TemplateRenderer $renderer
-     * @param string $template
-     * @param Codendi_Mail $mail
-     * @param UserSuspensionDao $dao
-     * @param UserManager $user_manager
-     * @param BaseLanguageFactory $lang_factory
      */
     public function __construct(
         MailPresenterFactory $mail_presenter_factory,
@@ -113,7 +106,6 @@ class UserSuspensionManager
     /**
      * Sends email alerts for all idle user accounts
      *
-     * @return bool
      */
     public function sendNotificationMailToIdleAccounts() : bool
     {
@@ -161,10 +153,6 @@ class UserSuspensionManager
     /**
      * Sends suspension notification to user
      *
-     * @param PFUser $user
-     * @param DateTimeImmutable $last_access_date
-     * @param DateTimeImmutable $suspension_date
-     * @param BaseLanguage $language
      *
      * @return bool True if sent, false otherwise
      */
@@ -201,7 +189,6 @@ class UserSuspensionManager
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
      * @param int $inactive_delay   Inactive accounts delay (number of days after last login)
      *
-     * @return DateTimeImmutable
      */
     private function getLastAccessDate(int $notification_delay, int $inactive_delay) : DateTimeImmutable
     {
@@ -212,7 +199,6 @@ class UserSuspensionManager
 
     /**
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
-     * @return DateTimeImmutable
      */
     private function getSuspensionDate(int $notification_delay) : DateTimeImmutable
     {
@@ -227,7 +213,6 @@ class UserSuspensionManager
      * - Last user access
      * - User not member of a project
      * All rules apply at midnight
-     * @param DateTimeImmutable $date
      */
     public function checkUserAccountValidity(DateTimeImmutable $date)
     {
@@ -239,7 +224,6 @@ class UserSuspensionManager
     /**
      * Change account status to suspended when the account expiry date is passed
      *
-     * @param DateTimeImmutable $time
      */
     private function suspendExpiredAccounts(DateTimeImmutable $time)
     {
@@ -249,7 +233,6 @@ class UserSuspensionManager
     /**
      * Suspend accounts that without activity since date defined in configuration
      *
-     * @param DateTimeImmutable $time
      */
     private function suspendInactiveAccounts(DateTimeImmutable $time)
     {
@@ -264,7 +247,6 @@ class UserSuspensionManager
     /**
      * Change account status to suspended when user is no more member of any project
      *
-     * @param DateTimeImmutable $time
      */
     private function suspendUserNotProjectMembers(DateTimeImmutable $time)
     {

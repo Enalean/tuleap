@@ -55,7 +55,6 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     /**
      * Should use the singleton instance()
      *
-     * @param TransitionFactory $transition_factory
      */
     public function __construct(
         TransitionFactory $transition_factory,

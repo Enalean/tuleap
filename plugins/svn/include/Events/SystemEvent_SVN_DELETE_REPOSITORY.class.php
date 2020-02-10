@@ -56,13 +56,6 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent //phpcs:ignore
      */
     private $generator;
 
-    /**
-     * @param RepositoryManager   $repository_manager
-     * @param ProjectManager      $project_manager
-     * @param ApacheConfGenerator $generator
-     * @param RepositoryDeleter   $repository_deleter
-     * @param SvnAdmin            $svn_admin
-     */
     public function injectDependencies(
         RepositoryManager $repository_manager,
         ProjectManager $project_manager,

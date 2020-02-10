@@ -134,7 +134,6 @@ class ProjectTrackersResource
     }
 
     /**
-     * @param Project $project
      * @param         $limit
      * @param         $offset
      * @param         $json_query
@@ -155,8 +154,6 @@ class ProjectTrackersResource
     }
 
     /**
-     * @param PFUser  $user
-     * @param Project $project
      * @param String  $representation
      * @param int     $limit
      * @param int     $offset

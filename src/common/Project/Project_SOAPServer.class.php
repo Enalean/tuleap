@@ -629,7 +629,6 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     /**
      * Return a user member of project
      *
-     * @param Project $project
      * @param String  $userLogin
      *
      * @return PFUser

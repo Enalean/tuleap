@@ -128,9 +128,7 @@ class MetadataRepresentationBuilder
     }
 
     /**
-     * @param int $type
      *
-     * @return string
      * @throws UnknownMetadataException
      */
     private function getMetadataType(int $type): string

@@ -55,7 +55,6 @@ final class FileCreator
     }
 
     /**
-     * @return CreatedFileRepresentation
      * @throws I18NRestException
      * @throws RestException
      */

@@ -106,7 +106,6 @@ class ArtifactLinkValidator
     }
 
     /**
-     * @param Tracker_FormElement_Field_ArtifactLink $field
      * @param $artifact_id
      *
      * @return bool
@@ -131,7 +130,6 @@ class ArtifactLinkValidator
     }
 
     /**
-     * @param Tracker_FormElement_Field_ArtifactLink $field
      * @param $artifact_id
      *
      * @return \Tracker_Artifact|null
@@ -156,8 +154,6 @@ class ArtifactLinkValidator
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param Tracker_FormElement_Field_ArtifactLink $field
      * @param $artifact_id
      *
      * @return bool
@@ -204,7 +200,6 @@ class ArtifactLinkValidator
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @param array $value
      *
      * @return bool

@@ -48,9 +48,6 @@ class GetPostActionShortNameFromXmlTagNameEvent implements Dispatchable
         return $this->xml_tag_name;
     }
 
-    /**
-     * @return string
-     */
     public function getPostActionShortName(): string
     {
         return $this->post_action_short_name;

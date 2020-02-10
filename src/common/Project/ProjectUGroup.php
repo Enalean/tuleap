@@ -492,7 +492,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      * Remove given user from user group
      * This method can remove from any group, either dynamic or static.
      *
-     * @param PFUser $user
      *
      * @throws UGroup_Invalid_Exception
      *

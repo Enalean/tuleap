@@ -52,7 +52,6 @@ class ItemImpactedByMetadataChangeCollection
     }
 
     /**
-     * @param PUTMetadataFolderRepresentation $representation
      * @param MetadataToUpdate[]              $metadata_to_update
      *
      * @return ItemImpactedByMetadataChangeCollection

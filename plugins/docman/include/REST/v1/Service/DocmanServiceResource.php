@@ -51,7 +51,6 @@ final class DocmanServiceResource extends AuthenticatedResource
      *
      * @param int $id Id of the project
      *
-     * @return DocmanServiceRepresentation
      * @throws RestException 404
      */
     public function getService(int $id): DocmanServiceRepresentation

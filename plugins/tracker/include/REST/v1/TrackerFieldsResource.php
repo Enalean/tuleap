@@ -152,9 +152,7 @@ class TrackerFieldsResource extends AuthenticatedResource
      * @access protected
      *
      * @param int                    $id                        The id of the field
-     * @param FilePOSTRepresentation $file_post_representation
      *
-     * @return CreatedFileRepresentation
      *
      * @status 201
      * @throws RestException 403

@@ -26,7 +26,6 @@ class CollectionOfLinksFormatter
 
     /**
      * @param Tracker_ArtifactLinkInfo[] $list_of_artifactlinkinfo
-     * @param PFUser $user
      * @param string $format
      *
      * @return string

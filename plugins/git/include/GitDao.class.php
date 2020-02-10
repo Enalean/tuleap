@@ -440,7 +440,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
     /**
      * @deprecated Should use GitRepository::getInstanceFrom row instead.
-     * @param GitRepository $repository
      * @param type $result
      */
     public function hydrateRepositoryObject(GitRepository $repository, $result)

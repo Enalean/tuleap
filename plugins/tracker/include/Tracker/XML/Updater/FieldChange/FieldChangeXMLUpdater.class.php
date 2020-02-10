@@ -22,7 +22,6 @@ interface Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater
 {
 
     /**
-     * @param SimpleXMLElement $field_change_xml
      * @param mixed            $submitted_value
      */
     public function update(SimpleXMLElement $field_change_xml, $submitted_value);

@@ -40,7 +40,6 @@ class AccessKeyScopeRetriever
     }
 
     /**
-     * @param int $access_key_id
      * @return AccessKeyScope[]
      */
     public function getScopesByAccessKeyID(int $access_key_id): array

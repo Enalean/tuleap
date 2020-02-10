@@ -68,7 +68,6 @@ class LDAP_UserManager
      * Create an LDAP_User object out of a regular user if this user comes as
      * a corresponding LDAP entry
      *
-     * @param PFUser $user
      *
      * @return LDAP_User|null
      */
@@ -267,7 +266,6 @@ class LDAP_UserManager
     /**
      * Create user account based on LDAPResult info.
      *
-     * @param  LDAPResult $lr
      * @return PFUser|false
      */
     function createAccountFromLdap(LDAPResult $lr)
@@ -378,8 +376,6 @@ class LDAP_UserManager
     /**
      * Synchronize user account with LDAP informations
      *
-     * @param  PFUser       $user
-     * @param  LDAPResult $lr
      * @param  String     $password
      * @return bool
      */

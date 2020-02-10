@@ -247,7 +247,6 @@ class ArtifactLinksToRender
     }
 
     /**
-     * @param Tracker $tracker
      *
      * @return ArtifactLinksToRenderForPerTrackerTable|null
      */

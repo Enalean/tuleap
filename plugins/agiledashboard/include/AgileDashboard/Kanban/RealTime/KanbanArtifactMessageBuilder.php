@@ -45,7 +45,6 @@ class KanbanArtifactMessageBuilder
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return KanbanArtifactUpdatedMessageRepresentation
      */
     public function buildArtifactUpdated(Tracker_Artifact $artifact)
@@ -56,7 +55,6 @@ class KanbanArtifactMessageBuilder
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return KanbanArtifactMovedMessageRepresentation
      * @throws RealTimeArtifactMessageException
      */

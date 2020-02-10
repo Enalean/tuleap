@@ -99,9 +99,6 @@ class GlobalButtonsActionPresenter
     }
 
     /**
-     * @param ArtifactMoveButtonPresenter             $artifact_move_button_presenter
-     * @param ArtifactCopyButtonPresenter             $artifact_copy_button_presenter
-     * @param ArtifactOriginalEmailButtonPresenter    $artifact_original_email_button_presenter
      *
      * @return bool
      */

@@ -39,7 +39,6 @@ class FieldsToBeSavedInSpecificOrderRetriever
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      *
      * @return Tracker_FormElement_Field[]
      */
@@ -49,7 +48,6 @@ class FieldsToBeSavedInSpecificOrderRetriever
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      *
      * @return Tracker_FormElement_Field[]
      */

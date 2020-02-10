@@ -154,7 +154,6 @@ class MailNotificationManager
     }
 
     /**
-     * @param Repository $repository
      * @param MailNotification[] $new_email_notification
      *
      * @throws CannotCreateMailHeaderException
@@ -224,7 +223,6 @@ class MailNotificationManager
     }
 
     /**
-     * @param Repository $repository
      * @param $notification_id
      * @return MailNotification
      */
@@ -235,7 +233,6 @@ class MailNotificationManager
     }
 
     /**
-     * @param Repository $repository
      * @param string $path
      *
      * @return MailNotification[]
@@ -251,7 +248,6 @@ class MailNotificationManager
     }
 
     /**
-     * @param Repository $repository
      * @param string $path
      * @return MailNotification[]
      */
@@ -364,7 +360,6 @@ class MailNotificationManager
     }
 
     /**
-     * @param Repository $repository
      * @param $notification_id
      * @param $form_path
      * @return bool

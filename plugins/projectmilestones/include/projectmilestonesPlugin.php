@@ -62,7 +62,6 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
     /**
      * Hook: event raised when widget are instanciated
      *
-     * @param \Tuleap\Widget\Event\GetWidget $get_widget_event
      */
     public function widgetInstance(GetWidget $get_widget_event)
     {

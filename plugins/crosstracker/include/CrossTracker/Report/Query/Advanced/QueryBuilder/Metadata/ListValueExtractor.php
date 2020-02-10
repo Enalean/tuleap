@@ -35,7 +35,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 class ListValueExtractor implements ValueWrapperVisitor
 {
     /**
-     * @param Comparison $comparison
      * @return array
      */
     public function extractCollectionOfValues(Comparison $comparison)

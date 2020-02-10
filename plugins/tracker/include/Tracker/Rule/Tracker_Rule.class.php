@@ -110,7 +110,6 @@ abstract class Tracker_Rule
 
     /**
      *
-     * @param Tracker_FormElement_Field $field
      * @return \Tracker_Rule
      */
     public function setSourceField(Tracker_FormElement_Field $field)
@@ -131,7 +130,6 @@ abstract class Tracker_Rule
 
     /**
      *
-     * @param Tracker_FormElement_Field $field
      * @return \Tracker_Rule
      */
     public function setTargetField(Tracker_FormElement_Field $field)

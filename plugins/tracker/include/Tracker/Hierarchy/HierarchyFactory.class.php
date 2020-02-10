@@ -143,7 +143,6 @@ class Tracker_HierarchyFactory
      * If no other trackers were found in hierarchy, returns the tracker alone in hierarchy
      *
      * @param array             $tracker_ids
-     * @param Tracker_Hierarchy $hierarchy
      *
      * @return \Tracker_Hierarchy
      */
@@ -208,8 +207,6 @@ class Tracker_HierarchyFactory
     /**
      * Return the parent artifact
      *
-     * @param PFUser $user
-     * @param Tracker_Artifact $child
      *
      * @return null| Tracker_Artifact
      */
@@ -260,8 +257,6 @@ class Tracker_HierarchyFactory
      *     `-- Task
      * getAllAncestors(User, Task) -> ['Story', 'Epic']
      *
-     * @param PFUser $user
-     * @param Tracker_Artifact $child
      * @param array $stack (purly internal for recursion, should not be used
      *
      * @return Array of Tracker_Artifact

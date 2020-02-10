@@ -125,7 +125,6 @@ class Controller
     }
 
     /**
-     * @param HTTPRequest $request
      * @throws ProviderMalformedDataException
      */
     public function createGenericProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request): void
@@ -168,7 +167,6 @@ class Controller
     }
 
     /**
-     * @param HTTPRequest $request
      * @throws ProviderMalformedDataException
      */
     public function createAzureADProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request): void
