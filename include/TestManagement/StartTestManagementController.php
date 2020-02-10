@@ -20,10 +20,10 @@
 
 namespace Tuleap\TestManagement;
 
-use BackendLogger;
 use Feedback;
 use HTTPRequest;
 use Project;
+use Psr\Log\LoggerInterface;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\TestManagement\Administration\TrackerChecker;
@@ -33,7 +33,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 class StartTestManagementController
 {
     /**
-     * @var BackendLogger
+     * @var LoggerInterface
      */
     private $backend_logger;
 
@@ -67,7 +67,7 @@ class StartTestManagementController
 
     public function __construct(
         TrackerFactory $tracker_factory,
-        BackendLogger $backend_logger,
+        LoggerInterface $backend_logger,
         TrackerXmlImport $tracker_xml_import,
         ArtifactLinksUsageUpdater $artifact_link_usage_updater,
         \CSRFSynchronizerToken $csrf_token,
