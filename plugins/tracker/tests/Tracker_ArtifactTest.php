@@ -728,7 +728,7 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase
         $this->sprint = anArtifact()->build();
         $this->sprint->setHierarchyFactory($this->hierarchy_factory);
 
-        $this->user = aUser()->build();
+        $this->user = new PFUser(['language_id' => 'en']);
     }
 
     public function itReturnsTheParentArtifactFromAncestors()
@@ -792,7 +792,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->fields_data = array();
-        $this->submitter   = aUser()->withId(74)->build();
+        $this->submitter   = new PFUser(['user_id' => 74, 'language_id' => 'en']);
 
         $this->changeset_dao  = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
         $this->changesets  = array(new Tracker_Artifact_Changeset_Null());
@@ -909,7 +909,12 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase
 
     public function itExportsTheArtifactToXML()
     {
-        $user = aUser()->withId(101)->withLdapId('ldap_O1')->withUserName('user_01')->build();
+        $user = new PFUser([
+            'user_id' => 101,
+            'language_id' => 'en',
+            'user_name' => 'user_01',
+            'ldap_id' => 'ldap_O1'
+        ]);
         stub($this->user_manager)->getUserById(101)->returns($user);
         stub($this->formelement_factory)->getUsedFileFields()->returns(array());
 

@@ -40,7 +40,10 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     protected function setUp(): void
     {
         $this->field = \Mockery::spy(\Tracker_FormElement_Field_Text::class)->shouldReceive('getName')->andReturns('field_text')->getMock();
-        $this->user  = (new \UserTestBuilder())->withId(101)->build();
+        $this->user  = new PFUser([
+            'language_id' => 'en',
+            'user_id' => 101
+        ]);
 
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
     }

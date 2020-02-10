@@ -704,7 +704,7 @@ XML;
             </project>
 XML;
 
-        stub($this->user_finder)->getUser()->returns(aUser()->withId(102)->build());
+        stub($this->user_finder)->getUser()->returns(new PFUser(['user_id' => 102, 'language_id' => 'en']));
         expect($this->git_dao)->logGitPush()->once();
         $this->import(new SimpleXMLElement($xml));
         $this->assertEqual(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());

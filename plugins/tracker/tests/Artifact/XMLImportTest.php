@@ -89,7 +89,11 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase
             aStringField()->withId(50)->withProperty('maxchars', 'string', '0')->build()
         );
 
-        $this->john_doe = aUser()->withId(200)->withUserName('john_doe')->build();
+        $this->john_doe = new PFUser([
+            'user_id' => 200,
+            'language_id' => 'en',
+            'user_name' => 'john_doe'
+        ]);
         $this->user_manager = \Mockery::spy(\UserManager::class);
         stub($this->user_manager)->getUserByIdentifier('john_doe')->returns($this->john_doe);
         stub($this->user_manager)->getUserAnonymous()->returns(new PFUser(array('user_id' => 0)));
@@ -2051,8 +2055,17 @@ class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact
               </artifact>
             </artifacts>');
 
-        $this->jeanne = aUser()->withId(101)->withUserName('jeanne')->build();
-        $this->serge  = aUser()->withId(102)->withUserName('serge')->build();
+        $this->jeanne = new PFUser([
+            'user_id' => 101,
+            'language_id' => 'en',
+            'user_name' => 'jeanne'
+        ]);
+
+        $this->serge = new PFUser([
+            'user_id' => 102,
+            'language_id' => 'en',
+            'user_name' => 'serge'
+        ]);
 
         stub($this->user_manager)->getUserByIdentifier('jeanne')->returns($this->jeanne);
         stub($this->user_manager)->getUserByIdentifier('serge')->returns($this->serge);

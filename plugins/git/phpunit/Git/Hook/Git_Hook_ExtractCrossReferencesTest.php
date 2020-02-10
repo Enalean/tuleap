@@ -51,7 +51,10 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
         $this->repository_in_subpath->shouldReceive('getProject')->andReturns($project);
         $this->repository_in_subpath->shouldReceive('getFullName')->andReturns('arch/x86_64/dev');
 
-        $this->user = (new \UserTestBuilder())->withId(350)->build();
+        $this->user = new PFUser([
+            'language_id' => 'en',
+            'user_id' => 350
+        ]);
         $this->reference_manager = \Mockery::spy(\ReferenceManager::class);
 
         $this->post_receive = new Git_Hook_ExtractCrossReferences($this->git_exec_repo, $this->reference_manager);

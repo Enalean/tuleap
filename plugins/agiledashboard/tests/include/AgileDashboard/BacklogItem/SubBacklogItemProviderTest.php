@@ -61,7 +61,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
         $this->milestone       = aMilestone()->withArtifact(anArtifact()->withId(3)->build())->withPlanning($sprint_planning)->build();
         $this->dao             = \Mockery::spy(\Tracker_ArtifactDao::class);
 
-        $this->user                            = aUser()->build();
+        $this->user                            = new PFUser(['language_id' => 'en']);
         $this->backlog_factory                 = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $this->backlog_item_collection_factory = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
         $this->planning_factory                = \Mockery::spy(PlanningFactory::class);

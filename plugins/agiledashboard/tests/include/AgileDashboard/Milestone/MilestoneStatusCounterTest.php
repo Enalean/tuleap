@@ -34,7 +34,7 @@ abstract class AgileDashboard_Milestone_MilestoneStatusCounterBaseTest extends T
         $this->backlog_dao      = mock('AgileDashboard_BacklogItemDao');
         $this->artifact_dao     = mock('Tracker_ArtifactDao');
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
-        $this->user             = aUser()->build();
+        $this->user             = new PFUser(['language_id' => 'en']);
         $this->counter          = new AgileDashboard_Milestone_MilestoneStatusCounter(
             $this->backlog_dao,
             $this->artifact_dao,

@@ -33,7 +33,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends TuleapTestC
         $this->artifact    = anArtifact()->withId($this->artifact_id)->build();
         $this->milestone   = aMilestone()->withArtifact($this->artifact)->build();
 
-        $this->user    = aUser()->build();
+        $this->user    = new PFUser(['language_id' => 'en']);
         $this->project = mock('Project');
 
         $this->milestone_factory = stub('Planning_MilestoneFactory')->getBareMilestoneByArtifactId($this->user, $this->artifact_id)->returns($this->milestone);

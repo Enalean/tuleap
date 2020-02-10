@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Language;
 
 use ForgeConfig;
+use PFUser;
 
 final class CustomizableContentLoaderTest extends \PHPUnit\Framework\TestCase
 {
@@ -42,9 +43,15 @@ final class CustomizableContentLoaderTest extends \PHPUnit\Framework\TestCase
         ForgeConfig::set('sys_incdir', __DIR__.'/_fixtures/customizable_loader/tuleap/site-content');
 
         $this->loader  = new CustomizableContentLoader();
-        $this->us_user = (new \UserTestBuilder())->withLang('en_US')->build();
-        $this->fr_user = (new \UserTestBuilder())->withLang('fr_FR')->build();
-        $this->br_user = (new \UserTestBuilder())->withLang('pt_BR')->build();
+        $this->us_user = new PFUser([
+            'language_id' => 'en_US',
+        ]);
+        $this->fr_user = new PFUser([
+            'language_id' => 'fr_FR',
+        ]);
+        $this->br_user = new PFUser([
+            'language_id' => 'pt_BR',
+        ]);
     }
 
     protected function tearDown() : void

@@ -25,6 +25,7 @@ namespace Tuleap\Git;
 require_once __DIR__ .'/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Project\HeartbeatsEntryCollection;
 
@@ -52,7 +53,7 @@ class LatestHeartbeatsCollectorTest extends TestCase
         $glyph_finder->shouldReceive('get')->andReturns(\Mockery::spy(\Tuleap\Glyph\Glyph::class));
 
         $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
-        $this->user    = (new \UserTestBuilder())->withId(200)->build();
+        $this->user    = new PFUser(['user_id' => 200, 'language_id' => 'en']);
 
         $dao = \Mockery::mock(\Git_LogDao::class);
         $dao->shouldReceive('searchLatestPushesInProject')

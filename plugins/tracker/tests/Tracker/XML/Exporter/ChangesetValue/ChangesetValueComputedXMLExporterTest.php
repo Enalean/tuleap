@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 
+use PFUser;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
@@ -57,7 +58,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
         $this->artifact_xml        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_value_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
         $this->changeset           = mock('Tracker_Artifact_Changeset');
-        $this->user                = aUser()->withId(101)->build();
+        $this->user                = new PFUser(['user_id' => 101, 'language_id' => 'en']);
     }
 
     public function itCreatesAComputedNode()

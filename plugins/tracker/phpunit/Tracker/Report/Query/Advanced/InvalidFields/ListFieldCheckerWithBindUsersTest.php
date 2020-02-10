@@ -58,7 +58,10 @@ class ListFieldCheckerWithBindUsersTest extends TestCase
     {
         parent::setUp();
 
-        $this->current_user = (new \UserTestBuilder())->withId(101)->withUserName('admin')->build();
+        $this->current_user = new PFUser([
+            'language_id' => 'en',
+            'user_name' => 'admin'
+        ]);
         $this->user_manager = \Mockery::spy(\UserManager::class);
 
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();

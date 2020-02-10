@@ -104,7 +104,7 @@ class UGroupRemoveUserTest extends TestCase
 
         $this->expectException(Exception::class);
 
-        $user = new PFUser(['id' => 0, 'language_id' => 'en_US']);
+        $user = new PFUser(['user_id' => 0, 'language_id' => 'en_US']);
 
         $ugroup->removeUser($user);
     }

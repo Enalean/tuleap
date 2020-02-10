@@ -38,7 +38,7 @@ abstract class PlanningFactoryTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->user = aUser()->build();
+        $this->user = new PFUser(['language_id' => 'en']);
     }
 }
 
@@ -498,7 +498,7 @@ class PlanningFactoryTest_getAvailablePlanningTrackersTest extends PlanningFacto
 
         stub($tracker_factory)->getTrackerById(2)->returns($releases_tracker);
 
-        $actual_trackers = $planning_factory->getAvailablePlanningTrackers(aUser()->build(), $group_id);
+        $actual_trackers = $planning_factory->getAvailablePlanningTrackers(new PFUser(['language_id' => 'en']), $group_id);
         $this->assertEqual($actual_trackers, array($releases_tracker));
     }
 }

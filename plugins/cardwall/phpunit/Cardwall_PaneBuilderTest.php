@@ -41,7 +41,7 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
         $this->artifact_factory               = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->dao                            = \Mockery::spy(\AgileDashboard_BacklogItemDao::class);
         $this->swimline_factory               = \Mockery::spy(\Cardwall_SwimlineFactory::class);
-        $this->user                           = (new \UserTestBuilder())->build();
+        $this->user                           = new PFUser(['language_id' => 'en']);
         $this->milestone_artifact             = Mockery::mock(Tracker_Artifact::class);
         $this->milestone_artifact->shouldReceive('getId')->andReturn(1);
         $this->mapping_collection             = \Mockery::spy(\Cardwall_MappingCollection::class);

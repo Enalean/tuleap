@@ -46,7 +46,11 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_User
         $bind       = stub('Tracker_FormElement_Field_List_Bind_Users')->getType()->returns('users');
         $open_value = stub('Tracker_FormElement_Field_List_OpenValue')->getLabel()->returns('email@tuleap.org');
 
-        $user              = aUser()->withId(112)->withLdapId('ldap_01')->build();
+        $user = new PFUser([
+            'user_id' => 112,
+            'language_id' => 'en',
+            'ldap_id' => 'ldap_01'
+        ]);
         $user_manager      = stub('UserManager')->getUserById(112)->returns($user);
         $user_xml_exporter = new UserXMLExporter($user_manager, mock('UserXMLExportedCollection'));
 

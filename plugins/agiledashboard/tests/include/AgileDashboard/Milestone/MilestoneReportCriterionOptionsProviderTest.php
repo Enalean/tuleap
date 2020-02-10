@@ -32,7 +32,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
             Sprint ---'      Task
         */
 
-        $this->user                    = aUser()->build();
+        $this->user                    = new PFUser(['language_id' => 'en']);
         $this->release_tracker_id      = 101;
         $this->sprint_tracker_id       = 1001;
         $this->task_tracker_project_id = 200;

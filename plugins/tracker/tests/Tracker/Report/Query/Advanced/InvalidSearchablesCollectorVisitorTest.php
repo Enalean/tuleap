@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use PFUser;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
@@ -86,7 +87,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
         $this->field_text          = aTextField()->withName('field')->withId(101)->build();
         $this->int_field           = anIntegerField()->withName('int')->withId(102)->build();
         $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->user                = aUser()->build();
+        $this->user                = new PFUser(['language_id' => 'en']);
 
         $this->invalid_searchables_collection = new InvalidSearchablesCollection();
         $this->parameters                     = new InvalidComparisonCollectorParameters(

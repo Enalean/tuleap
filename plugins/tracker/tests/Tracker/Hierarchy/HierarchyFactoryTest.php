@@ -207,7 +207,7 @@ class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase
             $child_link_retriever
         );
 
-        $this->user    = aUser()->build();
+        $this->user    = new PFUser(['language_id' => 'en']);
     }
 
     public function itReturnsTheParent()
@@ -253,7 +253,7 @@ class Tracker_HierarchyFactoryGetAllAncestorsTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->user              = aUser()->build();
+        $this->user              = new PFUser(['language_id' => 'en']);
         $this->hierarchy_factory = partial_mock('Tracker_HierarchyFactory', array('getParentArtifact'));
         $this->sprint            = anArtifact()->withId(1)->build();
     }

@@ -44,7 +44,7 @@ class UserAccountManagerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user                         = (new \UserTestBuilder())->withLdapId("testUser")->build();
+        $this->user                         = new PFUser(['ldap_id' => 'testUser', 'language_id' => 'en']);
         $this->gerrit_driver_factory        = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class);
         $this->remote_gerrit_factory        = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         $this->gerrit_user_account_manager  = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);

@@ -28,7 +28,7 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->user      = aUser()->withId(123)->build();
+        $this->user      = new PFUser(['user_id' => 123, 'language_id' => 'en']);
         $this->changeset = stub('Tracker_Artifact_Changeset')->getId()->returns(200);
         $this->artifact  = stub('Tracker_Artifact')->getId()->returns(101);
         stub($this->artifact)->getChangeset(200)->returns($this->changeset);

@@ -110,7 +110,12 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
 
     public function testItInformsAboutAnyGenericFailure() : void
     {
-        $this->user_manager->shouldReceive('getUserById')->andReturns((new \UserTestBuilder())->withId(0)->build());
+        $this->user_manager->shouldReceive('getUserById')->andReturns(
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 0
+            ])
+        );
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         $e = new Exception("failure detail");
         $this->project_creator->shouldReceive('createGerritProject')->andThrows($e);
@@ -121,7 +126,12 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
 
     public function testItInformsAboutAnyGerritRelatedFailureByAddingAPrefix() : void
     {
-        $this->user_manager->shouldReceive('getUserById')->andReturns((new \UserTestBuilder())->withId(0)->build());
+        $this->user_manager->shouldReceive('getUserById')->andReturns(
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 0
+            ])
+        );
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         $e = new Git_Driver_Gerrit_Exception("failure detail");
         $this->project_creator->shouldReceive('createGerritProject')->andThrows($e);
@@ -132,7 +142,12 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
 
     public function testItInformsAboutAnyServerFactoryFailure() : void
     {
-        $this->user_manager->shouldReceive('getUserById')->andReturns((new \UserTestBuilder())->withId(0)->build());
+        $this->user_manager->shouldReceive('getUserById')->andReturns(
+            new PFUser([
+                'language_id' => 'en',
+                'user_id' => 0
+            ])
+        );
         $e = new Exception("failure detail");
         $this->server_factory->shouldReceive('getServer')->andThrows($e);
         $this->event->shouldReceive('error')->with("failure detail")->once();

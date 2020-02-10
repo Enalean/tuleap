@@ -34,7 +34,10 @@ class UserAccountManagerPushSSHKeysTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = (new \UserTestBuilder())->withLdapId("testUser")->build();
+        $this->user = new PFUser([
+            'language_id' => 'en',
+            'ldap_id' => 'testUser'
+        ]);
         $key1 = 'key1';
         $key2 = 'key2';
 

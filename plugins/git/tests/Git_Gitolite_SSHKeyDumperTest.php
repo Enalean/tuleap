@@ -36,7 +36,12 @@ class Git_Gitolite_SSHKeyDumperTest extends Git_GitoliteTestCase
 
     public function testAddUserKey()
     {
-        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
+        $user = new PFUser([
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
+            'authorized_keys' => $this->key1
+        ]);
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
 
         expect($this->gitExec)->push()->once();
@@ -50,7 +55,12 @@ class Git_Gitolite_SSHKeyDumperTest extends Git_GitoliteTestCase
 
     public function testAddUserWithSeveralKeys()
     {
-        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $user = new PFUser([
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
+            'authorized_keys' => $this->key1.PFUser::SSH_KEY_SEPARATOR.$this->key2
+        ]);
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
 
         expect($this->gitExec)->push()->once();
@@ -70,11 +80,21 @@ class Git_Gitolite_SSHKeyDumperTest extends Git_GitoliteTestCase
         expect($this->gitExec)->push()->count(2);
 
         // User has 2 keys
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $user = new PFUser([
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
+            'authorized_keys' => $this->key1.PFUser::SSH_KEY_SEPARATOR.$this->key2
+        ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         // Now back with only one
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
+        $user = new PFUser([
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
+            'authorized_keys' => $this->key1
+        ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         // Ensure second key was deleted
@@ -86,10 +106,20 @@ class Git_Gitolite_SSHKeyDumperTest extends Git_GitoliteTestCase
     public function itDeletesAllTheKeys()
     {
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
-        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $user                   = new PFUser([
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
+            'authorized_keys' => $this->key1.PFUser::SSH_KEY_SEPARATOR.$this->key2
+        ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array())->build();
+        $user = new PFUser([
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
+            'authorized_keys' => ''
+        ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
         $this->assertCount(glob($this->_glAdmDir.'/keydir/*.pub'), 0);
 
@@ -99,10 +129,20 @@ class Git_Gitolite_SSHKeyDumperTest extends Git_GitoliteTestCase
     public function itFlipsTheKeys()
     {
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
-        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $user                   = new PFUser([
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
+            'authorized_keys' => $this->key1.PFUser::SSH_KEY_SEPARATOR.$this->key2
+        ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key2, $this->key1))->build();
+        $user = new PFUser([
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
+            'authorized_keys' => $this->key2.PFUser::SSH_KEY_SEPARATOR.$this->key1
+        ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key2);
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@1.pub'), $this->key1);
@@ -113,7 +153,12 @@ class Git_Gitolite_SSHKeyDumperTest extends Git_GitoliteTestCase
     public function itDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys()
     {
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
-        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $user                   = new PFUser([
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
+            'authorized_keys' => $this->key1.PFUser::SSH_KEY_SEPARATOR.$this->key2
+        ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);

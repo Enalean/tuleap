@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Artifact;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Project\HeartbeatsEntry;
@@ -57,7 +58,10 @@ class LatestHeartbeatsCollectorTest extends TestCase
         $glyph_finder->shouldReceive('get')->andReturns(\Mockery::spy(\Tuleap\Glyph\Glyph::class));
 
         $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
-        $this->user    = (new \UserTestBuilder())->withId(200)->build();
+        $this->user    = new PFUser([
+            'language_id' => 'en',
+            'user_id' => 200
+        ]);
 
         $this->dao = \Mockery::spy(\Tracker_ArtifactDao::class);
         $this->dao->shouldReceive('searchLatestUpdatedArtifactsInProject')->with(101, HeartbeatsEntryCollection::NB_MAX_ENTRIES)->andReturns(\TestHelper::arrayToDar(array('id' => 1), array('id' => 2), array('id' => 3)));
