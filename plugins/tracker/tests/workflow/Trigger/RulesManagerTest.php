@@ -450,8 +450,21 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
             ->shouldAllowMockingProtectedMethods();
 
         $artifact  = \Mockery::spy(\Tracker_Artifact::class);
-        $trigger_1 = aTriggerRule()->withId(1)->build();
-        $trigger_2 = aTriggerRule()->withId(2)->build();
+
+        $trigger_1 = new Tracker_Workflow_Trigger_TriggerRule(
+            1,
+            Mockery::spy(Tracker_Workflow_Trigger_FieldValue::class),
+            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
+            []
+        );
+
+        $trigger_2 = new Tracker_Workflow_Trigger_TriggerRule(
+            2,
+            Mockery::spy(Tracker_Workflow_Trigger_FieldValue::class),
+            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
+            []
+        );
+
         $changeset = mockery_stub(\Tracker_Artifact_Changeset::class)->getId()->returns(3);
         stub($changeset)->getArtifact()->returns($artifact);
 

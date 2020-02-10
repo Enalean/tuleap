@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,8 +46,16 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest exte
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
+        $bind_static = new Tracker_FormElement_Field_List_Bind_Static(
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
         $this->field = aMultiSelectBoxField()
-            ->withBind(aBindStatic()->build())
+            ->withBind($bind_static)
             ->withName('status')
             ->build();
 

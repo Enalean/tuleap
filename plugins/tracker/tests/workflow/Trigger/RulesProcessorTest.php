@@ -59,16 +59,16 @@ class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase
         $this->target_field    = aSelectBoxField()->withId($this->target_field_id)->withTracker($this->task_tracker)->build();
         $this->target_value_id = 7;
         $this->target_value    = aBindStaticValue()->withId($this->target_value_id)->build();
-        $this->rule = aTriggerRule()
-            ->applyValue(
-                new Tracker_Workflow_Trigger_FieldValue(
-                    $this->target_field,
-                    $this->target_value
-                )
-            )
-            ->whenAtLeastOne()
-            ->childHas(mock('Tracker_Workflow_Trigger_FieldValue'))
-            ->build();
+
+        $this->rule = new Tracker_Workflow_Trigger_TriggerRule(
+            1,
+            new Tracker_Workflow_Trigger_FieldValue(
+                $this->target_field,
+                $this->target_value
+            ),
+            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
+            [mock('Tracker_Workflow_Trigger_FieldValue')]
+        );
     }
 
     public function itDoesNothingWhenArtifactHasNoParents()
