@@ -222,4 +222,9 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
     {
         return $this->unknown_updater;
     }
+
+    public function visitPriority(Tracker_FormElement_Field_Priority $field)
+    {
+        return $this->unknown_updater;
+    }
 }

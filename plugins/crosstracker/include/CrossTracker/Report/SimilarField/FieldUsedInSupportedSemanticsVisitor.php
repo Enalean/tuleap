@@ -37,6 +37,7 @@ use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_PerTrackerArtifactId;
+use Tracker_FormElement_Field_Priority;
 use Tracker_FormElement_Field_Radiobutton;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_String;
@@ -178,5 +179,10 @@ class FieldUsedInSupportedSemanticsVisitor implements \Tracker_FormElement_Field
     public function visitExternalField(TrackerFormElementExternalField $element)
     {
         throw new RuntimeException('External field is not supported for similar fields matching.');
+    }
+
+    public function visitPriority(Tracker_FormElement_Field_Priority $field)
+    {
+        throw new RuntimeException('Priority field is not supported for similar fields matching.');
     }
 }
