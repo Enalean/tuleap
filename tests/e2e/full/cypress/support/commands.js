@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+// This forces our code to polyfill "fetch" on top of XHR and allows cypress to catch those requests.
+// See https://github.com/cypress-io/cypress/issues/95
+Cypress.Commands.overwrite("visit", (originalFn, url, options = {}) => {
+    const opts = Object.assign({}, options, {
+        onBeforeLoad: (window, ...args) => {
+            window.fetch = null;
+            if (options.onBeforeLoad) {
+                return options.onBeforeLoad(window, ...args);
+            }
+        }
+    });
+    return originalFn(url, opts);
+});
 
 Cypress.Commands.add("ProjectAdministratorLogin", () => {
     cy.visit("/");
