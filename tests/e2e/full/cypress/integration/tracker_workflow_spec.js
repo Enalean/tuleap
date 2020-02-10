@@ -18,7 +18,7 @@
  */
 
 import { PROJECT_ADMINISTRATORS_ID } from "../../../../../src/www/scripts/user-group-constants.js";
-import { POST_ACTION_TYPE } from "../../../../../plugins/tracker/www/scripts/workflow-transitions/src/constants/workflow-constants.js";
+import { POST_ACTION_TYPE } from "../../../../../plugins/tracker/scripts/workflow-transitions/src/constants/workflow-constants.js";
 
 function getTrackerIdFromTrackerListPage() {
     cy.visitProjectService("tracker-project", "Trackers");

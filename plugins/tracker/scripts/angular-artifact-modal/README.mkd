@@ -1,0 +1,67 @@
+# Tuleap Angular Artifact Modal
+
+## How to include this in my angular app?
+
+- You need webpack or a module-loader that can understand ES2015 `import`s.
+- You need a sass build that can use `@import`.
+- In `webpack.config.js`, add the following:
+    ```js
+    resolve: {
+    //...
+        alias: webpack_configurator.extendAliases(
+            {
+                // We force webpack to resolve angular in this app's node_modules,
+                // otherwise angular-artifact-modal makes us include it twice
+                webpack_configurator.angular_tlp_alias,
+                {
+                    angular$: path.resolve(__dirname, "node_modules/angular")
+                }
+            }
+        )
+    }
+    ```
+- In your main `app.js`, add the following:
+    ```js
+    import angular_artifact_modal from 'angular-artifact-modal';
+
+    // And in your main module declaration
+    angular.module('my-app', [
+        angular_artifact_modal
+    ])
+    //...
+    ```
+- In your main `app.scss`, add the following:
+    ```scss
+    // the path should point to angular-artifact-modal/index.scss
+    @import '../../../../tracker/scripts/angular-artifact-modal/index';
+    ```
+
+- Using your build system, include the images in `angular-artifact-modal/src/assets/`. These images should end in your app's `assets/` dir
+
+## How to use this?
+
+To create a new artifact, use:
+```js
+NewTuleapArtifactModalService.showCreation(
+    tracker_id,
+    parent_item,
+    callback
+);
+```
+
+`callback` will receive as first parameter `artifact_id`
+
+To edit an existing artifact, use:
+```js
+NewTuleapArtifactModalService.showEdition(
+    user_id,
+    tracker_id,
+    artifact_id,
+    callback,
+    prefill_values
+);
+```
+
+`callback` will receive as first parameter `artifact_id`
+
+To show that the modal is loading, use `NewTuleapArtifactModalService.loading.loading`

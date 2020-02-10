@@ -20,7 +20,7 @@
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
 import dragular from "dragular";
-import angular_artifact_modal from "../../../../../../tracker/www/scripts/angular-artifact-modal/index.js";
+import angular_artifact_modal from "../../../../../../tracker/scripts/angular-artifact-modal/index.js";
 
 import angular_tlp from "angular-tlp/index";
 import angular_async from "angular-tlp/angular-async";

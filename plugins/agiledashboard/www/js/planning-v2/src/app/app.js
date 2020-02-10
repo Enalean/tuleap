@@ -23,7 +23,7 @@ import angular from "angular";
 import ngAnimate from "angular-animate";
 import ngSanitize from "angular-sanitize";
 import dragular from "dragular";
-import angular_artifact_modal_module from "../../../../../../tracker/www/scripts/angular-artifact-modal/index.js";
+import angular_artifact_modal_module from "../../../../../../tracker/scripts/angular-artifact-modal/index.js";
 
 import "angular-moment";
 import "moment/locale/fr.js";
