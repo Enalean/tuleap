@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use EventManager;
 use Luracast\Restler\RestException;
+use Psr\Log\LoggerInterface;
 use Tracker_RuleFactory;
 use TrackerFactory;
 use Transition_PostAction_CIBuildDao;
@@ -474,10 +475,7 @@ class TransitionsResource extends AuthenticatedResource
         return new TransitionsPermissionsChecker(new TrackerPermissionsChecker(new \URLVerification()));
     }
 
-    /**
-     * @return RESTLogger
-     */
-    private function getRESTLogger()
+    private function getRESTLogger(): LoggerInterface
     {
         return new RESTLogger();
     }

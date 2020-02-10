@@ -25,6 +25,7 @@ namespace Tuleap\Project\Admin\DescriptionFields;
 
 use Project;
 use ProjectCreationData;
+use Psr\Log\LoggerInterface;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\DescriptionFieldsFactory;
 
@@ -39,14 +40,14 @@ class FieldUpdator
      */
     private $dao;
     /**
-     * @var \ProjectXMLImporterLogger
+     * @var LoggerInterface
      */
     private $logger;
 
     public function __construct(
         DescriptionFieldsFactory $fields_factory,
         ProjectDetailsDAO $dao,
-        \ProjectXMLImporterLogger $logger
+        LoggerInterface $logger
     ) {
         $this->fields_factory = $fields_factory;
         $this->dao            = $dao;

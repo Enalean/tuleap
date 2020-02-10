@@ -32,6 +32,7 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Plugin;
 use PluginConfigChecker;
+use Psr\Log\LoggerInterface;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_SystemCheckTest extends TestCase
@@ -61,7 +62,7 @@ class Docman_SystemCheckTest extends TestCase
         $this->plugin = Mockery::mock(Plugin::class);
         $this->plugin->shouldReceive('getServiceShortname')->andReturn('docman');
         $this->retriever = \Mockery::spy(\Docman_SystemCheckProjectRetriever::class);
-        $logger          = \Mockery::spy(\BackendLogger::class);
+        $logger          = \Mockery::spy(LoggerInterface::class);
         $config_checker  = new PluginConfigChecker($logger);
         $this->backend   = Mockery::mock(BackendSystem::class);
 

@@ -1716,10 +1716,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         return new BurnupDao();
     }
 
-    /**
-     * @return BackendLogger
-     */
-    private function getLogger()
+    private function getLogger(): \Psr\Log\LoggerInterface
     {
         return new BackendLogger();
     }

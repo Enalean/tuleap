@@ -20,7 +20,7 @@
 
 namespace Tuleap\AgileDashboard\FormElement\SystemEvent;
 
-use BackendLogger;
+use Psr\Log\LoggerInterface;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
@@ -38,7 +38,7 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
     private $burnup_dao;
 
     /**
-     * @var BackendLogger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -78,7 +78,7 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
         CountElementsCalculator $burnup_count_elements_calculator,
         BurnupCacheDao $cache_dao,
         CountElementsCacheDao $count_elements_cache_dao,
-        BackendLogger $logger,
+        LoggerInterface $logger,
         BurnupCacheDateRetriever $date_retriever
     ) {
         $this->burnup_dao                       = $burnup_dao;

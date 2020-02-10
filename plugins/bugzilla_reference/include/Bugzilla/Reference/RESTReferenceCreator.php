@@ -25,8 +25,8 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 use ReferenceInstance;
-use Tuleap\Bugzilla\BugzillaLogger;
 
 class RESTReferenceCreator
 {
@@ -43,7 +43,7 @@ class RESTReferenceCreator
      */
     private $stream_factory;
     /**
-     * @var BugzillaLogger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -51,7 +51,7 @@ class RESTReferenceCreator
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory,
-        BugzillaLogger $logger
+        LoggerInterface $logger
     ) {
         $this->http_client     = $http_client;
         $this->request_factory = $request_factory;

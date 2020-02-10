@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ use DateTimeImmutable;
 use ForgeConfig;
 use MailPresenterFactory;
 use PFUser;
+use Psr\Log\LoggerInterface;
 use TemplateRenderer;
 use Tuleap\Dao\UserSuspensionDao;
 use UserManager;
@@ -74,7 +75,7 @@ class UserSuspensionManager
     private $lang_factory;
 
     /**
-     * @var UserSuspensionLogger
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -88,7 +89,6 @@ class UserSuspensionManager
      * @param UserSuspensionDao $dao
      * @param UserManager $user_manager
      * @param BaseLanguageFactory $lang_factory
-     * @param UserSuspensionLogger $logger
      */
     public function __construct(
         MailPresenterFactory $mail_presenter_factory,
@@ -98,7 +98,7 @@ class UserSuspensionManager
         UserSuspensionDao $dao,
         UserManager $user_manager,
         BaseLanguageFactory $lang_factory,
-        UserSuspensionLogger $logger
+        LoggerInterface $logger
     ) {
         $this->mail_presenter_factory = $mail_presenter_factory;
         $this->renderer = $renderer;

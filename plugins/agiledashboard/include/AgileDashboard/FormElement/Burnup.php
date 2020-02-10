@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 use AgileDashboard_Semantic_InitialEffortFactory;
 use EventManager;
 use PFUser;
+use Psr\Log\LoggerInterface;
 use SystemEventManager;
 use TemplateRendererFactory;
 use Tracker_Artifact;
@@ -438,10 +439,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         );
     }
 
-    /**
-     * @return BurnupLogger
-     */
-    private function getLogger()
+    private function getLogger(): LoggerInterface
     {
         return new BurnupLogger();
     }

@@ -37,6 +37,7 @@ use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectHistoryDao;
 use ProjectManager;
+use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
@@ -166,7 +167,7 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var EventManager */
     private $event_manager;
 
-    /** @var BackendLogger */
+    /** @var LoggerInterface */
     private $logger;
 
     /**

@@ -22,7 +22,7 @@ namespace Tuleap\Git\Gitolite;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-use GitBackendLogger;
+use Psr\Log\LoggerInterface;
 use UserDao;
 use Tuleap\Git\History\Dao;
 
@@ -33,7 +33,7 @@ class Gitolite3LogParserTest extends \PHPUnit\Framework\TestCase
     /** @var Gitolite3LogParser */
     private $parser;
 
-    /** @var  GitBackendLogger */
+    /** @var  LoggerInterface */
     private $logger;
 
     /** @var  Dao */

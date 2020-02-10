@@ -23,17 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\Dao;
 
 use DateTimeImmutable;
+use Psr\Log\LoggerInterface;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\User\UserSuspensionLogger;
 
 class UserSuspensionDao extends DataAccessObject
 {
     /**
-     * @var UserSuspensionLogger
+     * @var LoggerInterface
      */
     private $userSuspensionLogger;
 
-    public function __construct(UserSuspensionLogger $userSuspensionLogger)
+    public function __construct(LoggerInterface $userSuspensionLogger)
     {
         parent::__construct(null);
         $this->userSuspensionLogger = $userSuspensionLogger;

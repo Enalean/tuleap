@@ -122,7 +122,7 @@ final class Tracker_Action_CopyArtifactTest extends \PHPUnit\Framework\TestCase 
         $this->children_xml_exporter      = Mockery::spy(Tracker_XML_Exporter_ChildrenXMLExporter::class);
         $this->artifacts_imported_mapping = Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class);
 
-        $backend_logger = Mockery::spy(BackendLogger::class);
+        $backend_logger = Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->logger   = new Tracker_XML_Importer_CopyArtifactInformationsAggregator($backend_logger);
 
         $this->submitted_values = [];

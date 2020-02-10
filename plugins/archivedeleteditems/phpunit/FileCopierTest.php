@@ -23,6 +23,7 @@ namespace Tuleap\ArchiveDeletedItems;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 require_once __DIR__ . '/bootstrap.php';
 
@@ -31,7 +32,7 @@ class FileCopierTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var ArchiveLogger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -43,7 +44,7 @@ class FileCopierTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->logger           = \Mockery::spy(\Tuleap\ArchiveDeletedItems\ArchiveLogger::class);
+        $this->logger           = \Mockery::spy(LoggerInterface::class);
         $this->file_system      = vfsStream::setup();
         $this->source_file      = $this->file_system->url() . '/source_file';
         $this->destination_file = $this->file_system->url() . '/destination_file';

@@ -27,10 +27,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use BaseLanguage;
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker;
 use Tracker_Artifact;
-use Tuleap\Mail\MailLogger;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use UserHelper;
 use Tracker_Artifact_MailGateway_RecipientFactory;
@@ -60,7 +60,7 @@ class NotifierCustomSenderTest extends TestCase
     {
         parent::setUp();
 
-        $logger                          = \Mockery::mock(MailLogger::class);
+        $logger                          = \Mockery::mock(LoggerInterface::class);
         $this->recipients_manager        = \Mockery::mock(RecipientsManager::class);
 
         $this->mail_gateway_config       = \Mockery::mock(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);

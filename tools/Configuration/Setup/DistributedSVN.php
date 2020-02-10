@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 
 namespace Tuleap\Configuration\Setup;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Configuration;
 use Tuleap\Configuration\Apache\LogrotateDeployer;
 
@@ -33,7 +34,7 @@ class DistributedSVN
     public const PID_ONE_SUPERVISORD = 'supervisord';
 
     /**
-     * @var Configuration\Logger\Console
+     * @var LoggerInterface
      */
     private $logger;
     private $tuleap_base_dir = '/usr/share/tuleap';

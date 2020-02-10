@@ -43,7 +43,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     public const DISCARD_COMMON_LOOK_AND_FEEL = false;
     /**
-     * @var BackendLogger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 

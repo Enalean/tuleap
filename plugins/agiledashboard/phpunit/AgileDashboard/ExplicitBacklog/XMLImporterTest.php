@@ -27,12 +27,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
-use Tuleap\HudsonGit\Logger;
 
 final class XMLImporterTest extends TestCase
 {
@@ -69,7 +69,7 @@ final class XMLImporterTest extends TestCase
     private $user;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Logger
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
      */
     private $logger;
 

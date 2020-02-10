@@ -23,9 +23,9 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 use ConfigNotificationAssignedTo;
 use ForgeConfig;
 use HTTPRequest;
+use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
-use Tuleap\Mail\MailLogger;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
@@ -74,7 +74,7 @@ final class EmailNotificationTask implements PostCreationTask
     private $recipient_factory;
 
     public function __construct(
-        MailLogger $logger,
+        LoggerInterface $logger,
         UserHelper $user_helper,
         RecipientsManager $recipients_manager,
         Tracker_Artifact_MailGateway_RecipientFactory $recipient_factory,
