@@ -296,9 +296,6 @@ final class ProjectCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @return ProjectCreator|Mockery\LegacyMockInterface|Mockery\MockInterface|
-     */
     private function buildProjectCreator(bool $force_activation): void
     {
         $this->creator = Mockery::mock(
