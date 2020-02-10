@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+import * as tlp from "tlp";
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+export function initAddModal() {
+    const modal_add_mirror_element = document.getElementById("modal-add-mirror");
+    const modal_add_mirror = tlp.modal(modal_add_mirror_element, {});
+
+    document.getElementById("button-modal-add-mirror").addEventListener("click", function() {
+        modal_add_mirror.toggle();
+    });
+}

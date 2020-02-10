@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+import * as tlp from "tlp";
 
-module.exports = webpack_configurator.extendDevConfiguration(common);
+export function initEditModal() {
+    const modal_gerrit_edit_buttons = document.querySelectorAll(".gerrit-action-edit-button");
+    [].forEach.call(modal_gerrit_edit_buttons, function(button) {
+        const modal_element = document.getElementById(button.dataset.modalId);
+
+        if (modal_element) {
+            const modal = tlp.modal(modal_element);
+
+            button.addEventListener("click", function() {
+                modal.toggle();
+            });
+        }
+    });
+}

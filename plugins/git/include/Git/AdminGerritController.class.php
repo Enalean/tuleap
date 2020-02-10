@@ -23,10 +23,10 @@ use Tuleap\Git\AdminAllowedProjectsGerritPresenter;
 use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
+use Tuleap\Layout\IncludeAssets;
 
-class Git_AdminGerritController
+class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     private $servers;
 
     /** @var Git_RemoteServer_GerritServerFactory */
@@ -51,6 +51,10 @@ class Git_AdminGerritController
      * @var Restrictor
      */
     private $gerrit_restrictor;
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -58,7 +62,8 @@ class Git_AdminGerritController
         AdminPageRenderer $admin_page_renderer,
         GerritServerResourceRestrictor $gerrit_ressource_restrictor,
         Restrictor $gerrit_restrictor,
-        AdminGerritBuilder $admin_gerrit_builder
+        AdminGerritBuilder $admin_gerrit_builder,
+        IncludeAssets $include_assets
     ) {
         $this->gerrit_server_factory       = $gerrit_server_factory;
         $this->csrf                        = $csrf;
@@ -66,6 +71,7 @@ class Git_AdminGerritController
         $this->gerrit_ressource_restrictor = $gerrit_ressource_restrictor;
         $this->gerrit_restrictor           = $gerrit_restrictor;
         $this->admin_gerrit_builder        = $admin_gerrit_builder;
+        $this->include_assets              = $include_assets;
     }
 
     public function process(Codendi_Request $request)
@@ -149,9 +155,7 @@ class Git_AdminGerritController
             $this->getListOfGerritServersPresenters()
         );
 
-        $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/modal-add-gerrit-server.js');
-        $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/modal-delete-gerrit-server.js');
-        $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/modal-edit-gerrit-server.js');
+        $GLOBALS['HTML']->includeFooterJavascriptFile($this->include_assets->getFileURL('siteadmin-gerrit.js'));
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,

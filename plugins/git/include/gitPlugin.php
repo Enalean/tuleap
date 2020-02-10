@@ -417,11 +417,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
-            $asset = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/git/themes',
-                '/assets/git/themes'
-            );
-            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('default.css') .'" />';
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getIncludeAssets()->getFileURL('default.css') .'" />';
         }
     }
 
@@ -429,10 +425,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         // Only show the javascript if we're actually in the Git pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/git.js"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/mass-update.js"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/webhooks.js"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/permissions.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getIncludeAssets()->getFileURL('git.js').'"></script>';
         }
     }
 
@@ -2810,17 +2803,14 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     }
 
     /**
-     *
      * @access protected for test purpose
-     * @return IncludeAssets
      */
-    protected function getIncludeAssets()
+    protected function getIncludeAssets(): IncludeAssets
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../www/assets',
-            $this->getPluginPath() . '/assets'
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/git',
+            "/assets/git"
         );
-        return $include_assets;
     }
 
     /**

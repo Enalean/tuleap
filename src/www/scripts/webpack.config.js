@@ -20,11 +20,6 @@
 const loadJsonFile = require("load-json-file");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 // eslint-disable-next-line import/no-extraneous-dependencies
-const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
-const {
-    SuppressNullNamedEntryPlugin
-} = require("../../../tools/utils/scripts/webpack-custom-plugins.js");
-// eslint-disable-next-line import/no-extraneous-dependencies
 const merge = require("webpack-merge");
 const path = require("path");
 const polyfills_for_fetch = require("../../../tools/utils/scripts/ie11-polyfill-names.js")
@@ -322,16 +317,12 @@ const webpack_config_legacy_combined = {
     },
     output: webpack_configurator.configureOutput(assets_dir_path),
     plugins: [
-        new SuppressNullNamedEntryPlugin(),
-        new MergeIntoSingleFilePlugin({
-            files: {
-                "tuleap.js": fat_combined_files,
-                "tuleap_subset.js": subset_combined_files,
-                "tuleap_subset_flamingparrot.js": subset_combined_files.concat(
-                    subset_combined_flamingparrot_files
-                )
-            },
-            hash: true
+        ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
+            "tuleap.js": fat_combined_files,
+            "tuleap_subset.js": subset_combined_files,
+            "tuleap_subset_flamingparrot.js": subset_combined_files.concat(
+                subset_combined_flamingparrot_files
+            )
         }),
         manifest_plugin
     ]

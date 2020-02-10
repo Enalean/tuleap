@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,4 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../node_modules/prismjs/themes/prism';
+import { initAddModal } from "./modal-add-gerrit-server";
+import { initEditModal } from "./modal-edit-gerrit-server";
+import { initDeleteModal } from "./modal-delete-gerrit-server";
+
+document.addEventListener("DOMContentLoaded", () => {
+    initAddModal();
+    initEditModal();
+    initDeleteModal();
+});

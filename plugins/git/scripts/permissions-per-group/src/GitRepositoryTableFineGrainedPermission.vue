@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -46,7 +46,7 @@
     </tr>
 </template>
 <script>
-import GitPermissionsBadge from "permission-badge/PermissionsPerGroupBadge.vue";
+import GitPermissionsBadge from "../../../../../src/www/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 
 export default {
     name: "GitRepositoryTableFineGrainedPermission",

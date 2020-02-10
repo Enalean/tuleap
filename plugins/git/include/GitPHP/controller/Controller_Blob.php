@@ -23,8 +23,8 @@ namespace Tuleap\Git\GitPHP;
 
 use EventManager;
 use Tuleap\Git\BinaryDetector;
-use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
+use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Layout\IncludeAssets;
 
 /**
@@ -222,7 +222,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         $detector = new LanguageDetectorForPrismJS();
         $this->tpl->assign('language', $detector->getLanguage($blob->GetName()));
         $this->tpl->assign('bloblines', $blob->GetData(true));
-        $include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets', GIT_BASE_URL . '/assets');
+        $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
         $GLOBALS['Response']->includeFooterJavascriptFile(
             $include_assets->getFileURL('repository-blob.js')
         );

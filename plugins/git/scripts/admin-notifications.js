@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,19 +14,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global tlp:readonly */
+import tuleap from "tuleap";
 
-(function() {
-    "use strict";
+document.addEventListener("DOMContentLoaded", function() {
+    var input = document.querySelector("#add_mail");
 
-    var modal_gerrit_add_server = document.getElementById("modal-add-gerrit-server");
-    var modal_gerrit_add_server_content = tlp.modal(modal_gerrit_add_server, {});
+    if (!input) {
+        return;
+    }
 
-    document.getElementById("button-modal-add-gerrit-server").addEventListener("click", function() {
-        modal_gerrit_add_server_content.toggle();
-    });
-})();
+    tuleap.loadUserAndUgroupAutocompleter(input);
+});
