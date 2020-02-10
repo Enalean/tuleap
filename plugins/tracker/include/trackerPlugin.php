@@ -76,6 +76,8 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
+use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
+use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
@@ -1913,6 +1915,13 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $r->addRoute(['GET', 'POST'], GlobalAdminController::URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdmin'));
         });
 
+        $event->getRouteCollector()
+            ->addRoute(
+                ['GET'],
+                '/{project_name:[A-z0-9-]+}/tracker/new',
+                $this->getRouteHandler('routeCreateNewTracker')
+            );
+
         $event->getRouteCollector()->addRoute(
             ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
             '/uploads/tracker/file/{id:\d+}',
@@ -2005,6 +2014,17 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new TrackerDao()
                 );
             }
+        );
+    }
+
+    public function routeCreateNewTracker(): TrackerCreationController
+    {
+        return new TrackerCreationController(
+            new TrackerCreationBreadCrumbsBuilder(),
+            TemplateRendererFactory::build(),
+            new TrackerManager(),
+            \UserManager::instance(),
+            \ProjectManager::instance()
         );
     }
 
