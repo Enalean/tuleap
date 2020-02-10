@@ -31,7 +31,6 @@ use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Plugin\TimetrackingPluginInfo;
 use Tuleap\Timetracking\REST\ResourcesInjector;
 use Tuleap\Timetracking\REST\v1\ProjectResource;
-use Tuleap\Timetracking\REST\v1\UserResource;
 use Tuleap\Timetracking\Router;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimeChecker;
@@ -65,7 +64,6 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
-        $this->addHook(\Tuleap\Widget\Event\UserTimeRetriever::NAME);
         $this->addHook(\Tuleap\REST\Event\GetAdditionalCriteria::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectsWithCriteria::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetTrackersWithCriteria::NAME);
@@ -241,18 +239,6 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
                     break;
             }
         }
-    }
-
-    public function userTimeRetriever(\Tuleap\Widget\Event\UserTimeRetriever $user_time_retriever)
-    {
-        $user_resource = new UserResource();
-
-        $user_time_retriever->addTimes($user_resource->getUserTimes(
-            $user_time_retriever->getUserId(),
-            $user_time_retriever->getQuery(),
-            $user_time_retriever->getLimit(),
-            $user_time_retriever->getOffset()
-        ));
     }
 
     public function getAdditionalCriteria(\Tuleap\REST\Event\GetAdditionalCriteria $get_projects)

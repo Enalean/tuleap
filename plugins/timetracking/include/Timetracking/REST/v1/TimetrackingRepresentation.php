@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -27,11 +27,42 @@ namespace Tuleap\Timetracking\REST\v1;
 use Tracker_ArtifactFactory;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
-use Tuleap\REST\v1\TimetrackingRepresentationBase;
 use Tuleap\Timetracking\Time\Time;
 
-class TimetrackingRepresentation extends TimetrackingRepresentationBase
+final class TimetrackingRepresentation
 {
+    public const NAME = 'timetracking';
+
+    /**
+     * @var MinimalArtifactRepresentation
+     */
+    public $artifact;
+
+    /**
+     * @var MinimalProjectRepresentation
+     */
+    public $project;
+
+    /**
+     * @var string
+     */
+    public $date;
+
+    /**
+     * @var int
+     */
+    public $minutes;
+
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $step;
+
     public function build(Time $time)
     {
         $this->artifact = $this->getArtifactRepresentation($time);
