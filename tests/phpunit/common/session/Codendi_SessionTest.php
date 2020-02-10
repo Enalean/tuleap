@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved.
  *
  * This file is a part of Tuleap.
@@ -208,7 +208,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testItRaisesAnErrorWhenTryingToUseAStringAsAStringOffset()
     {
-        $this->expectException(\PHPUnit\Framework\Error\Warning::class);
+        $this->expectWarning();
 
         $pseudo_php_session = [];
         $session            = new Codendi_Session($pseudo_php_session);
