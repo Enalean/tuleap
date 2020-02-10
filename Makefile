@@ -37,7 +37,7 @@ build:
 	cd /build/src && npm install && \
 	cd /build/src/src/www/themes/common/tlp && npm install && npm run build && \
 	cd /build/src/src/www/scripts && npm install && npm run build && \
-	cd /build/src/plugins/tracker/www/scripts && npm install && npm run build && \
+	cd /build/src/plugins/tracker/scripts && npm install && npm run build && \
 	cd /build/src/plugins/testmanagement/scripts && npm install && npm run build && \
 	cd /build/src/plugins/testmanagement/ && npm install && npm run build && \
 	cd /build/src/plugins/testmanagement/ && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts

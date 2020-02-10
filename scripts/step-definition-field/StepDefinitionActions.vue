@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { TEXT_FORMAT_TEXT } from "../../../tracker/www/scripts/constants/fields-constants.js";
+import { TEXT_FORMAT_TEXT } from "../../../tracker/scripts/constants/fields-constants.js";
 
 export default {
     name: "StepDefinitionActions",
