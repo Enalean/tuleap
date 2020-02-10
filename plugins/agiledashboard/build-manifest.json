@@ -13,8 +13,8 @@
     ],
     "gettext-js": {
         "burnup-chart": {
-            "src": "www/js/burnup-chart/src",
-            "po": "www/js/burnup-chart/po"
+            "src": "scripts/burnup-chart/src",
+            "po": "scripts/burnup-chart/po"
         }
     },
     "gettext-ts": {

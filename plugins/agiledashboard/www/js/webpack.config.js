@@ -6,7 +6,6 @@ const manifest_plugin = webpack_configurator.getManifestPlugin();
 
 const webpack_config_for_charts = {
     entry: {
-        "burnup-chart": "./burnup-chart/src/burnup-chart.js",
         "home-burndowns": "./home.js"
     },
     context: path.resolve(__dirname),
