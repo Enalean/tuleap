@@ -77,71 +77,71 @@ class ProjectTest extends ProjectBase
         $this->assertArrayHasKey('resources', $json_projects[0]);
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/trackers',
                 'type' => 'trackers',
+                'uri' => 'projects/'.$this->project_private_member_id.'/trackers',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/backlog',
                 'type' => 'backlog',
+                'uri' => 'projects/'.$this->project_private_member_id.'/backlog',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/milestones',
                 'type' => 'milestones',
+                'uri' => 'projects/'.$this->project_private_member_id.'/milestones',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/plannings',
                 'type' => 'plannings',
+                'uri' => 'projects/'.$this->project_private_member_id.'/plannings',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
                 'type' => 'user_groups',
+                'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
                 'type' => 'labels',
+                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/project_services',
                 'type' => 'project_services',
+                'uri' => 'projects/'.$this->project_private_member_id.'/project_services',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             [
-                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_service',
                 'type' => 'docman_service',
+                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_service',
             ],
             $json_projects[0]['resources']
         );
         $this->assertContains(
             [
-                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_metadata',
                 'type' => 'docman_metadata',
+                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_metadata',
             ],
             $json_projects[0]['resources']
         );

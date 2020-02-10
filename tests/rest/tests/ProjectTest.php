@@ -22,7 +22,6 @@ namespace Tuleap\REST;
 
 use Guzzle\Http\Exception\BadResponseException;
 use REST_TestDataBuilder;
-use Tuleap\Project\Registration\Template\ScrumTemplate;
 
 /**
  * @group ProjectTests
@@ -135,7 +134,7 @@ class ProjectTest extends ProjectBase
             'shortname'   => 'from-scrum-template',
             'description' => 'I create projects',
             'is_public'   => false,
-            'xml_template_name' => ScrumTemplate::NAME,
+            'xml_template_name' => 'scrum',
         ]);
 
         $response = $this->getResponseByName(
@@ -171,71 +170,71 @@ class ProjectTest extends ProjectBase
         $this->assertArrayHasKey('resources', $json_projects[0]);
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/trackers',
                 'type' => 'trackers',
+                'uri' => 'projects/'.$this->project_private_member_id.'/trackers',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/backlog',
                 'type' => 'backlog',
+                'uri' => 'projects/'.$this->project_private_member_id.'/backlog',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/milestones',
                 'type' => 'milestones',
+                'uri' => 'projects/'.$this->project_private_member_id.'/milestones',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/plannings',
                 'type' => 'plannings',
+                'uri' => 'projects/'.$this->project_private_member_id.'/plannings',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
                 'type' => 'user_groups',
+                'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
                 'type' => 'labels',
+                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/project_services',
                 'type' => 'project_services',
+                'uri' => 'projects/'.$this->project_private_member_id.'/project_services',
             ),
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
             [
-                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_service',
                 'type' => 'docman_service',
+                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_service',
             ],
             $json_projects[0]['resources']
         );
         $this->assertContains(
             [
-                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_metadata',
                 'type' => 'docman_metadata',
+                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_metadata',
             ],
             $json_projects[0]['resources']
         );
@@ -375,48 +374,48 @@ class ProjectTest extends ProjectBase
         $this->assertArrayHasKey('resources', $json_project);
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/trackers',
                 'type' => 'trackers',
+                'uri' => 'projects/'.$this->project_private_member_id.'/trackers',
             ),
             $json_project['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/backlog',
                 'type' => 'backlog',
+                'uri' => 'projects/'.$this->project_private_member_id.'/backlog',
             ),
             $json_project['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/milestones',
                 'type' => 'milestones',
+                'uri' => 'projects/'.$this->project_private_member_id.'/milestones',
             ),
             $json_project['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/plannings',
                 'type' => 'plannings',
+                'uri' => 'projects/'.$this->project_private_member_id.'/plannings',
             ),
             $json_project['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
                 'type' => 'user_groups',
+                'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
             ),
             $json_project['resources']
         );
 
         $this->assertContains(
             array(
-                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
                 'type' => 'labels',
+                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
             ),
             $json_project['resources']
         );
@@ -880,8 +879,8 @@ class ProjectTest extends ProjectBase
         foreach ($json_response as $user_group) {
             $user_group_ids[] = $user_group['id'];
         }
-        $this->assertContains(1, $user_group_ids); // ProjectUgroup::ANONYMOUS
-        $this->assertContains(2, $user_group_ids); // ProjectUgroup::REGISTERED
+        $this->assertContains('1', $user_group_ids); // ProjectUgroup::ANONYMOUS
+        $this->assertContains('2', $user_group_ids); // ProjectUgroup::REGISTERED
     }
 
     public function testPATCHbacklogWithoutPermission()
