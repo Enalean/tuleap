@@ -27,6 +27,7 @@
  * diff -u -I "[ ]*<date>.*</date>" -I "[ ]*<create_date>.*</create_date>" -I "[ ]*<update_date>.*</update_date>" -I "[ ]*<owner>.*</owner>" -I "[ ]*<author>.*</author>" file1.xml file2.xml
  */
 require_once __DIR__ . '/../../../../src/www/include/pre.php';
+require __DIR__ . '/../../include/docmanPlugin.php';
 require __DIR__ . '/XMLExport.class.php';
 require __DIR__ . '/Docman_ExportException.class.php';
 

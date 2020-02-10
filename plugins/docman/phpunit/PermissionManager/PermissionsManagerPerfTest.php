@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +31,7 @@ use Mockery;
 use PermissionsManager;
 use PFUser;
 use Project;
-use URLVerification;
+use Tuleap\Project\ProjectAccessChecker;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class PermissionsManagerPerfTest extends TestCase
@@ -45,12 +46,12 @@ class PermissionsManagerPerfTest extends TestCase
      * @var Mockery\Mock
      */
     private $docmanPm;
-    /**
-     * @var \Mockery\MockInterface|URLVerification
-     */
-    private $url_verification;
 
     private $refOnNull;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
+     */
+    private $project_access_checker;
 
     public function setUp(): void
     {
@@ -60,16 +61,16 @@ class PermissionsManagerPerfTest extends TestCase
         $this->docmanPm = \Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn('102');
-        $this->url_verification = Mockery::mock(URLVerification::class);
+        $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
         $this->docmanPm->allows(['_itemIsLockedForUser' => false]);
         $this->docmanPm->shouldReceive('getProject')->andReturn($project);
-        $this->docmanPm->shouldReceive('getURLVerification')->andReturn($this->url_verification);
+        $this->docmanPm->shouldReceive('getProjectAccessChecker')->andReturn($this->project_access_checker);
         $this->refOnNull = null;
     }
 
     public function testSuperAdminHasAllAccess(): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->user->allows(['isSuperUser' => true]);
 
         // no _isUserDocmanAdmin call
@@ -88,7 +89,7 @@ class PermissionsManagerPerfTest extends TestCase
 
     public function testProjectAdminHasAllAccess(): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->user->allows(['isSuperUser' => false]);
         $this->user->allows(['isAdmin' => true]);
 
@@ -108,7 +109,7 @@ class PermissionsManagerPerfTest extends TestCase
 
     public function testDocmanAdminHasAllAccess(): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->user->allows(['isSuperUser' => false]);
 
         // one _isUserDocmanAdmin call
@@ -127,7 +128,7 @@ class PermissionsManagerPerfTest extends TestCase
 
     public function testManageRightGivesReadAndWriteRights(): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         // user is not super admin
         $this->user->allows(['isSuperUser' => false]);
         $this->user->allows(['getUgroups' => ['test']]);
@@ -154,7 +155,7 @@ class PermissionsManagerPerfTest extends TestCase
 
     public function testWriteRightGivesReadRights(): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         // user is not super admin
         $this->user->allows(['isSuperUser' => false]);
         $this->user->allows(['getUgroups' => ['test']]);
@@ -177,7 +178,7 @@ class PermissionsManagerPerfTest extends TestCase
 
     public function testOnReadTestManageRightGivesReadAndWriteRights(): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
 
         // user is not super admin
@@ -205,7 +206,7 @@ class PermissionsManagerPerfTest extends TestCase
 
     public function testOnReadTestWriteRightGivesReadAndWriteRights(): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
         // user is not super admin
@@ -237,7 +238,7 @@ class PermissionsManagerPerfTest extends TestCase
 
     public function testOnWriteTestManageRightGivesReadAndWriteRights(): void
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
         // user is not super admin

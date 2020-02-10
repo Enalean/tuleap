@@ -30,7 +30,7 @@ class Docman_XMLExport
     protected $dataPath;
     protected $logger;
 
-    public function __construct(Logger $logger)
+    public function __construct(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

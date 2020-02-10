@@ -35,7 +35,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
     protected $dataPath;
     protected $logger;
 
-    public function __construct(DOMDocument $doc, Logger $logger)
+    public function __construct(DOMDocument $doc, \Psr\Log\LoggerInterface $logger)
     {
         $this->doc = $doc;
 

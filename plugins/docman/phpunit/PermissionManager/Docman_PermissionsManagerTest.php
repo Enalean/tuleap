@@ -28,7 +28,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
-use URLVerification;
+use Tuleap\Project\ProjectAccessChecker;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_PermissionsManagerTest extends TestCase
@@ -45,9 +45,9 @@ class Docman_PermissionsManagerTest extends TestCase
      */
     private $project;
     /**
-     * @var \Mockery\MockInterface|URLVerification
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
      */
-    private $url_verification;
+    private $project_access_checker;
 
     public function setUp(): void
     {
@@ -58,14 +58,14 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->project   = Mockery::mock(Project::class);
         $this->project->shouldReceive('getID')->andReturn('102');
         $this->docmanPm->shouldReceive('getProject')->andReturn($this->project);
-        $this->url_verification = Mockery::mock(URLVerification::class);
-        $this->docmanPm->shouldReceive('getURLVerification')->andReturn($this->url_verification);
+        $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
+        $this->docmanPm->shouldReceive('getProjectAccessChecker')->andReturn($this->project_access_checker);
     }
 
     // Functional test (should never change)
     public function testSuperUserHasAllAccess()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         $this->user->shouldReceive('isSuperUser')->andReturns(true);
@@ -78,7 +78,9 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testAUserNotAbleToAccessTheProjectCanNotDoAnything()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(false);
+        $this->project_access_checker
+            ->shouldReceive('checkUserCanAccessProject')
+            ->andThrow(\Project_AccessPrivateException::class);
 
         $this->assertFalse($this->docmanPm->userCanAdmin($this->user));
         $this->assertFalse($this->docmanPm->userCanRead($this->user, '2231'));
@@ -89,7 +91,7 @@ class Docman_PermissionsManagerTest extends TestCase
     // Functional test (should never change)
     public function testDocmanAdminHasAllAccess()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(true);
         $this->user->shouldReceive('isSuperUser')->andReturns(false);
@@ -108,7 +110,7 @@ class Docman_PermissionsManagerTest extends TestCase
     // Functional test (should never change)
     public function testManageRightGivesReadAndWriteRights()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -136,7 +138,7 @@ class Docman_PermissionsManagerTest extends TestCase
     // Functional test (should never change)
     public function testWriteRightGivesReadRight()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -165,7 +167,7 @@ class Docman_PermissionsManagerTest extends TestCase
     // Functional test (should never change)
     public function testReadRight()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -189,7 +191,7 @@ class Docman_PermissionsManagerTest extends TestCase
     // Functional test (should never change)
     public function testNoRight()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -212,7 +214,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testUserCanWriteButItemIsLockedBySomeoneelse()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         // item is locked
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(true);
 
@@ -237,7 +239,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testExpectedQueriesOnRead()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
          // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -262,7 +264,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testExpectedQueriesOnWrite()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
          // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -286,7 +288,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testExpectedQueriesOnManage()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
          // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -310,7 +312,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testCacheUserCanRead()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -347,7 +349,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testCacheUserCanWrite()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -384,7 +386,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testCacheUserCanManage()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
@@ -421,7 +423,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testPermissionsBatchRetreivalForDocmanAdmin()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(true);
         $this->user->shouldReceive('isSuperUser')->andReturns(false);
@@ -439,7 +441,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testPermissionsBatchRetreivalForSuperUser()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         $this->user->shouldReceive('isSuperUser')->andReturns(true);
@@ -459,7 +461,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testSetUserCanManage()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         // Ensure everything comes from cache
         $this->docmanPm->shouldNotReceive('_isUserDocmanAdmin');
         $this->docmanPm->shouldNotReceive('_getPermissionManagerInstance');
@@ -474,7 +476,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testSetUserCanWrite()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         // Ensure everything comes from cache
         $this->docmanPm->shouldNotReceive('_isUserDocmanAdmin');
         $this->docmanPm->shouldNotReceive('_getPermissionManagerInstance');
@@ -488,7 +490,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
     public function testSetUserCanRead()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         // Ensure everything comes from cache
         $this->docmanPm->shouldNotReceive('_isUserDocmanAdmin');
         $this->docmanPm->shouldNotReceive('_getPermissionManagerInstance');
@@ -502,7 +504,7 @@ class Docman_PermissionsManagerTest extends TestCase
     // Read comes from cache but must look for write in DB
     public function testSetUserCanWriteAfterCanRead()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->user->shouldReceive('isSuperUser')->andReturns(false);
@@ -522,7 +524,7 @@ class Docman_PermissionsManagerTest extends TestCase
     // Read comes from cache but must look for manage in DB
     public function testSetUserCanManageAfterCanRead()
     {
-        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         $this->user->shouldReceive('isSuperUser')->andReturns(false);
         $this->user->shouldReceive('getUgroups')->andReturns(['test']);
@@ -538,7 +540,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanReadWrite()
+    public function testSetUserCanReadWrite()
     {
         $itemId = 1515;
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
@@ -547,7 +549,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanReadWriteManage()
+    public function testSetUserCanReadWriteManage()
     {
         $itemId = 1515;
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
@@ -558,7 +560,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanReadManage()
+    public function testSetUserCanReadManage()
     {
         $itemId = 1515;
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
@@ -568,7 +570,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanManageWrite()
+    public function testSetUserCanManageWrite()
     {
         $itemId = 1515;
         $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
@@ -578,7 +580,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanManageRead()
+    public function testSetUserCanManageRead()
     {
         $itemId = 1515;
         $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
@@ -588,7 +590,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanWriteRead()
+    public function testSetUserCanWriteRead()
     {
         $itemId = 1515;
         $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
@@ -664,7 +666,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->assertEquals(array(), $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
-    function testGetDocmanManagerUsersStaticUgroup(): void
+    public function testGetDocmanManagerUsersStaticUgroup(): void
     {
         $dar = array(array('ugroup_id' => 100));
         $pm  = \Mockery::spy(\PermissionsManager::class);
@@ -678,7 +680,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->assertEquals(array(), $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
-    function testGetDocmanAdminUsersError(): void
+    public function testGetDocmanAdminUsersError(): void
     {
         $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
