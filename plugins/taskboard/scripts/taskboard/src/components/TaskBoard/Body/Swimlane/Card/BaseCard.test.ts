@@ -114,7 +114,7 @@ describe("BaseCard", () => {
             const card = getCard({ is_in_edit_mode: false } as Card);
             const wrapper = getWrapper(card);
 
-            wrapper.find(".taskboard-card-edit-trigger").trigger("click");
+            wrapper.find("[data-test=card-edit-button]").trigger("click");
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "swimlane/addCardToEditMode",
@@ -126,7 +126,7 @@ describe("BaseCard", () => {
             const card = getCard({ is_in_edit_mode: true } as Card);
             const wrapper = getWrapper(card);
 
-            wrapper.find(".taskboard-card-edit-trigger").trigger("click");
+            wrapper.find("[data-test=card-edit-button]").trigger("click");
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
                 "swimlane/addCardToEditMode",
                 expect.any(Object)
@@ -307,7 +307,7 @@ describe("BaseCard", () => {
 
             jest.spyOn(scroll_helper, "scrollToItemIfNeeded").mockImplementation();
 
-            wrapper.find(".taskboard-card-edit-trigger").trigger("click");
+            wrapper.find("[data-test=card-edit-button]").trigger("click");
 
             jest.runAllTimers();
             expect(scroll_helper.scrollToItemIfNeeded).toHaveBeenCalled();

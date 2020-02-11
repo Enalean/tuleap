@@ -33,6 +33,7 @@
                 for="button-bar-show-closed"
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
                 v-bind:title="view_closed_items_title"
+                data-test="show-closed-items"
             >
                 <i class="fa fa-eye tlp-button-icon"></i>
             </label>
@@ -50,6 +51,7 @@
                 for="button-bar-hide-closed"
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
                 v-bind:title="hide_closed_items_title"
+                data-test="hide-closed-items"
             >
                 <i class="fa fa-eye-slash tlp-button-icon"></i>
             </label>

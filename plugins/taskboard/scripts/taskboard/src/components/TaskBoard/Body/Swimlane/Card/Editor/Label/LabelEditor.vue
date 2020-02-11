@@ -36,6 +36,7 @@
             v-bind:placeholder="$gettext('Card label…')"
             v-bind:readonly="readonly"
             ref="textarea"
+            data-test="label-editor"
         ></textarea>
     </div>
 </template>
