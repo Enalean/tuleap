@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi 2001-2009.
  *
  * This file is a part of Tuleap.
@@ -230,7 +230,7 @@ abstract class Widget_Rss extends Widget
     }
 
     /**
-     * @@throws \Laminas\Feed\Exception\RuntimeException
+     * @throws \Laminas\Feed\Exception\RuntimeException
      */
     private function retrieveFeed(string $url) : \Laminas\Feed\Reader\Feed\FeedInterface
     {

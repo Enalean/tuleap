@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\RSS;
 
+use Laminas\Feed\Exception\RuntimeException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Laminas\Feed\Reader\Http\HeaderAwareClientInterface;
@@ -52,6 +54,10 @@ final class FeedHTTPClient implements HeaderAwareClientInterface
             $request = $request->withHeader($name, $value);
         }
 
-        return new Psr7ResponseDecorator($this->http_client->sendRequest($request));
+        try {
+            return new Psr7ResponseDecorator($this->http_client->sendRequest($request));
+        } catch (ClientExceptionInterface $e) {
+            throw new RuntimeException('Cannot retrieve feed: ' . $e->getMessage(), 0, $e);
+        }
     }
 }
