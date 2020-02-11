@@ -82,7 +82,7 @@ final class ProjectRegistrationPresenterBuilderTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getGroupId')->andReturn(101);
         $project->shouldReceive('getDescription')->andReturn('My awesome project');
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn('project-shortname');
+        $project->shouldReceive('getPublicName')->andReturn('project-shortname');
 
         $glyph_finder = Mockery::mock(GlyphFinder::class);
         $glyph        = Mockery::mock(Glyph::class);
@@ -149,7 +149,7 @@ final class ProjectRegistrationPresenterBuilderTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getGroupId')->andReturn(101);
         $project->shouldReceive('getDescription')->andReturn('My awesome project');
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn('project-shortname');
+        $project->shouldReceive('getPublicName')->andReturn('project-shortname');
 
         $glyph_finder = Mockery::mock(GlyphFinder::class);
         $glyph        = Mockery::mock(Glyph::class);
@@ -183,7 +183,7 @@ final class ProjectRegistrationPresenterBuilderTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getGroupId')->andReturn(101);
         $project->shouldReceive('getDescription')->andReturn('My awesome project');
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn('project-shortname');
+        $project->shouldReceive('getPublicName')->andReturn('project-shortname');
 
         $glyph_finder = Mockery::mock(GlyphFinder::class);
         $glyph        = Mockery::mock(Glyph::class);

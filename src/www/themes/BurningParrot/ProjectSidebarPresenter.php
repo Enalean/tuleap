@@ -67,7 +67,7 @@ class ProjectSidebarPresenter
         $this->is_sidebar_collapsable = $current_user->isLoggedIn();
         $this->project_link           = '/projects/' . $project->getUnixName() . '/';
         $this->project_is_public      = $project->isPublic();
-        $this->project_name           = $project->getUnconvertedPublicName();
+        $this->project_name           = $project->getPublicName();
         $this->project_id             = $project->getID();
 
         $this->version       = $version;

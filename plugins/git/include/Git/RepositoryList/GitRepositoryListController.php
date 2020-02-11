@@ -125,7 +125,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
     private function displayHeader($title, Project $project)
     {
         $params = [
-            'title'      => $title . ' - ' . $project->getUnconvertedPublicName(),
+            'title'      => $title . ' - ' . $project->getPublicName(),
             'toptab'     => 'plugin_git',
             'group'      => $project->getID(),
             'body_class' => []

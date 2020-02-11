@@ -67,7 +67,7 @@ $prjManager     = ProjectManager::instance();
 $nbProjectFound = 0;
 $projects       = $prjManager->searchProjectsNameLike($name, $limit, $nbProjectFound, $user, $isMember, $isAdmin, $isPrivate, $offset);
 foreach ($projects as $project) {
-    $list[] = $project->getUnconvertedPublicName(). " (".$project->getUnixName().")";
+    $list[] = $project->getPublicName(). " (".$project->getUnixName().")";
 }
 
 $nbLeft = $nbProjectFound - $limit;

@@ -73,7 +73,7 @@ final class ReleasePermissionsForGroupsBuilderTest extends TestCase
     public function setUp(): void
     {
         $this->project_id = 350;
-        $this->a_project = M::mock(\Project::class, ['getID' => (string) $this->project_id, 'getUnconvertedPublicName' => 'foo']);
+        $this->a_project = M::mock(\Project::class, ['getID' => (string) $this->project_id, 'getPublicName' => 'foo']);
         $this->a_release_id = '34';
         $this->a_release = new FRSRelease(['release_id' => $this->a_release_id]);
         $this->a_release->setProject($this->a_project);

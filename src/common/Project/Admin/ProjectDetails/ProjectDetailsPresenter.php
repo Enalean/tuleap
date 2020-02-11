@@ -135,7 +135,7 @@ class ProjectDetailsPresenter
             ];
         } else {
             $this->built_from_project = [
-                'template_project_name' => $template_project->getUnconvertedPublicName(),
+                'template_project_name' => $template_project->getPublicName(),
                 'template_project_url'  => '/projects/' . urlencode($template_project->getUnixNameLowerCase()),
             ];
         }

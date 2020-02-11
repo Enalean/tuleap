@@ -83,7 +83,7 @@
         $title   = '';
         $project = $this->getProjectFromParams($params);
         if ($project) {
-            $title .= $project->getUnconvertedPublicName() . ' - ';
+            $title .= $project->getPublicName() . ' - ';
         }
         $title .= $GLOBALS['Language']->getText('plugin_docman', 'title');
 

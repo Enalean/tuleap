@@ -47,7 +47,7 @@ class HomePageNews
         $this->summary           = $summary;
         $this->time_ago          = DateHelper::timeAgoInWords($date->getTimestamp());
         $this->project_url       = $project->getUrl();
-        $this->project_name      = $project->getUnconvertedPublicName();
+        $this->project_name      = $project->getPublicName();
         $this->author_url        = $author->getPublicProfileUrl();
         $this->author_name       = $author->getRealName();
         $this->author_avatar_url = $author->getAvatarUrl();

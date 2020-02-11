@@ -51,7 +51,7 @@ class ProjectCreatedPayload implements Payload
             'created_at'          => $creation_date->format('c'),
             'updated_at'          => $update_date->format('c'),
             'event_name'          => 'project_create',
-            'name'                => $project->getUnconvertedPublicName(),
+            'name'                => $project->getPublicName(),
             'owner_id'            => $owner_id,
             'owner_email'         => $owner_email,
             'owner_name'          => $owner_name,

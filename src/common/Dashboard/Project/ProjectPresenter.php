@@ -42,7 +42,7 @@ class ProjectPresenter
         PFUser $current_user,
         array $trove_cats
     ) {
-        $this->name          = $project->getUnconvertedPublicName();
+        $this->name          = $project->getPublicName();
         $this->access        = new ProjectAccessPresenter($project->getAccess());
         $this->trove_cats    = implode(', ', $trove_cats);
         $this->has_trove_cat = ! empty($this->trove_cats);
@@ -56,7 +56,7 @@ class ProjectPresenter
         $parent_project = $project_manager->getParentProject($project->getID());
         if ($parent_project) {
             $this->has_parent  = true;
-            $this->parent_name = $parent_project->getUnconvertedPublicName();
+            $this->parent_name = $parent_project->getPublicName();
         }
 
         $nb_members       = count($project->getMembers());

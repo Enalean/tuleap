@@ -522,7 +522,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             if ((int) $template->getID() === Project::ADMIN_PROJECT_ID) {
                 continue;
             }
-            echo '<option value="'. (int) $template->getID() .'">'. $hp->purify($template->getUnconvertedPublicName()) .'</option>';
+            echo '<option value="'. (int) $template->getID() .'">'. $hp->purify($template->getPublicName()) .'</option>';
         }
         echo '</optgroup>';
 

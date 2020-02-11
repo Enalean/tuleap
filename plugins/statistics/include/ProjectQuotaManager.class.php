@@ -126,7 +126,7 @@ class ProjectQuotaManager
         $exceed_percent        = round(($over_quota_disk_space / $allowed_size), 2) * 100;
         $projectRow            = array(
             'project_unix_name'  => $project->getUnixNameMixedCase(),
-            'project_name'       => $project->getUnconvertedPublicName(),
+            'project_name'       => $project->getPublicName(),
             'project_id'         => $project->getGroupId(),
             'exceed'             => $exceed_percent . '%',
             'disk_quota'         => $usage_output->sizeReadable($allowed_size),
@@ -258,7 +258,7 @@ class ProjectQuotaManager
         $historyDao   = new ProjectHistoryDao(CodendiDataAccess::instance());
         if ($this->dao->deleteCustomQuota($project->getId())) {
             $historyDao->groupAddHistory("restore_default_quota", intval($defaultQuota), $project->getId());
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', $project->getUnconvertedPublicName()));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', $project->getPublicName()));
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
         }

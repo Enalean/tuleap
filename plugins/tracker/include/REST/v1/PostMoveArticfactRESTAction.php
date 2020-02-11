@@ -57,7 +57,7 @@ class PostMoveArticfactRESTAction
                 dgettext('tuleap-tracker', "%s has been successfully moved to %s in %s"),
                 $tracker_source_name . " #" . $artifact->getId(),
                 $tracker_destination_name . " #" . $artifact->getId(),
-                $target_tracker->getProject()->getUnconvertedPublicName()
+                $target_tracker->getProject()->getPublicName()
             );
         }
 

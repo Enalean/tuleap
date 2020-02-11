@@ -66,7 +66,7 @@ class ProfilePresenter
         foreach ($projects as $project) {
             $this->projects[] = [
                 'unix_name'   => $project->getUnixNameMixedCase(),
-                'public_name' => $project->getUnconvertedPublicName(),
+                'public_name' => $project->getPublicName(),
                 'description' => $project->getDescription(),
                 'nb_members'  => count($project->getMembersId())
             ];

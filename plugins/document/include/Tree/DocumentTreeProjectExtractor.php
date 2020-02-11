@@ -51,7 +51,7 @@ class DocumentTreeProjectExtractor
             throw new NotFoundException(
                 sprintf(
                     dgettext("tuleap-document", "Documents service is not activated in project %s"),
-                    $project->getUnconvertedPublicName()
+                    $project->getPublicName()
                 )
             );
         }

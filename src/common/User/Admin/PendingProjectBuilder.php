@@ -74,7 +74,7 @@ class PendingProjectBuilder
 
             $project_list[] = array(
                 'project_id'          => $project->getID(),
-                'project_public_name' => $project->getUnconvertedPublicName(),
+                'project_public_name' => $project->getPublicName(),
                 'project_unix_name'   => $project->getUnixNameMixedCase(),
                 'project_is_public'   => $project->isPublic(),
                 'project_get_access'  => $project->getAccess(),

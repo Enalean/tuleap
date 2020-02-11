@@ -36,7 +36,7 @@ final class ProjectCreatedPayloadTest extends TestCase
     {
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getStartDate')->andReturn(0);
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn('public_name');
+        $project->shouldReceive('getPublicName')->andReturn('public_name');
         $project->shouldReceive('getUnixName')->andReturn('unix_name');
         $project->shouldReceive('getID')->andReturn(101);
         $project->shouldReceive('getAccess')->andReturn('private');

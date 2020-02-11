@@ -79,7 +79,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $this->submitter->shouldReceive('getId')->andReturn(101);
         $this->user->shouldReceive('getId')->andReturn(102);
-        $project->allows()->getUnconvertedPublicName()->andReturn('Project01');
+        $project->allows()->getPublicName()->andReturn('Project01');
         $this->tracker->allows()->getName()->andReturn('TrackerName');
         $this->tracker->allows()->getProject()->andReturn($project);
     }

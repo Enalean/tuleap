@@ -80,7 +80,7 @@ class CSVRepresentationBuilderTest extends TestCase
     public function testBuild()
     {
         $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn('Atacaman');
+        $project->shouldReceive('getPublicName')->andReturn('Atacaman');
         $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getProject')->andReturn($project);
         $tracker->shouldReceive('getName')->andReturn('freckly');

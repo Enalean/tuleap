@@ -115,7 +115,7 @@ class CSVRepresentationBuilder
         FormatterParameters $formatter_parameters
     ) {
         $tracker      = $artifact->getTracker();
-        $project_name = new TextValue($tracker->getProject()->getUnconvertedPublicName());
+        $project_name = new TextValue($tracker->getProject()->getPublicName());
         $formatted_project_name = $project_name->accept($this->visitor, $formatter_parameters);
 
         $tracker_name = new TextValue($tracker->getName());

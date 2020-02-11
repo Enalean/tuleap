@@ -31,7 +31,7 @@ class UserDetailsProjectPresenter
     public function __construct(Project $project, $is_admin)
     {
         $this->id       = $project->getId();
-        $this->name     = $project->getUnconvertedPublicName();
+        $this->name     = $project->getPublicName();
         $this->is_admin = $is_admin;
     }
 }

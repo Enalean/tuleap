@@ -32,7 +32,7 @@ class MassmailSender
     public function sendMassmail(Project $project, PFUser $user, string $subject, string $html_body, array $receivers)
     {
         $hp             = Codendi_HTMLPurifier::instance();
-        $project_name   = $project->getUnconvertedPublicName();
+        $project_name   = $project->getPublicName();
 
         $sys_max_number_of_emailed_people = ForgeConfig::get('sys_max_number_of_emailed_people');
         if (count($receivers) > $sys_max_number_of_emailed_people && !$user->isSuperUser()) {

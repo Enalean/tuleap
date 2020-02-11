@@ -214,7 +214,7 @@ class StatisticsPlugin extends Plugin
 
         $project_url_params = array(
             'menu'           => 'services',
-            'project_filter' => $params['project']->getUnconvertedPublicName().' ('.$params['project']->getUnixName() .')'
+            'project_filter' => $params['project']->getPublicName().' ('.$params['project']->getUnixName() .')'
         );
         $params['links'][] = array(
             'href'  => $this->getPluginPath().'/disk_usage.php?'.http_build_query($project_url_params),

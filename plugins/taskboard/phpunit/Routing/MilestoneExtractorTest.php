@@ -101,7 +101,7 @@ class MilestoneExtractorTest extends TestCase
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn('My project');
+        $project->shouldReceive('getPublicName')->andReturn('My project');
         $project->shouldReceive('getID')->andReturn(42);
 
         $milestone = Mockery::mock(Planning_Milestone::class);
