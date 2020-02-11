@@ -1,19 +1,40 @@
-<h2>{{ git_admins_section }}</h2>
-<div class="">
-    <div>
-        <p> {{ git_admins_description }} </p>
-    </div>
-    <form method="POST" action="{{ git_admins_form_action }}">
-        <input type="hidden" value="{{ project_id }}" name="group_id"/>
-        <input type="hidden" name="git_admins[]" value="4"/>
+<h1 data-test="git-administration-page">{{ git_admin }}</h1>
 
-        <select id="{{ git_admins_selectbox_id }}" size="8" multiple name="{{ git_admins_selectbox_name }}">
-            {{# git_admins_options }}
-                <option value="{{ value }}" {{# selected }} selected="selected" {{/ selected }}> {{ label }} </option>
-            {{/ git_admins_options }}
-        </select>
-        <p>
-            <input class="btn btn-primary" type="submit" value="{{ git_admins_submit_button }}" name="submit"/>
-        </p>
-    </form>
+<div class="tabbable">
+    <ul class="nav nav-tabs git-admin-tabs">
+        <li>
+            <a href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}">{{ tab_gerrit_templates }}</a>
+        </li>
+        <li class="active">
+            <a href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}">{{ tab_git_admins }}</a>
+        </li>
+        {{# are_mirrors_defined }}
+            <li>
+                <a href="/plugins/git/?action=admin-mass-update&group_id={{ project_id }}">{{ tab_mass_update }}</a>
+            </li>
+        {{/ are_mirrors_defined }}
+        <li>
+            <a href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_template_settings }}</a>
+        </li>
+    </ul>
+
+    <h2>{{ git_admins_section }}</h2>
+    <div class="">
+        <div>
+            <p> {{ git_admins_description }} </p>
+        </div>
+        <form method="POST" action="{{ git_admins_form_action }}">
+            <input type="hidden" value="{{ project_id }}" name="group_id"/>
+            <input type="hidden" name="git_admins[]" value="4"/>
+
+            <select id="{{ git_admins_selectbox_id }}" size="8" multiple name="{{ git_admins_selectbox_name }}">
+                {{# git_admins_options }}
+                    <option value="{{ value }}" {{# selected }} selected="selected" {{/ selected }}> {{ label }} </option>
+                {{/ git_admins_options }}
+            </select>
+            <p>
+                <input class="btn btn-primary" type="submit" value="{{ git_admins_submit_button }}" name="submit"/>
+            </p>
+        </form>
+    </div>
 </div>

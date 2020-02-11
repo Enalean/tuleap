@@ -177,7 +177,7 @@ class IndexController
             $request->getCurrentUser(),
             $request->getProject()
         );
-        $renderer->renderToPage('admin', $presenter);
+        $renderer->renderToPage('admin-default-settings', $presenter);
         $GLOBALS['HTML']->footer([]);
     }
 }

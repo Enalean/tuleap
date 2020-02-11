@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -37,9 +37,8 @@ class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresen
         $are_mirrors_defined = true;
         parent::__construct($project_id, $are_mirrors_defined);
 
-        $this->csrf_token                             = $csrf;
-        $this->manage_mass_update_select_repositories = true;
-        $this->repositories                           = $repositories;
+        $this->csrf_token   = $csrf;
+        $this->repositories = $repositories;
     }
 
     public function title()

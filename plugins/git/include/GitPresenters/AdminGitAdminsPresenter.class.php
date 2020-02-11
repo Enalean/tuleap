@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -38,7 +38,6 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
     ) {
         parent::__construct($project_id, $are_mirrors_defined);
 
-        $this->manage_git_admins = true;
         $this->static_ugroups    = $static_ugroups;
         $this->selected_ugroups  = $selected_ugroups;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -51,7 +51,6 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
         parent::__construct($project_id, $are_mirrors_defined);
 
         $this->csrf_token          = $csrf;
-        $this->manage_mass_update  = true;
         $this->mirroring_presenter = $mirroring_presenter;
 
         $nb_mirrors     = count($mirroring_presenter->mirror_presenters);
