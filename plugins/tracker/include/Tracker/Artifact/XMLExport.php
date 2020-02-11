@@ -80,6 +80,9 @@ class Tracker_Artifact_XMLExport
         }
     }
 
+    /**
+     * @param Tracker_Artifact[] $artifacts
+     */
     private function exportBunchOfArtifacts(
         array $artifacts,
         SimpleXMLElement $xml_content,

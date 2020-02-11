@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
+use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
 {
@@ -31,11 +32,11 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
         UserXMLExporter $user_xml_exporter,
         $is_in_archive_context
     ) {
+        $file_info_xml_exporter = new FileInfoXMLExporter($file_path_xml_exporter);
+
         $visitor = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
-                $file_path_xml_exporter
-            ),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter($file_info_xml_exporter),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter(),
@@ -56,6 +57,6 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
             $user_xml_exporter
         );
 
-        return new Tracker_XML_Exporter_ArtifactXMLExporter($changeset_exporter);
+        return new Tracker_XML_Exporter_ArtifactXMLExporter($changeset_exporter, $file_info_xml_exporter);
     }
 }
