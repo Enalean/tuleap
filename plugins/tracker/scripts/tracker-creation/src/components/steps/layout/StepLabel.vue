@@ -18,17 +18,21 @@
   -->
 
 <template>
-    <step-one />
+    <div class="tracker-creation-step-info-label">
+        <span class="tracker-creation-step-number tlp-badge-primary">{{ stepNumber }}</span>
+        <span class="tracker-creation-step-label">{{ stepLabel }}</span>
+    </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import StepOne from "./steps/step-one/StepOne.vue";
+import { Component, Prop } from "vue-property-decorator";
 
-@Component({
-    components: {
-        StepOne
-    }
-})
-export default class App extends Vue {}
+@Component
+export default class StepLabel extends Vue {
+    @Prop({ required: true })
+    readonly stepNumber!: string;
+
+    @Prop({ required: true })
+    readonly stepLabel!: string;
+}
 </script>

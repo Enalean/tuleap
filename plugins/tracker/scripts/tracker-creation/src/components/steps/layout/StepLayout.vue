@@ -18,17 +18,29 @@
   -->
 
 <template>
-    <step-one />
+    <div class="tracker-creation-step">
+        <div class="tracker-creation-starting-point-illustration">
+            <step-layout-svg-placeholder />
+        </div>
+        <div class="tracker-creation-step-content">
+            <div class="tracker-creation-step-info">
+                <slot name="step_info"></slot>
+            </div>
+            <div class="tracker-creation-starting-point-options">
+                <slot name="interactive_content"></slot>
+            </div>
+        </div>
+    </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import StepOne from "./steps/step-one/StepOne.vue";
+import StepLayoutSvgPlaceholder from "./StepLayoutSvgPlaceholder.vue";
 
 @Component({
     components: {
-        StepOne
+        StepLayoutSvgPlaceholder
     }
 })
-export default class App extends Vue {}
+export default class StepLayout extends Vue {}
 </script>

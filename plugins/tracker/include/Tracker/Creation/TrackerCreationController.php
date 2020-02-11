@@ -27,6 +27,7 @@ use Project;
 use TrackerManager;
 use trackerPlugin;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -98,6 +99,12 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
             $this->breadcrumbs_builder->build($project, $user)
         );
 
+        $css_assets = new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/tracker/themes/',
+            '/assets/tracker/themes'
+        );
+        $layout->addCssAsset(new CssAsset($css_assets, 'tracker-creation'));
+
         $layout->header([
             'title' => dgettext('tuleap-tracker', 'New tracker'),
             'group' => $project->getID(),
@@ -112,12 +119,13 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
                 $this->presenter_builder->build()
             );
 
-        $assets = new IncludeAssets(
+        $js_assets = new IncludeAssets(
             __DIR__ . '/../../../www/assets',
             TRACKER_BASE_URL . '/assets'
         );
 
-        $layout->includeFooterJavascriptFile($assets->getFileURL('tracker-creation.js'));
+
+        $layout->includeFooterJavascriptFile($js_assets->getFileURL('tracker-creation.js'));
         $layout->footer([]);
     }
 

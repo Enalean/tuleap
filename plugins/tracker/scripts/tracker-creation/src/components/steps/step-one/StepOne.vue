@@ -18,17 +18,28 @@
   -->
 
 <template>
-    <step-one />
+    <step-layout>
+        <template v-slot:step_info>
+            <step-one-info />
+        </template>
+        <template v-slot:interactive_content>
+            <tracker-template-card />
+        </template>
+    </step-layout>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import StepOne from "./steps/step-one/StepOne.vue";
+import TrackerTemplateCard from "./cards/TrackerTemplateCard.vue";
+import StepLayout from "../layout/StepLayout.vue";
+import StepOneInfo from "./StepOneInfo.vue";
 
 @Component({
     components: {
-        StepOne
+        StepLayout,
+        TrackerTemplateCard,
+        StepOneInfo
     }
 })
-export default class App extends Vue {}
+export default class StepOne extends Vue {}
 </script>

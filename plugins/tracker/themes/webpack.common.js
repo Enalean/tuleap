@@ -37,6 +37,13 @@ for (const color of colors_burning_parrot) {
     entry_points[
         `workflow-${color}-condensed`
     ] = `./BurningParrot/css/workflow-${color}-condensed.scss`;
+
+    entry_points[
+        `tracker-creation-${color}`
+    ] = `./BurningParrot/css/tracker-creation/tracker-creation-${color}.scss`;
+    entry_points[
+        `tracker-creation-${color}-condensed`
+    ] = `./BurningParrot/css/tracker-creation/tracker-creation-${color}-condensed.scss`;
 }
 
 module.exports = [
