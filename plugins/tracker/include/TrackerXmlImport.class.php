@@ -677,12 +677,12 @@ class TrackerXmlImport
 
     /**
      *
-     * @param type $filepath
-     * @param type $name
-     * @param type $description
-     * @param type $item_name
+     * @param string $filepath
+     * @param string $name
+     * @param string $description
+     * @param string $item_name
      *
-     * @return Tracker
+     * @return Tracker|null
      * @throws TrackerFromXmlException
      * @throws Tracker_Exception
      */
