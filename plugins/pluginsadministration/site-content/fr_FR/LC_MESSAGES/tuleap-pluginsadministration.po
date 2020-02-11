@@ -212,9 +212,6 @@ msgstr "Désinstaller le plugin"
 msgid "Update properties"
 msgstr "Mettre à jour les propriétés"
 
-msgid "Users"
-msgstr "Utilisateurs"
-
 msgid "Version"
 msgstr "Version"
 

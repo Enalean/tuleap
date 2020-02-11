@@ -119,7 +119,6 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         $p = new Plugin();
         $this->assertEquals(Plugin::SCOPE_SYSTEM, $p->getScope());
         $this->assertNotEquals(Plugin::SCOPE_PROJECT, $p->getScope());
-        $this->assertNotEquals(Plugin::SCOPE_USER, $p->getScope());
     }
 
     public function testGetPluginEtcRoot(): void

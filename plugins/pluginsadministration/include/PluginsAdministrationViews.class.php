@@ -358,10 +358,6 @@ class PluginsAdministrationViews extends Views
             return dgettext('tuleap-pluginsadministration', 'Projects');
         }
 
-        if ($scope === Plugin::SCOPE_USER) {
-            return dgettext('tuleap-pluginsadministration', 'Users');
-        }
-
         return dgettext('tuleap-pluginsadministration', 'System');
     }
 
