@@ -34,7 +34,10 @@ class Plugin implements PFO_Plugin
     public $pluginInfo;
     /** @var Map */
     public $hooks;
-    protected $_scope;
+    /**
+     * @var int
+     */
+    private $scope;
 
     /** @var bool */
     private $is_custom = false;
@@ -49,7 +52,6 @@ class Plugin implements PFO_Plugin
 
     public const SCOPE_SYSTEM  = 0;
     public const SCOPE_PROJECT = 1;
-    public const SCOPE_USER    = 2;
 
     /**
      * @var bool True if the plugin should be disabled for all projects on installation
@@ -68,7 +70,7 @@ class Plugin implements PFO_Plugin
         $this->id            = $id;
         $this->hooks         = new Map();
 
-        $this->_scope = Plugin::SCOPE_SYSTEM;
+        $this->scope = self::SCOPE_SYSTEM;
     }
 
     /**
@@ -186,14 +188,17 @@ class Plugin implements PFO_Plugin
         return $hook;
     }
 
-    public function getScope()
+    public function getScope(): int
     {
-        return $this->_scope;
+        return $this->scope;
     }
 
-    public function setScope($s)
+    /**
+     * @psalm-param self::SCOPE_* $s
+     */
+    public function setScope(int $s): void
     {
-        $this->_scope = $s;
+        $this->scope = $s;
     }
 
     public function getPluginEtcRoot()
