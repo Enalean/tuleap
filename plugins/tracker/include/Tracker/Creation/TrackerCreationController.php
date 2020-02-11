@@ -60,19 +60,25 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
      * @var \ProjectManager
      */
     private $project_manager;
+    /**
+     * @var TrackerCreationPresenterBuilder
+     */
+    private $presenter_builder;
 
     public function __construct(
         TrackerCreationBreadCrumbsBuilder $breadcrumbs_builder,
         \TemplateRendererFactory $renderer_factory,
         TrackerManager $tracker_manager,
         \UserManager $user_manager,
-        \ProjectManager $project_manager
+        \ProjectManager $project_manager,
+        TrackerCreationPresenterBuilder $presenter_builder
     ) {
         $this->breadcrumbs_builder = $breadcrumbs_builder;
         $this->renderer_factory    = $renderer_factory;
         $this->tracker_manager     = $tracker_manager;
         $this->user_manager        = $user_manager;
         $this->project_manager     = $project_manager;
+        $this->presenter_builder   = $presenter_builder;
     }
 
     /**
@@ -103,7 +109,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
         $this->renderer_factory->getRenderer($templates_dir)
             ->renderToPage(
                 'tracker-creation-app',
-                new TrackerCreationPresenter()
+                $this->presenter_builder->build()
             );
 
         $assets = new IncludeAssets(

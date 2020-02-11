@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,38 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types = 1);
 
 namespace Tuleap\Tracker\Creation;
 
-class TrackerCreationPresenter
+class ProjectTemplatesRepresentation implements \JsonSerializable
 {
     /**
      * @var string
      */
-    public $project_templates;
+    public $project_name;
+    /**
+     * @var array
+     */
+    public $tracker_list;
 
-    public function __construct(array $project_templates)
+    public function __construct(\Project $project, array $tracker_list)
     {
-        $this->project_templates = json_encode($project_templates, JSON_THROW_ON_ERROR);
+        $this->project_name = $project->getPublicName();
+        $this->tracker_list = $tracker_list;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'project_name' => $this->project_name,
+            'tracker_list' => $this->tracker_list
+        ];
     }
 }
