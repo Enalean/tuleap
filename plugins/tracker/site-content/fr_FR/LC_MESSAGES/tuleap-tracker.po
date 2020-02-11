@@ -1477,6 +1477,14 @@ msgstr ""
 "Vous devez configurer la sémantique status si vous voulez utiliser le niveau "
 "de notification \"mise à jour du status\" pour ce tracker"
 
+msgid ""
+"Your file is not encoded in UTF-8, we are not able to parse it safely. "
+"Please save it with UTF-8 encoding before uploading it."
+msgstr ""
+"Votre fichier n'est pas encodé en UTF-8, nous ne sommes pas capable de le "
+"parcourir sans risque. Merci de le sauvegarder en UTF-8 avant de le "
+"téléverser."
+
 msgid "Your notification settings have been successfully updated"
 msgstr "Vos paramètres de notification ont été mis à jour avec succès"
 

@@ -2488,6 +2488,13 @@ class Tracker implements Tracker_Dispatchable_Interface
         $purifier = Codendi_HTMLPurifier::instance();
 
         if ($_FILES['csv_filename']) {
+            if (mb_detect_encoding(file_get_contents($_FILES['csv_filename']['tmp_name']), 'UTF-8', true) === false) {
+                $GLOBALS['Response']->addFeedback(
+                    'error',
+                    dgettext('tuleap-tracker', 'Your file is not encoded in UTF-8, we are not able to parse it safely. Please save it with UTF-8 encoding before uploading it.')
+                );
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->getId() .'&func=admin-csvimport');
+            }
             $f = fopen($_FILES['csv_filename']['tmp_name'], 'r');
             if ($f) {
                 // get the csv separator (defined in user preferences)
