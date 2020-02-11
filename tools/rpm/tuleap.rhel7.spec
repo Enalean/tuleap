@@ -397,6 +397,110 @@ Provides: tuleap-api-explorer
 %description plugin-api-explorer
 %{summary}.
 
+%if %{with enterprise}
+
+%package plugin-crosstracker
+Summary: Cross tracker search widget
+Group: Development/Tools
+Version: @@PLUGIN_CROSS_TRACKER_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist},  tuleap-plugin-tracker
+%description plugin-crosstracker
+%{summary}.
+
+%package plugin-document
+Summary: Document UI
+Group: Development/Tools
+Version: @@PLUGIN_DOCUMENT_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-docman
+%description plugin-document
+%{summary}.
+
+%package plugin-dynamic-credentials
+Summary: Dynamic credentials generation
+Group: Development/Tools
+Version: @@PLUGIN_DYNAMIC_CREDENTIALS_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-dynamic-credentials
+%{summary}.
+
+%package plugin-label
+Summary: Label widget
+Group: Development/Tools
+Version: @@PLUGIN_LABEL_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-label
+%{summary}.
+
+%package plugin-project-ownership
+Summary: Project ownership
+Group: Development/Tools
+Version: @@PLUGIN_PROJECT_OWNERSHIP_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Obsoletes: tuleap-plugin-project-certification
+%description plugin-project-ownership
+%{summary}.
+
+%package plugin-projectmilestones
+Summary: A widget for milestones monitoring
+Group: Development/Tools
+Version: @@PLUGIN_PROJECTMILESTONES_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboard
+%description plugin-projectmilestones
+%{summary}.
+
+%package plugin-prometheus-metrics
+Summary: Prometheus metrics end point
+Group: Development/Tools
+Version: @@PLUGIN_PROMETHEUS_METRICS_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-prometheus-metrics
+%{summary}.
+
+%package plugin-taskboard
+Summary: Taskboard
+Group: Development/Tools
+Version: @@PLUGIN_TASKBOARD_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboard
+%description plugin-taskboard
+%{summary}.
+
+%package plugin-textualreport
+Summary: Textual Report
+Group: Development/Tools
+Version: @@PLUGIN_TEXTUAL_REPORT_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-textualreport
+%{summary}.
+
+%package plugin-timetracking
+Summary: Timetracking plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_TIMETRACKING_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-timetracking
+%{summary}.
+
+%package plugin-velocity
+Summary: Velocity chart
+Group: Development/Tools
+Version: @@PLUGIN_VELOCITY_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboard
+%description plugin-velocity
+%{summary}.
+
+%endif
+
 #
 ## Themes
 #
@@ -449,8 +553,25 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanUploader.pl
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
 # No need of template
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
+%if %{with enterprise}
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones/scripts/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker/scripts/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document/scripts/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/project_ownership/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/taskboard/scripts/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/taskboard/themes/
+%else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document
@@ -458,9 +579,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/prometheus_metrics
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/project_ownership
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/projectmilestones
@@ -470,8 +589,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project_ownership
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/timetracking
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
+%endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload
@@ -1208,6 +1327,62 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/api_explorer
 %{APP_DIR}/src/www/assets/api-explorer
+
+%if %{with enterprise}
+
+%files plugin-crosstracker
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/crosstracker
+%{APP_DIR}/src/www/assets/crosstracker
+
+%files plugin-document
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/document
+%{APP_DIR}/src/www/assets/document
+
+%files plugin-dynamic-credentials
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/dynamic_credentials
+
+%files plugin-label
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/label
+%{APP_DIR}/src/www/assets/label
+
+%files plugin-project-ownership
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/project_ownership
+%{APP_DIR}/src/www/assets/project_ownership
+
+%files plugin-projectmilestones
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/projectmilestones
+%{APP_DIR}/src/www/assets/projectmilestones
+
+%files plugin-prometheus-metrics
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/prometheus_metrics
+
+%files plugin-taskboard
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/taskboard
+%{APP_DIR}/src/www/assets/taskboard
+
+%files plugin-textualreport
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/textualreport
+
+%files plugin-timetracking
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/timetracking
+%{APP_DIR}/src/www/assets/timetracking
+
+%files plugin-velocity
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/velocity
+%{APP_DIR}/src/www/assets/velocity
+
+%endif
 
 #
 # Themes
