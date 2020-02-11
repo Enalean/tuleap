@@ -1,68 +1,77 @@
-<div ng-if="$ctrl.loading_natures" id="loading-natures"></div>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title" translate>Linked Artifacts</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <div ng-if="$ctrl.loading_natures" class="frs-artifact-links-loading-natures"></div>
 
-<p
-    class="alert alert-error"
-    ng-show="$ctrl.getError().rest_error_occured"
-    translate
->
-    There was an error while getting the list of linked artifacts: {{ $ctrl.getError().rest_error }}
-</p>
+            <p
+                class="tlp-alert-danger frs-artifact-links-error"
+                ng-show="$ctrl.getError().rest_error_occured"
+                translate
+            >
+                There was an error while getting the list of linked artifacts: {{ $ctrl.getError().rest_error }}
+            </p>
 
-<div class="artifact-links" ng-repeat="link_nature in $ctrl.natures">
-    <h2>{{ link_nature.label }}</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th></th>
-                <th translate>Project</th>
-                <th translate>Tracker</th>
-                <th translate>Summary</th>
-                <th translate>Status</th>
-                <th translate>Submitted by</th>
-                <th translate>Submitted on</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="artifact in link_nature.linked_artifacts">
-                <td class="edit-column">
-                    <a href="/plugins/tracker/?aid={{ artifact.id }}"><i class="fa fa-pencil-square-o"></i></a>
-                </td>
-                <td class="project-column">{{ artifact.project.label }}</td>
-                <td class="tracker-column">{{ artifact.tracker.label }}</td>
-                <td class="summary-column">{{ artifact.title }}</td>
-                <td class="status-column">{{ artifact.status }}</td>
-                <td class="subby-column">
-                    <a ng-href="/users/{{ artifact.submitted_by_user.username }}">{{ artifact.submitted_by_user.display_name }}</a>
-                </td>
-                <td class="subon-column">{{ artifact.submitted_on | date: 'yyyy-MM-dd HH:mm' }}</td>
-            </tr>
-            <tr ng-if="link_nature.loading">
-                <td colspan="7" id="loading-links"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            <div class="frs-artifact-links-table" ng-repeat="link_nature in $ctrl.natures">
+                <h2>{{ link_nature.label }}</h2>
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th translate>Project</th>
+                        <th translate>Tracker</th>
+                        <th translate>Summary</th>
+                        <th translate>Status</th>
+                        <th translate>Submitted by</th>
+                        <th translate>Submitted on</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="artifact in link_nature.linked_artifacts">
+                        <td class="edit-column">
+                            <a href="/plugins/tracker/?aid={{ artifact.id }}"><i class="fa fa-pencil-square-o"></i></a>
+                        </td>
+                        <td class="project-column">{{ artifact.project.label }}</td>
+                        <td class="tracker-column">{{ artifact.tracker.label }}</td>
+                        <td class="summary-column">{{ artifact.title }}</td>
+                        <td class="status-column">{{ artifact.status }}</td>
+                        <td class="subby-column">
+                            <a ng-href="/users/{{ artifact.submitted_by_user.username }}">{{ artifact.submitted_by_user.display_name }}</a>
+                        </td>
+                        <td class="subon-column">{{ artifact.submitted_on | date: 'yyyy-MM-dd HH:mm' }}</td>
+                    </tr>
+                    <tr ng-if="link_nature.loading">
+                        <td colspan="7" class="frs-artifact-links-loading-links"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-<div class="artifact-links" ng-if="! $ctrl.loading_natures && $ctrl.natures.length === 0">
-    <h2>Artifact Links</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th></th>
-                <th translate>Project</th>
-                <th translate>Tracker</th>
-                <th translate>Summary</th>
-                <th translate>Status</th>
-                <th translate>Submitted by</th>
-                <th translate>Submitted on</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="7" id="empty-links" translate>
-                    There are no artifact links defined in this release.
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            <div class="frs-artifact-links-table" ng-if="! $ctrl.loading_natures && $ctrl.natures.length === 0">
+                <h2 translate>Artifact Links</h2>
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th translate>Project</th>
+                        <th translate>Tracker</th>
+                        <th translate>Summary</th>
+                        <th translate>Status</th>
+                        <th translate>Submitted by</th>
+                        <th translate>Submitted on</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="7" class="tlp-table-cell-empty" translate>
+                            There are no artifact links defined in this release.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</section>

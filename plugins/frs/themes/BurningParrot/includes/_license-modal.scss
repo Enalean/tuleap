@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,25 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default LicenseModalController;
-
-LicenseModalController.$inject = ["modal_instance", "acceptCallback", "SharedPropertiesService"];
-
-function LicenseModalController(modal_instance, acceptCallback, SharedPropertiesService) {
-    const self = this;
-
-    const platform_license_info = SharedPropertiesService.getPlatformLicenseInfo();
-
-    Object.assign(self, {
-        accept,
-
-        exchange_policy_url: platform_license_info.exchange_policy_url,
-        organisation_name: platform_license_info.organisation_name,
-        contact_email: platform_license_info.contact_email
-    });
-
-    function accept() {
-        modal_instance.tlp_modal.hide();
-        acceptCallback();
-    }
+.frs-license-modal-footer {
+    justify-content: center;
 }

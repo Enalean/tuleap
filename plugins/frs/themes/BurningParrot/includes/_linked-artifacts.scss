@@ -1,0 +1,62 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.frs-artifact-links-loading-natures {
+    height: 30px;
+    background: url('../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center
+        center;
+}
+
+.frs-artifact-links-table {
+    margin: $tlp-spacing 0 0;
+
+    .edit-column {
+        min-width: 15px;
+    }
+
+    .project-column {
+        min-width: 89px;
+    }
+
+    .tracker-column {
+        min-width: 79px;
+    }
+
+    .summary-column {
+        width: 100%;
+    }
+
+    .status-column {
+        min-width: 69px;
+    }
+
+    .subby-column {
+        min-width: 99px;
+    }
+
+    .subon-column {
+        min-width: 93px;
+    }
+
+    /* stylelint-disable-next-line selector-no-qualifying-type */
+    > .tlp-table > tbody > tr > td.frs-artifact-links-loading-links {
+        height: 30px;
+        background: url('./images/loader-mini.gif') no-repeat center center;
+    }
+}

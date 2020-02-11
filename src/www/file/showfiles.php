@@ -25,6 +25,7 @@ require_once __DIR__ . '/file_utils.php';
 define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
+use Tuleap\FRS\Events\GetReleaseNotesLink;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay;
@@ -77,18 +78,29 @@ if ($request->valid(new Valid_Pv())) {
     $pv = $request->get('pv');
 }
 
+function buildReleaseNotesLink(FRSRelease $release): string
+{
+    $event = new GetReleaseNotesLink($release);
+    EventManager::instance()->dispatch($event);
+    $link_url   = $event->getUrl();
+    $img_src    = util_get_image_theme("ic/text.png");
+    $alt_text   = $GLOBALS['Language']->getText('file_showfiles', 'read_notes');
+    $title_text = $GLOBALS['Language']->getText('file_showfiles', 'read_notes');
+    return '<a href="' . $link_url . '"><img src="' . $img_src . '" alt="' . $alt_text . '" title="' . $title_text . '" ></a>';
+}
+
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 $res = $frspf->getFRSPackagesFromDb($group_id);
 foreach ($res as $package) {
     if ($frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())
-         && $permission_manager->userCanRead($project, $user)) {
+        && $permission_manager->userCanRead($project, $user)) {
         if ($request->existAndNonEmpty('release_id')) {
             if ($request->valid(new Valid_UInt('release_id'))) {
                 $release_id = $request->get('release_id');
-                $row3 = $frsrf->getFRSReleaseFromDb($release_id);
+                $row3       = $frsrf->getFRSReleaseFromDb($release_id);
             }
         }
-        if (!$request->existAndNonEmpty('release_id') || $row3->getPackageID() == $package->getPackageID()) {
+        if (! $request->existAndNonEmpty('release_id') || $row3->getPackageID() == $package->getPackageID()) {
             $is_collapsed = ! $pv;
 
             if ($show_release_id !== false && $is_collapsed) {
@@ -288,7 +300,7 @@ foreach ($packages as $package_id => $package_for_display) {
                             . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
                         }
                         $html .= '&nbsp;';
-                        $html .= '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
+                        $html .= buildReleaseNotesLink($package_release);
                     }
                     $html .= '  </td>';
                     $html .= ' <td style="text-align:center">';
