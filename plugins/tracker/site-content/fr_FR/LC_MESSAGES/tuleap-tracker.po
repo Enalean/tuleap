@@ -582,9 +582,6 @@ msgstr "Autre groupes"
 msgid "Others"
 msgstr "Autres"
 
-msgid "Page under construction, please come back later."
-msgstr "Page en cours de construction, veuillez revenir plus tard."
-
 msgid "Permissions"
 msgstr "Permissions"
 

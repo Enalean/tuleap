@@ -27,6 +27,7 @@ use Project;
 use TrackerManager;
 use trackerPlugin;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -105,6 +106,12 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
                 new TrackerCreationPresenter()
             );
 
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../www/assets',
+            TRACKER_BASE_URL . '/assets'
+        );
+
+        $layout->includeFooterJavascriptFile($assets->getFileURL('tracker-creation.js'));
         $layout->footer([]);
     }
 

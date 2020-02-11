@@ -55,6 +55,10 @@
         "workflow-transitions": {
             "src": "scripts/workflow-transitions",
             "po": "scripts/workflow-transitions/po"
+        },
+        "tracker-creation": {
+            "src": "scripts/tracker-creation",
+            "po": "scripts/tracker-creation/po"
         }
     }
 }
