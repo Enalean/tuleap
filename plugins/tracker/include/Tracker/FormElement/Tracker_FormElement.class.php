@@ -36,7 +36,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     public const PROJECT_HISTORY_UPDATE = 'tracker_formelement_update';
 
-    public const XML_ID_PREFIX = 'F';
+    public const XML_ID_PREFIX          = 'F';
+    public const XML_TAG_EXTERNAL_FIELD = 'externalField';
+    public const XML_TAG                = 'formElement';
 
     /**
      * Get the visitor responsible of the display of update interface for the element
@@ -1390,4 +1392,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     abstract public function getDefaultRESTValue();
+
+    public function getTagNameForXMLExport(): string
+    {
+        return self::XML_TAG;
+    }
 }
