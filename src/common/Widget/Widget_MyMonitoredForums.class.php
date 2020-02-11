@@ -41,6 +41,7 @@ class Widget_MyMonitoredForums extends Widget
 
     public function getContent()
     {
+        $purifier = Codendi_HTMLPurifier::instance();
         $html_my_monitored_forums = '';
         $sql="SELECT groups.group_id, groups.group_name ".
              "FROM groups,forum_group_list,forum_monitored_forums ".
@@ -98,7 +99,7 @@ class Widget_MyMonitoredForums extends Widget
 
                 $html_hdr = '<tr class="boxitem"><td colspan="2">' .
                     $hide_url.'<a href="/forum/?group_id='.$group_id.'">'.
-                    db_result($result, $j, 'group_name').'</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                    $purifier->purify(db_result($result, $j, 'group_name')).'</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 
                 $html = '';
                 $count_new = max(0, $count_diff);

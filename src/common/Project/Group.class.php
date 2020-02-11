@@ -184,15 +184,15 @@ class Group
         return '/projects/'.urlencode($this->getUnixNameMixedCase());
     }
 
-    /** @deprecated */
     public function getPublicName()
     {
         return $this->data_array['group_name'];
     }
 
+    /** @deprecated */
     public function getUnconvertedPublicName()
     {
-        return util_unconvert_htmlspecialchars($this->data_array['group_name']);
+        return $this->data_array['group_name'];
     }
 
     //short description as entered on the group admin page

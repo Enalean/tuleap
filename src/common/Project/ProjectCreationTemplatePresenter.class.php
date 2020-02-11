@@ -55,34 +55,6 @@ class ProjectCreationTemplatePresenter
 
     /**
      *
-     * @return string
-     */
-    public function getUserGroupName()
-    {
-        return $this->project->getPublicName();
-    }
-
-    /**
-     *
-     * @param string $format A valid php date format
-     * @return string
-     */
-    public function getFormattedDateRegistered()
-    {
-        return date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->project->getStartDate());
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getUnixGroupName()
-    {
-        return $this->project->getUnixName();
-    }
-
-    /**
-     *
      * @return string coma separated list of names of admin users for this template
      */
     public function getAdminUserNames()
@@ -117,7 +89,7 @@ class ProjectCreationTemplatePresenter
     public function getPurifiedProjectName()
     {
         return $this->text_purifier->purify(
-            util_unconvert_htmlspecialchars($this->project->getPublicName()),
+            $this->project->getPublicName(),
             CODENDI_PURIFIER_CONVERT_HTML
         );
     }
@@ -129,7 +101,7 @@ class ProjectCreationTemplatePresenter
     public function getPurifiedShortDescription()
     {
         return $this->text_purifier->purify(
-            util_unconvert_htmlspecialchars($this->project->getDescription()),
+            $this->project->getDescription(),
             CODENDI_PURIFIER_LIGHT,
             $this->project->getID()
         );

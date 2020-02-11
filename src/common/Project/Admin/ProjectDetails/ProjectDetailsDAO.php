@@ -80,7 +80,7 @@ class ProjectDetailsDAO extends DataAccessObject
 
     public function updateGroupNameAndDescription($form_group_name, $form_shortdesc, $group_id)
     {
-        $escaped_form_group_name = $this->da->quoteSmart(htmlspecialchars($form_group_name));
+        $escaped_form_group_name = $this->da->quoteSmart($form_group_name);
         $escaped_form_shortdesc  = $this->da->quoteSmart($form_shortdesc);
         $escaped_group_id        = $this->da->escapeInt($group_id);
 

@@ -167,7 +167,7 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         return $GLOBALS['Language']->getText(
             'plugin_agiledashboard',
             'project_backlog',
-            util_unconvert_htmlspecialchars($this->project_name)
+            $this->project_name
         );
     }
 

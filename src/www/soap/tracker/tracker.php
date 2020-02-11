@@ -741,8 +741,8 @@ if (defined('NUSOAP')) {
         $uri.'#getArtifacts',
         'rpc',
         'encoded',
-        'Returns the ArtifactQueryResult of the tracker group_artifact_id in the project group_id 
-     that are matching the given criteria. If offset AND max_rows are filled, it returns only 
+        'Returns the ArtifactQueryResult of the tracker group_artifact_id in the project group_id
+     that are matching the given criteria. If offset AND max_rows are filled, it returns only
      max_rows artifacts, skipping the first offset ones.
      It is not possible to sort artifact with this function (use getArtifactsFromReport if you want to sort).
      Returns a soap fault if the group_id is not a valid one or if the group_artifact_id is not a valid one.'
@@ -764,8 +764,8 @@ if (defined('NUSOAP')) {
         $uri.'#getArtifactsFromReport',
         'rpc',
         'encoded',
-        'Returns the ArtifactReportResult of the tracker group_artifact_id in the project group_id 
-     with the report report_id that are matching the given criteria. 
+        'Returns the ArtifactReportResult of the tracker group_artifact_id in the project group_id
+     with the report report_id that are matching the given criteria.
      If offset AND max_rows are filled, it returns only max_rows artifacts, skipping the first offset ones.
      The result will be sorted, as defined in the param sort_criteria.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one or if the report_id is not a valid one.'
@@ -788,8 +788,8 @@ if (defined('NUSOAP')) {
         $uri.'#addArtifact',
         'rpc',
         'encoded',
-        'Add an Artifact in the tracker group_artifact_id of the project group_id with the values given by 
-     status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
+        'Add an Artifact in the tracker group_artifact_id of the project group_id with the values given by
+     status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns the Id of the created artifact if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, or if the add failed.'
     );
@@ -811,8 +811,8 @@ if (defined('NUSOAP')) {
         $uri.'#addArtifact',
         'rpc',
         'encoded',
-        'Add an Artifact in the tracker tracker_name of the project group_id with the values given by 
-     status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
+        'Add an Artifact in the tracker tracker_name of the project group_id with the values given by
+     status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns the Id of the created artifact if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, if the tracker_name is not a valid one, or if the add failed.'
     );
@@ -835,9 +835,9 @@ if (defined('NUSOAP')) {
         $uri.'#updateArtifact',
         'rpc',
         'encoded',
-        'Update the artifact $artifact_id of the tracker $group_artifact_id in the project group_id with the values given by 
+        'Update the artifact $artifact_id of the tracker $group_artifact_id in the project group_id with the values given by
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      if the artifart_id is not a valid one, or if the update failed.'
     );
 
@@ -859,9 +859,9 @@ if (defined('NUSOAP')) {
         $uri.'#updateArtifact',
         'rpc',
         'encoded',
-        'Update the artifact $artifact_id of the tracker $tracker_name in the project group_id with the values given by 
+        'Update the artifact $artifact_id of the tracker $tracker_name in the project group_id with the values given by
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      if the artifart_id is not a valid one, or if the update failed.'
     );
 
@@ -878,7 +878,7 @@ if (defined('NUSOAP')) {
         'rpc',
         'encoded',
         'Returns the list of follow-ups (ArtifactFollowup) of the artifact artifact_id of the tracker group_artifact_id in the project group_id.
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      or if the artifart_id is not a valid one.'
     );
 
@@ -893,7 +893,7 @@ if (defined('NUSOAP')) {
         $uri.'#getArtifactCannedResponses',
         'rpc',
         'encoded',
-        'Returns the list of canned responses (ArtifactCanned) for the tracker group_artifact_id of the project group_id. 
+        'Returns the list of canned responses (ArtifactCanned) for the tracker group_artifact_id of the project group_id.
      Returns a soap fault if the group_id is not a valid one or if group_artifact_id is not a valid one.'
     );
 
@@ -908,7 +908,7 @@ if (defined('NUSOAP')) {
         $uri.'#getArtifactReports',
         'rpc',
         'encoded',
-        'Returns the list of reports (ArtifactReport) for the tracker group_artifact_id of the project group_id of the current user. 
+        'Returns the list of reports (ArtifactReport) for the tracker group_artifact_id of the project group_id of the current user.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one.'
     );
 
@@ -924,8 +924,8 @@ if (defined('NUSOAP')) {
         $uri.'#getArtifactAttachedFiles',
         'rpc',
         'encoded',
-        'Returns the array of attached files (ArtifactFile) attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+        'Returns the array of attached files (ArtifactFile) attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      or if the artifact_id is not a valid one. NOTE : for performance reasons, the result does not contain the content of the file. Please use getArtifactAttachedFile to get the content of a single file'
     );
 
@@ -942,8 +942,8 @@ if (defined('NUSOAP')) {
         $uri.'#getArtifactAttachedFile',
         'rpc',
         'encoded',
-        'Returns the attached file (ArtifactFile) with the id file_id attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+        'Returns the attached file (ArtifactFile) with the id file_id attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      if the artifact_id is not a valid one, or if the file_id doesnt match with the given artifact_id.'
     );
 
@@ -960,8 +960,8 @@ if (defined('NUSOAP')) {
         $uri.'#getArtifactById',
         'rpc',
         'encoded',
-        'Returns the artifact (Artifact) identified by the id artifact_id in the tracker group_artifact_id of the project group_id. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+        'Returns the artifact (Artifact) identified by the id artifact_id in the tracker group_artifact_id of the project group_id.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      or if the artifact_id is not a valid one.'
     );
 
@@ -977,8 +977,8 @@ if (defined('NUSOAP')) {
         $uri.'#getArtifactDependencies',
         'rpc',
         'encoded',
-        'Returns the list of the dependencies (ArtifactDependency) for the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+        'Returns the list of the dependencies (ArtifactDependency) for the artifact artifact_id of the tracker group_artifact_id of the project group_id.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      or if the artifact_id is not a valid one.'
     );
 
@@ -994,8 +994,8 @@ if (defined('NUSOAP')) {
         $uri.'#getArtifactInverseDependencies',
         'rpc',
         'encoded',
-        'Returns the list of the dependencies (ArtifactDependency) that other artifact can have with the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+        'Returns the list of the dependencies (ArtifactDependency) that other artifact can have with the artifact artifact_id of the tracker group_artifact_id of the project group_id.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      or if the artifact_id is not a valid one.'
     );
 
@@ -1015,11 +1015,11 @@ if (defined('NUSOAP')) {
         $uri.'#addArtifactAttachedFile',
         'rpc',
         'encoded',
-        'Add an attached file to the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
-     The attached file is described by the raw encoded_data (encoded in base64), the description of the file, 
-     the name of the file and it type (the mimi-type -- plain/text, image/jpeg, etc ...). 
+        'Add an attached file to the artifact artifact_id of the tracker group_artifact_id of the project group_id.
+     The attached file is described by the raw encoded_data (encoded in base64), the description of the file,
+     the name of the file and it type (the mimi-type -- plain/text, image/jpeg, etc ...).
      Returns the ID of the attached file if the attachment succeed.
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      or if the artifact_id is not a valid one, or if the attachment failed.'
     );
 
@@ -1036,9 +1036,9 @@ if (defined('NUSOAP')) {
         $uri.'#deleteArtifactAttachedFile',
         'rpc',
         'encoded',
-        'Delete the attached file file_id from the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
-     Returns the ID of the deleted file if the deletion succeed. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+        'Delete the attached file file_id from the artifact artifact_id of the tracker group_artifact_id of the project group_id.
+     Returns the ID of the deleted file if the deletion succeed.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      if the artifact_id is not a valid one, if the file_id is not a valid one or if the deletion failed.'
     );
 
@@ -1055,10 +1055,10 @@ if (defined('NUSOAP')) {
         $uri.'#addArtifactDependencies',
         'rpc',
         'encoded',
-        'Add the list of dependencies is_dependent_on_artifact_id to the list of dependencies of the artifact artifact_id 
+        'Add the list of dependencies is_dependent_on_artifact_id to the list of dependencies of the artifact artifact_id
      of the tracker group_artifact_id of the project group_id.
-     Returns true if the add succeed. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     Returns true if the add succeed.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      if the artifact_id is not a valid one, or if the add failed.'
     );
 
@@ -1076,8 +1076,8 @@ if (defined('NUSOAP')) {
         'rpc',
         'encoded',
         'Delete the dependency between the artifact dependent_on_artifact_id and the artifact artifact_id of the tracker group_artifact_id of the project group_id.
-     Returns the ID of the deleted dependency if the deletion succeed. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     Returns the ID of the deleted dependency if the deletion succeed.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      if the artifact_id is not a valid one, if the dependent_on_artifact_id is not a valid artifact id, or if the deletion failed.'
     );
 
@@ -1098,8 +1098,8 @@ if (defined('NUSOAP')) {
         'encoded',
         'Add a follow-up body to the artifact artifact_id of the tracker group_artifact_id of the project group_id,
      with optionals comment type and canned response. If canned response is set, it will replace the body.
-     Returns nothing if the add succeed. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     Returns nothing if the add succeed.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      if the artifact_id is not a valid one, or if the add failed.'
     );
 
@@ -1118,7 +1118,7 @@ if (defined('NUSOAP')) {
         'rpc',
         'encoded',
         'Update the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id with the new comment $comment.
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the update failed.'
     );
 
@@ -1136,7 +1136,7 @@ if (defined('NUSOAP')) {
         'rpc',
         'encoded',
         'Delete the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id.
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one,
      if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the deletion failed.'
     );
 
@@ -2818,7 +2818,7 @@ if (defined('NUSOAP')) {
                 'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
                 'tracker_name' => SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'name')),
                 'group_id' => db_result($dependencies, $i, 'group_id'),
-                'group_name' => util_unconvert_htmlspecialchars(db_result($dependencies, $i, 'group_name'))
+                'group_name' => db_result($dependencies, $i, 'group_name')
                 );
             }
         }
@@ -2899,7 +2899,7 @@ if (defined('NUSOAP')) {
                 'tracker_id' => db_result($inverse_dependencies, $i, 'group_artifact_id'),
                 'tracker_name' => SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'name')),
                 'group_id' => db_result($inverse_dependencies, $i, 'group_id'),
-                'group_name' => util_unconvert_htmlspecialchars(db_result($inverse_dependencies, $i, 'group_name'))
+                'group_name' => db_result($inverse_dependencies, $i, 'group_name')
                 );
             }
         }

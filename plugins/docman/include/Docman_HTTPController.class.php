@@ -85,7 +85,7 @@ class Docman_HTTPController extends Docman_Controller
     }
     /* protected */ function _set_doesnot_belong_to_project_error($item, $group)
     {
-        $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), util_unconvert_htmlspecialchars($group->getPublicName()))));
+        $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), $group->getPublicName())));
         $this->_viewParams['redirect_to'] = str_replace('group_id='. $this->request->get('group_id'), 'group_id='. $item->getGroupId(), $_SERVER['REQUEST_URI']);
         $this->view = 'Redirect';
     }
@@ -96,6 +96,7 @@ class Docman_HTTPController extends Docman_Controller
      */
     function notifyFuturObsoleteDocuments()
     {
+        $hp = Codendi_HTMLPurifier::instance();
         $pm = ProjectManager::instance();
         $itemFactory = new Docman_ItemFactory(0);
 
@@ -126,7 +127,7 @@ class Docman_HTTPController extends Docman_Controller
             $subj = $this->txt('obso_warn_email_subject', array($GLOBALS['sys_name'],
                                                                 $item->getTitle()));
             $body = $this->txt('obso_warn_email_body', array($item->getTitle(),
-                                                             $group->getPublicName(),
+                                                             $hp->purify($group->getPublicName()),
                                                              $obsoDate,
                                                              $directUrl,
                                                              $detailUrl));

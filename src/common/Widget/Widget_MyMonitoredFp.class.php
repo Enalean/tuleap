@@ -40,6 +40,7 @@ class Widget_MyMonitoredFp extends Widget
     }
     function getContent()
     {
+        $purifier = Codendi_HTMLPurifier::instance();
         $frsrf = new FRSReleaseFactory();
         $html_my_monitored_fp = '';
         $sql="SELECT groups.group_name,groups.group_id ".
@@ -96,7 +97,7 @@ class Widget_MyMonitoredFp extends Widget
 
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
                     $hide_url.'<A HREF="/project/?group_id='.$group_id.'">'.
-                    db_result($result, $j, 'group_name').'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
+                    $purifier->purify(db_result($result, $j, 'group_name')).'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
 
                 $html = '';
                 $count_new = max(0, $count_diff);

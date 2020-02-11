@@ -959,7 +959,6 @@ if ($func == 'gotoid') {
         $params['toptab']='tracker';
         $params['pagename']='trackers';
         $params['title']=$Language->getText('tracker_index', 'trackers_for', $group->getPublicName());
-        $params['sectionvals']=array($group->getPublicName());
         $params['help']='tracker-v3.html';
         $params['pv']  = $pv ? $pv : '';
 

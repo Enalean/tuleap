@@ -230,7 +230,7 @@ class Docman_NotificationsManager
     protected function _addMessage(PFUser $to, $subject, $msg, $link)
     {
         if (!isset($this->notifications[$msg])) {
-            $subject = '['. util_unconvert_htmlspecialchars($this->_group_name) .' - Documents] '. $subject;
+            $subject = '['. $this->_group_name .' - Documents] '. $subject;
 
             $this->notifications[$msg] = new Notification(
                 array(),

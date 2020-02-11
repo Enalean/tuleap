@@ -94,7 +94,7 @@ class GitViewsTest extends TestCase
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getId')->andReturns($id);
-        $project->shouldReceive('getPublicName')->andReturns(htmlspecialchars($name)); //see create_project()
+        $project->shouldReceive('getPublicName')->andReturns($name); //see create_project()
         $project->shouldReceive('getUnixName')->andReturns($unixName);
         $project->shouldReceive('usesService')->with(GitPlugin::SERVICE_SHORTNAME)->andReturns($useGit);
         return $project;

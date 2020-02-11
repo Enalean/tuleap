@@ -228,7 +228,7 @@ class Git_Mirror_MirrorDataMapper
             if ($previous_group_id !== $row['group_id']) {
                 $project_presenter = new Git_AdminRepositoryListForProjectPresenter(
                     $row['group_id'],
-                    util_unconvert_htmlspecialchars($row['group_name'])
+                    $row['group_name']
                 );
                 $presenters[] = $project_presenter;
             }

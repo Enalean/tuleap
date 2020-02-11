@@ -259,10 +259,11 @@ function forum_create_forum($group_id, $forum_name, $is_public = 1, $create_defa
                   $group_name = $group_obj->getPublicName();
             }
 
+            $hp = Codendi_HTMLPurifier::instance();
          //set up a cheap default message
             $result2=db_query("INSERT INTO forum ".
              "(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-             "VALUES (".db_ei($forum_id).",100,'".db_es($GLOBALS['Language']->getText('forum_forum_utils', 'welcome_to', array($group_name))." ".htmlspecialchars($forum_name))."',".
+             "VALUES (".db_ei($forum_id).",100,'".db_es($GLOBALS['Language']->getText('forum_forum_utils', 'welcome_to', array($hp->purify($group_name)))." ".htmlspecialchars($forum_name))."',".
              "'".db_es($GLOBALS['Language']->getText('forum_forum_utils', 'welcome_to', array($group_name))." ".htmlspecialchars($forum_name))."','".time()."',0,'".get_next_thread_id()."')");
         }
         return $forum_id;

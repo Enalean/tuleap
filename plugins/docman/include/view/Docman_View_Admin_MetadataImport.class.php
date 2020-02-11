@@ -36,7 +36,7 @@ class Docman_View_Admin_MetadataImport extends Docman_View_Extra
         $this->srcGo = $pm->getProject($params['sSrcGroupId']);
         $this->dstGo = $pm->getProject($params['group_id']);
 
-        echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_title', array($this->srcGo->getPublicName())) .'</h2>';
+        echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_title', array(Codendi_HTMLPurifier::instance()->purify($this->srcGo->getPublicName()))) .'</h2>';
     }
 
 

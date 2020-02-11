@@ -124,7 +124,6 @@ if ($result && $rows > 0) {
     $params['toptab']='tracker';
     $params['pagename']='trackers';
     $params['title']=$Language->getText('tracker_index', 'trackers_for');
-    $params['sectionvals']=array($group->getPublicName());
     $params['help']='tracker-v3.html';
     $params['pv']  = $request->exist('pv') ? $request->get('pv') : '';
     site_project_header($params);

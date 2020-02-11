@@ -498,7 +498,7 @@ class GitViews extends PluginViews
         foreach ($usrProject as $projectId) {
             $project = $manager->getProject($projectId);
             if ($user->isMember($projectId, 'A') && $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-                $projectName     = $project->getPublicName();
+                $projectName     = $purifier->purify($project->getPublicName());
                 $projectUnixName = $purifier->purify($project->getUnixName());
                 $html           .= sprintf($option, $projectId, $projectUnixName, $projectName);
             }

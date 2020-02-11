@@ -55,10 +55,11 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
 
     public function sendMail(PFUser $user, Project $project, $tv3_id, $tracker_name)
     {
+        $hp          = Codendi_HTMLPurifier::instance();
         $mail        = new Codendi_Mail();
         $breadcrumbs = array();
 
-        $breadcrumbs[] = '<a href="'. HTTPRequest::instance()->getServerUrl() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
+        $breadcrumbs[] = '<a href="'. HTTPRequest::instance()->getServerUrl() .'/projects/'. $project->getUnixName(true) .'" />'. $hp->purify($project->getPublicName()) .'</a>';
 
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->addAdditionalHeader("X-Codendi-Project", $project->getUnixName());

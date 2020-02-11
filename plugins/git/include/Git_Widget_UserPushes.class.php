@@ -76,6 +76,7 @@ class Git_Widget_UserPushes extends Widget
         $content = '';
         $project = '';
         $dh      = new DateHelper();
+        $hp      = Codendi_HTMLPurifier::instance();
         if (count($result) > 0) {
             foreach ($result as $entry) {
                 if (! empty($entry['repository_namespace'])) {
@@ -90,10 +91,11 @@ class Git_Widget_UserPushes extends Widget
                             $content .= '</fieldset>';
                         }
                         $project = $entry['group_name'];
+                        $unix_name = $hp->purify($entry['unix_group_name']);
                         $content .= '<fieldset class="widget-last-git-pushes-project">
-                            <legend id="plugin_git_user_pushes_widget_project_'.$project.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">
+                            <legend id="plugin_git_user_pushes_widget_project_'.$unix_name.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$unix_name).'">
                             <span title="'.dgettext('tuleap-git', 'Project').'">
-                            <b>'.$project.'</b>
+                            <b>'. $hp->purify($project) .'</b>
                             </span>
                             </legend>
                             <div class="widget-last-git-pushes-details">
@@ -120,7 +122,6 @@ class Git_Widget_UserPushes extends Widget
                         </thead>
                         <tbody>';
                     $i   = 0;
-                    $hp  = Codendi_HTMLPurifier::instance();
                     foreach ($rows as $row) {
                         $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
                                          <td><span title="'.$dh->timeAgoInWords($row['push_date'], true).'">'.$hp->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['push_date'])).'</span></td>

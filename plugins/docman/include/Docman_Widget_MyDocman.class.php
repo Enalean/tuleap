@@ -121,7 +121,7 @@ class Docman_Widget_MyDocman extends Widget
                             $request->get('dashboard_id')
                         );
                     $docmanUrl = $this->pluginPath . '/?group_id=' . $review['group_id'];
-                    $docmanHref = '<a href="' . $docmanUrl . '">' . $review['group'] . '</a>';
+                    $docmanHref = '<a href="' . $docmanUrl . '">' . $hp->purify($review['group']) . '</a>';
 
                     if ($reviewer) {
                         $colspan = 2;

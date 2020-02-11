@@ -86,7 +86,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
 
         $this->imgroot = $root . '/images/';
 
-        $this->feeds       = array();
         $this->javascript  = array();
 
         /*
@@ -251,11 +250,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $this->includeJavascriptSnippet("var useLanguage = '". substr($this->getUser()->getLocale(), 0, 2) ."';");
         $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
         return $this;
-    }
-
-    function addFeed($title, $href)
-    {
-        $this->feeds[] = array('title' => $title, 'href' => $href);
     }
 
     function _getFeedback()
