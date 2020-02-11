@@ -86,9 +86,42 @@ const webpack_config_for_vue = {
     }
 };
 
-if (process.env.NODE_ENV === "watch" || process.env.NODE_ENV === "test") {
-    webpack_config_for_burndown_chart.devtool = "cheap-module-eval-source-map";
-    webpack_config_for_vue.devtool = "cheap-module-eval-source-map";
-}
+const webpack_for_vue_plus_typescript = {
+    entry: {
+        "tracker-creation": "./tracker-creation/index.ts"
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path, "/plugins/tracker/assets/"),
+    resolve: {
+        extensions: [".js", ".ts", ".vue"],
+        alias: webpack_configurator.extendAliases(webpack_configurator.vue_components_alias)
+    },
+    externals: {
+        tlp: "tlp"
+    },
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.rule_easygettext_loader,
+            webpack_configurator.rule_vue_loader,
+            webpack_configurator.rule_file_loader_images
+        ]
+    },
+    plugins: [
+        manifest_plugin,
+        webpack_configurator.getCleanWebpackPlugin(),
+        webpack_configurator.getVueLoaderPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(true)
+    ],
+    resolveLoader: {
+        alias: webpack_configurator.easygettext_loader_alias
+    }
+};
 
-module.exports = [webpack_config_for_burndown_chart, webpack_config_for_vue];
+module.exports = [
+    webpack_config_for_burndown_chart,
+    webpack_config_for_vue,
+    webpack_for_vue_plus_typescript
+];
