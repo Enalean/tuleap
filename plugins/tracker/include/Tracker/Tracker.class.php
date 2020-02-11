@@ -2318,7 +2318,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
 
         foreach ($this->getFormElementFactory()->getUsedFormElementForTracker($this) as $formElement) {
-            $grandchild = $child->addChild('formElement');
+            $grandchild = $child->addChild($formElement->getTagNameForXMLExport());
             $formElement->exportToXML($grandchild, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
 
