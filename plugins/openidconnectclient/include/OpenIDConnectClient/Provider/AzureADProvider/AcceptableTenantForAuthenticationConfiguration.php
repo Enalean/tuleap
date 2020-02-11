@@ -96,6 +96,21 @@ final class AcceptableTenantForAuthenticationConfiguration
         return $this->identifier;
     }
 
+    public function getDescription(): string
+    {
+        switch ($this->identifier) {
+            case self::TENANT_SPECIFIC_IDENTIFIER:
+                return dgettext('tuleap-openidconnectclient', 'Users from your specific Azure Active Directory');
+            case self::TENANT_CONSUMERS_IDENTIFIER:
+                return dgettext('tuleap-openidconnectclient', 'Only users with a personal Microsoft account');
+            case self::TENANT_ORGANIZATIONS_IDENTIFIER:
+                return dgettext('tuleap-openidconnectclient', 'Only users with a work/school account from Azure Active Directory');
+            case self::TENANT_COMMON_IDENTIFIER:
+            default:
+                return dgettext('tuleap-openidconnectclient', 'Any users with a work/school account from Azure Active Directory or a personal Microsoft account');
+        }
+    }
+
     /**
      * @return string[]
      */

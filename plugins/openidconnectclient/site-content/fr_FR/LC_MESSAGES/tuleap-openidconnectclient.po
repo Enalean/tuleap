@@ -25,8 +25,18 @@ msgstr "Une erreur est survenue lors de la suppression du lien avec %1$s."
 msgid "An error occurred, please retry"
 msgstr "Une erreur est survenue, merci de réessayer"
 
+msgid ""
+"Any users with a work/school account from Azure Active Directory or a "
+"personal Microsoft account"
+msgstr ""
+"Tout utilisateur disposant d'un compte professionnel/scolaire de Azure "
+"Active Directory ou d'un compte Microsoft personnel"
+
 msgid "Authenticate users with OpenID Connect"
 msgstr "Authentifie des utilisateurs à l'aide d'OpenID Connect"
+
+msgid "Authentication allowed for"
+msgstr "Authentification autorisée pour"
 
 msgid "Authorization endpoint"
 msgstr "Route de gestion de l'autorisation"
@@ -86,6 +96,14 @@ msgstr "Liez un compte"
 
 msgid "Name"
 msgstr "Nom"
+
+msgid "Only users with a personal Microsoft account"
+msgstr "Uniquement les utilisateurs disposant d'un compte Microsoft personnel"
+
+msgid "Only users with a work/school account from Azure Active Directory"
+msgstr ""
+"Uniquement les utilisateurs disposant d'un compte professionnel/scolaire "
+"de Azure Active Directory"
 
 msgid "OpenID Connect"
 msgstr "OpenID Connect"
@@ -157,6 +175,9 @@ msgstr "Mettre à jour le fournisseur"
 
 msgid "User information endpoint"
 msgstr "Route des informations utilisateur"
+
+msgid "Users from your specific Azure Active Directory"
+msgstr "Tout utilisateur de votre Azure Active Directory spécifique"
 
 msgid ""
 "You are about to delete a provider. This action is irreversible. Do you "
