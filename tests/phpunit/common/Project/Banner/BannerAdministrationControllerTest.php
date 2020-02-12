@@ -27,22 +27,22 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\ProjectRetriever;
 
 final class BannerAdministrationControllerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HeaderNavigationDisplayer
      */
@@ -54,23 +54,26 @@ final class BannerAdministrationControllerTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->project_manager             = Mockery::mock(ProjectManager::class);
+        $this->project_retriever           = Mockery::mock(ProjectRetriever::class);
         $this->header_navigation_displayer = Mockery::mock(HeaderNavigationDisplayer::class);
         $this->controller                  = new BannerAdministrationController(
             TemplateRendererFactory::build(),
             $this->header_navigation_displayer,
             Mockery::mock(IncludeAssets::class),
-            $this->project_manager,
+            $this->project_retriever,
             Mockery::mock(BannerRetriever::class)
         );
     }
 
     public function testNonProjectAdministratorCanNotAccessThePage() : void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('isError')->andReturn(false);
-        $project->shouldReceive('getID')->andReturn('102');
-        $this->project_manager->shouldReceive('getProject')->andReturn($project);
+        $project = Mockery::mock(Project::class)->shouldReceive('getID')
+            ->andReturn('102')
+            ->getMock();
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->once()
+            ->with('102')
+            ->andReturn($project);
 
         $request      = Mockery::mock(HTTPRequest::class);
         $current_user = Mockery::mock(PFUser::class);

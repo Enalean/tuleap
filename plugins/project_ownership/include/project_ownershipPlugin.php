@@ -20,7 +20,6 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\ProjectUGroup\ApproveProjectAdministratorRemoval;
@@ -28,7 +27,6 @@ use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdmini
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
 use Tuleap\ProjectOwnership\ProjectAdmin\CannotRemoveProjectOwnerFromTheProjectAdministratorsException;
 use Tuleap\ProjectOwnership\ProjectAdmin\IndexController;
-use Tuleap\ProjectOwnership\ProjectAdmin\ProjectOwnerPresenterBuilder;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerDAO;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerRetriever;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerUpdater;
@@ -114,17 +112,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
 
     public function routeGetProjectAdmin(): IndexController
     {
-        return new IndexController(
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
-            ProjectManager::instance(),
-            new HeaderNavigationDisplayer(),
-            new ProjectOwnerPresenterBuilder(
-                new ProjectOwnerDAO(),
-                UserManager::instance(),
-                UserHelper::instance(),
-                $GLOBALS['Language']
-            )
-        );
+        return IndexController::buildSelf();
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $routes)

@@ -30,15 +30,15 @@ use Mockery as M;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use ProjectManager;
 use Service;
 use ServiceDao;
 use ServiceManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\ProjectRetriever;
 
-class DeleteControllerTest extends TestCase
+final class DeleteControllerTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
 
@@ -51,9 +51,9 @@ class DeleteControllerTest extends TestCase
      */
     private $service_dao;
     /**
-     * @var M\MockInterface|ProjectManager
+     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
      */
-    private $project_manger;
+    private $project_retriever;
     /**
      * @var CSRFSynchronizerToken|M\MockInterface
      */
@@ -93,24 +93,35 @@ class DeleteControllerTest extends TestCase
 
         $this->service_id = '14';
 
-        $this->project_id      = 120;
-        $this->project         = M::mock(Project::class, ['getID' => (string) $this->project_id, 'isError' => false]);
-        $this->project_manger  = M::mock(ProjectManager::class);
-        $this->project_manger->shouldReceive('getProject')->with((string) $this->project_id)->andReturn($this->project);
+        $this->project_id        = 120;
+        $this->project           = M::mock(Project::class, ['getID' => (string) $this->project_id]);
+        $this->project_retriever = M::mock(ProjectRetriever::class);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with((string) $this->project_id)
+            ->andReturn($this->project);
         $this->project_admin->shouldReceive('isAdmin')->with((string) $this->project_id)->andReturnTrue();
 
-        $this->default_template_project = M::mock(Project::class, ['getID' => (string) Project::ADMIN_PROJECT_ID, 'isError' => false]);
-        $this->project_manger->shouldReceive('getProject')->with((string) Project::ADMIN_PROJECT_ID)->andReturn($this->default_template_project);
+        $this->default_template_project = M::mock(Project::class, ['getID' => (string) Project::ADMIN_PROJECT_ID]);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with((string) Project::ADMIN_PROJECT_ID)
+            ->andReturn($this->default_template_project);
         $this->project_admin->shouldReceive('isAdmin')->with((string) Project::ADMIN_PROJECT_ID)->andReturnTrue();
 
-        $this->csrf_token      = M::mock(CSRFSynchronizerToken::class);
+        $this->csrf_token = M::mock(CSRFSynchronizerToken::class);
         $this->csrf_token->shouldReceive('check')->once()->byDefault();
-        $this->request         = M::mock(HTTPRequest::class);
+        $this->request = M::mock(HTTPRequest::class);
         $this->request->shouldReceive('getCurrentUser')->andReturn($this->project_admin)->byDefault();
-        $this->layout          = M::mock(BaseLayout::class);
-        $this->request->shouldReceive('getValidated')->with('service_id', M::andAnyOtherArgs())->andReturn($this->service_id)->byDefault();
+        $this->layout = M::mock(BaseLayout::class);
+        $this->request->shouldReceive('getValidated')->with('service_id', M::andAnyOtherArgs())->andReturn(
+            $this->service_id
+        )->byDefault();
 
-        $this->controller = new DeleteController($this->service_dao, $this->project_manger, $this->csrf_token, $this->service_manager);
+        $this->controller = new DeleteController(
+            $this->service_dao,
+            $this->project_retriever,
+            $this->csrf_token,
+            $this->service_manager
+        );
     }
 
     public function testItDeletesOneService(): void

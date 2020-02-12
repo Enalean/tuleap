@@ -29,15 +29,16 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
+use Tuleap\Request\ProjectRetriever;
 
 class MemberAdditionControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     /**
-     * @var M\MockInterface|\ProjectManager
+     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var M\MockInterface|\UGroupManager
      */
@@ -73,22 +74,31 @@ class MemberAdditionControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->project_manager                = M::mock(\ProjectManager::class);
-        $this->ugroup_manager                 = M::mock(\UGroupManager::class);
-        $this->user_manager                   = M::mock(\UserManager::class);
-        $this->member_adder                   = M::mock(MemberAdder::class);
-        $this->http_request                   = M::mock(\HTTPRequest::class);
-        $this->layout                         = M::mock(BaseLayout::class);
-        $this->a_user                         = M::mock(\PFUser::class);
-        $this->csrf                           = M::mock(\CSRFSynchronizerToken::class);
+        $this->project_retriever = M::mock(ProjectRetriever::class);
+        $this->ugroup_manager    = M::mock(\UGroupManager::class);
+        $this->user_manager      = M::mock(\UserManager::class);
+        $this->member_adder      = M::mock(MemberAdder::class);
+        $this->http_request      = M::mock(\HTTPRequest::class);
+        $this->layout            = M::mock(BaseLayout::class);
+        $this->a_user            = M::mock(\PFUser::class);
+        $this->csrf              = M::mock(\CSRFSynchronizerToken::class);
         $this->csrf->shouldReceive('check')->once();
-        $this->controller = new MemberAdditionController($this->project_manager, $this->ugroup_manager, $this->user_manager, $this->member_adder, $this->csrf);
+        $this->controller = new MemberAdditionController(
+            $this->project_retriever,
+            $this->ugroup_manager,
+            $this->user_manager,
+            $this->member_adder,
+            $this->csrf
+        );
     }
 
     public function testItAddsUserWithSuccess()
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($project);
 
         $this->a_user->shouldReceive('isAdmin')->with(101)->andReturnTrue();
         $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->a_user);
@@ -110,7 +120,10 @@ class MemberAdditionControllerTest extends TestCase
     public function testItDoesntAddInBoundGroups()
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($project);
 
         $this->a_user->shouldReceive('isAdmin')->with(101)->andReturnTrue();
         $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->a_user);
@@ -126,7 +139,10 @@ class MemberAdditionControllerTest extends TestCase
     public function testItDoesntAddInvalidUser()
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($project);
 
         $this->a_user->shouldReceive('isAdmin')->with(101)->andReturnTrue();
         $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->a_user);

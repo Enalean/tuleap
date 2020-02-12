@@ -25,7 +25,6 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use ProjectManager;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
@@ -34,19 +33,20 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 
-class SaveLicenseAgreementControllerTest extends TestCase
+final class SaveLicenseAgreementControllerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var LicenseAgreementDisplayController
+     * @var SaveLicenseAgreementController
      */
     private $controller;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
      */
@@ -93,14 +93,19 @@ class SaveLicenseAgreementControllerTest extends TestCase
         $this->request = new \HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->project_manager = Mockery::mock(ProjectManager::class);
         $this->service_file = Mockery::mock(\ServiceFile::class, ['displayFRSHeader' => 'foo']);
-        $this->project = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
+        $this->project      = Mockery::mock(\Project::class, ['getID' => '101']);
         $this->project->shouldReceive('getFileService')->andReturn($this->service_file)->byDefault();
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturns($this->project);
+        $this->project_retriever = Mockery::mock(ProjectRetriever::class)
+            ->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($this->project)
+            ->getMock();
 
         $this->permissions_manager = Mockery::mock(FRSPermissionManager::class);
-        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnTrue()->byDefault();
+        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnTrue(
+        )->byDefault();
 
         $this->factory = Mockery::mock(LicenseAgreementFactory::class);
 
@@ -111,7 +116,7 @@ class SaveLicenseAgreementControllerTest extends TestCase
         $this->helper->shouldReceive('assertCanAccess')->with($this->project, $this->current_user);
 
         $this->controller = new SaveLicenseAgreementController(
-            $this->project_manager,
+            $this->project_retriever,
             $this->helper,
             $this->factory,
             $this->csrf_token,

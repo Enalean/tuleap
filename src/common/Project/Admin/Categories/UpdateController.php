@@ -25,42 +25,41 @@ namespace Tuleap\Project\Admin\Categories;
 
 use Feedback;
 use HTTPRequest;
-use Project;
-use ProjectManager;
+use ProjectHistoryDao;
+use TroveCatDao;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 
-class UpdateController implements DispatchableWithRequest, DispatchableWithProject
+class UpdateController implements DispatchableWithRequest
 {
     /**
-     * @var ProjectManager
+     * @var ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var ProjectCategoriesUpdater
      */
     private $updater;
 
-    public function __construct(ProjectManager $project_manager, ProjectCategoriesUpdater $updater)
+    public function __construct(ProjectRetriever $project_retriever, ProjectCategoriesUpdater $updater)
     {
-        $this->project_manager = $project_manager;
-        $this->updater = $updater;
+        $this->project_retriever = $project_retriever;
+        $this->updater           = $updater;
     }
 
-    /**
-     * @throws NotFoundException
-     */
-    public function getProject(array $variables): Project
+    public static function buildSelf(): self
     {
-        $project = $this->project_manager->getProject($variables['id']);
-        if (! $project || $project->isError()) {
-            throw new NotFoundException(gettext("Project does not exist"));
-        }
-
-        return $project;
+        return new self(
+            ProjectRetriever::buildSelf(),
+            new ProjectCategoriesUpdater(
+                new \TroveCatFactory(new TroveCatDao()),
+                new ProjectHistoryDao(),
+                new TroveSetNodeFacade()
+            )
+        );
     }
 
     /**
@@ -69,7 +68,7 @@ class UpdateController implements DispatchableWithRequest, DispatchableWithProje
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->getProject($variables);
+        $project = $this->project_retriever->getProjectFromId($variables['id']);
         if (! $request->getCurrentUser()->isAdmin($project->getId())) {
             throw new ForbiddenException(gettext("You don't have permission to access administration of this project."));
         }

@@ -25,21 +25,20 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use HTTPRequest;
 use Project;
+use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\GetProjectTrait;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 
-class SaveLicenseAgreementController implements DispatchableWithRequest, DispatchableWithProject
+class SaveLicenseAgreementController implements DispatchableWithRequest
 {
-    use GetProjectTrait;
-
     private const CSRF_TOKEN = 'frs_edit_license_agreement';
 
     /**
@@ -54,18 +53,41 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
      * @var LicenseAgreementControllersHelper
      */
     private $helper;
+    /**
+     * @var ProjectRetriever
+     */
+    private $project_retriever;
 
-    public function __construct(\ProjectManager $project_manager, LicenseAgreementControllersHelper $helper, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token)
+    public function __construct(
+        ProjectRetriever $project_retriever,
+        LicenseAgreementControllersHelper $helper,
+        LicenseAgreementFactory $factory,
+        \CSRFSynchronizerToken $csrf_token
+    ) {
+        $this->project_retriever = $project_retriever;
+        $this->helper            = $helper;
+        $this->factory           = $factory;
+        $this->csrf_token        = $csrf_token;
+    }
+
+    public static function buildSelf(): self
     {
-        $this->project_manager    = $project_manager;
-        $this->helper             = $helper;
-        $this->factory            = $factory;
-        $this->csrf_token         = $csrf_token;
+        return new self(
+            ProjectRetriever::buildSelf(),
+            new LicenseAgreementControllersHelper(
+                FRSPermissionManager::build(),
+                \TemplateRendererFactory::build(),
+            ),
+            new LicenseAgreementFactory(
+                new LicenseAgreementDao()
+            ),
+            SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
+        );
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->getProject($variables);
+        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
 
         $this->csrf_token->check(ListLicenseAgreementsController::getUrl($project));
 

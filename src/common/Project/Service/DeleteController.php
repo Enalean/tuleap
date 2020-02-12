@@ -24,27 +24,25 @@ use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use Project;
-use ProjectManager;
 use RuntimeException;
 use Service;
 use ServiceDao;
 use ServiceManager;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 
-class DeleteController implements DispatchableWithRequest, DispatchableWithProject
+class DeleteController implements DispatchableWithRequest
 {
     /**
      * @var ServiceDao
      */
     private $dao;
     /**
-     * @var ProjectManager
+     * @var ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var CSRFSynchronizerToken
      */
@@ -54,30 +52,31 @@ class DeleteController implements DispatchableWithRequest, DispatchableWithProje
      */
     private $service_manager;
 
-    public function __construct(ServiceDao $dao, ProjectManager $project_manager, CSRFSynchronizerToken $csrf_token, ServiceManager $service_manager)
-    {
-        $this->dao = $dao;
-        $this->project_manager = $project_manager;
-        $this->csrf_token = $csrf_token;
-        $this->service_manager = $service_manager;
+    public function __construct(
+        ServiceDao $dao,
+        ProjectRetriever $project_retriever,
+        CSRFSynchronizerToken $csrf_token,
+        ServiceManager $service_manager
+    ) {
+        $this->dao               = $dao;
+        $this->project_retriever = $project_retriever;
+        $this->csrf_token        = $csrf_token;
+        $this->service_manager   = $service_manager;
     }
 
-    /**
-     * @throws NotFoundException
-     */
-    public function getProject(array $variables): Project
+    public static function buildSelf(): self
     {
-        $project = $this->project_manager->getProject($variables['id']);
-        if (! $project || $project->isError()) {
-            throw new NotFoundException();
-        }
-        return $project;
+        return new self(
+            new ServiceDao(),
+            ProjectRetriever::buildSelf(),
+            IndexController::getCSRFTokenSynchronizer(),
+            ServiceManager::instance()
+        );
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->getProject($variables);
-
+        $project = $this->project_retriever->getProjectFromId($variables['id']);
         if (! $request->getCurrentUser()->isAdmin($project->getID())) {
             throw new ForbiddenException();
         }

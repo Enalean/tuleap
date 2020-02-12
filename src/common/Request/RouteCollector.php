@@ -21,16 +21,13 @@
 
 namespace Tuleap\Request;
 
-use ArtifactTypeFactory;
 use Codendi_HTMLPurifier;
 use ConfigDao;
 use EventManager;
 use FastRoute;
 use FRSFileFactory;
-use ProjectHistoryDao;
-use ProjectManager;
-use ServiceDao;
-use ServiceManager;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use TroveCatDao;
 use TroveCatFactory;
 use Tuleap\Admin\AdminPageRenderer;
@@ -54,22 +51,16 @@ use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Error\PermissionDeniedPrivateProjectMailSender;
 use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\FRS\FRSFileDownloadController;
 use Tuleap\FRS\FRSFileDownloadOldURLRedirectionController;
-use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\Admin\AddLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\EditLicenseAgreementController;
-use Tuleap\FRS\LicenseAgreement\Admin\LicenseAgreementControllersHelper;
 use Tuleap\FRS\LicenseAgreement\Admin\ListLicenseAgreementsController;
 use Tuleap\FRS\LicenseAgreement\Admin\SaveLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\SetDefaultLicenseAgreementController;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -83,17 +74,11 @@ use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Project\Admin\Categories;
-use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
-use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
-use Tuleap\Project\Admin\ProjectMembers\ProjectMembersDAO;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
-use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\Banner\BannerAdministrationController;
-use Tuleap\Project\Banner\BannerDao;
-use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -106,21 +91,6 @@ use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
 use Tuleap\Project\Service\IndexController;
-use Tuleap\Project\Service\ServiceCreator;
-use Tuleap\Project\Service\ServiceLinkDataBuilder;
-use Tuleap\Project\Service\ServicePOSTDataBuilder;
-use Tuleap\Project\Service\ServicesPresenterBuilder;
-use Tuleap\Project\Service\ServiceUpdator;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\Membership\MemberRemover;
-use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
-use Tuleap\Project\UserPermissionsDao;
-use Tuleap\Project\UserRemover;
-use Tuleap\Project\UserRemoverDao;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
@@ -136,16 +106,9 @@ use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
 use Tuleap\Widget\WidgetFactory;
-use UGroupBinding;
-use UGroupManager;
-use UGroupUserDao;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
-use UserHelper;
-use UserImport;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 class RouteCollector
 {
@@ -316,11 +279,6 @@ class RouteCollector
         return new LogoutController(\UserManager::instance());
     }
 
-    public static function getServicePOSTDataBuilder(): ServicePOSTDataBuilder
-    {
-        return new ServicePOSTDataBuilder(EventManager::instance(), ServiceManager::instance(), new ServiceLinkDataBuilder());
-    }
-
     public function postDisableLegacyBrowsersWarningMessage() : DisableLegacyBrowsersWarningMessageController
     {
         return new DisableLegacyBrowsersWarningMessageController();
@@ -361,19 +319,12 @@ class RouteCollector
 
     public static function getProjectAdminIndexCategories()
     {
-        return new Categories\IndexController(new TroveCatDao());
+        return Categories\IndexController::buildSelf();
     }
 
     public static function getProjectAdminUpdateCategories()
     {
-        return new Categories\UpdateController(
-            \ProjectManager::instance(),
-            new ProjectCategoriesUpdater(
-                new \TroveCatFactory(new TroveCatDao()),
-                new ProjectHistoryDao(),
-                new Categories\TroveSetNodeFacade()
-            )
-        );
+        return Categories\UpdateController::buildSelf();
     }
 
     public static function getSvnViewVC()
@@ -409,79 +360,27 @@ class RouteCollector
 
     public static function getFileDownloadAgreementAdminList(): DispatchableWithRequest
     {
-        return new ListLicenseAgreementsController(
-            ProjectManager::instance(),
-            new LicenseAgreementControllersHelper(
-                FRSPermissionManager::build(),
-                \TemplateRendererFactory::build(),
-            ),
-            \TemplateRendererFactory::build(),
-            new LicenseAgreementFactory(
-                new LicenseAgreementDao()
-            ),
-            SetDefaultLicenseAgreementController::getCSRFTokenSynchronizer(),
-        );
+        return ListLicenseAgreementsController::buildSelf();
     }
 
     public static function getFileDownloadAgreementAdminAdd(): DispatchableWithRequest
     {
-        return new AddLicenseAgreementController(
-            ProjectManager::instance(),
-            new LicenseAgreementControllersHelper(
-                FRSPermissionManager::build(),
-                \TemplateRendererFactory::build(),
-            ),
-            \TemplateRendererFactory::build(),
-            SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
-            new IncludeAssets(__DIR__ . '/../../www/assets/', '/assets'),
-        );
+        return AddLicenseAgreementController::buildSelf();
     }
 
     public static function getFileDownloadAgreementAdminEdit(): DispatchableWithRequest
     {
-        return new EditLicenseAgreementController(
-            ProjectManager::instance(),
-            new LicenseAgreementControllersHelper(
-                FRSPermissionManager::build(),
-                \TemplateRendererFactory::build(),
-            ),
-            \TemplateRendererFactory::build(),
-            new LicenseAgreementFactory(
-                new LicenseAgreementDao()
-            ),
-            SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
-            new IncludeAssets(__DIR__ . '/../../www/assets/', '/assets'),
-        );
+        return EditLicenseAgreementController::buildSelf();
     }
 
     public static function getFileDownloadAgreementAdminSave(): DispatchableWithRequest
     {
-        return new SaveLicenseAgreementController(
-            ProjectManager::instance(),
-            new LicenseAgreementControllersHelper(
-                FRSPermissionManager::build(),
-                \TemplateRendererFactory::build(),
-            ),
-            new LicenseAgreementFactory(
-                new LicenseAgreementDao()
-            ),
-            SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
-        );
+        return SaveLicenseAgreementController::buildSelf();
     }
 
     public static function getFileDownloadAgreementAdminSetDefault(): DispatchableWithRequest
     {
-        return new SetDefaultLicenseAgreementController(
-            ProjectManager::instance(),
-            new LicenseAgreementControllersHelper(
-                FRSPermissionManager::build(),
-                \TemplateRendererFactory::build(),
-            ),
-            new LicenseAgreementFactory(
-                new LicenseAgreementDao()
-            ),
-            SetDefaultLicenseAgreementController::getCSRFTokenSynchronizer(),
-        );
+        return SetDefaultLicenseAgreementController::buildSelf();
     }
 
     public static function getRssLatestProjects()
@@ -501,148 +400,47 @@ class RouteCollector
 
     public static function getProjectAdminMembersController() : DispatchableWithRequest
     {
-        $event_manager   = EventManager::instance();
-        $user_manager    = \UserManager::instance();
-        $user_helper     = new UserHelper();
-        $ugroup_manager  = new UGroupManager();
-        $project_manager = ProjectManager::instance();
-        $ugroup_binding  = new UGroupBinding(
-            new UGroupUserDao(),
-            $ugroup_manager
-        );
-
-        return new ProjectMembersController(
-            new ProjectMembersDAO(),
-            $user_helper,
-            $ugroup_binding,
-            new UserRemover(
-                $project_manager,
-                $event_manager,
-                new ArtifactTypeFactory(false),
-                new UserRemoverDao(),
-                $user_manager,
-                new ProjectHistoryDao(),
-                $ugroup_manager
-            ),
-            $event_manager,
-            $ugroup_manager,
-            new UserImport(
-                $user_manager,
-                $user_helper,
-                ProjectMemberAdderWithStatusCheckAndNotifications::build()
-            ),
-            $project_manager,
-            new SynchronizedProjectMembershipDetector(
-                new SynchronizedProjectMembershipDao()
-            )
-        );
+        return ProjectMembersController::buildSelf();
     }
 
     public static function getPostUserGroupIdAdd() : DispatchableWithRequest
     {
-        $ugroup_manager = new UGroupManager();
-        return new MemberAdditionController(
-            ProjectManager::instance(),
-            $ugroup_manager,
-            \UserManager::instance(),
-            MemberAdder::build(
-                ProjectMemberAdderWithStatusCheckAndNotifications::build()
-            ),
-            UGroupRouter::getCSRFTokenSynchronizer()
-        );
+        return MemberAdditionController::buildSelf();
     }
 
     public static function getPostUserGroupIdRemove() : DispatchableWithRequest
     {
-        $project_manager = ProjectManager::instance();
-        $ugroup_manager  = new UGroupManager();
-        $event_manager   = EventManager::instance();
-        $user_manager    = \UserManager::instance();
-        return new MemberRemovalController(
-            $project_manager,
-            $ugroup_manager,
-            $user_manager,
-            new MemberRemover(
-                new DynamicUGroupMembersUpdater(
-                    new UserPermissionsDao(),
-                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                    ProjectMemberAdderWithStatusCheckAndNotifications::build(),
-                    EventManager::instance()
-                ),
-                new StaticMemberRemover()
-            ),
-            new UserRemover(
-                $project_manager,
-                $event_manager,
-                new ArtifactTypeFactory(false),
-                new UserRemoverDao(),
-                $user_manager,
-                new ProjectHistoryDao(),
-                $ugroup_manager
-            ),
-            UGroupRouter::getCSRFTokenSynchronizer()
-        );
+        return MemberRemovalController::buildSelf();
     }
 
     public static function getPostSynchronizedMembershipActivation(): DispatchableWithRequest
     {
-        return new ActivationController(
-            ProjectManager::instance(),
-            new SynchronizedProjectMembershipDao(),
-            UGroupRouter::getCSRFTokenSynchronizer()
-        );
+        return ActivationController::buildSelf();
     }
 
     public static function getGetServices(): DispatchableWithRequest
     {
-        return new IndexController(
-            new ServicesPresenterBuilder(ServiceManager::instance(), EventManager::instance()),
-            new IncludeAssets(__DIR__ . '/../../www/assets', '/assets'),
-            new HeaderNavigationDisplayer(),
-            ProjectManager::instance()
-        );
+        return IndexController::buildSelf();
     }
 
     public static function getPostServicesAdd(): DispatchableWithRequest
     {
-        return new AddController(
-            new ServiceCreator(new ServiceDao(), ProjectManager::instance()),
-            self::getServicePOSTDataBuilder(),
-            ProjectManager::instance(),
-            IndexController::getCSRFTokenSynchronizer()
-        );
+        return AddController::buildSelf();
     }
 
     public static function getPostServicesEdit(): DispatchableWithRequest
     {
-        return new EditController(
-            new ServiceUpdator(new ServiceDao(), ProjectManager::instance(), ServiceManager::instance()),
-            self::getServicePOSTDataBuilder(),
-            ServiceManager::instance(),
-            ProjectManager::instance(),
-            IndexController::getCSRFTokenSynchronizer()
-        );
+        return EditController::buildSelf();
     }
 
     public static function getPostServicesDelete(): DispatchableWithRequest
     {
-        return new DeleteController(
-            new ServiceDao(),
-            ProjectManager::instance(),
-            IndexController::getCSRFTokenSynchronizer(),
-            ServiceManager::instance()
-        );
+        return DeleteController::buildSelf();
     }
 
     public static function getGetProjectBannerAdministration() : DispatchableWithRequest
     {
-        return new BannerAdministrationController(
-            \TemplateRendererFactory::build(),
-            new HeaderNavigationDisplayer(),
-            new IncludeAssets(__DIR__ . '/../../www/assets/', '/assets'),
-            ProjectManager::instance(),
-            new BannerRetriever(new BannerDao())
-        );
+        return BannerAdministrationController::buildSelf();
     }
 
     public static function getProjectRegistrationController(): ProjectRegistrationController

@@ -26,15 +26,15 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use ProjectManager;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\InvalidLicenseAgreementException;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\ProjectRetriever;
 
-class SetDefaultLicenseAgreementControllerTest extends TestCase
+final class SetDefaultLicenseAgreementControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -51,9 +51,9 @@ class SetDefaultLicenseAgreementControllerTest extends TestCase
      */
     private $helper;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
      */
@@ -84,9 +84,12 @@ class SetDefaultLicenseAgreementControllerTest extends TestCase
 
         $this->layout = Mockery::mock(BaseLayout::class);
 
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->project = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturns($this->project);
+        $this->project           = Mockery::mock(\Project::class, ['getID' => '101']);
+        $this->project_retriever = Mockery::mock(ProjectRetriever::class);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($this->project);
 
         $this->factory = Mockery::mock(LicenseAgreementFactory::class);
 
@@ -95,7 +98,7 @@ class SetDefaultLicenseAgreementControllerTest extends TestCase
         $this->helper = \Mockery::mock(LicenseAgreementControllersHelper::class);
 
         $this->controller = new SetDefaultLicenseAgreementController(
-            $this->project_manager,
+            $this->project_retriever,
             $this->helper,
             $this->factory,
             $this->csrf_token,

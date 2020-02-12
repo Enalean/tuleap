@@ -23,19 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Project\Banner;
 
 use HTTPRequest;
-use Project;
-use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Request\DispatchableWithBurningParrot;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 
-final class BannerAdministrationController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
+final class BannerAdministrationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var TemplateRendererFactory
@@ -46,9 +43,9 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
      */
     private $navigation_displayer;
     /**
-     * @var ProjectManager
+     * @var ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var IncludeAssets
      */
@@ -62,19 +59,30 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
         TemplateRendererFactory $template_renderer_factory,
         HeaderNavigationDisplayer $navigation_displayer,
         IncludeAssets $banner_assets,
-        ProjectManager $project_manager,
+        ProjectRetriever $project_retriever,
         BannerRetriever $banner_retriever
     ) {
         $this->template_renderer_factory = $template_renderer_factory;
         $this->navigation_displayer      = $navigation_displayer;
         $this->banner_assets             = $banner_assets;
-        $this->project_manager           = $project_manager;
+        $this->project_retriever         = $project_retriever;
         $this->banner_retriever          = $banner_retriever;
+    }
+
+    public static function buildSelf(): self
+    {
+        return new self(
+            TemplateRendererFactory::build(),
+            new HeaderNavigationDisplayer(),
+            new IncludeAssets(__DIR__ . '/../../../www/assets/', '/assets'),
+            ProjectRetriever::buildSelf(),
+            new BannerRetriever(new BannerDao())
+        );
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project      = $this->getProject($variables);
+        $project      = $this->project_retriever->getProjectFromId($variables['id']);
         $current_user = $request->getCurrentUser();
 
         if (! $current_user->isAdmin($project->getID())) {
@@ -101,14 +109,5 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
                 ]
             );
         project_admin_footer([]);
-    }
-
-    public function getProject(array $variables): Project
-    {
-        $project = $this->project_manager->getProject($variables['id']);
-        if (! $project || $project->isError()) {
-            throw new NotFoundException();
-        }
-        return $project;
     }
 }

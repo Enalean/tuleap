@@ -27,22 +27,20 @@ use HTTPRequest;
 use Project;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\InvalidLicenseAgreementException;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\GetProjectTrait;
+use Tuleap\Request\ProjectRetriever;
 
-class SetDefaultLicenseAgreementController implements DispatchableWithRequest, DispatchableWithProject
+class SetDefaultLicenseAgreementController implements DispatchableWithRequest
 {
-    use GetProjectTrait;
-
     private const CSRF_TOKEN = 'frs_set_default_license_agreement';
 
     /**
-     * @var FRSPermissionManager
+     * @var ProjectRetriever
      */
-    private $permission_manager;
+    private $project_retriever;
     /**
      * @var LicenseAgreementFactory
      */
@@ -52,25 +50,40 @@ class SetDefaultLicenseAgreementController implements DispatchableWithRequest, D
      */
     private $csrf_token;
     /**
-     * @var \TemplateRendererFactory
-     */
-    private $renderer_factory;
-    /**
      * @var LicenseAgreementControllersHelper
      */
     private $helper;
 
-    public function __construct(\ProjectManager $project_manager, LicenseAgreementControllersHelper $helper, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token)
+    public function __construct(
+        ProjectRetriever $project_retriever,
+        LicenseAgreementControllersHelper $helper,
+        LicenseAgreementFactory $factory,
+        \CSRFSynchronizerToken $csrf_token
+    ) {
+        $this->project_retriever = $project_retriever;
+        $this->helper            = $helper;
+        $this->factory           = $factory;
+        $this->csrf_token        = $csrf_token;
+    }
+
+    public static function buildSelf(): self
     {
-        $this->project_manager = $project_manager;
-        $this->helper          = $helper;
-        $this->factory         = $factory;
-        $this->csrf_token      = $csrf_token;
+        return new self(
+            ProjectRetriever::buildSelf(),
+            new LicenseAgreementControllersHelper(
+                FRSPermissionManager::build(),
+                \TemplateRendererFactory::build(),
+            ),
+            new LicenseAgreementFactory(
+                new LicenseAgreementDao()
+            ),
+            SetDefaultLicenseAgreementController::getCSRFTokenSynchronizer(),
+        );
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->getProject($variables);
+        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
 
         $this->csrf_token->check(ListLicenseAgreementsController::getUrl($project));
         $this->helper->assertCanAccess($project, $request->getCurrentUser());

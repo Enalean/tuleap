@@ -27,20 +27,23 @@ use CSRFSynchronizerToken;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\GetProjectTrait;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 
-class ListLicenseAgreementsController implements DispatchableWithRequest, DispatchableWithProject
+class ListLicenseAgreementsController implements DispatchableWithRequest
 {
-    use GetProjectTrait;
-
+    /**
+     * @var ProjectRetriever
+     */
+    private $project_retriever;
     /**
      * @var TemplateRendererFactory
      */
@@ -58,27 +61,47 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
      */
     private $helper;
 
-    public function __construct(\ProjectManager $project_manager, LicenseAgreementControllersHelper $helper, TemplateRendererFactory $renderer_factory, LicenseAgreementFactory $factory, CSRFSynchronizerToken $csrf_token)
+    public function __construct(
+        ProjectRetriever $project_retriever,
+        LicenseAgreementControllersHelper $helper,
+        TemplateRendererFactory $renderer_factory,
+        LicenseAgreementFactory $factory,
+        CSRFSynchronizerToken $csrf_token
+    ) {
+        $this->helper            = $helper;
+        $this->renderer_factory  = $renderer_factory;
+        $this->factory           = $factory;
+        $this->csrf_token        = $csrf_token;
+        $this->project_retriever = $project_retriever;
+    }
+
+    public static function buildSelf(): self
     {
-        $this->project_manager  = $project_manager;
-        $this->helper           = $helper;
-        $this->renderer_factory = $renderer_factory;
-        $this->factory          = $factory;
-        $this->csrf_token       = $csrf_token;
+        return new self(
+            ProjectRetriever::buildSelf(),
+            new LicenseAgreementControllersHelper(
+                FRSPermissionManager::build(),
+                \TemplateRendererFactory::build(),
+            ),
+            \TemplateRendererFactory::build(),
+            new LicenseAgreementFactory(
+                new LicenseAgreementDao()
+            ),
+            SetDefaultLicenseAgreementController::getCSRFTokenSynchronizer(),
+        );
     }
 
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param array       $variables
+     * @param array $variables
      * @return void
      * @throws ForbiddenException
      * @throws NotFoundException
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->getProject($variables);
-
+        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->helper->assertCanAccess($project, $request->getCurrentUser());
 
         $license_agreement_default = $this->factory->getDefaultLicenseAgreementForProject($project);
