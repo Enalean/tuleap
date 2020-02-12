@@ -26,10 +26,14 @@ require_once __DIR__ . '/constants.php';
 use FastRoute\RouteCollector;
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
+use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
-use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\HudsonGit\GitJenkinsAdministrationController;
+use Tuleap\HudsonGit\GitJenkinsAdministrationPaneBuilder;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\Hook;
@@ -51,6 +55,8 @@ class hudson_gitPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
 
+        bindtextdomain('tuleap-hudson_git', __DIR__ . '/../site-content');
+
         $this->addHook(CollectRoutesEvent::NAME);
 
         if (defined('GIT_BASE_URL')) {
@@ -58,6 +64,7 @@ class hudson_gitPlugin extends Plugin
             $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE);
             $this->addHook(self::DISPLAY_HUDSON_ADDITION_INFO);
             $this->addHook(GitAdminGetExternalPanePresenters::NAME);
+            $this->addHook(CollectGitRoutesEvent::NAME);
         }
     }
 
@@ -103,6 +110,44 @@ class hudson_gitPlugin extends Plugin
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeGetPostLegacyController'));
         });
+    }
+
+    public function collectGitRoutesEvent(CollectGitRoutesEvent $event)
+    {
+        $event->getRouteCollector()->get(
+            '/{project_name}/administration/jenkins',
+            $this->getRouteHandler('routeGetGitJenkinsAdministration')
+        );
+    }
+
+    public function routeGetGitJenkinsAdministration(): GitJenkinsAdministrationController
+    {
+        $git_plugin = PluginManager::instance()->getPluginByName('git');
+        assert($git_plugin instanceof GitPlugin);
+
+        $git_system_event_manager = new Git_SystemEventManager(
+            SystemEventManager::instance(),
+            new GitRepositoryFactory(
+                new GitDao(),
+                ProjectManager::instance()
+            )
+        );
+
+        $fine_grained_dao       = new FineGrainedDao();
+        $fine_grained_retriever = new FineGrainedRetriever($fine_grained_dao);
+
+        return new GitJenkinsAdministrationController(
+            ProjectManager::instance(),
+            new GitPermissionsManager(
+                new Git_PermissionsDao(),
+                $git_system_event_manager,
+                $fine_grained_dao,
+                $fine_grained_retriever
+            ),
+            $git_plugin->getMirrorDataMapper(),
+            $git_plugin->getHeaderRenderer(),
+            TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates')
+        );
     }
 
     public function routeGetPostLegacyController()
@@ -167,11 +212,6 @@ class hudson_gitPlugin extends Plugin
             return;
         }
 
-        $event->addExternalPanePresenter(
-            new AdminExternalPanePresenter(
-                'Jenkins',
-                '#'
-            )
-        );
+        $event->addExternalPanePresenter(GitJenkinsAdministrationPaneBuilder::buildPane($event->getProject()));
     }
 }

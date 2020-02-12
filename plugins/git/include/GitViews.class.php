@@ -297,7 +297,7 @@ class GitViews extends PluginViews
 
     protected function adminGitAdminsView($are_mirrors_defined)
     {
-        $event = new GitAdminGetExternalPanePresenters();
+        $event = new GitAdminGetExternalPanePresenters($this->project);
         $this->event_manager->processEvent($event);
 
         $presenter = new GitPresenters_AdminGitAdminsPresenter(
@@ -323,7 +323,7 @@ class GitViews extends PluginViews
         $templates_list        = (isset($params['templates_list'])) ? $params['templates_list'] : array();
         $parent_templates_list = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : array();
 
-        $event = new GitAdminGetExternalPanePresenters();
+        $event = new GitAdminGetExternalPanePresenters($this->project);
         $this->event_manager->processEvent($event);
 
         $presenter = new GitPresenters_AdminGerritTemplatesPresenter(
@@ -347,7 +347,7 @@ class GitViews extends PluginViews
     {
         $repository_list = $this->getGitRepositoryFactory()->getAllRepositories($this->project);
 
-        $event = new GitAdminGetExternalPanePresenters();
+        $event = new GitAdminGetExternalPanePresenters($this->project);
         $this->event_manager->processEvent($event);
 
         $presenter = new GitPresenters_AdminMassUpdateSelectRepositoriesPresenter(
@@ -371,7 +371,7 @@ class GitViews extends PluginViews
         $repositories = $params['repositories'];
         $mirrors      = $this->getAdminMassUpdateMirrorPresenters();
 
-        $event = new GitAdminGetExternalPanePresenters();
+        $event = new GitAdminGetExternalPanePresenters($this->project);
         $this->event_manager->processEvent($event);
 
         $presenter = new GitPresenters_AdminMassUpdatePresenter(

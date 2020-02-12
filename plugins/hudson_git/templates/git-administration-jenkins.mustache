@@ -1,0 +1,46 @@
+<h1 data-test="git-administration-page">{{ git_admin }}</h1>
+
+<div class="tabbable">
+    <ul class="nav nav-tabs git-admin-tabs">
+        <li>
+            <a href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}">{{ tab_gerrit_templates }}</a>
+        </li>
+        <li>
+            <a href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}">{{ tab_git_admins }}</a>
+        </li>
+        {{# are_mirrors_defined }}
+            <li>
+                <a href="/plugins/git/?action=admin-mass-update&group_id={{ project_id }}">{{ tab_mass_update }}</a>
+            </li>
+        {{/ are_mirrors_defined }}
+        <li>
+            <a href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_template_settings }}</a>
+        </li>
+        {{# external_pane_presenters }}
+            <li {{# isActive }}class="active"{{/ isActive }}>
+                <a href="{{ getUrl }}">{{ getPaneName }}</a>
+            </li>
+        {{/ external_pane_presenters }}
+    </ul>
+
+    <h2>Jenkins</h2>
+    <p>
+        {{# dgettext }} tuleap-hudson_git | Configuration of jenkins servers that will be triggered at each push in any repository of the project. {{/ dgettext }}
+    </p>
+
+    <table class="table hooks-list">
+        <thead>
+        <tr>
+            <th>{{# dgettext }} tuleap-hudson_git | Jenkins URL{{/ dgettext }}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="table-cell-empty" colspan="2">
+                {{# dgettext }} tuleap-hudson_git | No Jenkins server configured yet.{{/ dgettext }}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

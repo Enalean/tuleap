@@ -18,47 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\GitPresenters;
+declare(strict_types=1);
 
-/**
- * @psalm-immutable
- */
-class AdminExternalPanePresenter
+namespace Tuleap\HudsonGit;
+
+use GitPresenters_AdminPresenter;
+
+class GitJenkinsAdministrationPresenter extends GitPresenters_AdminPresenter
 {
-    /**
-     * @var string
-     */
-    private $pane_name;
-
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var bool
-     */
-    private $is_active;
-
-    public function __construct(string $pane_name, string $url, bool $is_active)
-    {
-        $this->pane_name = $pane_name;
-        $this->url       = $url;
-        $this->is_active = $is_active;
-    }
-
-    public function getPaneName(): string
-    {
-        return $this->pane_name;
-    }
-
-    public function getUrl(): string
-    {
-        return $this->url;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->is_active;
-    }
 }

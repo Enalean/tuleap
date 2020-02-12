@@ -20,12 +20,22 @@
 
 namespace Tuleap\Git\Events;
 
+use Project;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 
 class GitAdminGetExternalPanePresenters implements Dispatchable
 {
     public const NAME = 'gitAdminGetExternalPanePresenters';
+    /**
+     * @var Project
+     */
+    private $project;
+
+    public function __construct(Project $project)
+    {
+        $this->project = $project;
+    }
 
     /**
      * @var AdminExternalPanePresenter[]
@@ -40,5 +50,10 @@ class GitAdminGetExternalPanePresenters implements Dispatchable
     public function addExternalPanePresenter(AdminExternalPanePresenter $external_pane_presenter): void
     {
         $this->external_pane_presenters[] = $external_pane_presenter;
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
     }
 }
