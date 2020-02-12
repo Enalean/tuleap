@@ -28,6 +28,8 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\UnknownAcceptableTenantForAuthenticationIdentifierException;
 use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
@@ -113,6 +115,7 @@ class Controller
             $this->provider_manager->isAProviderConfiguredAsUniqueAuthenticationEndpoint(),
             $this->icon_presenter_factory->getIconsPresenters(),
             $this->color_presenter_factory->getColorsPresenters(),
+            AzureADTenantSetupPresenter::fromAllAcceptableValues(AzureADTenantSetup::allPossibleSetups(), AzureADTenantSetup::tenantSpecific()),
             $csrf_token
         );
 
@@ -174,12 +177,13 @@ class Controller
         $csrf_token->check();
 
         try {
-            $name          = $request->get('name');
-            $client_id     = $request->get('client_id');
-            $client_secret = $request->get('client_secret');
-            $icon          = $request->get('icon');
-            $color         = $request->get('color');
-            $tenant_id     = $request->get('tenant_id');
+            $name                    = $request->get('name');
+            $client_id               = $request->get('client_id');
+            $client_secret           = $request->get('client_secret');
+            $icon                    = $request->get('icon');
+            $color                   = $request->get('color');
+            $tenant_id               = $request->get('tenant_id');
+            $tenant_setup_identifier = (string) $request->get('tenant_setup_identifier');
 
             $provider = $this->azure_provider_manager->createAzureADProvider(
                 $name,
@@ -187,7 +191,8 @@ class Controller
                 $client_secret,
                 $icon,
                 $color,
-                $tenant_id
+                $tenant_id,
+                $tenant_setup_identifier
             );
         } catch (ProviderMalformedDataException $ex) {
             $this->redirectAfterFailure(
@@ -298,7 +303,18 @@ class Controller
         $color         = $request->get('color');
         $tenant_id     = $request->get('tenant_id');
 
-        $acceptable_tenant_for_authentication = AcceptableTenantForAuthenticationConfiguration::fromSpecificTenantID($tenant_id);
+        try {
+            $tenant_setup = AzureADTenantSetup::fromIdentifier((string) $request->get('tenant_setup_identifier'));
+        } catch (UnknownAcceptableTenantForAuthenticationIdentifierException $exception) {
+            $this->redirectAfterFailure(
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
+            );
+        }
+
+        $acceptable_tenant_for_authentication = AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(
+            $tenant_setup,
+            $tenant_id
+        );
 
         $updated_provider = new AzureADProvider(
             $id,

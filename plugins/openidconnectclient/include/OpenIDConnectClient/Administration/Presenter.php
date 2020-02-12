@@ -49,18 +49,27 @@ class Presenter
      */
     public $csrf_token;
     public const TEMPLATE = 'administration-providers';
+    /**
+     * @var AzureADTenantSetupPresenter[]
+     */
+    public $azure_ad_tenant_setups;
 
+    /**
+     * @param AzureADTenantSetupPresenter[] $azure_ad_tenant_setups
+     */
     public function __construct(
         array $providers_presenters,
         $is_a_provider_configured_as_unique_authentication_endpoint,
         array $icons_presenters,
         array $colors_presenters,
+        array $azure_ad_tenant_setups,
         $csrf_token
     ) {
         $this->providers_presenters                                       = $providers_presenters;
         $this->is_a_provider_configured_as_unique_authentication_endpoint = $is_a_provider_configured_as_unique_authentication_endpoint;
         $this->icons_presenters                                           = $icons_presenters;
         $this->colors_presenters                                          = $colors_presenters;
+        $this->azure_ad_tenant_setups                                     = $azure_ad_tenant_setups;
         $this->csrf_token                                                 = $csrf_token;
     }
 

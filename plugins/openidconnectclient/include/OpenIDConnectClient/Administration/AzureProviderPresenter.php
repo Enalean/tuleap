@@ -21,6 +21,7 @@
 namespace Tuleap\OpenIDConnectClient\Administration;
 
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 
 class AzureProviderPresenter
 {
@@ -40,10 +41,14 @@ class AzureProviderPresenter
     public $colors_presenters;
 
     /**
+     * @var AzureADTenantSetupPresenter[]
+     */
+    public $azure_ad_tenant_setups;
+
+    /**
      * @var bool
      */
     public $can_user_enable_unique_authentication_endpoint;
-
     /**
      * @var string
      */
@@ -59,7 +64,12 @@ class AzureProviderPresenter
         $this->can_user_enable_unique_authentication_endpoint = $can_user_enable_unique_authentication_endpoint;
         $this->icons_presenters                               = $icons_presenters;
         $this->colors_presenters                              = $colors_presenters;
-        $this->description_users_allowed_to_connect           = $provider->getDescriptionOfUsersAllowedToConnect();
+        $tenant_setup                                         = $provider->getTenantSetup();
+        $this->azure_ad_tenant_setups                         = AzureADTenantSetupPresenter::fromAllAcceptableValues(
+            AzureADTenantSetup::allPossibleSetups(),
+            $tenant_setup
+        );
+        $this->description_users_allowed_to_connect           = $tenant_setup->getDescription();
     }
 
     public function getId()

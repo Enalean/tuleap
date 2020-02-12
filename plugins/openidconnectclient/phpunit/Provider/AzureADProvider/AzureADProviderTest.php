@@ -28,7 +28,7 @@ final class AzureADProviderTest extends TestCase
 {
     public function testAuthenticationAndTokenEndpointsAreBuiltFromTheAcceptableTenantForAuthenticationConfiguration(): void
     {
-        $acceptable_tenant_for_login_identifier = 'consumers';
+        $acceptable_tenant_setup = AzureADTenantSetup::consumers();
 
         $provider = new AzureADProvider(
             1,
@@ -39,14 +39,14 @@ final class AzureADProviderTest extends TestCase
             'icon',
             'color',
             'tenant_id',
-            AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID(
-                $acceptable_tenant_for_login_identifier,
+            AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(
+                $acceptable_tenant_setup,
                 'tenant_id'
             )
         );
 
-        $this->assertStringContainsString($acceptable_tenant_for_login_identifier, $provider->getAuthorizationEndpoint());
-        $this->assertStringContainsString($acceptable_tenant_for_login_identifier, $provider->getTokenEndpoint());
+        $this->assertStringContainsString($acceptable_tenant_setup->getIdentifier(), $provider->getAuthorizationEndpoint());
+        $this->assertStringContainsString($acceptable_tenant_setup->getIdentifier(), $provider->getTokenEndpoint());
     }
 
     public function testGetFindAcceptableIssuerTenantIDs(): void
@@ -60,8 +60,8 @@ final class AzureADProviderTest extends TestCase
             'icon',
             'color',
             'tenant_id',
-            AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID(
-                'tenant_specific',
+            AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(
+                AzureADTenantSetup::tenantSpecific(),
                 'tenant_id'
             )
         );

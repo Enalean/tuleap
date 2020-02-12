@@ -158,9 +158,9 @@ final class AzureADProvider implements Provider
         return $this->acceptable_tenant_for_authentication_configuration->getAcceptableIssuerTenantIDs();
     }
 
-    public function getDescriptionOfUsersAllowedToConnect(): string
+    public function getTenantSetup(): AzureADTenantSetup
     {
-        return $this->acceptable_tenant_for_authentication_configuration->getDescription();
+        return $this->acceptable_tenant_for_authentication_configuration->getTenantSetup();
     }
 
     public function getRedirectUri() : string
