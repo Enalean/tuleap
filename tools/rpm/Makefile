@@ -49,6 +49,7 @@ PLUGIN_TASKBOARD_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/taskboard/VERSIO
 PLUGIN_TEXTUAL_REPORT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/textualreport/VERSION)
 PLUGIN_TIMETRACKING_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/timetracking/VERSION)
 PLUGIN_VELOCITY_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/velocity/VERSION)
+PLUGIN_OAUTH2_SERVER_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/oauth2_server/VERSION)
 
 THEME_FLAMINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/FlamingParrot/VERSION)
 THEME_BURNINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/BurningParrot/VERSION)
@@ -71,6 +72,10 @@ RPMBUILD = rpmbuild --define "%_topdir $(RPM_TMP)" \
 
 ifneq ("$(wildcard $(BASE_DIR)/ENTERPRISE_BUILD)","")
 	RPMBUILD += --with enterprise
+endif
+
+ifeq ($(strip $(EXPERIMENTAL_BUILD)),1)
+	RPMBUILD += --with experimental
 endif
 
 ifeq ($(strip $(OS)),rhel6)
@@ -220,6 +225,7 @@ $(RPM_TMP)/SPECS/$(SPEC_FILE): $(SPEC_FILE)
 		sed -e 's/@@PLUGIN_TEXTUAL_REPORT_VERSION@@/$(PLUGIN_TEXTUAL_REPORT_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_TIMETRACKING_VERSION@@/$(PLUGIN_TIMETRACKING_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_VELOCITY_VERSION@@/$(PLUGIN_VELOCITY_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_OAUTH2_SERVER_VERSION@@/$(PLUGIN_OAUTH2_SERVER_VERSION)/g' |\
 		sed -e 's/@@THEME_FLAMINGPARROT_VERSION@@/$(THEME_FLAMINGPARROT_VERSION)/g' |\
 		sed -e 's/@@THEME_BURNINGPARROT_VERSION@@/$(THEME_BURNINGPARROT_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \

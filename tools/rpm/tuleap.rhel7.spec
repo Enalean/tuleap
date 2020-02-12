@@ -21,6 +21,7 @@
 %define ftp_user         ftp
 
 %bcond_with enterprise
+%bcond_with experimental
 
 Summary: The Tuleap forge
 Name: %{PKG_NAME}
@@ -501,6 +502,19 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 
 %endif
 
+%if %{with experimental}
+
+%package plugin-oauth2-server
+Summary: OAuth2 Server
+Group: Development/Tools
+Version: @@PLUGIN_OAUTH2_SERVER_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-oauth2-server
+%{summary}.
+
+%endif
+
 #
 ## Themes
 #
@@ -557,7 +571,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %if %{with enterprise}
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones/themes/
@@ -591,6 +604,10 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
+%endif
+%if %{with experimental}
+%else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
@@ -1382,6 +1399,14 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/velocity
 %{APP_DIR}/src/www/assets/velocity
+
+%endif
+
+%if %{with experimental}
+
+%files plugin-oauth2-server
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/oauth2_server
 
 %endif
 
