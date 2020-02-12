@@ -43,7 +43,7 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
 
     private function setLevel($min_level)
     {
-        $min_weight = $this->level_weight[$min_level];
+        $min_weight = $this->level_weight[$min_level] ?? $this->level_weight[\Psr\Log\LogLevel::WARNING];
         foreach ($this->level_weight as $level_label => $weight) {
             $this->should_log[$level_label] = $weight >= $min_weight;
         }
