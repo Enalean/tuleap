@@ -85,7 +85,7 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
         $to_remove = $this->getUsersFromIds($to_remove);
 
         $admins = $project->getAdmins();
-        $project_name = $project->getUnconvertedPublicName();
+        $project_name = $project->getPublicName();
 
         $this->sendMailToAdmins($admins, $project, $to_add, $to_remove);
     }
@@ -140,7 +140,7 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
         $this->mail->setBody($this->getEmailBody($to_add, $to_remove));
 
         $subject = dgettext('tuleap-ldap', 'LDAP Sync Results for %projectName%');
-        $subject = str_replace('%projectName%', $project->getUnconvertedPublicName(), $subject);
+        $subject = str_replace('%projectName%', $project->getPublicName(), $subject);
         $this->mail->setSubject($subject);
 
         setlocale(LC_CTYPE, "$current_locale.UTF-8");

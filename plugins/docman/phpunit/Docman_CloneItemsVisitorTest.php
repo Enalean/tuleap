@@ -82,7 +82,7 @@ final class Docman_CloneItemsVisitorTest extends TestCase // phpcs:ignore Squiz.
 
         $item_factory->shouldReceive('getItemFromDb')->andReturn($copied_link);
         $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn('project name');
+        $project->shouldReceive('getPublicName')->andReturn('project name');
         $project_manager->shouldReceive('getProject')->andReturn($project);
 
         $link_version_factory->shouldReceive('create')->atLeast()->once();

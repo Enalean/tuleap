@@ -68,7 +68,7 @@ class MinimalProjectRepresentation
     {
         $this->id          = JsonCast::toInt($project->getID());
         $this->uri         = self::ROUTE . '/' . $this->id;
-        $this->label       = $project->getUnconvertedPublicName();
+        $this->label       = $project->getPublicName();
         $this->shortname   = $project->getUnixName();
         $this->status      = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag(
             $project->getStatus()

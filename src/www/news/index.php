@@ -83,7 +83,7 @@ $purifier = Codendi_HTMLPurifier::instance();
 if ($rows < 1) {
     echo '<H2>'.$Language->getText('news_index', 'no_news_found');
     if ($group_id) {
-         echo $purifier->purify(' '.$Language->getText('news_index', 'for', $pm->getProject($group_id)->getUnconvertedPublicName()));
+         echo $purifier->purify(' '.$Language->getText('news_index', 'for', $pm->getProject($group_id)->getPublicName()));
     }
     echo '</H2>';
     echo '

@@ -47,7 +47,7 @@ class ProjectHistoryPresenter
         ProjectHistorySearchPresenter $search
     ) {
         $this->id          = $project->getID();
-        $this->public_name = $project->getUnconvertedPublicName();
+        $this->public_name = $project->getPublicName();
         $this->search      = $search;
         $this->is_active   = $project->isActive();
 

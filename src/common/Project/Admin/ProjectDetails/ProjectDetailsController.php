@@ -419,7 +419,7 @@ class ProjectDetailsController
             return $parent_project_info;
         }
 
-        $parent_project_info['parent_name'] = $parent->getUnconvertedPublicName();
+        $parent_project_info['parent_name'] = $parent->getPublicName();
 
         if ($current_user->isMember($parent->getId(), 'A')) {
             $url = '?group_id=' . urlencode($parent->getID());
@@ -461,7 +461,7 @@ class ProjectDetailsController
             }
 
             $purified_url  = $purifier->purify($url);
-            $purified_name = $purifier->purify($child->getUnconvertedPublicName());
+            $purified_name = $purifier->purify($child->getPublicName());
             $children_projects[] = '<a href="' . $purified_url . '">' . $purified_name . '</a>';
         }
 

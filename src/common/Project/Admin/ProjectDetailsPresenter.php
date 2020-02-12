@@ -95,7 +95,7 @@ class ProjectDetailsPresenter
         array $plugin_suspended_and_not_blocked_warnings
     ) {
         $this->id          = $project->getID();
-        $this->public_name = $project->getUnconvertedPublicName();
+        $this->public_name = $project->getPublicName();
         $this->unix_name   = $project->getUnixNameMixedCase();
         $this->short_name  = $project->getUnixName();
         $this->description = $project->getDescription();

@@ -115,7 +115,7 @@ class BindingPresenterBuilder
     {
         return array(
             'project_url'  => '/projects/' . $project->getUnixName(),
-            'project_name' => $project->getUnconvertedPublicName(),
+            'project_name' => $project->getPublicName(),
             'ugroup_url'   => '/project/admin/editugroup.php?' . http_build_query(
                 array(
                     'group_id'  => $project->getID(),
@@ -166,7 +166,7 @@ class BindingPresenterBuilder
 
             $projects[] = array(
                 'id'                   => $project->getID(),
-                'name'                 => $project->getUnconvertedPublicName(),
+                'name'                 => $project->getPublicName(),
                 'json_encoded_ugroups' => json_encode($ugroup_list)
             );
         }

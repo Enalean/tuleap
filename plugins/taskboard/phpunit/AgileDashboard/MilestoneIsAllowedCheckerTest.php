@@ -64,7 +64,7 @@ class MilestoneIsAllowedCheckerTest extends TestCase
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn(102);
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn('My project');
+        $project->shouldReceive('getPublicName')->andReturn('My project');
 
         $this->milestone = Mockery::mock(Planning_Milestone::class);
         $this->milestone->shouldReceive('getProject')->andReturn($project);

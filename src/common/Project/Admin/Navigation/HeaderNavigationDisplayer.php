@@ -44,7 +44,7 @@ class HeaderNavigationDisplayer
     private function displayNavigation($title, Project $project, $template_name, $current_pane_shortname)
     {
         $params = array(
-            'title'      => $title . ' - ' . $project->getUnconvertedPublicName(),
+            'title'      => $title . ' - ' . $project->getPublicName(),
             'toptab'     => 'admin',
             'group'      => $project->getID(),
             'body_class' => array('project-administration')

@@ -70,7 +70,7 @@ class MailFilter
         }
 
         if ($project->isPublic()) {
-            $this->logger->info("Project " . $project->getUnconvertedPublicName() . " is public. All notifications sent");
+            $this->logger->info("Project " . $project->getPublicName() . " is public. All notifications sent");
             return $mails;
         }
 

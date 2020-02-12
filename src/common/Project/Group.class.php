@@ -189,12 +189,6 @@ class Group
         return $this->data_array['group_name'];
     }
 
-    /** @deprecated */
-    public function getUnconvertedPublicName()
-    {
-        return $this->data_array['group_name'];
-    }
-
     //short description as entered on the group admin page
     function getDescription()
     {

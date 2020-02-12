@@ -236,7 +236,7 @@ class ProjectDashboardController
                 Feedback::ERROR,
                 sprintf(
                     _('You have not rights to update dashboards of the project "%s".'),
-                    $project->getUnconvertedPublicName()
+                    $project->getPublicName()
                 )
             );
         } catch (NameDashboardAlreadyExistsException $exception) {
@@ -285,7 +285,7 @@ class ProjectDashboardController
                 Feedback::ERROR,
                 sprintf(
                     _('You have not rights to update dashboards of the project "%s".'),
-                    $project->getUnconvertedPublicName()
+                    $project->getPublicName()
                 )
             );
         } catch (NameDashboardAlreadyExistsException $exception) {
@@ -342,7 +342,7 @@ class ProjectDashboardController
                 Feedback::ERROR,
                 sprintf(
                     _('You have not rights to update dashboards of the project "%s".'),
-                    $project->getUnconvertedPublicName()
+                    $project->getPublicName()
                 )
             );
         } catch (DashboardDoesNotExistException $exception) {
@@ -527,7 +527,7 @@ class ProjectDashboardController
                 $title = $presenter->name . ' - ';
             }
         }
-        $title .= $project->getUnconvertedPublicName();
+        $title .= $project->getPublicName();
 
         return $title;
     }

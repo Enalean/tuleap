@@ -97,7 +97,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
             $pm      = ProjectManager::instance();
             $project = $pm->getProjectFromAutocompleter($request->get('plugin_admindelegation_group'));
             if ($project && $project->isActive()) {
-                $groupValue = $project->getUnconvertedPublicName().' ('.$project->getUnixName().')';
+                $groupValue = $project->getPublicName().' ('.$project->getUnixName().')';
             } else {
                 $groupValue = '';
             }
@@ -145,7 +145,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
 
                 // Mail to all admins
                 $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-                $html .= '<a href="mailto:'.$hp->purify(implode(',', $allAdmins)).'?Subject='.$hp->purify(sprintf(dgettext('tuleap-admindelegation', '[%1$s] Project %2$s:'), ForgeConfig::get('sys_name'), $project->getUnconvertedPublicName())).'">'.dgettext('tuleap-admindelegation', 'Mail to all admins').'</a>';
+                $html .= '<a href="mailto:'.$hp->purify(implode(',', $allAdmins)).'?Subject='.$hp->purify(sprintf(dgettext('tuleap-admindelegation', '[%1$s] Project %2$s:'), ForgeConfig::get('sys_name'), $project->getPublicName())).'">'.dgettext('tuleap-admindelegation', 'Mail to all admins').'</a>';
                 $html .= '</div>';
             }
         }

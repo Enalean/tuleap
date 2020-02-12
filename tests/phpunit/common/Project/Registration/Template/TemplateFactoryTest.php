@@ -120,20 +120,20 @@ class TemplateFactoryTest extends TestCase
         $template100->shouldReceive('getGroupId')->andReturn("100")->once();
         $template100->shouldReceive('getUnixNameLowerCase')->never();
         $template100->shouldReceive('getDescription')->never();
-        $template100->shouldReceive('getUnconvertedPublicName')->never();
+        $template100->shouldReceive('getPublicName')->never();
 
 
         $template110 = \Mockery::mock(\Project::class);
         $template110->shouldReceive('getGroupId')->andReturn("110")->atLeast()->twice();
         $template110->shouldReceive('getUnixNameLowerCase')->andReturn("hustler-company");
         $template110->shouldReceive('getDescription')->andReturn("New Jack City");
-        $template110->shouldReceive('getUnconvertedPublicName')->andReturn("Hustler Company");
+        $template110->shouldReceive('getPublicName')->andReturn("Hustler Company");
 
         $template120 = \Mockery::mock(\Project::class);
         $template120->shouldReceive('getGroupId')->andReturn("120")->atLeast()->twice();
         $template120->shouldReceive('getUnixNameLowerCase')->andReturn("lyudi-invalidy-company");
         $template120->shouldReceive('getDescription')->andReturn("All about us");
-        $template120->shouldReceive('getUnconvertedPublicName')->andReturn("Lyudi Invalidy Company");
+        $template120->shouldReceive('getPublicName')->andReturn("Lyudi Invalidy Company");
 
         $site_templates = [$template100, $template110, $template120];
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn($site_templates);
@@ -156,7 +156,7 @@ class TemplateFactoryTest extends TestCase
         $project->shouldReceive('getGroupId')->andReturn("100");
         $project->shouldReceive('getUnixNameLowerCase')->andReturn("none");
         $project->shouldReceive('getDescription')->andReturn("The default Tuleap template");
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn("Default Site Template");
+        $project->shouldReceive('getPublicName')->andReturn("Default Site Template");
 
         $this->project_manager->shouldReceive('getProject')->andReturn($project);
         $this->project_manager->shouldReceive('getGroupId')->andReturn("100");
@@ -176,7 +176,7 @@ class TemplateFactoryTest extends TestCase
         $project->shouldReceive('getGroupId')->andReturn("100")->never();
         $project->shouldReceive('getUnixNameLowerCase')->andReturn("none")->never();
         $project->shouldReceive('getDescription')->andReturn("The default Tuleap template")->never();
-        $project->shouldReceive('getUnconvertedPublicName')->andReturn("Default Site Template")->never();
+        $project->shouldReceive('getPublicName')->andReturn("Default Site Template")->never();
 
         $this->project_manager->shouldReceive('getProject')->andReturn($project);
         $this->project_manager->shouldReceive('getGroupId')->andReturn("100");

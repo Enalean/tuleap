@@ -71,7 +71,7 @@ class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends TestCase
         \ForgeConfig::set('sys_email_admin', 'admin@tuleap.example.com');
 
         $this->an_active_user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
-        $this->an_active_project = M::mock(\Project::class, ['getID' => 202, 'getUnconvertedPublicName' => 'A project name', 'getUnixName' => 'a-project-name']);
+        $this->an_active_project = M::mock(\Project::class, ['getID' => 202, 'getPublicName' => 'A project name', 'getUnixName' => 'a-project-name']);
 
         $this->project_member_adder = new ProjectMemberAdderWithStatusCheckAndNotifications(
             $this->add_project_member,

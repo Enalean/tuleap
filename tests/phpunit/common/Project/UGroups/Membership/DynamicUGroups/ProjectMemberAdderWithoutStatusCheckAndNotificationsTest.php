@@ -52,7 +52,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends TestCase
     {
         $this->add_project_member = M::mock(AddProjectMember::class);
 
-        $this->an_active_project = M::mock(\Project::class, ['getID' => 202, 'getUnconvertedPublicName' => 'A project name', 'getUnixName' => 'a-project-name']);
+        $this->an_active_project = M::mock(\Project::class, ['getID' => 202, 'getPublicName' => 'A project name', 'getUnixName' => 'a-project-name']);
 
         $this->project_member_adder = new ProjectMemberAdderWithoutStatusCheckAndNotifications($this->add_project_member);
     }

@@ -181,33 +181,33 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
                     return $user_language->getText(
                         'project_privacy',
                         'email_visibility_change_body_public',
-                        $project->getUnconvertedPublicName()
+                        $project->getPublicName()
                     );
                 case Project::ACCESS_PUBLIC_UNRESTRICTED:
                     return $user_language->getText(
                         'project_privacy',
                         'email_visibility_change_body_unrestricted',
-                        $project->getUnconvertedPublicName()
+                        $project->getPublicName()
                     );
                 case Project::ACCESS_PRIVATE_WO_RESTRICTED:
                     return $user_language->getText(
                         'project_privacy',
                         'email_visibility_change_body_private',
-                        $project->getUnconvertedPublicName()
+                        $project->getPublicName()
                     );
                 case Project::ACCESS_PRIVATE:
                 default:
                     return $user_language->getText(
                         'project_privacy',
                         'email_visibility_change_body_private_unrestricted',
-                        $project->getUnconvertedPublicName()
+                        $project->getPublicName()
                     );
             }
         } else {
             return $user_language->getText(
                 'project_privacy',
                 'email_visibility_change_body_' . $project->getAccess(),
-                $project->getUnconvertedPublicName()
+                $project->getPublicName()
             );
         }
     }

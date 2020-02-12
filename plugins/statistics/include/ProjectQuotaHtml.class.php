@@ -143,7 +143,7 @@ class ProjectQuotaHtml
         $total_size   = $this->dao->foundRows();
         foreach ($customQuotas as $row) {
             $project      = $this->projectManager->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
-            $project_name = (empty($project)) ? '' : $project->getUnconvertedPublicName();
+            $project_name = (empty($project)) ? '' : $project->getPublicName();
             $user         = $this->user_manager->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
 
             $quotas[] = array(

@@ -411,7 +411,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $project->shouldReceive(
             [
                 'getID'                    => 1478,
-                'getUnconvertedPublicName' => 'Gliddery Argulus'
+                'getPublicName' => 'Gliddery Argulus'
             ]
         );
         $project->shouldReceive('getID')->andReturn(1478);

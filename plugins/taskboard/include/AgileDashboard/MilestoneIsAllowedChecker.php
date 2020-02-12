@@ -85,7 +85,7 @@ class MilestoneIsAllowedChecker
             throw new MilestoneIsNotAllowedException(
                 sprintf(
                     dgettext('tuleap-taskboard', "Taskboard is not activated in project %s."),
-                    $milestone->getProject()->getUnconvertedPublicName()
+                    $milestone->getProject()->getPublicName()
                 )
             );
         }
@@ -98,7 +98,7 @@ class MilestoneIsAllowedChecker
             throw new MilestoneIsNotAllowedException(
                 sprintf(
                     dgettext('tuleap-taskboard', "Taskboard is not activated in project %s."),
-                    $milestone->getProject()->getUnconvertedPublicName()
+                    $milestone->getProject()->getPublicName()
                 )
             );
         }

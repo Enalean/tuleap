@@ -87,7 +87,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         $mail = $this->mail_factory->getMail();
         $mail->setTo($user->getEmail());
         $mail->setFrom(\ForgeConfig::get('sys_noreply'));
-        $mail->setSubject($this->language->getOverridableText('include_account', 'welcome', [\ForgeConfig::get('sys_name'), $project->getUnconvertedPublicName()]));
+        $mail->setSubject($this->language->getOverridableText('include_account', 'welcome', [\ForgeConfig::get('sys_name'), $project->getPublicName()]));
         $mail->setBodyText($this->getMessageBody($project));
         if (! $mail->send()) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(_('Unable to send email to user, please contact %s'), \ForgeConfig::get('sys_email_admin')));
@@ -100,7 +100,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
      */
     private function getMessageBody(\Project $project) : string
     {
-        $group_name      = $project->getUnconvertedPublicName();
+        $group_name      = $project->getPublicName();
         $base_url        = HTTPRequest::instance()->getServerUrl();
         $unix_group_name = $project->getUnixName();
         // $message is defined in the content file

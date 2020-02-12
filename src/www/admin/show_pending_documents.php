@@ -97,7 +97,7 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
 
 ?>
 <div class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally"><?php echo $purifier->purify($project->getUnconvertedPublicName()) ?></h1>
+    <h1 class="tlp-framed-horizontally"><?php echo $purifier->purify($project->getPublicName()) ?></h1>
 
     <nav class="tlp-tabs">
         <a href="/admin/groupedit.php?group_id=<?php echo (int)$group_id ?>" class="tlp-tab">

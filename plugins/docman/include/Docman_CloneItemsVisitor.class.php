@@ -180,7 +180,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         return sprintf(
             dgettext('tuleap-docman', 'Copy of %s in %s at version %d.'),
             $original_item->getTitle(),
-            $project->getUnconvertedPublicName(),
+            $project->getPublicName(),
             $current_version === null ? 0 : $current_version->getNumber()
         );
     }

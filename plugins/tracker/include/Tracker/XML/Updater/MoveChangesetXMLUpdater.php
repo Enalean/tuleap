@@ -469,7 +469,7 @@ class MoveChangesetXMLUpdater
             sprintf(
                 dgettext('tuleap-tracker', "Artifact was moved from '%s' tracker in '%s' project."),
                 $source_tracker->getName(),
-                $source_tracker->getProject()->getUnconvertedPublicName()
+                $source_tracker->getProject()->getPublicName()
             )
         );
         $comment_body->addAttribute('format', 'text');

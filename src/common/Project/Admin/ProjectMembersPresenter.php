@@ -52,7 +52,7 @@ class ProjectMembersPresenter
     ) {
         $this->id            = $project->getID();
         $this->group_id      = $project->getID();
-        $this->public_name   = $project->getUnconvertedPublicName();
+        $this->public_name   = $project->getPublicName();
         $this->is_active     = $project->isActive();
         $this->results       = $results;
         $this->search_fields = $search_fields;

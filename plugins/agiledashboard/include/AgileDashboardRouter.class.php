@@ -621,7 +621,7 @@ class AgileDashboardRouter
         $service->displayHeader(
             sprintf(
                 dgettext('tuleap-agiledashboard', '%s top backlog'),
-                $service->getProject()->getUnconvertedPublicName()
+                $service->getProject()->getPublicName()
             ),
             $breadcrumbs,
             [],

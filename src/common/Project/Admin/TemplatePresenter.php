@@ -42,7 +42,7 @@ class TemplatePresenter
     public function __construct(Project $template)
     {
         $this->id        = $template->getId();
-        $this->name      = $template->getUnconvertedPublicName();
+        $this->name      = $template->getPublicName();
         $this->unix_name = $template->getUnixNameMixedCase();
 
         $this->additional_buttons = array();
