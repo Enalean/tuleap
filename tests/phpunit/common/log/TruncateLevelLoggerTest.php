@@ -22,9 +22,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 
-class TruncateLevelLoggerTest extends TestCase
+class TruncateLevelLoggerTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Psr\Log\LoggerInterface
+     */
     private $logger;
 
     protected function setUp(): void
@@ -63,7 +66,7 @@ class TruncateLevelLoggerTest extends TestCase
         $truncate_logger->error("error message");
     }
 
-    public function testItSkipsDebugAndInfoWhenLevelIsWarn(): void
+    public function testItSkipsDebugAndInfoWhenLevelIsWarning(): void
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::WARNING);
 
@@ -91,5 +94,21 @@ class TruncateLevelLoggerTest extends TestCase
         $truncate_logger->info("info message");
         $truncate_logger->warning("warn message");
         $truncate_logger->error("error message");
+    }
+
+
+    public function testFallbackToWarningLevelWhenLevelIsUnknown(): void
+    {
+        $truncate_logger = new TruncateLevelLogger($this->logger, 'warn');
+
+        $this->logger->shouldReceive('debug')->never();
+        $this->logger->shouldReceive('info')->never();
+        $this->logger->shouldReceive('warning')->with('warn message', [])->once();
+        $this->logger->shouldReceive('error')->with('error message', [])->once();
+
+        $truncate_logger->debug('debug message');
+        $truncate_logger->info('info message');
+        $truncate_logger->warning('warn message');
+        $truncate_logger->error('error message');
     }
 }

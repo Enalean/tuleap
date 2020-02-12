@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) Enalean, 2011-2018. All rights reserved
+// Copyright (c) Enalean, 2011-Present. All rights reserved
 // Copyright (c) STMicroelectronics, 2009-2011. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
@@ -413,11 +413,11 @@ $sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue,Flaming
 //  Possible levels:
 // - debug
 // - info
-// - warn
+// - warning
 // - error
 //
 // Note: as of today, not all loggers respects this value
-$sys_logger_level = 'warn';
+$sys_logger_level = 'warning';
 
 
 // Define the email domain for email gateway feature
