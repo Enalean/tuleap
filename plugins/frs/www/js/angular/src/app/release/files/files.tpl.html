@@ -1,77 +1,80 @@
-<section class="tlp-pane">
+<section class="tlp-pane" ng-if="$ctrl.release.files.length > 0">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title" translate>Linked Artifacts</h1>
+            <h1 class="tlp-pane-title" translate>Files</h1>
         </div>
         <section class="tlp-pane-section">
-            <div ng-if="$ctrl.release.links.length === 0 || $ctrl.release.files.length > 0">
-                <h2 translate>Files</h2>
-                <table class="tlp-table">
-                    <thead>
-                        <tr>
-                            <th translate>Name</th>
-                            <th class="tlp-table-cell-numeric" translate>Size</th>
-                            <th class="tlp-table-cell-numeric" translate>Downloads</th>
-                            <th translate>Arch.</th>
-                            <th translate>Type</th>
-                            <th translate>Date</th>
-                            <th translate>MD5Sum</th>
-                            <th translate>Owner</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-if="$ctrl.release.files.length === 0">
-                            <td colspan="8" class="tlp-table-cell-empty" translate>
-                                There are no files in this release.
-                            </td>
-                        </tr>
-                        <tr ng-repeat="file in $ctrl.release.files">
-                            <td
-                                file-download="file"
-                                license-approval-mandatory="$ctrl.release.license_approval"
-                                custom-license-agreement="$ctrl.custom_license_agreement"
-                            ></td>
-                            <td class="tlp-table-cell-numeric">
-                                {{ file.file_size | byteFmt: 2 }}
-                            </td>
-                            <td class="tlp-table-cell-numeric">{{ file.nb_download }}</td>
-                            <td>{{ file.arch }}</td>
-                            <td>{{ file.type }}</td>
-                            <td>{{ file.date | date:'yyyy-MM-dd' }}</td>
-                            <td>{{ file.computed_md5 }}</td>
-                            <td>
-                                <a ng-href="/users/{{ file.owner.username }}">
-                                    {{ file.owner.display_name }}
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th translate>Name</th>
+                        <th class="tlp-table-cell-numeric" translate>Size</th>
+                        <th class="tlp-table-cell-numeric" translate>Downloads</th>
+                        <th translate>Arch.</th>
+                        <th translate>Type</th>
+                        <th translate>Date</th>
+                        <th translate>MD5Sum</th>
+                        <th translate>Owner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="$ctrl.release.files.length === 0">
+                        <td colspan="8" class="tlp-table-cell-empty" translate>
+                            There are no files in this release.
+                        </td>
+                    </tr>
+                    <tr ng-repeat="file in $ctrl.release.files">
+                        <td
+                            file-download="file"
+                            license-approval-mandatory="$ctrl.release.license_approval"
+                            custom-license-agreement="$ctrl.custom_license_agreement"
+                        ></td>
+                        <td class="tlp-table-cell-numeric">
+                            {{ file.file_size | byteFmt: 2 }}
+                        </td>
+                        <td class="tlp-table-cell-numeric">{{ file.nb_download }}</td>
+                        <td>{{ file.arch }}</td>
+                        <td>{{ file.type }}</td>
+                        <td>{{ file.date | date:'yyyy-MM-dd' }}</td>
+                        <td>{{ file.computed_md5 }}</td>
+                        <td>
+                            <a ng-href="/users/{{ file.owner.username }}">
+                                {{ file.owner.display_name }}
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>
 
-            <div ng-if="$ctrl.release.links.length > 0">
-                <h2 translate>Links</h2>
-                <table class="tlp-table">
-                    <thead>
-                        <tr>
-                            <th translate>Link</th>
-                            <th translate>Date</th>
-                            <th translate>Owner</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="link in $ctrl.release.links">
-                            <td><a href="{{ link.link }}">{{ link.displayed_link }}</a></td>
-                            <td>{{ link.release_time | date:'yyyy-MM-dd' }}</td>
-                            <td>
-                                <a ng-href="/users/{{ link.owner.username }}">
-                                    {{ link.owner.display_name }}
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+<section class="tlp-pane" ng-if="$ctrl.release.links.length > 0">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title" translate>Links</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                <tr>
+                    <th translate>Link</th>
+                    <th translate>Date</th>
+                    <th translate>Owner</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="link in $ctrl.release.links">
+                    <td><a href="{{ link.link }}">{{ link.displayed_link }}</a></td>
+                    <td>{{ link.release_time | date:'yyyy-MM-dd' }}</td>
+                    <td>
+                        <a ng-href="/users/{{ link.owner.username }}">
+                            {{ link.owner.display_name }}
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </section>
     </div>
 </section>
