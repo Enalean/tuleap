@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+
 abstract class GitPresenters_AdminPresenter
 {
 
@@ -26,10 +28,16 @@ abstract class GitPresenters_AdminPresenter
     /** @var bool */
     public $are_mirrors_defined = false;
 
-    public function __construct($project_id, $are_mirrors_defined)
+    /**
+     * @var AdminExternalPanePresenter[]
+     */
+    public $external_pane_presenters = [];
+
+    public function __construct($project_id, bool $are_mirrors_defined, array $external_pane_presenters)
     {
-        $this->project_id          = $project_id;
-        $this->are_mirrors_defined = $are_mirrors_defined;
+        $this->project_id               = $project_id;
+        $this->are_mirrors_defined      = $are_mirrors_defined;
+        $this->external_pane_presenters = $external_pane_presenters;
     }
 
     public function git_admin()

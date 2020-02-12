@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
@@ -296,9 +297,13 @@ class GitViews extends PluginViews
 
     protected function adminGitAdminsView($are_mirrors_defined)
     {
+        $event = new GitAdminGetExternalPanePresenters();
+        $this->event_manager->processEvent($event);
+
         $presenter = new GitPresenters_AdminGitAdminsPresenter(
             $this->groupId,
             $are_mirrors_defined,
+            $event->getExternalPanePresenters(),
             $this->ugroup_manager->getStaticUGroups($this->project),
             $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
         );
@@ -318,12 +323,16 @@ class GitViews extends PluginViews
         $templates_list        = (isset($params['templates_list'])) ? $params['templates_list'] : array();
         $parent_templates_list = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : array();
 
+        $event = new GitAdminGetExternalPanePresenters();
+        $this->event_manager->processEvent($event);
+
         $presenter = new GitPresenters_AdminGerritTemplatesPresenter(
             $repository_list,
             $templates_list,
             $parent_templates_list,
             $this->groupId,
             $are_mirrors_defined,
+            $event->getExternalPanePresenters(),
             $params['has_gerrit_servers_set_up']
         );
 
@@ -337,9 +346,14 @@ class GitViews extends PluginViews
     protected function adminMassUpdateSelectRepositoriesView()
     {
         $repository_list = $this->getGitRepositoryFactory()->getAllRepositories($this->project);
-        $presenter       = new GitPresenters_AdminMassUpdateSelectRepositoriesPresenter(
+
+        $event = new GitAdminGetExternalPanePresenters();
+        $this->event_manager->processEvent($event);
+
+        $presenter = new GitPresenters_AdminMassUpdateSelectRepositoriesPresenter(
             $this->generateMassUpdateCSRF(),
             $this->groupId,
+            $event->getExternalPanePresenters(),
             $repository_list
         );
 
@@ -356,9 +370,14 @@ class GitViews extends PluginViews
 
         $repositories = $params['repositories'];
         $mirrors      = $this->getAdminMassUpdateMirrorPresenters();
-        $presenter    = new GitPresenters_AdminMassUpdatePresenter(
+
+        $event = new GitAdminGetExternalPanePresenters();
+        $this->event_manager->processEvent($event);
+
+        $presenter = new GitPresenters_AdminMassUpdatePresenter(
             $this->generateMassUpdateCSRF(),
             $this->groupId,
+            $event->getExternalPanePresenters(),
             $this->buildListOfMirroredRepositoriesPresenters(
                 $repositories,
                 $mirrors,

@@ -31,11 +31,14 @@ class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresen
      */
     public $repositories;
 
-
-    public function __construct(CSRFSynchronizerToken $csrf, $project_id, array $repositories)
-    {
+    public function __construct(
+        CSRFSynchronizerToken $csrf,
+        $project_id,
+        array $external_pane_presenters,
+        array $repositories
+    ) {
         $are_mirrors_defined = true;
-        parent::__construct($project_id, $are_mirrors_defined);
+        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
 
         $this->csrf_token   = $csrf;
         $this->repositories = $repositories;

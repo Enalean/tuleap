@@ -32,6 +32,7 @@ use Tuleap\Git\DefaultSettings\Pane\AccessControl;
 use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\DefaultSettings\Pane\DisabledPane;
 use Tuleap\Git\DefaultSettings\Pane\Mirroring;
+use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
@@ -108,9 +109,13 @@ class IndexController
 
         $panes = $this->getPanes($project, $request, $are_mirrors_defined);
 
+        $event = new GitAdminGetExternalPanePresenters();
+        $this->event_manager->processEvent($event);
+
         $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
             $project->getID(),
             $are_mirrors_defined,
+            $event->getExternalPanePresenters(),
             $panes
         );
 
