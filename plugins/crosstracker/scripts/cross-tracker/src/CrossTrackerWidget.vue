@@ -21,7 +21,11 @@
     <div>
         <error-message />
         <error-inactive-project-message />
-        <div class="tlp-alert-info cross-tracker-report-success" v-if="has_success_message">
+        <div
+            class="tlp-alert-info cross-tracker-report-success"
+            v-if="has_success_message"
+            data-test="cross-tracker-report-success"
+        >
             {{ success_message }}
         </div>
         <div class="cross-tracker-loader" v-if="is_loading"></div>

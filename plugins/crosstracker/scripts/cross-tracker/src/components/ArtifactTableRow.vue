@@ -19,7 +19,7 @@
 
 <template>
     <tr>
-        <td>
+        <td data-test="cross-tracker-results-artifact">
             <a class="direct-link-to-artifact" v-bind:href="artifact.badge.uri">
                 <span class="tlp-badge-outline link-to-tracker-badge" v-bind:class="badge_color">
                     {{ artifact.badge.cross_ref }}

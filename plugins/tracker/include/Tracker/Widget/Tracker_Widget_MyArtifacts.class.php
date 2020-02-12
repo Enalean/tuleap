@@ -190,7 +190,7 @@ class Tracker_Widget_MyArtifacts extends Widget
                 $project             = ProjectManager::instance()->getProject($group_id);
                 $project_and_tracker = $project->getPublicName() . ' - ' . $tracker->getName();
 
-                $html_my_artifacts .= '<div>';
+                $html_my_artifacts .= '<div data-test="dashboard-my-artifacts-content">';
                 $html_my_artifacts .= '<div class="' . $classname . ' tracker-widget-artifacts-toggler" id="' . $div_id . '">';
                 $html_my_artifacts .= '<a href="/plugins/tracker/?tracker=' . $tracker->getId() . '" class="tracker-widget-artifacts">';
                 $html_my_artifacts .= '<strong>' . $hp->purify($project_and_tracker, CODENDI_PURIFIER_CONVERT_HTML) . '</strong>';

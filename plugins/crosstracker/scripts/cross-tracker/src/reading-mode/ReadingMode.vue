@@ -23,6 +23,7 @@
             class="reading-mode-report"
             v-bind:class="{ disabled: !is_user_admin }"
             v-on:click="switchToWritingMode"
+            data-test="cross-tracker-reading-mode"
         >
             <tracker-list-reading-mode
                 v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
@@ -43,6 +44,7 @@
                 class="tlp-button-primary"
                 v-on:click="saveReport()"
                 v-bind:class="{ disabled: is_save_disabled }"
+                data-test="cross-tracker-save-report"
             >
                 <i v-if="!is_loading" class="tlp-button-icon fa fa-save"></i>
                 <i v-if="is_loading" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
