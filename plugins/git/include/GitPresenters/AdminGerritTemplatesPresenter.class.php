@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -58,7 +58,6 @@ class GitPresenters_AdminGerritTemplatesPresenter extends GitPresenters_AdminPre
     ) {
         parent::__construct($project_id, $are_mirrors_defined);
 
-        $this->manage_gerrit_templates   = true;
         $this->repository_list           = $repository_list;
         $this->templates_list            = $templates_list;
         $this->parent_templates_list     = $parent_templates_list;

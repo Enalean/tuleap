@@ -306,7 +306,7 @@ class GitViews extends PluginViews
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
         $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
-        echo $renderer->renderToString('admin', $presenter);
+        echo $renderer->renderToString('admin-git-admins', $presenter);
         $this->footer();
     }
 
@@ -330,7 +330,7 @@ class GitViews extends PluginViews
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
         $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
-        echo $renderer->renderToString('admin', $presenter);
+        echo $renderer->renderToString('admin-gerrit-templates', $presenter);
         $this->footer();
     }
 
@@ -346,7 +346,7 @@ class GitViews extends PluginViews
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
         $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
-        echo $renderer->renderToString('admin', $presenter);
+        echo $renderer->renderToString('admin-mass-update-select-repositories', $presenter);
         $this->footer();
     }
 
@@ -370,7 +370,7 @@ class GitViews extends PluginViews
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
         $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
-        echo $renderer->renderToString('admin', $presenter);
+        echo $renderer->renderToString('admin-mass-update', $presenter);
         $this->footer();
     }
 

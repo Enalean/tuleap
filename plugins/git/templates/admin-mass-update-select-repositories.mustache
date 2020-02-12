@@ -1,31 +1,52 @@
-<h2>{{ title }}</h2>
+<h1 data-test="git-administration-page">{{ git_admin }}</h1>
 
-<p>{{ select_repositories }}</p>
+<div class="tabbable">
+    <ul class="nav nav-tabs git-admin-tabs">
+        <li>
+            <a href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}">{{ tab_gerrit_templates }}</a>
+        </li>
+        <li>
+            <a href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}">{{ tab_git_admins }}</a>
+        </li>
+        {{# are_mirrors_defined }}
+            <li class="active">
+                <a href="/plugins/git/?action=admin-mass-update&group_id={{ project_id }}">{{ tab_mass_update }}</a>
+            </li>
+        {{/ are_mirrors_defined }}
+        <li>
+            <a href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_template_settings }}</a>
+        </li>
+    </ul>
 
-<form action="{{ form_action }}" method="POST">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
+    <h2>{{ title }}</h2>
 
-    <table class="table git-admin-mass-update-table">
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="select-all"></th>
-                <th>{{ repository_list_name }}</th>
-            </tr>
-        </thead>
+    <p>{{ select_repositories }}</p>
 
-        <tbody>
-            {{# repositories }}
-            <tr>
-                <td><input type="checkbox" class="repository-ids" name="repository_ids[]" value="{{ getId }}"></td>
-                <td>{{ getFullName }}</td>
-            </tr>
-            {{/ repositories }}
-        </tbody>
-    </table>
+    <form action="{{ form_action }}" method="POST">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
 
-    <div class="mass-mirrors-list-update-bar">
-        <input type="submit" id="go-to-mass-change" name="go-to-mass-change" class="btn btn-large btn-primary" value="{{ mass_change }}" disabled>
-    </div>
-</form>
+        <table class="table git-admin-mass-update-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>{{ repository_list_name }}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {{# repositories }}
+                <tr>
+                    <td><input type="checkbox" class="repository-ids" name="repository_ids[]" value="{{ getId }}"></td>
+                    <td>{{ getFullName }}</td>
+                </tr>
+                {{/ repositories }}
+            </tbody>
+        </table>
+
+        <div class="mass-mirrors-list-update-bar">
+            <input type="submit" id="go-to-mass-change" name="go-to-mass-change" class="btn btn-large btn-primary" value="{{ mass_change }}" disabled>
+        </div>
+    </form>
+</div>

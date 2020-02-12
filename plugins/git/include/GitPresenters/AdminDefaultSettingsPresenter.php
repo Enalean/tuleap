@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,6 @@
 class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPresenter
 {
     public $panes;
-    public $manage_default_settings = true;
 
     public function __construct($project_id, $are_mirrors_defined, array $panes)
     {
