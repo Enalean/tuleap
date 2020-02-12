@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -60,6 +60,7 @@ class ArtifactView extends Tracker_Artifact_View_View
 
     public function getURL()
     {
-        return '/file/shownotes.php?release_id=' . (int)$this->release_id;
+        $release_id = urlencode((string) $this->release_id);
+        return "/frs/release/$release_id/release-notes";
     }
 }
