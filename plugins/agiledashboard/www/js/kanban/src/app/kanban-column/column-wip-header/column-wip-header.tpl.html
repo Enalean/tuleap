@@ -3,6 +3,7 @@
         ng-if="wip_header.isColumnLoaded()"
         class="kanban-column-header-wip-count"
         ng-class="{ loading: wip_header.column.loading_items }"
+        data-test="kanban-column-header-wip-count"
     >{{ wip_header.column.content.length }}</span>
     <span
         ng-if="! wip_header.isColumnLoaded()"
@@ -18,6 +19,7 @@
                   'tlp-badge-warning': wip_header.isColumnWipReached()
               }"
               id="kanban-column-header-wip-limit-{{ wip_header.column.id }}"
+              data-test="kanban-column-header-wip-limit"
         >
             <span class="kanban-column-header-wip-limit-infinite" ng-show="! wip_header.column.limit">∞</span>
             <span ng-show="wip_header.column.limit">

@@ -107,6 +107,7 @@
                                         ng-if="column.user_can_remove_column"
                                         ng-click="edit_modal.removeColumn(column)"
                                         ng-disabled="edit_modal.processing()"
+                                        data-test="edit-modal-remove-column-button"
                                 >
                                     <i class="fa fa-trash-o tlp-button-icon"></i>
                                     <span translate>Remove</span>

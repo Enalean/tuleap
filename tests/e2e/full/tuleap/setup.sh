@@ -115,6 +115,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/e2e/_fixtures/mediawiki_public_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/platform_allows_anonymous
     load_project /usr/share/tuleap/tests/e2e/_fixtures/platform_allows_restricted
+    load_project /usr/share/tuleap/tests/e2e/_fixtures/kanban_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/tracker_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/taskboard_project
 

@@ -36,16 +36,17 @@
         aria-label="{{ 'Expand/collapse the card' | translate }}"
         role="button"
         ng-click="kanban.setIsCollapsed(item, ! item.is_collapsed)"
+         data-test="kanban-item-content-expand-collapse"
     >
-        <i class="kanban-item-content-expand-collapse-icon fa" ng-class="{ 'fa-angle-down': item.is_collapsed, 'fa-angle-up': ! item.is_collapsed }"></i>
+        <i class="kanban-item-content-expand-collapse-icon fa" ng-class="{ 'fa-angle-down': item.is_collapsed, 'fa-angle-up': ! item.is_collapsed }" data-test="kanban-item-content-expand-collapse-icon"></i>
     </div>
 </div>
 
 <div data-nodrag="true" class="kanban-item-content-moves">
-    <span class="tlp-button-primary kanban-item-content-move" title="{{ 'Move to top' | translate }}" aria-label="{{ 'Move to top' | translate }}" role="button" ng-click="kanban.moveKanbanItemToTop(item)">
+    <span class="tlp-button-primary kanban-item-content-move" title="{{ 'Move to top' | translate }}" aria-label="{{ 'Move to top' | translate }}" role="button" ng-click="kanban.moveKanbanItemToTop(item)" data-test="kanban-item-content-move-to-top">
         <i class="fa fa-chevron-up kanban-item-content-move-icon"></i>
     </span>
-    <span class="tlp-button-primary kanban-item-content-move" title="{{ 'Move to bottom' | translate }}" aria-label="{{ 'Move to bottom' | translate }}" role="button" ng-click="kanban.moveKanbanItemToBottom(item)">
+    <span class="tlp-button-primary kanban-item-content-move" title="{{ 'Move to bottom' | translate }}" aria-label="{{ 'Move to bottom' | translate }}" role="button" ng-click="kanban.moveKanbanItemToBottom(item)" data-test="kanban-item-content-move-to-bottom">
         <i class="fa fa-chevron-down kanban-item-content-move-icon"></i>
     </span>
 </div>

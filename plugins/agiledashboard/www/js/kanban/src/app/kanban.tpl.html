@@ -60,6 +60,7 @@
                         ng-change="kanban.saveCardsViewMode()"
                         ng-model="kanban.user_prefers_collapsed_cards"
                         ng-value="false"
+                        data-test="kanban-header-detailed-toggler"
                 >
                 <label
                         for="kanban-header-detailed-toggler"
@@ -74,6 +75,7 @@
                placeholder="{{ 'id, title, ...' | translate }}"
                ng-model="kanban.filter.terms"
                ng-keyup="kanban.filterCards()"
+               data-test="kanban-header-search"
         >
         <div class="tuleap-modal-loading" ng-if="kanban.loading_modal.loading"></div>
     </div>
@@ -132,6 +134,7 @@
          ng-click="kanban.expandColumn(column)"
          ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
          data-column-id="{{ column.id }}"
+         data-test="kanban-column"
     >
         <div class="kanban-column-header">
             <span class="kanban-column-header-toggle"
@@ -149,6 +152,7 @@
             <span ng-if="column.is_open"
                   class="kanban-column-header-label"
                   title="{{ column.label }}"
+                  data-test="kanban-column-label"
             >
                 {{ column.label }}
             </span>
