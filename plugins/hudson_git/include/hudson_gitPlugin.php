@@ -25,6 +25,8 @@ require_once __DIR__ . '/constants.php';
 
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
+use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
+use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
@@ -52,6 +54,7 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PS
             $this->addHook(Hooks::ADDITIONAL_WEBHOOKS);
             $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE);
             $this->addHook(self::DISPLAY_HUDSON_ADDITION_INFO);
+            $this->addHook(GitAdminGetExternalPanePresenters::NAME);
         }
     }
 
@@ -157,5 +160,19 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PS
     private function getLogger()
     {
         return new WrapperLogger(new Logger(), 'hudson_git');
+    }
+
+    public function gitAdminGetExternalPanePresenters(GitAdminGetExternalPanePresenters $event): void
+    {
+        if (! ForgeConfig::get('git_allow_jenkins_plugin_hook_configuration')) {
+            return;
+        }
+
+        $event->addExternalPanePresenter(
+            new AdminExternalPanePresenter(
+                'Jenkins',
+                '#'
+            )
+        );
     }
 }

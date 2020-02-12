@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPresenter
-{
-    public $panes;
+namespace Tuleap\Git\GitPresenters;
 
-    public function __construct($project_id, $are_mirrors_defined, array $external_pane_presenters, array $panes)
+/**
+ * @psalm-immutable
+ */
+class AdminExternalPanePresenter
+{
+    /**
+     * @var string
+     */
+    private $pane_name;
+
+    /**
+     * @var string
+     */
+    private $url;
+
+    public function __construct(string $pane_name, string $url)
     {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
-        $this->panes = $panes;
+        $this->pane_name = $pane_name;
+        $this->url = $url;
+    }
+
+    public function getPaneName(): string
+    {
+        return $this->pane_name;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
     }
 }

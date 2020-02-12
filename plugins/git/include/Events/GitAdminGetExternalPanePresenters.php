@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPresenter
-{
-    public $panes;
+namespace Tuleap\Git\Events;
 
-    public function __construct($project_id, $are_mirrors_defined, array $external_pane_presenters, array $panes)
+use Tuleap\Event\Dispatchable;
+use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+
+class GitAdminGetExternalPanePresenters implements Dispatchable
+{
+    public const NAME = 'gitAdminGetExternalPanePresenters';
+
+    /**
+     * @var AdminExternalPanePresenter[]
+     */
+    private $external_pane_presenters = [];
+
+    public function getExternalPanePresenters(): array
     {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
-        $this->panes = $panes;
+        return $this->external_pane_presenters;
+    }
+
+    public function addExternalPanePresenter(AdminExternalPanePresenter $external_pane_presenter): void
+    {
+        $this->external_pane_presenters[] = $external_pane_presenter;
     }
 }

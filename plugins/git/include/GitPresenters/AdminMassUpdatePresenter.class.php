@@ -44,11 +44,12 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $project_id,
+        array $external_pane_presenters,
         array $repositories,
         GitPresenters_AdminMassUdpdateMirroringPresenter $mirroring_presenter
     ) {
         $are_mirrors_defined = true;
-        parent::__construct($project_id, $are_mirrors_defined);
+        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
 
         $this->csrf_token          = $csrf;
         $this->mirroring_presenter = $mirroring_presenter;
