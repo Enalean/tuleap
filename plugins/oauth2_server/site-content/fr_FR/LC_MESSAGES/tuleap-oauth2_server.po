@@ -6,8 +6,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Add App"
+msgstr "Ajouter une App"
+
+msgid "App name"
+msgstr "Nom de l'App"
+
 msgid "Delegate access to Tuleap resources"
 msgstr "Déléguer l'accès aux ressources de Tuleap"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "OAuth2 Apps"
+msgstr "Apps OAuth2"
 
 msgid "OAuth2 Server"
 msgstr "Server OAuth2"
