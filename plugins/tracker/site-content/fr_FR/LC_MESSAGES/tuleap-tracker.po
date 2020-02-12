@@ -1026,6 +1026,9 @@ msgstr ""
 "Le champs entré ne peut pas être partagé avec cet outil de suivi parce que "
 "son projet d'origine n'est pas actif."
 
+msgid "The provided file is invalid"
+msgstr "Le fichier fourni est invalide"
+
 msgid ""
 "The query is considered too complex to be executed by the server.\n"
 "                                Please simplify it (e.g remove comparisons) "
@@ -1247,6 +1250,9 @@ msgid ""
 msgstr ""
 "Les permissions des configurations de tracker et celles des artéfacts ne "
 "sont pas listées"
+
+msgid "Tracker creation has failed."
+msgstr "La création d'outil de suivi a échoué."
 
 msgid "Tracker does not exist"
 msgstr "L'outil de suivi n'existe pas."

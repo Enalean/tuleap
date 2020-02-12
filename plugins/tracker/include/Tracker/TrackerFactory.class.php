@@ -461,16 +461,6 @@ class TrackerFactory
     }
 
     /**
-     * create - use this to create a new Tracker in the database.
-     *
-     * @param Project $project_id          the group id of the new tracker
-     * @param int     $project_id_template the template group id (used for the copy)
-     * @param int     $id_template         the template tracker id
-     * @param string  $name                the name of the new tracker
-     * @param string  $description         the description of the new tracker
-     * @param string  $itemname            the itemname of the new tracker
-     * @param Array   $ugroup_mapping the ugroup mapping
-     *
      * @return mixed array(Tracker object, field_mapping array) or false on failure.
      */
     function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false)

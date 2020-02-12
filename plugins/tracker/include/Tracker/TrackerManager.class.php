@@ -23,6 +23,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\GlobalAdminController;
+use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
@@ -352,7 +353,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
     public function doCreateTracker(Project $project, Codendi_Request $request)
     {
-        $is_error    = false;
         $new_tracker = null;
 
         $name          = trim($request->get('name'));
@@ -360,40 +360,47 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $itemname      = trim($request->get('itemname'));
         $atid_template = $request->getValidated('atid_template', 'uint', 0);
 
+        if (! $request->existAndNonEmpty('create_mode')) {
+            return;
+        }
+
         // First try XML
-        if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'xml') {
+        if ($request->get('create_mode') == 'xml') {
             $vFile = new Valid_File('tracker_new_xml_file');
             $vFile->required();
-            if ($request->validFile($vFile)) {
-                try {
-                    $user_finder = new XMLImportHelper(UserManager::instance());
-                    $new_tracker = TrackerXmlImport::build($user_finder)
-                        ->createFromXMLFileWithInfo(
-                            $project,
-                            $_FILES["tracker_new_xml_file"]["tmp_name"],
-                            $name,
-                            $description,
-                            $itemname
-                        );
-                } catch (XML_ParseException $exception) {
-                    $this->displayCreateTrackerFromXMLErrors($project, $exception->getErrors(), $exception->getFileLines());
-                } catch (TrackerFromXmlException $exception) {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-                }
+            if (! $request->validFile($vFile)) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    dgettext("tuleap-tracker", "The provided file is invalid")
+                );
+                return;
             }
-        } elseif ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'tv3') {
+
+            $new_tracker = $this->getTrackerCreator()->createTrackerFromXml(
+                $project,
+                $_FILES["tracker_new_xml_file"]["tmp_name"],
+                $name,
+                $description,
+                $itemname
+            );
+        } elseif ($request->get('create_mode') == 'tv3') {
             $atid = $request->get('tracker_new_tv3');
             $user = UserManager::instance()->getCurrentUser();
             $new_tracker = $this->getTrackerFactory()->createFromTV3($user, $atid, $project, $name, $description, $itemname);
-        } elseif ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'migrate_from_tv3') {
+        } elseif ($request->get('create_mode') == 'migrate_from_tv3') {
             $tracker_id = $request->get('tracker_new_tv3');
             if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname)) {
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id);
             }
         } else {
-            // Otherwise tries duplicate
-            $duplicate = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
-            $new_tracker = $duplicate['tracker'];
+            try {
+                $new_tracker = $this->getTrackerCreator()->duplicateTracker($project, $name, $name, $itemname, $atid_template);
+            } catch (\Tuleap\Tracker\Creation\TrackerCreationHasFailedException $exception) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    dgettext("tuleap-tracker", "Tracker creation has failed.")
+                );
+            }
         }
 
         if ($new_tracker) {
@@ -585,6 +592,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 <input type="file" name="tracker_new_xml_file" id="tracker_new_xml_file" />
 
               </div>';
+    }
+
+    private function getTrackerCreator(): TrackerCreator
+    {
+        $user_finder        = new XMLImportHelper(UserManager::instance());
+        $tracker_xml_import = TrackerXmlImport::build($user_finder);
+        return new TrackerCreator($tracker_xml_import, $this->getTrackerFactory());
     }
 
     /**
