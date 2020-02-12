@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'bootstrap.php';
+declare(strict_types=1);
 
+namespace Tuleap\Git;
+
+use DirectoryIterator;
+use ForgeAccess;
+use ForgeConfig;
+use ForgeUpgradeConfig;
+use Git;
+use Git_Backend_Gitolite;
+use Git_GitoliteDriver;
+use Git_Mirror_MirrorDao;
+use GitDao;
+use GitPlugin;
+use GitRepository;
+use GitRepositoryFactory;
+use GitRepositoryManager;
+use GitXmlImporter;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PermissionsManager;
+use PFUser;
+use PHPUnit\Framework\TestCase;
+use PluginFactory;
+use PluginManager;
+use PluginResourceRestrictor;
+use Project;
+use ProjectManager;
+use SimpleXMLElement;
+use SiteCache;
+use System_Command;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\Permissions\FineGrainedPermission;
-use Tuleap\Git\XmlUgroupRetriever;
+use Tuleap\TemporaryTestDirectory;
+use UGroupManager;
+use UserManager;
+use XML_RNGValidator;
+use XMLImportHelper;
 
-class GitXmlImporterTest extends TuleapTestCase
+final class GitXmlImporterTest extends TestCase
 {
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory, \Tuleap\GlobalLanguageMock;
     /**
      * @var XMLImportHelper
      */
@@ -35,7 +70,6 @@ class GitXmlImporterTest extends TuleapTestCase
      * @var ProjectManager
      */
     private $project_manager;
-    private $old_sys_data_dir;
     /**
      * @var GitXmlImporter
      */
@@ -87,22 +121,24 @@ class GitXmlImporterTest extends TuleapTestCase
      * @var GitRepository|null
      */
     private $last_saved_repository;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Psr\Log\LoggerInterface
+     */
+    private $logger;
 
-    public function setUp()
+    protected function setUp() : void
     {
         $this->old_cwd = getcwd();
         $this->system_command = new System_Command();
         parent::setUp();
 
-        $this->old_sys_data_dir = isset($GLOBALS['sys_data_dir']) ? $GLOBALS['sys_data_dir'] : null;
-        $GLOBALS['sys_data_dir'] = parent::getTmpDir();
+        $GLOBALS['sys_data_dir'] = $this->getTmpDir();
         mkdir("${GLOBALS['sys_data_dir']}/gitolite/admin/", 0777, true);
         mkdir("${GLOBALS['sys_data_dir']}/gitolite/repositories/test_project", 0777, true);
         $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
-        $this->system_command->exec("chown -R gitolite:gitolite $sys_data_dir_arg/");
+        $this->system_command->exec("chmod -R 0777 $sys_data_dir_arg/");
 
-        ForgeConfig::store();
-        ForgeConfig::set('tmp_dir', parent::getTmpDir());
+        ForgeConfig::set('tmp_dir', $this->getTmpDir());
 
         $this->git_dao = \Mockery::spy(GitDao::class);
         $this->git_dao->shouldReceive('save')->with(\Mockery::on(
@@ -111,26 +147,27 @@ class GitXmlImporterTest extends TuleapTestCase
                 return true;
             }
         ));
-        $plugin_dao = mock('PluginDao');
+        $plugin_dao = \Mockery::spy(\PluginDao::class);
         ProjectManager::clearInstance();
         $this->project_manager = ProjectManager::instance();
 
-        $this->logger = mock(\Psr\Log\LoggerInterface::class);
+        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger->shouldReceive('debug');
         $this->git_plugin = new GitPlugin(1);
         $this->git_factory = new GitRepositoryFactory($this->git_dao, $this->project_manager);
 
-        $this->ugroup_dao     = mock('UGroupDao');
+        $this->ugroup_dao     = \Mockery::spy(\UGroupDao::class);
         $this->ugroup_manager = new UGroupManager($this->ugroup_dao, \Mockery::spy(\EventManager::class));
 
-        $this->git_systemeventmanager        = mock('Git_SystemEventManager');
-        $this->mirror_updater                = mock('GitRepositoryMirrorUpdater');
-        $this->mirror_data_mapper            = mock('Git_Mirror_MirrorDataMapper');
+        $this->git_systemeventmanager        = \Mockery::spy(\Git_SystemEventManager::class);
+        $this->mirror_updater                = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
+        $this->mirror_data_mapper            = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
         $this->event_manager                 = \Mockery::spy(\EventManager::class);
-        $this->fine_grained_updater          = mock('Tuleap\Git\Permissions\FineGrainedUpdater');
-        $this->regexp_fine_grained_retriever = mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever');
-        $this->regexp_fine_grained_enabler   = mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler');
-        $this->fine_grained_factory          = mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory');
-        $this->fine_grained_saver            = mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver');
+        $this->fine_grained_updater          = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class);
+        $this->regexp_fine_grained_retriever = \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class);
+        $this->regexp_fine_grained_enabler   = \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class);
+        $this->fine_grained_factory          = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
+        $this->fine_grained_saver            = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class);
         $this->xml_ugroup_retriever          = new XmlUgroupRetriever(
             $this->logger,
             $this->ugroup_manager
@@ -140,16 +177,16 @@ class GitXmlImporterTest extends TuleapTestCase
             $this->git_factory,
             $this->git_systemeventmanager,
             $this->git_dao,
-            parent::getTmpDir(),
+            $this->getTmpDir(),
             $this->mirror_updater,
             $this->mirror_data_mapper,
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
-            mock('ProjectHistoryDao'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class),
+            \Mockery::spy(\ProjectHistoryDao::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
             $this->event_manager
         );
 
-        $restricted_plugin_dao = mock('RestrictedPluginDao');
+        $restricted_plugin_dao = \Mockery::spy(\RestrictedPluginDao::class);
         $plugin_factory = new PluginFactory($plugin_dao, new PluginResourceRestrictor($restricted_plugin_dao));
 
         $plugin_manager = new PluginManager(
@@ -161,28 +198,28 @@ class GitXmlImporterTest extends TuleapTestCase
 
         PluginManager::setInstance($plugin_manager);
 
-        $this->permission_dao = mock('PermissionsDao');
+        $this->permission_dao = \Mockery::spy(\PermissionsDao::class);
         $permissions_manager  = new PermissionsManager($this->permission_dao);
-        $git_mirror_dao       = safe_mock(Git_Mirror_MirrorDao::class);
+        $git_mirror_dao       = Mockery::mock(Git_Mirror_MirrorDao::class);
         $git_gitolite_driver  = new Git_GitoliteDriver(
             $this->logger,
             $this->git_systemeventmanager,
-            mock('Git_GitRepositoryUrlManager'),
+            \Mockery::spy(\Git_GitRepositoryUrlManager::class),
             $this->git_dao,
             $git_mirror_dao,
             $this->git_plugin,
             null,
             null,
-            mock('Git_Gitolite_ConfigPermissionsSerializer'),
+            \Mockery::spy(\Git_Gitolite_ConfigPermissionsSerializer::class),
             null,
             null,
-            mock('Git_Mirror_MirrorDataMapper'),
-            mock('Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager'),
-            mock('Tuleap\Git\Gitolite\VersionDetector')
+            \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
+            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
+            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class)
         );
-        $this->user_finder = mock(XMLImportHelper::class);
+        $this->user_finder = \Mockery::spy(XMLImportHelper::class);
 
-        $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, mock(GitoliteAccessURLGenerator::class), $this->logger);
+        $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, \Mockery::spy(GitoliteAccessURLGenerator::class), $this->logger);
         $this->importer = new GitXmlImporter(
             $this->logger,
             $this->git_manager,
@@ -202,34 +239,26 @@ class GitXmlImporterTest extends TuleapTestCase
             $this->user_finder
         );
 
-        $this->temp_project_dir = parent::getTmpDir() . DIRECTORY_SEPARATOR . 'test_project';
+        $this->temp_project_dir = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'test_project';
 
-        $userManager = mock('UserManager');
-        stub($userManager)->getUserById()->returns(new PFUser());
+        $userManager = \Mockery::spy(\UserManager::class);
+        $userManager->shouldReceive('getUserById')->andReturns(new PFUser());
         UserManager::setInstance($userManager);
 
-        stub($this->permission_dao)->clearPermission()->returns(true);
-        stub($this->permission_dao)->addPermission()->returns(true);
-        stub($this->git_dao)->getProjectRepositoryList()->returns(array());
+        $this->permission_dao->shouldReceive('clearPermission')->andReturns(true);
+        $this->permission_dao->shouldReceive('addPermission')->andReturns(true);
+        $this->git_dao->shouldReceive('getProjectRepositoryList')->andReturns(array());
 
-        copy(__DIR__ . '/_fixtures/stable_repo_one_commit.bundle', parent::getTmpDir() . DIRECTORY_SEPARATOR . 'stable.bundle');
+        copy(__DIR__ . '/_fixtures/stable_repo_one_commit.bundle', $this->getTmpDir() . DIRECTORY_SEPARATOR . 'stable.bundle');
         $this->project = $this->project_manager->getProjectFromDbRow(
             array('group_id' => 123, 'unix_group_name' => 'test_project', 'access' => Project::ACCESS_PUBLIC)
         );
     }
 
-    public function tearDown()
+    protected function tearDown() : void
     {
-        try {
-            $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
-            $this->system_command->exec("sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-delete-test-repository.sh $sys_data_dir_arg/gitolite/repositories/test_project");
-        } catch (Exception $e) {
-            //ignore errors
-        }
         parent::tearDown();
-        if ($this->old_sys_data_dir !== null) {
-            $GLOBALS['sys_data_dir'] = $this->old_sys_data_dir;
-        }
+        unset($GLOBALS['sys_data_dir']);
         ForgeConfig::restore();
         PermissionsManager::clearInstance();
         PluginManager::clearInstance();
@@ -238,7 +267,7 @@ class GitXmlImporterTest extends TuleapTestCase
         chdir($this->old_cwd);
     }
 
-    public function itShouldCreateOneEmptyRepository()
+    public function testItShouldCreateOneEmptyRepository() : void
     {
         $xml = <<<XML
             <project>
@@ -248,9 +277,15 @@ class GitXmlImporterTest extends TuleapTestCase
             </project>
 XML;
         $xml_element = new SimpleXMLElement($xml);
-        $res = $this->importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $this->project, mock('PFUSer'), $xml_element, parent::getTmpDir());
+        $res = $this->importer->import(
+            new \Tuleap\Project\XML\Import\ImportConfig(),
+            $this->project,
+            \Mockery::spy(\PFUser::class),
+            $xml_element,
+            $this->getTmpDir()
+        );
 
-        $this->assertEqual($this->last_saved_repository->getName(), 'empty');
+        $this->assertEquals($this->last_saved_repository->getName(), 'empty');
 
         $iterator = new DirectoryIterator($GLOBALS['sys_data_dir'].'/gitolite/repositories/test_project');
         $empty_is_here = false;
@@ -262,7 +297,7 @@ XML;
         $this->assertFalse($empty_is_here);
     }
 
-    public function itShouldImportOneRepositoryWithOneCommit()
+    public function testItShouldImportOneRepositoryWithOneCommit() : void
     {
         $xml = <<<XML
             <project>
@@ -273,19 +308,19 @@ XML;
 XML;
         $xml_element = new SimpleXMLElement($xml);
         $res = $this->importer->import(
-            new Tuleap\Project\XML\Import\ImportConfig(),
+            new \Tuleap\Project\XML\Import\ImportConfig(),
             $this->project,
-            mock('PFUSer'),
+            \Mockery::spy(\PFUser::class),
             $xml_element,
-            parent::getTmpDir()
+            $this->getTmpDir()
         );
 
         $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
         $nb_commit = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");
-        $this->assertEqual(1, intval($nb_commit));
+        $this->assertEquals(1, intval($nb_commit));
     }
 
-    public function itShouldImportTwoRepositoriesWithOneCommit()
+    public function testItShouldImportTwoRepositoriesWithOneCommit() : void
     {
         $xml = <<<XML
             <project>
@@ -298,13 +333,13 @@ XML;
         $this->import(new SimpleXMLElement($xml));
         $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
         $nb_commit_stable = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");
-        $this->assertEqual(1, intval($nb_commit_stable));
+        $this->assertEquals(1, (int) $nb_commit_stable);
 
         $nb_commit_stable2 = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git && git log --oneline| wc -l");
-        $this->assertEqual(1, intval($nb_commit_stable2));
+        $this->assertEquals(1, (int) $nb_commit_stable2);
     }
 
-    public function itShouldImportStaticUgroups()
+    public function testItShouldImportStaticUgroups() : void
     {
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
@@ -328,16 +363,16 @@ XML;
                 </git>
             </project>
 XML;
-        $result = mock('DataAccessResult');
-        stub($result)->getRow()->returns(false);
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returns($result);
-        stub($this->permission_dao)->addPermission(Git::PERM_READ, '*', 3)->at(0);
-        stub($this->permission_dao)->addPermission(Git::PERM_WRITE, '*', 3)->at(1);
-        stub($this->permission_dao)->addPermission(Git::PERM_WPLUS, '*', 4)->at(2);
+        $result = \Mockery::spy(\DataAccessResult::class);
+        $result->shouldReceive('getRow')->andReturns(false);
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns($result);
+        $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_READ, \Mockery::any(), 3)->ordered();
+        $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WRITE, \Mockery::any(), 3)->ordered();
+        $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WPLUS, \Mockery::any(), 4)->ordered();
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportLegacyPermissions()
+    public function testItShouldImportLegacyPermissions() : void
     {
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
@@ -359,16 +394,16 @@ XML;
                 </git>
             </project>
 XML;
-        $result = mock('DataAccessResult');
-        stub($result)->getRow()->returns(false);
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returns($result);
-        stub($this->permission_dao)->addPermission(Git::PERM_READ, '*', 3)->at(0);
-        stub($this->permission_dao)->addPermission(Git::PERM_WRITE, '*', 3)->at(1);
-        stub($this->permission_dao)->addPermission(Git::PERM_WPLUS, '*', 4)->at(2);
+        $result = \Mockery::spy(\DataAccessResult::class);
+        $result->shouldReceive('getRow')->andReturns(false);
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns($result);
+        $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_READ, \Mockery::any(), 3)->ordered();
+        $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WRITE, \Mockery::any(), 3)->ordered();
+        $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WPLUS, \Mockery::any(), 4)->ordered();
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldUpdateConfViaSystemEvents()
+    public function testItShouldUpdateConfViaSystemEvents() : void
     {
         $xml = <<<XML
             <project>
@@ -377,11 +412,11 @@ XML;
                 </git>
             </project>
 XML;
-        stub($this->git_systemeventmanager)->queueProjectsConfigurationUpdate(array(123))->atLeastOnce();
+        $this->git_systemeventmanager->shouldReceive('queueProjectsConfigurationUpdate')->with(array(123))->atLeast()->once();
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportDescription()
+    public function testItShouldImportDescription() : void
     {
         $xml = <<<XML
             <project>
@@ -391,10 +426,10 @@ XML;
             </project>
 XML;
         $this->import(new SimpleXMLElement($xml));
-        $this->assertEqual('description stable', $this->last_saved_repository->getDescription());
+        $this->assertEquals('description stable', $this->last_saved_repository->getDescription());
     }
 
-    public function itShouldImportDefaultDescription()
+    public function testItShouldImportDefaultDescription() : void
     {
         $xml = <<<XML
             <project>
@@ -404,10 +439,10 @@ XML;
             </project>
 XML;
         $this->import(new SimpleXMLElement($xml));
-        $this->assertEqual(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());
+        $this->assertEquals(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());
     }
 
-    public function itShouldAtLeastSetProjectsAdminAsGitAdmins()
+    public function testItShouldAtLeastSetProjectsAdminAsGitAdmins() : void
     {
         $xml = <<<XML
             <project>
@@ -416,11 +451,11 @@ XML;
                 </git>
             </project>
 XML;
-        expect($this->permission_dao)->addPermission(Git::PERM_ADMIN, $this->project->getId(), 4)->once();
+        $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 4);
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportGitAdmins()
+    public function testItShouldImportGitAdmins() : void
     {
         $xml = <<<XML
             <project>
@@ -432,16 +467,16 @@ XML;
                 </git>
             </project>
 XML;
-        $result = mock('DataAccessResult');
-        stub($result)->getRow()->returns(false);
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returns($result);
+        $result = \Mockery::spy(\DataAccessResult::class);
+        $result->shouldReceive('getRow')->andReturns(false);
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns($result);
 
-        expect($this->permission_dao)->addPermission(Git::PERM_ADMIN, $this->project->getId(), 3)->at(0);
-        expect($this->permission_dao)->addPermission(Git::PERM_ADMIN, $this->project->getId(), 4)->at(1);
+        $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 3)->ordered();
+        $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 4)->ordered();
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportReferences()
+    public function testItShouldImportReferences() : void
     {
         $xml = <<<XML
             <project>
@@ -454,14 +489,14 @@ XML;
                 </git>
             </project>
 XML;
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
 
-        expect($this->event_manager)->processEvent()->count(2);
+        $this->event_manager->shouldReceive('processEvent')->times(2);
 
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldNotImportFineGrainedPermissionsWhenNoNode()
+    public function testItShouldNotImportFineGrainedPermissionsWhenNoNode() : void
     {
         $xml = <<<XML
             <project>
@@ -471,15 +506,15 @@ XML;
                 </git>
             </project>
 XML;
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
 
-        expect($this->fine_grained_updater)->enableRepository()->never();
-        expect($this->regexp_fine_grained_enabler)->enableForRepository()->never();
+        $this->fine_grained_updater->shouldReceive('enableRepository')->never();
+        $this->regexp_fine_grained_enabler->shouldReceive('enableForRepository')->never();
 
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportFineGrainedPermissions()
+    public function testItShouldImportFineGrainedPermissions() : void
     {
         $xml = <<<XML
             <project>
@@ -492,15 +527,16 @@ XML;
                 </git>
             </project>
 XML;
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+        $this->logger->shouldReceive('warning')->once();
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
 
-        expect($this->fine_grained_updater)->enableRepository()->once();
-        expect($this->regexp_fine_grained_enabler)->enableForRepository()->never();
+        $this->fine_grained_updater->shouldReceive('enableRepository')->once();
+        $this->regexp_fine_grained_enabler->shouldReceive('enableForRepository')->never();
 
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportRegexpFineGrainedPermissions()
+    public function testItShouldImportRegexpFineGrainedPermissions() : void
     {
         $xml = <<<XML
             <project>
@@ -513,16 +549,16 @@ XML;
                 </git>
             </project>
 XML;
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
-        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
+        $this->regexp_fine_grained_retriever->shouldReceive('areRegexpActivatedAtSiteLevel')->andReturns(true);
 
-        expect($this->fine_grained_updater)->enableRepository()->once();
-        expect($this->regexp_fine_grained_enabler)->enableForRepository()->once();
+        $this->fine_grained_updater->shouldReceive('enableRepository')->once();
+        $this->regexp_fine_grained_enabler->shouldReceive('enableForRepository')->once();
 
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldNotImportRegexpFineGrainedPermissionsIfNotAvailableAtSiteLevel()
+    public function testItShouldNotImportRegexpFineGrainedPermissionsIfNotAvailableAtSiteLevel() : void
     {
         $xml = <<<XML
             <project>
@@ -535,16 +571,17 @@ XML;
                 </git>
             </project>
 XML;
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
-        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(false);
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
+        $this->regexp_fine_grained_retriever->shouldReceive('areRegexpActivatedAtSiteLevel')->andReturns(false);
 
-        expect($this->fine_grained_updater)->enableRepository()->once();
-        expect($this->regexp_fine_grained_enabler)->enableForRepository()->never();
+        $this->logger->shouldReceive('warning')->once();
+        $this->fine_grained_updater->shouldReceive('enableRepository')->once();
+        $this->regexp_fine_grained_enabler->shouldReceive('enableForRepository')->never();
 
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportRegexpFineGrainedPermissionsEvenWhenFineGrainedAreNotUsed()
+    public function testItShouldImportRegexpFineGrainedPermissionsEvenWhenFineGrainedAreNotUsed() : void
     {
         $xml = <<<XML
             <project>
@@ -557,16 +594,16 @@ XML;
                 </git>
             </project>
 XML;
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
-        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
+        $this->regexp_fine_grained_retriever->shouldReceive('areRegexpActivatedAtSiteLevel')->andReturns(true);
 
-        expect($this->fine_grained_updater)->enableRepository()->never();
-        expect($this->regexp_fine_grained_enabler)->enableForRepository()->once();
+        $this->fine_grained_updater->shouldReceive('enableRepository')->never();
+        $this->regexp_fine_grained_enabler->shouldReceive('enableForRepository')->once();
 
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itImportPatternsWithoutRegexp()
+    public function testItImportPatternsWithoutRegexp() : void
     {
         $xml = <<<XML
             <project>
@@ -591,17 +628,17 @@ XML;
             array()
         );
 
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
-        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
-        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returns($representation);
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
+        $this->regexp_fine_grained_retriever->shouldReceive('areRegexpActivatedAtSiteLevel')->andReturns(true);
+        $this->fine_grained_factory->shouldReceive('getFineGrainedPermissionFromXML')->andReturns($representation);
 
-        expect($this->fine_grained_saver)->saveBranchPermission()->once();
-        expect($this->fine_grained_saver)->saveTagPermission()->once();
+        $this->fine_grained_saver->shouldReceive('saveBranchPermission')->once();
+        $this->fine_grained_saver->shouldReceive('saveTagPermission')->once();
 
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itDoesNotImportRegexpWhenNotActivated()
+    public function testItDoesNotImportRegexpWhenNotActivated() : void
     {
         $xml = <<<XML
             <project>
@@ -627,19 +664,18 @@ XML;
             array()
         );
 
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
-        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
-        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(0, $representation);
-        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(1, false);
-        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(2, $representation);
+        $this->logger->shouldReceive('warning')->once();
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
+        $this->regexp_fine_grained_retriever->shouldReceive('areRegexpActivatedAtSiteLevel')->andReturns(true);
+        $this->fine_grained_factory->shouldReceive('getFineGrainedPermissionFromXML')->andReturns($representation, false, $representation);
 
-        expect($this->fine_grained_saver)->saveBranchPermission()->once();
-        expect($this->fine_grained_saver)->saveTagPermission()->once();
+        $this->fine_grained_saver->shouldReceive('saveBranchPermission')->once();
+        $this->fine_grained_saver->shouldReceive('saveTagPermission')->once();
 
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itImportsRegexpPatterns()
+    public function testItImportsRegexpPatterns() : void
     {
         $xml = <<<XML
             <project>
@@ -673,24 +709,24 @@ XML;
             array()
         );
 
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
-        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
-        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(0, $representation_01);
-        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(1, $representation_02);
-        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(2, $representation_01);
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
+        $this->regexp_fine_grained_retriever->shouldReceive('areRegexpActivatedAtSiteLevel')->andReturns(true);
+        $this->fine_grained_factory->shouldReceive('getFineGrainedPermissionFromXML')->andReturns($representation_01)->ordered();
+        $this->fine_grained_factory->shouldReceive('getFineGrainedPermissionFromXML')->andReturns($representation_02)->ordered();
+        $this->fine_grained_factory->shouldReceive('getFineGrainedPermissionFromXML')->andReturns($representation_01)->ordered();
 
-        $this->fine_grained_saver->expectCallCount('saveBranchPermission', 2);
-        expect($this->fine_grained_saver)->saveTagPermission()->once();
+        $this->fine_grained_saver->shouldReceive('saveBranchPermission')->times(2);
+        $this->fine_grained_saver->shouldReceive('saveTagPermission')->once();
 
         $this->import(new SimpleXMLElement($xml));
     }
 
     private function import($xml)
     {
-        return $this->importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $this->project, mock('PFUSer'), $xml, parent::getTmpDir());
+        return $this->importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $this->project, \Mockery::spy(\PFUser::class), $xml, $this->getTmpDir());
     }
 
-    public function itShouldImportGitLastPushData()
+    public function testItShouldImportGitLastPushData() : void
     {
         $xml = <<<XML
             <project>
@@ -704,9 +740,9 @@ XML;
             </project>
 XML;
 
-        stub($this->user_finder)->getUser()->returns(new PFUser(['user_id' => 102, 'language_id' => 'en']));
-        expect($this->git_dao)->logGitPush()->once();
+        $this->user_finder->shouldReceive('getUser')->atLeast()->once()->andReturn(new PFUser(['user_id' => 102, 'language_id' => 'en']));
+        $this->git_dao->shouldReceive('logGitPush')->once();
         $this->import(new SimpleXMLElement($xml));
-        $this->assertEqual(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());
+        $this->assertEquals(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());
     }
 }
