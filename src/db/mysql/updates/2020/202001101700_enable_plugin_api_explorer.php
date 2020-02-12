@@ -35,7 +35,7 @@ final class b202001101700_enable_plugin_api_explorer extends ForgeUpgrade_Bucket
 
     public function up(): void
     {
-        $sql = "INSERT INTO plugin (name, available) VALUES ('api_explorer', '1')";
+        $sql = "INSERT IGNORE INTO plugin (name, available) VALUES ('api_explorer', '1')";
 
         $res = $this->db->dbh->exec($sql);
 
