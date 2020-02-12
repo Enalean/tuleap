@@ -31,7 +31,7 @@ import "angular-gettext";
 import "restangular";
 import translations from "../../po/fr.po";
 
-import card_fields from "../../../card-fields/index.js";
+import card_fields from "../../../../../scripts/card-fields/index.js";
 
 import MainController from "./main-controller.js";
 import PlanningConfig from "./app-config.js";

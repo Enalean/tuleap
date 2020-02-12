@@ -145,7 +145,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp -o\
 				-path $(PKG_NAME)-$(version)/plugins/pullrequest/www/scripts -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\
-				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban \)\
+				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/scripts/kanban \)\
 				-prune -o -print \
 			&& \
 			find $(PKG_NAME)-$(version)/src/www/themes/common/tlp/dist; \
