@@ -32,7 +32,8 @@ function BacklogItemDetailsController(
         removeElementFromExplicitBacklog: EditItemService.removeElementFromExplicitBacklog,
         showAddChildModal,
         canBeAddedToChildren,
-        getCardColorName
+        getCardColorName,
+        canShowRemoveFromExplicitBacklog
     });
 
     function showAddChildModal($event, item_type) {
@@ -83,6 +84,14 @@ function BacklogItemDetailsController(
         );
 
         return angular.isUndefined(child_already_in_children);
+    }
+
+    function canShowRemoveFromExplicitBacklog() {
+        return (
+            self.is_in_explicit_top_backlog &&
+            !self.current_milestone &&
+            self.children_context !== "true"
+        );
     }
 
     function getCardColorName() {

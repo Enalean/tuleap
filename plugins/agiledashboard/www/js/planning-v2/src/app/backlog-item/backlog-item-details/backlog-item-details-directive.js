@@ -8,7 +8,8 @@ export default function BacklogItemDetails() {
             backlog_item: "=backlogItemDetails",
             moveToTop: "&",
             moveToBottom: "&",
-            current_milestone: "=currentMilestone"
+            current_milestone: "=currentMilestone",
+            children_context: "@childrenContext"
         },
         controller: BacklogItemDetailsController,
         controllerAs: "details",
