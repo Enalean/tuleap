@@ -111,7 +111,6 @@ const webpack_for_vue_plus_typescript = {
     },
     plugins: [
         manifest_plugin,
-        webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getVueLoaderPlugin(),
         webpack_configurator.getTypescriptCheckerPlugin(true)
     ],
