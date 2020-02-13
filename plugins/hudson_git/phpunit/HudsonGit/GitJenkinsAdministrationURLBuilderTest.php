@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,24 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit;
 
-use CSRFSynchronizerToken;
-use GitPresenters_AdminPresenter;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Project;
 
-class GitJenkinsAdministrationPresenter extends GitPresenters_AdminPresenter
+class GitJenkinsAdministrationURLBuilderTest extends TestCase
 {
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
+    use MockeryPHPUnitIntegration;
 
-    public function __construct(
-        $project_id,
-        bool $are_mirrors_defined,
-        array $external_pane_presenters,
-        CSRFSynchronizerToken $csrf_token
-    ) {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
+    public function testItBuildsAnURL()
+    {
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getUnixName')->once()->andReturn('testprj');
 
-        $this->csrf_token = $csrf_token;
+        $url = GitJenkinsAdministrationURLBuilder::buildUrl($project);
+
+        $this->assertEquals(
+            '/plugins/git/testprj/administration/jenkins',
+            $url
+        );
     }
 }

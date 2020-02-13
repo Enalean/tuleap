@@ -643,6 +643,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphontrackersv5/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_svn/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_git/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ldap/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient/scripts/
@@ -1219,6 +1220,7 @@ fi
 %files plugin-hudson-git
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/hudson_git
+%{APP_DIR}/src/www/assets/hudson_git
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_git
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_git
 

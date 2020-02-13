@@ -49,6 +49,10 @@ class GitJenkinsAdministrationPaneBuilderTest extends TestCase
         $pane = GitJenkinsAdministrationPaneBuilder::buildPane($this->project);
 
         $this->assertEquals('Jenkins', $pane->getPaneName());
+        $this->assertStringContainsString(
+            "/test/administration/jenkins",
+            $pane->getUrl()
+        );
         $this->assertFalse($pane->isActive());
     }
 
@@ -57,6 +61,10 @@ class GitJenkinsAdministrationPaneBuilderTest extends TestCase
         $pane = GitJenkinsAdministrationPaneBuilder::buildActivePane($this->project);
 
         $this->assertEquals('Jenkins', $pane->getPaneName());
+        $this->assertStringContainsString(
+            "/test/administration/jenkins",
+            $pane->getUrl()
+        );
         $this->assertTrue($pane->isActive());
     }
 }

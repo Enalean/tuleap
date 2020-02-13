@@ -31,7 +31,7 @@ class GitJenkinsAdministrationPaneBuilder
     {
         return new AdminExternalPanePresenter(
             'Jenkins',
-            self::buildUrl($project),
+            GitJenkinsAdministrationURLBuilder::buildUrl($project),
             false
         );
     }
@@ -40,13 +40,8 @@ class GitJenkinsAdministrationPaneBuilder
     {
         return new AdminExternalPanePresenter(
             'Jenkins',
-            self::buildUrl($project),
+            GitJenkinsAdministrationURLBuilder::buildUrl($project),
             true
         );
-    }
-
-    private static function buildUrl(Project $project): string
-    {
-        return GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/administration/jenkins';
     }
 }

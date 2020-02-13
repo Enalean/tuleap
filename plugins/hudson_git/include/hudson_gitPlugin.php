@@ -34,6 +34,9 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\GitJenkinsAdministrationController;
 use Tuleap\HudsonGit\GitJenkinsAdministrationPaneBuilder;
+use Tuleap\HudsonGit\GitJenkinsAdministrationPOSTController;
+use Tuleap\HudsonGit\GitJenkinsAdministrationServerAdder;
+use Tuleap\HudsonGit\GitJenkinsAdministrationServerDao;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\Hook;
@@ -43,6 +46,7 @@ use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -58,6 +62,7 @@ class hudson_gitPlugin extends Plugin
         bindtextdomain('tuleap-hudson_git', __DIR__ . '/../site-content');
 
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook('cssfile', 'cssFile', false);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(Hooks::ADDITIONAL_WEBHOOKS);
@@ -66,6 +71,25 @@ class hudson_gitPlugin extends Plugin
             $this->addHook(GitAdminGetExternalPanePresenters::NAME);
             $this->addHook(CollectGitRoutesEvent::NAME);
         }
+    }
+
+    public function cssFile($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/administration/jenkins') !== false &&
+            strpos($_SERVER['REQUEST_URI'], '/plugins/git/') === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getIncludeAssets()->getFileURL('style.css') .'" />';
+        }
+    }
+
+    /**
+     * @access protected for test purpose
+     */
+    protected function getIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/hudson_git',
+            "/assets/hudson_git"
+        );
     }
 
     public function display_hudson_addition_info($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -109,7 +133,20 @@ class hudson_gitPlugin extends Plugin
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeGetPostLegacyController'));
+
+            $r->post('/jenkins_server', $this->getRouteHandler('getPostGitAdministrationJenkinsServer'));
         });
+    }
+
+    public static function getPostGitAdministrationJenkinsServer(): GitJenkinsAdministrationPOSTController
+    {
+        return new GitJenkinsAdministrationPOSTController(
+            ProjectManager::instance(),
+            self::getGitPermissionsManager(),
+            new GitJenkinsAdministrationServerAdder(
+                new GitJenkinsAdministrationServerDao()
+            )
+        );
     }
 
     public function collectGitRoutesEvent(CollectGitRoutesEvent $event)
@@ -125,6 +162,19 @@ class hudson_gitPlugin extends Plugin
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         assert($git_plugin instanceof GitPlugin);
 
+
+
+        return new GitJenkinsAdministrationController(
+            ProjectManager::instance(),
+            self::getGitPermissionsManager(),
+            $git_plugin->getMirrorDataMapper(),
+            $git_plugin->getHeaderRenderer(),
+            TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates')
+        );
+    }
+
+    private static function getGitPermissionsManager(): GitPermissionsManager
+    {
         $git_system_event_manager = new Git_SystemEventManager(
             SystemEventManager::instance(),
             new GitRepositoryFactory(
@@ -136,17 +186,11 @@ class hudson_gitPlugin extends Plugin
         $fine_grained_dao       = new FineGrainedDao();
         $fine_grained_retriever = new FineGrainedRetriever($fine_grained_dao);
 
-        return new GitJenkinsAdministrationController(
-            ProjectManager::instance(),
-            new GitPermissionsManager(
-                new Git_PermissionsDao(),
-                $git_system_event_manager,
-                $fine_grained_dao,
-                $fine_grained_retriever
-            ),
-            $git_plugin->getMirrorDataMapper(),
-            $git_plugin->getHeaderRenderer(),
-            TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates')
+        return new GitPermissionsManager(
+            new Git_PermissionsDao(),
+            $git_system_event_manager,
+            $fine_grained_dao,
+            $fine_grained_retriever
         );
     }
 

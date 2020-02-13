@@ -22,24 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit;
 
-use CSRFSynchronizerToken;
-use GitPresenters_AdminPresenter;
+use Project;
 
-class GitJenkinsAdministrationPresenter extends GitPresenters_AdminPresenter
+class GitJenkinsAdministrationServerAdder
 {
     /**
-     * @var CSRFSynchronizerToken
+     * @var GitJenkinsAdministrationServerDao
      */
-    public $csrf_token;
+    private $git_jenkins_administration_server_dao;
 
-    public function __construct(
-        $project_id,
-        bool $are_mirrors_defined,
-        array $external_pane_presenters,
-        CSRFSynchronizerToken $csrf_token
-    ) {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
+    public function __construct(GitJenkinsAdministrationServerDao $git_jenkins_administration_server_dao)
+    {
+        $this->git_jenkins_administration_server_dao = $git_jenkins_administration_server_dao;
+    }
 
-        $this->csrf_token = $csrf_token;
+    public function addServerInProject(Project $project, string $jenkins_server_url): void
+    {
+        $this->git_jenkins_administration_server_dao->addJenkinsServer(
+            (int) $project->getID(),
+            $jenkins_server_url
+        );
     }
 }
