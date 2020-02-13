@@ -65,6 +65,15 @@ use Tuleap\Docman\Upload\Version\VersionDataStore;
 use Tuleap\Docman\Upload\Version\VersionUploadCanceler;
 use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
+use Tuleap\Docman\XML\Import\ItemImporter;
+use Tuleap\Docman\XML\Import\NodeImporter;
+use Tuleap\Docman\XML\Import\PostDoNothingImporter;
+use Tuleap\Docman\XML\Import\PostFileImporter;
+use Tuleap\Docman\XML\Import\PostFolderImporter;
+use Tuleap\Docman\XML\Import\VersionImporter;
+use Tuleap\Docman\XML\XMLExporter;
+use Tuleap\Docman\XML\XMLImporter;
+use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -199,6 +208,9 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         $this->addHook(StatisticsCollectionCollector::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
+
+        $this->addHook(ExportXmlProject::NAME);
+        $this->addHook(Event::IMPORT_XML_PROJECT);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1577,5 +1589,63 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
+    }
+
+    public function exportXmlProject(ExportXmlProject $event): void
+    {
+        if (! $event->getProject()->usesService($this->getServiceShortname())) {
+            return;
+        }
+
+        $archive = $event->getArchive();
+        $archive->addEmptyDir('documents');
+        $export = new XMLExporter(
+            $event->getLogger(),
+            Docman_ItemFactory::instance($event->getProject()->getGroupId()),
+            new Docman_VersionFactory(),
+            UserManager::instance()
+        );
+        $export->export($event->getProject(), $event->getIntoXml(), $archive);
+    }
+
+    /** @see Event::IMPORT_XML_PROJECT */
+    public function importXmlProject(array $params): void
+    {
+        if (empty($params['xml_content']->docman)) {
+            return;
+        }
+        $root_path = $this->getPluginInfo()->getPropertyValueForName('docman_root');
+
+        $logger = new WrapperLogger($params['logger'], 'docman');
+        $logger->info('Start import');
+
+        $project             = $params['project'];
+        $docman_item_factory = Docman_ItemFactory::instance($project->getGroupId());
+        $xml_importer        = new XMLImporter(
+            $docman_item_factory,
+            $project,
+            $logger,
+            new NodeImporter(
+                new ItemImporter(PermissionsManager::instance(), $docman_item_factory),
+                new PostFileImporter(
+                    new VersionImporter(
+                        new Docman_VersionFactory(),
+                        new Docman_FileStorage($root_path),
+                        $project,
+                        $params['extraction_path']
+                    ),
+                    $logger
+                ),
+                new PostFolderImporter(),
+                new PostDoNothingImporter(),
+                $logger
+            )
+        );
+        $xml_importer->import(
+            $params['xml_content']->docman,
+            UserManager::instance()->getCurrentUser()
+        );
+
+        $logger->info('Import completed');
     }
 }

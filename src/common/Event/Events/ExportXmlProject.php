@@ -19,11 +19,12 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Event\Events;
 
 use Project;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -60,6 +61,10 @@ class ExportXmlProject implements Dispatchable
      * @var string
      */
     private $temporary_dump_path_on_filesystem;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         Project $project,
@@ -68,7 +73,8 @@ class ExportXmlProject implements Dispatchable
         \PFUser $user,
         \UserXMLExporter $user_XML_exporter,
         ArchiveInterface $archive,
-        string $temporary_dump_path_on_filesystem
+        string $temporary_dump_path_on_filesystem,
+        LoggerInterface $logger
     ) {
         $this->project                           = $project;
         $this->options                           = $options;
@@ -77,6 +83,7 @@ class ExportXmlProject implements Dispatchable
         $this->user_XML_exporter                 = $user_XML_exporter;
         $this->archive                           = $archive;
         $this->temporary_dump_path_on_filesystem = $temporary_dump_path_on_filesystem;
+        $this->logger                            = $logger;
     }
 
     public function getProject(): Project
@@ -112,5 +119,10 @@ class ExportXmlProject implements Dispatchable
     public function getTemporaryDumpPathOnFilesystem(): string
     {
         return $this->temporary_dump_path_on_filesystem;
+    }
+
+    public function getLogger(): LoggerInterface
+    {
+        return $this->logger;
     }
 }

@@ -134,7 +134,6 @@ class ProjectXMLExporter
     ) {
         $this->logger->info("Export plugins");
 
-
         $event = new ExportXmlProject(
             $project,
             $options,
@@ -142,7 +141,8 @@ class ProjectXMLExporter
             $user,
             $this->user_xml_exporter,
             $archive,
-            $temporary_dump_path_on_filesystem
+            $temporary_dump_path_on_filesystem,
+            $this->logger
         );
 
         $this->event_manager->processEvent($event);
