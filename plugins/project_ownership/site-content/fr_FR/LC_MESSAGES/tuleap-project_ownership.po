@@ -26,9 +26,6 @@ msgstr "Erreur lors de l'envoi de la notification à l'utilisateur %s."
 msgid "Owner"
 msgstr "Responsable"
 
-msgid "Project does not exist."
-msgstr "Ce projet n'existe pas."
-
 msgid "Project owner"
 msgstr "Responsable du projet"
 

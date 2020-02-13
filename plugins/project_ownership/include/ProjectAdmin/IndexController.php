@@ -22,23 +22,27 @@ namespace Tuleap\ProjectOwnership\ProjectAdmin;
 
 use HTTPRequest;
 use Project;
-use Project_NotFoundException;
+use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerDAO;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
+use UserHelper;
+use UserManager;
 
 class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public const PANE_SHORTNAME = 'project_ownership';
     /** @var \TemplateRenderer */
     private $template_renderer;
-    /** @var \ProjectManager */
-    private $project_manager;
+    /** @var ProjectRetriever */
+    private $project_retriever;
     /** @var HeaderNavigationDisplayer */
     private $header_displayer;
     /** @var ProjectOwnerPresenterBuilder */
@@ -46,25 +50,40 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
 
     public function __construct(
         \TemplateRenderer $template_renderer,
-        \ProjectManager $project_manager,
+        ProjectRetriever $project_retriever,
         HeaderNavigationDisplayer $header_displayer,
         ProjectOwnerPresenterBuilder $project_owner_presenter_builder
     ) {
         $this->template_renderer               = $template_renderer;
-        $this->project_manager                 = $project_manager;
+        $this->project_retriever               = $project_retriever;
         $this->header_displayer                = $header_displayer;
         $this->project_owner_presenter_builder = $project_owner_presenter_builder;
     }
 
+    public static function buildSelf(): self
+    {
+        return new self(
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates'),
+            ProjectRetriever::buildSelf(),
+            new HeaderNavigationDisplayer(),
+            new ProjectOwnerPresenterBuilder(
+                new ProjectOwnerDAO(),
+                UserManager::instance(),
+                UserHelper::instance(),
+                $GLOBALS['Language']
+            )
+        );
+    }
+
     /**
-     * @param array       $variables
-     * @throws NotFoundException
-     * @throws ForbiddenException
+     * @param array $variables
      * @return void
+     * @throws ForbiddenException
+     * @throws NotFoundException
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project      = $this->getProject($variables['project_id']);
+        $project      = $this->project_retriever->getProjectFromId($variables['project_id']);
         $current_user = $request->getCurrentUser();
         $this->checkUserIsProjectAdmin($project, $current_user);
 
@@ -100,22 +119,5 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
                 dgettext('tuleap-project_ownership', 'You must be project administrator to access this page.')
             );
         }
-    }
-
-    /**
-     * @param int $project_id
-     *
-     * @return Project
-     * @throws NotFoundException
-     */
-    public function getProject($project_id)
-    {
-        try {
-            $project = $this->project_manager->getValidProject($project_id);
-        } catch (Project_NotFoundException $e) {
-            throw new NotFoundException(dgettext('tuleap-project_ownership', 'Project does not exist.'), $e);
-        }
-
-        return $project;
     }
 }

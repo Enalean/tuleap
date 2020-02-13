@@ -25,7 +25,6 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
@@ -33,20 +32,17 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 use Tuleap\Templating\Mustache\MustacheEngine;
 
-class EditLicenseAgreementControllerTest extends TestCase
+final class EditLicenseAgreementControllerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var LicenseAgreementDisplayController
+     * @var EditLicenseAgreementController
      */
     private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
      */
@@ -79,6 +75,10 @@ class EditLicenseAgreementControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementControllersHelper
      */
     private $helper;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRetriever
+     */
+    private $project_retriever;
 
     protected function setUp(): void
     {
@@ -89,10 +89,14 @@ class EditLicenseAgreementControllerTest extends TestCase
         $this->request = new \HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->project = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
+        $this->project = Mockery::mock(\Project::class, ['getID' => '101']);
         $this->project->shouldReceive('getFileService')->andReturn($this->service_file)->byDefault();
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturns($this->project);
+
+        $this->project_retriever = \Mockery::mock(ProjectRetriever::class);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($this->project);
 
         $this->renderer_factory = Mockery::mock(TemplateRendererFactory::class);
 
@@ -103,7 +107,7 @@ class EditLicenseAgreementControllerTest extends TestCase
         $this->factory = Mockery::mock(LicenseAgreementFactory::class);
 
         $this->controller = new EditLicenseAgreementController(
-            $this->project_manager,
+            $this->project_retriever,
             $this->helper,
             $this->renderer_factory,
             $this->factory,

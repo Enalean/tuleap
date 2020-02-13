@@ -24,6 +24,7 @@
 
 namespace Tuleap\Project\Admin\ProjectMembers;
 
+use ArtifactTypeFactory;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
@@ -31,6 +32,7 @@ use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use Project;
+use ProjectHistoryDao;
 use ProjectManager;
 use ProjectUGroup;
 use TemplateRendererFactory;
@@ -38,18 +40,22 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
-use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
+use Tuleap\Project\UGroups\InvalidUGroupException;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 use Tuleap\User\StatusPresenter;
 use UGroupBinding;
 use UGroupManager;
+use UGroupUserDao;
 use UserHelper;
 use UserImport;
 
@@ -97,49 +103,88 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
      */
     private $ugroup_presenters = [];
     /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
      * @var SynchronizedProjectMembershipDetector
      */
     private $synchronized_project_membership_detector;
+    /**
+     * @var MembershipDelegationDao
+     */
+    private $membership_delegation_dao;
+    /**
+     * @var ProjectRetriever
+     */
+    private $project_retriever;
 
     public function __construct(
-        ProjectMembersDAO     $members_dao,
-        UserHelper            $user_helper,
-        UGroupBinding         $user_group_bindings,
-        UserRemover           $user_remover,
-        EventManager          $event_manager,
-        UGroupManager         $ugroup_manager,
-        UserImport            $user_importer,
-        ProjectManager        $project_manager,
-        SynchronizedProjectMembershipDetector $synchronized_project_membership_detector
+        ProjectMembersDAO $members_dao,
+        UserHelper $user_helper,
+        UGroupBinding $user_group_bindings,
+        UserRemover $user_remover,
+        EventManager $event_manager,
+        UGroupManager $ugroup_manager,
+        UserImport $user_importer,
+        ProjectRetriever $project_retriever,
+        SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
+        MembershipDelegationDao $membership_delegation_dao
     ) {
-        $this->members_dao         = $members_dao;
-        $this->user_helper         = $user_helper;
-        $this->user_group_bindings = $user_group_bindings;
-        $this->user_remover        = $user_remover;
-        $this->event_manager       = $event_manager;
-        $this->ugroup_manager      = $ugroup_manager;
-        $this->user_importer       = $user_importer;
-        $this->project_manager     = $project_manager;
+        $this->members_dao                              = $members_dao;
+        $this->user_helper                              = $user_helper;
+        $this->user_group_bindings                      = $user_group_bindings;
+        $this->user_remover                             = $user_remover;
+        $this->event_manager                            = $event_manager;
+        $this->ugroup_manager                           = $ugroup_manager;
+        $this->user_importer                            = $user_importer;
         $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
+        $this->membership_delegation_dao                = $membership_delegation_dao;
+        $this->project_retriever                        = $project_retriever;
+    }
+
+    public static function buildSelf(): self
+    {
+        $event_manager   = EventManager::instance();
+        $user_manager    = \UserManager::instance();
+        $user_helper     = new UserHelper();
+        $ugroup_manager  = new UGroupManager();
+        $ugroup_binding  = new UGroupBinding(
+            new UGroupUserDao(),
+            $ugroup_manager
+        );
+        return new self(
+            new ProjectMembersDAO(),
+            $user_helper,
+            $ugroup_binding,
+            new UserRemover(
+                ProjectManager::instance(),
+                $event_manager,
+                new ArtifactTypeFactory(false),
+                new UserRemoverDao(),
+                $user_manager,
+                new ProjectHistoryDao(),
+                $ugroup_manager
+            ),
+            $event_manager,
+            $ugroup_manager,
+            new UserImport(
+                $user_manager,
+                $user_helper,
+                ProjectMemberAdderWithStatusCheckAndNotifications::build()
+            ),
+            ProjectRetriever::buildSelf(),
+            new SynchronizedProjectMembershipDetector(
+                new SynchronizedProjectMembershipDao()
+            ),
+            new MembershipDelegationDao()
+        );
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project_id = $variables['id'];
-        $project = $this->project_manager->getProject($project_id);
-        if (! $project || $project->isError()) {
-            throw new NotFoundException();
-        }
+        $project = $this->project_retriever->getProjectFromId($variables['id']);
 
         $this->csrf_token = new CSRFSynchronizerToken('/project/'.(int)$project->getID().'/admin/members');
 
-        $membership_delegation_dao = new MembershipDelegationDao();
         $user                      = $request->getCurrentUser();
-        if (! $user->isAdmin($project->getID()) && ! $membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $project->getID())) {
+        if (! $user->isAdmin($project->getID()) && ! $this->membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $project->getID())) {
             throw new ForbiddenException();
         }
 

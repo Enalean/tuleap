@@ -25,21 +25,23 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use HTTPRequest;
 use Project;
+use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\GetProjectTrait;
+use Tuleap\Request\ProjectRetriever;
 
-class AddLicenseAgreementController implements DispatchableWithRequest, DispatchableWithProject
+class AddLicenseAgreementController implements DispatchableWithRequest
 {
-    use GetProjectTrait;
-
     /**
-     * @var \TemplateRendererFactory
+     * @var ProjectRetriever
      */
-    private $renderer_factory;
+    private $project_retriever;
+    /**
+     * @var \TemplateRenderer
+     */
+    private $content_renderer;
     /**
      * @var \CSRFSynchronizerToken
      */
@@ -54,31 +56,41 @@ class AddLicenseAgreementController implements DispatchableWithRequest, Dispatch
     private $helper;
 
     public function __construct(
-        \ProjectManager $project_manager,
+        ProjectRetriever $project_retriever,
         LicenseAgreementControllersHelper $helper,
-        \TemplateRendererFactory $renderer_factory,
+        \TemplateRenderer $content_renderer,
         \CSRFSynchronizerToken $csrf_token,
         IncludeAssets $assets
     ) {
-        $this->project_manager  = $project_manager;
-        $this->helper           = $helper;
-        $this->renderer_factory = $renderer_factory;
-        $this->csrf_token       = $csrf_token;
-        $this->assets           = $assets;
+        $this->project_retriever = $project_retriever;
+        $this->helper            = $helper;
+        $this->content_renderer  = $content_renderer;
+        $this->csrf_token        = $csrf_token;
+        $this->assets            = $assets;
+    }
+
+    public static function buildSelf(): self
+    {
+        return new self(
+            ProjectRetriever::buildSelf(),
+            new LicenseAgreementControllersHelper(
+                FRSPermissionManager::build(),
+                \TemplateRendererFactory::build(),
+            ),
+            \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/templates'),
+            SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
+            new IncludeAssets(__DIR__ . '/../../../../www/assets', '/assets'),
+        );
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->getProject($variables);
-
+        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->helper->assertCanAccess($project, $request->getCurrentUser());
-
-        $content_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/templates');
-
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('frs-admin-license-agreement.js'));
 
         $this->helper->renderHeader($project);
-        $content_renderer->renderToPage(
+        $this->content_renderer->renderToPage(
             'edit-license-agreement',
             new EditLicenseAgreementPresenter(
                 $project,

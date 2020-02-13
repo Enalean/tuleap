@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -26,41 +25,37 @@ namespace Tuleap\Project\Admin\Categories;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
-use ProjectManager;
 use TemplateRendererFactory;
 use TroveCatDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Request\DispatchableWithBurningParrot;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 
-class IndexController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
+class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var TroveCatDao
      */
     private $dao;
+    /**
+     * @var ProjectRetriever
+     */
+    private $project_retriever;
 
-    public function __construct(TroveCatDao $dao)
+    public function __construct(TroveCatDao $dao, ProjectRetriever $project_retriever)
     {
-        $this->dao = $dao;
+        $this->dao               = $dao;
+        $this->project_retriever = $project_retriever;
     }
 
-    /**
-     * @throws NotFoundException
-     */
-    public function getProject(array $variables): Project
+    public static function buildSelf(): self
     {
-        $project = ProjectManager::instance()->getProject($variables['id']);
-        if (!$project || $project->isError()) {
-            throw new NotFoundException(dgettext('tuleap-document', "Project does not exist"));
-        }
-
-        return $project;
+        return new self(new TroveCatDao(), ProjectRetriever::buildSelf());
     }
 
     /**
@@ -69,7 +64,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->getProject($variables);
+        $project = $this->project_retriever->getProjectFromId($variables['id']);
         if (! $request->getCurrentUser()->isAdmin($project->getId())) {
             throw new ForbiddenException(_("You don't have permission to access administration of this project."));
         }

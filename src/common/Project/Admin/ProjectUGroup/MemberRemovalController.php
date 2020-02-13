@@ -23,27 +23,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
+use ArtifactTypeFactory;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use ProjectHistoryDao;
 use ProjectManager;
 use ProjectUGroup;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Project\UserRemover as ProjectMemberRemover;
 use Tuleap\Project\UGroups\Membership\CannotModifyBoundGroupException;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberRemover;
+use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
+use Tuleap\Project\UserPermissionsDao;
+use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemover as ProjectMemberRemover;
+use Tuleap\Project\UserRemoverDao;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 use UGroupManager;
 use UserManager;
 
 class MemberRemovalController implements DispatchableWithRequest
 {
     /**
-     * @var ProjectManager
+     * @var ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var UGroupManager
      */
@@ -65,31 +76,63 @@ class MemberRemovalController implements DispatchableWithRequest
      */
     private $csrf_synchronizer;
 
-    public function __construct(ProjectManager $project_manager, UGroupManager $ugroup_manager, UserManager $user_manager, MemberRemover $member_remover, ProjectMemberRemover $project_member_remover, CSRFSynchronizerToken $csrf_synchronizer)
-    {
-        $this->project_manager = $project_manager;
-        $this->ugroup_manager  = $ugroup_manager;
-        $this->user_manager    = $user_manager;
-        $this->member_remover  = $member_remover;
+    public function __construct(
+        ProjectRetriever $project_retriever,
+        UGroupManager $ugroup_manager,
+        UserManager $user_manager,
+        MemberRemover $member_remover,
+        ProjectMemberRemover $project_member_remover,
+        CSRFSynchronizerToken $csrf_synchronizer
+    ) {
+        $this->project_retriever      = $project_retriever;
+        $this->ugroup_manager         = $ugroup_manager;
+        $this->user_manager           = $user_manager;
+        $this->member_remover         = $member_remover;
         $this->project_member_remover = $project_member_remover;
-        $this->csrf_synchronizer = $csrf_synchronizer;
+        $this->csrf_synchronizer      = $csrf_synchronizer;
+    }
+
+    public static function buildSelf(): self
+    {
+        $ugroup_manager = new UGroupManager();
+        $event_manager  = \EventManager::instance();
+        $user_manager   = \UserManager::instance();
+        return new self(
+            ProjectRetriever::buildSelf(),
+            $ugroup_manager,
+            $user_manager,
+            new MemberRemover(
+                new DynamicUGroupMembersUpdater(
+                    new UserPermissionsDao(),
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                    ProjectMemberAdderWithStatusCheckAndNotifications::build(),
+                    $event_manager
+                ),
+                new StaticMemberRemover()
+            ),
+            new UserRemover(
+                ProjectManager::instance(),
+                $event_manager,
+                new ArtifactTypeFactory(false),
+                new UserRemoverDao(),
+                $user_manager,
+                new ProjectHistoryDao(),
+                $ugroup_manager
+            ),
+            UGroupRouter::getCSRFTokenSynchronizer()
+        );
     }
 
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param array       $variables
+     * @param array $variables
      * @throws NotFoundException
      * @throws ForbiddenException
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project_id = $variables['id'];
-        $project = $this->project_manager->getProject($project_id);
-        if (! $project || $project->isError()) {
-            throw new NotFoundException();
-        }
-
+        $project = $this->project_retriever->getProjectFromId($variables['id']);
         if (! $request->getCurrentUser()->isAdmin($project->getID())) {
             throw new ForbiddenException();
         }

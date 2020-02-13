@@ -25,14 +25,14 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\ProjectRetriever;
 use Tuleap\Templating\Mustache\MustacheEngine;
 
-class ListLicenseAgreementsControllerTest extends TestCase
+final class ListLicenseAgreementsControllerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -41,9 +41,9 @@ class ListLicenseAgreementsControllerTest extends TestCase
      */
     private $controller;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
      */
@@ -81,9 +81,13 @@ class ListLicenseAgreementsControllerTest extends TestCase
         $this->request = new \HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->project = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturns($this->project);
+        $this->project           = Mockery::mock(\Project::class, ['getID' => '101']);
+        $this->project_retriever = Mockery::mock(ProjectRetriever::class)
+            ->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($this->project)
+            ->getMock();
 
         $this->renderer_factory = Mockery::mock(TemplateRendererFactory::class);
 
@@ -93,7 +97,7 @@ class ListLicenseAgreementsControllerTest extends TestCase
         $this->factory = Mockery::mock(LicenseAgreementFactory::class);
 
         $this->controller = new ListLicenseAgreementsController(
-            $this->project_manager,
+            $this->project_retriever,
             $this->helper,
             $this->renderer_factory,
             $this->factory,

@@ -31,15 +31,16 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\UGroups\Membership\CannotModifyBoundGroupException;
 use Tuleap\Project\UGroups\Membership\MemberRemover;
 use Tuleap\Project\UserRemover as ProjectMemberRemover;
+use Tuleap\Request\ProjectRetriever;
 
 class MemberRemovalControllerTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
 
     /**
-     * @var M\MockInterface|\ProjectManager
+     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
     /**
      * @var M\MockInterface|\UGroupManager
      */
@@ -79,28 +80,38 @@ class MemberRemovalControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->project_manager                = M::mock(\ProjectManager::class);
-        $this->ugroup_manager                 = M::mock(\UGroupManager::class);
-        $this->user_manager                   = M::mock(\UserManager::class);
-        $this->member_remover                 = M::mock(MemberRemover::class);
-        $this->http_request                   = M::mock(\HTTPRequest::class);
-        $this->layout                         = M::mock(BaseLayout::class);
-        $this->a_user                         = M::mock(\PFUser::class);
-        $this->project_member_remover         = M::mock(ProjectMemberRemover::class);
-        $this->csrf                           = M::mock(\CSRFSynchronizerToken::class);
+        $this->project_retriever      = M::mock(ProjectRetriever::class);
+        $this->ugroup_manager         = M::mock(\UGroupManager::class);
+        $this->user_manager           = M::mock(\UserManager::class);
+        $this->member_remover         = M::mock(MemberRemover::class);
+        $this->http_request           = M::mock(\HTTPRequest::class);
+        $this->layout                 = M::mock(BaseLayout::class);
+        $this->a_user                 = M::mock(\PFUser::class);
+        $this->project_member_remover = M::mock(ProjectMemberRemover::class);
+        $this->csrf                   = M::mock(\CSRFSynchronizerToken::class);
         $this->csrf->shouldReceive('check')->once();
-        $this->controller = new MemberRemovalController($this->project_manager, $this->ugroup_manager, $this->user_manager, $this->member_remover, $this->project_member_remover, $this->csrf);
+        $this->controller = new MemberRemovalController(
+            $this->project_retriever,
+            $this->ugroup_manager,
+            $this->user_manager,
+            $this->member_remover,
+            $this->project_member_remover,
+            $this->csrf
+        );
     }
 
     public function testItRemovesWithSuccess()
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($project);
 
         $this->a_user->shouldReceive('isAdmin')->with(101)->andReturnTrue();
         $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->a_user);
 
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProjectId' => 101, 'getId' => 202]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
 
         $user_to_remove = new \PFUser(['user_id' => 303]);
@@ -119,7 +130,10 @@ class MemberRemovalControllerTest extends TestCase
     public function testItRemovesFromUserGroupOnlyWithError()
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($project);
 
         $this->a_user->shouldReceive('isAdmin')->with(101)->andReturnTrue();
         $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->a_user);
@@ -145,7 +159,10 @@ class MemberRemovalControllerTest extends TestCase
     public function testItRemovesFromUserGroupAndProject()
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($project);
 
         $this->a_user->shouldReceive('isAdmin')->with(101)->andReturnTrue();
         $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->a_user);
@@ -169,7 +186,10 @@ class MemberRemovalControllerTest extends TestCase
     public function testItDoesntRemoveProjectAdminsFromUserGroupAndProject()
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+        $this->project_retriever->shouldReceive('getProjectFromId')
+            ->with('101')
+            ->once()
+            ->andReturn($project);
 
         $this->a_user->shouldReceive('isAdmin')->with(101)->andReturnTrue();
         $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->a_user);

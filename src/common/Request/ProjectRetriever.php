@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,28 +16,38 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use Project;
+use ProjectManager;
 
-trait GetProjectTrait
+class ProjectRetriever
 {
-    /**
-     * @var \ProjectManager
-     */
+    /** @var ProjectManager */
     private $project_manager;
 
-    public function getProject(array $variables): Project
+    public function __construct(ProjectManager $project_manager)
     {
-        $project = $this->project_manager->getProject($variables['project_id']);
-        if ($project && ! $project->isError()) {
-            return $project;
+        $this->project_manager = $project_manager;
+    }
+
+    public static function buildSelf(): self
+    {
+        return new ProjectRetriever(ProjectManager::instance());
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function getProjectFromId(string $project_id): \Project
+    {
+        $project = $this->project_manager->getProject($project_id);
+        if (! $project || $project->isError()) {
+            throw new NotFoundException(gettext('Project does not exist'));
         }
-        throw new NotFoundException();
+        return $project;
     }
 }

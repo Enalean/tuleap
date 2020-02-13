@@ -21,21 +21,21 @@
 namespace Tuleap\Project\Service;
 
 use CSRFSynchronizerToken;
+use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
-use ProjectManager;
+use ServiceManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Request\DispatchableWithBurningParrot;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 
-class IndexController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
+class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     private const CSRF_TOKEN = 'project_admin_services';
 
@@ -52,26 +52,36 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
      */
     private $presenter_builder;
     /**
-     * @var ProjectManager
+     * @var ProjectRetriever
      */
-    private $project_manager;
+    private $project_retriever;
 
     public function __construct(
         ServicesPresenterBuilder $presenter_builder,
         IncludeAssets $include_assets,
         HeaderNavigationDisplayer $navigation_displayer,
-        ProjectManager $project_manager
+        ProjectRetriever $project_retriever
     ) {
 
         $this->include_assets       = $include_assets;
         $this->navigation_displayer = $navigation_displayer;
         $this->presenter_builder    = $presenter_builder;
-        $this->project_manager = $project_manager;
+        $this->project_retriever    = $project_retriever;
+    }
+
+    public static function buildSelf(): self
+    {
+        return new self(
+            new ServicesPresenterBuilder(ServiceManager::instance(), EventManager::instance()),
+            new IncludeAssets(__DIR__ . '/../../../www/assets', '/assets'),
+            new HeaderNavigationDisplayer(),
+            ProjectRetriever::buildSelf()
+        );
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->getProject($variables);
+        $project      = $this->project_retriever->getProjectFromId($variables['id']);
         $current_user = $request->getCurrentUser();
 
         if (! $current_user->isAdmin($project->getID())) {
@@ -114,14 +124,5 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
     public static function getUrl(Project $project) : string
     {
         return sprintf('/project/%s/admin/services', urlencode((string) $project->getID()));
-    }
-
-    public function getProject(array $variables): Project
-    {
-        $project = $this->project_manager->getProject($variables['id']);
-        if (! $project || $project->isError()) {
-            throw new NotFoundException();
-        }
-        return $project;
     }
 }
