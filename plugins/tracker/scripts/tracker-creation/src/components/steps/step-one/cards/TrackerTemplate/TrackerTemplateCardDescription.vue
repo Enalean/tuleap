@@ -17,29 +17,13 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
-    <step-layout>
-        <template v-slot:step_info>
-            <step-one-info />
-        </template>
-        <template v-slot:interactive_content>
-            <tracker-template-card />
-        </template>
-    </step-layout>
+<template functional>
+    <div class="card-content" data-test="template-description">
+        <h4 class="card-title" v-translate>Template</h4>
+        <div class="card-description">
+            <span class="card-description-content" v-translate>
+                Choose one tracker template among ones available in your platform
+            </span>
+        </div>
+    </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import TrackerTemplateCard from "./cards/TrackerTemplate/TrackerTemplateCard.vue";
-import StepLayout from "../layout/StepLayout.vue";
-import StepOneInfo from "./StepOneInfo.vue";
-
-@Component({
-    components: {
-        StepLayout,
-        TrackerTemplateCard,
-        StepOneInfo
-    }
-})
-export default class StepOne extends Vue {}
-</script>

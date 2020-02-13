@@ -23,6 +23,44 @@
     min-height: 120px;
     margin: 0 10px 20px 0;
 
+    .tracker-creation-template-card-radio-button {
+        display: none;
+    }
+
+    .card-glyph-stroke {
+        stroke: $tlp-ui-border-dark;
+    }
+
+    .card-glyph-fill {
+        fill: $tlp-ui-border-dark;
+    }
+
+    #tracker-creation-template-selector {
+        width: 100%;
+    }
+
+    &.tracker-creation-template-card-active {
+        .tlp-card {
+            border-color: $tlp-theme-color;
+        }
+
+        .tlp-label {
+            color: $tlp-theme-color;
+        }
+
+        .tlp-select {
+            border-color: $tlp-theme-color;
+        }
+
+        .card-glyph-stroke {
+            stroke: $tlp-theme-color;
+        }
+
+        .card-glyph-fill {
+            fill: $tlp-theme-color;
+        }
+    }
+
     > .tracker-creation-template-card-label {
         display: flex;
         position: relative;
