@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,8 +24,5 @@ use Tuleap\Cryptography\ConcealedString;
 
 interface SplitTokenFormatter
 {
-    /**
-     * @return ConcealedString
-     */
-    public function getIdentifier(SplitToken $token);
+    public function getIdentifier(SplitToken $token): ConcealedString;
 }

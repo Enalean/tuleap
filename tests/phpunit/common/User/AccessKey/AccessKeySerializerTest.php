@@ -36,7 +36,7 @@ final class AccessKeySerializerTest extends TestCase
     public function testIdentifierPrefixIsPresent(): void
     {
         $access_key_verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $access_key_verification_string->shouldReceive('getString')->andReturns('random_string');
+        $access_key_verification_string->shouldReceive('getString')->andReturns(new ConcealedString('random_string'));
         $access_key = new SplitToken(1, $access_key_verification_string);
 
         $access_key_serializer = new AccessKeySerializer();

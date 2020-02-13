@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 use Tuleap\GitLFS\Authorization\User\UserTokenCreator;
 
@@ -61,11 +62,11 @@ class SSHAuthenticateResponseBuilderTest extends TestCase
             Mockery::mock(
                 SplitToken::class,
                 [
-                    'getId' => 'foo',
+                    'getId' => 100,
                     'getVerificationString' => Mockery::mock(
                         SplitTokenVerificationString::class,
                         [
-                            'getString' => 'bar',
+                            'getString' => new ConcealedString('bar'),
                         ]
                     )
                 ]
@@ -84,7 +85,7 @@ class SSHAuthenticateResponseBuilderTest extends TestCase
                 'href'       => 'https://lfs-server/foo/bar/info/lfs',
                 'expires_in' => 600,
                 'header'     => [
-                    'Authorization' => 'RemoteAuth foo.626172'
+                    'Authorization' => 'RemoteAuth 100.626172'
                 ],
             ],
             $this->response_builder->jsonSerialize()

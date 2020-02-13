@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\Authentication\SplitToken;
 
 final class IncorrectSizeVerificationStringException extends \RuntimeException
 {
-    public function __construct($expected_size, $string_size)
+    public function __construct(int $expected_size, int $string_size)
     {
         parent::__construct(
             "Expected a verification string of $expected_size bytes, got $string_size bytes"

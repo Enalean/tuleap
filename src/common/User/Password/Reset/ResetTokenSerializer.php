@@ -32,10 +32,7 @@ final class ResetTokenSerializer implements SplitTokenFormatter, SplitTokenIdent
 {
     public const PARTS_SEPARATOR = '.';
 
-    /**
-     * @return ConcealedString
-     */
-    public function getIdentifier(SplitToken $token)
+    public function getIdentifier(SplitToken $token): ConcealedString
     {
         return new ConcealedString(
             $token->getID() . self::PARTS_SEPARATOR . \sodium_bin2hex((string) $token->getVerificationString()->getString())
@@ -45,9 +42,8 @@ final class ResetTokenSerializer implements SplitTokenFormatter, SplitTokenIdent
     /**
      * @throws InvalidIdentifierFormatException
      * @throws IncorrectSizeVerificationStringException
-     * @return SplitToken
      */
-    public function getSplitToken(ConcealedString $identifier)
+    public function getSplitToken(ConcealedString $identifier): SplitToken
     {
         $identifier_parts = explode(self::PARTS_SEPARATOR, $identifier);
         if (count($identifier_parts) !== 2) {
