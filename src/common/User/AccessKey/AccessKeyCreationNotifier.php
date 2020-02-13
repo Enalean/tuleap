@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
-use Tuleap\User\AccessKey\Scope\AccessKeyScope;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 
 class AccessKeyCreationNotifier
 {
@@ -42,9 +42,9 @@ class AccessKeyCreationNotifier
     }
 
     /**
-     * @param AccessKeyScope[] $scopes
+     * @param AuthenticationScope[] $scopes
      *
-     * @psalm-param non-empty-array<AccessKeyScope> $scopes
+     * @psalm-param non-empty-array<AuthenticationScope> $scopes
      */
     public function notifyCreation(\PFUser $user, string $description, array $scopes): void
     {

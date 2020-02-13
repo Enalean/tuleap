@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
-use Tuleap\User\AccessKey\Scope\AccessKeyScopeDefinition;
+use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 
 /**
  * @psalm-immutable
@@ -38,7 +38,7 @@ final class AccessKeyScopePresenter
      */
     public $description;
 
-    public function __construct(AccessKeyScopeDefinition $definition)
+    public function __construct(AuthenticationScopeDefinition $definition)
     {
         $this->name        = $definition->getName();
         $this->description = $definition->getDescription();

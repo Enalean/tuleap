@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\REST;
 
-use Tuleap\User\AccessKey\Scope\AccessKeyScope;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 
 /**
  * @psalm-immutable
@@ -34,7 +34,7 @@ final class UserAccessKeyScopeRepresentation
      */
     public $identifier;
 
-    public function __construct(AccessKeyScope $scope)
+    public function __construct(AuthenticationScope $scope)
     {
         $this->identifier = $scope->getIdentifier()->toString();
     }

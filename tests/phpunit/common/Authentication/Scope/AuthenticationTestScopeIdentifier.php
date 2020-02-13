@@ -20,27 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Authentication\Scope;
 
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilderCollectorEvent;
-
-final class AccessKeyScopeBuilderCollector implements AuthenticationScopeBuilderCollectorEvent
+final class AuthenticationTestScopeIdentifier implements AuthenticationScopeIdentifier
 {
-    public const NAME = 'collectAccessKeyScopeBuilder';
-
     /**
-     * @var AuthenticationScopeBuilder[]
+     * @var string
      */
-    private $builders = [];
+    private $identifier;
 
-    public function addAccessKeyScopeBuilder(AuthenticationScopeBuilder $access_key_scope_builder): void
+    private function __construct(string $identifier)
     {
-        $this->builders[] = $access_key_scope_builder;
+        $this->identifier = $identifier;
     }
 
-    public function getAuthenticationKeyScopeBuilders(): array
+    public static function fromIdentifierKey(string $identifier_key): AuthenticationScopeIdentifier
     {
-        return $this->builders;
+        return new self($identifier_key);
+    }
+
+    public function toString() : string
+    {
+        return $this->identifier;
     }
 }

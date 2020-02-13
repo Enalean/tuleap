@@ -23,15 +23,16 @@ use EventManager;
 use Luracast\Restler\RestException;
 use PaginatedUserCollection;
 use PFUser;
+use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\REST\UserAccessKeyRepresentation;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
-use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryEntry;
@@ -645,9 +646,9 @@ class UserResource extends AuthenticatedResource
             new AccessKeyDAO(),
             new AccessKeyScopeRetriever(
                 new AccessKeyScopeDAO(),
-                AggregateAccessKeyScopeBuilder::fromBuildersList(
+                AggregateAuthenticationScopeBuilder::fromBuildersList(
                     CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
-                    AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+                    AggregateAuthenticationScopeBuilder::fromEventDispatcher(\EventManager::instance(), new AccessKeyScopeBuilderCollector())
                 )
             )
         );

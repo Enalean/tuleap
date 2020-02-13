@@ -20,27 +20,38 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Authentication\Scope;
 
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilderCollectorEvent;
-
-final class AccessKeyScopeBuilderCollector implements AuthenticationScopeBuilderCollectorEvent
+/**
+ * @psalm-immutable
+ *
+ * @template TScopeIdentifier of AuthenticationScopeIdentifier
+ */
+interface AuthenticationScope
 {
-    public const NAME = 'collectAccessKeyScopeBuilder';
+    /**
+     * @psalm-pure
+     *
+     * @psalm-return self<TScopeIdentifier>
+     */
+    public static function fromItself(): self;
 
     /**
-     * @var AuthenticationScopeBuilder[]
+     * @psalm-pure
+     *
+     * @psalm-return ?self<TScopeIdentifier>
      */
-    private $builders = [];
+    public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?self;
 
-    public function addAccessKeyScopeBuilder(AuthenticationScopeBuilder $access_key_scope_builder): void
-    {
-        $this->builders[] = $access_key_scope_builder;
-    }
+    /**
+     * @psalm-return TScopeIdentifier
+     */
+    public function getIdentifier(): AuthenticationScopeIdentifier;
 
-    public function getAuthenticationKeyScopeBuilders(): array
-    {
-        return $this->builders;
-    }
+    public function getDefinition(): AuthenticationScopeDefinition;
+
+    /**
+     * @psalm-param self<TScopeIdentifier> $scope
+     */
+    public function covers(self $scope): bool;
 }

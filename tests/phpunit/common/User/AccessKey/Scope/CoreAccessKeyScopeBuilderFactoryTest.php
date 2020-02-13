@@ -23,13 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey\Scope;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 
 final class CoreAccessKeyScopeBuilderFactoryTest extends TestCase
 {
     public function testCoreAccessKeyScopeBuilderFactoryTest(): void
     {
         $this->assertInstanceOf(
-            AccessKeyScopeBuilderFromClassNames::class,
+            AuthenticationScopeBuilderFromClassNames::class,
             CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder()
         );
     }

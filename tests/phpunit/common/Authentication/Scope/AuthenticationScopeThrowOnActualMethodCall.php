@@ -20,27 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Authentication\Scope;
 
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilderCollectorEvent;
-
-final class AccessKeyScopeBuilderCollector implements AuthenticationScopeBuilderCollectorEvent
+trait AuthenticationScopeThrowOnActualMethodCall
 {
-    public const NAME = 'collectAccessKeyScopeBuilder';
-
-    /**
-     * @var AuthenticationScopeBuilder[]
-     */
-    private $builders = [];
-
-    public function addAccessKeyScopeBuilder(AuthenticationScopeBuilder $access_key_scope_builder): void
+    final public function getIdentifier(): AuthenticationScopeIdentifier
     {
-        $this->builders[] = $access_key_scope_builder;
+        $this->throwUnexpectedCall();
     }
 
-    public function getAuthenticationKeyScopeBuilders(): array
+    final public function getDefinition(): AuthenticationScopeDefinition
     {
-        return $this->builders;
+        $this->throwUnexpectedCall();
+    }
+
+    final public function covers(AuthenticationScope $scope): bool
+    {
+        $this->throwUnexpectedCall();
+    }
+
+    /**
+     * @psalm-return never-return
+     *
+     * @throws \LogicException
+     */
+    private function throwUnexpectedCall(): void
+    {
+        throw new \LogicException('This method is not supposed to be called in the test');
     }
 }

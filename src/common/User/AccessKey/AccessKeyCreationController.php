@@ -24,6 +24,8 @@ namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
 use HTTPRequest;
+use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
@@ -31,11 +33,10 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\User\AccessKey\Scope\AccessKeyScope;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
-use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\AccessKey\Scope\InvalidScopeIdentifierKeyException;
 use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
@@ -88,13 +89,13 @@ class AccessKeyCreationController implements DispatchableWithRequest
     }
 
     /**
-     * @return AccessKeyScope[]
+     * @return AuthenticationScope[]
      */
     private function getAccessKeyScopes(HTTPRequest $request, BaseLayout $layout): array
     {
-        $access_key_scope_builder = AggregateAccessKeyScopeBuilder::fromBuildersList(
+        $access_key_scope_builder = AggregateAuthenticationScopeBuilder::fromBuildersList(
             CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
-            AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+            AggregateAuthenticationScopeBuilder::fromEventDispatcher(\EventManager::instance(), new AccessKeyScopeBuilderCollector())
         );
 
         $scope_identifier_keys = $request->get('access-key-scopes');
@@ -110,7 +111,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
             } catch (InvalidScopeIdentifierKeyException $ex) {
                 $this->rejectMalformedAccessKeyScopes($layout);
             }
-            $access_key_scope = $access_key_scope_builder->buildAccessKeyScopeFromScopeIdentifier(
+            $access_key_scope = $access_key_scope_builder->buildAuthenticationScopeFromScopeIdentifier(
                 $access_key_scope_identifier
             );
             if ($access_key_scope === null) {

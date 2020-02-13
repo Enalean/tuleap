@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
-use Tuleap\User\AccessKey\Scope\AccessKeyScope;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 
 final class AccessKeyDoesNotHaveRequiredScopeException extends AccessKeyException
 {
-    public function __construct(AccessKeyScope $needed_scope)
+    public function __construct(AuthenticationScope $needed_scope)
     {
         parent::__construct(
             sprintf(

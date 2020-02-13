@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\User\AccessKey\Scope\AccessKeyScope;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 
 class AccessKeyVerifier
@@ -65,7 +65,7 @@ class AccessKeyVerifier
      * @throws InvalidAccessKeyException
      * @throws AccessKeyMatchingUnknownUserException
      */
-    public function getUser(SplitToken $access_key, AccessKeyScope $required_scope, string $ip_address_requesting_verification): \PFUser
+    public function getUser(SplitToken $access_key, AuthenticationScope $required_scope, string $ip_address_requesting_verification): \PFUser
     {
         $row = $this->dao->searchAccessKeyVerificationAndTraceabilityDataByID($access_key->getID());
         if ($row === null) {
@@ -127,7 +127,7 @@ class AccessKeyVerifier
         );
     }
 
-    private function hasTheNeededScope(AccessKeyScope $required_scope, SplitToken $access_key): bool
+    private function hasTheNeededScope(AuthenticationScope $required_scope, SplitToken $access_key): bool
     {
         $access_key_scopes = $this->access_key_scope_retriever->getScopesByAccessKeyID($access_key->getID());
         foreach ($access_key_scopes as $access_key_scope) {

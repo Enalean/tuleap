@@ -18,15 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataPresenter;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopePresenter;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
-use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 
 require_once __DIR__ . '/../include/pre.php';
@@ -188,12 +189,12 @@ if (isset($_SESSION['last_svn_token'])) {
 
 $user_default_format = user_get_preference('user_edition_default_format');
 
-$access_key_scope_builder      = AggregateAccessKeyScopeBuilder::fromBuildersList(
+$access_key_scope_builder      = AggregateAuthenticationScopeBuilder::fromBuildersList(
     CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
-    AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+    AggregateAuthenticationScopeBuilder::fromEventDispatcher(\EventManager::instance(), new AccessKeyScopeBuilderCollector())
 );
 $access_key_scope_presenters   = [];
-foreach ($access_key_scope_builder->buildAllAvailableAccessKeyScopes() as $access_key_scope) {
+foreach ($access_key_scope_builder->buildAllAvailableAuthenticationScopes() as $access_key_scope) {
     $access_key_scope_presenters[] = new AccessKeyScopePresenter($access_key_scope);
 }
 $access_key_presenters         = [];

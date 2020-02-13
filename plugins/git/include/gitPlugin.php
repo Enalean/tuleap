@@ -21,6 +21,8 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CLI\CLICommandsCollector;
@@ -157,9 +159,7 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
-use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilder;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
-use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderFromClassNames;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\PasswordVerifier;
@@ -2934,9 +2934,9 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $collector->addAccessKeyScopeBuilder($this->buildAccessKeyScopeBuilder());
     }
 
-    private function buildAccessKeyScopeBuilder(): AccessKeyScopeBuilder
+    private function buildAccessKeyScopeBuilder(): AuthenticationScopeBuilder
     {
-        return new AccessKeyScopeBuilderFromClassNames(
+        return new AuthenticationScopeBuilderFromClassNames(
             GitRepositoryAccessKeyScope::class
         );
     }

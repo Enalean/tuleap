@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\User\AccessKey\Scope\AccessKeyScope;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
 
@@ -82,7 +82,7 @@ class AccessKeyCreator
         \PFUser $user,
         string $description,
         ?DateTimeImmutable $expiration_date,
-        AccessKeyScope ...$access_key_scopes
+        AuthenticationScope ...$access_key_scopes
     ): void {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $current_time        = new DateTimeImmutable();
