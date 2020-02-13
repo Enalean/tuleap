@@ -23,12 +23,14 @@ require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
+use FastRoute\RouteCollector;
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\Logger;
@@ -37,9 +39,10 @@ use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
-use Tuleap\Plugin\PluginWithLegacyInternalRouting;
+use Tuleap\Request\CollectRoutesEvent;
 
-class hudson_gitPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class hudson_gitPlugin extends Plugin
 {
     public const DISPLAY_HUDSON_ADDITION_INFO = 'display_hudson_addition_info';
 
@@ -48,7 +51,7 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PS
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
 
-        $this->listenToCollectRouteEventWithDefaultController();
+        $this->addHook(CollectRoutesEvent::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(Hooks::ADDITIONAL_WEBHOOKS);
@@ -95,26 +98,22 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PS
         }
     }
 
-    public function process() : void
+    public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $request = HTTPRequest::instance();
-        $action  = $request->get('action');
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeGetPostLegacyController'));
+        });
+    }
 
-        if (! $this->isAllowed($request->getProject()->getID())) {
-            return;
-        }
+    public function routeGetPostLegacyController()
+    {
+        $request    = HTTPRequest::instance();
+        $project_id = (int) $request->getProject()->getID();
 
-        switch ($action) {
-            case 'save-jenkins':
-                $this->getHookController($request)->save();
-                break;
-
-            case 'remove-webhook':
-                if ($request->get('webhook_id') === 'jenkins') {
-                    $this->getHookController($request)->remove();
-                }
-                break;
-        }
+        return new HudsonGitPluginDefaultController(
+            $this->getHookController($request),
+            $this->isAllowed($project_id)
+        );
     }
 
     public function git_hook_post_receive_ref_update($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
