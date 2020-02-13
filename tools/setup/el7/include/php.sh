@@ -1,9 +1,3 @@
-_phpPasswordHasher() {
-    # ${1}: password
-
-    "${php}" "${tools_dir}/utils/password_hasher.php" -p "${1}"
-}
-
 _phpActivePlugin() {
     # ${1}: plugin name
     # ${2}: user name

@@ -17,16 +17,6 @@ _checkCommand() {
     done
 }
 
-_checkDatabase() {
-    # ${1}: mysql user
-    # ${2}: mysql password
-    # ${3}: database
-
-    if _mysqlExecute ${1} ${2} "$(_sqlShowDb)" | ${grep} --silent ${3}; then
-        db_exist="true"
-    fi
-}
-
 _checkFilePassword() {
     if [ -f ${password_file} ]; then
         ${mv} ${password_file} \
@@ -80,22 +70,6 @@ _checkMysqlStatus() {
     else
         _infoMessage "MySQL server is accessible"
     fi
-}
-
-_checkMysqlMode() {
-    # ${1}: mysql user
-    # ${2}: mysql password
-
-    local sql_mode=$(_mysqlExecute ${1} ${2} "$(_sqlShowMode)")
-
-    if [[ ${sql_mode#* } =~ STRICT_.*_TABLES ]] || [[ ${sql_mode#* } =~ ONLY_FULL_GROUP_BY ]]; then
-        _errorMessage "MySQL: unsupported sql_mode: ${sql_mode//sql_mode/}"
-        _errorMessage "Please remove STRICT_ALL_TABLES or STRICT_TRANS_TABLES and ONLY_FULL_GROUP_BY from my.cnf"
-        exit 1
-    else
-        _infoMessage "Sql_mode : ${sql_mode//sql_mode/}"
-    fi
-
 }
 
 _checkOsVersion() {

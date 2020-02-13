@@ -1,7 +1,6 @@
-#!/opt/remi/php73/root/usr/bin/php
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +16,36 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-require_once __DIR__.'/../vendor/autoload.php';
+namespace TuleapCfg\Command\SetupMysql;
 
-use Symfony\Component\Console\Application;
-use TuleapCfg\Command\ProcessFactory;
+use ParagonIE\EasyDB\EasyDB;
 
-$application = new Application();
-$application->add(new \TuleapCfg\Command\ConfigureCommand());
-$application->add(new \TuleapCfg\Command\SystemControlCommand(new ProcessFactory()));
-$application->add(new \TuleapCfg\Command\DockerAioRunCommand(new ProcessFactory()));
-$application->add(new \TuleapCfg\Command\SetupMysqlCommand());
-$application->add(new \TuleapCfg\Command\SetupMysqlInitCommand());
-$application->run();
+class StatementLoader
+{
+    /**
+     * @var EasyDB
+     */
+    private $db;
+
+    public function __construct(EasyDB $db)
+    {
+        $this->db = $db;
+    }
+
+    public function loadFromFile(string $filepath)
+    {
+        if (! is_file($filepath)) {
+            throw new \RuntimeException(sprintf('%s does not exist', $filepath));
+        }
+
+        $sql = file_get_contents($filepath);
+        $transformed = str_replace("\\\n", '', $sql);
+
+        $this->db->getPdo()->exec($transformed);
+    }
+}
