@@ -18,47 +18,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\GitPresenters;
+declare(strict_types=1);
 
-/**
- * @psalm-immutable
- */
-class AdminExternalPanePresenter
+namespace Tuleap\HudsonGit;
+
+use Project;
+use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+
+class GitJenkinsAdministrationPaneBuilder
 {
-    /**
-     * @var string
-     */
-    private $pane_name;
-
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var bool
-     */
-    private $is_active;
-
-    public function __construct(string $pane_name, string $url, bool $is_active)
+    public static function buildPane(Project $project): AdminExternalPanePresenter
     {
-        $this->pane_name = $pane_name;
-        $this->url       = $url;
-        $this->is_active = $is_active;
+        return new AdminExternalPanePresenter(
+            'Jenkins',
+            self::buildUrl($project),
+            false
+        );
     }
 
-    public function getPaneName(): string
+    public static function buildActivePane(Project $project): AdminExternalPanePresenter
     {
-        return $this->pane_name;
+        return new AdminExternalPanePresenter(
+            'Jenkins',
+            self::buildUrl($project),
+            true
+        );
     }
 
-    public function getUrl(): string
+    private static function buildUrl(Project $project): string
     {
-        return $this->url;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->is_active;
+        return GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/administration/jenkins';
     }
 }

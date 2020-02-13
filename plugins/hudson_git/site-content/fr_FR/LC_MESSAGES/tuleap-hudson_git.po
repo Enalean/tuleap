@@ -1,0 +1,18 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid ""
+"Configuration of jenkins servers that will be triggered at each push in any "
+"repository of the project."
+msgstr ""
+"Configuration de serveurs Jenkins qui seront appellés lors de chaque push "
+"fait dans les dépôts du projet."
+
+msgid "Jenkins URL"
+msgstr "URL Jenkins"
+
+msgid "No Jenkins server configured yet."
+msgstr "Aucun serveur Jenkins n'a été configuré."
+
+msgid "User is not Git administrator."
+msgstr "L'utilisateur n'est pas administrateur Git."

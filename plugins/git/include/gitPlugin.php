@@ -895,7 +895,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return new RegexpRepositoryDao();
     }
 
-    protected function getMirrorDataMapper()
+    public function getMirrorDataMapper(): Git_Mirror_MirrorDataMapper
     {
         return new Git_Mirror_MirrorDataMapper(
             new Git_Mirror_MirrorDao(),
@@ -2831,10 +2831,9 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     }
 
     /**
-     * @access protected for test purpose
      * @return HeaderRenderer
      */
-    protected function getHeaderRenderer()
+    public function getHeaderRenderer()
     {
         $service_crumb_builder        = new GitCrumbBuilder($this->getGitPermissionsManager(), $this->getPluginPath());
         $settings_crumb_builder       = new RepositorySettingsCrumbBuilder($this->getPluginPath());
