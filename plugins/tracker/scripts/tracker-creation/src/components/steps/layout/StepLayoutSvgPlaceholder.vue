@@ -17,18 +17,23 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
-    <step-one />
+<template functional>
+    <svg
+        width="332"
+        height="333"
+        viewBox="0 0 332 333"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <rect
+            x="0.5"
+            y="0.5"
+            width="331"
+            height="332"
+            rx="4.5"
+            fill="#E3E5ED"
+            fill-opacity="0.5"
+            stroke="#D4D7E1"
+        />
+    </svg>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import StepOne from "./steps/step-one/StepOne.vue";
-
-@Component({
-    components: {
-        StepOne
-    }
-})
-export default class App extends Vue {}
-</script>
