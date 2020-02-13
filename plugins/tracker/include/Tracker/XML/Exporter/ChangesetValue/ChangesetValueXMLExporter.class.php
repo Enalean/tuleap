@@ -45,24 +45,4 @@ abstract class Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
 
         return $field_change;
     }
-
-    protected function isCurrentChangesetTheLastChangeset(
-        Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $current_changeset_value
-    ) {
-        $field          = $current_changeset_value->getField();
-        $last_changeset = $artifact->getLastChangeset();
-
-        if (! $last_changeset) {
-            return false;
-        }
-
-        $last_changeset_value = $last_changeset->getValue($field);
-
-        if (! $last_changeset_value) {
-            return false;
-        }
-
-        return ($last_changeset_value->getId() === $current_changeset_value->getId());
-    }
 }
