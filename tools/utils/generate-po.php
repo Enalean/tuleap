@@ -107,6 +107,7 @@ $gettext_in_mustache_extractor->extract(
     [
         "$basedir/src/templates",
         "$basedir/src/common/FRS",
+        "$basedir/src/common/User",
     ],
     $mustache_template
 );

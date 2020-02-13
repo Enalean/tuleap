@@ -8,7 +8,8 @@
         "src/www/themes/BurningParrot/",
         "src/www/themes/BurningParrot/css/project-registration/",
         "src/www/themes/BurningParrot/css/project-registration-creation/",
-        "src/www/themes/BurningParrot/css/dashboards/"
+        "src/www/themes/BurningParrot/css/dashboards/",
+        "src/www/themes/BurningParrot/css/account/"
     ],
     "gettext-js": {
         "chart-builders": {

@@ -28,6 +28,7 @@ use FastRoute;
 use FRSFileFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
+use TemplateRendererFactory;
 use TroveCatDao;
 use TroveCatFactory;
 use Tuleap\Admin\AdminPageRenderer;
@@ -98,8 +99,10 @@ use Tuleap\REST\UserManager;
 use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
+use Tuleap\User\Account\AccessKeyPresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
 use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
+use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
@@ -141,7 +144,7 @@ class RouteCollector
     {
         return new SiteContentCustomisationController(
             new AdminPageRenderer,
-            \TemplateRendererFactory::build(),
+            TemplateRendererFactory::build(),
             new \BaseLanguageFactory()
         );
     }
@@ -150,7 +153,7 @@ class RouteCollector
     {
         return new PasswordPolicyDisplayController(
             new AdminPageRenderer,
-            \TemplateRendererFactory::build(),
+            TemplateRendererFactory::build(),
             new PasswordConfigurationRetriever(new PasswordConfigurationDAO)
         );
     }
@@ -258,14 +261,23 @@ class RouteCollector
         );
     }
 
-    public static function postAccountAccessKeyCreate()
+    public static function getAccountToken(): DispatchableWithRequest
     {
-        return new AccessKeyCreationController();
+        return new DisplayKeysTokensController(
+            TemplateRendererFactory::build(),
+            DisplayKeysTokensController::getCSRFToken(),
+            AccessKeyPresenterBuilder::build(),
+        );
     }
 
-    public static function postAccountAccessKeyRevoke()
+    public static function postAccountAccessKeyCreate(): DispatchableWithRequest
     {
-        return new AccessKeyRevocationController();
+        return new AccessKeyCreationController(DisplayKeysTokensController::getCSRFToken());
+    }
+
+    public static function postAccountAccessKeyRevoke(): DispatchableWithRequest
+    {
+        return new AccessKeyRevocationController(DisplayKeysTokensController::getCSRFToken());
     }
 
     public static function postAccountAvatar()
@@ -446,7 +458,7 @@ class RouteCollector
     public static function getProjectRegistrationController(): ProjectRegistrationController
     {
         return new ProjectRegistrationController(
-            \TemplateRendererFactory::build(),
+            TemplateRendererFactory::build(),
             new IncludeAssets(__DIR__ . '/../../www/assets/project-registration/scripts', '/assets/project-registration/scripts'),
             new IncludeAssets(__DIR__ . '/../../www/assets/project-registration/themes', '/assets/project-registration/themes'),
             new ProjectRegistrationUserPermissionChecker(
@@ -535,7 +547,9 @@ class RouteCollector
             $r->get('/site-content-customisations', [self::class, 'getAdminSiteContentCustomisation']);
         });
 
+
         $r->addGroup('/account', function (FastRoute\RouteCollector $r) {
+            $r->get('/keys-tokens', [self::class, 'getAccountToken']);
             $r->post('/access_key/create', [self::class, 'postAccountAccessKeyCreate']);
             $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
             $r->post('/avatar', [self::class, 'postAccountAvatar']);

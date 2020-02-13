@@ -230,6 +230,29 @@ const webpack_config_for_project_registration_modal = {
     }
 };
 
+const webpack_config_for_account_token = {
+    entry: {
+        "keys-tokens": "./account/keys-tokens.ts"
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
+    externals: {
+        tlp: "tlp"
+    },
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
+        ]
+    },
+    plugins: [webpack_configurator.getTypescriptCheckerPlugin(false)],
+    resolve: {
+        extensions: [".ts", ".js"]
+    }
+};
+
 const fat_combined_files = [
         "./prototype/prototype.js",
         "./protocheck/protocheck.js",
@@ -332,7 +355,8 @@ const configs_with_manifest = [
     webpack_config_for_vue_components,
     webpack_config_for_rich_text_editor,
     webpack_config_for_project_banner,
-    webpack_config_for_frs_admin
+    webpack_config_for_frs_admin,
+    webpack_config_for_account_token
 ].map(config =>
     merge(config, {
         plugins: [manifest_plugin]

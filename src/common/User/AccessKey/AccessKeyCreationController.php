@@ -41,9 +41,20 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\AccessKey\Scope\InvalidScopeIdentifierKeyException;
 use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
+use Tuleap\User\Account\DisplayKeysTokensController;
 
 class AccessKeyCreationController implements DispatchableWithRequest
 {
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    private $csrf_token;
+
+    public function __construct(\CSRFSynchronizerToken $csrf_token)
+    {
+        $this->csrf_token = $csrf_token;
+    }
+
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
@@ -51,7 +62,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
             throw new ForbiddenException(_('Unauthorized action for anonymous'));
         }
 
-        (new \CSRFSynchronizerToken('/account/index.php'))->check();
+        $this->csrf_token->check(DisplayKeysTokensController::URL);
 
         $access_key_creator = new AccessKeyCreator(
             new LastAccessKeyIdentifierStore(
@@ -76,14 +87,14 @@ class AccessKeyCreationController implements DispatchableWithRequest
                 $expiration_date,
                 ...$this->getAccessKeyScopes($request, $layout)
             );
-            $layout->redirect('/account/#account-access-keys');
+            $layout->redirect(DisplayKeysTokensController::URL);
         } catch (AccessKeyAlreadyExpiredException $exception) {
             $layout->addFeedback(
                 \Feedback::ERROR,
                 _("You cannot create an already expired access key.")
             );
 
-            $layout->redirect('/account/');
+            $layout->redirect(DisplayKeysTokensController::URL);
         } catch (NoValidAccessKeyScopeException $exception) {
             $this->rejectMalformedAccessKeyScopes($layout);
         }
@@ -134,7 +145,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
             _('Access key scopes are not well formed.')
         );
 
-        $layout->redirect('/account/');
+        $layout->redirect(DisplayKeysTokensController::URL);
     }
 
     private function getExpirationDate(HTTPRequest $request, BaseLayout $layout): ?DateTimeImmutable
@@ -151,7 +162,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
                     _("Expiration date is not well formed.")
                 );
 
-                $layout->redirect('/account/');
+                $layout->redirect(DisplayKeysTokensController::URL);
             }
 
             $expiration_date = $expiration_date->setTime(23, 59, 59);
