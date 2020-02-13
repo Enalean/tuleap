@@ -33,6 +33,7 @@ use ProjectUGroup;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\Membership\CannotModifyBoundGroupException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
@@ -56,6 +57,10 @@ class MemberRemovalController implements DispatchableWithRequest
      */
     private $project_retriever;
     /**
+     * @var ProjectAdministratorChecker
+     */
+    private $administrator_checker;
+    /**
      * @var UGroupManager
      */
     private $ugroup_manager;
@@ -78,6 +83,7 @@ class MemberRemovalController implements DispatchableWithRequest
 
     public function __construct(
         ProjectRetriever $project_retriever,
+        ProjectAdministratorChecker $administrator_checker,
         UGroupManager $ugroup_manager,
         UserManager $user_manager,
         MemberRemover $member_remover,
@@ -85,6 +91,7 @@ class MemberRemovalController implements DispatchableWithRequest
         CSRFSynchronizerToken $csrf_synchronizer
     ) {
         $this->project_retriever      = $project_retriever;
+        $this->administrator_checker = $administrator_checker;
         $this->ugroup_manager         = $ugroup_manager;
         $this->user_manager           = $user_manager;
         $this->member_remover         = $member_remover;
@@ -99,6 +106,7 @@ class MemberRemovalController implements DispatchableWithRequest
         $user_manager   = \UserManager::instance();
         return new self(
             ProjectRetriever::buildSelf(),
+            new ProjectAdministratorChecker(),
             $ugroup_manager,
             $user_manager,
             new MemberRemover(
@@ -133,9 +141,7 @@ class MemberRemovalController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->project_retriever->getProjectFromId($variables['id']);
-        if (! $request->getCurrentUser()->isAdmin($project->getID())) {
-            throw new ForbiddenException();
-        }
+        $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
 
         $ugroup = $this->ugroup_manager->getUGroup($project, $variables['user-group-id']);
         if (! $ugroup) {

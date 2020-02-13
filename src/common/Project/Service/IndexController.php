@@ -22,98 +22,86 @@ namespace Tuleap\Project\Service;
 
 use CSRFSynchronizerToken;
 use EventManager;
-use ForgeConfig;
 use HTTPRequest;
 use Project;
 use ServiceManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
+use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\ProjectRetriever;
 
 class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     private const CSRF_TOKEN = 'project_admin_services';
 
     /**
-     * @var IncludeAssets
+     * @var LayoutHelper
      */
-    private $include_assets;
-    /**
-     * @var HeaderNavigationDisplayer
-     */
-    private $navigation_displayer;
+    private $layout_helper;
     /**
      * @var ServicesPresenterBuilder
      */
     private $presenter_builder;
     /**
-     * @var ProjectRetriever
+     * @var \TemplateRenderer
      */
-    private $project_retriever;
+    private $renderer;
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
 
     public function __construct(
+        LayoutHelper $layout_helper,
         ServicesPresenterBuilder $presenter_builder,
-        IncludeAssets $include_assets,
-        HeaderNavigationDisplayer $navigation_displayer,
-        ProjectRetriever $project_retriever
+        \TemplateRenderer $renderer,
+        IncludeAssets $include_assets
     ) {
 
-        $this->include_assets       = $include_assets;
-        $this->navigation_displayer = $navigation_displayer;
-        $this->presenter_builder    = $presenter_builder;
-        $this->project_retriever    = $project_retriever;
+        $this->layout_helper     = $layout_helper;
+        $this->presenter_builder = $presenter_builder;
+        $this->renderer          = $renderer;
+        $this->include_assets    = $include_assets;
     }
 
     public static function buildSelf(): self
     {
         return new self(
+            AdministrationLayoutHelper::buildSelf(),
             new ServicesPresenterBuilder(ServiceManager::instance(), EventManager::instance()),
-            new IncludeAssets(__DIR__ . '/../../../www/assets', '/assets'),
-            new HeaderNavigationDisplayer(),
-            ProjectRetriever::buildSelf()
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/project/admin/services/'),
+            new IncludeAssets(__DIR__ . '/../../../www/assets', '/assets')
         );
     }
 
+    /**
+     * @throws \Tuleap\Request\ForbiddenException
+     * @throws \Tuleap\Request\NotFoundException
+     */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project      = $this->project_retriever->getProjectFromId($variables['id']);
-        $current_user = $request->getCurrentUser();
-
-        if (! $current_user->isAdmin($project->getID())) {
-            throw new ForbiddenException();
-        }
-
-        $presenter = $this->presenter_builder->build($project, self::getCSRFTokenSynchronizer(), $request->getCurrentUser());
-
-        $this->displayHeader($project, $layout, $current_user);
-        TemplateRendererFactory::build()
-            ->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/services/')
-            ->renderToPage(
-                'services',
-                $presenter
-            );
-        $this->displayFooter();
-    }
-
-    private function displayHeader(Project $project, BaseLayout $layout, \PFUser $current_user): void
-    {
         $title = $GLOBALS['Language']->getText('project_admin_servicebar', 'edit_s_bar');
-        $javascript_file_name = 'project-admin-services.js';
-        if ($current_user->isSuperUser()) {
-            $javascript_file_name = 'site-admin-services.js';
-        }
-        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL($javascript_file_name));
-        $this->navigation_displayer->displayBurningParrotNavigation($title, $project, 'services');
-    }
 
-    private function displayFooter()
-    {
-        project_admin_footer(array());
+        $callback = function (Project $project, \PFUser $current_user) use ($layout): void {
+            $javascript_file_name = 'project-admin-services.js';
+            if ($current_user->isSuperUser()) {
+                $javascript_file_name = 'site-admin-services.js';
+            }
+            $layout->includeFooterJavascriptFile($this->include_assets->getFileURL($javascript_file_name));
+            $presenter = $this->presenter_builder->build($project, self::getCSRFTokenSynchronizer(), $current_user);
+            $this->renderer->renderToPage('services', $presenter);
+        };
+
+        $this->layout_helper->renderInProjectAdministrationLayout(
+            $request,
+            $variables['id'],
+            $title,
+            'services',
+            $callback
+        );
     }
 
     public static function getCSRFTokenSynchronizer(): CSRFSynchronizerToken

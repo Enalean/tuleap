@@ -27,52 +27,93 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
-use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
 final class IndexControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     /** @var IndexController */
     private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
-     */
-    private $project_retriever;
+    /** @var LayoutHelperPassthrough */
+    private $helper;
+    /** @var M\LegacyMockInterface|M\MockInterface|ServicesPresenterBuilder */
+    private $presenter_builder;
+    /** @var M\LegacyMockInterface|M\MockInterface|\TemplateRenderer */
+    private $renderer;
+    /** @var M\LegacyMockInterface|M\MockInterface|IncludeAssets */
+    private $include_assets;
 
     protected function setUp(): void
     {
-        $this->project_retriever = M::mock(ProjectRetriever::class);
-        $this->controller      = new IndexController(
-            M::mock(ServicesPresenterBuilder::class),
-            M::mock(IncludeAssets::class),
-            M::mock(HeaderNavigationDisplayer::class),
-            $this->project_retriever
+        $this->helper            = new LayoutHelperPassthrough();
+        $this->presenter_builder = M::mock(ServicesPresenterBuilder::class);
+        $this->renderer          = M::mock(\TemplateRenderer::class);
+        $this->include_assets    = M::mock(IncludeAssets::class);
+        $this->controller        = new IndexController(
+            $this->helper,
+            $this->presenter_builder,
+            $this->renderer,
+            $this->include_assets,
         );
+        $GLOBALS['Language']->shouldReceive('getText')->andReturn('');
     }
 
-    public function testNonProjectAdministratorCanNotAccessThePage(): void
+    protected function tearDown(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
+        if (isset($GLOBALS['_SESSION'])) {
+            unset($GLOBALS['_SESSION']);
+        }
+    }
+
+    public function testProcessIncludesSpecialAssetForSiteAdmin(): void
+    {
+        $project      = M::mock(\Project::class)->shouldReceive('getID')
             ->andReturn('102')
             ->getMock();
-        $project->shouldReceive('isError')->andReturnFalse();
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->once()
-            ->with('102')
-            ->andReturn($project);
-
-        $request      = M::mock(HTTPRequest::class);
         $current_user = M::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(110);
-        $current_user->shouldReceive('isAdmin')->andReturn(false);
-        $request->shouldReceive('getCurrentUser')->andReturn($current_user);
+        $current_user->shouldReceive('isSuperUser')->once()->andReturnTrue();
+        $this->helper->setCallbackParams($project, $current_user);
 
-        $this->expectException(ForbiddenException::class);
-        $this->controller->process($request, M::mock(BaseLayout::class), ['id' => '102']);
+        $presenter = M::mock(ServicesPresenter::class);
+        $this->presenter_builder->shouldReceive('build')->once()->andReturn($presenter);
+        $this->include_assets->shouldReceive('getFileURL')
+            ->once()
+            ->with('site-admin-services.js');
+        $request = M::mock(HTTPRequest::class);
+        $layout  = M::mock(BaseLayout::class);
+        $layout->shouldReceive('includeFooterJavascriptFile')->once();
+        $this->renderer->shouldReceive('renderToPage')
+            ->once()
+            ->with('services', $presenter);
+
+        $this->controller->process($request, $layout, ['id' => '102']);
+    }
+
+    public function testProcessIncludesNormalAssetForProjectAdmin(): void
+    {
+        $project      = M::mock(\Project::class)->shouldReceive('getID')
+            ->andReturn('102')
+            ->getMock();
+        $current_user = M::mock(PFUser::class);
+        $current_user->shouldReceive('isSuperUser')->once()->andReturnFalse();
+        $this->helper->setCallbackParams($project, $current_user);
+
+        $presenter = M::mock(ServicesPresenter::class);
+        $this->presenter_builder->shouldReceive('build')->once()->andReturn($presenter);
+        $this->include_assets->shouldReceive('getFileURL')
+            ->once()
+            ->with('project-admin-services.js');
+        $request = M::mock(HTTPRequest::class);
+        $layout  = M::mock(BaseLayout::class);
+        $layout->shouldReceive('includeFooterJavascriptFile')->once();
+        $this->renderer->shouldReceive('renderToPage')
+            ->once()
+            ->with('services', $presenter);
+
+        $this->controller->process($request, $layout, ['id' => '102']);
     }
 }

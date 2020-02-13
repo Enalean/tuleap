@@ -29,9 +29,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
-use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
 final class IndexControllerTest extends TestCase
 {
@@ -39,38 +37,41 @@ final class IndexControllerTest extends TestCase
 
     /** @var IndexController */
     private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
-     */
-    private $project_retriever;
+    /** @var LayoutHelperPassthrough */
+    private $helper;
+    /** @var M\LegacyMockInterface|M\MockInterface|ProjectOwnerPresenterBuilder */
+    private $presenter_builder;
+    /** @var M\LegacyMockInterface|M\MockInterface|\TemplateRenderer */
+    private $renderer;
 
     protected function setUp(): void
     {
-        $this->project_retriever = M::mock(ProjectRetriever::class);
-        $this->controller = new IndexController(
-            M::mock(\TemplateRenderer::class),
-            $this->project_retriever,
-            M::mock(HeaderNavigationDisplayer::class),
-            M::mock(ProjectOwnerPresenterBuilder::class)
+        $this->helper            = new LayoutHelperPassthrough();
+        $this->presenter_builder = M::mock(ProjectOwnerPresenterBuilder::class);
+        $this->renderer          = M::mock(\TemplateRenderer::class);
+        $this->controller        = new IndexController(
+            $this->helper,
+            $this->renderer,
+            $this->presenter_builder,
         );
     }
 
-    public function testNonProjectAdministratorCannotAccessThePage(): void
+    public function testProcessRenders(): void
     {
-        $project = M::mock(Project::class)->shouldReceive('getID')
+        $project      = M::mock(Project::class)->shouldReceive('getID')
             ->andReturn('102')
             ->getMock();
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->with('102')
-            ->once()
-            ->andReturn($project);
-
-        $request      = M::mock(HTTPRequest::class);
         $current_user = M::mock(PFUser::class);
-        $current_user->shouldReceive('isAdmin')->andReturn(false);
-        $request->shouldReceive('getCurrentUser')->andReturn($current_user);
+        $this->helper->setCallbackParams($project, $current_user);
 
-        $this->expectException(ForbiddenException::class);
-        $this->controller->process($request, M::mock(BaseLayout::class), ['project_id' => '102']);
+        $request = M::mock(HTTPRequest::class);
+        $layout  = M::mock(BaseLayout::class);
+        $layout->shouldReceive('addCssAsset')->once();
+        $this->presenter_builder->shouldReceive('build')
+            ->once()
+            ->with($project);
+        $this->renderer->shouldReceive('renderToPage')->once();
+
+        $this->controller->process($request, $layout, ['project_id' => '102']);
     }
 }

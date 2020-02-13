@@ -29,20 +29,24 @@ use Service;
 use ServiceDao;
 use ServiceManager;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\ProjectRetriever;
 
 class DeleteController implements DispatchableWithRequest
 {
     /**
-     * @var ServiceDao
-     */
-    private $dao;
-    /**
      * @var ProjectRetriever
      */
     private $project_retriever;
+    /**
+     * @var ProjectAdministratorChecker
+     */
+    private $administrator_checker;
+    /**
+     * @var ServiceDao
+     */
+    private $dao;
     /**
      * @var CSRFSynchronizerToken
      */
@@ -53,22 +57,25 @@ class DeleteController implements DispatchableWithRequest
     private $service_manager;
 
     public function __construct(
-        ServiceDao $dao,
         ProjectRetriever $project_retriever,
+        ProjectAdministratorChecker $administrator_checker,
+        ServiceDao $dao,
         CSRFSynchronizerToken $csrf_token,
         ServiceManager $service_manager
     ) {
-        $this->dao               = $dao;
-        $this->project_retriever = $project_retriever;
-        $this->csrf_token        = $csrf_token;
-        $this->service_manager   = $service_manager;
+        $this->project_retriever     = $project_retriever;
+        $this->administrator_checker = $administrator_checker;
+        $this->dao                   = $dao;
+        $this->csrf_token            = $csrf_token;
+        $this->service_manager       = $service_manager;
     }
 
     public static function buildSelf(): self
     {
         return new self(
-            new ServiceDao(),
             ProjectRetriever::buildSelf(),
+            new ProjectAdministratorChecker(),
+            new ServiceDao(),
             IndexController::getCSRFTokenSynchronizer(),
             ServiceManager::instance()
         );
@@ -77,9 +84,7 @@ class DeleteController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['id']);
-        if (! $request->getCurrentUser()->isAdmin($project->getID())) {
-            throw new ForbiddenException();
-        }
+        $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
 
         $this->csrf_token->check(IndexController::getUrl($project));
 

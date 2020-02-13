@@ -35,90 +35,77 @@ use ServiceDao;
 use ServiceManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\ForbiddenException;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
 
 final class DeleteControllerTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
 
-    /**
-     * @var DeleteController
-     */
+    /** @var DeleteController */
     private $controller;
-    /**
-     * @var M\MockInterface|ServiceDao
-     */
+    /** @var M\MockInterface|ServiceDao */
     private $service_dao;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
-     */
+    /** @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever */
     private $project_retriever;
-    /**
-     * @var CSRFSynchronizerToken|M\MockInterface
-     */
+    /** @var CSRFSynchronizerToken|M\MockInterface */
     private $csrf_token;
-    /**
-     * @var M\MockInterface|ServiceManager
-     */
+    /** @var M\MockInterface|ServiceManager */
     private $service_manager;
-    /**
-     * @var HTTPRequest|M\MockInterface
-     */
+    /** @var HTTPRequest|M\MockInterface */
     private $request;
-    /**
-     * @var M\MockInterface|BaseLayout
-     */
+    /** @var M\MockInterface|BaseLayout */
     private $layout;
-    /**
-     * @var M\MockInterface|Project
-     */
+    /** @var M\MockInterface|Project */
     private $project;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $project_id;
-    /**
-     * @var M\MockInterface|PFUser
-     */
-    private $project_admin;
     private $service_id;
+    /** * @var M\LegacyMockInterface|M\MockInterface|Project */
     private $default_template_project;
+    /** @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker */
+    private $administrator_checker;
 
     protected function setUp(): void
     {
         $this->service_dao     = M::mock(ServiceDao::class);
-        $this->project_admin   = M::mock(PFUser::class);
+        $project_admin         = M::mock(PFUser::class);
         $this->service_manager = M::mock(ServiceManager::class);
+        $this->project_retriever = M::mock(ProjectRetriever::class);
+        $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
 
         $this->service_id = '14';
 
         $this->project_id        = 120;
         $this->project           = M::mock(Project::class, ['getID' => (string) $this->project_id]);
-        $this->project_retriever = M::mock(ProjectRetriever::class);
         $this->project_retriever->shouldReceive('getProjectFromId')
             ->with((string) $this->project_id)
             ->andReturn($this->project);
-        $this->project_admin->shouldReceive('isAdmin')->with((string) $this->project_id)->andReturnTrue();
+        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
+            ->with($project_admin, $this->project);
 
         $this->default_template_project = M::mock(Project::class, ['getID' => (string) Project::ADMIN_PROJECT_ID]);
         $this->project_retriever->shouldReceive('getProjectFromId')
             ->with((string) Project::ADMIN_PROJECT_ID)
             ->andReturn($this->default_template_project);
-        $this->project_admin->shouldReceive('isAdmin')->with((string) Project::ADMIN_PROJECT_ID)->andReturnTrue();
+        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
+            ->with($project_admin, $this->default_template_project);
 
         $this->csrf_token = M::mock(CSRFSynchronizerToken::class);
         $this->csrf_token->shouldReceive('check')->once()->byDefault();
         $this->request = M::mock(HTTPRequest::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($this->project_admin)->byDefault();
+        $this->request->shouldReceive('getCurrentUser')
+            ->once()
+            ->andReturn($project_admin);
         $this->layout = M::mock(BaseLayout::class);
         $this->request->shouldReceive('getValidated')->with('service_id', M::andAnyOtherArgs())->andReturn(
             $this->service_id
         )->byDefault();
 
         $this->controller = new DeleteController(
-            $this->service_dao,
             $this->project_retriever,
+            $this->administrator_checker,
+            $this->service_dao,
             $this->csrf_token,
             $this->service_manager
         );
@@ -151,21 +138,6 @@ final class DeleteControllerTest extends TestCase
         $this->layout->shouldReceive('redirect')->once();
 
         $this->controller->process($this->request, $this->layout, ['id' => (string) Project::ADMIN_PROJECT_ID]);
-    }
-
-    public function testItRedirectNonAdminUsers(): void
-    {
-        $random_user = M::mock(PFUser::class);
-        $random_user->shouldReceive('isAdmin')->with((string) $this->project_id)->andReturnFalse();
-        $this->request->shouldReceive('getCurrentUser')->andReturn($random_user);
-
-        $this->csrf_token->shouldNotReceive('check');
-        $this->service_dao->shouldNotReceive('delete');
-        $this->service_dao->shouldNotReceive('deleteFromAllProjects');
-
-        $this->expectException(ForbiddenException::class);
-
-        $this->controller->process($this->request, $this->layout, ['id' => '120']);
     }
 
     public function testItDoesNotAllowToDeleteSystemServices() : void
