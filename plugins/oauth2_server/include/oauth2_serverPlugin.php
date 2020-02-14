@@ -24,6 +24,13 @@ use Tuleap\OAuth2Server\ProjectAdmin\AdministrationController;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Request\CollectRoutesEvent;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
+use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
+use Tuleap\User\OAuth2\BearerTokenHeaderParser;
+use Tuleap\User\PasswordVerifier;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -80,10 +87,14 @@ final class oauth2_serverPlugin extends Plugin
     {
         $routes->getRouteCollector()->addGroup(
             $this->getPluginPath(),
-            function (FastRoute\RouteCollector $r) {
+            function (FastRoute\RouteCollector $r): void {
                 $r->get(
                     '/project/{project_id:\d+}/admin',
                     $this->getRouteHandler('routeGetProjectAdmin')
+                );
+                $r->get(
+                    '/testendpoint',
+                    $this->getRouteHandler('routeTestEndpoint')
                 );
             }
         );
@@ -92,5 +103,33 @@ final class oauth2_serverPlugin extends Plugin
     public function routeGetProjectAdmin(): AdministrationController
     {
         return AdministrationController::buildSelf();
+    }
+
+    public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController
+    {
+        $response_factory = \Tuleap\Http\HTTPFactoryBuilder::responseFactory();
+        $password_handler = \PasswordHandlerFactory::getPasswordHandler();
+        return new \Tuleap\OAuth2Server\TestEndpointController(
+            \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
+            \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
+            UserManager::instance(),
+            new SapiEmitter(),
+            new \Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware(
+                $response_factory,
+                new BearerTokenHeaderParser(),
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
+                new OAuth2AccessTokenVerifier(
+                    UserManager::instance(),
+                    new SplitTokenVerificationStringHasher()
+                ),
+                new User_LoginManager(
+                    EventManager::instance(),
+                    UserManager::instance(),
+                    new PasswordVerifier($password_handler),
+                    new User_PasswordExpirationChecker(),
+                    $password_handler
+                )
+            )
+        );
     }
 }

@@ -19,10 +19,11 @@
 
 namespace Tuleap\REST;
 
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\User\AccessKey\AccessKeyDAO;
-use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
+use Tuleap\User\AccessKey\PrefixAccessKey;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
@@ -100,7 +101,7 @@ class UserManager
                 new User_PasswordExpirationChecker(),
                 $password_handler
             ),
-            new AccessKeyHeaderExtractor(new AccessKeySerializer(), $_SERVER),
+            new AccessKeyHeaderExtractor(new PrefixedSplitTokenSerializer(new PrefixAccessKey()), $_SERVER),
             new AccessKeyVerifier(
                 new AccessKeyDAO(),
                 new SplitTokenVerificationStringHasher(),

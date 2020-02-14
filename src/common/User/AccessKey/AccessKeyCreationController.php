@@ -26,6 +26,7 @@ use DateTimeImmutable;
 use HTTPRequest;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
@@ -54,7 +55,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
 
         $access_key_creator = new AccessKeyCreator(
             new LastAccessKeyIdentifierStore(
-                new AccessKeySerializer(),
+                new PrefixedSplitTokenSerializer(new PrefixAccessKey()),
                 (new KeyFactory)->getEncryptionKey(),
                 $_SESSION
             ),

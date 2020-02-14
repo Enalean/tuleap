@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Authentication\SplitToken;
+declare(strict_types=1);
 
-final class IncorrectSizeVerificationStringException extends SplitTokenException
+namespace Tuleap\User\OAuth2\AccessToken;
+
+use PHPUnit\Framework\TestCase;
+
+final class PrefixOAuth2AccessTokenTest extends TestCase
 {
-    public function __construct(int $expected_size, int $string_size)
+    public function testHasSpecificPrefix(): void
     {
-        parent::__construct(
-            "Expected a verification string of $expected_size bytes, got $string_size bytes"
-        );
+        $prefix = new PrefixOAuth2AccessToken();
+        $this->assertStringContainsString('oauth2', $prefix->getString());
+        $this->assertStringContainsString('at1', $prefix->getString());
     }
 }

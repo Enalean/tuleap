@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Authentication\SplitToken;
+declare(strict_types=1);
 
-final class IncorrectSizeVerificationStringException extends SplitTokenException
+namespace Tuleap\User\OAuth2\AccessToken;
+
+use Tuleap\User\OAuth2\OAuth2Exception;
+
+final class OAuth2AccessTokenNotFoundException extends \RuntimeException implements OAuth2Exception
 {
-    public function __construct(int $expected_size, int $string_size)
+    public function __construct(int $access_token_id)
     {
-        parent::__construct(
-            "Expected a verification string of $expected_size bytes, got $string_size bytes"
-        );
+        parent::__construct("OAuth2 Access token #$access_token_id does not exist");
     }
 }

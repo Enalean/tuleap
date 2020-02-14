@@ -157,7 +157,6 @@ use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\User\AccessKey\AccessKeyDAO;
-use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
@@ -2680,7 +2679,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 new HttpUserValidator()
             ),
             new HTTPUserAccessKeyAuthenticator(
-                new AccessKeySerializer(),
+                new \Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer(new \Tuleap\User\AccessKey\PrefixAccessKey()),
                 new AccessKeyVerifier(
                     new AccessKeyDAO(),
                     new SplitTokenVerificationStringHasher(),
