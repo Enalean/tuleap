@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <trackers>
+    <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+      <name>name10</name>
+      <item_name>item11</item_name>
+      <description>desc12</description>
+      <color>inca-silver</color>
+      <cannedResponses />
+    </tracker>
+    <tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
+      <name>name20</name>
+      <item_name>item21</item_name>
+      <description>desc22</description>
+      <color>inca-silver</color>
+      <cannedResponses />
+    </tracker>
+    <tracker id="T103" parent_id="T102" instantiate_for_new_projects="1">
+        <name>name30</name>
+        <item_name>item31</item_name>
+        <description>desc32</description>
+        <color>inca-silver</color>
+        <cannedResponses />
+    </tracker>
+  </trackers>
+</project>

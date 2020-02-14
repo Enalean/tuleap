@@ -552,14 +552,14 @@ class TrackerXmlImport
     }
 
     /**
-     *
+     * protected for testing purpose
      * @return Tracker the link between xml id and new id given by Tuleap
      *
      * @throws TrackerFromXmlException
      * @throws TrackerFromXmlImportCannotBeCreatedException
      * @throws Tracker_Exception
      */
-    private function instantiateTrackerFromXml(
+    protected function instantiateTrackerFromXml(
         Project $project,
         SimpleXMLElement $xml_tracker,
         ImportConfig $configuration
@@ -771,92 +771,23 @@ class TrackerXmlImport
     }
 
     /**
-     * Creates a Tracker Object
-     *
-     * @param SimpleXMLElement  $xml containing the structure of the imported tracker
-     * @param Project           $project - the project into which the tracker is imported
-     * @param string            $name of the tracker given by the user
-     * @param string            $description of the tracker given by the user
-     * @param string            $itemname - short_name of the tracker given by the user
-     *
-     * @return Tracker Object
+     * @return Tracker
      * @throws Tracker_Exception
      */
-    protected function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname, TrackerXmlImportFeedbackCollector $feedback_collector)
-    {
-        $xml_tracker_color_name = (string) $xml->color;
-        if ($xml_tracker_color_name === '') {
-            $tracker_color = TrackerColor::default();
-        } else {
-            $tracker_color = TrackerColor::fromNotStandardizedName($xml_tracker_color_name);
-        }
-
-        // set general settings
-        // real id will be set during Database update
-        $att = $xml->attributes();
-        $row = array(
-            'id'                  => 0,
-            'name'                => (string)$name,
-            'group_id'            => (int)$project->getId(),
-            'description'         => (string)$description,
-            'item_name'           => (string)$itemname,
-            'submit_instructions' => (string)$xml->submit_instructions,
-            'browse_instructions' => (string)$xml->browse_instructions,
-            'status'              => '',
-            'deletion_date'       => '',
-            'color'               => $tracker_color->getName()
-        );
-        $row['allow_copy'] = isset($att['allow_copy']) ?
-            (int) $att['allow_copy'] : 0;
-        $row['enable_emailgateway'] = isset($att['enable_emailgateway']) ?
-            (int) $att['enable_emailgateway'] : 0;
-        $row['instantiate_for_new_projects'] = isset($att['instantiate_for_new_projects']) ?
-            (int) $att['instantiate_for_new_projects'] : 0;
-        $row['log_priority_changes'] = isset($att['log_priority_changes']) ?
-            (int) $att['log_priority_changes'] : 0;
-        $row['notifications_level'] = $this->getNotificationsLevel($att);
-
+    protected function getInstanceFromXML(
+        SimpleXMLElement $xml,
+        Project $project,
+        string $name,
+        string $description,
+        string $itemname,
+        TrackerXmlImportFeedbackCollector $feedback_collector
+    ) {
+        $row     = $this->setTrackerGeneralInformation($xml, $project, $name, $description, $itemname);
         $tracker = $this->tracker_factory->getInstanceFromRow($row);
 
-        // set canned responses
-        if (isset($xml->cannedResponses)) {
-            foreach ($xml->cannedResponses->cannedResponse as $index => $response) {
-                $tracker->cannedResponses[] = $this->canned_response_factory->getInstanceFromXML($response);
-            }
-        }
-
-        // set formElements
-        foreach ($xml->formElements->formElement as $index => $elem) {
-            $form_element = $this->formelement_factory->getInstanceFromXML(
-                $tracker,
-                $elem,
-                $this->xml_fields_mapping,
-                $this->user_finder,
-                $feedback_collector
-            );
-
-            if (! $form_element) {
-                continue;
-            }
-
-            $tracker->formElements[] = $form_element;
-        }
-
-        // set semantics
-        if (isset($xml->semantics)) {
-            foreach ($xml->semantics->semantic as $xml_semantic) {
-                $semantic = $this->semantic_factory->getInstanceFromXML(
-                    $xml_semantic,
-                    $xml->semantics,
-                    $this->xml_fields_mapping,
-                    $tracker
-                );
-
-                if ($semantic) {
-                    $tracker->semantics[] = $semantic;
-                }
-            }
-        }
+        $this->setCannedResponses($xml, $tracker);
+        $this->setFormElementFields($xml, $feedback_collector, $tracker);
+        $this->setSemantics($xml, $tracker);
 
         /*
          * Legacy compatibility
@@ -867,113 +798,13 @@ class TrackerXmlImport
          * SimpleXML does not allow for nodes to be moved so have to recursively
          * generate rules from the dependencies data.
          */
-        if (isset($xml->dependencies)) {
-            $list_rules = null;
+        $this->setLegacyDependencies($xml);
 
-            if (! isset($xml->rules)) {
-                $list_rules = $xml->addChild('rules')->addChild('list_rules');
-            } elseif (! isset($xml->rules->list_rules)) {
-                $list_rules = $xml->rules->addChild('list_rules', $xml->dependencies);
-            }
-
-            if ($list_rules !== null) {
-                foreach ($xml->dependencies->rule as $old_rule) {
-                    $source_field_attributes = $old_rule->source_field->attributes();
-                    $target_field_attributes = $old_rule->target_field->attributes();
-                    $source_value_attributes = $old_rule->source_value->attributes();
-                    $target_value_attributes = $old_rule->target_value->attributes();
-
-                    $new_rule = $list_rules->addChild('rule', $old_rule);
-                    $new_rule->addChild('source_field')->addAttribute('REF', $source_field_attributes['REF']);
-                    $new_rule->addChild('target_field')->addAttribute('REF', $target_field_attributes['REF']);
-                    $new_rule->addChild('source_value')->addAttribute('REF', $source_value_attributes['REF']);
-                    $new_rule->addChild('target_value')->addAttribute('REF', $target_value_attributes['REF']);
-                }
-            }
-        }
-
-        //set field rules
-        if (isset($xml->rules)) {
-            $tracker->rules = $this->rule_factory->getInstanceFromXML($xml->rules, $this->xml_fields_mapping, $tracker);
-        }
-
-        // set report
-        if (isset($xml->reports)) {
-            foreach ($xml->reports->report as $report) {
-                $tracker->reports[] = $this->report_factory->getInstanceFromXML(
-                    $report,
-                    $this->xml_fields_mapping,
-                    $this->renderers_xml_mapping,
-                    $project->getId()
-                );
-            }
-        }
-
-        //set workflow
-        if (isset($xml->workflow->field_id)) {
-            $tracker->workflow= $this->workflow_factory->getInstanceFromXML(
-                $xml->workflow,
-                $this->xml_fields_mapping,
-                $tracker,
-                $project
-            );
-        } elseif (isset($xml->simple_workflow->field_id)) {
-            $tracker->workflow = $this->workflow_factory->getSimpleInstanceFromXML(
-                $xml->simple_workflow,
-                $this->xml_fields_mapping,
-                $tracker,
-                $project
-            );
-        }
-
-        //set webhooks
-        if (isset($xml->webhooks)) {
-            $tracker->webhooks = $this->webhook_factory->getWebhooksFromXML($xml->webhooks);
-        }
-
-        //set permissions
-        if (isset($xml->permissions->permission)) {
-            $allowed_tracker_perms = array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER_ONLY);
-            $allowed_field_perms   = array('PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_FIELD_SUBMIT');
-
-            foreach ($xml->permissions->permission as $permission) {
-                $ugroup_name = (string) $permission['ugroup'];
-                $ugroup_id = $this->ugroup_retriever_with_legacy->getUGroupId($project, $ugroup_name);
-                if (is_null($ugroup_id)) {
-                    $this->logger->error("Custom ugroup '$ugroup_name' does not seem to exist for '{$project->getPublicName()}' project.");
-                    continue;
-                }
-                $type = (string) $permission['type'];
-
-                switch ((string) $permission['scope']) {
-                    case 'tracker':
-                        //tracker permissions
-                        if (!in_array($type, $allowed_tracker_perms)) {
-                            $this->logger->error("Can not import permission of type $type for tracker.");
-                            break;
-                        }
-                        $this->logger->debug("Adding '$type' permission to '$ugroup_name' on tracker '{$tracker->getName()}'.");
-                        $tracker->setCachePermission($ugroup_id, $type);
-                        break;
-                    case 'field':
-                        //field permissions
-                        $REF    = (string) $permission['REF'];
-                        if (!in_array($type, $allowed_field_perms)) {
-                            $this->logger->error("Can not import permission of type $type for field.");
-                            break;
-                        }
-                        if (!isset($this->xml_fields_mapping[$REF])) {
-                            $this->logger->error("Unknow ref to field $REF.");
-                            break;
-                        }
-                        $this->logger->debug("Adding '$type' permission to '$ugroup_name' on field '$REF'.");
-                        $this->xml_fields_mapping[$REF]->setCachePermission($ugroup_id, $type);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        $this->setRules($xml, $tracker);
+        $this->setTrackerReports($xml, $project, $tracker);
+        $this->setWorkflow($xml, $project, $tracker);
+        $this->setWebhooks($xml, $tracker);
+        $this->setPermissions($xml, $project, $tracker, $this->xml_fields_mapping);
 
         return $tracker;
     }
@@ -982,6 +813,7 @@ class TrackerXmlImport
      *
      * @param array $hierarchy
      * @param array $mapper
+     *
      * @return array The hierarchy array with new elements added
      */
     protected function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper)
@@ -1040,5 +872,272 @@ class TrackerXmlImport
         }
 
         $feedback_collector->displayWarnings($this->logger);
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setTrackerGeneralInformation(
+        SimpleXMLElement $xml,
+        Project $project,
+        string $name,
+        string $description,
+        string $itemname
+    ): array {
+        $xml_tracker_color_name = (string) $xml->color;
+        if ($xml_tracker_color_name === '') {
+            $tracker_color = TrackerColor::default();
+        } else {
+            $tracker_color = TrackerColor::fromNotStandardizedName($xml_tracker_color_name);
+        }
+
+        $att                                 = $xml->attributes();
+        $row                                 = [
+            'id'                  => 0,
+            'name'                => (string) $name,
+            'group_id'            => (int) $project->getId(),
+            'description'         => (string) $description,
+            'item_name'           => (string) $itemname,
+            'submit_instructions' => (string) $xml->submit_instructions,
+            'browse_instructions' => (string) $xml->browse_instructions,
+            'status'              => '',
+            'deletion_date'       => '',
+            'color'               => $tracker_color->getName()
+        ];
+        $row['allow_copy']                   = isset($att['allow_copy']) ?
+            (int) $att['allow_copy'] : 0;
+        $row['enable_emailgateway']          = isset($att['enable_emailgateway']) ?
+            (int) $att['enable_emailgateway'] : 0;
+        $row['instantiate_for_new_projects'] = isset($att['instantiate_for_new_projects']) ?
+            (int) $att['instantiate_for_new_projects'] : 0;
+        $row['log_priority_changes']         = isset($att['log_priority_changes']) ?
+            (int) $att['log_priority_changes'] : 0;
+        $row['notifications_level']          = $this->getNotificationsLevel($att);
+
+        return $row;
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setCannedResponses(SimpleXMLElement $xml, Tracker $tracker): void
+    {
+        if (! isset($xml->cannedResponses)) {
+            return;
+        }
+        foreach ($xml->cannedResponses->cannedResponse as $index => $response) {
+            $tracker->cannedResponses[] = $this->canned_response_factory->getInstanceFromXML($response);
+        }
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setFormElementFields(
+        SimpleXMLElement $xml,
+        TrackerXmlImportFeedbackCollector $feedback_collector,
+        Tracker $tracker
+    ): void {
+        foreach ($xml->formElements->formElement as $index => $elem) {
+            $form_element = $this->formelement_factory->getInstanceFromXML(
+                $tracker,
+                $elem,
+                $this->xml_fields_mapping,
+                $this->user_finder,
+                $feedback_collector
+            );
+
+            if (! $form_element) {
+                continue;
+            }
+
+            $tracker->formElements[] = $form_element;
+        }
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setSemantics(SimpleXMLElement $xml, Tracker $tracker): void
+    {
+        if (! isset($xml->semantics)) {
+            return;
+        }
+        foreach ($xml->semantics->semantic as $xml_semantic) {
+            $semantic = $this->semantic_factory->getInstanceFromXML(
+                $xml_semantic,
+                $xml->semantics,
+                $this->xml_fields_mapping,
+                $tracker
+            );
+
+            if ($semantic) {
+                $tracker->semantics[] = $semantic;
+            }
+        }
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setLegacyDependencies(SimpleXMLElement $xml): void
+    {
+        if (! isset($xml->dependencies)) {
+            return;
+        }
+        $list_rules = null;
+
+        if (! isset($xml->rules)) {
+            $list_rules = $xml->addChild('rules')->addChild('list_rules');
+        } elseif (! isset($xml->rules->list_rules)) {
+            $list_rules = $xml->rules->addChild('list_rules', $xml->dependencies);
+        }
+
+        if ($list_rules === null) {
+            return;
+        }
+
+        foreach ($xml->dependencies->rule as $old_rule) {
+            $source_field_attributes = $old_rule->source_field->attributes();
+            $target_field_attributes = $old_rule->target_field->attributes();
+            $source_value_attributes = $old_rule->source_value->attributes();
+            $target_value_attributes = $old_rule->target_value->attributes();
+
+            $new_rule = $list_rules->addChild('rule', $old_rule);
+            $new_rule->addChild('source_field')->addAttribute('REF', $source_field_attributes['REF']);
+            $new_rule->addChild('target_field')->addAttribute('REF', $target_field_attributes['REF']);
+            $new_rule->addChild('source_value')->addAttribute('REF', $source_value_attributes['REF']);
+            $new_rule->addChild('target_value')->addAttribute('REF', $target_value_attributes['REF']);
+        }
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setRules(SimpleXMLElement $xml, Tracker $tracker): void
+    {
+        if (! isset($xml->rules)) {
+            return;
+        }
+        $tracker->rules = $this->rule_factory->getInstanceFromXML($xml->rules, $this->xml_fields_mapping, $tracker);
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setTrackerReports(SimpleXMLElement $xml, Project $project, Tracker $tracker): void
+    {
+        if (! isset($xml->reports)) {
+            return;
+        }
+        foreach ($xml->reports->report as $report) {
+            $tracker->reports[] = $this->report_factory->getInstanceFromXML(
+                $report,
+                $this->xml_fields_mapping,
+                $this->renderers_xml_mapping,
+                $project->getId()
+            );
+        }
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setWorkflow(SimpleXMLElement $xml, Project $project, Tracker $tracker): void
+    {
+        if (isset($xml->workflow->field_id)) {
+            $tracker->workflow = $this->workflow_factory->getInstanceFromXML(
+                $xml->workflow,
+                $this->xml_fields_mapping,
+                $tracker,
+                $project
+            );
+        } elseif (isset($xml->simple_workflow->field_id)) {
+            $tracker->workflow = $this->workflow_factory->getSimpleInstanceFromXML(
+                $xml->simple_workflow,
+                $this->xml_fields_mapping,
+                $tracker,
+                $project
+            );
+        }
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setWebhooks(SimpleXMLElement $xml, Tracker $tracker): void
+    {
+        if (! isset($xml->webhooks)) {
+            return;
+        }
+        $tracker->webhooks = $this->webhook_factory->getWebhooksFromXML($xml->webhooks);
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function setPermissions(
+        SimpleXMLElement $xml,
+        Project $project,
+        Tracker $tracker,
+        array $xml_mapping
+    ): void {
+        if (! isset($xml->permissions->permission)) {
+            return;
+        }
+        $allowed_tracker_perms = [
+            Tracker::PERMISSION_ADMIN,
+            Tracker::PERMISSION_FULL,
+            Tracker::PERMISSION_SUBMITTER,
+            Tracker::PERMISSION_ASSIGNEE,
+            Tracker::PERMISSION_SUBMITTER_ONLY
+        ];
+        $allowed_field_perms   = [
+            'PLUGIN_TRACKER_FIELD_READ',
+            'PLUGIN_TRACKER_FIELD_UPDATE',
+            'PLUGIN_TRACKER_FIELD_SUBMIT'
+        ];
+
+        foreach ($xml->permissions->permission as $permission) {
+            $ugroup_name = (string) $permission['ugroup'];
+            $ugroup_id   = $this->ugroup_retriever_with_legacy->getUGroupId($project, $ugroup_name);
+            if (is_null($ugroup_id)) {
+                $this->logger->error(
+                    "Custom ugroup '$ugroup_name' does not seem to exist for '{$project->getPublicName()}' project."
+                );
+                continue;
+            }
+            $type = (string) $permission['type'];
+
+            switch ((string) $permission['scope']) {
+                case 'tracker':
+                    //tracker permissions
+                    if (! in_array($type, $allowed_tracker_perms)) {
+                        $this->logger->error("Can not import permission of type $type for tracker.");
+                        break;
+                    }
+                    $this->logger->debug(
+                        "Adding '$type' permission to '$ugroup_name' on tracker '{$tracker->getName()}'."
+                    );
+                    $tracker->setCachePermission($ugroup_id, $type);
+                    break;
+                case 'field':
+                    //field permissions
+                    $REF = (string) $permission['REF'];
+                    if (! in_array($type, $allowed_field_perms)) {
+                        $this->logger->error("Can not import permission of type $type for field.");
+                        break;
+                    }
+                    if (! isset($xml_mapping[$REF])) {
+                        $this->logger->error("Unknow ref to field $REF.");
+                        break;
+                    }
+                    $this->logger->debug("Adding '$type' permission to '$ugroup_name' on field '$REF'.");
+                    $xml_mapping[$REF]->setCachePermission($ugroup_id, $type);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
