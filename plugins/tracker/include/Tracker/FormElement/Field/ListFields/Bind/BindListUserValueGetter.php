@@ -137,7 +137,7 @@ class BindListUserValueGetter
                     $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
                     $sql[] = "(
-                        SELECT DISTINCT user.user_id, $display_name_sql, user.realname, user.user_name
+                        SELECT DISTINCT user.user_id, $display_name_sql, user.realname, user.user_name, user.email, user.status
                             FROM tracker_artifact AS a
                             INNER JOIN user
                                 ON ( user.user_id = a.submitted_by AND a.tracker_id = $tracker_id )
@@ -155,7 +155,7 @@ class BindListUserValueGetter
                     $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
                     $sql[] = "(
-                        SELECT DISTINCT user.user_id, $display_name_sql, user.realname, user.user_name
+                        SELECT DISTINCT user.user_id, $display_name_sql, user.realname, user.user_name, user.email, user.status
                             FROM tracker_artifact AS a
                             INNER JOIN tracker_changeset c ON a.id = c.artifact_id
                             INNER JOIN user
