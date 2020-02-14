@@ -18,6 +18,9 @@ msgstr "1"
 msgid "Choose a starting point"
 msgstr "Choisissez un point de départ"
 
+msgid "Choose a tracker..."
+msgstr "Choisissez un outil de suivi ..."
+
 msgid "Choose one tracker template among ones available in your platform"
 msgstr ""
 "Choisissez un modèle d'outil de suivi parmi ceux disponibles sur votre plate-"

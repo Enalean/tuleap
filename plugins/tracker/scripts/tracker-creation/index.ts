@@ -18,8 +18,11 @@
  */
 
 import Vue from "vue";
+import Vuex from "vuex";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { createStore } from "./src/store/index";
+import { CreationOptions, ProjectTemplate } from "./src/store/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-creation-app");
@@ -32,6 +35,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     const AppComponent = Vue.extend(App);
+    Vue.use(Vuex);
 
-    new AppComponent().$mount(vue_mount_point);
+    const project_templates: Array<ProjectTemplate> =
+        typeof vue_mount_point.dataset.projectTemplates !== "undefined"
+            ? JSON.parse(vue_mount_point.dataset.projectTemplates)
+            : [];
+
+    const initial_state = {
+        project_templates,
+        active_option: CreationOptions.NONE_YET,
+        selected_template_tracker_id: ""
+    };
+
+    new AppComponent({
+        store: createStore(initial_state)
+    }).$mount(vue_mount_point);
 });
