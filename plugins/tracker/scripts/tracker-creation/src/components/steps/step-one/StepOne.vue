@@ -18,12 +18,14 @@
   -->
 
 <template>
-    <step-layout>
+    <step-layout next-step-name="step-2">
         <template v-slot:step_info>
             <step-one-info />
         </template>
         <template v-slot:interactive_content>
-            <tracker-template-card />
+            <div class="tracker-creation-starting-point-options">
+                <tracker-template-card />
+            </div>
         </template>
     </step-layout>
 </template>

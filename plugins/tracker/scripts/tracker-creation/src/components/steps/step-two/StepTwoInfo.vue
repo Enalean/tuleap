@@ -18,12 +18,20 @@
   -->
 
 <template>
-    <router-view />
+    <step-label
+        v-bind:step-number="$gettext('2')"
+        v-bind:step-label="$gettext('Give your tracker some basic info')"
+    />
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import StepLabel from "../layout/StepLabel.vue";
 
-@Component
-export default class App extends Vue {}
+@Component({
+    components: {
+        StepLabel
+    }
+})
+export default class StepTwoInfo extends Vue {}
 </script>

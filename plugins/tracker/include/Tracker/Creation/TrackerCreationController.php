@@ -116,7 +116,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
         $this->renderer_factory->getRenderer($templates_dir)
             ->renderToPage(
                 'tracker-creation-app',
-                $this->presenter_builder->build()
+                $this->presenter_builder->build($project)
             );
 
         $js_assets = new IncludeAssets(

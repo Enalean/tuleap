@@ -23,6 +23,7 @@ import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { createStore } from "./src/store/index";
 import { CreationOptions, ProjectTemplate } from "./src/store/type";
+import { createRouter } from "./src/router";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-creation-app");
@@ -42,13 +43,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? JSON.parse(vue_mount_point.dataset.projectTemplates)
             : [];
 
+    const project_unix_name = vue_mount_point.dataset.projectUnixName;
+
+    if (!project_unix_name) {
+        throw new Error("Project name not provided, app can't be routed.");
+    }
+
     const initial_state = {
         project_templates,
         active_option: CreationOptions.NONE_YET,
-        selected_template_tracker_id: ""
+        selected_tracker_template: null
     };
 
     new AppComponent({
-        store: createStore(initial_state)
+        store: createStore(initial_state),
+        router: createRouter(project_unix_name)
     }).$mount(vue_mount_point);
 });

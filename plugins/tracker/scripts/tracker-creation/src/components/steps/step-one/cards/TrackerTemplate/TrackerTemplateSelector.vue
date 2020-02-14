@@ -27,10 +27,10 @@
             id="tracker-creation-template-selector"
             data-test="template-selector"
             name="area"
-            v-model="selected_template_tracker_id"
-            v-on:change="setSelectedTemplateTrackerId(selected_template_tracker_id)"
+            v-model="model"
+            v-on:change="setSelectedTrackerTemplate(model)"
         >
-            <option value="" selected disabled v-translate>Choose a tracker...</option>
+            <option value="" disabled v-translate>Choose a tracker...</option>
             <optgroup
                 v-for="(project, index) in project_templates"
                 v-bind:label="project.project_name"
@@ -40,6 +40,7 @@
                     v-for="tracker in project.tracker_list"
                     v-bind:value="tracker.id"
                     v-bind:key="tracker.id"
+                    v-bind:selected="tracker.id === model"
                 >
                     {{ tracker.name }}
                 </option>
@@ -51,16 +52,25 @@
 import Vue from "vue";
 import { State, Mutation } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { ProjectTemplate } from "../../../../../store/type";
+import { ProjectTemplate, Tracker } from "../../../../../store/type";
 
 @Component
 export default class TrackerTemplateSelector extends Vue {
     @State
     readonly project_templates!: ProjectTemplate[];
 
-    @Mutation
-    readonly setSelectedTemplateTrackerId!: (tracker_id: string) => void;
+    @State
+    readonly selected_tracker_template!: Tracker | null;
 
-    private selected_template_tracker_id = "";
+    @Mutation
+    readonly setSelectedTrackerTemplate!: (tracker_id: string) => void;
+
+    private model = "";
+
+    mounted(): void {
+        if (this.selected_tracker_template) {
+            this.model = this.selected_tracker_template.id;
+        }
+    }
 }
 </script>

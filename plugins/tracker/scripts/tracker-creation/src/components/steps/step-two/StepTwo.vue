@@ -18,12 +18,34 @@
   -->
 
 <template>
-    <router-view />
+    <step-layout previous-step-name="step-1">
+        <template v-slot:step_info>
+            <step-two-info />
+        </template>
+        <template v-slot:interactive_content>
+            <field-name />
+            <field-shortname />
+            <field-description />
+        </template>
+    </step-layout>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import StepLayout from "../layout/StepLayout.vue";
+import StepTwoInfo from "./StepTwoInfo.vue";
+import FieldName from "./creation-fields/FieldName.vue";
+import FieldShortname from "./creation-fields/FieldShortname.vue";
+import FieldDescription from "./creation-fields/FieldDescription.vue";
 
-@Component
-export default class App extends Vue {}
+@Component({
+    components: {
+        StepLayout,
+        StepTwoInfo,
+        FieldName,
+        FieldShortname,
+        FieldDescription
+    }
+})
+export default class StepTwo extends Vue {}
 </script>

@@ -21,6 +21,7 @@ import Vuex from "vuex";
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { Vue } from "vue/types/vue";
+import VueRouter from "vue-router";
 
 export async function createTrackerCreationLocalVue(): Promise<typeof Vue> {
     const local_vue = createLocalVue();
@@ -29,6 +30,7 @@ export async function createTrackerCreationLocalVue(): Promise<typeof Vue> {
     });
 
     local_vue.use(Vuex);
+    local_vue.use(VueRouter);
 
     return local_vue;
 }

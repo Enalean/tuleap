@@ -18,12 +18,22 @@
   -->
 
 <template>
-    <router-view />
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="tracker-shortname">
+            <translate>Shortname</translate>
+            <i class="fa fa-asterisk"></i>
+        </label>
+        <input type="text" class="tlp-input" id="tracker-shortname" name="tracker-shortname" />
+        <p class="tlp-text-info">
+            <i class="fa fa-life-saver"></i>
+            <translate>Avoid spaces and ponctuation</translate>
+        </p>
+    </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 
 @Component
-export default class App extends Vue {}
+export default class StepTwo extends Vue {}
 </script>

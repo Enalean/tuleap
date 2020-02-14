@@ -45,20 +45,28 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
      */
     private $project_manager;
 
+    /**
+     * @var \Project
+     */
+    private $current_project;
+
     protected function setUp(): void
     {
         $this->project_manager = \Mockery::mock(ProjectManager::class);
         $this->tracker_dao     = \Mockery::mock(TrackerDao::class);
         $this->builder         = new TrackerCreationPresenterBuilder($this->project_manager, $this->tracker_dao);
+        $this->current_project = \Mockery::mock(\Project::class);
+
+        $this->current_project->shouldReceive('getUnixNameLowerCase')->andReturn('my-project-name');
     }
 
     public function testItReturnsAnEmptyArrayWhenPlatformHasNoProjectTemplates(): void
     {
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([]);
 
-        $presenter = $this->builder->build();
+        $presenter = $this->builder->build($this->current_project);
 
-        $expected_template = new TrackerCreationPresenter([]);
+        $expected_template = new TrackerCreationPresenter([], $this->current_project);
         $this->assertEquals($expected_template, $presenter);
     }
 
@@ -69,9 +77,9 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
         $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn(false);
 
-        $presenter = $this->builder->build();
+        $presenter = $this->builder->build($this->current_project);
 
-        $expected_template = new TrackerCreationPresenter([]);
+        $expected_template = new TrackerCreationPresenter([], $this->current_project);
         $this->assertEquals($expected_template, $presenter);
     }
 
@@ -82,9 +90,9 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
         $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn([]);
 
-        $presenter = $this->builder->build();
+        $presenter = $this->builder->build($this->current_project);
 
-        $expected_template = new TrackerCreationPresenter([]);
+        $expected_template = new TrackerCreationPresenter([], $this->current_project);
         $this->assertEquals($expected_template, $presenter);
     }
 
@@ -116,9 +124,9 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [$tracker_bugs, $tracker_epics]
         );
 
-        $expected_template = new TrackerCreationPresenter($project_template);
+        $expected_template = new TrackerCreationPresenter($project_template, $this->current_project);
 
-        $presenter = $this->builder->build();
+        $presenter = $this->builder->build($this->current_project);
 
         $this->assertEquals($expected_template, $presenter);
     }

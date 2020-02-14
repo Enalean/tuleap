@@ -24,23 +24,36 @@
         </div>
         <div class="tracker-creation-step-content">
             <div class="tracker-creation-step-info">
+                <h1 v-translate>Create a new tracker</h1>
                 <slot name="step_info"></slot>
             </div>
-            <div class="tracker-creation-starting-point-options">
+            <div class="tracker-creation-step-interactive-content">
                 <slot name="interactive_content"></slot>
             </div>
+            <step-navigation-buttons
+                v-bind:previous-step-name="previousStepName"
+                v-bind:next-step-name="nextStepName"
+            />
         </div>
     </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import StepLayoutSvgPlaceholder from "./StepLayoutSvgPlaceholder.vue";
+import StepNavigationButtons from "./StepNavigationButtons.vue";
 
 @Component({
     components: {
-        StepLayoutSvgPlaceholder
+        StepLayoutSvgPlaceholder,
+        StepNavigationButtons
     }
 })
-export default class StepLayout extends Vue {}
+export default class StepLayout extends Vue {
+    @Prop({ required: false })
+    readonly nextStepName!: string;
+
+    @Prop({ required: false })
+    readonly previousStepName!: string;
+}
 </script>

@@ -20,11 +20,13 @@
 import { Store, StoreOptions } from "vuex";
 import { State } from "./type";
 import * as mutations from "./mutations";
+import * as getters from "./getters";
 
 export function createStore(initial_state: State): Store<State> {
     const store_options: StoreOptions<State> = {
         state: initial_state,
-        mutations
+        mutations,
+        getters
     };
 
     return new Store(store_options);

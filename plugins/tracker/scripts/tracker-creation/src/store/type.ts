@@ -20,7 +20,7 @@
 export interface State {
     project_templates: ProjectTemplate[];
     active_option: CreationOptions;
-    selected_template_tracker_id: string;
+    selected_tracker_template: Tracker | null;
 }
 
 export interface ProjectTemplate {

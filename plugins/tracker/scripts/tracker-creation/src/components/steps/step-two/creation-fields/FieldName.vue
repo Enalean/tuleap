@@ -18,12 +18,29 @@
   -->
 
 <template>
-    <router-view />
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="tracker-name">
+            <translate>Name</translate>
+            <i class="fa fa-asterisk"></i>
+        </label>
+        <input
+            type="text"
+            class="tlp-input"
+            id="tracker-name"
+            name="tracker-name"
+            v-bind:value="selected_tracker_template.name"
+        />
+    </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
+import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
+import { Tracker } from "../../../../store/type";
 
 @Component
-export default class App extends Vue {}
+export default class StepTwo extends Vue {
+    @State
+    readonly selected_tracker_template!: Tracker;
+}
 </script>
