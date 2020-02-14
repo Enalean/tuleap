@@ -20,22 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Authentication\Scope;
 
 /**
  * @psalm-immutable
  */
-final class AccessKeyScopeBuilderFromClassNames implements AccessKeyScopeBuilder
+final class AuthenticationScopeBuilderFromClassNames implements AuthenticationScopeBuilder
 {
     /**
      * @var string[]
      *
-     * @psalm-var class-string<AccessKeyScope>[]
+     * @psalm-var class-string<AuthenticationScope>[]
      */
     private $classnames;
 
     /**
-     * @psalm-param class-string<AccessKeyScope>[] $classnames
+     * @psalm-param class-string<AuthenticationScope>[] $classnames
      */
     public function __construct(string ...$classnames)
     {
@@ -45,7 +45,7 @@ final class AccessKeyScopeBuilderFromClassNames implements AccessKeyScopeBuilder
     /**
      * @psalm-pure
      */
-    public function buildAccessKeyScopeFromScopeIdentifier(AccessKeyScopeIdentifier $scope_identifier) : ?AccessKeyScope
+    public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier) : ?AuthenticationScope
     {
         foreach ($this->classnames as $classname) {
             $key_scope = $classname::fromIdentifier($scope_identifier);
@@ -60,9 +60,9 @@ final class AccessKeyScopeBuilderFromClassNames implements AccessKeyScopeBuilder
     /**
      * @psalm-pure
      *
-     * @return AccessKeyScope[]
+     * @return AuthenticationScope[]
      */
-    public function buildAllAvailableAccessKeyScopes(): array
+    public function buildAllAvailableAuthenticationScopes(): array
     {
         $scopes = [];
 

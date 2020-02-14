@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
+use Tuleap\Authentication\Scope\AuthenticationScope;
+
 /**
  * @psalm-immutable
  */
@@ -40,7 +42,7 @@ final class AccessKeyScopePresenter
      */
     public $description;
 
-    public function __construct(AccessKeyScope $access_key_scope)
+    public function __construct(AuthenticationScope $access_key_scope)
     {
         $this->identifier  = $access_key_scope->getIdentifier()->toString();
         $this->name        = $access_key_scope->getDefinition()->getName();

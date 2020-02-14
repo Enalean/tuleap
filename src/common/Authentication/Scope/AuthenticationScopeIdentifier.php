@@ -20,13 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Authentication\Scope;
 
 /**
  * @psalm-immutable
  */
-interface AccessKeyScopeDefinition
+interface AuthenticationScopeIdentifier
 {
-    public function getName(): string;
-    public function getDescription(): string;
+    /**
+     * @psalm-pure
+     */
+    public static function fromIdentifierKey(string $identifier_key): self;
+
+    public function toString(): string;
 }

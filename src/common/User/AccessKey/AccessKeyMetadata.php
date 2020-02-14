@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
-use Tuleap\User\AccessKey\Scope\AccessKeyScope;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 
 /**
  * @psalm-immutable
@@ -56,16 +56,16 @@ class AccessKeyMetadata
     private $expiration_date;
 
     /**
-     * @var AccessKeyScope[]
+     * @var AuthenticationScope[]
      *
-     * @psalm-var non-empty-array<AccessKeyScope>
+     * @psalm-var non-empty-array<AuthenticationScope>
      */
     private $scopes;
 
     /**
-     * @param AccessKeyScope[] $scopes
+     * @param AuthenticationScope[] $scopes
      *
-     * @psalm-param non-empty-array<AccessKeyScope> $scopes
+     * @psalm-param non-empty-array<AuthenticationScope> $scopes
      */
     public function __construct(
         int $id,
@@ -117,9 +117,9 @@ class AccessKeyMetadata
     }
 
     /**
-     * @return AccessKeyScope[]
+     * @return AuthenticationScope[]
      *
-     * @psalm-return non-empty-array<AccessKeyScope>
+     * @psalm-return non-empty-array<AuthenticationScope>
      */
     public function getScopes(): array
     {

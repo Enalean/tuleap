@@ -20,45 +20,44 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Authentication\Scope;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @psalm-immutable
  */
-final class AggregateAccessKeyScopeBuilder implements AccessKeyScopeBuilder
+final class AggregateAuthenticationScopeBuilder implements AuthenticationScopeBuilder
 {
     /**
-     * @var AccessKeyScopeBuilder[]
+     * @var AuthenticationScopeBuilder[]
      */
     private $builders;
 
-    private function __construct(AccessKeyScopeBuilder ...$builders)
+    private function __construct(AuthenticationScopeBuilder ...$builders)
     {
         $this->builders = $builders;
     }
 
-    public static function fromBuildersList(AccessKeyScopeBuilder ...$builders): self
+    public static function fromBuildersList(AuthenticationScopeBuilder ...$builders): self
     {
         return new self(...$builders);
     }
 
-    public static function fromEventDispatcher(EventDispatcherInterface $event_dispatcher): self
+    public static function fromEventDispatcher(EventDispatcherInterface $event_dispatcher, AuthenticationScopeBuilderCollectorEvent $event): self
     {
-        $event = new AccessKeyScopeBuilderCollector();
         $event_dispatcher->dispatch($event);
 
-        return new self(...$event->getAccessKeyScopeBuilders());
+        return new self(...$event->getAuthenticationKeyScopeBuilders());
     }
 
     /**
      * @psalm-pure
      */
-    public function buildAccessKeyScopeFromScopeIdentifier(AccessKeyScopeIdentifier $scope_identifier): ?AccessKeyScope
+    public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope
     {
         foreach ($this->builders as $builder) {
-            $key_scope = $builder->buildAccessKeyScopeFromScopeIdentifier($scope_identifier);
+            $key_scope = $builder->buildAuthenticationScopeFromScopeIdentifier($scope_identifier);
             if ($key_scope !== null) {
                 return $key_scope;
             }
@@ -70,14 +69,14 @@ final class AggregateAccessKeyScopeBuilder implements AccessKeyScopeBuilder
     /**
      * @psalm-pure
      *
-     * @return AccessKeyScope[]
+     * @return AuthenticationScope[]
      */
-    public function buildAllAvailableAccessKeyScopes(): array
+    public function buildAllAvailableAuthenticationScopes(): array
     {
         $key_scope_sets = [];
 
         foreach ($this->builders as $builder) {
-            $key_scope_sets[] = $builder->buildAllAvailableAccessKeyScopes();
+            $key_scope_sets[] = $builder->buildAllAvailableAuthenticationScopes();
         }
 
         return array_merge([], ...$key_scope_sets);

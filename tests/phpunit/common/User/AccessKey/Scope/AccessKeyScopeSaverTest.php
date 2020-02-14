@@ -24,6 +24,7 @@ namespace Tuleap\User\AccessKey\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 
 final class AccessKeyScopeSaverTest extends TestCase
 {
@@ -49,9 +50,9 @@ final class AccessKeyScopeSaverTest extends TestCase
     {
         $identifier = AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar');
 
-        $scope_a = \Mockery::mock(AccessKeyScope::class);
+        $scope_a = \Mockery::mock(AuthenticationScope::class);
         $scope_a->shouldReceive('getIdentifier')->andReturn($identifier);
-        $scope_b = \Mockery::mock(AccessKeyScope::class);
+        $scope_b = \Mockery::mock(AuthenticationScope::class);
         $scope_b->shouldReceive('getIdentifier')->andReturn($identifier);
 
         $this->dao->shouldReceive('saveScopeKeysByAccessKeyID')->with(11, 'foo:bar')->once();

@@ -24,6 +24,9 @@ namespace Tuleap\User\AccessKey\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
+use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
 final class AccessKeyScopeRetrieverTest extends TestCase
 {
@@ -34,7 +37,7 @@ final class AccessKeyScopeRetrieverTest extends TestCase
      */
     private $scope_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessKeyScopeBuilder
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthenticationScopeBuilder
      */
     private $key_scope_builder;
 
@@ -46,7 +49,7 @@ final class AccessKeyScopeRetrieverTest extends TestCase
     protected function setUp(): void
     {
         $this->scope_dao         = \Mockery::mock(AccessKeyScopeDAO::class);
-        $this->key_scope_builder = \Mockery::mock(AccessKeyScopeBuilder::class);
+        $this->key_scope_builder = \Mockery::mock(AuthenticationScopeBuilder::class);
 
         $this->retriever = new AccessKeyScopeRetriever($this->scope_dao, $this->key_scope_builder);
     }
@@ -58,16 +61,16 @@ final class AccessKeyScopeRetrieverTest extends TestCase
             ['scope_key' => 'type:value'],
         ]);
 
-        $this->key_scope_builder->shouldReceive('buildAccessKeyScopeFromScopeIdentifier')->with(
-            \Mockery::on(static function (AccessKeyScopeIdentifier $scope_identifier): bool {
+        $this->key_scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->with(
+            \Mockery::on(static function (AuthenticationScopeIdentifier $scope_identifier): bool {
                 return 'foo:bar' === $scope_identifier->toString();
             })
-        )->once()->andReturn(\Mockery::mock(AccessKeyScope::class));
-        $this->key_scope_builder->shouldReceive('buildAccessKeyScopeFromScopeIdentifier')->with(
-            \Mockery::on(static function (AccessKeyScopeIdentifier $scope_identifier): bool {
+        )->once()->andReturn(\Mockery::mock(AuthenticationScope::class));
+        $this->key_scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->with(
+            \Mockery::on(static function (AuthenticationScopeIdentifier $scope_identifier): bool {
                 return 'type:value' === $scope_identifier->toString();
             })
-        )->once()->andReturn(\Mockery::mock(AccessKeyScope::class));
+        )->once()->andReturn(\Mockery::mock(AuthenticationScope::class));
 
         $scopes = $this->retriever->getScopesByAccessKeyID(12);
 
@@ -80,7 +83,7 @@ final class AccessKeyScopeRetrieverTest extends TestCase
             ['scope_key' => 'foo:baz']
         ]);
 
-        $this->key_scope_builder->shouldReceive('buildAccessKeyScopeFromScopeIdentifier')->andReturn(null);
+        $this->key_scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->andReturn(null);
 
         $scopes = $this->retriever->getScopesByAccessKeyID(13);
 

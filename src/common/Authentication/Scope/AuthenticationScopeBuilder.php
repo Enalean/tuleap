@@ -20,32 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Authentication\Scope;
 
-trait AccessKeyScopeThrowOnActualMethodCall
+/**
+ * @psalm-immutable
+ */
+interface AuthenticationScopeBuilder
 {
-    final public function getIdentifier(): AccessKeyScopeIdentifier
-    {
-        $this->throwUnexpectedCall();
-    }
-
-    final public function getDefinition(): AccessKeyScopeDefinition
-    {
-        $this->throwUnexpectedCall();
-    }
-
-    final public function covers(AccessKeyScope $scope): bool
-    {
-        $this->throwUnexpectedCall();
-    }
+    /**
+     * @psalm-pure
+     */
+    public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope;
 
     /**
-     * @psalm-return never-return
+     * @psalm-pure
      *
-     * @throws \LogicException
+     * @return AuthenticationScope[]
      */
-    private function throwUnexpectedCall(): void
-    {
-        throw new \LogicException('This method is not supposed to be called in the test');
-    }
+    public function buildAllAvailableAuthenticationScopes(): array;
 }

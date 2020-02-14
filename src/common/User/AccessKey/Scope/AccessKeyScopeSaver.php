@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
+use Tuleap\Authentication\Scope\AuthenticationScope;
+
 class AccessKeyScopeSaver
 {
     /**
@@ -37,7 +39,7 @@ class AccessKeyScopeSaver
     /**
      * @throws NoValidAccessKeyScopeException
      */
-    public function saveKeyScopes(int $access_key_id, AccessKeyScope ...$scopes): void
+    public function saveKeyScopes(int $access_key_id, AuthenticationScope ...$scopes): void
     {
         $scope_keys = [];
 

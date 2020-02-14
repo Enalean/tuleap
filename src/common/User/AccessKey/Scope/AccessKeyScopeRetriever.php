@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
+use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
+
 class AccessKeyScopeRetriever
 {
     /**
@@ -29,18 +32,18 @@ class AccessKeyScopeRetriever
      */
     private $dao;
     /**
-     * @var AccessKeyScopeBuilder
+     * @var AuthenticationScopeBuilder
      */
     private $key_scope_builder;
 
-    public function __construct(AccessKeyScopeDAO $dao, AccessKeyScopeBuilder $key_scope_builder)
+    public function __construct(AccessKeyScopeDAO $dao, AuthenticationScopeBuilder $key_scope_builder)
     {
         $this->dao               = $dao;
         $this->key_scope_builder = $key_scope_builder;
     }
 
     /**
-     * @return AccessKeyScope[]
+     * @return AuthenticationScope[]
      */
     public function getScopesByAccessKeyID(int $access_key_id): array
     {
@@ -49,7 +52,7 @@ class AccessKeyScopeRetriever
         $key_scopes = [];
 
         foreach ($scope_key_rows as $scope_key_row) {
-            $key_scope = $this->key_scope_builder->buildAccessKeyScopeFromScopeIdentifier(
+            $key_scope = $this->key_scope_builder->buildAuthenticationScopeFromScopeIdentifier(
                 AccessKeyScopeIdentifier::fromIdentifierKey($scope_key_row['scope_key'])
             );
             if ($key_scope !== null) {

@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
+use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
+
 /**
  * @psalm-immutable
  */
-final class AccessKeyScopeIdentifier
+final class AccessKeyScopeIdentifier implements AuthenticationScopeIdentifier
 {
     /**
      * @var string
@@ -40,9 +42,11 @@ final class AccessKeyScopeIdentifier
     /**
      * @psalm-pure
      *
+     * @psalm-return self
+     *
      * @throws InvalidScopeIdentifierKeyException
      */
-    public static function fromIdentifierKey(string $identifier_key): self
+    public static function fromIdentifierKey(string $identifier_key): AuthenticationScopeIdentifier
     {
         if (preg_match('/^[^\s:]+:[^\s:]+$/', $identifier_key) !== 1) {
             throw new InvalidScopeIdentifierKeyException($identifier_key);

@@ -22,15 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
+
 final class CoreAccessKeyScopeBuilderFactory
 {
     private function __construct()
     {
     }
 
-    public static function buildCoreAccessKeyScopeBuilder(): AccessKeyScopeBuilder
+    public static function buildCoreAccessKeyScopeBuilder(): AuthenticationScopeBuilder
     {
-        return new AccessKeyScopeBuilderFromClassNames(
+        return new AuthenticationScopeBuilderFromClassNames(
             RESTAccessKeyScope::class
         );
     }

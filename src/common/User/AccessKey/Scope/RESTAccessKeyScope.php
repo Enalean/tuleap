@@ -22,10 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
+use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
+use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
+
 /**
  * @psalm-immutable
+ *
+ * @implements AuthenticationScope<AccessKeyScopeIdentifier>
  */
-final class RESTAccessKeyScope implements AccessKeyScope
+final class RESTAccessKeyScope implements AuthenticationScope
 {
     public const IDENTIFIER_KEY = 'write:rest';
 
@@ -34,14 +40,14 @@ final class RESTAccessKeyScope implements AccessKeyScope
      */
     private $identifier;
     /**
-     * @var AccessKeyScopeDefinition
+     * @var AuthenticationScopeDefinition
      */
     private $definition;
 
     private function __construct(AccessKeyScopeIdentifier $identifier)
     {
         $this->identifier = $identifier;
-        $this->definition = new /** @psalm-immutable */ class implements AccessKeyScopeDefinition
+        $this->definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition
         {
             public function getName(): string
             {
@@ -58,7 +64,7 @@ final class RESTAccessKeyScope implements AccessKeyScope
     /**
      * @psalm-pure
      */
-    public static function fromItself(): AccessKeyScope
+    public static function fromItself(): AuthenticationScope
     {
         return new self(
             AccessKeyScopeIdentifier::fromIdentifierKey(self::IDENTIFIER_KEY)
@@ -68,26 +74,36 @@ final class RESTAccessKeyScope implements AccessKeyScope
     /**
      * @psalm-pure
      */
-    public static function fromIdentifier(AccessKeyScopeIdentifier $identifier): ?AccessKeyScope
+    public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
     {
-        if ($identifier->toString() !== self::IDENTIFIER_KEY) {
-            return null;
+        if (self::isScopeIdentifier($identifier)) {
+            return new self($identifier);
         }
 
-        return new self($identifier);
+        return null;
     }
 
-    public function getIdentifier(): AccessKeyScopeIdentifier
+    /**
+     * @psalm-pure
+     *
+     * @psalm-assert-if-true AccessKeyScopeIdentifier $identifier
+     */
+    private static function isScopeIdentifier(AuthenticationScopeIdentifier $identifier): bool
+    {
+        return $identifier->toString() === self::IDENTIFIER_KEY;
+    }
+
+    public function getIdentifier(): AuthenticationScopeIdentifier
     {
         return $this->identifier;
     }
 
-    public function getDefinition(): AccessKeyScopeDefinition
+    public function getDefinition(): AuthenticationScopeDefinition
     {
         return $this->definition;
     }
 
-    public function covers(AccessKeyScope $scope): bool
+    public function covers(AuthenticationScope $scope): bool
     {
         return self::IDENTIFIER_KEY === $scope->getIdentifier()->toString();
     }

@@ -25,6 +25,7 @@ namespace Tuleap\User\AccessKey\REST;
 use DateTime;
 use DateTimeImmutable;
 use Luracast\Restler\RestException;
+use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
@@ -40,11 +41,11 @@ use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
 use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
-use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\AccessKey\Scope\InvalidScopeIdentifierKeyException;
 use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
@@ -121,13 +122,13 @@ class AccessKeyResource extends AuthenticatedResource
         }
 
         $key_scopes               = [];
-        $access_key_scope_builder = AggregateAccessKeyScopeBuilder::fromBuildersList(
+        $access_key_scope_builder = AggregateAuthenticationScopeBuilder::fromBuildersList(
             CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
-            AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+            AggregateAuthenticationScopeBuilder::fromEventDispatcher(\EventManager::instance(), new AccessKeyScopeBuilderCollector())
         );
         foreach ($access_key->scopes as $scope_identifier) {
             try {
-                $key_scope = $access_key_scope_builder->buildAccessKeyScopeFromScopeIdentifier(
+                $key_scope = $access_key_scope_builder->buildAuthenticationScopeFromScopeIdentifier(
                     AccessKeyScopeIdentifier::fromIdentifierKey($scope_identifier)
                 );
             } catch (InvalidScopeIdentifierKeyException $exception) {
@@ -189,9 +190,9 @@ class AccessKeyResource extends AuthenticatedResource
                 new AccessKeyDAO(),
                 new AccessKeyScopeRetriever(
                     new AccessKeyScopeDAO(),
-                    AggregateAccessKeyScopeBuilder::fromBuildersList(
+                    AggregateAuthenticationScopeBuilder::fromBuildersList(
                         CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
-                        AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+                        AggregateAuthenticationScopeBuilder::fromEventDispatcher(\EventManager::instance(), new AccessKeyScopeBuilderCollector())
                     )
                 )
             )

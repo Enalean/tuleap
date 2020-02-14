@@ -24,6 +24,9 @@ namespace Tuleap\User\AccessKey\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
+use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
 final class AccessKeyScopeBuilderCollectorTest extends TestCase
 {
@@ -31,7 +34,7 @@ final class AccessKeyScopeBuilderCollectorTest extends TestCase
 
     public function testNoBuildersAreCollectedByDefault(): void
     {
-        $this->assertEmpty((new AccessKeyScopeBuilderCollector())->getAccessKeyScopeBuilders());
+        $this->assertEmpty((new AccessKeyScopeBuilderCollector())->getAuthenticationKeyScopeBuilders());
     }
 
     public function testBuildersAddedToTheCollectorCanBeRetrieved(): void
@@ -44,19 +47,19 @@ final class AccessKeyScopeBuilderCollectorTest extends TestCase
         $collector->addAccessKeyScopeBuilder($builder_1);
         $collector->addAccessKeyScopeBuilder($builder_2);
 
-        $this->assertSame([$builder_1, $builder_2], $collector->getAccessKeyScopeBuilders());
+        $this->assertSame([$builder_1, $builder_2], $collector->getAuthenticationKeyScopeBuilders());
     }
 
-    private function buildAccessKeyScopeBuilder(): AccessKeyScopeBuilder
+    private function buildAccessKeyScopeBuilder(): AuthenticationScopeBuilder
     {
-        return new class implements AccessKeyScopeBuilder
+        return new class implements AuthenticationScopeBuilder
         {
-            public function buildAccessKeyScopeFromScopeIdentifier(AccessKeyScopeIdentifier $scope_identifier) : ?AccessKeyScope
+            public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier) : ?AuthenticationScope
             {
                 return null;
             }
 
-            public function buildAllAvailableAccessKeyScopes(): array
+            public function buildAllAvailableAuthenticationScopes(): array
             {
                 return [];
             }
