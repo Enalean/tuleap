@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Templating\TemplateCacheInterface;
 use Tuleap\Templating\TemplateCache;
 
-/**
- * Handles TemplateRenderer's instanciation.
- */
 class TemplateRendererFactory
 {
     /**
-     * @var TemplateCache
+     * @var TemplateCacheInterface
      */
     private $template_cache;
 
-    public function __construct(TemplateCache $template_cache)
+    public function __construct(TemplateCacheInterface $template_cache)
     {
         $this->template_cache = $template_cache;
     }
@@ -49,7 +47,7 @@ class TemplateRendererFactory
     }
 
     /**
-     * @return TemplateCache
+     * @return TemplateCacheInterface
      */
     public function getTemplateCache()
     {

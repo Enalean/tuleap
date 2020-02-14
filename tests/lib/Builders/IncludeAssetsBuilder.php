@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,40 +23,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Builders;
 
-class UserTestBuilder
+use Tuleap\Layout\IncludeAssets;
+
+class IncludeAssetsBuilder
 {
-    private $params = ['language_id' => 'en_US'];
-
-    public static function aUser() : self
+    public static function build()
     {
-        return new self();
-    }
+        return new class extends IncludeAssets {
+            public function __construct()
+            {
+            }
 
-    public static function anAnonymousUser(): self
-    {
-        return (new self())->withId(0);
-    }
-
-    public function withUserName(string $name)
-    {
-        $this->params['user_name'] = $name;
-        return $this;
-    }
-
-    public function withId(int $id)
-    {
-        $this->params['user_id'] = $id;
-        return $this;
-    }
-
-    public function withLdapId(string $id)
-    {
-        $this->params['ldap_id'] = $id;
-        return $this;
-    }
-
-    public function build(): \PFUser
-    {
-        return new \PFUser($this->params);
+            public function getFileURL($file_name)
+            {
+                return $file_name;
+            }
+        };
     }
 }

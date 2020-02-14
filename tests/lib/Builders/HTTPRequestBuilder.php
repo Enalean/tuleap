@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,35 +16,39 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\Templating;
+declare(strict_types=1);
 
-class TemplateCache implements TemplateCacheInterface
+namespace Tuleap\Test\Builders;
+
+class HTTPRequestBuilder
 {
-    public const CACHE_FOLDER_NAME = 'template_engine';
+    private $user;
 
-
-    public function getPath() : ?string
+    public static function get(): self
     {
-        return \ForgeConfig::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . self::CACHE_FOLDER_NAME;
+        return new self();
     }
 
-    public function invalidate(): void
+    public function withUser(\PFUser $user): self
     {
-        $path = $this->getPath();
-        if ($path === null) {
-            return;
-        }
+        $this->user = $user;
+        return $this;
+    }
 
-        if (! is_dir($path)) {
-            return;
-        }
+    public function withAnonymousUser(): self
+    {
+        return $this->withUser(UserTestBuilder::anAnonymousUser()->build());
+    }
 
-        foreach (new \DirectoryIterator($path) as $file_info) {
-            if ($file_info->isFile()) {
-                unlink($file_info->getPathname());
-            }
+    public function build(): \HTTPRequest
+    {
+        $request = new \HTTPRequest();
+        if ($this->user) {
+            $request->setCurrentUser($this->user);
         }
+        return $request;
     }
 }

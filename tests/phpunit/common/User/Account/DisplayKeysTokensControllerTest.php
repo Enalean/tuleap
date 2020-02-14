@@ -25,44 +25,33 @@ use CSRFSynchronizerToken;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use TemplateRendererFactory;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DisplayKeysTokensControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
 
     /**
      * @var DisplayKeysTokensController
      */
     private $controller;
-    private $request;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|BaseLayout
+     * @var M\LegacyMockInterface|M\MockInterface|AccessKeyPresenterBuilder
      */
-    private $layout;
     private $access_keys_presenter_builder;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\TemplateRenderer
-     */
-    private $renderer;
 
     public function setUp(): void
     {
-        $this->renderer = M::mock(\TemplateRenderer::class);
-        $renderer_factory = M::mock(
-            TemplateRendererFactory::class,
-            ['getRenderer' => $this->renderer]
-        );
         $csrf_token = M::mock(CSRFSynchronizerToken::class);
         $this->access_keys_presenter_builder = M::mock(AccessKeyPresenterBuilder::class);
 
-        $this->request = new \HTTPRequest();
-        $this->layout = M::mock(BaseLayout::class);
-
         $this->controller = new DisplayKeysTokensController(
-            $renderer_factory,
+            TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $csrf_token,
             $this->access_keys_presenter_builder,
         );
@@ -75,23 +64,28 @@ final class DisplayKeysTokensControllerTest extends TestCase
         unset($_SESSION);
     }
 
-    public function testItThrowExceptionForAnonymous()
+    public function testItThrowExceptionForAnonymous(): void
     {
         $this->expectException(ForbiddenException::class);
-        $this->request->setCurrentUser(new \PFUser(['user_id' => 0, 'language_id' => 'en_US']));
-        $this->controller->process($this->request, $this->layout, []);
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withAnonymousUser()->build(),
+            LayoutBuilder::build(),
+            []
+        );
     }
 
-    public function testItRendersThePage()
+    public function testItRendersThePage(): void
     {
-        $this->layout->shouldReceive('includeFooterJavascriptFile');
-        $this->layout->shouldReceive('header');
-        $this->layout->shouldReceive('footer');
-        $this->layout->shouldReceive('addCssAsset');
         $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
-        $this->renderer->shouldReceive('renderToPage');
 
-        $this->request->setCurrentUser(new \PFUser(['user_id' => 110, 'language_id' => 'en_US']));
-        $this->controller->process($this->request, $this->layout, []);
+        ob_start();
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::aUser()->withId(110)->build())->build(),
+            LayoutBuilder::build(),
+            []
+        );
+        $output = ob_get_clean();
+        $this->assertStringContainsString('Personal access keys', $output);
     }
 }
