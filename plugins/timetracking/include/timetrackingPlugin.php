@@ -42,6 +42,7 @@ use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimeUpdater;
 use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
+use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once 'constants.php';
@@ -66,7 +67,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\REST\Event\GetAdditionalCriteria::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectsWithCriteria::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetTrackersWithCriteria::NAME);
+        $this->addHook(GetTrackersWithCriteria::NAME);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::REST_RESOURCES);
 
@@ -269,7 +270,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
      * @throws User_StatusInvalidException
      * @throws \Luracast\Restler\RestException
      */
-    public function getTrackersWithCriteria(\Tuleap\Widget\Event\GetTrackersWithCriteria $get_trackers)
+    public function getTrackersWithCriteria(GetTrackersWithCriteria $get_trackers)
     {
         if (! isset($get_trackers->getQuery()[ProjectResource::TIMETRACKING_CRITERION])) {
             return;

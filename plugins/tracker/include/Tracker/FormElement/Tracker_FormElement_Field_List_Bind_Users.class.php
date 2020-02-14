@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,12 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\REST\UserRepresentation;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindListUserValueGetter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
+use Tuleap\Tracker\REST\FormElement\UserListValueRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind
 {
@@ -896,7 +896,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
     {
-        $user_representation = new UserRepresentation();
+        $user_representation = new UserListValueRepresentation();
+        assert($value instanceof Tracker_FormElement_Field_List_Bind_UsersValue);
         $user_representation->build($value);
 
         $representation = new FieldListBindUserValueRepresentation();

@@ -17,14 +17,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\REST\FormElement;
 
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 
-class UserRepresentation
+final class UserListValueRepresentation
 {
-
-    public const ROUTE = 'users';
+    private const ROUTE = 'users';
 
     /**
      * @var int
@@ -32,24 +33,24 @@ class UserRepresentation
     public $id;
 
     /**
-     * @var String
+     * @var string
      */
     public $uri;
 
     /**
-     * @var String
+     * @var string
      */
     public $real_name;
 
     /**
-     * @var String
+     * @var string
      */
     public $username;
 
-    public function build(Tracker_FormElement_Field_List_Bind_UsersValue $user)
+    public function build(Tracker_FormElement_Field_List_Bind_UsersValue $user): void
     {
         $this->id        = $user->getId();
-        $this->uri       = UserRepresentation::ROUTE . '/' . $this->id;
+        $this->uri       = self::ROUTE . '/' . $this->id;
         $this->real_name = $user->getLabel();
         $this->username  = $user->getUsername();
     }

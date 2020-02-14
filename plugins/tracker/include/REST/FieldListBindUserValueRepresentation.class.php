@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\REST;
 
 use Tracker_FormElement_Field_List_Value;
-use Tuleap\Project\REST\UserRepresentation;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\REST\FormElement\UserListValueRepresentation;
 
 class FieldListBindUserValueRepresentation
 {
@@ -37,11 +37,11 @@ class FieldListBindUserValueRepresentation
     public $label;
 
     /**
-     * @var UserRepresentation
+     * @var UserListValueRepresentation
      */
     public $user_reference;
 
-    public function build(Tracker_FormElement_Field_List_Value $value, UserRepresentation $user_representation)
+    public function build(Tracker_FormElement_Field_List_Value $value, UserListValueRepresentation $user_representation)
     {
         $this->id             = JsonCast::toInt($value->getId());
         $this->label          = $value->getAPIValue();
