@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,24 +31,18 @@ class SplitToken
      */
     private $verification_string;
 
-    public function __construct($id, SplitTokenVerificationString $verification_string)
+    public function __construct(int $id, SplitTokenVerificationString $verification_string)
     {
         $this->id                  = $id;
         $this->verification_string = $verification_string;
     }
 
-    /**
-     * @return int
-     */
-    public function getID()
+    public function getID(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return SplitTokenVerificationString
-     */
-    public function getVerificationString()
+    public function getVerificationString(): SplitTokenVerificationString
     {
         return $this->verification_string;
     }

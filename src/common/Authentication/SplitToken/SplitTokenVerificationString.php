@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,10 +46,7 @@ class SplitTokenVerificationString
         $this->verification_string = $verification_string;
     }
 
-    /**
-     * @return self
-     */
-    public static function generateNewSplitTokenVerificationString()
+    public static function generateNewSplitTokenVerificationString(): self
     {
         return new self(
             new ConcealedString(
@@ -58,10 +55,7 @@ class SplitTokenVerificationString
         );
     }
 
-    /**
-     * @return ConcealedString
-     */
-    public function getString()
+    public function getString(): ConcealedString
     {
         return $this->verification_string;
     }

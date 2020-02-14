@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,6 @@ interface SplitTokenIdentifierTranslator
     /**
      * @throws InvalidIdentifierFormatException
      * @throws IncorrectSizeVerificationStringException
-     * @return SplitToken
      */
-    public function getSplitToken(ConcealedString $identifier);
+    public function getSplitToken(ConcealedString $identifier): SplitToken;
 }

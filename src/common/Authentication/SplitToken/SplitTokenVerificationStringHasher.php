@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,18 +22,12 @@ namespace Tuleap\Authentication\SplitToken;
 
 class SplitTokenVerificationStringHasher
 {
-    /**
-     * @return string
-     */
-    public function computeHash(SplitTokenVerificationString $verification_string)
+    public function computeHash(SplitTokenVerificationString $verification_string): string
     {
         return hash('sha256', $verification_string->getString());
     }
 
-    /**
-     * @return bool
-     */
-    public function verifyHash(SplitTokenVerificationString $verification_string, $known_verification_string)
+    public function verifyHash(SplitTokenVerificationString $verification_string, string $known_verification_string): bool
     {
         return hash_equals($known_verification_string, $this->computeHash($verification_string));
     }
