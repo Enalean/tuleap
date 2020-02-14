@@ -28,6 +28,7 @@ use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthe
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 
 class AzureADProviderManagerTest extends TestCase
 {
@@ -40,6 +41,8 @@ class AzureADProviderManagerTest extends TestCase
 
         $azure_provider_dao->shouldReceive('create')->andReturn(1)->once();
 
+        $tenant_setup = AzureADTenantSetup::common();
+
         $azure_provider = new AzureADProvider(
             1,
             'Provider',
@@ -49,7 +52,7 @@ class AzureADProviderManagerTest extends TestCase
             'github',
             'fiesta_red',
             'tenant',
-            AcceptableTenantForAuthenticationConfiguration::fromSpecificTenantID('tenant')
+            AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID($tenant_setup, 'tenant')
         );
 
         $res = $azure_provider_manager->createAzureADProvider(
@@ -58,7 +61,8 @@ class AzureADProviderManagerTest extends TestCase
             'secret',
             'github',
             'fiesta_red',
-            'tenant'
+            'tenant',
+            $tenant_setup->getIdentifier()
         );
 
         $this->assertEquals($azure_provider, $res);
@@ -71,6 +75,8 @@ class AzureADProviderManagerTest extends TestCase
             $generic_provider_dao
         );
 
+        $tenant_setup = AzureADTenantSetup::common();
+
         $provider = new AzureADProvider(
             0,
             'Provider',
@@ -80,10 +86,10 @@ class AzureADProviderManagerTest extends TestCase
             'github',
             'fiesta_red',
             'tenant id',
-            AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID('common', 'tenant id')
+            AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID($tenant_setup, 'tenant id')
         );
 
         $generic_provider_dao->shouldReceive('save')->once();
-        $generic_provider_manager->updateAzureADProvider($provider);
+        $generic_provider_manager->updateAzureADProvider($provider, $tenant_setup);
     }
 }

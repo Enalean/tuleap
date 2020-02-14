@@ -81,6 +81,23 @@
                     >
                 </div>
             </div>
+            <div class="tlp-form-element">
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="tenant_setup_identifier_{{ getId }}">
+                        {{# dgettext }} tuleap-openidconnectclient | Authentication allowed for {{/ dgettext }} <i class="fa fa-asterisk"></i>
+                    </label>
+                    <select
+                            class="tlp-select"
+                            id="tenant_setup_identifier_{{ getId }}"
+                            name="tenant_setup_identifier"
+                            required
+                    >
+                        {{# azure_ad_tenant_setups }}
+                            <option value="{{ identifier }}" {{# selected }}selected{{/selected}}>{{ description }}</option>
+                        {{/ azure_ad_tenant_setups }}
+                    </select>
+                </div>
+            </div>
             <div class="tlp-form-element {{^ can_user_enable_unique_authentication_endpoint }}tlp-form-element-disabled{{/ can_user_enable_unique_authentication_endpoint }}">
                 <label class="tlp-label tlp-checkbox">
                     <input type="checkbox" name="unique_authentication_endpoint"

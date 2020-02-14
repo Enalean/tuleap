@@ -28,64 +28,55 @@ final class AcceptableTenantForAuthenticationConfigurationTest extends TestCase
 {
     public function testValueUsedByTheAuthenticationFlowIsTheIdentifierWhenUsersOutsideOfTheSpecificTenantCanAuthenticate(): void
     {
-        $configuration = AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID(
-            'common',
+        $common_setup  = AzureADTenantSetup::common();
+
+        $configuration = AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(
+            $common_setup,
             'tenant_id'
         );
 
-        $this->assertEquals('common', $configuration->getIdentifier());
-        $this->assertEquals($configuration->getIdentifier(), $configuration->getValueForAuthenticationFlow());
-        $this->assertNotEmpty($configuration->getDescription());
+        $this->assertEquals($common_setup, $configuration->getTenantSetup());
+        $this->assertEquals($common_setup->getIdentifier(), $configuration->getValueForAuthenticationFlow());
     }
 
     public function testValueUsedByTheAuthenticationFlowIsTheTenantIDWhenOnlyUsersFromTheSpecificTenantCanAuthenticate(): void
     {
-        $configuration = AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID(
-            'tenant_specific',
+        $tenant_specific_setup = AzureADTenantSetup::tenantSpecific();
+
+        $configuration = AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(
+            $tenant_specific_setup,
             'tenant_id'
         );
 
-        $this->assertEquals('tenant_specific', $configuration->getIdentifier());
+        $this->assertEquals($tenant_specific_setup, $configuration->getTenantSetup());
         $this->assertEquals('tenant_id', $configuration->getValueForAuthenticationFlow());
-        $this->assertNotEmpty($configuration->getDescription());
-    }
-
-    public function testRejectsUnknownAcceptableTenantForLoginIdentifier(): void
-    {
-        $this->expectException(UnknownAcceptableTenantForAuthenticationIdentifierException::class);
-        AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID(
-            'unknown',
-            'tenant_id'
-        );
-    }
-
-    public function testCanBuildConfigurationOnlyAllowingUsersFromTheSpecificTenantToAuthenticate(): void
-    {
-        $configuration = AcceptableTenantForAuthenticationConfiguration::fromSpecificTenantID(
-            'tenant_id'
-        );
-
-        $this->assertEquals('tenant_specific', $configuration->getIdentifier());
     }
 
     /**
-     * @testWith ["tenant_specific"]
-     *           ["organizations"]
+     * @dataProvider providerSpecificTenantOrganizationsSetup
      */
-    public function testAcceptableTenantIssuersIDIsTheTenantIDWhenExpectingUsersFromSpecificTenantOrFromOrganizations(string $login_identifier): void
+    public function testAcceptableTenantIssuersIDIsTheTenantIDWhenExpectingUsersFromSpecificTenantOrFromOrganizations(AzureADTenantSetup $tenant_setup): void
     {
-        $configuration = AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID(
-            $login_identifier,
+        $configuration = AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(
+            $tenant_setup,
             'tenant_id'
         );
 
         $this->assertEquals(['tenant_id'], $configuration->getAcceptableIssuerTenantIDs());
     }
 
+    public function providerSpecificTenantOrganizationsSetup(): array
+    {
+        return [
+            [AzureADTenantSetup::tenantSpecific()],
+            [AzureADTenantSetup::organizations()],
+        ];
+    }
+
     public function testAcceptableTenantIssuersIDIsEitherTheTenantIDOrAnHardcodedGUIDWhenExpectingAllUsers(): void
     {
-        $configuration = AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID(
-            'common',
+        $configuration = AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(
+            AzureADTenantSetup::common(),
             'tenant_id'
         );
 
@@ -94,8 +85,8 @@ final class AcceptableTenantForAuthenticationConfigurationTest extends TestCase
 
     public function testAcceptableTenantIssuersIDIsTheHardcodedGUIDWhenExpectingOnlyConsumersUsers(): void
     {
-        $configuration = AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID(
-            'consumers',
+        $configuration = AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(
+            AzureADTenantSetup::consumers(),
             'tenant_id'
         );
 

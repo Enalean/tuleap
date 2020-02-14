@@ -28,6 +28,7 @@ use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthe
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
@@ -82,7 +83,7 @@ class ProviderManagerTest extends TestCase
             'github',
             'fiesta_red',
             'tenant',
-            AcceptableTenantForAuthenticationConfiguration::fromAcceptableTenantForLoginIdentifierAndTenantID('common', 'tenant')
+            AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(AzureADTenantSetup::common(), 'tenant')
         );
 
         $this->generic_provider = new GenericProvider(

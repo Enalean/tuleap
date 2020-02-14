@@ -27,17 +27,6 @@ namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
  */
 final class AcceptableTenantForAuthenticationConfiguration
 {
-    private const TENANT_SPECIFIC_IDENTIFIER      = 'tenant_specific';
-    private const TENANT_COMMON_IDENTIFIER        = 'common';
-    private const TENANT_ORGANIZATIONS_IDENTIFIER = 'organizations';
-    private const TENANT_CONSUMERS_IDENTIFIER     = 'consumers';
-    private const VALID_IDENTIFIERS               = [
-        self::TENANT_COMMON_IDENTIFIER,
-        self::TENANT_ORGANIZATIONS_IDENTIFIER,
-        self::TENANT_CONSUMERS_IDENTIFIER,
-        self::TENANT_SPECIFIC_IDENTIFIER
-    ];
-
     /**
      * @see https://docs.microsoft.com/en-us/azure/active-directory/develop/access-tokens#payload-claims
      */
@@ -45,84 +34,62 @@ final class AcceptableTenantForAuthenticationConfiguration
 
     /**
      * @var string
-     *
-     * @psalm-var value-of<self::VALID_IDENTIFIERS>
-     */
-    private $identifier;
-    /**
-     * @var string
      */
     private $tenant_id;
-
     /**
-     * @psalm-param value-of<self::VALID_IDENTIFIERS> $identifier
+     * @var AzureADTenantSetup
      */
-    private function __construct(string $identifier, string $tenant_id)
+    private $tenant_setup;
+
+    private function __construct(AzureADTenantSetup $tenant_setup, string $tenant_id)
     {
-        $this->identifier = $identifier;
-        $this->tenant_id  = $tenant_id;
+        $this->tenant_setup = $tenant_setup;
+        $this->tenant_id    = $tenant_id;
     }
 
-    public static function fromAcceptableTenantForLoginIdentifierAndTenantID(
-        string $acceptable_tenant_for_login_identifier,
+    public static function fromTenantSetupAndTenantID(
+        AzureADTenantSetup $tenant_setup,
         string $tenant_id
     ): self {
-        if (! in_array($acceptable_tenant_for_login_identifier, self::VALID_IDENTIFIERS, true)) {
-            throw new UnknownAcceptableTenantForAuthenticationIdentifierException($acceptable_tenant_for_login_identifier);
-        }
-
-        return new self($acceptable_tenant_for_login_identifier, $tenant_id);
+        return new self($tenant_setup, $tenant_id);
     }
 
     public static function fromSpecificTenantID(string $tenant_id): self
     {
-        return new self(self::TENANT_SPECIFIC_IDENTIFIER, $tenant_id);
+        return new self(AzureADTenantSetup::tenantSpecific(), $tenant_id);
     }
 
+    /**
+     * @psalm-external-mutation-free
+     */
     public function getValueForAuthenticationFlow(): string
     {
-        if ($this->identifier === self::TENANT_SPECIFIC_IDENTIFIER) {
+        if ($this->tenant_setup === AzureADTenantSetup::tenantSpecific()) {
             return $this->tenant_id;
         }
 
-        return $this->identifier;
+        return $this->tenant_setup->getIdentifier();
+    }
+
+    public function getTenantSetup(): AzureADTenantSetup
+    {
+        return $this->tenant_setup;
     }
 
     /**
-     * @psalm-return value-of<self::VALID_IDENTIFIERS>
-     */
-    public function getIdentifier(): string
-    {
-        return $this->identifier;
-    }
-
-    public function getDescription(): string
-    {
-        switch ($this->identifier) {
-            case self::TENANT_SPECIFIC_IDENTIFIER:
-                return dgettext('tuleap-openidconnectclient', 'Users from your specific Azure Active Directory');
-            case self::TENANT_CONSUMERS_IDENTIFIER:
-                return dgettext('tuleap-openidconnectclient', 'Only users with a personal Microsoft account');
-            case self::TENANT_ORGANIZATIONS_IDENTIFIER:
-                return dgettext('tuleap-openidconnectclient', 'Only users with a work/school account from Azure Active Directory');
-            case self::TENANT_COMMON_IDENTIFIER:
-            default:
-                return dgettext('tuleap-openidconnectclient', 'Any users with a work/school account from Azure Active Directory or a personal Microsoft account');
-        }
-    }
-
-    /**
+     * @psalm-external-mutation-free
+     *
      * @return string[]
      */
     public function getAcceptableIssuerTenantIDs(): array
     {
-        switch ($this->identifier) {
-            case self::TENANT_COMMON_IDENTIFIER:
+        switch ($this->tenant_setup) {
+            case AzureADTenantSetup::common():
                 return [self::TENANT_CONSUMERS_GUID, $this->tenant_id];
-            case self::TENANT_CONSUMERS_IDENTIFIER:
+            case AzureADTenantSetup::consumers():
                 return [self::TENANT_CONSUMERS_GUID];
-            case self::TENANT_ORGANIZATIONS_IDENTIFIER:
-            case self::TENANT_SPECIFIC_IDENTIFIER:
+            case AzureADTenantSetup::organizations():
+            case AzureADTenantSetup::tenantSpecific():
             default:
                 return [$this->tenant_id];
         }
