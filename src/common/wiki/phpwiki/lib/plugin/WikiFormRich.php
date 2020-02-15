@@ -85,15 +85,15 @@ rcs_id('$Id: WikiFormRich.php,v 1.15 2004/11/26 18:25:33 rurban Exp $');
 
 class WikiPlugin_WikiFormRich extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return "WikiFormRich";
     }
-    function getDescription()
+    public function getDescription()
     {
         return _("Provide generic WikiForm input buttons");
     }
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -101,7 +101,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
             "\$Revision: 1.15 $"
         );
     }
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('action' => false,     // required argument
                      'method' => 'post',    // or get
@@ -114,7 +114,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
 
     /* TODO: support better block alignment: <br>, tables, indent
      */
-    function handle_plugin_args_cruft($argstr, $args)
+    public function handle_plugin_args_cruft($argstr, $args)
     {
         $allowed = array("editbox", "hidden", "checkbox", "radiobutton"/*deprecated*/,
                  "radio", "pulldown", "submit", "reset", "combobox");
@@ -175,7 +175,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
         return;
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
         if (empty($action)) {

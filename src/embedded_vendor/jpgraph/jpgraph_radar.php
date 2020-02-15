@@ -18,12 +18,12 @@ require_once('jpgraph_plotmark.inc.php');
 class RadarLogTicks extends Ticks
 {
 
-    function __construct()
+    public function __construct()
     {
             // Empty
     }
 
-    function Stroke($aImg, &$grid, $aPos, $aAxisAngle, $aScale, &$aMajPos, &$aMajLabel)
+    public function Stroke($aImg, &$grid, $aPos, $aAxisAngle, $aScale, &$aMajPos, &$aMajLabel)
     {
         $start = $aScale->GetMinVal();
         $limit = $aScale->GetMaxVal();
@@ -113,25 +113,25 @@ class RadarLinearTicks extends Ticks
     private $xlabel_offset=0;
     private $xtick_offset=0;
 
-    function __construct()
+    public function __construct()
     {
         // Empty
     }
 
     // Return major step size in world coordinates
-    function GetMajor()
+    public function GetMajor()
     {
         return $this->major_step;
     }
 
     // Return minor step size in world coordinates
-    function GetMinor()
+    public function GetMinor()
     {
         return $this->minor_step;
     }
 
     // Set Minor and Major ticks (in world coordinates)
-    function Set($aMajStep, $aMinStep = false)
+    public function Set($aMajStep, $aMinStep = false)
     {
         if ($aMinStep==false) {
             $aMinStep=$aMajStep;
@@ -147,7 +147,7 @@ class RadarLinearTicks extends Ticks
         $this->is_set = true;
     }
 
-    function Stroke($aImg, &$grid, $aPos, $aAxisAngle, $aScale, &$aMajPos, &$aMajLabel)
+    public function Stroke($aImg, &$grid, $aPos, $aAxisAngle, $aScale, &$aMajPos, &$aMajLabel)
     {
         // Prepare to draw linear ticks
         $maj_step_abs = abs($aScale->scale_factor*$this->major_step);
@@ -229,7 +229,7 @@ class RadarAxis extends AxisPrototype
     private $title_color='navy';
     private $len=0;
 
-    function __construct($img, $aScale, $color = array(0,0,0))
+    public function __construct($img, $aScale, $color = array(0,0,0))
     {
         parent::__construct($img, $aScale, $color);
         $this->len = $img->plotheight;
@@ -243,7 +243,7 @@ class RadarAxis extends AxisPrototype
     // $aAxisAngle = Axis angle
     // $grid   = Returns an array with positions used to draw the grid
     // $lf   = Label flag, TRUE if the axis should have labels
-    function Stroke($pos, $aAxisAngle, &$grid, $title, $lf)
+    public function Stroke($pos, $aAxisAngle, &$grid, $title, $lf)
     {
         $this->img->SetColor($this->color);
 
@@ -290,7 +290,7 @@ class RadarAxis extends AxisPrototype
         $this->_StrokeAxisTitle($pos, $aAxisAngle, $title);
     }
 
-    function _StrokeAxisTitle($pos, $aAxisAngle, $title)
+    public function _StrokeAxisTitle($pos, $aAxisAngle, $title)
     {
         $this->title->Set($title);
         $marg=6+$this->title->margin;
@@ -371,34 +371,34 @@ class RadarGrid
     private $show=false;
     private $weight=1;
 
-    function __construct()
+    public function __construct()
     {
         // Empty
     }
 
-    function SetColor($aMajColor)
+    public function SetColor($aMajColor)
     {
         $this->grid_color = $aMajColor;
     }
 
-    function SetWeight($aWeight)
+    public function SetWeight($aWeight)
     {
         $this->weight=$aWeight;
     }
 
     // Specify if grid should be dashed, dotted or solid
-    function SetLineStyle($aType)
+    public function SetLineStyle($aType)
     {
         $this->type = $aType;
     }
 
     // Decide if both major and minor grid should be displayed
-    function Show($aShowMajor = true)
+    public function Show($aShowMajor = true)
     {
         $this->show=$aShowMajor;
     }
 
-    function Stroke($img, $grid)
+    public function Stroke($img, $grid)
     {
         if (!$this->show) {
             return;
@@ -454,49 +454,49 @@ class RadarPlot
 
     //---------------
     // CONSTRUCTOR
-    function __construct($data)
+    public function __construct($data)
     {
         $this->data = $data;
         $this->mark = new PlotMark();
     }
 
-    function Min()
+    public function Min()
     {
         return Min($this->data);
     }
 
-    function Max()
+    public function Max()
     {
         return Max($this->data);
     }
 
-    function SetLegend($legend)
+    public function SetLegend($legend)
     {
         $this->legend=$legend;
     }
 
-    function SetLineStyle($aStyle)
+    public function SetLineStyle($aStyle)
     {
         $this->linestyle=$aStyle;
     }
 
-    function SetLineWeight($w)
+    public function SetLineWeight($w)
     {
         $this->weight=$w;
     }
 
-    function SetFillColor($aColor)
+    public function SetFillColor($aColor)
     {
         $this->fill_color = $aColor;
         $this->fill = true;
     }
 
-    function SetFill($f = true)
+    public function SetFill($f = true)
     {
         $this->fill = $f;
     }
 
-    function SetColor($aColor, $aFillColor = false)
+    public function SetColor($aColor, $aFillColor = false)
     {
         $this->color = $aColor;
         if ($aFillColor) {
@@ -506,19 +506,19 @@ class RadarPlot
     }
 
     // Set href targets for CSIM
-    function SetCSIMTargets($aTargets, $aAlts = null)
+    public function SetCSIMTargets($aTargets, $aAlts = null)
     {
         $this->csimtargets=$aTargets;
         $this->csimalts=$aAlts;
     }
 
     // Get all created areas
-    function GetCSIMareas()
+    public function GetCSIMareas()
     {
         return $this->csimareas;
     }
 
-    function Stroke($img, $pos, $scale, $startangle)
+    public function Stroke($img, $pos, $scale, $startangle)
     {
         $nbrpnts = count($this->data);
         $astep=2*M_PI/$nbrpnts;
@@ -581,12 +581,12 @@ class RadarPlot
         }
     }
 
-    function GetCount()
+    public function GetCount()
     {
         return count($this->data);
     }
 
-    function Legend($graph)
+    public function Legend($graph)
     {
         if ($this->legend == '') {
             return;
@@ -612,7 +612,7 @@ class RadarGraph extends Graph
     private $len;
     private $axis_title=null;
 
-    function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)
+    public function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)
     {
         parent::__construct($width, $height, $cachedName, $timeout, $inline);
         $this->posx = $width/2;
@@ -624,17 +624,17 @@ class RadarGraph extends Graph
         $this->SetGridDepth(DEPTH_FRONT);
     }
 
-    function HideTickMarks($aFlag = true)
+    public function HideTickMarks($aFlag = true)
     {
         $this->axis->scale->ticks->SupressTickMarks($aFlag);
     }
 
-    function ShowMinorTickmarks($aFlag = true)
+    public function ShowMinorTickmarks($aFlag = true)
     {
         $this->yscale->ticks->SupressMinorTickMarks(!$aFlag);
     }
 
-    function SetScale($axtype, $ymin = 1, $ymax = 1, $dummy1 = null, $dumy2 = null)
+    public function SetScale($axtype, $ymin = 1, $ymax = 1, $dummy1 = null, $dumy2 = null)
     {
         if ($axtype != 'lin' && $axtype != 'log') {
             JpGraphError::RaiseL(18003, $axtype);
@@ -653,7 +653,7 @@ class RadarGraph extends Graph
         $this->grid = new RadarGrid();
     }
 
-    function SetSize($aSize)
+    public function SetSize($aSize)
     {
         if ($aSize < 0.1 || $aSize>1) {
             JpGraphError::RaiseL(18004, $aSize);
@@ -662,12 +662,12 @@ class RadarGraph extends Graph
         $this->len=min($this->img->width, $this->img->height)*$aSize/2;
     }
 
-    function SetPlotSize($aSize)
+    public function SetPlotSize($aSize)
     {
         $this->SetSize($aSize);
     }
 
-    function SetTickDensity($densy = TICKD_NORMAL, $dummy1 = null)
+    public function SetTickDensity($densy = TICKD_NORMAL, $dummy1 = null)
     {
         $this->ytick_factor=25;
         switch ($densy) {
@@ -689,12 +689,12 @@ class RadarGraph extends Graph
         }
     }
 
-    function SetPos($px, $py = 0.5)
+    public function SetPos($px, $py = 0.5)
     {
         $this->SetCenter($px, $py);
     }
 
-    function SetCenter($px, $py = 0.5)
+    public function SetCenter($px, $py = 0.5)
     {
         if ($px >= 0 && $px <= 1) {
             $this->posx = $this->img->width*$px;
@@ -708,17 +708,17 @@ class RadarGraph extends Graph
         }
     }
 
-    function SetColor($aColor)
+    public function SetColor($aColor)
     {
         $this->SetMarginColor($aColor);
     }
 
-    function SetTitles($aTitleArray)
+    public function SetTitles($aTitleArray)
     {
         $this->axis_title = $aTitleArray;
     }
 
-    function Add($aPlot)
+    public function Add($aPlot)
     {
         if ($aPlot == null) {
             JpGraphError::RaiseL(25010);//("Graph::Add() You tried to add a null plot to the graph.");
@@ -738,7 +738,7 @@ class RadarGraph extends Graph
         }
     }
 
-    function GetPlotsYMinMax($aPlots)
+    public function GetPlotsYMinMax($aPlots)
     {
         $min=$aPlots[0]->Min();
         $max=$aPlots[0]->Max();
@@ -753,7 +753,7 @@ class RadarGraph extends Graph
         return array($min,$max);
     }
 
-    function StrokeIcons()
+    public function StrokeIcons()
     {
         if ($this->iIcons != null) {
             $n = count($this->iIcons);
@@ -763,7 +763,7 @@ class RadarGraph extends Graph
         }
     }
 
-    function StrokeTexts()
+    public function StrokeTexts()
     {
         if ($this->texts != null) {
             $n = count($this->texts);
@@ -774,7 +774,7 @@ class RadarGraph extends Graph
     }
 
     // Stroke the Radar graph
-    function Stroke($aStrokeFileName = '')
+    public function Stroke($aStrokeFileName = '')
     {
 
         // If the filename is the predefined value = '_csim_special_'

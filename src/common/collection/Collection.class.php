@@ -25,7 +25,7 @@ class Collection
 
     public $elements;
 
-    function __construct($initial_array = '')
+    public function __construct($initial_array = '')
     {
         if (is_array($initial_array)) {
             $this->elements = $initial_array;
@@ -37,7 +37,7 @@ class Collection
     /**
      * add the element to the collection
      */
-    function add($element)
+    public function add($element)
     {
         $this->elements[] = $element;
     }
@@ -45,7 +45,7 @@ class Collection
     /**
      * @return true if this collection contains the specified element
      */
-    function contains($wanted)
+    public function contains($wanted)
     {
         $compare_with_equals = method_exists($wanted, 'equals');
         $found = false;
@@ -66,7 +66,7 @@ class Collection
     /**
      * @return Iterator to iterate through the elements
      */
-    function iterator()
+    public function iterator()
     {
         $it = new ArrayIterator($this->elements);
         return $it;
@@ -77,7 +77,7 @@ class Collection
      * @param obj the reference object with which to compare.
      * @return true if this object is the same as the obj argument; false otherwise.
      */
-    function equals($obj)
+    public function equals($obj)
     {
         if (is_a($obj, "Collection") && $this->size() === $obj->size()) {
             //We walk through the first collection to see if the second
@@ -114,7 +114,7 @@ class Collection
     /**
      * @return the number of elements in this collection
      */
-    function size()
+    public function size()
     {
         return count($this->elements);
     }
@@ -122,7 +122,7 @@ class Collection
     /**
      * @return true if the collection is empty
      */
-    function isEmpty()
+    public function isEmpty()
     {
          return $this->size() === 0;
     }
@@ -133,7 +133,7 @@ class Collection
      * @param element element to be removed from this collection, if present.
      * @return true if this collection changed as a result of the call
      */
-    function remove($wanted)
+    public function remove($wanted)
     {
         $compare_with_equals = method_exists($wanted, 'equals');
         //function in_array doesn't work with object ?!
@@ -148,7 +148,7 @@ class Collection
     }
 
 
-    function toArray()
+    public function toArray()
     {
         return $this->elements;
     }

@@ -29,7 +29,7 @@ class ReferenceDao extends DataAccessObject
     * Gets all references for the given project ID, sorted for presentation
     * @return DataAccessResult
     */
-    function searchByGroupID($group_id)
+    public function searchByGroupID($group_id)
     {
         $sql = sprintf(
             "SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id ORDER BY reference.scope DESC, reference.service_short_name, reference.keyword",
@@ -42,7 +42,7 @@ class ReferenceDao extends DataAccessObject
     * Gets a reference from the reference id and the group ID, so that we also have "is_active" row
     * @return DataAccessResult
     */
-    function searchByIdAndGroupID($ref_id, $group_id)
+    public function searchByIdAndGroupID($ref_id, $group_id)
     {
         $sql = sprintf(
             "SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference.id=%s AND reference_group.reference_id=reference.id",
@@ -56,7 +56,7 @@ class ReferenceDao extends DataAccessObject
     * Gets all active references for the given project ID
     * @return DataAccessResult
     */
-    function searchActiveByGroupID($group_id)
+    public function searchActiveByGroupID($group_id)
     {
         $sql = sprintf(
             "SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id AND reference_group.is_active=1",
@@ -69,7 +69,7 @@ class ReferenceDao extends DataAccessObject
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function searchAll()
+    public function searchAll()
     {
         $sql = "SELECT * FROM reference";
         return $this->retrieve($sql);
@@ -79,7 +79,7 @@ class ReferenceDao extends DataAccessObject
     * Searches Reference by reference Id
     * @return DataAccessResult
     */
-    function searchById($id)
+    public function searchById($id)
     {
         $sql = sprintf(
             "SELECT * FROM reference WHERE id = %s",
@@ -108,7 +108,7 @@ class ReferenceDao extends DataAccessObject
     * Searches Reference by scope
     * @return DataAccessResult
     */
-    function searchByScope($scope)
+    public function searchByScope($scope)
     {
         $sql = sprintf(
             "SELECT * FROM reference WHERE scope = %s",
@@ -171,7 +171,7 @@ class ReferenceDao extends DataAccessObject
     * Searches Reference by service short name
     * @return DataAccessResult
     */
-    function searchByServiceShortName($service)
+    public function searchByServiceShortName($service)
     {
         $sql = sprintf(
             "SELECT * FROM reference WHERE service_short_name = %s",
@@ -186,7 +186,7 @@ class ReferenceDao extends DataAccessObject
     * Don't return reference 100 (empty reference)
     * @return DataAccessResult
     */
-    function searchByScopeAndServiceShortName($scope, $service)
+    public function searchByScopeAndServiceShortName($scope, $service)
     {
         $sql = sprintf(
             "SELECT * FROM reference WHERE scope = %s AND service_short_name = %s AND id != 100",
@@ -202,7 +202,7 @@ class ReferenceDao extends DataAccessObject
     * Don't return reference 100 (empty reference)
     * @return DataAccessResult
     */
-    function searchByScopeAndServiceShortNameAndGroupId($scope, $service, $group_id)
+    public function searchByScopeAndServiceShortNameAndGroupId($scope, $service, $group_id)
     {
         $sql = sprintf(
             "SELECT * FROM reference,reference_group WHERE scope = %s AND reference.id=reference_group.reference_id AND service_short_name = %s AND group_id = %s AND reference.id != 100",
@@ -218,7 +218,7 @@ class ReferenceDao extends DataAccessObject
     * Searches Reference by keyword and group_id
     * @return DataAccessResult with one field ('reference_id')
     */
-    function searchByKeywordAndGroupId($keyword, $group_id)
+    public function searchByKeywordAndGroupId($keyword, $group_id)
     {
         // Order by scope to return 'P'roject references before 'S'ystem references
         // This may happen for old tracker created before Reference management.
@@ -236,7 +236,7 @@ class ReferenceDao extends DataAccessObject
     * Searches Reference by keyword and group_id
     * @return DataAccessResult with one field ('reference_id')
     */
-    function searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($keyword, $group_id, $description, $link, $scope)
+    public function searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($keyword, $group_id, $description, $link, $scope)
     {
         // Order by scope to return 'P'roject references before 'S'ystem references
         // This may happen for old tracker created before Reference management.
@@ -265,7 +265,7 @@ class ReferenceDao extends DataAccessObject
     * create a row in the table reference
     * @return true or id(auto_increment) if there is no error
     */
-    function create($keyword, $desc, $link, $scope, $service_short_name, $nature)
+    public function create($keyword, $desc, $link, $scope, $service_short_name, $nature)
     {
         $sql = sprintf(
             "INSERT INTO reference (keyword,description,link,scope,service_short_name, nature) VALUES (%s, %s, %s, %s, %s, %s);",
@@ -279,7 +279,7 @@ class ReferenceDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
-    function create_ref_group($refid, $is_active, $group_id)
+    public function create_ref_group($refid, $is_active, $group_id)
     {
         $sql = sprintf(
             "INSERT INTO reference_group (reference_id,is_active,group_id) VALUES (%s, %s, %s);",
@@ -294,7 +294,7 @@ class ReferenceDao extends DataAccessObject
     * update a row in the table reference
     * @return true or id(auto_increment) if there is no error
     */
-    function update_ref($id, $keyword, $desc, $link, $scope, $service_short_name, $nature)
+    public function update_ref($id, $keyword, $desc, $link, $scope, $service_short_name, $nature)
     {
         $sql = sprintf(
             "UPDATE reference SET keyword=%s, description=%s, link=%s, scope=%s, service_short_name=%s, nature=%s WHERE id=%s;",
@@ -309,7 +309,7 @@ class ReferenceDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function update_ref_group($refid, $is_active, $group_id)
+    public function update_ref_group($refid, $is_active, $group_id)
     {
         $sql = sprintf(
             "UPDATE reference_group SET is_active=%s WHERE reference_id=%s AND group_id=%s;",
@@ -320,7 +320,7 @@ class ReferenceDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name)
+    public function updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name)
     {
 
         $group_id       = $this->da->escapeInt($group_id);
@@ -334,7 +334,7 @@ class ReferenceDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function update_keyword($old_keyword, $keyword, $group_id)
+    public function update_keyword($old_keyword, $keyword, $group_id)
     {
         $sql = sprintf(
             "UPDATE reference, reference_group SET keyword=%s WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s",
@@ -345,7 +345,7 @@ class ReferenceDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function removeById($id)
+    public function removeById($id)
     {
         $sql = sprintf(
             "DELETE FROM reference WHERE id = %s",
@@ -354,7 +354,7 @@ class ReferenceDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function removeRefGroup($id, $group_id)
+    public function removeRefGroup($id, $group_id)
     {
         $sql = sprintf(
             "DELETE FROM reference_group WHERE reference_id = %s AND group_id = %s",
@@ -364,7 +364,7 @@ class ReferenceDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function removeAllById($id)
+    public function removeAllById($id)
     {
         $sql = sprintf(
             "DELETE reference, reference_group FROM reference, reference_group WHERE reference.id = %s AND reference_group.reference_id =%s",

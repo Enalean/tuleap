@@ -42,17 +42,17 @@ class WikiPlugin_PageTrail extends WikiPlugin
     // Four required functions in a WikiPlugin.
     public $def_numberlinks = 5;
 
-    function getName()
+    public function getName()
     {
         return _("PageTrail");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("PageTrail Plugin");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -62,7 +62,7 @@ class WikiPlugin_PageTrail extends WikiPlugin
     }
 
     // default values
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('numberlinks' => $this->def_numberlinks,
                      'invisible'   => false,
@@ -70,7 +70,7 @@ class WikiPlugin_PageTrail extends WikiPlugin
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
 

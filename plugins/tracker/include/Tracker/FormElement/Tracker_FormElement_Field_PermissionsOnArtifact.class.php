@@ -43,7 +43,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return mixed The default value for this field, or null if no default value defined
      */
-    function getDefaultValue()
+    public function getDefaultValue()
     {
     }
 

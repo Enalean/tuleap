@@ -31,7 +31,7 @@ class Docman_Token
      * This token is stored with the referer.
      * @return the generated
      */
-    function __construct()
+    public function __construct()
     {
         $tok     = null;
         $user_id = $this->_getCurrentUserId();
@@ -63,7 +63,7 @@ class Docman_Token
             }
         }
     }
-    /* static */ function retrieveUrl($token)
+    /* static */ public function retrieveUrl($token)
     {
         $url  = null;
         $um   = UserManager::instance();
@@ -81,7 +81,7 @@ class Docman_Token
         return $url;
     }
 
-    function getToken()
+    public function getToken()
     {
         return $this->tok;
     }
@@ -90,17 +90,17 @@ class Docman_Token
         $d = new Docman_TokenDao(CodendiDataAccess::instance());
         return $d;
     }
-    function _getReferer()
+    public function _getReferer()
     {
         return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
     }
-    function _getCurrentUserId()
+    public function _getCurrentUserId()
     {
         $um   = UserManager::instance();
         $user = $um->getCurrentUser();
         return $user->isAnonymous() ? null : $user->getId();
     }
-    function _getHTTPRequest()
+    public function _getHTTPRequest()
     {
         return HTTPRequest::instance();
     }

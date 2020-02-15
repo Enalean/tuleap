@@ -16,7 +16,7 @@ if (!defined('RSS_ENCODING')) {
  */
 class RssWriter extends XmlElement
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct(
             'rdf:RDF',
@@ -45,7 +45,7 @@ class RssWriter extends XmlElement
         $this->_items = array();
     }
 
-    function registerModule($alias, $uri)
+    public function registerModule($alias, $uri)
     {
         assert(!isset($this->_modules[$alias]));
         $this->_modules[$alias] = $uri;
@@ -55,7 +55,7 @@ class RssWriter extends XmlElement
     //  'title', 'link', 'description'
     // and can include:
     //  'URI'
-    function channel($properties, $uri = false)
+    public function channel($properties, $uri = false)
     {
         $this->_channel = $this->node('channel', $properties, $uri);
     }
@@ -64,7 +64,7 @@ class RssWriter extends XmlElement
     //  'title', 'link'
     // and can include:
     //  'description', 'URI'
-    function addItem($properties, $uri = false)
+    public function addItem($properties, $uri = false)
     {
         $this->_items[] = $this->node('item', $properties, $uri);
     }
@@ -73,7 +73,7 @@ class RssWriter extends XmlElement
     //  'url', 'title', 'link'
     // and can include:
     //  'URI'
-    function image($properties, $uri = false)
+    public function image($properties, $uri = false)
     {
         $this->_image = $this->node('image', $properties, $uri);
     }
@@ -82,7 +82,7 @@ class RssWriter extends XmlElement
     //  'title', 'description', 'name', and 'link'
     // and can include:
     //  'URI'
-    function textinput($properties, $uri = false)
+    public function textinput($properties, $uri = false)
     {
         $this->_textinput = $this->node('textinput', $properties, $uri);
     }
@@ -90,7 +90,7 @@ class RssWriter extends XmlElement
     /**
      * Finish construction of RSS.
      */
-    function finish()
+    public function finish()
     {
         if (isset($this->_finished)) {
             return;

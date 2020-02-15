@@ -22,7 +22,7 @@
 class FileModuleMonitorDao extends DataAccessObject
 {
 
-    function whoIsMonitoringPackageByID($group_id, $package_id)
+    public function whoIsMonitoringPackageByID($group_id, $package_id)
     {
         $_package_id = (int) $package_id;
         $_group_id = (int) $group_id;
@@ -49,7 +49,7 @@ class FileModuleMonitorDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function whoIsPubliclyMonitoringPackage($packageId)
+    public function whoIsPubliclyMonitoringPackage($packageId)
     {
         $packageId = $this->da->quoteSmart($packageId);
 
@@ -62,7 +62,7 @@ class FileModuleMonitorDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchById($id)
+    public function searchById($id)
     {
         $_id = (int) $id;
         return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_id), '', ' ORDER BY filemodule_id DESC');
@@ -78,7 +78,7 @@ class FileModuleMonitorDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchMonitoringFileByUserAndPackageId($package_id, PFUser $user, $publicly = false)
+    public function searchMonitoringFileByUserAndPackageId($package_id, PFUser $user, $publicly = false)
     {
         $option = "";
         if ($publicly) {
@@ -90,7 +90,7 @@ class FileModuleMonitorDao extends DataAccessObject
         return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_package_id).' AND fm.user_id ='.$this->da->escapeInt($_user_id).' '.$option, '', ' ORDER BY filemodule_id DESC');
     }
 
-    function _search($where, $group = '', $order = '', $from = array())
+    public function _search($where, $group = '', $order = '', $from = array())
     {
         $sql = 'SELECT fm.* '
             .' FROM filemodule_monitor AS fm '
@@ -110,7 +110,7 @@ class FileModuleMonitorDao extends DataAccessObject
      *
      * @return true or id(auto_increment) if there is no error
      */
-    function create($filemodule_id, PFUser $user, $anonymous = true)
+    public function create($filemodule_id, PFUser $user, $anonymous = true)
     {
 
         $arg      = array();
@@ -141,7 +141,7 @@ class FileModuleMonitorDao extends DataAccessObject
      *
      * @return true if there is no error
      */
-    function delete($filemodule_id, PFUser $user, $onlyPublic = false)
+    public function delete($filemodule_id, PFUser $user, $onlyPublic = false)
     {
         $option = "";
         if ($onlyPublic) {

@@ -40,7 +40,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
      */
     private $ugroups_to_be_notified_builder;
 
-    function __construct(
+    public function __construct(
         $item,
         $url,
         $notificationsManager,
@@ -57,7 +57,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $this->token                          = $token;
         $this->ugroups_to_be_notified_builder = $ugroups_to_be_notified_builder;
     }
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         $content = '<dl><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
         $content .= '<dd>';
@@ -117,31 +117,31 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         return $content;
     }
 
-    function visitEmpty(&$item, $params)
+    public function visitEmpty(&$item, $params)
     {
         return $this->visitDocument($item, $params);
     }
-    function visitWiki(&$item, $params)
+    public function visitWiki(&$item, $params)
     {
         return $this->visitDocument($item, $params);
     }
-    function visitLink(&$item, $params)
+    public function visitLink(&$item, $params)
     {
         return $this->visitDocument($item, $params);
     }
-    function visitEmbeddedFile(&$item, $params)
+    public function visitEmbeddedFile(&$item, $params)
     {
         return $this->visitDocument($item, $params);
     }
-    function visitFile(&$item, $params)
+    public function visitFile(&$item, $params)
     {
         return $this->visitDocument($item, $params);
     }
-    function visitDocument(&$item, $params)
+    public function visitDocument(&$item, $params)
     {
         return '';
     }
-    function visitFolder(&$item, $params)
+    public function visitFolder(&$item, $params)
     {
         $content = '<blockquote>';
         $checked  = !$params['user']->isAnonymous() && $this->notificationsManager->userExists($params['user']->getId(), $this->item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE) ? 'checked="checked"' : '';

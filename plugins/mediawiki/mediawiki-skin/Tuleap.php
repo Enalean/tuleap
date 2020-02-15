@@ -30,7 +30,7 @@ class SkinTuleap extends SkinTemplate
     public $template = 'TuleapTemplate';
     public $useHeadElement = true;
 
-    function setupTemplate($classname, $repository = false, $cache_dir = false)
+    public function setupTemplate($classname, $repository = false, $cache_dir = false)
     {
             $tc = new $classname();
 
@@ -51,7 +51,7 @@ class SkinTuleap extends SkinTemplate
     /**
      * @param $out OutputPage
      */
-    function setupSkinUserCss(OutputPage $out)
+    public function setupSkinUserCss(OutputPage $out)
     {
             global $wgHandheldStyle;
             /* add Tuleap styles */
@@ -94,7 +94,7 @@ class TuleapTemplate extends BaseTemplate
      *
      * @access private
      */
-    function execute()
+    public function execute()
     {
         global $wgHtml5;
      // Suppress warnings to prevent notices about missing indexes in $this->data
@@ -242,7 +242,7 @@ class TuleapTemplate extends BaseTemplate
      * Prints the cactions bar.
      * Shared between MonoBook and Modern
      */
-    function cactions()
+    public function cactions()
     {
         ?>
     <div id="p-cactions" class="portlet">
@@ -259,7 +259,7 @@ class TuleapTemplate extends BaseTemplate
     </div>
         <?php
     }
-    function toolbox()
+    public function toolbox()
     {
         ?>
     <div class="portlet" id="p-tb">
@@ -281,7 +281,7 @@ class TuleapTemplate extends BaseTemplate
         <?php
     }
 
-    function languageBox()
+    public function languageBox()
     {
         if ($this->data['language_urls']) {
             ?>
@@ -300,7 +300,7 @@ class TuleapTemplate extends BaseTemplate
         }
     }
 
-    function customBox($bar, $cont)
+    public function customBox($bar, $cont)
     {
         $portletAttribs = array( 'class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId("p-$bar") );
         $tooltip = Linker::titleAttrib("p-$bar");

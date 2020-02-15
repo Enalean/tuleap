@@ -24,7 +24,7 @@
 class Docman_MetadataListOfValuesElementDao extends DataAccessObject
 {
 
-    function serachByValueId($id)
+    public function serachByValueId($id)
     {
         $sql = sprintf(
             'SELECT *'.
@@ -57,7 +57,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchByName($metadataId, $name, $onlyActive)
+    public function searchByName($metadataId, $name, $onlyActive)
     {
         $where_clause = '';
         if ($onlyActive === true) {
@@ -78,7 +78,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     }
 
     // Special query to get values in rank order.
-    function searchListValuesById($fieldId, $itemId)
+    public function searchListValuesById($fieldId, $itemId)
     {
         $sql = sprintf(
             'SELECT love.*'.
@@ -162,7 +162,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         return $rank;
     }
 
-    function createElement($name, $description, $rank, $status)
+    public function createElement($name, $description, $rank, $status)
     {
         $sql = sprintf(
             'INSERT INTO plugin_docman_metadata_love('.
@@ -178,7 +178,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         return $this->_createAndReturnId($sql);
     }
 
-    function createMetadataElementBond($metadataId, $elementId)
+    public function createMetadataElementBond($metadataId, $elementId)
     {
         $sql = sprintf(
             'INSERT INTO plugin_docman_metadata_love_md('.
@@ -192,7 +192,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         return $this->_createAndReturnId($sql);
     }
 
-    function create($metadataId, $name, $description, $rank, $status)
+    public function create($metadataId, $name, $description, $rank, $status)
     {
         $rank = $this->prepareLoveRanking($metadataId, $rank);
         if ($rank !== false) {
@@ -206,7 +206,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         }
     }
 
-    function _createAndReturnId($sql)
+    public function _createAndReturnId($sql)
     {
         $inserted = $this->update($sql);
         if ($inserted) {
@@ -220,7 +220,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         return $inserted;
     }
 
-    function updateElement($metadataId, $valueId, $name, $description, $rank, $status)
+    public function updateElement($metadataId, $valueId, $name, $description, $rank, $status)
     {
         $updated = false;
 
@@ -253,7 +253,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         return $updated;
     }
 
-    function updateFromRow($row)
+    public function updateFromRow($row)
     {
         $updated = false;
         $id = false;
@@ -282,14 +282,14 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         return $updated;
     }
 
-    function delete($id)
+    public function delete($id)
     {
         $row = array('value_id' => $id,
                      'status'   => 'D');
         return $this->updateFromRow($row);
     }
 
-    function deleteByMetadataId($id)
+    public function deleteByMetadataId($id)
     {
         $sql = sprintf(
             'UPDATE plugin_docman_metadata_love AS love'.

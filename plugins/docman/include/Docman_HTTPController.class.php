@@ -29,7 +29,7 @@ require_once('Docman_Actions.class.php');
 class Docman_HTTPController extends Docman_Controller
 {
 
-    function __construct(&$plugin, $pluginPath, $themePath, $request = null)
+    public function __construct(&$plugin, $pluginPath, $themePath, $request = null)
     {
         if (!$request) {
             $request = HTTPRequest::instance();
@@ -38,7 +38,7 @@ class Docman_HTTPController extends Docman_Controller
     }
 
 
-    /* protected */ function _includeView()
+    /* protected */ public function _includeView()
     {
         $className = 'Docman_View_'. $this->view;
         if (file_exists(dirname(__FILE__).'/view/'. $className .'.class.php')) {
@@ -47,18 +47,18 @@ class Docman_HTTPController extends Docman_Controller
         }
         return false;
     }
-    /* protected */ function _set_deleteView_errorPerms()
+    /* protected */ public function _set_deleteView_errorPerms()
     {
         $this->view = 'Details';
     }
-    /* protected */ function _set_redirectView()
+    /* protected */ public function _set_redirectView()
     {
         if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
             $this->_viewParams['redirect_to'] = $redirect_to;
         }
         $this->view = 'RedirectAfterCrud';
     }
-    /* protected */ function _setView($view)
+    /* protected */ public function _setView($view)
     {
         if ($view == 'getRootFolder') {
             $this->feedback->log('error', 'Unable to process request');
@@ -67,15 +67,15 @@ class Docman_HTTPController extends Docman_Controller
             $this->view = $view;
         }
     }
-    /* protected */ function _set_moveView_errorPerms()
+    /* protected */ public function _set_moveView_errorPerms()
     {
         $this->view = 'Details';
     }
-    /* protected */ function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view)
+    /* protected */ public function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view)
     {
            $this->view = $item->accept($get_show_view, $this->request->get('report'));
     }
-    /* protected */ function _set_createItemView_afterCreate($view)
+    /* protected */ public function _set_createItemView_afterCreate($view)
     {
         if ($view == 'createFolder') {
             $this->view = 'NewFolder';
@@ -83,7 +83,7 @@ class Docman_HTTPController extends Docman_Controller
             $this->view = 'NewDocument';
         }
     }
-    /* protected */ function _set_doesnot_belong_to_project_error($item, $group)
+    /* protected */ public function _set_doesnot_belong_to_project_error($item, $group)
     {
         $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), $group->getPublicName())));
         $this->_viewParams['redirect_to'] = str_replace('group_id='. $this->request->get('group_id'), 'group_id='. $item->getGroupId(), $_SERVER['REQUEST_URI']);
@@ -94,7 +94,7 @@ class Docman_HTTPController extends Docman_Controller
      * Get the list of all futur obsolete documents and warn document owner
      * about this obsolescence.
      */
-    function notifyFuturObsoleteDocuments()
+    public function notifyFuturObsoleteDocuments()
     {
         $hp = Codendi_HTMLPurifier::instance();
         $pm = ProjectManager::instance();

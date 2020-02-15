@@ -22,23 +22,23 @@ class FieldArrow
     private $isizespec = array(
         array(2,1),array(3,2),array(4,3),array(6,4),array(7,4),array(8,5),array(10,6),array(12,7),array(16,8),array(20,10)
         );
-    function __construct()
+    public function __construct()
     {
         // Empty
     }
 
-    function SetSize($aSize, $aArrowSize = 2)
+    public function SetSize($aSize, $aArrowSize = 2)
     {
         $this->iSize = $aSize;
         $this->iArrowSize = $aArrowSize;
     }
 
-    function SetColor($aColor)
+    public function SetColor($aColor)
     {
         $this->iColor = $aColor;
     }
 
-    function Stroke($aImg, $x, $y, $a)
+    public function Stroke($aImg, $x, $y, $a)
     {
         // First rotate the center coordinates
         list($x,$y) = $aImg->Rotate($x, $y);
@@ -73,7 +73,7 @@ class FieldPlot extends Plot
     private $iAngles = array();
     private $iCallback = '';
 
-    function __construct($datay, $datax, $angles)
+    public function __construct($datay, $datax, $angles)
     {
         if ((count($datax) != count($datay))) {
             JpGraphError::RaiseL(20001);//("Fieldplots must have equal number of X and Y points.");
@@ -91,12 +91,12 @@ class FieldPlot extends Plot
         $this->arrow = new FieldArrow();
     }
 
-    function SetCallback($aFunc)
+    public function SetCallback($aFunc)
     {
         $this->iCallback = $aFunc;
     }
 
-    function Stroke($img, $xscale, $yscale)
+    public function Stroke($img, $xscale, $yscale)
     {
 
         // Remeber base color and size
@@ -136,7 +136,7 @@ class FieldPlot extends Plot
     }
 
     // Framework function
-    function Legend($aGraph)
+    public function Legend($aGraph)
     {
         if ($this->legend != "") {
             $aGraph->legend->Add(
@@ -163,7 +163,7 @@ class ScatterPlot extends Plot
     private $impuls = false;
     //---------------
     // CONSTRUCTOR
-    function __construct($datay, $datax = false)
+    public function __construct($datay, $datax = false)
     {
         if (is_array($datax) && (count($datax) != count($datay))) {
             JpGraphError::RaiseL(20003);//("Scatterplot must have equal number of X and Y points.");
@@ -180,18 +180,18 @@ class ScatterPlot extends Plot
 
     //---------------
     // PUBLIC METHODS
-    function SetImpuls($f = true)
+    public function SetImpuls($f = true)
     {
         $this->impuls = $f;
     }
 
-    function SetStem($f = true)
+    public function SetStem($f = true)
     {
         $this->impuls = $f;
     }
 
     // Combine the scatter plot points with a line
-    function SetLinkPoints($aFlag = true, $aColor = "black", $aWeight = 1, $aStyle = 'solid')
+    public function SetLinkPoints($aFlag = true, $aColor = "black", $aWeight = 1, $aStyle = 'solid')
     {
         $this->link->iShow = $aFlag;
         $this->link->iColor = $aColor;
@@ -199,7 +199,7 @@ class ScatterPlot extends Plot
         $this->link->iStyle = $aStyle;
     }
 
-    function Stroke($img, $xscale, $yscale)
+    public function Stroke($img, $xscale, $yscale)
     {
 
         $ymin=$yscale->scale_abs[0];
@@ -263,7 +263,7 @@ class ScatterPlot extends Plot
     }
 
     // Framework function
-    function Legend($aGraph)
+    public function Legend($aGraph)
     {
         if ($this->legend != "") {
             $aGraph->legend->Add(

@@ -38,17 +38,17 @@ require_once("lib/plugin/IncludePage.php");
 
 class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
 {
-    function getName()
+    public function getName()
     {
         return _("UnfoldSubpages");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Includes the content of all SubPages of the current page.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -57,7 +57,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -84,7 +84,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
         );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         static $included_pages = false;
         if (!$included_pages) {

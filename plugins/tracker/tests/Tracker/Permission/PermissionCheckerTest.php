@@ -595,7 +595,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanView($this->restricted, $artifact));
     }
 
-    function testUserCanViewTrackerAccessSubmitter()
+    public function testUserCanViewTrackerAccessSubmitter()
     {
         $ugroup_ass = 101;
         $ugroup_sub = 102;
@@ -622,7 +622,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanView($this->u_ass, $artifact));
     }
 
-    function testUserCanViewTrackerAccessAssignee()
+    public function testUserCanViewTrackerAccessAssignee()
     {
         $ugroup_ass = 101;
         $ugroup_sub = 102;
@@ -654,7 +654,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanView($this->user, $artifact_assignee));
     }
 
-    function testUserCanViewTrackerAccessSubmitterOrAssignee()
+    public function testUserCanViewTrackerAccessSubmitterOrAssignee()
     {
         $ugroup_ass = 101;
         $ugroup_sub = 102;
@@ -688,7 +688,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanView($this->user, $artifact_subass));
     }
 
-    function testUserCanViewTrackerAccessFull()
+    public function testUserCanViewTrackerAccessFull()
     {
         $ugroup_ass = 101;
         $ugroup_sub = 102;

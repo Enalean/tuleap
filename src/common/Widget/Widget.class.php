@@ -95,11 +95,11 @@ use Tuleap\Layout\CssAssetCollection;
         return true;
     }
 
-    function hasRss()
+    public function hasRss()
     {
         return false;
     }
-    function getRssUrl($owner_id, $owner_type)
+    public function getRssUrl($owner_id, $owner_type)
     {
         if ($this->hasRss()) {
             return '/widgets/?'. http_build_query(
@@ -115,26 +115,26 @@ use Tuleap\Layout\CssAssetCollection;
             return false;
         }
     }
-    function isUnique()
+    public function isUnique()
     {
         return true;
     }
-    function isAvailable()
+    public function isAvailable()
     {
         return true;
     }
-    function isAjax()
+    public function isAjax()
     {
         return false;
     }
-    function getInstanceId()
+    public function getInstanceId()
     {
         return $this->content_id;
     }
-    function loadContent($id)
+    public function loadContent($id)
     {
     }
-    function setOwner($owner_id, $owner_type)
+    public function setOwner($owner_id, $owner_type)
     {
         $this->owner_id = $owner_id;
         $this->owner_type = $owner_type;
@@ -164,7 +164,7 @@ use Tuleap\Layout\CssAssetCollection;
         return null;
     }
 
-    function destroy($id)
+    public function destroy($id)
     {
     }
 
@@ -173,7 +173,7 @@ use Tuleap\Layout\CssAssetCollection;
         return _('General');
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return '';
     }
@@ -181,7 +181,7 @@ use Tuleap\Layout\CssAssetCollection;
     /**
      * @return PFUser
      */
-    function getCurrentUser()
+    public function getCurrentUser()
     {
         return UserManager::instance()->getCurrentUser();
     }

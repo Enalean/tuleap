@@ -56,7 +56,7 @@ class ArtifactFieldFactory
      *  @param ArtifactType: the artifact type object
      *    @return bool success.
      */
-    function __construct(&$ArtifactType)
+    public function __construct(&$ArtifactType)
     {
         global $Language;
 
@@ -85,7 +85,7 @@ class ArtifactFieldFactory
      *  @param group_artifact_id: the artifact type id
      *    @return bool success.
      */
-    function fetchData($group_artifact_id)
+    public function fetchData($group_artifact_id)
     {
 
         $sql='SELECT af.field_id, field_name, display_type, data_type, '.
@@ -126,7 +126,7 @@ class ArtifactFieldFactory
      *  @param field_name: the field name
      *    @return    ArtifactField object
      */
-    function getFieldFromName($field_name)
+    public function getFieldFromName($field_name)
     {
         $field = isset($this->USAGE_BY_NAME[$field_name])?$this->USAGE_BY_NAME[$field_name]:false;
         return $field;
@@ -138,7 +138,7 @@ class ArtifactFieldFactory
      *  @param field_id: the field id
      *    @return    ArtifactField object
      */
-    function getFieldFromId($field_id)
+    public function getFieldFromId($field_id)
     {
             return isset($this->USAGE_BY_ID[$field_id])?$this->USAGE_BY_ID[$field_id]:null;
     }
@@ -148,7 +148,7 @@ class ArtifactFieldFactory
      *
      *    @return    array
      */
-    function getAllUsedFields()
+    public function getAllUsedFields()
     {
 
         $result_fields = array();
@@ -167,7 +167,7 @@ class ArtifactFieldFactory
      *
      *    @return    array
      */
-    function getAllUnusedFields()
+    public function getAllUnusedFields()
     {
 
         $result_fields = array();
@@ -189,7 +189,7 @@ class ArtifactFieldFactory
      *
      *    @return    array
      */
-    function extractFieldList($post_method = true, $prefix = null)
+    public function extractFieldList($post_method = true, $prefix = null)
     {
 
         $request = HTTPRequest::instance();
@@ -287,7 +287,7 @@ class ArtifactFieldFactory
      *
      *    @return bool
      */
-    function checkEmptyFields($field_array, $showFeedback = true)
+    public function checkEmptyFields($field_array, $showFeedback = true)
     {
         global $Language;
 
@@ -331,7 +331,7 @@ class ArtifactFieldFactory
      * of this tracker that have not been showed to the user
      * during the artifact creation
      */
-    function getAllFieldsNotShownOnAdd()
+    public function getAllFieldsNotShownOnAdd()
     {
         $result_fields = array();
         foreach ($this->USAGE_BY_NAME as $key => $field) {
@@ -350,7 +350,7 @@ class ArtifactFieldFactory
      * @param int $fieldset_id the id of the field set
      * @return array{ArtifactField} the array of the ArtifactField objects contained in the fieldset
      */
-    function getFieldsContainedInFieldSet($fieldset_id)
+    public function getFieldsContainedInFieldSet($fieldset_id)
     {
         $fields_contained_in_fieldset = array();
         $sql = "SELECT af.field_id
@@ -374,7 +374,7 @@ class ArtifactFieldFactory
      * param $atid_dest: all groups that do not have this tracker are foreign groups
      * return name of $ug if it is a foreign group else return false
      */
-    function _getForeignUgroupName($ug, $atid_dest)
+    public function _getForeignUgroupName($ug, $atid_dest)
     {
         $db_res = db_query("SELECT ugroup.name FROM ugroup,artifact_group_list agl ".
         "WHERE ugroup.ugroup_id='". db_ei($ug) ."' ".
@@ -398,7 +398,7 @@ class ArtifactFieldFactory
      *
      *    @return bool
      */
-    function copyFields($atid_dest, $mapping_fieldset_array, $ugroup_mapping = false)
+    public function copyFields($atid_dest, $mapping_fieldset_array, $ugroup_mapping = false)
     {
         global $Language;
 
@@ -507,7 +507,7 @@ class ArtifactFieldFactory
      *
      *    @return bool
      */
-    function deleteFields($atid)
+    public function deleteFields($atid)
     {
 
         // Remove fields permissions
@@ -552,7 +552,7 @@ class ArtifactFieldFactory
      *
      *  @return bool - exist or not
      */
-    function existFieldId($field_id)
+    public function existFieldId($field_id)
     {
         $sql = "SELECT * FROM artifact_field WHERE group_artifact_id=". db_ei($this->ArtifactType->getID()) .
          " AND field_id=". db_ei($field_id) ;
@@ -573,7 +573,7 @@ class ArtifactFieldFactory
      *
      *  @return string
      */
-    function getDefaultValue($data_type, $display_type)
+    public function getDefaultValue($data_type, $display_type)
     {
 
         $af = new ArtifactField();
@@ -633,7 +633,7 @@ class ArtifactFieldFactory
      *
      *  @return bool - succeed or failed
      */
-    function createField(
+    public function createField(
         $description,
         $label,
         $data_type,

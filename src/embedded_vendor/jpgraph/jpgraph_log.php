@@ -22,7 +22,7 @@ class LogScale extends LinearScale
     // CONSTRUCTOR
 
     // Log scale is specified using the log of min and max
-    function __construct($min, $max, $type = "y")
+    public function __construct($min, $max, $type = "y")
     {
         parent::__construct($min, $max, $type);
         $this->ticks = new LogTicks();
@@ -33,7 +33,7 @@ class LogScale extends LinearScale
     // PUBLIC METHODS
 
     // Translate between world and screen
-    function Translate($a)
+    public function Translate($a)
     {
         if (!is_numeric($a)) {
             if ($a != '' && $a != '-' && $a != 'x') {
@@ -56,7 +56,7 @@ class LogScale extends LinearScale
 
     // Relative translate (don't include offset) usefull when we just want
     // to know the relative position (in pixels) on the axis
-    function RelTranslate($a)
+    public function RelTranslate($a)
     {
         if (!is_numeric($a)) {
             if ($a != '' && $a != '-' && $a != 'x') {
@@ -73,12 +73,12 @@ class LogScale extends LinearScale
     }
 
     // Use bcpow() for increased precision
-    function GetMinVal()
+    public function GetMinVal()
     {
         return round(bcpow(10, $this->scale[0], 15), 14);
     }
 
-    function GetMaxVal()
+    public function GetMaxVal()
     {
         return round(bcpow(10, $this->scale[1], 15), 14);
     }
@@ -88,7 +88,7 @@ class LogScale extends LinearScale
     // Note that for log autoscale the "maxstep" the fourth argument
     // isn't used. This is just included to give the method the same
     // signature as the linear counterpart.
-    function AutoScale($img, $min, $max, $maxsteps, $majend = true)
+    public function AutoScale($img, $min, $max, $maxsteps, $majend = true)
     {
         if ($min==0) {
             $min=1;
@@ -132,17 +132,17 @@ class LogTicks extends Ticks
     private $ticklabels_pos = array();
     //---------------
     // CONSTRUCTOR
-    function __construct()
+    public function __construct()
     {
     }
     //---------------
     // PUBLIC METHODS
-    function IsSpecified()
+    public function IsSpecified()
     {
         return true;
     }
 
-    function SetLabelLogType($aType)
+    public function SetLabelLogType($aType)
     {
         $this->label_logtype = $aType;
     }
@@ -150,18 +150,18 @@ class LogTicks extends Ticks
     // For log scale it's meaningless to speak about a major step
     // We just return -1 to make the framework happy (specifically
     // StrokeLabels() )
-    function GetMajor()
+    public function GetMajor()
     {
         return -1;
     }
 
-    function SetTextLabelStart($aStart)
+    public function SetTextLabelStart($aStart)
     {
         JpGraphError::RaiseL(11005);
         //('Specifying tick interval for a logarithmic scale is undefined. Remove any calls to SetTextLabelStart() or SetTextTickInterval() on the logarithmic scale.');
     }
 
-    function SetXLabelOffset($dummy)
+    public function SetXLabelOffset($dummy)
     {
         // For log scales we dont care about XLabel offset
     }
@@ -170,7 +170,7 @@ class LogTicks extends Ticks
     // position in the image is specified in pos, i.e. for an x-axis
     // it specifies the absolute y-coord and for Y-ticks it specified the
     // absolute x-position.
-    function Stroke($img, $scale, $pos)
+    public function Stroke($img, $scale, $pos)
     {
         $start = $scale->GetMinVal();
         $limit = $scale->GetMaxVal();

@@ -463,7 +463,7 @@ class TrackerFactory
     /**
      * @return mixed array(Tracker object, field_mapping array) or false on failure.
      */
-    function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false)
+    public function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false)
     {
 
         if ($this->validMandatoryInfoOnCreate($name, $itemname, $project_id)) {

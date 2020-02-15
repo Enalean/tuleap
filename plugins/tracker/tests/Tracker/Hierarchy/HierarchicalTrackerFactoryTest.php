@@ -28,7 +28,7 @@ Mock::generate('TrackerFactory');
 class HierarchicalTrackerFactoryTest extends TuleapTestCase
 {
 
-    function testGetWithChildren()
+    public function testGetWithChildren()
     {
         $tracker = aTracker()->withId(1)->build();
 

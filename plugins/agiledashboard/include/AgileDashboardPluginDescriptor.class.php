@@ -24,7 +24,7 @@
 class AgileDashboardPluginDescriptor extends PluginDescriptor
 {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct($GLOBALS['Language']->getText('plugin_agiledashboard', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_agiledashboard', 'descriptor_description'));
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');

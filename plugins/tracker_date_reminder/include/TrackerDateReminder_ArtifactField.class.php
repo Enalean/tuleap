@@ -20,7 +20,7 @@
 
 class TrackerDateReminder_ArtifactField
 {
-    function getDateFieldReminderSettings($field_id, $group_artifact_id)
+    public function getDateFieldReminderSettings($field_id, $group_artifact_id)
     {
         $sql = sprintf(
             'SELECT * FROM artifact_date_reminder_settings'
@@ -41,7 +41,7 @@ class TrackerDateReminder_ArtifactField
      *
      * @return result set
      */
-    function deleteFieldReminderSettings($field_id, $group_artifact_id)
+    public function deleteFieldReminderSettings($field_id, $group_artifact_id)
     {
 
         $del = sprintf(
@@ -63,7 +63,7 @@ class TrackerDateReminder_ArtifactField
     }
 
 
-    function populateProcessingForField(ArtifactType $at, $field_id, $group_artifact_id)
+    public function populateProcessingForField(ArtifactType $at, $field_id, $group_artifact_id)
     {
         //Now populate the 'artifact_date_reminder_processing' table with concerned artifacts
         $art = sprintf(
@@ -97,7 +97,7 @@ class TrackerDateReminder_ArtifactField
      *
      *  @return true on success, false on failure.
      */
-    function updateDateFieldReminderSettings(ArtifactType $at, ArtifactField $field, $group_artifact_id, $start, $notif_type, $frequency, $recurse, $people_notified)
+    public function updateDateFieldReminderSettings(ArtifactType $at, ArtifactField $field, $group_artifact_id, $start, $notif_type, $frequency, $recurse, $people_notified)
     {
         $res = $this->getDateFieldReminderSettings($field->getID(), $group_artifact_id);
         if ($res && !db_error($res)) {

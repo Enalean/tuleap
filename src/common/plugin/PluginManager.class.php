@@ -91,17 +91,17 @@ class PluginManager
         return $this->plugin_factory->getAvailablePlugins();
     }
 
-    function getAllPlugins()
+    public function getAllPlugins()
     {
         return $this->plugin_factory->getAllPlugins();
     }
 
-    function isPluginAvailable($plugin)
+    public function isPluginAvailable($plugin)
     {
         return $this->plugin_factory->isPluginAvailable($plugin);
     }
 
-    function availablePlugin($plugin)
+    public function availablePlugin($plugin)
     {
         if ($plugin->canBeMadeAvailable()) {
             $this->plugin_factory->availablePlugin($plugin);
@@ -111,7 +111,7 @@ class PluginManager
         }
     }
 
-    function unavailablePlugin($plugin)
+    public function unavailablePlugin($plugin)
     {
         $this->plugin_factory->unavailablePlugin($plugin);
 
@@ -131,7 +131,7 @@ class PluginManager
         $this->site_cache->invalidatePluginBasedCaches();
     }
 
-    function installPlugin($name)
+    public function installPlugin($name)
     {
         $plugin = false;
         if ($this->isNameValid($name)) {
@@ -153,7 +153,7 @@ class PluginManager
         return $plugin;
     }
 
-    function uninstallPlugin(Plugin $plugin)
+    public function uninstallPlugin(Plugin $plugin)
     {
         $name = $this->plugin_factory->getNameForPlugin($plugin);
         if (!$this->_executeSqlStatements('uninstall', $name)) {
@@ -165,7 +165,7 @@ class PluginManager
             return false;
         }
     }
-    function getPostInstall($name)
+    public function getPostInstall($name)
     {
         $path_to_file = '/'.$name.'/POSTINSTALL.txt';
         return file_exists($GLOBALS['sys_pluginsroot'].$path_to_file) ?
@@ -173,7 +173,7 @@ class PluginManager
             false;
     }
 
-    function getInstallReadme($name)
+    public function getInstallReadme($name)
     {
         foreach ($this->plugin_factory->getAllPossiblePluginsDir() as $dir) {
             $path = $dir.'/'.$name;
@@ -254,7 +254,7 @@ class PluginManager
         }
     }
 
-    function _createEtc($name)
+    public function _createEtc($name)
     {
         if (!is_dir($GLOBALS['sys_custompluginsroot'] .'/'. $name)) {
             mkdir($GLOBALS['sys_custompluginsroot'] .'/'. $name, 0700);
@@ -278,7 +278,7 @@ class PluginManager
         }
     }
 
-    function _executeSqlStatements($file, $name)
+    public function _executeSqlStatements($file, $name)
     {
         $db_corrupted = false;
         $path_to_file = '/'.$name.'/db/'.$file.'.sql';
@@ -301,34 +301,34 @@ class PluginManager
         return $this->plugin_factory->getNotYetInstalledPlugins();
     }
 
-    function isNameValid($name)
+    public function isNameValid($name)
     {
         return (0 === preg_match('/[^a-zA-Z0-9_-]/', $name));
     }
 
-    function getPluginByName($name)
+    public function getPluginByName($name)
     {
         return $this->plugin_factory->getPluginByName($name);
     }
 
-    function getAvailablePluginByName($name)
+    public function getAvailablePluginByName($name)
     {
         $plugin = $this->getPluginByName($name);
         if ($plugin && $this->isPluginAvailable($plugin)) {
             return $plugin;
         }
     }
-    function getPluginById($id)
+    public function getPluginById($id)
     {
         return $this->plugin_factory->getPluginById($id);
     }
-    function pluginIsCustom($plugin)
+    public function pluginIsCustom($plugin)
     {
         return $this->plugin_factory->pluginIsCustom($plugin);
     }
 
     public $plugins_name;
-    function getNameForPlugin($plugin)
+    public function getNameForPlugin($plugin)
     {
         if (!$this->plugins_name) {
             $this->plugins_name = array();
@@ -339,12 +339,12 @@ class PluginManager
         return $this->plugins_name[$plugin->getId()];
     }
 
-    function getAllowedProjects($plugin)
+    public function getAllowedProjects($plugin)
     {
         return $this->plugin_factory->getProjectsByPluginId($plugin);
     }
 
-    function _updateProjectForPlugin($action, $plugin, $projectIds)
+    public function _updateProjectForPlugin($action, $plugin, $projectIds)
     {
         $success     = true;
         $successOnce = false;
@@ -381,22 +381,22 @@ class PluginManager
         }
     }
 
-    function addProjectForPlugin($plugin, $projectIds)
+    public function addProjectForPlugin($plugin, $projectIds)
     {
         $this->_updateProjectForPlugin('add', $plugin, $projectIds);
     }
 
-    function delProjectForPlugin($plugin, $projectIds)
+    public function delProjectForPlugin($plugin, $projectIds)
     {
         $this->_updateProjectForPlugin('del', $plugin, $projectIds);
     }
 
-    function isProjectPluginRestricted($plugin)
+    public function isProjectPluginRestricted($plugin)
     {
         return $this->plugin_factory->isProjectPluginRestricted($plugin);
     }
 
-    function updateProjectPluginRestriction($plugin, $restricted)
+    public function updateProjectPluginRestriction($plugin, $restricted)
     {
         $this->plugin_factory->restrictProjectPluginUse($plugin, $restricted);
         if ($restricted == false) {
@@ -404,7 +404,7 @@ class PluginManager
         }
     }
 
-    function isPluginAllowedForProject($plugin, $projectId)
+    public function isPluginAllowedForProject($plugin, $projectId)
     {
         if ($this->isProjectPluginRestricted($plugin)) {
             return $this->plugin_factory->isPluginAllowedForProject($plugin, $projectId);

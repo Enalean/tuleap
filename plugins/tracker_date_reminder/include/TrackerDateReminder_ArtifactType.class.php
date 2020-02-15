@@ -22,7 +22,7 @@ class TrackerDateReminder_ArtifactType
 {
     protected $at;
 
-    function __construct(ArtifactType $at)
+    public function __construct(ArtifactType $at)
     {
         $this->at = $at;
     }
@@ -37,7 +37,7 @@ class TrackerDateReminder_ArtifactType
     *
     * @return nothing
     */
-    function addArtifactToDateReminderProcessing($field_id, $artifact_id, $group_artifact_id)
+    public function addArtifactToDateReminderProcessing($field_id, $artifact_id, $group_artifact_id)
     {
 
         $art_field_fact = new ArtifactFieldFactory($this->at);
@@ -131,7 +131,7 @@ class TrackerDateReminder_ArtifactType
     *
     * @return nothing
     */
-    function deleteArtifactFromDateReminderProcessing($field_id, $artifact_id, $group_artifact_id)
+    public function deleteArtifactFromDateReminderProcessing($field_id, $artifact_id, $group_artifact_id)
     {
 
         if ($field_id == 0) {

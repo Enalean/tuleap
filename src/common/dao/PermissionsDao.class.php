@@ -33,7 +33,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function searchAll()
+    public function searchAll()
     {
         $sql = "SELECT * FROM permissions";
         return $this->retrieve($sql);
@@ -48,7 +48,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
      *
      * @return DataAccessResult
      */
-    function searchUgroupByObjectIdAndPermissionType($objectId, $permissionType, $withName = true)
+    public function searchUgroupByObjectIdAndPermissionType($objectId, $permissionType, $withName = true)
     {
         $fields = '';
         $joins  = '';
@@ -147,7 +147,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     *
     * @return bool
     */
-    function clonePermissions($source, $target, $perms, $toGroupId = 0)
+    public function clonePermissions($source, $target, $perms, $toGroupId = 0)
     {
         $sql = sprintf(
             "DELETE FROM permissions ".
@@ -253,7 +253,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
      *
      * @return bool
      */
-    function clearPermission($permissionType, $objectId)
+    public function clearPermission($permissionType, $objectId)
     {
         $sql = ' DELETE FROM permissions '.
                ' WHERE object_id = '.$this->da->quoteSmart($objectId, array('force_string' => true)).

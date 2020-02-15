@@ -58,7 +58,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
         $this->job_builder = $job_builder;
     }
 
-    function getTitle()
+    public function getTitle()
     {
         $title = '';
         if ($this->job) {
@@ -69,12 +69,12 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
         return $title;
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_buildshistory');
     }
 
-    function loadContent($id)
+    public function loadContent($id)
     {
         $this->content_id = $id;
     }
@@ -100,7 +100,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
         }
     }
 
-    function getContent()
+    public function getContent()
     {
         $this->initContent();
 
@@ -117,7 +117,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
         return $html;
     }
 
-    function hasRss()
+    public function hasRss()
     {
         return true;
     }

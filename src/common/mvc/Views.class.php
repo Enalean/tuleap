@@ -32,33 +32,33 @@ class Views
   /* protected string */ public $view;
   /* protected Controler */ public $_controler;
 
-    function View(&$controler, $view = null, $params = array())
+    public function View(&$controler, $view = null, $params = array())
     {
         $this->_controler =& $controler;
         $this->view=$view;
     }
 
-    function getControler()
+    public function getControler()
     {
         return $this->_controler;
     }
 
 
-    function header()
+    public function header()
     {
         site_project_header($this->html_params);
     }
 
-    function footer()
+    public function footer()
     {
         site_project_footer($this->html_params);
     }
 
-    function main()
+    public function main()
     {
     }
 
-    function display($view = '')
+    public function display($view = '')
     {
         $this->header();
         if (!empty($view)) {

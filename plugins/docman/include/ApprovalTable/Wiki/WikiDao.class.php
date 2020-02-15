@@ -23,7 +23,7 @@
 class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
 {
 
-    function getTableById($itemId, $wikiVersionId, $fields = '*')
+    public function getTableById($itemId, $wikiVersionId, $fields = '*')
     {
         $sql = 'SELECT '.$fields.
             ' FROM plugin_docman_approval'.
@@ -35,12 +35,12 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
     /**
      * Last approval table created for the given itemId
      */
-    function getLatestTableByItemId($itemId, $fields = 'app.*')
+    public function getLatestTableByItemId($itemId, $fields = 'app.*')
     {
         return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1', true);
     }
 
-    function getApprovalTableItemId($itemId, $fields = 'app.*', $limit = '', $tableStatus = false)
+    public function getApprovalTableItemId($itemId, $fields = 'app.*', $limit = '', $tableStatus = false)
     {
         $where = 'app.item_id = '.$this->da->escapeInt($itemId).
             ' AND app.wiki_version_id IS NOT NULL';
@@ -52,7 +52,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
     /**
      * Last wiki version id bound to an approval table for the given itemId
      */
-    function getLastTableVersionIdByItemId($itemId)
+    public function getLastTableVersionIdByItemId($itemId)
     {
         $sql = 'SELECT wiki_version_id '.
             ' FROM plugin_docman_approval'.
@@ -72,7 +72,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
     /**
      * Last version for the wiki page referenced by the given item id.
      */
-    function getLastWikiVersionIdByItemId($itemId)
+    public function getLastWikiVersionIdByItemId($itemId)
     {
         $sql = 'SELECT MAX(wv.version) version'.
             ' FROM wiki_version wv'.
@@ -95,7 +95,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
         }
     }
 
-    function createTable($itemId, $wikiVersionId, $userId, $description, $date, $status, $notification)
+    public function createTable($itemId, $wikiVersionId, $userId, $description, $date, $status, $notification)
     {
         $sql = 'INSERT INTO plugin_docman_approval'.
             '(item_id, wiki_version_id, table_owner, date, description, status, notification)'.
@@ -113,7 +113,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
     /**
      * Did user access the wiki since the given version was published.
      */
-    function userAccessedSince($userId, $pageName, $groupId, $versionId)
+    public function userAccessedSince($userId, $pageName, $groupId, $versionId)
     {
         $sql  = 'SELECT NULL'.
             ' FROM wiki_log wl'.

@@ -70,7 +70,7 @@ rcs_id('$Id: PhotoAlbum.php,v 1.14 2005/10/12 06:19:07 rurban Exp $');
 
 class ImageTile extends HtmlElement
 {
-    function image_tile(/*...*/)
+    public function image_tile(/*...*/)
     {
         $el = new HTML('img');
         $tag = func_get_args();
@@ -95,17 +95,17 @@ class ImageTile extends HtmlElement
 
 class WikiPlugin_PhotoAlbum extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("PhotoAlbum");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Displays a set of photos listed in a text file with optional descriptions");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -120,7 +120,7 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
 // define('album_default_extension', '.jpg');
 // define('desc_separator', ';');
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('src'      => '',          // textfile of image list, or local dir.
                      'url'      => '',          // if src=localfs, url prefix (webroot for the links)
@@ -167,7 +167,7 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
     }
     // descriptions (instead of filenames) for image alt-tags
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
 
         extract($this->getArgs($argstr, $request));
@@ -615,7 +615,7 @@ display_slides();"));
      * @param mixed $value Either absolute no. or HTML percentage e.g. '50%'
      * @return int New size in pixels
      */
-    function newSize($oldSize, $value)
+    public function newSize($oldSize, $value)
     {
         if (trim(substr($value, strlen($value)-1)) != "%") {
             return $value;
@@ -632,7 +632,7 @@ display_slides();"));
     * @param array $photos
     * @return string Error if fixed location is not allowed
     */
-    function fromLocation($src, &$photos)
+    public function fromLocation($src, &$photos)
     {
         /*if (!allow_album_location) {
             return $this->error(_("Fixed album location is not allowed. Please specify parameter src."));
@@ -653,7 +653,7 @@ display_slides();"));
      * @param array $photos
      * @return string Error when bad url or file couldn't be opened
      */
-    function fromFile($src, &$photos, $webpath = '')
+    public function fromFile($src, &$photos, $webpath = '')
     {
         $src_bak = $src;
         //there has a big security hole... as loading config/config.ini !

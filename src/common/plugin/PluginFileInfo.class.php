@@ -39,7 +39,7 @@ class PluginFileInfo extends PluginInfo
      * @param Plugin $plugin  The plugin on which PluginInfo applies
      * @param String $incname Name of the '.inc' file in plugin 'etc' directory
      */
-    function __construct(Plugin $plugin, $incname)
+    public function __construct(Plugin $plugin, $incname)
     {
         parent::__construct($plugin);
 
@@ -62,7 +62,7 @@ class PluginFileInfo extends PluginInfo
     /**
      * Load properties from the configuration file
      */
-    function loadProperties()
+    public function loadProperties()
     {
         if (is_file($this->conf_path)) {
             $this->checkConfigurationFiles($this->conf_path);
@@ -141,7 +141,7 @@ class PluginFileInfo extends PluginInfo
      *
      * @return string
      */
-    function getPropertyValueForName($name)
+    public function getPropertyValueForName($name)
     {
         $desc = $this->getPropertyDescriptorForName($name);
         return $desc ? $desc->getValue() : $desc;
@@ -151,7 +151,7 @@ class PluginFileInfo extends PluginInfo
      * Alias for getPropertyValueForName
      *
      */
-    function getPropVal($name)
+    public function getPropVal($name)
     {
         return $this->getPropertyValueForName($name);
     }

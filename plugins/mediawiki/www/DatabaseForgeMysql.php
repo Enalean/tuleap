@@ -22,7 +22,7 @@
 
 class DatabaseForge extends DataBase
 {
-    function __construct(
+    public function __construct(
         $server = false,
         $user = false,
         $password = false,
@@ -43,7 +43,7 @@ class DatabaseForge extends DataBase
         );
     }
 
-    function tableName($name)
+    public function tableName($name)
     {
         switch ($name) {
             case 'interwiki':

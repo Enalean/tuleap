@@ -25,7 +25,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
 {
 
     public $groupId;
-    function __construct($da, $groupId)
+    public function __construct($da, $groupId)
     {
         parent::__construct($da);
         $this->groupId = $groupId;
@@ -45,7 +45,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function setDefaultPermissions($objectId, $perm, $force = false)
+    public function setDefaultPermissions($objectId, $perm, $force = false)
     {
         require_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
         /** @psalm-suppress DeprecatedFunction */
@@ -55,7 +55,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
         }
     }
 
-    function oneFolderIsWritable($group_id, $ugroupIds)
+    public function oneFolderIsWritable($group_id, $ugroupIds)
     {
         $sql = sprintf(
             'SELECT i.item_id'.
@@ -81,7 +81,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
      *
      * @param Project $project
      */
-    function getProjectAdminMembers($project)
+    public function getProjectAdminMembers($project)
     {
         $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.$this->da->escapeInt($project->getId());
         return $this->retrieve($sql);
@@ -92,7 +92,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
      *
      * @param int $ugroupId
      */
-    function getUgroupMembers($ugroupId)
+    public function getUgroupMembers($ugroupId)
     {
         $sql = ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id = '.$this->da->escapeInt($ugroupId);
         return $this->retrieve($sql);
@@ -104,7 +104,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function getDocmanAdminUgroups(Project $project)
+    public function getDocmanAdminUgroups(Project $project)
     {
         $sql="SELECT ugroup_id
               FROM permissions

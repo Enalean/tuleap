@@ -44,21 +44,21 @@ rcs_id('$Id: SystemInfo.php,v 1.23 2005/10/03 16:48:09 rurban Exp $');
 require_once "lib/WikiPluginCached.php";
 class WikiPlugin_SystemInfo extends WikiPluginCached
 {
-    function getPluginType()
+    public function getPluginType()
     {
         return PLUGIN_CACHED_HTML;
     }
-    function getName()
+    public function getName()
     {
         return _("SystemInfo");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Provides access to PhpWiki's lower level system information.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -72,15 +72,15 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
      * call $request->appendValidators() with appropriate arguments,
      * and should override this method to return true.
      */
-    function managesValidators()
+    public function managesValidators()
     {
         return true;
     }
-    function getExpire($dbi, $argarray, $request)
+    public function getExpire($dbi, $argarray, $request)
     {
         return '+1800'; // 30 minutes
     }
-    function getHtml($dbi, $argarray, $request, $basepage)
+    public function getHtml($dbi, $argarray, $request, $basepage)
     {
         $loader = new WikiPluginLoader;
         return $loader->expandPI('<?plugin SystemInfo '
@@ -94,7 +94,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                      );
     }
     */
-    function cachestats()
+    public function cachestats()
     {
         global $request;
         if (! defined('USECACHE') or !USECACHE) {
@@ -110,7 +110,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         //$s .= ", cache misses: ?";
         return $s;
     }
-    function ExpireParams()
+    public function ExpireParams()
     {
         global $ExpireParams;
         $s  = sprintf(
@@ -136,7 +136,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         );
         return $s;
     }
-    function pagestats()
+    public function pagestats()
     {
         global $request;
         $dbi = $request->getDbh();
@@ -151,7 +151,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     //What kind of link statistics?
     //  total links in, total links out, mean links per page, ...
     //  Any useful numbers similar to a VisualWiki interestmap?
-    function linkstats()
+    public function linkstats()
     {
         $s  = _("not yet");
         return $s;
@@ -161,7 +161,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     //   calc this from accesslog info?
     // number of anonymous edits?
     //   easy. related to the view/edit rate in accessstats.
-    function userstats()
+    public function userstats()
     {
         $dbi = $this->_dbi;
         $h = 0;
@@ -180,7 +180,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     }
 
     // numeric array
-    function _stats($hits, $treshold = 10.0)
+    public function _stats($hits, $treshold = 10.0)
     {
         sort($hits);
         reset($hits);
@@ -231,7 +231,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     //  total, max, mean, median, stddev;
     //  %d pages less than 3 hits (<10%)    <10% percent of the leastpopular
     //  %d pages more than 100 hits (>90%)  >90% percent of the mostpopular
-    function hitstats()
+    public function hitstats()
     {
         $dbi = $this->_dbi;
         $hits = array();
@@ -265,19 +265,19 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         return $s;
     }
 
-    function inlineimages()
+    public function inlineimages()
     {
         return implode(' ', explode('|', INLINE_IMAGES));
     }
-    function wikinameregexp()
+    public function wikinameregexp()
     {
         return $GLOBALS['WikiNameRegexp'];
     }
-    function allowedprotocols()
+    public function allowedprotocols()
     {
         return implode(' ', explode('|', ALLOWED_PROTOCOLS));
     }
-    function available_plugins()
+    public function available_plugins()
     {
         $fileset = new fileSet(FindFile('lib/plugin'), '*.php');
         $list = $fileset->getFiles();
@@ -289,7 +289,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
             },
                                       $list));
     }
-    function supported_languages()
+    public function supported_languages()
     {
         $available_languages = listAvailableLanguages();
         natcasesort($available_languages);
@@ -305,7 +305,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                : '');
     }
 
-    function supported_themes()
+    public function supported_themes()
     {
         global $WikiTheme;
         $available_themes = listAvailableThemes();
@@ -318,7 +318,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                : '');
     }
 
-    function call($arg, &$availableargs)
+    public function call($arg, &$availableargs)
     {
         if (!empty($availableargs[$arg])) {
             return $availableargs[$arg]();
@@ -332,7 +332,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         // don't parse argstr for name=value pairs. instead we use just 'name'
         //$args = $this->getArgs($argstr, $request);

@@ -26,7 +26,7 @@ use Tuleap\Statistics\Frequencies\GraphDataBuilder\Sample;
 class Docman_Sample extends Sample
 {
 
-    function __construct()
+    public function __construct()
     {
         $this->field = 'time';
         $this->table = 'plugin_docman_log';

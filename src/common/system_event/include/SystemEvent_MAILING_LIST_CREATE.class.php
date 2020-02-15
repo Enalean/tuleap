@@ -47,7 +47,7 @@ class SystemEvent_MAILING_LIST_CREATE extends SystemEvent
     /**
      * Process stored event
      */
-    function process()
+    public function process()
     {
         // Check parameters
         $group_list_id=$this->getIdFromParam($this->parameters);

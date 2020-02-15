@@ -56,7 +56,7 @@ class GTextTableCell
     private $iCSIMalt = '';
     private $iCSIMArea = '';
 
-    function __construct($aVal = '', $aRow = 0, $aCol = 0)
+    public function __construct($aVal = '', $aRow = 0, $aCol = 0)
     {
         $this->iVal = new Text($aVal);
         $this->iRow = $aRow;
@@ -66,19 +66,19 @@ class GTextTableCell
         $this->iIconConstrain = array(-1,-1);
     }
 
-    function Init($aTable)
+    public function Init($aTable)
     {
         $this->iTable = $aTable;
     }
 
-    function SetCSIMTarget($aTarget, $aAlt = '', $aWinTarget = '')
+    public function SetCSIMTarget($aTarget, $aAlt = '', $aWinTarget = '')
     {
         $this->iCSIMtarget = $aTarget;
         $this->iCSIMwintarget = $aWinTarget;
         $this->iCSIMalt = $aAlt;
     }
 
-    function GetCSIMArea()
+    public function GetCSIMArea()
     {
         if ($this->iCSIMtarget !== '') {
             return $this->iCSIMArea;
@@ -87,7 +87,7 @@ class GTextTableCell
         }
     }
 
-    function SetImageConstrain($aType, $aVal)
+    public function SetImageConstrain($aType, $aVal)
     {
         if (!in_array($aType, array(TIMG_WIDTH, TIMG_HEIGHT))) {
             JpGraphError::RaiseL(27015);
@@ -95,53 +95,53 @@ class GTextTableCell
         $this->iIconConstrain = array($aType,$aVal);
     }
 
-    function SetCountryFlag($aFlag, $aScale = 1.0, $aMix = 100, $aStdSize = 3)
+    public function SetCountryFlag($aFlag, $aScale = 1.0, $aMix = 100, $aStdSize = 3)
     {
         $this->iIcon = new IconPlot();
         $this->iIcon->SetCountryFlag($aFlag, 0, 0, $aScale, $aMix, $aStdSize);
     }
 
-    function SetImage($aFile, $aScale = 1.0, $aMix = 100)
+    public function SetImage($aFile, $aScale = 1.0, $aMix = 100)
     {
         $this->iIcon = new IconPlot($aFile, 0, 0, $aScale, $aMix);
     }
 
-    function SetImageFromString($aStr, $aScale = 1.0, $aMix = 100)
+    public function SetImageFromString($aStr, $aScale = 1.0, $aMix = 100)
     {
         $this->iIcon = new IconPlot("", 0, 0, $aScale, $aMix);
         $this->iIcon->CreateFromString($aStr);
     }
 
-    function SetRowColSpan($aRowSpan, $aColSpan)
+    public function SetRowColSpan($aRowSpan, $aColSpan)
     {
         $this->iRowSpan = $aRowSpan;
         $this->iColSpan = $aColSpan;
         $this->iMerged = true;
     }
 
-    function SetMerged($aPRow, $aPCol, $aFlg = true)
+    public function SetMerged($aPRow, $aPCol, $aFlg = true)
     {
         $this->iMerged = $aFlg;
         $this->iPRow=$aPRow;
         $this->iPCol=$aPCol;
     }
 
-    function IsMerged()
+    public function IsMerged()
     {
         return $this->iMerged;
     }
 
-    function SetNumberFormat($aF)
+    public function SetNumberFormat($aF)
     {
         $this->iNumberFormat = $aF;
     }
 
-    function Set($aTxt)
+    public function Set($aTxt)
     {
         $this->iVal->Set($aTxt);
     }
 
-    function SetFont($aFF, $aFS, $aFSize)
+    public function SetFont($aFF, $aFS, $aFSize)
     {
         $this->iFF = $aFF;
         $this->iFS = $aFS;
@@ -149,17 +149,17 @@ class GTextTableCell
         $this->iVal->SetFont($aFF, $aFS, $aFSize);
     }
 
-    function SetFillColor($aColor)
+    public function SetFillColor($aColor)
     {
         $this->iBGColor=$aColor;
     }
 
-    function SetFontColor($aColor)
+    public function SetFontColor($aColor)
     {
         $this->iFontColor=$aColor;
     }
 
-    function SetGridColor($aLeft, $aTop = null, $aBottom = null, $aRight = null)
+    public function SetGridColor($aLeft, $aTop = null, $aBottom = null, $aRight = null)
     {
         if ($aLeft !== null) {
             $this->iGridColor[0] = $aLeft;
@@ -175,7 +175,7 @@ class GTextTableCell
         }
     }
 
-    function SetGridStyle($aLeft, $aTop = null, $aBottom = null, $aRight = null)
+    public function SetGridStyle($aLeft, $aTop = null, $aBottom = null, $aRight = null)
     {
         if ($aLeft !== null) {
             $this->iGridStyle[0] = $aLeft;
@@ -191,7 +191,7 @@ class GTextTableCell
         }
     }
 
-    function SetGridWeight($aLeft = null, $aTop = null, $aBottom = null, $aRight = null)
+    public function SetGridWeight($aLeft = null, $aTop = null, $aBottom = null, $aRight = null)
     {
         $weight_arr = array($aLeft, $aTop, $aBottom, $aRight);
         for ($i = 0; $i < count($weight_arr); $i++) {
@@ -213,7 +213,7 @@ class GTextTableCell
         }
     }
 
-    function SetMargin($aLeft, $aRight, $aTop, $aBottom)
+    public function SetMargin($aLeft, $aRight, $aTop, $aBottom)
     {
         $this->iMarginLeft=$aLeft;
         $this->iMarginRight=$aRight;
@@ -221,7 +221,7 @@ class GTextTableCell
         $this->iMarginBottom=$aBottom;
     }
 
-    function GetWidth($aImg)
+    public function GetWidth($aImg)
     {
         if ($this->iIcon !== null) {
             if ($this->iIconConstrain[0] == TIMG_WIDTH) {
@@ -250,7 +250,7 @@ class GTextTableCell
         return round(max($iwidth, $pwidth)/$pcolspan) + $this->iMarginLeft + $this->iMarginRight;
     }
 
-    function GetHeight($aImg)
+    public function GetHeight($aImg)
     {
         if ($this->iIcon !== null) {
             if ($this->iIconConstrain[0] == TIMG_WIDTH) {
@@ -276,7 +276,7 @@ class GTextTableCell
         return round(max($iheight, $pheight)/$prowspan) + $this->iMarginTop + $this->iMarginBottom;
     }
 
-    function SetAlign($aHorAlign = 'left', $aVertAlign = 'bottom')
+    public function SetAlign($aHorAlign = 'left', $aVertAlign = 'bottom')
     {
         $aHorAlign = strtolower($aHorAlign);
         $aVertAlign = strtolower($aVertAlign);
@@ -288,7 +288,7 @@ class GTextTableCell
         $this->iHorAlign = $aHorAlign;
     }
 
-    function AdjustMarginsForGrid()
+    public function AdjustMarginsForGrid()
     {
         if ($this->iCol > 0) {
             switch ($this->iGridStyle[0]) {
@@ -348,7 +348,7 @@ class GTextTableCell
         }
     }
 
-    function StrokeVGrid($aImg, $aX, $aY, $aWidth, $aHeight, $aDir = 1)
+    public function StrokeVGrid($aImg, $aX, $aY, $aWidth, $aHeight, $aDir = 1)
     {
         // Left or right grid line
         // For the right we increase the X-pos and for the right we decrease it. This is
@@ -392,7 +392,7 @@ class GTextTableCell
         }
     }
 
-    function StrokeHGrid($aImg, $aX, $aY, $aWidth, $aHeight, $aDir = 1)
+    public function StrokeHGrid($aImg, $aX, $aY, $aWidth, $aHeight, $aDir = 1)
     {
         // Top or bottom grid line
         // For the left we increase the X-pos and for the right we decrease it. This is
@@ -436,7 +436,7 @@ class GTextTableCell
         }
     }
 
-    function Stroke($aImg, $aX, $aY, $aWidth, $aHeight)
+    public function Stroke($aImg, $aX, $aY, $aWidth, $aHeight)
     {
         // If this is a merged cell we only stroke if it is the parent cell.
         // The parent cell holds the merged cell block
@@ -580,12 +580,12 @@ class GTextTable
      * First and second phase constructors
      *-----------------------------------------------------------------
      */
-    function __construct()
+    public function __construct()
     {
         // Empty
     }
 
-    function Init($aRows = 0, $aCols = 0, $aFillText = '')
+    public function Init($aRows = 0, $aCols = 0, $aFillText = '')
     {
         $this->iSize[0] = $aRows;
         $this->iSize[1] = $aCols;
@@ -602,7 +602,7 @@ class GTextTable
      * Outer border of table
      *-----------------------------------------------------------------
      */
-    function SetBorder($aWeight = 1, $aColor = 'black')
+    public function SetBorder($aWeight = 1, $aColor = 'black')
     {
         $this->iBorderColor=$aColor;
         $this->iBorderWeight = $aWeight;
@@ -613,19 +613,19 @@ class GTextTable
      * Position in graph of table
      *-----------------------------------------------------------------
      */
-    function SetPos($aX, $aY)
+    public function SetPos($aX, $aY)
     {
         $this->iXPos = $aX;
         $this->iYPos = $aY;
     }
 
-    function SetScalePos($aX, $aY)
+    public function SetScalePos($aX, $aY)
     {
         $this->iScaleXPos = $aX;
         $this->iScaleYPos = $aY;
     }
 
-    function SetAnchorPos($aXAnchor, $aYAnchor = 'top')
+    public function SetAnchorPos($aXAnchor, $aYAnchor = 'top')
     {
         $this->iXAnchor = $aXAnchor;
         $this->iYAnchor = $aYAnchor;
@@ -635,7 +635,7 @@ class GTextTable
      * Setup country flag in a cell
      *-----------------------------------------------------------------
      */
-    function SetCellCountryFlag($aRow, $aCol, $aFlag, $aScale = 1.0, $aMix = 100, $aStdSize = 3)
+    public function SetCellCountryFlag($aRow, $aCol, $aFlag, $aScale = 1.0, $aMix = 100, $aStdSize = 3)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
@@ -646,14 +646,14 @@ class GTextTable
      * Setup image in a cell
      *-----------------------------------------------------------------
      */
-    function SetCellImage($aRow, $aCol, $aFile, $aScale = 1.0, $aMix = 100)
+    public function SetCellImage($aRow, $aCol, $aFile, $aScale = 1.0, $aMix = 100)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
         $this->iCells[$aRow][$aCol]->SetImage($aFile, $aScale, $aMix);
     }
 
-    function SetRowImage($aRow, $aFile, $aScale = 1.0, $aMix = 100)
+    public function SetRowImage($aRow, $aFile, $aScale = 1.0, $aMix = 100)
     {
         $this->_chkR($aRow);
         for ($j=0; $j < $this->iSize[1]; ++$j) {
@@ -661,7 +661,7 @@ class GTextTable
         }
     }
 
-    function SetColImage($aCol, $aFile, $aScale = 1.0, $aMix = 100)
+    public function SetColImage($aCol, $aFile, $aScale = 1.0, $aMix = 100)
     {
         $this->_chkC($aCol);
         for ($j=0; $j < $this->iSize[0]; ++$j) {
@@ -669,7 +669,7 @@ class GTextTable
         }
     }
 
-    function SetImage($aFileR1, $aScaleC1 = null, $aMixR2 = null, $aC2 = null, $aFile = null, $aScale = 1.0, $aMix = 100)
+    public function SetImage($aFileR1, $aScaleC1 = null, $aMixR2 = null, $aC2 = null, $aFile = null, $aScale = 1.0, $aMix = 100)
     {
         if ($aScaleC1 !== null && $aMixR2!==null && $aC2!==null && $aFile!==null) {
             $this->_chkR($aArgR1);
@@ -696,7 +696,7 @@ class GTextTable
         }
     }
 
-    function SetCellImageConstrain($aRow, $aCol, $aType, $aVal)
+    public function SetCellImageConstrain($aRow, $aCol, $aType, $aVal)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
@@ -707,7 +707,7 @@ class GTextTable
      * Generate a HTML version of the table
      *-----------------------------------------------------------------
      */
-    function toString()
+    public function toString()
     {
         $t = '<table border=1 cellspacing=0 cellpadding=0>';
         for ($i=0; $i < $this->iSize[0]; ++$i) {
@@ -732,7 +732,7 @@ class GTextTable
      * Specify data for table
      *-----------------------------------------------------------------
      */
-    function Set($aArg1, $aArg2 = null, $aArg3 = null)
+    public function Set($aArg1, $aArg2 = null, $aArg3 = null)
     {
         if ($aArg2===null && $aArg3===null) {
             if (is_array($aArg1)) {
@@ -775,7 +775,7 @@ class GTextTable
      * Cell margin setting
      *---------------------------------------------------------------------
      */
-    function SetPadding($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aPad = null)
+    public function SetPadding($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aPad = null)
     {
         if ($aC1 !== null && $aR2!==null && $aC2!==null && $aPad!==null) {
             $this->_chkR($aArgR1);
@@ -796,7 +796,7 @@ class GTextTable
         }
     }
 
-    function SetRowPadding($aRow, $aPad)
+    public function SetRowPadding($aRow, $aPad)
     {
         $this->_chkR($aRow);
         for ($j=0; $j < $this->iSize[1]; ++$j) {
@@ -804,7 +804,7 @@ class GTextTable
         }
     }
 
-    function SetColPadding($aCol, $aPad)
+    public function SetColPadding($aCol, $aPad)
     {
         $this->_chkC($aCol);
         for ($j=0; $j < $this->iSize[0]; ++$j) {
@@ -812,7 +812,7 @@ class GTextTable
         }
     }
 
-    function SetCellPadding($aRow, $aCol, $aPad)
+    public function SetCellPadding($aRow, $aCol, $aPad)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
@@ -824,7 +824,7 @@ class GTextTable
      * Cell text orientation setting
      *---------------------------------------------------------------------
      */
-    function SetTextOrientation($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aO = null)
+    public function SetTextOrientation($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aO = null)
     {
         if ($aC1 !== null && $aR2!==null && $aC2!==null && $aPad!==null) {
             $this->_chkR($aArgR1);
@@ -845,7 +845,7 @@ class GTextTable
         }
     }
 
-    function SetRowTextOrientation($aRow, $aO)
+    public function SetRowTextOrientation($aRow, $aO)
     {
         $this->_chkR($aRow);
         for ($j=0; $j < $this->iSize[1]; ++$j) {
@@ -853,7 +853,7 @@ class GTextTable
         }
     }
 
-    function SetColTextOrientation($aCol, $aO)
+    public function SetColTextOrientation($aCol, $aO)
     {
         $this->_chkC($aCol);
         for ($j=0; $j < $this->iSize[0]; ++$j) {
@@ -861,7 +861,7 @@ class GTextTable
         }
     }
 
-    function SetCellTextOrientation($aRow, $aCol, $aO)
+    public function SetCellTextOrientation($aRow, $aCol, $aO)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
@@ -876,7 +876,7 @@ class GTextTable
      *---------------------------------------------------------------------
      */
 
-    function SetColor($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aArg = null)
+    public function SetColor($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aArg = null)
     {
         if ($aC1 !== null && $aR2!==null && $aC2!==null && $aArg!==null) {
             $this->_chkR($aArgR1);
@@ -897,7 +897,7 @@ class GTextTable
         }
     }
 
-    function SetRowColor($aRow, $aColor)
+    public function SetRowColor($aRow, $aColor)
     {
         $this->_chkR($aRow);
         for ($j=0; $j < $this->iSize[1]; ++$j) {
@@ -905,7 +905,7 @@ class GTextTable
         }
     }
 
-    function SetColColor($aCol, $aColor)
+    public function SetColColor($aCol, $aColor)
     {
         $this->_chkC($aCol);
         for ($i=0; $i < $this->iSize[0]; ++$i) {
@@ -913,7 +913,7 @@ class GTextTable
         }
     }
 
-    function SetCellColor($aRow, $aCol, $aColor)
+    public function SetCellColor($aRow, $aCol, $aColor)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
@@ -925,7 +925,7 @@ class GTextTable
      *---------------------------------------------------------------------
      */
 
-    function SetFillColor($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aArg = null)
+    public function SetFillColor($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aArg = null)
     {
         if ($aC1 !== null && $aR2!==null && $aC2!==null && $aArg!==null) {
             $this->_chkR($aArgR1);
@@ -942,7 +942,7 @@ class GTextTable
         }
     }
 
-    function SetRowFillColor($aRow, $aColor)
+    public function SetRowFillColor($aRow, $aColor)
     {
         $this->_chkR($aRow);
         for ($j=0; $j < $this->iSize[1]; ++$j) {
@@ -950,7 +950,7 @@ class GTextTable
         }
     }
 
-    function SetColFillColor($aCol, $aColor)
+    public function SetColFillColor($aCol, $aColor)
     {
         $this->_chkC($aCol);
         for ($i=0; $i < $this->iSize[0]; ++$i) {
@@ -958,7 +958,7 @@ class GTextTable
         }
     }
 
-    function SetCellFillColor($aRow, $aCol, $aColor)
+    public function SetCellFillColor($aRow, $aCol, $aColor)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
@@ -969,7 +969,7 @@ class GTextTable
      * Font family setting
      *---------------------------------------------------------------------
      */
-    function SetFont()
+    public function SetFont()
     {
         $numargs = func_num_args();
         if ($numargs == 2 || $numargs == 3) {
@@ -1011,7 +1011,7 @@ class GTextTable
         }
     }
 
-    function SetRowFont($aRow, $aFF, $aFS, $aFSize = 10)
+    public function SetRowFont($aRow, $aFF, $aFS, $aFSize = 10)
     {
         $this->_chkR($aRow);
         for ($j=0; $j < $this->iSize[1]; ++$j) {
@@ -1019,7 +1019,7 @@ class GTextTable
         }
     }
 
-    function SetColFont($aCol, $aFF, $aFS, $aFSize = 10)
+    public function SetColFont($aCol, $aFF, $aFS, $aFSize = 10)
     {
         $this->_chkC($aCol);
         for ($i=0; $i < $this->iSize[0]; ++$i) {
@@ -1027,7 +1027,7 @@ class GTextTable
         }
     }
 
-    function SetCellFont($aRow, $aCol, $aFF, $aFS, $aFSize = 10)
+    public function SetCellFont($aRow, $aCol, $aFF, $aFS, $aFSize = 10)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
@@ -1039,7 +1039,7 @@ class GTextTable
      *---------------------------------------------------------------------
      */
 
-    function SetAlign($aR1HAlign = null, $aC1VAlign = null, $aR2 = null, $aC2 = null, $aHArg = null, $aVArg = 'center')
+    public function SetAlign($aR1HAlign = null, $aC1VAlign = null, $aR2 = null, $aC2 = null, $aHArg = null, $aVArg = 'center')
     {
         if ($aC1VAlign !== null && $aR2!==null && $aC2!==null && $aHArg!==null) {
             $this->_chkR($aR1HAlign);
@@ -1067,14 +1067,14 @@ class GTextTable
         }
     }
 
-    function SetCellAlign($aRow, $aCol, $aHorAlign, $aVertAlign = 'bottom')
+    public function SetCellAlign($aRow, $aCol, $aHorAlign, $aVertAlign = 'bottom')
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
         $this->iCells[$aRow][$aCol]->SetAlign($aHorAlign, $aVertAlign);
     }
 
-    function SetRowAlign($aRow, $aHorAlign, $aVertAlign = 'bottom')
+    public function SetRowAlign($aRow, $aHorAlign, $aVertAlign = 'bottom')
     {
         $this->_chkR($aRow);
         for ($j=0; $j < $this->iSize[1]; ++$j) {
@@ -1082,7 +1082,7 @@ class GTextTable
         }
     }
 
-    function SetColAlign($aCol, $aHorAlign, $aVertAlign = 'bottom')
+    public function SetColAlign($aCol, $aHorAlign, $aVertAlign = 'bottom')
     {
         $this->_chkC($aCol);
         for ($i=0; $i < $this->iSize[0]; ++$i) {
@@ -1095,7 +1095,7 @@ class GTextTable
      *---------------------------------------------------------------------
      */
 
-    function SetNumberFormat($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aArg = null)
+    public function SetNumberFormat($aArgR1, $aC1 = null, $aR2 = null, $aC2 = null, $aArg = null)
     {
         if ($aC1 !== null && $aR2!==null && $aC2!==null && $aArg!==null) {
             $this->_chkR($aArgR1);
@@ -1119,7 +1119,7 @@ class GTextTable
         }
     }
 
-    function SetRowNumberFormat($aRow, $aF)
+    public function SetRowNumberFormat($aRow, $aF)
     {
         $this->_chkR($aRow);
         if (!is_string($aF)) {
@@ -1130,7 +1130,7 @@ class GTextTable
         }
     }
 
-    function SetColNumberFormat($aCol, $aF)
+    public function SetColNumberFormat($aCol, $aF)
     {
         $this->_chkC($aCol);
         if (!is_string($aF)) {
@@ -1141,7 +1141,7 @@ class GTextTable
         }
     }
 
-    function SetCellNumberFormat($aRow, $aCol, $aF)
+    public function SetCellNumberFormat($aRow, $aCol, $aF)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
@@ -1156,7 +1156,7 @@ class GTextTable
      *---------------------------------------------------------------------
      */
 
-    function SetMinColWidth($aColWidth, $aWidth = null)
+    public function SetMinColWidth($aColWidth, $aWidth = null)
     {
         // If there is only one argument this means that all
         // columns get set to the same width
@@ -1170,7 +1170,7 @@ class GTextTable
         }
     }
 
-    function SetMinRowHeight($aRowHeight, $aHeight = null)
+    public function SetMinRowHeight($aRowHeight, $aHeight = null)
     {
         // If there is only one argument this means that all
         // rows get set to the same height
@@ -1189,7 +1189,7 @@ class GTextTable
      *---------------------------------------------------------------------
      */
 
-    function SetGrid($aWeight = 1, $aColor = 'black', $aStyle = TGRID_SINGLE)
+    public function SetGrid($aWeight = 1, $aColor = 'black', $aStyle = TGRID_SINGLE)
     {
         $rc = $this->iSize[0];
         $cc = $this->iSize[1];
@@ -1202,7 +1202,7 @@ class GTextTable
         }
     }
 
-    function SetColGrid($aCol, $aWeight = 1, $aColor = 'black', $aStyle = TGRID_SINGLE)
+    public function SetColGrid($aCol, $aWeight = 1, $aColor = 'black', $aStyle = TGRID_SINGLE)
     {
         $this->_chkC($aCol);
         for ($i=0; $i < $this->iSize[0]; ++$i) {
@@ -1212,7 +1212,7 @@ class GTextTable
         }
     }
 
-    function SetRowGrid($aRow, $aWeight = 1, $aColor = 'black', $aStyle = TGRID_SINGLE)
+    public function SetRowGrid($aRow, $aWeight = 1, $aColor = 'black', $aStyle = TGRID_SINGLE)
     {
         $this->_chkR($aRow);
         for ($j=0; $j < $this->iSize[1]; ++$j) {
@@ -1227,19 +1227,19 @@ class GTextTable
      *---------------------------------------------------------------------
      */
 
-    function MergeRow($aRow, $aHAlign = 'center', $aVAlign = 'center')
+    public function MergeRow($aRow, $aHAlign = 'center', $aVAlign = 'center')
     {
         $this->_chkR($aRow);
         $this->MergeCells($aRow, 0, $aRow, $this->iSize[1]-1, $aHAlign, $aVAlign);
     }
 
-    function MergeCol($aCol, $aHAlign = 'center', $aVAlign = 'center')
+    public function MergeCol($aCol, $aHAlign = 'center', $aVAlign = 'center')
     {
         $this->_chkC($aCol);
         $this->MergeCells(0, $aCol, $this->iSize[0]-1, $aCol, $aHAlign, $aVAlign);
     }
 
-    function MergeCells($aR1, $aC1, $aR2, $aC2, $aHAlign = 'center', $aVAlign = 'center')
+    public function MergeCells($aR1, $aC1, $aR2, $aC2, $aHAlign = 'center', $aVAlign = 'center')
     {
         if ($aR1 > $aR2 || $aC1 > $aC2) {
             JpGraphError::RaiseL(27004);
@@ -1277,7 +1277,7 @@ class GTextTable
      *---------------------------------------------------------------------
      */
 
-    function SetCSIMTarget($aTarget, $aAlt = null, $aAutoTarget = false)
+    public function SetCSIMTarget($aTarget, $aAlt = null, $aAutoTarget = false)
     {
         $m = $this->iSize[0];
         $n = $this->iSize[1];
@@ -1294,7 +1294,7 @@ class GTextTable
         }
     }
 
-    function SetCellCSIMTarget($aRow, $aCol, $aTarget, $aAlt = null)
+    public function SetCellCSIMTarget($aRow, $aCol, $aTarget, $aAlt = null)
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
@@ -1306,7 +1306,7 @@ class GTextTable
      *---------------------------------------------------------------------
      */
 
-    function GetCSIMAreas()
+    public function GetCSIMAreas()
     {
         $m = $this->iSize[0];
         $n = $this->iSize[1];
@@ -1319,7 +1319,7 @@ class GTextTable
         return $csim;
     }
 
-    function _chkC($aCol)
+    public function _chkC($aCol)
     {
         if (! $this->iInit) {
             JpGraphError::Raise(27014); // Table not initialized
@@ -1330,7 +1330,7 @@ class GTextTable
         //("GTextTable:\nColumn argument ($aCol) is outside specified table size.");
     }
 
-    function _chkR($aRow)
+    public function _chkR($aRow)
     {
         if (! $this->iInit) {
             JpGraphError::Raise(27014); // Table not initialized
@@ -1341,7 +1341,7 @@ class GTextTable
         //("GTextTable:\nRow argument ($aRow) is outside specified table size.");
     }
 
-    function _getScalePos()
+    public function _getScalePos()
     {
         if ($this->iScaleXPos === null || $this->iScaleYPos === null) {
             return false;
@@ -1349,7 +1349,7 @@ class GTextTable
         return array($this->iScaleXPos, $this->iScaleYPos);
     }
 
-    function _autoSizeTable($aImg)
+    public function _autoSizeTable($aImg)
     {
         // Get maximum column width and row height
         $m = $this->iSize[0];
@@ -1384,7 +1384,7 @@ class GTextTable
         }
     }
 
-    function _setcell($aRow, $aCol, $aVal = '')
+    public function _setcell($aRow, $aCol, $aVal = '')
     {
         if (isset($this->iCells[$aRow][$aCol])) {
             $this->iCells[$aRow][$aCol]->Set($aVal);
@@ -1394,7 +1394,7 @@ class GTextTable
         }
     }
 
-    function StrokeWithScale($aImg, $aXScale, $aYScale)
+    public function StrokeWithScale($aImg, $aXScale, $aYScale)
     {
         if (is_numeric($this->iScaleXPos) && is_numeric($this->iScaleYPos)) {
             $x = round($aXScale->Translate($this->iScaleXPos));
@@ -1405,7 +1405,7 @@ class GTextTable
         }
     }
 
-    function Stroke($aImg, $aX = null, $aY = null)
+    public function Stroke($aImg, $aX = null, $aY = null)
     {
         if ($aX !== null && $aY !== null) {
             $this->iXPos = $aX;

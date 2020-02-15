@@ -29,7 +29,7 @@ class FlamingParrot_BodyPresenter
     /** @var string */
     public $user_locale;
 
-    function __construct(
+    public function __construct(
         PFUser $user,
         $notifications_placeholder,
         $body_class

@@ -23,7 +23,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    function testIsActive()
+    public function testIsActive()
     {
         $active_value = 1;
         $deleted_value = 2;
@@ -40,7 +40,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $this->assertFalse($r->isActive());
     }
 
-    function testIsHidden()
+    public function testIsHidden()
     {
         $active_value = 1;
         $deleted_value = 2;
@@ -57,7 +57,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $this->assertFalse($r->isHidden());
     }
 
-    function testIsDeleted()
+    public function testIsDeleted()
     {
         $active_value = 1;
         $deleted_value = 2;
@@ -74,7 +74,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $this->assertFalse($r->isDeleted());
     }
 
-    function testGetProjectWithProjectSet()
+    public function testGetProjectWithProjectSet()
     {
         $r = new FRSRelease();
 
@@ -84,7 +84,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $this->assertSame($p, $r->getProject());
     }
 
-    function testGetProjectWithGroupIdSet()
+    public function testGetProjectWithGroupIdSet()
     {
         $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->setGroupID(123);
@@ -99,7 +99,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $this->assertSame($p, $r->getProject());
     }
 
-    function testGetProjectWithNeitherProjectNorGroupID()
+    public function testGetProjectWithNeitherProjectNorGroupID()
     {
         $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->setPackageId(696);
@@ -118,7 +118,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $this->assertSame($p, $r->getProject());
     }
 
-    function testGetGroupIdWithoutProjectSet()
+    public function testGetGroupIdWithoutProjectSet()
     {
         $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->setPackageId(696);
@@ -132,7 +132,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $this->assertSame($r->getGroupID(), 123);
     }
 
-    function testGetGroupIdWithProjectSet()
+    public function testGetGroupIdWithProjectSet()
     {
         $r = new FRSRelease();
 

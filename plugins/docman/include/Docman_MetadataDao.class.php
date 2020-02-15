@@ -25,7 +25,7 @@ class Docman_MetadataDao extends DataAccessObject
     public $deletedStmt;
     public $notDeletedStmt;
 
-    function __construct($da)
+    public function __construct($da)
     {
         parent::__construct($da);
 
@@ -33,7 +33,7 @@ class Docman_MetadataDao extends DataAccessObject
         $this->notDeletedStmt = 'special != 100';
     }
 
-    function searchById($id)
+    public function searchById($id)
     {
         $sql = sprintf(
             'SELECT *'
@@ -45,7 +45,7 @@ class Docman_MetadataDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchByGroupId($id, $onlyUsed, $type = array())
+    public function searchByGroupId($id, $onlyUsed, $type = array())
     {
         $where_clause = '';
         if ($onlyUsed) {
@@ -71,7 +71,7 @@ class Docman_MetadataDao extends DataAccessObject
 
     // Very limited implementation of update
     // right now, only 'use_it' field is concerned by update
-    function updateById($id, $name, $description, $emptyAllowed, $mulValuesAllowed, $useIt)
+    public function updateById($id, $name, $description, $emptyAllowed, $mulValuesAllowed, $useIt)
     {
         $row = array('field_id' => $id,
                      'name' => $name,
@@ -82,7 +82,7 @@ class Docman_MetadataDao extends DataAccessObject
         return $this->updateFromRow($row);
     }
 
-    function updateFromRow($row)
+    public function updateFromRow($row)
     {
         $updated = false;
         $id = false;
@@ -111,7 +111,7 @@ class Docman_MetadataDao extends DataAccessObject
         return $updated;
     }
 
-    function create(
+    public function create(
         $groupId,
         $name,
         $type,
@@ -159,7 +159,7 @@ class Docman_MetadataDao extends DataAccessObject
         }
     }
 
-    function _createAndReturnId($sql)
+    public function _createAndReturnId($sql)
     {
         $inserted = $this->update($sql);
         if ($inserted) {
@@ -173,7 +173,7 @@ class Docman_MetadataDao extends DataAccessObject
         return $inserted;
     }
 
-    function delete($id)
+    public function delete($id)
     {
         $sql = sprintf(
             'UPDATE plugin_docman_metadata'.
@@ -184,7 +184,7 @@ class Docman_MetadataDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function searchByName($groupId, $name)
+    public function searchByName($groupId, $name)
     {
         $sql = sprintf(
             'SELECT *'.
@@ -198,7 +198,7 @@ class Docman_MetadataDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchValueById($fieldId, $itemId)
+    public function searchValueById($fieldId, $itemId)
     {
         $sql = sprintf(
             'SELECT *'.

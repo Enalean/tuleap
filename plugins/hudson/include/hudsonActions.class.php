@@ -114,7 +114,7 @@ class hudsonActions extends Actions
         }
     }
 
-    function deleteJob()
+    public function deleteJob()
     {
         $request = HTTPRequest::instance();
         $job_id = $request->get('job_id');

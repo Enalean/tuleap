@@ -67,7 +67,7 @@ class Tracker_FileInfo_CommonTest extends TuleapTestCase
 class Tracker_FileInfoTest extends Tracker_FileInfo_CommonTest
 {
 
-    function testProperties()
+    public function testProperties()
     {
         $this->assertEqual($this->file_info_1->getDescription(), 'Screenshot of the issue');
         $this->assertEqual($this->file_info_1->getSubmittedBy(), 103);
@@ -77,14 +77,14 @@ class Tracker_FileInfoTest extends Tracker_FileInfo_CommonTest
         $this->assertEqual($this->file_info_1->getId(), 1);
     }
 
-    function testGetPath()
+    public function testGetPath()
     {
         $this->assertEqual($this->file_info_1->getPath(), $this->working_directory .'/1');
         $this->assertEqual($this->file_info_1->getThumbnailPath(), $this->working_directory .'/thumbnails/1');
         $this->assertNull($this->file_info_2->getThumbnailPath(), "A file that is not an image doesn't have any thumbnail (for now)");
     }
 
-    function testIsImage()
+    public function testIsImage()
     {
         $fi = partial_mock(Tracker_FileInfo::class, array('getFiletype'));
         $fi->setReturnValueAt(0, 'getFiletype', 'image/png');
@@ -103,7 +103,7 @@ class Tracker_FileInfoTest extends Tracker_FileInfo_CommonTest
         $this->assertFalse($fi->isImage(), 'text/gif should not be detected as an image');
     }
 
-    function testHumanReadableFilesize()
+    public function testHumanReadableFilesize()
     {
         $sizes = array(
             array(

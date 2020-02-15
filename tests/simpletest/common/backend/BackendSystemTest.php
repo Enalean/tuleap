@@ -41,7 +41,7 @@ Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManag
 class BackendSystemTest extends TuleapTestCase
 {
 
-    function setUp()
+    public function setUp()
     {
         parent::setUp();
         $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
@@ -66,7 +66,7 @@ class BackendSystemTest extends TuleapTestCase
     }
 
 
-    function tearDown()
+    public function tearDown()
     {
         Backend::clearInstances();
         ForgeConfig::restore();
@@ -74,13 +74,13 @@ class BackendSystemTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    function testConstructor()
+    public function testConstructor()
     {
         $backend = BackendSystem::instance();
     }
 
 
-    function testCreateUserHome()
+    public function testCreateUserHome()
     {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
         $user = new PFUser([
@@ -100,7 +100,7 @@ class BackendSystemTest extends TuleapTestCase
         rmdir(ForgeConfig::get('homedir_prefix')."/codendiadm");
     }
 
-    function testCreateProjectHome()
+    public function testCreateProjectHome()
     {
 
         $project = new MockProject($this);
@@ -137,7 +137,7 @@ class BackendSystemTest extends TuleapTestCase
         rmdir($frsdir);
     }
 
-    function testArchiveUserHome()
+    public function testArchiveUserHome()
     {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
         $user = new PFUser([
@@ -164,7 +164,7 @@ class BackendSystemTest extends TuleapTestCase
         unlink(ForgeConfig::get('sys_project_backup_path')."/codendiadm.tgz");
     }
 
-    function testArchiveProjectHome()
+    public function testArchiveProjectHome()
     {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));

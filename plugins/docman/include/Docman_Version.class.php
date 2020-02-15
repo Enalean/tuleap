@@ -29,7 +29,7 @@ use Tuleap\Docman\Version\Version;
 class Docman_Version implements Version
 {
 
-    function __construct($data = null)
+    public function __construct($data = null)
     {
         $this->id        = null;
         $this->authorId  = null;
@@ -49,71 +49,71 @@ class Docman_Version implements Version
     }
 
     public $id;
-    function getId()
+    public function getId()
     {
         return $this->id;
     }
-    function setId($id)
+    public function setId($id)
     {
         $this->id = $id;
     }
 
     public $authorId;
-    function getAuthorId()
+    public function getAuthorId()
     {
         return $this->authorId;
     }
-    function setAuthorId($authorId)
+    public function setAuthorId($authorId)
     {
         $this->authorId = $authorId;
     }
 
     public $itemId;
-    function getItemId()
+    public function getItemId()
     {
         return $this->itemId;
     }
-    function setItemId($itemId)
+    public function setItemId($itemId)
     {
         $this->itemId = $itemId;
     }
 
     public $number;
-    function getNumber()
+    public function getNumber()
     {
         return $this->number;
     }
-    function setNumber($number)
+    public function setNumber($number)
     {
         $this->number = $number;
     }
 
     public $label;
-    function getLabel()
+    public function getLabel()
     {
         return $this->label;
     }
-    function setLabel($label)
+    public function setLabel($label)
     {
         $this->label = $label;
     }
 
     public $changelog;
-    function getChangelog()
+    public function getChangelog()
     {
         return $this->changelog;
     }
-    function setChangelog($changelog)
+    public function setChangelog($changelog)
     {
         $this->changelog = $changelog;
     }
 
     public $date;
-    function getDate()
+    public function getDate()
     {
         return $this->date;
     }
-    function setDate($date)
+    public function setDate($date)
     {
         $this->date = $date;
     }
@@ -136,11 +136,11 @@ class Docman_Version implements Version
     }
 
     public $filesize;
-    function getFilesize()
+    public function getFilesize()
     {
         return $this->filesize;
     }
-    function setFilesize($filesize)
+    public function setFilesize($filesize)
     {
         $this->filesize = $filesize;
     }
@@ -194,7 +194,7 @@ class Docman_Version implements Version
         $this->_content = $content;
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         if (isset($row['id'])) {
             $this->setId($row['id']);
@@ -240,7 +240,7 @@ class Docman_Version implements Version
      *
      * @return void
      */
-    function preDownload($item, $user)
+    public function preDownload($item, $user)
     {
         $event_manager = EventManager::instance();
         $event_adder   = new DocmanItemsEventAdder($event_manager);
@@ -262,7 +262,7 @@ class Docman_Version implements Version
      *
      * @return void
      */
-    function fireDeleteEvent($item, $user)
+    public function fireDeleteEvent($item, $user)
     {
         $value = $this->getNumber();
         if ($this->getLabel() != '') {

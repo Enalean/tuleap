@@ -32,7 +32,7 @@ class SOAP_RequestLimitatorFactory
      *
      * @return SOAP_RequestLimitator
      */
-    function getLimitator()
+    public function getLimitator()
     {
         return new SOAP_RequestLimitator(ForgeConfig::get('sys_nb_sensitive_soap_calls_per_hour'), 3600, new SOAP_RequestLimitatorDao());
     }

@@ -32,7 +32,7 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
      */
     private $bind;
 
-    function setUp()
+    public function setUp()
     {
         $this->bind = mock('Tracker_FormElement_Field_List_Bind_Static');
     }

@@ -20,7 +20,7 @@
 
 class Tracker_FormElement_Field_List_Bind_UsersDao extends DataAccessObject
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_users';

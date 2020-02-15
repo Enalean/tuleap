@@ -27,12 +27,12 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
 {
     public $defaultUrl;
 
-    function _title($params)
+    public function _title($params)
     {
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_lock_infos_title') .'</h2>';
     }
 
-    function _content($params)
+    public function _content($params)
     {
         $html = '';
 
@@ -46,7 +46,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
         print($html);
     }
 
-    function getTable($params)
+    public function getTable($params)
     {
         $this->defaultUrl = $params['default_url'];
         $content = '';

@@ -53,7 +53,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         $this->link_version_factory = $link_version_factory;
     }
 
-    function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = array())
     {
         // Clone folder
         $newItemId = $this->_cloneItem($item, $params);
@@ -77,7 +77,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    function visitDocument(&$item, $params = array())
+    public function visitDocument(&$item, $params = array())
     {
         die('never happen');
     }
@@ -122,7 +122,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     {
     }
 
-    function _cloneFile($item, $params)
+    public function _cloneFile($item, $params)
     {
         $newItemId = $this->_cloneItem($item, $params);
         if ($newItemId > 0) {
@@ -185,7 +185,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         );
     }
 
-    function _cloneItem($item, $params)
+    public function _cloneItem($item, $params)
     {
         $parentId = $params['parentId'];
         $metadataMapping = $params['metadataMapping'];
@@ -226,7 +226,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         return $newItemId;
     }
 
-    function _clonePermissions($item, $newItemId, $ugroupsMapping)
+    public function _clonePermissions($item, $newItemId, $ugroupsMapping)
     {
         $dpm = $this->_getPermissionsManager($item->getGroupId());
         if ($ugroupsMapping === false) {
@@ -238,7 +238,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    function _cloneMetadataValues($item, $newItemId, $metadataMapping)
+    public function _cloneMetadataValues($item, $newItemId, $metadataMapping)
     {
         // List for current item all its metadata and
         // * change the itemId
@@ -296,7 +296,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    function _metadataEnabled($srcGroupId, $mdLabel)
+    public function _metadataEnabled($srcGroupId, $mdLabel)
     {
         if (!isset($this->_cacheMetadataUsage[$mdLabel])) {
             $srcSettingsBo = $this->_getSettingsBo($srcGroupId);
@@ -311,43 +311,43 @@ class Docman_CloneItemsVisitor implements ItemVisitor
      * Return the mapping between item_id in the original tree (src) and the new one (dst).
      * Src item id it the key of the hash map.
      */
-    function getItemMapping()
+    public function getItemMapping()
     {
         return $this->itemMapping;
     }
 
     // Factory methods mandatate by tests.
-    function _getItemFactory()
+    public function _getItemFactory()
     {
         return new Docman_ItemFactory();
     }
 
-    function _getPermissionsManager($groupId)
+    public function _getPermissionsManager($groupId)
     {
         return Docman_PermissionsManager::instance($groupId);
     }
 
-    function _getFileStorage($dataRoot)
+    public function _getFileStorage($dataRoot)
     {
         return new Docman_FileStorage($dataRoot);
     }
 
-    function _getVersionFactory()
+    public function _getVersionFactory()
     {
         return new Docman_VersionFactory();
     }
 
-    function _getMetadataValueFactory($groupId)
+    public function _getMetadataValueFactory($groupId)
     {
         return new Docman_MetadataValueFactory($groupId);
     }
 
-    function _getMetadataFactory($groupId)
+    public function _getMetadataFactory($groupId)
     {
         return new Docman_MetadataFactory($groupId);
     }
 
-    function _getSettingsBo($groupId)
+    public function _getSettingsBo($groupId)
     {
         return Docman_SettingsBo::instance($groupId);
     }

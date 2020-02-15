@@ -22,13 +22,13 @@ class FuncGenerator
     private $iMax;
     private $iStepSize;
 
-    function __construct($aFunc, $aXFunc = '')
+    public function __construct($aFunc, $aXFunc = '')
     {
         $this->iFunc = $aFunc;
         $this->iXFunc = $aXFunc;
     }
 
-    function E($aXMin, $aXMax, $aSteps = 50)
+    public function E($aXMin, $aXMax, $aSteps = 50)
     {
         $this->iMin = $aXMin;
         $this->iMax = $aXMax;
@@ -91,12 +91,12 @@ class DateScaleUtils
     private static $minTickPositions=array();
     private static $iUseWeeks = true;
 
-    static function UseWeekFormat($aFlg)
+    public static function UseWeekFormat($aFlg)
     {
         self::$iUseWeeks = $aFlg;
     }
 
-    static function doYearly($aType, $aMinor = false)
+    public static function doYearly($aType, $aMinor = false)
     {
         $i=0;
         $j=0;
@@ -152,7 +152,7 @@ class DateScaleUtils
         }
     }
 
-    static function doDaily($aType, $aMinor = false)
+    public static function doDaily($aType, $aMinor = false)
     {
         $m = self::$startmonth;
         $y = self::$startyear;
@@ -201,7 +201,7 @@ class DateScaleUtils
         }
     }
 
-    static function doWeekly($aType, $aMinor = false)
+    public static function doWeekly($aType, $aMinor = false)
     {
         $hpd = 3600*24;
         $hpw = 3600*24*7;
@@ -250,7 +250,7 @@ class DateScaleUtils
         }
     }
 
-    static function doMonthly($aType, $aMinor = false)
+    public static function doMonthly($aType, $aMinor = false)
     {
         $monthcount=0;
         $m = self::$startmonth;
@@ -344,13 +344,13 @@ class DateScaleUtils
         return array(self::$tickPositions,self::$minTickPositions);
     }
 
-    static function GetTicks($aData, $aType = 1, $aMinor = false, $aEndPoints = false)
+    public static function GetTicks($aData, $aType = 1, $aMinor = false, $aEndPoints = false)
     {
         $n = count($aData);
         return self::GetTicksFromMinMax($aData[0], $aData[$n-1], $aType, $aMinor, $aEndPoints);
     }
 
-    static function GetAutoTicks($aMin, $aMax, $aMaxTicks = 10, $aMinor = false)
+    public static function GetAutoTicks($aMin, $aMax, $aMaxTicks = 10, $aMinor = false)
     {
         $diff = $aMax - $aMin;
         $spd = 3600*24;
@@ -391,7 +391,7 @@ class DateScaleUtils
         }
     }
 
-    static function GetTicksFromMinMax($aMin, $aMax, $aType, $aMinor = false, $aEndPoints = false)
+    public static function GetTicksFromMinMax($aMin, $aMax, $aType, $aMinor = false, $aEndPoints = false)
     {
         self::$starthour = date('G', $aMin);
         self::$startmonth = date('n', $aMin);
@@ -445,7 +445,7 @@ class ReadFileData
     // Returns:
     // The number of data values read on success, FALSE on failure
     //----------------------------------------------------------------------------
-    static function FromCSV($aFile, &$aData, $aSepChar = ',', $aMaxLineLength = 1024)
+    public static function FromCSV($aFile, &$aData, $aSepChar = ',', $aMaxLineLength = 1024)
     {
         $rh = @fopen($aFile, 'r');
         if ($rh === false) {
@@ -492,7 +492,7 @@ class ReadFileData
     // Returns:
     // The number of lines read on success, FALSE on failure
     //----------------------------------------------------------------------------
-    static function FromCSV2($aFile, &$aData, $aOptions = array())
+    public static function FromCSV2($aFile, &$aData, $aOptions = array())
     {
         $aDefaults = array(
             'separator'     => ',',
@@ -573,7 +573,7 @@ class ReadFileData
     }
 
     // Read data from two columns in a plain text file
-    static function From2Col($aFile, $aCol1, $aCol2, $aSepChar = ' ')
+    public static function From2Col($aFile, $aCol1, $aCol2, $aSepChar = ' ')
     {
         $lines = @file($aFile, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
         if ($lines === false) {
@@ -595,7 +595,7 @@ class ReadFileData
     }
 
     // Read data from one columns in a plain text file
-    static function From1Col($aFile, $aCol1)
+    public static function From1Col($aFile, $aCol1)
     {
         $lines = @file($aFile, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
         if ($lines === false) {
@@ -608,7 +608,7 @@ class ReadFileData
         return count($lines);
     }
 
-    static function FromMatrix($aFile, $aSepChar = ' ')
+    public static function FromMatrix($aFile, $aSepChar = ' ')
     {
         $lines = @file($aFile, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
         if ($lines === false) {

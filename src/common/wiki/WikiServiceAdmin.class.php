@@ -25,7 +25,7 @@ class WikiServiceAdmin extends Controler
 {
   /* private Wiki*/ public $wiki;
 
-    function __construct($id)
+    public function __construct($id)
     {
         global $LANG, $is_wiki_page;
 
@@ -56,7 +56,7 @@ class WikiServiceAdmin extends Controler
         }
     }
 
-    function request()
+    public function request()
     {
       // Default behaviour: display default view:
         $this->view = 'main';

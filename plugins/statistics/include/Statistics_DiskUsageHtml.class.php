@@ -41,7 +41,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
     /**
      * Apply a jpgraph compliant color modifier on color and return a css rgb() rule
      */
-    function applyColorModifier($color)
+    public function applyColorModifier($color)
     {
         $jpgraphRgb = new RGB();
         $newColor   = $jpgraphRgb->color($color.':1.5');

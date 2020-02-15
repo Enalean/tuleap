@@ -26,7 +26,7 @@ use Tuleap\Statistics\Frequencies\GraphDataBuilder\Sample;
 class Tracker_Sample extends Sample
 {
 
-    function __construct()
+    public function __construct()
     {
         $this->field = 'submitted_on';
         $this->table = 'tracker_artifact';

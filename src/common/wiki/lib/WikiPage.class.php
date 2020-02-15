@@ -57,7 +57,7 @@ class WikiPage
     /*
      * Constructor
      */
-    function __construct($id = 0, $pagename = '')
+    public function __construct($id = 0, $pagename = '')
     {
         $this->empty = null;
 
@@ -249,7 +249,7 @@ class WikiPage
     /**
      * @todo transfer to Wrapper
      */
-    function isEmpty()
+    public function isEmpty()
     {
         // If this value is already computed, return now !
         if ($this->empty != null) {
@@ -349,7 +349,7 @@ class WikiPage
     /**
      * @todo transfer to Wrapper
      */
-    function exist()
+    public function exist()
     {
         return($this->id != 0);
     }

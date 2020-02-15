@@ -67,7 +67,7 @@ class Widget_MySystemEvent extends Widget
      * Get the description of the widget
      * @return string html
      */
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_system_event', 'description');
     }

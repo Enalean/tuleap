@@ -307,7 +307,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         return true;
     }
 
-    function userCanVisualize()
+    public function userCanVisualize()
     {
         $ff = Tracker_FormElementFactory::instance();
         $artifact_field_start = $ff->getFormElementById($this->field_start);

@@ -28,13 +28,13 @@ class Docman_View_LoveDetails
     public $md;
     public $hp;
 
-    function __construct($md)
+    public function __construct($md)
     {
         $this->md = $md;
         $this->hp = Codendi_HTMLPurifier::instance();
     }
 
-    function getNameField($value = '')
+    public function getNameField($value = '')
     {
         $html = '';
 
@@ -48,7 +48,7 @@ class Docman_View_LoveDetails
         return $html;
     }
 
-    function getDescriptionField($value = '')
+    public function getDescriptionField($value = '')
     {
         $html = '';
 
@@ -62,7 +62,7 @@ class Docman_View_LoveDetails
         return $html;
     }
 
-    function getRankField($value = 'end')
+    public function getRankField($value = 'end')
     {
         $html = '';
 
@@ -97,7 +97,7 @@ class Docman_View_LoveDetails
         return $html;
     }
 
-    function getHiddenFields($loveId = null)
+    public function getHiddenFields($loveId = null)
     {
         $html = '';
 

@@ -25,7 +25,7 @@ class LDAP_SyncNotificationManager
     private $retentionPeriod;
     private $projectManager;
 
-    function __construct(ProjectManager $projectManager, $retentionPeriod)
+    public function __construct(ProjectManager $projectManager, $retentionPeriod)
     {
         $this->ldapSyncMail    = new LDAP_SyncMail($projectManager);
         $this->retentionPeriod = $retentionPeriod;

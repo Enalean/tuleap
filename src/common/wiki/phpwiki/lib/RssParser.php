@@ -56,7 +56,7 @@ class RSSParser extends XmlParser
     public $divers = "";
     public $date = "";
 
-    function tag_open($parser, $name, $attrs = '')
+    public function tag_open($parser, $name, $attrs = '')
     {
         global $current_tag, $current_attrs;
 
@@ -71,7 +71,7 @@ class RSSParser extends XmlParser
         }
     }
 
-    function tag_close($parser, $tagName, $attrs = '')
+    public function tag_close($parser, $tagName, $attrs = '')
     {
         global $current_tag;
 
@@ -117,7 +117,7 @@ class RSSParser extends XmlParser
         }
     }
 
-    function cdata($parser, $data)
+    public function cdata($parser, $data)
     {
         global $current_tag, $current_attrs;
 
@@ -171,7 +171,7 @@ class RSSParser extends XmlParser
         }
     }
 
-    function parse($content, $is_final = true)
+    public function parse($content, $is_final = true)
     {
         xml_parse($this->_parser, $content, $is_final) or
             trigger_error(

@@ -22,7 +22,7 @@ if (! defined('MEDIAWIKI')) {
 class SkinFusionForge extends SkinTemplate
 {
     /** Using fusionforge. */
-    function initPage(OutputPage $out)
+    public function initPage(OutputPage $out)
     {
         parent::initPage($out);
         $this->skinname  = 'fusionforge';
@@ -30,7 +30,7 @@ class SkinFusionForge extends SkinTemplate
         $this->template  = 'FusionForgeTemplate';
     }
 
-    function setupSkinUserCss(OutputPage $out)
+    public function setupSkinUserCss(OutputPage $out)
     {
         global $wgHandheldStyle;
 
@@ -68,7 +68,7 @@ class FusionForgeTemplate extends QuickTemplate
      *
      * @access private
      */
-    function execute()
+    public function execute()
     {
         global $wgRequest, $sysDTDs;
         $this->skin = $skin = $this->data['skin'];
@@ -306,7 +306,7 @@ echo htmlspecialchars($item['class']) ?>"
         wfRestoreWarnings();
     } // end of execute() method
 
-    function searchBox()
+    public function searchBox()
     {
         global $wgUseTwoButtonsSearchForm;
         ?>
@@ -332,7 +332,7 @@ echo htmlspecialchars($item['class']) ?>"
         <?php
     }
 
-    function toolbox()
+    public function toolbox()
     {
         ?>
     <div class="portlet" id="p-tb">
@@ -390,7 +390,7 @@ echo htmlspecialchars($item['class']) ?>"
         <?php
     }
 
-    function languageBox()
+    public function languageBox()
     {
         if ($this->data['language_urls']) {
             ?>
@@ -409,7 +409,7 @@ echo htmlspecialchars($item['class']) ?>"
         }
     }
 
-    function customBox($bar, $cont)
+    public function customBox($bar, $cont)
     {
         ?>
     <div class='generated-sidebar portlet' id='<?php echo Sanitizer::escapeId("p-$bar") ?>'<?php echo $this->skin->tooltip('p-'.$bar) ?>>

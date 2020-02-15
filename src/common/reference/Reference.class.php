@@ -99,46 +99,46 @@ class Reference
     /**
      * Accessors
      */
-    function getId()
+    public function getId()
     {
         return $this->id;
     }
-    function getKeyword()
+    public function getKeyword()
     {
         return $this->keyword;
     }
-    function getDescription()
+    public function getDescription()
     {
         return $this->description;
     }
-    function getLink()
+    public function getLink()
     {
         return $this->link;
     }
-    function getScope()
+    public function getScope()
     {
         return $this->scope;
     }
-    function getServiceShortName()
+    public function getServiceShortName()
     {
         return $this->service_short_name;
     }
-    function getNature()
+    public function getNature()
     {
         return $this->nature;
     }
-    function isActive()
+    public function isActive()
     {
         return $this->is_active;
     }
-    function getGroupId()
+    public function getGroupId()
     {
         return $this->group_id;
     }
     /**
      * @return bool true if this is a system reference (false if project reference)
      */
-    function isSystemReference()
+    public function isSystemReference()
     {
         return ($this->scope == 'S');
     }
@@ -148,7 +148,7 @@ class Reference
     /**
      * @see computeNumParam()
      */
-    function getNumParam()
+    public function getNumParam()
     {
         // Compute number of parameters if not already done
         if ($this->num_param == false) {
@@ -157,22 +157,22 @@ class Reference
         return $this->num_param;
     }
 
-    function setIsActive($my_is_active)
+    public function setIsActive($my_is_active)
     {
         $this->is_active=$my_is_active;
     }
 
-    function setGroupId($my_group_id)
+    public function setGroupId($my_group_id)
     {
         $this->group_id=$my_group_id;
     }
 
-    function setId($my_id)
+    public function setId($my_id)
     {
         $this->id=$my_id;
     }
 
-    function setDescription($my_description)
+    public function setDescription($my_description)
     {
         $this->description=$my_description;
     }
@@ -195,7 +195,7 @@ class Reference
      * @param array $args array of arguments (optional)
      * @param string $projname contains the project name (optional)
     */
-    function replaceLink($args = null, $projname = null)
+    public function replaceLink($args = null, $projname = null)
     {
         $this->link = str_replace('$0', $this->keyword, $this->link);
         if ($projname) {
@@ -225,7 +225,7 @@ class Reference
      * @return int number of parameters needed to compute the link
      * @static
      */
-    function computeNumParam($link)
+    public function computeNumParam($link)
     {
         for ($i=9; $i>0; $i--) {
             if (strpos($link, '$'.$i)!==false) {
@@ -238,7 +238,7 @@ class Reference
     /**
      * @return ReferenceDao instance
      */
-    function &_getReferenceDao()
+    public function &_getReferenceDao()
     {
         if (!is_a($this->referenceDao, 'ReferenceDao')) {
             $this->referenceDao = new ReferenceDao(CodendiDataAccess::instance());

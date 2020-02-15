@@ -27,17 +27,17 @@ define('REQUIRE_ADMIN', false);
 
 class WikiPlugin_PluginManager extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("PluginManager");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Description: Provides a list of plugins on this wiki.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -46,12 +46,12 @@ class WikiPlugin_PluginManager extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('info' => 'args');
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
 
@@ -77,12 +77,12 @@ class WikiPlugin_PluginManager extends WikiPlugin
         return $h;
     }
 
-    function _generatePageheader(&$info, &$html)
+    public function _generatePageheader(&$info, &$html)
     {
         $html->pushContent(HTML::p($this->getDescription()));
     }
 
-    function _generateColgroups(&$info, &$table)
+    public function _generateColgroups(&$info, &$table)
     {
         // specify last two column widths
         $colgroup = HTML::colgroup();
@@ -96,7 +96,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
         $table->pushcontent($colgroup);
     }
 
-    function _generateColheadings(&$info, &$table)
+    public function _generateColheadings(&$info, &$table)
     {
         // table headings
         $tr = HTML::tr();
@@ -110,7 +110,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
         $table->pushContent(HTML::thead($tr));
     }
 
-    function _generateTableBody(&$info, &$dbi, &$request, &$table)
+    public function _generateTableBody(&$info, &$dbi, &$request, &$table)
     {
         $plugin_dir = 'lib/plugin';
         if (defined('PHPWIKI_DIR')) {

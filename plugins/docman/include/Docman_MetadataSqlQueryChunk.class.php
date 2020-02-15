@@ -32,7 +32,7 @@ class Docman_MetadataSqlQueryChunk
     public $mdv;
     public $mdId;
 
-    function __construct($md)
+    public function __construct($md)
     {
         $this->mdv = 'mdv_'.$md->getLabel();
         $this->mdId = $md->getId();
@@ -65,22 +65,22 @@ class Docman_MetadataSqlQueryChunk
         }
     }
 
-    function getFrom()
+    public function getFrom()
     {
         return '';
     }
 
-    function getWhere()
+    public function getWhere()
     {
         return '';
     }
 
-    function getOrderBy()
+    public function getOrderBy()
     {
         return '';
     }
 
-    function _getMdvJoin($label = null)
+    public function _getMdvJoin($label = null)
     {
         if ($label !== null) {
             $mdv = 'mdv_'.$label;

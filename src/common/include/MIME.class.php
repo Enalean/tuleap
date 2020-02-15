@@ -55,7 +55,7 @@ class MIME
      * tries to determine the mimetype of the given file
      * if the second variable is false, the file won't be opened and magic checking will be skipped
      */
-    function type($filename, $openfile = true)
+    public function type($filename, $openfile = true)
     {
         $mimetype = '';
         $matchlen = 0;
@@ -231,7 +231,7 @@ class MIME
     /**
      * gets the textual description of the mimetype, optionally in the specified language
      */
-    function description($mimetype, $language = 'en')
+    public function description($mimetype, $language = 'en')
     {
         $this->description = '';
         $this->lang = $language;

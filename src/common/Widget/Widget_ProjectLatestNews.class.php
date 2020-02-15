@@ -49,7 +49,7 @@ class Widget_ProjectLatestNews extends Widget
      *
      * @return String
      */
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('include_project_home', 'latest_news');
     }
@@ -59,7 +59,7 @@ class Widget_ProjectLatestNews extends Widget
      *
      * @return String
      */
-    function getContent()
+    public function getContent()
     {
         return $this->content;
     }
@@ -69,7 +69,7 @@ class Widget_ProjectLatestNews extends Widget
      *
      * @return bool
      */
-    function isAvailable()
+    public function isAvailable()
     {
         return $this->content ? true : false;
     }
@@ -91,7 +91,7 @@ class Widget_ProjectLatestNews extends Widget
      *
      * @return String
      */
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_latest_news', 'description');
     }

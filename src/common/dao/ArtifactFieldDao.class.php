@@ -29,7 +29,7 @@ class ArtifactFieldDao extends DataAccessObject
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll()
+    public function & searchAll()
     {
         $sql = "SELECT * FROM artifact_field";
         return $this->retrieve($sql);
@@ -39,7 +39,7 @@ class ArtifactFieldDao extends DataAccessObject
     * Searches field_id for (multi_)assigned_to By artifactTypeId
     * @return DataAccessResult
     */
-    function & searchAssignedToFieldIdByArtifactTypeId($artifactTypeId)
+    public function & searchAssignedToFieldIdByArtifactTypeId($artifactTypeId)
     {
         $sql = sprintf(
             " SELECT field_id ".

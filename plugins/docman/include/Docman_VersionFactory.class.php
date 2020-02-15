@@ -31,17 +31,17 @@ use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 class Docman_VersionFactory
 {
 
-    function __construct()
+    public function __construct()
     {
     }
 
-    function create($row)
+    public function create($row)
     {
         $dao = $this->_getVersionDao();
         return $dao->createFromRow($row);
     }
     public $dao;
-    function _getVersionDao()
+    public function _getVersionDao()
     {
         if (!$this->dao) {
             $this->dao = new Docman_VersionDao(CodendiDataAccess::instance());
@@ -49,22 +49,22 @@ class Docman_VersionFactory
         return $this->dao;
     }
 
-    function _getEventManager()
+    public function _getEventManager()
     {
         return EventManager::instance();
     }
 
-    function _getItemFactory()
+    public function _getItemFactory()
     {
         return new Docman_ItemFactory();
     }
 
-    function _getUserManager()
+    public function _getUserManager()
     {
         return UserManager::instance();
     }
 
-    function getAllVersionForItem(&$item)
+    public function getAllVersionForItem(&$item)
     {
         $dao = $this->_getVersionDao();
         $dar = $dao->searchByItemId($item->getId());
@@ -94,7 +94,7 @@ class Docman_VersionFactory
         return null;
     }
 
-    function getSpecificVersion($item, $number)
+    public function getSpecificVersion($item, $number)
     {
         $dao = $this->_getVersionDao();
         $dar = $dao->searchByNumber($item->getId(), $number);
@@ -112,7 +112,7 @@ class Docman_VersionFactory
      *
      * @return Docman_Version | null
      */
-    function getSpecificVersionById($id, $table = 'plugin_docman_version_deleted')
+    public function getSpecificVersionById($id, $table = 'plugin_docman_version_deleted')
     {
         $dao = $this->_getVersionDao();
         $dar = $dao->searchById($id, $table);
@@ -131,7 +131,7 @@ class Docman_VersionFactory
      *
      * @return int
      */
-    function getNextVersionNumber($item)
+    public function getNextVersionNumber($item)
     {
         $dao = $this->_getVersionDao();
         return $dao->searchNextVersionNumber($item->getId());
@@ -145,7 +145,7 @@ class Docman_VersionFactory
      *
      * @return bool
      */
-    function deleteSpecificVersion($item, $number)
+    public function deleteSpecificVersion($item, $number)
     {
         // The event must be processed before the version is deleted
         $version = $this->getSpecificVersion($item, $number) ;
@@ -258,7 +258,7 @@ class Docman_VersionFactory
      * @param  String  $new_name
      * @return bool
      */
-    function renameProject($docman_path, $project, $new_name)
+    public function renameProject($docman_path, $project, $new_name)
     {
         $updateSystem = rename($docman_path.$project->getUnixName(true), $docman_path.strtolower($new_name));
         if ($updateSystem) {
@@ -278,7 +278,7 @@ class Docman_VersionFactory
      *
      * @return Array
      */
-    function listPendingVersions($groupId, $offset, $limit)
+    public function listPendingVersions($groupId, $offset, $limit)
     {
         $dao = $this->_getVersionDao();
         return $dao->listPendingVersions($groupId, $offset, $limit);
@@ -291,7 +291,7 @@ class Docman_VersionFactory
      *
      * @return array|false
      */
-    function listVersionsToPurgeForItem($item)
+    public function listVersionsToPurgeForItem($item)
     {
         $dao = $this->_getVersionDao();
         $dar = $dao->listVersionsToPurgeByItemId($item->getId());
@@ -313,7 +313,7 @@ class Docman_VersionFactory
      *
      * @return bool
      */
-    function physicalDeleteVersion($path)
+    public function physicalDeleteVersion($path)
     {
         if (unlink($path)) {
             return true;

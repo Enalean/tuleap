@@ -19,7 +19,7 @@
 
 class UserNotExistException extends Exception
 {
-    function __construct($message = 'user not exist')
+    public function __construct($message = 'user not exist')
     {
         parent::__construct($message, 3300);
     }

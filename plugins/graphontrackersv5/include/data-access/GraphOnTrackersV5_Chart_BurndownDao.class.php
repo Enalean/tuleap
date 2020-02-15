@@ -23,7 +23,7 @@
 class GraphOnTrackersV5_Chart_BurndownDao extends DataAccessObject
 {
 
-    function __construct($da = null)
+    public function __construct($da = null)
     {
         parent::__construct($da);
         $this->table_name = 'plugin_graphontrackersv5_scrum_burndown';

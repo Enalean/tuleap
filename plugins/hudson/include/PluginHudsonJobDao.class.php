@@ -29,7 +29,7 @@ class PluginHudsonJobDao extends DataAccessObject
     * Gets all jobs in the db
     * @return DataAccessResult
     */
-    function searchAll()
+    public function searchAll()
     {
         $sql = "SELECT * FROM plugin_hudson_job";
         return $this->retrieve($sql);
@@ -39,7 +39,7 @@ class PluginHudsonJobDao extends DataAccessObject
     * Searches PluginHudsonJob by Codendi group ID
     * @return DataAccessResult
     */
-    function searchByGroupID($group_id)
+    public function searchByGroupID($group_id)
     {
         $sql = sprintf(
             "SELECT *
@@ -54,7 +54,7 @@ class PluginHudsonJobDao extends DataAccessObject
     * Searches PluginHudsonJob by job ID
     * @return DataAccessResult
     */
-    function searchByJobID($job_id)
+    public function searchByJobID($job_id)
     {
         $sql = sprintf(
             "SELECT *
@@ -69,7 +69,7 @@ class PluginHudsonJobDao extends DataAccessObject
     * Searches PluginHudsonJob by job name
     * @return DataAccessResult
     */
-    function searchByJobName($job_name)
+    public function searchByJobName($job_name)
     {
         $sql = sprintf(
             "SELECT *
@@ -85,7 +85,7 @@ class PluginHudsonJobDao extends DataAccessObject
     * means "all the jobs of all projects the user is member of"
     * @return DataAccessResult
     */
-    function searchByUserID($user_id)
+    public function searchByUserID($user_id)
     {
         $sql = sprintf(
             "SELECT j.*
@@ -154,7 +154,7 @@ class PluginHudsonJobDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function deleteHudsonJob($job_id)
+    public function deleteHudsonJob($job_id)
     {
         $sql = sprintf(
             "DELETE FROM plugin_hudson_job WHERE job_id = %s",
@@ -164,7 +164,7 @@ class PluginHudsonJobDao extends DataAccessObject
         return $updated;
     }
 
-    function deleteHudsonJobsByGroupID($group_id)
+    public function deleteHudsonJobsByGroupID($group_id)
     {
         $sql = sprintf(
             "DELETE FROM plugin_hudson_job WHERE group_id = %s",
@@ -181,7 +181,7 @@ class PluginHudsonJobDao extends DataAccessObject
     *
     * @return DataAccessResult
     */
-    function countJobs($groupId = null)
+    public function countJobs($groupId = null)
     {
         $condition = '';
         if ($groupId) {

@@ -25,7 +25,7 @@ class LDAP_SyncReminderNotificationManager
     private $userManager;
     private $projectManager;
 
-    function __construct(ProjectManager $projectManager, UserManager $userManager)
+    public function __construct(ProjectManager $projectManager, UserManager $userManager)
     {
         $this->userManager  = $userManager;
         $this->ldapSyncMail = new LDAP_SyncMail($projectManager);

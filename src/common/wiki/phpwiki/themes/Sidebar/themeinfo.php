@@ -31,14 +31,14 @@ require_once('lib/WikiPlugin.php');
 class Theme_Sidebar extends Theme
 {
 
-    function __construct($theme_name = 'Sidebar')
+    public function __construct($theme_name = 'Sidebar')
     {
         parent::__construct($theme_name);
 
         $this->calendarInit(true);
     }
 
-    function findTemplate($name)
+    public function findTemplate($name)
     {
         // hack for navbar.tmpl to hide the buttonseparator
         if ($name == "navbar") {
@@ -50,13 +50,13 @@ class Theme_Sidebar extends Theme
         return parent::findTemplate($name);
     }
 
-    function calendarLink($date = false)
+    public function calendarLink($date = false)
     {
         return $this->calendarBase() . SUBPAGE_SEPARATOR .
                strftime("%Y-%m-%d", $date ? $date : time());
     }
 
-    function calendarBase()
+    public function calendarBase()
     {
         static $UserCalPageTitle = false;
         global $request;
@@ -72,7 +72,7 @@ class Theme_Sidebar extends Theme
         return $UserCalPageTitle;
     }
 
-    function calendarInit($force = false)
+    public function calendarInit($force = false)
     {
         $dbi = $GLOBALS['request']->getDbh();
         // display flat calender dhtml in the sidebar

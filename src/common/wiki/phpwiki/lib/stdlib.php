@@ -548,19 +548,19 @@ class Stack
 {
 
     // var in php5 deprecated
-    function __construct()
+    public function __construct()
     {
         $this->items = array();
         $this->size = 0;
     }
-    function push($item)
+    public function push($item)
     {
         $this->items[$this->size] = $item;
         $this->size++;
         return true;
     }
 
-    function pop()
+    public function pop()
     {
         if ($this->size == 0) {
             return false; // stack is empty
@@ -569,12 +569,12 @@ class Stack
         return $this->items[$this->size];
     }
 
-    function cnt()
+    public function cnt()
     {
         return $this->size;
     }
 
-    function top()
+    public function top()
     {
         if ($this->size) {
             return $this->items[$this->size - 1];
@@ -712,7 +712,7 @@ class WikiPageName
      * @param mixed $basename Page name from which to interpret
      * relative or other non-fully-specified page names.
      */
-    function __construct($name, $basename = false, $anchor = false)
+    public function __construct($name, $basename = false, $anchor = false)
     {
         if (is_string($name)) {
             $this->shortName = $name;
@@ -759,12 +759,12 @@ class WikiPageName
         $this->anchor = (string)$anchor;
     }
 
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
 
-    function getParent()
+    public function getParent()
     {
         $name = $this->name;
         if (!($tail = strrchr($name, SUBPAGE_SEPARATOR))) {
@@ -773,7 +773,7 @@ class WikiPageName
         return substr($name, 0, -strlen($tail));
     }
 
-    function isValid($strict = false)
+    public function isValid($strict = false)
     {
         if ($strict) {
             return !isset($this->_errors);
@@ -781,7 +781,7 @@ class WikiPageName
         return (is_string($this->name) and $this->name != '');
     }
 
-    function getWarnings()
+    public function getWarnings()
     {
         $warnings = array();
         if (isset($this->_warnings)) {
@@ -801,7 +801,7 @@ class WikiPageName
         );
     }
 
-    function _pagename($page)
+    public function _pagename($page)
     {
         if (isa($page, 'WikiDB_Page')) {
             return $page->getName();
@@ -826,7 +826,7 @@ class WikiPageName
         return $page;
     }
 
-    function _normalize_bad_pagename($name)
+    public function _normalize_bad_pagename($name)
     {
         trigger_error("Bad pagename: " . $name, E_USER_WARNING);
 
@@ -841,7 +841,7 @@ class WikiPageName
     }
 
 
-    function _check($pagename)
+    public function _check($pagename)
     {
         // Compress internal white-space to single space character.
          //WARNING : MODIFICATIONS FOR CODENDI
@@ -1525,7 +1525,7 @@ class fileSet
      * (This was a function LoadDir in lib/loadsave.php)
      * See also http://www.php.net/manual/en/function.readdir.php
      */
-    function getFiles($exclude = false, $sortby = false, $limit = false)
+    public function getFiles($exclude = false, $sortby = false, $limit = false)
     {
         $list = $this->_fileList;
 
@@ -1552,7 +1552,7 @@ class fileSet
         return $list;
     }
 
-    function _filenameSelector($filename)
+    public function _filenameSelector($filename)
     {
         if (! $this->_pattern) {
             return true;
@@ -1567,7 +1567,7 @@ class fileSet
         }
     }
 
-    function __construct($directory, $filepattern = false)
+    public function __construct($directory, $filepattern = false)
     {
         $this->_fileList = array();
         $this->_pattern = $filepattern;
@@ -1614,14 +1614,14 @@ class fileSet
 class ListRegexExpand
 {
     //var $match, $list, $index, $case_sensitive;
-    function __construct(&$list, $match, $case_sensitive = true)
+    public function __construct(&$list, $match, $case_sensitive = true)
     {
         $this->match = $match;
         $this->list = &$list;
         $this->case_sensitive = $case_sensitive;
         //$this->index = false;
     }
-    function listMatchCallback($item, $key)
+    public function listMatchCallback($item, $key)
     {
         $quoted = str_replace('/', '\/', $item);
         if (preg_match(
@@ -1632,7 +1632,7 @@ class ListRegexExpand
             $this->list[] = $item;
         }
     }
-    function expandRegex($index, &$pages)
+    public function expandRegex($index, &$pages)
     {
         $this->index = $index;
         array_walk($pages, array($this, 'listMatchCallback'));
@@ -1893,7 +1893,7 @@ class Alert
      * @param hash $buttons  An array mapping button labels to URLs.
      *    The default is a single "Okay" button pointing to $request->getURLtoSelf().
      */
-    function __construct($head, $body, $buttons = false)
+    public function __construct($head, $body, $buttons = false)
     {
         if ($buttons === false) {
             $buttons = array();
@@ -1906,7 +1906,7 @@ class Alert
     /**
      * Show the alert box.
      */
-    function show()
+    public function show()
     {
         global $request;
 
@@ -1920,7 +1920,7 @@ class Alert
     }
 
 
-    function _getButtons()
+    public function _getButtons()
     {
         global $request;
 

@@ -83,7 +83,7 @@ class LDAP
      *
      * @return array
      */
-    function getLDAPParams()
+    public function getLDAPParams()
     {
         return $this->ldapParams;
     }
@@ -95,7 +95,7 @@ class LDAP
      *
      * @return String
      */
-    function getLDAPParam($key)
+    public function getLDAPParam($key)
     {
         return isset($this->ldapParams[$key]) ?  $this->ldapParams[$key] : null;
     }
@@ -108,7 +108,7 @@ class LDAP
      *
      * @return bool true if connect was successful, false otherwise.
      */
-    function connect()
+    public function connect()
     {
         if (!$this->ds) {
             foreach (preg_split('/[,;]/', $this->ldapParams['server']) as $ldap_server) {
@@ -181,7 +181,7 @@ class LDAP
      *
      * @return bool true if bind was successful, false otherwise.
      */
-    function bind($binddn = null, $bindpw = null)
+    public function bind($binddn = null, $bindpw = null)
     {
         if (!$this->bound) {
             if (!$binddn) {
@@ -220,7 +220,7 @@ class LDAP
      * ldap_unbind kills the link descriptor so we just have to force the rebind
      * for next query
      */
-    function unbind()
+    public function unbind()
     {
         $this->bound = false;
     }
@@ -230,7 +230,7 @@ class LDAP
      *
      * @return bool
      */
-    function _connectAndBind()
+    public function _connectAndBind()
     {
         if (!$this->connect()) {
             //$this->setError($Language->getText('ldap_class','err_cant_connect'));
@@ -248,7 +248,7 @@ class LDAP
      *
      * @return int
      */
-    function getErrno()
+    public function getErrno()
     {
         return ldap_errno($this->ds);
     }
@@ -264,7 +264,7 @@ class LDAP
      *
      * @return bool true if the login and password match, false otherwise
      */
-    function authenticate($login, $passwd)
+    public function authenticate($login, $passwd)
     {
         if (!$passwd) {
             // avoid a successful bind on LDAP servers accepting anonymous connections
@@ -363,7 +363,7 @@ class LDAP
      *
      * @return LDAPResultIterator|false
      */
-    function searchDn($dn, $attributes = array())
+    public function searchDn($dn, $attributes = array())
     {
         $attributes = count($attributes) > 0 ? $attributes : $this->getDefaultAttributes();
         return $this->search($dn, 'objectClass=*', self::SCOPE_BASE, $attributes);
@@ -396,7 +396,7 @@ class LDAP
      *
      * @return LDAPResultIterator|false
      */
-    function searchEdUid($name)
+    public function searchEdUid($name)
     {
         $filter = $this->ldapParams['eduid'].'='. ldap_escape($name, '', LDAP_ESCAPE_FILTER);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
@@ -409,7 +409,7 @@ class LDAP
      *
      * @return LDAPResultIterator|false
      */
-    function searchUser($words)
+    public function searchUser($words)
     {
         $words = ldap_escape($words, '', LDAP_ESCAPE_FILTER);
         $filter = str_replace("%words%", $words, $this->ldapParams['search_user']);
@@ -423,7 +423,7 @@ class LDAP
      *
      * @return LDAPResultIterator|false
      */
-    function searchCommonName($name)
+    public function searchCommonName($name)
     {
         $filter = $this->ldapParams['cn'].'='. ldap_escape($name, '', LDAP_ESCAPE_FILTER);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
@@ -436,7 +436,7 @@ class LDAP
      *
      * @return LDAPResultIterator|false
      */
-    function searchGroup($name)
+    public function searchGroup($name)
     {
         $name = ldap_escape($name, '', LDAP_ESCAPE_FILTER);
 
@@ -456,7 +456,7 @@ class LDAP
      *
      * @return LDAPResultIterator|false
      */
-    function searchGroupMembers($groupDn)
+    public function searchGroupMembers($groupDn)
     {
         return $this->search($groupDn, 'objectClass=*', self::SCOPE_SUBTREE, array($this->ldapParams['grp_member']));
     }
@@ -471,7 +471,7 @@ class LDAP
      *
      * @return AppendIterator
      */
-    function searchUserAsYouType($name, $sizeLimit, $validEmail = false)
+    public function searchUserAsYouType($name, $sizeLimit, $validEmail = false)
     {
         $apIt  = new AppendIterator();
         if ($name && $this->_connectAndBind()) {
@@ -543,7 +543,7 @@ class LDAP
      *
      * @return LDAPResultIterator
      */
-    function searchGroupAsYouType($name, $sizeLimit)
+    public function searchGroupAsYouType($name, $sizeLimit)
     {
         $lri = false;
         if ($this->_connectAndBind()) {

@@ -21,7 +21,7 @@
 
 class SimpleSanitizerTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    function testSanitize()
+    public function testSanitize()
     {
         $bad_tag   = "<tag";
         $html      = "Lorem ipsum dolor sit amet,".$bad_tag." consectetuer adipiscing elit.";

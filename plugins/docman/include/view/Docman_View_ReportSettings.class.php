@@ -30,7 +30,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
     public $defaultUrl;
     public $controller;
 
-    function _title($params)
+    public function _title($params)
     {
         $request = HTTPRequest::instance();
         $hp = Codendi_HTMLPurifier::instance();
@@ -48,7 +48,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         $this->controller  = $params['docman'];
     }
 
-    function _getReportTableContent($reportIter, $isAdmin, &$altRowClass)
+    public function _getReportTableContent($reportIter, $isAdmin, &$altRowClass)
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -81,7 +81,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         return $html;
     }
 
-    function _getReportTable()
+    public function _getReportTable()
     {
         $html = '';
 
@@ -109,7 +109,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         return $html;
     }
 
-    function _getReportSettings($reportId)
+    public function _getReportSettings($reportId)
     {
         $html = '';
 
@@ -205,7 +205,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         return $html;
     }
 
-    function _getImportForm()
+    public function _getImportForm()
     {
         $GLOBALS['HTML']->includeFooterJavascriptSnippet("new ProjectAutoCompleter('import_search_report_from_group', '".util_get_dir_image_theme()."', false);");
 
@@ -245,7 +245,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         return $html;
     }
 
-    function _content($params)
+    public function _content($params)
     {
         $html = '';
 

@@ -24,7 +24,7 @@ class ForumML_MessageManager
 {
     private $_dao;
 
-    function getHeaderValue($messageId, $headerId)
+    public function getHeaderValue($messageId, $headerId)
     {
         $dar = $this->getDao()->searchHeaderValue($messageId, $headerId);
         if ($dar && !$dar->isError()) {
@@ -34,7 +34,7 @@ class ForumML_MessageManager
         return false;
     }
 
-    function getDao()
+    public function getDao()
     {
         if (!isset($this->_dao)) {
             $this->_dao = new ForumML_MessageDao(CodendiDataAccess::instance());

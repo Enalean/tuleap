@@ -69,7 +69,7 @@ class ArtifactTypeFactory
      *
      *    @return    object    The Group object.
      */
-    function getGroup()
+    public function getGroup()
     {
         return $this->Group;
     }
@@ -81,7 +81,7 @@ class ArtifactTypeFactory
      *
      *    @return    array of counts
      */
-    function getStatusIdCount($group_artifact_id)
+    public function getStatusIdCount($group_artifact_id)
     {
         $count_array=array();
         $sql="select status_id,count(*) from artifact where group_artifact_id = ". db_ei($group_artifact_id).
@@ -112,7 +112,7 @@ class ArtifactTypeFactory
      *
      *    @return    array    The array of ArtifactType objects.
      */
-    function getArtifactTypes($includeDeleted = false)
+    public function getArtifactTypes($includeDeleted = false)
     {
         global $Language;
 
@@ -194,7 +194,7 @@ class ArtifactTypeFactory
      *
      *    @return    resultSet
      */
-    function getPendingArtifactTypes()
+    public function getPendingArtifactTypes()
     {
         global $Language;
 
@@ -220,7 +220,7 @@ class ArtifactTypeFactory
      *
      * @return bool
      */
-    function preDeleteAllProjectArtifactTypes()
+    public function preDeleteAllProjectArtifactTypes()
     {
         $deleteStatus = true;
         $artifactTypes = $this->getArtifactTypes();
@@ -242,7 +242,7 @@ class ArtifactTypeFactory
      *
      * @return bool
      */
-    function preDeleteArtifactType(ArtifactType $artifactType)
+    public function preDeleteArtifactType(ArtifactType $artifactType)
     {
         if ($artifactType->preDelete(true)) {
             $arm = new ArtifactRulesManager();
@@ -264,7 +264,7 @@ class ArtifactTypeFactory
      *
      *    @return bool
      */
-    function deleteArtifactType($atid)
+    public function deleteArtifactType($atid)
     {
 
      // Delete artifact_canned_responses
@@ -391,7 +391,7 @@ class ArtifactTypeFactory
      *  @param view: 1 means assigned, 2 means Submitted, 3 means Both
      *    @return    db_result
      */
-    function getMyArtifacts($user_id, $view = 'AS')
+    public function getMyArtifacts($user_id, $view = 'AS')
     {
         $assignee = false;
         $submitter = false;
@@ -461,7 +461,7 @@ class ArtifactTypeFactory
      * @param string $tracker_name the name of the tracker we are lokking for
      * @return the ArtifactType named $tracker_name in the project of ID $gropup_id, or false if such a tracker does not exist or if the user can not view this tracker
      */
-    function getArtifactTypeFromName($group_id, $tracker_name)
+    public function getArtifactTypeFromName($group_id, $tracker_name)
     {
         global $Language;
 
@@ -495,7 +495,7 @@ class ArtifactTypeFactory
      *
      *  @return query result.
      */
-    function getTrackerTemplatesForNewProjects()
+    public function getTrackerTemplatesForNewProjects()
     {
         $group_id = db_ei($this->Group->getGroupId());
 
@@ -520,7 +520,7 @@ class ArtifactTypeFactory
      * @param int $group_id th ID of the group
      * @return bool
      */
-    function isNameExists($name, $group_id)
+    public function isNameExists($name, $group_id)
     {
         $reference_dao = $this->getArtifactGroupListDao();
         $dar=$reference_dao->searchNameByGroupId($group_id);
@@ -543,7 +543,7 @@ class ArtifactTypeFactory
      *    @param    itemname: the itemname of the new tracker
      *    @return id on success, false on failure.
      */
-    function create($group_id, $group_id_template, $atid_template, $name, $description, $itemname, $ugroup_mapping = false, &$report_mapping = array())
+    public function create($group_id, $group_id_template, $atid_template, $name, $description, $itemname, $ugroup_mapping = false, &$report_mapping = array())
     {
         global $Language;
 

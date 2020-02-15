@@ -33,17 +33,17 @@ require_once('lib/plugin/WikiAdminSelect.php');
 
 class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
 {
-    function getName()
+    public function getName()
     {
         return _("WikiAdminSearchReplace");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Search and replace text in selected wiki pages.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -52,7 +52,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -64,7 +64,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function replaceHelper(&$dbi, $pagename, $from, $to, $case_exact = true, $regex = false)
+    public function replaceHelper(&$dbi, $pagename, $from, $to, $case_exact = true, $regex = false)
     {
         $page = $dbi->getPage($pagename);
         if ($page->exists()) {// don't replace default contents
@@ -90,7 +90,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         return false;
     }
 
-    function searchReplacePages(&$dbi, &$request, $pages, $from, $to)
+    public function searchReplacePages(&$dbi, &$request, $pages, $from, $to)
     {
         if (empty($from)) {
             return HTML::p(HTML::strong(fmt("Error: Empty search string.")));
@@ -128,7 +128,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         // no action=replace support yet
         if ($request->getArg('action') != 'browse') {
@@ -238,7 +238,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function replaceForm(&$header, $post_args)
+    public function replaceForm(&$header, $post_args)
     {
         $header->pushContent(
             HTML::div(

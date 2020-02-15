@@ -35,7 +35,7 @@ abstract class Docman_ApprovalTable
     public $customizable;
     public $reviewers;
 
-    function __construct()
+    public function __construct()
     {
         $this->id                 = null;
         $this->date               = null;
@@ -50,92 +50,92 @@ abstract class Docman_ApprovalTable
         $this->reviewers          = array();
     }
 
-    function setId($v)
+    public function setId($v)
     {
         $this->id = $v;
     }
 
-    function getId()
+    public function getId()
     {
         return $this->id;
     }
 
-    function setDate($v)
+    public function setDate($v)
     {
         $this->date = $v;
     }
 
-    function getDate()
+    public function getDate()
     {
         return $this->date;
     }
 
-    function setOwner($v)
+    public function setOwner($v)
     {
         $this->owner = $v;
     }
 
-    function getOwner()
+    public function getOwner()
     {
         return $this->owner;
     }
 
-    function setDescription($v)
+    public function setDescription($v)
     {
         $this->description = $v;
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return $this->description;
     }
 
-    function setStatus($v)
+    public function setStatus($v)
     {
         $this->status = $v;
     }
 
-    function getStatus()
+    public function getStatus()
     {
         return $this->status;
     }
 
-    function setNotification($v)
+    public function setNotification($v)
     {
         $this->notification = $v;
     }
 
-    function getNotification()
+    public function getNotification()
     {
         return $this->notification;
     }
 
-    function setNotificationOccurence($v)
+    public function setNotificationOccurence($v)
     {
         $this->notificationOccurence = $v;
     }
 
-    function getNotificationOccurence()
+    public function getNotificationOccurence()
     {
         return $this->notificationOccurence;
     }
 
-    function setCustomizable($v)
+    public function setCustomizable($v)
     {
         $this->customizable = $v;
     }
 
-    function getCustomizable()
+    public function getCustomizable()
     {
         return $this->customizable;
     }
 
-    function getApprovalState()
+    public function getApprovalState()
     {
         return $this->approvalState;
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         if (isset($row['table_id'])) {
             $this->id    = $row['table_id'];
@@ -161,7 +161,7 @@ abstract class Docman_ApprovalTable
         $this->approvalState = $this->computeApprovalState($row);
     }
 
-    /*static*/ function computeApprovalState($row)
+    /*static*/ public function computeApprovalState($row)
     {
         $approvalState = null;
         if (isset($row['nb_reviewers']) && isset($row['rejected']) && isset($row['nb_approved']) && isset($row['nb_declined'])) {
@@ -181,7 +181,7 @@ abstract class Docman_ApprovalTable
     }
 
     // Convenient accessors
-    function isDisabled()
+    public function isDisabled()
     {
         if ($this->status == PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED) {
             return true;
@@ -189,7 +189,7 @@ abstract class Docman_ApprovalTable
         return false;
     }
 
-    function isEnabled()
+    public function isEnabled()
     {
         if ($this->status == PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED) {
             return true;
@@ -197,7 +197,7 @@ abstract class Docman_ApprovalTable
         return false;
     }
 
-    function isClosed()
+    public function isClosed()
     {
         if ($this->status == PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED) {
             return true;
@@ -205,34 +205,34 @@ abstract class Docman_ApprovalTable
         return false;
     }
 
-    function isCustomizable()
+    public function isCustomizable()
     {
         return $this->getCustomizable();
     }
 
     // Reviewers management
     // Should be managed with SplObjectStorage in Php 5
-    function addReviewer($reviewer)
+    public function addReviewer($reviewer)
     {
         $this->reviewers[$reviewer->getId()] = $reviewer;
     }
 
-    function getReviewer($id)
+    public function getReviewer($id)
     {
         return $this->reviewers[$id];
     }
 
-    function isReviewer($id)
+    public function isReviewer($id)
     {
         return isset($this->reviewers[$id]);
     }
 
-    function &getReviewerArray()
+    public function &getReviewerArray()
     {
         return $this->reviewers;
     }
 
-    function getReviewerIterator()
+    public function getReviewerIterator()
     {
         return new ArrayIterator($this->reviewers);
     }

@@ -37,19 +37,19 @@ require_once('lib/WikiPluginCached.php');
  */
 class WikiPlugin_LinkDatabase extends WikiPluginCached
 {
-    function getName()
+    public function getName()
     {
         return _("LinkDatabase");
     }
-    function getPluginType()
+    public function getPluginType()
     {
         return PLUGIN_CACHED_HTML;
     }
-    function getDescription()
+    public function getDescription()
     {
         return _("List all pages with all links in various formats for some Java Visualization tools");
     }
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -57,12 +57,12 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             "\$Revision: 1.7 $"
         );
     }
-    function getExpire($dbi, $argarray, $request)
+    public function getExpire($dbi, $argarray, $request)
     {
         return '+900'; // 15 minutes
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -76,12 +76,12 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
         );
     }
 
-    function getHtml($dbi, $argarray, $request, $basepage)
+    public function getHtml($dbi, $argarray, $request, $basepage)
     {
         $this->run($dbi, WikiPluginCached::glueArgs($argarray), $request, $basepage);
     }
 
-    function run($dbi, $argstr, $request, $basepage)
+    public function run($dbi, $argstr, $request, $basepage)
     {
         global $WikiTheme;
         $args = $this->getArgs($argstr, $request);
@@ -221,7 +221,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
 
 class _PageList_Column_LinkDatabase_links extends _PageList_Column
 {
-    function _getValue($page, &$revision_handle)
+    public function _getValue($page, &$revision_handle)
     {
         $out = HTML();
         $links = $page->getPageLinks();

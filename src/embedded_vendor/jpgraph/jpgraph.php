@@ -288,13 +288,13 @@ class JpgTimer
     private $start;
     private $idx;
 
-    function __construct()
+    public function __construct()
     {
         $this->idx=0;
     }
 
     // Push a new timer start on stack
-    function Push()
+    public function Push()
     {
         list($ms,$s)=explode(" ", microtime());
         $this->start[$this->idx++]=floor($ms*1000) + 1000*$s;
@@ -302,7 +302,7 @@ class JpgTimer
 
     // Pop the latest timer start and return the diff with the
     // current time
-    function Pop()
+    public function Pop()
     {
         assert($this->idx>0);
         list($ms,$s)=explode(" ", microtime());
@@ -325,7 +325,7 @@ class DateLocale
     private $iShortMonth = null;
     private $iMonthName = null;
 
-    function __construct()
+    public function __construct()
     {
         settype($this->iDayAbb, 'array');
         settype($this->iShortDay, 'array');
@@ -334,7 +334,7 @@ class DateLocale
         $this->Set('C');
     }
 
-    function Set($aLocale)
+    public function Set($aLocale)
     {
         if (in_array($aLocale, array_keys($this->iDayAbb))) {
             $this->iLocale = $aLocale;
@@ -381,32 +381,32 @@ class DateLocale
     }
 
 
-    function GetDayAbb()
+    public function GetDayAbb()
     {
         return $this->iDayAbb[$this->iLocale];
     }
 
-    function GetShortDay()
+    public function GetShortDay()
     {
         return $this->iShortDay[$this->iLocale];
     }
 
-    function GetShortMonth()
+    public function GetShortMonth()
     {
         return $this->iShortMonth[$this->iLocale];
     }
 
-    function GetShortMonthName($aNbr)
+    public function GetShortMonthName($aNbr)
     {
         return $this->iShortMonth[$this->iLocale][$aNbr];
     }
 
-    function GetLongMonthName($aNbr)
+    public function GetLongMonthName($aNbr)
     {
         return $this->iMonthName[$this->iLocale][$aNbr];
     }
 
-    function GetMonth()
+    public function GetMonth()
     {
         return $this->iMonthName[$this->iLocale];
     }
@@ -431,7 +431,7 @@ class Footer
     private $iTimer=null;
     private $itimerpoststring='';
 
-    function __construct()
+    public function __construct()
     {
         $this->left = new Text();
         $this->left->ParagraphAlign('left');
@@ -441,20 +441,20 @@ class Footer
         $this->right->ParagraphAlign('right');
     }
 
-    function SetTimer($aTimer, $aTimerPostString = '')
+    public function SetTimer($aTimer, $aTimerPostString = '')
     {
         $this->iTimer = $aTimer;
         $this->itimerpoststring = $aTimerPostString;
     }
 
-    function SetMargin($aLeft = 3, $aRight = 3, $aBottom = 3)
+    public function SetMargin($aLeft = 3, $aRight = 3, $aBottom = 3)
     {
         $this->iLeftMargin = $aLeft;
         $this->iRightMargin = $aRight;
         $this->iBottomMargin = $aBottom;
     }
 
-    function Stroke($aImg)
+    public function Stroke($aImg)
     {
         $y = $aImg->height - $this->iBottomMargin;
         $x = $this->iLeftMargin;
@@ -608,7 +608,7 @@ class Graph
     // aTimeOut  Timeout in minutes for image in cache
     // aInline  If true the image is streamed back in the call to Stroke()
     //   If false the image is just created in the cache
-    function __construct($aWidth = 300, $aHeight = 200, $aCachedName = '', $aTimeout = 0, $aInline = true)
+    public function __construct($aWidth = 300, $aHeight = 200, $aCachedName = '', $aTimeout = 0, $aInline = true)
     {
 
         if (!is_numeric($aWidth) || !is_numeric($aHeight)) {
@@ -680,7 +680,7 @@ class Graph
         }
     }
 
-    function InitializeFrameAndMargin()
+    public function InitializeFrameAndMargin()
     {
         $this->doframe=true;
         $this->frame_color='black';
@@ -703,14 +703,14 @@ class Graph
         $this->margin_color = array(250,250,250);
     }
 
-    function SetupCache($aFilename, $aTimeout = 60)
+    public function SetupCache($aFilename, $aTimeout = 60)
     {
         $this->cache_name = $aFilename;
         $this->cache->SetTimeOut($aTimeout);
     }
 
     // Enable final image perspective transformation
-    function Set3DPerspective($aDir = 1, $aHorizon = 100, $aSkewDist = 120, $aQuality = false, $aFillColor = '#FFFFFF', $aBorder = false, $aMinSize = true, $aHorizonPos = 0.5)
+    public function Set3DPerspective($aDir = 1, $aHorizon = 100, $aSkewDist = 120, $aQuality = false, $aFillColor = '#FFFFFF', $aBorder = false, $aMinSize = true, $aHorizonPos = 0.5)
     {
         $this->iImgTrans = true;
         $this->iImgTransHorizon = $aHorizon;
@@ -723,68 +723,68 @@ class Graph
         $this->iImgTransHorizonPos=$aHorizonPos;
     }
 
-    function SetUserFont($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
+    public function SetUserFont($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->img->ttf->SetUserFont($aNormal, $aBold, $aItalic, $aBoldIt);
     }
 
-    function SetUserFont1($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
+    public function SetUserFont1($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->img->ttf->SetUserFont1($aNormal, $aBold, $aItalic, $aBoldIt);
     }
 
-    function SetUserFont2($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
+    public function SetUserFont2($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->img->ttf->SetUserFont2($aNormal, $aBold, $aItalic, $aBoldIt);
     }
 
-    function SetUserFont3($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
+    public function SetUserFont3($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->img->ttf->SetUserFont3($aNormal, $aBold, $aItalic, $aBoldIt);
     }
 
     // Set Image format and optional quality
-    function SetImgFormat($aFormat, $aQuality = 75)
+    public function SetImgFormat($aFormat, $aQuality = 75)
     {
         $this->img->SetImgFormat($aFormat, $aQuality);
     }
 
     // Should the grid be in front or back of the plot?
-    function SetGridDepth($aDepth)
+    public function SetGridDepth($aDepth)
     {
         $this->grid_depth=$aDepth;
     }
 
-    function SetIconDepth($aDepth)
+    public function SetIconDepth($aDepth)
     {
         $this->iIconDepth=$aDepth;
     }
 
     // Specify graph angle 0-360 degrees.
-    function SetAngle($aAngle)
+    public function SetAngle($aAngle)
     {
         $this->img->SetAngle($aAngle);
     }
 
-    function SetAlphaBlending($aFlg = true)
+    public function SetAlphaBlending($aFlg = true)
     {
         $this->img->SetAlphaBlending($aFlg);
     }
 
     // Shortcut to image margin
-    function SetMargin($lm, $rm, $tm, $bm)
+    public function SetMargin($lm, $rm, $tm, $bm)
     {
         $this->img->SetMargin($lm, $rm, $tm, $bm);
     }
 
-    function SetY2OrderBack($aBack = true)
+    public function SetY2OrderBack($aBack = true)
     {
         $this->y2orderback = $aBack;
     }
 
     // Rotate the graph 90 degrees and set the margin
     // when we have done a 90 degree rotation
-    function Set90AndMargin($lm = 0, $rm = 0, $tm = 0, $bm = 0)
+    public function Set90AndMargin($lm = 0, $rm = 0, $tm = 0, $bm = 0)
     {
         $adj = ($this->img->height - $this->img->width)/2;
         $this->img->SetMargin($tm-$adj, $bm-$adj, $rm+$adj, $lm+$adj);
@@ -797,13 +797,13 @@ class Graph
         $this->yaxis->SetLabelAlign('center', 'bottom');
     }
 
-    function SetClipping($aFlg = true)
+    public function SetClipping($aFlg = true)
     {
         $this->iDoClipping = $aFlg ;
     }
 
     // Add a plot object to the graph
-    function Add($aPlot)
+    public function Add($aPlot)
     {
         if ($aPlot == null) {
             JpGraphError::RaiseL(25010);//("Graph::Add() You tried to add a null plot to the graph.");
@@ -837,7 +837,7 @@ class Graph
         }
     }
 
-    function AddTable($aTable)
+    public function AddTable($aTable)
     {
         if (is_array($aTable)) {
             for ($i=0; $i < count($aTable); ++$i) {
@@ -848,7 +848,7 @@ class Graph
         }
     }
 
-    function AddIcon($aIcon)
+    public function AddIcon($aIcon)
     {
         if (is_array($aIcon)) {
             for ($i=0; $i < count($aIcon); ++$i) {
@@ -860,7 +860,7 @@ class Graph
     }
 
     // Add plot to second Y-scale
-    function AddY2($aPlot)
+    public function AddY2($aPlot)
     {
         if ($aPlot == null) {
             JpGraphError::RaiseL(25011);//("Graph::AddY2() You tried to add a null plot to the graph.");
@@ -888,7 +888,7 @@ class Graph
     }
 
     // Add plot to the extra Y-axises
-    function AddY($aN, $aPlot)
+    public function AddY($aN, $aPlot)
     {
 
         if ($aPlot == null) {
@@ -915,7 +915,7 @@ class Graph
     }
 
     // Add text object to the graph
-    function AddText($aTxt, $aToY2 = false)
+    public function AddText($aTxt, $aToY2 = false)
     {
         if ($aTxt == null) {
             JpGraphError::RaiseL(25014);//("Graph::AddText() You tried to add a null text to the graph.");
@@ -940,7 +940,7 @@ class Graph
     }
 
     // Add a line object (class PlotLine) to the graph
-    function AddLine($aLine, $aToY2 = false)
+    public function AddLine($aLine, $aToY2 = false)
     {
         if ($aLine == null) {
             JpGraphError::RaiseL(25015);//("Graph::AddLine() You tried to add a null line to the graph.");
@@ -970,7 +970,7 @@ class Graph
     }
 
     // Add vertical or horizontal band
-    function AddBand($aBand, $aToY2 = false)
+    public function AddBand($aBand, $aToY2 = false)
     {
         if ($aBand == null) {
             JpGraphError::RaiseL(25016);//(" Graph::AddBand() You tried to add a null band to the graph.");
@@ -995,14 +995,14 @@ class Graph
         }
     }
 
-    function SetPlotGradient($aFrom = 'navy', $aTo = 'silver', $aGradType = 2)
+    public function SetPlotGradient($aFrom = 'navy', $aTo = 'silver', $aGradType = 2)
     {
         $this->plot_gradtype=$aGradType;
         $this->plot_gradfrom = $aFrom;
         $this->plot_gradto = $aTo;
     }
 
-    function SetBackgroundGradient($aFrom = 'navy', $aTo = 'silver', $aGradType = 2, $aStyle = BGRAD_FRAME)
+    public function SetBackgroundGradient($aFrom = 'navy', $aTo = 'silver', $aGradType = 2, $aStyle = BGRAD_FRAME)
     {
         $this->bkg_gradtype=$aGradType;
         $this->bkg_gradstyle=$aStyle;
@@ -1011,7 +1011,7 @@ class Graph
     }
 
     // Set a country flag in the background
-    function SetBackgroundCFlag($aName, $aBgType = BGIMG_FILLPLOT, $aMix = 100)
+    public function SetBackgroundCFlag($aName, $aBgType = BGIMG_FILLPLOT, $aMix = 100)
     {
         $this->background_cflag = $aName;
         $this->background_cflag_type = $aBgType;
@@ -1019,7 +1019,7 @@ class Graph
     }
 
     // Alias for the above method
-    function SetBackgroundCountryFlag($aName, $aBgType = BGIMG_FILLPLOT, $aMix = 100)
+    public function SetBackgroundCountryFlag($aName, $aBgType = BGIMG_FILLPLOT, $aMix = 100)
     {
         $this->background_cflag = $aName;
         $this->background_cflag_type = $aBgType;
@@ -1028,7 +1028,7 @@ class Graph
 
 
     // Specify a background image
-    function SetBackgroundImage($aFileName, $aBgType = BGIMG_FILLPLOT, $aImgFormat = 'auto')
+    public function SetBackgroundImage($aFileName, $aBgType = BGIMG_FILLPLOT, $aImgFormat = 'auto')
     {
 
         // Get extension to determine image type
@@ -1052,26 +1052,26 @@ class Graph
         $this->background_image_format=$aImgFormat;
     }
 
-    function SetBackgroundImageMix($aMix)
+    public function SetBackgroundImageMix($aMix)
     {
         $this->background_image_mix = $aMix ;
     }
 
     // Adjust background image position
-    function SetBackgroundImagePos($aXpos, $aYpos)
+    public function SetBackgroundImagePos($aXpos, $aYpos)
     {
         $this->background_image_xpos = $aXpos ;
         $this->background_image_ypos = $aYpos ;
     }
 
     // Specify axis style (boxed or single)
-    function SetAxisStyle($aStyle)
+    public function SetAxisStyle($aStyle)
     {
         $this->iAxisStyle = $aStyle ;
     }
 
     // Set a frame around the plot area
-    function SetBox($aDrawPlotFrame = true, $aPlotFrameColor = array(0,0,0), $aPlotFrameWeight = 1)
+    public function SetBox($aDrawPlotFrame = true, $aPlotFrameColor = array(0,0,0), $aPlotFrameWeight = 1)
     {
         $this->boxed = $aDrawPlotFrame;
         $this->box_weight = $aPlotFrameWeight;
@@ -1079,26 +1079,26 @@ class Graph
     }
 
     // Specify color for the plotarea (not the margins)
-    function SetColor($aColor)
+    public function SetColor($aColor)
     {
         $this->plotarea_color=$aColor;
     }
 
     // Specify color for the margins (all areas outside the plotarea)
-    function SetMarginColor($aColor)
+    public function SetMarginColor($aColor)
     {
         $this->margin_color=$aColor;
     }
 
     // Set a frame around the entire image
-    function SetFrame($aDrawImgFrame = true, $aImgFrameColor = array(0,0,0), $aImgFrameWeight = 1)
+    public function SetFrame($aDrawImgFrame = true, $aImgFrameColor = array(0,0,0), $aImgFrameWeight = 1)
     {
         $this->doframe = $aDrawImgFrame;
         $this->frame_color = $aImgFrameColor;
         $this->frame_weight = $aImgFrameWeight;
     }
 
-    function SetFrameBevel($aDepth = 3, $aBorder = false, $aBorderColor = 'black', $aColor1 = 'white@0.4', $aColor2 = 'darkgray@0.4', $aFlg = true)
+    public function SetFrameBevel($aDepth = 3, $aBorder = false, $aBorderColor = 'black', $aColor1 = 'white@0.4', $aColor2 = 'darkgray@0.4', $aFlg = true)
     {
         $this->framebevel = $aFlg ;
         $this->framebeveldepth = $aDepth ;
@@ -1111,7 +1111,7 @@ class Graph
     }
 
     // Set the shadow around the whole image
-    function SetShadow($aShowShadow = true, $aShadowWidth = 5, $aShadowColor = 'darkgray')
+    public function SetShadow($aShowShadow = true, $aShadowWidth = 5, $aShadowColor = 'darkgray')
     {
         $this->doshadow = $aShowShadow;
         $this->shadow_color = $aShadowColor;
@@ -1122,7 +1122,7 @@ class Graph
 
     // Specify x,y scale. Note that if you manually specify the scale
     // you must also specify the tick distance with a call to Ticks::Set()
-    function SetScale($aAxisType, $aYMin = 1, $aYMax = 1, $aXMin = 1, $aXMax = 1)
+    public function SetScale($aAxisType, $aYMin = 1, $aYMax = 1, $aXMin = 1, $aXMax = 1)
     {
         $this->axtype = $aAxisType;
 
@@ -1179,7 +1179,7 @@ class Graph
     }
 
     // Specify secondary Y scale
-    function SetY2Scale($aAxisType = 'lin', $aY2Min = 1, $aY2Max = 1)
+    public function SetY2Scale($aAxisType = 'lin', $aY2Min = 1, $aY2Max = 1)
     {
         if ($aAxisType == 'lin') {
             $this->y2scale = new LinearScale($aY2Min, $aY2Max);
@@ -1207,13 +1207,13 @@ class Graph
     }
 
     // Set the delta position (in pixels) between the multiple Y-axis
-    function SetYDeltaDist($aDist)
+    public function SetYDeltaDist($aDist)
     {
         $this->iYAxisDeltaPos = $aDist;
     }
 
     // Specify secondary Y scale
-    function SetYScale($aN, $aAxisType = "lin", $aYMin = 1, $aYMax = 1)
+    public function SetYScale($aN, $aAxisType = "lin", $aYMin = 1, $aYMax = 1)
     {
 
         if ($aAxisType == 'lin') {
@@ -1239,7 +1239,7 @@ class Graph
     // Specify density of ticks when autoscaling 'normal', 'dense', 'sparse', 'verysparse'
     // The dividing factor have been determined heuristically according to my aesthetic
     // sense (or lack off) y.m.m.v !
-    function SetTickDensity($aYDensity = TICKD_NORMAL, $aXDensity = TICKD_NORMAL)
+    public function SetTickDensity($aYDensity = TICKD_NORMAL, $aXDensity = TICKD_NORMAL)
     {
         $this->xtick_factor=30;
         $this->ytick_factor=25;
@@ -1279,7 +1279,7 @@ class Graph
 
 
     // Get a string of all image map areas
-    function GetCSIMareas()
+    public function GetCSIMareas()
     {
         if (!$this->iHasStroked) {
             $this->Stroke(_CSIM_SPECIALFILE);
@@ -1342,7 +1342,7 @@ class Graph
     }
 
     // Get a complete <MAP>..</MAP> tag for the final image map
-    function GetHTMLImageMap($aMapName)
+    public function GetHTMLImageMap($aMapName)
     {
         $im = "<map name=\"$aMapName\" id=\"$aMapName\" >\n";
         $im .= $this->GetCSIMareas();
@@ -1350,7 +1350,7 @@ class Graph
         return $im;
     }
 
-    function CheckCSIMCache($aCacheName, $aTimeOut = 60)
+    public function CheckCSIMCache($aCacheName, $aTimeOut = 60)
     {
         global $_SERVER;
 
@@ -1400,7 +1400,7 @@ class Graph
     }
 
     // Build the argument string to be used with the csim images
-    static function GetURLArguments($aAddRecursiveBlocker = false)
+    public static function GetURLArguments($aAddRecursiveBlocker = false)
     {
 
         if ($aAddRecursiveBlocker) {
@@ -1438,12 +1438,12 @@ class Graph
         return $urlarg;
     }
 
-    function SetCSIMImgAlt($aAlt)
+    public function SetCSIMImgAlt($aAlt)
     {
         $this->iCSIMImgAlt = $aAlt;
     }
 
-    function StrokeCSIM($aScriptName = 'auto', $aCSIMName = '', $aBorder = 0)
+    public function StrokeCSIM($aScriptName = 'auto', $aCSIMName = '', $aBorder = 0)
     {
         if ($aCSIMName=='') {
             // create a random map name
@@ -1511,14 +1511,14 @@ class Graph
         }
     }
 
-    function StrokeCSIMImage()
+    public function StrokeCSIMImage()
     {
         if (@$_GET[_CSIM_DISPLAY] == 1) {
             $this->Stroke();
         }
     }
 
-    function GetCSIMImgHTML($aCSIMName, $aScriptName = 'auto', $aBorder = 0)
+    public function GetCSIMImgHTML($aCSIMName, $aScriptName = 'auto', $aBorder = 0)
     {
         if ($aScriptName=='auto') {
             $aScriptName=basename($_SERVER['PHP_SELF']);
@@ -1527,7 +1527,7 @@ class Graph
         return "<img src=\"".$aScriptName.'?'.$urlarg."\" ismap=\"ismap\" usemap=\"#".$aCSIMName.'" height="'.$this->img->height."\" alt=\"".$this->iCSIMImgAlt."\" />\n";
     }
 
-    function GetTextsYMinMax($aY2 = false)
+    public function GetTextsYMinMax($aY2 = false)
     {
         if ($aY2) {
             $txts = $this->y2texts;
@@ -1554,7 +1554,7 @@ class Graph
         }
     }
 
-    function GetTextsXMinMax($aY2 = false)
+    public function GetTextsXMinMax($aY2 = false)
     {
         if ($aY2) {
             $txts = $this->y2texts;
@@ -1581,7 +1581,7 @@ class Graph
         }
     }
 
-    function GetXMinMax()
+    public function GetXMinMax()
     {
 
         list($min,$ymin) = $this->plots[0]->Min();
@@ -1630,7 +1630,7 @@ class Graph
         return array($min,$max);
     }
 
-    function AdjustMarginsForTitles()
+    public function AdjustMarginsForTitles()
     {
         $totrequired =
             ($this->title->t != ''
@@ -1700,7 +1700,7 @@ class Graph
         }
     }
 
-    function StrokeStore($aStrokeFileName)
+    public function StrokeStore($aStrokeFileName)
     {
         // Get the handler to prevent the library from sending the
         // image to the browser
@@ -1714,7 +1714,7 @@ class Graph
         $this->img->Stream();
     }
 
-    function doAutoscaleXAxis()
+    public function doAutoscaleXAxis()
     {
     //Check if we should autoscale x-axis
         if (!$this->xscale->IsSpecified()) {
@@ -1845,7 +1845,7 @@ class Graph
     }
 
 
-    function doAutoScaleYnAxis()
+    public function doAutoScaleYnAxis()
     {
 
         if ($this->y2scale != null) {
@@ -1932,7 +1932,7 @@ class Graph
         }
     }
 
-    function doAutoScaleYAxis()
+    public function doAutoScaleYAxis()
     {
 
         //Check if we should autoscale y-axis
@@ -1985,7 +1985,7 @@ class Graph
         }
     }
 
-    function InitScaleConstants()
+    public function InitScaleConstants()
     {
         // Setup scale constants
         if ($this->yscale) {
@@ -2006,7 +2006,7 @@ class Graph
         }
     }
 
-    function doPrestrokeAdjustments()
+    public function doPrestrokeAdjustments()
     {
 
         // Do any pre-stroke adjustment that is needed by the different plot types
@@ -2038,7 +2038,7 @@ class Graph
         }
     }
 
-    function StrokeBands($aDepth, $aCSIM)
+    public function StrokeBands($aDepth, $aCSIM)
     {
     // Stroke bands
         if ($this->bands != null && !$aCSIM) {
@@ -2064,7 +2064,7 @@ class Graph
     // Stroke the graph
     // $aStrokeFileName If != "" the image will be written to this file and NOT
     // streamed back to the browser
-    function Stroke($aStrokeFileName = '')
+    public function Stroke($aStrokeFileName = '')
     {
         // Fist make a sanity check that user has specified a scale
         if (empty($this->yscale)) {
@@ -2348,7 +2348,7 @@ class Graph
         }
     }
 
-    function SetAxisLabelBackground($aType, $aXFColor = 'lightgray', $aXColor = 'black', $aYFColor = 'lightgray', $aYColor = 'black')
+    public function SetAxisLabelBackground($aType, $aXFColor = 'lightgray', $aXColor = 'black', $aYFColor = 'lightgray', $aYColor = 'black')
     {
         $this->iAxisLblBgType = $aType;
         $this->iXAxisLblBgFillColor = $aXFColor;
@@ -2357,7 +2357,7 @@ class Graph
         $this->iYAxisLblBgColor = $aYColor;
     }
 
-    function StrokeAxisLabelBackground()
+    public function StrokeAxisLabelBackground()
     {
         // Types
         // 0 = No background
@@ -2438,7 +2438,7 @@ class Graph
         }
     }
 
-    function StrokeAxis($aStrokeLabels = true)
+    public function StrokeAxis($aStrokeLabels = true)
     {
 
         if ($aStrokeLabels) {
@@ -2525,7 +2525,7 @@ class Graph
 
 
     // Private helper function for backgound image
-    static function LoadBkgImage($aImgFormat = '', $aFile = '', $aImgStr = '')
+    public static function LoadBkgImage($aImgFormat = '', $aFile = '', $aImgStr = '')
     {
         if ($aImgStr != '') {
             return Image::CreateFromString($aImgStr);
@@ -2578,7 +2578,7 @@ class Graph
         return $img;
     }
 
-    function StrokePlotGrad()
+    public function StrokePlotGrad()
     {
         if ($this->plot_gradtype < 0) {
             return;
@@ -2592,7 +2592,7 @@ class Graph
         $grad->FilledRectangle($xl, $yt, $xr, $yb, $this->plot_gradfrom, $this->plot_gradto, $this->plot_gradtype);
     }
 
-    function StrokeBackgroundGrad()
+    public function StrokeBackgroundGrad()
     {
         if ($this->bkg_gradtype < 0) {
             return;
@@ -2626,7 +2626,7 @@ class Graph
         }
     }
 
-    function StrokeFrameBackground()
+    public function StrokeFrameBackground()
     {
         if ($this->background_image != '' && $this->background_cflag != '') {
             JpGraphError::RaiseL(25040);//('It is not possible to specify both a background image and a background country flag.');
@@ -2773,7 +2773,7 @@ class Graph
 
     // Private
     // Draw a frame around the image
-    function StrokeFrame()
+    public function StrokeFrame()
     {
         if (!$this->doframe) {
             return;
@@ -2825,7 +2825,7 @@ class Graph
         }
     }
 
-    function FillMarginArea()
+    public function FillMarginArea()
     {
         $hadj=0;
         $vadj=0;
@@ -2853,7 +2853,7 @@ class Graph
         );
     }
 
-    function FillPlotArea()
+    public function FillPlotArea()
     {
         $this->img->PushColor($this->plotarea_color);
         $this->img->FilledRectangle(
@@ -2866,7 +2866,7 @@ class Graph
     }
 
     // Stroke the plot area with either a solid color or a background image
-    function StrokePlotArea()
+    public function StrokePlotArea()
     {
         // Note: To be consistent we really should take a possible shadow
         // into account. However, that causes some problem for the LinearScale class
@@ -2891,7 +2891,7 @@ class Graph
         }
     }
 
-    function StrokeIcons()
+    public function StrokeIcons()
     {
         $n = count($this->iIcons);
         for ($i=0; $i < $n; ++$i) {
@@ -2899,7 +2899,7 @@ class Graph
         }
     }
 
-    function StrokePlotBox()
+    public function StrokePlotBox()
     {
         // Should we draw a box around the plot area?
         if ($this->boxed) {
@@ -2917,14 +2917,14 @@ class Graph
         }
     }
 
-    function SetTitleBackgroundFillStyle($aStyle, $aColor1 = 'black', $aColor2 = 'white')
+    public function SetTitleBackgroundFillStyle($aStyle, $aColor1 = 'black', $aColor2 = 'white')
     {
         $this->titlebkg_fillstyle = $aStyle;
         $this->titlebkg_scolor1 = $aColor1;
         $this->titlebkg_scolor2 = $aColor2;
     }
 
-    function SetTitleBackground($aBackColor = 'gray', $aStyle = TITLEBKG_STYLE1, $aFrameStyle = TITLEBKG_FRAME_NONE, $aFrameColor = 'black', $aFrameWeight = 1, $aBevelHeight = 3, $aEnable = true)
+    public function SetTitleBackground($aBackColor = 'gray', $aStyle = TITLEBKG_STYLE1, $aFrameStyle = TITLEBKG_FRAME_NONE, $aFrameColor = 'black', $aFrameWeight = 1, $aBevelHeight = 3, $aEnable = true)
     {
         $this->titlebackground = $aEnable;
         $this->titlebackground_color = $aBackColor;
@@ -2936,7 +2936,7 @@ class Graph
     }
 
 
-    function StrokeTitles()
+    public function StrokeTitles()
     {
 
         $margin=3;
@@ -3104,7 +3104,7 @@ class Graph
         $this->tabtitle->Stroke($this->img);
     }
 
-    function StrokeTexts()
+    public function StrokeTexts()
     {
         // Stroke any user added text objects
         if ($this->texts != null) {
@@ -3120,7 +3120,7 @@ class Graph
         }
     }
 
-    function StrokeTables()
+    public function StrokeTables()
     {
         if ($this->iTables != null) {
             $n = count($this->iTables);
@@ -3130,7 +3130,7 @@ class Graph
         }
     }
 
-    function DisplayClientSideaImageMapAreas()
+    public function DisplayClientSideaImageMapAreas()
     {
         // Debug stuff - display the outline of the image map areas
         $csim='';
@@ -3162,20 +3162,20 @@ class Graph
     }
 
     // Text scale offset in world coordinates
-    function SetTextScaleOff($aOff)
+    public function SetTextScaleOff($aOff)
     {
         $this->text_scale_off = $aOff;
         $this->xscale->text_scale_off = $aOff;
     }
 
     // Text width of bar to be centered in absolute pixels
-    function SetTextScaleAbsCenterOff($aOff)
+    public function SetTextScaleAbsCenterOff($aOff)
     {
         $this->text_scale_abscenteroff = $aOff;
     }
 
     // Get Y min and max values for added lines
-    function GetLinesYMinMax($aLines)
+    public function GetLinesYMinMax($aLines)
     {
         $n = is_array($aLines) ? count($aLines) : 0;
         if ($n == 0) {
@@ -3200,7 +3200,7 @@ class Graph
     }
 
     // Get X min and max values for added lines
-    function GetLinesXMinMax($aLines)
+    public function GetLinesXMinMax($aLines)
     {
         $n = is_array($aLines) ? count($aLines) : 0;
         if ($n == 0) {
@@ -3225,7 +3225,7 @@ class Graph
     }
 
     // Get min and max values for all included plots
-    function GetPlotsYMinMax($aPlots)
+    public function GetPlotsYMinMax($aPlots)
     {
         $n = count($aPlots);
         $i=0;
@@ -3266,7 +3266,7 @@ class Graph
         return array($min,$max);
     }
 
-    function hasLinePlotAndBarPlot()
+    public function hasLinePlotAndBarPlot()
     {
         $has_line = false;
         $has_bar  = false;
@@ -3287,7 +3287,7 @@ class Graph
         return false;
     }
 
-    function SetTheme($graph_theme)
+    public function SetTheme($graph_theme)
     {
 
         if (!($this instanceof PieGraph)) {
@@ -3303,7 +3303,7 @@ class Graph
         $this->graph_theme->ApplyGraph($this);
     }
 
-    function ClearTheme()
+    public function ClearTheme()
     {
         $this->graph_theme = null;
 
@@ -3332,7 +3332,7 @@ class Graph
         $this->isRunningClear = false;
     }
 
-    function SetSupersampling($do = false, $scale = 2)
+    public function SetSupersampling($do = false, $scale = 2)
     {
         if ($do) {
             define('SUPERSAMPLING_SCALE', $scale);
@@ -3355,34 +3355,34 @@ class LineProperty
     public $iStyle='solid';
     public $iShow=false;
 
-    function __construct($aWeight = 1, $aColor = 'black', $aStyle = 'solid')
+    public function __construct($aWeight = 1, $aColor = 'black', $aStyle = 'solid')
     {
         $this->iWeight = $aWeight;
         $this->iColor = $aColor;
         $this->iStyle = $aStyle;
     }
 
-    function SetColor($aColor)
+    public function SetColor($aColor)
     {
         $this->iColor = $aColor;
     }
 
-    function SetWeight($aWeight)
+    public function SetWeight($aWeight)
     {
         $this->iWeight = $aWeight;
     }
 
-    function SetStyle($aStyle)
+    public function SetStyle($aStyle)
     {
         $this->iStyle = $aStyle;
     }
 
-    function Show($aShow = true)
+    public function Show($aShow = true)
     {
         $this->iShow=$aShow;
     }
 
-    function Stroke($aImg, $aX1, $aY1, $aX2, $aY2)
+    public function Stroke($aImg, $aX1, $aY1, $aX2, $aY2)
     {
         if ($this->iShow) {
             $aImg->PushColor($this->iColor);
@@ -3411,7 +3411,7 @@ class GraphTabTitle extends Text
     private $bordercolor='black';
     private $align = 'left';
     private $width=TABTITLE_WIDTHFIT;
-    function __construct()
+    public function __construct()
     {
         $this->t = '';
         $this->font_style = FS_BOLD;
@@ -3419,40 +3419,40 @@ class GraphTabTitle extends Text
         $this->color = 'darkred';
     }
 
-    function SetColor($aTxtColor, $aFillColor = 'lightyellow', $aBorderColor = 'black')
+    public function SetColor($aTxtColor, $aFillColor = 'lightyellow', $aBorderColor = 'black')
     {
         $this->color = $aTxtColor;
         $this->fillcolor = $aFillColor;
         $this->bordercolor = $aBorderColor;
     }
 
-    function SetFillColor($aFillColor)
+    public function SetFillColor($aFillColor)
     {
         $this->fillcolor = $aFillColor;
     }
 
-    function SetTabAlign($aAlign)
+    public function SetTabAlign($aAlign)
     {
         $this->align = $aAlign;
     }
 
-    function SetWidth($aWidth)
+    public function SetWidth($aWidth)
     {
         $this->width = $aWidth ;
     }
 
-    function Set($t)
+    public function Set($t)
     {
         $this->t = $t;
         $this->hide = false;
     }
 
-    function SetCorner($aD)
+    public function SetCorner($aD)
     {
         $this->corner = $aD ;
     }
 
-    function Stroke($aImg, $aDummy1 = null, $aDummy2 = null)
+    public function Stroke($aImg, $aDummy1 = null, $aDummy2 = null)
     {
         if ($this->hide) {
             return;
@@ -3546,13 +3546,13 @@ class SuperScriptText extends Text
     private $iSDir=0;
     private $iSimple=false;
 
-    function __construct($aTxt = '', $aSuper = '', $aXAbsPos = 0, $aYAbsPos = 0)
+    public function __construct($aTxt = '', $aSuper = '', $aXAbsPos = 0, $aYAbsPos = 0)
     {
         parent::__construct($aTxt, $aXAbsPos, $aYAbsPos);
         $this->iSuper = $aSuper;
     }
 
-    function FromReal($aVal, $aPrecision = 2)
+    public function FromReal($aVal, $aPrecision = 2)
     {
         // Convert a floating point number to scientific notation
         $neg=1.0;
@@ -3580,13 +3580,13 @@ class SuperScriptText extends Text
         $this->iSuper = $l;
     }
 
-    function Set($aTxt, $aSuper = '')
+    public function Set($aTxt, $aSuper = '')
     {
         $this->t = $aTxt;
         $this->iSuper = $aSuper;
     }
 
-    function SetSuperFont($aFontFam, $aFontStyle = FS_NORMAL, $aFontSize = 8)
+    public function SetSuperFont($aFontFam, $aFontStyle = FS_NORMAL, $aFontSize = 8)
     {
         $this->sfont_family = $aFontFam;
         $this->sfont_style = $aFontStyle;
@@ -3594,7 +3594,7 @@ class SuperScriptText extends Text
     }
 
     // Total width of text
-    function GetWidth($aImg)
+    public function GetWidth($aImg)
     {
         $aImg->SetFont($this->font_family, $this->font_style, $this->font_size);
         $w = $aImg->GetTextWidth($this->t);
@@ -3605,7 +3605,7 @@ class SuperScriptText extends Text
     }
 
     // Hight of font (approximate the height of the text)
-    function GetFontHeight($aImg)
+    public function GetFontHeight($aImg)
     {
         $aImg->SetFont($this->font_family, $this->font_style, $this->font_size);
         $h = $aImg->GetFontHeight();
@@ -3615,7 +3615,7 @@ class SuperScriptText extends Text
     }
 
     // Hight of text
-    function GetTextHeight($aImg)
+    public function GetTextHeight($aImg)
     {
         $aImg->SetFont($this->font_family, $this->font_style, $this->font_size);
         $h = $aImg->GetTextHeight($this->t);
@@ -3624,7 +3624,7 @@ class SuperScriptText extends Text
         return $h;
     }
 
-    function Stroke($aImg, $ax = -1, $ay = -1)
+    public function Stroke($aImg, $ax = -1, $ay = -1)
     {
 
         // To position the super script correctly we need different
@@ -3739,13 +3739,13 @@ class Grid
     protected $fill=false;
     protected $fillcolor=array('#EFEFEF','#BBCCFF');
 
-    function __construct($aAxis)
+    public function __construct($aAxis)
     {
         $this->scale = $aAxis->scale;
         $this->img = $aAxis->img;
     }
 
-    function SetColor($aMajColor, $aMinColor = false)
+    public function SetColor($aMajColor, $aMinColor = false)
     {
         $this->majorcolor=$aMajColor;
         if ($aMinColor === false) {
@@ -3754,39 +3754,39 @@ class Grid
         $this->minorcolor = $aMinColor;
     }
 
-    function SetWeight($aMajorWeight, $aMinorWeight = 1)
+    public function SetWeight($aMajorWeight, $aMinorWeight = 1)
     {
         $this->majorweight=$aMajorWeight;
         $this->minorweight=$aMinorWeight;
     }
 
     // Specify if grid should be dashed, dotted or solid
-    function SetLineStyle($aMajorType, $aMinorType = 'solid')
+    public function SetLineStyle($aMajorType, $aMinorType = 'solid')
     {
         $this->majortype = $aMajorType;
         $this->minortype = $aMinorType;
     }
 
-    function SetStyle($aMajorType, $aMinorType = 'solid')
+    public function SetStyle($aMajorType, $aMinorType = 'solid')
     {
         $this->SetLineStyle($aMajorType, $aMinorType);
     }
 
     // Decide if both major and minor grid should be displayed
-    function Show($aShowMajor = true, $aShowMinor = false)
+    public function Show($aShowMajor = true, $aShowMinor = false)
     {
         $this->show=$aShowMajor;
         $this->showMinor=$aShowMinor;
     }
 
-    function SetFill($aFlg = true, $aColor1 = 'lightgray', $aColor2 = 'lightblue')
+    public function SetFill($aFlg = true, $aColor1 = 'lightgray', $aColor2 = 'lightblue')
     {
         $this->fill = $aFlg;
         $this->fillcolor = array( $aColor1, $aColor2 );
     }
 
     // Display the grid
-    function Stroke()
+    public function Stroke()
     {
         if ($this->showMinor && !$this->scale->textscale) {
             $this->DoStroke($this->scale->ticks->ticks_pos, $this->minortype, $this->minorcolor, $this->minorweight);
@@ -3799,7 +3799,7 @@ class Grid
     //--------------
     // Private methods
     // Draw the grid
-    function DoStroke($aTicksPos, $aType, $aColor, $aWeight)
+    public function DoStroke($aTicksPos, $aType, $aColor, $aWeight)
     {
         if (!$this->show) {
             return;
@@ -3935,7 +3935,7 @@ class AxisPrototype
     protected $hide_line=false;
     protected $iDeltaAbsPos=0;
 
-    function __construct($img, $aScale, $color = array(0,0,0))
+    public function __construct($img, $aScale, $color = array(0,0,0))
     {
         $this->img = $img;
         $this->scale = $aScale;
@@ -3958,22 +3958,22 @@ class AxisPrototype
         }
     }
 
-    function SetLabelFormat($aFormStr)
+    public function SetLabelFormat($aFormStr)
     {
         $this->scale->ticks->SetLabelFormat($aFormStr);
     }
 
-    function SetLabelFormatString($aFormStr, $aDate = false)
+    public function SetLabelFormatString($aFormStr, $aDate = false)
     {
         $this->scale->ticks->SetLabelFormat($aFormStr, $aDate);
     }
 
-    function SetLabelFormatCallback($aFuncName)
+    public function SetLabelFormatCallback($aFuncName)
     {
         $this->scale->ticks->SetFormatCallback($aFuncName);
     }
 
-    function SetLabelAlign($aHAlign, $aVAlign = 'top', $aParagraphAlign = 'left')
+    public function SetLabelAlign($aHAlign, $aVAlign = 'top', $aParagraphAlign = 'left')
     {
         $this->label_halign = $aHAlign;
         $this->label_valign = $aVAlign;
@@ -3981,42 +3981,42 @@ class AxisPrototype
     }
 
     // Don't display the first label
-    function HideFirstTickLabel($aShow = false)
+    public function HideFirstTickLabel($aShow = false)
     {
         $this->show_first_label=$aShow;
     }
 
-    function HideLastTickLabel($aShow = false)
+    public function HideLastTickLabel($aShow = false)
     {
         $this->show_last_label=$aShow;
     }
 
     // Manually specify the major and (optional) minor tick position and labels
-    function SetTickPositions($aMajPos, $aMinPos = null, $aLabels = null)
+    public function SetTickPositions($aMajPos, $aMinPos = null, $aLabels = null)
     {
         $this->scale->ticks->SetTickPositions($aMajPos, $aMinPos, $aLabels);
     }
 
     // Manually specify major tick positions and optional labels
-    function SetMajTickPositions($aMajPos, $aLabels = null)
+    public function SetMajTickPositions($aMajPos, $aLabels = null)
     {
         $this->scale->ticks->SetTickPositions($aMajPos, null, $aLabels);
     }
 
     // Hide minor or major tick marks
-    function HideTicks($aHideMinor = true, $aHideMajor = true)
+    public function HideTicks($aHideMinor = true, $aHideMajor = true)
     {
         $this->scale->ticks->SupressMinorTickMarks($aHideMinor);
         $this->scale->ticks->SupressTickMarks($aHideMajor);
     }
 
     // Hide zero label
-    function HideZeroLabel($aFlag = true)
+    public function HideZeroLabel($aFlag = true)
     {
         $this->scale->ticks->SupressZeroLabel();
     }
 
-    function HideFirstLastLabel()
+    public function HideFirstLastLabel()
     {
         // The two first calls to ticks method will supress
         // automatically generated scale values. However, that
@@ -4030,30 +4030,30 @@ class AxisPrototype
     }
 
     // Hide the axis
-    function Hide($aHide = true)
+    public function Hide($aHide = true)
     {
         $this->hide=$aHide;
     }
 
     // Hide the actual axis-line, but still print the labels
-    function HideLine($aHide = true)
+    public function HideLine($aHide = true)
     {
         $this->hide_line = $aHide;
     }
 
-    function HideLabels($aHide = true)
+    public function HideLabels($aHide = true)
     {
         $this->hide_labels = $aHide;
     }
 
     // Weight of axis
-    function SetWeight($aWeight)
+    public function SetWeight($aWeight)
     {
         $this->weight = $aWeight;
     }
 
     // Axis color
-    function SetColor($aColor, $aLabelColor = false)
+    public function SetColor($aColor, $aLabelColor = false)
     {
         $this->color = $aColor;
         if (!$aLabelColor) {
@@ -4064,49 +4064,49 @@ class AxisPrototype
     }
 
     // Title on axis
-    function SetTitle($aTitle, $aAdjustAlign = 'high')
+    public function SetTitle($aTitle, $aAdjustAlign = 'high')
     {
         $this->title->Set($aTitle);
         $this->title_adjust=$aAdjustAlign;
     }
 
     // Specify distance from the axis
-    function SetTitleMargin($aMargin)
+    public function SetTitleMargin($aMargin)
     {
         $this->title_margin=$aMargin;
     }
 
     // Which side of the axis should the axis title be?
-    function SetTitleSide($aSideOfAxis)
+    public function SetTitleSide($aSideOfAxis)
     {
         $this->title_side = $aSideOfAxis;
     }
 
-    function SetTickSide($aDir)
+    public function SetTickSide($aDir)
     {
         $this->scale->ticks->SetSide($aDir);
     }
 
-    function SetTickSize($aMajSize, $aMinSize = 3)
+    public function SetTickSize($aMajSize, $aMinSize = 3)
     {
         $this->scale->ticks->SetSize($aMajSize, $aMinSize = 3);
     }
 
     // Specify text labels for the ticks. One label for each data point
-    function SetTickLabels($aLabelArray, $aLabelColorArray = null)
+    public function SetTickLabels($aLabelArray, $aLabelColorArray = null)
     {
         $this->ticks_label = $aLabelArray;
         $this->ticks_label_colors = $aLabelColorArray;
     }
 
-    function SetLabelMargin($aMargin)
+    public function SetLabelMargin($aMargin)
     {
         $this->tick_label_margin=$aMargin;
     }
 
     // Specify that every $step of the ticks should be displayed starting
     // at $start
-    function SetTextTickInterval($aStep, $aStart = 0)
+    public function SetTextTickInterval($aStep, $aStart = 0)
     {
         $this->scale->ticks->SetTextLabelStart($aStart);
         $this->tick_step=$aStep;
@@ -4114,7 +4114,7 @@ class AxisPrototype
 
     // Specify that every $step tick mark should have a label
     // should be displayed starting
-    function SetTextLabelInterval($aStep)
+    public function SetTextLabelInterval($aStep)
     {
         if ($aStep < 1) {
             JpGraphError::RaiseL(25058);//(" Text label interval must be specified >= 1.");
@@ -4122,13 +4122,13 @@ class AxisPrototype
         $this->label_step=$aStep;
     }
 
-    function SetLabelSide($aSidePos)
+    public function SetLabelSide($aSidePos)
     {
         $this->labelPos=$aSidePos;
     }
 
     // Set the font
-    function SetFont($aFamily, $aStyle = FS_NORMAL, $aSize = 10)
+    public function SetFont($aFamily, $aStyle = FS_NORMAL, $aSize = 10)
     {
         $this->font_family = $aFamily;
         $this->font_style = $aStyle;
@@ -4136,20 +4136,20 @@ class AxisPrototype
     }
 
     // Position for axis line on the "other" scale
-    function SetPos($aPosOnOtherScale)
+    public function SetPos($aPosOnOtherScale)
     {
         $this->pos=$aPosOnOtherScale;
     }
 
     // Set the position of the axis to be X-pixels delta to the right
     // of the max X-position (used to position the multiple Y-axis)
-    function SetPosAbsDelta($aDelta)
+    public function SetPosAbsDelta($aDelta)
     {
         $this->iDeltaAbsPos=$aDelta;
     }
 
     // Specify the angle for the tick labels
-    function SetLabelAngle($aAngle)
+    public function SetLabelAngle($aAngle)
     {
         $this->label_angle = $aAngle;
     }
@@ -4167,13 +4167,13 @@ class AxisPrototype
 class Axis extends AxisPrototype
 {
 
-    function __construct($img, $aScale, $color = 'black')
+    public function __construct($img, $aScale, $color = 'black')
     {
         parent::__construct($img, $aScale, $color);
     }
 
     // Stroke the axis.
-    function Stroke($aOtherAxisScale, $aStrokeLabels = true)
+    public function Stroke($aOtherAxisScale, $aStrokeLabels = true)
     {
         if ($this->hide) {
             return;
@@ -4276,7 +4276,7 @@ class Axis extends AxisPrototype
     //---------------
     // PRIVATE METHODS
     // Draw all the tick labels on major tick marks
-    function StrokeLabels($aPos, $aMinor = false, $aAbsLabel = false)
+    public function StrokeLabels($aPos, $aMinor = false, $aAbsLabel = false)
     {
 
         if (is_array($this->label_color) && count($this->label_color) > 3) {
@@ -4448,101 +4448,101 @@ class Ticks
     protected $weight=1;
     protected $label_usedateformat=false;
 
-    function __construct($aScale)
+    public function __construct($aScale)
     {
         $this->scale=$aScale;
         $this->precision = -1;
     }
 
     // Set format string for automatic labels
-    function SetLabelFormat($aFormatString, $aDate = false)
+    public function SetLabelFormat($aFormatString, $aDate = false)
     {
         $this->label_formatstr=$aFormatString;
         $this->label_usedateformat=$aDate;
     }
 
-    function SetLabelDateFormat($aFormatString)
+    public function SetLabelDateFormat($aFormatString)
     {
         $this->label_dateformatstr=$aFormatString;
     }
 
-    function SetFormatCallback($aCallbackFuncName)
+    public function SetFormatCallback($aCallbackFuncName)
     {
         $this->label_formfunc = $aCallbackFuncName;
     }
 
     // Don't display the first zero label
-    function SupressZeroLabel($aFlag = true)
+    public function SupressZeroLabel($aFlag = true)
     {
         $this->supress_zerolabel=$aFlag;
     }
 
     // Don't display minor tick marks
-    function SupressMinorTickMarks($aHide = true)
+    public function SupressMinorTickMarks($aHide = true)
     {
         $this->supress_minor_tickmarks=$aHide;
     }
 
     // Don't display major tick marks
-    function SupressTickMarks($aHide = true)
+    public function SupressTickMarks($aHide = true)
     {
         $this->supress_tickmarks=$aHide;
     }
 
     // Hide the first tick mark
-    function SupressFirst($aHide = true)
+    public function SupressFirst($aHide = true)
     {
         $this->supress_first=$aHide;
     }
 
     // Hide the last tick mark
-    function SupressLast($aHide = true)
+    public function SupressLast($aHide = true)
     {
         $this->supress_last=$aHide;
     }
 
     // Size (in pixels) of minor tick marks
-    function GetMinTickAbsSize()
+    public function GetMinTickAbsSize()
     {
         return $this->minor_abs_size;
     }
 
     // Size (in pixels) of major tick marks
-    function GetMajTickAbsSize()
+    public function GetMajTickAbsSize()
     {
         return $this->major_abs_size;
     }
 
-    function SetSize($aMajSize, $aMinSize = 3)
+    public function SetSize($aMajSize, $aMinSize = 3)
     {
         $this->major_abs_size = $aMajSize;
         $this->minor_abs_size = $aMinSize;
     }
 
     // Have the ticks been specified
-    function IsSpecified()
+    public function IsSpecified()
     {
         return $this->is_set;
     }
 
-    function SetSide($aSide)
+    public function SetSide($aSide)
     {
         $this->direction=$aSide;
     }
 
     // Which side of the axis should the ticks be on
-    function SetDirection($aSide = SIDE_RIGHT)
+    public function SetDirection($aSide = SIDE_RIGHT)
     {
         $this->direction=$aSide;
     }
 
     // Set colors for major and minor tick marks
-    function SetMarkColor($aMajorColor, $aMinorColor = '')
+    public function SetMarkColor($aMajorColor, $aMinorColor = '')
     {
         $this->SetColor($aMajorColor, $aMinorColor);
     }
 
-    function SetColor($aMajorColor, $aMinorColor = '')
+    public function SetColor($aMajorColor, $aMinorColor = '')
     {
         $this->majcolor=$aMajorColor;
 
@@ -4554,7 +4554,7 @@ class Ticks
         }
     }
 
-    function SetWeight($aWeight)
+    public function SetWeight($aWeight)
     {
         $this->weight=$aWeight;
     }
@@ -4578,25 +4578,25 @@ class LinearTicks extends Ticks
     private $iManualTickLabels = null;
     private $iAdjustForDST = false; // If a date falls within the DST period add one hour to the diaplyed time
 
-    function __construct()
+    public function __construct()
     {
         $this->precision = -1;
     }
 
     // Return major step size in world coordinates
-    function GetMajor()
+    public function GetMajor()
     {
         return $this->major_step;
     }
 
     // Return minor step size in world coordinates
-    function GetMinor()
+    public function GetMinor()
     {
         return $this->minor_step;
     }
 
     // Set Minor and Major ticks (in world coordinates)
-    function Set($aMajStep, $aMinStep = false)
+    public function Set($aMajStep, $aMinStep = false)
     {
         if ($aMinStep==false) {
             $aMinStep=$aMajStep;
@@ -4612,12 +4612,12 @@ class LinearTicks extends Ticks
         $this->is_set = true;
     }
 
-    function SetMajTickPositions($aMajPos, $aLabels = null)
+    public function SetMajTickPositions($aMajPos, $aLabels = null)
     {
         $this->SetTickPositions($aMajPos, null, $aLabels);
     }
 
-    function SetTickPositions($aMajPos, $aMinPos = null, $aLabels = null)
+    public function SetTickPositions($aMajPos, $aMinPos = null, $aLabels = null)
     {
         if (!is_array($aMajPos) || ($aMinPos!==null && !is_array($aMinPos))) {
             JpGraphError::RaiseL(25065);//('Tick positions must be specifued as an array()');
@@ -4632,13 +4632,13 @@ class LinearTicks extends Ticks
         $this->iManualTickLabels = $aLabels;
     }
 
-    function HaveManualLabels()
+    public function HaveManualLabels()
     {
         return is_array($this->iManualTickLabels) ? count($this->iManualTickLabels) > 0 : false;
     }
 
     // Specify all the tick positions manually and possible also the exact labels
-    function _doManualTickPos($aScale)
+    public function _doManualTickPos($aScale)
     {
         $n=count($this->iManualTickPos);
         $m= is_array($this->iManualMinTickPos) ? count($this->iManualMinTickPos) : 0;
@@ -4690,7 +4690,7 @@ class LinearTicks extends Ticks
         }
     }
 
-    function _doAutoTickPos($aScale)
+    public function _doAutoTickPos($aScale)
     {
         $maj_step_abs = $aScale->scale_factor*$this->major_step;
         $min_step_abs = $aScale->scale_factor*$this->minor_step;
@@ -4773,13 +4773,13 @@ class LinearTicks extends Ticks
         }
     }
 
-    function AdjustForDST($aFlg = true)
+    public function AdjustForDST($aFlg = true)
     {
         $this->iAdjustForDST = $aFlg;
     }
 
 
-    function _doLabelFormat($aVal, $aIdx, $aNbrTicks)
+    public function _doLabelFormat($aVal, $aIdx, $aNbrTicks)
     {
 
         // If precision hasn't been specified set it to a sensible value
@@ -4844,7 +4844,7 @@ class LinearTicks extends Ticks
     }
 
     // Stroke ticks on either X or Y axis
-    function _StrokeTicks($aImg, $aScale, $aPos)
+    public function _StrokeTicks($aImg, $aScale, $aPos)
     {
         $hor = $aScale->type == 'x';
         $aImg->SetLineWeight($this->weight);
@@ -4904,7 +4904,7 @@ class LinearTicks extends Ticks
     }
 
     // Draw linear ticks
-    function Stroke($aImg, $aScale, $aPos)
+    public function Stroke($aImg, $aScale, $aPos)
     {
         if ($this->iManualTickPos != null) {
             $this->_doManualTickPos($aScale);
@@ -4922,7 +4922,7 @@ class LinearTicks extends Ticks
     // $lo specifies the label offset and $to specifies the tick offset
     // this comes in handy for example in bar graphs where we wont no offset for the
     // tick but have the labels displayed halfway under the bars.
-    function SetXLabelOffset($aLabelOff, $aTickOff = -1)
+    public function SetXLabelOffset($aLabelOff, $aTickOff = -1)
     {
         $this->xlabel_offset=$aLabelOff;
         if ($aTickOff==-1) {
@@ -4937,7 +4937,7 @@ class LinearTicks extends Ticks
     }
 
     // Which tick label should we start with?
-    function SetTextLabelStart($aTextLabelOff)
+    public function SetTextLabelStart($aTextLabelOff)
     {
         $this->text_label_start=$aTextLabelOff;
     }
@@ -4973,7 +4973,7 @@ class LinearScale
 
     private $_world_size; // Plot area size in world coordinates
 
-    function __construct($aMin = 0, $aMax = 0, $aType = 'y')
+    public function __construct($aMin = 0, $aMax = 0, $aType = 'y')
     {
         assert($aType=='x' || $aType=='y');
         assert($aMin<=$aMax);
@@ -4986,7 +4986,7 @@ class LinearScale
 
     // Check if scale is set or if we should autoscale
     // We should do this is either scale or ticks has not been set
-    function IsSpecified()
+    public function IsSpecified()
     {
         if ($this->GetMinVal()==$this->GetMaxVal()) {  // Scale not set
             return false;
@@ -4997,7 +4997,7 @@ class LinearScale
     // Set the minimum data value when the autoscaling is used.
     // Usefull if you want a fix minimum (like 0) but have an
     // automatic maximum
-    function SetAutoMin($aMin)
+    public function SetAutoMin($aMin)
     {
         $this->autoscale_min=$aMin;
     }
@@ -5005,20 +5005,20 @@ class LinearScale
     // Set the minimum data value when the autoscaling is used.
     // Usefull if you want a fix minimum (like 0) but have an
     // automatic maximum
-    function SetAutoMax($aMax)
+    public function SetAutoMax($aMax)
     {
         $this->autoscale_max=$aMax;
     }
 
     // If the user manually specifies a scale should the ticks
     // still be set automatically?
-    function SetAutoTicks($aFlag = true)
+    public function SetAutoTicks($aFlag = true)
     {
         $this->auto_ticks = $aFlag;
     }
 
     // Specify scale "grace" value (top and bottom)
-    function SetGrace($aGraceTop, $aGraceBottom = 0)
+    public function SetGrace($aGraceTop, $aGraceBottom = 0)
     {
         if ($aGraceTop<0 || $aGraceBottom < 0) {
             JpGraphError::RaiseL(25069);//(" Grace must be larger then 0");
@@ -5028,19 +5028,19 @@ class LinearScale
     }
 
     // Get the minimum value in the scale
-    function GetMinVal()
+    public function GetMinVal()
     {
         return $this->scale[0];
     }
 
     // get maximum value for scale
-    function GetMaxVal()
+    public function GetMaxVal()
     {
         return $this->scale[1];
     }
 
     // Specify a new min/max value for sclae
-    function Update($aImg, $aMin, $aMax)
+    public function Update($aImg, $aMin, $aMax)
     {
         $this->scale=array($aMin,$aMax);
         $this->world_size=$aMax-$aMin;
@@ -5048,7 +5048,7 @@ class LinearScale
     }
 
     // Translate between world and screen
-    function Translate($aCoord)
+    public function Translate($aCoord)
     {
         if (!is_numeric($aCoord)) {
             if ($aCoord != '' && $aCoord != '-' && $aCoord != 'x') {
@@ -5062,7 +5062,7 @@ class LinearScale
 
     // Relative translate (don't include offset) usefull when we just want
     // to know the relative position (in pixels) on the axis
-    function RelTranslate($aCoord)
+    public function RelTranslate($aCoord)
     {
         if (!is_numeric($aCoord)) {
             if ($aCoord != '' && $aCoord != '-' && $aCoord != 'x') {
@@ -5075,13 +5075,13 @@ class LinearScale
     }
 
     // Restrict autoscaling to only use integers
-    function SetIntScale($aIntScale = true)
+    public function SetIntScale($aIntScale = true)
     {
         $this->intscale=$aIntScale;
     }
 
     // Calculate an integer autoscale
-    function IntAutoScale($img, $min, $max, $maxsteps, $majend = true)
+    public function IntAutoScale($img, $min, $max, $maxsteps, $majend = true)
     {
         // Make sure limits are integers
         $min=floor($min);
@@ -5198,7 +5198,7 @@ class LinearScale
 
     // Calculate autoscale. Used if user hasn't given a scale and ticks
     // $maxsteps is the maximum number of major tickmarks allowed.
-    function AutoScale($img, $min, $max, $maxsteps, $majend = true)
+    public function AutoScale($img, $min, $max, $maxsteps, $majend = true)
     {
 
         if (!is_numeric($min) || !is_numeric($max)) {
@@ -5306,7 +5306,7 @@ class LinearScale
     // margins in the image. If the margins in the image are changed
     // this method should be called for every scale that is registred with
     // that image. Should really be installed as an observer of that image.
-    function InitConstants($img)
+    public function InitConstants($img)
     {
         if ($this->type=='x') {
             $this->world_abs_size=$img->width - $img->left_margin - $img->right_margin;
@@ -5333,7 +5333,7 @@ class LinearScale
     // $start =scale start in absolute pixels (for x-scale this is an y-position
     //     and for an y-scale this is an x-position
     // $len   =absolute length in pixels of scale
-    function SetConstants($aStart, $aLen)
+    public function SetConstants($aStart, $aLen)
     {
         $this->world_abs_size=$aLen;
         $this->off=$aStart;
@@ -5361,7 +5361,7 @@ class LinearScale
     //  [$numsteps,$adjmin,$adjmax,$minstep,$majstep]
     // If $majend==true then the first and last marks on the axis will be major
     // labeled tick marks otherwise it will be adjusted to the closest min tick mark
-    function CalcTicks($maxsteps, $min, $max, $a, $b, $majend = true)
+    public function CalcTicks($maxsteps, $min, $max, $a, $b, $majend = true)
     {
         $diff=$max-$min;
         if ($diff==0) {
@@ -5404,7 +5404,7 @@ class LinearScale
         return array($numsteps,$adjmin,$adjmax,$minstep,$majstep);
     }
 
-    function CalcTicksFreeze($maxsteps, $min, $max, $a, $b)
+    public function CalcTicksFreeze($maxsteps, $min, $max, $a, $b)
     {
         // Same as CalcTicks but don't adjust min/max values
         $diff=$max-$min;
@@ -5429,7 +5429,7 @@ class LinearScale
     }
 
 
-    function IntCalcTicks($maxsteps, $min, $max, $a, $majend = true)
+    public function IntCalcTicks($maxsteps, $min, $max, $a, $majend = true)
     {
         $diff=$max-$min;
         if ($diff==0) {
@@ -5475,7 +5475,7 @@ class LinearScale
     }
 
 
-    function IntCalcTicksFreeze($maxsteps, $min, $max, $a)
+    public function IntCalcTicksFreeze($maxsteps, $min, $max, $a)
     {
         // Same as IntCalcTick but don't change min/max values
         $diff=$max-$min;
@@ -5504,7 +5504,7 @@ class LinearScale
     }
 
     // Determine the minimum of three values witha  weight for last value
-    function MatchMin3($a, $b, $c, $weight)
+    public function MatchMin3($a, $b, $c, $weight)
     {
         if ($a < $b) {
             if ($a < ($c*$weight)) {
@@ -5518,7 +5518,7 @@ class LinearScale
         return 3; // $c smallest
     }
 
-    function __get($name)
+    public function __get($name)
     {
         $variable_name = '_' . $name;
 
@@ -5529,7 +5529,7 @@ class LinearScale
         }
     }
 
-    function __set($name, $value)
+    public function __set($name, $value)
     {
         $this->{'_'.$name} = $value;
     }
@@ -5558,67 +5558,67 @@ class DisplayValue
     private $iHideZero=false;
     public $txt=null;
 
-    function __construct()
+    public function __construct()
     {
                 $this->txt = new Text();
     }
 
-    function Show($aFlag = true)
+    public function Show($aFlag = true)
     {
         $this->show=$aFlag;
     }
 
-    function SetColor($aColor, $aNegcolor = '')
+    public function SetColor($aColor, $aNegcolor = '')
     {
         $this->color = $aColor;
         $this->negcolor = $aNegcolor;
     }
 
-    function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 8)
+    public function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 8)
     {
         $this->ff=$aFontFamily;
         $this->fs=$aFontStyle;
         $this->fsize=$aFontSize;
     }
 
-    function ApplyFont($aImg)
+    public function ApplyFont($aImg)
     {
         $aImg->SetFont($this->ff, $this->fs, $this->fsize);
     }
 
-    function SetMargin($aMargin)
+    public function SetMargin($aMargin)
     {
         $this->margin = $aMargin;
     }
 
-    function SetAngle($aAngle)
+    public function SetAngle($aAngle)
     {
         $this->angle = $aAngle;
     }
 
-    function SetAlign($aHAlign, $aVAlign = '')
+    public function SetAlign($aHAlign, $aVAlign = '')
     {
         $this->halign = $aHAlign;
         $this->valign = $aVAlign;
     }
 
-    function SetFormat($aFormat, $aNegFormat = '')
+    public function SetFormat($aFormat, $aNegFormat = '')
     {
         $this->format= $aFormat;
         $this->negformat= $aNegFormat;
     }
 
-    function SetFormatCallback($aFunc)
+    public function SetFormatCallback($aFunc)
     {
         $this->iFormCallback = $aFunc;
     }
 
-    function HideZero($aFlag = true)
+    public function HideZero($aFlag = true)
     {
         $this->iHideZero=$aFlag;
     }
 
-    function Stroke($img, $aVal, $x, $y)
+    public function Stroke($img, $aVal, $x, $y)
     {
 
         if ($this->show) {
@@ -5707,7 +5707,7 @@ class Plot
     protected $inputValues;
     protected $isRunningClear = false;
 
-    function __construct($aDatay, $aDatax = false)
+    public function __construct($aDatay, $aDatax = false)
     {
         $this->numpoints = count($aDatay);
         if ($this->numpoints==0) {
@@ -5736,30 +5736,30 @@ class Plot
     // Stroke the plot
     // "virtual" function which must be implemented by
     // the subclasses
-    function Stroke($aImg, $aXScale, $aYScale)
+    public function Stroke($aImg, $aXScale, $aYScale)
     {
         JpGraphError::RaiseL(25122);//("JpGraph: Stroke() must be implemented by concrete subclass to class Plot");
     }
 
-    function HideLegend($f = true)
+    public function HideLegend($f = true)
     {
         $this->hidelegend = $f;
     }
 
-    function DoLegend($graph)
+    public function DoLegend($graph)
     {
         if (!$this->hidelegend) {
             $this->Legend($graph);
         }
     }
 
-    function StrokeDataValue($img, $aVal, $x, $y)
+    public function StrokeDataValue($img, $aVal, $x, $y)
     {
         $this->value->Stroke($img, $aVal, $x, $y);
     }
 
     // Set href targets for CSIM
-    function SetCSIMTargets($aTargets, $aAlts = '', $aWinTargets = '')
+    public function SetCSIMTargets($aTargets, $aAlts = '', $aWinTargets = '')
     {
         $this->csimtargets=$aTargets;
         $this->csimwintargets=$aWinTargets;
@@ -5767,14 +5767,14 @@ class Plot
     }
 
     // Get all created areas
-    function GetCSIMareas()
+    public function GetCSIMareas()
     {
         return $this->csimareas;
     }
 
     // "Virtual" function which gets called before any scale
     // or axis are stroked used to do any plot specific adjustment
-    function PreStrokeAdjust($aGraph)
+    public function PreStrokeAdjust($aGraph)
     {
         if (substr($aGraph->axtype, 0, 4) == "text" && (isset($this->coords[1]))) {
             JpGraphError::RaiseL(25123);//("JpGraph: You can't use a text X-scale with specified X-coords. Use a \"int\" or \"lin\" scale instead.");
@@ -5784,13 +5784,13 @@ class Plot
 
     // Virtual function to the the concrete plot class to make any changes to the graph
     // and scale before the stroke process begins
-    function PreScaleSetup($aGraph)
+    public function PreScaleSetup($aGraph)
     {
         // Empty
     }
 
     // Get minimum values in plot
-    function Min()
+    public function Min()
     {
         if (isset($this->coords[1])) {
             $x=$this->coords[1];
@@ -5822,7 +5822,7 @@ class Plot
     }
 
     // Get maximum value in plot
-    function Max()
+    public function Max()
     {
         if (isset($this->coords[1])) {
             $x=$this->coords[1];
@@ -5854,12 +5854,12 @@ class Plot
         return array($xm,$ym);
     }
 
-    function SetColor($aColor)
+    public function SetColor($aColor)
     {
         $this->color=$aColor;
     }
 
-    function SetLegend($aLegend, $aCSIM = '', $aCSIMAlt = '', $aCSIMWinTarget = '')
+    public function SetLegend($aLegend, $aCSIM = '', $aCSIMAlt = '', $aCSIMWinTarget = '')
     {
         $this->legend = $aLegend;
         $this->legendcsimtarget = $aCSIM;
@@ -5867,37 +5867,37 @@ class Plot
         $this->legendcsimalt = $aCSIMAlt;
     }
 
-    function SetWeight($aWeight)
+    public function SetWeight($aWeight)
     {
         $this->weight=$aWeight;
     }
 
-    function SetLineWeight($aWeight = 1)
+    public function SetLineWeight($aWeight = 1)
     {
         $this->line_weight=$aWeight;
     }
 
-    function SetCenter($aCenter = true)
+    public function SetCenter($aCenter = true)
     {
         $this->center = $aCenter;
     }
 
     // This method gets called by Graph class to plot anything that should go
     // into the margin after the margin color has been set.
-    function StrokeMargin($aImg)
+    public function StrokeMargin($aImg)
     {
         return true;
     }
 
     // Framework function the chance for each plot class to set a legend
-    function Legend($aGraph)
+    public function Legend($aGraph)
     {
         if ($this->legend != '') {
             $aGraph->legend->Add($this->legend, $this->color, '', 0, $this->legendcsimtarget, $this->legendcsimalt, $this->legendcsimwintarget);
         }
     }
 
-    function Clear()
+    public function Clear()
     {
         $this->isRunningClear = true;
         $this->__construct($this->inputValues['aDatay'], $this->inputValues['aDatax']);
@@ -5948,7 +5948,7 @@ class ColorFactory
         'springgreen2');
     private static $iNum = 33;
 
-    static function getColor()
+    public static function getColor()
     {
         if (ColorFactory::$iIdx >= ColorFactory::$iNum) {
             ColorFactory::$iIdx = 0;

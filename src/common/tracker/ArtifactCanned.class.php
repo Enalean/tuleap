@@ -44,7 +44,7 @@ class ArtifactCanned
      *  @param    array    (all fields from artifact_file_user_vw) OR id from database.
      *  @return bool success.
      */
-    function __construct(&$ArtifactType, $data = false)
+    public function __construct(&$ArtifactType, $data = false)
     {
         global $Language;
 
@@ -86,7 +86,7 @@ class ArtifactCanned
      *    @param    string    The item body.
      *  @return id on success / false on failure.
      */
-    function create($title, $body)
+    public function create($title, $body)
     {
         global $Language;
 
@@ -130,7 +130,7 @@ class ArtifactCanned
      *    @param int    The ID number.
      *    @return bool success.
      */
-    function fetchData($id)
+    public function fetchData($id)
     {
         global $Language;
 
@@ -149,7 +149,7 @@ class ArtifactCanned
      *
      *    @return ArtifactType.
      */
-    function getArtifactType()
+    public function getArtifactType()
     {
         return $this->ArtifactType;
     }
@@ -159,7 +159,7 @@ class ArtifactCanned
      *
      *    @return    int    The id #.
      */
-    function getID()
+    public function getID()
     {
         return $this->data_array['artifact_canned_id'];
     }
@@ -169,7 +169,7 @@ class ArtifactCanned
      *
      *    @return    string    The title.
      */
-    function getTitle()
+    public function getTitle()
     {
         return $this->data_array['title'];
     }
@@ -179,7 +179,7 @@ class ArtifactCanned
      *
      *    @return    string    The message body.
      */
-    function getBody()
+    public function getBody()
     {
         return $this->data_array['body'];
     }
@@ -191,7 +191,7 @@ class ArtifactCanned
      *  @param    string    Body of the message.
      *  @return bool success.
      */
-    function delete($artifact_canned_id)
+    public function delete($artifact_canned_id)
     {
         global $Language;
 
@@ -221,7 +221,7 @@ class ArtifactCanned
      *  @param    string    Body of the message.
      *  @return bool success.
      */
-    function update($title, $body)
+    public function update($title, $body)
     {
         global $Language;
 

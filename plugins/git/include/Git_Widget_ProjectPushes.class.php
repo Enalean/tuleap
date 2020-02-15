@@ -75,7 +75,7 @@ class Git_Widget_ProjectPushes extends Widget
      *
      * @return string
      */
-    function getCategory()
+    public function getCategory()
     {
         return _('Source code management');
     }
@@ -85,7 +85,7 @@ class Git_Widget_ProjectPushes extends Widget
      *
      * @return String
      */
-    function getDescription()
+    public function getDescription()
     {
         return dgettext('tuleap-git', 'Display last Git pushes of the project.');
     }

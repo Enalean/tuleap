@@ -31,5 +31,5 @@ interface TreeNodeCallback
      *
      * @return TreeNode
      */
-    function apply(TreeNode $node);
+    public function apply(TreeNode $node);
 }

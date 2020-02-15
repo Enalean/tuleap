@@ -27,7 +27,7 @@ require_once('Docman_View_ParentsTree.class.php');
 class Docman_View_New_FolderSelection extends Docman_View_Docman
 {
 
-    function _title($params)
+    public function _title($params)
     {
         // No title in printer version
         if (isset($params['pv']) && $params['pv'] > 0) {
@@ -36,7 +36,7 @@ class Docman_View_New_FolderSelection extends Docman_View_Docman
         echo '<h2>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_title').'</h2>';
     }
 
-    function _content($params)
+    public function _content($params)
     {
         $html = '';
 

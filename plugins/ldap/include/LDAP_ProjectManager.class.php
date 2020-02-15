@@ -34,7 +34,7 @@ class LDAP_ProjectManager
      *
      * @return bool
      */
-    function hasSVNLDAPAuth($groupId)
+    public function hasSVNLDAPAuth($groupId)
     {
         if (!isset($this->cacheSVNLDAP[$groupId])) {
             $this->cacheSVNLDAP[$groupId] = $this->getDao()->hasLdapSvn($groupId);
@@ -49,7 +49,7 @@ class LDAP_ProjectManager
      *
      * @return bool
      */
-    function hasSVNLDAPAuthByName($groupName)
+    public function hasSVNLDAPAuthByName($groupName)
     {
         return $this->getDao()->hasLdapAuthByName($groupName);
     }
@@ -61,7 +61,7 @@ class LDAP_ProjectManager
      *
      * @return Void
      */
-    function setLDAPAuthForSVN($groupId)
+    public function setLDAPAuthForSVN($groupId)
     {
         $this->getDao()->activateLdapAuthForProject($groupId);
     }
@@ -71,7 +71,7 @@ class LDAP_ProjectManager
      *
      * @return LDAP_ProjectDao
      */
-    function getDao()
+    public function getDao()
     {
         return new LDAP_ProjectDao(CodendiDataAccess::instance());
     }

@@ -30,12 +30,12 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetailsSectionApproval
 {
 
-    function __construct($item, $url, $themePath)
+    public function __construct($item, $url, $themePath)
     {
         parent::__construct($item, $url, $themePath, null);
     }
 
-    function displayConfirmDelete()
+    public function displayConfirmDelete()
     {
         $html = '';
         $html .= '<form action="'.$this->url.'" method="POST" class="docman_confirm_delete">';
@@ -53,7 +53,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    function displayNotificationEmail()
+    public function displayNotificationEmail()
     {
         $html = '';
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_email_title').'</h3>';
@@ -99,7 +99,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getNewTable()
+    public function _getNewTable()
     {
         $html = '';
         if (is_a($this->table, 'Docman_ApprovalTableVersionned')) {
@@ -113,7 +113,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getGlobalSettings()
+    public function _getGlobalSettings()
     {
         $html = '';
 
@@ -171,7 +171,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getNotificationSettings()
+    public function _getNotificationSettings()
     {
         $html = '';
 
@@ -225,7 +225,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _displayNotificationOccurence()
+    public function _displayNotificationOccurence()
     {
         $html = '<tr>';
         $html .= '<td>';
@@ -256,7 +256,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getReviewerTable()
+    public function _getReviewerTable()
     {
         $html  = '';
         $uh    = UserHelper::instance();
@@ -355,7 +355,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getAddReviewers()
+    public function _getAddReviewers()
     {
         $html = '';
 
@@ -384,7 +384,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    /*static*/function displayImportLastTable($onTableUpdate = false)
+    /*static*/public function displayImportLastTable($onTableUpdate = false)
     {
         $html = '';
 
@@ -404,7 +404,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    function displayUpdateForm()
+    public function displayUpdateForm()
     {
         $html = '';
         $html .= '<form name="docman_approval_settings" method="post" action="?" class="docman_form">';
@@ -432,7 +432,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    function displayCreateTable()
+    public function displayCreateTable()
     {
         $html = '';
 
@@ -470,7 +470,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
     }
 
 
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         $html = '';
 

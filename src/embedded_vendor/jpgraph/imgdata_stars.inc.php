@@ -20,7 +20,7 @@ class ImgData_Stars extends ImgData
     protected $maxidx = 7 ;
     protected $imgdata ;
 
-    function __construct()
+    public function __construct()
     {
         //==========================================================
         // File: bstar_green_001.png

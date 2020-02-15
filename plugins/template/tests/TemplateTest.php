@@ -21,7 +21,7 @@
 class TemplatePluginTest extends TuleapTestCase
 {
 
-    function testSomething()
+    public function testSomething()
     {
         $this->pass();
     }

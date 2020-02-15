@@ -176,7 +176,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return bool
      */
-    function isUsed()
+    public function isUsed()
     {
         return( $this->use_it );
     }
@@ -1011,7 +1011,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string
      */
-    function getLabel()
+    public function getLabel()
     {
         return $this->label;
     }
@@ -1021,7 +1021,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string
      */
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
@@ -1031,7 +1031,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string
      */
-    function getDescription()
+    public function getDescription()
     {
         return $this->description;
     }

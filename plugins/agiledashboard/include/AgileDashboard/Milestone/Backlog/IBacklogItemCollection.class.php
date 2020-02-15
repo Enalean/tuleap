@@ -25,13 +25,13 @@
 interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection
 {
 
-    function getParentItemName();
+    public function getParentItemName();
 
-    function setParentItemName($name);
+    public function setParentItemName($name);
 
-    function push(AgileDashboard_Milestone_Backlog_IBacklogItem $item);
+    public function push(AgileDashboard_Milestone_Backlog_IBacklogItem $item);
 
-    function containsId($id);
+    public function containsId($id);
 
     public function getTotalAvaialableSize();
 

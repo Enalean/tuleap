@@ -28,7 +28,7 @@ class PluginDescriptor
     public $version;
     public $description;
 
-    function __construct($name = '', $version = '', $description = '')
+    public function __construct($name = '', $version = '', $description = '')
     {
         $this->name        = $name;
         $this->version     = $version;
@@ -36,15 +36,15 @@ class PluginDescriptor
         $this->icon_name   = '';
     }
 
-    function getFullName()
+    public function getFullName()
     {
         return $this->name;
     }
-    function getVersion()
+    public function getVersion()
     {
         return $this->version;
     }
-    function getDescription()
+    public function getDescription()
     {
         return $this->description;
     }

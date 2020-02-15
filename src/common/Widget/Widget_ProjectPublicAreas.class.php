@@ -32,11 +32,11 @@ class Widget_ProjectPublicAreas extends Widget
         parent::__construct('projectpublicareas');
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('include_project_home', 'public_areas');
     }
-    function getContent()
+    public function getContent()
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $request  = HTTPRequest::instance();
@@ -229,7 +229,7 @@ class Widget_ProjectPublicAreas extends Widget
         return $html;
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_public_areas', 'description');
     }

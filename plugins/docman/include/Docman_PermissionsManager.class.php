@@ -116,7 +116,7 @@ class Docman_PermissionsManager
      *
      * @return PermissionsManager
      */
-    function _getPermissionManagerInstance()
+    public function _getPermissionManagerInstance()
     {
         return PermissionsManager::instance();
     }
@@ -125,7 +125,7 @@ class Docman_PermissionsManager
      * Wrapper for Docman_PermissionsManagerDao
      * @return Docman_PermissionsManagerDao
      */
-    function getDao()
+    public function getDao()
     {
         if ($this->dao === null) {
             $this->dao = new Docman_PermissionsManagerDao(CodendiDataAccess::instance(), $this->getProject()->getID());
@@ -139,7 +139,7 @@ class Docman_PermissionsManager
      * @param int $groupId
      * @return Docman_ItemFactory
      */
-    function _getItemFactory($groupId = 0)
+    public function _getItemFactory($groupId = 0)
     {
         return Docman_ItemFactory::instance($groupId);
     }
@@ -149,7 +149,7 @@ class Docman_PermissionsManager
      *
      * @return Docman_LockFactory
      */
-    function getLockFactory()
+    public function getLockFactory()
     {
         if (!isset($this->lockFactory)) {
             $this->lockFactory = new \Docman_LockFactory(new \Docman_LockDao(), new Docman_Log());
@@ -164,7 +164,7 @@ class Docman_PermissionsManager
     *
     * @return bool
     */
-    function userCanAccess($user, $item_id)
+    public function userCanAccess($user, $item_id)
     {
         if (!isset($this->cache_access[$user->getId()][$item_id])) {
             $can_read = $this->userCanRead($user, $item_id);
@@ -198,7 +198,7 @@ class Docman_PermissionsManager
     * - or one of his ugroups has READ permission on the item
     * @return bool
     */
-    function userCanRead($user, $item_id)
+    public function userCanRead($user, $item_id)
     {
         if (!isset($this->cache_read[$user->getId()][$item_id])) {
             $can_access_project = $this->canUserAccessProject($user, $this->getProject());
@@ -231,7 +231,7 @@ class Docman_PermissionsManager
     *
     * @return bool
     */
-    function userCanWrite($user, $item_id)
+    public function userCanWrite($user, $item_id)
     {
         if (!isset($this->cache_write[$user->getId()][$item_id])) {
             $can_access_project = $this->canUserAccessProject($user, $this->getProject());
@@ -282,7 +282,7 @@ class Docman_PermissionsManager
      *
      * @return bool
      */
-    function _userHasWritePermission($user, $item_id)
+    public function _userHasWritePermission($user, $item_id)
     {
         $pm = $this->_getPermissionManagerInstance();
         $canWrite = $user->isSuperUser()
@@ -354,7 +354,7 @@ class Docman_PermissionsManager
     * @return bool
     * @access protected
     */
-    function _isUserDocmanAdmin($user)
+    public function _isUserDocmanAdmin($user)
     {
         require_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
         $has_permission = false;
@@ -420,7 +420,7 @@ class Docman_PermissionsManager
      * @param $itemId Integer The parent item id.
      * @return bool
      */
-    function userCanWriteSubItems($user, $itemId)
+    public function userCanWriteSubItems($user, $itemId)
     {
         $item = $this->_getItemTreeForPermChecking($itemId, $user);
         $this->subItemsWritableVisitor = new Docman_SubItemsWritableVisitor($this->getProject()->getID(), $user);
@@ -435,7 +435,7 @@ class Docman_PermissionsManager
      * WARNING: use the result tree carfully as you may expose protected data
      * by mistake.
      */
-    function _getItemTreeForPermChecking($itemId, $user)
+    public function _getItemTreeForPermChecking($itemId, $user)
     {
         $itemFactory = $this->_getItemFactory($this->getProject()->getID());
         $srcItem = $itemFactory->getItemFromDb($itemId);
@@ -446,25 +446,25 @@ class Docman_PermissionsManager
     /**
      * Setup the 'IsWritable' visitor object.
      */
-    function getSubItemsWritableVisitor()
+    public function getSubItemsWritableVisitor()
     {
         return $this->subItemsWritableVisitor;
     }
 
-    function cloneItemPermissions($srcItemId, $dstItemId, $toGroupId)
+    public function cloneItemPermissions($srcItemId, $dstItemId, $toGroupId)
     {
         $pm = $this->_getPermissionManagerInstance();
         $pm->clonePermissions($srcItemId, $dstItemId, self::ITEM_PERMISSION_TYPES, $toGroupId);
     }
 
-    function cloneDocmanPermissions($srcGroupId, $dstGroupId)
+    public function cloneDocmanPermissions($srcGroupId, $dstGroupId)
     {
         $perms = array(self::PLUGIN_DOCMAN_ADMIN);
         $pm = $this->_getPermissionManagerInstance();
         $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
     }
 
-    function setDefaultItemPermissions($itemId, $force = false)
+    public function setDefaultItemPermissions($itemId, $force = false)
     {
         $dao = $this->getDao();
 
@@ -473,7 +473,7 @@ class Docman_PermissionsManager
         $dao->setDefaultPermissions($itemId, self::ITEM_PERMISSION_TYPE_MANAGE, $force);
     }
 
-    function setDefaultDocmanPermissions($groupId)
+    public function setDefaultDocmanPermissions($groupId)
     {
         $dao = $this->getDao();
 
@@ -491,7 +491,7 @@ class Docman_PermissionsManager
      *
      * @return void
      */
-    function retreiveReadPermissionsForItems($itemsIds, $user)
+    public function retreiveReadPermissionsForItems($itemsIds, $user)
     {
         $dao    = $this->getDao();
         $userId = $user->getId();
@@ -549,7 +549,7 @@ class Docman_PermissionsManager
     /**
      * Revoke all access to the user if not already set.
      */
-    function _setNoAccess($userId, $objectId)
+    public function _setNoAccess($userId, $objectId)
     {
         $this->_revokeIfNotGranted($this->cache_read, $userId, $objectId);
         $this->_revokeIfNotGranted($this->cache_write, $userId, $objectId);
@@ -562,7 +562,7 @@ class Docman_PermissionsManager
      * If userCanRead, cache it. Otherwise, if read is not already granted,
      * block it.
      */
-    function _setCanRead($userId, $objectId, $canRead)
+    public function _setCanRead($userId, $objectId, $canRead)
     {
         if ($canRead) {
             $this->cache_read[$userId][$objectId] = true;
@@ -577,7 +577,7 @@ class Docman_PermissionsManager
      * If userCanWrite, cache it. Otherwise, if write is not already granted,
      * block it.
      */
-    function _setCanWrite($userId, $objectId, $canWrite)
+    public function _setCanWrite($userId, $objectId, $canWrite)
     {
         if ($canWrite) {
             $this->cache_read[$userId][$objectId] = true;
@@ -592,7 +592,7 @@ class Docman_PermissionsManager
      *
      * If user cannot manage and manage is not already granted, block it.
      */
-    function _setCanManage($userId, $objectId, $canManage)
+    public function _setCanManage($userId, $objectId, $canManage)
     {
         if ($canManage) {
             $this->cache_read[$userId][$objectId]   = true;
@@ -612,14 +612,14 @@ class Docman_PermissionsManager
      *
      * @return void
      */
-    function _revokeIfNotGranted(&$array, $userId, $objectId)
+    public function _revokeIfNotGranted(&$array, $userId, $objectId)
     {
         if (!isset($array[$userId][$objectId])) {
             $array[$userId][$objectId] = false;
         }
     }
 
-    function oneFolderIsWritable($user)
+    public function oneFolderIsWritable($user)
     {
         $oneWritable = false;
 
@@ -667,7 +667,7 @@ class Docman_PermissionsManager
      *
      * @return Array
      */
-    function getDocmanManagerUsers($objectId, $project)
+    public function getDocmanManagerUsers($objectId, $project)
     {
         $userArray = array();
         $dao = $this->getDao();
@@ -692,7 +692,7 @@ class Docman_PermissionsManager
      *
      * @return Array
      */
-    function getDocmanAdminUsers($project)
+    public function getDocmanAdminUsers($project)
     {
         $userArray = array();
         $dao = $this->getDao();
@@ -717,7 +717,7 @@ class Docman_PermissionsManager
      *
      * @return Array
      */
-    function getProjectAdminUsers($project)
+    public function getProjectAdminUsers($project)
     {
         $userArray = array();
         $dao = $this->getDao();

@@ -40,11 +40,11 @@ abstract class Widget_Rss extends Widget
         $this->setOwner($owner_id, $owner_type);
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $this->rss_title ?: 'RSS Reader';
     }
-    function getContent()
+    public function getContent()
     {
         if (! $this->rss_url) {
             return '';
@@ -70,7 +70,7 @@ abstract class Widget_Rss extends Widget
 
         return $content . '</table>';
     }
-    function isAjax()
+    public function isAjax()
     {
         return true;
     }
@@ -155,7 +155,7 @@ abstract class Widget_Rss extends Widget
         $res = db_query($sql);
         return db_insertid($res);
     }
-    function loadContent($id)
+    public function loadContent($id)
     {
         $sql = "SELECT * FROM widget_rss WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
@@ -167,7 +167,7 @@ abstract class Widget_Rss extends Widget
         }
     }
 
-    function create(Codendi_Request $request)
+    public function create(Codendi_Request $request)
     {
         $content_id = false;
         $vUrl = new Valid_String('url');
@@ -191,7 +191,7 @@ abstract class Widget_Rss extends Widget
         }
         return $content_id;
     }
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
@@ -219,12 +219,12 @@ abstract class Widget_Rss extends Widget
         }
         return $done;
     }
-    function destroy($id)
+    public function destroy($id)
     {
         $sql = 'DELETE FROM widget_rss WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
         db_query($sql);
     }
-    function isUnique()
+    public function isUnique()
     {
         return false;
     }

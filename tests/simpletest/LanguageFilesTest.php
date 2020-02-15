@@ -8,7 +8,7 @@
 class LanguageFilesTest extends TuleapTestCase
 {
 
-    function testLanguagesFiles()
+    public function testLanguagesFiles()
     {
         $basedir      = __DIR__ . '/../../';
         $cmd          = $basedir.'/src/utils/analyse_language_files.pl '.$basedir.' 2>&1';

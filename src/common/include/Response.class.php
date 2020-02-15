@@ -61,7 +61,7 @@ class Response
         }
     }
 
-    function addTour(Tuleap_Tour $tour)
+    public function addTour(Tuleap_Tour $tour)
     {
         $this->tours[] = $tour;
     }
@@ -69,12 +69,12 @@ class Response
     /**
      * @return Tuleap_Tour[]
      */
-    function getTours()
+    public function getTours()
     {
         return $this->tours;
     }
 
-    function addFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
+    public function addFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
         $this->_feedback->log($level, $message, $purify);
     }
@@ -82,7 +82,7 @@ class Response
     /**
      * Only adds to the feedback if the messge doesn't already exist.
      */
-    function addUniqueFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
+    public function addUniqueFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
         if (! strstr($this->getRawFeedback(), $message)) {
             $this->_feedback->log($level, $message, $purify);
@@ -93,16 +93,16 @@ class Response
     {
         $this->_feedback->display();
     }
-    function feedbackHasWarningsOrErrors()
+    public function feedbackHasWarningsOrErrors()
     {
         return $this->_feedback->hasWarningsOrErrors();
     }
-    function feedbackHasErrors()
+    public function feedbackHasErrors()
     {
         return $this->_feedback->hasErrors();
     }
 
-    function getRawFeedback()
+    public function getRawFeedback()
     {
         return $this->_feedback->fetchAsPlainText();
     }
@@ -117,7 +117,7 @@ class Response
     /**
      * @return array of error messages
      */
-    function getFeedbackErrors()
+    public function getFeedbackErrors()
     {
         return $this->_feedback->fetchErrors();
     }
@@ -137,7 +137,7 @@ class Response
         return new FeedbackDao();
     }
 
-    function _serializeFeedback()
+    public function _serializeFeedback()
     {
         $dao        = $this->getFeedbackDao();
         $session_id = UserManager::instance()->getCurrentUser()->getSessionId();

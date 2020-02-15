@@ -290,7 +290,7 @@ define('ZIP_ENDDIR_MAGIC', "PK\005\006");
 
 class ZipWriter
 {
-    function __construct($comment = "", $zipname = "archive.zip")
+    public function __construct($comment = "", $zipname = "archive.zip")
     {
         $this->comment = $comment;
         $this->nfiles = 0;
@@ -302,7 +302,7 @@ class ZipWriter
         header("Content-Disposition: attachment; filename=\"$zipname\"");
     }
 
-    function addRegularFile($filename, $content, $attrib = false)
+    public function addRegularFile($filename, $content, $attrib = false)
     {
         if (!$attrib) {
             $attrib = array();
@@ -395,7 +395,7 @@ class ZipWriter
         $this->nfiles++;
     }
 
-    function finish()
+    public function finish()
     {
         // Output the central directory
         echo $this->dir;
@@ -435,7 +435,7 @@ class ZipWriter
  */
 class ZipReader
 {
-    function __construct($zipfile)
+    public function __construct($zipfile)
     {
         if (!is_string($zipfile)) { // filepointer: File already open
             $this->fp = $zipfile;
@@ -458,7 +458,7 @@ class ZipReader
         }
     }
 
-    function _read($nbytes)
+    public function _read($nbytes)
     {
         if ($this->fp) {
             $chunk = fread($this->fp, $nbytes);
@@ -476,7 +476,7 @@ class ZipReader
         }
     }
 
-    function done()
+    public function done()
     {
         if ($this->fp) {
             fclose($this->fp);
@@ -486,7 +486,7 @@ class ZipReader
         return false;
     }
 
-    function readFile()
+    public function readFile()
     {
         $head = $this->_read(30); // FIXME: This is bad for gzip compressed buffers
 

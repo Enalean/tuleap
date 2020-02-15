@@ -25,7 +25,7 @@
 class Tracker_FormElement_FieldDao extends DataAccessObject
 {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_field';
@@ -176,7 +176,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchUsedByParentId($parent_id)
+    public function searchUsedByParentId($parent_id)
     {
         $parent_id  = $this->da->escapeInt($parent_id);
         $sql = "SELECT *
@@ -187,7 +187,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchUsedByTrackerIdAndType($tracker_id, $type, $used = null)
+    public function searchUsedByTrackerIdAndType($tracker_id, $type, $used = null)
     {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         if (is_array($type)) {
@@ -208,7 +208,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchByTrackerIdAndType($tracker_id, $type)
+    public function searchByTrackerIdAndType($tracker_id, $type)
     {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         if (is_array($type)) {
@@ -229,7 +229,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
     * Searches field_id for (multi_)assigned_to By TrackerId
     * @return DataAccessResult
     */
-    function searchAssignedToFieldIdByArtifactTrackerId($TrackerId)
+    public function searchAssignedToFieldIdByArtifactTrackerId($TrackerId)
     {
         $sql = sprintf(
             " SELECT field_id ".
@@ -241,14 +241,14 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchById($id)
+    public function searchById($id)
     {
         $id = $this->da->escapeInt($id);
         $sql = "SELECT * FROM tracker_field WHERE id = $id";
         return $this->retrieve($sql);
     }
 
-    function searchNextUsedSibling($tracker_id, $id)
+    public function searchNextUsedSibling($tracker_id, $id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $id         = $this->da->escapeInt($id);
@@ -262,7 +262,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchPreviousUsedSibling($tracker_id, $id)
+    public function searchPreviousUsedSibling($tracker_id, $id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $id         = $this->da->escapeInt($id);
@@ -276,7 +276,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchByTrackerId($tracker_id)
+    public function searchByTrackerId($tracker_id)
     {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *

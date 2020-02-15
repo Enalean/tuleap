@@ -34,7 +34,7 @@ class DateParser
      *
      * @return The corresponding timestamp
      */
-    static function parseIso8601($isodate)
+    public static function parseIso8601($isodate)
     {
         if (preg_match("/^(\d{4})-?(\d{2})-?(\d{2})(.*)$/", $isodate, $matches)) {
             list( , $year, $month, $day, $rest) = $matches;

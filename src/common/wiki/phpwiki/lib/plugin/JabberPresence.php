@@ -20,17 +20,17 @@ if (!defined('MY_JABBER_ID')) {
 class WikiPlugin_JabberPresence extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
-    function getName()
+    public function getName()
     {
         return _("JabberPresence");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Simple jabber presence plugin");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -40,7 +40,7 @@ class WikiPlugin_JabberPresence extends WikiPlugin
     }
 
     // Establish default values for each of this plugin's arguments.
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('scripturl' => "http://edgar.netflint.net/status.php",
                      'jid'       => MY_JABBER_ID,
@@ -48,7 +48,7 @@ class WikiPlugin_JabberPresence extends WikiPlugin
                      'iconset'   => "gabber");
     }
 
-    function run($dbi, $argstr, $request)
+    public function run($dbi, $argstr, $request)
     {
         extract($this->getArgs($argstr, $request));
         // Any text that is returned will not be further transformed,

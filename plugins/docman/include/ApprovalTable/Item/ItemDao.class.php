@@ -33,7 +33,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function tableExist($tableId)
+    public function tableExist($tableId)
     {
         $dar = $this->getTableById($tableId, 'NULL');
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
@@ -42,7 +42,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
         return false;
     }
 
-    /*static*/ function getTableStatusFields($table = 'app_u')
+    /*static*/ public function getTableStatusFields($table = 'app_u')
     {
         $fields = 'COUNT('.$table.'.reviewer_id) AS nb_reviewers, '.
             'COUNT(IF('.$table.'.state = '.PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED.',1,NULL)) AS rejected, '.
@@ -51,20 +51,20 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
         return $fields;
     }
 
-    /*static*/ function getTableStatusJoin($tableUser = 'app_u', $tableApproval = 'app')
+    /*static*/ public function getTableStatusJoin($tableUser = 'app_u', $tableApproval = 'app')
     {
         $join = 'plugin_docman_approval_user '.$tableUser
             .' ON ('.$tableUser.'.table_id = '.$tableApproval.'.table_id) ';
         return $join;
     }
 
-    /*static*/ function getTableStatusGroupBy($table = 'app_u')
+    /*static*/ public function getTableStatusGroupBy($table = 'app_u')
     {
         $groupBy  = $table.'.table_id ';
         return $groupBy;
     }
 
-    function getTableWithStatus($status, $fields, $where, $join = '', $orderBy = '', $limit = '')
+    public function getTableWithStatus($status, $fields, $where, $join = '', $orderBy = '', $limit = '')
     {
         $groupBy = '';
         if ($status) {
@@ -83,7 +83,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function createTable($field, $id, $userId, $description, $date, $status, $notification)
+    public function createTable($field, $id, $userId, $description, $date, $status, $notification)
     {
         $sql = 'INSERT INTO plugin_docman_approval'.
             '('.$field.', table_owner, date, description, status, notification)'.
@@ -97,14 +97,14 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
         return $this->_createAndReturnId($sql);
     }
 
-    function deleteTable($tableId)
+    public function deleteTable($tableId)
     {
         $sql = 'DELETE FROM plugin_docman_approval'.
             ' WHERE table_id = '.$this->da->escapeInt($tableId);
         return $this->update($sql);
     }
 
-    function updateTable($tableId, $description = null, $status = null, $notification = null, $notificationOccurence = null, $owner = null)
+    public function updateTable($tableId, $description = null, $status = null, $notification = null, $notificationOccurence = null, $owner = null)
     {
         $_updStmt = '';
         if ($description !== null) {
@@ -159,7 +159,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
         }
     }
 
-    function _createAndReturnId($sql)
+    public function _createAndReturnId($sql)
     {
         $inserted = $this->update($sql);
         if ($inserted) {
@@ -178,7 +178,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function getTablesForReminder()
+    public function getTablesForReminder()
     {
         $sql  = 'SELECT plugin_docman_approval.*, plugin_docman_link_version.item_id AS link_item_id
                  FROM plugin_docman_approval

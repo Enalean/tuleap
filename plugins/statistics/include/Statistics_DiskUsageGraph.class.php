@@ -33,7 +33,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
      * @param unknown_type $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayServiceGraph($services, $groupBy, $startDate, $endDate, $accumulative, $absolute = true)
+    public function displayServiceGraph($services, $groupBy, $startDate, $endDate, $accumulative, $absolute = true)
     {
         $graph = new Chart(750, 450, "auto");
         $graph->SetScale("textint");
@@ -101,7 +101,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
      * @param unknown_type $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayUserGraph($userId, $groupBy, $startDate, $endDate, $absolute = true)
+    public function displayUserGraph($userId, $groupBy, $startDate, $endDate, $absolute = true)
     {
         $graph = new Chart(750, 450, "auto");
         $graph->SetScale("textlin");
@@ -149,7 +149,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
      * @param Date    $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute = true, $accumulative = true, $siteAdminView = true)
+    public function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute = true, $accumulative = true, $siteAdminView = true)
     {
         $graph = new Chart(750, 450, "auto");
         $graph->SetScale("textint");
@@ -229,7 +229,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
      * @param Date    $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayProjectTotalSizeGraph($groupId, $groupBy, $startDate, $endDate, $absolute = true)
+    public function displayProjectTotalSizeGraph($groupId, $groupBy, $startDate, $endDate, $absolute = true)
     {
         $graph = new Chart(420, 340, "auto");
         $graph->img->SetMargin(70, 50, 30, 70);
@@ -272,7 +272,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
         }
     }
 
-    function displayError($msg)
+    public function displayError($msg)
     {
         //ttf from jpgraph
         $ttf = new TTF();

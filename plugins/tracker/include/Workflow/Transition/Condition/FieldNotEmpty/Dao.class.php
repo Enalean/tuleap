@@ -89,7 +89,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
     /**
      * Duplicate condition
      */
-    function duplicate($from_transition_id, $to_transition_id, $field_mapping)
+    public function duplicate($from_transition_id, $to_transition_id, $field_mapping)
     {
         $from_transition_id = $this->da->escapeInt($from_transition_id);
         $to_transition_id   = $this->da->escapeInt($to_transition_id);
@@ -115,7 +115,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
         }
     }
 
-    function addPermission($permission_type, $object_id, $ugroup_id)
+    public function addPermission($permission_type, $object_id, $ugroup_id)
     {
  // WAT ???
         $sql=sprintf(

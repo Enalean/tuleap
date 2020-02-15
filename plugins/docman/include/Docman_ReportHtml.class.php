@@ -39,7 +39,7 @@ class Docman_ReportHtml
         $this->hp         = Codendi_HTMLPurifier::instance();
     }
 
-    function getSelectOption($value, $text, $selected = null)
+    public function getSelectOption($value, $text, $selected = null)
     {
         $html = '';
         $html .= '<option value="'.$value.'"';
@@ -50,7 +50,7 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getSelectOptionFromReportIterator($reportIter, $current = null)
+    public function getSelectOptionFromReportIterator($reportIter, $current = null)
     {
         $html = '';
         $reportIter->rewind();
@@ -62,7 +62,7 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getReportSelector($item)
+    public function getReportSelector($item)
     {
         $html = '';
 
@@ -102,7 +102,7 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function _getFilterDisplayBox($filter, $params, $trashLinkBase, &$displayedFilters)
+    public function _getFilterDisplayBox($filter, $params, $trashLinkBase, &$displayedFilters)
     {
         $html = '';
         $htmlFilter = Docman_HtmlFilterFactory::getFromFilter($filter);
@@ -113,7 +113,7 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getSelectedFilters($params, &$displayedFilters)
+    public function getSelectedFilters($params, &$displayedFilters)
     {
         $html = '';
 
@@ -149,7 +149,7 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getFiltersOptions($params, $displayedFilters)
+    public function getFiltersOptions($params, $displayedFilters)
     {
         $html = '';
 
@@ -209,7 +209,7 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getReportOptions()
+    public function getReportOptions()
     {
         $html = '';
 
@@ -334,7 +334,7 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getReportImage()
+    public function getReportImage()
     {
         $html = '';
         if ($this->report->getImage() !== null) {

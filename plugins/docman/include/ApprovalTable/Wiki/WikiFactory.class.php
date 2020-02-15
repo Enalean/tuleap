@@ -47,7 +47,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
      * version id of the wiki page.
      * If there is no version for the given wiki page, default to 0.
      */
-    function __construct($item, $versionNumber = null)
+    public function __construct($item, $versionNumber = null)
     {
         parent::__construct($item);
 
@@ -81,12 +81,12 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         }
     }
 
-    function newTable()
+    public function newTable()
     {
         return new Docman_ApprovalTableWiki();
     }
 
-    function _createTable($table)
+    public function _createTable($table)
     {
         return $this->_getDao()->createTable(
             $table->getItemId(),
@@ -106,12 +106,12 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         $dstTable->setWikiVersionId($wikiVersionId);
     }
 
-    function _getTable()
+    public function _getTable()
     {
         return $this->getTableFromVersion($this->item->getId(), $this->wikiVersionId);
     }
 
-    function getTableFromVersion($itemId, $version)
+    public function getTableFromVersion($itemId, $version)
     {
         $table = null;
         if ($version !== null) {
@@ -125,19 +125,19 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         return $table;
     }
 
-    function getLastDocumentVersionNumber()
+    public function getLastDocumentVersionNumber()
     {
         $lastVersionId = $this->_getDao()->getLastWikiVersionIdByItemId($this->item->getId());
         return $lastVersionId;
     }
 
-    function userAccessedSinceLastUpdate($user)
+    public function userAccessedSinceLastUpdate($user)
     {
         return $this->_getDao()->userAccessedSince($user->getId(), $this->item->getPagename(), $this->item->getGroupId(), $this->wikiVersionId);
     }
 
     // Class accessor
-    function _getDao()
+    public function _getDao()
     {
         return new Docman_ApprovalTableWikiDao(CodendiDataAccess::instance());
     }

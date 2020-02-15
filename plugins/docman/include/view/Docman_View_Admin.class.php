@@ -24,11 +24,11 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 class Docman_View_Admin extends Docman_View_Extra
 {
 
-    function _title($params)
+    public function _title($params)
     {
         echo '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key') .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_title') .'</h2>';
     }
-    function _content($params)
+    public function _content($params)
     {
         $html = '';
         $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_permissions')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_permissions_title') .'</a></h3>';

@@ -36,7 +36,7 @@ class LDAP_UserDao extends DataAccessObject
      * @return DataAccessResult
      * @throws DataAccessQueryException
      */
-    function searchLdapLoginFromUserIds(array $user_ids)
+    public function searchLdapLoginFromUserIds(array $user_ids)
     {
         $user_ids = $this->da->escapeIntImplode($user_ids);
 
@@ -55,7 +55,7 @@ class LDAP_UserDao extends DataAccessObject
      *
      * @return bool
      */
-    function alreadyLoggedInOnce($userId)
+    public function alreadyLoggedInOnce($userId)
     {
         $sql = 'SELECT NULL'.
             ' FROM plugin_ldap_user ldap_u'.
@@ -81,7 +81,7 @@ class LDAP_UserDao extends DataAccessObject
      *
      * @return bool
      */
-    function createLdapUser($userId, $date = 0, $ldap_uid = "")
+    public function createLdapUser($userId, $date = 0, $ldap_uid = "")
     {
         $sql = 'INSERT INTO plugin_ldap_user'.
             '(user_id, login_confirmation_date, ldap_uid)'.
@@ -98,7 +98,7 @@ class LDAP_UserDao extends DataAccessObject
      *
      * @return bool
      */
-    function setLoginDate($userId, $date)
+    public function setLoginDate($userId, $date)
     {
         $sql = 'UPDATE plugin_ldap_user'.
             ' SET login_confirmation_date = '.db_ei($date).
@@ -144,7 +144,7 @@ class LDAP_UserDao extends DataAccessObject
      *
      * @return bool
      */
-    function updateLdapUid($userId, $ldapUid)
+    public function updateLdapUid($userId, $ldapUid)
     {
         $user_id  = $this->da->quoteSmart($userId);
         $ldap_uid = $this->da->quoteSmart($ldapUid, array('force_string'));

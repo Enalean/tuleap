@@ -31,7 +31,7 @@ class Cardwall_OnTop_ConfigFactory
      */
     private $element_factory;
 
-    function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory)
+    public function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory)
     {
         $this->tracker_factory = $tracker_factory;
         $this->element_factory = $element_factory;

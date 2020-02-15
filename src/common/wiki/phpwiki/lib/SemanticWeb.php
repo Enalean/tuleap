@@ -112,7 +112,7 @@
 include_once('lib/RssWriter.php');
 class RdfWriter extends RssWriter // in fact it should be rewritten to be other way round.
 {
-    function __construct()
+    public function __construct()
     {
         $this->XmlElement(
             'rdf:RDF',
@@ -163,28 +163,28 @@ class ModelWriter extends OwlWriter
  */
 class ReasonerBackend
 {
-    function __construct()
+    public function __construct()
     {
         ;
     }
     /**
      * transform to reasoner syntax
      */
-    function transformTo()
+    public function transformTo()
     {
         ;
     }
     /**
      * transform from reasoner syntax
      */
-    function transformFrom()
+    public function transformFrom()
     {
         ;
     }
     /**
      * call the reasoner
      */
-    function invoke()
+    public function invoke()
     {
         ;
     }

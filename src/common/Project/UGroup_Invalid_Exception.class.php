@@ -19,7 +19,7 @@
 
 class UGroup_Invalid_Exception extends Exception
 {
-    function __construct($message = 'Invalid ugroup exception')
+    public function __construct($message = 'Invalid ugroup exception')
     {
         parent::__construct($message, 3301);
     }

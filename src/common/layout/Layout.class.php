@@ -104,7 +104,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $this->purifier = Codendi_HTMLPurifier::instance();
     }
 
-    function iframe($url, $html_options = array())
+    public function iframe($url, $html_options = array())
     {
         $url_purified = $this->purifier->purify($this->uri_sanitizer->sanitizeForHTMLAttribute($url));
 
@@ -117,7 +117,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo $html;
     }
 
-    function selectRank($id, $rank, $items, $html_options)
+    public function selectRank($id, $rank, $items, $html_options)
     {
         $html = '';
         $html .= '<select ';
@@ -202,7 +202,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      *
      * @return void
      */
-    function includeJavascriptFile($file)
+    public function includeJavascriptFile($file)
     {
         $this->javascript[] = array('file' => $file);
         return $this;
@@ -220,7 +220,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      *
      * @return void
      */
-    function includeJavascriptSnippet($snippet)
+    public function includeJavascriptSnippet($snippet)
     {
         $this->javascript[] = array('snippet' => $snippet);
         return $this;
@@ -245,14 +245,14 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $this->includeFooterJavascriptSnippet($js);
     }
 
-    function includeCalendarScripts()
+    public function includeCalendarScripts()
     {
         $this->includeJavascriptSnippet("var useLanguage = '". substr($this->getUser()->getLocale(), 0, 2) ."';");
         $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
         return $this;
     }
 
-    function _getFeedback()
+    public function _getFeedback()
     {
         $feedback = '';
         if (trim($GLOBALS['feedback']) !== '') {
@@ -320,7 +320,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
-    function box1_top($title, $echoout = 1, $bgcolor = '', $cols = 2)
+    public function box1_top($title, $echoout = 1, $bgcolor = '', $cols = 2)
     {
             $return = '<TABLE class="boxtable" cellspacing="1" cellpadding="5" width="100%" border="0">
                         <TR class="boxtitle" align="center">
@@ -341,7 +341,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
-    function box1_middle($title, $bgcolor = '', $cols = 2)
+    public function box1_middle($title, $bgcolor = '', $cols = 2)
     {
             return '
                                 </TD>
@@ -360,7 +360,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
-    function box1_bottom($echoout = 1)
+    public function box1_bottom($echoout = 1)
     {
             $return = '
                 </TD>
@@ -472,7 +472,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see includeFooterJavascriptFile
      * @see includeFooterJavascriptSnippet
      */
-    function displayFooterJavascriptElements()
+    public function displayFooterJavascriptElements()
     {
         foreach ($this->javascript_in_footer as $js) {
             if (isset($js['file'])) {
@@ -587,7 +587,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @param string $href the href of the feed
      * @return string the <link> tag for the feed
      */
-    function getRssFeed($title, $href)
+    public function getRssFeed($title, $href)
     {
         return '<link rel="alternate" title="'. $title .'" href="'. $href .'" type="application/rss+xml" />';
     }
@@ -603,7 +603,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @param string $maxlength the optional maxlength the input element, default is 10
      * @return string The calendar picker
      */
-    function getDatePicker($id, $name, $value, $size = 10, $maxlength = 10)
+    public function getDatePicker($id, $name, $value, $size = 10, $maxlength = 10)
     {
         $hp = Codendi_HTMLPurifier::instance();
         return '<span style="white-space:nowrap;"><input type="text"
@@ -673,7 +673,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return $html;
     }
 
-    function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab)
+    public function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab)
     {
         $pm = ProjectManager::instance();
         $project=$pm->getProject($group_id);
@@ -696,7 +696,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         }
     }
 
-    function generic_footer($params)
+    public function generic_footer($params)
     {
 
         global $Language;
@@ -716,7 +716,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo '</html>';
     }
 
-    function pv_header($params)
+    public function pv_header($params)
     {
         $this->generic_header($params);
         echo '
@@ -730,7 +730,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         }
     }
 
-    function pv_footer($params)
+    public function pv_footer($params)
     {
         echo $this->displayFooterJavascriptElements();
         echo "\n</body></html>";
@@ -775,7 +775,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return '<div id="notification-placeholder"></div>';
     }
 
-    function feedback($feedback)
+    public function feedback($feedback)
     {
         return '';
     }
@@ -792,7 +792,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
              </html>';
     }
 
-    function footer(array $params)
+    public function footer(array $params)
     {
         if (!isset($params['showfeedback']) || $params['showfeedback']) {
             echo $this->_getFeedback();
@@ -817,7 +817,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $this->generic_footer($params);
     }
 
-    function menu_entry($link, $title)
+    public function menu_entry($link, $title)
     {
             print "\t".'<A class="menus" href="'.$link.'">'.$title.'</A> &nbsp;<img src="'.util_get_image_theme("point1.png").'" alt=" " width="7" height="7"><br>';
     }
@@ -966,7 +966,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     /**
      * Echo the search box
      */
-    function searchBox()
+    public function searchBox()
     {
         echo "\t<CENTER>\n".$this->getSearchBox()."\t</CENTER>\n";
     }
@@ -977,7 +977,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @param $index the index (id) of the priority : 1
      * @return string 'priora'
      */
-    function getPriorityColor($index)
+    public function getPriorityColor($index)
     {
         if (isset($this->bgpri[$index])) {
             return $this->bgpri[$index];

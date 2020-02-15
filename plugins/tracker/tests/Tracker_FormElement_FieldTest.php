@@ -130,7 +130,7 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    function testValidateField()
+    public function testValidateField()
     {
         // 0 => Field has value in last changeset
         // 1 => Field submitted in the request
@@ -242,7 +242,7 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase
         }
     }
 
-    function testIsValid_not_required()
+    public function testIsValid_not_required()
     {
         $this->response->expectNever('addFeedback', array('error', 'Status is required'));
         $artifact = new MockTracker_Artifact();
@@ -261,7 +261,7 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase
         $this->assertTrue($field->hasErrors());
     }
 
-    function testIsValid_required()
+    public function testIsValid_required()
     {
 
         $artifact = new MockTracker_Artifact();

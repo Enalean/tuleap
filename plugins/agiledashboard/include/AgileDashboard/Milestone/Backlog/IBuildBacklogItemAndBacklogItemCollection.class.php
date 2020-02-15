@@ -31,10 +31,10 @@ interface AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollec
     /**
      * @return AgileDashboard_Milestone_Backlog_IBacklogItemCollection
      */
-    function getCollection();
+    public function getCollection();
 
     /**
      * @return AgileDashboard_Milestone_Backlog_IBacklogItem
      */
-    function getItem(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent);
+    public function getItem(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent);
 }

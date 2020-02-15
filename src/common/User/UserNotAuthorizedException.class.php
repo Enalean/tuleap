@@ -19,7 +19,7 @@
 
 class UserNotAuthorizedException extends Exception
 {
-    function __construct($message = 'user not authorized')
+    public function __construct($message = 'user not authorized')
     {
         parent::__construct($message, 3300);
     }

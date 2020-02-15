@@ -31,17 +31,17 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return void
      */
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
     }
 
-    function getType()
+    public function getType()
     {
         return 'docman_permission_denied';
     }
 
-    function getTextBase()
+    public function getTextBase()
     {
         return 'plugin_docman';
     }
@@ -53,7 +53,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return Array
      */
-    function returnBuildInterfaceParam()
+    public function returnBuildInterfaceParam()
     {
         $param = array();
         $param['name']   = 'msg_docman_access';
@@ -74,7 +74,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return String
      */
-    function urlTransform($url)
+    public function urlTransform($url)
     {
         $query = $this->urlQueryToArray($url);
         if (!isset($query['action'])) {
@@ -102,7 +102,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return String
      */
-    function getRedirectLink($urlData, $language)
+    public function getRedirectLink($urlData, $language)
     {
         return $this->urlTransform($urlData);
     }
@@ -114,7 +114,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return Array
      */
-    function urlQueryToArray($url)
+    public function urlQueryToArray($url)
     {
         $params = array();
         $query  = explode('&', parse_url($url, PHP_URL_QUERY));
@@ -133,7 +133,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return Array
      */
-    function extractReceiver($project, $url)
+    public function extractReceiver($project, $url)
     {
         $query = $this->urlQueryToArray($url);
         if (isset($query['id'])) {
@@ -176,7 +176,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return Docman_PermissionsManager
      */
-    function _getPermissionManagerInstance($groupId)
+    public function _getPermissionManagerInstance($groupId)
     {
         return Docman_PermissionsManager::instance($groupId);
     }
@@ -186,7 +186,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return Docman_ItemFactory
      */
-    function _getItemFactoryInstance($groupId)
+    public function _getItemFactoryInstance($groupId)
     {
         return Docman_ItemFactory::instance($groupId);
     }

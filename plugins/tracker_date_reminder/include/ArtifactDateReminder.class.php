@@ -29,12 +29,12 @@ class ArtifactDateReminder
 
     private $logger;
 
-    function __construct(TrackerDateReminder_Logger $logger)
+    public function __construct(TrackerDateReminder_Logger $logger)
     {
         $this->logger = new TrackerDateReminder_Logger_Prefix($logger, '');
     }
 
-    function codexDaily()
+    public function codexDaily()
     {
         $this->logger->info('Start');
 

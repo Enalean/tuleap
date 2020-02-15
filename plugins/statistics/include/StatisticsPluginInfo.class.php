@@ -24,7 +24,7 @@
 class StatisticsPluginInfo extends PluginFileInfo
 {
 
-    function __construct($plugin)
+    public function __construct($plugin)
     {
         parent::__construct($plugin, 'statistics');
         $this->setPluginDescriptor(new StatisticsPluginDescriptor());

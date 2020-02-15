@@ -21,7 +21,7 @@
 abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject
 {
 
-    function searchById($changeset_value_id)
+    public function searchById($changeset_value_id)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $sql = "SELECT *
@@ -30,7 +30,7 @@ abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function delete($changeset_value_id)
+    public function delete($changeset_value_id)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $sql = "DELETE

@@ -33,17 +33,17 @@ require_once("lib/PageList.php");
  */
 class WikiPlugin_SearchHighlight extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("SearchHighlight");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Hilight referred search terms.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -52,7 +52,7 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('s'        => false,
                      'case_exact' => false,  //not yet supported
@@ -60,7 +60,7 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         if (empty($args['s'])) {
@@ -77,7 +77,7 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
         return $this->showhits($page, $hilight_re);
     }
 
-    function showhits($page, $hilight_re)
+    public function showhits($page, $hilight_re)
     {
         $current = $page->getCurrentRevision();
         $matches = preg_grep("/$hilight_re/i", $current->getContent());
@@ -92,7 +92,7 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
         return $html;
     }
 
-    function highlight_line($line, $hilight_re)
+    public function highlight_line($line, $hilight_re)
     {
         while (preg_match("/^(.*?)($hilight_re)/i", $line, $m)) {
             $line = substr($line, strlen($m[0]));

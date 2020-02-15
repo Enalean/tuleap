@@ -20,13 +20,13 @@
 
 class Tracker_Report_Renderer_TableDao extends DataAccessObject
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_report_renderer_table';
     }
 
-    function searchByRendererId($renderer_id)
+    public function searchByRendererId($renderer_id)
     {
         $renderer_id  = $this->da->escapeInt($renderer_id);
         $sql = "SELECT *
@@ -35,7 +35,7 @@ class Tracker_Report_Renderer_TableDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function create($renderer_id, $chunksz)
+    public function create($renderer_id, $chunksz)
     {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $chunksz     = $this->da->escapeInt($chunksz);
@@ -45,7 +45,7 @@ class Tracker_Report_Renderer_TableDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function save($renderer_id, $chunksz, $multisort)
+    public function save($renderer_id, $chunksz, $multisort)
     {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $chunksz     = $this->da->escapeInt($chunksz);
@@ -57,13 +57,13 @@ class Tracker_Report_Renderer_TableDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function delete($renderer_id)
+    public function delete($renderer_id)
     {
         $sql = "DELETE FROM $this->table_name WHERE renderer_id = ". $this->da->escapeInt($renderer_id);
         return $this->update($sql);
     }
 
-    function duplicate($from_renderer_id, $to_renderer_id)
+    public function duplicate($from_renderer_id, $to_renderer_id)
     {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);

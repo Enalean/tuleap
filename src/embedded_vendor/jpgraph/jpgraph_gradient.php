@@ -34,13 +34,13 @@ class Gradient
     private $numcolors=100;
     //---------------
     // CONSTRUCTOR
-    function __construct(&$img)
+    public function __construct(&$img)
     {
         $this->img = $img;
     }
 
 
-    function SetNumColors($aNum)
+    public function SetNumColors($aNum)
     {
         $this->numcolors=$aNum;
     }
@@ -53,7 +53,7 @@ class Gradient
     // $from_color Starting color in gradient
     // $to_color End color in the gradient
     // $style  Which way is the gradient oriented?
-    function FilledRectangle($xl, $yt, $xr, $yb, $from_color, $to_color, $style = 1)
+    public function FilledRectangle($xl, $yt, $xr, $yb, $from_color, $to_color, $style = 1)
     {
         $this->img->SetLineWeight(1);
         switch ($style) {
@@ -339,7 +339,7 @@ class Gradient
     // Please note that this is NOT a generic gradient polygon fill
     // routine. It assumes that the bottom is flat (like a drawing
     // of a mountain)
-    function FilledFlatPolygon($pts, $from_color, $to_color)
+    public function FilledFlatPolygon($pts, $from_color, $to_color)
     {
         if (count($pts) == 0) {
             return;
@@ -405,7 +405,7 @@ class Gradient
     // PRIVATE METHODS
     // Add to the image color map the necessary colors to do the transition
     // between the two colors using $numcolors intermediate colors
-    function GetColArray($from_color, $to_color, $arr_size, &$colors, $numcols = 100)
+    public function GetColArray($from_color, $to_color, $arr_size, &$colors, $numcols = 100)
     {
         if ($arr_size==0) {
             return;

@@ -23,18 +23,18 @@ class RSS
 {
     public $channel;
     public $items;
-    function __construct($channel)
+    public function __construct($channel)
     {
         $this->channel = $channel;
         $this->items   = array();
     }
 
-    function addItem($item)
+    public function addItem($item)
     {
         $this->items[] = $item;
     }
 
-    function display()
+    public function display()
     {
         $channel_elements   = array('title', 'description', 'link', 'language', 'rating', 'image', 'textinput', 'copyright', 'pubDate', 'lastBuildDate', 'docs', 'managingEditor', 'webMaster', 'skipHours', 'skipDays');
         $image_elements     = array('title', 'description', 'link', 'url', 'width', 'height');

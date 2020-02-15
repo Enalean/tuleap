@@ -28,7 +28,7 @@ class Docman_WikiController extends Docman_Controller
 
     public $params;
 
-    function __construct(&$plugin, $pluginPath, $themePath, $request)
+    public function __construct(&$plugin, $pluginPath, $themePath, $request)
     {
         parent::__construct($plugin, $pluginPath, $themePath, $request);
         $event_manager = $this->_getEventManager();
@@ -36,15 +36,15 @@ class Docman_WikiController extends Docman_Controller
         $event_manager->addListener('plugin_docman_event_wikipage_update', $this->notificationsManager, 'somethingHappen', true);
     }
 
-    function request()
+    public function request()
     {
     }
 
-    function viewsManagement()
+    public function viewsManagement()
     {
     }
 
-    function actionsManagement()
+    public function actionsManagement()
     {
         switch ($this->request->get('action')) {
             case 'wiki_page_updated':
@@ -73,7 +73,7 @@ class Docman_WikiController extends Docman_Controller
         }
     }
 
-    function isWikiPageReferenced()
+    public function isWikiPageReferenced()
     {
         $wiki_page = $this->request->get('wiki_page');
         $group_id  = $this->request->get('group_id');
@@ -89,7 +89,7 @@ class Docman_WikiController extends Docman_Controller
         }
     }
 
-    function canAccess()
+    public function canAccess()
     {
         $wiki_page = $this->request->get('wiki_page');
         $group_id = $this->request->get('group_id');
@@ -113,7 +113,7 @@ class Docman_WikiController extends Docman_Controller
         $this->request->params['canAccess'] = $can_access;
     }
 
-    function wikiPageUpdated()
+    public function wikiPageUpdated()
     {
         $event_manager = $this->_getEventManager();
         $item_factory  = $this->getItemFactory();
@@ -157,7 +157,7 @@ class Docman_WikiController extends Docman_Controller
         $event_manager->processEvent('send_notifications', array());
     }
 
-    function getPermsLabelForWiki()
+    public function getPermsLabelForWiki()
     {
         $this->request->params['label'] = $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_perms_label');
     }
@@ -166,7 +166,7 @@ class Docman_WikiController extends Docman_Controller
     *  This checks whether a wiki page is editable by checking if the user have write permission on it (including items lock check )
     *
     */
-    function isWikiPageEditable()
+    public function isWikiPageEditable()
     {
         $item_factory = $this->getItemFactory();
         $wiki_page    = $this->request->get('wiki_page');
@@ -216,7 +216,7 @@ class Docman_WikiController extends Docman_Controller
         }
     }
 
-    function process()
+    public function process()
     {
         if ($this->request->get('action')) {
             $this->actionsManagement();
@@ -224,7 +224,7 @@ class Docman_WikiController extends Docman_Controller
         return $this->viewsManagement();
     }
 
-    function wiki_display_remove_button()
+    public function wiki_display_remove_button()
     {
         $wiki_page = $this->request->get('wiki_page');
         $group_id  = $this->request->get('group_id');
@@ -233,7 +233,7 @@ class Docman_WikiController extends Docman_Controller
             $this->request->set('display_remove_button', false);
         }
     }
-    function wiki_before_content()
+    public function wiki_before_content()
     {
         $wiki_page = $this->request->get('wiki_page');
         $group_id  = $this->request->get('group_id');
@@ -336,7 +336,7 @@ class Docman_WikiController extends Docman_Controller
         $this->request->params['html'] = $docman_references;
     }
 
-    function referrerIsDocument()
+    public function referrerIsDocument()
     {
         $ref = $this->getReferrer();
         if (isset($ref) && $ref) {
@@ -350,7 +350,7 @@ class Docman_WikiController extends Docman_Controller
         }
     }
 
-    function getReferrer()
+    public function getReferrer()
     {
         if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
             return $_SERVER['HTTP_REFERER'];
@@ -359,7 +359,7 @@ class Docman_WikiController extends Docman_Controller
         }
     }
 
-    function getReferrerId($ref)
+    public function getReferrerId($ref)
     {
         //Refferers are urls like this :  "plugins/docman/index.php?group_id=101&id=37&action=details"
         if (preg_match("/\&action=details\&id\=([0-9]+)/", $ref, $match)) {
@@ -372,7 +372,7 @@ class Docman_WikiController extends Docman_Controller
         }
     }
 
-    function showReferrerPath($referrer_id, $group_id)
+    public function showReferrerPath($referrer_id, $group_id)
     {
         $parents      = array();
         $html         = HTML();
@@ -406,7 +406,7 @@ class Docman_WikiController extends Docman_Controller
         return $html;
     }
 
-    function getDocumentPath($id, $group_id, $referrer_id = null)
+    public function getDocumentPath($id, $group_id, $referrer_id = null)
     {
         $parents      = array();
         $html         = HTML();

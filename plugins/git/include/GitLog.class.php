@@ -44,7 +44,7 @@ class GitLog
      *
      * @return Void
      */
-    function logsDaily($params)
+    public function logsDaily($params)
     {
         $params['logs'][] = array(
             'sql'   => $this->getSqlStatementForLogsDaily(

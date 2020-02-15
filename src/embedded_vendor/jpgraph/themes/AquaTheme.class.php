@@ -9,7 +9,7 @@ class AquaTheme extends Theme
     protected $axis_color       = '#0066CC';
     protected $grid_color       = '#3366CC';
 
-    function GetColorList()
+    public function GetColorList()
     {
         return array(
             '#183152',
@@ -49,7 +49,7 @@ class AquaTheme extends Theme
         );
     }
 
-    function SetupGraph($graph)
+    public function SetupGraph($graph)
     {
 
         // graph
@@ -99,7 +99,7 @@ class AquaTheme extends Theme
     }
 
 
-    function SetupPieGraph($graph)
+    public function SetupPieGraph($graph)
     {
 
         // graph
@@ -125,7 +125,7 @@ class AquaTheme extends Theme
     }
 
 
-    function PreStrokeApply($graph)
+    public function PreStrokeApply($graph)
     {
         if ($graph->legend->HasItems()) {
             $img = $graph->img;
@@ -138,7 +138,7 @@ class AquaTheme extends Theme
         }
     }
 
-    function ApplyPlot($plot)
+    public function ApplyPlot($plot)
     {
 
         switch (get_class($plot)) {

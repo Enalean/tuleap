@@ -44,7 +44,7 @@ class WikiServiceAdminActions extends WikiActions
         $this->gid = (int) $controler->gid;
     }
 
-    function checkPage($page)
+    public function checkPage($page)
     {
         global $feedback;
 
@@ -69,7 +69,7 @@ class WikiServiceAdminActions extends WikiActions
     }
 
 
-    function create()
+    public function create()
     {
         $page=$_POST['page'];
         if (!empty($_POST['upage'])) {
@@ -89,7 +89,7 @@ class WikiServiceAdminActions extends WikiActions
         }
     }
 
-    function delete()
+    public function delete()
     {
         $we = new WikiEntry();
         $we->setGid($this->gid);
@@ -101,7 +101,7 @@ class WikiServiceAdminActions extends WikiActions
   /**
    * Perform wiki attachment removal.
    */
-    function deleteAttachments()
+    public function deleteAttachments()
     {
         $request = HTTPRequest::instance();
         if ($request->isPost() && $request->exist('attachments_to_delete')) {
@@ -134,7 +134,7 @@ class WikiServiceAdminActions extends WikiActions
         }
     }
 
-    function update()
+    public function update()
     {
         $page=$_POST['page'];
         if (!empty($_POST['upage'])) {
@@ -155,7 +155,7 @@ class WikiServiceAdminActions extends WikiActions
         }
     }
 
-    function setWikiPerms()
+    public function setWikiPerms()
     {
         global $feedback;
 
@@ -182,7 +182,7 @@ class WikiServiceAdminActions extends WikiActions
         );
     }
 
-    function setWikiPagePerms()
+    public function setWikiPagePerms()
     {
         global $feedback;
 
@@ -219,7 +219,7 @@ class WikiServiceAdminActions extends WikiActions
     /**
      * Wrapper to set permissions on wiki attachments.
      */
-    function setWikiAttachmentPerms()
+    public function setWikiAttachmentPerms()
     {
         global $feedback;
 

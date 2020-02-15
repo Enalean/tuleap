@@ -40,7 +40,7 @@ class BackendSVNTest extends TuleapTestCase
     private $tmp_dir;
     private $cache_parameters;
 
-    function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->tmp_dir = $this->getTmpDir();
@@ -84,7 +84,7 @@ class BackendSVNTest extends TuleapTestCase
     }
 
 
-    function tearDown()
+    public function tearDown()
     {
         //clear the cache between each tests
         Backend::clearInstances();
@@ -98,13 +98,13 @@ class BackendSVNTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    function testConstructor()
+    public function testConstructor()
     {
         $backend = BackendSVN::instance();
     }
 
 
-    function testArchiveProjectSVN()
+    public function testArchiveProjectSVN()
     {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
@@ -130,7 +130,7 @@ class BackendSVNTest extends TuleapTestCase
     }
 
 
-    function testCreateProjectSVN()
+    public function testCreateProjectSVN()
     {
         $user1   = mock('PFUser');
         $user1->setReturnValue('getUserName', 'user1');
@@ -198,7 +198,7 @@ class BackendSVNTest extends TuleapTestCase
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/hooks/post-commit"), "post-commit file should be created");
     }
 
-    function testUpdateSVNAccess()
+    public function testUpdateSVNAccess()
     {
         $user1   = mock('PFUser');
         $user1->setReturnValue('getUserName', 'user1');
@@ -288,7 +288,7 @@ class BackendSVNTest extends TuleapTestCase
         $this->assertFalse(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.old"), "SVN access file (.old) should not be created");
     }
 
-    function testGenerateSVNApacheConf()
+    public function testGenerateSVNApacheConf()
     {
         $svn_dao = stub('SVN_DAO')->searchSvnRepositories()->returnsDar(
             array (

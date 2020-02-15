@@ -95,7 +95,7 @@ class ArtifactField
      */
     private $error_state = false;
 
-    function __construct()
+    public function __construct()
     {
     }
 
@@ -107,7 +107,7 @@ class ArtifactField
      *
      * @return void
      */
-    function fetchData($group_artifact_id, $field_name)
+    public function fetchData($group_artifact_id, $field_name)
     {
         global $display_debug;
 
@@ -137,7 +137,7 @@ class ArtifactField
      *
      * @return void
      */
-    function setFromArray($field_array)
+    public function setFromArray($field_array)
     {
      //echo "setFromArray";
         $this->field_id = $field_array['field_id'];
@@ -171,7 +171,7 @@ class ArtifactField
      *
      * @return string
      */
-    function getName()
+    public function getName()
     {
         return $this->field_name;
     }
@@ -181,7 +181,7 @@ class ArtifactField
      *
      * @return int
      */
-    function getID()
+    public function getID()
     {
         return $this->field_id;
     }
@@ -191,7 +191,7 @@ class ArtifactField
      *
      * @return int
      */
-    function getDataType()
+    public function getDataType()
     {
         return $this->data_type;
     }
@@ -201,7 +201,7 @@ class ArtifactField
      *
      * @return string
      */
-    function getDisplayType()
+    public function getDisplayType()
     {
         return $this->display_type;
     }
@@ -212,7 +212,7 @@ class ArtifactField
      *
      * @return string
      */
-    function getLabelFieldType()
+    public function getLabelFieldType()
     {
         global $Language;
 
@@ -259,7 +259,7 @@ class ArtifactField
      *
      * @return string
      */
-    function getDisplaySize()
+    public function getDisplaySize()
     {
         return($this->display_size);
     }
@@ -269,7 +269,7 @@ class ArtifactField
      *
      * @return string
      */
-    function getLabel()
+    public function getLabel()
     {
         return $this->label;
     }
@@ -279,7 +279,7 @@ class ArtifactField
      *
      * @return string
      */
-    function getDescription()
+    public function getDescription()
     {
         return $this->description;
     }
@@ -289,7 +289,7 @@ class ArtifactField
      *
      * @return string
      */
-    function getScope()
+    public function getScope()
     {
         return $this->scope;
     }
@@ -300,7 +300,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function getRequired()
+    public function getRequired()
     {
         return $this->required;
     }
@@ -310,7 +310,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function getEmptyOk()
+    public function getEmptyOk()
     {
         return $this->empty_ok;
     }
@@ -321,7 +321,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function getKeepHistory()
+    public function getKeepHistory()
     {
         if ($this->field_name == 'cc' || $this->field_name == 'attachment' || $this->field_name == 'submitted_by') {
             return true;
@@ -335,7 +335,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function getSpecial()
+    public function getSpecial()
     {
         return $this->special;
     }
@@ -345,7 +345,7 @@ class ArtifactField
      *
      * @return array
      */
-    function getValueFunction()
+    public function getValueFunction()
     {
         return $this->value_function;
     }
@@ -356,7 +356,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function getUseIt()
+    public function getUseIt()
     {
         return $this->use_it;
     }
@@ -366,7 +366,7 @@ class ArtifactField
      *
      * @return int
      */
-    function getPlace()
+    public function getPlace()
     {
         return $this->place;
     }
@@ -376,7 +376,7 @@ class ArtifactField
      *
      * @return string
      */
-    function getDefaultValue($for_insert = false)
+    public function getDefaultValue($for_insert = false)
     {
         if ($for_insert) {
             return $this->default_value;
@@ -392,7 +392,7 @@ class ArtifactField
     }
 
 
-    function getFieldSetID()
+    public function getFieldSetID()
     {
         return $this->field_set_id;
     }
@@ -403,7 +403,7 @@ class ArtifactField
      *
      * @return string
      */
-    function dumpStandard()
+    public function dumpStandard()
     {
         return "field_id=".$this->field_id.
          " - field_name=".$this->field_name.
@@ -429,7 +429,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isSelectBox()
+    public function isSelectBox()
     {
         return ( $this->getDisplayType() == "SB" );
     }
@@ -439,7 +439,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isMultiSelectBox()
+    public function isMultiSelectBox()
     {
         return ( $this->getDisplayType() == "MB" );
     }
@@ -449,7 +449,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isDateField()
+    public function isDateField()
     {
         return ( $this->getDisplayType() == "DF" );
     }
@@ -459,7 +459,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isTextField()
+    public function isTextField()
     {
         return ( $this->getDisplayType() == "TF" );
     }
@@ -469,7 +469,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isTextArea()
+    public function isTextArea()
     {
         return ( $this->getDisplayType() == "TA" );
     }
@@ -479,7 +479,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isFloat()
+    public function isFloat()
     {
         return ( $this->getDataType() == $this->DATATYPE_FLOAT );
     }
@@ -489,7 +489,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isInt()
+    public function isInt()
     {
         return ( $this->getDataType() == $this->DATATYPE_INT );
     }
@@ -499,7 +499,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isEmptyOk()
+    public function isEmptyOk()
     {
         $val = $this->getEmptyOk();
         return($val);
@@ -510,7 +510,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isSpecial()
+    public function isSpecial()
     {
         return( $this->special == 1 );
     }
@@ -520,7 +520,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isUsed()
+    public function isUsed()
     {
         return( $this->use_it );
     }
@@ -530,7 +530,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isStandardField()
+    public function isStandardField()
     {
         switch ($this->field_name) {
             case "artifact_id":
@@ -552,7 +552,7 @@ class ArtifactField
      * Returns true if the field is bound (to a function like group_members, etc ...)
      * @return bool true if the field values are bound to a function, false otherwise
      */
-    function isBound()
+    public function isBound()
     {
         return count($this->getValueFunction()) > 0;
     }
@@ -562,7 +562,7 @@ class ArtifactField
      *
      * @return array
      */
-    function getGlobalValueFunction($by_field_id = false)
+    public function getGlobalValueFunction($by_field_id = false)
     {
         global $art_field_fact;
         if ($by_field_id) {
@@ -579,7 +579,7 @@ class ArtifactField
      *
      * @return string
      */
-    function getGlobalKeepHistory($by_field_id = false)
+    public function getGlobalKeepHistory($by_field_id = false)
     {
         global $art_field_fact;
         if ($by_field_id) {
@@ -596,7 +596,7 @@ class ArtifactField
      *
      * @return string[]
      */
-    function getGlobalDisplaySize($by_field_id = false)
+    public function getGlobalDisplaySize($by_field_id = false)
     {
         global $art_field_fact;
 
@@ -624,7 +624,7 @@ class ArtifactField
      *
      * @return bool|string
      */
-    function getValue($group_artifact_id, $value_id, $by_field_id = false)
+    public function getValue($group_artifact_id, $value_id, $by_field_id = false)
     {
         global $Language;
          $uh = UserHelper::instance();
@@ -665,7 +665,7 @@ class ArtifactField
      * false if the value function does not concern a special
      * ugroup (id > 100)
      */
-    function isUgroupValueFunction($value)
+    public function isUgroupValueFunction($value)
     {
 
         if (preg_match('/ugroup_([0-9]+)/', $value, $matches)) {
@@ -685,7 +685,7 @@ class ArtifactField
      *
      * @return array
      */
-    function getFieldPredefinedValues($group_artifact_id, $checked = false, $by_field_id = false, $active_only = true, $use_cache = false, $with_display_preferences = false)
+    public function getFieldPredefinedValues($group_artifact_id, $checked = false, $by_field_id = false, $active_only = true, $use_cache = false, $with_display_preferences = false)
     {
 
             // ArtifactTypeHtml object created in index.php
@@ -771,7 +771,7 @@ class ArtifactField
      *
      * @return array
      */
-    function checkValueInPredefinedValues($group_artifact_id, $value)
+    public function checkValueInPredefinedValues($group_artifact_id, $value)
     {
 
         $res = $this->getFieldPredefinedValues($group_artifact_id);
@@ -793,7 +793,7 @@ class ArtifactField
      *
      * @return array
      */
-    function getFieldValues($group_artifact_id, $status)
+    public function getFieldValues($group_artifact_id, $status)
     {
         $res_value = false;
         $gvf = $this->getGlobalValueFunction();
@@ -821,7 +821,7 @@ class ArtifactField
      *
      * @return array
      */
-    function getFieldValue($group_artifact_id, $value_id)
+    public function getFieldValue($group_artifact_id, $value_id)
     {
         $res = null;
         $gvf = $this->getGlobalValueFunction();
@@ -842,7 +842,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function isUsername()
+    public function isUsername()
     {
 
         return ($this->data_type == $this->DATATYPE_USER);
@@ -853,7 +853,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function getValueFieldName()
+    public function getValueFieldName()
     {
 
      //echo "DT=".$this->getDataType()."<br>";
@@ -885,7 +885,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function updateValue($artifact_id, $value)
+    public function updateValue($artifact_id, $value)
     {
 
         $sql = "update artifact_field_value set ";
@@ -927,7 +927,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function updateValues($artifact_id, $values)
+    public function updateValues($artifact_id, $values)
     {
 
      // First delete the items
@@ -950,7 +950,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function insertValue($artifact_id, $value)
+    public function insertValue($artifact_id, $value)
     {
 
         if (is_array($value)) {
@@ -1025,7 +1025,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function insertSingleValue($artifact_id, $value)
+    public function insertSingleValue($artifact_id, $value)
     {
         if (!$this->insertFieldValue($artifact_id, $value)) {
             // This might happen if the submitted type is incorrect.
@@ -1044,7 +1044,7 @@ class ArtifactField
      *
      * @return bool
      */
-    function insertDefaultValue($artifact_id)
+    public function insertDefaultValue($artifact_id)
     {
         // We could simply call insertSingleValue($artifact_id,$this->getDefaultValue()) but
         // it might end up in an infinite loop since insertSingleValue() might call this
@@ -1059,7 +1059,7 @@ class ArtifactField
      *
      * @return string
      */
-    function buildMatchExpression($field_name, &$to_match)
+    public function buildMatchExpression($field_name, &$to_match)
     {
 
         switch ($this->getDataType()) {
@@ -1160,7 +1160,7 @@ class ArtifactField
      *
      * @return array
      */
-    function getValues($artifact_id)
+    public function getValues($artifact_id)
     {
 
         switch ($this->getDataType()) {
@@ -1196,7 +1196,7 @@ class ArtifactField
      *
      * @return array
      */
-    function getLabelValues($group_artifact_id, $values)
+    public function getLabelValues($group_artifact_id, $values)
     {
         global $Language;
 
@@ -1234,7 +1234,7 @@ class ArtifactField
      *
      *  @return array
      */
-    function getUsersList($values)
+    public function getUsersList($values)
     {
 
         $sql="SELECT user_id,user_name ".
@@ -1263,7 +1263,7 @@ class ArtifactField
      *
      *  @return bool - succeed or failed
      */
-    function update(
+    public function update(
         $group_artifact_id,
         $field_name,
         $description,
@@ -1387,7 +1387,7 @@ class ArtifactField
      *
      *  @return bool - succeed or failed
      */
-    function updateValueFunction($group_artifact_id, $value_function)
+    public function updateValueFunction($group_artifact_id, $value_function)
     {
         global $Language;
 
@@ -1426,7 +1426,7 @@ class ArtifactField
      *
      *  @return bool - succeed or failed
      */
-    function updateDefaultValue($group_artifact_id, $default_value, $computed_value = false)
+    public function updateDefaultValue($group_artifact_id, $default_value, $computed_value = false)
     {
         global $Language;
 
@@ -1471,7 +1471,7 @@ class ArtifactField
      *
      *  @return bool - succeed or failed
      */
-    function delete($group_artifact_id)
+    public function delete($group_artifact_id)
     {
         global $Language;
 
@@ -1534,7 +1534,7 @@ class ArtifactField
      *
      *  @return bool - exist or not
      */
-    function existValue($group_artifact_id, $value_id, $value)
+    public function existValue($group_artifact_id, $value_id, $value)
     {
      // Check id first
         $sql = "SELECT * FROM artifact_field_value_list WHERE group_artifact_id=". db_ei($group_artifact_id) .
@@ -1567,7 +1567,7 @@ class ArtifactField
      *
      *  @return bool - exist or not
      */
-    function createValueList($group_artifact_id, $value, $description, $order_id)
+    public function createValueList($group_artifact_id, $value, $description, $order_id)
     {
         global $Language;
 
@@ -1613,7 +1613,7 @@ class ArtifactField
      *
      *  @return bool - exist or not
      */
-    function updateValueList($group_artifact_id, $value_id, $value, $description, $order_id, $status)
+    public function updateValueList($group_artifact_id, $value_id, $value, $description, $order_id, $status)
     {
         global $Language;
 
@@ -1652,7 +1652,7 @@ class ArtifactField
      *
      *  @return bool - exist or not
      */
-    function deleteValueList($group_artifact_id, $value_id)
+    public function deleteValueList($group_artifact_id, $value_id)
     {
         global $Language;
 
@@ -1677,7 +1677,7 @@ class ArtifactField
      *
      * @return int
      */
-    function getNextValueID($group_artifact_id, $field_id)
+    public function getNextValueID($group_artifact_id, $field_id)
     {
         $sql = "SELECT max(value_id)+1 FROM artifact_field_value_list WHERE ".
         "field_id=". db_ei($field_id) ." AND group_artifact_id=".$group_artifact_id." ".
@@ -1705,7 +1705,7 @@ class ArtifactField
      * @param group_artifact_id: the trackers id this field is in
      * @param user_id: if not given or false take the current user
     **/
-    function userCanRead($group_id, $group_artifact_id, $user_id = false)
+    public function userCanRead($group_id, $group_artifact_id, $user_id = false)
     {
         $pm = PermissionsManager::instance();
         $um = UserManager::instance();
@@ -1728,7 +1728,7 @@ class ArtifactField
      * @param group_artifact_id: the trackers id this field is in
      * @param user_id: if not given or false take the current user
     **/
-    function userCanUpdate($group_id, $group_artifact_id, $user_id = false)
+    public function userCanUpdate($group_id, $group_artifact_id, $user_id = false)
     {
         $pm = PermissionsManager::instance();
         $um = UserManager::instance();
@@ -1747,7 +1747,7 @@ class ArtifactField
      * @param group_artifact_id: the trackers id this field is in
      * @param user_id: if not given or false take the current user
     **/
-    function userCanSubmit($group_id, $group_artifact_id, $user_id = false)
+    public function userCanSubmit($group_id, $group_artifact_id, $user_id = false)
     {
         $pm = PermissionsManager::instance();
         $um = UserManager::instance();
@@ -1768,7 +1768,7 @@ class ArtifactField
      * @param ugroups: the ugroups users are part of
      * @param group_artifact_id: the trackers id this field is in
     **/
-    function ugroupsCanRead($ugroups, $group_artifact_id)
+    public function ugroupsCanRead($ugroups, $group_artifact_id)
     {
         $pm = PermissionsManager::instance();
         $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $ugroups);
@@ -1780,7 +1780,7 @@ class ArtifactField
      * @param ugroups: the ugroups users are part of
      * @param group_artifact_id: the trackers id this field is in
     **/
-    function ugroupsCanUpdate($ugroups, $group_artifact_id)
+    public function ugroupsCanUpdate($ugroups, $group_artifact_id)
     {
         $pm = PermissionsManager::instance();
         $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $ugroups);
@@ -1792,7 +1792,7 @@ class ArtifactField
      * @param ugroups: the ugroups users are part of
      * @param group_artifact_id: the trackers id this field is in
     **/
-    function ugroupsCanSubmit($ugroups, $group_artifact_id)
+    public function ugroupsCanSubmit($ugroups, $group_artifact_id)
     {
         $pm = PermissionsManager::instance();
         $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $ugroups);
@@ -1808,7 +1808,7 @@ class ArtifactField
      * @param group_artifact_id: the trackers id this field is in
      * return array of all associated permissions
      */
-    function getPermissionForUgroups($ugroups, $group_artifact_id)
+    public function getPermissionForUgroups($ugroups, $group_artifact_id)
     {
         $perms = array();
 

@@ -47,7 +47,7 @@ if (defined('DEBUG') and (DEBUG & 8) and extension_loaded("xdebug")) {
 // Used for debugging purposes
 class DebugTimer
 {
-    function __construct()
+    public function __construct()
     {
         $this->_start = $this->microtime();
         if (function_exists('posix_times')) {
@@ -59,7 +59,7 @@ class DebugTimer
      * @param string $which  One of 'real', 'utime', 'stime', 'cutime', 'sutime'
      * @return float Seconds.
      */
-    function getTime($which = 'real', $now = false)
+    public function getTime($which = 'real', $now = false)
     {
         if ($which == 'real') {
             return $this->microtime() - $this->_start;
@@ -76,7 +76,7 @@ class DebugTimer
         return 0.0;           // Not available.
     }
 
-    function getStats()
+    public function getStats()
     {
         if (!isset($this->_times)) {
             // posix_times() not available.
@@ -91,14 +91,14 @@ class DebugTimer
         );
     }
 
-    function _CLK_TCK()
+    public function _CLK_TCK()
     {
         // FIXME: this is clearly not always right.
         // But how to figure out the right value?
         return 100.0;
     }
 
-    function microtime()
+    public function microtime()
     {
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);

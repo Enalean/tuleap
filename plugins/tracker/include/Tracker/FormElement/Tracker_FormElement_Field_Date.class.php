@@ -230,7 +230,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      *
      * @return mixed The default value for this field, or null if no default value defined
      */
-    function getDefaultValue()
+    public function getDefaultValue()
     {
         if ($this->getProperty('default_value_type')) {
             $value = $this->formatDate(parent::getDefaultValue());

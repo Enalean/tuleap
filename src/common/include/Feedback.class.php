@@ -37,18 +37,18 @@ class Feedback
     public const ERROR = 'error';
     public const DEBUG = 'debug';
 
-    function __construct()
+    public function __construct()
     {
         $this->logs = array();
         $this->setFormatter(new FeedbackFormatter());
     }
 
-    function setFormatter(FeedbackFormatter $formatter)
+    public function setFormatter(FeedbackFormatter $formatter)
     {
         $this->formatter = $formatter;
     }
 
-    function log($level, $msg, $purify = CODENDI_PURIFIER_CONVERT_HTML)
+    public function log($level, $msg, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
         if (!is_array($msg)) {
             $msg = array($msg);
@@ -66,12 +66,12 @@ class Feedback
         return $this->logs;
     }
 
-    function fetch()
+    public function fetch()
     {
         return $this->formatter->format($this->logs);
     }
 
-    function fetchAsPlainText()
+    public function fetchAsPlainText()
     {
            $txt = '';
         foreach ($this->logs as $log) {
@@ -83,7 +83,7 @@ class Feedback
     /**
      * @return array of error messages
      */
-    function fetchErrors()
+    public function fetchErrors()
     {
         $errors = array();
         foreach ($this->logs as $log) {
@@ -95,7 +95,7 @@ class Feedback
         return $errors;
     }
 
-    function display()
+    public function display()
     {
         echo $this->htmlContent();
     }

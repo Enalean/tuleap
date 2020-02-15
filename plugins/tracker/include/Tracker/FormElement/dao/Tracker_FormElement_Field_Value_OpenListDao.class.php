@@ -27,7 +27,7 @@ class Tracker_FormElement_Field_Value_OpenListDao extends Tracker_FormElement_Fi
         $this->table_name = 'tracker_changeset_value_openlist';
     }
 
-    function searchById($changeset_value_id)
+    public function searchById($changeset_value_id)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $sql = "SELECT *

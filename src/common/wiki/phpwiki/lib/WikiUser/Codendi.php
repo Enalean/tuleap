@@ -24,7 +24,7 @@
 
 class _CodendiPassUser extends _PassUser
 {
-    function __construct($UserName = '', $prefs = false)
+    public function __construct($UserName = '', $prefs = false)
     {
         if ($prefs) {
             $this->_prefs = $prefs;
@@ -64,15 +64,15 @@ class _CodendiPassUser extends _PassUser
         $this->_authmethod = 'Codendi';
     }
 
-    function userExists()
+    public function userExists()
     {
         return !empty($this->_userid);
     }
-    function checkPass($submitted_password)
+    public function checkPass($submitted_password)
     {
         return $this->userExists() and $this->_level > -1;
     }
-    function mayChangePass()
+    public function mayChangePass()
     {
         return false;
     }
@@ -81,14 +81,14 @@ class _CodendiPassUser extends _PassUser
 class CodendiUserPreferences extends UserPreferences
 {
 
-    function __construct($saved_prefs = false)
+    public function __construct($saved_prefs = false)
     {
         parent::__construct($saved_prefs);
         //        $this->set('emailVerified', 1);
         //$this->set('email', user_getemail(user_getid()));
     }
 
-    function get($name)
+    public function get($name)
     {
         if ($name == 'emailVerified') {
             return 1;

@@ -31,7 +31,7 @@ class GroupFactory
      *
      *    @return bool success.
      */
-    function __construct()
+    public function __construct()
     {
             return true;
     }
@@ -41,7 +41,7 @@ class GroupFactory
      *
      *    @return    resultset
      */
-    function getAllGroups()
+    public function getAllGroups()
     {
         global $Language;
         if (user_isloggedin()) {
@@ -86,7 +86,7 @@ class GroupFactory
      *
      *    @return    resultset
      */
-    function getMemberGroups()
+    public function getMemberGroups()
     {
                 global $Language;
         if (!user_isloggedin()) {
@@ -120,7 +120,7 @@ class GroupFactory
      *
      *    @return    array of {Group}
      */
-    function getMyGroups()
+    public function getMyGroups()
     {
         global $Language;
         $result_my_groups = $this->getMemberGroups();

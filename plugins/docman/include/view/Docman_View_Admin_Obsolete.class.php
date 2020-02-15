@@ -27,12 +27,12 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 class Docman_View_Admin_Obsolete extends Docman_View_Extra
 {
 
-    function _title($params)
+    public function _title($params)
     {
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_obsolete_title') .'</h2>';
     }
 
-    function getTable($params)
+    public function getTable($params)
     {
         $html = '';
 
@@ -104,7 +104,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
         return $html;
     }
 
-    function _content($params)
+    public function _content($params)
     {
         $html = '';
 

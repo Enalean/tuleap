@@ -30,7 +30,7 @@ class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer
 {
     public const ID = 'plugin_tracker_myrenderer';
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct(
             self::ID,

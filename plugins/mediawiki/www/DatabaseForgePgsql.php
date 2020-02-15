@@ -23,7 +23,7 @@
 require_once("$IP/includes/db/DatabasePostgres.php");
 class DatabaseForge extends DatabasePostgres
 {
-    function __construct(
+    public function __construct(
         $server = false,
         $user = false,
         $password = false,
@@ -44,7 +44,7 @@ class DatabaseForge extends DatabasePostgres
         );
     }
 
-    function fieldInfo($table, $field)
+    public function fieldInfo($table, $field)
     {
         switch ($table) {
             case 'interwiki':
@@ -63,7 +63,7 @@ class DatabaseForge extends DatabasePostgres
         return $v;
     }
 
-    function open($server, $user, $password, $dbName)
+    public function open($server, $user, $password, $dbName)
     {
         $v = DatabasePostgres::open($server, $user, $password, $dbName);
 
@@ -80,7 +80,7 @@ class DatabaseForge extends DatabasePostgres
         return $v;
     }
 
-    function query($sql, $fname = '', $tempIgnore = false)
+    public function query($sql, $fname = '', $tempIgnore = false)
     {
      /* ugh! */
         $chk = "ALTER TABLE interwiki ";
@@ -92,7 +92,7 @@ class DatabaseForge extends DatabasePostgres
         return DatabasePostgres::query($sql, $fname, $tempIgnore);
     }
 
-    function tableName($name, $format = 'quoted')
+    public function tableName($name, $format = 'quoted')
     {
         global $wgDBmwschema;
 

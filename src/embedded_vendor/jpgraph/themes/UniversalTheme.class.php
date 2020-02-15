@@ -9,7 +9,7 @@ class UniversalTheme extends Theme
     private $axis_color       = '#888888';
     private $grid_color       = '#E3E3E3';
 
-    function GetColorList()
+    public function GetColorList()
     {
         return array(
             '#61a9f3',// blue
@@ -31,7 +31,7 @@ class UniversalTheme extends Theme
         );
     }
 
-    function SetupGraph($graph)
+    public function SetupGraph($graph)
     {
 
         // graph
@@ -86,7 +86,7 @@ class UniversalTheme extends Theme
     }
 
 
-    function SetupPieGraph($graph)
+    public function SetupPieGraph($graph)
     {
 
         // graph
@@ -112,7 +112,7 @@ class UniversalTheme extends Theme
     }
 
 
-    function PreStrokeApply($graph)
+    public function PreStrokeApply($graph)
     {
         if ($graph->legend->HasItems()) {
             $img = $graph->img;
@@ -125,7 +125,7 @@ class UniversalTheme extends Theme
         }
     }
 
-    function ApplyPlot($plot)
+    public function ApplyPlot($plot)
     {
 
         switch (get_class($plot)) {

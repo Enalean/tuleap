@@ -127,17 +127,17 @@ require_once('lib/PageList.php');
 class WikiPlugin__WikiTranslation extends WikiPlugin
 {
 
-    function getName()
+    public function getName()
     {
         return _("_WikiTranslation");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Show translations of various words or pages");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -146,7 +146,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -170,7 +170,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
         );
     }
 
-    function init_locale($lang)
+    public function init_locale($lang)
     {
         if ($lang != $this->lang) {
             update_locale($lang);
@@ -192,7 +192,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
     }
 
     // reverse translation:
-    function translate_to_en($text, $lang = false)
+    public function translate_to_en($text, $lang = false)
     {
         if (!$lang) {
             $lang = $this->lang; // current locale
@@ -223,7 +223,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
      * setlocale() switching with the gettext extension is by far too slow.
      * So use the hash regardless if gettext is loaded or not.
      */
-    function fast_translate($text, $to_lang, $from_lang = false)
+    public function fast_translate($text, $to_lang, $from_lang = false)
     {
         if (!$from_lang) {
             $from_lang = $this->lang; // current locale
@@ -245,7 +245,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
     }
 
     //FIXME! There's something wrong.
-    function translate($text, $to_lang, $from_lang = false)
+    public function translate($text, $to_lang, $from_lang = false)
     {
         if (!$from_lang) {
             $from_lang = $this->lang; // current locale
@@ -278,7 +278,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
         return $result;
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $this->args = $this->getArgs($argstr, $request);
         extract($this->args);
@@ -451,7 +451,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
 
 class _PageList_Column_customlang extends _PageList_Column
 {
-    function __construct($field, $from_lang, $plugin)
+    public function __construct($field, $from_lang, $plugin)
     {
         $this->_field = $field;
         $this->_from_lang = $from_lang;
@@ -468,7 +468,7 @@ class _PageList_Column_customlang extends _PageList_Column
         $this->_PageList_Column_base($this->_field);
     }
 
-    function _getValue($page, &$revision_handle)
+    public function _getValue($page, &$revision_handle)
     {
         if (is_object($page)) {
             $text = $page->getName();

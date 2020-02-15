@@ -53,7 +53,7 @@ class ImgData_Balls extends ImgData
     protected $imgdata_xsmall ;
 
 
-    function GetImg($aMark, $aIdx)
+    public function GetImg($aMark, $aIdx)
     {
         switch ($aMark) {
             case MARK_IMG_SBALL:
@@ -76,7 +76,7 @@ class ImgData_Balls extends ImgData
         return parent::GetImg($aMark, $aIdx);
     }
 
-    function __construct()
+    public function __construct()
     {
 
         //==========================================================

@@ -19,7 +19,7 @@
 
 class UserNotActiveException extends Exception
 {
-    function __construct($message = 'user not active')
+    public function __construct($message = 'user not active')
     {
         parent::__construct($message, 3300);
     }

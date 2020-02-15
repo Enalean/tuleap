@@ -80,7 +80,7 @@ class LDAP_BackendSVN extends BackendSVN
      *
      * @return String
      */
-    function getSVNAccessProjectMembers($project)
+    public function getSVNAccessProjectMembers($project)
     {
         if (! $project instanceof Project) {
             throw new InvalidArgumentException('Expected Project, got ' . get_class($project));
@@ -101,7 +101,7 @@ class LDAP_BackendSVN extends BackendSVN
      *
      * @return String
      */
-    function getSVNAccessUserGroupMembers(Project $project)
+    public function getSVNAccessUserGroupMembers(Project $project)
     {
         $ldapPrjMgr = $this->getLDAPProjectManager();
         if ($ldapPrjMgr->hasSVNLDAPAuth($project->getID())) {
@@ -144,7 +144,7 @@ class LDAP_BackendSVN extends BackendSVN
      *
      * @return String
      */
-    function getSVNAccessRootPathDef($project)
+    public function getSVNAccessRootPathDef($project)
     {
         $ldapPrjMgr = $this->getLDAPProjectManager();
         if ($ldapPrjMgr->hasSVNLDAPAuth($project->getID())) {

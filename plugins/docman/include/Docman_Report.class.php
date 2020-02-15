@@ -39,7 +39,7 @@ class Docman_Report
     public $filters;
     public $columns;
 
-    function __construct()
+    public function __construct()
     {
         $this->id             = null;
         $this->name           = null;
@@ -57,106 +57,106 @@ class Docman_Report
         $this->columns = array();
     }
 
-    function setId($i)
+    public function setId($i)
     {
         $this->id = $i;
     }
-    function getId()
+    public function getId()
     {
         return $this->id;
     }
 
-    function setName($v)
+    public function setName($v)
     {
         $this->name = $v;
     }
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
 
-    function setTitle($v)
+    public function setTitle($v)
     {
         $this->title = $v;
     }
-    function getTitle()
+    public function getTitle()
     {
         return $this->title;
     }
 
-    function setGroupId($g)
+    public function setGroupId($g)
     {
         $this->groupId = $g;
     }
-    function getGroupId()
+    public function getGroupId()
     {
         return $this->groupId;
     }
 
-    function setUserId($v)
+    public function setUserId($v)
     {
         $this->userId = $v;
     }
-    function getUserId()
+    public function getUserId()
     {
         return $this->userId;
     }
 
-    function setItemId($v)
+    public function setItemId($v)
     {
         $this->itemId = $v;
     }
-    function getItemId()
+    public function getItemId()
     {
         return $this->itemId;
     }
 
-    function setScope($v)
+    public function setScope($v)
     {
         $this->scope = $v;
     }
-    function getScope()
+    public function getScope()
     {
         return $this->scope;
     }
 
-    function setIsDefault($v)
+    public function setIsDefault($v)
     {
         $this->isDefault = $v;
     }
-    function getIsDefault()
+    public function getIsDefault()
     {
         return $this->isDefault;
     }
 
-    function setAdvancedSearch($v)
+    public function setAdvancedSearch($v)
     {
         $this->advancedSearch = $v;
     }
-    function getAdvancedSearch()
+    public function getAdvancedSearch()
     {
         return $this->advancedSearch;
     }
 
-    function setDescription($v)
+    public function setDescription($v)
     {
         $this->description = $v;
     }
-    function getDescription()
+    public function getDescription()
     {
         return $this->description;
     }
 
-    function setImage($v)
+    public function setImage($v)
     {
         $this->image = $v;
     }
-    function getImage()
+    public function getImage()
     {
         return $this->image;
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         if (isset($row['report_id'])) {
             $this->id = $row['report_id'];
@@ -193,38 +193,38 @@ class Docman_Report
         }
     }
 
-    function addColumn(&$c)
+    public function addColumn(&$c)
     {
         $this->columns[] = $c;
     }
 
-    function &getColumnIterator()
+    public function &getColumnIterator()
     {
         $i = new ArrayIterator($this->columns);
         return $i;
     }
 
-    function getFiltersArray()
+    public function getFiltersArray()
     {
         return $this->filters;
     }
-    function setFiltersArray($a)
+    public function setFiltersArray($a)
     {
         $this->filters = $a;
     }
 
-    function addFilter(&$f)
+    public function addFilter(&$f)
     {
         $this->filters[] = $f;
     }
 
-    function &getFilterIterator()
+    public function &getFilterIterator()
     {
         $i = new ArrayIterator($this->filters);
         return $i;
     }
 
-    function getUrlParameters()
+    public function getUrlParameters()
     {
         $param = array();
         // Report Id
@@ -240,13 +240,13 @@ class Docman_Report
         return $param;
     }
 
-    function getGlobalSearchMetadata()
+    public function getGlobalSearchMetadata()
     {
         $filterFactory = new Docman_FilterFactory($this->groupId);
         return $filterFactory->getGlobalSearchMetadata();
     }
 
-    function getItemTypeSearchMetadata()
+    public function getItemTypeSearchMetadata()
     {
         $filterFactory = new Docman_FilterFactory($this->groupId);
         return $filterFactory->getItemTypeSearchMetadata();

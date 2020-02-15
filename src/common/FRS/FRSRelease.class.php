@@ -79,7 +79,7 @@ class FRSRelease
      */
     protected $group_id;
 
-    function __construct($data_array = null)
+    public function __construct($data_array = null)
     {
         $this->release_id       = null;
         $this->package_id       = null;
@@ -101,87 +101,87 @@ class FRSRelease
         return (int) $this->release_id;
     }
 
-    function setReleaseID($release_id)
+    public function setReleaseID($release_id)
     {
         $this->release_id = (int) $release_id;
     }
 
-    function getPackageID()
+    public function getPackageID()
     {
         return $this->package_id;
     }
 
-    function setPackageID($package_id)
+    public function setPackageID($package_id)
     {
         $this->package_id = (int) $package_id;
     }
 
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
 
-    function setName($name)
+    public function setName($name)
     {
         $this->name = $name;
     }
 
-    function getNotes()
+    public function getNotes()
     {
         return $this->notes;
     }
 
-    function setNotes($notes)
+    public function setNotes($notes)
     {
         $this->notes = $notes;
     }
 
-    function getChanges()
+    public function getChanges()
     {
         return $this->changes;
     }
 
-    function setChanges($changes)
+    public function setChanges($changes)
     {
         $this->changes = $changes;
     }
 
-    function getStatusID()
+    public function getStatusID()
     {
         return $this->status_id;
     }
 
-    function setStatusID($status_id)
+    public function setStatusID($status_id)
     {
         $this->status_id = $status_id;
     }
 
-    function getPreformatted()
+    public function getPreformatted()
     {
         return $this->preformatted;
     }
 
-    function setPreformatted($preformatted)
+    public function setPreformatted($preformatted)
     {
         $this->preformatted = $preformatted;
     }
 
-    function getReleaseDate()
+    public function getReleaseDate()
     {
         return $this->release_date;
     }
 
-    function setReleaseDate($release_date)
+    public function setReleaseDate($release_date)
     {
         $this->release_date = $release_date;
     }
 
-    function getReleasedBy()
+    public function getReleasedBy()
     {
         return $this->released_by;
     }
 
-    function setReleasedBy($released_by)
+    public function setReleasedBy($released_by)
     {
         $this->released_by = $released_by;
     }
@@ -197,7 +197,7 @@ class FRSRelease
         return $this->project;
     }
 
-    function setProject($project)
+    public function setProject($project)
     {
         $this->project = $project;
     }
@@ -206,7 +206,7 @@ class FRSRelease
      * Determines if the release is active or not
      * @return bool true if the release is active, false otherwise
      */
-    function isActive()
+    public function isActive()
     {
         $release_factory = new FRSReleaseFactory();
         return $this->getStatusID() == $release_factory->STATUS_ACTIVE;
@@ -216,7 +216,7 @@ class FRSRelease
      * Determines if the release is hidden or not
      * @return bool true if the release is hidden, false otherwise
      */
-    function isHidden()
+    public function isHidden()
     {
         $release_factory = new FRSReleaseFactory();
         return $this->getStatusID() == $release_factory->STATUS_HIDDEN;
@@ -226,7 +226,7 @@ class FRSRelease
      * Determines if the release is deleted or not
      * @return bool true if the release is boolean, false otherwise
      */
-    function isDeleted()
+    public function isDeleted()
     {
         $release_factory = new FRSReleaseFactory();
         return $this->getStatusID() == $release_factory->STATUS_DELETED;
@@ -236,7 +236,7 @@ class FRSRelease
      * Determines if the release notes and changes are preformatted or not
      * @return bool true if the release notes and changes are preformatted, false otherwise
      */
-    function isPreformatted()
+    public function isPreformatted()
     {
         return $this->getPreformatted() == 1;
     }
@@ -244,7 +244,7 @@ class FRSRelease
     /**
      * Set group id
      */
-    function setGroupID($group_id)
+    public function setGroupID($group_id)
     {
         $this->group_id = $group_id;
     }
@@ -252,7 +252,7 @@ class FRSRelease
     /**
      * Returns the group ID the release belongs to
      */
-    function getGroupID()
+    public function getGroupID()
     {
         if (!isset($this->group_id)) {
             if (isset($this->project)) {
@@ -273,7 +273,7 @@ class FRSRelease
         return $this->_getFRSPackageFactory()->getFRSPackageFromDb($this->getPackageID());
     }
 
-    function initFromArray($array)
+    public function initFromArray($array)
     {
         if (isset($array['release_id'])) {
             $this->setReleaseID($array['release_id']);
@@ -304,7 +304,7 @@ class FRSRelease
         }
     }
 
-    function toArray()
+    public function toArray()
     {
         $array = array();
         $array['release_id']   = $this->getReleaseID();
@@ -332,7 +332,7 @@ class FRSRelease
      *
      *    return    array    Array of FRSFile Objects.
      */
-    function &getFiles()
+    public function &getFiles()
     {
         if (!is_array($this->release_files) || count($this->release_files) < 1) {
             $this->release_files=array();
@@ -353,7 +353,7 @@ class FRSRelease
      * Returns the HTML content for tooltip when hover a reference with the nature release
      * @returns string HTML content for release tooltip
      */
-    function getReferenceTooltip()
+    public function getReferenceTooltip()
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
         $tooltip = '';
@@ -382,7 +382,7 @@ class FRSRelease
      *
      * @return FRSPackageFactory
      */
-    function _getFRSPackageFactory()
+    public function _getFRSPackageFactory()
     {
         return FRSPackageFactory::instance();
     }
@@ -392,7 +392,7 @@ class FRSRelease
      *
      * @return ProjectManager
      */
-    function _getProjectManager()
+    public function _getProjectManager()
     {
         return ProjectManager::instance();
     }

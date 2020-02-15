@@ -35,7 +35,7 @@ class Statistics_Formatter_Cvs extends Statistics_Formatter_Scm
      *
      * @return void
      */
-    function __construct($startDate, $endDate, $groupId = null)
+    public function __construct($startDate, $endDate, $groupId = null)
     {
         $this->dao = new Statistics_ScmCvsDao(CodendiDataAccess::instance(), $this->groupId);
         parent::__construct('cvs', $startDate, $endDate, $groupId);
@@ -46,7 +46,7 @@ class Statistics_Formatter_Cvs extends Statistics_Formatter_Scm
      *
      * @return String
      */
-    function getStats()
+    public function getStats()
     {
         $this->addHeader('CVS');
         return parent::getStats();

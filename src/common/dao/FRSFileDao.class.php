@@ -26,13 +26,13 @@ class FRSFileDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchById($id)
+    public function searchById($id)
     {
         $_id = (int) $id;
         return $this->_search(' f.file_id = '.$this->da->escapeInt($_id), '', ' ORDER BY release_time DESC LIMIT 1');
     }
 
-    function searchInReleaseById($id, $group_id)
+    public function searchInReleaseById($id, $group_id)
     {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
@@ -45,7 +45,7 @@ class FRSFileDao extends DataAccessObject
         );
     }
 
-    function searchByIdList($idList)
+    public function searchByIdList($idList)
     {
         if (is_array($idList) && count($idList) > 0) {
             $sql_where = sprintf(' f.file_id IN (%s)', implode(', ', $idList));
@@ -60,7 +60,7 @@ class FRSFileDao extends DataAccessObject
      * @param int $only_active_files 1 means that only files with an active status will be retrieved. 0 means all files
      * @return DataAccessResult
      */
-    function searchByReleaseId($id, $only_active_files = 1)
+    public function searchByReleaseId($id, $only_active_files = 1)
     {
         $_id = (int) $id;
         $where_status = "";
@@ -71,7 +71,7 @@ class FRSFileDao extends DataAccessObject
     }
 
 
-    function searchInfoByGroupFileID($group_id, $file_id)
+    public function searchInfoByGroupFileID($group_id, $file_id)
     {
         $_group_id = (int) $group_id;
         $_file_id = (int) $file_id;
@@ -96,7 +96,7 @@ class FRSFileDao extends DataAccessObject
      * @param int $release_id the ID of the release the files belong to
      * @param int $only_active_files 1 means that only files with an active status will be retrieved. 0 means all files
      */
-    function searchInfoFileByReleaseID($release_id, $only_active_files = 1)
+    public function searchInfoFileByReleaseID($release_id, $only_active_files = 1)
     {
         $_release_id = (int) $release_id;
 
@@ -118,7 +118,7 @@ class FRSFileDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function _search($where, $group = '', $order = '', $from = array())
+    public function _search($where, $group = '', $order = '', $from = array())
     {
         $sql = 'SELECT f.* '
             .' FROM frs_file AS f '
@@ -129,7 +129,7 @@ class FRSFileDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchFileByName($file_name, $group_id)
+    public function searchFileByName($file_name, $group_id)
     {
         $_group_id = (int) $group_id;
         return $this->_search(
@@ -159,7 +159,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return true or id(auto_increment) if there is no error
      */
-    function create(
+    public function create(
         $file_name = null,
         $filepath = null,
         $release_id = null,
@@ -229,7 +229,7 @@ class FRSFileDao extends DataAccessObject
     }
 
 
-    function createFromArray($data_array)
+    public function createFromArray($data_array)
     {
         $arg    = array();
         $values = array();
@@ -251,7 +251,7 @@ class FRSFileDao extends DataAccessObject
     }
 
 
-    function _createAndReturnId($sql)
+    public function _createAndReturnId($sql)
     {
         return $this->updateAndGetLastId($sql);
     }
@@ -260,7 +260,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return true if there is no error
      */
-    function updateById(
+    public function updateById(
         $file_id,
         $file_name = null,
         $release_id = null,
@@ -309,7 +309,7 @@ class FRSFileDao extends DataAccessObject
         return $inserted;
     }
 
-    function updateFromArray($data_array)
+    public function updateFromArray($data_array)
     {
         $updated = false;
         $id = false;
@@ -344,7 +344,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return true if there is no error
      */
-    function delete($file_id)
+    public function delete($file_id)
     {
         $sql = "UPDATE frs_file SET status='D' WHERE file_id=".$this->da->escapeInt($file_id);
         $deleted = $this->update($sql);
@@ -358,7 +358,7 @@ class FRSFileDao extends DataAccessObject
      * @param int $user_id the user that download the file
      * @return bool true if there is no error, false otherwise
      */
-    function logDownload($file, $user_id)
+    public function logDownload($file, $user_id)
     {
         $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
              ."VALUES ('".$this->da->escapeInt($user_id)."','".$this->da->escapeInt($file->getFileID())."','".$this->da->escapeInt(time())."')";
@@ -374,7 +374,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return bool
      */
-    function existsDownloadLogSince($fileId, $userId, $time)
+    public function existsDownloadLogSince($fileId, $userId, $time)
     {
         $sql = 'SELECT NULL'.
                ' FROM filedownload_log'.
@@ -393,7 +393,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchStagingCandidates($groupId = 0)
+    public function searchStagingCandidates($groupId = 0)
     {
         $fields = '';
         $from   = '';
@@ -426,7 +426,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchFilesToPurge($time, $groupId = 0, $offset = 0, $limit = 0)
+    public function searchFilesToPurge($time, $groupId = 0, $offset = 0, $limit = 0)
     {
         $fields = '';
         $from   = '';
@@ -457,7 +457,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return bool
      */
-    function setFileInDeletedList($id)
+    public function setFileInDeletedList($id)
     {
         // Store file in deleted table
         $sql = 'INSERT INTO frs_file_deleted(file_id, filename, filepath, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,delete_date)'.
@@ -475,7 +475,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return bool
      */
-    function setPurgeDate($id, $time)
+    public function setPurgeDate($id, $time)
     {
         $sql = 'UPDATE frs_file_deleted'.
                ' SET purge_date = '.$this->da->escapeInt($time).
@@ -490,7 +490,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return bool
      */
-    function restoreFile($id)
+    public function restoreFile($id)
     {
         $sql = 'UPDATE frs_file SET status = "A" WHERE file_id = '.$this->da->escapeInt($id);
         if ($this->update($sql)) {
@@ -505,7 +505,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchFilesToRestore($groupId = null)
+    public function searchFilesToRestore($groupId = null)
     {
         $fields = '';
         $from   = '';
@@ -534,7 +534,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return bool
      */
-    function isMarkedToBeRestored($filename)
+    public function isMarkedToBeRestored($filename)
     {
         $sql = 'SELECT NULL'.
                ' FROM frs_file_deleted file'.
@@ -552,7 +552,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return bool
      */
-    function markFileToBeRestored($id)
+    public function markFileToBeRestored($id)
     {
                 $sql = 'UPDATE frs_file_deleted AS f,'.
                 ' frs_release AS r '.
@@ -570,7 +570,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return bool
      */
-    function cancelRestore($fileId)
+    public function cancelRestore($fileId)
     {
         $sql = 'UPDATE frs_file_deleted SET delete_date = '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).' WHERE file_id = '.$this->da->escapeInt($fileId);
         return $this->update($sql);
@@ -584,7 +584,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @return bool
      */
-    function updateComputedMd5sum($fileId, $md5Computed)
+    public function updateComputedMd5sum($fileId, $md5Computed)
     {
         $sql = ' UPDATE frs_file '.
                ' SET computed_md5 = '.$this->da->quoteSmart($md5Computed).

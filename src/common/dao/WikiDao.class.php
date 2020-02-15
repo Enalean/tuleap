@@ -35,7 +35,7 @@ class WikiDao extends DataAccessObject
     * @param int $group_id
     * @return int $id id in wiki of a wiki page.
     */
-    function retrieveWikiPageId($pagename, $group_id)
+    public function retrieveWikiPageId($pagename, $group_id)
     {
         $sql = sprintf(
             'SELECT id'.
@@ -67,7 +67,7 @@ class WikiDao extends DataAccessObject
     * @param string $pagename
     * @return int version number
     */
-    function searchCurrentWikiVersion($groupId, $pagename)
+    public function searchCurrentWikiVersion($groupId, $pagename)
     {
         $version = null;
         $sql = sprintf(
@@ -93,7 +93,7 @@ class WikiDao extends DataAccessObject
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteWikiPage($id)
+    public function deleteWikiPage($id)
     {
         $sql = sprintf('DELETE FROM wiki_page'.
                     ' WHERE id=%d', $id);
@@ -106,7 +106,7 @@ class WikiDao extends DataAccessObject
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteWikiPageVersion($id)
+    public function deleteWikiPageVersion($id)
     {
         $sql = sprintf('DELETE FROM wiki_version'.
                     ' WHERE id=%d', $id);
@@ -119,7 +119,7 @@ class WikiDao extends DataAccessObject
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteLinksFromToWikiPage($id)
+    public function deleteLinksFromToWikiPage($id)
     {
         $sql = sprintf('DELETE FROM wiki_link'.
                     ' WHERE linkfrom=%d'.
@@ -133,7 +133,7 @@ class WikiDao extends DataAccessObject
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteWikiPageFromNonEmptyList($id)
+    public function deleteWikiPageFromNonEmptyList($id)
     {
         $sql = sprintf('DELETE FROM wiki_nonempty'.
                     ' WHERE id=%d', $id);
@@ -146,7 +146,7 @@ class WikiDao extends DataAccessObject
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteWikiPageRecentInfos($id)
+    public function deleteWikiPageRecentInfos($id)
     {
         $sql = sprintf('DELETE FROM wiki_recent'.
                     ' WHERE id=%d', $id);
@@ -159,7 +159,7 @@ class WikiDao extends DataAccessObject
      * @param String $new_name
      * @return bool
      */
-    function updatePageName($user, $new_name)
+    public function updatePageName($user, $new_name)
     {
         $sql = 'UPDATE wiki_page SET pagename = '.$this->da->quoteSmart($new_name).
                ' WHERE pagename = '.$this->da->quoteSmart($user->getUserName());

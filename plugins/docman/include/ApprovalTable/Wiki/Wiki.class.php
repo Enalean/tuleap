@@ -25,28 +25,28 @@ class Docman_ApprovalTableWiki extends Docman_ApprovalTableVersionned
     public $itemId = null;
     public $wikiVersionId = null;
 
-    function setItemId($v)
+    public function setItemId($v)
     {
         $this->itemId = $v;
     }
 
-    function getItemId()
+    public function getItemId()
     {
         return $this->itemId;
     }
 
-    function setWikiVersionId($v)
+    public function setWikiVersionId($v)
     {
         $this->wikiVersionId = $v;
         $this->versionNumber = $v;
     }
 
-    function getWikiVersionId()
+    public function getWikiVersionId()
     {
         return $this->wikiVersionId;
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         parent::initFromRow($row);
         if (isset($row['item_id'])) {

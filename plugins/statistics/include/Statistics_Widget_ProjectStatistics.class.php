@@ -92,7 +92,7 @@ class Statistics_Widget_ProjectStatistics extends Widget
      *
      * @see Widget::getDescription()
      */
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('plugin_statistics', 'widget_desc_projectstatistics');
     }
@@ -104,7 +104,7 @@ class Statistics_Widget_ProjectStatistics extends Widget
      *
      * @see Widget::getCategory()
      */
-    function getCategory()
+    public function getCategory()
     {
         return dgettext('tuleap-statistics', 'Project statistics');
     }

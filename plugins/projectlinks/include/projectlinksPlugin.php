@@ -62,7 +62,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    function _adminURI()
+    public function _adminURI()
     {
         return $this->getPluginPath() . "/projectlinks_admin.php";
     }
@@ -312,7 +312,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    function _icon($icon, $params = null)
+    public function _icon($icon, $params = null)
     {
         // returns the HTML to display the named icon
         global $Language;
@@ -369,7 +369,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    function _getLinks($group_id)
+    public function _getLinks($group_id)
     {
         // returns a record set of project link types belonging to
         //the passed group
@@ -381,7 +381,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    function _adminPage_Default($group_id, $project)
+    public function _adminPage_Default($group_id, $project)
     {
         // show the default configuration page
         global $HTML, $Language;
@@ -474,7 +474,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    function _adminPage_UpdateLinkType($group_id, $link_type_id)
+    public function _adminPage_UpdateLinkType($group_id, $link_type_id)
     {
         global $HTML, $Language;
 
@@ -620,7 +620,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    function _adminPage_ResyncTemplate($group_id, $template_id)
+    public function _adminPage_ResyncTemplate($group_id, $template_id)
     {
         $hp = Codendi_HTMLPurifier::instance();
         // re-synchronise project links and types with originating template
@@ -859,7 +859,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    function _link_unique_update($group_id, $target_group_id, $link_type_id, $link_id = null)
+    public function _link_unique_update($group_id, $target_group_id, $link_type_id, $link_id = null)
     {
         // update link, but check the change would not create a duplicate
         // (same target project and link type)
@@ -916,7 +916,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
      *
      * @return string
      */
-    function _admin_links_table($link_type_id)
+    public function _admin_links_table($link_type_id)
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -954,7 +954,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    function registerProjectCreation($params)
+    public function registerProjectCreation($params)
     {
         // called during new project creation to inherit project links and
         // types from a template
@@ -1031,7 +1031,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    function registerProjectAbandon($params)
+    public function registerProjectAbandon($params)
     {
         // deletes all project link information for the passed group -
         // usually when a user declines to accept a new project at the
@@ -1064,7 +1064,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
      *
      * @return ProjectLinksDao
      */
-    function getProjectLinksDao()
+    public function getProjectLinksDao()
     {
         include_once 'ProjectLinksDao.class.php';
         return new ProjectLinksDao(CodendiDataAccess::instance());

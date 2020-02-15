@@ -32,17 +32,17 @@ rcs_id('$Id: CreateToc.php,v 1.20 2004/05/11 13:57:46 rurban Exp $');
 
 class WikiPlugin_CreateBib extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("CreateBib");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Automatically create a Bibtex file from linked pages");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -51,13 +51,13 @@ class WikiPlugin_CreateBib extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array( 'pagename'  => '[pagename]', // The page from which the BibTex file is generated
                       );
     }
 
-    function preg_quote($heading)
+    public function preg_quote($heading)
     {
         return str_replace(
             array("/",".","?","*"),
@@ -68,7 +68,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
 
 
     // Have to include the $starttag and $endtag to the regexps...
-    function extractBibTeX(&$content, $starttag, $endtag)
+    public function extractBibTeX(&$content, $starttag, $endtag)
     {
         $bib = array();
 
@@ -93,7 +93,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
 
     // Extract article links. Current markup is by * characters...
     // Assume straight list
-    function extractArticles(&$content)
+    public function extractArticles(&$content)
     {
         $articles = array();
         for ($i=0; $i<count($content); $i++) {
@@ -107,7 +107,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
     }
 
 
-    function dumpFile(&$thispage, $filename)
+    public function dumpFile(&$thispage, $filename)
     {
         include_once("lib/loadsave.php");
         $mailified = MailifyPage($thispage);
@@ -123,7 +123,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
         $zip->finish();
     }
 
-    function run($dbi, $argstr, $request, $basepage)
+    public function run($dbi, $argstr, $request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
         if ($pagename) {

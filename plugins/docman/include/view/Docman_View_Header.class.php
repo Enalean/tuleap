@@ -22,7 +22,7 @@
 /* abstract */ class Docman_View_Header extends Docman_View_View
 {
 
-    function _header($params)
+    public function _header($params)
     {
         if (!headers_sent()) {
             header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
@@ -66,7 +66,7 @@
         return array();
     }
 
-    /* protected */ function _getTitle($params)
+    /* protected */ public function _getTitle($params)
     {
         $title = '';
         $project = $this->getProjectFromParams($params);
@@ -90,7 +90,7 @@
         return $title;
     }
 
-    /* protected */ function _footer($params)
+    /* protected */ public function _footer($params)
     {
         if (isset($params['pv']) && $params['pv'] > 0) {
             $GLOBALS['HTML']->pv_footer(array());
@@ -99,12 +99,12 @@
         }
     }
 
-    /* protected */ function _getAdditionalHtmlParams($params)
+    /* protected */ public function _getAdditionalHtmlParams($params)
     {
         return  array();
     }
 
-    /* protected */ function _feedback($params)
+    /* protected */ public function _feedback($params)
     {
         //$this->_controller->feedback->display();
     }

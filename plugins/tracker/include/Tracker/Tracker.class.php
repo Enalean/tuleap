@@ -222,7 +222,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return int The group_id
      */
-    function getGroupId()
+    public function getGroupId()
     {
         return $this->group_id;
     }
@@ -232,7 +232,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return Project
      */
-    function getProject()
+    public function getProject()
     {
         if (!$this->project) {
             $this->project = ProjectManager::instance()->getProject($this->group_id);
@@ -240,7 +240,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $this->project;
     }
 
-    function setProject(Project $project)
+    public function setProject(Project $project)
     {
         $this->project  = $project;
         $this->group_id = $project->getID();
@@ -258,7 +258,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return int The id
      */
-    function setId($id)
+    public function setId($id)
     {
         $this->id = $id;
     }
@@ -268,7 +268,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return string the tracker name
      */
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
@@ -278,7 +278,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return string the tracker description
      */
-    function getDescription()
+    public function getDescription()
     {
         return $this->description;
     }
@@ -288,7 +288,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return string the tracker item name (shortname)
      */
-    function getItemName()
+    public function getItemName()
     {
         return $this->item_name;
     }
@@ -298,7 +298,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return string the browse instructions of the tracker
      */
-    function getBrowseInstructions()
+    public function getBrowseInstructions()
     {
         return $this->browse_instructions;
     }
@@ -308,7 +308,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return bool true is this tracker must be instantiated for new project
      */
-    function mustBeInstantiatedForNewProjects()
+    public function mustBeInstantiatedForNewProjects()
     {
         return $this->instantiate_for_new_projects == 1;
     }
@@ -2147,7 +2147,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return bool true if user has persission to submit artifacts, false otherwise
      */
-    function userCanSubmitArtifact($user = false)
+    public function userCanSubmitArtifact($user = false)
     {
         if (! $user instanceof PFUser) {
             $um = UserManager::instance();
@@ -2175,7 +2175,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return bool true if user has persission to delete trackers, false otherwise
      */
-    function userCanDeleteTracker($user = false)
+    public function userCanDeleteTracker($user = false)
     {
         if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
@@ -2207,7 +2207,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return bool true if user has full access to tracker, false otherwise
      */
-    function userHasFullAccess($user = false)
+    public function userHasFullAccess($user = false)
     {
         if (!($user instanceof PFUser)) {
             $um = UserManager::instance();

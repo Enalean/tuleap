@@ -113,7 +113,7 @@ abstract class SystemEvent
      * @param string $end_date
      * @param string $log
      */
-    function __construct($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log)
+    public function __construct($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log)
     {
         $this->id           = $id;
         $this->type         = $type;
@@ -129,22 +129,22 @@ abstract class SystemEvent
 
     // Getters
 
-    function getId()
+    public function getId()
     {
         return $this->id;
     }
 
-    function getType()
+    public function getType()
     {
         return $this->type;
     }
 
-    function getOwner()
+    public function getOwner()
     {
         return $this->owner;
     }
 
-    function getParameters()
+    public function getParameters()
     {
         return $this->parameters;
     }
@@ -194,12 +194,12 @@ abstract class SystemEvent
         return $txt;
     }
 
-    function getParametersAsArray()
+    public function getParametersAsArray()
     {
         return explode(self::PARAMETER_SEPARATOR, $this->parameters);
     }
 
-    function getPriority()
+    public function getPriority()
     {
         return $this->priority;
     }
@@ -212,37 +212,37 @@ abstract class SystemEvent
         return $this->status;
     }
 
-    function getLog()
+    public function getLog()
     {
         return $this->log;
     }
 
-    function setStatus($status)
+    public function setStatus($status)
     {
         $this->status=$status;
     }
 
-    function setLog($log)
+    public function setLog($log)
     {
         $this->log=$log;
     }
 
-    function setParameters($params)
+    public function setParameters($params)
     {
         $this->parameters = $params;
     }
 
-    function getCreateDate()
+    public function getCreateDate()
     {
         return $this->create_date;
     }
 
-    function getProcessDate()
+    public function getProcessDate()
     {
         return $this->process_date;
     }
 
-    function getEndDate()
+    public function getEndDate()
     {
         return $this->end_date;
     }
@@ -289,7 +289,7 @@ abstract class SystemEvent
      * Checks if the given value represents integer
      * is_int() won't work on string containing integers...
      */
-    function int_ok($val)
+    public function int_ok($val)
     {
         return ((string) $val) === ((string)(int) $val);
     }
@@ -297,7 +297,7 @@ abstract class SystemEvent
     /**
      * A few functions to parse the parameters string
      */
-    function getIdFromParam()
+    public function getIdFromParam()
     {
         if ($this->int_ok($this->parameters)) {
             return $this->parameters;
@@ -324,7 +324,7 @@ abstract class SystemEvent
     /**
      * Error functions
      */
-    function setErrorBadParam()
+    public function setErrorBadParam()
     {
         $this->error("Bad parameter for event ".$this->getType().": ".$this->getParameters());
         return 0;
@@ -335,7 +335,7 @@ abstract class SystemEvent
      * Process stored event
      * Virtual method redeclared in children
      */
-    function process()
+    public function process()
     {
         return null;
     }

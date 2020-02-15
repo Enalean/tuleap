@@ -28,7 +28,7 @@ class Docman_SettingsBo
     public $groupId;
     public $dao;
 
-    function __construct($groupId)
+    public function __construct($groupId)
     {
         $this->groupId = $groupId;
         $this->row = null;
@@ -44,7 +44,7 @@ class Docman_SettingsBo
         return $_plugin_docman_settings_bo_i[$groupId];
     }
 
-    function &getDao()
+    public function &getDao()
     {
         if ($this->dao === null) {
             $this->dao = new Docman_SettingsDao(CodendiDataAccess::instance());
@@ -52,7 +52,7 @@ class Docman_SettingsBo
         return $this->dao;
     }
 
-    function _cacheGroupSettings()
+    public function _cacheGroupSettings()
     {
         if ($this->row === null) {
             $dao = $this->getDao();
@@ -63,7 +63,7 @@ class Docman_SettingsBo
         }
     }
 
-    function getView()
+    public function getView()
     {
         $this->_cacheGroupSettings();
 
@@ -74,7 +74,7 @@ class Docman_SettingsBo
         }
     }
 
-    function getMetadataUsage($metadata)
+    public function getMetadataUsage($metadata)
     {
         $this->_cacheGroupSettings();
 
@@ -85,7 +85,7 @@ class Docman_SettingsBo
         }
     }
 
-    function settingsExist()
+    public function settingsExist()
     {
         $this->_cacheGroupSettings();
         if ($this->row === null) {
@@ -95,7 +95,7 @@ class Docman_SettingsBo
         }
     }
 
-    function updateView($view)
+    public function updateView($view)
     {
         $dao = $this->getDao();
         if ($this->settingsExist()) {
@@ -105,7 +105,7 @@ class Docman_SettingsBo
         }
     }
 
-    function updateMetadataUsage($label, $useIt)
+    public function updateMetadataUsage($label, $useIt)
     {
         $dao = $this->getDao();
         if (!$this->settingsExist()) {
@@ -114,7 +114,7 @@ class Docman_SettingsBo
         return $dao->updateMetadataUsageForGroupId($this->groupId, $label, $useIt);
     }
 
-    function cloneMetadataSettings($targetGroupId)
+    public function cloneMetadataSettings($targetGroupId)
     {
         if ($this->settingsExist()) {
             $dao = $this->getDao();
@@ -137,7 +137,7 @@ class Docman_SettingsBo
      *
      * @access: public
      */
-    function exportMetadataUsage($dstGroupId)
+    public function exportMetadataUsage($dstGroupId)
     {
         $dstBo = Docman_SettingsBo::instance($dstGroupId);
         $dstBo->_importMetadataUsage($this, 'obsolescence_date');
@@ -147,7 +147,7 @@ class Docman_SettingsBo
      /**
       * @access: private
       */
-    function _importMetadataUsage($srcBo, $label)
+    public function _importMetadataUsage($srcBo, $label)
     {
         if ($srcBo->getMetadataUsage($label) == true &&
            $this->getMetadataUsage($label) != true) {

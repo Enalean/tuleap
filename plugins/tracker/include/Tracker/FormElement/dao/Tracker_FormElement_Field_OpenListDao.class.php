@@ -21,7 +21,7 @@
 
 class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_SpecificPropertiesDao
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_field_openlist';

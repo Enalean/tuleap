@@ -28,13 +28,13 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
 {
 
     public $token;
-    function __construct($item, $url, $controller, $params, $token)
+    public function __construct($item, $url, $controller, $params, $token)
     {
         parent::__construct($item, $url, false, true, $controller);
         $this->params = $params;
         $this->token = $token;
     }
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         $content = '';
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move') .'</dt><dd>';
@@ -64,7 +64,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         $content .= '</dd></dl>';
         return $content;
     }
-    /* protected */ function _getJSDocmanParameters()
+    /* protected */ public function _getJSDocmanParameters()
     {
         return array('action' => 'move');
     }

@@ -26,13 +26,13 @@ class Docman_View_Update extends Docman_View_Details
 {
 
 
-    /* protected */ function _getTitle($params)
+    /* protected */ public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
         return $GLOBALS['Language']->getText('plugin_docman', 'details_update_title', $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
-    /* protected */ function _content($params, $view = null, $section = null)
+    /* protected */ public function _content($params, $view = null, $section = null)
     {
         $force = isset($params['force_item']) ? $params['force_item'] : null;
         $token = isset($params['token']) ? $params['token'] : null;

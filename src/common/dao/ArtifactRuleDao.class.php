@@ -28,7 +28,7 @@ class ArtifactRuleDao extends DataAccessObject
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function searchAll()
+    public function searchAll()
     {
         $sql = "SELECT * FROM artifact_rule";
         return $this->retrieve($sql);
@@ -38,7 +38,7 @@ class ArtifactRuleDao extends DataAccessObject
     * Searches ArtifactRule by Id
     * @return DataAccessResult
     */
-    function searchById($id)
+    public function searchById($id)
     {
         $sql = sprintf(
             "SELECT group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE id = %s",
@@ -51,7 +51,7 @@ class ArtifactRuleDao extends DataAccessObject
     * Searches ArtifactRule by GroupArtifactId
     * @return DataAccessResult
     */
-    function searchByGroupArtifactId($groupArtifactId)
+    public function searchByGroupArtifactId($groupArtifactId)
     {
         $sql = sprintf(
             "SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE group_artifact_id = %s",
@@ -64,7 +64,7 @@ class ArtifactRuleDao extends DataAccessObject
     * Searches ArtifactRule by SourceFieldId
     * @return DataAccessResult
     */
-    function searchBySourceFieldId($sourceFieldId)
+    public function searchBySourceFieldId($sourceFieldId)
     {
         $sql = sprintf(
             "SELECT id, group_artifact_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE source_field_id = %s",
@@ -77,7 +77,7 @@ class ArtifactRuleDao extends DataAccessObject
     * Searches ArtifactRule by SourceValueId
     * @return DataAccessResult
     */
-    function searchBySourceValueId($sourceValueId)
+    public function searchBySourceValueId($sourceValueId)
     {
         $sql = sprintf(
             "SELECT id, group_artifact_id, source_field_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE source_value_id = %s",
@@ -90,7 +90,7 @@ class ArtifactRuleDao extends DataAccessObject
     * Searches ArtifactRule by TargetFieldId
     * @return DataAccessResult
     */
-    function searchByTargetFieldId($targetFieldId)
+    public function searchByTargetFieldId($targetFieldId)
     {
         $sql = sprintf(
             "SELECT id, group_artifact_id, source_field_id, source_value_id, rule_type, target_value_id FROM artifact_rule WHERE target_field_id = %s",
@@ -103,7 +103,7 @@ class ArtifactRuleDao extends DataAccessObject
     * Searches ArtifactRule by RuleType
     * @return DataAccessResult
     */
-    function searchByRuleType($ruleType)
+    public function searchByRuleType($ruleType)
     {
         $sql = sprintf(
             "SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, target_value_id FROM artifact_rule WHERE rule_type = %s",
@@ -116,7 +116,7 @@ class ArtifactRuleDao extends DataAccessObject
     * Searches ArtifactRule by TargetValueId
     * @return DataAccessResult
     */
-    function searchByTargetValueId($targetValueId)
+    public function searchByTargetValueId($targetValueId)
     {
         $sql = sprintf(
             "SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type FROM artifact_rule WHERE target_value_id = %s",
@@ -130,7 +130,7 @@ class ArtifactRuleDao extends DataAccessObject
     * create a row in the table artifact_rule
     * @return true or id(auto_increment) if there is no error
     */
-    function create($group_artifact_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id)
+    public function create($group_artifact_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id)
     {
         $sql = sprintf(
             "INSERT INTO artifact_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) VALUES (%s, %s, %s, %s, %s, %s)",
@@ -158,7 +158,7 @@ class ArtifactRuleDao extends DataAccessObject
     * Searches ArtifactRule by GroupArtifactId
     * @return DataAccessResult
     */
-    function searchByGroupArtifactIdWithOrder($groupArtifactId)
+    public function searchByGroupArtifactIdWithOrder($groupArtifactId)
     {
         $sql = sprintf(
             "SELECT ar.id, ar.source_field_id, ar.source_value_id, ar.target_field_id, ar.rule_type, ar.target_value_id ".
@@ -176,7 +176,7 @@ class ArtifactRuleDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function deleteById($id)
+    public function deleteById($id)
     {
         $sql = sprintf(
             "DELETE FROM artifact_rule WHERE id = %s",
@@ -185,7 +185,7 @@ class ArtifactRuleDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function deleteRuleState($group_artifact_id, $source, $source_value, $target, $rule_types)
+    public function deleteRuleState($group_artifact_id, $source, $source_value, $target, $rule_types)
     {
         $quoted_types = array();
         foreach ($rule_types as $type) {
@@ -207,7 +207,7 @@ class ArtifactRuleDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($artifact_type, $source, $source_value, $target, $rule_type)
+    public function deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($artifact_type, $source, $source_value, $target, $rule_type)
     {
         $sql = sprintf(
             'DELETE FROM artifact_rule '.
@@ -225,7 +225,7 @@ class ArtifactRuleDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($artifact_type, $source, $target, $target_value, $rule_type)
+    public function deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($artifact_type, $source, $target, $target_value, $rule_type)
     {
         $sql = sprintf(
             'DELETE FROM artifact_rule '.
@@ -243,7 +243,7 @@ class ArtifactRuleDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function deleteRulesByGroupArtifactId($artifact_type)
+    public function deleteRulesByGroupArtifactId($artifact_type)
     {
         $sql = sprintf(
             'DELETE FROM artifact_rule '.
@@ -252,7 +252,7 @@ class ArtifactRuleDao extends DataAccessObject
         );
         return $this->update($sql);
     }
-    function deleteByField($artifact_type, $field_id)
+    public function deleteByField($artifact_type, $field_id)
     {
         $sql = sprintf(
             'DELETE FROM artifact_rule '.
@@ -265,7 +265,7 @@ class ArtifactRuleDao extends DataAccessObject
         );
         return $this->update($sql);
     }
-    function deleteByFieldValue($artifact_type, $field_id, $value_id)
+    public function deleteByFieldValue($artifact_type, $field_id, $value_id)
     {
         $sql = sprintf(
             'DELETE FROM artifact_rule '.
@@ -287,7 +287,7 @@ class ArtifactRuleDao extends DataAccessObject
         );
         return $this->update($sql);
     }
-    function copyRules($from_artifact_type, $to_artifact_type)
+    public function copyRules($from_artifact_type, $to_artifact_type)
     {
         $sql = sprintf(
             'INSERT INTO artifact_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) '.

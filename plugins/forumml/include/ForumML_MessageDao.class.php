@@ -21,12 +21,12 @@
 class ForumML_MessageDao extends DataAccessObject
 {
 
-    function __construct($da)
+    public function __construct($da)
     {
         parent::__construct($da);
     }
 
-    function searchHeaderValue($messageId, $headerId)
+    public function searchHeaderValue($messageId, $headerId)
     {
         $sql = 'SELECT mh.value'.
             ' FROM plugin_forumml_message m'.

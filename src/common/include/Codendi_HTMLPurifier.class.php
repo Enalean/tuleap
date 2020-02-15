@@ -115,7 +115,7 @@ class Codendi_HTMLPurifier
      * @see http://htmlpurifier.org/live/configdoc/plain.html#AutoFormat
      *
      */
-    function getLightConfig()
+    public function getLightConfig()
     {
         $config = $this->getCodendiConfig();
         $this->setConfigAttribute($config, 'HTML', 'Allowed', $this->getLightConfigMarkups());
@@ -139,7 +139,7 @@ class Codendi_HTMLPurifier
      * - 'ul', 'ol', 'li'
      * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre', 'b', 'i'
      */
-    function getLightConfigMarkups()
+    public function getLightConfigMarkups()
     {
         $allowed = 'p,br,'.
                    'a[href|title|class],img[src|alt],'.
@@ -148,7 +148,7 @@ class Codendi_HTMLPurifier
         return $allowed;
     }
 
-    function getStripConfig()
+    public function getStripConfig()
     {
         $config = $this->getCodendiConfig();
         $this->setConfigAttribute($config, 'HTML', 'Allowed', '');
@@ -165,7 +165,7 @@ class Codendi_HTMLPurifier
     /**
      * HTML Purifier configuration factory
      */
-    function getHPConfig($level)
+    public function getHPConfig($level)
     {
         if (isset($this->config[$level])) {
             return $this->config[$level];
@@ -334,7 +334,7 @@ class Codendi_HTMLPurifier
         return $this->purify($html, CODENDI_PURIFIER_BASIC, $group_id);
     }
 
-    function purifyMap($array, $level = 0, $groupId = 0)
+    public function purifyMap($array, $level = 0, $groupId = 0)
     {
         return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
     }

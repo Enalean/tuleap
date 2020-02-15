@@ -19,7 +19,7 @@
 
 class Project_Creation_Exception extends Exception
 {
-    function __construct($message = 'Project creation failure')
+    public function __construct($message = 'Project creation failure')
     {
         parent::__construct($message, 3101);
     }

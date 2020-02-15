@@ -27,11 +27,11 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
 
     public const MESSAGE_ADDED = 'added'; // X has been added
 
-    function _getListeningUsersItemId($params)
+    public function _getListeningUsersItemId($params)
     {
         return $params['parent']->getId();
     }
-    function _buildMessage($event, $params, $user)
+    public function _buildMessage($event, $params, $user)
     {
         switch ($event) {
             case 'plugin_docman_event_add':
@@ -51,7 +51,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
                 break;
         }
     }
-    function _getMessageForUser($user, $message_type, $params)
+    public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
         switch ($message_type) {

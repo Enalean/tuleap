@@ -20,23 +20,23 @@
 
 class DbaPartition
 {
-    function __construct(&$dbm, $prefix)
+    public function __construct(&$dbm, $prefix)
     {
         $this->_h = &$dbm;
         $this->_p = $prefix;
     }
 
-    function open($mode = 'w')
+    public function open($mode = 'w')
     {
         $this->_h->open();
     }
 
-    function close()
+    public function close()
     {
         $this->_h->close();
     }
 
-    function firstkey()
+    public function firstkey()
     {
         $dbh = &$this->_h;
         $prefix = &$this->_p;
@@ -49,7 +49,7 @@ class DbaPartition
         return false;
     }
 
-    function nextkey()
+    public function nextkey()
     {
         $dbh = &$this->_h;
         $prefix = &$this->_p;
@@ -62,47 +62,47 @@ class DbaPartition
         return false;
     }
 
-    function exists($key)
+    public function exists($key)
     {
         return $this->_h->exists($this->_p . $key);
     }
 
-    function fetch($key)
+    public function fetch($key)
     {
         return $this->_h->fetch($this->_p . $key);
     }
 
-    function insert($key, $val)
+    public function insert($key, $val)
     {
         return $this->_h->insert($this->_p . $key, $val);
     }
 
-    function replace($key, $val)
+    public function replace($key, $val)
     {
         return $this->_h->replace($this->_p . $key, $val);
     }
 
-    function delete($key)
+    public function delete($key)
     {
         return $this->_h->delete($this->_p . $key);
     }
 
-    function get($key)
+    public function get($key)
     {
         return $this->_h->get($this->_p . $key);
     }
 
-    function set($key, $val)
+    public function set($key, $val)
     {
         return $this->_h->set($this->_p . $key, $val);
     }
 
-    function sync()
+    public function sync()
     {
         return $this->_h->sync();
     }
 
-    function optimize()
+    public function optimize()
     {
         return $this->_h->optimize();
     }

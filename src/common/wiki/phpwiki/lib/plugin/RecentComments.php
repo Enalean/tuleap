@@ -13,11 +13,11 @@ require_once("lib/plugin/WikiBlog.php");
 
 class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
 {
-    function getName()
+    public function getName()
     {
         return _("RecentComments");
     }
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -25,7 +25,7 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
             "\$Revision: 1.3 $"
         );
     }
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         $args = WikiPlugin_RecentChanges::getDefaultArguments();
         $args['show_minor'] = false;
@@ -34,13 +34,13 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
         return $args;
     }
 
-    function format($changes, $args)
+    public function format($changes, $args)
     {
         $fmt = new _RecentChanges_CommentFormatter($args);
         return $fmt->format($changes);
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         // HACKish: fix for SF bug #622784  (1000 years of RecentChanges ought
@@ -49,7 +49,7 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
         return $this->format($this->getChanges($request->_dbi, $args), $args);
     }
 
-    function getChanges($dbi, $args)
+    public function getChanges($dbi, $args)
     {
         $changes = $dbi->mostRecent($this->getMostRecentParams($args));
         $show_deleted = $args['show_deleted'];
@@ -68,17 +68,17 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
 class _RecentChanges_CommentFormatter extends _RecentChanges_HtmlFormatter
 {
 
-    function empty_message()
+    public function empty_message()
     {
         return _("No comments found");
     }
 
-    function title()
+    public function title()
     {
         return;
     }
 
-    function format_revision($rev)
+    public function format_revision($rev)
     {
         static $doublettes = array();
         if (isset($doublettes[$rev->getPageName()])) {
@@ -119,7 +119,7 @@ class _RecentChanges_CommentFormatter extends _RecentChanges_HtmlFormatter
  */
 class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
 {
-    function __construct($revisions, &$dbi)
+    public function __construct($revisions, &$dbi)
     {
         $this->_revisions = $revisions;
         $this->_wikidb = $dbi;
@@ -127,7 +127,7 @@ class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
         $this->_blog = new WikiPlugin_WikiBlog();
     }
 
-    function next()
+    public function next()
     {
         if (!empty($this->comments) and $this->_current) {
             if (isset($this->comments[$this->_current])) {

@@ -23,7 +23,7 @@ class Docman_ApprovalTableFactoriesFactory
     /**
      * Return the right ApprovalTableFactory depending of the item.
      */
-    static function getFromItem($item, $version = null)
+    public static function getFromItem($item, $version = null)
     {
         $appTableFactory = null;
         if ($item instanceof Docman_File) {

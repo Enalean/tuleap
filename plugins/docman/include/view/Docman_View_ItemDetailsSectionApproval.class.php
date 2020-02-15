@@ -31,7 +31,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
     public $version;
     public $notificationManager;
 
-    function __construct($item, $url, $themePath, $notificationManager)
+    public function __construct($item, $url, $themePath, $notificationManager)
     {
         parent::__construct($item, $url, 'approval', $GLOBALS['Language']->getText('plugin_docman', 'details_approval'));
 
@@ -42,7 +42,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $this->notificationsManager = $notificationManager;
     }
 
-    function initDisplay()
+    public function initDisplay()
     {
         $request = HTTPRequest::instance();
 
@@ -57,7 +57,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $this->table = $this->atf->getTable();
     }
 
-    function _getItemVersionLink($version, $noLink = false)
+    public function _getItemVersionLink($version, $noLink = false)
     {
         $html = '';
         if ($version !== null) {
@@ -94,7 +94,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $html;
     }
 
-    function getReviewerTable($forceReadOnly = false)
+    public function getReviewerTable($forceReadOnly = false)
     {
         $html  = '';
         $uh    = UserHelper::instance();
@@ -222,7 +222,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
     }
 
 
-    function _getReviewCurrentVersion()
+    public function _getReviewCurrentVersion()
     {
         $version = null;
         $itemFactory = Docman_ItemFactory::instance($this->item->getGroupId());
@@ -241,7 +241,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $version;
     }
 
-    function getReviewForm($user)
+    public function getReviewForm($user)
     {
         $html = '';
         $uh   = UserHelper::instance();
@@ -427,7 +427,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $html;
     }
 
-    function getTableHistory()
+    public function getTableHistory()
     {
         $html = '';
         $uh   = UserHelper::instance();
@@ -468,7 +468,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $html;
     }
 
-    function getToolbar()
+    public function getToolbar()
     {
         $html = '';
         $user = $this->_getCurrentUser();
@@ -485,7 +485,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $html;
     }
 
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         $html = '';
 
@@ -546,57 +546,57 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $html;
     }
 
-    function &_getDocmanIcons()
+    public function &_getDocmanIcons()
     {
         $icons = new Docman_Icons($this->themePath.'/images/ic/');
         return $icons;
     }
 
-    function &_getUserManager()
+    public function &_getUserManager()
     {
         $um = UserManager::instance();
         return $um;
     }
 
-    function &_getCurrentUser()
+    public function &_getCurrentUser()
     {
         $um   = $this->_getUserManager();
         $user = $um->getCurrentUser();
         return $user;
     }
 
-    function &_getPermissionsManager()
+    public function &_getPermissionsManager()
     {
         $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
         return $dpm;
     }
 
-    function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = array())
     {
         return '';
     }
 
-    function visitWiki($item, $params = array())
+    public function visitWiki($item, $params = array())
     {
         return '';
     }
 
-    function visitLink($item, $params = array())
+    public function visitLink($item, $params = array())
     {
         return '';
     }
 
-    function visitFile($item, $params = array())
+    public function visitFile($item, $params = array())
     {
         return '';
     }
 
-    function visitEmbeddedFile($item, $params = array())
+    public function visitEmbeddedFile($item, $params = array())
     {
         return '';
     }
 
-    function visitEmpty($item, $params = array())
+    public function visitEmpty($item, $params = array())
     {
         return '';
     }

@@ -25,7 +25,7 @@ require_once __DIR__ . '/bootstrap.php';
 
 class Tracker_ArtifactTest extends TuleapTestCase
 {
-    function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->setUpGlobalsMockery();
@@ -62,14 +62,14 @@ class Tracker_ArtifactTest extends TuleapTestCase
         $this->artifact_update->shouldReceive('getLastChangeset')->andReturns($this->changeset); // changeset => artifact modification
     }
 
-    function tearDown()
+    public function tearDown()
     {
         unset($this->field);
         unset($this->artifact);
         parent::tearDown();
     }
 
-    function testGetValue()
+    public function testGetValue()
     {
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $field     = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
@@ -83,7 +83,7 @@ class Tracker_ArtifactTest extends TuleapTestCase
         $this->assertEqual($artifact->getValue($field, $changeset), $value);
     }
 
-    function testGetValue_without_changeset()
+    public function testGetValue_without_changeset()
     {
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $field     = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
@@ -100,7 +100,7 @@ class Tracker_ArtifactTest extends TuleapTestCase
 
 class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactTest
 {
-    function testCreateNewChangesetWithWorkflowAndNoPermsOnPostActionField()
+    public function testCreateNewChangesetWithWorkflowAndNoPermsOnPostActionField()
     {
         $email   = null; //not anonymous user
         $comment = '';
@@ -222,7 +222,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         );
     }
 
-    function testDontCreateNewChangesetIfNoCommentOrNoChanges()
+    public function testDontCreateNewChangesetIfNoCommentOrNoChanges()
     {
         $this->language->shouldReceive('getText')->with('plugin_tracker_artifact', 'no_changes', Mockery::any())->andReturns('no changes');
         $this->response->shouldReceive('addFeedback')->never();
@@ -310,7 +310,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
 class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
 {
 
-    function testCreateNewChangeset()
+    public function testCreateNewChangeset()
     {
         $email   = null; //not annonymous user
         $comment = 'It did solve my problem, I let you close the artifact.';
@@ -560,7 +560,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 
-    function testCreateNewChangesetWithoutNotification()
+    public function testCreateNewChangesetWithoutNotification()
     {
         $email   = null; //not anonymous user
         $comment = '';
@@ -679,7 +679,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 
-    function testGetCommentators()
+    public function testGetCommentators()
     {
         $c1 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $c2 = \Mockery::spy(\Tracker_Artifact_Changeset::class);

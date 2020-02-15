@@ -17,7 +17,7 @@ class _UserPreference_recengine extends _UserPreference // recommendation engine
     public $valid_values = array('php','mysuggest','mymovielens','mycluto');
     public $default_value = 'php';
 
-    function sanify($value)
+    public function sanify($value)
     {
         if (!in_array($value, $this->valid_values)) {
             return $this->default_value;
@@ -38,7 +38,7 @@ class _UserPreference_recalgo extends _UserPreference // recommendation engine a
          'bayes');   // Na�ve Bayesian Classifier
     public $default_value = 'itemProb';
 
-    function sanify($value)
+    public function sanify($value)
     {
         if (!in_array($value, $this->valid_values)) {
             return $this->default_value;

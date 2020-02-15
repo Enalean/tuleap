@@ -71,7 +71,7 @@ class TextSearchQuery
      * @param $regex string one of 'auto', 'none', 'glob', 'posix', 'pcre', 'sql'
      * @see TextSearchQuery
      */
-    function __construct($search_query, $case_exact = false, $regex = 'auto')
+    public function __construct($search_query, $case_exact = false, $regex = 'auto')
     {
         if ($regex == 'none' or !$regex) {
             $this->_regex = 0;
@@ -88,7 +88,7 @@ class TextSearchQuery
         $this->_stoplist = '(A|An|And|But|By|For|From|In|Is|It|Of|On|Or|The|To|With)';
     }
 
-    function _optimize()
+    public function _optimize()
     {
         $this->_tree = $this->_tree->optimize();
     }
@@ -96,7 +96,7 @@ class TextSearchQuery
     /**
      * Get a PCRE regexp which matches the query.
      */
-    function asRegexp()
+    public function asRegexp()
     {
         if (!isset($this->_regexp)) {
             if ($this->_regex) {
@@ -114,7 +114,7 @@ class TextSearchQuery
      * @param $string string The string to match.
      * @return bool True if the string matches the query.
      */
-    function match($string)
+    public function match($string)
     {
         return preg_match($this->asRegexp(), $string);
     }
@@ -128,7 +128,7 @@ class TextSearchQuery
      *
      * @return string The PCRE regexp.
      */
-    function getHighlightRegexp()
+    public function getHighlightRegexp()
     {
         if (!isset($this->_hilight_regexp)) {
             $words = array_unique($this->_tree->highlight_words());
@@ -175,13 +175,13 @@ class TextSearchQuery
      *
      * @return string The SQL clause.
      */
-    function makeSqlClause($sql_clause_cb)
+    public function makeSqlClause($sql_clause_cb)
     {
         $this->_sql_clause_cb = $sql_clause_cb;
         return $this->_sql_clause($this->_tree);
     }
     // deprecated: use _sql_clause_obj now.
-    function _sql_clause($node)
+    public function _sql_clause($node)
     {
         switch ($node->op) {
             case 'WORD':        // word => %word%
@@ -204,13 +204,13 @@ class TextSearchQuery
     /** Get away with the callback and use a db-specific search class instead.
      * @see WikiDB_backend_PearDB_search
      */
-    function makeSqlClauseObj(&$sql_search_cb)
+    public function makeSqlClauseObj(&$sql_search_cb)
     {
         $this->_sql_clause_cb = $sql_search_cb;
         return $this->_sql_clause_obj($this->_tree);
     }
 
-    function _sql_clause_obj($node)
+    public function _sql_clause_obj($node)
     {
         switch ($node->op) {
             case 'NOT':
@@ -231,7 +231,7 @@ class TextSearchQuery
         }
     }
 
-    function sql()
+    public function sql()
     {
         return '%'.$this->_sql_quote($this->word).'%';
     }
@@ -242,12 +242,12 @@ class TextSearchQuery
      * This is for debugging only.
      * @return string Printable parse tree.
      */
-    function asString()
+    public function asString()
     {
         return $this->_as_string($this->_tree);
     }
 
-    function _as_string($node, $indent = '')
+    public function _as_string($node, $indent = '')
     {
         switch ($node->op) {
             case 'WORD':
@@ -277,26 +277,26 @@ class NullTextSearchQuery extends TextSearchQuery
      *
      * @see TextSearchQuery
      */
-    function __construct()
+    public function __construct()
     {
     }
-    function asRegexp()
+    public function asRegexp()
     {
         return '/^(?!a)a/x';
     }
-    function match($string)
+    public function match($string)
     {
         return false;
     }
-    function getHighlightRegexp()
+    public function getHighlightRegexp()
     {
         return "";
     }
-    function makeSqlClause($make_sql_clause_cb)
+    public function makeSqlClause($make_sql_clause_cb)
     {
         return "(1 = 0)";
     }
-    function asString()
+    public function asString()
     {
         return "NullTextSearchQuery";
     }
@@ -321,7 +321,7 @@ class TextSearchQuery_node
      * Optimize this node.
      * @return object Optimized node.
      */
-    function optimize()
+    public function optimize()
     {
         return $this;
     }
@@ -329,7 +329,7 @@ class TextSearchQuery_node
     /**
      * @return regexp matching this node.
      */
-    function regexp()
+    public function regexp()
     {
         return '';
     }
@@ -338,12 +338,12 @@ class TextSearchQuery_node
      * @param bool True if this node has been negated (higher in the parse tree.)
      * @return array A list of all non-negated words contained by this node.
      */
-    function highlight_words($negated = false)
+    public function highlight_words($negated = false)
     {
         return array();
     }
 
-    function sql()
+    public function sql()
     {
         return $this->word;
     }
@@ -356,24 +356,24 @@ class TextSearchQuery_node_word extends TextSearchQuery_node
 {
     public $op = "WORD";
 
-    function __construct($word)
+    public function __construct($word)
     {
         $this->word = $word;
     }
-    function regexp()
+    public function regexp()
     {
         return '(?=.*' . preg_quote($this->word, '/') . ')';
     }
-    function highlight_words($negated = false)
+    public function highlight_words($negated = false)
     {
         return $negated ? array() : array($this->word);
     }
-    function _sql_quote()
+    public function _sql_quote()
     {
         $word = preg_replace('/(?=[%_\\\\])/', "\\", $this->word);
         return $GLOBALS['request']->_dbi->qstr($word);
     }
-    function sql()
+    public function sql()
     {
         return '%'.$this->_sql_quote($this->word).'%';
     }
@@ -382,11 +382,11 @@ class TextSearchQuery_node_word extends TextSearchQuery_node
 class TextSearchQuery_node_all extends TextSearchQuery_node
 {
     public $op = "ALL";
-    function regexp()
+    public function regexp()
     {
         return '(?=.*)';
     }
-    function sql()
+    public function sql()
     {
         return '%';
     }
@@ -394,11 +394,11 @@ class TextSearchQuery_node_all extends TextSearchQuery_node
 class TextSearchQuery_node_starts_with extends TextSearchQuery_node_word
 {
     public $op = "STARTS_WITH";
-    function regexp()
+    public function regexp()
     {
         return '(?=.*\b' . preg_quote($this->word, '/') . ')';
     }
-    function sql()
+    public function sql()
     {
         return $this->_sql_quote($this->word).'%';
     }
@@ -407,11 +407,11 @@ class TextSearchQuery_node_starts_with extends TextSearchQuery_node_word
 class TextSearchQuery_node_ends_with extends TextSearchQuery_node_word
 {
     public $op = "ENDS_WITH";
-    function regexp()
+    public function regexp()
     {
         return '(?=.*' . preg_quote($this->word, '/') . '\b)';
     }
-    function sql()
+    public function sql()
     {
         return '%'.$this->_sql_quote($this->word);
     }
@@ -420,11 +420,11 @@ class TextSearchQuery_node_ends_with extends TextSearchQuery_node_word
 class TextSearchQuery_node_exact extends TextSearchQuery_node_word
 {
     public $op = "EXACT";
-    function regexp()
+    public function regexp()
     {
         return '(?=\b' . preg_quote($this->word, '/') . '\b)';
     }
-    function sql()
+    public function sql()
     {
         return $this->_sql_squote($this->word);
     }
@@ -434,11 +434,11 @@ class TextSearchQuery_node_regex extends TextSearchQuery_node_word
 {
  // posix regex. FIXME!
     public $op = "REGEX"; // using REGEXP or ~ extension
-    function regexp()
+    public function regexp()
     {
         return '(?=.*\b' . $this->word . '\b)';
     }
-    function sql()
+    public function sql()
     {
         return $this->_sql_quote($this->word);
     }
@@ -447,7 +447,7 @@ class TextSearchQuery_node_regex extends TextSearchQuery_node_word
 class TextSearchQuery_node_regex_glob extends TextSearchQuery_node_regex
 {
     public $op = "REGEX_GLOB";
-    function regexp()
+    public function regexp()
     {
         return '(?=.*\b' . glob_to_pcre($this->word) . '\b)';
     }
@@ -457,7 +457,7 @@ class TextSearchQuery_node_regex_pcre extends TextSearchQuery_node_regex
 {
  // how to handle pcre modifiers? /i
     public $op = "REGEX_PCRE";
-    function regexp()
+    public function regexp()
     {
         return $this->word;
     }
@@ -466,11 +466,11 @@ class TextSearchQuery_node_regex_pcre extends TextSearchQuery_node_regex
 class TextSearchQuery_node_regex_sql extends TextSearchQuery_node_regex
 {
     public $op = "REGEX_SQL"; // using LIKE
-    function regexp()
+    public function regexp()
     {
         return str_replace(array("/%/","/_/"), array(".*","."), $this->word);
     }
-    function sql()
+    public function sql()
     {
         return $this->word;
     }
@@ -483,12 +483,12 @@ class TextSearchQuery_node_not extends TextSearchQuery_node
 {
     public $op = "NOT";
 
-    function __construct($leaf)
+    public function __construct($leaf)
     {
         $this->leaves = array($leaf);
     }
 
-    function optimize()
+    public function optimize()
     {
         $leaf = &$this->leaves[0];
         $leaf = $leaf->optimize();
@@ -498,13 +498,13 @@ class TextSearchQuery_node_not extends TextSearchQuery_node
         return $this;
     }
 
-    function regexp()
+    public function regexp()
     {
         $leaf = &$this->leaves[0];
         return '(?!' . $leaf->regexp() . ')';
     }
 
-    function highlight_words($negated = false)
+    public function highlight_words($negated = false)
     {
         return $this->leaves[0]->highlight_words(!$negated);
     }
@@ -515,12 +515,12 @@ class TextSearchQuery_node_not extends TextSearchQuery_node
  */
 class TextSearchQuery_node_binop extends TextSearchQuery_node
 {
-    function __construct($leaves)
+    public function __construct($leaves)
     {
         $this->leaves = $leaves;
     }
 
-    function _flatten()
+    public function _flatten()
     {
         // This flattens e.g. (AND (AND a b) (OR c d) e)
         //        to (AND a b e (OR c d))
@@ -536,7 +536,7 @@ class TextSearchQuery_node_binop extends TextSearchQuery_node
         $this->leaves = $flat;
     }
 
-    function optimize()
+    public function optimize()
     {
         $this->_flatten();
         assert(!empty($this->leaves));
@@ -546,7 +546,7 @@ class TextSearchQuery_node_binop extends TextSearchQuery_node
         return $this;
     }
 
-    function highlight_words($negated = false)
+    public function highlight_words($negated = false)
     {
         $words = array();
         foreach ($this->leaves as $leaf) {
@@ -568,7 +568,7 @@ class TextSearchQuery_node_and extends TextSearchQuery_node_binop
 {
     public $op = "AND";
 
-    function optimize()
+    public function optimize()
     {
         $this->_flatten();
 
@@ -603,7 +603,7 @@ class TextSearchQuery_node_and extends TextSearchQuery_node_binop
      * or we have to use multiple match calls for each AND
      * (AND x y) => /(?(:x)(:y))|(?(:y)(:x))/
      */
-    function regexp()
+    public function regexp()
     {
         $regexp = '';
         foreach ($this->leaves as $leaf) {
@@ -620,7 +620,7 @@ class TextSearchQuery_node_or extends TextSearchQuery_node_binop
 {
     public $op = "OR";
 
-    function regexp()
+    public function regexp()
     {
         // We will combine any of our direct descendents which are WORDs
         // into a single (?=.*(?:word1|word2|...)) regexp.
@@ -646,7 +646,7 @@ class TextSearchQuery_node_or extends TextSearchQuery_node_binop
         return $this->_join($regexps);
     }
 
-    function _join($regexps)
+    public function _join($regexps)
     {
         assert(count($regexps) > 0);
 
@@ -722,7 +722,7 @@ class TextSearchQuery_Parser
      * *                  ALL
      */
 
-    function parse($search_expr, $case_exact = false, $regex = TSQ_REGEX_AUTO)
+    public function parse($search_expr, $case_exact = false, $regex = TSQ_REGEX_AUTO)
     {
         $this->lexer = new TextSearchQuery_Lexer($search_expr, $case_exact, $regex);
         $this->_regex = $regex;
@@ -732,7 +732,7 @@ class TextSearchQuery_Parser
         return $tree;
     }
 
-    function get_list($is_toplevel = false)
+    public function get_list($is_toplevel = false)
     {
         $list = array();
 
@@ -758,7 +758,7 @@ class TextSearchQuery_Parser
         return new TextSearchQuery_node_and($list);
     }
 
-    function get_expr()
+    public function get_expr()
     {
         if (!($expr = $this->get_atom())) {
             return false;
@@ -785,7 +785,7 @@ class TextSearchQuery_Parser
     }
 
 
-    function get_atom()
+    public function get_atom()
     {
         if ($word = $this->get_word(TSQ_ALLWORDS)) {
             return $word;
@@ -805,7 +805,7 @@ class TextSearchQuery_Parser
         return false;
     }
 
-    function get_word($accept = TSQ_ALLWORDS)
+    public function get_word($accept = TSQ_ALLWORDS)
     {
         foreach (array("WORD","STARTS_WITH","ENDS_WITH","EXACT",
                        "REGEX","REGEX_GLOB","REGEX_PCRE","ALL") as $tok) {
@@ -821,23 +821,23 @@ class TextSearchQuery_Parser
 
 class TextSearchQuery_Lexer
 {
-    function __construct($query_str, $case_exact = false, $regex = TSQ_REGEX_AUTO)
+    public function __construct($query_str, $case_exact = false, $regex = TSQ_REGEX_AUTO)
     {
         $this->tokens = $this->tokenize($query_str, $case_exact, $regex);
         $this->pos = 0;
     }
 
-    function tell()
+    public function tell()
     {
         return $this->pos;
     }
 
-    function seek($pos)
+    public function seek($pos)
     {
         $this->pos = $pos;
     }
 
-    function eof()
+    public function eof()
     {
         return $this->pos == count($this->tokens);
     }
@@ -846,7 +846,7 @@ class TextSearchQuery_Lexer
      * TODO: support more regex styles, esp. prefer the forced ones over auto
      * re: and // stuff
      */
-    function tokenize($string, $case_exact = false, $regex = TSQ_REGEX_AUTO)
+    public function tokenize($string, $case_exact = false, $regex = TSQ_REGEX_AUTO)
     {
         $tokens = array();
         $buf = $case_exact ? ltrim($string) : strtolower(ltrim($string));
@@ -922,7 +922,7 @@ class TextSearchQuery_Lexer
         return $tokens;
     }
 
-    function get($accept)
+    public function get($accept)
     {
         if ($this->pos >= count($this->tokens)) {
             return false;

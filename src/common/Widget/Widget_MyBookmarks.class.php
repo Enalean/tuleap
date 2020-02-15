@@ -34,12 +34,12 @@ class Widget_MyBookmarks extends Widget
         parent::__construct('mybookmarks');
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('my_index', 'my_bookmarks');
     }
 
-    function getContent()
+    public function getContent()
     {
         $html_my_bookmarks = '';
         $result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ".
@@ -68,7 +68,7 @@ class Widget_MyBookmarks extends Widget
         $html_my_bookmarks .= '<div style="text-align:center; font-size:0.8em;"><a href="/my/bookmark_add.php">['. $GLOBALS['Language']->getText('my_index', 'add_bookmark') .']</a></div>';
         return $html_my_bookmarks;
     }
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_bookmarks', 'description');
     }

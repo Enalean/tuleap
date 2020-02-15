@@ -159,7 +159,7 @@ class LanguageConv
 {
     private $g2312 = null ;
 
-    function Convert($aTxt, $aFF)
+    public function Convert($aTxt, $aFF)
     {
         if (LANGUAGE_GREEK) {
             if (GREEK_FROM_WINDOWS) {
@@ -262,7 +262,7 @@ class TTF
     private $font_files;
     private $style_names;
 
-    function __construct()
+    public function __construct()
     {
 
             // String names for font styles to be used in error messages
@@ -459,7 +459,7 @@ class TTF
     //---------------
     // PUBLIC METHODS
     // Create the TTF file from the font specification
-    function File($family, $style = FS_NORMAL)
+    public function File($family, $style = FS_NORMAL)
     {
         $fam = @$this->font_files[$family];
         if (!$fam) {
@@ -510,7 +510,7 @@ class TTF
         return $font_file;
     }
 
-    function SetUserFont($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
+    public function SetUserFont($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT] =
             array(FS_NORMAL     => $aNormal,
@@ -519,7 +519,7 @@ class TTF
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
 
-    function SetUserFont1($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
+    public function SetUserFont1($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT1] =
             array(FS_NORMAL     => $aNormal,
@@ -528,7 +528,7 @@ class TTF
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
 
-    function SetUserFont2($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
+    public function SetUserFont2($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT2] =
             array(FS_NORMAL     => $aNormal,
@@ -537,7 +537,7 @@ class TTF
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
 
-    function SetUserFont3($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
+    public function SetUserFont3($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT3] =
             array(FS_NORMAL     => $aNormal,
@@ -556,7 +556,7 @@ class TTF
 //=============================================================================
 class SymChar
 {
-    static function Get($aSymb, $aCapital = false)
+    public static function Get($aSymb, $aCapital = false)
     {
         $iSymbols = array(
         /* Greek */

@@ -48,7 +48,7 @@ class SystemEvent_USER_DELETE extends SystemEvent
     /**
      * Process stored event
      */
-    function process()
+    public function process()
     {
         // Check parameters
         $user_id=$this->getIdFromParam($this->parameters);

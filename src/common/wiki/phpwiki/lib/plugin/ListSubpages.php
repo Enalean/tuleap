@@ -30,17 +30,17 @@ require_once('lib/PageList.php');
 
 class WikiPlugin_ListSubpages extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("ListSubpages");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Lists the names of all SubPages of the current page.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -49,7 +49,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -66,7 +66,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
     // info=mtime,hits,summary,version,author,locked,minor,count
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         if ($args['basepage']) {
@@ -131,7 +131,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
 // how many backlinks for this subpage
 class _PageList_Column_ListSubpages_count extends _PageList_Column
 {
-    function _getValue($page, &$revision_handle)
+    public function _getValue($page, &$revision_handle)
     {
         $iter = $page->getBackLinks();
         $count = $iter->count();

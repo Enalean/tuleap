@@ -41,76 +41,76 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
     public $jp_graph_path;
     public $summary_label;
 
-    function setTitle($title)
+    public function setTitle($title)
     {
         $this->title = $title;
     }
 
-    function setDescription($description)
+    public function setDescription($description)
     {
         $this->description = $description;
     }
 
-    function setScale($scale)
+    public function setScale($scale)
     {
         $this->scale = $scale;
     }
 
-    function setStart($start)
+    public function setStart($start)
     {
         $this->start = $start;
     }
 
-    function setDue($due)
+    public function setDue($due)
     {
         $this->due = $due;
     }
 
-    function setFinish($finish)
+    public function setFinish($finish)
     {
         $this->finish = $finish;
     }
 
-    function setProgress($progress)
+    public function setProgress($progress)
     {
         $this->progress = $progress;
     }
 
 
-    function setRight($right)
+    public function setRight($right)
     {
         $this->right = $right;
     }
 
 
-    function setAsOfDate($asOfDate)
+    public function setAsOfDate($asOfDate)
     {
         $this->asOfDate = $asOfDate;
     }
 
-    function setHint($hint)
+    public function setHint($hint)
     {
         $this->hint = $hint;
     }
 
-    function setSummary($summary)
+    public function setSummary($summary)
     {
         $this->summary = $summary;
     }
 
 
-    function setLinks($links)
+    public function setLinks($links)
     {
         $this->links = $links;
     }
 
-    function setData($data)
+    public function setData($data)
     {
         $this->data = $data;
     }
 
 
-    function formatScale()
+    public function formatScale()
     {
         switch ($this->scale) {
             case 'day':
@@ -129,7 +129,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
         }
     }
 
-    function getScaleDim()
+    public function getScaleDim()
     {
         $scale_dim = null;
         switch ($this->scale) {
@@ -154,7 +154,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
     /**
     * Builds gantt graph
     */
-    function buildGraph()
+    public function buildGraph()
     {
         $this->graph = new Chart_Gantt($this->width, $this->height, "auto");
 

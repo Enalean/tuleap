@@ -29,7 +29,7 @@ class Docman_ApprovalReviewer
     public $comment;
     public $version;
 
-    function __construct()
+    public function __construct()
     {
         $this->reviewerId = null;
         $this->rank = null;
@@ -39,61 +39,61 @@ class Docman_ApprovalReviewer
         $this->version = null;
     }
 
-    function setId($v)
+    public function setId($v)
     {
         $this->reviewerId = $v;
     }
-    function getId()
+    public function getId()
     {
         return $this->reviewerId;
     }
 
-    function setRank($v)
+    public function setRank($v)
     {
         $this->rank = $v;
     }
-    function getRank()
+    public function getRank()
     {
         return $this->rank;
     }
 
-    function setReviewDate($v)
+    public function setReviewDate($v)
     {
         $this->reviewDate = $v;
     }
-    function getReviewDate()
+    public function getReviewDate()
     {
         return $this->reviewDate;
     }
 
-    function setState($v)
+    public function setState($v)
     {
         $this->state = $v;
     }
-    function getState()
+    public function getState()
     {
         return $this->state;
     }
 
-    function setComment($v)
+    public function setComment($v)
     {
         $this->comment = $v;
     }
-    function getComment()
+    public function getComment()
     {
         return $this->comment;
     }
 
-    function setVersion($v)
+    public function setVersion($v)
     {
         $this->version = $v;
     }
-    function getVersion()
+    public function getVersion()
     {
         return $this->version;
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         if (isset($row['reviewer_id'])) {
             $this->reviewerId = $row['reviewer_id'];

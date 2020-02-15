@@ -38,17 +38,17 @@ define('TEXT2PNG_DEBUG', true);
 
 class WikiPlugin_text2png extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return "text2png";
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Convert text into a png image using GD.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -57,14 +57,14 @@ class WikiPlugin_text2png extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         global $LANG;
         return array('text' => "Hello WikiWorld!",
                      'l'    => $LANG );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         if (ImageTypes() & IMG_PNG) {
             // we have gd & png so go ahead.
@@ -80,7 +80,7 @@ class WikiPlugin_text2png extends WikiPlugin
         }
     }
 
-    function text2png($text, $l)
+    public function text2png($text, $l)
     {
 
         /**

@@ -29,7 +29,7 @@ class Tracker_SharedFormElementFactory
      */
     private $boundValuesFactory;
 
-    function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory)
+    public function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory)
     {
         $this->boundValuesFactory = $boundValuesFactory;
         $this->factory = $factory;

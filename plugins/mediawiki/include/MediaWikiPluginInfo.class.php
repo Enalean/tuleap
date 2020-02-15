@@ -23,7 +23,7 @@
 class MediaWikiPluginInfo extends PluginFileInfo
 {
 
-    function __construct(&$plugin)
+    public function __construct(&$plugin)
     {
         parent::__construct($plugin, 'mediawiki');
         $this->setPluginDescriptor(new MediaWikiPluginDescriptor());

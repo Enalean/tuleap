@@ -47,7 +47,7 @@ class Docman_MetadataValueFactory
     /**
      * Constructor
      */
-    function __construct($groupId)
+    public function __construct($groupId)
     {
         $this->groupId = $groupId;
     }
@@ -55,7 +55,7 @@ class Docman_MetadataValueFactory
     /**
      * Return Docman_MetadataValueDao reference.
      */
-    function getDao()
+    public function getDao()
     {
         static $_plugin_docman_metadata_value_dao_instance;
         if (!$_plugin_docman_metadata_value_dao_instance) {
@@ -68,7 +68,7 @@ class Docman_MetadataValueFactory
      * Create and set-up a MetadataValue object.
      * @deprecated use MetadataValueObjectFactory::createNewMetadataValue
      */
-    function newMetadataValue($itemId, $fieldId, $type, $value)
+    public function newMetadataValue($itemId, $fieldId, $type, $value)
     {
         return $this->getMetadataTypeObjectFactory()->createMetadataValueObjectWithCorrectValue((int)$itemId, (int)$fieldId, (int)$type, $value);
     }
@@ -77,7 +77,7 @@ class Docman_MetadataValueFactory
      * Insert new metadata value(s) in database.
      * @deprecated use MetadataValueCreator::storeMetadata
      */
-    function create(&$mdv)
+    public function create(&$mdv)
     {
         try {
             $store = new MetadataValueStore($this->getDao(), ReferenceManager::instance());
@@ -99,7 +99,7 @@ class Docman_MetadataValueFactory
      * Create new MetadataValue record.
      * @deprecated use MetadataValueCreator::createMetadataObject
      */
-    function createFromRow($id, $row)
+    public function createFromRow($id, $row)
     {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
 
@@ -131,7 +131,7 @@ class Docman_MetadataValueFactory
     /**
      * Update an existing MetadataValue record.
      */
-    function updateFromRow($id, $row)
+    public function updateFromRow($id, $row)
     {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         $updator   = $this->getMetadataUpdator();
@@ -166,14 +166,14 @@ class Docman_MetadataValueFactory
      * For each metadata in '$recurseArray', apply the metadata value of
      * '$srcItemId' item on items in '$itemIdArray'.
      */
-    function massUpdateFromRow($srcItemId, $recurseArray, $itemIdArray)
+    public function massUpdateFromRow($srcItemId, $recurseArray, $itemIdArray)
     {
         foreach ($recurseArray as $mdLabel) {
             $this->massUpdate($srcItemId, $mdLabel, $itemIdArray);
         }
     }
 
-    function massUpdate($srcItemId, $mdLabel, $itemIdArray)
+    public function massUpdate($srcItemId, $mdLabel, $itemIdArray)
     {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         if ($mdFactory->isRealMetadata($mdLabel)) {
@@ -191,7 +191,7 @@ class Docman_MetadataValueFactory
      * If an item is only assigned to the deleted value, it is automaticaly
      * defaulted to '100'
      */
-    function deleteLove($mdId, $loveId)
+    public function deleteLove($mdId, $loveId)
     {
         $dao = $this->getDao();
         $deleted = $dao->deleteLove($loveId);
@@ -204,7 +204,7 @@ class Docman_MetadataValueFactory
     /**
      * Ensure there is no item w/o a value for '$mdId' metadata
      */
-    function updateOrphansLoveItem($mdId)
+    public function updateOrphansLoveItem($mdId)
     {
         $dao = $this->getDao();
         return $dao->updateOrphansLoveItem($mdId);
@@ -213,7 +213,7 @@ class Docman_MetadataValueFactory
     /**
      * Return true if a value already exist for a given (itme, field).
      */
-    function exist($itemId, $fieldId)
+    public function exist($itemId, $fieldId)
     {
         $exist = false;
         $dao   = $this->getDao();

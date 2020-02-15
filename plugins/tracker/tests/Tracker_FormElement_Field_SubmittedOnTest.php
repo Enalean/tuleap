@@ -39,14 +39,14 @@ Mock::generate('Tracker_Artifact_ChangesetValue_Date');
 class Tracker_FormElement_Field_SubmittedOnTest extends TuleapTestCase
 {
 
-    function testhasChanges()
+    public function testhasChanges()
     {
         $f = new Tracker_FormElement_Field_SubmittedOnTestVersion();
         $v = new MockTracker_Artifact_ChangesetValue_Date();
         $this->assertFalse($f->hasChanges(mock('Tracker_Artifact'), $v, null));
     }
 
-    function testisValid()
+    public function testisValid()
     {
         $f = new Tracker_FormElement_Field_SubmittedOnTestVersion();
         $a = new MockTracker_Artifact();

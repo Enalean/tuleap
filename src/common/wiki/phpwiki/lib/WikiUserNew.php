@@ -365,7 +365,7 @@ class _WikiUser
      public $_HomePagehandle = false;
 
     // constructor
-    function __construct($UserName = '', $prefs = false)
+    public function __construct($UserName = '', $prefs = false)
     {
 
         $this->_userid = $UserName;
@@ -382,21 +382,21 @@ class _WikiUser
         }
     }
 
-    function UserName()
+    public function UserName()
     {
         if (!empty($this->_userid)) {
             return $this->_userid;
         }
     }
 
-    function getPreferences()
+    public function getPreferences()
     {
         trigger_error("DEBUG: Note: undefined _WikiUser class trying to load prefs." . " "
                       . "New subclasses of _WikiUser must override this function.");
         return false;
     }
 
-    function setPreferences($prefs, $id_only)
+    public function setPreferences($prefs, $id_only)
     {
         trigger_error("DEBUG: Note: undefined _WikiUser class trying to save prefs."
                       . " "
@@ -404,12 +404,12 @@ class _WikiUser
         return false;
     }
 
-    function userExists()
+    public function userExists()
     {
         return $this->hasHomePage();
     }
 
-    function checkPass($submitted_password)
+    public function checkPass($submitted_password)
     {
         // By definition, an undefined user class cannot sign in.
         trigger_error("DEBUG: Warning: undefined _WikiUser class trying to sign in."
@@ -419,7 +419,7 @@ class _WikiUser
     }
 
     // returns page_handle to user's home page or false if none
-    function hasHomePage()
+    public function hasHomePage()
     {
         if ($this->_userid) {
             if (!empty($this->_HomePagehandle) and is_object($this->_HomePagehandle)) {
@@ -437,7 +437,7 @@ class _WikiUser
     }
 
     // innocent helper: case-insensitive position in _auth_methods
-    function array_position($string, $array)
+    public function array_position($string, $array)
     {
         $string = strtolower($string);
         for ($found = 0; $found < count($array); $found++) {
@@ -448,7 +448,7 @@ class _WikiUser
         return false;
     }
 
-    function nextAuthMethodIndex()
+    public function nextAuthMethodIndex()
     {
         if (empty($this->_auth_methods)) {
             $this->_auth_methods = $GLOBALS['USER_AUTH_ORDER'];
@@ -472,7 +472,7 @@ class _WikiUser
         return $this->_current_index;
     }
 
-    function AuthMethod($index = false)
+    public function AuthMethod($index = false)
     {
         return $this->_auth_methods[ $index === false
                                      ? count($this->_auth_methods)-1
@@ -480,7 +480,7 @@ class _WikiUser
     }
 
     // upgrade the user object
-    function nextClass()
+    public function nextClass()
     {
         $method = $this->AuthMethod($this->nextAuthMethodIndex());
         include_once("lib/WikiUser/$method.php");
@@ -488,7 +488,7 @@ class _WikiUser
     }
 
     //Fixme: for _HttpAuthPassUser
-    function PrintLoginForm(
+    public function PrintLoginForm(
         &$request,
         $args,
         $fail_message = false,
@@ -532,21 +532,21 @@ class _WikiUser
 
     /** Signed in but not password checked or empty password.
      */
-    function isSignedIn()
+    public function isSignedIn()
     {
         return (isa($this, '_BogoUser') or isa($this, '_PassUser'));
     }
 
     /** This is password checked for sure.
      */
-    function isAuthenticated()
+    public function isAuthenticated()
     {
         //return isa($this,'_PassUser');
         //return isa($this,'_BogoUser') || isa($this,'_PassUser');
         return $this->_level >= WIKIAUTH_BOGO;
     }
 
-    function isAdmin()
+    public function isAdmin()
     {
         static $group;
         if ($this->_level == WIKIAUTH_ADMIN) {
@@ -567,7 +567,7 @@ class _WikiUser
 
     /** Name or IP for a signed user. UserName could come from a cookie e.g.
      */
-    function getId()
+    public function getId()
     {
         return ( $this->UserName()
                  ? $this->UserName()
@@ -576,14 +576,14 @@ class _WikiUser
 
     /** Name for an authenticated user. No IP here.
      */
-    function getAuthenticatedId()
+    public function getAuthenticatedId()
     {
         return ( $this->isAuthenticated()
                  ? $this->_userid
                  : ''); //$GLOBALS['request']->get('REMOTE_ADDR') );
     }
 
-    function hasAuthority($require_level)
+    public function hasAuthority($require_level)
     {
         return $this->_level >= $require_level;
     }
@@ -592,7 +592,7 @@ class _WikiUser
        Any word char (A-Za-z0-9_), ".", "@" and "-"
        The backends may loosen this.
     */
-    function isValidName($userid = false)
+    public function isValidName($userid = false)
     {
         if (!$userid) {
             $userid = $this->_userid;
@@ -604,7 +604,7 @@ class _WikiUser
      * Called on an auth_args POST request, such as login, logout or signin.
      * TODO: Check BogoLogin users with empty password. (self-signed users)
      */
-    function AuthCheck($postargs)
+    public function AuthCheck($postargs)
     {
         // Normalize args, and extract.
         $keys = array('userid', 'passwd', 'require_level', 'login', 'logout',
@@ -681,7 +681,7 @@ class _AnonUser extends _WikiUser
 
     /** Anon only gets to load and save prefs in a cookie, that's it.
      */
-    function getPreferences()
+    public function getPreferences()
     {
 
         if (empty($this->_prefs)) {
@@ -700,7 +700,7 @@ class _AnonUser extends _WikiUser
      * user. In that case stricter error checking will be needed
      * when loading the cookie.
      */
-    function setPreferences($prefs, $id_only = false)
+    public function setPreferences($prefs, $id_only = false)
     {
         if (!is_object($prefs)) {
             if (is_object($this->_prefs)) {
@@ -732,12 +732,12 @@ class _AnonUser extends _WikiUser
         return $updated;
     }
 
-    function userExists()
+    public function userExists()
     {
         return true;
     }
 
-    function checkPass($submitted_password)
+    public function checkPass($submitted_password)
     {
         return false;
         // this might happen on a old-style signin button.
@@ -759,12 +759,12 @@ class _ForbiddenUser extends _AnonUser
 {
     public $_level = WIKIAUTH_FORBIDDEN;
 
-    function checkPass($submitted_password)
+    public function checkPass($submitted_password)
     {
         return WIKIAUTH_FORBIDDEN;
     }
 
-    function userExists()
+    public function userExists()
     {
         if ($this->_HomePagehandle) {
             return true;
@@ -783,7 +783,7 @@ class _ForbiddenUser extends _AnonUser
  */
 class _BogoUser extends _AnonUser
 {
-    function userExists()
+    public function userExists()
     {
         if (isWikiWord($this->_userid)) {
             $this->_level = WIKIAUTH_BOGO;
@@ -794,7 +794,7 @@ class _BogoUser extends _AnonUser
         }
     }
 
-    function checkPass($submitted_password)
+    public function checkPass($submitted_password)
     {
         // By definition, BogoUser has an empty password.
         $this->userExists();
@@ -824,7 +824,7 @@ class _PassUser extends _AnonUser
     public $_current_index;
 
     // check and prepare the auth and pref methods only once
-    function __construct($UserName = '', $prefs = false)
+    public function __construct($UserName = '', $prefs = false)
     {
         //global $DBAuthParams, $DBParams;
         if ($UserName) {
@@ -924,7 +924,7 @@ class _PassUser extends _AnonUser
         }
     }
 
-    function getAuthDbh()
+    public function getAuthDbh()
     {
         global $request; //, $DBParams, $DBAuthParams;
 
@@ -962,7 +962,7 @@ class _PassUser extends _AnonUser
         return $this->_auth_dbi;
     }
 
-    function _normalize_stmt_var($var, $oldstyle = false)
+    public function _normalize_stmt_var($var, $oldstyle = false)
     {
         static $valid_variables = array('userid','password','pref_blob','groupname');
         // old-style: "'$userid'"
@@ -976,7 +976,7 @@ class _PassUser extends _AnonUser
     }
 
     // TODO: use it again for the auth and member tables
-    function prepare($stmt, $variables, $oldstyle = false)
+    public function prepare($stmt, $variables, $oldstyle = false)
     {
         global $request;
         $dbi = $request->getDbh();
@@ -1058,7 +1058,7 @@ class _PassUser extends _AnonUser
         return $new_stmt;
     }
 
-    function getPreferences()
+    public function getPreferences()
     {
         if (!empty($this->_prefs->_method)) {
             if ($this->_prefs->_method == 'ADODB') {
@@ -1096,7 +1096,7 @@ class _PassUser extends _AnonUser
         return $this->_prefs;
     }
 
-    function setPreferences($prefs, $id_only = false)
+    public function setPreferences($prefs, $id_only = false)
     {
         if (!empty($this->_prefs->_method)) {
             if ($this->_prefs->_method == 'ADODB') {
@@ -1132,14 +1132,14 @@ class _PassUser extends _AnonUser
         return $num;
     }
 
-    function mayChangePass()
+    public function mayChangePass()
     {
         return true;
     }
 
     //The default method is getting the password from prefs.
     // child methods obtain $stored_password from external auth.
-    function userExists()
+    public function userExists()
     {
         //if ($this->_HomePagehandle) return true;
         $class = $this->nextClass();
@@ -1160,7 +1160,7 @@ class _PassUser extends _AnonUser
 
     //The default method is getting the password from prefs.
     // child methods obtain $stored_password from external auth.
-    function checkPass($submitted_password)
+    public function checkPass($submitted_password)
     {
         $stored_password = $this->_prefs->get('passwd');
         if ($this->_checkPass($submitted_password, $stored_password)) {
@@ -1176,7 +1176,7 @@ class _PassUser extends _AnonUser
     }
 
 
-    function _checkPassLength($submitted_password)
+    public function _checkPassLength($submitted_password)
     {
         if (strlen($submitted_password) < PASSWORD_LENGTH_MINIMUM) {
             trigger_error(_("The length of the password is shorter than the system policy allows."));
@@ -1200,17 +1200,17 @@ class _PassUser extends _AnonUser
      *
      * TODO: remove crypt() function check from config.php:396 ??
      */
-    function _checkPass($submitted_password, $stored_password)
+    public function _checkPass($submitted_password, $stored_password)
     {
         return false;
     }
 
-    function changePass($submitted_password)
+    public function changePass($submitted_password)
     {
         return false;
     }
 
-    function _tryNextPass($submitted_password)
+    public function _tryNextPass($submitted_password)
     {
         if (DEBUG & _DEBUG_LOGIN) {
             $class = strtolower(static::class);
@@ -1236,7 +1236,7 @@ class _PassUser extends _AnonUser
         return $this->_level;
     }
 
-    function _tryNextUser()
+    public function _tryNextUser()
     {
         if (DEBUG & _DEBUG_LOGIN) {
             $class = strtolower(static::class);
@@ -1278,11 +1278,11 @@ class _PassUser extends _AnonUser
  */
 class _AdminUser extends _PassUser
 {
-    function mayChangePass()
+    public function mayChangePass()
     {
         return false;
     }
-    function checkPass($submitted_password)
+    public function checkPass($submitted_password)
     {
         if ($this->_userid == ADMIN_USER) {
             $stored_password = ADMIN_PASSWD;
@@ -1306,7 +1306,7 @@ class _AdminUser extends _PassUser
         }
     }
 
-    function storePass($submitted_password)
+    public function storePass($submitted_password)
     {
         if ($this->_userid == ADMIN_USER) {
             return false;
@@ -1328,17 +1328,17 @@ class _UserPreference
 {
     public $default_value;
 
-    function __construct($default_value)
+    public function __construct($default_value)
     {
         $this->default_value = $default_value;
     }
 
-    function sanify($value)
+    public function sanify($value)
     {
         return (string)$value;
     }
 
-    function get($name)
+    public function get($name)
     {
         if (isset($this->{$name})) {
             return $this->{$name};
@@ -1347,7 +1347,7 @@ class _UserPreference
         }
     }
 
-    function getraw($name)
+    public function getraw($name)
     {
         if (!empty($this->{$name})) {
             return $this->{$name};
@@ -1355,7 +1355,7 @@ class _UserPreference
     }
 
     // stores the value as $this->$name, and not as $this->value (clever?)
-    function set($name, $value)
+    public function set($name, $value)
     {
         $return = 0;
         $value = $this->sanify($value);
@@ -1372,7 +1372,7 @@ class _UserPreference
     }
 
     // default: no side-effects
-    function update($value)
+    public function update($value)
     {
         ;
     }
@@ -1380,7 +1380,7 @@ class _UserPreference
 
 class _UserPreference_numeric extends _UserPreference
 {
-    function __construct(
+    public function __construct(
         $default,
         $minval = false,
         $maxval = false
@@ -1390,7 +1390,7 @@ class _UserPreference_numeric extends _UserPreference
         $this->_maxval = (double)$maxval;
     }
 
-    function sanify($value)
+    public function sanify($value)
     {
         $value = (double)$value;
         if ($this->_minval !== false && $value < $this->_minval) {
@@ -1405,12 +1405,12 @@ class _UserPreference_numeric extends _UserPreference
 
 class _UserPreference_int extends _UserPreference_numeric
 {
-    function __construct($default, $minval = false, $maxval = false)
+    public function __construct($default, $minval = false, $maxval = false)
     {
         parent::__construct((int)$default, (int)$minval, (int)$maxval);
     }
 
-    function sanify($value)
+    public function sanify($value)
     {
         return (int)parent::sanify((int)$value);
     }
@@ -1418,12 +1418,12 @@ class _UserPreference_int extends _UserPreference_numeric
 
 class _UserPreference_bool extends _UserPreference
 {
-    function __construct($default = false)
+    public function __construct($default = false)
     {
         parent::__construct((bool)$default);
     }
 
-    function sanify($value)
+    public function sanify($value)
     {
         if (is_array($value)) {
             /* This allows for constructs like:
@@ -1448,13 +1448,13 @@ class _UserPreference_bool extends _UserPreference
 
 class _UserPreference_language extends _UserPreference
 {
-    function __construct($default = DEFAULT_LANGUAGE)
+    public function __construct($default = DEFAULT_LANGUAGE)
     {
         parent::__construct($default);
     }
 
     // FIXME: check for valid locale
-    function sanify($value)
+    public function sanify($value)
     {
         // Revert to DEFAULT_LANGUAGE if user does not specify
         // language in UserPreferences or chooses <system language>.
@@ -1465,7 +1465,7 @@ class _UserPreference_language extends _UserPreference
         return (string) $value;
     }
 
-    function update($newvalue)
+    public function update($newvalue)
     {
         if (! $this->_init) {
             // invalidate etag to force fresh output
@@ -1477,12 +1477,12 @@ class _UserPreference_language extends _UserPreference
 
 class _UserPreference_theme extends _UserPreference
 {
-    function __construct($default = THEME)
+    public function __construct($default = THEME)
     {
         parent::__construct($default);
     }
 
-    function sanify($value)
+    public function sanify($value)
     {
         if (!empty($value) and FindFile($this->_themefile($value))) {
             return $value;
@@ -1490,7 +1490,7 @@ class _UserPreference_theme extends _UserPreference
         return $this->default_value;
     }
 
-    function update($newvalue)
+    public function update($newvalue)
     {
         global $WikiTheme;
         // invalidate etag to force fresh output
@@ -1505,7 +1505,7 @@ class _UserPreference_theme extends _UserPreference
         }
     }
 
-    function _themefile($theme)
+    public function _themefile($theme)
     {
         return "themes/$theme/themeinfo.php";
     }
@@ -1513,7 +1513,7 @@ class _UserPreference_theme extends _UserPreference
 
 class _UserPreference_notify extends _UserPreference
 {
-    function sanify($value)
+    public function sanify($value)
     {
         if (!empty($value)) {
             return $value;
@@ -1529,7 +1529,7 @@ class _UserPreference_notify extends _UserPreference
      *                                     ...),
      *                ...);
      */
-    function update($value)
+    public function update($value)
     {
         if (!empty($this->_init)) {
             return;
@@ -1589,7 +1589,7 @@ class _UserPreference_notify extends _UserPreference
     /** split the user-given comma or whitespace delimited pagenames
      *  to array
      */
-    function _page_split($value)
+    public function _page_split($value)
     {
         return preg_split('/[\s,]+/', $value, -1, PREG_SPLIT_NO_EMPTY);
     }
@@ -1597,7 +1597,7 @@ class _UserPreference_notify extends _UserPreference
 
 class _UserPreference_email extends _UserPreference
 {
-    function sanify($value)
+    public function sanify($value)
     {
         // check for valid email address
         if ($this->get('email') == $value and $this->getraw('emailVerified')) {
@@ -1620,7 +1620,7 @@ class _UserPreference_email extends _UserPreference
      * Send a verification mail or for now just a notification email.
      * For true verification (value = 2), we'd need a mailserver hook.
      */
-    function update($value)
+    public function update($value)
     {
         if (!empty($this->_init)) {
             return;
@@ -1758,7 +1758,7 @@ function ValidateMail($email, $noconnect = false)
  */
 class UserPreferences
 {
-    function __construct($saved_prefs = false)
+    public function __construct($saved_prefs = false)
     {
         // userid stored too, to ensure the prefs are being loaded for
         // the correct (currently signing in) userid if stored in a
@@ -1816,7 +1816,7 @@ class UserPreferences
         }
     }
 
-    function _getPref($name)
+    public function _getPref($name)
     {
         if ($name == 'emailVerified') {
             $name = 'email';
@@ -1835,7 +1835,7 @@ class UserPreferences
     }
 
     // get the value or default_value of the subobject
-    function get($name)
+    public function get($name)
     {
         if ($_pref = $this->_getPref($name)) {
             if ($name == 'emailVerified') {
@@ -1849,7 +1849,7 @@ class UserPreferences
     }
 
     // check and set the new value in the subobject
-    function set($name, $value)
+    public function set($name, $value)
     {
         $pref = $this->_getPref($name);
         if ($pref === false) {
@@ -1884,7 +1884,7 @@ class UserPreferences
     /**
      * use init to avoid update on set
      */
-    function updatePrefs($prefs, $init = false)
+    public function updatePrefs($prefs, $init = false)
     {
         $count = 0;
         if ($init) {
@@ -1964,7 +1964,7 @@ class UserPreferences
 
     // For now convert just array of objects => array of values
     // Todo: the specialized subobjects must override this.
-    function store()
+    public function store()
     {
         $prefs = [];
         foreach ($this->_prefs as $name => $object) {
@@ -1977,7 +1977,7 @@ class UserPreferences
 
     // packed string or array of values => array of values
     // Todo: the specialized subobjects must override this.
-    function retrieve($packed)
+    public function retrieve($packed)
     {
         if (is_string($packed) and (substr($packed, 0, 2) == "a:")) {
             $packed = unserialize($packed);
@@ -2021,7 +2021,7 @@ class UserPreferences
     /**
      * Check if the given prefs object is different from the current prefs object
      */
-    function isChanged($other)
+    public function isChanged($other)
     {
         foreach ($this->_prefs as $type => $obj) {
             if ($obj->get($type) !== $other->get($type)) {
@@ -2031,7 +2031,7 @@ class UserPreferences
         return false;
     }
 
-    function defaultPreferences()
+    public function defaultPreferences()
     {
         $prefs = array();
         foreach ($this->_prefs as $key => $obj) {
@@ -2041,17 +2041,17 @@ class UserPreferences
     }
 
     // array of objects
-    function getAll()
+    public function getAll()
     {
         return $this->_prefs;
     }
 
-    function pack($nonpacked)
+    public function pack($nonpacked)
     {
         return serialize($nonpacked);
     }
 
-    function unpack($packed)
+    public function unpack($packed)
     {
         if (!$packed) {
             return false;
@@ -2069,7 +2069,7 @@ class UserPreferences
         return false;
     }
 
-    function hash()
+    public function hash()
     {
         return wikihash($this->_prefs);
     }

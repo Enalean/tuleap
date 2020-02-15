@@ -47,17 +47,17 @@ class WikiPlugin_SiteMap extends WikiPlugin
 {
     public $_pagename;
 
-    function getName()
+    public function getName()
     {
         return _("SiteMap");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Recursively get BackLinks or links");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -66,7 +66,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('exclude'        => '',
                      'include_self'   => 0,
@@ -88,7 +88,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
 
     // Fixme: overcome limitation if two SiteMap plugins are in the same page!
     // static $VisitedPages still holds it
-    function recursivelyGetBackLinks(
+    public function recursivelyGetBackLinks(
         $startpage,
         $pagearr,
         $level = '*',
@@ -122,7 +122,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         return $pagearr;
     }
 
-    function recursivelyGetLinks(
+    public function recursivelyGetLinks(
         $startpage,
         $pagearr,
         $level = '*',
@@ -162,7 +162,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
     }
 
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         include_once('lib/BlockParser.php');
 

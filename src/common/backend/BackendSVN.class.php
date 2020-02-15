@@ -69,7 +69,7 @@ class BackendSVN extends Backend
      *
      * @return ServiceDao
      */
-    function _getServiceDao()
+    public function _getServiceDao()
     {
         return new ServiceDao(CodendiDataAccess::instance());
     }
@@ -220,7 +220,7 @@ class BackendSVN extends Backend
      * Check if repository of given project exists
      * @return bool true is repository already exists, false otherwise
      */
-    function repositoryExists(Project $project)
+    public function repositoryExists(Project $project)
     {
         return is_dir($project->getSVNRootPath());
     }
@@ -573,7 +573,7 @@ class BackendSVN extends Backend
      * @param Project $project
      * @return String
      */
-    function getSVNAccessGroups($project)
+    public function getSVNAccessGroups($project)
     {
         $conf = "[groups]\n";
         $conf .= $this->getSVNAccessProjectMembers($project);
@@ -591,7 +591,7 @@ class BackendSVN extends Backend
      *
      * @return String
      */
-    function getSVNAccessProjectMembers($project)
+    public function getSVNAccessProjectMembers($project)
     {
         $list  = "";
         $first = true;
@@ -611,7 +611,7 @@ class BackendSVN extends Backend
      *
      * @return String
      */
-    function getSVNAccessUserGroupMembers(Project $project)
+    public function getSVNAccessUserGroupMembers(Project $project)
     {
         $conf       = "";
         $ugroup_dao = $this->getUGroupDao();
@@ -655,7 +655,7 @@ class BackendSVN extends Backend
      *
      * @return String
      */
-    function getSVNAccessRootPathDef($project)
+    public function getSVNAccessRootPathDef($project)
     {
         $conf = "[/]\n";
         if (!$project->isPublic() || $project->isSVNPrivate()) {
@@ -890,7 +890,7 @@ class BackendSVN extends Backend
      *
      * @return false if repository or file  or link already exists, true otherwise
      */
-    function isNameAvailable($name)
+    public function isNameAvailable($name)
     {
         $path = $GLOBALS['svn_prefix']."/".$name;
         return (!$this->fileExists($path));

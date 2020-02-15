@@ -85,7 +85,7 @@ class PluginFactory // phpcs:ignore
         self::$instance = null;
     }
 
-    function getPluginById($id)
+    public function getPluginById($id)
     {
         if (!isset($this->retrieved_plugins['by_id'][$id])) {
             $dar = $this->plugin_dao->searchById($id);
@@ -98,7 +98,7 @@ class PluginFactory // phpcs:ignore
         return $this->retrieved_plugins['by_id'][$id];
     }
 
-    function getPluginByName($name)
+    public function getPluginByName($name)
     {
         if (!isset($this->retrieved_plugins['by_name'][$name])) {
             $dar = $this->plugin_dao->searchByName($name);
@@ -115,7 +115,7 @@ class PluginFactory // phpcs:ignore
      * create a plugin in the db
      * @return the new plugin or false if there is already the plugin (same name)
      */
-    function createPlugin($name)
+    public function createPlugin($name)
     {
         $p = false;
         $dar = $this->plugin_dao->searchByName($name);
@@ -131,7 +131,7 @@ class PluginFactory // phpcs:ignore
         return $p;
     }
 
-    function _getInstancePlugin($id, $row)
+    public function _getInstancePlugin($id, $row)
     {
         if (!isset($this->retrieved_plugins['by_id'][$id])) {
             $this->retrieved_plugins['by_id'][$id] = false;
@@ -248,12 +248,12 @@ class PluginFactory // phpcs:ignore
         return false;
     }
 
-    function _getOfficialPluginsRoot()
+    public function _getOfficialPluginsRoot()
     {
         return ForgeConfig::get('sys_pluginsroot', null);
     }
 
-    function _getCustomPluginsRoot()
+    public function _getCustomPluginsRoot()
     {
         return ForgeConfig::get('sys_custompluginsroot', null);
     }
@@ -261,7 +261,7 @@ class PluginFactory // phpcs:ignore
     /**
      * @return array of enabled or disabled plugins depends on parameters
      */
-    function _getAvailableOrUnavailablePlugins($map, $criteria)
+    public function _getAvailableOrUnavailablePlugins($map, $criteria)
     {
          $dar = $this->plugin_dao->searchByAvailable($criteria);
         while ($row = $dar->getRow()) {
@@ -272,14 +272,14 @@ class PluginFactory // phpcs:ignore
     /**
      * @return array of unavailable plugins
      */
-    function getUnavailablePlugins()
+    public function getUnavailablePlugins()
     {
          return $this->_getAvailableOrUnavailablePlugins('unavailable', 0);
     }
     /**
      * @return Plugin[]
      */
-    function getAvailablePlugins()
+    public function getAvailablePlugins()
     {
          return $this->_getAvailableOrUnavailablePlugins('available', 1);
     }
@@ -292,7 +292,7 @@ class PluginFactory // phpcs:ignore
     /**
      * @return array of all plugins
      */
-    function getAllPlugins()
+    public function getAllPlugins()
     {
         $all_plugins = array();
         $dar = $this->plugin_dao->searchAll();
@@ -306,7 +306,7 @@ class PluginFactory // phpcs:ignore
     /**
      * @return true if the plugin is enabled
      */
-    function isPluginAvailable($plugin)
+    public function isPluginAvailable($plugin)
     {
         return isset($this->retrieved_plugins['available'][$plugin->getId()]);
     }
@@ -314,7 +314,7 @@ class PluginFactory // phpcs:ignore
     /**
      * available plugin
      */
-    function availablePlugin($plugin)
+    public function availablePlugin($plugin)
     {
         if (!$this->isPluginAvailable($plugin)) {
             $this->plugin_dao->updateAvailableByPluginId('1', $plugin->getId());
@@ -325,7 +325,7 @@ class PluginFactory // phpcs:ignore
     /**
      * unavailable plugin
      */
-    function unavailablePlugin($plugin)
+    public function unavailablePlugin($plugin)
     {
         if ($this->isPluginAvailable($plugin)) {
             $this->plugin_dao->updateAvailableByPluginId('0', $plugin->getId());
@@ -362,13 +362,13 @@ class PluginFactory // phpcs:ignore
         return $col;
     }
 
-    function isPluginInstalled($name)
+    public function isPluginInstalled($name)
     {
         $dar = $this->plugin_dao->searchByName($name);
         return ($dar->rowCount() > 0);
     }
 
-    function removePlugin($plugin)
+    public function removePlugin($plugin)
     {
         $id =  $plugin->getId();
         unset($this->retrieved_plugins['by_id'][$id]);
@@ -379,7 +379,7 @@ class PluginFactory // phpcs:ignore
         return $this->plugin_dao->removeById($plugin->getId());
     }
 
-    function getNameForPlugin($plugin)
+    public function getNameForPlugin($plugin)
     {
         $name = '';
         $id = $plugin->getId();
@@ -395,7 +395,7 @@ class PluginFactory // phpcs:ignore
         return $name;
     }
 
-    function pluginIsCustom($plugin)
+    public function pluginIsCustom($plugin)
     {
         return isset($this->custom_plugins[$plugin->getId()]);
     }
@@ -430,7 +430,7 @@ class PluginFactory // phpcs:ignore
         );
     }
 
-    function restrictProjectPluginUse($plugin, $usage)
+    public function restrictProjectPluginUse($plugin, $usage)
     {
         return $this->plugin_dao->restrictProjectPluginUse($plugin->getId(), $usage);
     }
@@ -440,7 +440,7 @@ class PluginFactory // phpcs:ignore
         return $this->plugin_restrictor->revokeAllProjectsFromPlugin($plugin);
     }
 
-    function isProjectPluginRestricted($plugin)
+    public function isProjectPluginRestricted($plugin)
     {
         $restricted = false;
         $dar =$this->plugin_dao->searchProjectPluginRestrictionStatus($plugin->getId());

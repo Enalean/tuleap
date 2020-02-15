@@ -22,7 +22,7 @@
 class Docman_View_ParentsTree /* implements Visitor*/
 {
     public $docman;
-    function __construct(&$docman)
+    public function __construct(&$docman)
     {
         $this->docman = $docman;
     }
@@ -31,7 +31,7 @@ class Docman_View_ParentsTree /* implements Visitor*/
     //docman_icons
     //current
     //hierarchy
-    function fetch($params)
+    public function fetch($params)
     {
         $html  = '';
         $html .= '<div id="docman_new_item_location_current_folder"></div>';
@@ -54,7 +54,7 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $html .= '</div>';
         return $html;
     }
-    function fetchFolder($folder, $params)
+    public function fetchFolder($folder, $params)
     {
         $hp = Codendi_HTMLPurifier::instance();
         $selected = '';
@@ -88,13 +88,13 @@ class Docman_View_ParentsTree /* implements Visitor*/
         return $h.'</ul></li>';
     }
 
-    function _itemCanBeFetched(&$item, $params)
+    public function _itemCanBeFetched(&$item, $params)
     {
         $ok = !isset($params['excludes']) || !in_array($item->getId(), $params['excludes']);
         return $ok;
     }
 
-    function visitFolder(&$item, $params = array())
+    public function visitFolder(&$item, $params = array())
     {
         $t = '';
         if ($this->docman->userCanRead($item->getId()) && $this->_itemCanBeFetched($item, $params)) {
@@ -121,28 +121,28 @@ class Docman_View_ParentsTree /* implements Visitor*/
         }
         return $t;
     }
-    function visitDocument(&$item, $params = array())
+    public function visitDocument(&$item, $params = array())
     {
         return false;
     }
-    function visitWiki(&$item, $params = array())
+    public function visitWiki(&$item, $params = array())
     {
         return $this->visitDocument($item, $params);
     }
-    function visitLink(&$item, $params = array())
+    public function visitLink(&$item, $params = array())
     {
         return $this->visitDocument($item, $params);
     }
-    function visitFile(&$item, $params = array())
+    public function visitFile(&$item, $params = array())
     {
         return $this->visitDocument($item, $params);
     }
-    function visitEmbeddedFile(&$item, $params = array())
+    public function visitEmbeddedFile(&$item, $params = array())
     {
         return $this->visitDocument($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array())
+    public function visitEmpty(&$item, $params = array())
     {
         return $this->visitDocument($item, $params);
     }

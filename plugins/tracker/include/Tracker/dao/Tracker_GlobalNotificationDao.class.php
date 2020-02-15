@@ -25,7 +25,7 @@
  */
 class Tracker_GlobalNotificationDao extends DataAccessObject
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_global_notification';
@@ -35,7 +35,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function searchAll()
+    public function searchAll()
     {
         $sql = "SELECT * FROM $this->table_name";
         return $this->retrieve($sql);
@@ -45,7 +45,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
     * Searches Tracker_GlobalNotification by Id
     * @return DataAccessResult
     */
-    function searchById($id)
+    public function searchById($id)
     {
         $sql = sprintf(
             "SELECT tracker_id, addresses, all_updates, check_permissions FROM $this->table_name WHERE id = %s",
@@ -58,7 +58,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
     * Searches Tracker_GlobalNotification by TrackerId
     * @return DataAccessResult
     */
-    function searchByTrackerId($trackerId)
+    public function searchByTrackerId($trackerId)
     {
         $sql = sprintf(
             "SELECT id, addresses, all_updates, check_permissions FROM $this->table_name WHERE tracker_id = %s ORDER BY id",
@@ -71,7 +71,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
     * Searches Tracker_GlobalNotification by Addresses
     * @return DataAccessResult
     */
-    function searchByAddresses($addresses)
+    public function searchByAddresses($addresses)
     {
         $sql = sprintf(
             "SELECT id, tracker_id, all_updates, check_permissions FROM $this->table_name WHERE addresses = %s",
@@ -84,7 +84,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
     * Searches Tracker_GlobalNotification by AllUpdates
     * @return DataAccessResult
     */
-    function searchByAllUpdates($allUpdates)
+    public function searchByAllUpdates($allUpdates)
     {
         $sql = sprintf(
             "SELECT id, tracker_id, addresses, check_permissions FROM $this->table_name WHERE all_updates = %s",
@@ -97,7 +97,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
     * Searches Tracker_GlobalNotification by CheckPermissions
     * @return DataAccessResult
     */
-    function searchByCheckPermissions($checkPermissions)
+    public function searchByCheckPermissions($checkPermissions)
     {
         $sql = sprintf(
             "SELECT id, tracker_id, addresses, all_updates FROM $this->table_name WHERE check_permissions = %s",
@@ -128,7 +128,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
     * create a row in the table tracker_global_notification
     * @return true or id(auto_increment) if there is no error
     */
-    function create($tracker_id, $addresses, $all_updates, $check_permissions)
+    public function create($tracker_id, $addresses, $all_updates, $check_permissions)
     {
         $sql = sprintf(
             "INSERT INTO $this->table_name (tracker_id, addresses, all_updates, check_permissions) VALUES (%s, %s, %s, %s)",
@@ -140,7 +140,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
-    function modify($id, $values)
+    public function modify($id, $values)
     {
         $updates = array();
         foreach ($values as $field => $value) {
@@ -150,7 +150,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function delete($id, $tracker_id)
+    public function delete($id, $tracker_id)
     {
         $sql = sprintf(
             "DELETE FROM $this->table_name WHERE id = %s AND tracker_id = %s",
@@ -160,7 +160,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function duplicate($from_tracker_id, $to_tracker_id)
+    public function duplicate($from_tracker_id, $to_tracker_id)
     {
         $from_tracker_id = $this->da->escapeInt($from_tracker_id);
         $to_tracker_id   = $this->da->escapeInt($to_tracker_id);

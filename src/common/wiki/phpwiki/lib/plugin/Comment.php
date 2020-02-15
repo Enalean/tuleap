@@ -18,17 +18,17 @@ class WikiPlugin_Comment extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
 
-    function getName()
+    public function getName()
     {
         return _("Comment");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Embed hidden comments in WikiPages.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -38,12 +38,12 @@ class WikiPlugin_Comment extends WikiPlugin
     }
 
     // No arguments here.
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array();
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
     }
 

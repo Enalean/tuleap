@@ -34,12 +34,12 @@ class WikiPlugin_UserPreferences extends WikiPlugin
 {
     public $bool_args;
 
-    function getName()
+    public function getName()
     {
         return _("UserPreferences");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -48,7 +48,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         global $request;
         $pagename = $request->getArg('pagename');
@@ -68,7 +68,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
         return $prefs;
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         $user = $request->_user;

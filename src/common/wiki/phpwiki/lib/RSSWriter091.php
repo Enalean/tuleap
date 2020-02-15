@@ -26,7 +26,7 @@ rcs_id('$Id: RSSWriter091.php,v 1.10 2005/08/06 13:06:22 rurban Exp $');
 include_once("lib/RssWriter.php");
 class RSSWriter091 extends RssWriter
 {
-    function __construct()
+    public function __construct()
     {
         $this->XmlElement('rss', array('version' => "0.91"));
         $this->_items = array();
@@ -34,7 +34,7 @@ class RSSWriter091 extends RssWriter
   /**
    * Finish construction of RSS.
    */
-    function finish()
+    public function finish()
     {
         if (isset($this->_finished)) {
             return;
@@ -56,7 +56,7 @@ class RSSWriter091 extends RssWriter
     /**
      * Create a new RDF <em>typedNode</em>.
      */
-    function node($type, $properties, $uri = false)
+    public function node($type, $properties, $uri = false)
     {
         return new XmlElement(
             $type,
@@ -68,7 +68,7 @@ class RSSWriter091 extends RssWriter
     /**
      * Write output to HTTP client.
      */
-    function spew()
+    public function spew()
     {
         header("Content-Type: application/xml; charset=" . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);
@@ -81,7 +81,7 @@ class RSSWriter091 extends RssWriter
 class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
 // This class should probably go at then of RecentChanges.php
 {
-    function format($changes)
+    public function format($changes)
     {
         //    include_once('lib/RssWriter.php');
         $rss = new RSSWriter091;
@@ -110,7 +110,7 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
     }
 
 
-    function channel_properties()
+    public function channel_properties()
     {
         global $request;
 
@@ -132,7 +132,7 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
     }
 
 
-    function item_properties($rev)
+    public function item_properties($rev)
     {
         $page = $rev->getPage();
         $pagename = $page->getName();

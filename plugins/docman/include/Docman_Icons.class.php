@@ -28,12 +28,12 @@
 class Docman_Icons
 {
     public $images_path;
-    function __construct($images_path)
+    public function __construct($images_path)
     {
         $this->images_path = $images_path;
     }
 
-    function getActionIcon($action)
+    public function getActionIcon($action)
     {
         switch ($action) {
             case 'popup':
@@ -56,7 +56,7 @@ class Docman_Icons
         }
     }
 
-    function getIconForItem(&$item, $params = null)
+    public function getIconForItem(&$item, $params = null)
     {
         $icon = $this->images_path;
         if (isset($params['icon_width'])) {
@@ -188,20 +188,20 @@ class Docman_Icons
         return $icon;
     }
 
-    function getFolderSpinner()
+    public function getFolderSpinner()
     {
         return $this->images_path . 'folder-spinner.gif';
     }
-    function getSpinner()
+    public function getSpinner()
     {
         return $this->images_path . 'spinner.gif';
     }
-    function getIcon($icon)
+    public function getIcon($icon)
     {
         return $this->images_path . $icon;
     }
 
-    function getThemeIcon($icon)
+    public function getThemeIcon($icon)
     {
         return util_get_image_theme('ic/'.$icon);
     }

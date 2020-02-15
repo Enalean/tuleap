@@ -67,7 +67,7 @@ class WindrosePlotScale
     private $iManualScale = false;
     private $iHideLabels = false;
 
-    function __construct($aData)
+    public function __construct($aData)
     {
         $max=0;
         $totlegsum = 0;
@@ -91,14 +91,14 @@ class WindrosePlotScale
     }
 
     // Return number of grid circles
-    function GetNumCirc()
+    public function GetNumCirc()
     {
         // Never return less than 1 circles
         $num = ceil($this->iMax / $this->iDelta);
         return max(1, $num) ;
     }
 
-    function SetMaxValue($aMax)
+    public function SetMaxValue($aMax)
     {
         $this->iMax = $aMax;
         $this->iNumCirc = $this->GetNumCirc();
@@ -106,7 +106,7 @@ class WindrosePlotScale
     }
 
     // Set step size for circular grid
-    function Set($aMax, $aDelta = null)
+    public function Set($aMax, $aDelta = null)
     {
         if ($aDelta==null) {
             $this->SetMaxValue($aMax);
@@ -121,7 +121,7 @@ class WindrosePlotScale
         $this->iManualScale = true;
     }
 
-    function AutoScale($aRadius, $aMinDist = 30)
+    public function AutoScale($aRadius, $aMinDist = 30)
     {
 
         if ($this->iManualScale) {
@@ -161,39 +161,39 @@ class WindrosePlotScale
     }
 
     // Return max of all leg values
-    function GetMax()
+    public function GetMax()
     {
         return $this->iMax;
     }
 
-    function Hide($aFlg = true)
+    public function Hide($aFlg = true)
     {
         $this->iHideLabels = $aFlg;
     }
 
-    function SetAngle($aAngle)
+    public function SetAngle($aAngle)
     {
         $this->iAngle = $aAngle ;
     }
 
     // Translate a Leg value to radius distance
-    function RelTranslate($aVal, $r, $ri)
+    public function RelTranslate($aVal, $r, $ri)
     {
         $tv = round($aVal/$this->iMaxVal*($r-$ri));
         return $tv ;
     }
 
-    function SetLabelAlign($aAlign)
+    public function SetLabelAlign($aAlign)
     {
         $this->iLblAlign = $aAlign ;
     }
 
-    function SetLabelFormat($aFmt)
+    public function SetLabelFormat($aFmt)
     {
         $this->iLblFmt = $aFmt ;
     }
 
-    function SetLabelFillColor($aBkgColor, $aBorderColor = false)
+    public function SetLabelFillColor($aBkgColor, $aBorderColor = false)
     {
 
         $this->iFontBkgColor = $aBkgColor;
@@ -204,13 +204,13 @@ class WindrosePlotScale
         }
     }
 
-    function SetFontColor($aColor)
+    public function SetFontColor($aColor)
     {
         $this->iFontColor = $aColor ;
         $this->iZFontColor = $aColor ;
     }
 
-    function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
+    public function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iFontFamily = $aFontFamily ;
         $this->iFontStyle = $aFontStyle ;
@@ -218,24 +218,24 @@ class WindrosePlotScale
         $this->SetZFont($aFontFamily, $aFontStyle, $aFontSize);
     }
 
-    function SetZFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
+    public function SetZFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iZFontFamily = $aFontFamily ;
         $this->iZFontStyle = $aFontStyle ;
         $this->iZFontSize = $aFontSize ;
     }
 
-    function SetZeroLabel($aTxt)
+    public function SetZeroLabel($aTxt)
     {
         $this->iLblZeroTxt = $aTxt ;
     }
 
-    function SetZFontColor($aColor)
+    public function SetZFontColor($aColor)
     {
         $this->iZFontColor = $aColor ;
     }
 
-    function StrokeLabels($aImg, $xc, $yc, $ri, $rr)
+    public function StrokeLabels($aImg, $xc, $yc, $ri, $rr)
     {
 
         if ($this->iHideLabels) {
@@ -324,7 +324,7 @@ class LegendStyle
     private $iTxt='';
     public $iZCircleTxt='Calm';
 
-    function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
+    public function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iLblFontFamily = $aFontFamily ;
         $this->iLblFontStyle = $aFontStyle ;
@@ -337,21 +337,21 @@ class LegendStyle
         $this->iCircleFontSize = $aFontSize ;
     }
 
-    function SetLFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
+    public function SetLFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iLblFontFamily = $aFontFamily ;
         $this->iLblFontStyle = $aFontStyle ;
         $this->iLblFontSize = $aFontSize ;
     }
 
-    function SetTFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
+    public function SetTFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iTxtFontFamily = $aFontFamily ;
         $this->iTxtFontStyle = $aFontStyle ;
         $this->iTxtFontSize = $aFontSize ;
     }
 
-    function SetCFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
+    public function SetCFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iCircleFontFamily = $aFontFamily ;
         $this->iCircleFontStyle = $aFontStyle ;
@@ -359,75 +359,75 @@ class LegendStyle
     }
 
 
-    function SetFontColor($aColor)
+    public function SetFontColor($aColor)
     {
         $this->iTxtFontColor = $aColor ;
         $this->iLblFontColor = $aColor ;
         $this->iCircleFontColor = $aColor ;
     }
 
-    function SetTFontColor($aColor)
+    public function SetTFontColor($aColor)
     {
         $this->iTxtFontColor = $aColor ;
     }
 
-    function SetLFontColor($aColor)
+    public function SetLFontColor($aColor)
     {
         $this->iLblFontColor = $aColor ;
     }
 
-    function SetCFontColor($aColor)
+    public function SetCFontColor($aColor)
     {
         $this->iCircleFontColor = $aColor ;
     }
 
-    function SetCircleWeight($aWeight)
+    public function SetCircleWeight($aWeight)
     {
         $this->iCircleWeight = $aWeight;
     }
 
-    function SetCircleRadius($aRadius)
+    public function SetCircleRadius($aRadius)
     {
         $this->iCircleRadius = $aRadius;
     }
 
-    function SetCircleColor($aColor)
+    public function SetCircleColor($aColor)
     {
         $this->iCircleColor = $aColor ;
     }
 
-    function SetCircleText($aTxt)
+    public function SetCircleText($aTxt)
     {
         $this->iZCircleTxt = $aTxt;
     }
 
-    function SetMargin($aMarg, $aBottomMargin = 5)
+    public function SetMargin($aMarg, $aBottomMargin = 5)
     {
         $this->iMargin=$aMarg;
         $this->iBottomMargin=$aBottomMargin;
     }
 
-    function SetLength($aLength)
+    public function SetLength($aLength)
     {
         $this->iLength = $aLength ;
     }
 
-    function Show($aFlg = true)
+    public function Show($aFlg = true)
     {
         $this->iShow = $aFlg;
     }
 
-    function Hide($aFlg = true)
+    public function Hide($aFlg = true)
     {
         $this->iShow = ! $aFlg;
     }
 
-    function SetFormat($aFmt)
+    public function SetFormat($aFmt)
     {
         $this->iFormatString=$aFmt;
     }
 
-    function SetText($aTxt)
+    public function SetText($aTxt)
     {
         $this->iTxt = $aTxt ;
     }
@@ -478,7 +478,7 @@ class WindrosePlot
     private $iOrdinalEncoding=KEYENCODING_ANTICLOCKWISE;
     public $legend=null;
 
-    function __construct($aData)
+    public function __construct($aData)
     {
         $this->iData = $aData;
         $this->legend = new LegendStyle();
@@ -497,42 +497,42 @@ class WindrosePlot
 
     // Dummy method to make window plots have the same signature as the
     // layout classes since windrose plots are "leaf" classes in the hierarchy
-    function LayoutSize()
+    public function LayoutSize()
     {
         return 1;
     }
 
-    function SetSize($aSize)
+    public function SetSize($aSize)
     {
         $this->iSize = $aSize;
     }
 
-    function SetDataKeyEncoding($aEncoding)
+    public function SetDataKeyEncoding($aEncoding)
     {
         $this->iOrdinalEncoding = $aEncoding;
     }
 
-    function SetColor($aColor)
+    public function SetColor($aColor)
     {
         $this->iColor = $aColor;
     }
 
-    function SetRadialColors($aColors)
+    public function SetRadialColors($aColors)
     {
         $this->iRadialColorArray = $aColors;
     }
 
-    function SetRadialWeights($aWeights)
+    public function SetRadialWeights($aWeights)
     {
         $this->iRadialWeightArray = $aWeights;
     }
 
-    function SetRadialStyles($aStyles)
+    public function SetRadialStyles($aStyles)
     {
         $this->iRadialStyleArray = $aStyles;
     }
 
-    function SetBox($aColor = 'black', $aWeight = 1, $aStyle = 'solid', $aShow = true)
+    public function SetBox($aColor = 'black', $aWeight = 1, $aStyle = 'solid', $aShow = true)
     {
         $this->iShowBox = $aShow ;
         $this->iBoxColor = $aColor ;
@@ -540,22 +540,22 @@ class WindrosePlot
         $this->iBoxStyle = $aStyle;
     }
 
-    function SetLabels($aLabels)
+    public function SetLabels($aLabels)
     {
         $this->iLabels = $aLabels ;
     }
 
-    function SetLabelMargin($aMarg)
+    public function SetLabelMargin($aMarg)
     {
         $this->iLabelMargin = $aMarg ;
     }
 
-    function SetLabelFormat($aLblFormat)
+    public function SetLabelFormat($aLblFormat)
     {
         $this->iLabelFormatString = $aLblFormat ;
     }
 
-    function SetCompassLabels($aLabels)
+    public function SetCompassLabels($aLabels)
     {
         if (count($aLabels) != 16) {
             JpgraphError::RaiseL(22004); //('Label specification for windrose directions must have 16 values (one for each compass direction).');
@@ -568,41 +568,41 @@ class WindrosePlot
         }
     }
 
-    function SetCenterSize($aSize)
+    public function SetCenterSize($aSize)
     {
         $this->iCenterSize = $aSize;
     }
     // Alias for SetCenterSize
-    function SetZCircleSize($aSize)
+    public function SetZCircleSize($aSize)
     {
         $this->iCenterSize = $aSize;
     }
 
-    function SetFont($aFFam, $aFStyle = FS_NORMAL, $aFSize = 10)
+    public function SetFont($aFFam, $aFStyle = FS_NORMAL, $aFSize = 10)
     {
         $this->iFontFamily = $aFFam ;
         $this->iFontStyle = $aFStyle ;
         $this->iFontSize = $aFSize ;
     }
 
-    function SetFontColor($aColor)
+    public function SetFontColor($aColor)
     {
         $this->iFontColor=$aColor;
     }
 
-    function SetGridColor($aColor1, $aColor2)
+    public function SetGridColor($aColor1, $aColor2)
     {
         $this->iGridColor1 = $aColor1;
         $this->iGridColor2 = $aColor2;
     }
 
-    function SetGridWeight($aGrid1 = 1, $aGrid2 = 2)
+    public function SetGridWeight($aGrid1 = 1, $aGrid2 = 2)
     {
         $this->iCircGridWeight = $aGrid1 ;
         $this->iRadialGridWeight = $aGrid2 ;
     }
 
-    function SetRadialGridStyle($aStyle)
+    public function SetRadialGridStyle($aStyle)
     {
         $aStyle = strtolower($aStyle);
         if (!in_array($aStyle, array('solid','dotted','dashed','longdashed'))) {
@@ -611,22 +611,22 @@ class WindrosePlot
         $this->iRadialGridStyle=$aStyle;
     }
 
-    function SetRanges($aRanges)
+    public function SetRanges($aRanges)
     {
         $this->iRanges = $aRanges;
     }
 
-    function SetRangeStyle($aStyle)
+    public function SetRangeStyle($aStyle)
     {
         $this->iRangeStyle = $aStyle;
     }
 
-    function SetRangeColors($aLegColors)
+    public function SetRangeColors($aLegColors)
     {
         $this->iLegColors = $aLegColors;
     }
 
-    function SetRangeWeights($aWeights)
+    public function SetRangeWeights($aWeights)
     {
         $n=count($aWeights);
         for ($i=0; $i< $n; ++$i) {
@@ -635,7 +635,7 @@ class WindrosePlot
         $this->iLegweights = $aWeights;
     }
 
-    function SetType($aType)
+    public function SetType($aType)
     {
         if ($aType < WINDROSE_TYPE4 || $aType > WINDROSE_TYPEFREE) {
             JpGraphError::RaiseL(22006); //('Illegal windrose type specified.');
@@ -644,19 +644,19 @@ class WindrosePlot
     }
 
     // Alias for SetPos()
-    function SetCenterPos($aX, $aY)
+    public function SetCenterPos($aX, $aY)
     {
         $this->iX = $aX;
         $this->iY = $aY;
     }
 
-    function SetPos($aX, $aY)
+    public function SetPos($aX, $aY)
     {
         $this->iX = $aX;
         $this->iY = $aY;
     }
 
-    function SetAntiAlias($aFlag)
+    public function SetAntiAlias($aFlag)
     {
         $this->iAntiAlias = $aFlag ;
         if (! $aFlag) {
@@ -664,7 +664,7 @@ class WindrosePlot
         }
     }
 
-    function _ThickCircle($aImg, $aXC, $aYC, $aRad, $aWeight, $aColor)
+    public function _ThickCircle($aImg, $aXC, $aYC, $aRad, $aWeight, $aColor)
     {
 
         $aImg->SetColor($aColor);
@@ -681,7 +681,7 @@ class WindrosePlot
         }
     }
 
-    function _StrokeWindLeg($aImg, $xc, $yc, $a, $ri, $r, $weight, $color)
+    public function _StrokeWindLeg($aImg, $xc, $yc, $a, $ri, $r, $weight, $color)
     {
 
         // If less than 1 px long then we assume this has been caused by rounding problems
@@ -710,7 +710,7 @@ class WindrosePlot
         $aImg->FilledPolygon($pts);
     }
 
-    function _StrokeLegend($aImg, $x, $y, $scaling = 1, $aReturnWidth = false)
+    public function _StrokeLegend($aImg, $x, $y, $scaling = 1, $aReturnWidth = false)
     {
 
         if (! $this->legend->iShow) {
@@ -839,7 +839,7 @@ class WindrosePlot
         $value->Stroke($aImg, $xcenter, $y2+$this->legend->iTxtMargin*$scaling);
     }
 
-    function SetAutoScaleAngle($aIsRegRose = true)
+    public function SetAutoScaleAngle($aIsRegRose = true)
     {
 
         // If the user already has manually set an angle don't
@@ -979,7 +979,7 @@ class WindrosePlot
         }
     }
 
-    function NormAngle($a)
+    public function NormAngle($a)
     {
         while ($a > 360) {
             $a -= 360;
@@ -987,12 +987,12 @@ class WindrosePlot
         return $a;
     }
 
-    function SetLabelPosition($aPos)
+    public function SetLabelPosition($aPos)
     {
         $this->iLabelPositioning  = $aPos ;
     }
 
-    function _StrokeFreeRose($dblImg, $value, $scaling, $xc, $yc, $r, $ri)
+    public function _StrokeFreeRose($dblImg, $value, $scaling, $xc, $yc, $r, $ri)
     {
 
         // Plot radial grid lines and remember the end position
@@ -1165,7 +1165,7 @@ class WindrosePlot
 
     // Translate potential string specified compass labels to their
     // corresponding index.
-    function FixupIndexes($aDataArray, $num)
+    public function FixupIndexes($aDataArray, $num)
     {
         $ret = array();
         $keys = array_keys($aDataArray);
@@ -1194,7 +1194,7 @@ class WindrosePlot
         return $ret;
     }
 
-    function _StrokeRegularRose($dblImg, $value, $scaling, $xc, $yc, $r, $ri)
+    public function _StrokeRegularRose($dblImg, $value, $scaling, $xc, $yc, $r, $ri)
     {
         // _StrokeRegularRose($dblImg,$xc,$yc,$r,$ri)
         // Plot radial grid lines and remember the end position
@@ -1366,7 +1366,7 @@ class WindrosePlot
     }
 
 
-    function getWidth($aImg)
+    public function getWidth($aImg)
     {
 
         $scaling = 1;//$this->iAntiAlias ? 2 : 1 ;
@@ -1407,7 +1407,7 @@ class WindrosePlot
         return $w;
     }
 
-    function getHeight($aImg)
+    public function getHeight($aImg)
     {
 
         $scaling = 1;//$this->iAntiAlias ? 2 : 1 ;
@@ -1448,7 +1448,7 @@ class WindrosePlot
         return $h;
     }
 
-    function Stroke($aGraph)
+    public function Stroke($aGraph)
     {
 
         $aImg = $aGraph->img;
@@ -1622,7 +1622,7 @@ class WindroseGraph extends Graph
     private $posy;
     public $plots=array();
 
-    function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)
+    public function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)
     {
         parent::__construct($width, $height, $cachedName, $timeout, $inline);
         $this->posx=$width/2;
@@ -1636,7 +1636,7 @@ class WindroseGraph extends Graph
         $this->subsubtitle->SetMargin(0);
     }
 
-    function StrokeTexts()
+    public function StrokeTexts()
     {
         if ($this->texts != null) {
             $n = count($this->texts);
@@ -1646,7 +1646,7 @@ class WindroseGraph extends Graph
         }
     }
 
-    function StrokeIcons()
+    public function StrokeIcons()
     {
         if ($this->iIcons != null) {
             $n = count($this->iIcons);
@@ -1660,7 +1660,7 @@ class WindroseGraph extends Graph
 
     //---------------
     // PUBLIC METHODS
-    function Add($aObj)
+    public function Add($aObj)
     {
         if (is_array($aObj) && count($aObj) > 0) {
             $cl = $aObj[0];
@@ -1678,18 +1678,18 @@ class WindroseGraph extends Graph
         }
     }
 
-    function AddText($aTxt, $aToY2 = false)
+    public function AddText($aTxt, $aToY2 = false)
     {
         parent::AddText($aTxt);
     }
 
-    function SetColor($c)
+    public function SetColor($c)
     {
         $this->SetMarginColor($c);
     }
 
     // Method description
-    function Stroke($aStrokeFileName = "")
+    public function Stroke($aStrokeFileName = "")
     {
 
         // If the filename is the predefined value = '_csim_special_'

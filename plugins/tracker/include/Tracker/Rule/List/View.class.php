@@ -40,7 +40,7 @@ class Tracker_Rule_List_View
             $this->rule = $rule;
     }
 
-    function display()
+    public function display()
     {
         echo $this->fetch();
     }
@@ -49,7 +49,7 @@ class Tracker_Rule_List_View
      * @return a representation of an artifact rule
      * #id@tracker_id source_field(source_value) => target_field(target_value_1, target_value_2)
      */
-    function fetch()
+    public function fetch()
     {
         $output  = '#'. $this->rule->id;
         $output .= '@'. $this->rule->tracker_id;
@@ -60,7 +60,7 @@ class Tracker_Rule_List_View
         return $output;
     }
 
-    function fetchJavascript()
+    public function fetchJavascript()
     {
         $output  = '{id:'. (int)$this->rule->id .', ';
         $output .= 'tracker_id:'. (int)$this->rule->tracker_id .', ';

@@ -38,7 +38,7 @@ class FlamingParrot_HeaderPresenter
     /** @var string */
     public $variant_color_code;
 
-    function __construct(
+    public function __construct(
         $title,
         $img_root,
         OpenGraphPresenter $open_graph,

@@ -35,7 +35,7 @@ class CrossReference
      * Constructor
      *
      */
-    function __construct($refSourceId, $refSourceGid, $refSourceType, $refSourceKey, $refTargetId, $refTargetGid, $refTargetType, $refTargetKey, $userId)
+    public function __construct($refSourceId, $refSourceGid, $refSourceType, $refSourceKey, $refTargetId, $refTargetGid, $refTargetType, $refTargetKey, $userId)
     {
         $this->refSourceId=$refSourceId;
         $this->refSourceGid=$refSourceGid;
@@ -56,59 +56,59 @@ class CrossReference
     }
 
     /** Accessors */
-    function getRefSourceId()
+    public function getRefSourceId()
     {
         return $this->refSourceId;
     }
-    function getRefSourceGid()
+    public function getRefSourceGid()
     {
         return $this->refSourceGid;
     }
-    function getRefSourceType()
+    public function getRefSourceType()
     {
         return $this->refSourceType;
     }
-    function getRefTargetId()
+    public function getRefTargetId()
     {
         return $this->refTargetId;
     }
-    function getRefTargetGid()
+    public function getRefTargetGid()
     {
         return $this->refTargetGid;
     }
-    function getRefTargetType()
+    public function getRefTargetType()
     {
         return $this->refTargetType;
     }
-    function getUserId()
+    public function getUserId()
     {
         return $this->userId;
     }
-    function getRefTargetUrl()
+    public function getRefTargetUrl()
     {
         return $this->targetUrl;
     }
-    function getRefSourceUrl()
+    public function getRefSourceUrl()
     {
         return $this->sourceUrl;
     }
-    function getRefSourceKey()
+    public function getRefSourceKey()
     {
         return $this->sourceKey;
     }
-    function getRefTargetKey()
+    public function getRefTargetKey()
     {
         return $this->targetKey;
     }
-    function getCreatedAt()
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
-    function getInsertSourceType()
+    public function getInsertSourceType()
     {
         return $this->insertSourceType;
     }
-    function getInsertTargetType()
+    public function getInsertTargetType()
     {
         return $this->insertTargetType;
     }
@@ -120,7 +120,7 @@ class CrossReference
      * @param CrossReference $crossref
      * @return bool true if current CrossReference is really "cross referenced" with $crossref
      */
-    function isCrossReferenceWith($crossref)
+    public function isCrossReferenceWith($crossref)
     {
         return $this->getRefSourceId() == $crossref->getRefTargetId() &&
                $this->getRefSourceGid() == $crossref->getRefTargetGid() &&
@@ -130,7 +130,7 @@ class CrossReference
                $crossref->getRefSourceType() == $this->getRefTargetType();
     }
 
-    function computeUrls()
+    public function computeUrls()
     {
         $server_url  = HTTPRequest::instance()->getServerUrl();
         $group_param = '';

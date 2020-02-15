@@ -26,7 +26,7 @@
 class ArtifactGlobalNotificationFactory
 {
 
-    function getGlobalNotificationsForTracker($tracker_id)
+    public function getGlobalNotificationsForTracker($tracker_id)
     {
         $notifs = array();
         $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
@@ -42,17 +42,17 @@ class ArtifactGlobalNotificationFactory
         return $notifs;
     }
 
-    function addGlobalNotificationForTracker($tracker_id)
+    public function addGlobalNotificationForTracker($tracker_id)
     {
         $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         return $dao->create($tracker_id, '', 0, 1);
     }
-    function removeGlobalNotificationForTracker($global_notification_id, $tracker_id)
+    public function removeGlobalNotificationForTracker($global_notification_id, $tracker_id)
     {
         $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         return $dao->delete($global_notification_id, $tracker_id);
     }
-    function updateGlobalNotification($global_notification_id, $data)
+    public function updateGlobalNotification($global_notification_id, $data)
     {
         $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         $feedback = '';
@@ -68,7 +68,7 @@ class ArtifactGlobalNotificationFactory
     /**
      * @param bool $update true if the action is an update one (update artifact, add comment, ...) false if it is a create action.
      */
-    function getAllAddresses($tracker_id, $update = false)
+    public function getAllAddresses($tracker_id, $update = false)
     {
         $addresses = array();
         $notifs = $this->getGlobalNotificationsForTracker($tracker_id);

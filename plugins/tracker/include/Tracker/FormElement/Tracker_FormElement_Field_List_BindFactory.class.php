@@ -328,7 +328,7 @@ class Tracker_FormElement_Field_List_BindFactory
      *
      * @return Tracker_FormElement_Field_List_Bind_StaticValue
      */
-    function getStaticValueInstance($id, $label, $description, $rank, $is_hidden)
+    public function getStaticValueInstance($id, $label, $description, $rank, $is_hidden)
     {
         return new Tracker_FormElement_Field_List_Bind_StaticValue($id, $label, $description, $rank, $is_hidden);
     }
@@ -351,7 +351,7 @@ class Tracker_FormElement_Field_List_BindFactory
      *
      * @return Tracker_FormElement_Field_List_BindDecorator
      */
-    function getDecoratorInstance($field, $id, $r, $g, $b, $tlp_color_name)
+    public function getDecoratorInstance($field, $id, $r, $g, $b, $tlp_color_name)
     {
         return new Tracker_FormElement_Field_List_BindDecorator(
             $field,

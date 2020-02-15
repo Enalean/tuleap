@@ -85,7 +85,7 @@ class Statistics_SOAPServer
      *
      * @return ArrayOfStatistics
      */
-    function getProjectDiskStats($sessionKey, $group_id)
+    public function getProjectDiskStats($sessionKey, $group_id)
     {
         try {
             $user = $this->soap_request_validator->continueSession($sessionKey);

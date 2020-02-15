@@ -22,32 +22,32 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
 {
     public $newItem;
 
-    /* protected abstract */ function _getEnctype()
+    /* protected abstract */ public function _getEnctype()
     {
     }
 
-    /* protected abstract */ function _getAction()
+    /* protected abstract */ public function _getAction()
     {
     }
 
-    /* protected abstract */ function _getActionText()
+    /* protected abstract */ public function _getActionText()
     {
     }
 
-    /* protected abstract */ function _getForm()
+    /* protected abstract */ public function _getForm()
     {
     }
 
-    /* protected */ function _getSpecificProperties($params)
+    /* protected */ public function _getSpecificProperties($params)
     {
         return '';
     }
 
-    /* protected */ function _getCategories($params)
+    /* protected */ public function _getCategories($params)
     {
         return '';
     }
-    /* protected */ function _getJSDocmanParameters($params)
+    /* protected */ public function _getJSDocmanParameters($params)
     {
         $doc_params = array();
         if (isset($params['force_permissions'])) {
@@ -64,7 +64,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         );
     }
 
-    function _getPropertiesFieldsDisplay($fields)
+    public function _getPropertiesFieldsDisplay($fields)
     {
         $html = '';
         $html .= '<table>';
@@ -78,7 +78,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    function metadataToSkip()
+    public function metadataToSkip()
     {
         $labels = array('owner'       => 'owner',
                         'create_date' => 'create_date',
@@ -86,12 +86,12 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $labels;
     }
 
-    function _getNewItem()
+    public function _getNewItem()
     {
         return null;
     }
 
-    function setupNewItem($params)
+    public function setupNewItem($params)
     {
         $mdFactory = new Docman_MetadataFactory($params['group_id']);
 
@@ -112,7 +112,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         $mdFactory->appendAllListOfValuesToItem($this->newItem);
     }
 
-    function _getPropertiesFields($params)
+    public function _getPropertiesFields($params)
     {
         $get_fields = new Docman_View_GetFieldsVisitor($this->metadataToSkip());
         $fields = $this->newItem->accept($get_fields, array('form_name'  => $params['form_name'],
@@ -120,7 +120,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $fields;
     }
 
-    function _getGeneralProperties($params)
+    public function _getGeneralProperties($params)
     {
         $html = '';
         $fields = $this->_getPropertiesFields($params);
@@ -129,7 +129,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    function _getGeneralPropertiesFieldset($params)
+    public function _getGeneralPropertiesFieldset($params)
     {
         $html = '';
         $html .= '<div class="properties">'."\n";
@@ -141,12 +141,12 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    function _getDefaultValuesFieldset($params)
+    public function _getDefaultValuesFieldset($params)
     {
         return '';
     }
 
-    function _getSpecificPropertiesFieldset($params)
+    public function _getSpecificPropertiesFieldset($params)
     {
         $html = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') .'</h3>';
@@ -154,7 +154,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    function _getLocationFieldset($params)
+    public function _getLocationFieldset($params)
     {
         $html = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') .'</h3>';
@@ -169,7 +169,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    function _getPermissionsFieldset($params)
+    public function _getPermissionsFieldset($params)
     {
         $html = '';
         $html .= '<h3>Permissions</h3>';
@@ -181,7 +181,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    function _getNewsFieldset($params)
+    public function _getNewsFieldset($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';

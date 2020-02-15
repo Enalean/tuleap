@@ -28,7 +28,7 @@ class WikiCallback
      * @return object Returns the appropriate subclass of WikiCallback.
      * @access public
      */
-    function callback($pearCb)
+    public function callback($pearCb)
     {
         if (is_string($pearCb)) {
             return new WikiFunctionCb($pearCb);
@@ -47,7 +47,7 @@ class WikiCallback
      * @return mixed The return value of the callback.
      * @access public
      */
-    function call()
+    public function call()
     {
         return $this->call_array(func_get_args());
     }
@@ -60,7 +60,7 @@ class WikiCallback
      * @see call_user_func_array.
      * @access public
      */
-    function call_array($args)
+    public function call_array($args)
     {
         trigger_error('pure virtual', E_USER_ERROR);
     }
@@ -73,7 +73,7 @@ class WikiCallback
      *   to a number of different Pear functions and methods.)
      * @access public
      */
-    function toPearCb()
+    public function toPearCb()
     {
         trigger_error('pure virtual', E_USER_ERROR);
     }
@@ -90,17 +90,17 @@ class WikiFunctionCb extends WikiCallback
      * @param $functionName string Name of global function to call.
      * @access public
      */
-    function __construct($functionName)
+    public function __construct($functionName)
     {
         $this->functionName = $functionName;
     }
 
-    function call_array($args)
+    public function call_array($args)
     {
         return call_user_func_array($this->functionName, $args);
     }
 
-    function toPearCb()
+    public function toPearCb()
     {
         return $this->functionName;
     }
@@ -118,20 +118,20 @@ class WikiMethodCb extends WikiCallback
      * @param $methodName string Name of method to call.
      * @access public
      */
-    function __construct(&$object, $methodName)
+    public function __construct(&$object, $methodName)
     {
         $this->object = &$object;
         $this->methodName = $methodName;
     }
 
-    function call_array($args)
+    public function call_array($args)
     {
         $method = &$this->methodName;
 
         return call_user_func_array(array(&$this->object, $method), $args);
     }
 
-    function toPearCb()
+    public function toPearCb()
     {
         return array($this->object, $this->methodName);
     }

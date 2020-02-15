@@ -34,7 +34,7 @@ class Docman_ItemAction
     public $other_icons;
     public $extraUrlParams;
 
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         $this->item             = $item;
         $this->action           = '';
@@ -44,7 +44,7 @@ class Docman_ItemAction
         $this->extraUrlParams   = array();
     }
 
-    function fetchAction($params)
+    public function fetchAction($params)
     {
         $url   = $params['default_url'].'&action='.$this->action.'&id='.$this->item->getId();
         $title = $this->title;
@@ -53,7 +53,7 @@ class Docman_ItemAction
         return $html;
     }
 
-    function fetch($params)
+    public function fetch($params)
     {
         $dfltUrlParams = array('action' => $this->action,
                                'id' => $this->item->getId());
@@ -73,7 +73,7 @@ class Docman_ItemAction
 }
 class Docman_ItemActionNewFolder extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'newFolder';
@@ -83,7 +83,7 @@ class Docman_ItemActionNewFolder extends Docman_ItemAction
 }
 class Docman_ItemActionNewDocument extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'newDocument';
@@ -93,7 +93,7 @@ class Docman_ItemActionNewDocument extends Docman_ItemAction
 }
 class Docman_ItemActionDetails extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'details';
@@ -103,7 +103,7 @@ class Docman_ItemActionDetails extends Docman_ItemAction
 }
 class Docman_ItemActionNewVersion extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'action_new_version';
@@ -113,7 +113,7 @@ class Docman_ItemActionNewVersion extends Docman_ItemAction
 }
 class Docman_ItemActionMove extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'move';
@@ -127,7 +127,7 @@ class Docman_ItemActionMove extends Docman_ItemAction
 }
 class Docman_ItemActionPermissions extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'details&section=permissions';
@@ -137,7 +137,7 @@ class Docman_ItemActionPermissions extends Docman_ItemAction
 }
 class Docman_ItemActionHistory extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'details&section=history';
@@ -147,7 +147,7 @@ class Docman_ItemActionHistory extends Docman_ItemAction
 }
 class Docman_ItemActionNotifications extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'details&section=notifications';
@@ -157,7 +157,7 @@ class Docman_ItemActionNotifications extends Docman_ItemAction
 }
 class Docman_ItemActionDelete extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'confirmDelete';
@@ -167,7 +167,7 @@ class Docman_ItemActionDelete extends Docman_ItemAction
 }
 class Docman_ItemActionUpdate extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'action_update';
@@ -178,7 +178,7 @@ class Docman_ItemActionUpdate extends Docman_ItemAction
 
 class Docman_ItemActionCopy extends Docman_ItemAction
 {
-    function __construct(&$item, $params)
+    public function __construct(&$item, $params)
     {
         parent::__construct($item);
         $this->action           = 'action_copy';
@@ -194,7 +194,7 @@ class Docman_ItemActionCopy extends Docman_ItemAction
 
 class Docman_ItemActionCut extends Docman_ItemAction
 {
-    function __construct(&$item, $params)
+    public function __construct(&$item, $params)
     {
         parent::__construct($item);
         $this->action           = 'action_cut';
@@ -210,7 +210,7 @@ class Docman_ItemActionCut extends Docman_ItemAction
 
 class Docman_ItemActionPaste extends Docman_ItemAction
 {
-    function __construct(&$item, $params)
+    public function __construct(&$item, $params)
     {
         parent::__construct($item);
         $this->action           = 'action_paste';
@@ -221,7 +221,7 @@ class Docman_ItemActionPaste extends Docman_ItemAction
 
 class Docman_ItemActionApproval extends Docman_ItemAction
 {
-    function __construct(&$item)
+    public function __construct(&$item)
     {
         parent::__construct($item);
         $this->action           = 'details&section=approval';

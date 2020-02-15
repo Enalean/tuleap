@@ -30,17 +30,17 @@ rcs_id('$Id: IncludePage.php,v 1.27 2004/11/17 20:07:18 rurban Exp $');
 
 class WikiPlugin_IncludePage extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("IncludePage");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Include text from another wiki page.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -49,7 +49,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array( 'page'    => false, // the page to include
                       'rev'     => false, // the revision (defaults to most recent)
@@ -61,7 +61,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
                       );
     }
 
-    function getWikiPageLinks($argstr, $basepage)
+    public function getWikiPageLinks($argstr, $basepage)
     {
         extract($this->getArgs($argstr));
 
@@ -75,7 +75,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
         return array($page->name);
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
         if ($page) {
@@ -150,7 +150,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
      * handles the arguments: section, sectionhead, lines, words, bytes,
      * for UnfoldSubpages, IncludePage, ...
      */
-    function extractParts($c, $pagename, $args)
+    public function extractParts($c, $pagename, $args)
     {
         extract($args);
 

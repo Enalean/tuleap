@@ -132,7 +132,7 @@ class CGIFLZW
     public $LastByte;
 
     // CONSTRUCTOR
-    function __construct()
+    public function __construct()
     {
         $this->MAX_LZW_BITS = 12;
         unset($this->Next);
@@ -146,7 +146,7 @@ class CGIFLZW
         $this->Buf   = range(0, 279);
     }
 
-    function deCompress($data, &$datLen)
+    public function deCompress($data, &$datLen)
     {
         $stLen  = strlen($data);
         $datLen = 0;
@@ -168,7 +168,7 @@ class CGIFLZW
         return $ret;
     }
 
-    function LZWCommand(&$data, $bInit)
+    public function LZWCommand(&$data, $bInit)
     {
         if ($bInit) {
             $this->SetCodeSize = ord($data[0]);
@@ -281,7 +281,7 @@ class CGIFLZW
         return $Code;
     }
 
-    function GetCode(&$data, $bInit)
+    public function GetCode(&$data, $bInit)
     {
         if ($bInit) {
             $this->CurBit   = 0;
@@ -336,14 +336,14 @@ class CGIFCOLORTABLE
     public $m_arColors;
 
     // CONSTRUCTOR
-    function __construct()
+    public function __construct()
     {
         unset($this->m_nColors);
         unset($this->m_arColors);
     }
 
 
-    function load($lpData, $num)
+    public function load($lpData, $num)
     {
         $this->m_nColors  = 0;
         $this->m_arColors = array();
@@ -361,7 +361,7 @@ class CGIFCOLORTABLE
         return true;
     }
 
-    function toString()
+    public function toString()
     {
         $ret = "";
 
@@ -375,7 +375,7 @@ class CGIFCOLORTABLE
         return $ret;
     }
 
-    function toRGBQuad()
+    public function toRGBQuad()
     {
         $ret = "";
 
@@ -390,7 +390,7 @@ class CGIFCOLORTABLE
         return $ret;
     }
 
-    function colorIndex($rgb)
+    public function colorIndex($rgb)
     {
         $rgb  = intval($rgb) & 0xFFFFFF;
         $r1   = ($rgb & 0x0000FF);
@@ -428,7 +428,7 @@ class CGIFFILEHEADER
     public $m_colorTable;
 
     // CONSTRUCTOR
-    function __construct()
+    public function __construct()
     {
         unset($this->m_lpVer);
         unset($this->m_nWidth);
@@ -443,7 +443,7 @@ class CGIFFILEHEADER
     }
 
 
-    function load($lpData, &$hdrLen)
+    public function load($lpData, &$hdrLen)
     {
         $hdrLen = 0;
 
@@ -478,7 +478,7 @@ class CGIFFILEHEADER
         return true;
     }
 
-    function w2i($str)
+    public function w2i($str)
     {
         return ord(substr($str, 0, 1)) + (ord(substr($str, 1, 1)) << 8);
     }
@@ -497,7 +497,7 @@ class CGIFIMAGEHEADER
     public $m_colorTable;
 
     // CONSTRUCTOR
-    function __construct()
+    public function __construct()
     {
         unset($this->m_nLeft);
         unset($this->m_nTop);
@@ -510,7 +510,7 @@ class CGIFIMAGEHEADER
         unset($this->m_colorTable);
     }
 
-    function load($lpData, &$hdrLen)
+    public function load($lpData, &$hdrLen)
     {
         $hdrLen = 0;
 
@@ -541,7 +541,7 @@ class CGIFIMAGEHEADER
         return true;
     }
 
-    function w2i($str)
+    public function w2i($str)
     {
         return ord(substr($str, 0, 1)) + (ord(substr($str, 1, 1)) << 8);
     }
@@ -559,7 +559,7 @@ class CGIFIMAGE
     public $m_data;
     public $m_lzw;
 
-    function __construct()
+    public function __construct()
     {
         unset($this->m_disp);
         unset($this->m_bUser);
@@ -572,7 +572,7 @@ class CGIFIMAGE
         $this->m_lzw = new CGIFLZW();
     }
 
-    function load($data, &$datLen)
+    public function load($data, &$datLen)
     {
         $datLen = 0;
 
@@ -617,7 +617,7 @@ class CGIFIMAGE
         return false;
     }
 
-    function skipExt(&$data, &$extLen)
+    public function skipExt(&$data, &$extLen)
     {
         $extLen = 0;
 
@@ -660,12 +660,12 @@ class CGIFIMAGE
         return true;
     }
 
-    function w2i($str)
+    public function w2i($str)
     {
         return ord(substr($str, 0, 1)) + (ord(substr($str, 1, 1)) << 8);
     }
 
-    function deInterlace()
+    public function deInterlace()
     {
         $data = $this->m_data;
 
@@ -715,7 +715,7 @@ class CGIF
     public $m_bLoaded;
 
     // CONSTRUCTOR
-    function __construct()
+    public function __construct()
     {
         $this->m_gfh     = new CGIFFILEHEADER();
         $this->m_img     = new CGIFIMAGE();
@@ -723,7 +723,7 @@ class CGIF
         $this->m_bLoaded = false;
     }
 
-    function loadFile($lpszFileName, $iIndex)
+    public function loadFile($lpszFileName, $iIndex)
     {
         if ($iIndex < 0) {
             return false;
@@ -779,7 +779,7 @@ class CGIF
 
 
 
-    function getBmp($bgColor)
+    public function getBmp($bgColor)
     {
         $out = "";
 
@@ -878,7 +878,7 @@ class CGIF
 
 
 
-    function getPng($bgColor)
+    public function getPng($bgColor)
     {
         $out = "";
 
@@ -974,34 +974,34 @@ class CGIF
         return $out;
     }
 
-    function dword($val)
+    public function dword($val)
     {
         $val = intval($val);
         return chr($val & 0xFF).chr(($val & 0xFF00) >> 8).chr(($val & 0xFF0000) >> 16).chr(($val & 0xFF000000) >> 24);
     }
 
-    function ndword($val)
+    public function ndword($val)
     {
         $val = intval($val);
         return chr(($val & 0xFF000000) >> 24).chr(($val & 0xFF0000) >> 16).chr(($val & 0xFF00) >> 8).chr($val & 0xFF);
     }
 
-    function width()
+    public function width()
     {
         return $this->m_gfh->m_nWidth;
     }
 
-    function height()
+    public function height()
     {
         return $this->m_gfh->m_nHeight;
     }
 
-    function comment()
+    public function comment()
     {
         return $this->m_img->m_lpComm;
     }
 
-    function loaded()
+    public function loaded()
     {
         return $this->m_bLoaded;
     }

@@ -27,7 +27,7 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
      *
      * @param Bar_Engine $engine object
      */
-    function buildProperties($engine)
+    public function buildProperties($engine)
     {
         parent::buildProperties($engine);
         $engine->title      = $this->chart->getTitle();
@@ -47,7 +47,7 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
      * @param Gantt_Engine object
      * @return array data array
      */
-    function buildData($engine)
+    public function buildData($engine)
     {
         $engine->data = array();
 

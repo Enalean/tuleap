@@ -61,7 +61,7 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract
     }
 
     //WARNING : READ/UPDATE is actual when last is READ, UPDATE liste (weird case, but good to know)
-    function test_getPermissionFromFormElementData()
+    public function test_getPermissionFromFormElementData()
     {
         $formElementData = array('permissions'=> array(
                                                $GLOBALS['UGROUP_ANONYMOUS'] => array(0 => 'PLUGIN_TRACKER_FIELD_READ',
@@ -82,7 +82,7 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract
         $this->assertEqual($ugroups_permissions[$elmtId][2]['others'], 0);
     }
 
-    function test_getPermissionFromFormElementData_Submit()
+    public function test_getPermissionFromFormElementData_Submit()
     {
         $formElementData = array('permissions'=> array(
                                                $GLOBALS['UGROUP_ANONYMOUS'] => array(0 => 'PLUGIN_TRACKER_FIELD_UPDATE',

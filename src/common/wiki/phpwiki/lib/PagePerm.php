@@ -356,7 +356,7 @@ class PagePermission
 {
     public $perm;
 
-    function __construct($hash = array())
+    public function __construct($hash = array())
     {
         $this->_group = &$GLOBALS['request']->getGroup();
         if (is_array($hash) and !empty($hash)) {
@@ -383,7 +383,7 @@ class PagePermission
      * Must translate the various special groups to the actual users settings
      * (userid, group membership).
      */
-    function isAuthorized($access, $user)
+    public function isAuthorized($access, $user)
     {
         if (!empty($this->perm[$access])) {
             foreach ($this->perm[$access] as $group => $bool) {
@@ -399,7 +399,7 @@ class PagePermission
      * Translate the various special groups to the actual users settings
      * (userid, group membership).
      */
-    function isMember($user, $group)
+    public function isMember($user, $group)
     {
         global $request;
         if ($group === ACL_EVERY) {
@@ -466,7 +466,7 @@ class PagePermission
      * returns hash of default permissions.
      * check if the page '.' exists and returns this instead.
      */
-    function defaultPerms()
+    public function defaultPerms()
     {
         //Todo: check for the existance of '.' and take this instead.
         //Todo: honor more config.ini auth settings here
@@ -512,7 +512,7 @@ class PagePermission
     /**
      * FIXME: check valid groups and access
      */
-    function sanify()
+    public function sanify()
     {
         foreach ($this->perm as $access => $groups) {
             foreach ($groups as $group => $bool) {
@@ -524,7 +524,7 @@ class PagePermission
     /**
      * do a recursive comparison
      */
-    function equal($otherperm)
+    public function equal($otherperm)
     {
         $diff = array_diff_assoc_recursive($this->perm, $otherperm);
         return empty($diff);
@@ -533,7 +533,7 @@ class PagePermission
     /**
      * returns list of all supported access types.
      */
-    function accessTypes()
+    public function accessTypes()
     {
         return array_keys(PagePermission::defaultPerms());
     }
@@ -542,7 +542,7 @@ class PagePermission
      * special permissions for dot-files, beginning with '.'
      * maybe also for '_' files?
      */
-    function dotPerms()
+    public function dotPerms()
     {
         $def = array(ACL_ADMIN => true,
                      ACL_OWNER => true);
@@ -556,7 +556,7 @@ class PagePermission
     /**
      *  dead code. not needed inside the object. see getPagePermissions($page)
      */
-    function retrieve($page)
+    public function retrieve($page)
     {
         $hash = $page->get('perm');
         if ($hash) {  // hash => object
@@ -568,14 +568,14 @@ class PagePermission
         return $perm;
     }
 
-    function store($page)
+    public function store($page)
     {
         // object => hash
         $this->sanify();
         return $page->set('perm', serialize($this->perm));
     }
 
-    function groupName($group)
+    public function groupName($group)
     {
         if ($group[0] == '_') {
             return constant("GROUP".$group);
@@ -585,7 +585,7 @@ class PagePermission
     }
 
     /* type: page, default, inherited */
-    function asTable($type)
+    public function asTable($type)
     {
         $table = HTML::table();
         foreach ($this->perm as $access => $perms) {
@@ -613,7 +613,7 @@ class PagePermission
     }
 
     /* type: page, default, inherited */
-    function asEditableTable($type)
+    public function asEditableTable($type)
     {
         global $WikiTheme;
         if (!isset($this->_group)) {
@@ -758,7 +758,7 @@ class PagePermission
     // Seperate acl's by "; " or whitespace
     // See http://opag.ca/wiki/HelpOnAccessControlLists
     // As used by WikiAdminSetAclSimple
-    function asAclLines()
+    public function asAclLines()
     {
         $s = '';
         $line = '';
@@ -784,7 +784,7 @@ class PagePermission
     // This is just a bad hack for testing.
     // Simplify the ACL to a unix-like "rwx------+" string
     // See getfacl(8)
-    function asRwxString($owner, $group = false)
+    public function asRwxString($owner, $group = false)
     {
         global $request;
         // simplify object => rwxrw---x+ string as in cygwin (+ denotes additional ACLs)

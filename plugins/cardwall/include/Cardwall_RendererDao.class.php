@@ -21,13 +21,13 @@
 class Cardwall_RendererDao extends DataAccessObject
 {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'plugin_cardwall_renderer';
     }
 
-    function searchByRendererId($renderer_id)
+    public function searchByRendererId($renderer_id)
     {
         $renderer_id  = $this->da->escapeInt($renderer_id);
         $sql = "SELECT *
@@ -36,7 +36,7 @@ class Cardwall_RendererDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function create($renderer_id, $field_id)
+    public function create($renderer_id, $field_id)
     {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id     = $this->da->escapeInt($field_id);
@@ -46,7 +46,7 @@ class Cardwall_RendererDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function save($renderer_id, $field_id)
+    public function save($renderer_id, $field_id)
     {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id     = $this->da->escapeInt($field_id);
@@ -56,13 +56,13 @@ class Cardwall_RendererDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function delete($renderer_id)
+    public function delete($renderer_id)
     {
         $sql = "DELETE FROM $this->table_name WHERE renderer_id = ". $this->da->escapeInt($renderer_id);
         return $this->update($sql);
     }
 
-    function duplicate($from_renderer_id, $to_renderer_id)
+    public function duplicate($from_renderer_id, $to_renderer_id)
     {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);

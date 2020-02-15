@@ -24,7 +24,7 @@
 class Docman_LockDao extends DataAccessObject
 {
 
-    function searchLockForItem($itemId)
+    public function searchLockForItem($itemId)
     {
         $sql = 'SELECT *'.
                ' FROM plugin_docman_item_lock'.
@@ -39,7 +39,7 @@ class Docman_LockDao extends DataAccessObject
      * @param int $itemId
      * @return DataAccessResult
      */
-    function searchLocksForProjectByItemId($itemId)
+    public function searchLocksForProjectByItemId($itemId)
     {
         $sql = 'SELECT l.item_id, l.user_id'.
                ' FROM plugin_docman_item_lock l'.
@@ -56,7 +56,7 @@ class Docman_LockDao extends DataAccessObject
     * @param int $groupId
     * @return DataAccessResult|false
     */
-    function searchLocksForProjectByGroupId($groupId)
+    public function searchLocksForProjectByGroupId($groupId)
     {
         $sql = 'SELECT l.*'.
                ' FROM plugin_docman_item_lock l'.
@@ -73,7 +73,7 @@ class Docman_LockDao extends DataAccessObject
      *
      * @return DataAccessResult|false
      */
-    function searchLocksForItemIds(array $itemIds)
+    public function searchLocksForItemIds(array $itemIds)
     {
         $sql = 'SELECT l.item_id, l.user_id'.
                ' FROM plugin_docman_item_lock l'.
@@ -83,7 +83,7 @@ class Docman_LockDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function addLock($itemId, $userId, $date)
+    public function addLock($itemId, $userId, $date)
     {
         $sql = 'INSERT INTO plugin_docman_item_lock'.
                ' (item_id, user_id, lock_date)'.
@@ -95,7 +95,7 @@ class Docman_LockDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function delLock($itemId)
+    public function delLock($itemId)
     {
         $sql = 'DELETE FROM plugin_docman_item_lock'.
                ' WHERE item_id = '.$this->da->quoteSmart($itemId);

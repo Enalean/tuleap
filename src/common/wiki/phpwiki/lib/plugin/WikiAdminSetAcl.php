@@ -35,17 +35,17 @@ require_once('lib/plugin/WikiAdminSelect.php');
 
 class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
 {
-    function getName()
+    public function getName()
     {
         return _("WikiAdminSetAcl");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Set individual page permissions.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -54,7 +54,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -67,7 +67,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function setaclPages(&$request, $pages, $acl)
+    public function setaclPages(&$request, $pages, $acl)
     {
         $ul = HTML::ul();
         $count = 0;
@@ -128,7 +128,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
     //if (!DEBUG)
@@ -237,7 +237,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function setaclForm(&$header, $post_args, $pagehash)
+    public function setaclForm(&$header, $post_args, $pagehash)
     {
         $acl = $post_args['acl'];
 
@@ -306,7 +306,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
 
 class _PageList_Column_acl extends _PageList_Column
 {
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         $perm_tree = pagePermissions($page_handle->_pagename);
         return pagePermissionsAclFormat($perm_tree);
@@ -315,7 +315,7 @@ class _PageList_Column_acl extends _PageList_Column
 
 class _PageList_Column_perm extends _PageList_Column
 {
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         $perm_array = pagePermissions($page_handle->_pagename);
         return pagePermissionsSimpleFormat(

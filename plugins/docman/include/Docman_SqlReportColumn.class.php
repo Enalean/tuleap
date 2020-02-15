@@ -25,7 +25,7 @@ require_once('Docman_MetadataSqlQueryChunk.class.php');
 class Docman_SqlReportColumnFactory
 {
 
-    function &getFromColumn($c)
+    public function &getFromColumn($c)
     {
         $obj = null;
         switch (strtolower(get_class($c))) {
@@ -43,13 +43,13 @@ class Docman_SqlReportColumn extends Docman_MetadataSqlQueryChunk
 {
     public $column;
 
-    function __construct($column)
+    public function __construct($column)
     {
         $this->column = $column;
         parent::__construct($column->md);
     }
 
-    function getOrderBy()
+    public function getOrderBy()
     {
         $sql = '';
 

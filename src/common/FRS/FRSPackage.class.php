@@ -61,7 +61,7 @@ class FRSPackage
      */
     private $approve_license;
 
-    function __construct($data_array = null)
+    public function __construct($data_array = null)
     {
         $this->package_id       = null;
         $this->group_id         = null;
@@ -74,43 +74,43 @@ class FRSPackage
         }
     }
 
-    function getPackageID()
+    public function getPackageID()
     {
         return $this->package_id;
     }
-    function setPackageID($package_id)
+    public function setPackageID($package_id)
     {
         $this->package_id = (int) $package_id;
     }
-    function getGroupID()
+    public function getGroupID()
     {
         return $this->group_id;
     }
-    function setGroupID($group_id)
+    public function setGroupID($group_id)
     {
         $this->group_id = (int) $group_id;
     }
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
-    function setName($name)
+    public function setName($name)
     {
         $this->name = $name;
     }
-    function getStatusID()
+    public function getStatusID()
     {
         return $this->status_id;
     }
-    function setStatusID($status_id)
+    public function setStatusID($status_id)
     {
         $this->status_id = (int) $status_id;
     }
-    function getRank()
+    public function getRank()
     {
         return $this->rank;
     }
-    function setRank($rank)
+    public function setRank($rank)
     {
         $this->rank = $rank;
     }
@@ -132,7 +132,7 @@ class FRSPackage
      * Determines if the package is active or not
      * @return bool true if the package is active, false otherwise
      */
-    function isActive()
+    public function isActive()
     {
         $frsrf = new FRSPackageFactory();
         return $this->getStatusID() == $frsrf->STATUS_ACTIVE;
@@ -142,7 +142,7 @@ class FRSPackage
      * Determines if the package is hidden or not
      * @return bool true if the package is hidden, false otherwise
      */
-    function isHidden()
+    public function isHidden()
     {
         $frsrf = new FRSPackageFactory();
         return $this->getStatusID() == $frsrf->STATUS_HIDDEN;
@@ -152,7 +152,7 @@ class FRSPackage
      * Determines if the package is deleted or not
      * @return bool true if the package is deleted, false otherwise
      */
-    function isDeleted()
+    public function isDeleted()
     {
         $frsrf = new FRSPackageFactory();
         return $this->getStatusID() == $frsrf->STATUS_DELETED;
@@ -206,7 +206,7 @@ class FRSPackage
      *
      *  return  array   Array of FRSRelease Objects.
      */
-    function &getReleases()
+    public function &getReleases()
     {
         if (!is_array($this->package_releases) || count($this->package_releases) < 1) {
             $this->package_releases=array();

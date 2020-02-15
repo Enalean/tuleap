@@ -38,7 +38,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         unset($GLOBALS['ftp_incoming_dir']);
     }
 
-    function testgetUploadSubDirectory()
+    public function testgetUploadSubDirectory()
     {
         $package_id = rand(1, 1000);
         $release_id = rand(1, 1000);
@@ -53,7 +53,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertEquals($sub_dir, 'p'.$package_id.'_r'.$release_id);
     }
 
-    function testPurgeDeletedFiles()
+    public function testPurgeDeletedFiles()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -66,7 +66,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue($ff->moveFiles(1287504083, $backend));
     }
 
-    function testMoveFilesMoveStagingError()
+    public function testMoveFilesMoveStagingError()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -79,7 +79,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-    function testMoveFilesPurgeError()
+    public function testMoveFilesPurgeError()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -92,7 +92,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-    function testMoveFilesCleanStagingError()
+    public function testMoveFilesCleanStagingError()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -105,7 +105,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-    function testMoveFilesRestoreDeletedError()
+    public function testMoveFilesRestoreDeletedError()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -118,7 +118,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-    function testMoveFilesCatchesExceptionAndLogThem()
+    public function testMoveFilesCatchesExceptionAndLogThem()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -133,7 +133,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-    function testMoveDeletedFilesToStagingAreaWithNoFiles()
+    public function testMoveDeletedFilesToStagingAreaWithNoFiles()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -156,7 +156,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         }
     }
 
-    function testMoveDeletedFileToStagingArea()
+    public function testMoveDeletedFileToStagingArea()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -186,7 +186,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
      * deleted and purged at the very same date
      *
      */
-    function testMoveDeletedFileToStagingAreaButFileDoesntExist()
+    public function testMoveDeletedFileToStagingAreaButFileDoesntExist()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -214,7 +214,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1'));
     }
 
-    function testMoveDeletedFileToStagingAreaReleaseNotEmpty()
+    public function testMoveDeletedFileToStagingAreaReleaseNotEmpty()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -242,7 +242,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/barfoo.doc'), 'The other file in the release must not be deleted');
     }
 
-    function testMoveDeletedFilesToStagingAreaFail()
+    public function testMoveDeletedFilesToStagingAreaFail()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -262,7 +262,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->moveDeletedFilesToStagingArea($backend));
     }
 
-    function testMoveDeletedFilesToStagingAreaWithOneFile()
+    public function testMoveDeletedFilesToStagingAreaWithOneFile()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -282,7 +282,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue($ff->moveDeletedFilesToStagingArea($backend));
     }
 
-    function testPurgeFilesWithNoFiles()
+    public function testPurgeFilesWithNoFiles()
     {
         $dao = \Mockery::spy(\FRSFileDao::class);
         $dao->shouldReceive('searchFilesToPurge')->with(1287504083)->once()->andReturn(TestHelper::emptyDar());
@@ -296,7 +296,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue($ff->purgeFiles(1287504083, $backend));
     }
 
-    function testPurgeFilesWithOneFile()
+    public function testPurgeFilesWithOneFile()
     {
         $dao = \Mockery::spy(\FRSFileDao::class);
         $dao->shouldReceive('searchFilesToPurge')->with(1287504083)->once()->andReturn(TestHelper::arrayToDar(['file_id' => 12]));
@@ -316,7 +316,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue($ff->purgeFiles(1287504083, $backend));
     }
 
-    function testPurgeFileSucceed()
+    public function testPurgeFileSucceed()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -350,7 +350,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse(is_file($filepath), "File should be deleted");
     }
 
-    function testPurgeFileDBUpdateFails()
+    public function testPurgeFileDBUpdateFails()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -401,7 +401,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->purgeFile($file, $backend));
     }
 
-    function testPurgeFileWithFileNotFoundInFS()
+    public function testPurgeFileWithFileNotFoundInFS()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -432,7 +432,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         }
     }
 
-    function testRemoveStagingEmptyDirectories()
+    public function testRemoveStagingEmptyDirectories()
     {
         $ff = new FRSFileFactory();
         $backend = \Mockery::spy(\BackendSystem::class);
@@ -452,7 +452,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10/foo.txt.12'));
     }
 
-    function testRestoreFileSucceed()
+    public function testRestoreFileSucceed()
     {
         $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $fileFactory->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -491,7 +491,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
     }
 
-    function testRestoreFileNotExists()
+    public function testRestoreFileNotExists()
     {
         $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $fileFactory->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -523,7 +523,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
     }
 
-    function testRestoreFileLocationNotExists()
+    public function testRestoreFileLocationNotExists()
     {
         $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $fileFactory->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -562,7 +562,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
     }
 
-    function testRestoreFileDBUpdateFails()
+    public function testRestoreFileDBUpdateFails()
     {
         $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $fileFactory->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -602,7 +602,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
     }
 
-    function testRestoreFileInDeletedRelease()
+    public function testRestoreFileInDeletedRelease()
     {
         $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $fileFactory->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
@@ -630,7 +630,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1'));
     }
 
-    function testRestoreDeletedFiles()
+    public function testRestoreDeletedFiles()
     {
         $refFile = new FRSFile(array('file_id' => 12));
 
@@ -651,7 +651,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue($ff->restoreDeletedFiles($backend));
     }
 
-    function testRestoreDeletedFilesReturnFalse()
+    public function testRestoreDeletedFilesReturnFalse()
     {
         $dao = \Mockery::spy(\FRSFileDao::class);
         $dao->shouldReceive('searchFilesToRestore')->andReturn(TestHelper::arrayToDar(['file_id' => 12], ['file_id' => 13]));
@@ -666,7 +666,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->restoreDeletedFiles($backend));
     }
 
-    function testRestoreDeletedFilesDBError()
+    public function testRestoreDeletedFilesDBError()
     {
         $refFile = new FRSFile(array('file_id' => 12));
 
@@ -682,7 +682,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->restoreDeletedFiles($backend));
     }
 
-    function testRestoreDeletedFilesNoFiles()
+    public function testRestoreDeletedFilesNoFiles()
     {
         $refFile = new FRSFile(array('file_id' => 12));
 
@@ -698,38 +698,38 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue($ff->restoreDeletedFiles($backend));
     }
 
-    function testCompareMd5ChecksumsFail()
+    public function testCompareMd5ChecksumsFail()
     {
         $fileFactory = new FRSFileFactory();
         $this->assertFalse($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de36', 'da1e100dc9e7bebb810985e37875de38'));
     }
 
-    function testCompareMd5ChecksumsSucceedeEmptyHashes()
+    public function testCompareMd5ChecksumsSucceedeEmptyHashes()
     {
         $fileFactory = new FRSFileFactory();
         $this->assertTrue($fileFactory->compareMd5Checksums('', ''));
     }
 
-    function testCompareMd5ChecksumsSucceedeEmptyReference()
+    public function testCompareMd5ChecksumsSucceedeEmptyReference()
     {
         $fileFactory = new FRSFileFactory();
         $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de36', ''));
     }
 
-    function testCompareMd5ChecksumsSucceedeEmptyComputed()
+    public function testCompareMd5ChecksumsSucceedeEmptyComputed()
     {
         $fileFactory = new FRSFileFactory();
         $this->assertTrue($fileFactory->compareMd5Checksums('', 'da1e100dc9e7bebb810985e37875de38'));
     }
 
-    function testCompareMd5ChecksumsSucceededComparison()
+    public function testCompareMd5ChecksumsSucceededComparison()
     {
         $fileFactory = new FRSFileFactory();
         $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de38', 'da1e100dc9e7bebb810985e37875de38'));
         $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de38', 'DA1E100DC9E7BEBB810985E37875DE38'));
     }
 
-    function testMoveFileforgeOk()
+    public function testMoveFileforgeOk()
     {
         // Create target release directory
         $this->createReleaseDir('prj', 'p123_r456');
@@ -756,7 +756,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFileExists($GLOBALS['ftp_frs_dir_prefix'].'/prj/'.$f->getFilePath());
     }
 
-    function testMoveFileforgeFileExist()
+    public function testMoveFileforgeFileExist()
     {
         // Create toto.txt in the release directory
         $this->createReleaseDir('prj', 'p123_r456');
@@ -781,7 +781,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->moveFileForge($f));
     }
 
-    function testMoveFileforgeFileExistWithSpaces()
+    public function testMoveFileforgeFileExistWithSpaces()
     {
         // Create toto.txt in the release directory
         $this->createReleaseDir('prj', 'p123_r456');
@@ -805,7 +805,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($ff->moveFileForge($f));
     }
 
-    function testCreateFileIllegalName()
+    public function testCreateFileIllegalName()
     {
         $ff = new FRSFileFactory();
         $f = new FRSFile();
@@ -816,7 +816,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $ff->createFile($f);
     }
 
-    function testCreateFileSetReleaseTime()
+    public function testCreateFileSetReleaseTime()
     {
         $p = \Mockery::spy(\Project::class);
         $p->shouldReceive('getUnixName')->andReturns('prj');
@@ -851,7 +851,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertTrue($f->getReleaseTime() >= $before && $f->getReleaseTime() <= $after);
     }
 
-    function testCreateFileDoNotSetReleaseTimeIfAlreadySet()
+    public function testCreateFileDoNotSetReleaseTimeIfAlreadySet()
     {
         $p = \Mockery::spy(\Project::class);
         $p->shouldReceive('getUnixName')->andReturns('prj');
@@ -892,7 +892,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
      * We should not be able to create a file with the same name,
      * if an active one exists.
      */
-    function testCreateFileAlreadyExistingAndActive()
+    public function testCreateFileAlreadyExistingAndActive()
     {
         // Create toto.txt in the release directory
         $this->createReleaseDir('prj', 'p123_r456');
@@ -925,7 +925,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
      * We should be able to create a file with the same name,
      * even if the active one has been deleted but not yet moved to staging area.
      */
-    function testCreateFileAlreadyExistingAndMarkedToBeDeletedNotYetMoved()
+    public function testCreateFileAlreadyExistingAndMarkedToBeDeletedNotYetMoved()
     {
         // Create toto.txt in the release directory
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
@@ -968,7 +968,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
      * even if the restored one has not yet been moved to the corresponding  pi_rj.
      */
 
-    function testCreateFileAlreadyMarkedToBeRestoredNotYetMoved()
+    public function testCreateFileAlreadyMarkedToBeRestoredNotYetMoved()
     {
         // Create toto.txt in the release directory
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
@@ -1001,7 +1001,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     }
 
 
-    function testCreateFileNotYetIncoming()
+    public function testCreateFileNotYetIncoming()
     {
         $p = \Mockery::spy(\Project::class);
 
@@ -1025,7 +1025,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
 
-    function testCreateFileSkipCompareMD5Checksums()
+    public function testCreateFileSkipCompareMD5Checksums()
     {
         $p = \Mockery::spy(\Project::class);
         $p->shouldReceive('getUnixName')->andReturns('prj');
@@ -1057,7 +1057,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
     }
 
-    function testCreateFileCompareMD5Checksums()
+    public function testCreateFileCompareMD5Checksums()
     {
         $project = new Project(['group_id' => 111]);
 
@@ -1095,7 +1095,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
     }
 
-    function testCreateFileMoveFileForgeKo()
+    public function testCreateFileMoveFileForgeKo()
     {
         $project = new Project(['group_id' => 111]);
 
@@ -1121,7 +1121,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
 
-    function testCreateFileDbEntryMovedFile()
+    public function testCreateFileDbEntryMovedFile()
     {
         // Create toto.txt in the release directory
         $this->createReleaseDir('prj', 'p123_r456');
@@ -1154,7 +1154,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
 
-    function testDeleteProjectFRSPackagesFail()
+    public function testDeleteProjectFRSPackagesFail()
     {
         $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
 
@@ -1172,7 +1172,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
 
-    function testDeleteProjectFRSReleasesFail()
+    public function testDeleteProjectFRSReleasesFail()
     {
         $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
 
@@ -1190,7 +1190,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
 
-    function testDeleteProjectFRSMoveFail()
+    public function testDeleteProjectFRSMoveFail()
     {
         $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
 
@@ -1208,7 +1208,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
 
-    function testDeleteProjectFRSSuccess()
+    public function testDeleteProjectFRSSuccess()
     {
         $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
 

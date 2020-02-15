@@ -255,7 +255,7 @@ class WorkflowTest extends TuleapTestCase
         $this->assertEqual(count($xml->transitions), count($root->transitions));
     }
 
-    function testNonTransitionAlwaysExist()
+    public function testNonTransitionAlwaysExist()
     {
         $workflow = new WorkflowTestVersion(1, 2, 3, 1);
         $workflow->expectNever('getTransitions');
@@ -372,7 +372,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    function testBeforeShouldTriggerTransitionActions()
+    public function testBeforeShouldTriggerTransitionActions()
     {
         $changeset_value_list = new MockTracker_Artifact_ChangesetValue_List();
         $changeset_value_list->setReturnValue('getValue', array($this->open_value_id));
@@ -390,7 +390,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase
         $this->workflow->before($fields_data, $this->current_user, $this->artifact);
     }
 
-    function testBeforeShouldTriggerTransitionActionsForNewArtifact()
+    public function testBeforeShouldTriggerTransitionActionsForNewArtifact()
     {
         $changeset = new MockTracker_Artifact_Changeset_Null();
         $this->artifact->setReturnValue('getLastChangeset', $changeset);
@@ -453,7 +453,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase
         $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
     }
 
-    function testAfterShouldTriggerTransitionActionsForNewArtifact()
+    public function testAfterShouldTriggerTransitionActionsForNewArtifact()
     {
         $previous_changeset = null;
         $new_changeset      = mock('Tracker_Artifact_Changeset');

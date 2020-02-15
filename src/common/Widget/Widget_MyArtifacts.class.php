@@ -40,12 +40,12 @@ class Widget_MyArtifacts extends Widget
         }
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('my_index', 'my_arts');
     }
 
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
         $vShow = new Valid_WhiteList('show', array('A', 'S', 'N', 'AS'));
@@ -109,11 +109,11 @@ class Widget_MyArtifacts extends Widget
             ';
     }
 
-    function isAjax()
+    public function isAjax()
     {
         return true;
     }
-    function getContent()
+    public function getContent()
     {
         $html_my_artifacts = '<table style="width:100%">';
         if ($atf = new ArtifactTypeFactory(false)) {
@@ -143,7 +143,7 @@ class Widget_MyArtifacts extends Widget
         return $html;
     }
 
-    function _display_artifacts($list_trackers, $print_box_begin)
+    public function _display_artifacts($list_trackers, $print_box_begin)
     {
         $request = HTTPRequest::instance();
 
@@ -320,11 +320,11 @@ class Widget_MyArtifacts extends Widget
 
         return $ajax_url;
     }
-    function getCategory()
+    public function getCategory()
     {
         return _('Trackers');
     }
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_artifacts', 'description');
     }

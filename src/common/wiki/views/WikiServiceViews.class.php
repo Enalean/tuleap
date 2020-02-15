@@ -36,7 +36,7 @@ class WikiServiceViews extends WikiViews
   /**
    * WikiServiceViews - Constructor
    */
-    function __construct(&$controler, $id = 0, $view = null)
+    public function __construct(&$controler, $id = 0, $view = null)
     {
         $this->purifier = Codendi_HTMLPurifier::instance();
         parent::WikiView($controler, $id, $view);
@@ -73,7 +73,7 @@ class WikiServiceViews extends WikiViews
    * </ul>
    * @access public
    */
-    function browse()
+    public function browse()
     {
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_documents', $this->gid);
         $hurl='<a href="'.$this->wikiLink.'&'.$hideUrl.'">'.$hideImg.'</a>';
@@ -95,7 +95,7 @@ class WikiServiceViews extends WikiViews
    * </ul>
    * @access public
    */
-    function browsePages()
+    public function browsePages()
     {
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_pages', $this->gid);
         $hurl='<a href="'.$this->wikiLink.'&view=browsePages&'.$hideUrl.'">'.$hideImg.'</a>';
@@ -119,7 +119,7 @@ class WikiServiceViews extends WikiViews
         }
     }
 
-    function _browseWikiDocuments()
+    public function _browseWikiDocuments()
     {
 
         $wei = WikiEntry::getEntryIterator($this->gid);
@@ -144,7 +144,7 @@ class WikiServiceViews extends WikiViews
    *
    * Display project pages.
    */
-    function _browseProjectWikiPages()
+    public function _browseProjectWikiPages()
     {
         WikiPage::globallySetProjectID($this->gid);
         $allPages = WikiPage::getAllUserPages();
@@ -156,7 +156,7 @@ class WikiServiceViews extends WikiViews
    *
    * Display empty pages.
    */
-    function _browseEmptyWikiPages()
+    public function _browseEmptyWikiPages()
     {
         $wpw = new WikiPageWrapper($this->gid);
         $allPages = $wpw->getProjectEmptyLinks();
@@ -168,7 +168,7 @@ class WikiServiceViews extends WikiViews
    *
    * @param  string[] &$pageList List of page names.
    */
-    function _browsePages(&$pageList)
+    public function _browsePages(&$pageList)
     {
         print '<ul class="WikiEntries">';
         foreach ($pageList as $pagename) {
@@ -186,7 +186,7 @@ class WikiServiceViews extends WikiViews
    *
    * @param  string $addr Form action adress
    */
-    function _newPageForm($addr = '')
+    public function _newPageForm($addr = '')
     {
         print '
     <form name="newPage" method="post" action="'.$addr.'">
@@ -203,7 +203,7 @@ class WikiServiceViews extends WikiViews
    * @param  string   $title
    * @return string   $href
    */
-    function _buildPageLink(&$wikiPage, $title = null)
+    public function _buildPageLink(&$wikiPage, $title = null)
     {
         $href='';
       // Check permission
@@ -239,7 +239,7 @@ class WikiServiceViews extends WikiViews
   /**
    * header - public
    */
-    function header()
+    public function header()
     {
         $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki.css';
         parent::header();
@@ -248,7 +248,7 @@ class WikiServiceViews extends WikiViews
   /**
    * displayMenu - public
    */
-    function displayMenu()
+    public function displayMenu()
     {
 
         print '
@@ -332,7 +332,7 @@ class WikiServiceViews extends WikiViews
    *
    * @access public
    */
-    function pagePerms()
+    public function pagePerms()
     {
         $postUrl = '/wiki/index.php?group_id='.$this->gid.'&action=setWikiPagePerms';
         $this->_pagePerms($postUrl);
@@ -344,7 +344,7 @@ class WikiServiceViews extends WikiViews
    *
    * @access public
    */
-    function wiki()
+    public function wiki()
     {
         $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
 
@@ -365,7 +365,7 @@ class WikiServiceViews extends WikiViews
    * display - public
    * @access public
    */
-    function display($view = '')
+    public function display($view = '')
     {
         $GLOBALS['type_of_search'] = 'wiki';
 
@@ -394,7 +394,7 @@ class WikiServiceViews extends WikiViews
   /**
    * install: ask for confirmation and choose language
    */
-    function install()
+    public function install()
     {
         echo $GLOBALS['Language']->getText(
             'wiki_views_wikiserviceviews',
@@ -414,7 +414,7 @@ class WikiServiceViews extends WikiViews
   /**
    * install
    */
-    function doinstall()
+    public function doinstall()
     {
         global $LANG;
         global $language_id;

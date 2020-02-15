@@ -24,7 +24,7 @@ class Bootstrap_FeedbackFormatter extends FeedbackFormatter
     /**
      * @return string html
      */
-    function format(array $logs)
+    public function format(array $logs)
     {
         $hp        = Codendi_HTMLPurifier::instance();
         $html      = '';

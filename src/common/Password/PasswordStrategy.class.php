@@ -60,7 +60,7 @@ class PasswordStrategy
     *
     * validate a password with the help of validators
     */
-    function validate($pwd)
+    public function validate($pwd)
     {
         $valid = true;
         foreach ($this->validators as $key => $nop) {

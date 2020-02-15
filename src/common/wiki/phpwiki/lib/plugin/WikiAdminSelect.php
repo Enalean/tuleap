@@ -36,17 +36,17 @@ require_once('lib/PageList.php');
 
 class WikiPlugin_WikiAdminSelect extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("WikiAdminSelect");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Allows selection of multiple pages which get passed to other WikiAdmin plugins.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -55,7 +55,7 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('s'       => '', // preselect pages
                      /* select pages by meta-data: */
@@ -75,7 +75,7 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
      * Default collector for all WikiAdmin* plugins.
      * preSelectS() is similar, but fills $this->_list
      */
-    function collectPages(&$list, &$dbi, $sortby, $limit = 0, $exclude = false)
+    public function collectPages(&$list, &$dbi, $sortby, $limit = 0, $exclude = false)
     {
         $allPages = $dbi->getAllPages(0, $sortby, $limit, $exclude);
         while ($pagehandle = $allPages->next()) {
@@ -94,7 +94,7 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
      * 'only: forgot what the diffrrence to 's' was.
      * Sets $this->_list, which is picked up by collectPages() and is a default for p[]
      */
-    function preSelectS(&$args, &$request)
+    public function preSelectS(&$args, &$request)
     {
         // override plugin argument by GET: probably not needed if s||="" is used
         // anyway, we force it for unique interface.
@@ -127,7 +127,7 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
         return $this->_list;
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         //if ($request->getArg('action') != 'browse')
         //    return $this->disabled("(action != 'browse')");

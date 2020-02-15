@@ -12,7 +12,7 @@ require_once('lib/WikiDB/backend.php');
  */
 class WikiDB_backend_dumb_MostRecentIter extends WikiDB_backend_iterator
 {
-    function __construct(&$backend, &$pages, $params)
+    public function __construct(&$backend, &$pages, $params)
     {
         $limit = false;
         extract($params);
@@ -61,12 +61,12 @@ class WikiDB_backend_dumb_MostRecentIter extends WikiDB_backend_iterator
         }
     }
 
-    function next()
+    public function next()
     {
         return array_shift($this->_revisions);
     }
 
-    function free()
+    public function free()
     {
         unset($this->_revisions);
     }

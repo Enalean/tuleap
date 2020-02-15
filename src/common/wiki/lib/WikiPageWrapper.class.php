@@ -37,7 +37,7 @@ class WikiPageWrapper
   /* private int    */ public $gid;
 
 
-    function __construct($id = 0)
+    public function __construct($id = 0)
     {
         $this->gid = (int) $id;
 
@@ -55,7 +55,7 @@ class WikiPageWrapper
   /**
    * @return WikiRequest
    */
-    function getRequest()
+    public function getRequest()
     {
         define('PHPWIKI_NOMAIN', true);
         IniConfig(PHPWIKI_DIR."/config/config.ini");
@@ -67,7 +67,7 @@ class WikiPageWrapper
         return new WikiRequest();
     }
 
-    function getProjectEmptyLinks()
+    public function getProjectEmptyLinks()
     {
       // Dirty hack to 'give' a WikiRequest object to phpwiki
       // Obscure functions seems require it.
@@ -88,7 +88,7 @@ class WikiPageWrapper
         return $allPages;
     }
 
-    function addNewProjectPage($pagename)
+    public function addNewProjectPage($pagename)
     {
         $projectPageName='ProjectWantedPages';
 
@@ -145,7 +145,7 @@ class WikiPageWrapper
         return ! $page_created->exists() && ! in_array($pagename, $this->getProjectEmptyLinks());
     }
 
-    function addUploadPage()
+    public function addUploadPage()
     {
         // Dirty hack to 'give' a WikiRequest object to phpwiki
         // So obscure functions seems require it.
@@ -179,7 +179,7 @@ Upload:num_rev/filename
     }
 
 
-    function render($lite = false, $full_screen = false)
+    public function render($lite = false, $full_screen = false)
     {
         if ($lite) {
             define('THEME', 'Codendi-lite');
@@ -197,7 +197,7 @@ Upload:num_rev/filename
    * special install function
    *
    */
-    function install()
+    public function install()
     {
         if ($this->gid == 1) {
             if (!user_is_super_user()) {
@@ -249,7 +249,7 @@ Upload:num_rev/filename
         $this->render();
     }
 
-    function getNextGroupWithWiki($currentGroupId, &$nbMatchFound)
+    public function getNextGroupWithWiki($currentGroupId, &$nbMatchFound)
     {
         $nextId = null;
 
@@ -276,7 +276,7 @@ Upload:num_rev/filename
           return $nextId;
     }
 
-    function upgrade()
+    public function upgrade()
     {
         global $request;
         global $WikiTheme;

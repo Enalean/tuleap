@@ -48,7 +48,7 @@ class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent
     /**
      * Process stored event
      */
-    function process()
+    public function process()
     {
         list($group_id, $shortname, $is_used) = $this->getParametersAsArray();
 

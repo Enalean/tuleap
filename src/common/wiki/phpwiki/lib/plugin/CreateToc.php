@@ -43,17 +43,17 @@ if (!defined('TOC_FULL_SYNTAX')) {
 
 class WikiPlugin_CreateToc extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("CreateToc");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Automatically link headers at the top");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -62,7 +62,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array( 'pagename'  => '[pagename]', // TOC of another page here?
                       // or headers=1,2,3 is also possible.
@@ -78,14 +78,14 @@ class WikiPlugin_CreateToc extends WikiPlugin
                       );
     }
     // Initialisation of toc counter
-    function _initTocCounter()
+    public function _initTocCounter()
     {
         $counter = array(1=>0, 2=>0, 3=>0);
         return $counter;
     }
 
     // Update toc counter with a new title
-    function _tocCounter(&$counter, $level)
+    public function _tocCounter(&$counter, $level)
     {
         $counter[$level]++;
         $level--;
@@ -95,7 +95,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
     }
 
     // Get string corresponding to the current title
-    function _getCounter(&$counter, $level)
+    public function _getCounter(&$counter, $level)
     {
         $str=$counter[3];
         for ($i = 2; $i > 0; $i--) {
@@ -106,7 +106,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         return $str;
     }
 
-    function preg_quote($heading)
+    public function preg_quote($heading)
     {
         return str_replace(
             array("/",".","?","*"),
@@ -116,7 +116,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
     }
 
     // Get HTML header corresponding to current level (level is set of !)
-    function _getHeader($level)
+    public function _getHeader($level)
     {
         $count = substr_count($level, '!');
         switch ($count) {
@@ -133,7 +133,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         return $h;
     }
 
-    function _quote($heading)
+    public function _quote($heading)
     {
         if (TOC_FULL_SYNTAX) {
             $theading = TransformInline($heading);
@@ -151,7 +151,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
      * @param $hstart id (in $content) of heading start
      * @param $hend   id (in $content) of heading end
      */
-    function searchHeader(
+    public function searchHeader(
         $content,
         $start_index,
         $heading,
@@ -217,7 +217,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
     /** prevent from duplicate anchors,
      *  beautify spaces: " " => "_" and not "x20."
      */
-    function _nextAnchor($s)
+    public function _nextAnchor($s)
     {
         static $anchors = array();
 
@@ -232,7 +232,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
     }
 
     // Feature request: proper nesting; multiple levels (e.g. 1,3)
-    function extractHeaders(
+    public function extractHeaders(
         &$content,
         &$markup,
         $backlink = 0,
@@ -366,7 +366,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         return $headers;
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         global $WikiTheme;
         extract($this->getArgs($argstr, $request));

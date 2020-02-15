@@ -127,7 +127,7 @@ class ServiceFile extends Service
     *
     * return the packages the user can see
     */
-    function _getPackagesForUser($user_id)
+    public function _getPackagesForUser($user_id)
     {
         $frspf = $this->getFRSPackageFactory();
         $packages = array();

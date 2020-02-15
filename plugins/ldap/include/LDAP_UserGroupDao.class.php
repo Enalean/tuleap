@@ -36,7 +36,7 @@ class LDAP_UserGroupDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchByGroupId($ugroupId)
+    public function searchByGroupId($ugroupId)
     {
         $sql = 'SELECT * FROM plugin_ldap_ugroup'.
             ' WHERE ugroup_id = '.db_ei($ugroupId);
@@ -58,7 +58,7 @@ class LDAP_UserGroupDao extends DataAccessObject
      *
      * @return bool
      */
-    function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $synchroPolicy)
+    public function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $synchroPolicy)
     {
         $synchroPolicy = $this->da->quoteSmart($synchroPolicy);
         $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro_policy, bind_option)'.
@@ -73,7 +73,7 @@ class LDAP_UserGroupDao extends DataAccessObject
      *
      * @return bool
      */
-    function unlinkGroupLdap($ugroupId)
+    public function unlinkGroupLdap($ugroupId)
     {
         $sql = 'DELETE FROM plugin_ldap_ugroup'.
             ' WHERE ugroup_id = '.db_ei($ugroupId);
@@ -88,7 +88,7 @@ class LDAP_UserGroupDao extends DataAccessObject
      *
      * @return void
      */
-    function addUserToGroup($ugroupId, $userId)
+    public function addUserToGroup($ugroupId, $userId)
     {
         $row = $this->_getUgroupRow($ugroupId);
         return ugroup_add_user_to_ugroup($row['group_id'], $ugroupId, $userId);
@@ -102,7 +102,7 @@ class LDAP_UserGroupDao extends DataAccessObject
      *
      * @return void
      */
-    function removeUserFromGroup($ugroupId, $userId)
+    public function removeUserFromGroup($ugroupId, $userId)
     {
         $row = $this->_getUgroupRow($ugroupId);
         return ugroup_remove_user_from_ugroup($row['group_id'], $ugroupId, $userId);
@@ -115,7 +115,7 @@ class LDAP_UserGroupDao extends DataAccessObject
      *
      * @return array
      */
-    function _getUgroupRow($ugroupId)
+    public function _getUgroupRow($ugroupId)
     {
         include_once __DIR__ . '/../../../src/www/project/admin/ugroup_utils.php';
         $Language = $GLOBALS['Language'];
@@ -123,7 +123,7 @@ class LDAP_UserGroupDao extends DataAccessObject
         return db_fetch_array($res);
     }
 
-    function getMembersId($id)
+    public function getMembersId($id)
     {
         include_once __DIR__ . '/../../../src/www/project/admin/ugroup_utils.php';
         $ret = array();
@@ -163,7 +163,7 @@ class LDAP_UserGroupDao extends DataAccessObject
      *
      * @return bool
      */
-    function isSynchronizedUgroup($ugroup_id)
+    public function isSynchronizedUgroup($ugroup_id)
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * FROM plugin_ldap_ugroup
@@ -182,7 +182,7 @@ class LDAP_UserGroupDao extends DataAccessObject
      *
      * @return bool
      */
-    function isMembersPreserving($ugroup_id)
+    public function isMembersPreserving($ugroup_id)
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = 'SELECT * FROM plugin_ldap_ugroup

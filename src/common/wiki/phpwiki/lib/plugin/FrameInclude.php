@@ -48,17 +48,17 @@ rcs_id('$Id: FrameInclude.php,v 1.10 2004/06/14 11:31:39 rurban Exp $');
  */
 class WikiPlugin_FrameInclude extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("FrameInclude");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Displays a url in a seperate frame inside our body. Only one frame allowed.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -67,7 +67,7 @@ class WikiPlugin_FrameInclude extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array( 'src'         => false,       // the src url to include
                       'page'        => false,
@@ -84,7 +84,7 @@ class WikiPlugin_FrameInclude extends WikiPlugin
                     );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         global $WikiTheme;
 

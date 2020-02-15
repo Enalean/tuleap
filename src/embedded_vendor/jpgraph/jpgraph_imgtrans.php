@@ -16,7 +16,7 @@ class ImgTrans
 {
     private $gdImg=null;
 
-    function __construct($aGdImg)
+    public function __construct($aGdImg)
     {
         // Constructor
         $this->gdImg = $aGdImg;
@@ -26,7 +26,7 @@ class ImgTrans
     // _TransVert3D() and _TransHor3D() are helper methods to
     // Skew3D().
     // --------------------------------------------------------------------
-    function _TransVert3D($aGdImg, $aHorizon = 100, $aSkewDist = 120, $aDir = SKEW3D_DOWN, $aMinSize = true, $aFillColor = '#FFFFFF', $aQuality = false, $aBorder = false, $aHorizonPos = 0.5)
+    public function _TransVert3D($aGdImg, $aHorizon = 100, $aSkewDist = 120, $aDir = SKEW3D_DOWN, $aMinSize = true, $aFillColor = '#FFFFFF', $aQuality = false, $aBorder = false, $aHorizonPos = 0.5)
     {
 
         // Parameter check
@@ -114,7 +114,7 @@ class ImgTrans
     // _TransVert3D() and _TransHor3D() are helper methods to
     // Skew3D().
     // --------------------------------------------------------------------
-    function _TransHor3D($aGdImg, $aHorizon = 100, $aSkewDist = 120, $aDir = SKEW3D_LEFT, $aMinSize = true, $aFillColor = '#FFFFFF', $aQuality = false, $aBorder = false, $aHorizonPos = 0.5)
+    public function _TransHor3D($aGdImg, $aHorizon = 100, $aSkewDist = 120, $aDir = SKEW3D_LEFT, $aMinSize = true, $aFillColor = '#FFFFFF', $aQuality = false, $aBorder = false, $aHorizonPos = 0.5)
     {
 
         $w = imagesx($aGdImg);
@@ -221,7 +221,7 @@ class ImgTrans
     // * $aBorder, if set to anything besides false this will draw a
     //   a border of the speciied color around the image
     // --------------------------------------------------------------------
-    function Skew3D($aHorizon = 120, $aSkewDist = 150, $aDir = SKEW3D_DOWN, $aHiQuality = false, $aMinSize = true, $aFillColor = '#FFFFFF', $aBorder = false)
+    public function Skew3D($aHorizon = 120, $aSkewDist = 150, $aDir = SKEW3D_DOWN, $aHiQuality = false, $aMinSize = true, $aFillColor = '#FFFFFF', $aBorder = false)
     {
         return $this->_Skew3D(
             $this->gdImg,
@@ -235,7 +235,7 @@ class ImgTrans
         );
     }
 
-    function _Skew3D($aGdImg, $aHorizon = 120, $aSkewDist = 150, $aDir = SKEW3D_DOWN, $aHiQuality = false, $aMinSize = true, $aFillColor = '#FFFFFF', $aBorder = false)
+    public function _Skew3D($aGdImg, $aHorizon = 120, $aSkewDist = 150, $aDir = SKEW3D_DOWN, $aHiQuality = false, $aMinSize = true, $aFillColor = '#FFFFFF', $aBorder = false)
     {
         if ($aDir == SKEW3D_DOWN || $aDir == SKEW3D_UP) {
             return $this->_TransVert3D($aGdImg, $aHorizon, $aSkewDist, $aDir, $aMinSize, $aFillColor, $aHiQuality, $aBorder);

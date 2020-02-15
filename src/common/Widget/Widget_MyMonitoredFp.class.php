@@ -34,11 +34,11 @@ class Widget_MyMonitoredFp extends Widget
         parent::__construct('mymonitoredfp');
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('my_index', 'my_files');
     }
-    function getContent()
+    public function getContent()
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $frsrf = new FRSReleaseFactory();
@@ -122,16 +122,16 @@ class Widget_MyMonitoredFp extends Widget
         return $html_my_monitored_fp;
     }
 
-    function getCategory()
+    public function getCategory()
     {
         return _('Files');
     }
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_monitored_fp', 'description');
         ;
     }
-    function isAjax()
+    public function isAjax()
     {
         return true;
     }

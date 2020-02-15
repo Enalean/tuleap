@@ -43,7 +43,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
      */
     private $get_action_on_icon;
 
-    function __construct($view, $params = null)
+    public function __construct($view, $params = null)
     {
         $this->view                = $view;
         $this->get_action_on_icon = new Docman_View_GetActionOnIconVisitor();
@@ -59,26 +59,26 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         }
     }
 
-    function toHtml()
+    public function toHtml()
     {
         return $this->html;
     }
 
-    function getJavascript()
+    public function getJavascript()
     {
         return $this->js;
     }
 
-    function _canDisplayItem($item)
+    public function _canDisplayItem($item)
     {
         return true;
     }
-    function _canDisplaySubItems($item)
+    public function _canDisplaySubItems($item)
     {
         return true;
     }
 
-    function visitFolder(Docman_Folder $item, $params = array())
+    public function visitFolder(Docman_Folder $item, $params = array())
     {
         $li_displayed = $this->_displayItem($item, $params);
         if ($this->_canDisplaySubItems($item)) {
@@ -106,7 +106,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         }
         return '';
     }
-    function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = array())
     {
         $params['popup_doc'] = true;
         $li_displayed = $this->_displayItem($item, $params);
@@ -143,7 +143,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
 
 
     //{{{
-    function _displayItem(&$item, $params)
+    public function _displayItem(&$item, $params)
     {
         $li_displayed = false;
         if ($this->stripFirstNode && !$this->firstNodeStripped) {

@@ -55,7 +55,7 @@ class Wiki
    *
    * @return bool Return if a permission is set on this Wiki
    */
-    function permissionExist()
+    public function permissionExist()
     {
         return permission_exist('WIKI_READ', $this->gid);
     }
@@ -87,7 +87,7 @@ class Wiki
    * @param  string[] $groups List of groups allowed to access to the Wiki
    * @return bool Modification status
    */
-    function setPermissions($groups)
+    public function setPermissions($groups)
     {
         global $feedback;
 
@@ -107,7 +107,7 @@ class Wiki
    *
    * @return bool Modification status
    */
-    function resetPermissions()
+    public function resetPermissions()
     {
         return permission_clear_all(
             $this->gid,
@@ -121,7 +121,7 @@ class Wiki
    * Check WikiEntry existance for given project.
    * @return bool
    */
-    function exist()
+    public function exist()
     {
         if ($this->exist === null) {
             $res = db_query('SELECT count(*) AS nb FROM wiki_page'
@@ -136,7 +136,7 @@ class Wiki
    * Get number of wiki pages.
    * @return number of pages (0 if wiki is empty)
    */
-    function getPageCount()
+    public function getPageCount()
     {
         $res = db_query(' SELECT count(*) as count'
         .' FROM wiki_page, wiki_nonempty'
@@ -155,7 +155,7 @@ class Wiki
    * Get number of project wiki pages.
    * @return number of project pages (0 if wiki is empty)
    */
-    function getProjectPageCount()
+    public function getProjectPageCount()
     {
         $excluded_pages_db_escaped = [];
         foreach (array_merge(WikiPage::getAdminPages(), WikiPage::getDefaultPages()) as $excluded_page) {
@@ -179,7 +179,7 @@ class Wiki
    * Get wiki language (set at creation time)
    * return 0 if no wiki document exist
    */
-    function getLanguage_id()
+    public function getLanguage_id()
     {
         // The language of the wiki is the language of all its wiki documents.
         if (!$this->language_id) {
@@ -199,7 +199,7 @@ class Wiki
    * Experimental
    */
 
-    function dropLink($id)
+    public function dropLink($id)
     {
         $res = db_query('  DELETE FROM wiki_link'
         .' WHERE linkfrom='.db_ei($id)
@@ -210,31 +210,31 @@ class Wiki
         }
     }
 
-    function dropNonEmpty($id)
+    public function dropNonEmpty($id)
     {
         $res = db_query('  DELETE FROM wiki_nonempty'
         .' WHERE id='.db_ei($id));
     }
 
-    function dropRecent($id)
+    public function dropRecent($id)
     {
         $res = db_query('  DELETE FROM wiki_recent'
         .' WHERE id='.db_ei($id));
     }
 
-    function dropVersion($id)
+    public function dropVersion($id)
     {
         $res = db_query('  DELETE FROM wiki_version'
         .' WHERE id='.db_ei($id));
     }
 
-    function dropPage($id)
+    public function dropPage($id)
     {
         $res = db_query('  DELETE FROM wiki_page'
         .' WHERE id='.db_ei($id));
     }
 
-    function drop()
+    public function drop()
     {
       //TODO: Drop entries
 

@@ -40,7 +40,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
      *
      * @return void
      */
-    function deleteForm($file)
+    public function deleteForm($file)
     {
         echo '<form name="deleteform" method="post" action="">
         <input type="hidden" name="action" value="delete" />
@@ -56,7 +56,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
      *
      * @return void
      */
-    function renameForm($file)
+    public function renameForm($file)
     {
         echo '<form method="post" action="">
         <input type="hidden" name="action" value="rename" />
@@ -74,7 +74,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
      *
      * @return void
      */
-    function moveForm($file, $destinations)
+    public function moveForm($file, $destinations)
     {
         echo '<form method="post" action="">
         <input type="hidden" name="action" value="move" />
@@ -97,7 +97,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
      *
      * @return void
      */
-    function mkcolForm()
+    public function mkcolForm()
     {
         echo '<form method="post" action="">
         <input type="hidden" name="action" value="mkcol" />
@@ -113,7 +113,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
      *
      * @return Array
      */
-    function getReleaseDestinations($release)
+    public function getReleaseDestinations($release)
     {
         $project = $this->server->tree->getNodeForPath(dirname(dirname($release['href'])));
         $packages = $project->getChildren();
@@ -134,7 +134,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
      *
      * @return Array
      */
-    function getFileDestinations($file)
+    public function getFileDestinations($file)
     {
         $project = $this->server->tree->getNodeForPath(dirname(dirname(dirname($file['href']))));
         $packages = $project->getChildren();

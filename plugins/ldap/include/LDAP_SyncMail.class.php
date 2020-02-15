@@ -26,7 +26,7 @@ class LDAP_SyncMail
     private $projectManager;
     private $logger;
 
-    function __construct(ProjectManager $projectManager)
+    public function __construct(ProjectManager $projectManager)
     {
         $this->logger         = new \Tuleap\LDAP\LdapLogger();
         $this->projectManager = $projectManager;

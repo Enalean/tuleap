@@ -24,7 +24,7 @@ class Docman_ApprovalTableItem extends Docman_ApprovalTable
 {
     public $itemId = null;
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         parent::initFromRow($row);
         if (isset($row['item_id'])) {
@@ -32,12 +32,12 @@ class Docman_ApprovalTableItem extends Docman_ApprovalTable
         }
     }
 
-    function setItemId($v)
+    public function setItemId($v)
     {
         $this->itemId = $v;
     }
 
-    function getItemId()
+    public function getItemId()
     {
         return $this->itemId;
     }

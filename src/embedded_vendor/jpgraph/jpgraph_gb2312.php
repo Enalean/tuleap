@@ -1507,7 +1507,7 @@ class GB2312toUTF8
     30586 => 40761, 30587 => 40759, 30588 => 40765, 30589 => 40766, 30590 => 40772,
     0 => 0 );
 
-    function gb2utf8($gb)
+    public function gb2utf8($gb)
     {
         if (!trim($gb)) {
             return $gb;
@@ -1527,7 +1527,7 @@ class GB2312toUTF8
         return $utf8;
     }
 
-    function u2utf8($c)
+    public function u2utf8($c)
     {
         $str='';
         if ($c < 0x80) {

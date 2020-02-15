@@ -121,7 +121,7 @@ class StatisticsPlugin extends Plugin
         }
     }
 
-    function getPluginInfo()
+    public function getPluginInfo()
     {
         if (!$this->pluginInfo instanceof StatisticsPluginInfo) {
             include_once('StatisticsPluginInfo.class.php');
@@ -130,7 +130,7 @@ class StatisticsPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    function site_admin_option_hook($params)
+    public function site_admin_option_hook($params)
     {
         $params['plugins'][] = array(
             'label' => 'Statistics',
@@ -192,7 +192,7 @@ class StatisticsPlugin extends Plugin
      *
      * @return void
      */
-    function usergroup_data($params)
+    public function usergroup_data($params)
     {
         $user_url_params = array(
             'menu' => 'one_user_details',
@@ -206,7 +206,7 @@ class StatisticsPlugin extends Plugin
     }
 
     /** @see ProjectDetailsPresenter::GET_MORE_INFO_LINKS */
-    function get_more_info_links($params)
+    public function get_more_info_links($params)
     {
         if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
             return;
