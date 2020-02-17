@@ -151,6 +151,7 @@ export interface BurndownData {
     is_under_calculation: boolean;
     opening_days: Array<number>;
     points_with_date: Array<PointsWithDate>;
+    label: string | null;
 }
 
 export interface PointsWithDate {

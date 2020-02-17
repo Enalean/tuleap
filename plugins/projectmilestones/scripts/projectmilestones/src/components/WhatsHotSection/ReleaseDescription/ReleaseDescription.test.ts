@@ -22,7 +22,7 @@ import ReleaseDescription from "./ReleaseDescription.vue";
 import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { MilestoneData, StoreOptions } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
-import BurndownChart from "./Chart/BurndownChart.vue";
+import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseDescription> = {};
@@ -74,23 +74,7 @@ describe("ReleaseDescription", () => {
         expect(wrapper.find("[data-test=tooltip-description]").text()).toEqual(description);
     });
 
-    it("When there isn't any burndown, Then the BurndownChart is not rendered", async () => {
-        release_data = {
-            id: 2,
-            resources: {
-                burndown: null
-            }
-        } as MilestoneData;
-
-        component_options.propsData = {
-            release_data
-        };
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains(BurndownChart)).toBe(false);
-    });
-
-    it("When there is a burndown, Then the BurndownChart is rendered", async () => {
+    it("When there is a burndown, Then the ChartDisplayer is rendered", async () => {
         release_data = {
             id: 2,
             resources: {
@@ -105,6 +89,6 @@ describe("ReleaseDescription", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains(BurndownChart)).toBe(true);
+        expect(wrapper.contains(ChartDisplayer)).toBe(true);
     });
 });

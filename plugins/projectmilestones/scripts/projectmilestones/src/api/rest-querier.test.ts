@@ -149,14 +149,8 @@ describe("getProject() -", () => {
 
     it("the REST API will be queried and the burndown_data of milestone returned", async () => {
         const burndown_data: BurndownData = {
-            start_date: "",
-            is_under_calculation: false,
-            duration: 2,
-            capacity: 10,
-            points: [],
-            opening_days: [],
-            points_with_date: []
-        };
+            start_date: new Date().toDateString()
+        } as BurndownData;
 
         const artifact_chart = {
             values: [{ value: burndown_data }]

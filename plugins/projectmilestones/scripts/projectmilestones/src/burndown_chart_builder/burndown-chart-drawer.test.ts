@@ -153,7 +153,7 @@ describe("BurndownChartDrawer -", () => {
             is_under_calculation: false,
             points: [5, 10, 15],
             points_with_date: getPointsWithDateWithMaxIs15()
-        };
+        } as BurndownData;
     }
 
     function getBurndownDataWithoutPointsWithDate(): BurndownData {
@@ -163,9 +163,9 @@ describe("BurndownChartDrawer -", () => {
             start_date: "2019-07-01T00:00:00+00:00",
             capacity: null,
             is_under_calculation: false,
-            points: [],
-            points_with_date: []
-        };
+            points: [] as number[],
+            points_with_date: [] as PointsWithDate[]
+        } as BurndownData;
     }
 
     function getBurndownDataWith0RemainingEffort(): BurndownData {
@@ -177,7 +177,7 @@ describe("BurndownChartDrawer -", () => {
             is_under_calculation: false,
             points: [0],
             points_with_date: getPointsWithDateWithMaxIsZero()
-        };
+        } as BurndownData;
     }
 
     function getPointsWithDateWithMaxIs15(): PointsWithDate[] {

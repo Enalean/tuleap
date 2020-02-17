@@ -57,5 +57,5 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 
 @Component
-export default class BurndownChartError extends Vue {}
+export default class BurndownError extends Vue {}
 </script>

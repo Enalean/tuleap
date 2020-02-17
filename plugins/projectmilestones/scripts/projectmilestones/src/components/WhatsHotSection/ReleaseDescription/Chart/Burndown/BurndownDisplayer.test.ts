@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,33 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BurndownData, MilestoneData, StoreOptions } from "../../../../type";
+import { BurndownData, MilestoneData, PointsWithDate, StoreOptions } from "../../../../../type";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import BurndownChart from "./BurndownChart.vue";
-import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
+import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import Burndown from "./Burndown.vue";
+import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import { DefaultData } from "vue/types/options";
-import * as rest_querier from "../../../../api/rest-querier";
-import BurndownChartError from "./BurndownChartError.vue";
-import BurndownChartDisplayer from "./BurndownChartDisplayer.vue";
+import BurndownError from "./BurndownError.vue";
+import BurndownDisplayer from "./BurndownDisplayer.vue";
 
 let release_data: MilestoneData;
-const component_options: ShallowMountOptions<BurndownChart> = {};
+const component_options: ShallowMountOptions<BurndownDisplayer> = {};
 const project_id = 102;
 
-describe("BurndownChart", () => {
+describe("BurndownDisplayer", () => {
     let store_options: StoreOptions;
     let store;
 
     async function getPersonalWidgetInstance(
         store_options: StoreOptions
-    ): Promise<Wrapper<BurndownChart>> {
+    ): Promise<Wrapper<BurndownDisplayer>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
-        return shallowMount(BurndownChart, component_options);
+        return shallowMount(BurndownDisplayer, component_options);
     }
 
     beforeEach(() => {
@@ -61,10 +60,10 @@ describe("BurndownChart", () => {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 10,
                 capacity: 10,
-                points: [],
+                points: [] as number[],
                 is_under_calculation: true,
-                opening_days: [],
-                points_with_date: []
+                opening_days: [] as number[],
+                points_with_date: [] as PointsWithDate[]
             } as BurndownData
         } as MilestoneData;
 
@@ -75,9 +74,13 @@ describe("BurndownChart", () => {
         getPersonalWidgetInstance(store_options);
     });
 
-    it("When the burndown is under calculation, Then BurndownChartError component is rendered", async () => {
+    it("When the burndown is under calculation, Then BurndownError component is rendered", async () => {
+        component_options.propsData = {
+            release_data,
+            message_error_rest: null
+        };
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownChartError);
+        const burndown_error = wrapper.find(BurndownError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeTruthy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
@@ -85,7 +88,7 @@ describe("BurndownChart", () => {
         expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
-    it("When there isn't start date, Then BurndownChartError component is rendered", async () => {
+    it("When there isn't start date, Then BurndownError component is rendered", async () => {
         release_data = {
             id: 2,
             start_date: null,
@@ -93,19 +96,20 @@ describe("BurndownChart", () => {
                 start_date: "",
                 duration: 10,
                 capacity: 10,
-                points: [],
+                points: [] as number[],
                 is_under_calculation: false,
-                opening_days: [],
-                points_with_date: []
+                opening_days: [] as number[],
+                points_with_date: [] as PointsWithDate[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
+            message_error_rest: null
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownChartError);
+        const burndown_error = wrapper.find(BurndownError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeTruthy();
@@ -113,7 +117,7 @@ describe("BurndownChart", () => {
         expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
-    it("When there duration is equal to 0, Then BurndownChartError component is rendered", async () => {
+    it("When there duration is equal to 0, Then BurndownError component is rendered", async () => {
         release_data = {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -121,19 +125,20 @@ describe("BurndownChart", () => {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 0,
                 capacity: 10,
-                points: [],
+                points: [] as number[],
                 is_under_calculation: false,
-                opening_days: [],
-                points_with_date: []
+                opening_days: [] as number[],
+                points_with_date: [] as PointsWithDate[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
+            message_error_rest: null
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownChartError);
+        const burndown_error = wrapper.find(BurndownError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
@@ -141,7 +146,7 @@ describe("BurndownChart", () => {
         expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
-    it("When duration is null, Then BurndownChartError component is rendered", async () => {
+    it("When duration is null, Then BurndownError component is rendered", async () => {
         release_data = {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -149,19 +154,20 @@ describe("BurndownChart", () => {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: null,
                 capacity: 10,
-                points: [],
+                points: [] as number[],
                 is_under_calculation: false,
-                opening_days: [],
-                points_with_date: []
+                opening_days: [] as number[],
+                points_with_date: [] as PointsWithDate[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
+            message_error_rest: null
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownChartError);
+        const burndown_error = wrapper.find(BurndownError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
@@ -169,7 +175,7 @@ describe("BurndownChart", () => {
         expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
-    it("When duration is null and start date is null, Then BurndownChartError component is rendered", async () => {
+    it("When duration is null and start date is null, Then BurndownError component is rendered", async () => {
         release_data = {
             id: 2,
             start_date: null,
@@ -177,19 +183,20 @@ describe("BurndownChart", () => {
                 start_date: "",
                 duration: null,
                 capacity: 10,
-                points: [],
+                points: [] as number[],
                 is_under_calculation: false,
-                opening_days: [],
-                points_with_date: []
+                opening_days: [] as number[],
+                points_with_date: [] as PointsWithDate[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
+            message_error_rest: null
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownChartError);
+        const burndown_error = wrapper.find(BurndownError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeTruthy();
@@ -197,7 +204,7 @@ describe("BurndownChart", () => {
         expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
-    it("When duration is null and it is under calculation, Then BurndownChartError component is rendered", async () => {
+    it("When duration is null and it is under calculation, Then BurndownError component is rendered", async () => {
         release_data = {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -205,19 +212,20 @@ describe("BurndownChart", () => {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: null,
                 capacity: 10,
-                points: [],
+                points: [] as number[],
                 is_under_calculation: true,
-                opening_days: [],
-                points_with_date: []
+                opening_days: [] as number[],
+                points_with_date: [] as PointsWithDate[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
+            message_error_rest: null
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownChartError);
+        const burndown_error = wrapper.find(BurndownError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeTruthy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
@@ -225,7 +233,7 @@ describe("BurndownChart", () => {
         expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
-    it("When the burndown can be created, Then component BurndownChartDisplayer is rendered", async () => {
+    it("When the burndown can be created, Then component BurndownDisplayer is rendered", async () => {
         release_data = {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -233,98 +241,38 @@ describe("BurndownChart", () => {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 10,
                 capacity: 10,
-                points: [],
+                points: [] as number[],
                 is_under_calculation: false,
-                opening_days: [],
-                points_with_date: []
+                opening_days: [] as number[],
+                points_with_date: [] as PointsWithDate[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
+            message_error_rest: null
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(BurndownChartDisplayer)).toBe(true);
+        expect(wrapper.contains(BurndownDisplayer)).toBe(true);
     });
 
-    it("When the burndown is recovering, Then component BurndownChartDisplayer is rendered", async () => {
-        const burndown_data: BurndownData = {
-            start_date: new Date().toString()
-        } as BurndownData;
-
-        jest.spyOn(rest_querier, "getBurndownData").mockReturnValue(
-            Promise.resolve({
-                values: [
-                    {
-                        value: burndown_data,
-                        field_id: 10,
-                        label: "burndown",
-                        type: "burndown"
-                    }
-                ]
-            })
-        );
-
-        release_data = {
-            id: 2,
-            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            burndown_data: null
-        } as MilestoneData;
-
-        component_options.data = (): DefaultData<BurndownChart> => {
+    it("When there is a rest error, Then BurndownError component is rendered", async () => {
+        component_options.data = (): DefaultData<Burndown> => {
             return {
-                is_open: false,
-                is_loading: true,
-                error_message: null
+                is_open: false
             };
         };
 
         component_options.propsData = {
-            release_data
-        };
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-
-        expect(wrapper.contains(BurndownChartDisplayer)).toBe(true);
-    });
-
-    it("When the burndown doesn't yet exist, Then there is a spinner", async () => {
-        component_options.data = (): DefaultData<BurndownChart> => {
-            return {
-                is_open: false,
-                is_loading: true,
-                error_message: null
-            };
-        };
-
-        component_options.propsData = {
-            release_data
-        };
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        wrapper.setData({ is_loading: true });
-
-        expect(wrapper.contains("[data-test=loading-data]")).toBe(true);
-    });
-
-    it("When there is a rest error, Then BurndownChartError component is rendered", async () => {
-        component_options.data = (): DefaultData<BurndownChart> => {
-            return {
-                is_open: false,
-                is_loading: true,
-                message_error_rest: "404 Error"
-            };
-        };
-
-        component_options.propsData = {
-            release_data
+            release_data,
+            message_error_rest: "404 Error"
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         wrapper.setData({ message_error_rest: "404 Error" });
-        const burndown_error = wrapper.find(BurndownChartError);
+        const burndown_error = wrapper.find(BurndownError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeTruthy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
@@ -342,19 +290,20 @@ describe("BurndownChart", () => {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 10,
                 capacity: 10,
-                points: [],
+                points: [] as number[],
                 is_under_calculation: false,
-                opening_days: [],
-                points_with_date: []
+                opening_days: [] as number[],
+                points_with_date: [] as PointsWithDate[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
+            messsage_error_rest: null
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownChartError);
+        const burndown_error = wrapper.find(BurndownError);
 
         expect(burndown_error.attributes("has_error_duration")).toBeTruthy();
     });
@@ -372,19 +321,20 @@ describe("BurndownChart", () => {
                 start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
                 duration: 10,
                 capacity: 10,
-                points: [],
+                points: [] as number[],
                 is_under_calculation: false,
-                opening_days: [],
-                points_with_date: []
+                opening_days: [] as number[],
+                points_with_date: [] as PointsWithDate[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
+            messsage_error_rest: null
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownChartError);
+        const burndown_error = wrapper.find(BurndownError);
 
         expect(burndown_error.attributes("has_error_duration")).toBeFalsy();
     });
