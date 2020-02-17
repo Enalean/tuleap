@@ -25,7 +25,9 @@ namespace Tuleap\User;
 use BaseLanguage;
 use BaseLanguageFactory;
 use Codendi_Mail;
+use DateInterval;
 use ForgeConfig;
+use Hamcrest\Matchers;
 use MailPresenterFactory;
 use Mockery;
 use PFUser;
@@ -117,17 +119,33 @@ class UserSuspensionManagerTest extends TestCase
     public function testCheckUserAccountValidity()
     {
         $test_date = (new \DateTimeImmutable())->setTimestamp(1579699252);
-        $last_remove_date_param = '- ' . ForgeConfig::get('sys_suspend_non_project_member_delay') . ' day';
-        $last_remove = $test_date->modify($last_remove_date_param);
-        $last_valid_access_date_param = '- ' . ForgeConfig::get('sys_suspend_inactive_accounts_delay') . ' day';
-        $last_valid_access = $test_date->modify($last_valid_access_date_param);
 
-        $this->dao->shouldReceive('suspendUserNotProjectMembers')
-            ->with(\Mockery::mustBe($last_remove))->once();
-        $this->dao->shouldReceive('suspendInactiveAccounts')
-            ->with(\Mockery::mustBe($last_valid_access))->once();
-        $this->dao->shouldReceive('suspendExpiredAccounts')
-            ->with($test_date)->once();
+        $last_remove = $test_date->sub(new DateInterval("P4D"));
+        $last_valid_access = $test_date->sub(new DateInterval("P10D"));
+
+        $non_project_members = array(array('user_id' => 103), array('user_id' => 104));
+        $non_project_member_1 = 103;
+        $non_project_member_2 = 104;
+        $this->user_suspension_logger->shouldReceive('info');
+        $this->user_suspension_logger->shouldReceive('error');
+        $this->user_suspension_logger->shouldReceive('debug');
+
+        $this->dao->shouldReceive('returnNotProjectMembers')->andReturn($non_project_members);
+        $this->dao->shouldReceive('delayForBeingNotProjectMembers')->with($non_project_member_1)->andReturn(array());
+        $this->dao->shouldReceive('delayForBeingNotProjectMembers')->with($non_project_member_2)->andReturn(array(array('date' => 1579267252)));
+
+        $this->dao->shouldReceive('delayForBeingSubscribed')
+            ->with($non_project_member_1, Matchers::equalTo($last_remove))
+            ->andReturn(array(array(null)));
+
+        $this->dao->shouldReceive('suspendAccount')->with($non_project_member_1);
+        $this->dao->shouldReceive('verifySuspension')->with($non_project_member_1)->andReturn(true);
+        $this->dao->shouldReceive('suspendAccount')->with($non_project_member_2);
+        $this->dao->shouldReceive('verifySuspension')->with($non_project_member_2)->andReturn(true);
+        ;
+
+        $this->dao->shouldReceive('suspendInactiveAccounts')->with(Matchers::equalTo($last_valid_access))->once();
+        $this->dao->shouldReceive('suspendExpiredAccounts')->with($test_date)->once();
 
         $this->user_suspension_manager->checkUserAccountValidity($test_date);
     }

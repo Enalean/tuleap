@@ -176,7 +176,7 @@ $CLI_command_collector->addCommand(
                 TemplateRendererFactory::build()->getRenderer(__DIR__ .'/../templates/mail/'),
                 'mail-suspension-alert',
                 new Codendi_Mail,
-                new UserSuspensionDao(new UserSuspensionLogger()),
+                new UserSuspensionDao(),
                 $user_manager,
                 new BaseLanguageFactory(),
                 new UserSuspensionLogger()
