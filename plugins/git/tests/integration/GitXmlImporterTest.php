@@ -49,7 +49,6 @@ use ProjectManager;
 use SimpleXMLElement;
 use SiteCache;
 use System_Command;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\Permissions\FineGrainedPermission;
@@ -61,7 +60,7 @@ use XMLImportHelper;
 
 final class GitXmlImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory, \Tuleap\GlobalLanguageMock;
+    use MockeryPHPUnitIntegration, TemporaryTestDirectory, \Tuleap\GlobalLanguageMock;
     /**
      * @var XMLImportHelper
      */
@@ -126,8 +125,14 @@ final class GitXmlImporterTest extends TestCase
      */
     private $logger;
 
+    private $backup_tmp_dir;
+    private $backup_access_config;
+
     protected function setUp() : void
     {
+        $this->backup_tmp_dir       = ForgeConfig::get('tmp_dir');
+        $this->backup_access_config = ForgeConfig::get(ForgeAccess::CONFIG);
+
         $this->old_cwd = getcwd();
         $this->system_command = new System_Command();
         parent::setUp();
@@ -257,6 +262,9 @@ final class GitXmlImporterTest extends TestCase
 
     protected function tearDown() : void
     {
+        $this->backup_tmp_dir       = ForgeConfig::set('tmp_dir', $this->backup_tmp_dir);
+        $this->backup_access_config = ForgeConfig::set(ForgeAccess::CONFIG, $this->backup_access_config);
+
         parent::tearDown();
         unset($GLOBALS['sys_data_dir']);
         ForgeConfig::restore();
