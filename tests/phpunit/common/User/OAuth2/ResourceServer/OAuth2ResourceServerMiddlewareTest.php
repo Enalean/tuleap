@@ -92,17 +92,29 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         $this->assertSame($expected_response, $response);
     }
 
-    public function testAccessIsNotAllowedWhenTheAuthorizationHeaderIsNotCorrectlySet(): void
+    /**
+     * @dataProvider dataProviderBadAuthorizationHeader
+     */
+    public function testAccessIsNotAllowedWhenTheAuthorizationHeaderIsNotCorrect(string $bad_authorization_header_for_bearer_token): void
     {
         $handler = \Mockery::mock(RequestHandlerInterface::class);
         $handler->shouldNotReceive('handle');
 
         $response = $this->middleware->process(
-            $this->buildServerRequest(''),
+            $this->buildServerRequest($bad_authorization_header_for_bearer_token),
             $handler
         );
 
         $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals('Bearer realm="Tuleap OAuth2 Protected Resource"', $response->getHeaderLine('WWW-Authenticate'));
+    }
+
+    public function dataProviderBadAuthorizationHeader(): array
+    {
+        return [
+            [''],
+            ['NotABearer Foo']
+        ];
     }
 
     public function testAccessIsNotAllowedWhenTheTokenCannotBeVerified(): void
@@ -124,6 +136,10 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         );
 
         $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(
+            'Bearer realm="Tuleap OAuth2 Protected Resource" error="invalid_token"',
+            $response->getHeaderLine('WWW-Authenticate')
+        );
     }
 
     public function testAccessIsNotAllowedWhenTheTokenCannotBeParsed(): void
@@ -143,6 +159,10 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         );
 
         $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(
+            'Bearer realm="Tuleap OAuth2 Protected Resource" error="invalid_token" error_description="Access token is malformed"',
+            $response->getHeaderLine('WWW-Authenticate')
+        );
     }
 
     public function testAccessIsNotAllowedWhenTheUserCannotBeValidated(): void
@@ -165,6 +185,10 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         );
 
         $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(
+            'Bearer realm="Tuleap OAuth2 Protected Resource" error="invalid_token" error_description="Cannot authenticate user"',
+            $response->getHeaderLine('WWW-Authenticate')
+        );
     }
 
 
