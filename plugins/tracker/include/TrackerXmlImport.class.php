@@ -809,6 +809,20 @@ class TrackerXmlImport
         return $tracker;
     }
 
+    private function getFormElementsFromXml(SimpleXMLElement $xml): array
+    {
+        $form_element = [];
+        foreach ($xml->formElements->children() as $index => $elem) {
+            if ($index === Tracker_FormElement::XML_TAG) {
+                $form_element[] = $elem;
+            }
+            if ($index === Tracker_FormElement::XML_TAG_EXTERNAL_FIELD) {
+                $form_element[] = $elem;
+            }
+        }
+
+        return $form_element;
+    }
     /**
      *
      * @param array $hierarchy
@@ -938,7 +952,9 @@ class TrackerXmlImport
         TrackerXmlImportFeedbackCollector $feedback_collector,
         Tracker $tracker
     ): void {
-        foreach ($xml->formElements->formElement as $index => $elem) {
+        $elements = $this->getFormElementsFromXml($xml);
+
+        foreach ($elements as $elem) {
             $form_element = $this->formelement_factory->getInstanceFromXML(
                 $tracker,
                 $elem,

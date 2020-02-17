@@ -160,7 +160,7 @@ final class TrackerXmlImportTest extends TestCase
         $this->external_validator           = Mockery::mock(ExternalFieldsExtractor::class);
         $this->ugroup_retriever_with_legacy = Mockery::spy(UGroupRetrieverWithLegacy::class);
 
-        $this->tracker_form_element_factory  = Mockery::spy(Tracker_FormElementFactory::class);
+        $this->tracker_form_element_factory  = Mockery::mock(Tracker_FormElementFactory::class);
         $this->artifact_XML_import           = Mockery::spy(Tracker_Artifact_XMLImport::class);
         $this->hierarchy_dao                 = Mockery::spy(HierarchyDAO::class);
         $this->rng_validator                 = new XML_RNGValidator();
@@ -709,6 +709,57 @@ final class TrackerXmlImportTest extends TestCase
             $xml,
             $this->mapping_registery,
             ''
+        );
+    }
+
+    public function testItImportFormElementAndExternalField()
+    {
+        $xml = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+                     <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                         <name>name10</name>
+                         <item_name>item11</item_name>
+                         <description>desc12</description>
+                         <color>inca-silver</color>
+                         <cannedResponses/>
+                         <formElements>
+                            <formElement type="string" ID="F691" rank="0" required="1">
+                              <name>summary</name>
+                              <label><![CDATA[Summary]]></label>
+                              <description><![CDATA[One line description of the artifact]]></description>
+                              <properties maxchars="150" size="80"/>
+                             </formElement>
+                             <externalField/>
+                             <paformElement/>
+                         </formElements>
+                     </tracker>'
+        );
+        $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
+        $tracker            = Mockery::mock(Tracker::class);
+        $this->tracker_xml_importer->shouldReceive('setTrackerGeneralInformation')->once();
+        $this->tracker_factory->shouldReceive('getInstanceFromRow')->once()->andReturn($tracker);
+        $this->tracker_xml_importer->shouldReceive('setCannedResponses')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_form_element_factory->shouldReceive('getInstanceFromXML')->twice();
+
+        $this->tracker_xml_importer->shouldReceive('setSemantics')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setLegacyDependencies')->once()->withArgs([$xml]);
+        $this->tracker_xml_importer->shouldReceive('setRules')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setTrackerReports')->once()->withArgs(
+            [$xml, $this->project, $tracker]
+        );
+        $this->tracker_xml_importer->shouldReceive('setWorkflow')->once()->withArgs([$xml, $this->project, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setWebhooks')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setPermissions')->once()->withArgs(
+            [$xml, $this->project, $tracker, []]
+        );
+
+        $this->tracker_xml_importer->getInstanceFromXML(
+            $xml,
+            $this->project,
+            "tracker name",
+            "trcker description",
+            "bugs",
+            $feedback_collector
         );
     }
 
