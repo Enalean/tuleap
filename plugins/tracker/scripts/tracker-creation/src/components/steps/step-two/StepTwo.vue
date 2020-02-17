@@ -47,5 +47,18 @@ import FieldDescription from "./creation-fields/FieldDescription.vue";
         FieldDescription
     }
 })
-export default class StepTwo extends Vue {}
+export default class StepTwo extends Vue {
+    mounted(): void {
+        window.addEventListener("beforeunload", this.beforeUnload);
+    }
+
+    beforeDestroy(): void {
+        window.removeEventListener("beforeunload", this.beforeUnload);
+    }
+
+    beforeUnload(event: Event): void {
+        event.preventDefault();
+        event.returnValue = false;
+    }
+}
 </script>
