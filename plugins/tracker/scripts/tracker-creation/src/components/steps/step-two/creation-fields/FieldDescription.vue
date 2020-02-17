@@ -33,17 +33,17 @@
 import Vue from "vue";
 import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { Tracker } from "../../../../store/type";
+import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 
 @Component
 export default class StepTwo extends Vue {
     @State
-    readonly selected_tracker_template!: Tracker;
+    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
 
     get placeholder(): string {
         return this.$gettextInterpolate(
             this.$gettext("My %{ tracker_name } tracker description..."),
-            { tracker_name: this.selected_tracker_template.name }
+            { tracker_name: this.tracker_to_be_created.name }
         );
     }
 }

@@ -22,7 +22,7 @@ import Vuex from "vuex";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { createStore } from "./src/store/index";
-import { CreationOptions, ProjectTemplate } from "./src/store/type";
+import { CreationOptions, ProjectTemplate, State } from "./src/store/type";
 import { createRouter } from "./src/router";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -49,10 +49,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Project name not provided, app can't be routed.");
     }
 
-    const initial_state = {
+    const initial_state: State = {
         project_templates,
         active_option: CreationOptions.NONE_YET,
-        selected_tracker_template: null
+        selected_tracker_template: null,
+        tracker_to_be_created: {
+            name: "",
+            shortname: ""
+        }
     };
 
     new AppComponent({

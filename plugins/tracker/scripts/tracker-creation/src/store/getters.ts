@@ -24,3 +24,10 @@ export const is_ready_for_step_2 = (state: State): boolean => {
         state.active_option !== CreationOptions.NONE_YET && state.selected_tracker_template !== null
     );
 };
+
+export const is_ready_to_submit = (state: State): boolean => {
+    return (
+        state.tracker_to_be_created.name.length > 0 &&
+        state.tracker_to_be_created.shortname.length > 0
+    );
+};

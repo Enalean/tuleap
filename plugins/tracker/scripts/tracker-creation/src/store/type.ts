@@ -21,6 +21,7 @@ export interface State {
     project_templates: ProjectTemplate[];
     active_option: CreationOptions;
     selected_tracker_template: Tracker | null;
+    tracker_to_be_created: TrackerToBeCreatedMandatoryData;
 }
 
 export interface ProjectTemplate {
@@ -31,6 +32,11 @@ export interface ProjectTemplate {
 export interface Tracker {
     readonly id: string;
     readonly name: string;
+}
+
+export interface TrackerToBeCreatedMandatoryData {
+    name: string;
+    shortname: string;
 }
 
 export enum CreationOptions {

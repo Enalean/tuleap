@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tracker-creation-next-step-button">
+    <div class="tracker-creation-navigation-buttons">
         <router-link
             v-if="previousStepName"
             v-bind:to="{ name: previousStepName }"
@@ -28,6 +28,7 @@
             <translate>Back</translate>
             <i class="fa fa-long-arrow-left"></i>
         </router-link>
+
         <button
             v-if="nextStepName"
             v-on:click="goToNextStepIfGood"
@@ -39,6 +40,18 @@
         >
             <translate>Next</translate>
             <i class="fa fa-long-arrow-right tlp-button-icon-right"></i>
+        </button>
+        <button
+            v-else
+            class="tlp-button-primary tracker-creation-submit-button"
+            type="submit"
+            form="tracker-creation-form"
+            data-test="button-create-my-tracker"
+            v-bind:class="{ 'tlp-button-disabled': !is_ready_to_submit }"
+            v-bind:disabled="!is_ready_to_submit"
+            v-translate
+        >
+            Create my tracker
         </button>
     </div>
 </template>
@@ -57,6 +70,9 @@ export default class StepNavigationButtons extends Vue {
 
     @Getter
     readonly is_ready_for_step_2!: boolean;
+
+    @Getter
+    readonly is_ready_to_submit!: boolean;
 
     goToNextStepIfGood(): void {
         if (this.is_ready_for_step_2) {

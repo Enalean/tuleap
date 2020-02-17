@@ -27,7 +27,8 @@ import { createRouter } from "../../../router";
 describe("StepNavigationButtons", () => {
     async function getWrapper(
         props: {},
-        is_ready_for_step_2 = true
+        is_ready_for_step_2 = true,
+        is_ready_to_submit = true
     ): Promise<Wrapper<StepNavigationButtons>> {
         const router: VueRouter = createRouter("my-project");
 
@@ -37,7 +38,8 @@ describe("StepNavigationButtons", () => {
             mocks: {
                 $store: createStoreMock({
                     getters: {
-                        is_ready_for_step_2
+                        is_ready_for_step_2,
+                        is_ready_to_submit
                     }
                 })
             },
@@ -58,13 +60,21 @@ describe("StepNavigationButtons", () => {
         expect(wrapper.find("[data-test=button-back]").exists()).toBe(false);
     });
 
-    it("Does not display the [next ->] button when there is no next step", async () => {
+    it("Does not display the [next ->] button when there is no next step, but displays the submit button instead", async () => {
         const wrapper = await getWrapper({
             previousStepName: "step-1"
         });
 
         expect(wrapper.find("[data-test=button-next]").exists()).toBe(false);
         expect(wrapper.find("[data-test=button-back]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=button-create-my-tracker]").exists()).toBe(true);
+    });
+
+    it("Disables the [Create my tracker] submit button when the creation is not ready to be submitted", async () => {
+        const wrapper = await getWrapper({ previousStepName: "step-1" }, false, false);
+        const submit_button = wrapper.find("[data-test=button-create-my-tracker]");
+
+        expect(submit_button.attributes("disabled")).toBe("disabled");
     });
 
     it("Disables the [next ->] button when the creation is not ready for the step 2 and to click on it does nothing", async () => {
