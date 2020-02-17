@@ -26,6 +26,7 @@ use DateTime;
 use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
@@ -39,8 +40,8 @@ use Tuleap\User\AccessKey\AccessKeyCreator;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
-use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
+use Tuleap\User\AccessKey\PrefixAccessKey;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
@@ -98,7 +99,7 @@ class AccessKeyResource extends AuthenticatedResource
         $current_user                        = \UserManager::instance()->getCurrentUser();
         $storage_access_key_identifier_store = [];
         $last_access_key_identifier_store    = new LastAccessKeyIdentifierStore(
-            new AccessKeySerializer(),
+            new PrefixedSplitTokenSerializer(new PrefixAccessKey()),
             (new KeyFactory)->getEncryptionKey(),
             $storage_access_key_identifier_store
         );
@@ -185,7 +186,7 @@ class AccessKeyResource extends AuthenticatedResource
         $current_user = \UserManager::instance()->getCurrentUser();
 
         $user_access_key_representation_retriever = new UserAccessKeyRepresentationRetriever(
-            new AccessKeyHeaderExtractor(new AccessKeySerializer(), $_SERVER),
+            new AccessKeyHeaderExtractor(new PrefixedSplitTokenSerializer(new PrefixAccessKey()), $_SERVER),
             new AccessKeyMetadataRetriever(
                 new AccessKeyDAO(),
                 new AccessKeyScopeRetriever(

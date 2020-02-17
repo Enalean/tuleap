@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,33 +20,41 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey;
+namespace Tuleap\Authentication\SplitToken;
 
-use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
-use Tuleap\Authentication\SplitToken\SplitToken;
-use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
-use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 
-final class AccessKeySerializer implements SplitTokenFormatter, SplitTokenIdentifierTranslator
+final class PrefixedSplitTokenSerializer implements SplitTokenFormatter, SplitTokenIdentifierTranslator
 {
-    public const PREFIX  = 'tlp-k1-';
-    public const PATTERN = '/^' . self::PREFIX . '(?<key_id>\d+)\.(?<verifier>(?:[[:xdigit:]]{2})+)$/';
+    /**
+     * @var PrefixSplitTokenForSerialization
+     */
+    private $prefix;
+
+    public function __construct(PrefixSplitTokenForSerialization $prefix)
+    {
+        $this->prefix = $prefix;
+    }
 
     public function getIdentifier(SplitToken $token): ConcealedString
     {
         return new ConcealedString(
-            self::PREFIX . $token->getID() . '.' . \sodium_bin2hex((string) $token->getVerificationString()->getString())
+            $this->prefix->getString() . $token->getID() . '.' . \sodium_bin2hex((string) $token->getVerificationString()->getString())
         );
     }
 
     public function getSplitToken(ConcealedString $identifier): SplitToken
     {
-        if (preg_match(self::PATTERN, $identifier->getString(), $matches) !== 1) {
+        if (preg_match($this->buildPattern(), $identifier->getString(), $matches) !== 1) {
             throw new InvalidIdentifierFormatException();
         }
+
         $verification_string = new SplitTokenVerificationString(new ConcealedString(\sodium_hex2bin($matches['verifier'])));
         return new SplitToken((int) $matches['key_id'], $verification_string);
+    }
+
+    private function buildPattern(): string
+    {
+        return '/^' . preg_quote($this->prefix->getString(), '/') . '(?<key_id>\d+)\.(?<verifier>(?:[[:xdigit:]]{2})+)$/';
     }
 }

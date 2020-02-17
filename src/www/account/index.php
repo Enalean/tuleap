@@ -209,7 +209,7 @@ foreach ($access_key_metadata_retriever->getMetadataByUser($user) as $access_key
     $access_key_presenters[] = new AccessKeyMetadataPresenter($access_key_metadata);
 }
 $last_access_key_identifier_store = new LastAccessKeyIdentifierStore(
-    new \Tuleap\User\AccessKey\AccessKeySerializer(),
+    new \Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer(new \Tuleap\User\AccessKey\PrefixAccessKey()),
     (new KeyFactory)->getEncryptionKey(),
     $_SESSION
 );

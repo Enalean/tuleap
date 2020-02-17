@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
+/**
+ * @psalm-immutable
+ */
 class ConcealedString
 {
     /**

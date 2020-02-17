@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Authentication\SplitToken;
+declare(strict_types=1);
 
-final class IncorrectSizeVerificationStringException extends SplitTokenException
+namespace Tuleap\User\OAuth2;
+
+use Tuleap\Cryptography\ConcealedString;
+
+/**
+ * @see https://tools.ietf.org/html/rfc6750#section-2.1
+ */
+final class BearerTokenHeaderParser
 {
-    public function __construct(int $expected_size, int $string_size)
+    /**
+     * @psalm-pure
+     */
+    public function parseHeaderLine(string $header_line): ?ConcealedString
     {
-        parent::__construct(
-            "Expected a verification string of $expected_size bytes, got $string_size bytes"
-        );
+        $matches = [];
+        preg_match('/^\s*Bearer\s(?<token>(?:[a-zA-Z0-9]|-|\.|\_|\~|\+|\/|=)+)$/', $header_line, $matches);
+
+        if (! isset($matches['token'])) {
+            return null;
+        }
+
+        return new ConcealedString($matches['token']);
     }
 }

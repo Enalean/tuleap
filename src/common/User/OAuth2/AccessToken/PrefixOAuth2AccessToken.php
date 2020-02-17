@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Authentication\SplitToken;
+declare(strict_types=1);
 
-final class IncorrectSizeVerificationStringException extends SplitTokenException
+namespace Tuleap\User\OAuth2\AccessToken;
+
+use Tuleap\Authentication\SplitToken\PrefixSplitTokenForSerialization;
+
+final class PrefixOAuth2AccessToken implements PrefixSplitTokenForSerialization
 {
-    public function __construct(int $expected_size, int $string_size)
+    /**
+     * @psalm-pure
+     */
+    public function getString(): string
     {
-        parent::__construct(
-            "Expected a verification string of $expected_size bytes, got $string_size bytes"
-        );
+        return 'tlp-oauth2-at1-';
     }
 }
