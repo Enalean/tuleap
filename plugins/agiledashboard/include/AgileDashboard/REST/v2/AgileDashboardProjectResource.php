@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST\v2;
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\REST\v2;
 
 use Luracast\Restler\RestException;
 use ProjectManager;
-use UserManager;
-use Project;
-use EventManager;
-use Event;
+use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\REST\AuthenticatedResource;
 use URLVerification;
+use UserManager;
 
-/**
- * Wrapper for project related REST methods
- */
-
-class ProjectResource extends AuthenticatedResource
+final class AgileDashboardProjectResource extends AuthenticatedResource
 {
-
     public const MAX_LIMIT = 50;
 
     /** @var UserManager */
@@ -54,10 +48,8 @@ class ProjectResource extends AuthenticatedResource
     /**
      * @throws RestException 403
      * @throws RestException 404
-     *
-     * @return Project
      */
-    private function getProjectForUser($id)
+    private function getProjectForUser(int $id): \Project
     {
         $project = $this->project_manager->getProject($id);
         $user    = $this->user_manager->getCurrentUser();
@@ -78,7 +70,7 @@ class ProjectResource extends AuthenticatedResource
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array {@type Tuleap\REST\v2\BacklogRepresentationBase}
+     * @return BacklogRepresentation
      *
      * @throws RestException 406
      */
@@ -86,12 +78,15 @@ class ProjectResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $this->checkAgileEndpointsAvailable();
-
-        $backlog_items = $this->backlogItems($id, $limit, $offset, Event::REST_GET_PROJECT_BACKLOG);
+        $project_backlog_resource = new ProjectBacklogResource();
         $this->sendAllowHeadersForBacklog();
 
-        return $backlog_items;
+        return $project_backlog_resource->get(
+            $this->user_manager->getCurrentUser(),
+            $this->getProjectForUser($id),
+            $limit,
+            $offset
+        );
     }
 
     /**
@@ -101,48 +96,11 @@ class ProjectResource extends AuthenticatedResource
      */
     public function optionsBacklog($id)
     {
-        $this->checkAgileEndpointsAvailable();
         $this->sendAllowHeadersForBacklog();
     }
 
-
-    private function backlogItems($id, $limit, $offset, $event)
-    {
-        $project = $this->getProjectForUser($id);
-        $result  = array();
-
-        EventManager::instance()->processEvent(
-            $event,
-            array(
-                'version' => 'v2',
-                'project' => $project,
-                'limit'   => $limit,
-                'offset'  => $offset,
-                'result'  => &$result,
-            )
-        );
-
-        return $result;
-    }
-
-    private function sendAllowHeadersForBacklog()
+    private function sendAllowHeadersForBacklog(): void
     {
         Header::allowOptionsGet();
-    }
-
-    private function checkAgileEndpointsAvailable()
-    {
-        $available = false;
-
-        EventManager::instance()->processEvent(
-            Event::REST_PROJECT_AGILE_ENDPOINTS,
-            array(
-                'available' => &$available
-            )
-        );
-
-        if ($available === false) {
-            throw new RestException(404, 'AgileDashboard plugin not activated');
-        }
     }
 }

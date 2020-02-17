@@ -62,7 +62,6 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\Header;
-use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -269,7 +268,7 @@ class ProjectBacklogResource
     public function patch(
         PFUser $user,
         Project $project,
-        ?OrderRepresentationBase $order = null,
+        ?OrderRepresentation $order = null,
         ?array $add = null,
         ?array $remove = null
     ) {

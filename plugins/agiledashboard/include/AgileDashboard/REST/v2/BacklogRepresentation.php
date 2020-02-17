@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,10 +20,27 @@
 namespace Tuleap\AgileDashboard\REST\v2;
 
 use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\REST\v2\BacklogRepresentationBase;
 
-class BacklogRepresentation extends BacklogRepresentationBase
+class BacklogRepresentation
 {
+    public const ROUTE = 'backlog_items';
+
+    /**
+     * @var BacklogItemRepresentation[]
+     */
+    public $content;
+
+    /**
+     *
+     * @var array
+     */
+    public $accept;
+
+    /**
+     * @var bool
+     */
+    public $has_user_priority_change_permission;
+
     public function build(
         array $backlog_items,
         array $accepted_trackers,

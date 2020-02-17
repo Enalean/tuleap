@@ -104,16 +104,7 @@ $restler->setAPIVersion($version);
 $core_resources_injector = new Tuleap\REST\ResourcesInjector();
 $core_resources_injector->populate($restler);
 
-switch ($version) {
-    case 2:
-        $event = Event::REST_RESOURCES_V2;
-        break;
-    default:
-        $event = Event::REST_RESOURCES;
-        break;
-}
-
-EventManager::instance()->processEvent($event, array('restler' => $restler));
+EventManager::instance()->processEvent(Event::REST_RESOURCES, array('restler' => $restler));
 $restler->addAPIClass('Explorer');
 
 $restler->addAuthenticationClass('\\' . TuleapRESTAuthentication::class);

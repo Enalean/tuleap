@@ -299,7 +299,7 @@ class BacklogItemResource extends AuthenticatedResource
      *
      * @param int                                                   $id    Id of the Backlog Item
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
-     * @param array                                                 $add   Ids to add to backlog_items content  {@from body} {@type \Tuleap\REST\v1\BacklogAddRepresentation}
+     * @param array                                                 $add   Ids to add to backlog_items content  {@from body} {@type BacklogAddRepresentation}
      *
      * @throws RestException 400
      * @throws RestException 403
