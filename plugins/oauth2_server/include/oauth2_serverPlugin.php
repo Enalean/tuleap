@@ -20,6 +20,11 @@
 
 declare(strict_types=1);
 
+use Tuleap\OAuth2Server\ProjectAdmin\AdministrationController;
+use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Request\CollectRoutesEvent;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -30,6 +35,14 @@ final class oauth2_serverPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-oauth2_server', __DIR__ . '/../site-content');
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook(NavigationPresenter::NAME);
+        $this->addHook(CollectRoutesEvent::NAME);
+
+        return parent::getHooksAndCallbacks();
     }
 
     public function getPluginInfo(): PluginInfo
@@ -47,5 +60,37 @@ final class oauth2_serverPlugin extends Plugin
         }
 
         return $this->pluginInfo;
+    }
+
+    public function collectProjectAdminNavigationItems(NavigationPresenter $presenter): void
+    {
+        $project_id = urlencode((string)$presenter->getProjectId());
+        $html_url   = $this->getPluginPath() . "/project/$project_id/admin";
+        $presenter->addItem(
+            new NavigationItemPresenter(
+                dgettext('tuleap-oauth2_server', 'OAuth2 Apps'),
+                $html_url,
+                AdministrationController::PANE_SHORTNAME,
+                $presenter->getCurrentPaneShortname()
+            )
+        );
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $routes): void
+    {
+        $routes->getRouteCollector()->addGroup(
+            $this->getPluginPath(),
+            function (FastRoute\RouteCollector $r) {
+                $r->get(
+                    '/project/{project_id:\d+}/admin',
+                    $this->getRouteHandler('routeGetProjectAdmin')
+                );
+            }
+        );
+    }
+
+    public function routeGetProjectAdmin(): AdministrationController
+    {
+        return AdministrationController::buildSelf();
     }
 }
