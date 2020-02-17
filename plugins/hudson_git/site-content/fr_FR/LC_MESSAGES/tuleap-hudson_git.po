@@ -33,5 +33,11 @@ msgstr "Aucun serveur Jenkins n'a été configuré."
 msgid "Save"
 msgstr "Sauvegarder"
 
+msgid "The Jenkins server has successfully been added."
+msgstr "Le serveur Jenkins a été ajouté."
+
+msgid "The Jenkins server is already defined in project."
+msgstr "Le serveur Jenkins est déjà défini pour ce projet."
+
 msgid "User is not Git administrator."
 msgstr "L'utilisateur n'est pas administrateur Git."

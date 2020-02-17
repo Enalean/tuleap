@@ -36,10 +36,22 @@ class GitJenkinsAdministrationServerAdder
         $this->git_jenkins_administration_server_dao = $git_jenkins_administration_server_dao;
     }
 
+    /**
+     * @throws GitJenkinsAdministrationServerAlreadyDefinedException
+     */
     public function addServerInProject(Project $project, string $jenkins_server_url): void
     {
+        $project_id = (int) $project->getID();
+
+        if ($this->git_jenkins_administration_server_dao->isJenkinsServerAlreadyDefinedInProject(
+            $project_id,
+            $jenkins_server_url
+        )) {
+            throw new GitJenkinsAdministrationServerAlreadyDefinedException();
+        }
+
         $this->git_jenkins_administration_server_dao->addJenkinsServer(
-            (int) $project->getID(),
+            $project_id,
             $jenkins_server_url
         );
     }

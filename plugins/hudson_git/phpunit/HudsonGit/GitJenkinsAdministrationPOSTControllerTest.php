@@ -234,6 +234,7 @@ class GitJenkinsAdministrationPOSTControllerTest extends TestCase
             );
 
         $this->layout->shouldReceive('redirect');
+        $this->layout->shouldReceive('addFeedback');
 
         $this->controller->process($this->request, $this->layout, []);
     }
