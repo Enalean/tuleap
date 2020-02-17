@@ -27,60 +27,64 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use TemplateRendererFactory;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
-use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
 final class BannerAdministrationControllerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HeaderNavigationDisplayer
-     */
-    private $header_navigation_displayer;
-    /**
-     * @var BannerAdministrationController
-     */
+    /** @var BannerAdministrationController */
     private $controller;
+    /** @var LayoutHelperPassthrough */
+    private $helper;
+    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|\TemplateRenderer */
+    private $renderer;
+    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets */
+    private $include_assets;
+    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|BannerRetriever */
+    private $banner_retriever;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->project_retriever           = Mockery::mock(ProjectRetriever::class);
-        $this->header_navigation_displayer = Mockery::mock(HeaderNavigationDisplayer::class);
-        $this->controller                  = new BannerAdministrationController(
-            TemplateRendererFactory::build(),
-            $this->header_navigation_displayer,
-            Mockery::mock(IncludeAssets::class),
-            $this->project_retriever,
-            Mockery::mock(BannerRetriever::class)
+        $this->helper           = new LayoutHelperPassthrough();
+        $this->renderer         = Mockery::mock(\TemplateRenderer::class);
+        $this->include_assets   = Mockery::mock(IncludeAssets::class);
+        $this->banner_retriever = Mockery::mock(BannerRetriever::class);
+        $this->controller       = new BannerAdministrationController(
+            $this->helper,
+            $this->renderer,
+            $this->include_assets,
+            $this->banner_retriever
         );
     }
 
-    public function testNonProjectAdministratorCanNotAccessThePage() : void
+    public function testProcessRenders(): void
     {
-        $project = Mockery::mock(Project::class)->shouldReceive('getID')
+        $project      = Mockery::mock(Project::class)->shouldReceive('getID')
             ->andReturn('102')
             ->getMock();
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->once()
-            ->with('102')
-            ->andReturn($project);
-
-        $request      = Mockery::mock(HTTPRequest::class);
         $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('isAdmin')->andReturn(false);
-        $request->shouldReceive('getCurrentUser')->andReturn($current_user);
+        $this->helper->setCallbackParams($project, $current_user);
 
-        $this->expectException(ForbiddenException::class);
-        $this->controller->process($request, Mockery::mock(BaseLayout::class), ['id' => '102']);
+        $request = Mockery::mock(HTTPRequest::class);
+        $layout  = Mockery::mock(BaseLayout::class);
+
+        $this->include_assets->shouldReceive('getFileURL')
+            ->once()
+            ->with('ckeditor.js');
+        $this->include_assets->shouldReceive('getFileURL')
+            ->once()
+            ->with('project-admin-banner.js');
+        $layout->shouldReceive('includeFooterJavascriptFile')->twice();
+        $this->banner_retriever->shouldReceive('getBannerForProject')
+            ->with($project)
+            ->once();
+        $this->renderer->shouldReceive('renderToPage')
+            ->once()
+            ->with('administration', Mockery::type('array'));
+
+        $this->controller->process($request, $layout, ['id' => '102']);
     }
 }

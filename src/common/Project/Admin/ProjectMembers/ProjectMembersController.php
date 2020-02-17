@@ -41,6 +41,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -114,6 +115,10 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
      * @var ProjectRetriever
      */
     private $project_retriever;
+    /**
+     * @var ProjectAdministratorChecker
+     */
+    private $administrator_checker;
 
     public function __construct(
         ProjectMembersDAO $members_dao,
@@ -124,6 +129,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         UGroupManager $ugroup_manager,
         UserImport $user_importer,
         ProjectRetriever $project_retriever,
+        ProjectAdministratorChecker $administrator_checker,
         SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
         MembershipDelegationDao $membership_delegation_dao
     ) {
@@ -137,6 +143,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
         $this->membership_delegation_dao                = $membership_delegation_dao;
         $this->project_retriever                        = $project_retriever;
+        $this->administrator_checker                    = $administrator_checker;
     }
 
     public static function buildSelf(): self
@@ -170,6 +177,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 ProjectMemberAdderWithStatusCheckAndNotifications::build()
             ),
             ProjectRetriever::buildSelf(),
+            new ProjectAdministratorChecker(),
             new SynchronizedProjectMembershipDetector(
                 new SynchronizedProjectMembershipDao()
             ),
@@ -180,17 +188,23 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['id']);
-
-        $this->csrf_token = new CSRFSynchronizerToken('/project/'.(int)$project->getID().'/admin/members');
-
-        $user                      = $request->getCurrentUser();
-        if (! $user->isAdmin($project->getID()) && ! $this->membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $project->getID())) {
-            throw new ForbiddenException();
+        $user    = $request->getCurrentUser();
+        try {
+            $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
+        } catch (ForbiddenException $e) {
+            if (! $this->membership_delegation_dao->doesUserHasMembershipDelegation(
+                $user->getId(),
+                $project->getID()
+            )) {
+                throw $e;
+            }
         }
 
         if ($project->getStatus() !== Project::STATUS_ACTIVE && ! $user->isSuperUser()) {
             throw new ForbiddenException();
         }
+
+        $this->csrf_token = new CSRFSynchronizerToken('/project/' . (int) $project->getID() . '/admin/members');
 
         switch ($request->get('action')) {
             case 'add-user':

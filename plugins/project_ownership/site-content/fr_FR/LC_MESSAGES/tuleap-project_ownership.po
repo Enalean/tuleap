@@ -37,6 +37,3 @@ msgstr "Il n'est pas possible de supprimer le responsable du projet."
 
 msgid "This project has no owner."
 msgstr "Ce projet n'a pas de responsable."
-
-msgid "You must be project administrator to access this page."
-msgstr "Vous devez être administrateur du projet pour accéder à cette page."

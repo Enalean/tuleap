@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -28,6 +27,7 @@ use HTTPRequest;
 use ProjectHistoryDao;
 use TroveCatDao;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -40,20 +40,29 @@ class UpdateController implements DispatchableWithRequest
      */
     private $project_retriever;
     /**
+     * @var ProjectAdministratorChecker
+     */
+    private $administrator_checker;
+    /**
      * @var ProjectCategoriesUpdater
      */
     private $updater;
 
-    public function __construct(ProjectRetriever $project_retriever, ProjectCategoriesUpdater $updater)
-    {
-        $this->project_retriever = $project_retriever;
-        $this->updater           = $updater;
+    public function __construct(
+        ProjectRetriever $project_retriever,
+        ProjectAdministratorChecker $administrator_checker,
+        ProjectCategoriesUpdater $updater
+    ) {
+        $this->project_retriever     = $project_retriever;
+        $this->administrator_checker = $administrator_checker;
+        $this->updater               = $updater;
     }
 
     public static function buildSelf(): self
     {
         return new self(
             ProjectRetriever::buildSelf(),
+            new ProjectAdministratorChecker(),
             new ProjectCategoriesUpdater(
                 new \TroveCatFactory(new TroveCatDao()),
                 new ProjectHistoryDao(),
@@ -69,11 +78,8 @@ class UpdateController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->project_retriever->getProjectFromId($variables['id']);
-        if (! $request->getCurrentUser()->isAdmin($project->getId())) {
-            throw new ForbiddenException(gettext("You don't have permission to access administration of this project."));
-        }
-
-        $redirect_url  = '/project/' . (int) $project->getID() . '/admin/categories';
+        $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
+        $redirect_url = '/project/' . (int) $project->getID() . '/admin/categories';
 
         $categories = $request->get('categories');
         if (! is_array($categories)) {

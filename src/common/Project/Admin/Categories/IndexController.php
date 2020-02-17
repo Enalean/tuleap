@@ -22,19 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Categories;
 
-use ForgeConfig;
 use HTTPRequest;
 use Project;
+use TemplateRenderer;
 use TemplateRendererFactory;
 use TroveCatDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
+use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Request\ProjectRetriever;
 
 class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -43,19 +43,38 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
      */
     private $dao;
     /**
-     * @var ProjectRetriever
+     * @var LayoutHelper
      */
-    private $project_retriever;
+    private $layout_helper;
+    /**
+     * @var TemplateRenderer
+     */
+    private $renderer;
+    /**
+     * @var IncludeAssets
+     */
+    private $assets;
 
-    public function __construct(TroveCatDao $dao, ProjectRetriever $project_retriever)
-    {
-        $this->dao               = $dao;
-        $this->project_retriever = $project_retriever;
+    public function __construct(
+        LayoutHelper $layout_helper,
+        TroveCatDao $dao,
+        TemplateRenderer $renderer,
+        IncludeAssets $assets
+    ) {
+        $this->layout_helper = $layout_helper;
+        $this->dao           = $dao;
+        $this->renderer      = $renderer;
+        $this->assets        = $assets;
     }
 
     public static function buildSelf(): self
     {
-        return new self(new TroveCatDao(), ProjectRetriever::buildSelf());
+        return new self(
+            AdministrationLayoutHelper::buildSelf(),
+            new TroveCatDao(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/project/admin'),
+            new IncludeAssets(__DIR__ . '/../../../../www/assets', '/assets')
+        );
     }
 
     /**
@@ -64,22 +83,17 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->project_retriever->getProjectFromId($variables['id']);
-        if (! $request->getCurrentUser()->isAdmin($project->getId())) {
-            throw new ForbiddenException(_("You don't have permission to access administration of this project."));
-        }
-
-        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-        $include_assets = new IncludeAssets($assets_path, '/assets');
-
-        $layout->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
-
-        $navigation_displayer = new HeaderNavigationDisplayer();
-        $navigation_displayer->displayBurningParrotNavigation(_('Project categories'), $project, 'categories');
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/project/admin');
-        $renderer->renderToPage('categories', $this->getPresenter($project));
-        site_project_footer([]);
+        $layout->includeFooterJavascriptFile($this->assets->getFileURL('project-admin.js'));
+        $callback = function (\Project $project, \PFUser $current_user): void {
+            $this->renderer->renderToPage('categories', $this->getPresenter($project));
+        };
+        $this->layout_helper->renderInProjectAdministrationLayout(
+            $request,
+            $variables['id'],
+            _('Project categories'),
+            'categories',
+            $callback
+        );
     }
 
     private function getPresenter(Project $project): array

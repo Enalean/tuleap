@@ -26,7 +26,7 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\ForbiddenException;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
 
 final class EditControllerTest extends TestCase
@@ -35,24 +35,31 @@ final class EditControllerTest extends TestCase
 
     /** @var EditController */
     private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
-     */
+    /** @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever */
     private $project_retriever;
+    /** @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker */
+    private $admininistrator_checker;
+    /** @var M\LegacyMockInterface|M\MockInterface|ServicePOSTDataBuilder */
+    private $data_builder;
 
     protected function setUp(): void
     {
-        $this->project_retriever = M::mock(ProjectRetriever::class);
-        $this->controller        = new EditController(
-            M::mock(ServiceUpdator::class),
-            M::mock(ServicePOSTDataBuilder::class),
-            M::mock(\ServiceManager::class),
+        $this->project_retriever       = M::mock(ProjectRetriever::class);
+        $this->admininistrator_checker = M::mock(ProjectAdministratorChecker::class);
+        $this->data_builder            = M::mock(ServicePOSTDataBuilder::class);
+        $csrf_token                    = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller              = new AddController(
             $this->project_retriever,
-            M::mock(\CSRFSynchronizerToken::class)
+            $this->admininistrator_checker,
+            M::mock(ServiceCreator::class),
+            $this->data_builder,
+            $csrf_token
         );
+
+        $csrf_token->shouldReceive('check');
     }
 
-    public function testNonProjectAdministratorCannotAccessThePage(): void
+    public function testItRedirectsWhenServiceDataIsInvalid(): void
     {
         $project = M::mock(\Project::class)->shouldReceive('getID')
             ->andReturn('102')
@@ -64,10 +71,18 @@ final class EditControllerTest extends TestCase
 
         $request      = M::mock(\HTTPRequest::class);
         $current_user = M::mock(\PFUser::class);
-        $current_user->shouldReceive('isAdmin')->andReturn(false);
         $request->shouldReceive('getCurrentUser')->andReturn($current_user);
+        $this->admininistrator_checker->shouldReceive('checkUserIsProjectAdministrator')
+            ->once()
+            ->with($current_user, $project);
+        $response = M::mock(BaseLayout::class);
+        $this->data_builder->shouldReceive('buildFromRequest')
+            ->once()
+            ->with($request, $project, $response)
+            ->andThrow(new InvalidServicePOSTDataException());
 
-        $this->expectException(ForbiddenException::class);
-        $this->controller->process($request, M::mock(BaseLayout::class), ['id' => '102']);
+        $response->shouldReceive('addFeedback')->once();
+        $response->shouldReceive('redirect')->once();
+        $this->controller->process($request, $response, ['id' => '102']);
     }
 }

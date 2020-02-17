@@ -26,6 +26,7 @@ use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -36,6 +37,8 @@ class ActivationController implements DispatchableWithRequest
 {
     /** @var ProjectRetriever */
     private $project_retriever;
+    /** @var ProjectAdministratorChecker */
+    private $administrator_checker;
     /** @var SynchronizedProjectMembershipDao */
     private $dao;
     /** @var \CSRFSynchronizerToken */
@@ -43,18 +46,21 @@ class ActivationController implements DispatchableWithRequest
 
     public function __construct(
         ProjectRetriever $project_retriever,
+        ProjectAdministratorChecker $administrator_checker,
         SynchronizedProjectMembershipDao $dao,
         \CSRFSynchronizerToken $csrf
     ) {
-        $this->project_retriever = $project_retriever;
-        $this->dao               = $dao;
-        $this->csrf              = $csrf;
+        $this->project_retriever     = $project_retriever;
+        $this->administrator_checker = $administrator_checker;
+        $this->dao                   = $dao;
+        $this->csrf                  = $csrf;
     }
 
     public static function buildSelf(): self
     {
         return new self(
             ProjectRetriever::buildSelf(),
+            new ProjectAdministratorChecker(),
             new SynchronizedProjectMembershipDao(),
             UGroupRouter::getCSRFTokenSynchronizer()
         );
@@ -82,6 +88,7 @@ class ActivationController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->project_retriever->getProjectFromId($variables['id']);
+        $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
         $this->csrf->check($this->getRedirectUrl($project));
 
         $activation = $request->get('activation') === 'on';
