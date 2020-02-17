@@ -162,12 +162,11 @@ class hudson_gitPlugin extends Plugin
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         assert($git_plugin instanceof GitPlugin);
 
-
-
         return new GitJenkinsAdministrationController(
             ProjectManager::instance(),
             self::getGitPermissionsManager(),
             $git_plugin->getMirrorDataMapper(),
+            new GitJenkinsAdministrationServerDao(),
             $git_plugin->getHeaderRenderer(),
             TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates')
         );
