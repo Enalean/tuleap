@@ -27,6 +27,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
@@ -119,6 +120,7 @@ final class oauth2_serverPlugin extends Plugin
                 new BearerTokenHeaderParser(),
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
                 new OAuth2AccessTokenVerifier(
+                    new OAuth2AccessTokenDAO(),
                     UserManager::instance(),
                     new SplitTokenVerificationStringHasher()
                 ),

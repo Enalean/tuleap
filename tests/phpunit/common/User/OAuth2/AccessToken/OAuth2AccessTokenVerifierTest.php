@@ -34,9 +34,17 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenDAO
+     */
+    private $dao;
+    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
      */
     private $user_manager;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenVerificationStringHasher
+     */
+    private $hasher;
     /**
      * @var OAuth2AccessTokenVerifier
      */
@@ -44,20 +52,27 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->dao          = \Mockery::mock(OAuth2AccessTokenDAO::class);
         $this->user_manager = \Mockery::mock(\UserManager::class);
+        $this->hasher       = \Mockery::mock(SplitTokenVerificationStringHasher::class);
 
-        $this->verifier = new OAuth2AccessTokenVerifier($this->user_manager, new SplitTokenVerificationStringHasher());
+        $this->verifier = new OAuth2AccessTokenVerifier($this->dao, $this->user_manager, $this->hasher);
     }
 
-    public function testGivingTheCorrectTestTokenRetrievesTheAnonymousUser(): void
+    public function testGivingACorrectTokenTheCorrespondingUserIsRetrieved(): void
     {
-        $expected_user = new \PFUser(['language_id' => 'en']);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturn($expected_user);
+        $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
+        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
 
         $access_token = new SplitToken(
             1,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
+        $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(
+            ['user_id' => $expected_user->getId(), 'verifier' => 'expected_hashed_verification_string']
+        );
+        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+
         $user = $this->verifier->getUser($access_token);
 
         $this->assertSame($expected_user, $user);
@@ -68,6 +83,8 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $access_token = \Mockery::mock(SplitToken::class);
         $access_token->shouldReceive('getID')->andReturn(404);
 
+        $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(null);
+
         $this->expectException(OAuth2AccessTokenNotFoundException::class);
         $this->verifier->getUser($access_token);
     }
@@ -75,11 +92,33 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
     public function testVerificationFailsWhenVerificationStringDoesNotMatch(): void
     {
         $access_token = new SplitToken(
-            1,
+            2,
             new SplitTokenVerificationString(new ConcealedString('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'))
         );
 
+        $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(
+            ['user_id' => 102, 'verifier' => 'expected_hashed_verification_string']
+        );
+        $this->hasher->shouldReceive('verifyHash')->andReturn(false);
+
         $this->expectException(InvalidOAuth2AccessTokenException::class);
+        $this->verifier->getUser($access_token);
+    }
+
+    public function testVerificationFailsWhenTheUserCanNotBeFound(): void
+    {
+        $this->user_manager->shouldReceive('getUserById')->andReturn(null);
+
+        $access_token = new SplitToken(
+            3,
+            new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+        );
+        $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(
+            ['user_id' => 404, 'verifier' => 'expected_hashed_verification_string']
+        );
+        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+
+        $this->expectException(OAuth2AccessTokenMatchingUnknownUserException::class);
         $this->verifier->getUser($access_token);
     }
 }
