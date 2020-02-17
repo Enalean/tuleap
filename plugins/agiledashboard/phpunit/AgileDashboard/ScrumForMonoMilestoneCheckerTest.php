@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,13 +21,15 @@
 
 namespace Tuleap\AgileDashboard;
 
-require_once dirname(__FILE__) . '/../../bootstrap.php';
-
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use TuleapTestCase;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 
-class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
+class ScrumForMonoMilestoneCheckerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var \PlanningFactory
      */
@@ -44,15 +46,15 @@ class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
     private $scrum_mono_milestone_checker;
 
     /**
-     * @var Tuleap\AgileDashboard\ScrumForMonoMilestoneDao
+     * @var ScrumForMonoMilestoneDao
      */
     private $scrum_mono_milestone_dao;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->user                     = mock('PFUser');
-        $this->scrum_mono_milestone_dao = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao');
-        $this->planning_factory               = mock('PlanningFactory');
+        $this->user                     = \Mockery::spy(\PFUser::class);
+        $this->scrum_mono_milestone_dao = \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao::class);
+        $this->planning_factory               = \Mockery::spy(\PlanningFactory::class);
 
         $this->scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
             $this->scrum_mono_milestone_dao,
@@ -60,9 +62,9 @@ class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsTrueWhenConfigurationIsInScrumV1()
+    public function testItReturnsTrueWhenConfigurationIsInScrumV1() : void
     {
-        stub($this->scrum_mono_milestone_dao)->isMonoMilestoneActivatedForProject()->returns(false);
+        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(false);
 
         $this->assertTrue(
             $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation(
@@ -72,10 +74,10 @@ class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsFalseWhenOnePlanningIsDefinedAndConfigurationAllowsMonoMilestone()
+    public function testItReturnsFalseWhenOnePlanningIsDefinedAndConfigurationAllowsMonoMilestone() : void
     {
-        stub($this->scrum_mono_milestone_dao)->isMonoMilestoneActivatedForProject()->returns(array(101));
-        stub($this->planning_factory)->getPlannings()->returns(array(1));
+        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(array(101));
+        $this->planning_factory->shouldReceive('getPlannings')->andReturns(array(1));
 
         $this->assertFalse(
             $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation(
@@ -85,10 +87,10 @@ class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsFalseWhenTwoPlanningsAreDefinedAndConfigurationAllowsMonoMilestone()
+    public function testItReturnsFalseWhenTwoPlanningsAreDefinedAndConfigurationAllowsMonoMilestone() : void
     {
-        stub($this->scrum_mono_milestone_dao)->isMonoMilestoneActivatedForProject()->returns(array(101));
-        stub($this->planning_factory)->getPlannings()->returns(array(1,2));
+        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(array(101));
+        $this->planning_factory->shouldReceive('getPlannings')->andReturns(array(1,2));
 
         $this->assertFalse(
             $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation(
@@ -98,9 +100,9 @@ class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
         );
     }
 
-    public function itAlwaysReturnsTrueWhenMonoMilestoneIsDefinedInDb()
+    public function testItAlwaysReturnsTrueWhenMonoMilestoneIsDefinedInDb() : void
     {
-        stub($this->scrum_mono_milestone_dao)->isMonoMilestoneActivatedForProject()->returns(array(101));
+        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(array(101));
 
         $this->assertTrue(
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable(
@@ -110,11 +112,11 @@ class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsTrueWhenOnePlanningIsDefinedAndUserIsInLabMode()
+    public function testItReturnsTrueWhenOnePlanningIsDefinedAndUserIsInLabMode() : void
     {
-        stub($this->scrum_mono_milestone_dao)->isMonoMilestoneActivatedForProject()->returns(false);
-        stub($this->planning_factory)->getPlannings()->returns(array(1));
-        stub($this->user)->useLabFeatures()->returns(true);
+        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(false);
+        $this->planning_factory->shouldReceive('getPlannings')->andReturns(array(1));
+        $this->user->shouldReceive('useLabFeatures')->andReturns(true);
 
         $this->assertTrue(
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable(
@@ -124,11 +126,11 @@ class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsFalseWhenOnePlanningIsDefinedAndUserIsNotInLabMode()
+    public function testItReturnsFalseWhenOnePlanningIsDefinedAndUserIsNotInLabMode() : void
     {
-        stub($this->scrum_mono_milestone_dao)->isMonoMilestoneActivatedForProject()->returns(false);
-        stub($this->planning_factory)->getPlannings()->returns(array(1));
-        stub($this->user)->useLabFeatures()->returns(false);
+        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(false);
+        $this->planning_factory->shouldReceive('getPlannings')->andReturns(array(1));
+        $this->user->shouldReceive('useLabFeatures')->andReturns(false);
 
         $this->assertFalse(
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable(

@@ -219,9 +219,6 @@ class AdminController extends BaseController
 
     public function updateConfiguration(): void
     {
-        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
-        $token->check();
-
         if (! $this->request->getCurrentUser()->isAdmin($this->group_id)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
@@ -230,6 +227,9 @@ class AdminController extends BaseController
 
             return;
         }
+
+        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
+        $token->check();
 
         $response = new AgileDashboardConfigurationResponse(
             $this->request->getProject(),
