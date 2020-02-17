@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-namespace Tuleap\HudsonGit;
-
-use CSRFSynchronizerToken;
-use GitPresenters_AdminPresenter;
-
-class GitJenkinsAdministrationPresenter extends GitPresenters_AdminPresenter
-{
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
-
-    public function __construct(
-        $project_id,
-        bool $are_mirrors_defined,
-        array $external_pane_presenters,
-        CSRFSynchronizerToken $csrf_token
-    ) {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
-
-        $this->csrf_token = $csrf_token;
-    }
-}
+module.exports = webpack_configurator.extendProdConfiguration(common);

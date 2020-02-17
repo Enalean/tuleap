@@ -1,0 +1,4 @@
+{
+    "name": "hudson_git",
+    "components": ["./"]
+}

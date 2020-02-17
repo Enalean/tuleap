@@ -22,24 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit;
 
-use CSRFSynchronizerToken;
-use GitPresenters_AdminPresenter;
+use Tuleap\DB\DataAccessObject;
 
-class GitJenkinsAdministrationPresenter extends GitPresenters_AdminPresenter
+class GitJenkinsAdministrationServerDao extends DataAccessObject
 {
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
-
-    public function __construct(
-        $project_id,
-        bool $are_mirrors_defined,
-        array $external_pane_presenters,
-        CSRFSynchronizerToken $csrf_token
-    ) {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
-
-        $this->csrf_token = $csrf_token;
+    public function addJenkinsServer(int $project_id, string $jenkins_server_url): void
+    {
+        $this->getDB()->insertOnDuplicateKeyUpdate(
+            'plugin_hudson_git_project_server',
+            [
+                'project_id' => $project_id,
+                'jenkins_server_url' => $jenkins_server_url,
+            ],
+            [
+                'jenkins_server_url'
+            ]
+        );
     }
 }

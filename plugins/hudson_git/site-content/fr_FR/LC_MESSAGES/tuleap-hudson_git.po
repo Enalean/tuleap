@@ -1,18 +1,37 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid "Add a Jenkins server"
+msgstr "Ajouter un serveur Jenkins"
+
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid ""
 "Configuration of jenkins servers that will be triggered at each push in any "
 "repository of the project."
 msgstr ""
-"Configuration de serveurs Jenkins qui seront appellés lors de chaque push "
+"Configuration de serveurs Jenkins qui seront appelés lors de chaque push "
 "fait dans les dépôts du projet."
+
+msgid "Expected jenkins server URL not found"
+msgstr "L'adresse attendue du serveur Jenkins n'a pas été trouvée"
 
 msgid "Jenkins URL"
 msgstr "URL Jenkins"
 
+msgid ""
+"Jenkins server will be notified about git activity on any repository in the "
+"project."
+msgstr ""
+"Le serveur Jenkins sera notifié à propos de l'activité git sur l'ensemble "
+"des dépôts du projet."
+
 msgid "No Jenkins server configured yet."
 msgstr "Aucun serveur Jenkins n'a été configuré."
+
+msgid "Save"
+msgstr "Sauvegarder"
 
 msgid "User is not Git administrator."
 msgstr "L'utilisateur n'est pas administrateur Git."

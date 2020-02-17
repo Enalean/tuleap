@@ -22,22 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit;
 
-use CSRFSynchronizerToken;
-use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
 use Project;
 use ProjectManager;
-use TemplateRenderer;
-use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use RuntimeException;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class GitJenkinsAdministrationController implements DispatchableWithRequest, DispatchableWithProject
+class GitJenkinsAdministrationPOSTController implements DispatchableWithRequest
 {
     /**
      * @var ProjectManager
@@ -50,37 +46,23 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
     private $git_permissions_manager;
 
     /**
-     * @var TemplateRenderer
+     * @var GitJenkinsAdministrationServerAdder
      */
-    private $renderer;
-
-    /**
-     * @var HeaderRenderer
-     */
-    private $header_renderer;
-
-    /**
-     * @var Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
+    private $git_jenkins_administration_server_adder;
 
     public function __construct(
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        HeaderRenderer $header_renderer,
-        TemplateRenderer $renderer
+        GitJenkinsAdministrationServerAdder $git_jenkins_administration_server_adder
     ) {
-        $this->project_manager         = $project_manager;
-        $this->git_permissions_manager = $git_permissions_manager;
-        $this->renderer                = $renderer;
-        $this->header_renderer         = $header_renderer;
-        $this->mirror_data_mapper      = $mirror_data_mapper;
+        $this->project_manager                         = $project_manager;
+        $this->git_permissions_manager                 = $git_permissions_manager;
+        $this->git_jenkins_administration_server_adder = $git_jenkins_administration_server_adder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->getProject($variables);
+        $project = $this->getProjectFromRequest($request);
 
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
@@ -91,35 +73,32 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
             throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
         }
 
-        $this->header_renderer->renderServiceAdministrationHeader(
-            $request,
-            $user,
-            $project
+        $provided_url = $request->get('url');
+        if ($provided_url === false) {
+            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected jenkins server URL not found"));
+        }
+
+        $this->git_jenkins_administration_server_adder->addServerInProject(
+            $project,
+            trim($provided_url)
         );
 
-        $this->renderer->renderToPage(
-            'git-administration-jenkins',
-            new GitJenkinsAdministrationPresenter(
-                (int) $project->getID(),
-                count($this->mirror_data_mapper->fetchAllForProject($project)) > 0,
-                [
-                    GitJenkinsAdministrationPaneBuilder::buildActivePane($project)
-                ],
-                new CSRFSynchronizerToken(
-                    GitJenkinsAdministrationURLBuilder::buildUrl($project)
-                )
-            )
+        $layout->redirect(
+            GitJenkinsAdministrationURLBuilder::buildUrl($project)
         );
-
-        $layout->footer(array());
     }
 
     /**
      * @throws NotFoundException
      */
-    public function getProject(array $variables): Project
+    private function getProjectFromRequest(HTTPRequest $request): Project
     {
-        $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
+        $project_id = $request->get('project_id');
+        if ($project_id === false) {
+            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+        }
+
+        $project = $this->project_manager->getProject((int) $project_id);
         if (! $project || $project->isError()) {
             throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
         }
