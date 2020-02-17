@@ -84,4 +84,29 @@ class UGroupRetrieverWithLegacyTest extends TestCase
 
         $this->assertNull($this->ugroup_retriever->getUGroupId($this->project, 'ugroup_project'));
     }
+
+    public function testGetProjectUGroups()
+    {
+        $project_group = Mockery::mock(ProjectUGroup::class);
+        $project_group->shouldReceive('getId')->andReturn(42);
+        $project_group->shouldReceive('getName')->andReturn('legroup');
+
+        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturn([$project_group]);
+
+        $ugroups = [
+            'UGROUP_NONE'               => ProjectUGroup::NONE,
+            'UGROUP_ANONYMOUS'          => ProjectUGroup::ANONYMOUS,
+            'UGROUP_REGISTERED'         => ProjectUGroup::REGISTERED,
+            'UGROUP_AUTHENTICATED'      => ProjectUGroup::AUTHENTICATED,
+            'UGROUP_PROJECT_MEMBERS'    => ProjectUGroup::PROJECT_MEMBERS,
+            'UGROUP_PROJECT_ADMIN'      => ProjectUGroup::PROJECT_ADMIN,
+            'UGROUP_FILE_MANAGER_ADMIN' => ProjectUGroup::FILE_MANAGER_ADMIN,
+            'UGROUP_WIKI_ADMIN'         => ProjectUGroup::WIKI_ADMIN,
+            'UGROUP_TRACKER_ADMIN'      => ProjectUGroup::TRACKER_ADMIN
+        ];
+
+        $ugroups['legroup'] = 42;
+
+        $this->assertSame($ugroups, $this->ugroup_retriever->getProjectUgroupIds($this->project));
+    }
 }

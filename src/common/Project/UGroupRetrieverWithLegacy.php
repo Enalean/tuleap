@@ -63,4 +63,19 @@ class UGroupRetrieverWithLegacy
 
         return $ugroup_id;
     }
+
+    /**
+     * @return int[]
+     */
+    public function getProjectUgroupIds(Project $project): array
+    {
+        $ugroups        = self::LEGACY_SYSTEM_USER_GROUPS;
+        $static_groups  = $this->ugroup_manager->getStaticUGroups($project);
+
+        foreach ($static_groups as $ugroup) {
+            $ugroups[$ugroup->getName()] = $ugroup->getId();
+        }
+
+        return $ugroups;
+    }
 }

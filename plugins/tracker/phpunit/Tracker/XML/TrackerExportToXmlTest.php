@@ -31,6 +31,7 @@ use Tracker_CannedResponseManager;
 use Tracker_Hierarchy;
 use Tracker_HierarchyFactory;
 use Tracker_RulesManager;
+use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use UserManager;
@@ -56,6 +57,11 @@ class TrackerExportToXmlTest extends TestCase
      */
     private $hierarchy;
 
+    /**
+     * @var Mockery\MockInterface|UGroupRetrieverWithLegacy
+     */
+    private $ugroup_retriever;
+
     protected function setUp(): void
     {
         $this->tracker = Mockery::mock(Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -63,6 +69,9 @@ class TrackerExportToXmlTest extends TestCase
         $this->tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
         $this->tracker->shouldReceive('getUserManager')->andReturn(Mockery::mock(UserManager::class));
         $this->tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+
+        $this->ugroup_retriever = Mockery::mock(UGroupRetrieverWithLegacy::class);
+        $this->tracker->shouldReceive('getUGroupRetrieverWithLegacy')->andReturn($this->ugroup_retriever);
 
         $this->formelement_factory = Mockery::mock(\Tracker_FormElementFactory::class);
 
@@ -123,7 +132,8 @@ class TrackerExportToXmlTest extends TestCase
             'UGROUP_4' => 4,
             'UGROUP_5' => 5,
         ];
-        $this->tracker->shouldReceive('getProjectUgroups')->andReturn($ugroups);
+
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn($ugroups);
 
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
 
@@ -148,7 +158,7 @@ class TrackerExportToXmlTest extends TestCase
     {
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
 
-        $this->tracker->shouldReceive('getProjectUgroups')->andReturn([]);
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -162,7 +172,7 @@ class TrackerExportToXmlTest extends TestCase
     {
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
 
-        $this->tracker->shouldReceive('getProjectUgroups')->andReturn([]);
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -175,7 +185,7 @@ class TrackerExportToXmlTest extends TestCase
     public function testItExportsTheParentId()
     {
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn(array());
-        $this->tracker->shouldReceive('getProjectUgroups')->andReturn([]);
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
         $this->hierarchy->addRelationship(9001, 110);
@@ -191,7 +201,7 @@ class TrackerExportToXmlTest extends TestCase
     {
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn(array());
 
-        $this->tracker->shouldReceive('getProjectUgroups')->andReturn([]);
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
