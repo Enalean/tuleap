@@ -6,7 +6,7 @@
     ],
     "components": [
         "www/js",
-        "www/js/kanban",
+        "scripts/kanban",
         "www/js/planning-v2",
         "scripts",
         "themes"
@@ -29,8 +29,8 @@
             "po": "www/js/planning-v2/po"
         },
         "kanban": {
-            "src": "www/js/kanban/src/app",
-            "po": "www/js/kanban/po"
+            "src": "scripts/kanban/src/app",
+            "po": "scripts/kanban/po"
         }
     },
 

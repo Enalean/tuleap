@@ -17,4 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../../../../scripts/card-fields/highlight-filter-test.js";
+import "../../../../../src/www/themes/common/tlp/angular-tlp/tlp-modal-service-test.js";
