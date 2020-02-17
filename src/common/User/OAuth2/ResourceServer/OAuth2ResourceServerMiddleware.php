@@ -36,6 +36,8 @@ use User_LoginException;
 
 final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
 {
+    private const WWW_AUTHENTICATE_HEADER_BASE = 'Bearer realm="Tuleap OAuth2 Protected Resource" ';
+
     /**
      * @var ResponseFactoryInterface
      */
@@ -78,21 +80,36 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
         $serialized_access_token_identifier = $this->bearer_token_header_parser->parseHeaderLine($authorization_header);
 
         if ($serialized_access_token_identifier === null) {
-            return $this->response_factory->createResponse(401);
+            return $this->response_factory->createResponse(401)
+                ->withHeader('WWW-Authenticate', self::WWW_AUTHENTICATE_HEADER_BASE);
         }
 
         try {
             $user = $this->access_token_verifier->getUser(
                 $this->access_token_identifier_unserializer->getSplitToken($serialized_access_token_identifier)
             );
-        } catch (OAuth2Exception|SplitTokenException $exception) {
-            return $this->response_factory->createResponse(401);
+        } catch (SplitTokenException $exception) {
+            return $this->response_factory->createResponse(401)
+                ->withHeader(
+                    'WWW-Authenticate',
+                    self::WWW_AUTHENTICATE_HEADER_BASE . 'error="invalid_token" error_description="Access token is malformed"'
+                );
+        } catch (OAuth2Exception $exception) {
+            return $this->response_factory->createResponse(401)
+                ->withHeader(
+                    'WWW-Authenticate',
+                    self::WWW_AUTHENTICATE_HEADER_BASE . 'error="invalid_token"'
+                );
         }
 
         try {
             $this->login_manager->validateAndSetCurrentUser($user);
         } catch (User_LoginException $exception) {
-            return $this->response_factory->createResponse(401);
+            return $this->response_factory->createResponse(401)
+                ->withHeader(
+                    'WWW-Authenticate',
+                    self::WWW_AUTHENTICATE_HEADER_BASE . 'error="invalid_token" error_description="Cannot authenticate user"'
+                );
         }
 
         return $handler->handle($request);
