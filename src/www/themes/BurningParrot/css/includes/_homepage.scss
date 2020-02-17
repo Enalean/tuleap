@@ -245,6 +245,7 @@ body.homepage > #main-container {
     min-width: 150px;
     margin: 10px;
     padding: 30px;
+    overflow: hidden;
     border: 1px solid $tlp-theme-color;
     border-radius: 3px;
     background: $tlp-theme-sidebar-background-color;
@@ -304,8 +305,8 @@ body.homepage > #main-container {
 .homepage-statistic-growth-background {
     position: absolute;
     z-index: 1;
+    right: 10px;
     bottom: 0;
-    left: 0;
     opacity: .05;
 
     @supports (mix-blend-mode: overlay) {
