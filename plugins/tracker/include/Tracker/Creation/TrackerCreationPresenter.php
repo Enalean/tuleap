@@ -22,6 +22,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Tracker\Creation;
 
+use Project;
+
 class TrackerCreationPresenter
 {
     /**
@@ -29,8 +31,14 @@ class TrackerCreationPresenter
      */
     public $project_templates;
 
-    public function __construct(array $project_templates)
+    /**
+     * @var string
+     */
+    public $project_unix_name;
+
+    public function __construct(array $project_templates, Project $current_project)
     {
         $this->project_templates = json_encode($project_templates, JSON_THROW_ON_ERROR);
+        $this->project_unix_name = $current_project->getUnixNameLowerCase();
     }
 }

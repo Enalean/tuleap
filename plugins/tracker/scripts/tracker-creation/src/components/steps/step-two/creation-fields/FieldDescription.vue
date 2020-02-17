@@ -18,12 +18,33 @@
   -->
 
 <template>
-    <router-view />
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="tracker-description" v-translate>Description</label>
+        <textarea
+            type="text"
+            class="tlp-textarea"
+            id="tracker-description"
+            name="tracker-description"
+            v-bind:placeholder="placeholder"
+        ></textarea>
+    </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
+import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
+import { Tracker } from "../../../../store/type";
 
 @Component
-export default class App extends Vue {}
+export default class StepTwo extends Vue {
+    @State
+    readonly selected_tracker_template!: Tracker;
+
+    get placeholder(): string {
+        return this.$gettextInterpolate(
+            this.$gettext("My %{ tracker_name } tracker description..."),
+            { tracker_name: this.selected_tracker_template.name }
+        );
+    }
+}
 </script>

@@ -17,24 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CreationOptions, State, Tracker } from "./type";
+import { CreationOptions, State } from "./type";
 
-export function setActiveOption(state: State, option: CreationOptions): void {
-    state.active_option = option;
-}
-
-export function setSelectedTrackerTemplate(state: State, tracker_id: string): void {
-    let tracker: Tracker | undefined;
-
-    for (let i = 0; !tracker && i < state.project_templates.length; i++) {
-        tracker = state.project_templates[i].tracker_list.find(
-            (tracker: Tracker) => tracker.id === tracker_id
-        );
-    }
-
-    if (!tracker) {
-        throw new Error("Tracker not found in store");
-    }
-
-    state.selected_tracker_template = tracker;
-}
+export const is_ready_for_step_2 = (state: State): boolean => {
+    return (
+        state.active_option !== CreationOptions.NONE_YET && state.selected_tracker_template !== null
+    );
+};

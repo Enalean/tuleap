@@ -52,9 +52,32 @@ describe("TrackerTemplateSelector", () => {
         } as State);
 
         wrapper.find("[data-test=template-selector]").setValue("10");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSelectedTemplateTrackerId", "10");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSelectedTrackerTemplate", "10");
 
         wrapper.find("[data-test=template-selector]").setValue("11");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSelectedTemplateTrackerId", "11");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSelectedTrackerTemplate", "11");
+    });
+
+    it(`pre-selects the current selected template if any,
+        so it keeps showing the selected template when user goes back to step 1`, async () => {
+        const story_tracker = { id: "11", name: "Stories" };
+        const wrapper = await getWrapper({
+            project_templates: [
+                {
+                    project_name: "Scrum template",
+                    tracker_list: [
+                        { id: "10", name: "Bug" },
+                        story_tracker,
+                        { id: "12", name: "Releases" }
+                    ]
+                }
+            ],
+            selected_tracker_template: story_tracker
+        } as State);
+
+        const selectbox: HTMLInputElement = wrapper.find("[data-test=template-selector]")
+            .element as HTMLInputElement;
+
+        expect(selectbox.value).toEqual(story_tracker.id);
     });
 });

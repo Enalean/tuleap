@@ -15,6 +15,15 @@ msgstr ""
 msgid "1"
 msgstr "1"
 
+msgid "2"
+msgstr "2"
+
+msgid "Avoid spaces and ponctuation"
+msgstr "Évitez les espaces et la ponctuation"
+
+msgid "Back"
+msgstr "Retour"
+
 msgid "Choose a starting point"
 msgstr "Choisissez un point de départ"
 
@@ -29,12 +38,30 @@ msgstr ""
 msgid "Create a new tracker"
 msgstr "Créer un nouvel outil de suivi"
 
+msgid "Description"
+msgstr "Description"
+
 msgid ""
 "Don't worry, you will still be able to modify your tracker after it has been "
 "created."
 msgstr ""
 "Ne vous inquiétez pas, vous serez toujours en mesure de modifier votre outil "
 "de suivi après sa création."
+
+msgid "Give your tracker some basic info"
+msgstr "Donnez à votre outil de suivi quelques infos de base"
+
+msgid "My %{ tracker_name } tracker description..."
+msgstr "Ma description de l'outil de suivi %{ tracker_name } ..."
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Shortname"
+msgstr "Nom court"
 
 msgid "Template"
 msgstr "Modèle"

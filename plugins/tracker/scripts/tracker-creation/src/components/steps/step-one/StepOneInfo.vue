@@ -19,7 +19,6 @@
 
 <template>
     <div>
-        <h1 v-translate>Create a new tracker</h1>
         <step-label
             v-bind:step-number="$gettext('1')"
             v-bind:step-label="$gettext('Choose a starting point')"

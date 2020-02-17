@@ -1915,12 +1915,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $r->addRoute(['GET', 'POST'], GlobalAdminController::URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdmin'));
         });
 
-        $event->getRouteCollector()
-            ->addRoute(
-                ['GET'],
-                '/{project_name:[A-z0-9-]+}/tracker/new',
-                $this->getRouteHandler('routeCreateNewTracker')
-            );
+        $event->getRouteCollector()->addGroup('/{project_name:[A-z0-9-]+}/tracker', function (FastRoute\RouteCollector $r) {
+            $r->get('/new', $this->getRouteHandler('routeCreateNewTracker'));
+            $r->get('/new-information', $this->getRouteHandler('routeCreateNewTracker'));
+        });
 
         $event->getRouteCollector()->addRoute(
             ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
