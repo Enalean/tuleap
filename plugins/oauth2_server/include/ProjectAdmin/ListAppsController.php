@@ -25,29 +25,40 @@ namespace Tuleap\OAuth2Server\ProjectAdmin;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
-class AdministrationController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final class ListAppsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const PANE_SHORTNAME = 'oauth2_clients';
+    public const  PANE_SHORTNAME = 'oauth2_clients';
+    public const  CSRF_TOKEN     = 'oauth2_server_list_clients';
+
     /** @var LayoutHelper */
     private $layout_helper;
     /** @var TemplateRenderer */
     private $renderer;
     /** @var ProjectAdminPresenterBuilder */
     private $presenter_builder;
+    /** @var IncludeAssets */
+    private $assets;
+    /** @var \CSRFSynchronizerToken */
+    private $csrf_token;
 
     public function __construct(
         LayoutHelper $layout_helper,
         TemplateRenderer $renderer,
-        ProjectAdminPresenterBuilder $presenter_builder
+        ProjectAdminPresenterBuilder $presenter_builder,
+        IncludeAssets $assets,
+        \CSRFSynchronizerToken $csrf_token
     ) {
         $this->layout_helper     = $layout_helper;
         $this->renderer          = $renderer;
         $this->presenter_builder = $presenter_builder;
+        $this->assets            = $assets;
+        $this->csrf_token        = $csrf_token;
     }
 
     public static function buildSelf(): self
@@ -55,14 +66,25 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
         return new self(
             AdministrationLayoutHelper::buildSelf(),
             \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates'),
-            ProjectAdminPresenterBuilder::buildSelf()
+            ProjectAdminPresenterBuilder::buildSelf(),
+            new IncludeAssets(__DIR__ . '/../../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
+            new \CSRFSynchronizerToken(self::CSRF_TOKEN)
         );
+    }
+
+    public static function getUrl(\Project $project): string
+    {
+        return sprintf('/plugins/oauth2_server/project/%d/admin', $project->getID());
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        $layout->includeFooterJavascriptFile($this->assets->getFileURL('project-administration.js'));
         $callback = function (\Project $project, \PFUser $user) {
-            $this->renderer->renderToPage('project-admin', $this->presenter_builder->build($project));
+            $this->renderer->renderToPage(
+                'project-admin',
+                $this->presenter_builder->build($this->csrf_token, $project)
+            );
         };
         $this->layout_helper->renderInProjectAdministrationLayout(
             $request,

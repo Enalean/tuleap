@@ -41,13 +41,13 @@ class ProjectAdminPresenterBuilder
         return new self(new AppDao());
     }
 
-    public function build(\Project $project): ProjectAdminPresenter
+    public function build(\CSRFSynchronizerToken $csrf_token, \Project $project): ProjectAdminPresenter
     {
         $apps = [];
         $rows = $this->app_dao->searchByProject($project);
         foreach ($rows as $row) {
             $apps[] = new AppPresenter($row['name']);
         }
-        return new ProjectAdminPresenter($apps);
+        return new ProjectAdminPresenter($apps, $csrf_token, $project);
     }
 }

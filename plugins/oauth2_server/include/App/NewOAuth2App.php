@@ -20,27 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\ProjectAdmin;
+namespace Tuleap\OAuth2Server\App;
 
 /**
  * @psalm-immutable
  */
-final class ProjectAdminPresenter
+final class NewOAuth2App
 {
-    /** @var AppPresenter[] */
-    public $apps;
-    /** @var \CSRFSynchronizerToken */
-    public $csrf_token;
-    /** @var string */
-    public $add_client_url;
-
     /**
-     * @param $apps AppPresenter[]
+     * @var string
      */
-    public function __construct(array $apps, \CSRFSynchronizerToken $csrf_token, \Project $project)
+    private $name;
+    /**
+     * @var \Project
+     */
+    private $project;
+
+    public function __construct(string $name, \Project $project)
     {
-        $this->apps           = $apps;
-        $this->csrf_token     = $csrf_token;
-        $this->add_client_url = AddAppController::getUrl($project);
+        $this->name = $name;
+        $this->project = $project;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getProject(): \Project
+    {
+        return $this->project;
     }
 }

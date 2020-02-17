@@ -47,17 +47,24 @@ final class ProjectAdminPresenterBuilderTest extends TestCase
 
     public function testBuildQueriesDaoAndBuildsPresenter(): void
     {
-        $rows    = [
+        $rows       = [
             ['name' => 'Jenkins'],
             ['name' => 'My custom REST client']
         ];
-        $project = M::mock(\Project::class);
+        $project    = M::mock(\Project::class)->shouldReceive('getID')
+            ->andReturn(102)
+            ->getMock();
+        $csrf_token = M::mock(\CSRFSynchronizerToken::class);
         $this->app_dao->shouldReceive('searchByProject')
             ->once()
             ->with($project)
             ->andReturn($rows);
 
-        $expected = new ProjectAdminPresenter([new AppPresenter('Jenkins'), new AppPresenter('My custom REST client')]);
-        $this->assertEquals($expected, $this->presenter_builder->build($project));
+        $expected = new ProjectAdminPresenter(
+            [new AppPresenter('Jenkins'), new AppPresenter('My custom REST client')],
+            $csrf_token,
+            $project
+        );
+        $this->assertEquals($expected, $this->presenter_builder->build($csrf_token, $project));
     }
 }

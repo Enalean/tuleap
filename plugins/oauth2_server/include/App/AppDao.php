@@ -32,4 +32,12 @@ class AppDao extends DataAccessObject
             WHERE project_id = ?";
         return $this->getDB()->run($sql, $project->getID());
     }
+
+    public function create(NewOAuth2App $app): int
+    {
+        $sql = "INSERT INTO plugin_oauth2_server_app (project_id, name)
+            VALUES (?, ?)";
+        $this->getDB()->run($sql, $app->getProject()->getID(), $app->getName());
+        return (int) $this->getDB()->lastInsertId();
+    }
 }

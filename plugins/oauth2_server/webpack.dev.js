@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,29 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-namespace Tuleap\OAuth2Server\ProjectAdmin;
-
-/**
- * @psalm-immutable
- */
-final class ProjectAdminPresenter
-{
-    /** @var AppPresenter[] */
-    public $apps;
-    /** @var \CSRFSynchronizerToken */
-    public $csrf_token;
-    /** @var string */
-    public $add_client_url;
-
-    /**
-     * @param $apps AppPresenter[]
-     */
-    public function __construct(array $apps, \CSRFSynchronizerToken $csrf_token, \Project $project)
-    {
-        $this->apps           = $apps;
-        $this->csrf_token     = $csrf_token;
-        $this->add_client_url = AddAppController::getUrl($project);
-    }
-}
+module.exports = webpack_configurator.extendDevConfiguration(common);

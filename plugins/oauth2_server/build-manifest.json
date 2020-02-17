@@ -1,0 +1,4 @@
+{
+    "name": "oauth2_server",
+    "components": ["./"]
+}

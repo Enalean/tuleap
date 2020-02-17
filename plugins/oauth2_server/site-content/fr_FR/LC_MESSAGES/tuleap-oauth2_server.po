@@ -1,22 +1,40 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.3\n"
 
-msgid "Add App"
+msgid "Add an App"
 msgstr "Ajouter une App"
 
 msgid "App name"
 msgstr "Nom de l'App"
+
+msgid "App name is required."
+msgstr "Le nom de l'App est obligatoire."
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Close"
+msgstr "Fermer"
 
 msgid "Delegate access to Tuleap resources"
 msgstr "Déléguer l'accès aux ressources de Tuleap"
 
 msgid "Delete"
 msgstr "Supprimer"
+
+msgid "My REST API consumer App"
+msgstr "Mon App utilisant l'API REST"
 
 msgid "OAuth2 Apps"
 msgstr "Apps OAuth2"
