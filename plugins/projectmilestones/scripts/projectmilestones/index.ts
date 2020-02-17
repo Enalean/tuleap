@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const label_timeframe = vue_mount_point.dataset.labelTimeframe;
     const user_can_view_sub_milestones_planning_dataset =
         vue_mount_point.dataset.userCanViewSubMilestonesPlanning;
+    const activate_burnup_dataset = vue_mount_point.dataset.projectMilestonesActivateBurnup;
 
     if (!project_id_dataset) {
         throw new Error("Project Id is missing.");
@@ -93,6 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user_can_view_sub_milestones_planning = Boolean(
         user_can_view_sub_milestones_planning_dataset
     );
+    const activate_burnup = Boolean(activate_burnup_dataset);
 
     const AppComponent = Vue.extend(App);
 
@@ -106,7 +108,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             is_timeframe_duration,
             label_start_date,
             label_timeframe,
-            user_can_view_sub_milestones_planning
+            user_can_view_sub_milestones_planning,
+            activate_burnup
         )
     }).$mount(vue_mount_point);
 });

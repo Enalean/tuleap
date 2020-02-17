@@ -21,10 +21,7 @@
     <div>
         <div class="release-content-description">
             <release-description-badges-tracker v-bind:release_data="release_data" />
-            <chart-displayer
-                class="release-chart-burndown-row"
-                v-bind:release_data="release_data"
-            />
+            <chart-displayer class="release-charts-row" v-bind:release_data="release_data" />
         </div>
         <div class="release-description-row">
             <div

@@ -30,7 +30,7 @@ export {
     getCurrentMilestones,
     getOpenSprints,
     getMilestonesContent,
-    getBurndownData,
+    getChartData,
     getNbOfClosedSprints
 };
 
@@ -115,8 +115,7 @@ function getPaginationSizeFromHeader(header: Headers): number {
     return Number.parseInt(pagination_size_header, 10);
 }
 
-async function getBurndownData(milestone_id: number): Promise<ArtifactMilestone> {
-    const burndown_data = await get(`/api/v1/artifacts/${encodeURIComponent(milestone_id)}`);
-
-    return burndown_data.json();
+async function getChartData(milestone_id: number): Promise<ArtifactMilestone> {
+    const chart_data = await get(`/api/v1/artifacts/${encodeURIComponent(milestone_id)}`);
+    return chart_data.json();
 }

@@ -21,7 +21,7 @@ import {
     getCurrentMilestones,
     getOpenSprints,
     getMilestonesContent,
-    getBurndownData,
+    getChartData,
     getNbOfClosedSprints
 } from "./rest-querier";
 
@@ -147,13 +147,13 @@ describe("getProject() -", () => {
         expect(result).toEqual(user_stories);
     });
 
-    it("the REST API will be queried and the burndown_data of milestone returned", async () => {
+    it("the REST API will be queried and charts data of milestone returned", async () => {
         const burndown_data: BurndownData = {
             start_date: new Date().toDateString()
         } as BurndownData;
 
         const artifact_chart = {
-            values: [{ value: burndown_data }]
+            values: [{ value: burndown_data }, {}]
         } as ArtifactMilestone;
 
         const tlpGetMock = jest.spyOn(tlp, "get");
@@ -166,7 +166,7 @@ describe("getProject() -", () => {
             return_json: artifact_chart
         });
 
-        const result = await getBurndownData(milestone_id);
+        const result = await getChartData(milestone_id);
 
         expect(tlpGetMock).toHaveBeenCalledWith(
             `/api/v1/artifacts/${encodeURIComponent(milestone_id)}`

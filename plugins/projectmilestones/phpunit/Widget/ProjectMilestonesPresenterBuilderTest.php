@@ -44,6 +44,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Tuleap\Tracker\TrackerColor;
+use ForgeConfig;
 
 class ProjectMilestonesPresenterBuilderTest extends TestCase
 {
@@ -503,6 +504,33 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
         $this->assertFalse($built_presenter->user_can_view_sub_milestones_planning);
+    }
+
+    public function testUserCanSeeTheBurnup(): void
+    {
+        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+
+        $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
+
+        $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
+        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+
+        $this->mockTimeframe($this->semantic_timeframe);
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getAllFutureMilestones')
+            ->once()
+            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+
+        $this->tracker->shouldReceive('getChildren')->andReturn([]);
+
+        ForgeConfig::set("project_milestones_activate_burnup", 1);
+        $built_presenter = $this->builder->getProjectMilestonePresenter();
+
+        $this->assertTrue($built_presenter->project_milestones_activate_burnup);
     }
 
     private function mockAnArtifact(string $name, string $color)

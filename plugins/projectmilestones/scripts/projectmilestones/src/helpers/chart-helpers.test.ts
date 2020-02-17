@@ -17,31 +17,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ArtifactMilestone, BurndownData } from "../type";
-import { getBurndownDataFromType } from "./chart-helper";
+import { ArtifactMilestone, BurndownData, BurnupData } from "../type";
+import { getBurndownDataFromType, getBurnupDataFromType } from "./chart-helper";
 
 describe("Chart Helpers", () => {
     describe("getBurndownDataFromType", () => {
         it("When the type is burndown, Then a BurndownChart object is returned", () => {
-            const burndown_data = {
-                start_date: new Date("2017-01-22T13:42:08+02:00").toDateString()
-            } as BurndownData;
+            const burndown = getBurndownDataFromType(getArtifact());
 
-            const label = "Burndown";
-            const artifact = {
-                values: [
-                    {
-                        field_id: 10,
-                        label,
-                        value: burndown_data,
-                        type: "burndown"
-                    }
-                ]
-            } as ArtifactMilestone;
+            if (!burndown) {
+                throw new Error("Burndown doesn't exist");
+            }
 
-            const burndown = getBurndownDataFromType(artifact);
-
-            expect(burndown).toStrictEqual({ ...burndown_data, label });
+            expect(burndown.label).toEqual("Burndown");
         });
     });
+
+    describe("getBurnupDataFromType", () => {
+        it("When the type is burnup, Then a BurnupData object id rendered", () => {
+            const burnup = getBurnupDataFromType(getArtifact());
+
+            if (!burnup) {
+                throw new Error("Burnup doesn't exist");
+            }
+
+            expect(burnup.label).toEqual("Burnup");
+        });
+    });
+
+    function getArtifact(): ArtifactMilestone {
+        const burndown_data = {
+            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString()
+        } as BurndownData;
+
+        const label_burndown = "Burndown";
+
+        const burnup_data = {
+            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString()
+        } as BurnupData;
+
+        const label_burnup = "Burnup";
+
+        return {
+            values: [
+                {
+                    field_id: 10,
+                    label: label_burndown,
+                    value: burndown_data,
+                    type: "burndown"
+                },
+                {
+                    field_id: 122,
+                    label: label_burnup,
+                    value: burnup_data,
+                    type: "burnup"
+                }
+            ]
+        } as ArtifactMilestone;
+    }
 });

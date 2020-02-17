@@ -20,12 +20,18 @@
 <template>
     <div>
         <div v-if="is_loading" class="release-loader" data-test="loading-data"></div>
-        <div v-else-if="burndown_exits">
-            <h2 class="tlp-pane-subtitle">{{ burndown_label }}</h2>
-            <burndown-displayer
-                v-bind:release_data="release_data"
-                v-bind:message_error_rest="message_error_rest"
-            />
+        <div v-else-if="!has_rest_error">
+            <div v-if="burndown_exists">
+                <h2 class="tlp-pane-subtitle">{{ burndown_label }}</h2>
+                <burndown-displayer v-bind:release_data="release_data" />
+            </div>
+            <div v-if="activate_burnup && burnup_exists" data-test="burnup-exists">
+                <h2 class="tlp-pane-subtitle project-milestones-chart-label">{{ burnup_label }}</h2>
+                <p class="empty-pane-text" v-translate>There is nothing here!</p>
+            </div>
+        </div>
+        <div v-if="has_rest_error" class="tlp-alert-danger" data-test="error-rest">
+            {{ message_error_rest }}
         </div>
     </div>
 </template>
@@ -35,9 +41,10 @@ import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../../type";
 import Vue from "vue";
 import { FetchWrapperError } from "tlp";
-import { getBurndownData } from "../../../../api/rest-querier";
-import { getBurndownDataFromType } from "../../../../helpers/chart-helper";
+import { getChartData } from "../../../../api/rest-querier";
+import { getBurndownDataFromType, getBurnupDataFromType } from "../../../../helpers/chart-helper";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
+import { State } from "vuex-class";
 
 @Component({
     components: { BurndownDisplayer }
@@ -45,12 +52,19 @@ import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
 export default class ChartDisplayer extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @State
+    readonly activate_burnup!: boolean;
 
     is_loading = true;
     message_error_rest: string | null = null;
+    has_rest_error = false;
 
-    get burndown_exits(): boolean {
+    get burndown_exists(): boolean {
         return this.release_data.resources.burndown !== null;
+    }
+
+    get burnup_exists(): boolean {
+        return this.release_data.burnup_data !== null;
     }
 
     get burndown_label(): string {
@@ -61,13 +75,25 @@ export default class ChartDisplayer extends Vue {
         return this.$gettext("Burndown");
     }
 
-    async created(): Promise<void> {
-        if (!this.release_data.burndown_data) {
-            try {
-                const burndown_values = await getBurndownData(this.release_data.id);
+    get burnup_label(): string {
+        if (this.release_data.burnup_data && this.release_data.burnup_data.label) {
+            return this.release_data.burnup_data.label;
+        }
 
+        return this.$gettext("Burnup");
+    }
+
+    async created(): Promise<void> {
+        if (
+            this.is_loading &&
+            (!this.release_data.burndown_data || !this.release_data.burnup_data)
+        ) {
+            try {
+                const burndown_values = await getChartData(this.release_data.id);
                 this.release_data.burndown_data = getBurndownDataFromType(burndown_values);
+                this.release_data.burnup_data = getBurnupDataFromType(burndown_values);
             } catch (rest_error) {
+                this.has_rest_error = true;
                 await this.handle_error(rest_error);
             } finally {
                 this.is_loading = false;

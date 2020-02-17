@@ -35,7 +35,8 @@ export function createStore(
     is_timeframe_duration: boolean,
     label_start_date: string,
     label_timeframe: string,
-    user_can_view_sub_milestones_planning: boolean
+    user_can_view_sub_milestones_planning: boolean,
+    activate_burnup: boolean
 ): Store<State> {
     const state: State = {
         project_id,
@@ -51,7 +52,8 @@ export function createStore(
         is_timeframe_duration,
         label_start_date,
         label_timeframe,
-        user_can_view_sub_milestones_planning
+        user_can_view_sub_milestones_planning,
+        activate_burnup
     };
 
     return new Vuex.Store({
