@@ -116,6 +116,8 @@ class Docman_FileStorage
             $path .= $elem .'/';
             if (!is_dir($path)) {
                 mkdir($path, 0700);
+                chown($path, ForgeConfig::get('sys_http_user'));
+                chgrp($path, ForgeConfig::get('sys_http_user'));
             }
         }
 
