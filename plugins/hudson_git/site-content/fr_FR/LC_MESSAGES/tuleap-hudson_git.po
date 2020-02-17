@@ -1,6 +1,9 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid "Actions"
+msgstr "Actions"
+
 msgid "Add a Jenkins server"
 msgstr "Ajouter un serveur Jenkins"
 
@@ -13,6 +16,9 @@ msgid ""
 msgstr ""
 "Configuration de serveurs Jenkins qui seront appelés lors de chaque push "
 "fait dans les dépôts du projet."
+
+msgid "Confirm deletion"
+msgstr "Confirmer la suppression"
 
 msgid "Expected jenkins server URL not found"
 msgstr "L'adresse attendue du serveur Jenkins n'a pas été trouvée"
@@ -30,6 +36,9 @@ msgstr ""
 msgid "No Jenkins server configured yet."
 msgstr "Aucun serveur Jenkins n'a été configuré."
 
+msgid "Remove"
+msgstr "Enlever"
+
 msgid "Save"
 msgstr "Sauvegarder"
 
@@ -41,3 +50,8 @@ msgstr "Le serveur Jenkins est déjà défini pour ce projet."
 
 msgid "User is not Git administrator."
 msgstr "L'utilisateur n'est pas administrateur Git."
+
+msgid "You are about to remove the jenkins server. Please confirm your action."
+msgstr ""
+"Vous êtes sur le point de supprimer le serveur jenkins. Veuillez confirmer "
+"la suppression."

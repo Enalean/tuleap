@@ -32,6 +32,7 @@ use ProjectManager;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -69,13 +70,19 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
      */
     private $git_jenkins_administration_server_dao;
 
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
+
     public function __construct(
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         GitJenkinsAdministrationServerDao $git_jenkins_administration_server_dao,
         HeaderRenderer $header_renderer,
-        TemplateRenderer $renderer
+        TemplateRenderer $renderer,
+        IncludeAssets $include_assets
     ) {
         $this->project_manager                       = $project_manager;
         $this->git_permissions_manager               = $git_permissions_manager;
@@ -83,6 +90,7 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
         $this->header_renderer                       = $header_renderer;
         $this->mirror_data_mapper                    = $mirror_data_mapper;
         $this->git_jenkins_administration_server_dao = $git_jenkins_administration_server_dao;
+        $this->include_assets                        = $include_assets;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -97,6 +105,10 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
         if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
             throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
         }
+
+        $layout->includeFooterJavascriptFile(
+            $this->include_assets->getFileURL('git-administration.js')
+        );
 
         $this->header_renderer->renderServiceAdministrationHeader(
             $request,
@@ -140,6 +152,7 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
         $presenters = [];
         foreach ($this->git_jenkins_administration_server_dao->getJenkinsServerOfProject((int) $project->getID()) as $jenkins_server) {
             $presenters[] = new GitJenkinsAdministrationServerPresenter(
+                (int) $jenkins_server['id'],
                 (string) $jenkins_server['jenkins_server_url']
             );
         }

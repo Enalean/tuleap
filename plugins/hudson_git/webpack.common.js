@@ -23,20 +23,34 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 const context = path.resolve(__dirname);
 const output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "../../src/www/assets/hudson_git")
+    path.resolve(__dirname, "../../src/www/assets/hudson_git"),
+    "/assets/hudson_git/"
 );
 
 const webpack_config_for_themes = {
-    entry: { style: "./themes/default/css/style.scss" },
+    entry: {
+        style: "./themes/default/css/style.scss",
+        "git-administration": "./scripts/src/git-administration.ts"
+    },
     context,
     output,
+    externals: {
+        jquery: "jQuery"
+    },
     module: {
-        rules: [webpack_configurator.rule_scss_loader]
+        rules: [
+            webpack_configurator.rule_scss_loader,
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.rule_po_files
+        ]
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),
         manifest_plugin,
-        ...webpack_configurator.getCSSExtractionPlugins()
+        ...webpack_configurator.getCSSExtractionPlugins(),
+        webpack_configurator.getTypescriptCheckerPlugin(false)
     ]
 };
 

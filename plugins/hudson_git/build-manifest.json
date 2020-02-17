@@ -1,4 +1,10 @@
 {
     "name": "hudson_git",
-    "components": ["./"]
+    "components": ["./"],
+    "gettext-ts": {
+        "git-administration": {
+            "src": "scripts/src",
+            "po": "scripts/po"
+        }
+    }
 }

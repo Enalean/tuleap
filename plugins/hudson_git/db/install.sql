@@ -13,7 +13,7 @@ CREATE TABLE plugin_hudson_git_job (
 );
 
 CREATE TABLE IF NOT EXISTS plugin_hudson_git_project_server(
+   id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
    project_id int(11) NOT NULL,
-   jenkins_server_url varchar(255) default '',
-   PRIMARY KEY (project_id, jenkins_server_url)
+   jenkins_server_url varchar(255) default ''
 ) ENGINE=InnoDB;
