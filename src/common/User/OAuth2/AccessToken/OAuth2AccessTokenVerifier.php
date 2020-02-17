@@ -27,10 +27,10 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
 class OAuth2AccessTokenVerifier
 {
-    private const TEST_TOKEN_ID = 1;
-    // Not hashed: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    private const TEST_VERIFIER_HASHED_VALUE = '3ba3f5f43b92602683c19aee62a20342b084dd5971ddd33808d81a328879a547';
-
+    /**
+     * @var OAuth2AccessTokenDAO
+     */
+    private $access_token_dao;
     /**
      * @var \UserManager
      */
@@ -40,10 +40,14 @@ class OAuth2AccessTokenVerifier
      */
     private $hasher;
 
-    public function __construct(\UserManager $user_manager, SplitTokenVerificationStringHasher $hasher)
-    {
-        $this->user_manager = $user_manager;
-        $this->hasher       = $hasher;
+    public function __construct(
+        OAuth2AccessTokenDAO $access_token_dao,
+        \UserManager $user_manager,
+        SplitTokenVerificationStringHasher $hasher
+    ) {
+        $this->access_token_dao = $access_token_dao;
+        $this->user_manager     = $user_manager;
+        $this->hasher           = $hasher;
     }
 
     /**
@@ -52,15 +56,20 @@ class OAuth2AccessTokenVerifier
      */
     public function getUser(SplitToken $access_token): \PFUser
     {
-        if ($access_token->getID() !== self::TEST_TOKEN_ID) {
+        $row = $this->access_token_dao->searchAccessToken($access_token->getID());
+        if ($row === null) {
             throw new OAuth2AccessTokenNotFoundException($access_token->getID());
         }
 
-        $is_valid_access_key = $this->hasher->verifyHash($access_token->getVerificationString(), self::TEST_VERIFIER_HASHED_VALUE);
+        $is_valid_access_key = $this->hasher->verifyHash($access_token->getVerificationString(), $row['verifier']);
         if (! $is_valid_access_key) {
             throw new InvalidOAuth2AccessTokenException();
         }
 
-        return $this->user_manager->getUserByUserName('admin');
+        $user = $this->user_manager->getUserById($row['user_id']);
+        if ($user === null) {
+            throw new OAuth2AccessTokenMatchingUnknownUserException($row['user_id']);
+        }
+        return $user;
     }
 }
