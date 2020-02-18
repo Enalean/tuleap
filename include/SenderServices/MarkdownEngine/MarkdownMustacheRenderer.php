@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
 use MustacheRenderer;
 use Tuleap\Templating\Mustache\MustacheEngine;
-use Tuleap\Templating\TemplateCache;
+use Tuleap\Templating\TemplateCacheInterface;
 
 class MarkdownMustacheRenderer extends MustacheRenderer
 {
@@ -48,7 +48,7 @@ class MarkdownMustacheRenderer extends MustacheRenderer
     );
 
 
-    protected function getEngine(\Mustache_Loader $loader, TemplateCache $template_cache)
+    protected function getEngine(\Mustache_Loader $loader, TemplateCacheInterface $template_cache): MustacheEngine
     {
         $special_characters = self::$markdown_special_characters;
 
