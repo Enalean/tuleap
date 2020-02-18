@@ -132,6 +132,9 @@ msgstr "Une erreur s'est produite, le workflow ne peut être réinitialisé."
 msgid "An error has occurred, the workflow couldn't be updated."
 msgstr "Une erreur est survenue, le workflow ne peut pas être modifié."
 
+msgid "An error occured while creating the tracker."
+msgstr "Une erreur est survenue lors de la création de l'outil de suivi."
+
 msgid "An error occurred while updating the timeframe semantic"
 msgstr ""
 "Une erreur est survenue lors de la mise à jour de la sémantique plage de "
@@ -1043,6 +1046,9 @@ msgid ""
 msgstr ""
 "Le rapport a été trié sur cette colonne. Cette colonne ne permet cependant "
 "pas le tri. Le tri a donc été ignoré. Veuillez choisir une autre colonne."
+
+msgid "The request for the tracker creation is not valid."
+msgstr "La requête pour la création de l'outil de suivi n'est pas valide."
 
 msgid "The same value cannot be source and destination at the same time."
 msgstr ""

@@ -18,41 +18,17 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <label class="tlp-label" for="tracker-name">
-            <translate>Name</translate>
-            <i class="fa fa-asterisk"></i>
-        </label>
-        <input
-            type="text"
-            class="tlp-input"
-            id="tracker-name"
-            name="tracker-name"
-            v-bind:value="tracker_to_be_created.name"
-            v-on:keyup="setTrackerName($event.target.value)"
-            required
-        />
-    </div>
+    <input type="hidden" name="tracker-template-id" v-bind:value="selected_tracker_template.id" />
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { State, Mutation } from "vuex-class";
+import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
+import { Tracker } from "../../../../store/type";
 
 @Component
-export default class StepTwo extends Vue {
+export default class FieldTrackerTemplateId extends Vue {
     @State
-    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
-
-    @Mutation
-    readonly initTrackerName!: () => void;
-
-    @Mutation
-    readonly setTrackerName!: (name: string) => void;
-
-    mounted(): void {
-        this.initTrackerName();
-    }
+    readonly selected_tracker_template!: Tracker;
 }
 </script>

@@ -24,28 +24,15 @@ namespace Tuleap\Tracker\Creation;
 
 use HTTPRequest;
 use Project;
-use trackerPlugin;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class TrackerCreationController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
+class TrackerCreationProcessorController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-    /**
-     * @var TrackerCreationBreadCrumbsBuilder
-     */
-    private $breadcrumbs_builder;
-
-    /**
-     * @var \TemplateRendererFactory
-     */
-    private $renderer_factory;
-
     /**
      * @var \UserManager
      */
@@ -55,10 +42,11 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
      * @var \ProjectManager
      */
     private $project_manager;
+
     /**
-     * @var TrackerCreationPresenterBuilder
+     * @var TrackerCreator
      */
-    private $presenter_builder;
+    private $tracker_creator;
 
     /**
      * @var TrackerCreationPermissionChecker
@@ -66,23 +54,21 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
     private $permission_checker;
 
     public function __construct(
-        TrackerCreationBreadCrumbsBuilder $breadcrumbs_builder,
-        \TemplateRendererFactory $renderer_factory,
         \UserManager $user_manager,
         \ProjectManager $project_manager,
-        TrackerCreationPresenterBuilder $presenter_builder,
+        TrackerCreator $tracker_creator,
         TrackerCreationPermissionChecker $permission_checker
     ) {
-        $this->breadcrumbs_builder = $breadcrumbs_builder;
-        $this->renderer_factory    = $renderer_factory;
-        $this->user_manager        = $user_manager;
-        $this->project_manager     = $project_manager;
-        $this->presenter_builder   = $presenter_builder;
-        $this->permission_checker  = $permission_checker;
+        $this->user_manager       = $user_manager;
+        $this->project_manager    = $project_manager;
+        $this->tracker_creator    = $tracker_creator;
+        $this->permission_checker = $permission_checker;
     }
 
     /**
-     * Serves the route /<project_name>/tracker/new
+     * Is able to process a request routed by FrontRouter
+     *
+     * @param array $variables
      *
      * @throws NotFoundException
      * @throws ForbiddenException
@@ -94,38 +80,31 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
 
         $this->permission_checker->checkANewTrackerCanBeCreated($project, $user);
 
-        $layout->addBreadcrumbs(
-            $this->breadcrumbs_builder->build($project, $user)
-        );
+        $creation_request = new TrackerCreationRequest($request);
 
-        $css_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/tracker/themes/',
-            '/assets/tracker/themes'
-        );
-        $layout->addCssAsset(new CssAsset($css_assets, 'tracker-creation'));
+        if (! $creation_request->areMandatoryFieldFilledForTrackerDuplication()) {
+            $this->redirectToTrackerCreation(
+                $project,
+                dgettext('tuleap-tracker', 'The request for the tracker creation is not valid.')
+            );
+        }
 
-        $layout->header([
-            'title' => dgettext('tuleap-tracker', 'New tracker'),
-            'group' => $project->getID(),
-            'toptab' => trackerPlugin::SERVICE_SHORTNAME
-        ]);
-
-        $templates_dir = __DIR__ . '/../../../templates/tracker-creation';
-
-        $this->renderer_factory->getRenderer($templates_dir)
-            ->renderToPage(
-                'tracker-creation-app',
-                $this->presenter_builder->build($project)
+        try {
+            $tracker = $this->tracker_creator->duplicateTracker(
+                $project,
+                $creation_request->tracker_name,
+                $creation_request->tracker_description,
+                $creation_request->tracker_shortname,
+                $creation_request->tracker_template_id
             );
 
-        $js_assets = new IncludeAssets(
-            __DIR__ . '/../../../www/assets',
-            TRACKER_BASE_URL . '/assets'
-        );
-
-
-        $layout->includeFooterJavascriptFile($js_assets->getFileURL('tracker-creation.js'));
-        $layout->footer([]);
+            $this->redirectToTrackerAdmin($tracker);
+        } catch (TrackerCreationHasFailedException $exception) {
+             $this->redirectToTrackerCreation(
+                 $project,
+                 dgettext('tuleap-tracker', 'An error occured while creating the tracker.')
+             );
+        }
     }
 
     /**
@@ -139,5 +118,16 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
     public function getProject(array $variables) : Project
     {
         return $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);
+    }
+
+    private function redirectToTrackerCreation(Project $project, string $reason): void
+    {
+        $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $reason);
+        $GLOBALS['Response']->redirect('/' . urlencode($project->getUnixNameLowerCase()) . '/tracker/new');
+    }
+
+    private function redirectToTrackerAdmin(\Tracker $tracker): void
+    {
+        $GLOBALS['Response']->redirect($tracker->getAdministrationUrl());
     }
 }

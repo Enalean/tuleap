@@ -23,7 +23,16 @@
             <translate>Shortname</translate>
             <i class="fa fa-asterisk"></i>
         </label>
-        <input type="text" class="tlp-input" id="tracker-shortname" name="tracker-shortname" />
+        <input
+            pattern="^[a-zA-Z0-9_]+$"
+            type="text"
+            maxlength="25"
+            class="tlp-input"
+            id="tracker-shortname"
+            name="tracker-shortname"
+            v-on:keyup="setTrackerShortName($event.target.value)"
+            required
+        />
         <p class="tlp-text-info">
             <i class="fa fa-life-saver"></i>
             <translate>Avoid spaces and ponctuation</translate>
@@ -32,8 +41,16 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
+import { State, Mutation } from "vuex-class";
 import { Component } from "vue-property-decorator";
+import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 
 @Component
-export default class StepTwo extends Vue {}
+export default class StepTwo extends Vue {
+    @State
+    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
+
+    @Mutation
+    readonly setTrackerShortName!: (name: string) => void;
+}
 </script>

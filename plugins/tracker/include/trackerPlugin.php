@@ -78,7 +78,10 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationController;
+use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
 use Tuleap\Tracker\Creation\TrackerCreationPresenterBuilder;
+use Tuleap\Tracker\Creation\TrackerCreationProcessorController;
+use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
@@ -1918,6 +1921,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $event->getRouteCollector()->addGroup('/{project_name:[A-z0-9-]+}/tracker', function (FastRoute\RouteCollector $r) {
             $r->get('/new', $this->getRouteHandler('routeCreateNewTracker'));
             $r->get('/new-information', $this->getRouteHandler('routeCreateNewTracker'));
+            $r->post('/new-information', $this->getRouteHandler('routeProcessNewTrackerCreation'));
         });
 
         $event->getRouteCollector()->addRoute(
@@ -2020,10 +2024,25 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new TrackerCreationController(
             new TrackerCreationBreadCrumbsBuilder(),
             TemplateRendererFactory::build(),
-            new TrackerManager(),
             \UserManager::instance(),
             \ProjectManager::instance(),
-            new TrackerCreationPresenterBuilder($this->getProjectManager(), new TrackerDao())
+            new TrackerCreationPresenterBuilder($this->getProjectManager(), new TrackerDao()),
+            new TrackerCreationPermissionChecker(new TrackerManager())
+        );
+    }
+
+    public function routeProcessNewTrackerCreation(): TrackerCreationProcessorController
+    {
+        $user_manager = UserManager::instance();
+
+        return new TrackerCreationProcessorController(
+            $user_manager,
+            \ProjectManager::instance(),
+            new TrackerCreator(
+                TrackerXmlImport::build(new XMLImportHelper($user_manager)),
+                $this->getTrackerFactory()
+            ),
+            new TrackerCreationPermissionChecker(new TrackerManager())
         );
     }
 

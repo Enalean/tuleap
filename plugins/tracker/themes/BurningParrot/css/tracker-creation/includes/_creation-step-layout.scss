@@ -68,15 +68,20 @@
     flex-wrap: wrap;
 }
 
-.tracker-creation-next-step-button {
+.tracker-creation-navigation-buttons {
     display: flex;
     justify-content: flex-end;
-}
 
-.tracker-creation-previous-step-button {
-    color: #9095a6;
+    > .tracker-creation-submit-button {
+        margin: 0 0 0 $tlp-spacing;
+    }
 
-    > .fa {
-        margin: 0 0 0 4px;
+    > .tracker-creation-previous-step-button {
+        align-self: center;
+        color: $tlp-ui-dimmed;
+
+        > .fa {
+            margin: 0 0 0 4px;
+        }
     }
 }

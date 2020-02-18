@@ -49,4 +49,39 @@ describe("getters", () => {
             expect(getters.is_ready_for_step_2(state)).toBe(true);
         });
     });
+
+    describe("is_ready_to_submit", () => {
+        it("Is not ready if the tracker has no name", () => {
+            const state: State = {
+                tracker_to_be_created: {
+                    name: "",
+                    shortname: ""
+                }
+            } as State;
+
+            expect(getters.is_ready_to_submit(state)).toBe(false);
+        });
+
+        it("Is not ready if the tracker has no shortname", () => {
+            const state: State = {
+                tracker_to_be_created: {
+                    name: "Bugz",
+                    shortname: ""
+                }
+            } as State;
+
+            expect(getters.is_ready_to_submit(state)).toBe(false);
+        });
+
+        it("Is ready otherwise", () => {
+            const state: State = {
+                tracker_to_be_created: {
+                    name: "Bugz",
+                    shortname: "bugz"
+                }
+            } as State;
+
+            expect(getters.is_ready_to_submit(state)).toBe(true);
+        });
+    });
 });

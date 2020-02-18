@@ -75,7 +75,7 @@ class TrackerCreator
         string $description,
         string $itemname,
         string $atid_template
-    ): ?Tracker {
+    ): Tracker {
         $duplicate = $this->tracker_factory->create(
             $project->getId(),
             -1,
@@ -85,9 +85,10 @@ class TrackerCreator
             $itemname
         );
 
-        if ($duplicate && $duplicate['tracker']) {
-            return $duplicate['tracker'];
+        if (! $duplicate || ! $duplicate['tracker']) {
+            throw new TrackerCreationHasFailedException();
         }
-        throw new TrackerCreationHasFailedException();
+
+        return $duplicate['tracker'];
     }
 }

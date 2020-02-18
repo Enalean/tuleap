@@ -38,3 +38,17 @@ export function setSelectedTrackerTemplate(state: State, tracker_id: string): vo
 
     state.selected_tracker_template = tracker;
 }
+
+export function initTrackerName(state: State): void {
+    if (state.selected_tracker_template) {
+        state.tracker_to_be_created.name = state.selected_tracker_template.name;
+    }
+}
+
+export function setTrackerName(state: State, name: string): void {
+    state.tracker_to_be_created.name = name;
+}
+
+export function setTrackerShortName(state: State, shortname: string): void {
+    state.tracker_to_be_created.shortname = shortname;
+}
