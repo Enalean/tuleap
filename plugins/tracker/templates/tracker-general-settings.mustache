@@ -4,13 +4,19 @@
     <input type="hidden" name="instantiate_for_new_projects" value="0">
 
     <label for="tracker-name">{{ tracker_name_label }} <font color="red">*</font></label>
-    <input id="tracker-name" type="text" name="name" value="{{ tracker_name }}">
+    <input id="tracker-name" type="text" name="name" value="{{ tracker_name }}" required>
 
     <label for="tracker-description">{{ tracker_description_label }}</label>
     <textarea id="tracker-description" name="description" rows="3" cols="50">{{ tracker_description }}</textarea>
 
     <label for="tracker-shortname">{{ tracker_shortname_label }} <font color="red">*</font></label>
-    <input id="tracker-shortname" type="text" name="item_name" value="{{ tracker_shortname }}" />
+        <input id="tracker-shortname"
+               type="text"
+               name="item_name"
+               required
+               value="{{ tracker_shortname }}"
+               {{^ has_excessive_shortname_length }} maxlength="{{ max_tracker_length }}" {{/ has_excessive_shortname_length }}
+        />
 
     <label>{{ tracker_color_label }} <font color="red">*</font></label>
     {{> tracker-color-settings }}

@@ -451,8 +451,8 @@ class ReferenceManager
     /**
      * This method updates (rename) reference short name and related cross references
      * @param int $group_id
-     * @param String $old_short_name
-     * @param Stirng $new_short_name
+     * @param string $old_short_name
+     * @param string $new_short_name
      */
     public function updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name)
     {

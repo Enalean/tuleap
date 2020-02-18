@@ -430,6 +430,22 @@ msgstr "Import / Export"
 msgid "Invalid color tracker name"
 msgstr "Nom de couleur pour l'outil de suivi non valide"
 
+#, php-format
+msgid ""
+"Invalid name: %s. Please use only alphanumerical characters or an unreserved "
+"reference."
+msgstr ""
+"Nom invalide : %s. Veuillez utiliser uniquement des caractères "
+"alphanumériques ou un nom court non réservé."
+
+#, php-format
+msgid ""
+"Invalid short name: %s. Please use only alphanumerical characters or an "
+"unreserved reference."
+msgstr ""
+"Nom court invalide : %s. Veuillez utiliser uniquement des caractères "
+"alphanumériques ou un nom court non réservé."
+
 msgid "Last push"
 msgstr "Dernier push"
 
@@ -492,6 +508,9 @@ msgstr "Déplacer l'artéfact"
 
 msgid "My notifications"
 msgstr "Mes notifications"
+
+msgid "Name, color, and short name are required."
+msgstr "Le nom, la description et le nom court sont obligatoires."
 
 #, php-format
 msgid "New %s"
@@ -1147,6 +1166,15 @@ msgstr ""
 msgid "The tracker hierarchy cannot be defined."
 msgstr "La hiérarchie entre outils de suivi ne peut être définie."
 
+#, php-format
+msgid "The tracker name %s is already used. Please use another one."
+msgstr "Le nom du tracker %s est déjà utilisé. Veuillez en choisir un autre."
+
+#, php-format
+msgid "The tracker short name %s is already used. Please use another one."
+msgstr ""
+"Le nom court du tracker %s est déjà utilisé. Veuillez en choisir un autre."
+
 msgid "The transition has not been updated."
 msgstr "La transition n'a pas été mise à jour."
 
@@ -1277,6 +1305,10 @@ msgstr "Rendu d'un tracker"
 
 msgid "Tracker service is disabled."
 msgstr "Le service tracker est désactivé."
+
+msgid "Tracker shortname length must be inferior to 25 characters."
+msgstr ""
+"La longeur du nom court de tracker doit être inférieure à 25 caractères."
 
 msgid "Trackers"
 msgstr "Trackers"
