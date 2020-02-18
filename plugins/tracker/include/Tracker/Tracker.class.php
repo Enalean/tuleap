@@ -29,6 +29,7 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\HeaderPresenter;
@@ -1888,6 +1889,11 @@ class Tracker implements Tracker_Dispatchable_Interface
         return new Tracker_CannedResponseManager($this);
     }
 
+    public function getUGroupRetrieverWithLegacy()
+    {
+        return new UGroupRetrieverWithLegacy(new UGroupManager());
+    }
+
     /**
      * @return Tracker_CannedResponseFactory
      */
@@ -2364,8 +2370,8 @@ class Tracker implements Tracker_Dispatchable_Interface
         $webhook_xml_exporter->exportTrackerWebhooksInXML($xmlElem, $this);
 
         // permissions
-        $node_perms      = $xmlElem->addChild('permissions');
-        $project_ugroups = $this->getProjectUgroups();
+        $node_perms       = $xmlElem->addChild('permissions');
+        $project_ugroups = $this->getUGroupRetrieverWithLegacy()->getProjectUgroupIds($this->getProject());
         // tracker permissions
         if ($permissions = $this->getPermissionsByUgroupId()) {
             foreach ($permissions as $ugroup_id => $permission_types) {
@@ -2388,21 +2394,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         return $xmlElem;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getProjectUgroups()
-    {
-        $ugroup_manager = new UGroupManager();
-        $ugroups        = $GLOBALS['UGROUPS'];
-        $static_groups  = $ugroup_manager->getStaticUGroups($this->getProject());
-        foreach ($static_groups as $ugroup) {
-            $ugroups[$ugroup->getName()] = $ugroup->getId();
-        }
-
-        return $ugroups;
     }
 
     /**
