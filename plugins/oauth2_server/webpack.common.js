@@ -23,11 +23,12 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 module.exports = [
     {
         entry: {
-            "project-administration": "./scripts/project-administration.ts"
+            "project-administration": "./scripts/src/project-administration.ts"
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/oauth2_server")
+            path.resolve(__dirname, "../../src/www/assets/oauth2_server"),
+            "/assets/oauth2_server/"
         ),
         externals: {
             tlp: "tlp"
@@ -36,8 +37,12 @@ module.exports = [
             rules: [
                 ...webpack_configurator.configureTypescriptRules(
                     webpack_configurator.babel_options_ie11
-                )
+                ),
+                webpack_configurator.rule_po_files
             ]
+        },
+        resolve: {
+            extensions: [".ts", ".js"]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),

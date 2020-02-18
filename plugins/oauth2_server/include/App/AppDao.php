@@ -26,18 +26,26 @@ use Tuleap\DB\DataAccessObject;
 
 class AppDao extends DataAccessObject
 {
-    public function searchByProject(\Project $project)
+    /**
+     * @psalm-return array<array{id:int, project_id:int, name:string}>
+     */
+    public function searchByProject(\Project $project): array
     {
         $sql = "SELECT * FROM plugin_oauth2_server_app
             WHERE project_id = ?";
         return $this->getDB()->run($sql, $project->getID());
     }
 
-    public function create(NewOAuth2App $app): int
+    public function create(NewOAuth2App $app): void
     {
-        $sql = "INSERT INTO plugin_oauth2_server_app (project_id, name)
-            VALUES (?, ?)";
-        $this->getDB()->run($sql, $app->getProject()->getID(), $app->getName());
-        return (int) $this->getDB()->lastInsertId();
+        $this->getDB()->insert(
+            'plugin_oauth2_server_app',
+            ['project_id' => $app->getProject()->getID(), 'name' => $app->getName()]
+        );
+    }
+
+    public function delete(int $app_id): void
+    {
+        $this->getDB()->run('DELETE FROM plugin_oauth2_server_app WHERE id = ?', $app_id);
     }
 }

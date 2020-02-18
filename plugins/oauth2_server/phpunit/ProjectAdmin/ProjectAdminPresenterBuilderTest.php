@@ -25,7 +25,8 @@ namespace ProjectAdmin;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\OAuth2Server\App\AppDao;
+use Tuleap\OAuth2Server\App\AppFactory;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\ProjectAdmin\AppPresenter;
 use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenter;
 use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenterBuilder;
@@ -34,34 +35,36 @@ final class ProjectAdminPresenterBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var ProjectAdminPresenterBuilder */
+    /**
+     * @var ProjectAdminPresenterBuilder
+     */
     private $presenter_builder;
-    /** @var M\LegacyMockInterface|M\MockInterface|AppDao */
-    private $app_dao;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|AppFactory
+     */
+    private $app_factory;
 
     protected function setUp(): void
     {
-        $this->app_dao           = M::mock(AppDao::class);
-        $this->presenter_builder = new ProjectAdminPresenterBuilder($this->app_dao);
+        $this->app_factory       = M::mock(AppFactory::class);
+        $this->presenter_builder = new ProjectAdminPresenterBuilder($this->app_factory);
     }
 
-    public function testBuildQueriesDaoAndBuildsPresenter(): void
+    public function testBuildTransformsAppsIntoPresenters(): void
     {
-        $rows       = [
-            ['name' => 'Jenkins'],
-            ['name' => 'My custom REST client']
-        ];
         $project    = M::mock(\Project::class)->shouldReceive('getID')
             ->andReturn(102)
             ->getMock();
         $csrf_token = M::mock(\CSRFSynchronizerToken::class);
-        $this->app_dao->shouldReceive('searchByProject')
+        $this->app_factory->shouldReceive('getAppsForProject')
             ->once()
             ->with($project)
-            ->andReturn($rows);
+            ->andReturn(
+                [new OAuth2App(1, 'Jenkins', $project), new OAuth2App(2, 'My custom REST client', $project)]
+            );
 
         $expected = new ProjectAdminPresenter(
-            [new AppPresenter('Jenkins'), new AppPresenter('My custom REST client')],
+            [new AppPresenter(1, 'Jenkins'), new AppPresenter(2, 'My custom REST client')],
             $csrf_token,
             $project
         );

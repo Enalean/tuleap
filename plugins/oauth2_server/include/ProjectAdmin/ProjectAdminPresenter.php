@@ -33,6 +33,8 @@ final class ProjectAdminPresenter
     public $csrf_token;
     /** @var string */
     public $add_client_url;
+    /** @var string */
+    public $delete_client_url;
 
     /**
      * @param $apps AppPresenter[]
@@ -42,5 +44,6 @@ final class ProjectAdminPresenter
         $this->apps           = $apps;
         $this->csrf_token     = $csrf_token;
         $this->add_client_url = AddAppController::getUrl($project);
+        $this->delete_client_url = DeleteAppController::getUrl($project);
     }
 }

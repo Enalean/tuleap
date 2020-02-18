@@ -33,6 +33,9 @@ msgstr "Déléguer l'accès aux ressources de Tuleap"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Delete App"
+msgstr "Supprimer l'App"
+
 msgid "My REST API consumer App"
 msgstr "Mon App utilisant l'API REST"
 
@@ -41,3 +44,9 @@ msgstr "Apps OAuth2"
 
 msgid "OAuth2 Server"
 msgstr "Server OAuth2"
+
+msgid "The App has been successfully deleted."
+msgstr "L'App a correctement été supprimée."
+
+msgid "The App's ID is required."
+msgstr "L'ID de l'App est obligatoire."

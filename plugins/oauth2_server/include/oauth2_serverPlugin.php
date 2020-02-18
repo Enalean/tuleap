@@ -102,6 +102,10 @@ final class oauth2_serverPlugin extends Plugin
                     '/project/{project_id:\d+}/admin/add-app',
                     $this->getRouteHandler('routePostProjectAdmin')
                 );
+                $r->post(
+                    '/project/{project_id:\d+}/admin/delete-app',
+                    $this->getRouteHandler('routeDeleteProjectAdmin')
+                );
                 $r->get(
                     '/testendpoint',
                     $this->getRouteHandler('routeTestEndpoint')
@@ -118,6 +122,11 @@ final class oauth2_serverPlugin extends Plugin
     public function routePostProjectAdmin(): DispatchableWithRequest
     {
         return \Tuleap\OAuth2Server\ProjectAdmin\AddAppController::buildSelf();
+    }
+
+    public function routeDeleteProjectAdmin(): DispatchableWithRequest
+    {
+        return \Tuleap\OAuth2Server\ProjectAdmin\DeleteAppController::buildSelf();
     }
 
     public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController

@@ -1,0 +1,34 @@
+<form
+    id="oauth2-server-delete-client-modal"
+    class="tlp-modal tlp-modal-danger"
+    role="dialog"
+    aria-labelledby="oauth2-server-delete-client-modal-title"
+    action="{{ delete_client_url }}"
+    method="post"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="oauth2-server-delete-client-modal-title">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i>
+            {{# dgettext }}tuleap-oauth2_server | Delete App{{/ dgettext }}
+        </h1>
+        <div class="tlp-modal-close"
+             data-dismiss="modal"
+             aria-label="{{# dgettext }}tuleap-oauth2_server | Close{{/dgettext}}"
+        >&times;</div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="app_id" id="oauth2-server-delete-client-modal-app-id">
+        <p id="oauth2-server-delete-client-modal-app-name"></p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }}tuleap-oauth2_server | Cancel {{/ dgettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{# dgettext }}tuleap-oauth2_server | Delete {{/ dgettext }}
+        </button>
+    </div>
+</form>

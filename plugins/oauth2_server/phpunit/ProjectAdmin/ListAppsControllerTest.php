@@ -25,11 +25,13 @@ namespace ProjectAdmin;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenter;
 use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenterBuilder;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
 final class ListAppsControllerTest extends TestCase
@@ -67,19 +69,17 @@ final class ListAppsControllerTest extends TestCase
 
     public function testProcessRenders(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->once()
+        $project      = M::mock(\Project::class)->shouldReceive('getID')
             ->andReturn(102)
             ->getMock();
-        $current_user = M::mock(\PFUser::class);
+        $current_user = UserTestBuilder::aUser()->build();
         $this->layout_helper->setCallbackParams($project, $current_user);
 
-        $request = M::mock(\HttpRequest::class);
-        $layout  = M::mock(BaseLayout::class);
+        $request = HTTPRequestBuilder::get()->build();
+        $layout  = LayoutBuilder::build();
         $this->include_assets->shouldReceive('getFileURL')
             ->once()
             ->with('project-administration.js');
-        $layout->shouldReceive('includeFooterJavascriptFile')->once();
         $presenter = new ProjectAdminPresenter([], $this->csrf_token, $project);
         $this->presenter_builder->shouldReceive('build')
             ->once()
