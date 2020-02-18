@@ -28,6 +28,7 @@ use Project;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_CannedResponseManager;
+use Tracker_FormElement;
 use Tracker_Hierarchy;
 use Tracker_HierarchyFactory;
 use Tracker_RulesManager;
@@ -209,5 +210,28 @@ class TrackerExportToXmlTest extends TestCase
 
         $color = $xml->color;
         $this->assertEquals(TrackerColor::default()->getName(), (string)$color);
+    }
+
+    public function testItExportsTheTrackerFormelementpermissions()
+    {
+        $form_element_1 = Mockery::mock(Tracker_FormElement::class);
+        $form_element_1->shouldReceive('getTagNameForXMLExport')->andReturn('formElement');
+        $form_element_1->shouldReceive('exportToXML');
+        $form_element_1->shouldReceive('exportPermissionsToXML')->once();
+
+        $form_element_2 = Mockery::mock(Tracker_FormElement::class);
+        $form_element_2->shouldReceive('getTagNameForXMLExport')->andReturn('externalField');
+        $form_element_2->shouldReceive('exportToXML');
+        $form_element_2->shouldReceive('exportPermissionsToXML')->never();
+
+        $this->formelement_factory
+            ->shouldReceive('getUsedFormElementForTracker')
+            ->andReturn([$form_element_1, $form_element_2]);
+
+        $this->tracker->shouldReceive('getProjectUgroups')->andReturn([]);
+        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $this->tracker->exportToXML($xml);
     }
 }
