@@ -45,11 +45,20 @@
         </tr>
         </thead>
         <tbody>
+        {{# jenkins_server_presenters }}
+            <tr>
+                <td colspan="2">
+                    {{ getJenkinsServerUrl }}
+                </td>
+            </tr>
+        {{/ jenkins_server_presenters }}
+        {{^ jenkins_server_presenters }}
         <tr>
             <td class="table-cell-empty" colspan="2">
                 {{# dgettext }} tuleap-hudson_git | No Jenkins server configured yet.{{/ dgettext }}
             </td>
         </tr>
+        {{/ jenkins_server_presenters }}
         </tbody>
     </table>
 </div>

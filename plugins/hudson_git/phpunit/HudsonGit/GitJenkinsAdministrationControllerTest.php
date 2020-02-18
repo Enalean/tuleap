@@ -87,20 +87,27 @@ class GitJenkinsAdministrationControllerTest extends TestCase
      */
     private $mirror_data_mapper;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitJenkinsAdministrationServerDao
+     */
+    private $git_jenkins_administration_server_dao;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->project_manager         = Mockery::mock(ProjectManager::class);
-        $this->git_permissions_manager = Mockery::mock(GitPermissionsManager::class);
-        $this->header_renderer         = Mockery::mock(HeaderRenderer::class);
-        $this->renderer                = Mockery::mock(TemplateRenderer::class);
-        $this->mirror_data_mapper      = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
+        $this->project_manager                       = Mockery::mock(ProjectManager::class);
+        $this->git_permissions_manager               = Mockery::mock(GitPermissionsManager::class);
+        $this->header_renderer                       = Mockery::mock(HeaderRenderer::class);
+        $this->renderer                              = Mockery::mock(TemplateRenderer::class);
+        $this->mirror_data_mapper                    = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
+        $this->git_jenkins_administration_server_dao = Mockery::mock(GitJenkinsAdministrationServerDao::class);
 
         $this->controller = new GitJenkinsAdministrationController(
             $this->project_manager,
             $this->git_permissions_manager,
             $this->mirror_data_mapper,
+            $this->git_jenkins_administration_server_dao,
             $this->header_renderer,
             $this->renderer
         );
@@ -210,6 +217,11 @@ class GitJenkinsAdministrationControllerTest extends TestCase
             ->andReturnTrue();
 
         $this->mirror_data_mapper->shouldReceive('fetchAllForProject')->andReturn([]);
+
+        $this->git_jenkins_administration_server_dao->shouldReceive('getJenkinsServerOfProject')
+            ->once()
+            ->with(101)
+            ->andReturn([]);
 
         $this->header_renderer->shouldReceive('renderServiceAdministrationHeader')->once();
         $this->renderer->shouldReceive('renderToPage')->once();

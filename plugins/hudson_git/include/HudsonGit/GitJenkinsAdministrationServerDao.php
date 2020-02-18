@@ -39,4 +39,13 @@ class GitJenkinsAdministrationServerDao extends DataAccessObject
             ]
         );
     }
+
+    public function getJenkinsServerOfProject(int $project_id): array
+    {
+        $sql = "SELECT *
+                FROM plugin_hudson_git_project_server
+                WHERE project_id = ?";
+
+        return $this->getDB()->run($sql, $project_id);
+    }
 }
