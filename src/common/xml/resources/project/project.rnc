@@ -13,6 +13,7 @@ grammar {
     include "../../../../../plugins/cardwall/www/resources/xml_project_cardwall_data.rnc"
     include "../../../../../plugins/tracker/www/resources/tracker-definition.rnc"
     include "../../../../../plugins/svn/resources/svn-definition.rnc"
+    include "../../../../../plugins/docman/resources/docman-definition.rnc"
 
     start =
         element project {
@@ -27,6 +28,7 @@ grammar {
             element mediawiki { mediawiki }? &
             element agiledashboard { agiledashboard }? &
             element cardwall { cardwall }? &
-            element ugroups { ugroups }?
+            element ugroups { ugroups }? &
+            element docman { docman }?
         }
 }

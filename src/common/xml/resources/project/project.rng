@@ -12,6 +12,7 @@
   <include href="xml_project_cardwall_data.rng"/>
   <include href="tracker-definition.rng"/>
   <include href="svn-definition.rng"/>
+  <include href="docman-definition.rng"/>
   <start>
     <element name="project">
       <interleave>
@@ -65,6 +66,11 @@
         <optional>
           <element name="ugroups">
             <ref name="ugroups"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="docman">
+            <ref name="docman"/>
           </element>
         </optional>
       </interleave>

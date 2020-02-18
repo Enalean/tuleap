@@ -1,0 +1,57 @@
+docman =
+    element item {
+        docman_folder
+    }
+
+docman_item =
+    element properties {
+        element title { xsd:string }
+    }
+
+docman_folder =
+    attribute type { "folder" },
+    docman_item,
+    element item {
+        (
+            docman_folder |
+            docman_file |
+            docman_embedded |
+            docman_wiki |
+            docman_link |
+            docman_empty
+        )
+    }*
+
+docman_empty =
+    attribute type { "empty" },
+    docman_item
+
+docman_link =
+    attribute type { "link" },
+    docman_item,
+    element url { xsd:string }
+
+docman_wiki =
+    attribute type { "wiki" },
+    docman_item,
+    element pagename { xsd:string }
+
+docman_file =
+    attribute type { "file" },
+    docman_item,
+    docman_file_versions
+
+docman_embedded =
+    attribute type { "embeddedfile" },
+    docman_item,
+    docman_file_versions
+
+docman_file_versions =
+    element versions {
+        element version {
+            element filename { xsd:string },
+            element filetype { xsd:string },
+            element filesize { xsd:string },
+            element content { xsd:string }
+        }*
+    }

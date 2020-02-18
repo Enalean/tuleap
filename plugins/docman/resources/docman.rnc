@@ -1,0 +1,7 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+grammar {
+    include "docman-definition.rnc"
+
+    start = element docman { docman }
+}

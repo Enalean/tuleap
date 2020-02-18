@@ -26,6 +26,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\XML\Import\NodeImporter;
+use XML_RNGValidator;
 
 class XMLImporter
 {
@@ -42,21 +43,32 @@ class XMLImporter
      * @var NodeImporter
      */
     private $node_importer;
+    /**
+     * @var XML_RNGValidator
+     */
+    private $rng_validator;
 
     public function __construct(
         Docman_ItemFactory $item_factory,
         Project $project,
         LoggerInterface $logger,
-        NodeImporter $node_importer
+        NodeImporter $node_importer,
+        XML_RNGValidator $rng_validator
     ) {
         $this->item_factory  = $item_factory;
         $this->logger        = $logger;
         $this->project       = $project;
         $this->node_importer = $node_importer;
+        $this->rng_validator = $rng_validator;
     }
 
     public function import(SimpleXMLElement $xml_docman, \PFUser $user): void
     {
+        $this->rng_validator->validate(
+            $xml_docman,
+            __DIR__ . '/../../resources/docman.rng'
+        );
+
         $parent_item = $this->item_factory->getRoot($this->project->getGroupId());
         if ($parent_item === null) {
             $this->logger->error('Unable to find a root element in project #' . $this->project->getGroupId());
