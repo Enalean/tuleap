@@ -678,8 +678,10 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 %endif
 %if %{with experimental}
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server/scripts/
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
@@ -1608,6 +1610,7 @@ fi
 %files plugin-oauth2-server
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/oauth2_server
+%{APP_DIR}/src/www/assets/oauth2_server
 
 %endif
 

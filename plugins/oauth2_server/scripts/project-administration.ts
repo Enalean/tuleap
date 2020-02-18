@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,29 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { modal as createModal } from "tlp";
 
-namespace Tuleap\OAuth2Server\ProjectAdmin;
-
-/**
- * @psalm-immutable
- */
-final class ProjectAdminPresenter
-{
-    /** @var AppPresenter[] */
-    public $apps;
-    /** @var \CSRFSynchronizerToken */
-    public $csrf_token;
-    /** @var string */
-    public $add_client_url;
-
-    /**
-     * @param $apps AppPresenter[]
-     */
-    public function __construct(array $apps, \CSRFSynchronizerToken $csrf_token, \Project $project)
-    {
-        $this->apps           = $apps;
-        $this->csrf_token     = $csrf_token;
-        $this->add_client_url = AddAppController::getUrl($project);
+document.addEventListener("DOMContentLoaded", () => {
+    const button = document.getElementById("oauth2-server-add-client-button");
+    const modal_element = document.getElementById("oauth2-server-add-client-modal");
+    if (!button || !modal_element) {
+        return;
     }
-}
+
+    const modal = createModal(modal_element, { keyboard: true });
+    button.addEventListener("click", () => {
+        modal.show();
+    });
+});

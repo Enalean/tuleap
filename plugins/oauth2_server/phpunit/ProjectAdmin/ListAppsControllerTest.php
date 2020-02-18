@@ -26,16 +26,17 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\OAuth2Server\ProjectAdmin\AdministrationController;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenter;
 use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenterBuilder;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
-final class AdministrationControllerTest extends TestCase
+final class ListAppsControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var AdministrationController */
+    /** @var ListAppsController */
     private $controller;
     /** @var LayoutHelperPassthrough */
     private $layout_helper;
@@ -43,36 +44,60 @@ final class AdministrationControllerTest extends TestCase
     private $renderer;
     /** @var M\LegacyMockInterface|M\MockInterface|ProjectAdminPresenterBuilder */
     private $presenter_builder;
+    /** @var M\LegacyMockInterface|M\MockInterface|IncludeAssets */
+    private $include_assets;
+    /** @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface */
+    private $csrf_token;
 
     protected function setUp(): void
     {
         $this->layout_helper     = new LayoutHelperPassthrough();
         $this->renderer          = M::mock(\TemplateRenderer::class);
         $this->presenter_builder = M::mock(ProjectAdminPresenterBuilder::class);
-        $this->controller        = new AdministrationController(
+        $this->include_assets    = M::mock(IncludeAssets::class);
+        $this->csrf_token        = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller        = new ListAppsController(
             $this->layout_helper,
             $this->renderer,
             $this->presenter_builder,
+            $this->include_assets,
+            $this->csrf_token
         );
     }
 
     public function testProcessRenders(): void
     {
-        $project      = M::mock(\Project::class);
+        $project = M::mock(\Project::class)->shouldReceive('getID')
+            ->once()
+            ->andReturn(102)
+            ->getMock();
         $current_user = M::mock(\PFUser::class);
         $this->layout_helper->setCallbackParams($project, $current_user);
 
-        $request   = M::mock(\HttpRequest::class);
-        $layout    = M::mock(BaseLayout::class);
-        $presenter = new ProjectAdminPresenter([]);
+        $request = M::mock(\HttpRequest::class);
+        $layout  = M::mock(BaseLayout::class);
+        $this->include_assets->shouldReceive('getFileURL')
+            ->once()
+            ->with('project-administration.js');
+        $layout->shouldReceive('includeFooterJavascriptFile')->once();
+        $presenter = new ProjectAdminPresenter([], $this->csrf_token, $project);
         $this->presenter_builder->shouldReceive('build')
             ->once()
-            ->with($project)
+            ->with($this->csrf_token, $project)
             ->andReturn($presenter);
         $this->renderer->shouldReceive('renderToPage')
             ->once()
             ->with('project-admin', $presenter);
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
+    }
+
+    public function testGetUrl(): void
+    {
+        $project = M::mock(\Project::class)->shouldReceive('getID')
+            ->once()
+            ->andReturn(102)
+            ->getMock();
+        $this->assertSame('/plugins/oauth2_server/project/102/admin', ListAppsController::getUrl($project));
     }
 }

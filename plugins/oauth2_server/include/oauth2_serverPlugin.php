@@ -20,13 +20,14 @@
 
 declare(strict_types=1);
 
-use Tuleap\OAuth2Server\ProjectAdmin\AdministrationController;
-use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
-use Tuleap\Project\Admin\Navigation\NavigationPresenter;
-use Tuleap\Request\CollectRoutesEvent;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
+use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
@@ -78,7 +79,7 @@ final class oauth2_serverPlugin extends Plugin
             new NavigationItemPresenter(
                 dgettext('tuleap-oauth2_server', 'OAuth2 Apps'),
                 $html_url,
-                AdministrationController::PANE_SHORTNAME,
+                ListAppsController::PANE_SHORTNAME,
                 $presenter->getCurrentPaneShortname()
             )
         );
@@ -93,6 +94,10 @@ final class oauth2_serverPlugin extends Plugin
                     '/project/{project_id:\d+}/admin',
                     $this->getRouteHandler('routeGetProjectAdmin')
                 );
+                $r->post(
+                    '/project/{project_id:\d+}/admin/add-app',
+                    $this->getRouteHandler('routePostProjectAdmin')
+                );
                 $r->get(
                     '/testendpoint',
                     $this->getRouteHandler('routeTestEndpoint')
@@ -101,9 +106,14 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
-    public function routeGetProjectAdmin(): AdministrationController
+    public function routeGetProjectAdmin(): DispatchableWithRequest
     {
-        return AdministrationController::buildSelf();
+        return ListAppsController::buildSelf();
+    }
+
+    public function routePostProjectAdmin(): DispatchableWithRequest
+    {
+        return \Tuleap\OAuth2Server\ProjectAdmin\AddAppController::buildSelf();
     }
 
     public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController
