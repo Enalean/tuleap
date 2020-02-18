@@ -20,38 +20,43 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Authentication\Scope;
+namespace Tuleap\User\OAuth2\Scope;
+
+use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
 /**
  * @psalm-immutable
- *
- * @template TScopeIdentifier of \Tuleap\Authentication\Scope\AuthenticationScopeIdentifier
  */
-interface AuthenticationScope
+final class OAuth2ScopeIdentifier implements AuthenticationScopeIdentifier
 {
     /**
-     * @psalm-pure
-     *
-     * @psalm-return self<TScopeIdentifier>
+     * @var string
      */
-    public static function fromItself(): self;
+    private $identifier;
+
+    private function __construct(string $identifier_key)
+    {
+        $this->identifier = $identifier_key;
+    }
 
     /**
      * @psalm-pure
      *
-     * @psalm-return ?self<TScopeIdentifier>
+     * @psalm-return self
+     *
+     * @throws InvalidOAuth2ScopeIdentifierException
      */
-    public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?self;
+    public static function fromIdentifierKey(string $identifier_key): AuthenticationScopeIdentifier
+    {
+        if (preg_match('/^(?:[a-z]|:)+$/', $identifier_key) !== 1) {
+            throw new InvalidOAuth2ScopeIdentifierException($identifier_key);
+        }
 
-    /**
-     * @psalm-return TScopeIdentifier
-     */
-    public function getIdentifier(): AuthenticationScopeIdentifier;
+        return new self($identifier_key);
+    }
 
-    public function getDefinition(): AuthenticationScopeDefinition;
-
-    /**
-     * @psalm-param self<TScopeIdentifier> $scope
-     */
-    public function covers(self $scope): bool;
+    public function toString(): string
+    {
+        return $this->identifier;
+    }
 }

@@ -26,13 +26,17 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\OAuth2Exception;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 use User_LoginException;
 use User_LoginManager;
 
@@ -49,6 +53,10 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
      */
     private $access_token_verifier;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthenticationScope
+     */
+    private $required_scope;
+    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|User_LoginManager
      */
     private $login_manager;
@@ -62,6 +70,7 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
     {
         $this->access_token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
         $this->access_token_verifier     = \Mockery::mock(OAuth2AccessTokenVerifier::class);
+        $this->required_scope            = \Mockery::mock(AuthenticationScope::class);
         $this->login_manager             = \Mockery::mock(User_LoginManager::class);
 
         $this->middleware = new OAuth2ResourceServerMiddleware(
@@ -69,6 +78,7 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
             new BearerTokenHeaderParser(),
             $this->access_token_unserializer,
             $this->access_token_verifier,
+            $this->required_scope,
             $this->login_manager
         );
     }
@@ -191,6 +201,44 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         );
     }
 
+    public function testAccessIsNotAllowedWhenTheGivenAccessTokenDoesNotHaveTheRequiredScope(): void
+    {
+        $handler = \Mockery::mock(RequestHandlerInterface::class);
+        $handler->shouldNotReceive('handle');
+
+        $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
+            \Mockery::mock(SplitToken::class)
+        );
+        $scope_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('foo');
+        $scope_definition = new /** @psalm-immutable */class implements AuthenticationScopeDefinition
+        {
+            public function getName() : string
+            {
+                return 'Foo';
+            }
+
+            public function getDescription() : string
+            {
+                return 'Foo Description';
+            }
+        };
+        $this->required_scope->shouldReceive('getIdentifier')->andReturn($scope_identifier);
+        $this->required_scope->shouldReceive('getDefinition')->andReturn($scope_definition);
+        $this->access_token_verifier->shouldReceive('getUser')->andThrow(
+            new OAuth2AccessTokenDoesNotHaveRequiredScopeException($this->required_scope)
+        );
+
+        $response = $this->middleware->process(
+            $this->buildServerRequest('Bearer FooToken'),
+            $handler
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(
+            'Bearer realm="Tuleap OAuth2 Protected Resource" error="insufficient_scope" scope="foo"',
+            $response->getHeaderLine('WWW-Authenticate')
+        );
+    }
 
     private function buildServerRequest(string $authorization_header_line): ServerRequestInterface
     {

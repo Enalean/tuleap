@@ -956,6 +956,12 @@ CREATE TABLE oauth2_access_token (
     verifier VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE oauth2_access_token_scope (
+    access_token_id INT(11) NOT NULL,
+    scope_key VARCHAR(255) NOT NULL,
+    PRIMARY KEY (access_token_id, scope_key)
+);
+
 #
 # Table structure for table 'user_bookmarks'
 #

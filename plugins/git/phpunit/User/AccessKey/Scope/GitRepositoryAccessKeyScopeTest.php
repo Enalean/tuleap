@@ -24,17 +24,17 @@ namespace Tuleap\Git\User\AccessKey\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
-use Tuleap\User\AccessKey\Scope\AccessKeyScopeTestCase;
 
-final class GitRepositoryAccessKeyScopeTest extends AccessKeyScopeTestCase
+final class GitRepositoryAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
      * @inheritDoc
      */
-    public function getAccessKeyScopeClassname(): string
+    public function getAuthenticationScopeClassname(): string
     {
         return GitRepositoryAccessKeyScope::class;
     }

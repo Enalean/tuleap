@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\AccessToken;
 
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
 
 class OAuth2AccessTokenVerifier
 {
@@ -31,6 +33,10 @@ class OAuth2AccessTokenVerifier
      * @var OAuth2AccessTokenDAO
      */
     private $access_token_dao;
+    /**
+     * @var OAuth2AccessTokenScopeRetriever
+     */
+    private $scope_retriever;
     /**
      * @var \UserManager
      */
@@ -42,19 +48,25 @@ class OAuth2AccessTokenVerifier
 
     public function __construct(
         OAuth2AccessTokenDAO $access_token_dao,
+        OAuth2AccessTokenScopeRetriever $scope_retriever,
         \UserManager $user_manager,
         SplitTokenVerificationStringHasher $hasher
     ) {
         $this->access_token_dao = $access_token_dao;
+        $this->scope_retriever  = $scope_retriever;
         $this->user_manager     = $user_manager;
         $this->hasher           = $hasher;
     }
 
     /**
+     * @psalm-param AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier> $required_scope
+     *
      * @throws OAuth2AccessTokenNotFoundException
      * @throws InvalidOAuth2AccessTokenException
+     * @throws OAuth2AccessTokenMatchingUnknownUserException
+     * @throws OAuth2AccessTokenDoesNotHaveRequiredScopeException
      */
-    public function getUser(SplitToken $access_token): \PFUser
+    public function getUser(SplitToken $access_token, AuthenticationScope $required_scope): \PFUser
     {
         $row = $this->access_token_dao->searchAccessToken($access_token->getID());
         if ($row === null) {
@@ -66,10 +78,28 @@ class OAuth2AccessTokenVerifier
             throw new InvalidOAuth2AccessTokenException();
         }
 
+        if (! $this->hasNeededScopes($access_token, $required_scope)) {
+            throw new OAuth2AccessTokenDoesNotHaveRequiredScopeException($required_scope);
+        }
+
         $user = $this->user_manager->getUserById($row['user_id']);
         if ($user === null) {
             throw new OAuth2AccessTokenMatchingUnknownUserException($row['user_id']);
         }
         return $user;
+    }
+
+    /**
+     * @psalm-param AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier> $required_scope
+     */
+    private function hasNeededScopes(SplitToken $access_token, AuthenticationScope $required_scope): bool
+    {
+        $access_token_scopes = $this->scope_retriever->getScopesByAccessToken($access_token);
+        foreach ($access_token_scopes as $access_token_scope) {
+            if ($access_token_scope->covers($required_scope)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
