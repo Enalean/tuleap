@@ -200,8 +200,7 @@ simpletest-74-file: ## Run SimpleTest with PHP 7.4 on a given file or directory 
 
 
 psalm: ## Run Psalm (PHP static analysis tool). Use FILES variables to execute on a given set of files or directories.
-	$(eval THREADS ?= 2)
-	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false --threads=$(THREADS) -c={config_path} $(FILES)
+	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false -c={config_path} $(FILES)
 
 psalm-with-info: ## Run Psalm (PHP static analysis tool) with INFO findings. Use FILES variables to execute on a given set of files or directories.
 	$(eval THREADS ?= 2)

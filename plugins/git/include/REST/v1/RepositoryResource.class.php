@@ -91,6 +91,7 @@ use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 use Tuleap\Git\Repository\RepositoryCreator;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Http\HttpClientFactory;
+use Tuleap\PullRequest\REST\v1\RepositoryPullRequestRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -414,7 +415,7 @@ class RepositoryResource extends AuthenticatedResource
      * @param int    $limit  Number of elements displayed per page {@from path}
      * @param int    $offset Position of the first element to display {@from path}
      *
-     * @return Tuleap\PullRequest\REST\v1\RepositoryPullRequestRepresentation
+     * @return RepositoryPullRequestRepresentation
      *
      * @throws RestException 403
      * @throws RestException 404

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -75,8 +75,8 @@ class BaseLanguageFactory
         }
         if (!isset($this->languages[$locale])) {
             $this->cacheBaseLanguage($this->createBaseLanguage($locale));
-            assert(isset($this->languages[$locale]));
         }
+        assert(isset($this->languages[$locale]));
         return $this->languages[$locale];
     }
 

@@ -471,8 +471,6 @@ class URLVerification
     /**
      * Ensure given user can access given project and user is admin of the project
      *
-     * @return bool
-     *
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException
      * @throws Project_AccessRestrictedException
@@ -480,19 +478,17 @@ class URLVerification
      * @throws Project_AccessNotAdminException
      * @throws ProjectAccessSuspendedException
      */
-    public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project)
+    public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project): void
     {
         if ($this->userCanAccessProject($user, $project)) {
             if (! $user->isAdmin($project->getId())) {
                 throw new Project_AccessNotAdminException();
             }
-            return true;
+            return;
         }
     }
 
     /**
-     * @return bool
-     *
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException
      * @throws Project_AccessRestrictedException
@@ -500,14 +496,14 @@ class URLVerification
      * @throws Project_AccessNotAdminException
      * @throws ProjectAccessSuspendedException
      */
-    public function userCanManageProjectMembership(PFUser $user, Project $project)
+    public function userCanManageProjectMembership(PFUser $user, Project $project): void
     {
         if ($this->userCanAccessProject($user, $project)) {
             $dao = new MembershipDelegationDao();
             if (! $user->isAdmin($project->getId()) && ! $dao->doesUserHasMembershipDelegation($user->getId(), $project->getID())) {
                 throw new Project_AccessNotAdminException();
             }
-            return true;
+            return;
         }
     }
 

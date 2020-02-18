@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,6 +69,7 @@ use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
 use Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\OrderedColumnRepresentationsBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooManyPointsException;
@@ -316,7 +317,7 @@ class KanbanResource extends AuthenticatedResource
      *
      * @param int $id Id of the kanban
      *
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation
+     * @return KanbanRepresentation
      *
      * @throws RestException 403
      * @throws RestException 404
@@ -508,7 +509,7 @@ class KanbanResource extends AuthenticatedResource
      * @param int $limit    Number of elements displayed per page
      * @param int $offset   Position of the first element to display
      *
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation
+     * @return ItemCollectionRepresentation
      *
      * @throws RestException 403
      * @throws RestException 404
@@ -784,7 +785,7 @@ class KanbanResource extends AuthenticatedResource
      * @param int $limit    Number of elements displayed per page
      * @param int $offset   Position of the first element to display
      *
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation
+     * @return ItemCollectionRepresentation
      *
      * @throws RestException 403
      * @throws RestException 404
@@ -961,7 +962,7 @@ class KanbanResource extends AuthenticatedResource
      * @param int $limit     Number of elements displayed per page
      * @param int $offset    Position of the first element to display
      *
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation
+     * @return ItemCollectionRepresentation
      *
      * @throws RestException 403
      * @throws RestException 404
@@ -1373,7 +1374,7 @@ class KanbanResource extends AuthenticatedResource
      * @param int    $interval_between_point Number of days between 2 points of the cumulative flow {@from path}{@type int}{@min 1}
      * @param string $query                  Search string in json format {@from path}{@type string}
      *
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation
+     * @return DiagramRepresentation
      *
      * @throws RestException 400
      * @throws RestException 403

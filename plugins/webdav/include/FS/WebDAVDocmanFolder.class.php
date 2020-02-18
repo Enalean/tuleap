@@ -116,7 +116,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
     /**
      * Returns the visible content of the folder
      *
-     * @return Array
+     * @return Sabre_DAV_INode[]
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_ICollection::getChildren()
      */
@@ -137,7 +137,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
      *
      * @param String $name
      *
-     * @return Docman_Item
+     * @return Sabre_DAV_INode
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Directory::getChild()
      */
@@ -175,7 +175,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
     /**
      * Returns the last modification date
      *
-     * @return date
+     * @return int
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Node::getLastModified()
      */

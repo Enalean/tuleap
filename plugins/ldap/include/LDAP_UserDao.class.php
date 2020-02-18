@@ -156,9 +156,6 @@ class LDAP_UserDao extends DataAccessObject
 
     /**
      * Return number of active users
-     *
-     * @return int
-     *
      */
     public function getNbrActiveUsers()
     {
@@ -172,12 +169,6 @@ class LDAP_UserDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    /**
-     * Return all active users
-     *
-     * @return DataAccessResult
-     *
-     */
     public function getActiveUsers()
     {
         $sql = 'SELECT u.user_id, user_name, email, ldap_id, status, realname, ldap_uid

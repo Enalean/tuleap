@@ -82,9 +82,10 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
     /**
      * Returns mime-type of the file
      *
-     * @return String
+     * @return string
      *
      * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getContentType()
+     * @psalm-suppress ImplementedReturnTypeMismatch Return type of the library is incorrect
      */
     public function getContentType()
     {

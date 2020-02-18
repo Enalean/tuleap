@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,7 +55,7 @@ class MilestonesCardwallResource
      *
      * @param int $id Id of the milestone
      *
-     * @return \Tuleap\Cardwall\REST\v1\MilestonesCardwallRepresentation
+     * @return \AgileDashboard_MilestonesCardwallRepresentation
      *
      * @throws RestException 403
      * @throws RestException 404
