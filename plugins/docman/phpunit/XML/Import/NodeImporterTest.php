@@ -294,4 +294,40 @@ class NodeImporterTest extends TestCase
 
         $this->importer->import($node, $this->parent_item, $this->user);
     }
+
+    public function testImportItemWithItsDescription(): void
+    {
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <item type="empty">
+                <properties>
+                    <title>My document</title>
+                    <description>The description</description>
+                </properties>
+            </item>
+            EOS
+        );
+
+        $this->logger
+            ->shouldReceive('debug')
+            ->with('Importing empty: My document')
+            ->once();
+        $this->item_importer
+            ->shouldReceive('import')
+            ->with(
+                $node,
+                $this->importer,
+                $this->do_nothing_importer,
+                $this->parent_item,
+                $this->user,
+                Mockery::on(static function (ImportProperties $properties): bool {
+                    return $properties->getDescription() === 'The description'
+                        && $properties->getTitle() === 'My document';
+                })
+            )->once();
+
+
+        $this->importer->import($node, $this->parent_item, $this->user);
+    }
 }

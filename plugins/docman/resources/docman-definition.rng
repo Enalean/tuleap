@@ -10,6 +10,11 @@
       <element name="title">
         <data type="string"/>
       </element>
+      <optional>
+        <element name="description">
+          <data type="string"/>
+        </element>
+      </optional>
     </element>
   </define>
   <define name="docman_folder">

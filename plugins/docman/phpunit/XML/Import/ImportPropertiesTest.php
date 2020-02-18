@@ -28,8 +28,9 @@ class ImportPropertiesTest extends TestCase
 {
     public function testWiki(): void
     {
-        $properties = ImportProperties::buildWiki('title', 'wiki page name');
+        $properties = ImportProperties::buildWiki('title', 'description', 'wiki page name');
         $this->assertEquals('title', $properties->getTitle());
+        $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals('wiki page name', $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $properties->getItemTypeId());
@@ -37,8 +38,9 @@ class ImportPropertiesTest extends TestCase
 
     public function testLink(): void
     {
-        $properties = ImportProperties::buildLink('title', 'link url');
+        $properties = ImportProperties::buildLink('title', 'description', 'link url');
         $this->assertEquals('title', $properties->getTitle());
+        $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals('link url', $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_LINK, $properties->getItemTypeId());
@@ -46,8 +48,9 @@ class ImportPropertiesTest extends TestCase
 
     public function testEmpty(): void
     {
-        $properties = ImportProperties::buildEmpty('title');
+        $properties = ImportProperties::buildEmpty('title', 'description');
         $this->assertEquals('title', $properties->getTitle());
+        $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $properties->getItemTypeId());
@@ -55,8 +58,9 @@ class ImportPropertiesTest extends TestCase
 
     public function testFolder(): void
     {
-        $properties = ImportProperties::buildFolder('title');
+        $properties = ImportProperties::buildFolder('title', 'description');
         $this->assertEquals('title', $properties->getTitle());
+        $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $properties->getItemTypeId());
@@ -64,8 +68,9 @@ class ImportPropertiesTest extends TestCase
 
     public function testFile(): void
     {
-        $properties = ImportProperties::buildFile('title');
+        $properties = ImportProperties::buildFile('title', 'description');
         $this->assertEquals('title', $properties->getTitle());
+        $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FILE, $properties->getItemTypeId());
@@ -73,8 +78,9 @@ class ImportPropertiesTest extends TestCase
 
     public function testEmbbeded(): void
     {
-        $properties = ImportProperties::buildEmbedded('title');
+        $properties = ImportProperties::buildEmbedded('title', 'description');
         $this->assertEquals('title', $properties->getTitle());
+        $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $properties->getItemTypeId());

@@ -58,7 +58,7 @@ class ItemImporter
     ): void {
         $item = $this->item_factory->createWithoutOrdering(
             $properties->getTitle(),
-            '',
+            $properties->getDescription(),
             $parent_item->getId(),
             PLUGIN_DOCMAN_ITEM_STATUS_NONE,
             0,

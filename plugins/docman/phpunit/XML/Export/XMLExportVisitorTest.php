@@ -62,14 +62,14 @@ class XMLExportVisitorTest extends TestCase
 
     public function testEmpty(): void
     {
-        $empty = new \Docman_Empty(['title' => 'My document', 'item_id' => 42]);
+        $empty = new \Docman_Empty(['title' => 'My document', 'description' => 'desc', 'item_id' => 42]);
         $xml   = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
         $this->logger->shouldReceive('debug')->with('Exporting empty item #42: My document')->once();
         $this->visitor->export($xml, $empty);
 
         $this->assertEquals(
-            '<item type="empty"><properties><title><![CDATA[My document]]></title></properties></item>',
+            '<item type="empty"><properties><title><![CDATA[My document]]></title><description><![CDATA[desc]]></description></properties></item>',
             $xml->item->asXML()
         );
     }
