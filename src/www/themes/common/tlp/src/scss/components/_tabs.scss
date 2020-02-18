@@ -208,16 +208,11 @@ $tlp-tabs-transition: 75ms ease-out;
             border-bottom-left-radius: 3px;
         }
     }
-
-    > .tlp-tab-icon {
-        font-size: 12px;
-        line-height: 14px;
-    }
 }
 
 .tlp-tab-icon {
     margin: 0 8px 0 0;
-    font-size: 16px;
+    font-size: 12px;
 
     &.fa-external-link {
         margin: 0 0 0 5px;
