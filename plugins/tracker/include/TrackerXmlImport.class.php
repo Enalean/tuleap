@@ -100,9 +100,6 @@ class TrackerXmlImport
     /** @var User\XML\Import\IFindUserFromXMLReference */
     private $user_finder;
 
-    /** @var UGroupManager */
-    private $ugroup_manager;
-
     /**
      * @var UGroupRetrieverWithLegacy
      */
@@ -135,6 +132,10 @@ class TrackerXmlImport
      * @var ExternalFieldsExtractor
      */
     private $external_fields_extractor;
+    /**
+     * @var TrackerXmlImportFeedbackCollector
+     */
+    private $feedback_collector;
 
     public function __construct(
         TrackerFactory $tracker_factory,
@@ -150,14 +151,14 @@ class TrackerXmlImport
         Tracker_Workflow_Trigger_RulesManager $trigger_rulesmanager,
         Tracker_Artifact_XMLImport $xml_import,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        UGroupManager $ugroup_manager,
         UGroupRetrieverWithLegacy $ugroup_retriever_with_legacy,
         \Psr\Log\LoggerInterface $logger,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
         WebhookFactory $webhook_factory,
         TrackerXMLFieldMappingFromExistingTracker $tracker_XML_field_mapping_from_existing_tracker,
-        ExternalFieldsExtractor $external_fields_extractor
+        ExternalFieldsExtractor $external_fields_extractor,
+        TrackerXmlImportFeedbackCollector $feedback_collector
     ) {
         $this->tracker_factory                = $tracker_factory;
         $this->event_manager                  = $event_manager;
@@ -172,7 +173,6 @@ class TrackerXmlImport
         $this->trigger_rulesmanager           = $trigger_rulesmanager;
         $this->xml_import                     = $xml_import;
         $this->user_finder                    = $user_finder;
-        $this->ugroup_manager                 = $ugroup_manager;
         $this->ugroup_retriever_with_legacy   = $ugroup_retriever_with_legacy;
         $this->logger                         = $logger;
         $this->artifact_links_usage_updater   = $artifact_links_usage_updater;
@@ -180,6 +180,7 @@ class TrackerXmlImport
         $this->webhook_factory                = $webhook_factory;
         $this->existing_tracker_field_mapping = $tracker_XML_field_mapping_from_existing_tracker;
         $this->external_fields_extractor      = $external_fields_extractor;
+        $this->feedback_collector             = $feedback_collector;
     }
 
     /**
@@ -218,14 +219,14 @@ class TrackerXmlImport
                 $logger
             ),
             $user_finder,
-            $ugroup_manager,
             new UGroupRetrieverWithLegacy($ugroup_manager),
             new WrapperLogger($logger, 'TrackerXMLImport'),
             $artifact_links_usage_updater,
             $artifact_links_usage_dao,
             new WebhookFactory(new WebhookDao()),
             new TrackerXMLFieldMappingFromExistingTracker(),
-            new ExternalFieldsExtractor($event_manager)
+            new ExternalFieldsExtractor($event_manager),
+            new TrackerXmlImportFeedbackCollector($logger)
         );
     }
 
@@ -434,8 +435,7 @@ class TrackerXmlImport
                 $project,
                 $name,
                 $description,
-                $item_name,
-                new TrackerXmlImportFeedbackCollector($this->logger),
+                $item_name
             );
         }
 
@@ -724,14 +724,12 @@ class TrackerXmlImport
                 realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/tracker.rng')
             );
 
-            $feedback_collector = new TrackerXmlImportFeedbackCollector($this->logger);
             $tracker = $this->getInstanceFromXML(
                 $xml_element,
                 $project,
                 $name,
                 $description,
-                $itemname,
-                $feedback_collector
+                $itemname
             );
             //Testing consistency of the imported tracker before updating database
             if ($tracker->testImport()) {
@@ -747,7 +745,7 @@ class TrackerXmlImport
                 throw new TrackerFromXmlException('XML file cannot be imported');
             }
 
-            $this->displayWarnings($feedback_collector);
+            $this->displayWarnings();
         }
 
         XMLCriteriaValueCache::clearInstances();
@@ -779,14 +777,13 @@ class TrackerXmlImport
         Project $project,
         string $name,
         string $description,
-        string $itemname,
-        TrackerXmlImportFeedbackCollector $feedback_collector
+        string $itemname
     ) {
         $row     = $this->setTrackerGeneralInformation($xml, $project, $name, $description, $itemname);
         $tracker = $this->tracker_factory->getInstanceFromRow($row);
 
         $this->setCannedResponses($xml, $tracker);
-        $this->setFormElementFields($xml, $feedback_collector, $tracker);
+        $this->setFormElementFields($xml, $tracker);
         $this->setSemantics($xml, $tracker);
 
         /*
@@ -879,13 +876,13 @@ class TrackerXmlImport
         return $notifications_level;
     }
 
-    private function displayWarnings(TrackerXmlImportFeedbackCollector $feedback_collector)
+    private function displayWarnings()
     {
-        if (empty($feedback_collector->getWarnings())) {
+        if (empty($this->feedback_collector->getWarnings())) {
             return;
         }
 
-        $feedback_collector->displayWarnings($this->logger);
+        $this->feedback_collector->displayWarnings($this->logger);
     }
 
     /**
@@ -949,7 +946,6 @@ class TrackerXmlImport
      */
     protected function setFormElementFields(
         SimpleXMLElement $xml,
-        TrackerXmlImportFeedbackCollector $feedback_collector,
         Tracker $tracker
     ): void {
         $elements = $this->getFormElementsFromXml($xml);
@@ -960,7 +956,7 @@ class TrackerXmlImport
                 $elem,
                 $this->xml_fields_mapping,
                 $this->user_finder,
-                $feedback_collector
+                $this->feedback_collector
             );
 
             if (! $form_element) {

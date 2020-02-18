@@ -51,7 +51,6 @@ use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
-use UGroupManager;
 use User\XML\Import\IFindUserFromXMLReference;
 use WorkflowFactory;
 use XML_RNGValidator;
@@ -133,10 +132,6 @@ final class TrackerXmlImportTest extends TestCase
      */
     private $contributors_ugroup_id;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UGroupManager
-     */
-    private $ugroup_manager;
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
      */
     private $tracker;
@@ -154,8 +149,6 @@ final class TrackerXmlImportTest extends TestCase
         $this->tracker_factory = Mockery::spy(TrackerFactory::class);
 
         $this->field1685 = Mockery::spy(Tracker_FormElement_Field_Date::class);
-
-        $this->ugroup_manager = Mockery::spy(UGroupManager::class);
 
         $this->external_validator           = Mockery::mock(ExternalFieldsExtractor::class);
         $this->ugroup_retriever_with_legacy = Mockery::spy(UGroupRetrieverWithLegacy::class);
@@ -184,14 +177,14 @@ final class TrackerXmlImportTest extends TestCase
                 $this->trigger_rules_manager,
                 $this->artifact_XML_import,
                 Mockery::spy(IFindUserFromXMLReference::class),
-                $this->ugroup_manager,
                 $this->ugroup_retriever_with_legacy,
                 Mockery::spy(LoggerInterface::class),
                 Mockery::spy(ArtifactLinksUsageUpdater::class),
                 $this->artifact_links_usage_dao,
                 Mockery::spy(WebhookFactory::class),
                 $this->mapping_from_existing_tracker,
-                $this->external_validator
+                $this->external_validator,
+                Mockery::mock(TrackerXmlImportFeedbackCollector::class)
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -377,13 +370,12 @@ final class TrackerXmlImportTest extends TestCase
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/EmptyTracker.xml'));
 
-        $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
         $tracker            = Mockery::mock(Tracker::class);
         $this->tracker_xml_importer->shouldReceive('setTrackerGeneralInformation')->once();
         $this->tracker_factory->shouldReceive('getInstanceFromRow')->once()->andReturn($tracker);
         $this->tracker_xml_importer->shouldReceive('setCannedResponses')->once()->withArgs([$xml, $tracker]);
         $this->tracker_xml_importer->shouldReceive('setFormElementFields')->once()->withArgs(
-            [$xml, $feedback_collector, $tracker]
+            [$xml, $tracker]
         );
         $this->tracker_xml_importer->shouldReceive('setSemantics')->once()->withArgs([$xml, $tracker]);
         $this->tracker_xml_importer->shouldReceive('setLegacyDependencies')->once()->withArgs([$xml]);
@@ -402,8 +394,7 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             "tracker name",
             "trcker description",
-            "bugs",
-            $feedback_collector
+            "bugs"
         );
     }
 
