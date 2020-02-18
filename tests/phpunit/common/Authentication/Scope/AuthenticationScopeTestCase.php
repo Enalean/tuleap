@@ -20,22 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Authentication\Scope;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 
-abstract class AccessKeyScopeTestCase extends TestCase
+abstract class AuthenticationScopeTestCase extends TestCase
 {
     /**
-     * @psalm-return class-string<AccessKeyScope>
+     * @psalm-return class-string<AuthenticationScope>
      */
-    abstract public function getAccessKeyScopeClassname(): string;
+    abstract public function getAuthenticationScopeClassname(): string;
 
     final public function testBuildsFromTheExpectedIdentifier(): void
     {
-        $identifier = $this->getAccessKeyScopeClassname()::fromItself()->getIdentifier();
+        $identifier = $this->getAuthenticationScopeClassname()::fromItself()->getIdentifier();
 
-        $scope = $this->getAccessKeyScopeClassname()::fromIdentifier($identifier);
+        $scope = $this->getAuthenticationScopeClassname()::fromIdentifier($identifier);
 
         $this->assertEquals($identifier, $scope->getIdentifier());
         $definition = $scope->getDefinition();
@@ -46,14 +47,14 @@ abstract class AccessKeyScopeTestCase extends TestCase
     final public function testDoesNotBuildFromUnknownIdentifier(): void
     {
         $this->assertNull(
-            $this->getAccessKeyScopeClassname()::fromIdentifier(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'))
+            $this->getAuthenticationScopeClassname()::fromIdentifier(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'))
         );
     }
 
     final public function testScopeCoversItself(): void
     {
         $this->assertTrue(
-            $this->getAccessKeyScopeClassname()::fromItself()->covers($this->getAccessKeyScopeClassname()::fromItself())
+            $this->getAuthenticationScopeClassname()::fromItself()->covers($this->getAuthenticationScopeClassname()::fromItself())
         );
     }
 }

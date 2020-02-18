@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\User\OAuth2\Scope;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
-final class RESTAccessKeyScopeTest extends AuthenticationScopeTestCase
+final class DemoOAuth2ScopeTest extends AuthenticationScopeTestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @inheritDoc
-     */
     public function getAuthenticationScopeClassname() : string
     {
-        return RESTAccessKeyScope::class;
-    }
-
-    public function testDoesNotCoversAllTheScopes(): void
-    {
-        $scope = \Mockery::mock(AuthenticationScope::class);
-        $scope->shouldReceive('getIdentifier')->andReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
-
-        $this->assertFalse(RESTAccessKeyScope::fromItself()->covers($scope));
+        return DemoOAuth2Scope::class;
     }
 }

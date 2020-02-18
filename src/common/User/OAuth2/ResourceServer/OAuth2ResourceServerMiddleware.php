@@ -27,13 +27,18 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\OAuth2Exception;
 use User_LoginException;
 
+/**
+ * @see https://tools.ietf.org/html/rfc6750#section-3
+ */
 final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
 {
     private const WWW_AUTHENTICATE_HEADER_BASE = 'Bearer realm="Tuleap OAuth2 Protected Resource" ';
@@ -55,6 +60,10 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
      */
     private $access_token_verifier;
     /**
+     * @var AuthenticationScope
+     */
+    private $required_scope;
+    /**
      * @var \User_LoginManager
      */
     private $login_manager;
@@ -64,12 +73,14 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
         BearerTokenHeaderParser $bearer_token_header_parser,
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         OAuth2AccessTokenVerifier $access_token_verifier,
+        AuthenticationScope $required_scope,
         \User_LoginManager $login_manager
     ) {
         $this->response_factory                   = $response_factory;
         $this->bearer_token_header_parser         = $bearer_token_header_parser;
         $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
         $this->access_token_verifier              = $access_token_verifier;
+        $this->required_scope                     = $required_scope;
         $this->login_manager                      = $login_manager;
     }
 
@@ -86,13 +97,21 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
 
         try {
             $user = $this->access_token_verifier->getUser(
-                $this->access_token_identifier_unserializer->getSplitToken($serialized_access_token_identifier)
+                $this->access_token_identifier_unserializer->getSplitToken($serialized_access_token_identifier),
+                $this->required_scope
             );
         } catch (SplitTokenException $exception) {
             return $this->response_factory->createResponse(401)
                 ->withHeader(
                     'WWW-Authenticate',
                     self::WWW_AUTHENTICATE_HEADER_BASE . 'error="invalid_token" error_description="Access token is malformed"'
+                );
+        } catch (OAuth2AccessTokenDoesNotHaveRequiredScopeException $exception) {
+            $needed_scope_identifier = $exception->getNeededScope()->getIdentifier()->toString();
+            return $this->response_factory->createResponse(403)
+                ->withHeader(
+                    'WWW-Authenticate',
+                    self::WWW_AUTHENTICATE_HEADER_BASE . 'error="insufficient_scope" scope="' . $needed_scope_identifier . '"'
                 );
         } catch (OAuth2Exception $exception) {
             return $this->response_factory->createResponse(401)

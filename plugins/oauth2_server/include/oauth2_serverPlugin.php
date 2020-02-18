@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
@@ -31,7 +32,10 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
+use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
+use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
+use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 use Tuleap\User\PasswordVerifier;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -131,9 +135,16 @@ final class oauth2_serverPlugin extends Plugin
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
                 new OAuth2AccessTokenVerifier(
                     new OAuth2AccessTokenDAO(),
+                    new OAuth2AccessTokenScopeRetriever(
+                        new OAuth2AccessTokenScopeDAO(),
+                        new AuthenticationScopeBuilderFromClassNames(
+                            DemoOAuth2Scope::class
+                        )
+                    ),
                     UserManager::instance(),
                     new SplitTokenVerificationStringHasher()
                 ),
+                DemoOAuth2Scope::fromItself(),
                 new User_LoginManager(
                     EventManager::instance(),
                     UserManager::instance(),

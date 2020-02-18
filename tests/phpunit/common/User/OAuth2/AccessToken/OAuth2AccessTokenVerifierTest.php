@@ -24,10 +24,16 @@ namespace Tuleap\User\OAuth2\AccessToken;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
+use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
+use Tuleap\Authentication\Scope\AuthenticationScopeThrowOnActualMethodCall;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class OAuth2AccessTokenVerifierTest extends TestCase
 {
@@ -37,6 +43,10 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenDAO
      */
     private $dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenScopeRetriever
+     */
+    private $scope_retriever;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
      */
@@ -52,11 +62,12 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dao          = \Mockery::mock(OAuth2AccessTokenDAO::class);
-        $this->user_manager = \Mockery::mock(\UserManager::class);
-        $this->hasher       = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $this->dao             = \Mockery::mock(OAuth2AccessTokenDAO::class);
+        $this->scope_retriever = \Mockery::mock(OAuth2AccessTokenScopeRetriever::class);
+        $this->user_manager    = \Mockery::mock(\UserManager::class);
+        $this->hasher          = \Mockery::mock(SplitTokenVerificationStringHasher::class);
 
-        $this->verifier = new OAuth2AccessTokenVerifier($this->dao, $this->user_manager, $this->hasher);
+        $this->verifier = new OAuth2AccessTokenVerifier($this->dao, $this->scope_retriever, $this->user_manager, $this->hasher);
     }
 
     public function testGivingACorrectTokenTheCorrespondingUserIsRetrieved(): void
@@ -72,8 +83,10 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
             ['user_id' => $expected_user->getId(), 'verifier' => 'expected_hashed_verification_string']
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+        $required_scope = $this->buildRequiredScope();
+        $this->scope_retriever->shouldReceive('getScopesByAccessToken')->andReturn([$required_scope]);
 
-        $user = $this->verifier->getUser($access_token);
+        $user = $this->verifier->getUser($access_token, $required_scope);
 
         $this->assertSame($expected_user, $user);
     }
@@ -86,7 +99,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(null);
 
         $this->expectException(OAuth2AccessTokenNotFoundException::class);
-        $this->verifier->getUser($access_token);
+        $this->verifier->getUser($access_token, $this->buildRequiredScope());
     }
 
     public function testVerificationFailsWhenVerificationStringDoesNotMatch(): void
@@ -102,7 +115,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $this->hasher->shouldReceive('verifyHash')->andReturn(false);
 
         $this->expectException(InvalidOAuth2AccessTokenException::class);
-        $this->verifier->getUser($access_token);
+        $this->verifier->getUser($access_token, $this->buildRequiredScope());
     }
 
     public function testVerificationFailsWhenTheUserCanNotBeFound(): void
@@ -117,8 +130,105 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
             ['user_id' => 404, 'verifier' => 'expected_hashed_verification_string']
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+        $required_scope = $this->buildRequiredScope();
+        $this->scope_retriever->shouldReceive('getScopesByAccessToken')->andReturn([$required_scope]);
 
         $this->expectException(OAuth2AccessTokenMatchingUnknownUserException::class);
-        $this->verifier->getUser($access_token);
+        $this->verifier->getUser($access_token, $required_scope);
+    }
+
+    /**
+     * @dataProvider dataProviderScopeFailures
+     */
+    public function testVerificationFailsWhenTheRequiredScopeCannotBeApproved(AuthenticationScope ...$scopes_matching_access_token): void
+    {
+        $expected_user = new \PFUser(['user_id' => 103, 'language_id' => 'en']);
+        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
+
+        $access_token = new SplitToken(
+            4,
+            new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+        );
+        $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(
+            ['user_id' => $expected_user->getId(), 'verifier' => 'expected_hashed_verification_string']
+        );
+        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+        $this->scope_retriever->shouldReceive('getScopesByAccessToken')->andReturn($scopes_matching_access_token);
+
+        $this->expectException(OAuth2AccessTokenDoesNotHaveRequiredScopeException::class);
+        $this->verifier->getUser($access_token, $this->buildRequiredScope());
+    }
+
+    public function dataProviderScopeFailures(): array
+    {
+
+        return [
+            'No scopes associated with the access token' => [],
+            'None of the scopes covers the required scope' => [$this->buildScopeCoveringNothing(), $this->buildScopeCoveringNothing()],
+        ];
+    }
+
+    private function buildRequiredScope(): AuthenticationScope
+    {
+        return new class /** @psalm-immutable */ implements AuthenticationScope
+        {
+            public static function fromItself() : AuthenticationScope
+            {
+                throw new \LogicException('This method is not supposed to be called in the test');
+            }
+
+            public static function fromIdentifier(AuthenticationScopeIdentifier $identifier) : ?AuthenticationScope
+            {
+                throw new \LogicException('This method is not supposed to be called in the test');
+            }
+
+            public function getIdentifier() : AuthenticationScopeIdentifier
+            {
+                return OAuth2ScopeIdentifier::fromIdentifierKey('required');
+            }
+
+            public function getDefinition() : AuthenticationScopeDefinition
+            {
+                return new class /** @psalm-immutable */ implements AuthenticationScopeDefinition {
+                    public function getName(): string
+                    {
+                        return 'Name';
+                    }
+
+                    public function getDescription(): string
+                    {
+                        return 'Description';
+                    }
+                };
+            }
+
+            public function covers(AuthenticationScope $scope) : bool
+            {
+                return true;
+            }
+        };
+    }
+
+    public function buildScopeCoveringNothing(): AuthenticationScope
+    {
+        return new class /** @psalm-immutable */ implements AuthenticationScope
+        {
+            use AuthenticationScopeThrowOnActualMethodCall;
+
+            public static function fromItself() : AuthenticationScope
+            {
+                throw new \LogicException('This method is not supposed to be called in the test');
+            }
+
+            public static function fromIdentifier(AuthenticationScopeIdentifier $identifier) : ?AuthenticationScope
+            {
+                throw new \LogicException('This method is not supposed to be called in the test');
+            }
+
+            public function covers(AuthenticationScope $scope) : bool
+            {
+                return false;
+            }
+        };
     }
 }

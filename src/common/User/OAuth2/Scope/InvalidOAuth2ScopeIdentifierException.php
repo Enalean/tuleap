@@ -20,38 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Authentication\Scope;
+namespace Tuleap\User\OAuth2\Scope;
+
+use Tuleap\User\OAuth2\OAuth2Exception;
 
 /**
  * @psalm-immutable
- *
- * @template TScopeIdentifier of \Tuleap\Authentication\Scope\AuthenticationScopeIdentifier
  */
-interface AuthenticationScope
+final class InvalidOAuth2ScopeIdentifierException extends \RuntimeException implements OAuth2Exception
 {
-    /**
-     * @psalm-pure
-     *
-     * @psalm-return self<TScopeIdentifier>
-     */
-    public static function fromItself(): self;
-
-    /**
-     * @psalm-pure
-     *
-     * @psalm-return ?self<TScopeIdentifier>
-     */
-    public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?self;
-
-    /**
-     * @psalm-return TScopeIdentifier
-     */
-    public function getIdentifier(): AuthenticationScopeIdentifier;
-
-    public function getDefinition(): AuthenticationScopeDefinition;
-
-    /**
-     * @psalm-param self<TScopeIdentifier> $scope
-     */
-    public function covers(self $scope): bool;
+    public function __construct(string $invalid_identifier_key)
+    {
+        parent::__construct("$invalid_identifier_key is not a valid identifier key, format is not correct");
+    }
 }
