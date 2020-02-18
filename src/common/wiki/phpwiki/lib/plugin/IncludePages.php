@@ -31,17 +31,17 @@ include_once("lib/plugin/IncludePage.php");
 
 class WikiPlugin_IncludePages extends WikiPlugin_IncludePage
 {
-    function getName()
+    public function getName()
     {
         return _("IncludePages");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Include multiple pages.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -50,7 +50,7 @@ class WikiPlugin_IncludePages extends WikiPlugin_IncludePage
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             array( 'pages'   => false,  // the pages to include
@@ -59,7 +59,7 @@ class WikiPlugin_IncludePages extends WikiPlugin_IncludePage
         );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         $html = HTML();

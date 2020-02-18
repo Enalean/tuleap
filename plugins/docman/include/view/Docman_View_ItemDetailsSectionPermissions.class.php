@@ -25,11 +25,11 @@ require_once __DIR__ . '/../../../../src/www/project/admin/permissions.php';
 
 class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsSection
 {
-    function __construct($item, $url)
+    public function __construct($item, $url)
     {
         parent::__construct($item, $url, 'permissions', $GLOBALS['Language']->getText('plugin_docman', 'details_permissions'));
     }
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         $content  = '';
         $content .= '<form action="'. $this->url .'" method="post">';

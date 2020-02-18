@@ -31,7 +31,7 @@ class Git_Ci
      *
      * @return Git_Ci_Dao
      */
-    function getDao()
+    public function getDao()
     {
         if (!isset($this->dao)) {
             $this->_dao = new Git_Ci_Dao();
@@ -44,7 +44,7 @@ class Git_Ci
      *
      * @return ProjectManager
      */
-    function getProjectManager()
+    public function getProjectManager()
     {
         return ProjectManager::instance();
     }
@@ -61,7 +61,7 @@ class Git_Ci
      *
      * @return Array
      */
-    function retrieveTriggers($params)
+    public function retrieveTriggers($params)
     {
         if (isset($params['group_id']) && !empty($params['group_id'])) {
             $project = $this->getProjectManager()->getProject($params['group_id']);
@@ -153,7 +153,7 @@ class Git_Ci
      *
      * @return bool
      */
-    function saveTrigger($jobId, $repositoryId)
+    public function saveTrigger($jobId, $repositoryId)
     {
         $dar = $this->getDao()->checkRepository($jobId, $repositoryId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -171,7 +171,7 @@ class Git_Ci
      *
      * @return bool
      */
-    function deleteTrigger($jobId)
+    public function deleteTrigger($jobId)
     {
         return $this->getDao()->deleteTrigger($jobId);
     }

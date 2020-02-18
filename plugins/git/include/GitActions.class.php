@@ -1081,7 +1081,7 @@ class GitActions extends PluginActions
         return $r->renameProject($project, $newName);
     }
 
-    function _loadRepository($projectId, $repositoryId)
+    public function _loadRepository($projectId, $repositoryId)
     {
         $repository = $this->getGitRepository($repositoryId);
         if ($repository) {
@@ -1097,7 +1097,7 @@ class GitActions extends PluginActions
     /**
      * Wrapper used for tests to get a new GitRepository
      */
-    function getGitRepository($repositoryId)
+    public function getGitRepository($repositoryId)
     {
         return $this->factory->getRepositoryById($repositoryId);
     }

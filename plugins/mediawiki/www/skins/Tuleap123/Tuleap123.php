@@ -34,7 +34,7 @@ class SkinTuleap123 extends SkinTemplate
     public $template = 'Tuleap123Template';
     public $useHeadElement = true;
 
-    function setupTemplate($classname, $repository = false, $cache_dir = false)
+    public function setupTemplate($classname, $repository = false, $cache_dir = false)
     {
             $tc = new $classname();
             $tc->params = array();
@@ -54,7 +54,7 @@ class SkinTuleap123 extends SkinTemplate
     /**
      * @param $out OutputPage
      */
-    function setupSkinUserCss(OutputPage $out)
+    public function setupSkinUserCss(OutputPage $out)
     {
             /* add Tuleap styles */
         foreach ($GLOBALS['HTML']->getAllStyleSheets() as $sheet) {
@@ -72,7 +72,7 @@ class SkinTuleap123 extends SkinTemplate
             $out->addStyle('Tuleap123/IE70Fixes.css', 'screen', 'IE 7');
     }
 
-    function addToBodyAttributes($out, &$bodyAttrs)
+    public function addToBodyAttributes($out, &$bodyAttrs)
     {
         parent::addToBodyAttributes($out, $bodyAttrs);
         $current_user  = UserManager::instance()->getCurrentUser();
@@ -340,7 +340,7 @@ class Tuleap123Template extends BaseTemplate
                echo '</div>';
     }
 
-    function searchBox()
+    public function searchBox()
     {
         global $wgUseTwoButtonsSearchForm;
         ?>
@@ -369,7 +369,7 @@ class Tuleap123Template extends BaseTemplate
      * Prints the cactions bar.
      * Shared between MonoBook and Modern
      */
-    function cactions()
+    public function cactions()
     {
         ?>
     <div id="p-cactions" class="portlet" role="navigation">
@@ -387,7 +387,7 @@ class Tuleap123Template extends BaseTemplate
     </div>
         <?php
     }
-    function toolbox()
+    public function toolbox()
     {
         ?>
     <div class="portlet" id="p-tb" role="navigation">
@@ -410,7 +410,7 @@ class Tuleap123Template extends BaseTemplate
         <?php
     }
 
-    function languageBox()
+    public function languageBox()
     {
         if ($this->data['language_urls'] !== false) {
             ?>
@@ -434,7 +434,7 @@ class Tuleap123Template extends BaseTemplate
      * @param $bar string
      * @param $cont array|string
      */
-    function customBox($bar, $cont)
+    public function customBox($bar, $cont)
     {
         $portletAttribs = array( 'class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId("p-$bar"), 'role' => 'navigation' );
         $tooltip = Linker::titleAttrib("p-$bar");

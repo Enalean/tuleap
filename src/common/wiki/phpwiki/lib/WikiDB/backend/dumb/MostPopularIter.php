@@ -14,7 +14,7 @@ require_once('lib/WikiDB/backend.php');
  */
 class WikiDB_backend_dumb_MostPopularIter extends WikiDB_backend_iterator
 {
-    function __construct($backend, &$all_pages, $limit)
+    public function __construct($backend, &$all_pages, $limit)
     {
         $this->_pages = array();
         $pages = &$this->_pages;
@@ -43,12 +43,12 @@ class WikiDB_backend_dumb_MostPopularIter extends WikiDB_backend_iterator
         }
     }
 
-    function next()
+    public function next()
     {
         return array_shift($this->_pages);
     }
 
-    function free()
+    public function free()
     {
         unset($this->_pages);
     }

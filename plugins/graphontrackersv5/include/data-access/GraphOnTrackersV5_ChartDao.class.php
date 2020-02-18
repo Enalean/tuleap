@@ -27,7 +27,7 @@ class GraphOnTrackersV5_ChartDao extends DataAccessObject
     /**
      * Constructs the GraphOnTrackersV5_ChartDao
      */
-    function __construct($da = null)
+    public function __construct($da = null)
     {
         parent::__construct($da);
         $this->table_name = 'plugin_graphontrackersv5_chart';

@@ -9,7 +9,7 @@ class GreenTheme extends Theme
     private $axis_color       = '#00CC00';
     private $grid_color       = '#33CC33';
 
-    function GetColorList()
+    public function GetColorList()
     {
         return array(
             '#66CC00',
@@ -31,7 +31,7 @@ class GreenTheme extends Theme
         );
     }
 
-    function SetupGraph($graph)
+    public function SetupGraph($graph)
     {
 
         // graph
@@ -81,7 +81,7 @@ class GreenTheme extends Theme
     }
 
 
-    function SetupPieGraph($graph)
+    public function SetupPieGraph($graph)
     {
 
         // graph
@@ -107,7 +107,7 @@ class GreenTheme extends Theme
     }
 
 
-    function PreStrokeApply($graph)
+    public function PreStrokeApply($graph)
     {
         if ($graph->legend->HasItems()) {
             $img = $graph->img;
@@ -120,7 +120,7 @@ class GreenTheme extends Theme
         }
     }
 
-    function ApplyPlot($plot)
+    public function ApplyPlot($plot)
     {
 
         switch (get_class($plot)) {

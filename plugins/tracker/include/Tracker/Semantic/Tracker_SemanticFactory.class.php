@@ -124,7 +124,7 @@ class Tracker_SemanticFactory
      *
      * @return Tracker_Semantic_TitleFactory an instance of the factory
      */
-    function getSemanticTitleFactory()
+    public function getSemanticTitleFactory()
     {
         return Tracker_Semantic_TitleFactory::instance();
     }
@@ -134,7 +134,7 @@ class Tracker_SemanticFactory
      *
      * @return Tracker_Semantic_TitleFactory an instance of the factory
      */
-    function getSemanticDescriptionFactory()
+    public function getSemanticDescriptionFactory()
     {
         return Tracker_Semantic_DescriptionFactory::instance();
     }
@@ -144,7 +144,7 @@ class Tracker_SemanticFactory
      *
      * @return Tracker_Semantic_StatusFactory an instance of the factory
      */
-    function getSemanticStatusFactory()
+    public function getSemanticStatusFactory()
     {
         return Tracker_Semantic_StatusFactory::instance();
     }
@@ -153,7 +153,7 @@ class Tracker_SemanticFactory
      *
      * @return Tracker_TooltipFactory an instance of the factory
      */
-    function getSemanticTooltipFactory()
+    public function getSemanticTooltipFactory()
     {
         return Tracker_TooltipFactory::instance();
     }
@@ -163,7 +163,7 @@ class Tracker_SemanticFactory
      *
      * @return Tracker_Semantic_ContributorFactory an instance of the factory
      */
-    function getSemanticContributorFactory()
+    public function getSemanticContributorFactory()
     {
         return Tracker_Semantic_ContributorFactory::instance();
     }

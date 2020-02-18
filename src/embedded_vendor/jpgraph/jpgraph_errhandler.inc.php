@@ -24,7 +24,7 @@ $__jpg_err_locale = DEFAULT_ERR_LOCALE;
 class ErrMsgText
 {
     private $lt=null;
-    function __construct()
+    public function __construct()
     {
         global $__jpg_err_locale;
         $file = 'lang/'.$__jpg_err_locale.'.inc.php';
@@ -42,7 +42,7 @@ class ErrMsgText
         $this->lt = $_jpg_messages;
     }
 
-    function Get($errnbr, $a1 = null, $a2 = null, $a3 = null, $a4 = null, $a5 = null)
+    public function Get($errnbr, $a1 = null, $a2 = null, $a3 = null, $a4 = null, $a5 = null)
     {
         global $__jpg_err_locale;
         if (!isset($this->lt[$errnbr])) {
@@ -211,23 +211,23 @@ class JpGraphErrObject
     protected $iDest = false;
 
 
-    function __construct()
+    public function __construct()
     {
         // Empty. Reserved for future use
     }
 
-    function SetTitle($aTitle)
+    public function SetTitle($aTitle)
     {
         $this->iTitle = $aTitle;
     }
 
-    function SetStrokeDest($aDest)
+    public function SetStrokeDest($aDest)
     {
         $this->iDest = $aDest;
     }
 
     // If aHalt is true then execution can't continue. Typical used for fatal errors
-    function Raise($aMsg, $aHalt = false)
+    public function Raise($aMsg, $aHalt = false)
     {
         if ($this->iDest != '') {
             if ($this->iDest == 'syslog') {
@@ -262,13 +262,13 @@ class JpGraphErrObject
 class JpGraphErrObjectImg extends JpGraphErrObject
 {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         // Empty. Reserved for future use
     }
 
-    function Raise($aMsg, $aHalt = true)
+    public function Raise($aMsg, $aHalt = true)
     {
         $img_iconerror =
         'iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAaV'.

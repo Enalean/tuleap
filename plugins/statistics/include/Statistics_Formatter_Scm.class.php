@@ -37,7 +37,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      *
      * @return void
      */
-    function __construct($scm, $startDate, $endDate, $groupId = null)
+    public function __construct($scm, $startDate, $endDate, $groupId = null)
     {
         $this->scm = $scm;
         parent::__construct($startDate, $endDate, get_csv_separator(), $groupId);
@@ -48,7 +48,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      *
      * @return Array
      */
-    function calculateReadStats()
+    public function calculateReadStats()
     {
         $readIndex[]          = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $totalRead[]          = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_total_read');
@@ -75,7 +75,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      *
      * @return Array
      */
-    function calculateCommitsStats()
+    public function calculateCommitsStats()
     {
         $commitsIndex[]         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $totalCommits[]         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_total_commit');
@@ -102,7 +102,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      *
      * @return Array
      */
-    function topCommitByProject()
+    public function topCommitByProject()
     {
         $result['project'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_project');
         $result['commits'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_project_commits');
@@ -123,7 +123,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      *
      * @return Array
      */
-    function topCommitByUser()
+    public function topCommitByUser()
     {
         $result['user'][]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_user');
         $result['commits'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_user_commits');
@@ -144,7 +144,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      *
      * @return Array
      */
-    function repositoriesWithCommit()
+    public function repositoriesWithCommit()
     {
         $repositories[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_repo_total');
         $count = 0;
@@ -164,7 +164,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      *
      * @return String
      */
-    function getStats()
+    public function getStats()
     {
         $readStats = $this->calculateReadStats();
         $this->addLine($readStats['read_index']);

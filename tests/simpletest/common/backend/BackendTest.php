@@ -69,7 +69,7 @@ class BackendTest_Plugin_With_SetUp_And_Params
 class BackendTest extends TuleapTestCase
 {
 
-    function __construct($name = 'BackendSystem test')
+    public function __construct($name = 'BackendSystem test')
     {
         parent::__construct($name);
     }
@@ -82,7 +82,7 @@ class BackendTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    function testFactory_core()
+    public function testFactory_core()
     {
         // Core backends
         $this->assertIsA(Backend::instance(Backend::SVN), 'BackendSVN');
@@ -93,13 +93,13 @@ class BackendTest extends TuleapTestCase
         $this->assertIsA(Backend::instance(Backend::ALIASES), 'BackendAliases');
     }
 
-    function testFactory_plugin()
+    public function testFactory_plugin()
     {
         //Plugin backends. Give the base classname to build the backend
         $this->assertIsA(Backend::instance('plugin_fake', 'BackendTest_FakeBackend'), 'BackendTest_FakeBackend'); //like plugins !
     }
 
-    function testFactory_plugin_bad()
+    public function testFactory_plugin_bad()
     {
         //The base classname is mandatory for unkown (by core) backends
         // else it search for Backend . $type
@@ -107,7 +107,7 @@ class BackendTest extends TuleapTestCase
         $nop = Backend::instance('plugin_fake');
     }
 
-    function testFactory_override()
+    public function testFactory_override()
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
@@ -120,7 +120,7 @@ class BackendTest extends TuleapTestCase
         $this->assertIsA(Backend::instance(Backend::SVN), 'BackendTest_BackendSVN_overriden_by_plugin');
     }
 
-    function testFactory_override_without_parameters()
+    public function testFactory_override_without_parameters()
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
@@ -134,7 +134,7 @@ class BackendTest extends TuleapTestCase
         $this->assertEqual($b->a_variable_for_tests, -25);
     }
 
-    function testFactory_override_with_parameters()
+    public function testFactory_override_with_parameters()
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
@@ -148,7 +148,7 @@ class BackendTest extends TuleapTestCase
         $this->assertEqual($b->a_variable_for_tests, 9);
     }
 
-    function testFactory_override_with_parameters_defined_in_plugin()
+    public function testFactory_override_with_parameters_defined_in_plugin()
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
@@ -162,7 +162,7 @@ class BackendTest extends TuleapTestCase
         $this->assertEqual($b->a_variable_for_tests, 9);
     }
 
-    function testFactory_override_with_parameters_but_no_setUp()
+    public function testFactory_override_with_parameters_but_no_setUp()
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
@@ -176,7 +176,7 @@ class BackendTest extends TuleapTestCase
         $b = Backend::instance(Backend::SVN, null, array(1, 2, 3));
     }
 
-    function testrecurseDeleteInDir()
+    public function testrecurseDeleteInDir()
     {
         $test_dir =  $this->getTmpDir();
 

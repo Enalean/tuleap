@@ -39,7 +39,7 @@ if (USE_HTMLAREA) {
 
 class PageEditor
 {
-    function __construct(&$request)
+    public function __construct(&$request)
     {
         $this->request = &$request;
 
@@ -92,7 +92,7 @@ class PageEditor
         }
     }
 
-    function editPage()
+    public function editPage()
     {
 
         global $WikiTheme;
@@ -179,7 +179,7 @@ class PageEditor
         return $this->output('editpage', _("Edit: %s"));
     }
 
-    function output($template, $title_fs)
+    public function output($template, $title_fs)
     {
         global $WikiTheme;
         $selected = &$this->selected;
@@ -204,7 +204,7 @@ class PageEditor
     }
 
 
-    function viewSource()
+    public function viewSource()
     {
         assert($this->isInitialEdit());
         assert($this->selected);
@@ -214,7 +214,7 @@ class PageEditor
         return $this->output('viewsource', _("View Source: %s"));
     }
 
-    function updateLock()
+    public function updateLock()
     {
         if ((bool)$this->page->get('locked') == (bool)$this->locked) {
             return false;       // Not changed.
@@ -232,7 +232,7 @@ class PageEditor
         return true;            // lock changed.
     }
 
-    function savePage()
+    public function savePage()
     {
         $request = &$this->request;
 
@@ -341,23 +341,23 @@ class PageEditor
         return true;
     }
 
-    function isConcurrentUpdate()
+    public function isConcurrentUpdate()
     {
         assert($this->current->getVersion() >= $this->_currentVersion);
         return $this->current->getVersion() != $this->_currentVersion;
     }
 
-    function canEdit()
+    public function canEdit()
     {
         return !$this->page->get('locked') || $this->user->isAdmin();
     }
 
-    function isInitialEdit()
+    public function isInitialEdit()
     {
         return $this->_initialEdit;
     }
 
-    function isUnchanged()
+    public function isUnchanged()
     {
         $current = &$this->current;
 
@@ -368,14 +368,14 @@ class PageEditor
         return $this->_content == $current->getPackedContent();
     }
 
-    function getPreview()
+    public function getPreview()
     {
         include_once('lib/PageType.php');
         $this->_content = $this->getContent();
         return new TransformedText($this->page, $this->_content, $this->meta);
     }
 
-    function getConvertedPreview()
+    public function getConvertedPreview()
     {
         include_once('lib/PageType.php');
         $this->_content = $this->getContent();
@@ -385,7 +385,7 @@ class PageEditor
     }
 
     // possibly convert HTMLAREA content back to Wiki markup
-    function getContent()
+    public function getContent()
     {
         if (USE_HTMLAREA) {
             $xml_output = Edit_HtmlArea_ConvertAfter($this->_content);
@@ -396,7 +396,7 @@ class PageEditor
         }
     }
 
-    function getLockedMessage()
+    public function getLockedMessage()
     {
         return
             HTML(
@@ -407,7 +407,7 @@ class PageEditor
             );
     }
 
-    function getConflictMessage($unresolved = false)
+    public function getConflictMessage($unresolved = false)
     {
         /*
          xgettext only knows about c/c++ line-continuation strings
@@ -443,7 +443,7 @@ class PageEditor
     }
 
 
-    function getTextArea()
+    public function getTextArea()
     {
         $request = &$this->request;
 
@@ -470,7 +470,7 @@ class PageEditor
         }
     }
 
-    function getFormElements()
+    public function getFormElements()
     {
         global $WikiTheme;
         $request = &$this->request;
@@ -546,12 +546,12 @@ class PageEditor
         return $el;
     }
 
-    function _redirectToBrowsePage()
+    public function _redirectToBrowsePage()
     {
         $this->request->redirect(WikiURL($this->page, false, 'absolute_url'));
     }
 
-    function redirectAfterSavingPage($pagename)
+    public function redirectAfterSavingPage($pagename)
     {
         $url     = WikiURL($this->page, false, 'absolute_url');
         $link    = '<a href="' . $url . '">'.$pagename.'</a>';
@@ -561,7 +561,7 @@ class PageEditor
         $GLOBALS['Response']->redirect($url);
     }
 
-    function _restoreState()
+    public function _restoreState()
     {
         $request = &$this->request;
 
@@ -614,7 +614,7 @@ class PageEditor
         return true;
     }
 
-    function _initializeState()
+    public function _initializeState()
     {
         $request = &$this->request;
         $current = &$this->current;
@@ -656,7 +656,7 @@ class PageEditor
 
 class LoadFileConflictPageEditor extends PageEditor
 {
-    function editPage($saveFailed = true)
+    public function editPage($saveFailed = true)
     {
         $tokens = &$this->tokens;
 
@@ -720,7 +720,7 @@ class LoadFileConflictPageEditor extends PageEditor
         // FIXME: this doesn't display
     }
 
-    function output($template, $title_fs)
+    public function output($template, $title_fs)
     {
         $selected = &$this->selected;
         $current = &$this->current;
@@ -741,7 +741,7 @@ class LoadFileConflictPageEditor extends PageEditor
         return true;
     }
 
-    function getConflictMessage($unresolved = false)
+    public function getConflictMessage($unresolved = false)
     {
         $message = HTML(HTML::p(
             fmt(

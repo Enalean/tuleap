@@ -42,7 +42,7 @@ class Webdav_URLVerification extends URLVerification
      *
      * @return String
      */
-    function getWebDAVHost()
+    public function getWebDAVHost()
     {
         return $this->webdavHost;
     }
@@ -84,7 +84,7 @@ class Webdav_URLVerification extends URLVerification
      *
      * @return void
      */
-    function forbiddenError()
+    public function forbiddenError()
     {
         header('HTTP/1.1 403 Forbidden: HTTPS required instead of HTTP');
         exit;

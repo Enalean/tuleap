@@ -36,17 +36,17 @@ require_once('lib/plugin/WikiAdminSelect.php');
 
 class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
 {
-    function getName()
+    public function getName()
     {
         return _("WikiAdminRemove");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Permanently remove all selected pages.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -55,7 +55,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -83,7 +83,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function collectPages(&$list, &$dbi, $sortby, $limit = 0)
+    public function collectPages(&$list, &$dbi, $sortby, $limit = 0)
     {
         extract($this->_args);
 
@@ -115,7 +115,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         return $list;
     }
 
-    function removePages(&$request, $pages)
+    public function removePages(&$request, $pages)
     {
         $ul = HTML::ul();
         $dbi = $request->getDbh();
@@ -139,7 +139,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         if ($request->getArg('action') != 'browse') {
             if ($request->getArg('action') != _("PhpWikiAdministration/Remove")) {
@@ -262,7 +262,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
 
 class _PageList_Column_remove extends _PageList_Column
 {
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         return Button(
             array('action' => 'remove'),

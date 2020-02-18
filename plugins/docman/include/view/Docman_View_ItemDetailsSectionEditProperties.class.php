@@ -35,7 +35,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     public $nbDocsImpacted;
     public $nbFoldersImpacted;
 
-    function __construct($item, $url, $theme_path, $force, $token, $updateConfirmed, $recurse, $recurseOnDocs)
+    public function __construct($item, $url, $theme_path, $force, $token, $updateConfirmed, $recurse, $recurseOnDocs)
     {
         parent::__construct($item, $url, $theme_path, true, $force);
         $this->token = $token;
@@ -49,12 +49,12 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $this->nbFoldersImpacted = null;
     }
 
-    function _getDirectLinkField()
+    public function _getDirectLinkField()
     {
         return '';
     }
 
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         $html = '';
         $params = array('form_name' => $this->formName);
@@ -73,17 +73,17 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _showField($field)
+    public function _showField($field)
     {
         return $field->getField();
     }
 
-    function _getFieldLabel($field)
+    public function _getFieldLabel($field)
     {
         return $field->getLabel(true);
     }
 
-    function _subItemsAreWritable()
+    public function _subItemsAreWritable()
     {
         if ($this->subItemsWritable === null) {
             $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
@@ -98,7 +98,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $this->subItemsWritable;
     }
 
-    function _getDefaultValuePropertyField($field)
+    public function _getDefaultValuePropertyField($field)
     {
         $html = '';
 
@@ -123,7 +123,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getDefaultValuesTableHeader()
+    public function _getDefaultValuesTableHeader()
     {
         $html = '';
         if ($this->_subItemsAreWritable()) {
@@ -136,7 +136,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getDefaultValues()
+    public function _getDefaultValues()
     {
         $html = '';
         if ($this->_subItemsAreWritable()) {
@@ -168,7 +168,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getAdditionalRows()
+    public function _getAdditionalRows()
     {
         $html  = '<p>';
         if ($this->token) {

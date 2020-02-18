@@ -441,7 +441,7 @@ class DataAccessObject
      * Return the result of 'FOUND_ROWS()' SQL method for the last query.
      * @deprecated
      */
-    function foundRows()
+    public function foundRows()
     {
         $sql = "SELECT FOUND_ROWS() as nb";
         $dar = $this->retrieve($sql);

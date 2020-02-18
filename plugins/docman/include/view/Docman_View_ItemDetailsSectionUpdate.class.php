@@ -26,18 +26,18 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     public $validate;
     public $force;
     public $token;
-    function __construct($item, $url, $controller, $force, $token)
+    public function __construct($item, $url, $controller, $force, $token)
     {
         parent::__construct($item, $url, false, true, $controller);
         $this->force = $force;
         $this->token = $token;
     }
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         return $this->item->accept($this);
     }
 
-    function _updateHeader($enctype = '')
+    public function _updateHeader($enctype = '')
     {
         $content = '';
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
@@ -45,7 +45,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
-    function _updateFooter()
+    public function _updateFooter()
     {
         $content = '';
         if ($this->token) {
@@ -62,11 +62,11 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
-    function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = array())
     {
         return "";
     }
-    function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = array())
     {
         $content = '';
 
@@ -83,24 +83,24 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
 
         return $content;
     }
-    function visitWiki($item, $params = array())
+    public function visitWiki($item, $params = array())
     {
         return $this->visitDocument($item, $params);
     }
-    function visitLink($item, $params = array())
+    public function visitLink($item, $params = array())
     {
         return $this->visitDocument($item, $params);
     }
-    function visitFile($item, $params = array())
+    public function visitFile($item, $params = array())
     {
         return '';
     }
-    function visitEmbeddedFile($item, $params = array())
+    public function visitEmbeddedFile($item, $params = array())
     {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty($item, $params = array())
+    public function visitEmpty($item, $params = array())
     {
         $content = '';
 

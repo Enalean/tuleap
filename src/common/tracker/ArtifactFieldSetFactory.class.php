@@ -61,7 +61,7 @@ class ArtifactFieldSetFactory
      *    @param    object $ArtifactType The ArtifactType object to which this ArtifactFieldSetFactory is associated
      *    @return bool success.
      */
-    function __construct($ArtifactType)
+    public function __construct($ArtifactType)
     {
         if ($ArtifactType) {
             if ($ArtifactType->isError()) {
@@ -81,7 +81,7 @@ class ArtifactFieldSetFactory
      *
      *    @return    object The ArtifactType object.
      */
-    function getArtifactType()
+    public function getArtifactType()
     {
         return $this->ArtifactType;
     }
@@ -92,7 +92,7 @@ class ArtifactFieldSetFactory
      *  @param int $group_artifact_id the artifact type id
      *    @return bool success
      */
-    function fetchData($group_artifact_id)
+    public function fetchData($group_artifact_id)
     {
 
         $sql = "SELECT *
@@ -125,7 +125,7 @@ class ArtifactFieldSetFactory
      *
      *  @param int $group_artifact_id the id of the tracker
      */
-    function getArtifactFieldSetsFromId($group_artifact_id)
+    public function getArtifactFieldSetsFromId($group_artifact_id)
     {
         global $Language;
 
@@ -157,7 +157,7 @@ class ArtifactFieldSetFactory
      * @param int $field_set_id the id of the field set we are looking for
      * @return Object{ArtifactFieldSet} the field set found, or null if not
      */
-    function getFieldSetById($field_set_id)
+    public function getFieldSetById($field_set_id)
     {
         $fieldsets = $this->ArtifactFieldSets;
         $searched_fieldset = null;
@@ -179,7 +179,7 @@ class ArtifactFieldSetFactory
      *
      * @return array{ArtifactFieldSet} all the field sets of the tracker $ArtifactType
      */
-    function getAllFieldSets()
+    public function getAllFieldSets()
     {
         return $this->ArtifactFieldSets;
     }
@@ -191,7 +191,7 @@ class ArtifactFieldSetFactory
      *
      * @return array{ArtifactFieldSet} the field set that contain at least one field used
      */
-    function getAllFieldSetsContainingUsedFields()
+    public function getAllFieldSetsContainingUsedFields()
     {
         $fieldsets = $this->ArtifactFieldSets;
         $used_fieldsets = array();
@@ -224,7 +224,7 @@ class ArtifactFieldSetFactory
      *
      * @return array{ArtifactFieldSet} the field set that contain at least one field unused
      */
-    function getAllFieldSetsContainingUnusedFields()
+    public function getAllFieldSetsContainingUnusedFields()
     {
         $fieldsets = $this->ArtifactFieldSets;
         $unused_fieldsets = array();
@@ -258,7 +258,7 @@ class ArtifactFieldSetFactory
      *
      *  @return bool - succeed or failed
      */
-    function createFieldSet($fieldset_name, $description, $rank)
+    public function createFieldSet($fieldset_name, $description, $rank)
     {
 
         global $Language;
@@ -295,7 +295,7 @@ class ArtifactFieldSetFactory
      *  @param int $field_set_id the field set id to delete
      *    @return bool true if the deletion happen without problems, false otherwise
      */
-    function deleteFieldSet($field_set_id)
+    public function deleteFieldSet($field_set_id)
     {
 
         global $Language;
@@ -329,7 +329,7 @@ class ArtifactFieldSetFactory
      *
      *    @return bool true if the deletion happen without problems, false otherwise
      */
-    function deleteFieldSets()
+    public function deleteFieldSets()
     {
      // Delete artifact_field_set records
         $artifact_type = $this->getArtifactType();
@@ -354,7 +354,7 @@ class ArtifactFieldSetFactory
      *
      *    @return    array the mapping array between the old fieldset_id and the new ones array[$source_fieldset_id] = $dest_fieldset_id, or false if the copy goes wrong
      */
-    function copyFieldSets($atid_source, $atid_dest)
+    public function copyFieldSets($atid_source, $atid_dest)
     {
         global $Language;
         // Copy the field_sets

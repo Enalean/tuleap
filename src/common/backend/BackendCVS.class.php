@@ -29,7 +29,7 @@ class BackendCVS extends Backend
      *
      * @return ServiceDao
      */
-    function _getServiceDao()
+    public function _getServiceDao()
     {
         return new ServiceDao(CodendiDataAccess::instance());
     }
@@ -40,7 +40,7 @@ class BackendCVS extends Backend
      *
      * @return bool
      */
-    function useCVSNT()
+    public function useCVSNT()
     {
         if (isset($this->UseCVSNT)) {
             return $this->UseCVSNT;
@@ -60,7 +60,7 @@ class BackendCVS extends Backend
      *
      * @return true is repository already exists, false otherwise
      */
-    function repositoryExists($project)
+    public function repositoryExists($project)
     {
         $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
         $cvs_dir=$GLOBALS['cvs_prefix']."/".$unix_group_name;
@@ -416,7 +416,7 @@ class BackendCVS extends Backend
      *
      * @return bool
      */
-    function CVSWatch($cvs_dir, $unix_group_name, $watch_mode)
+    public function CVSWatch($cvs_dir, $unix_group_name, $watch_mode)
     {
         $sandbox_dir =  $GLOBALS['tmp_dir']."/".$unix_group_name.".cvs_watch_sandbox";
         if (is_dir($sandbox_dir)) {
@@ -441,7 +441,7 @@ class BackendCVS extends Backend
      *
      * @return void
      */
-    function _RcsCheckout($file, &$output = '')
+    public function _RcsCheckout($file, &$output = '')
     {
         $rcode = 0;
         $output = $this->system("co -q -l $file", $rcode);
@@ -455,7 +455,7 @@ class BackendCVS extends Backend
      *
      * @return void
      */
-    function _RcsCommit($file, &$output = '')
+    public function _RcsCommit($file, &$output = '')
     {
         $rcode  = 0;
         $output = $this->system("/usr/bin/rcs -q -l $file; ci -q -m\"Codendi modification\" $file; co -q $file", $rcode);
@@ -665,7 +665,7 @@ class BackendCVS extends Backend
      *
      * @return false if repository or file  or link already exists, true otherwise
      */
-    function isNameAvailable($name)
+    public function isNameAvailable($name)
     {
         $path = $GLOBALS['cvs_prefix']."/".$name;
         return  (!$this->fileExists($path));

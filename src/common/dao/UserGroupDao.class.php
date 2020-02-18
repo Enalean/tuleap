@@ -26,7 +26,7 @@ class UserGroupDao extends DataAccessObject
     * Searches User-Group by UserId
     * @return DataAccessResult
     */
-    function searchByUserId($user_id)
+    public function searchByUserId($user_id)
     {
         $user_id = $this->da->escapeInt($user_id);
         $sql = "SELECT *
@@ -39,7 +39,7 @@ class UserGroupDao extends DataAccessObject
     * Searches User-Group by UserId
     * @return DataAccessResult
     */
-    function searchActiveGroupsByUserId($user_id)
+    public function searchActiveGroupsByUserId($user_id)
     {
         $user_id = $this->da->escapeInt($user_id);
         $sql = "SELECT *
@@ -72,7 +72,7 @@ class UserGroupDao extends DataAccessObject
      * @return int
      *
      */
-    function returnUsersNumberByGroupId($groupId)
+    public function returnUsersNumberByGroupId($groupId)
     {
         $groupId = $this->da->escapeInt($groupId);
         $sql = 'SELECT count(*) as numrows
@@ -89,7 +89,7 @@ class UserGroupDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function returnProjectAdminsByGroupId($groupId)
+    public function returnProjectAdminsByGroupId($groupId)
     {
         $sql = 'SELECT u.email as email  FROM user u
                     JOIN user_group ug
@@ -120,7 +120,7 @@ class UserGroupDao extends DataAccessObject
      *
      * @return bool
      */
-    function removeProjectMembers($groupId)
+    public function removeProjectMembers($groupId)
     {
         $groupId = $this->da->escapeInt($groupId);
         $sql     = "DELETE FROM user_group".

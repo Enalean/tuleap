@@ -78,7 +78,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
      * The new table should be transparent for reviewers, they should not see
      * any difference between the 2 tables.
      */
-    function newTableCopy($srcTable, $dstTable, $userId)
+    public function newTableCopy($srcTable, $dstTable, $userId)
     {
         $dstTable->setOwner($userId);
         return $this->importTable($srcTable, $dstTable, 'copy');
@@ -91,7 +91,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
      * commitment is deleted.
      * It acts like if the table was 'reset' by the admin.
      */
-    function newTableReset($srcTable, $dstTable, $userId)
+    public function newTableReset($srcTable, $dstTable, $userId)
     {
         $dstTable->setOwner($userId);
         $dstTable->setDate(time());
@@ -101,7 +101,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     /**
      * Create a new approval table based on the last active one.
      */
-    function createTable($userId, $import)
+    public function createTable($userId, $import)
     {
         $tableCreated = false;
         if ($import == 'copy' || $import == 'reset' || $import == 'empty') {
@@ -133,7 +133,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
      *
      * @return Docman_ApprovalTable object
      */
-    function getLastTableForItem()
+    public function getLastTableForItem()
     {
         $table = null;
         $dao = $this->_getDao();
@@ -148,7 +148,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     /**
      * Return all the approval table of for the item
      */
-    function getAllApprovalTable()
+    public function getAllApprovalTable()
     {
         $tableArray = array();
         $dao = $this->_getDao();
@@ -161,5 +161,5 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
         return $tableArray;
     }
 
-    abstract function getLastDocumentVersionNumber();
+    abstract public function getLastDocumentVersionNumber();
 }

@@ -38,7 +38,7 @@ class FRSFileFactory
      */
     private $fileforge = ['sudo', __DIR__ . '/../../utils/fileforge.pl'];
 
-    function __construct(?\Psr\Log\LoggerInterface $logger = null)
+    public function __construct(?\Psr\Log\LoggerInterface $logger = null)
     {
         if ($logger === null) {
             $this->logger = new \Psr\Log\NullLogger();
@@ -60,7 +60,7 @@ class FRSFileFactory
     /**
      * @return FRSFile
      */
-    function &getFRSFileFromArray(&$array)
+    public function &getFRSFileFromArray(&$array)
     {
         $frs_file = null;
         $frs_file = new FRSFile($array);
@@ -94,7 +94,7 @@ class FRSFileFactory
      *
      * @param int $release_id the ID of the release the files belong to
      */
-    function &getFRSFilesFromDb($release_id)
+    public function &getFRSFilesFromDb($release_id)
     {
         $_id = (int) $release_id;
         $dao = $this->_getFRSFileDao();
@@ -111,7 +111,7 @@ class FRSFileFactory
         return $files;
     }
 
-    function getFRSFileInfoListFromDb($group_id, $file_id)
+    public function getFRSFileInfoListFromDb($group_id, $file_id)
     {
         $_group_id = (int) $group_id;
         $_file_id = (int) $file_id;
@@ -135,7 +135,7 @@ class FRSFileFactory
         return $file_info;
     }
 
-    function getFRSFileInfoListByReleaseFromDb($release_id)
+    public function getFRSFileInfoListByReleaseFromDb($release_id)
     {
         $_release_id = (int) $release_id;
         $dao = $this->_getFRSFileDao();
@@ -158,7 +158,7 @@ class FRSFileFactory
         return $file_info;
     }
 
-    function isFileNameExist($file_name, $group_id)
+    public function isFileNameExist($file_name, $group_id)
     {
         $_id = (int) $group_id;
         $dao = $this->_getFRSFileDao();
@@ -207,7 +207,7 @@ class FRSFileFactory
 
     public $dao;
 
-    function &_getFRSFileDao()
+    public function &_getFRSFileDao()
     {
         if (!$this->dao) {
             $this->dao = new FRSFileDao(CodendiDataAccess::instance());
@@ -260,7 +260,7 @@ class FRSFileFactory
     }
 
 
-    function create($data_array)
+    public function create($data_array)
     {
         $dao = $this->_getFRSFileDao();
         if ($id = $dao->createFromArray($data_array)) {
@@ -356,7 +356,7 @@ class FRSFileFactory
      *
      * @return array of string : the names of the files present in the incoming directory
      */
-    function getUploadedFileNames(Project $project)
+    public function getUploadedFileNames(Project $project)
     {
         $uploaded_file_names = array();
         //iterate and show the files in the upload directory
@@ -387,7 +387,7 @@ class FRSFileFactory
      *
      * @return string the created filename
      */
-    function getResolvedFileName($file_name)
+    public function getResolvedFileName($file_name)
     {
         $resolvedName = $file_name."_".$_SERVER['REQUEST_TIME'];
         return $resolvedName;
@@ -458,7 +458,7 @@ class FRSFileFactory
      * @param int $release_id the ID of the release the file belongs to
      * @return string the sub-directory (wihtout any /) where to upload the file
      */
-    function getUploadSubDirectory(FRSRelease $release)
+    public function getUploadSubDirectory(FRSRelease $release)
     {
         return 'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
     }
@@ -468,7 +468,7 @@ class FRSFileFactory
      *
      * @return Object{FRSReleaseFactory} a FRSReleaseFactory Object.
      */
-    function _getFRSReleaseFactory()
+    public function _getFRSReleaseFactory()
     {
         if (empty($this->release_factory)) {
             $this->release_factory = new FRSReleaseFactory();
@@ -476,7 +476,7 @@ class FRSFileFactory
         return $this->release_factory;
     }
 
-    function _delete($file_id)
+    public function _delete($file_id)
     {
         $_id = (int) $file_id;
         $file = $this->getFRSFileFromDb($_id);
@@ -519,7 +519,7 @@ class FRSFileFactory
      *
      * @return bool
      */
-    function delete_file($group_id, $file_id)
+    public function delete_file($group_id, $file_id)
     {
         $file = $this->getFRSFileFromDb($file_id, $group_id);
         if ($file) {
@@ -886,7 +886,7 @@ class FRSFileFactory
      *
      * @return UserManager
      */
-    function _getUserManager()
+    public function _getUserManager()
     {
         $um = UserManager::instance();
         return $um;
@@ -897,7 +897,7 @@ class FRSFileFactory
      *
      * @return EventManager
      */
-    function _getEventManager()
+    public function _getEventManager()
     {
         $em = EventManager::instance();
         FRSLog::instance();
@@ -909,7 +909,7 @@ class FRSFileFactory
      *
      * @return SystemEventManager
      */
-    function _getSystemEventManager()
+    public function _getSystemEventManager()
     {
         return SystemEventManager::instance();
     }
@@ -919,7 +919,7 @@ class FRSFileFactory
      *
      * @return ProjectManager
      */
-    function _getProjectManager()
+    public function _getProjectManager()
     {
         return ProjectManager::instance();
     }
@@ -931,7 +931,7 @@ class FRSFileFactory
      *
      * @return bool
      */
-    function restoreFile($file, $backend)
+    public function restoreFile($file, $backend)
     {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
         $dao = $this->_getFRSFileDao();
@@ -1029,7 +1029,7 @@ class FRSFileFactory
      *
      * @return bool
      */
-    function compareMd5Checksums($computedMd5, $referenceMd5)
+    public function compareMd5Checksums($computedMd5, $referenceMd5)
     {
         return($computedMd5 == '' || $referenceMd5 == '' || strcasecmp($computedMd5, $referenceMd5) == 0);
     }

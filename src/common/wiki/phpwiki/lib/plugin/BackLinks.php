@@ -25,17 +25,17 @@ require_once('lib/PageList.php');
 
 class WikiPlugin_BackLinks extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("BackLinks");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return sprintf(_("List all pages which link to %s."), '[pagename]');
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -44,7 +44,7 @@ class WikiPlugin_BackLinks extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -59,7 +59,7 @@ class WikiPlugin_BackLinks extends WikiPlugin
     // info=mtime,hits,summary,version,author,locked,minor
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
     // NEW: info=count : number of links
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);
@@ -162,7 +162,7 @@ class WikiPlugin_BackLinks extends WikiPlugin
 // how many links from this backLink to other pages
 class _PageList_Column_BackLinks_count extends _PageList_Column
 {
-    function _getValue($page, &$revision_handle)
+    public function _getValue($page, &$revision_handle)
     {
         $iter = $page->getPageLinks();
         $count = $iter->count();

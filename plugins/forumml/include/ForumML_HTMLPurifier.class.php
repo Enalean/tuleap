@@ -59,7 +59,7 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
      * No basic HTML markups, no forms, no javascript
      * Allow urls, auto-magic links, <blockquote> and CSS styles
      */
-    function getForumMLConfig()
+    public function getForumMLConfig()
     {
 
         $config = $this->getCodendiConfig();
@@ -73,7 +73,7 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
     /**
      * HTML Purifier configuration factory
      */
-    function getHPConfig($level)
+    public function getHPConfig($level)
     {
         $config = null;
         switch ($level) {
@@ -90,7 +90,7 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
     /**
     * Perform HTML purification depending of level purification required and create links.
     */
-    function purify($html, $level = 0, $groupId = 0)
+    public function purify($html, $level = 0, $groupId = 0)
     {
         $clean = '';
         switch ($level) {

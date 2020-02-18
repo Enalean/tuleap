@@ -26,13 +26,13 @@ class Docman_FilterFactory
     public $dynTextFields;
     public $groupId;
 
-    function __construct($groupId)
+    public function __construct($groupId)
     {
         $this->dynTextFields = array();
         $this->groupId = $groupId;
     }
 
-    function addFiltersToReport(&$report)
+    public function addFiltersToReport(&$report)
     {
         $gsMd = $this->getGlobalSearchMetadata();
         $globalSearch = false;
@@ -109,7 +109,7 @@ class Docman_FilterFactory
         }
     }
 
-    function getGlobalSearchMetadata()
+    public function getGlobalSearchMetadata()
     {
         // Special case for a fake metadata: generic text search
         $md = new Docman_Metadata();
@@ -121,7 +121,7 @@ class Docman_FilterFactory
         return $md;
     }
 
-    function getItemTypeSearchMetadata()
+    public function getItemTypeSearchMetadata()
     {
         // Special case for a fake metadata: item type search
         $md = new Docman_ListMetadata();
@@ -152,14 +152,14 @@ class Docman_FilterFactory
      * Fake filter only used to display the global text search as a default
      * option when no filter selected.
      */
-    function getFakeGlobalSearchFilter()
+    public function getFakeGlobalSearchFilter()
     {
         $md = $this->getGlobalSearchMetadata();
         $filter = new Docman_FilterGlobalText($md, '');
         return $filter;
     }
 
-    function getGlobalSearchFilter($request)
+    public function getGlobalSearchFilter($request)
     {
         $md = $this->getGlobalSearchMetadata();
 
@@ -168,7 +168,7 @@ class Docman_FilterFactory
         return $this->_initFilter($filter, $request);
     }
 
-    function getItemTypeSearchFilter($request, $advSearch)
+    public function getItemTypeSearchFilter($request, $advSearch)
     {
         $md = $this->getItemTypeSearchMetadata();
 
@@ -182,13 +182,13 @@ class Docman_FilterFactory
         return $this->_initFilter($filter, $request);
     }
 
-    function createFilterOnMatch($md, $request, $advSearch)
+    public function createFilterOnMatch($md, $request, $advSearch)
     {
         $f = $this->createFromMetadata($md, $advSearch);
         return $this->_initFilter($f, $request);
     }
 
-    function createFromMetadata($md, $advSearch)
+    public function createFromMetadata($md, $advSearch)
     {
         $filter = null;
 
@@ -223,7 +223,7 @@ class Docman_FilterFactory
         return $filter;
     }
 
-    function createItemTypeFilter($md, $advSearch)
+    public function createItemTypeFilter($md, $advSearch)
     {
         if ($advSearch) {
             $f = new Docman_FilterItemTypeAdvanced($md);
@@ -234,7 +234,7 @@ class Docman_FilterFactory
         return $f;
     }
 
-    function _initFilter($filter, $request)
+    public function _initFilter($filter, $request)
     {
         if ($filter !== null) {
             if ($filter->initOnUrlMatch($request)) {
@@ -244,7 +244,7 @@ class Docman_FilterFactory
         return null;
     }
 
-    function createFiltersFromReport($report)
+    public function createFiltersFromReport($report)
     {
         $fi = $report->getFilterIterator();
         while ($fi->valid()) {
@@ -254,7 +254,7 @@ class Docman_FilterFactory
         }
     }
 
-    function createFilter($reportId, $filter)
+    public function createFilter($reportId, $filter)
     {
         $dao = $this->getDao();
 
@@ -276,7 +276,7 @@ class Docman_FilterFactory
     /**
      * Delete all the filters of the given report.
      */
-    function truncateFilters($report)
+    public function truncateFilters($report)
     {
         $dao = $this->getDao();
         return $dao->truncateFilters($report->getId());
@@ -295,7 +295,7 @@ class Docman_FilterFactory
      * and create in the $dstReport all the matching possibilities (either
      * metadata or values).
      */
-    function copy($srcReport, $dstReport, $metadataMapping)
+    public function copy($srcReport, $dstReport, $metadataMapping)
     {
         $this->addFiltersToReport($srcReport);
 
@@ -316,12 +316,12 @@ class Docman_FilterFactory
      *
      * @retunr Docman_FilterFactory
      */
-    function getFilterFactory($groupId)
+    public function getFilterFactory($groupId)
     {
         return new Docman_FilterFactory($groupId);
     }
 
-    function cloneFilter($srcFilter, $dstReport, $metadataMapping)
+    public function cloneFilter($srcFilter, $dstReport, $metadataMapping)
     {
         $dstMdFactory = new Docman_MetadataFactory($dstReport->getGroupId());
 
@@ -367,7 +367,7 @@ class Docman_FilterFactory
         }
     }
 
-    function cloneFilterValues($srcFilter, &$dstFilter, $metadataMapping)
+    public function cloneFilterValues($srcFilter, &$dstFilter, $metadataMapping)
     {
         $dstVal = null;
 
@@ -396,7 +396,7 @@ class Docman_FilterFactory
         }
     }
 
-    function getLoveClonedValue($srcFilter, $value, $metadataMapping)
+    public function getLoveClonedValue($srcFilter, $value, $metadataMapping)
     {
         $dstVal = null;
 
@@ -409,7 +409,7 @@ class Docman_FilterFactory
         return $dstVal;
     }
 
-    function &getDao()
+    public function &getDao()
     {
         $dao = new Docman_FilterDao(CodendiDataAccess::instance());
         return $dao;

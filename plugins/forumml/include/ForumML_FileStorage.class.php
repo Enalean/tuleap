@@ -38,7 +38,7 @@ class ForumML_FileStorage
      *
      * @param root: The ForumML attachments directory
      */
-    function __construct($root)
+    public function __construct($root)
     {
         $this->root = $root;
     }
@@ -54,7 +54,7 @@ class ForumML_FileStorage
      *
      * @return int size of attached file
      */
-    function store($filename, $content, $list, $date, $encod = "")
+    public function store($filename, $content, $list, $date, $encod = "")
     {
         $path = $this->_getPath($filename, $list, $date, "store");
         $ret = file_put_contents($path, $content);
@@ -97,7 +97,7 @@ class ForumML_FileStorage
      *
      * @return string path
      */
-    function _getPath($name, $list, $date, $type)
+    public function _getPath($name, $list, $date, $type)
     {
         $name = trim($name);
 
@@ -139,7 +139,7 @@ class ForumML_FileStorage
         return $path.$name.$ext;
     }
 
-    function fileExists($path)
+    public function fileExists($path)
     {
         return is_file($path);
     }

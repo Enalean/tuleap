@@ -31,7 +31,7 @@ class IconPlot
     private $iImgString='';
 
 
-    function __construct($aFile = "", $aX = 0, $aY = 0, $aScale = 1.0, $aMix = 100)
+    public function __construct($aFile = "", $aX = 0, $aY = 0, $aScale = 1.0, $aMix = 100)
     {
         $this->iFile = $aFile;
         $this->iX=$aX;
@@ -43,7 +43,7 @@ class IconPlot
         $this->iMix = $aMix ;
     }
 
-    function SetCountryFlag($aFlag, $aX = 0, $aY = 0, $aScale = 1.0, $aMix = 100, $aStdSize = 3)
+    public function SetCountryFlag($aFlag, $aX = 0, $aY = 0, $aScale = 1.0, $aMix = 100, $aStdSize = 3)
     {
         $this->iCountryFlag = $aFlag;
         $this->iX=$aX;
@@ -56,29 +56,29 @@ class IconPlot
         $this->iCountryStdSize = $aStdSize;
     }
 
-    function SetPos($aX, $aY)
+    public function SetPos($aX, $aY)
     {
         $this->iX=$aX;
         $this->iY=$aY;
     }
 
-    function CreateFromString($aStr)
+    public function CreateFromString($aStr)
     {
         $this->iImgString = $aStr;
     }
 
-    function SetScalePos($aX, $aY)
+    public function SetScalePos($aX, $aY)
     {
         $this->iScalePosX = $aX;
         $this->iScalePosY = $aY;
     }
 
-    function SetScale($aScale)
+    public function SetScale($aScale)
     {
         $this->iScale = $aScale;
     }
 
-    function SetMix($aMix)
+    public function SetMix($aMix)
     {
         if ($aMix < 0 || $aMix > 100) {
             JpGraphError::RaiseL(8001);//('Mix value for icon must be between 0 and 100.');
@@ -86,7 +86,7 @@ class IconPlot
         $this->iMix = $aMix ;
     }
 
-    function SetAnchor($aXAnchor = 'left', $aYAnchor = 'center')
+    public function SetAnchor($aXAnchor = 'left', $aYAnchor = 'center')
     {
         if (!in_array($aXAnchor, $this->iAnchors) ||
         !in_array($aYAnchor, $this->iAnchors)) {
@@ -96,17 +96,17 @@ class IconPlot
         $this->iVertAnchor=$aYAnchor;
     }
 
-    function PreStrokeAdjust($aGraph)
+    public function PreStrokeAdjust($aGraph)
     {
         // Nothing to do ...
     }
 
-    function DoLegend($aGraph)
+    public function DoLegend($aGraph)
     {
         // Nothing to do ...
     }
 
-    function Max()
+    public function Max()
     {
         return array(false,false);
     }
@@ -115,40 +115,40 @@ class IconPlot
     // The next four function are framework function tht gets called
     // from Gantt and is not menaiungfull in the context of Icons but
     // they must be implemented to avoid errors.
-    function GetMaxDate()
+    public function GetMaxDate()
     {
         return false;
     }
-    function GetMinDate()
+    public function GetMinDate()
     {
         return false;
     }
-    function GetLineNbr()
+    public function GetLineNbr()
     {
         return 0;
     }
-    function GetAbsHeight()
+    public function GetAbsHeight()
     {
         return 0;
     }
 
 
-    function Min()
+    public function Min()
     {
         return array(false,false);
     }
 
-    function StrokeMargin(&$aImg)
+    public function StrokeMargin(&$aImg)
     {
         return true;
     }
 
-    function Stroke($aImg, $axscale = null, $ayscale = null)
+    public function Stroke($aImg, $axscale = null, $ayscale = null)
     {
         $this->StrokeWithScale($aImg, $axscale, $ayscale);
     }
 
-    function StrokeWithScale($aImg, $axscale, $ayscale)
+    public function StrokeWithScale($aImg, $axscale, $ayscale)
     {
         if ($this->iScalePosX === null || $this->iScalePosY === null ||
             $axscale === null || $ayscale === null) {
@@ -162,13 +162,13 @@ class IconPlot
         }
     }
 
-    function GetWidthHeight()
+    public function GetWidthHeight()
     {
         $dummy=0;
         return $this->_Stroke($dummy, null, null, true);
     }
 
-    function _Stroke($aImg, $x = null, $y = null, $aReturnWidthHeight = false)
+    public function _Stroke($aImg, $x = null, $y = null, $aReturnWidthHeight = false)
     {
         if ($this->iFile != '' && $this->iCountryFlag != '') {
             JpGraphError::RaiseL(8003);//('It is not possible to specify both an image file and a country flag for the same icon.');

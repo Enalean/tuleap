@@ -25,19 +25,19 @@ class URL
     /**
     * @see http://www.ietf.org/rfc/rfc2396.txt Annex B
     */
-    /* static */ function parse($url)
+    /* static */ public function parse($url)
     {
         $components = array();
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
         return $components;
     }
-    /* static */ function getHost($url)
+    /* static */ public function getHost($url)
     {
         $components = URL::parse($url);
         return $components[4];
     }
 
-    static function getScheme($url)
+    public static function getScheme($url)
     {
         $components = URL::parse($url);
         return $components[2];
@@ -49,7 +49,7 @@ class URL
      *
      * @return String
      */
-    function getGroupNameFromSVNUrl($uri)
+    public function getGroupNameFromSVNUrl($uri)
     {
         $pieces = explode('&', $uri);
         foreach ($pieces as $piece) {
@@ -68,7 +68,7 @@ class URL
     /**
      * Wrapper for Rule_ProjectName
      */
-    function getProjectNameRule()
+    public function getProjectNameRule()
     {
         return new Rule_ProjectName();
     }
@@ -165,22 +165,22 @@ class URL
         return $group_id['group_id'];
     }
 
-    function getProjectDao()
+    public function getProjectDao()
     {
         return new ProjectDao(CodendiDataAccess::instance());
     }
 
-    function getForumDao()
+    public function getForumDao()
     {
         return new ForumDao(CodendiDataAccess::instance());
     }
 
-    function getNewsBytesDao()
+    public function getNewsBytesDao()
     {
         return new NewsBytesDao(CodendiDataAccess::instance());
     }
 
-    function getArtifactDao()
+    public function getArtifactDao()
     {
         return new ArtifactDao(CodendiDataAccess::instance());
     }

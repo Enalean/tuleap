@@ -55,7 +55,7 @@ class XmlParser
     public $root;
     public $current;
 
-    function __construct($encoding = '')
+    public function __construct($encoding = '')
     {
  //  "ISO-8859-1"
         if ($encoding) {
@@ -81,7 +81,7 @@ class XmlParser
         unset($GLOBALS['xml_parser_root']);
     }
 
-    function __destruct()
+    public function __destruct()
     {
         global $xml_parser_root, $xml_parser_current;
 
@@ -97,7 +97,7 @@ class XmlParser
         unset($xml_parser_current);
     }
 
-    function tag_open($parser, $name, $attrs = '')
+    public function tag_open($parser, $name, $attrs = '')
     {
         $this->_tag = strtolower($name);
         $node = new XmlElement($this->_tag);
@@ -132,13 +132,13 @@ class XmlParser
         }
     }
 
-    function tag_close($parser, $name, $attrs = '')
+    public function tag_close($parser, $name, $attrs = '')
     {
         //$this->parent = $this->current;   // copy!
         //unset($this->current);
     }
 
-    function cdata($parser, $data)
+    public function cdata($parser, $data)
     {
         if (isset($this->current)) {
             $this->current->_content[] = $data;
@@ -151,7 +151,7 @@ class XmlParser
         }
     }
 
-    function parse($content, $is_final = true)
+    public function parse($content, $is_final = true)
     {
         xml_parse($this->_parser, $content, $is_final) or
             trigger_error(
@@ -164,7 +164,7 @@ class XmlParser
             );
     }
 
-    function parse_url($file, $debug = false)
+    public function parse_url($file, $debug = false)
     {
         if (get_cfg_var('allow_url_fopen')) {
             if (!($fp = fopen("$file", "r"))) {

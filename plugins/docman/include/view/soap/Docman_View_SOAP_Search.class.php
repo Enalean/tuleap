@@ -23,7 +23,7 @@
 class Docman_View_SOAP_Search
 {
 
-    function display($params)
+    public function display($params)
     {
         $itemFactory = new Docman_ItemFactory($params['group_id']);
         $nbItemsFound = 0;

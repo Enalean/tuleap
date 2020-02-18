@@ -24,17 +24,17 @@
  */
 class WikiPlugin__GroupInfo extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("DebugGroupInfo");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return sprintf(_("Show Group Information"));
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -43,12 +43,12 @@ class WikiPlugin__GroupInfo extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array();
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);

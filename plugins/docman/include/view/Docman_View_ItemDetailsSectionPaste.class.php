@@ -51,7 +51,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         $this->mode  = $mode;
     }
 
-    function checkMdDifferences(&$mdDiffers)
+    public function checkMdDifferences(&$mdDiffers)
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -79,12 +79,12 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         return $html;
     }
 
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         return $this->item->accept($this);
     }
 
-    function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = array())
     {
         $content = '';
 
@@ -131,37 +131,37 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         return $content;
     }
 
-    function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = array())
     {
         return '';
     }
 
-    function visitWiki($item, $params = array())
+    public function visitWiki($item, $params = array())
     {
         return '';
     }
 
-    function visitLink($item, $params = array())
+    public function visitLink($item, $params = array())
     {
         return '';
     }
 
-    function visitFile($item, $params = array())
+    public function visitFile($item, $params = array())
     {
         return '';
     }
 
-    function visitEmbeddedFile($item, $params = array())
+    public function visitEmbeddedFile($item, $params = array())
     {
         return '';
     }
 
-    function visitEmpty($item, $params = array())
+    public function visitEmpty($item, $params = array())
     {
         return '';
     }
 
-    function &_getDocmanIcons()
+    public function &_getDocmanIcons()
     {
         $icons = new Docman_Icons($this->_controller->getThemePath().'/images/ic/');
         return $icons;

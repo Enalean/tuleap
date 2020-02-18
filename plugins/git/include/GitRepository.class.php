@@ -108,7 +108,7 @@ class GitRepository implements DVCSRepository
      *
      * @return UserManager
      */
-    function _getUserManager()
+    public function _getUserManager()
     {
         return UserManager::instance();
     }
@@ -118,7 +118,7 @@ class GitRepository implements DVCSRepository
      *
      * @return ProjectManager
      */
-    function _getProjectManager()
+    public function _getProjectManager()
     {
         return ProjectManager::instance();
     }

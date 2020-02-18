@@ -220,7 +220,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Update the preferences
      * @return bool true if something has been updated
      */
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
@@ -267,7 +267,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * It's up to the widget to decide if it is relevant.
      * @return bool
      */
-    function isUnique()
+    public function isUnique()
     {
         return false;
     }
@@ -277,7 +277,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Here are some exemple of categories used by Codendi: forum, frs, scm, trackers + plugin's ones
      * @return string
      */
-    function getCategory()
+    public function getCategory()
     {
         return dgettext('tuleap-docman', 'Document manager');
     }
@@ -309,7 +309,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return '';
     }
 
-    function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = array())
     {
         // do nothing
         return '';
@@ -368,7 +368,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return '';
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('plugin_docman', 'widget_description_embedded');
     }

@@ -209,7 +209,7 @@ class Tracker_FormElementFactory
      * @param int $form_element_id the id of the formElement to retrieve
      * @return Tracker_FormElement_Field
      */
-    function getFormElementById($form_element_id)
+    public function getFormElementById($form_element_id)
     {
         if (!array_key_exists($form_element_id, $this->formElements)) {
             if ($form_element_id && ($row = $this->getDao()->searchById($form_element_id)->getRow())) {
@@ -262,7 +262,7 @@ class Tracker_FormElementFactory
      *
      * @return Tracker_FormElement_Field
      */
-    function getFormElementByName($tracker_id, $name)
+    public function getFormElementByName($tracker_id, $name)
     {
         if (!isset($this->formElements_by_name[$tracker_id][$name])) {
             if ($row = $this->getDao()->searchByTrackerIdAndName($tracker_id, $name)->getRow()) {
@@ -279,7 +279,7 @@ class Tracker_FormElementFactory
      * @param int $id the id of the formElement to retrieve
      * @return Tracker_FormElement_Field
      */
-    function getUsedFormElementById($id)
+    public function getUsedFormElementById($id)
     {
         if (!isset($this->used_formElements[$id])) {
             $this->used_formElements[$id] = null;
@@ -299,7 +299,7 @@ class Tracker_FormElementFactory
      *
      * @return null|Tracker_FormElement_Field or null if not found
      */
-    function getUsedFieldByName($tracker_id, $name)
+    public function getUsedFieldByName($tracker_id, $name)
     {
         if (!isset($this->used_formElements_by_name[$tracker_id]) || !array_key_exists($name, $this->used_formElements_by_name[$tracker_id])) {
             if ($tracker_id && $name && ($row = $this->getDao()->searchUsedByTrackerIdAndName($tracker_id, $name)->getRow())) {

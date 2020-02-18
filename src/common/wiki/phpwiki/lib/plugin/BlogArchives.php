@@ -20,17 +20,17 @@ require_once('lib/plugin/WikiBlog.php');
  */
 class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
 {
-    function getName()
+    public function getName()
     {
         return _("Archives");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("List blog months links for the current or ADMIN user");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -39,7 +39,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return //array_merge
                //(
@@ -52,7 +52,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
                    );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         if (is_array($argstr)) { // can do with array also.
             $args = $argstr;
@@ -153,7 +153,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
     }
 
     // box is used to display a fixed-width, narrow version with common header
-    function box($args = false, $request = false, $basepage = false)
+    public function box($args = false, $request = false, $basepage = false)
     {
         if (!$request) {
             $request = $GLOBALS['request'];

@@ -78,7 +78,7 @@ class SearchEngines
      * @returns array engine, engine_url, query
      * @public
      */
-    function parseSearchQuery($url)
+    public function parseSearchQuery($url)
     {
         // test local referrers
         if (DEBUG) {

@@ -108,7 +108,7 @@ class WikiViews extends Views
   /**
    * WikiView - Constructor
    */
-    function WikiView(&$controler, $id = 0, $view = null)
+    public function WikiView(&$controler, $id = 0, $view = null)
     {
         parent::view($controler, $view);
 
@@ -131,7 +131,7 @@ class WikiViews extends Views
   /**
    * displayMenu - Public pure virtual
    */
-    function displayMenu()
+    public function displayMenu()
     {
     }
 
@@ -140,7 +140,7 @@ class WikiViews extends Views
    *
    * Display Wiki Service header
    */
-    function header()
+    public function header()
     {
         $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki-codendi.css';
         $this->html_params['service_name'] = 'wiki';
@@ -152,7 +152,7 @@ class WikiViews extends Views
     /**
     * pagePerms - public View
     */
-    function _pagePerms($postUrl = '')
+    public function _pagePerms($postUrl = '')
     {
         $wp = new WikiPage($_REQUEST['id']);
         $pagename = $wp->getPagename();

@@ -25,7 +25,7 @@ class FRSPackageDao extends DataAccessObject
 
     public $STATUS_DELETED;
 
-    function __construct($da, $status_deleted)
+    public function __construct($da, $status_deleted)
     {
         parent::__construct($da);
         $this->table_name = 'frs_package';
@@ -37,20 +37,20 @@ class FRSPackageDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchById($id, $extraFlags = 0)
+    public function searchById($id, $extraFlags = 0)
     {
         $_id = (int) $id;
         return $this->_search(' p.package_id = '.$this->da->escapeInt($_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
     }
 
-    function searchInGroupById($id, $group_id, $extraFlags = 0)
+    public function searchInGroupById($id, $group_id, $extraFlags = 0)
     {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
         return $this->_search(' p.package_id = '.$this->da->escapeInt($_id).' AND p.group_id = '.$this->da->escapeInt($_group_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
     }
 
-    function searchByFileId($file_id)
+    public function searchByFileId($file_id)
     {
         $_file_id = (int) $file_id;
         return $this->_search(
@@ -61,7 +61,7 @@ class FRSPackageDao extends DataAccessObject
         );
     }
 
-    function searchInGroupByReleaseId($id, $group_id)
+    public function searchInGroupByReleaseId($id, $group_id)
     {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
@@ -73,7 +73,7 @@ class FRSPackageDao extends DataAccessObject
         );
     }
 
-    function searchByIdList($idList)
+    public function searchByIdList($idList)
     {
         if (is_array($idList) && count($idList) > 0) {
             $sql_where = sprintf(' p.package_id IN (%s)', implode(', ', $idList));
@@ -86,7 +86,7 @@ class FRSPackageDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchByGroupId($id)
+    public function searchByGroupId($id)
     {
         $_id = (int) $id;
         return $this->_search(' p.group_id = '.$this->da->escapeInt($_id), '', ' ORDER BY rank ASC ');
@@ -117,7 +117,7 @@ class FRSPackageDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function _search($where, $group = '', $order = '', $from = array(), $extraFlags = 0)
+    public function _search($where, $group = '', $order = '', $from = array(), $extraFlags = 0)
     {
         if ($from === null) {
             $from = [];
@@ -137,7 +137,7 @@ class FRSPackageDao extends DataAccessObject
     }
 
 
-    function searchPackageByName($package_name, $group_id)
+    public function searchPackageByName($package_name, $group_id)
     {
         $_group_id = (int) $group_id;
         return $this->_search(' group_id='.$this->da->escapeInt($_group_id).' AND name='.$this->da->quoteSmart(htmlspecialchars($package_name)), '', '');
@@ -149,7 +149,7 @@ class FRSPackageDao extends DataAccessObject
      *
      * @return true or id(auto_increment) if there is no error
      */
-    function create(
+    public function create(
         $group_id = null,
         $name = null,
         $status_id = null,
@@ -191,7 +191,7 @@ class FRSPackageDao extends DataAccessObject
         return $this->_createAndReturnId($sql);
     }
 
-    function createFromArray($data_array)
+    public function createFromArray($data_array)
     {
         $arg    = array();
         $values = array();
@@ -215,7 +215,7 @@ class FRSPackageDao extends DataAccessObject
         }
     }
 
-    function _createAndReturnId($sql)
+    public function _createAndReturnId($sql)
     {
         return $this->updateAndGetLastId($sql);
     }
@@ -224,7 +224,7 @@ class FRSPackageDao extends DataAccessObject
      *
      * @return true if there is no error
      */
-    function updateById(
+    public function updateById(
         $package_id,
         $group_id,
         $name = null,
@@ -263,7 +263,7 @@ class FRSPackageDao extends DataAccessObject
         return $inserted;
     }
 
-    function updateFromArray($data_array)
+    public function updateFromArray($data_array)
     {
         $updated = false;
         $id = false;
@@ -300,7 +300,7 @@ class FRSPackageDao extends DataAccessObject
      * @param $package_id int
      * @return true if there is no error
      */
-    function delete($package_id, $status_deleted)
+    public function delete($package_id, $status_deleted)
     {
         $sql = sprintf(
             "UPDATE frs_package SET status_id= ".$this->da->escapeInt($status_deleted)." WHERE package_id=%d",

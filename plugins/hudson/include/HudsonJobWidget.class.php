@@ -29,12 +29,12 @@ abstract class HudsonJobWidget extends HudsonWidget
 
     public $job_id;
 
-    function isUnique()
+    public function isUnique()
     {
         return false;
     }
 
-    function create(Codendi_Request $request)
+    public function create(Codendi_Request $request)
     {
         $content_id = false;
         $vId = new Valid_UInt($this->widget_id . '_job_id');
@@ -49,7 +49,7 @@ abstract class HudsonJobWidget extends HudsonWidget
         return $content_id;
     }
 
-    function destroy($id)
+    public function destroy($id)
     {
         $sql = 'DELETE FROM plugin_hudson_widget WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
         db_query($sql);
@@ -115,7 +115,7 @@ abstract class HudsonJobWidget extends HudsonWidget
         return $html;
     }
 
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
         if (!$request->exist('cancel')) {

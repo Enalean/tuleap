@@ -28,7 +28,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
     private $cache_canbedeleted_values = array();
     private $cache_canbehidden_values = array();
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_static_value';

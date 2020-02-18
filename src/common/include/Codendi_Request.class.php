@@ -104,7 +104,7 @@ class Codendi_Request
      * @param string $variable Name of the parameter to get.
      * @param array $array Name of the parameter to get.
      */
-    function _get($variable, $array)
+    public function _get($variable, $array)
     {
         if ($this->_exist($variable, $array)) {
             return $array[$variable];

@@ -21,7 +21,7 @@
 class Tracker_NotificationDao extends DataAccessObject
 {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_notification';

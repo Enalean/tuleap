@@ -20,7 +20,7 @@
 
 class DatabaseForge extends DatabaseMysqli
 {
-    function __construct($params)
+    public function __construct($params)
     {
             global $wgDBtype;
 
@@ -29,7 +29,7 @@ class DatabaseForge extends DatabaseMysqli
             parent::__construct($params);
     }
 
-    function tableName($name, $format = 'quoted')
+    public function tableName($name, $format = 'quoted')
     {
         switch ($name) {
             case 'interwiki':

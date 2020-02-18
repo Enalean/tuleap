@@ -26,7 +26,7 @@
  */
 class Valid_Int extends Valid
 {
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_Int());
         return parent::validate($value);
@@ -38,7 +38,7 @@ class Valid_Int extends Valid
  */
 class Valid_UInt extends Valid_Int
 {
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_GreaterOrEqual(0));
         return parent::validate($value);
@@ -51,7 +51,7 @@ class Valid_UInt extends Valid_Int
 class Valid_Numeric extends Valid
 {
 
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_GreaterOrEqual(0));
         return parent::validate($value);
@@ -63,13 +63,13 @@ class Valid_Numeric extends Valid
  */
 class Valid_GroupId extends Valid
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct('group_id');
         //$this->setErrorMessage($GLOBALS['Language']->getText('include_exit','no_gid_err'));
     }
 
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_Int());
         $this->addRule(new Rule_GreaterThan(0));
@@ -82,12 +82,12 @@ class Valid_GroupId extends Valid
  */
 class Valid_Pv extends Valid
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct('pv');
     }
 
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_WhiteList(array(0,1,2)));
         return parent::validate($value);
@@ -99,7 +99,7 @@ class Valid_Pv extends Valid
  */
 class Valid_Text extends Valid
 {
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_String());
         return parent::validate($value);
@@ -111,7 +111,7 @@ class Valid_Text extends Valid
  */
 class Valid_String extends Valid_Text
 {
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_NoCr());
         return parent::validate($value);
@@ -189,7 +189,7 @@ class Valid_MailtoURI extends Valid_String
  */
 class Valid_Array extends Valid
 {
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_Array());
         return parent::validate($value);
@@ -202,7 +202,7 @@ class Valid_Array extends Valid
  */
 class Valid_WhiteList extends Valid
 {
-    function __construct($key, $whitelist)
+    public function __construct($key, $whitelist)
     {
         parent::__construct($key);
         $this->addRule(new Rule_WhiteList($whitelist));
@@ -216,7 +216,7 @@ class Valid_WhiteList extends Valid
  */
 class Valid_UserNameFormat extends Valid_String
 {
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_String());
         $this->addRule(new Rule_UserName());
@@ -237,7 +237,7 @@ class Valid_GenericUserNameSuffix extends Valid_UserNameFormat
      */
     public const FAKE_PREFIX = 'aaa';
 
-    function validate($value)
+    public function validate($value)
     {
         return parent::validate(self::FAKE_PREFIX.$value);
     }
@@ -264,7 +264,7 @@ class Valid_Email extends Valid_String
 {
     public $separator;
 
-    function __construct($key = null, $separator = null)
+    public function __construct($key = null, $separator = null)
     {
         if (is_string($separator)) {
             $this->separator = $separator;
@@ -274,7 +274,7 @@ class Valid_Email extends Valid_String
         parent::__construct($key);
     }
 
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_Email($this->separator));
         return parent::validate($value);
@@ -292,7 +292,7 @@ class Valid_File extends Valid
      *
      * @param Array One entry of $_FILES
      */
-    function isEmptyValue($file)
+    public function isEmptyValue($file)
     {
         if (!is_array($file)) {
             return false;
@@ -310,7 +310,7 @@ class Valid_File extends Valid
      * @param  String Index of file to check in $_FILES array.
      * @return bool
      */
-    function validate($files, $index = '')
+    public function validate($files, $index = '')
     {
         if (is_array($files) && isset($files[$index])) {
             $this->addRule(new Rule_File());

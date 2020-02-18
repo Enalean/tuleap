@@ -220,7 +220,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      *
      * @return string label, the name if the name is not internationalized, or the localized text if so
      */
-    function getLabel()
+    public function getLabel()
     {
         global $Language;
         if ($this->isLabelMustBeLocalized()) {
@@ -296,7 +296,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      *
      * @return int The id.
      */
-    function getID()
+    public function getID()
     {
         return $this->id;
     }

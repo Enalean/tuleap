@@ -44,7 +44,7 @@ class PlotMark
 
     //--------------
     // CONSTRUCTOR
-    function __construct()
+    public function __construct()
     {
         $this->title = new Text();
         $this->title->Hide();
@@ -53,7 +53,7 @@ class PlotMark
     }
     //---------------
     // PUBLIC METHODS
-    function SetType($aType, $aFileName = '', $aScale = 1.0)
+    public function SetType($aType, $aFileName = '', $aScale = 1.0)
     {
         $this->type = $aType;
         if ($aType == MARK_IMG && $aFileName=='') {
@@ -63,48 +63,48 @@ class PlotMark
         $this->iScale = $aScale;
     }
 
-    function SetCallback($aFunc)
+    public function SetCallback($aFunc)
     {
         $this->iFormatCallback = $aFunc;
     }
 
-    function SetCallbackYX($aFunc)
+    public function SetCallbackYX($aFunc)
     {
         $this->iFormatCallback2 = $aFunc;
     }
 
-    function GetType()
+    public function GetType()
     {
         return $this->type;
     }
 
-    function SetColor($aColor)
+    public function SetColor($aColor)
     {
         $this->color=$aColor;
     }
 
-    function SetFillColor($aFillColor)
+    public function SetFillColor($aFillColor)
     {
         $this->fill_color = $aFillColor;
     }
 
-    function SetWeight($aWeight)
+    public function SetWeight($aWeight)
     {
         $this->weight = $aWeight;
     }
 
     // Synonym for SetWidth()
-    function SetSize($aWidth)
+    public function SetSize($aWidth)
     {
         $this->width=$aWidth;
     }
 
-    function SetWidth($aWidth)
+    public function SetWidth($aWidth)
     {
         $this->width=$aWidth;
     }
 
-    function SetDefaultWidth()
+    public function SetDefaultWidth()
     {
         switch ($this->type) {
             case MARK_CIRCLE:
@@ -116,44 +116,44 @@ class PlotMark
         }
     }
 
-    function GetWidth()
+    public function GetWidth()
     {
         return $this->width;
     }
 
-    function Hide($aHide = true)
+    public function Hide($aHide = true)
     {
         $this->show = !$aHide;
     }
 
-    function Show($aShow = true)
+    public function Show($aShow = true)
     {
         $this->show = $aShow;
     }
 
-    function SetCSIMAltVal($aY, $aX = '')
+    public function SetCSIMAltVal($aY, $aX = '')
     {
         $this->yvalue=$aY;
         $this->xvalue=$aX;
     }
 
-    function SetCSIMTarget($aTarget, $aWinTarget = '')
+    public function SetCSIMTarget($aTarget, $aWinTarget = '')
     {
         $this->csimtarget=$aTarget;
         $this->csimwintarget=$aWinTarget;
     }
 
-    function SetCSIMAlt($aAlt)
+    public function SetCSIMAlt($aAlt)
     {
         $this->csimalt=$aAlt;
     }
 
-    function GetCSIMAreas()
+    public function GetCSIMAreas()
     {
         return $this->csimareas;
     }
 
-    function AddCSIMPoly($aPts)
+    public function AddCSIMPoly($aPts)
     {
         $coords = round($aPts[0]).", ".round($aPts[1]);
         $n = count($aPts)/2;
@@ -176,7 +176,7 @@ class PlotMark
         }
     }
 
-    function AddCSIMCircle($x, $y, $r)
+    public function AddCSIMCircle($x, $y, $r)
     {
         $x = round($x);
         $y=round($y);
@@ -197,7 +197,7 @@ class PlotMark
         }
     }
 
-    function Stroke($img, $x, $y)
+    public function Stroke($img, $x, $y)
     {
         if (!$this->show) {
             return;
@@ -522,13 +522,13 @@ class ImgData
     protected $anchor_x=0.5;
     private $anchor_y=0.5 ;    // Where is the center of the image
 
-    function __construct()
+    public function __construct()
     {
         // Empty
     }
 
     // Create a GD image from the data and return a GD handle
-    function GetImg($aMark, $aIdx)
+    public function GetImg($aMark, $aIdx)
     {
         $n = $this->an[$aMark];
         if (is_string($aIdx)) {
@@ -545,7 +545,7 @@ class ImgData
         return Image::CreateFromString(base64_decode($this->{$n}[$idx][1]));
     }
 
-    function GetAnchor()
+    public function GetAnchor()
     {
         return array($this->anchor_x,$this->anchor_y);
     }
@@ -563,7 +563,7 @@ $_gFlagCache=array(
 class FlagCache
 {
 
-    static function GetFlagImgByName($aSize, $aName)
+    public static function GetFlagImgByName($aSize, $aName)
     {
         global $_gFlagCache;
         require_once('jpgraph_flags.php');

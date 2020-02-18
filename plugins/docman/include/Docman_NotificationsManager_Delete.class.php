@@ -27,7 +27,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
     public const MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
     public const MESSAGE_REMOVED      = 'removed'; // X has been removed
 
-    function somethingHappen($event, $params)
+    public function somethingHappen($event, $params)
     {
         //search for users who monitor the item
         if ($event == 'plugin_docman_event_del') {
@@ -35,7 +35,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
             $this->_storeEvents($params['item']->getParentId(), self::MESSAGE_REMOVED_FROM, $params);
         }
     }
-    function sendNotifications($event, $params)
+    public function sendNotifications($event, $params)
     {
         $path = $this->_getDocmanPath();
         foreach ($this->_listeners as $l) {
@@ -118,7 +118,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
             parent::sendNotifications($event, $params);
         }
     }
-    function _getMessageForUser($user, $message_type, $params)
+    public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
         switch ($message_type) {
@@ -169,7 +169,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         return $link;
     }
 
-    function _storeEvents($id, $message_type, $params)
+    public function _storeEvents($id, $message_type, $params)
     {
         $dpm   = $this->_getPermissionsManager();
         $users = $this->notified_people_retriever->getNotifiedUsers($this->project, $id);

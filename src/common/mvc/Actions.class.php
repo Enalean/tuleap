@@ -41,17 +41,17 @@ class Actions
         $this->_controler = $controler;
     }
 
-    function getControler()
+    public function getControler()
     {
         return $this->_controler;
     }
 
-    function check()
+    public function check()
     {
         return true;
     }
 
-    function process($action, $params = array())
+    public function process($action, $params = array())
     {
         if ($this->check()) {
             $this->$action($params);

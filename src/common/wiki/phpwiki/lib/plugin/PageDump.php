@@ -32,16 +32,16 @@ class WikiPlugin_PageDump extends WikiPlugin
 {
     public $MessageId;
 
-    function getName()
+    public function getName()
     {
         return _("PageDump");
     }
-    function getDescription()
+    public function getDescription()
     {
         return _("View a single page dump online.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -50,7 +50,7 @@ class WikiPlugin_PageDump extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('s'    => false,
                      'page' => '[pagename]',
@@ -61,7 +61,7 @@ class WikiPlugin_PageDump extends WikiPlugin
                      'download' => false);
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
         // allow plugin-form
@@ -255,7 +255,7 @@ class WikiPlugin_PageDump extends WikiPlugin
     // function handle_plugin_args_cruft(&$argstr, &$args) {
     // }
 
-    function generateMessageId($mailified)
+    public function generateMessageId($mailified)
     {
         $array = explode("\n", $mailified);
         // Extract lastmodifed from mailified document for Content-Id
@@ -287,7 +287,7 @@ class WikiPlugin_PageDump extends WikiPlugin
             . "@". rawurlencode(SERVER_NAME);
     }
 
-    function fixup_headers(&$mailified)
+    public function fixup_headers(&$mailified)
     {
         $return = explode("\n", $mailified);
 
@@ -304,7 +304,7 @@ class WikiPlugin_PageDump extends WikiPlugin
         $mailified = implode("\n", array_values($return));
     }
 
-    function fixup_headers_forcvs(&$mailified)
+    public function fixup_headers_forcvs(&$mailified)
     {
         $array = explode("\n", $mailified);
 

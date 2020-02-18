@@ -34,7 +34,7 @@ class CrossReferenceFactory
      * Constructor
      * Note that we need a valid reference parameter
      */
-    function __construct($entity_id, $entity_type, $entity_group_id)
+    public function __construct($entity_id, $entity_type, $entity_group_id)
     {
         $this->entity_id=$entity_id;
         $this->entity_type=$entity_type;
@@ -45,7 +45,7 @@ class CrossReferenceFactory
      * Fill the arrays $this->source_refs_datas and $this->target_refs_datas
      * for the current CrossReferenceFactory
      */
-    function fetchDatas()
+    public function fetchDatas()
     {
         $sql = "SELECT *
                 FROM cross_references
@@ -93,22 +93,22 @@ class CrossReferenceFactory
     }
 
     /** Accessors */
-    function getRefSource()
+    public function getRefSource()
     {
         return $this->source_refs_datas;
     }
-    function getRefTarget()
+    public function getRefTarget()
     {
         return $this->target_refs_datas;
     }
 
     /**Display function */
-    function DisplayCrossRefs()
+    public function DisplayCrossRefs()
     {
         echo $this->getHTMLDisplayCrossRefs();
     }
 
-    function getParams($currRef)
+    public function getParams($currRef)
     {
         $params = "?target_id=".$currRef->getRefTargetId();
         $params.= "&target_gid=".$currRef->getRefTargetGid();
@@ -149,7 +149,7 @@ class CrossReferenceFactory
         return $refs;
     }
 
-    function getHTMLDisplayCrossRefs($with_links = true, $condensed = false, $isBrowser = true)
+    public function getHTMLDisplayCrossRefs($with_links = true, $condensed = false, $isBrowser = true)
     {
         global $Language;
 

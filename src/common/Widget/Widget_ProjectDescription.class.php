@@ -62,7 +62,7 @@ class Widget_ProjectDescription extends Widget
         return $html;
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_description', 'description');
     }

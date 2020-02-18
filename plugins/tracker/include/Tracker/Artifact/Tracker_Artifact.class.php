@@ -1508,7 +1508,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param Tracker_Artifact_Changeset $changeset The changeset. if null given take the last changeset of the artifact
      *
      */
-    function getValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_Changeset $changeset = null) : ?Tracker_Artifact_ChangesetValue
+    public function getValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_Changeset $changeset = null) : ?Tracker_Artifact_ChangesetValue
     {
         if (!$changeset) {
             $changeset = $this->getLastChangeset();
@@ -1524,7 +1524,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return int the timestamp for the date this aetifact was created
      */
-    function getSubmittedOn()
+    public function getSubmittedOn()
     {
         return $this->submitted_on;
     }
@@ -1534,7 +1534,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return int the user id
      */
-    function getSubmittedBy()
+    public function getSubmittedBy()
     {
         return $this->submitted_by;
     }

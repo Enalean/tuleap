@@ -40,7 +40,7 @@ class SystemEventDao extends DataAccessObject
      * Create new SystemEvent and store it in the DB
      * @return true if there is no error
      */
-    function store($type, $parameters, $priority, $status, $create_date, $owner)
+    public function store($type, $parameters, $priority, $status, $create_date, $owner)
     {
         $sql = sprintf(
             "INSERT INTO system_event (type, parameters, priority, status, create_date, owner) VALUES (%s, %s, %d, %s, FROM_UNIXTIME(%d), %s)",
@@ -60,7 +60,7 @@ class SystemEventDao extends DataAccessObject
      * @param $sysevent : SystemEvent object
      * @return true if there is no error
      */
-    function close($sysevent)
+    public function close($sysevent)
     {
         $now = time();
         $sql = sprintf(
@@ -82,7 +82,7 @@ class SystemEventDao extends DataAccessObject
      * And set the event status to 'RUNNING'
      * @return DataAccessResult
     */
-    function checkOutNextEvent($owner, $types)
+    public function checkOutNextEvent($owner, $types)
     {
         $owner    = $this->da->quoteSmart($owner);
         $types    = $this->da->quoteSmartImplode(',', $types);

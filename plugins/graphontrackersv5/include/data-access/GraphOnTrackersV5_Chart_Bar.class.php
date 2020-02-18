@@ -149,7 +149,7 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
         return true;
     }
 
-    function userCanVisualize()
+    public function userCanVisualize()
     {
 
         $ff = Tracker_FormElementFactory::instance();

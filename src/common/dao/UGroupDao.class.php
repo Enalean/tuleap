@@ -35,7 +35,7 @@ class UGroupDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchByGroupId($group_id)
+    public function searchByGroupId($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT * 
@@ -51,7 +51,7 @@ class UGroupDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchByUGroupId($ugroup_id)
+    public function searchByUGroupId($ugroup_id)
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * 
@@ -60,7 +60,7 @@ class UGroupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchByListOfUGroupsId(array $ugroup_ids)
+    public function searchByListOfUGroupsId(array $ugroup_ids)
     {
         $ugroup_ids = $this->da->quoteSmartImplode(',', $ugroup_ids);
 
@@ -71,7 +71,7 @@ class UGroupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchDynamicAndStaticByGroupId($group_id)
+    public function searchDynamicAndStaticByGroupId($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT * 
@@ -81,7 +81,7 @@ class UGroupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchStaticByGroupId($group_id)
+    public function searchStaticByGroupId($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT *
@@ -101,7 +101,7 @@ class UGroupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchNameByGroupIdAndUGroupId($project_id, $ugroup_id)
+    public function searchNameByGroupIdAndUGroupId($project_id, $ugroup_id)
     {
         $project_id = $this->da->escapeInt($project_id);
         $ugroup_id  = $this->da->escapeInt($ugroup_id);
@@ -112,7 +112,7 @@ class UGroupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchByGroupIdAndName($group_id, $name)
+    public function searchByGroupIdAndName($group_id, $name)
     {
         $group_id  = $this->da->escapeInt($group_id);
         $name      = $this->da->quoteSmart($name);
@@ -130,7 +130,7 @@ class UGroupDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchGroupByUserId($userId)
+    public function searchGroupByUserId($userId)
     {
         $user_id = $this->da->escapeInt($userId);
         $sql = "SELECT groups.group_id
@@ -212,7 +212,7 @@ class UGroupDao extends DataAccessObject
      *
      * @return bool
      */
-    function checkUGroupValidityByGroupId($groupId, $ugroupId)
+    public function checkUGroupValidityByGroupId($groupId, $ugroupId)
     {
         $groupId = $this->da->escapeInt($groupId);
         $ugroupId = $this->da->escapeInt($ugroupId);
@@ -236,7 +236,7 @@ class UGroupDao extends DataAccessObject
      *
      * @return bool
      */
-    function updateUgroupBinding($ugroupId, $sourceId = null)
+    public function updateUgroupBinding($ugroupId, $sourceId = null)
     {
         $ugroupId = $this->da->escapeInt($ugroupId);
         if (isset($sourceId)) {
@@ -256,7 +256,7 @@ class UGroupDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchUGroupByBindingSource($sourceId)
+    public function searchUGroupByBindingSource($sourceId)
     {
         $ugroupId = $this->da->escapeInt($sourceId);
         $sql      = "SELECT * FROM ugroup WHERE source_id = ".$sourceId;
@@ -285,7 +285,7 @@ class UGroupDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function getUgroupBindingSource($ugroupId)
+    public function getUgroupBindingSource($ugroupId)
     {
         $ugroupId = $this->da->escapeInt($ugroupId);
         $sql      = "SELECT source.*

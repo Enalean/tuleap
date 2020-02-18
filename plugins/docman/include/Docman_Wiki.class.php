@@ -28,17 +28,17 @@ require_once('Docman_Document.class.php');
 class Docman_Wiki extends Docman_Document
 {
 
-    function __construct($data = null)
+    public function __construct($data = null)
     {
         parent::__construct($data);
     }
 
     public $pagename;
-    function getPagename()
+    public function getPagename()
     {
         return $this->pagename;
     }
-    function setPagename($pagename)
+    public function setPagename($pagename)
     {
         $this->pagename = $pagename;
     }
@@ -48,12 +48,12 @@ class Docman_Wiki extends Docman_Document
         return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_wiki');
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         parent::initFromRow($row);
         $this->setPagename($row['wiki_page']);
     }
-    function toRow()
+    public function toRow()
     {
         $row = parent::toRow();
         $row['wiki_page'] = $this->getPagename();

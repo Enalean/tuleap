@@ -24,7 +24,7 @@
 class ProjectLinksPluginDescriptor extends PluginDescriptor
 {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct(
             $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_name'),

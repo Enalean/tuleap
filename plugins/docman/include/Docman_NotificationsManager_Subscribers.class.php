@@ -36,7 +36,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
      *
      * @return void
      */
-    function somethingHappen($event, $params)
+    public function somethingHappen($event, $params)
     {
         $um = $this->_getUserManager();
         $users = new ArrayIterator($params['listeners']);
@@ -62,7 +62,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     *
     * @return void
     */
-    function _buildMessage($event, $params, $user)
+    public function _buildMessage($event, $params, $user)
     {
         $type = '';
         switch ($event) {
@@ -107,7 +107,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     *
     * @return String
     */
-    function _getMessageForUser($user, $message_type, $params)
+    public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
         $separator = "\n\n--------------------------------------------------------------------\n";

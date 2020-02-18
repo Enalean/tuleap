@@ -25,7 +25,7 @@
  */
 class Valid_Widget_Owner extends Valid_String
 {
-    function validate($value)
+    public function validate($value)
     {
         $this->addRule(new Rule_Widget_Owner());
         return parent::validate($value);

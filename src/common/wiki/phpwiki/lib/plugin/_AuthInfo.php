@@ -31,17 +31,17 @@ require_once('lib/Template.php');
  */
 class WikiPlugin__AuthInfo extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("AuthInfo");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Display general and user specific auth information.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -50,12 +50,12 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('userid' => '');
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);
@@ -137,7 +137,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         return $html;
     }
 
-    function _showhash($heading, $hash, $depth = 0)
+    public function _showhash($heading, $hash, $depth = 0)
     {
         static $seen = array();
         static $maxdepth = 0;
@@ -222,7 +222,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         return $rows;
     }
 
-    function _buildConstHash($constants)
+    public function _buildConstHash($constants)
     {
         $hash = array();
         foreach ($constants as $c) {

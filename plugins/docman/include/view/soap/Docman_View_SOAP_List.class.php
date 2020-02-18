@@ -23,7 +23,7 @@
 class Docman_View_SOAP_List
 {
 
-    function display($params)
+    public function display($params)
     {
 
         $result = array();

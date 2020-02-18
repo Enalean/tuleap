@@ -18,17 +18,17 @@ require_once('lib/plugin/WikiBlog.php');
  */
 class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
 {
-    function getName()
+    public function getName()
     {
         return _("BlogJournal");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Include latest blog entries for the current or ADMIN user");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -37,7 +37,7 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('count'    => 7,
                      'user'     => '',
@@ -47,7 +47,7 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         if (is_array($argstr)) { // can do with array also.
             $args = $argstr;

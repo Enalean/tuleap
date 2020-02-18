@@ -26,12 +26,12 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
 {
 
-    function _title($params)
+    public function _title($params)
     {
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_md_details_title', array($this->hp->purify($params['md']->getName()))) .'</h2>';
     }
 
-    function _content($params)
+    public function _content($params)
     {
         $md = $params['md'];
 

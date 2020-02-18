@@ -43,7 +43,7 @@ class ArtifactFactory
      *    @param    object    The ArtifactType object to which this ArtifactFactory is associated.
      *    @return bool success.
      */
-    function __construct(&$ArtifactType)
+    public function __construct(&$ArtifactType)
     {
         global $Language;
 
@@ -67,7 +67,7 @@ class ArtifactFactory
      *
      *    @return    array    The array of Artifact objects.
      */
-    function getMyArtifacts($user_id)
+    public function getMyArtifacts($user_id)
     {
         global $Language;
 
@@ -126,7 +126,7 @@ class ArtifactFactory
      *
      *    @return    array    The array of Artifact objects.
      */
-    function getArtifacts($criteria, $offset, $max_rows, &$total_artifacts)
+    public function getArtifacts($criteria, $offset, $max_rows, &$total_artifacts)
     {
         global $Language, $art_field_fact;
 
@@ -227,7 +227,7 @@ class ArtifactFactory
     }
 
 
-    function getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, &$total_artifacts)
+    public function getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, &$total_artifacts)
     {
         global $ath, $art_field_fact, $Language;
 

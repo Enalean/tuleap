@@ -45,7 +45,7 @@ class XMLNode
     public $_parent_id;
     public $_parent_node;
 
-    function __construct($id = null)
+    public function __construct($id = null)
     {
         $this->_id = isset($id) ? $id : md5(uniqid(rand(), 1));
         $this->_name = '';
@@ -59,14 +59,14 @@ class XMLNode
         $this->_parent_node = null;
     }
 
-    function addChild(&$node)
+    public function addChild(&$node)
     {
         $this->_child_arr[$node->getId()] = $node;
         $node->setParentId($this->_id);
         $node->setParentNode($this);
     }
 
-    function addChildArr(&$node_arr)
+    public function addChildArr(&$node_arr)
     {
         $key_arr = array_keys($node_arr);
         $num_key = count($key_arr);
@@ -77,7 +77,7 @@ class XMLNode
         }
     }
 
-    function insertChildBefore($idx, &$node)
+    public function insertChildBefore($idx, &$node)
     {
         $key_arr = array_keys($this->_child_arr);
         $num_key = count($key_arr);
@@ -92,7 +92,7 @@ class XMLNode
         $this->_child_arr = $tmp_arr;
     }
 
-    function insertChildAfter($idx, &$node)
+    public function insertChildAfter($idx, &$node)
     {
         $key_arr = array_keys($this->_child_arr);
         $num_key = count($key_arr);
@@ -107,82 +107,82 @@ class XMLNode
         $this->_child_arr = $tmp_arr;
     }
 
-    function setId($id)
+    public function setId($id)
     {
         $this->_id = $id;
     }
 
-    function setName($name)
+    public function setName($name)
     {
         $this->_name = $name;
     }
 
-    function setNamepace($nmspc)
+    public function setNamepace($nmspc)
     {
         $this->_nmspc = $nmspc;
     }
 
-    function setNamespaceAlias($nmspc_alias)
+    public function setNamespaceAlias($nmspc_alias)
     {
         $this->_nmspc_alias = $nmspc_alias;
     }
 
-    function setContent($content)
+    public function setContent($content)
     {
         $this->_content = $content;
     }
 
-    function setEmptyElem($mt_elem_flg)
+    public function setEmptyElem($mt_elem_flg)
     {
         $this->_mt_elem_flg = $mt_elem_flg;
     }
 
-    function setAttr($attr_nm, $attr_val)
+    public function setAttr($attr_nm, $attr_val)
     {
         $this->_attr_arr[$attr_nm] = $attr_val;
     }
 
-    function setAttrArr($attr_arr)
+    public function setAttrArr($attr_arr)
     {
         $this->_attr_arr = $attr_arr;
     }
 
-    function setParentId($id)
+    public function setParentId($id)
     {
         $this->_parent_id = $id;
     }
 
-    function setParentNode(&$node)
+    public function setParentNode(&$node)
     {
         $this->_parent_node = $node;
     }
 
-    function getId()
+    public function getId()
     {
         return($this->_id);
     }
 
-    function getName()
+    public function getName()
     {
         return($this->_name);
     }
 
-    function getNamespace()
+    public function getNamespace()
     {
         return($this->_nmspc);
     }
 
-    function getNamespaceAlias()
+    public function getNamespaceAlias()
     {
         return($this->_nmspc_alias);
     }
 
-    function getContent()
+    public function getContent()
     {
         return($this->_content);
     }
 
-    function getAttr($attr_nm)
+    public function getAttr($attr_nm)
     {
         if (isset($this->_attr_arr[$attr_nm])) {
             return($this->_attr_arr[$attr_nm]);
@@ -191,22 +191,22 @@ class XMLNode
         }
     }
 
-    function getAttrArr()
+    public function getAttrArr()
     {
         return($this->_attr_arr);
     }
 
-    function getParentId()
+    public function getParentId()
     {
         return($this->parent_id);
     }
 
-    function getParentNode()
+    public function getParentNode()
     {
         return($this->_parent_node);
     }
 
-    function getChild($id)
+    public function getChild($id)
     {
         if (isset($this->_child_arr[$id])) {
             return($this->_child_arr[$id]);
@@ -215,7 +215,7 @@ class XMLNode
         }
     }
 
-    function getFirstChild()
+    public function getFirstChild()
     {
         $id_arr = array_keys($this->_child_arr);
         $num_child = count($id_arr);
@@ -227,7 +227,7 @@ class XMLNode
         }
     }
 
-    function getLastChild()
+    public function getLastChild()
     {
         $id_arr = array_keys($this->_child_arr);
         $num_child = count($id_arr);
@@ -239,7 +239,7 @@ class XMLNode
         }
     }
 
-    function getChildByIdx($idx)
+    public function getChildByIdx($idx)
     {
         $id_arr = array_keys($this->_child_arr);
 
@@ -250,35 +250,35 @@ class XMLNode
         }
     }
 
-    function getNumChild()
+    public function getNumChild()
     {
         return(count($this->_child_arr));
     }
 
-    function removeChild($id)
+    public function removeChild($id)
     {
         unset($this->_child_arr[$id]);
     }
 
-    function removeChildByIdx($idx)
+    public function removeChildByIdx($idx)
     {
         $key_arr = array_keys($this->_child_arr);
         unset($this->_child_arr[$key_arr[$idx]]);
     }
 
-    function removeFirstChild()
+    public function removeFirstChild()
     {
         $key_arr = array_keys($this->_child_arr);
         unset($this->_child_arr[$key_arr[0]]);
     }
 
-    function removeLastChild()
+    public function removeLastChild()
     {
         $key_arr = array_keys($this->_child_arr);
         unset($this->_child_arr[$key_arr[count($key_arr)-1]]);
     }
 
-    function dumpXML($indent_str = "\t")
+    public function dumpXML($indent_str = "\t")
     {
         $attr_txt = $this->_dumpAttr();
         $name = $this->_dumpName();
@@ -307,7 +307,7 @@ class XMLNode
         }
     }
 
-    function _dumpAttr()
+    public function _dumpAttr()
     {
         $id_arr = array_keys($this->_attr_arr);
         $id_arr_cnt = count($id_arr);
@@ -321,7 +321,7 @@ class XMLNode
         return($attr_txt);
     }
 
-    function _dumpName()
+    public function _dumpName()
     {
         $alias = $this->getNamespaceAlias();
         if ($alias == '') {
@@ -331,7 +331,7 @@ class XMLNode
         }
     }
 
-    function _dumpXmlns()
+    public function _dumpXmlns()
     {
         $nmspc = $this->getNamespace();
         $alias = $this->getNamespaceAlias();
@@ -347,7 +347,7 @@ class XMLNode
         }
     }
 
-    function _getCurrentLevel()
+    public function _getCurrentLevel()
     {
         if ($this->_parent_id === false) {
             return(0);
@@ -362,12 +362,12 @@ class XMLNode
 
 class MathMLNode extends XMLNode
 {
-    function __construct($id = null)
+    public function __construct($id = null)
     {
         parent::__construct($id);
     }
 
-    function removeBrackets()
+    public function removeBrackets()
     {
         if ($this->_name == 'mrow') {
             if ($c_node_0 = $this->getFirstChild()) {
@@ -380,7 +380,7 @@ class MathMLNode extends XMLNode
         }
     }
 
-    function isLeftBracket()
+    public function isLeftBracket()
     {
         switch ($this->_content) {
             case '{':
@@ -392,7 +392,7 @@ class MathMLNode extends XMLNode
         return(false);
     }
 
-    function isRightBracket()
+    public function isRightBracket()
     {
         switch ($this->_content) {
             case '}':
@@ -414,7 +414,7 @@ class ASCIIMathPHP
     public $_node_arr;
     public $_node_cntr;
 
-    function __construct($symbol_arr, $expr = null)
+    public function __construct($symbol_arr, $expr = null)
     {
         $this->_symbol_arr = $symbol_arr;
         if (isset($expr)) {
@@ -422,7 +422,7 @@ class ASCIIMathPHP
         }
     }
 
-    function setExpr($expr)
+    public function setExpr($expr)
     {
         $this->_expr = $expr;
         $this->_curr_expr = $expr;
@@ -432,7 +432,7 @@ class ASCIIMathPHP
         $this->_node_cntr = 0;
     }
 
-    function genMathML($attr_arr = null)
+    public function genMathML($attr_arr = null)
     {
      // <math> node
         $node_0 = $this->createNode();
@@ -457,7 +457,7 @@ class ASCIIMathPHP
         return(true);
     }
 
-    function parseExpr()
+    public function parseExpr()
     {
      // Child/Fragment array
         $node_arr = array();
@@ -707,7 +707,7 @@ class ASCIIMathPHP
         return($node_arr);
     }
 
-    function parseSmplExpr()
+    public function parseSmplExpr()
     {
         $sym = $this->getSymbol();
 
@@ -875,28 +875,28 @@ class ASCIIMathPHP
         return(false);
     }
 
-    function getMathML()
+    public function getMathML()
     {
         $root = $this->_node_arr[0];
         return($root->dumpXML());
     }
 
-    function getCurrExpr()
+    public function getCurrExpr()
     {
         return($this->_curr_expr);
     }
 
-    function getExpr()
+    public function getExpr()
     {
         return($this->_expr);
     }
 
-    function getPrevExpr()
+    public function getPrevExpr()
     {
         return($this->_prev_expr);
     }
 
-    function createNode()
+    public function createNode()
     {
         $node = new MathMLNode($this->_node_cntr);
      // $node->setNamespaceAlias('m');
@@ -905,7 +905,7 @@ class ASCIIMathPHP
         return($node);
     }
 
-    function getSymbol($chop_flg = false)
+    public function getSymbol($chop_flg = false)
     {
         $chr_cnt = strlen($this->_curr_expr);
 
@@ -954,7 +954,7 @@ class ASCIIMathPHP
         }
     }
 
-    function chopExpr($strlen)
+    public function chopExpr($strlen)
     {
         $this->_prev_expr = $this->_curr_expr;
 

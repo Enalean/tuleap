@@ -149,7 +149,7 @@ class Git_Widget_UserPushes extends Widget
      *
      * @return String
      */
-    function getCategory()
+    public function getCategory()
     {
         return _('Source code management');
     }
@@ -159,7 +159,7 @@ class Git_Widget_UserPushes extends Widget
      *
      * @return String
      */
-    function getDescription()
+    public function getDescription()
     {
         return dgettext('tuleap-git', 'Display last Git pushes performed by the user');
     }
@@ -169,7 +169,7 @@ class Git_Widget_UserPushes extends Widget
      *
      * @return bool
      */
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');

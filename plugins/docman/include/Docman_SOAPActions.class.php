@@ -27,7 +27,7 @@ class Docman_SOAPActions extends Docman_Actions
     /**
      * Append a chunk of data to a file
      */
-    function appendFileChunk()
+    public function appendFileChunk()
     {
         $request = $this->_controler->request;
 
@@ -68,7 +68,7 @@ class Docman_SOAPActions extends Docman_Actions
     /**
      * Returns the MD5 checksum of a file (last version)
      */
-    function getFileMD5sum()
+    public function getFileMD5sum()
     {
         $request = $this->_controler->request;
 
@@ -124,7 +124,7 @@ class Docman_SOAPActions extends Docman_Actions
     /**
      * Returns the (used) metadata of the given project
      */
-    function getProjectMetadata()
+    public function getProjectMetadata()
     {
         $request = $this->_controler->request;
         $groupId = $request->get('group_id');
@@ -136,7 +136,7 @@ class Docman_SOAPActions extends Docman_Actions
     /**
      * Returns the list of values for the given list metadata.
      */
-    function getMetadataListOfValues()
+    public function getMetadataListOfValues()
     {
         $request = $this->_controler->request;
         $groupId = $request->get('group_id');
@@ -161,7 +161,7 @@ class Docman_SOAPActions extends Docman_Actions
      * Returns the list of items contained in the arborescence of the given folder
      * The items are summarized by the following attributes: id, parent_id, title, type, update_date, nb_versions
      */
-    function getTreeInfo()
+    public function getTreeInfo()
     {
         $request = $this->_controler->request;
         $groupId = $request->get('group_id');
@@ -214,7 +214,7 @@ class Docman_SOAPActions extends Docman_Actions
     /**
      * Returns the content of an item (and if defined its version) base64 encoded.
      */
-    function getFileContents()
+    public function getFileContents()
     {
         $request = $this->_controler->request;
 
@@ -252,7 +252,7 @@ class Docman_SOAPActions extends Docman_Actions
      *  Returns a part (chunk) of the content, encoded in base64, of the file/embedded file which id
      *  item_id of a given version version_number, if the version is not specified it will be the current one, in the project group_id.
      */
-    function getFileChunk()
+    public function getFileChunk()
     {
         $request = $this->_controler->request;
 

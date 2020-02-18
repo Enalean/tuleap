@@ -28,17 +28,17 @@ include("lib/RssParser.php");
 class WikiPlugin_RssFeed extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
-    function getName()
+    public function getName()
     {
         return _("RssFeed");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Simple RSS Feed aggregator Plugin");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -48,7 +48,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
     }
 
     // Establish default values for each of this plugin's arguments.
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('feed'         => "",
                      'description'     => "",
@@ -58,7 +58,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
 
@@ -133,7 +133,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
         return $html;
     }
 
-    function box($args = false, $request = false, $basepage = false)
+    public function box($args = false, $request = false, $basepage = false)
     {
         if (!$request) {
             $request = $GLOBALS['request'];

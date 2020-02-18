@@ -39,7 +39,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      *
      * @see plugins/webdav/include/FS/WebDAVDocmanDocument::get()
      */
-    function get()
+    public function get()
     {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
@@ -66,7 +66,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      *
      * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getName()
      */
-    function getName()
+    public function getName()
     {
         switch (get_class($this->getItem())) {
             case 'Docman_File':
@@ -86,7 +86,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      *
      * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getContentType()
      */
-    function getContentType()
+    public function getContentType()
     {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
@@ -100,7 +100,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      *
      * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getSize()
      */
-    function getSize()
+    public function getSize()
     {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
@@ -112,7 +112,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      *
      * @return String
      */
-    function getETag()
+    public function getETag()
     {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
@@ -124,7 +124,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      *
      * @return int
      */
-    function getMaxFileSize()
+    public function getMaxFileSize()
     {
         return (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
     }
@@ -185,7 +185,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      *
      * @return void
      */
-    function setName($name)
+    public function setName($name)
     {
         switch (get_class($this->getItem())) {
             case 'Docman_File':

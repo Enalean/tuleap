@@ -36,22 +36,22 @@ if (!defined('SECONDS_PER_DAY')) {
 
 class WikiPlugin_Calendar extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("Calendar");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Calendar");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace("/[Revision: $]/", '', "\$Revision: 1.30 $");
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('prefix'           => '[pagename]' . SUBPAGE_SEPARATOR,
                      'date_format'      => '%Y-%m-%d',
@@ -71,7 +71,7 @@ class WikiPlugin_Calendar extends WikiPlugin
      * @param string $basepage The pagename the plugin is invoked from.
      * @return array List of pagenames linked to (or false).
      */
-    function getWikiPageLinks($argstr, $basepage)
+    public function getWikiPageLinks($argstr, $basepage)
     {
         if (isset($this->_links)) {
             return $this->_links;
@@ -172,7 +172,7 @@ class WikiPlugin_Calendar extends WikiPlugin
         return $td;
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $this->args = $this->getArgs($argstr, $request);
         $args       = &$this->args;

@@ -24,12 +24,12 @@ class DocmanOneFolderIsWriteable /* implements Visitor */
 {
 
     public $docman;
-    function __construct(&$docman)
+    public function __construct(&$docman)
     {
         $this->docman = $docman;
     }
 
-    function visitFolder(&$item, $params = array())
+    public function visitFolder(&$item, $params = array())
     {
         $b = false;
         if ($this->docman->userCanWrite($item->getId())) {
@@ -46,19 +46,19 @@ class DocmanOneFolderIsWriteable /* implements Visitor */
         return $b;
     }
 
-    function visitWiki(&$item, $params = array())
+    public function visitWiki(&$item, $params = array())
     {
         return false;
     }
-    function visitLink(&$item, $params = array())
+    public function visitLink(&$item, $params = array())
     {
         return false;
     }
-    function visitFile(&$item, $params = array())
+    public function visitFile(&$item, $params = array())
     {
         return false;
     }
-    function visitEmbeddedFile(&$item, $params = array())
+    public function visitEmbeddedFile(&$item, $params = array())
     {
         return false;
     }

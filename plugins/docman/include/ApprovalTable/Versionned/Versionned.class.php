@@ -24,12 +24,12 @@ abstract class Docman_ApprovalTableVersionned extends Docman_ApprovalTable
 {
     public $versionNumber = null;
 
-    function setVersionNumber($v)
+    public function setVersionNumber($v)
     {
         $this->versionNumber = $v;
     }
 
-    function getVersionNumber()
+    public function getVersionNumber()
     {
         return $this->versionNumber;
     }

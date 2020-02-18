@@ -53,7 +53,7 @@ class BaseLanguage
      * @param $supported_languages string 'en_US,fr_FR'
      * @param $default_language string 'en_US'
      */
-    function __construct($supported_languages, $default_language)
+    public function __construct($supported_languages, $default_language)
     {
         $this->allLanguages = array();
         $supported_languages = explode(',', $supported_languages);
@@ -76,7 +76,7 @@ class BaseLanguage
     /**
      * "compile" string definitions for one language.
      */
-    function compileLanguage($lang)
+    public function compileLanguage($lang)
     {
         $text_array = array();
         $this->loadAllLanguageFiles($lang, $text_array);
@@ -93,7 +93,7 @@ class BaseLanguage
      * load the custom (site wide) defs in order to override the default one,
      * and so on.
      */
-    function loadAllLanguageFiles($lang, &$text_array)
+    public function loadAllLanguageFiles($lang, &$text_array)
     {
         // The order is important!
 
@@ -115,7 +115,7 @@ class BaseLanguage
     /**
      * Load tab files in /usr/share/codendi/site-content for given language
      */
-    function loadCoreSiteContent($lang, &$text_array)
+    public function loadCoreSiteContent($lang, &$text_array)
     {
         $this->loadAllTabFiles($GLOBALS['sys_incdir'].'/'.$lang, $text_array);
     }
@@ -123,7 +123,7 @@ class BaseLanguage
     /**
      * Load tab files in /etc/codendi/site-content for given language
      */
-    function loadCustomSiteContent($lang, &$text_array)
+    public function loadCustomSiteContent($lang, &$text_array)
     {
         $this->loadAllTabFiles($GLOBALS['sys_custom_incdir'].'/'.$lang, $text_array);
     }
@@ -132,7 +132,7 @@ class BaseLanguage
      * Load all tab files in /usr/share/codendi/plugins/.../site-content for
      * given language
      */
-    function loadPluginsSiteContent($lang, &$text_array)
+    public function loadPluginsSiteContent($lang, &$text_array)
     {
         $directories = array_merge(
             array_map('trim', explode(',', ForgeConfig::get('sys_extra_plugin_path'))),
@@ -147,7 +147,7 @@ class BaseLanguage
      * Load all tab files in /etc/codendi/plugins/.../site-content for
      * given language
      */
-    function loadPluginsCustomSiteContent($lang, &$text_array)
+    public function loadPluginsCustomSiteContent($lang, &$text_array)
     {
         $this->_loadPluginsSiteContent($GLOBALS['sys_custompluginsroot'], $lang, $text_array);
     }
@@ -156,7 +156,7 @@ class BaseLanguage
      * This method walk through all the plugins and load all .tab files for
      * each plugin found.
      */
-    function _loadPluginsSiteContent($basedir, $lang, &$text_array)
+    public function _loadPluginsSiteContent($basedir, $lang, &$text_array)
     {
         if (is_dir($basedir)) {
             $fd = opendir($basedir);
@@ -179,7 +179,7 @@ class BaseLanguage
     /**
      * Look for all ".tab" files in the given path recursively.
      */
-    function loadAllTabFiles($basedir, &$text_array)
+    public function loadAllTabFiles($basedir, &$text_array)
     {
         if (is_dir($basedir)) {
             $fd = opendir($basedir);
@@ -221,7 +221,7 @@ class BaseLanguage
     /**
      * Parse given .tab file and store the result into $text_array
      */
-    function parseLanguageFile($fname, &$text_array)
+    public function parseLanguageFile($fname, &$text_array)
     {
         $ary = @file($fname, 1);
         for ($i=0; $i<sizeof($ary); $i++) {
@@ -247,7 +247,7 @@ class BaseLanguage
         }
     }
 
-    function loadLanguage($lang)
+    public function loadLanguage($lang)
     {
         if ($this->lang !== $lang) {
             $this->lang = $lang;
@@ -279,7 +279,7 @@ class BaseLanguage
         $this->text_array = $this->compileLanguage($lang);
     }
 
-    function getText($pagename, $category, $args = "")
+    public function getText($pagename, $category, $args = "")
     {
         // If the language files were modified by an update, the compiled version might not have been generated,
         // and the message not present.
@@ -333,7 +333,7 @@ class BaseLanguage
     // and is used either to include long piece of text that are inconvenient
     // to format on one line as the .tab file does or because there is some
     // PHP code that can be cutomized
-    function getContent($file, $lang_code = null, $plugin_name = null, $ext = '.txt')
+    public function getContent($file, $lang_code = null, $plugin_name = null, $ext = '.txt')
     {
 
         // Language for current user unless it is specified in the param list
@@ -389,18 +389,18 @@ class BaseLanguage
         return $ret;
     }
 
-    function getEncoding()
+    public function getEncoding()
     {
         return $this->text_array['conf']['content_encoding'];
     }
 
-    function getFont()
+    public function getFont()
     {
         return $this->text_array['conf']['default_font'];
     }
 
     /** Returns list of loaded language files (for debugging) */
-    function getLoadedLangageFiles()
+    public function getLoadedLangageFiles()
     {
         return array_keys($this->file_array);
     }
@@ -416,7 +416,7 @@ class BaseLanguage
      * @param $accept_language string "en-us,en;q=0.8,fr;q=0.5,fr-fr;q=0.3"
      * @return array ('en-us' => 1, 'en' => 0.8, 'fr' => 0.5, 'fr-fr' => 0.3) ordered by score
      */
-    function parseAcceptLanguage($accept_language)
+    public function parseAcceptLanguage($accept_language)
     {
         $langs      = array();
         $lang_parse = array();
@@ -457,7 +457,7 @@ class BaseLanguage
      * @param $accept_language string "en-us,en;q=0.8,fr;q=0.5,fr-fr;q=0.3"
      * @return string en_US
      */
-    function getLanguageFromAcceptLanguage($accept_language)
+    public function getLanguageFromAcceptLanguage($accept_language)
     {
         $relevant_language = $this->defaultLanguage;
 
@@ -496,7 +496,7 @@ class BaseLanguage
      * @param $language string 'en_US'
      * @return bool true if the $language is supported
      */
-    function isLanguageSupported($language)
+    public function isLanguageSupported($language)
     {
         return in_array($language, $this->allLanguages);
     }

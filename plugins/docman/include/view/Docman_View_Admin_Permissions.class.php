@@ -25,11 +25,11 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 class Docman_View_Admin_Permissions extends Docman_View_Extra
 {
 
-    function _title($params)
+    public function _title($params)
     {
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_permissions_title') .'</h2>';
     }
-    function _content($params)
+    public function _content($params)
     {
         $content  = '';
 

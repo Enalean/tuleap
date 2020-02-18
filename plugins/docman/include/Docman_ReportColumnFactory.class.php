@@ -28,12 +28,12 @@ class Docman_ReportColumnFactory
 {
     public $groupId;
 
-    function __construct($groupId)
+    public function __construct($groupId)
     {
         $this->groupId = $groupId;
     }
 
-    function getColumnFromLabel($colLabel)
+    public function getColumnFromLabel($colLabel)
     {
         $col = null;
         $mdFactory = $this->_getMetadataFactory();
@@ -60,7 +60,7 @@ class Docman_ReportColumnFactory
         return $col;
     }
 
-    function &_getMetadataFactory()
+    public function &_getMetadataFactory()
     {
         $mdf = new Docman_MetadataFactory($this->groupId);
         return $mdf;

@@ -29,7 +29,7 @@ class WebDAVPluginInfo extends PluginFileInfo
      *
      * @return void
      */
-    function __construct($plugin)
+    public function __construct($plugin)
     {
 
         parent::__construct($plugin, 'webdav');

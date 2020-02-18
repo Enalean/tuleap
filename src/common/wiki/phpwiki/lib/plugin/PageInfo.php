@@ -28,12 +28,12 @@ rcs_id('$Id: PageInfo.php,v 1.5 2004/02/17 12:11:36 rurban Exp $');
  */
 class WikiPlugin_PageInfo extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("PageInfo");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return sprintf(
             _("Show extra page Info and statistics for %s."),
@@ -41,7 +41,7 @@ class WikiPlugin_PageInfo extends WikiPlugin
         );
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -50,13 +50,13 @@ class WikiPlugin_PageInfo extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('page' => '[pagename]',
                      'version' => '[version]');
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);

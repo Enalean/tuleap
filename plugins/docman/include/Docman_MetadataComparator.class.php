@@ -28,7 +28,7 @@ class Docman_MetadataComparator
     public $srcGo;
     public $dstGo;
 
-    function __construct($srcGroupId, $dstGroupId, $themePath)
+    public function __construct($srcGroupId, $dstGroupId, $themePath)
     {
         $this->docmanIcons = new Docman_Icons($themePath.'/images/ic/');
         $pm = ProjectManager::instance();
@@ -40,7 +40,7 @@ class Docman_MetadataComparator
      * For a five object iterator, return an array of object indexed by
      * $func applied on object.
      */
-    function getArrayFromIterator($iter, $func)
+    public function getArrayFromIterator($iter, $func)
     {
         $a = array();
         while ($iter->valid()) {
@@ -51,7 +51,7 @@ class Docman_MetadataComparator
         return $a;
     }
 
-    function checkMdDifferences($srcMd, $dstMd, $loveMap)
+    public function checkMdDifferences($srcMd, $dstMd, $loveMap)
     {
         $diffArray = array();
         if (!$dstMd->sameDescription($srcMd)) {
@@ -73,7 +73,7 @@ class Docman_MetadataComparator
      *
      * Same algo used in Docman_View_ItemDetailsSectionPaste::_checkLoveToImport
      */
-    function getLoveCompareTable($srcMd, $dstMd, $mdMap, &$sthToImport)
+    public function getLoveCompareTable($srcMd, $dstMd, $mdMap, &$sthToImport)
     {
         $html = '';
 
@@ -171,7 +171,7 @@ class Docman_MetadataComparator
         return $html;
     }
 
-    function getMetadataCompareTable(&$sthToImport)
+    public function getMetadataCompareTable(&$sthToImport)
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html = '';

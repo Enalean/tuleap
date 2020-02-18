@@ -1276,7 +1276,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return Tracker_FormElement_Field_List_BindFactory
      */
-    function getBindFactory()
+    public function getBindFactory()
     {
         return new Tracker_FormElement_Field_List_BindFactory();
     }

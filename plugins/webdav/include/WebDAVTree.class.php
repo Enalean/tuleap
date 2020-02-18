@@ -33,7 +33,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree
      *
      * @return bool
      */
-    function releaseCanBeMoved($release, $destination)
+    public function releaseCanBeMoved($release, $destination)
     {
         return (($destination instanceof WebDAVFRSPackage)
         && ($release->getProject()->getGroupId() == $destination->getProject()->getGroupId()));
@@ -48,7 +48,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree
      *
      * @return bool
      */
-    function fileCanBeMoved($file, $destination)
+    public function fileCanBeMoved($file, $destination)
     {
         return (($destination instanceof WebDAVFRSRelease)
         && ($file->getProject()->getGroupId() == $destination->getProject()->getGroupId()));
@@ -62,7 +62,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree
      *
      * @return bool
      */
-    function canBeMoved($source, $destination)
+    public function canBeMoved($source, $destination)
     {
         return(($source instanceof WebDAVFRSRelease && $this->releaseCanBeMoved($source, $destination))
         || ($source instanceof WebDAVFRSFile && $this->fileCanBeMoved($source, $destination)));
@@ -189,7 +189,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree
      *
      * @return WebDAVUtils
      */
-    function getUtils()
+    public function getUtils()
     {
         return WebDAVUtils::getInstance();
     }

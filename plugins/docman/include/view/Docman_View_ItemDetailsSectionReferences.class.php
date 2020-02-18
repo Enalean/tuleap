@@ -24,12 +24,12 @@ class Docman_View_ItemDetailsSectionReferences extends Docman_View_ItemDetailsSe
 {
 
 
-    function __construct($item, $url)
+    public function __construct($item, $url)
     {
         parent::__construct($item, $url, 'references', $GLOBALS['Language']->getText('plugin_docman', 'details_references'));
     }
 
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         $crf = new CrossReferenceFactory($this->item->getId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->item->getGroupId());
         $crf->fetchDatas();

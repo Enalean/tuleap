@@ -23,7 +23,7 @@
 class trackerPluginInfo extends PluginInfo
 {
 
-    function __construct($plugin)
+    public function __construct($plugin)
     {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new trackerPluginDescriptor());

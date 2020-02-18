@@ -30,17 +30,17 @@ class Docman_Link extends Docman_Document
      */
     private $current_version;
 
-    function __construct($data = null)
+    public function __construct($data = null)
     {
         parent::__construct($data);
     }
 
     public $url;
-    function getUrl()
+    public function getUrl()
     {
         return $this->url;
     }
-    function setUrl($url)
+    public function setUrl($url)
     {
         $this->url = $url;
     }
@@ -50,12 +50,12 @@ class Docman_Link extends Docman_Document
         return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_link');
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         parent::initFromRow($row);
         $this->setUrl($row['link_url']);
     }
-    function toRow()
+    public function toRow()
     {
         $row = parent::toRow();
         $row['link_url'] = $this->getUrl();

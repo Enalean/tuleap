@@ -17,7 +17,7 @@ include_once("lib/RssWriter.php");
  */
 class RssWriter2 extends RssWriter
 {
-    function __construct()
+    public function __construct()
     {
         $this->XmlElement(
             'rss',
@@ -49,7 +49,7 @@ class RssWriter2 extends RssWriter
     //  'domain', 'port', 'path', 'protocol'
     // Optional args:
     //  none
-    function cloud($properties)
+    public function cloud($properties)
     {
         // soap or http-post
         if (!isset($properties['port'])) {
@@ -66,7 +66,7 @@ class RssWriter2 extends RssWriter
     /**
      * Write output to HTTP client.
      */
-    function spew()
+    public function spew()
     {
         header("Content-Type: application/rss+xml; charset=" . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);

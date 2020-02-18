@@ -94,7 +94,7 @@ class GitForkPermissionsManager
      *
      * @return ProjectManager
      */
-    function getProjectManager()
+    public function getProjectManager()
     {
         return $this->repository->_getProjectManager();
     }
@@ -104,7 +104,7 @@ class GitForkPermissionsManager
      *
      * @return Codendi_HTMLPurifier
      */
-    function getPurifier()
+    public function getPurifier()
     {
         return Codendi_HTMLPurifier::instance();
     }

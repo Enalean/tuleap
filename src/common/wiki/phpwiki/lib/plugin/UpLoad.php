@@ -41,17 +41,17 @@ class WikiPlugin_UpLoad extends WikiPlugin
     // TODO: use PagePerms instead
     public $only_authenticated = false; // allow only authenticated users may upload.
 
-    function getName()
+    public function getName()
     {
         return "UpLoad";
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Upload files to the local InterWiki Upload:<filename>");
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('logfile'  => false,
                  // add a link of the fresh file automatically to the
@@ -61,7 +61,7 @@ class WikiPlugin_UpLoad extends WikiPlugin
                  );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $this->disallowed_extensions = explode(
             "\n",
@@ -272,7 +272,7 @@ ws[cfh]"
         return $result;
     }
 
-    function log($userfile, $upload_log, &$message)
+    public function log($userfile, $upload_log, &$message)
     {
         global $WikiTheme;
         $user = $GLOBALS['request']->_user;

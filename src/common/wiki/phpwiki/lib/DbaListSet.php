@@ -20,12 +20,12 @@
 
 class DbaListSet
 {
-    function __construct(&$dbh)
+    public function __construct(&$dbh)
     {
         $this->_dbh = &$dbh;
     }
 
-    function create_sequence($seq)
+    public function create_sequence($seq)
     {
         $dbh = &$this->_dbh;
 
@@ -42,7 +42,7 @@ class DbaListSet
         }
     }
 
-    function delete_sequence($seq)
+    public function delete_sequence($seq)
     {
         $key = "s" . urlencode($seq);
         for ($i = $this->firstkey($seq); $i; $i = $next) {
@@ -52,14 +52,14 @@ class DbaListSet
         $this->_dbh->delete($key);
     }
 
-    function firstkey($seq)
+    public function firstkey($seq)
     {
         $key = "s" . urlencode($seq);
         list(, $next) =  explode(':', $this->_dbh->fetch($key), 3);
         return intval($next);
     }
 
-    function lastkey($seq)
+    public function lastkey($seq)
     {
         $key = "s" . urlencode($seq);
         list($prev) =  explode(':', $this->_dbh->fetch($key), 3);
@@ -67,62 +67,62 @@ class DbaListSet
     }
 
 
-    function next($i)
+    public function next($i)
     {
         list( , $next, ) = explode(':', $this->_dbh->fetch(intval($i)), 3);
         return intval($next);
     }
 
-    function prev(&$i)
+    public function prev(&$i)
     {
         list( $prev , , ) = explode(':', $this->_dbh->fetch(intval($i)), 3);
         return intval($prev);
     }
 
-    function exists($i)
+    public function exists($i)
     {
         $i = intval($i);
         return $i && $this->_dbh->exists($i);
     }
 
-    function fetch($i)
+    public function fetch($i)
     {
         list(, , $data) = explode(':', $this->_dbh->fetch(intval($i)), 3);
         return $data;
     }
 
-    function replace($i, $data)
+    public function replace($i, $data)
     {
         $dbh = &$this->_dbh;
         list($prev, $next,) = explode(':', $dbh->fetch(intval($i)), 3);
         $dbh->replace($i, "$prev:$next:$data");
     }
 
-    function insert_before($i, $data)
+    public function insert_before($i, $data)
     {
         assert(intval($i));
         return $this->_insert_before_nc($i, $data);
     }
 
-    function insert_after($i, $data)
+    public function insert_after($i, $data)
     {
         assert(intval($i));
         return $this->_insert_after_nc($i, $data);
     }
 
-    function append($seq, $data)
+    public function append($seq, $data)
     {
         $key = "s" . urlencode($seq);
         $this->_insert_before_nc($key, $data);
     }
 
-    function prepend($seq, $data)
+    public function prepend($seq, $data)
     {
         $key = "s" . urlencode($seq);
         $this->_insert_after_nc($key, $data);
     }
 
-    function _insert_before_nc($i, &$data)
+    public function _insert_before_nc($i, &$data)
     {
         $newkey = $this->_new_key();
         $old_prev = $this->_setprev($i, $newkey);
@@ -131,7 +131,7 @@ class DbaListSet
         return $newkey;
     }
 
-    function _insert_after_nc($i, &$data)
+    public function _insert_after_nc($i, &$data)
     {
         $newkey = $this->_new_key();
         $old_next = $this->_setnext($i, $newkey);
@@ -140,7 +140,7 @@ class DbaListSet
         return $newkey;
     }
 
-    function delete($i)
+    public function delete($i)
     {
         $dbh = &$this->_dbh;
         list($prev, $next) = explode(':', $dbh->fetch(intval($i)), 3);
@@ -149,7 +149,7 @@ class DbaListSet
         $dbh->delete(intval($i));
     }
 
-    function _new_key()
+    public function _new_key()
     {
         $dbh = &$this->_dbh;
         $new_key = $dbh->fetch('max_key') + 1;
@@ -157,7 +157,7 @@ class DbaListSet
         return $new_key;
     }
 
-    function _setprev($i, $new_prev)
+    public function _setprev($i, $new_prev)
     {
         $dbh = &$this->_dbh;
         list($old_prev, $next, $data) = explode(':', $dbh->fetch($i), 3);
@@ -165,7 +165,7 @@ class DbaListSet
         return $old_prev;
     }
 
-    function _setnext($i, $new_next)
+    public function _setnext($i, $new_next)
     {
         $dbh = &$this->_dbh;
         list($prev, $old_next, $data) = explode(':', $dbh->fetch($i), 3);

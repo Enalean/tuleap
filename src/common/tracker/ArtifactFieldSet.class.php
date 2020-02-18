@@ -67,7 +67,7 @@ class ArtifactFieldSet
     /**
      *    ArtifactFieldSet - constructor.
      */
-    function __construct()
+    public function __construct()
     {
     }
 
@@ -76,7 +76,7 @@ class ArtifactFieldSet
      *
      *  @return bool success.
      */
-    function fetchData()
+    public function fetchData()
     {
         $sql = "SELECT *
                 FROM artifact_field_set
@@ -100,7 +100,7 @@ class ArtifactFieldSet
      * @param array $fieldset_array the values array
      * @return void
      */
-    function setFromArray($fieldset_array)
+    public function setFromArray($fieldset_array)
     {
         $this->field_set_id = $fieldset_array['field_set_id'];
         $this->group_artifact_id = $fieldset_array['group_artifact_id'];
@@ -114,7 +114,7 @@ class ArtifactFieldSet
      *
      * @param ArtifactField[] $fields the array of fields contained in this Field set
      */
-    function setArtifactFields($fields)
+    public function setArtifactFields($fields)
     {
         $this->ArtifactFields = $fields;
     }
@@ -123,7 +123,7 @@ class ArtifactFieldSet
      *
      * @return ArtifactField[] The ArtifactType object.
      */
-    function getArtifactFields()
+    public function getArtifactFields()
     {
         return $this->ArtifactFields;
     }
@@ -133,7 +133,7 @@ class ArtifactFieldSet
      *
      * @return Object{ArtifactType} The ArtifactType object.
      */
-    function &getArtifactType()
+    public function &getArtifactType()
     {
         return $this->ArtifactType;
     }
@@ -143,7 +143,7 @@ class ArtifactFieldSet
      *
      * @return int The field_set_id #.
      */
-    function getID()
+    public function getID()
     {
         return $this->field_set_id;
     }
@@ -153,7 +153,7 @@ class ArtifactFieldSet
      *
      * @return int The group_artifact_id #.
      */
-    function getArtifactTypeID()
+    public function getArtifactTypeID()
     {
         return $this->group_artifact_id;
     }
@@ -163,7 +163,7 @@ class ArtifactFieldSet
      *
      * @return string name.
      */
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
@@ -173,7 +173,7 @@ class ArtifactFieldSet
      *
      * @return string description.
      */
-    function getDescription()
+    public function getDescription()
     {
         return $this->description;
     }
@@ -183,7 +183,7 @@ class ArtifactFieldSet
      *
      * @return int rank
      */
-    function getRank()
+    public function getRank()
     {
         return $this->rank;
     }
@@ -195,7 +195,7 @@ class ArtifactFieldSet
      *
      * @return string label, the name if the name is not internationalized, or the localized text if so
      */
-    function getLabel()
+    public function getLabel()
     {
         global $Language;
         if ($this->isNameMustBeLocalized()) {
@@ -212,7 +212,7 @@ class ArtifactFieldSet
      *
      * @return string description, the description text if the description is not internationalized, or the localized text if so
      */
-    function getDescriptionText()
+    public function getDescriptionText()
     {
         global $Language;
         if ($this->isDescriptionMustBeLocalized()) {
@@ -251,7 +251,7 @@ class ArtifactFieldSet
      *
      *    @return    array{ArtifactField}
      */
-    function getAllUsedFields()
+    public function getAllUsedFields()
     {
         $result_fields = array();
         foreach ($this->ArtifactFields as $key => $field) {
@@ -267,7 +267,7 @@ class ArtifactFieldSet
      *
      *    @return    array{ArtifactField}
      */
-    function getAllUnusedFields()
+    public function getAllUnusedFields()
     {
         $result_fields = array();
         foreach ($this->ArtifactFields as $key => $field) {
@@ -283,7 +283,7 @@ class ArtifactFieldSet
      *
      * @param user_id: if not given or false take the current user
      */
-    function userCanSubmit($group_id, $group_artifact_id, $user_id = false)
+    public function userCanSubmit($group_id, $group_artifact_id, $user_id = false)
     {
         $um = UserManager::instance();
         if (! $user_id) {
@@ -317,7 +317,7 @@ class ArtifactFieldSet
      *  @param    int        The rank.
      *  @return true on success, false on failure.
      */
-    function update($name, $description, $rank)
+    public function update($name, $description, $rank)
     {
         if (!$name || trim($name) == "") {
             return false;

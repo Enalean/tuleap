@@ -24,7 +24,7 @@ define('DBA_DATABASE_DEFAULT_TIMEOUT', 5);
 
 class DbaDatabase
 {
-    function __construct($filename, $mode = false, $handler = 'gdbm')
+    public function __construct($filename, $mode = false, $handler = 'gdbm')
     {
         $this->_file = $filename;
         $this->_handler = $handler;
@@ -47,12 +47,12 @@ class DbaDatabase
         }
     }
 
-    function set_timeout($timeout)
+    public function set_timeout($timeout)
     {
         $this->_timeout = $timeout;
     }
 
-    function open($mode = 'w')
+    public function open($mode = 'w')
     {
         if ($this->_dbh) {
             return;             // already open.
@@ -111,7 +111,7 @@ class DbaDatabase
         return !empty($dbh);
     }
 
-    function close()
+    public function close()
     {
         if ($this->_dbh) {
             dba_close($this->_dbh);
@@ -119,12 +119,12 @@ class DbaDatabase
         $this->_dbh = false;
     }
 
-    function exists($key)
+    public function exists($key)
     {
         return dba_exists($key, $this->_dbh);
     }
 
-    function fetch($key)
+    public function fetch($key)
     {
         $val = dba_fetch($key, $this->_dbh);
         if ($val === false) {
@@ -133,14 +133,14 @@ class DbaDatabase
         return $val;
     }
 
-    function insert($key, $val)
+    public function insert($key, $val)
     {
         if (!dba_insert($key, $val, $this->_dbh)) {
             return $this->_error("insert($key)");
         }
     }
 
-    function replace($key, $val)
+    public function replace($key, $val)
     {
         if (!dba_replace($key, $val, $this->_dbh)) {
             return $this->_error("replace($key)");
@@ -148,29 +148,29 @@ class DbaDatabase
     }
 
 
-    function firstkey()
+    public function firstkey()
     {
         return dba_firstkey($this->_dbh);
     }
 
-    function nextkey()
+    public function nextkey()
     {
         return dba_nextkey($this->_dbh);
     }
 
-    function delete($key)
+    public function delete($key)
     {
         if (!dba_delete($key, $this->_dbh)) {
             return $this->_error("delete($key)");
         }
     }
 
-    function get($key)
+    public function get($key)
     {
         return dba_fetch($key, $this->_dbh);
     }
 
-    function set($key, $val)
+    public function set($key, $val)
     {
         $dbh = &$this->_dbh;
         if (dba_exists($key, $dbh)) {
@@ -190,14 +190,14 @@ class DbaDatabase
         }
     }
 
-    function sync()
+    public function sync()
     {
         if (!dba_sync($this->_dbh)) {
             return $this->_error("sync()");
         }
     }
 
-    function optimize()
+    public function optimize()
     {
         if (!dba_optimize($this->_dbh)) {
             return $this->_error("optimize()");
@@ -205,7 +205,7 @@ class DbaDatabase
         return 1;
     }
 
-    function _error($mes)
+    public function _error($mes)
     {
         trigger_error("DbaDatabase: $mes", E_USER_WARNING);
         return false;
@@ -213,7 +213,7 @@ class DbaDatabase
         trigger_error("$this->_file: dba error: $mes", E_USER_ERROR);
     }
 
-    function _dump()
+    public function _dump()
     {
         $dbh = &$this->_dbh;
         for ($key = $this->firstkey($dbh); $key; $key = $this->nextkey($dbh)) {
@@ -221,7 +221,7 @@ class DbaDatabase
         }
     }
 
-    function _dba_open_error_handler($error)
+    public function _dba_open_error_handler($error)
     {
         $this->_dba_open_error = $error;
         return true;

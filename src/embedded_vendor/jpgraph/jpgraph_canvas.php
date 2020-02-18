@@ -21,7 +21,7 @@ class CanvasGraph extends Graph
 {
     //---------------
     // CONSTRUCTOR
-    function __construct($aWidth = 300, $aHeight = 200, $aCachedName = "", $timeout = 0, $inline = 1)
+    public function __construct($aWidth = 300, $aHeight = 200, $aCachedName = "", $timeout = 0, $inline = 1)
     {
         parent::__construct($aWidth, $aHeight, $aCachedName, $timeout, $inline);
     }
@@ -29,13 +29,13 @@ class CanvasGraph extends Graph
     //---------------
     // PUBLIC METHODS
 
-    function InitFrame()
+    public function InitFrame()
     {
         $this->StrokePlotArea();
     }
 
     // Method description
-    function Stroke($aStrokeFileName = "")
+    public function Stroke($aStrokeFileName = "")
     {
         if ($this->texts != null) {
             for ($i=0; $i < count($this->texts); ++$i) {

@@ -43,7 +43,7 @@ class Git_PostReceiveMailManager
      *
      * @return bool
      */
-    function addMail($repositoryId, $mail)
+    public function addMail($repositoryId, $mail)
     {
         try {
             $this->dao->createNotification($repositoryId, $mail);
@@ -111,7 +111,7 @@ class Git_PostReceiveMailManager
      *
      * @return Git_PostReceiveMailDao
      */
-    function _getDao()
+    public function _getDao()
     {
         if (!$this->dao) {
             $this->dao = new Git_PostReceiveMailDao();
@@ -122,7 +122,7 @@ class Git_PostReceiveMailManager
     /**
      * Wrapper used for tests to get a new GitDao
      */
-    function _getGitDao()
+    public function _getGitDao()
     {
         return new GitDao();
     }
@@ -130,7 +130,7 @@ class Git_PostReceiveMailManager
     /**
      * Wrapper used for tests to get a new GitRepository
      */
-    function _getGitRepository()
+    public function _getGitRepository()
     {
         return new GitRepository();
     }

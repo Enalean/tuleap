@@ -33,17 +33,17 @@ require_once('lib/plugin/WikiAdminSelect.php');
 
 class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
 {
-    function getName()
+    public function getName()
     {
         return _("WikiAdminChown");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Chown selected pages.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -52,7 +52,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -65,7 +65,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function chownPages(&$dbi, &$request, $pages, $newowner)
+    public function chownPages(&$dbi, &$request, $pages, $newowner)
     {
         $ul = HTML::ul();
         $count = 0;
@@ -108,7 +108,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         if ($request->getArg('action') != 'browse') {
@@ -223,7 +223,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function chownForm(&$header, $post_args)
+    public function chownForm(&$header, $post_args)
     {
         $header->pushContent(_("Chown")." ");
         $header->pushContent(' '._("to").': ');

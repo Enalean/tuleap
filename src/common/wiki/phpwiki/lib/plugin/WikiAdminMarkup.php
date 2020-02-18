@@ -33,17 +33,17 @@ require_once('lib/plugin/WikiAdminSelect.php');
 
 class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
 {
-    function getName()
+    public function getName()
     {
         return _("WikiAdminMarkup");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Change the markup type of selected pages.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -52,7 +52,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -65,7 +65,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function chmarkupPages(&$dbi, &$request, $pages, $newmarkup)
+    public function chmarkupPages(&$dbi, &$request, $pages, $newmarkup)
     {
         $ul = HTML::ul();
         $count = 0;
@@ -116,7 +116,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         if ($request->getArg('action') != 'browse') {
             if (!$request->getArg('action') == _("PhpWikiAdministration/Markup")) {
@@ -217,7 +217,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    function chmarkupForm(&$header, $post_args)
+    public function chmarkupForm(&$header, $post_args)
     {
         $header->pushContent(_("Change markup")." ");
         $header->pushContent(' '._("to").': ');

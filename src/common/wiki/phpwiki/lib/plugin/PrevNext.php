@@ -28,17 +28,17 @@ rcs_id('$Id: PrevNext.php,v 1.4 2004/06/14 11:31:39 rurban Exp $');
  */
 class WikiPlugin_PrevNext extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("PrevNext");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return sprintf(_("Easy navigation buttons for %s"), '[pagename]');
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -47,7 +47,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array(
                      'prev'    => '',
@@ -64,7 +64,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
 
         $args = $this->getArgs($argstr, $request);

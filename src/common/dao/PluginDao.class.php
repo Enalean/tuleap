@@ -27,7 +27,7 @@ class PluginDao extends DataAccessObject
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function searchAll()
+    public function searchAll()
     {
         $sql = "SELECT * FROM plugin";
         return $this->retrieve($sql);
@@ -37,7 +37,7 @@ class PluginDao extends DataAccessObject
     * Searches Plugin by Id
     * @return DataAccessResult
     */
-    function searchById($id)
+    public function searchById($id)
     {
         $sql = sprintf(
             "SELECT * FROM plugin WHERE id = %s",
@@ -50,7 +50,7 @@ class PluginDao extends DataAccessObject
     * Searches Plugin by Name
     * @return DataAccessResult
     */
-    function searchByName($name)
+    public function searchByName($name)
     {
         $sql = sprintf(
             "SELECT * FROM plugin WHERE name = %s",
@@ -63,7 +63,7 @@ class PluginDao extends DataAccessObject
     * Searches Plugin by Available
     * @return DataAccessResult
     */
-    function searchByAvailable($available)
+    public function searchByAvailable($available)
     {
         $sql = sprintf(
             "SELECT * FROM plugin WHERE available = %s ORDER BY id",
@@ -77,7 +77,7 @@ class PluginDao extends DataAccessObject
     * create a row in the table plugin
     * @return true or id(auto_increment) if there is no error
     */
-    function create($name, $available)
+    public function create($name, $available)
     {
         $sql = sprintf(
             "INSERT INTO plugin (name, available) VALUES (%s, %s);",
@@ -87,7 +87,7 @@ class PluginDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
-    function updateAvailableByPluginId($available, $id)
+    public function updateAvailableByPluginId($available, $id)
     {
         $sql = sprintf(
             "UPDATE plugin SET available = %s WHERE id = %s",
@@ -97,7 +97,7 @@ class PluginDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function removeById($id)
+    public function removeById($id)
     {
         $sql = sprintf(
             "DELETE FROM plugin WHERE id = %s",
@@ -106,7 +106,7 @@ class PluginDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function restrictProjectPluginUse($pluginId, $restrict)
+    public function restrictProjectPluginUse($pluginId, $restrict)
     {
         $_usage = ($restrict === true ? 1 : 0);
         $sql = sprintf(
@@ -119,7 +119,7 @@ class PluginDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function searchProjectPluginRestrictionStatus($pluginId)
+    public function searchProjectPluginRestrictionStatus($pluginId)
     {
         $sql = sprintf(
             'SELECT prj_restricted'.
@@ -130,7 +130,7 @@ class PluginDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchAvailableAndPriorities()
+    public function searchAvailableAndPriorities()
     {
         $sql = "SELECT p.*, h.hook AS hook, h.priority AS priority
                 FROM priority_plugin_hook h RIGHT JOIN plugin p ON (h.plugin_id = p.id) 

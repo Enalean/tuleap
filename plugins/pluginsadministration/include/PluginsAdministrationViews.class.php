@@ -45,7 +45,7 @@ class PluginsAdministrationViews extends Views
      */
     private $plugin_disabler_verifier;
 
-    function __construct(&$controler, $view = null)
+    public function __construct(&$controler, $view = null)
     {
         $this->View($controler, $view);
         $this->plugin_manager           = PluginManager::instance();
@@ -66,7 +66,7 @@ class PluginsAdministrationViews extends Views
         $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
     }
 
-    function footer()
+    public function footer()
     {
         $GLOBALS['HTML']->footer(array());
     }
@@ -144,7 +144,7 @@ class PluginsAdministrationViews extends Views
     }
 
     // {{{ Views
-    function browse()
+    public function browse()
     {
         $output = '';
         $output .= $this->getInstalledPluginsPresenter();
@@ -251,7 +251,7 @@ class PluginsAdministrationViews extends Views
 
     public $_plugins;
 
-    function _emphasis($name, $enable)
+    public function _emphasis($name, $enable)
     {
         if (!$enable) {
             $name = '<span class="pluginsadministration_unavailable">'.$name.'</span>';
@@ -259,7 +259,7 @@ class PluginsAdministrationViews extends Views
         return $name;
     }
 
-    function _searchPlugins()
+    public function _searchPlugins()
     {
         if (!$this->_plugins) {
             $this->_plugins    = array();

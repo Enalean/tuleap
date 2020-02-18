@@ -42,7 +42,7 @@ class WikiCloner
    *  @param New project identifier
    *
    */
-    function __construct($template_id = 0, $group_id = 0)
+    public function __construct($template_id = 0, $group_id = 0)
     {
 
         $this->template_id = (int) $template_id;
@@ -60,7 +60,7 @@ class WikiCloner
    *
    */
 
-    function newWikiIsUsed()
+    public function newWikiIsUsed()
     {
         if ($this->new_wiki_is_used === null) {
             $res = db_query(sprintf("SELECT is_used FROM service WHERE group_id=%d AND short_name='%s'", $this->group_id, $this->escapeString("wiki")));
@@ -75,7 +75,7 @@ class WikiCloner
    *  @return bool
    *
    */
-    function templateWikiExists()
+    public function templateWikiExists()
     {
         if ($this->new_wiki_is_used === null) {
             $res = db_query('SELECT count(*) AS nb FROM wiki_page'
@@ -85,7 +85,7 @@ class WikiCloner
         return $this->tmpl_wiki_exist;
     }
 
-    function templateWikiHaveAttachments()
+    public function templateWikiHaveAttachments()
     {
         $res = db_query('SELECT count(*) AS nb FROM wiki_attachment'
                     .' WHERE group_id='.db_ei($this->template_id));
@@ -102,7 +102,7 @@ class WikiCloner
    *  @return bool .
  * push
    */
-    function CloneWiki()
+    public function CloneWiki()
     {
         $this->addWikiEntries();
         $arr = $this->cloneWikiPageTable();
@@ -126,7 +126,7 @@ class WikiCloner
    *
    *
    */
-    function addWikiEntries()
+    public function addWikiEntries()
     {
         $language = $this->getTemplateLanguageId();
         $we_data = $this->getTemplateWikiEntries();
@@ -152,7 +152,7 @@ class WikiCloner
    *  Something like: template page id => new page id.
    *
    */
-    function cloneWikiVersionTable($array)
+    public function cloneWikiVersionTable($array)
     {
         foreach ($array as $key => $value) {
             $tmpl_version_data = $this->getTemplateWikiVersionData($key);
@@ -181,7 +181,7 @@ class WikiCloner
    *  @return hash of template wiki pages ids as keys and new wiki
    *  pages ids as their values.
    */
-    function cloneWikiPageTable()
+    public function cloneWikiPageTable()
     {
         $ids = array();
         $result = db_query(sprintf("SELECT id, pagename FROM wiki_page WHERE group_id=%d", $this->template_id));
@@ -202,7 +202,7 @@ class WikiCloner
   *  @param array: tmplpage_id => newpage_id
   *
   */
-    function cloneWikiRecentTable($array)
+    public function cloneWikiRecentTable($array)
     {
         $recent_infos = array();
         foreach ($array as $tmpl_id => $new_id) {
@@ -233,7 +233,7 @@ class WikiCloner
    *
    *
    */
-    function addWikiLinkEntries($array)
+    public function addWikiLinkEntries($array)
     {
         foreach ($array as $tmpl_id => $new_id) {
             $result = db_query(sprintf("select linkto FROM wiki_link WHERE linkfrom=%d", $tmpl_id));
@@ -253,7 +253,7 @@ class WikiCloner
    *  @return hash : template attachment id => new attachment id
    *
    */
-    function cloneWikiAttachementTable()
+    public function cloneWikiAttachementTable()
     {
         //Create attachement directory
         if (is_dir($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->template_id)) { // Otherwise, directory is created with perms '000'
@@ -286,7 +286,7 @@ class WikiCloner
    *  @return bool .
    *
    */
-    function attachmentHasAPermission($attachment_id)
+    public function attachmentHasAPermission($attachment_id)
     {
         $attachment_id = db_ei($attachment_id);
         $result        = db_query(
@@ -307,7 +307,7 @@ class WikiCloner
   *
   *  @returns int : mapped ugroup_id.
   */
-    function getMappedUGroupId($ugid)
+    public function getMappedUGroupId($ugid)
     {
         if ($ugid > 100) {
             $res = db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", $this->group_id, $ugid));
@@ -326,7 +326,7 @@ class WikiCloner
   *  @return int : authorized ugroup_id.
   *
   */
-    function getAttachmentPermission($attachment_id)
+    public function getAttachmentPermission($attachment_id)
     {
         $attachment_id = db_ei($attachment_id);
         $result        = db_query(
@@ -345,7 +345,7 @@ class WikiCloner
    *  @param int : cloned attachment id.
    *
    */
-    function insertNewAttachmentPermission($new_attachment_id, $permission)
+    public function insertNewAttachmentPermission($new_attachment_id, $permission)
     {
         $new_attachment_id = db_ei($new_attachment_id);
         $permission        = db_ei($permission);
@@ -360,7 +360,7 @@ class WikiCloner
    *  @param string : name of the attachment
    *
    */
-    function createAttachmentDir($name, $mode)
+    public function createAttachmentDir($name, $mode)
     {
         mkdir($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->group_id . '/' . $name, $mode);
     }
@@ -372,7 +372,7 @@ class WikiCloner
    *
    *
    */
-    function cloneWikiAttachmentRevisionTable($array)
+    public function cloneWikiAttachmentRevisionTable($array)
     {
         $array_rev = array();
         foreach ($array as $tmpl_id => $new_id) {
@@ -411,7 +411,7 @@ class WikiCloner
    *
    *
    */
-    function cloneAttachmentFileRevision($id, $revision_num)
+    public function cloneAttachmentFileRevision($id, $revision_num)
     {
          $result = db_query(sprintf("SELECT name from wiki_attachment where id=%d", $id));
         if (db_numrows($result) > 0) {
@@ -433,7 +433,7 @@ class WikiCloner
   *  @returns string : octal mode of the file.
   *
   */
-    function getFileMode($file)
+    public function getFileMode($file)
     {
         return fileperms($file);
     }
@@ -444,7 +444,7 @@ class WikiCloner
    *  @param hash: template attachment id => new attachment id.
    *
    */
-    function cloneWikiAttachmentLogTable($array, $array_rev)
+    public function cloneWikiAttachmentLogTable($array, $array_rev)
     {
         foreach ($array as $tmpl_id => $new_id) {
             $result = db_query(sprintf("SELECT * FROM wiki_attachment_log WHERE group_id=%d AND wiki_attachment_id=%d", $this->template_id, $tmpl_id));
@@ -464,7 +464,7 @@ class WikiCloner
    *  latestminor revision numbers.
    *
    */
-    function getTemplatePageRecentInfos($id)
+    public function getTemplatePageRecentInfos($id)
     {
         $recent = array();
         $result = db_query(sprintf("SELECT latestversion, latestmajor, latestminor FROM wiki_recent where id=%d", $id));
@@ -485,7 +485,7 @@ class WikiCloner
    *
    *
    */
-    function getTemplateWikiEntries()
+    public function getTemplateWikiEntries()
     {
         $we = array();
         $result = db_query(sprintf("SELECT id, wiki_name, wiki_link, description, rank, language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id));
@@ -504,7 +504,7 @@ class WikiCloner
    *
    *
    */
-    function getTemplateLanguageId()
+    public function getTemplateLanguageId()
     {
         $result = db_query(sprintf("SELECT language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id));
         if ($row = db_fetch_array($result)) {
@@ -522,7 +522,7 @@ class WikiCloner
    *  @params pagename : name of any wiki page stored in the db.
    *  @return deserialized page data hash.
    */
-    function getTemplatePageData($pagename)
+    public function getTemplatePageData($pagename)
     {
         $result = db_query(sprintf("SELECT pagedata FROM wiki_page WHERE pagename='%s' AND group_id=%d", db_es($pagename), $this->template_id));
         while ($page_data = db_fetch_array($result)) {
@@ -539,7 +539,7 @@ class WikiCloner
    *  $key : version number
    *  $value : deserialised version data hash
    */
-    function getTemplateWikiVersionData($id)
+    public function getTemplateWikiVersionData($id)
     {
         $version = array();
         $result = db_query(sprintf("SELECT version, versiondata FROM wiki_version WHERE id=%d", $id));
@@ -559,7 +559,7 @@ class WikiCloner
    *
    *  @return int: id of a wiki page clone
    */
-    function getWikiPageCloneId($array, $tmpl_page_id)
+    public function getWikiPageCloneId($array, $tmpl_page_id)
     {
         foreach ($array as $tmpl_id => $new_id) {
             if ($tmpl_id == $tmpl_page_id) {
@@ -576,7 +576,7 @@ class WikiCloner
    *  @params data : array of page data
    *  @return data : array of the new page data
    */
-    function createNewPageData($data)
+    public function createNewPageData($data)
     {
         if (empty($data)) {
             return array();
@@ -619,7 +619,7 @@ class WikiCloner
  * the template project.
    *
    */
-    function isTemplatePageNonEmpty($id)
+    public function isTemplatePageNonEmpty($id)
     {
         $result = db_query(sprintf("SELECT * from wiki_nonempty where id=%d", $id));
         if (db_numrows($result)) {
@@ -637,7 +637,7 @@ class WikiCloner
    *  @param array : new pages ids and template pages ids.
    *
    */
-    function addNonEmptyInfo($array)
+    public function addNonEmptyInfo($array)
     {
         foreach ($array as $tmpl => $new) {
             if ($this->isTemplatePageNonEmpty($tmpl)) {
@@ -652,7 +652,7 @@ class WikiCloner
    *
    *  @return int: id of the new attachment
    */
-    function insertNewAttachment($name)
+    public function insertNewAttachment($name)
     {
         $result = db_query(sprintf("INSERT INTO wiki_attachment (group_id, name)"
         ."VALUES(%d, '%s')", $this->group_id, $this->escapeString($name)));
@@ -673,7 +673,7 @@ class WikiCloner
    *  @return int id : id of the created page
    *
    */
-    function insertNewWikiPage($data, $pagename)
+    public function insertNewWikiPage($data, $pagename)
     {
         $result = db_query(sprintf(
             "INSERT INTO wiki_page (pagename, hits, pagedata, group_id)"
@@ -700,7 +700,7 @@ class WikiCloner
    *
    *
    */
-    function cloneWikiPermission()
+    public function cloneWikiPermission()
     {
         $template_id = db_ei($this->template_id);
         $result      = db_query("SELECT * FROM permissions
@@ -721,7 +721,7 @@ class WikiCloner
    *
    *
    */
-    function cloneWikiPagesPermissions($array)
+    public function cloneWikiPagesPermissions($array)
     {
         $result = db_query(sprintf("SELECT object_id, ugroup_id "
                                 ."FROM permissions perm, wiki_page wpg "
@@ -746,7 +746,7 @@ class WikiCloner
    *  @return string : the string escaped.
    *
    */
-    function escapeString($string)
+    public function escapeString($string)
     {
         return db_escape_string($string);
     }
@@ -755,7 +755,7 @@ class WikiCloner
  /**
    * Serialize data
    */
-    function _serialize($data)
+    public function _serialize($data)
     {
         if (empty($data)) {
             return '';
@@ -768,7 +768,7 @@ class WikiCloner
  /**
    * Deserialize data
    */
-    function _deserialize($data)
+    public function _deserialize($data)
     {
         return empty($data) ? array() : unserialize($data);
     }

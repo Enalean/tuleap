@@ -43,7 +43,7 @@ class SvnNotification
      *
      * @return bool
      */
-    function setSvnMailingList($projectId, $mailingList, $path)
+    public function setSvnMailingList($projectId, $mailingList, $path)
     {
         $dao = $this->_getDao();
         return $dao->setSvnMailingList($projectId, $mailingList, $path);
@@ -57,7 +57,7 @@ class SvnNotification
      *
      * @return String
      */
-    function getSvnMailingList($projectId, $path)
+    public function getSvnMailingList($projectId, $path)
     {
         $dao = $this->_getDao();
         $dar = $dao->getSvnMailingList($projectId, $path);
@@ -76,7 +76,7 @@ class SvnNotification
      *
      * @return DataAccessResult
      */
-    function getSvnEventNotificationDetails($projectId)
+    public function getSvnEventNotificationDetails($projectId)
     {
         $dao = $this->_getDao();
         $dar = $dao->getSvnMailingList($projectId);
@@ -95,7 +95,7 @@ class SvnNotification
      *
      * @return void
      */
-    function removeSvnNotification($projectId, $selectedPaths)
+    public function removeSvnNotification($projectId, $selectedPaths)
     {
         if (is_array($selectedPaths) && !empty($selectedPaths)) {
             $dao = $this->_getDao();

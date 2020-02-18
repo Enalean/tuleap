@@ -36,7 +36,7 @@ class ArtifactReportFactory
      *
      *    @return bool success.
      */
-    function __construct()
+    public function __construct()
     {
         return true;
     }
@@ -48,7 +48,7 @@ class ArtifactReportFactory
      *
      * @return void
      */
-    function getArtifactReportHtml($report_id, $atid)
+    public function getArtifactReportHtml($report_id, $atid)
     {
         $sql = "SELECT * FROM artifact_report ".
          "WHERE report_id=". db_ei($report_id) ;
@@ -69,7 +69,7 @@ class ArtifactReportFactory
      *
      *    @return bool
      */
-    function copyReports($atid_source, $atid_dest)
+    public function copyReports($atid_source, $atid_dest)
     {
         global $Language;
         $report_mapping = array(100 => 100); //The system report 'Default' (sic)
@@ -136,7 +136,7 @@ class ArtifactReportFactory
      *
      *    @return bool
      */
-    function deleteReports($atid)
+    public function deleteReports($atid)
     {
 
      // Delete artifact_report_field records
@@ -178,7 +178,7 @@ class ArtifactReportFactory
      *
      *    @return    array    The array of ArtifactReport objects.
      */
-    function getReports($group_artifact_id, $user_id)
+    public function getReports($group_artifact_id, $user_id)
     {
 
         $artifactreports = array();
@@ -211,7 +211,7 @@ class ArtifactReportFactory
      *  @return int     report_id
      */
 
-    function getDefaultReport($group_artifact_id)
+    public function getDefaultReport($group_artifact_id)
     {
         $report_id = null;
         $sql = "SELECT report_id FROM artifact_report WHERE group_artifact_id=".db_ei($group_artifact_id)." AND is_default = 1";

@@ -22,11 +22,11 @@
 
 class Docman_SqlFilterFactory
 {
-    function __construct()
+    public function __construct()
     {
     }
 
-    function getFromFilter($filter)
+    public function getFromFilter($filter)
     {
         $f = null;
 
@@ -67,13 +67,13 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
     public $isRealMetadata;
     public $db;
 
-    function __construct($filter)
+    public function __construct($filter)
     {
         $this->filter = $filter;
         parent::__construct($filter->md);
     }
 
-    function getFrom()
+    public function getFrom()
     {
         $tables = array();
 
@@ -87,7 +87,7 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
         return $tables;
     }
 
-    function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk()
     {
         $stmt = array();
 
@@ -100,7 +100,7 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
         return $stmt;
     }
 
-    function getWhere()
+    public function getWhere()
     {
         $where = '';
 
@@ -126,7 +126,7 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
      *
      * @return Array
      */
-    function getSearchType($qv)
+    public function getSearchType($qv)
     {
         $res = array();
         if (preg_match('/^\*(.+)$/', $qv)) {
@@ -150,13 +150,13 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
 class Docman_SqlFilterDate extends Docman_SqlFilter
 {
 
-    function __construct($filter)
+    public function __construct($filter)
     {
         parent::__construct($filter);
     }
 
     // '<'
-    function _getEndStatement($value)
+    public function _getEndStatement($value)
     {
         $stmt = '';
         list($time, $ok) = util_date_to_unixtime($value);
@@ -169,7 +169,7 @@ class Docman_SqlFilterDate extends Docman_SqlFilter
     }
 
     // '=' means that day between 00:00 and 23:59
-    function _getEqualStatement($value)
+    public function _getEqualStatement($value)
     {
         $stmt = '';
         list($time, $ok) = util_date_to_unixtime($value);
@@ -182,7 +182,7 @@ class Docman_SqlFilterDate extends Docman_SqlFilter
     }
 
     // '>'
-    function _getStartStatement($value)
+    public function _getStartStatement($value)
     {
         $stmt = '';
         list($time, $ok) = util_date_to_unixtime($value);
@@ -194,7 +194,7 @@ class Docman_SqlFilterDate extends Docman_SqlFilter
         return $stmt;
     }
 
-    function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk()
     {
         $stmt = array();
 
@@ -227,12 +227,12 @@ class Docman_SqlFilterDate extends Docman_SqlFilter
 class Docman_SqlFilterDateAdvanced extends Docman_SqlFilterDate
 {
 
-    function __construct($filter)
+    public function __construct($filter)
     {
         parent::__construct($filter);
     }
 
-    function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk()
     {
         $stmt = array();
 
@@ -270,13 +270,13 @@ class Docman_SqlFilterDateAdvanced extends Docman_SqlFilterDate
 class Docman_SqlFilterOwner extends Docman_SqlFilter
 {
 
-    function __construct($filter)
+    public function __construct($filter)
     {
         parent::__construct($filter);
         $this->field = 'user.user_name';
     }
 
-    function getFrom()
+    public function getFrom()
     {
         $tables = array();
         if ($this->filter->getValue() !== null
@@ -290,12 +290,12 @@ class Docman_SqlFilterOwner extends Docman_SqlFilter
 class Docman_SqlFilterText extends Docman_SqlFilter
 {
 
-    function __construct($filter)
+    public function __construct($filter)
     {
         parent::__construct($filter);
     }
 
-    function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk()
     {
         $stmt = array();
         if ($this->filter->getValue() !== null &&
@@ -315,12 +315,12 @@ class Docman_SqlFilterText extends Docman_SqlFilter
 class Docman_SqlFilterGlobalText extends Docman_SqlFilterText
 {
 
-    function __construct($filter)
+    public function __construct($filter)
     {
         parent::__construct($filter);
     }
 
-    function getFrom()
+    public function getFrom()
     {
         $tables = array();
         if ($this->filter->getValue() !== null &&
@@ -332,7 +332,7 @@ class Docman_SqlFilterGlobalText extends Docman_SqlFilterText
         return $tables;
     }
 
-    function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk()
     {
         $stmt = array();
         if ($this->filter->getValue() !== null &&
@@ -366,12 +366,12 @@ class Docman_SqlFilterGlobalText extends Docman_SqlFilterText
 class Docman_SqlFilterListAdvanced extends Docman_SqlFilter
 {
 
-    function __construct($filter)
+    public function __construct($filter)
     {
         parent::__construct($filter);
     }
 
-    function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk()
     {
         $stmt = array();
 

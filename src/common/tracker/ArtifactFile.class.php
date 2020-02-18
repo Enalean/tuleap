@@ -45,7 +45,7 @@ class ArtifactFile
      *  @param    array    (all fields from artifact_file_user_vw) OR id from database.
      *  @return bool success.
      */
-    function __construct(&$Artifact, $data = false)
+    public function __construct(&$Artifact, $data = false)
     {
         global $Language;
 
@@ -84,7 +84,7 @@ class ArtifactFile
      *    @param    string    Item description.
      *  @return id on success / false on failure.
      */
-    function create($filename, $filetype, $filesize, $bin_data, $description, &$changes)
+    public function create($filename, $filetype, $filesize, $bin_data, $description, &$changes)
     {
         global $Language;
 
@@ -184,7 +184,7 @@ class ArtifactFile
      *
      *    @return bool success.
      */
-    function delete()
+    public function delete()
     {
         global $Language;
 
@@ -234,7 +234,7 @@ class ArtifactFile
      *    @param    int    The file_id.
      *    @return bool success.
      */
-    function fetchData($id)
+    public function fetchData($id)
     {
         global $Language;
 
@@ -257,7 +257,7 @@ class ArtifactFile
      *
      *    @return object    Artifact.
      */
-    function getArtifact()
+    public function getArtifact()
     {
         return $this->Artifact;
     }
@@ -267,7 +267,7 @@ class ArtifactFile
      *
      *    @return    int    The id #.
      */
-    function getID()
+    public function getID()
     {
         return $this->data_array['id'];
     }
@@ -277,7 +277,7 @@ class ArtifactFile
      *
      *    @return string filename.
      */
-    function getName()
+    public function getName()
     {
         return $this->data_array['filename'];
     }
@@ -287,7 +287,7 @@ class ArtifactFile
      *
      *    @return string type.
      */
-    function getType()
+    public function getType()
     {
         return $this->data_array['filetype'];
     }
@@ -297,7 +297,7 @@ class ArtifactFile
      *
      *    @return binary.
      */
-    function getData()
+    public function getData()
     {
         return base64_decode($this->data_array['bin_data']);
     }
@@ -307,7 +307,7 @@ class ArtifactFile
      *
      *    @return int size.
      */
-    function getSize()
+    public function getSize()
     {
         return $this->data_array['filesize'];
     }
@@ -317,7 +317,7 @@ class ArtifactFile
      *
      *    @return string description.
      */
-    function getDescription()
+    public function getDescription()
     {
         return $this->data_array['description'];
     }
@@ -327,7 +327,7 @@ class ArtifactFile
      *
      *    @return int unix time.
      */
-    function getDate()
+    public function getDate()
     {
         return $this->data_array['adddate'];
     }
@@ -337,7 +337,7 @@ class ArtifactFile
      *
      *    @return int user_id.
      */
-    function getSubmittedBy()
+    public function getSubmittedBy()
     {
         return $this->data_array['submitted_by'];
     }
@@ -347,7 +347,7 @@ class ArtifactFile
      *
      *    @return    string    name.
      */
-    function getSubmittedRealName()
+    public function getSubmittedRealName()
     {
         return $this->data_array['realname'];
     }
@@ -357,7 +357,7 @@ class ArtifactFile
      *
      *    @return    string    unixname.
      */
-    function getSubmittedUnixName()
+    public function getSubmittedUnixName()
     {
         return $this->data_array['user_name'];
     }

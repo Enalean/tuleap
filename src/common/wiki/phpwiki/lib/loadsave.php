@@ -911,7 +911,7 @@ function LoadZip(&$request, $zipfile, $files = false, $exclude = false)
 
 class LimitedFileSet extends fileSet
 {
-    function __construct($dirname, $_include, $exclude)
+    public function __construct($dirname, $_include, $exclude)
     {
         $this->_includefiles = $_include;
         $this->_exclude = $exclude;
@@ -919,7 +919,7 @@ class LimitedFileSet extends fileSet
         parent::__construct($dirname);
     }
 
-    function _filenameSelector($fn)
+    public function _filenameSelector($fn)
     {
         $incl = &$this->_includefiles;
         $excl = &$this->_exclude;
@@ -933,7 +933,7 @@ class LimitedFileSet extends fileSet
         }
     }
 
-    function getSkippedFiles()
+    public function getSkippedFiles()
     {
         return $this->_skiplist;
     }

@@ -35,15 +35,15 @@ include_once('lib/PageList.php');
 
 class WikiPlugin_WantedPages extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("WantedPages");
     }
-    function getDescription()
+    public function getDescription()
     {
         return _("Lists referenced page names which do not exist yet.");
     }
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -51,7 +51,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
             "\$Revision: 1.16 $"
         );
     }
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -66,7 +66,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor,markup or all
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         if (!empty($args['exclude_from'])) {
@@ -142,12 +142,12 @@ class WikiPlugin_WantedPages extends WikiPlugin
 // which links to the missing page
 class _PageList_Column_WantedPages_wanted extends _PageList_Column
 {
-    function __construct($params)
+    public function __construct($params)
     {
         $this->parentobj = $params[3];
         parent::__construct($params[0], $params[1], $params[2]);
     }
-    function _getValue(&$page, $revision_handle)
+    public function _getValue(&$page, $revision_handle)
     {
         $html = false;
         foreach ($this->parentobj->_wpagelist[$page->getName()] as $page) {

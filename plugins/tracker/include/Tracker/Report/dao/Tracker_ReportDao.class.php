@@ -21,13 +21,13 @@
 
 class Tracker_ReportDao extends DataAccessObject
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_report';
     }
 
-    function searchById($id, $user_id)
+    public function searchById($id, $user_id)
     {
         $id      = $this->da->escapeInt($id);
         $user_id = $this->da->escapeInt($user_id);
@@ -39,7 +39,7 @@ class Tracker_ReportDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchByTrackerId($tracker_id, $user_id)
+    public function searchByTrackerId($tracker_id, $user_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $user_stm   = " ";
@@ -54,7 +54,7 @@ class Tracker_ReportDao extends DataAccessObject
                 ORDER BY name";
         return $this->retrieve($sql);
     }
-    function searchDefaultByTrackerId($tracker_id)
+    public function searchDefaultByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -66,7 +66,7 @@ class Tracker_ReportDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchDefaultReportByTrackerId($tracker_id)
+    public function searchDefaultReportByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -76,7 +76,7 @@ class Tracker_ReportDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchByUserId($user_id)
+    public function searchByUserId($user_id)
     {
         $user_id = $user_id ? '= '. $this->da->escapeInt($user_id) : 'IS NULL';
 
@@ -87,7 +87,7 @@ class Tracker_ReportDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function create(
+    public function create(
         $name,
         $description,
         $current_renderer_id,
@@ -115,7 +115,7 @@ class Tracker_ReportDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
-    function save(
+    public function save(
         $id,
         $name,
         $description,
@@ -159,13 +159,13 @@ class Tracker_ReportDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function delete($id)
+    public function delete($id)
     {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
     }
 
-    function duplicate($from_report_id, $to_tracker_id)
+    public function duplicate($from_report_id, $to_tracker_id)
     {
         $from_report_id = $this->da->escapeInt($from_report_id);
         $to_tracker_id  = $this->da->escapeInt($to_tracker_id);

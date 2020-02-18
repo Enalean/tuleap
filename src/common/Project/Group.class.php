@@ -70,7 +70,7 @@ class Group
      */
     private $error_state = false;
 
-    function __construct($param)
+    public function __construct($param)
     {
             //$param can be:
             // - a row from the groups table -> use it
@@ -101,7 +101,7 @@ class Group
 
         Generall should NOT be used - here for supporting deprecated group.php
     */
-    function getData()
+    public function getData()
     {
         return $this->db_result;
     }
@@ -110,7 +110,7 @@ class Group
     /*
         Simply return the group_id for this object
     */
-    function getGroupId()
+    public function getGroupId()
     {
         return $this->group_id;
     }
@@ -119,13 +119,13 @@ class Group
     /*
         Project, template, test, etc
     */
-    function getType()
+    public function getType()
     {
         return $this->data_array['type'];
     }
 
 
-    function getUnixBox()
+    public function getUnixBox()
     {
         return $this->data_array['unix_box'];
     }
@@ -133,7 +133,7 @@ class Group
     /*
         Statuses include H,A,D
     */
-    function getStatus()
+    public function getStatus()
     {
         return $this->data_array['status'];
     }
@@ -143,7 +143,7 @@ class Group
      *
      * @return bool
      */
-    function isProject()
+    public function isProject()
     {
         $template = $this->_getTemplateSingleton();
         return $template->isProject($this->data_array['type']);
@@ -164,7 +164,7 @@ class Group
         return $this->getStatus() == 's' || $this->getStatus() == 'S';
     }
 
-    function getUnixName($tolower = true)
+    public function getUnixName($tolower = true)
     {
         return $tolower ? $this->getUnixNameLowerCase() : $this->getUnixNameMixedCase();
     }
@@ -190,19 +190,19 @@ class Group
     }
 
     //short description as entered on the group admin page
-    function getDescription()
+    public function getDescription()
     {
         return $this->data_array['short_description'];
     }
 
 
     //date the group was registered
-    function getStartDate()
+    public function getStartDate()
     {
         return $this->data_array['register_time'];
     }
 
-    function getHTTPDomain()
+    public function getHTTPDomain()
     {
         return $this->data_array['http_domain'];
     }
@@ -224,7 +224,7 @@ class Group
      *
      *    @return int GID.
      */
-    function getUnixGID()
+    public function getUnixGID()
     {
         return $this->data_array['group_id']+$GLOBALS['unix_gid_add'];
     }
@@ -234,7 +234,7 @@ class Group
      *
      *    @return int group_id.
      */
-    function getMembersId()
+    public function getMembersId()
     {
         if ($this->members_data_array) {
      //list of members already built
@@ -259,7 +259,7 @@ class Group
     /**
      * getMembersUserNames - Return an array of user names of group members
      */
-    function getMembersUserNames(?ProjectManager $pm = null)
+    public function getMembersUserNames(?ProjectManager $pm = null)
     {
         if (!$this->members_usernames_data_array) {
             if (is_null($pm)) {
@@ -281,7 +281,7 @@ class Group
     /*
         Simple test to see if the current user is a member of this project
     */
-    function userIsMember($field = 'user_id', $value = 0)
+    public function userIsMember($field = 'user_id', $value = 0)
     {
         if ($this->userIsAdmin()) {
      //admins are tested first so that super-users can return true
@@ -341,7 +341,7 @@ class Group
     /*
         Return an associative array of permissions for this group/user
     */
-    function getPermData()
+    public function getPermData()
     {
         if ($this->perm_data_array) {
      //have already been through here and set up perms data
@@ -369,19 +369,19 @@ class Group
      *
      * @return bool
      */
-    function isTemplate()
+    public function isTemplate()
     {
         return $this->_getTemplateSingleton()->isTemplate($this->data_array['type']);
     }
 
 
     /** return the template id from which this group was built */
-    function getTemplate()
+    public function getTemplate()
     {
         return $this->data_array['built_from_template'];
     }
 
-    function setType($type)
+    public function setType($type)
     {
         db_query("UPDATE groups SET type='$type' WHERE group_id='".$this->group_id."'");
     }

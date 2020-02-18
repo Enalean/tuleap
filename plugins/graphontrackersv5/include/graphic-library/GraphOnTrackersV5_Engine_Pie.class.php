@@ -49,7 +49,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
     /**
      * Builds pie graph
      */
-    function buildGraph()
+    public function buildGraph()
     {
         $this->graph = new Chart_Pie($this->width, $this->height);
 

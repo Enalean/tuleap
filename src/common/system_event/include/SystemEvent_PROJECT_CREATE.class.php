@@ -52,7 +52,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
     /**
      * Process stored event
      */
-    function process()
+    public function process()
     {
 
         $groups=explode(',', $this->parameters);

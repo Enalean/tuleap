@@ -68,7 +68,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
      *
      * @return string label, the name if the name is not internationalized, or the localized text if so
      */
-    function getLabel()
+    public function getLabel()
     {
         global $Language;
         $label = parent::getLabel();
@@ -79,7 +79,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         }
     }
 
-    function getDescription()
+    public function getDescription()
     {
         // no description for Line Break
         return '';

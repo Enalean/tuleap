@@ -32,15 +32,15 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits
         parent::__construct('projectlatestsvncommits', 'svn_get_revisions');
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('include_project_home', 'latest_svn_commit');
     }
-    function _getLinkToCommit($data)
+    public function _getLinkToCommit($data)
     {
         return '/svn/?func=detailrevision&amp;group_id='.$this->group_id.'&amp;commit_id='.$data['commit_id'];
     }
-    function _getLinkToMore()
+    public function _getLinkToMore()
     {
         return '/svn/?func=browse&group_id='.$this->group_id;
     }
@@ -50,12 +50,12 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits
         return $project->usesSvn();
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_latest_svn_commits', 'description');
     }
 
-    function getLatestRevisions()
+    public function getLatestRevisions()
     {
         if (! $this->latest_revisions) {
             $pm = ProjectManager::instance();

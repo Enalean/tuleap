@@ -30,18 +30,18 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
 
     public $force;
     public $token;
-    function __construct($item, $url, $controller, $force, $token)
+    public function __construct($item, $url, $controller, $force, $token)
     {
         parent::__construct($item, $url, false, true, $controller);
         $this->force    = $force;
         $this->token = $token;
     }
-    function getContent($params = [])
+    public function getContent($params = [])
     {
         return $this->item->accept($this);
     }
 
-    function _getApprovalTable()
+    public function _getApprovalTable()
     {
         $html = '';
 
@@ -56,7 +56,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getReleaseLock()
+    public function _getReleaseLock()
     {
         $content = '';
         $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
@@ -69,25 +69,25 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = array())
     {
         return "";
     }
-    function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = array())
     {
         return "";
     }
-    function visitWiki($item, $params = array())
+    public function visitWiki($item, $params = array())
     {
         return $this->visitDocument($item, $params);
     }
 
-    function visitLink($item, $params = array())
+    public function visitLink($item, $params = array())
     {
         return $this->visitVersionnedItem($item, $params);
     }
 
-    function visitFile($item, $params = array())
+    public function visitFile($item, $params = array())
     {
         return $this->visitVersionnedItem($item, $params);
     }
@@ -160,12 +160,12 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    function visitEmbeddedFile($item, $params = array())
+    public function visitEmbeddedFile($item, $params = array())
     {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty($item, $params = array())
+    public function visitEmpty($item, $params = array())
     {
         return $this->visitDocument($item, $params);
     }

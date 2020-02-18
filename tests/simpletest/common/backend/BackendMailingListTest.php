@@ -34,7 +34,7 @@ Mock::generate('MailingList');
 class BackendMailingListTest extends TuleapTestCase
 {
 
-    function testDeleteProjectMailingListsNothingToDelete()
+    public function testDeleteProjectMailingListsNothingToDelete()
     {
         $backend = new BackendMailingList_TestVersion();
         $dao = new MockMailingListDao();
@@ -49,7 +49,7 @@ class BackendMailingListTest extends TuleapTestCase
         $this->assertTrue($backend->deleteProjectMailingLists(1));
     }
 
-    function testDeleteProjectMailingListsDbDeleteFail()
+    public function testDeleteProjectMailingListsDbDeleteFail()
     {
         $backend = new BackendMailingList_TestVersion();
         $dao = new MockMailingListDao();
@@ -67,7 +67,7 @@ class BackendMailingListTest extends TuleapTestCase
         $this->assertFalse($backend->deleteProjectMailingLists(1));
     }
 
-    function testDeleteProjectMailingListsSuccess()
+    public function testDeleteProjectMailingListsSuccess()
     {
         $backend = new BackendMailingList_TestVersion();
         $dao = new MockMailingListDao();

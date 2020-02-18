@@ -25,7 +25,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
 /* abstract */ class Docman_View_Display extends Docman_View_Docman
 {
 
-    function _title($params)
+    public function _title($params)
     {
         // No title in printer version
         if (isset($params['pv']) && $params['pv'] > 0) {
@@ -39,7 +39,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         );
     }
 
-    /* protected */ function _footer($params)
+    /* protected */ public function _footer($params)
     {
         $builder   = new DocumentFooterPresenterBuilder(ProjectManager::instance(), EventManager::instance());
         $presenter = $builder->build($params, $params['group_id'], $params['item']->toRow(), $params['user']);
@@ -51,7 +51,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         parent::_footer($params);
     }
 
-    function _breadCrumbs($params)
+    public function _breadCrumbs($params)
     {
         $hp                 = Codendi_HTMLPurifier::instance();
         $item               = $params['item'];
@@ -102,14 +102,14 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         echo $html;
     }
 
-    function _javascript($params)
+    public function _javascript($params)
     {
         // force docman object to watch click on pen icon
         $this->javascript .= "docman.initShowOptions();\n";
         parent::_javascript($params);
     }
 
-    function _mode($params)
+    public function _mode($params)
     {
         $html = '';
          // Close table opened in method 'breadCrumbs'.

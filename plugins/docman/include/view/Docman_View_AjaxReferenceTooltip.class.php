@@ -26,7 +26,7 @@ require_once('Docman_View_View.class.php');
 
 class Docman_View_AjaxReferenceTooltip extends Docman_View_View
 {
-    function display($params = array())
+    public function display($params = array())
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
         $di = $this->_getDocmanIcons($params);

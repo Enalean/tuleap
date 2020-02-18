@@ -45,7 +45,7 @@ class BackendAliases extends Backend
      *
      * @return void
      */
-    function setNeedUpdateMailAliases()
+    public function setNeedUpdateMailAliases()
     {
         $this->need_update = true;
     }
@@ -55,7 +55,7 @@ class BackendAliases extends Backend
      *
      * @return bool
      */
-    function aliasesNeedUpdate()
+    public function aliasesNeedUpdate()
     {
         return $this->need_update;
     }

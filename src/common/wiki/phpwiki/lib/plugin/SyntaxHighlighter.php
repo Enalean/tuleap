@@ -67,19 +67,19 @@ if (!defined('HIGHLIGHT_DATA_DIR')) {
 
 class WikiPlugin_SyntaxHighlighter extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("SyntaxHighlighter");
     }
-    function getDescription()
+    public function getDescription()
     {
         return _("Source code syntax highlighter (via http://www.andre-simon.de)");
     }
-    function managesValidators()
+    public function managesValidators()
     {
         return true;
     }
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -87,7 +87,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
             "\$Revision: 1.7 $"
         );
     }
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array(
                      'syntax' => null, // required argument
@@ -97,7 +97,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
                      'wrap'   => 0,
                      );
     }
-    function handle_plugin_args_cruft(&$argstr, &$args)
+    public function handle_plugin_args_cruft(&$argstr, &$args)
     {
         $this->source = $argstr;
     }
@@ -138,7 +138,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
         $source = $this->source;

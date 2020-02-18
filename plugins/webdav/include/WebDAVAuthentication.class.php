@@ -43,7 +43,7 @@ class WebDAVAuthentication
      *
      * @return PFUser
      */
-    function authenticate()
+    public function authenticate()
     {
 
         // test if username field is empty
@@ -68,7 +68,7 @@ class WebDAVAuthentication
      *
      * @return bool
      */
-    function issetUsername()
+    public function issetUsername()
     {
 
         return isset($_SERVER['PHP_AUTH_USER']);
@@ -88,7 +88,7 @@ class WebDAVAuthentication
      *
      * @return String
      */
-    function getUsername()
+    public function getUsername()
     {
 
         return $_SERVER['PHP_AUTH_USER'];
@@ -99,7 +99,7 @@ class WebDAVAuthentication
      *
      * @return String
      */
-    function getPassword()
+    public function getPassword()
     {
 
         return $_SERVER['PHP_AUTH_PW'];
@@ -114,7 +114,7 @@ class WebDAVAuthentication
      *
      * @return PFUser
      */
-    function getUser($username, $password)
+    public function getUser($username, $password)
     {
 
         return UserManager::instance()->login($username, $password);

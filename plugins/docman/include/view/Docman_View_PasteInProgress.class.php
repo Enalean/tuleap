@@ -27,7 +27,7 @@ require_once 'Docman_View_ProjectHeader.class.php';
 class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
 {
 
-    function _getTitle($params)
+    public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
         return $GLOBALS['Language']->getText('plugin_docman', 'details_paste_inprogress_title', array(
@@ -36,7 +36,7 @@ class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
         ));
     }
 
-    function _content($params)
+    public function _content($params)
     {
         //spinner
         echo '<p id="paste_'.$params['itemToPaste']->getId().'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_paste_inprogress_info');
@@ -66,7 +66,7 @@ class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
         echo '<script type="text/javascript">setTimeout(function () {location.href="'.$url.'";}, 5000);</script>';
     }
 
-    function &_getDocmanIcons($params)
+    public function &_getDocmanIcons($params)
     {
         $icons = new Docman_Icons($this->_controller->getThemePath().'/images/ic/');
         return $icons;

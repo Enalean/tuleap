@@ -48,17 +48,17 @@ include_once("lib/plugin/WikiBlog.php");
 
 class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
 {
-    function getName()
+    public function getName()
     {
         return _("WikiForum");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Handles threaded topics with comments/news and provide a input form");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -67,7 +67,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('pagename'   => '[pagename]',
                      'order'      => 'normal',   // oldest first
@@ -77,7 +77,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
                     );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         if (!$args['pagename']) {
@@ -121,7 +121,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
 
     // Table of titles(subpages) without content
     // TODO: use $args['info']
-    function showTopics($request, $args)
+    public function showTopics($request, $args)
     {
         global $WikiTheme;
 

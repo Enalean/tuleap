@@ -158,7 +158,7 @@ class Tracker_RulesManager
      *
      * @return Tracker_RuleFactory
      */
-    function getRuleFactory()
+    public function getRuleFactory()
     {
         return Tracker_RuleFactory::instance();
     }
@@ -186,7 +186,7 @@ class Tracker_RulesManager
      * @return bool True if the submitted values are coherent regarding the rules,
      * false otherwise
      */
-    function validate($tracker_id, $value_field_list)
+    public function validate($tracker_id, $value_field_list)
     {
         $tracker =  $this->tracker_factory->getTrackerByid($tracker_id);
 
@@ -214,7 +214,7 @@ class Tracker_RulesManager
             );
     }
 
-    function isCyclic($tracker_id, $source_id, $target_id)
+    public function isCyclic($tracker_id, $source_id, $target_id)
     {
         if ($source_id == $target_id) {
             return true;
@@ -244,7 +244,7 @@ class Tracker_RulesManager
             );
     }
 
-    function fieldHasTarget($tracker_id, $field_id)
+    public function fieldHasTarget($tracker_id, $field_id)
     {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         foreach ($rules as $rule) {
@@ -255,7 +255,7 @@ class Tracker_RulesManager
         return false;
     }
 
-    function fieldHasSource($tracker_id, $field_id)
+    public function fieldHasSource($tracker_id, $field_id)
     {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         foreach ($rules as $rule) {
@@ -266,7 +266,7 @@ class Tracker_RulesManager
         return false;
     }
 
-    function valueHasTarget($tracker_id, $field_id, $value_id, $target_id)
+    public function valueHasTarget($tracker_id, $field_id, $value_id, $target_id)
     {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         foreach ($rules as $rule) {
@@ -277,7 +277,7 @@ class Tracker_RulesManager
         return false;
     }
 
-    function valueHasSource($tracker_id, $field_id, $value_id, $source_id)
+    public function valueHasSource($tracker_id, $field_id, $value_id, $source_id)
     {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         foreach ($rules as $rule) {
@@ -288,7 +288,7 @@ class Tracker_RulesManager
         return false;
     }
 
-    function ruleExists($tracker_id, $source_id, $target_id)
+    public function ruleExists($tracker_id, $source_id, $target_id)
     {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         foreach ($rules as $rule) {
@@ -311,7 +311,7 @@ class Tracker_RulesManager
         return $sources;
     }
 
-    function getAllTargetFields($source_id)
+    public function getAllTargetFields($source_id)
     {
         $targets     = array();
         $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);
@@ -485,7 +485,7 @@ class Tracker_RulesManager
         $this->tracker->displayFooter($engine);
     }
 
-    function displayDefineDependencies($engine, $request, $current_user, $source_field_id, $target_field_id)
+    public function displayDefineDependencies($engine, $request, $current_user, $source_field_id, $target_field_id)
     {
         $hp = Codendi_HTMLPurifier::instance();
         $title = $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'dependencies_matrix_title');
@@ -568,7 +568,7 @@ class Tracker_RulesManager
           echo '<td class="matrix_cell" ><label class="pc_checkbox"><input type="checkbox" class=" tracker-field-dependencies-checkbox" name="'.$box_value.'" '. $checked .'>&nbsp;</label></td>';
     }
 
-    function displayRulesAsJavascript()
+    public function displayRulesAsJavascript()
     {
         $html = '<script type="text/javascript">';
         $html .= "\n//------------------------------------------------------\n";

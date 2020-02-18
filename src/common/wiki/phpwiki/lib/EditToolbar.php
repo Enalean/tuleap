@@ -13,7 +13,7 @@
 class EditToolbar
 {
 
-    function __construct()
+    public function __construct()
     {
         global $WikiTheme;
 
@@ -127,12 +127,12 @@ function undo_save() {
         $this->tokens['EDIT_TOOLBAR'] = $this->_generate();
     }
 
-    function getTokens()
+    public function getTokens()
     {
         return $this->tokens;
     }
 
-    function _generate()
+    public function _generate()
     {
         global $WikiTheme;
 
@@ -279,7 +279,7 @@ function undo_save() {
     }
 
     //TODO: make the result cached
-    function categoriesPulldown()
+    public function categoriesPulldown()
     {
         global $WikiTheme;
 
@@ -310,7 +310,7 @@ function undo_save() {
     }
 
     //TODO: Make the result cached. Esp. the args are expensive
-    function pluginPulldown()
+    public function pluginPulldown()
     {
         global $WikiTheme;
 
@@ -358,7 +358,7 @@ function undo_save() {
         return '';
     }
 
-    function pagesPulldown($query, $case_exact = false, $regex = 'auto')
+    public function pagesPulldown($query, $case_exact = false, $regex = 'auto')
     {
         require_once('lib/TextSearchQuery.php');
         $dbi = $GLOBALS['request']->_dbi;
@@ -383,7 +383,7 @@ function undo_save() {
     }
 
     //TODO: make the result cached
-    function templatePulldown($query, $case_exact = false, $regex = 'auto')
+    public function templatePulldown($query, $case_exact = false, $regex = 'auto')
     {
         require_once('lib/TextSearchQuery.php');
         $dbi = $GLOBALS['request']->_dbi;

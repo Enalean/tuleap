@@ -156,7 +156,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
-    function _deleteItem($item, $params)
+    public function _deleteItem($item, $params)
     {
         if ($this->getPermissionManager($item->getGroupId())->userCanDelete($params['user'], $item)) {
             $dIF = $this->_getItemFactory();
@@ -175,7 +175,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * @return bool
      * @throws DeleteFailedException
      */
-    function _deleteFile(Docman_File $item, $params)
+    public function _deleteFile(Docman_File $item, $params)
     {
         // Delete all versions before
         $version_factory = $this->_getVersionFactory();
@@ -197,20 +197,20 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      *
      * @return bool
      */
-    function _deleteVersion(Docman_File $item, Docman_Version $version, PFUser $user)
+    public function _deleteVersion(Docman_File $item, Docman_Version $version, PFUser $user)
     {
         // Proceed to deletion
         $version_factory = $this->_getVersionFactory();
         return $version_factory->deleteSpecificVersion($item, $version->getNumber());
     }
 
-    function _getEventManager()
+    public function _getEventManager()
     {
         return EventManager::instance();
     }
 
     public $version_factory;
-    function _getVersionFactory()
+    public function _getVersionFactory()
     {
         if (!$this->version_factory) {
             $this->version_factory = new Docman_VersionFactory();
@@ -219,7 +219,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     }
 
     public $item_factory;
-    function _getItemFactory()
+    public function _getItemFactory()
     {
         if (!$this->item_factory) {
             $this->item_factory = new Docman_ItemFactory();
@@ -228,7 +228,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     }
 
     public $lock_factory;
-    function _getLockFactory()
+    public function _getLockFactory()
     {
         if (!$this->lock_factory) {
             $this->lock_factory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
@@ -236,17 +236,17 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         return $this->lock_factory;
     }
 
-    function _getFileStorage()
+    public function _getFileStorage()
     {
         return new Docman_FileStorage();
     }
 
-    function _getItemDao()
+    public function _getItemDao()
     {
         return new Docman_ItemDao(CodendiDataAccess::instance());
     }
 
-    function getPermissionManager($groupId)
+    public function getPermissionManager($groupId)
     {
         return Docman_PermissionsManager::instance($groupId);
     }

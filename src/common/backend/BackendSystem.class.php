@@ -488,7 +488,7 @@ class BackendSystem extends Backend
      *
      * @return bool
      */
-    function archiveProjectFtp($group_id)
+    public function archiveProjectFtp($group_id)
     {
         if (! is_dir(ForgeConfig::get('ftp_anon_dir_prefix'))) {
             $this->log('No ftp_anon_dir_prefix, archiveProjectFtp skipped', Backend::LOG_INFO);
@@ -633,7 +633,7 @@ class BackendSystem extends Backend
      *
      * @return bool false if repository or file  or link already exists, true otherwise
      */
-    function isUserNameAvailable($name)
+    public function isUserNameAvailable($name)
     {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             return true;

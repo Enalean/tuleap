@@ -33,12 +33,12 @@ class ArtifactRuleValueView
      *
      *  @param $artifact_rule object
      */
-    function __construct($rule)
+    public function __construct($rule)
     {
         $this->rule = $rule;
     }
 
-    function display()
+    public function display()
     {
         echo $this->fetch();
     }
@@ -47,7 +47,7 @@ class ArtifactRuleValueView
      * @return a representation of an artifact rule
      * #id@group_artifact_id source_field(source_value) => target_field(target_value_1, target_value_2)
      */
-    function fetch()
+    public function fetch()
     {
         $output  = '#'. $this->rule->id;
         $output .= '@'. $this->rule->group_artifact_id;

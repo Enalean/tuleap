@@ -29,7 +29,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
     public $inheritableMetadataArray;
     public $_controller;
 
-    function __construct($item, $url, $controller)
+    public function __construct($item, $url, $controller)
     {
         $this->_controller = $controller;
 
@@ -38,7 +38,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         parent::__construct($item, $url, $id, $title);
     }
 
-    function _getPropertyRow($label, $value)
+    public function _getPropertyRow($label, $value)
     {
         $html = '';
         $html .= '<tr style="vertical-align:top;">';
@@ -48,7 +48,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getStatisticsFields($params)
+    public function _getStatisticsFields($params)
     {
         $html = '';
 
@@ -81,7 +81,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function getContent($params = array())
+    public function getContent($params = array())
     {
         $html = '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_statistics_help').'</div>';
         $html .= $this->_getStatisticsFields($params);

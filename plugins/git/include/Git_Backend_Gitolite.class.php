@@ -486,7 +486,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return GitRepository
      */
-    function loadRepositoryFromId($repositoryId)
+    public function loadRepositoryFromId($repositoryId)
     {
         $repository = new GitRepository();
         $repository->setId($repositoryId);

@@ -33,7 +33,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      *
      * @return void
      */
-    function __construct(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface $da, $groupId = null)
+    public function __construct(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface $da, $groupId = null)
     {
         parent::__construct($da);
         if ($groupId) {
@@ -49,7 +49,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function totalRead($startDate, $endDate)
+    public function totalRead($startDate, $endDate)
     {
         $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
                 YEAR(day) AS year,
@@ -73,7 +73,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function totalCommits($startDate, $endDate)
+    public function totalCommits($startDate, $endDate)
     {
         $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(date), '%M') AS month,
                 YEAR(FROM_UNIXTIME(date)) AS year,
@@ -97,7 +97,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function readByProject($startDate, $endDate)
+    public function readByProject($startDate, $endDate)
     {
         $sql = "SELECT unix_group_name AS project, SUM(svn_access_count) AS count
                 FROM group_svn_full_history
@@ -118,7 +118,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function commitsByProject($startDate, $endDate)
+    public function commitsByProject($startDate, $endDate)
     {
         $sql = "SELECT unix_group_name AS project, COUNT(c.id) AS count
                 FROM svn_commits c
@@ -139,7 +139,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function readByUser($startDate, $endDate)
+    public function readByUser($startDate, $endDate)
     {
         $sql = "SELECT user_name AS user, SUM(svn_access_count) AS count
                 FROM group_svn_full_history
@@ -161,7 +161,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function commitsByUser($startDate, $endDate)
+    public function commitsByUser($startDate, $endDate)
     {
         $sql = "SELECT user_name AS user, COUNT(c.id) AS count
                 FROM svn_commits c
@@ -183,7 +183,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function repositoriesWithCommit($startDate, $endDate)
+    public function repositoriesWithCommit($startDate, $endDate)
     {
         $sql = "SELECT COUNT(DISTINCT(group_id)) AS count
                 FROM svn_commits

@@ -62,7 +62,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::get()
      */
-    function get()
+    public function get()
     {
         // in this case download just an empty file
         $this->download('application/octet-stream', 0, '');
@@ -75,7 +75,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_INode::getName()
      */
-    function getName()
+    public function getName()
     {
         $utils = $this->getUtils();
         return $utils->unconvertHTMLSpecialChars($this->getItem()->getTitle());
@@ -88,7 +88,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getContentType()
      */
-    function getContentType()
+    public function getContentType()
     {
         switch (get_class($this->getItem())) {
             case 'Docman_Wiki':
@@ -110,7 +110,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getSize()
      */
-    function getSize()
+    public function getSize()
     {
         return 0;
     }
@@ -122,7 +122,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Node::getLastModified()
      */
-    function getLastModified()
+    public function getLastModified()
     {
         return $this->getItem()->getUpdateDate();
     }
@@ -132,7 +132,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @return Project
      */
-    function getProject()
+    public function getProject()
     {
         return $this->project;
     }
@@ -142,7 +142,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @return PFUser
      */
-    function getUser()
+    public function getUser()
     {
         return $this->user;
     }
@@ -152,7 +152,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @return Docman_Document
      */
-    function getItem()
+    public function getItem()
     {
         return $this->item;
     }
@@ -162,7 +162,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @return WebDAVUtils
      */
-    function getUtils()
+    public function getUtils()
     {
         return WebDAVUtils::getInstance();
     }
@@ -186,7 +186,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @return void
      */
-    function delete()
+    public function delete()
     {
         if ($this->getUtils()->isWriteEnabled()) {
             // Request
@@ -212,7 +212,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @return void
      */
-    function setName($name)
+    public function setName($name)
     {
         if ($this->getUtils()->isWriteEnabled()) {
             try {

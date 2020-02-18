@@ -78,7 +78,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase
 
 class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_BaseTest
 {
-    function testGetChangesetValue()
+    public function testGetChangesetValue()
     {
         $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_FileDao::class);
 
@@ -102,7 +102,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertEqual(count($changeset_value->getFiles()), 3);
     }
 
-    function testGetChangesetValue_doesnt_exist()
+    public function testGetChangesetValue_doesnt_exist()
     {
         $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_FileDao::class);
         $dar = Mockery::spy(DataAccessResult::class);
@@ -118,7 +118,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertEqual(count($changeset_value->getFiles()), 0);
     }
 
-    function test_augmentDataFromRequest_null()
+    public function test_augmentDataFromRequest_null()
     {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(null);
@@ -131,7 +131,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertIdentical($fields_data[66], array());
     }
 
-    function test_augmentDataFromRequest_emptyarray()
+    public function test_augmentDataFromRequest_emptyarray()
     {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array());
@@ -144,7 +144,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertIdentical($fields_data[66], array());
     }
 
-    function test_augmentDataFromRequest_one_file_belonging_to_field()
+    public function test_augmentDataFromRequest_one_file_belonging_to_field()
     {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -185,7 +185,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         ));
     }
 
-    function test_augmentDataFromRequest_two_files_belonging_to_field()
+    public function test_augmentDataFromRequest_two_files_belonging_to_field()
     {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -236,7 +236,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         ));
     }
 
-    function test_augmentDataFromRequest_two_files_belonging_to_field_and_one_file_not()
+    public function test_augmentDataFromRequest_two_files_belonging_to_field_and_one_file_not()
     {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -300,7 +300,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertFalse(isset($fields_data[111]));
     }
 
-    function test_augmentDataFromRequest_one_file_does_not_belong_to_field()
+    public function test_augmentDataFromRequest_one_file_does_not_belong_to_field()
     {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -334,7 +334,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertIdentical($fields_data[66], array());
     }
 
-    function test_augmentDataFromRequest_dont_override_description()
+    public function test_augmentDataFromRequest_dont_override_description()
     {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -373,7 +373,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertEqual($fields_data[66][0]['description'], 'The description of the file');
     }
 
-    function test_isValid_not_filled()
+    public function test_isValid_not_filled()
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -397,7 +397,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
 
-    function test_isValid_two_not_filled()
+    public function test_isValid_two_not_filled()
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -429,7 +429,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
 
-    function test_isValid_only_description_filled()
+    public function test_isValid_only_description_filled()
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -452,7 +452,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertFalse($not_required_file->isValid($artifact, $value));
     }
 
-    function test_isValid_description_filled_but_error_with_file_upload()
+    public function test_isValid_description_filled_but_error_with_file_upload()
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -475,7 +475,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertFalse($not_required_file->isValid($artifact, $value));
     }
 
-    function test_isValid_description_filled_and_file_ok()
+    public function test_isValid_description_filled_and_file_ok()
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -498,7 +498,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
 
-    function itIsValidWhenFieldIsRequiredButHasAFileFromPreviousChangeset()
+    public function itIsValidWhenFieldIsRequiredButHasAFileFromPreviousChangeset()
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -518,7 +518,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertTrue($required_file->isValid($artifact, $value));
     }
 
-    function test_isValid_two_files_ok()
+    public function test_isValid_two_files_ok()
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -549,7 +549,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
 
-    function test_isValid_one_file_ok_among_two()
+    public function test_isValid_one_file_ok_among_two()
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -580,7 +580,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertFalse($not_required_file->isValid($artifact, $value));
     }
 
-    function test_isValid_one_file_ok_and_one_empty()
+    public function test_isValid_one_file_ok_and_one_empty()
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -611,7 +611,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
 
-    function testGetRootPath()
+    public function testGetRootPath()
     {
         ForgeConfig::set('sys_data_dir', dirname(__FILE__) .'/data');
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();

@@ -19,7 +19,7 @@
 
 class Project_InvalidShortName_Exception extends Exception
 {
-    function __construct($message)
+    public function __construct($message)
     {
         parent::__construct($message, 3102);
     }

@@ -30,12 +30,12 @@ rcs_id('$Id: WikiForm.php,v 1.16 2004/07/01 13:14:01 rurban Exp $');
  */
 class WikiPlugin_WikiForm extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("WikiForm");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -44,7 +44,7 @@ class WikiPlugin_WikiForm extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('action' => 'upload', // 'upload', 'loadfile', or
                                            // 'dumpserial'
@@ -55,7 +55,7 @@ class WikiPlugin_WikiForm extends WikiPlugin
     }
 
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
         $form = HTML::form(

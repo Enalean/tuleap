@@ -113,23 +113,23 @@ class Docman_NotificationsManager
         $this->url_provider              = $url_provider;
     }
 
-    function _getItemFactory()
+    public function _getItemFactory()
     {
         return new Docman_ItemFactory();
     }
-    function _getUserManager()
+    public function _getUserManager()
     {
         return UserManager::instance();
     }
-    function _getPermissionsManager()
+    public function _getPermissionsManager()
     {
         return Docman_PermissionsManager::instance($this->project->getID());
     }
-    function _getDocmanPath()
+    public function _getDocmanPath()
     {
         return new Docman_Path();
     }
-    function somethingHappen($event, $params)
+    public function somethingHappen($event, $params)
     {
         $um             = $this->_getUserManager();
         $params['path'] = $this->_getDocmanPath();
@@ -151,12 +151,12 @@ class Docman_NotificationsManager
             }
         }
     }
-    function _getListeningUsersItemId($params)
+    public function _getListeningUsersItemId($params)
     {
         return $params['item']->getId();
     }
 
-    function sendNotifications($event, $params)
+    public function sendNotifications($event, $params)
     {
         $success = true;
         foreach ($this->notifications as $notification) {
@@ -167,7 +167,7 @@ class Docman_NotificationsManager
         }
     }
 
-    /* protected */ function _getType()
+    /* protected */ public function _getType()
     {
         return PLUGIN_DOCMAN_NOTIFICATION;
     }
@@ -198,7 +198,7 @@ class Docman_NotificationsManager
         return $this->ugroups_retriever->getListeningUGroups($item, $ugroups, PLUGIN_DOCMAN_NOTIFICATION);
     }
 
-    function _buildMessage($event, $params, $user)
+    public function _buildMessage($event, $params, $user)
     {
         $type = '';
         switch ($event) {
@@ -274,7 +274,7 @@ class Docman_NotificationsManager
      *
      * @return Docman_Item
      */
-    function _getMonitoredItemForUser($user, $item)
+    public function _getMonitoredItemForUser($user, $item)
     {
         $listeners = $this->getListeningUsers($item);
         foreach ($listeners as $userId => $item) {
@@ -285,7 +285,7 @@ class Docman_NotificationsManager
         return $item;
     }
 
-    function _getMessageForUser($user, $message_type, $params)
+    public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
         switch ($message_type) {
@@ -326,7 +326,7 @@ class Docman_NotificationsManager
      *
      * @return DataAccessResult|false
      */
-    function listAllMonitoredItems($groupId, $userId = null)
+    public function listAllMonitoredItems($groupId, $userId = null)
     {
         return $this->users_to_notify_dao->searchDocmanMonitoredItems($groupId, $userId);
     }

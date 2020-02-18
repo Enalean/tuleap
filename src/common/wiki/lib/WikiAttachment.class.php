@@ -433,7 +433,7 @@ class WikiAttachment /* implements UGroupPermission */
      *
      * @access
      */
-    function createRevision($userfile_name, $userfile_size, $userfile_type, $userfile_tmpname)
+    public function createRevision($userfile_name, $userfile_size, $userfile_type, $userfile_tmpname)
     {
         if (!$this->setFilename(urldecode($userfile_name))) {
             return -1;
@@ -470,7 +470,7 @@ class WikiAttachment /* implements UGroupPermission */
         return $att_rev->getRevision();
     }
 
-    function initWithId($id = 0)
+    public function initWithId($id = 0)
     {
         $this->id = (int) $id;
         $dao = WikiAttachment::getDao();
@@ -478,7 +478,7 @@ class WikiAttachment /* implements UGroupPermission */
         $this->setFromRow($dar->getRow());
     }
 
-    function setFromRow($row)
+    public function setFromRow($row)
     {
         $this->id       = $row['id'];
         $this->setGid($row['group_id']);
@@ -488,7 +488,7 @@ class WikiAttachment /* implements UGroupPermission */
         }
     }
 
-    function setRevisionCounter($nb)
+    public function setRevisionCounter($nb)
     {
         $this->revisionCounter = (int) $nb;
     }
@@ -496,7 +496,7 @@ class WikiAttachment /* implements UGroupPermission */
     /**
      * @access
      */
-    function validate()
+    public function validate()
     {
         // Validate Group id
         $pm = ProjectManager::instance();
@@ -516,12 +516,12 @@ class WikiAttachment /* implements UGroupPermission */
 
 
 
-    function htmlDump()
+    public function htmlDump()
     {
         $this->revision->htmlDump();
     }
 
-    function count()
+    public function count()
     {
         if ($this->revisionCounter === null) {
             $this->getId();

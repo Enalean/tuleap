@@ -54,7 +54,7 @@ class MGraph
 
 
     // Create a new instane of the combined graph
-    function __construct($aWidth = null, $aHeight = null, $aCachedName = '', $aTimeOut = 0, $aInline = true)
+    public function __construct($aWidth = null, $aHeight = null, $aCachedName = '', $aTimeOut = 0, $aInline = true)
     {
         $this->iWidth = $aWidth;
         $this->iHeight = $aHeight;
@@ -94,13 +94,13 @@ class MGraph
     }
 
     // Specify background fill color for the combined graph
-    function SetFillColor($aColor)
+    public function SetFillColor($aColor)
     {
         $this->iFillColor = $aColor;
     }
 
     // Add a frame around the combined graph
-    function SetFrame($aFlg, $aColor = 'black', $aWeight = 1)
+    public function SetFrame($aFlg, $aColor = 'black', $aWeight = 1)
     {
         $this->iDoFrame = $aFlg;
         $this->iFrameColor = $aColor;
@@ -108,13 +108,13 @@ class MGraph
     }
 
     // Specify a background image blend
-    function SetBackgroundImageMix($aMix)
+    public function SetBackgroundImageMix($aMix)
     {
         $this->background_image_mix = $aMix ;
     }
 
     // Specify a background image
-    function SetBackgroundImage($aFileName, $aCenter_aX = null, $aY = null)
+    public function SetBackgroundImage($aFileName, $aCenter_aX = null, $aY = null)
     {
         // Second argument can be either a boolean value or
         // a numeric
@@ -148,7 +148,7 @@ class MGraph
         $this->background_image_y = $aY;
     }
 
-    function _strokeBackgroundImage()
+    public function _strokeBackgroundImage()
     {
         if ($this->background_image == '') {
             return;
@@ -186,17 +186,17 @@ class MGraph
         imagecopymerge($this->img, $bkgimg, $x, $y, 0, 0, $bw, $bh, $this->background_image_mix);
     }
 
-    function AddMix($aGraph, $x = 0, $y = 0, $mix = 100, $fx = 0, $fy = 0, $w = 0, $h = 0)
+    public function AddMix($aGraph, $x = 0, $y = 0, $mix = 100, $fx = 0, $fy = 0, $w = 0, $h = 0)
     {
         $this->_gdImgHandle($aGraph->Stroke(_IMG_HANDLER), $x, $y, $fx = 0, $fy = 0, $w, $h, $mix);
     }
 
-    function Add($aGraph, $x = 0, $y = 0, $fx = 0, $fy = 0, $w = 0, $h = 0)
+    public function Add($aGraph, $x = 0, $y = 0, $fx = 0, $fy = 0, $w = 0, $h = 0)
     {
         $this->_gdImgHandle($aGraph->Stroke(_IMG_HANDLER), $x, $y, $fx = 0, $fy = 0, $w, $h);
     }
 
-    function _gdImgHandle($agdCanvas, $x, $y, $fx = 0, $fy = 0, $w = 0, $h = 0, $mix = 100)
+    public function _gdImgHandle($agdCanvas, $x, $y, $fx = 0, $fy = 0, $w = 0, $h = 0, $mix = 100)
     {
         if ($w == 0) {
             $w = @imagesx($agdCanvas);
@@ -212,7 +212,7 @@ class MGraph
         $this->iGraphs[$this->iCnt++] = array($agdCanvas,$x,$y,$fx,$fy,$w,$h,$mix);
     }
 
-    function SetMargin($lm, $rm, $tm, $bm)
+    public function SetMargin($lm, $rm, $tm, $bm)
     {
         $this->lm = $lm;
         $this->rm = $rm;
@@ -220,19 +220,19 @@ class MGraph
         $this->bm = $bm;
     }
 
-    function SetExpired($aFlg = true)
+    public function SetExpired($aFlg = true)
     {
         $this->expired = $aFlg;
     }
 
-    function SetImgFormat($aFormat, $aQuality = 75)
+    public function SetImgFormat($aFormat, $aQuality = 75)
     {
         $this->image_format = $aFormat;
         $this->image_quality = $aQuality;
     }
 
     // Set the shadow around the whole image
-    function SetShadow($aShowShadow = true, $aShadowWidth = 4, $aShadowColor = 'gray@0.3')
+    public function SetShadow($aShowShadow = true, $aShadowWidth = 4, $aShadowColor = 'gray@0.3')
     {
         $this->doshadow = $aShowShadow;
         $this->shadow_color = $aShadowColor;
@@ -241,7 +241,7 @@ class MGraph
         $this->footer->iRightMargin += $aShadowWidth;
     }
 
-    function StrokeTitle($image, $w, $h)
+    public function StrokeTitle($image, $w, $h)
     {
         // Stroke title
         if ($this->title->t !== '') {
@@ -293,7 +293,7 @@ class MGraph
         }
     }
 
-    function Stroke($aFileName = '')
+    public function Stroke($aFileName = '')
     {
         // Find out the necessary size for the container image
         $w=0;

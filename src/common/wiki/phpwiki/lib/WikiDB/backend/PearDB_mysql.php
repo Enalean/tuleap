@@ -11,7 +11,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
     /**
      * Create a new revision of a page.
      */
-    function set_versiondata($pagename, $version, $data)
+    public function set_versiondata($pagename, $version, $data)
     {
         $dbh = &$this->_dbh;
         $version_tbl = $this->_table_names['version_tbl'];
@@ -48,7 +48,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
         $this->unlock();
     }
 
-    function _update_recent_table($pageid = false)
+    public function _update_recent_table($pageid = false)
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
@@ -73,7 +73,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
     }
 
     /* ISNULL is mysql specific */
-    function wanted_pages($exclude_from = '', $exclude = '', $sortby = false, $limit = false)
+    public function wanted_pages($exclude_from = '', $exclude = '', $sortby = false, $limit = false)
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
@@ -128,7 +128,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
     /**
      * Lock tables.
      */
-    function _lock_tables($write_lock = true)
+    public function _lock_tables($write_lock = true)
     {
         $lock_type = $write_lock ? "WRITE" : "READ";
         foreach ($this->_table_names as $table) {
@@ -140,12 +140,12 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
     /**
      * Release all locks.
      */
-    function _unlock_tables()
+    public function _unlock_tables()
     {
         $this->_dbh->query("UNLOCK TABLES");
     }
 
-    function increaseHitCount($pagename)
+    public function increaseHitCount($pagename)
     {
         $dbh = &$this->_dbh;
         // Hits is the only thing we can update in a fast manner.
@@ -166,7 +166,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
 
 class WikiDB_backend_PearDB_mysql_search extends WikiDB_backend_PearDB_search
 {
-    function _pagename_match_clause($node)
+    public function _pagename_match_clause($node)
     {
         $word = $node->sql();
         if ($node->op == 'REGEX') { // posix regex extensions

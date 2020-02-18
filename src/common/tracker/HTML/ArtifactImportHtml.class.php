@@ -35,7 +35,7 @@ class ArtifactImportHtml extends ArtifactImport
    *
    *      @return bool success.
    */
-    function __construct($ath, $art_field_fact, $group)
+    public function __construct($ath, $art_field_fact, $group)
     {
         return parent::__construct($ath, $art_field_fact, $group);
     }
@@ -46,7 +46,7 @@ class ArtifactImportHtml extends ArtifactImport
    *
    *
    */
-    function displayParse($csv_filename)
+    public function displayParse($csv_filename)
     {
         global $Language;
 
@@ -88,7 +88,7 @@ class ArtifactImportHtml extends ArtifactImport
     }
 
 
-    function showErrors()
+    public function showErrors()
     {
         echo $this->getErrorMessage()." <br>\n";
     }
@@ -100,7 +100,7 @@ class ArtifactImportHtml extends ArtifactImport
  *                        all the fields parsed from $data
  * @param $artifacts_data: array containing the records for each artifact to be imported
  */
-    function showParseResults($parsed_labels, $artifacts_data)
+    public function showParseResults($parsed_labels, $artifacts_data)
     {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
@@ -248,7 +248,7 @@ class ArtifactImportHtml extends ArtifactImport
    *
    *
    */
-    function displayImport($parsed_labels, $artifacts_data, $aid_column, $count_artifacts)
+    public function displayImport($parsed_labels, $artifacts_data, $aid_column, $count_artifacts)
     {
         global $Language;
 
@@ -278,7 +278,7 @@ class ArtifactImportHtml extends ArtifactImport
    *
    *
    */
-    function displayShowFormat()
+    public function displayShowFormat()
     {
         global $Language;
 
@@ -344,7 +344,7 @@ class ArtifactImportHtml extends ArtifactImport
    *
    *
    */
-    function displayCSVInput($atid, $user_id)
+    public function displayCSVInput($atid, $user_id)
     {
         global $Language,$sys_max_size_upload;
 

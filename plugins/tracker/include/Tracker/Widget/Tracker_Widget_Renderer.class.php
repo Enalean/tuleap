@@ -29,19 +29,19 @@ abstract class Tracker_Widget_Renderer extends Widget
     public $renderer_title;
     public $renderer_id;
 
-    function __construct($id, $owner_id, $owner_type)
+    public function __construct($id, $owner_id, $owner_type)
     {
         parent::__construct($id);
         $this->setOwner($owner_id, $owner_type);
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $this->renderer_title ?:
             dgettext('tuleap-tracker', 'Tracker renderer');
     }
 
-    function getContent()
+    public function getContent()
     {
         $renderer = $this->getRenderer();
         if ($renderer) {
@@ -66,7 +66,7 @@ abstract class Tracker_Widget_Renderer extends Widget
         return null;
     }
 
-    function isAjax()
+    public function isAjax()
     {
         return true;
     }
@@ -154,7 +154,7 @@ abstract class Tracker_Widget_Renderer extends Widget
         return db_insertid($res);
     }
 
-    function loadContent($id)
+    public function loadContent($id)
     {
         $sql = "SELECT * FROM tracker_widget_renderer WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
@@ -166,7 +166,7 @@ abstract class Tracker_Widget_Renderer extends Widget
         }
     }
 
-    function create(Codendi_Request $request)
+    public function create(Codendi_Request $request)
     {
         $content_id = false;
         $vId = new Valid_UInt('renderer_id');
@@ -181,7 +181,7 @@ abstract class Tracker_Widget_Renderer extends Widget
         return $content_id;
     }
 
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
@@ -210,18 +210,18 @@ abstract class Tracker_Widget_Renderer extends Widget
         return $done;
     }
 
-    function destroy($id)
+    public function destroy($id)
     {
         $sql = 'DELETE FROM tracker_widget_renderer WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
         db_query($sql);
     }
 
-    function isUnique()
+    public function isUnique()
     {
         return false;
     }
 
-    function getCategory()
+    public function getCategory()
     {
         return dgettext('tuleap-tracker', 'Trackers');
     }

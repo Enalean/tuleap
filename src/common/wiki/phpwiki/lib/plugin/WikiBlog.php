@@ -71,17 +71,17 @@ require_once('lib/TextSearchQuery.php');
 
 class WikiPlugin_WikiBlog extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("WikiBlog");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return sprintf(_("Show and add blogs for %s"), '[pagename]');
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -111,7 +111,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
     // - captions for 'show' and 'add' sections
 
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('pagename'   => '[pagename]',
                      'order'      => 'normal',
@@ -120,7 +120,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
                     );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         // allow empty pagenames for ADMIN_USER style blogs: "Blog/day"
@@ -158,7 +158,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         return $html;
     }
 
-    function add(&$request, $blog, $type = 'wikiblog')
+    public function add(&$request, $blog, $type = 'wikiblog')
     {
         $parent = $blog['pagename'];
         if (empty($parent)) {
@@ -281,7 +281,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         // Any way to jump back to preview mode???
     }
 
-    function showAll(&$request, $args, $type = "wikiblog")
+    public function showAll(&$request, $args, $type = "wikiblog")
     {
         // FIXME: currently blogSearch uses WikiDB->titleSearch to
         // get results, so results are in alphabetical order.
@@ -322,7 +322,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
     }
 
     // all Blogs/Forum/Comment entries are subpages under this pagename, to find them faster.
-    function _blogPrefix($type = 'wikiblog')
+    public function _blogPrefix($type = 'wikiblog')
     {
         if ($type == 'wikiblog') {
             $name = "Blog";
@@ -334,7 +334,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         return $name;
     }
 
-    function _transformOldFormatBlog($rev, $type = 'wikiblog')
+    public function _transformOldFormatBlog($rev, $type = 'wikiblog')
     {
         $page = $rev->getPage();
         $metadata = array();
@@ -349,7 +349,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         return new TransformedText($page, $rev->getPackedContent(), $meta, $type);
     }
 
-    function findBlogs(&$dbi, $parent, $type = 'wikiblog')
+    public function findBlogs(&$dbi, $parent, $type = 'wikiblog')
     {
         $prefix = (empty($parent) ? "" :  $parent . SUBPAGE_SEPARATOR) . $this->_blogPrefix($type);
         $pages = $dbi->titleSearch(new TextSearchQuery("^".$prefix, true, 'posix'));
@@ -367,7 +367,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         return $blogs;
     }
 
-    function cmp($a, $b)
+    public function cmp($a, $b)
     {
         return(strcmp(
             $a->get('mtime'),
@@ -375,7 +375,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         ));
     }
 
-    function showForm(&$request, $args, $template = 'blogform')
+    public function showForm(&$request, $args, $template = 'blogform')
     {
         // Show blog-entry form.
         return new Template(
@@ -386,14 +386,14 @@ class WikiPlugin_WikiBlog extends WikiPlugin
     }
 
     // "2004-12" => "December 2004"
-    function _monthTitle($month)
+    public function _monthTitle($month)
     {
         //list($year,$mon) = explode("-",$month);
         return strftime("%B %Y", strtotime($month."-01"));
     }
 
     // "User/Blog/2004-12-13/12:28:50+01:00" => array('month' => "2004-12", ...)
-    function _blog($rev_or_page)
+    public function _blog($rev_or_page)
     {
         $pagename = $rev_or_page->getName();
         if (preg_match("/^(.*Blog)\/(\d\d\d\d-\d\d)-(\d\d)\/(.*)/", $pagename, $m)) {
@@ -409,7 +409,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
                      'prefix'  => $prefix);
     }
 
-    function _nonDefaultArgs($args)
+    public function _nonDefaultArgs($args)
     {
         return array_diff_assoc($args, $this->getDefaultArguments());
     }

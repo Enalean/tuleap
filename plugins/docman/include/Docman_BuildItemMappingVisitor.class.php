@@ -65,7 +65,7 @@ class Docman_BuildItemMappingVisitor
 {
     public $groupId;
 
-    function __construct($groupId)
+    public function __construct($groupId)
     {
         $this->groupId = $groupId;
         $this->itemMapping = array();
@@ -78,7 +78,7 @@ class Docman_BuildItemMappingVisitor
      * This is the only visit method the should be called as we deal with
      * folder children for comparison.
      */
-    function visitFolder($item, $params)
+    public function visitFolder($item, $params)
     {
         $nodesToInspect = array();
 
@@ -117,7 +117,7 @@ class Docman_BuildItemMappingVisitor
      * Find in the destination project an item that match the one in parameter.
      * This works only for root item.
      */
-    function findMatchingItem($item)
+    public function findMatchingItem($item)
     {
         if ($item->getParentId() == 0) {
             $dar = $this->searchMatchingItem($item, 0);
@@ -136,7 +136,7 @@ class Docman_BuildItemMappingVisitor
      * Search $item children in the destination project and check if the
      * resulting list of item is equivalent to the children of $item.
      */
-    function findMatchingChildren($item)
+    public function findMatchingChildren($item)
     {
         if (isset($this->itemMapping[$item->getId()])) {
             $parentId = $this->itemMapping[$item->getId()];
@@ -166,7 +166,7 @@ class Docman_BuildItemMappingVisitor
      * the search stops, the mapping is (obviously) not done and the source
      * child and its future brothers are discared.
      */
-    function compareFolderChildren($srcItem, $dstItem)
+    public function compareFolderChildren($srcItem, $dstItem)
     {
         $nodesToInspect = array();
         $srcList = $srcItem->getAllItems();
@@ -197,7 +197,7 @@ class Docman_BuildItemMappingVisitor
     /**
      * Compare 2 items.
      */
-    function compareItem($srcItem, $dstItem)
+    public function compareItem($srcItem, $dstItem)
     {
         return ($srcItem->getTitle() == $dstItem->getTitle());
     }
@@ -205,7 +205,7 @@ class Docman_BuildItemMappingVisitor
     /**
      * Check if item can be read by current user
      */
-    function checkItemPermissions($itemId)
+    public function checkItemPermissions($itemId)
     {
         $user = $this->getCurrentUser();
         $dPm  = $this->getPermissionsManager($this->groupId);
@@ -215,7 +215,7 @@ class Docman_BuildItemMappingVisitor
     /**
      * Search if there is an equivalent of $item in $parentId.
      */
-    function searchMatchingItem($item, $parentId)
+    public function searchMatchingItem($item, $parentId)
     {
         $dao = $this->getItemDao();
         $itemTitles = $this->getTitleStrings($item);
@@ -227,7 +227,7 @@ class Docman_BuildItemMappingVisitor
      * Build the list of $item children and search for matching items in
      * $parentId
      */
-    function searchMatchingChildren($item, $parentId)
+    public function searchMatchingChildren($item, $parentId)
     {
         $dao = $this->getItemDao();
         $itemTitles = $this->getChildrenTitles($item);
@@ -238,7 +238,7 @@ class Docman_BuildItemMappingVisitor
     /**
      * Build the list of title that we will look for.
      */
-    function getChildrenTitles($item)
+    public function getChildrenTitles($item)
     {
         $title = array();
         $childList = $item->getAllItems();
@@ -260,7 +260,7 @@ class Docman_BuildItemMappingVisitor
      * an item with 'roottitle_lbl_key' as title, we need to look for the key
      * and all possible translations.
      */
-    function getTitleStrings($item)
+    public function getTitleStrings($item)
     {
         $title = array();
         if ($item->titlekey != null) {
@@ -275,31 +275,31 @@ class Docman_BuildItemMappingVisitor
         return $title;
     }
 
-    function visitDocument($item, $params)
+    public function visitDocument($item, $params)
     {
     }
 
-    function visitWiki($item, $params)
+    public function visitWiki($item, $params)
     {
     }
 
-    function visitLink($item, $params)
+    public function visitLink($item, $params)
     {
     }
 
-    function visitFile($item, $params)
+    public function visitFile($item, $params)
     {
     }
 
-    function visitEmbeddedFile($item, $params)
+    public function visitEmbeddedFile($item, $params)
     {
     }
 
-    function visitEmpty($item, $params)
+    public function visitEmpty($item, $params)
     {
     }
 
-    function getItemMapping()
+    public function getItemMapping()
     {
         return $this->itemMapping;
     }

@@ -31,7 +31,7 @@ class Docman_MetadataValue
 
     public $type;
 
-    function __construct()
+    public function __construct()
     {
         $this->fieldId = null;
         $this->itemId = null;
@@ -39,25 +39,25 @@ class Docman_MetadataValue
         $this->type = null;
     }
 
-    function setFieldId($v)
+    public function setFieldId($v)
     {
         $this->fieldId = $v;
     }
-    function getFieldId()
+    public function getFieldId()
     {
         return $this->fieldId;
     }
 
-    function setItemId($v)
+    public function setItemId($v)
     {
         $this->itemId = $v;
     }
-    function getItemId()
+    public function getItemId()
     {
         return $this->itemId;
     }
 
-    function setValue($v)
+    public function setValue($v)
     {
         trigger_error(
             'Docman_MetadataValue::setValue is virtual but is not implemented.',
@@ -65,7 +65,7 @@ class Docman_MetadataValue
         );
     }
 
-    function getValue()
+    public function getValue()
     {
          trigger_error(
              'Docman_MetadataValue::getValue is virtual but is not implemented.',
@@ -73,16 +73,16 @@ class Docman_MetadataValue
          );
     }
 
-    function setType($v)
+    public function setType($v)
     {
         $this->type = $v;
     }
-    function getType()
+    public function getType()
     {
         return $this->type;
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         if (isset($row['field_id'])) {
             $this->fieldId = $row['field_id'];
@@ -103,26 +103,26 @@ class Docman_MetadataValueList extends Docman_MetadataValue
 {
     public $listOfValues;
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->listOfValues = null;
     }
 
-    function setType($v)
+    public function setType($v)
     {
         return;
     }
-    function getType()
+    public function getType()
     {
         return PLUGIN_DOCMAN_METADATA_TYPE_LIST;
     }
 
-    function setValue($v)
+    public function setValue($v)
     {
         $this->listOfValues = $v;
     }
-    function getValue()
+    public function getValue()
     {
         return new ArrayIterator($this->listOfValues);
     }
@@ -140,7 +140,7 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue
     public $valueDate;
     public $valueString;
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->valueText = null;
@@ -149,34 +149,34 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue
         $this->valueString = null;
     }
 
-    function setValueText($v)
+    public function setValueText($v)
     {
         $this->valueText = $v;
     }
-    function getValueText()
+    public function getValueText()
     {
         return $this->valueText;
     }
 
-    function setValueDate($v)
+    public function setValueDate($v)
     {
         $this->valueDate = $v;
     }
-    function getValueDate()
+    public function getValueDate()
     {
         return $this->valueDate;
     }
 
-    function setValueString($v)
+    public function setValueString($v)
     {
         $this->valueString = $v;
     }
-    function getValueString()
+    public function getValueString()
     {
         return $this->valueString;
     }
 
-    function getValue()
+    public function getValue()
     {
         switch ($this->type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
@@ -192,7 +192,7 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue
                 return null;
         }
     }
-    function setValue($v)
+    public function setValue($v)
     {
         switch ($this->type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
@@ -209,7 +209,7 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue
         }
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         parent::initFromRow($row);
 

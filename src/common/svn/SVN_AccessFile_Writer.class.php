@@ -25,7 +25,7 @@ class SVN_AccessFile_Writer
     private $accessfile;
     private $err;
 
-    function __construct($svnroot)
+    public function __construct($svnroot)
     {
         $this->accessfile = "$svnroot/.SVNAccessFile";
     }

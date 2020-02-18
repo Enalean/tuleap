@@ -119,7 +119,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
         $git->_doDispatchForkCrossProject(null, null);
     }
 
-    function testUserMustBeAdminOfTheDestinationProject()
+    public function testUserMustBeAdminOfTheDestinationProject()
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns(123);

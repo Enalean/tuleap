@@ -59,7 +59,7 @@ class TreeNode /*implements Visitable*/
     /**
      * Constructor
      */
-    function __construct($data = null, $id = null)
+    public function __construct($data = null, $id = null)
     {
         $this->id = ($id === null) ? uniqid() : $id;
         /*if(func_num_args() !== 0) {
@@ -85,7 +85,7 @@ class TreeNode /*implements Visitable*/
      *
      * @param mixed $d Any kind of data stored in a Node
      */
-    function setData($d)
+    public function setData($d)
     {
         $this->data = $d;
     }
@@ -96,7 +96,7 @@ class TreeNode /*implements Visitable*/
      *
      * @return mixed (reference)
      */
-    function &getData()
+    public function &getData()
     {
         return $this->data;
     }
@@ -108,7 +108,7 @@ class TreeNode /*implements Visitable*/
      * @access private
      * @return mixed (reference)
      */
-    function _setParentNode(&$node)
+    public function _setParentNode(&$node)
     {
         if (is_object($node) && is_a($node, 'TreeNode')) {
             $this->parentNode =& $node;
@@ -123,7 +123,7 @@ class TreeNode /*implements Visitable*/
      *
      * @return mixed (reference)
      */
-    function &getParentNode()
+    public function &getParentNode()
     {
         return $this->parentNode;
     }
@@ -134,7 +134,7 @@ class TreeNode /*implements Visitable*/
      *
      * @param TreeNode &$c A TreeNode (reference call)
      */
-    function addChild($c)
+    public function addChild($c)
     {
         if (is_object($c) && is_a($c, 'TreeNode')) {
             if ($this->children === null) {
@@ -152,7 +152,7 @@ class TreeNode /*implements Visitable*/
      *
      * @return TreeNode
      */
-    function addChildren()
+    public function addChildren()
     {
         $child_list = func_get_args();
         foreach ($child_list as $child) {
@@ -166,7 +166,7 @@ class TreeNode /*implements Visitable*/
      *
      * @param int $key Id of child to remove.
      */
-    function removeChild($key, $object = null)
+    public function removeChild($key, $object = null)
     {
         if (!$key && $object && is_array($this->children)) {
             $key = array_search($object, $this->children);
@@ -186,7 +186,7 @@ class TreeNode /*implements Visitable*/
      * @param int $key Id of child to return
      * @return TreeNode reference.
      */
-    function &getChild($key)
+    public function &getChild($key)
     {
         if (isset($key) && is_int($key) && is_array($this->children) && array_key_exists($key, $this->children)) {
             return $this->children[$key];
@@ -201,7 +201,7 @@ class TreeNode /*implements Visitable*/
      *
      * @return array of TreeNode
      */
-    function &getChildren()
+    public function &getChildren()
     {
         return $this->children;
     }
@@ -212,7 +212,7 @@ class TreeNode /*implements Visitable*/
      *
      * @param $children array of TreeNode
      */
-    function setChildren($children)
+    public function setChildren($children)
     {
         if (is_array($this->children)) {
             $this->clearChildren();
@@ -237,7 +237,7 @@ class TreeNode /*implements Visitable*/
      *
      * @return bool .
      */
-    function hasChildren()
+    public function hasChildren()
     {
         return (count($this->children) > 0);
     }
@@ -264,7 +264,7 @@ class TreeNode /*implements Visitable*/
      * Visitor entry.
      *
      */
-    function accept(&$visitor, $params = null)
+    public function accept(&$visitor, $params = null)
     {
         return $visitor->visit($this, $params);
     }

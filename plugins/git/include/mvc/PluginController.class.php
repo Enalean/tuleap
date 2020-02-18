@@ -183,7 +183,7 @@ abstract class PluginController
      * @TODO associate an action and a view in order to skip action call to provide data to a given view.(like Symfony framework component)
      * @return null
      */
-    function executeViews()
+    public function executeViews()
     {
         $wv = $this->instantiateView();
         //this allow to skip header
@@ -209,7 +209,7 @@ abstract class PluginController
      * @TODO associate an action and a view in order to skip action call to provide data to a given view.(like Symfony framework component)
      * @return null
      */
-    function executeActions()
+    public function executeActions()
     {
         if (empty($this->actions)) {
             return false;
@@ -239,7 +239,7 @@ abstract class PluginController
     /**
      * Render everything
      */
-    function process()
+    public function process()
     {
         $this->request();
         $this->executeActions();

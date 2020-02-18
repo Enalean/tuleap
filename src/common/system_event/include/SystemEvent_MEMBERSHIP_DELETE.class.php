@@ -50,7 +50,7 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent
     /**
      * Process stored event
      */
-    function process()
+    public function process()
     {
         list($group_id,$user_id) = $this->getParametersAsArray();
 

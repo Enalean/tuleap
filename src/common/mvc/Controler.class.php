@@ -35,11 +35,11 @@ class Controler
   /* protected */ public $_viewParams   = array();
   /* protected */ public $_actionParams = array();
 
-    function request()
+    public function request()
     {
     }
 
-    function viewsManagement()
+    public function viewsManagement()
     {
         $className = static::class.'Views';
         if (! class_exists($className)) {
@@ -49,7 +49,7 @@ class Controler
         return $wv->display($this->view);
     }
 
-    function actionsManagement()
+    public function actionsManagement()
     {
         $className = static::class.'Actions';
         if (! class_exists($className)) {
@@ -59,7 +59,7 @@ class Controler
         $wa->process($this->action, $this->_actionParams);
     }
 
-    function process()
+    public function process()
     {
         $this->request();
 

@@ -35,7 +35,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         unset($_REQUEST['artifact_id']);
     }
 
-    function testProjectsSvnExist()
+    public function testProjectsSvnExist()
     {
         $url = new URL();
         $this->assertEquals('group_name', $url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group_name'));
@@ -48,7 +48,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($url->getGroupNameFromSVNUrl('/viewvc.php/?roo=group_name&roottype=svn'));
     }
 
-    function testProjectsDontExist()
+    public function testProjectsDontExist()
     {
         $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao    = \Mockery::spy(\ProjectDao::class);
@@ -63,7 +63,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($url->getGroupIdFromURL('/projects/dontexist/'));
     }
 
-    function testProjectsExist()
+    public function testProjectsExist()
     {
         $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $url->shouldReceive('getForumDao');
@@ -93,7 +93,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/projects/exist/'));
     }
 
-    function testViewVcDontExist()
+    public function testViewVcDontExist()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ProjectDao::class);
@@ -110,7 +110,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=dontexist'));
     }
 
-    function testViewVcExist()
+    public function testViewVcExist()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ProjectDao::class);
@@ -127,7 +127,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=exist'), 1);
     }
 
-    function testViewVcNotValidProjectName()
+    public function testViewVcNotValidProjectName()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $rule = \Mockery::spy(\Rule_ProjectName::class);
@@ -137,7 +137,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=ex(ist'), false);
     }
 
-    function testViewVcExistForProjectWithPoint()
+    public function testViewVcExistForProjectWithPoint()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ProjectDao::class);
@@ -154,7 +154,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=test.svn'), 1);
     }
 
-    function testForumDontExist()
+    public function testForumDontExist()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ForumDao::class);
@@ -166,7 +166,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($url->getGroupIdFromURL('/forum/forum.php?forum_id=dontexist'));
     }
 
-    function testForumExist()
+    public function testForumExist()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ForumDao::class);
@@ -184,7 +184,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'));
     }
 
-    function testNewsBytesDontExist()
+    public function testNewsBytesDontExist()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ForumDao::class);
@@ -198,7 +198,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertNotEquals($GLOBALS['sys_news_group'], $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
     }
 
-    function testNewsBytesExist()
+    public function testNewsBytesExist()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ForumDao::class);
@@ -219,7 +219,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), $GLOBALS['sys_news_group']);
     }
 
-    function testArtifactDontExist()
+    public function testArtifactDontExist()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ArtifactDao::class);
@@ -231,7 +231,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($url->getGroupIdFromURL('/tracker/download.php?artifact_id=dontexist'));
     }
 
-    function testArtifactExist()
+    public function testArtifactExist()
     {
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ArtifactDao::class);

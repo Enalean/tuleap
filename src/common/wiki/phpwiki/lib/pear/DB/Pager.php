@@ -77,7 +77,7 @@ class DB_Pager extends PEAR
     *    and supply later to the constructor
     * @deprecated
     */
-    function __construct(&$res, $from, $limit, $numrows = null)
+    public function __construct(&$res, $from, $limit, $numrows = null)
     {
         $this->res = $res;
         $this->from = $from;
@@ -93,7 +93,7 @@ class DB_Pager extends PEAR
     * @see DB_Pager::getData
     * @deprecated
     */
-    function build()
+    public function build()
     {
         // if there is no numrows given, calculate it
         if ($this->numrows === null) {
@@ -114,7 +114,7 @@ class DB_Pager extends PEAR
     /**
     * @deprecated
     */
-    function fetchRow($mode = DB_FETCHMODE_DEFAULT)
+    public function fetchRow($mode = DB_FETCHMODE_DEFAULT)
     {
         $this->current++;
         if ($this->current >= $this->top) {
@@ -126,7 +126,7 @@ class DB_Pager extends PEAR
     /**
     * @deprecated
     */
-    function fetchInto(&$arr, $mode = DB_FETCHMODE_DEFAULT)
+    public function fetchInto(&$arr, $mode = DB_FETCHMODE_DEFAULT)
     {
         $this->current++;
         if ($this->current >= $this->top) {
@@ -166,7 +166,7 @@ class DB_Pager extends PEAR
     * @return array associative array with data or DB_error on error
     *
     */
-    function &getData($from, $limit, $numrows, $maxpages = false)
+    public function &getData($from, $limit, $numrows, $maxpages = false)
     {
         if (empty($numrows) || ($numrows < 0)) {
             return null;

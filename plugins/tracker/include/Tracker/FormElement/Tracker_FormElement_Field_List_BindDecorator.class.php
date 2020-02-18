@@ -202,7 +202,7 @@ class Tracker_FormElement_Field_List_BindDecorator
     /**
      * @return string the internal structure of  the decorator as JSON
      */
-    function toJSON()
+    public function toJSON()
     {
         return json_encode(
             array(

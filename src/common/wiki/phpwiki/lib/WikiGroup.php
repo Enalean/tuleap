@@ -70,7 +70,7 @@ class WikiGroup
      * $group = &WikiGroup::getGroup();
      * @param object $request The global WikiRequest object -- ignored.
      */
-    function __construct($not_current = false)
+    public function __construct($not_current = false)
     {
         $this->not_current = $not_current;
     }
@@ -81,7 +81,7 @@ class WikiGroup
      * the stored $this->username
      * @return string Current username.
      */
-    function _getUserName()
+    public function _getUserName()
     {
         global $request;
         $user = (!empty($this->user)) ? $this->user : $request->getUser();
@@ -102,7 +102,7 @@ class WikiGroup
      * @param object $request The global WikiRequest object.
      * @return object Subclass of WikiGroup selected via GROUP_METHOD.
      */
-    function getGroup($not_current = false)
+    public function getGroup($not_current = false)
     {
         return new GroupNone($not_current);
     }
@@ -110,17 +110,17 @@ class WikiGroup
     /** ACL PagePermissions will need those special groups based on the User status only.
      *  translated
      */
-    function specialGroup($group)
+    public function specialGroup($group)
     {
         return in_array($group, $this->specialGroups());
     }
     /** untranslated */
-    function _specialGroup($group)
+    public function _specialGroup($group)
     {
         return in_array($group, $this->_specialGroups());
     }
     /** translated */
-    function specialGroups()
+    public function specialGroups()
     {
         return array(
                      GROUP_EVERY,
@@ -133,7 +133,7 @@ class WikiGroup
                      GROUP_CREATOR);
     }
     /** untranslated */
-    function _specialGroups()
+    public function _specialGroups()
     {
         return array(
                      "_EVERY",
@@ -154,7 +154,7 @@ class WikiGroup
      * @param string $group Name of the group to check for membership (ignored).
      * @return bool True if user is a member, else false (always false).
      */
-    function isMember($group)
+    public function isMember($group)
     {
         if (isset($this->membership[$group])) {
             return $this->membership[$group];
@@ -174,7 +174,7 @@ class WikiGroup
         return false;
     }
 
-    function isSpecialMember($group)
+    public function isSpecialMember($group)
     {
         global $request;
 
@@ -220,7 +220,7 @@ class WikiGroup
      * array is returned.
      * @return array Array of groups to which the user belongs (always empty).
      */
-    function getAllGroupsIn()
+    public function getAllGroupsIn()
     {
         trigger_error(
             PHPWikiSprintf(
@@ -233,7 +233,7 @@ class WikiGroup
         return array();
     }
 
-    function _allUsers()
+    public function _allUsers()
     {
         static $result = array();
         if (!empty($result)) {
@@ -317,7 +317,7 @@ class WikiGroup
      * @param string $group Name of the group to get the full membership list of.
      * @return array Array of usernames that have joined the group (always empty).
      */
-    function getMembersOf($group)
+    public function getMembersOf($group)
     {
         if ($this->specialGroup($group)) {
             return $this->getSpecialMembersOf($group);
@@ -333,7 +333,7 @@ class WikiGroup
         return array();
     }
 
-    function getSpecialMembersOf($group)
+    public function getSpecialMembersOf($group)
     {
         //$request = &$this->request;
         $all = $this->_allUsers();
@@ -395,7 +395,7 @@ class WikiGroup
      * @param string $user Username to add to the group (default = current user).
      * @return bool On true user was added, false if not.
      */
-    function setMemberOf($group, $user = false)
+    public function setMemberOf($group, $user = false)
     {
         trigger_error(
             PHPWikiSprintf(
@@ -417,7 +417,7 @@ class WikiGroup
      * @param string $user Username to remove from the group (default = current user).
      * @return bool On true user was removed, false if not.
      */
-    function removeMemberOf($group, $user = false)
+    public function removeMemberOf($group, $user = false)
     {
         trigger_error(
             PHPWikiSprintf(
@@ -446,7 +446,7 @@ class GroupNone extends WikiGroup
      * Ignores the parameter provided.
      * @param object $request The global WikiRequest object - ignored.
      */
-    function __construct()
+    public function __construct()
     {
         //$this->request = &$GLOBALS['request'];
         return;
@@ -459,7 +459,7 @@ class GroupNone extends WikiGroup
      * @param string $group Name of the group to check for membership (ignored).
      * @return bool True if user is a member, else false (always false).
      */
-    function isMember($group)
+    public function isMember($group)
     {
         if ($this->specialGroup($group)) {
             return $this->isSpecialMember($group);
@@ -475,7 +475,7 @@ class GroupNone extends WikiGroup
      * @param string $group Name of the group to check for membership (ignored).
      * @return array Array of groups to which the user belongs (always empty).
      */
-    function getAllGroupsIn()
+    public function getAllGroupsIn()
     {
         return array();
     }
@@ -487,7 +487,7 @@ class GroupNone extends WikiGroup
      * @param string $group Name of the group to check for membership (ignored).
      * @return array Array of groups user belongs to (always empty).
      */
-    function getMembersOf($group)
+    public function getMembersOf($group)
     {
         return array();
     }

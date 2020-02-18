@@ -37,7 +37,7 @@ class MeshInterpolate
     * @param $col Top left corner of square to work with
     * $param $aFactor In how many subsquare should we split this square. A value of 1 indicates that no action
     */
-    function IntSquare($aRow, $aCol, $aFactor)
+    public function IntSquare($aRow, $aCol, $aFactor)
     {
         if ($aFactor <= 1) {
             return;
@@ -73,7 +73,7 @@ class MeshInterpolate
      * @param  $aInNbr Interpolation factor
      * @return the interpolated matrice
      */
-    function Linear(&$aData, $aIntFactor)
+    public function Linear(&$aData, $aIntFactor)
     {
         $step = pow(2, $aIntFactor-1);
 

@@ -46,7 +46,7 @@ class PluginsAdministrationActions extends Actions
         );
     }
 
-    function available()
+    public function available()
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
@@ -72,7 +72,7 @@ class PluginsAdministrationActions extends Actions
         $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=installed');
     }
 
-    function install()
+    public function install()
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
@@ -95,7 +95,7 @@ class PluginsAdministrationActions extends Actions
         $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=available');
     }
 
-    function unavailable()
+    public function unavailable()
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
@@ -121,7 +121,7 @@ class PluginsAdministrationActions extends Actions
         $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=installed');
     }
 
-    function uninstall()
+    public function uninstall()
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $plugin = $this->_getPluginFromRequest();
@@ -137,7 +137,7 @@ class PluginsAdministrationActions extends Actions
     }
 
     // Secure args: force each value to be an integer.
-    function _validateProjectList($usList)
+    public function _validateProjectList($usList)
     {
         $sPrjList = null;
         $usList = trim(rtrim($usList));
@@ -148,21 +148,21 @@ class PluginsAdministrationActions extends Actions
         return $sPrjList;
     }
 
-    function _addAllowedProjects($prjList)
+    public function _addAllowedProjects($prjList)
     {
         $plugin = $this->_getPluginFromRequest();
         $plugin_manager = $this->plugin_manager;
         $plugin_manager->addProjectForPlugin($plugin['plugin'], $prjList);
     }
 
-    function _delAllowedProjects($prjList)
+    public function _delAllowedProjects($prjList)
     {
         $plugin = $this->_getPluginFromRequest();
         $plugin_manager = $this->plugin_manager;
         $plugin_manager->delProjectForPlugin($plugin['plugin'], $prjList);
     }
 
-    function _changePluginGenericProperties($properties)
+    public function _changePluginGenericProperties($properties)
     {
         if (isset($properties['allowed_project'])) {
             $sPrjList = $this->_validateProjectList($properties['allowed_project']);
@@ -231,7 +231,7 @@ class PluginsAdministrationActions extends Actions
     }
 
 
-    function _getPluginFromRequest()
+    public function _getPluginFromRequest()
     {
         $return = false;
         $request = HTTPRequest::instance();

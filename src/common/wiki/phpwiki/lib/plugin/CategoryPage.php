@@ -40,17 +40,17 @@ require_once('lib/BlockParser.php');
  */
 class WikiPlugin_CategoryPage extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("CategoryPage");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Create a Wiki page.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -59,7 +59,7 @@ class WikiPlugin_CategoryPage extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array(// Assume the categories are listed on the HomePage
                      'exclude'              => false,
@@ -70,7 +70,7 @@ class WikiPlugin_CategoryPage extends WikiPlugin
                      'showbuds'             => false);
     }
 
-    function run($dbi, $argstr, &$request)
+    public function run($dbi, $argstr, &$request)
     {
         $args = $this->getArgs($argstr, $request);
 

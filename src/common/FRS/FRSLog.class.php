@@ -82,7 +82,7 @@ class FRSLog
      *
      * @return void
      */
-    function addLogPackage($event, $params)
+    public function addLogPackage($event, $params)
     {
         $userID    = $this->_getCurrentUser()->getId();
         $projectID = $params['group_id'];
@@ -109,7 +109,7 @@ class FRSLog
      *
      * @return void
      */
-    function addLogRelease($event, $params)
+    public function addLogRelease($event, $params)
     {
         $userID    = $this->_getCurrentUser()->getId();
         $projectID = $params['group_id'];
@@ -136,7 +136,7 @@ class FRSLog
      *
      * @return void
      */
-    function addLogFile($event, $params)
+    public function addLogFile($event, $params)
     {
         $userID    = $this->_getCurrentUser()->getId();
         $projectID = $params['group_id'];
@@ -163,7 +163,7 @@ class FRSLog
      *
      * @return FRSLogDao
      */
-    function _getFRSLogDao()
+    public function _getFRSLogDao()
     {
         if (!$this->dao) {
             $this->dao = new FRSLogDao();
@@ -181,7 +181,7 @@ class FRSLog
      *
      * @return void
      */
-    function addLog($userID, $projectID, $itemID, $actionID)
+    public function addLog($userID, $projectID, $itemID, $actionID)
     {
         $dao = $this->_getFRSLogDao();
         $dao->addLog($userID, $projectID, $itemID, $actionID);
@@ -192,7 +192,7 @@ class FRSLog
      *
      * @return PFUser
      */
-    function _getCurrentUser()
+    public function _getCurrentUser()
     {
         $um = UserManager::instance();
         return $um->getCurrentUser();

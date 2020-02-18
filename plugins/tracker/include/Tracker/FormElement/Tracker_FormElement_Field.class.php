@@ -1448,7 +1448,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return bool true if field has a default value defined, false otherwise
      */
-    function hasDefaultValue()
+    public function hasDefaultValue()
     {
         return ($this->getProperty('default_value') !== null);
     }
@@ -1458,7 +1458,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return mixed The default value for this field, or null if no default value defined
      */
-    function getDefaultValue()
+    public function getDefaultValue()
     {
         return $this->getProperty('default_value');
     }

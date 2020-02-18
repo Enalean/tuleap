@@ -35,7 +35,7 @@ class LDAP_ProjectDao extends DataAccessObject
      *
      * @return bool
      */
-    function hasLdapSvn($groupId)
+    public function hasLdapSvn($groupId)
     {
         $sql = 'SELECT NULL'.
             ' FROM plugin_ldap_svn_repository'.
@@ -53,14 +53,14 @@ class LDAP_ProjectDao extends DataAccessObject
      *
      * @param int $groupId Project id
      */
-    function activateLdapAuthForProject($groupId)
+    public function activateLdapAuthForProject($groupId)
     {
         $sql = 'INSERT INTO plugin_ldap_svn_repository(group_id, ldap_auth)'.
             ' VALUES ('.$this->da->escapeInt($groupId).',1)';
         $this->update($sql);
     }
 
-    function hasLdapAuthByName($groupName)
+    public function hasLdapAuthByName($groupName)
     {
         $sql = 'SELECT NULL'.
             ' FROM plugin_ldap_svn_repository'.

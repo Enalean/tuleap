@@ -30,7 +30,7 @@ class Docman_View_Admin_MetadataImport extends Docman_View_Extra
     public $srcGo;
     public $dstGo;
 
-    function _title($params)
+    public function _title($params)
     {
         $pm = ProjectManager::instance();
         $this->srcGo = $pm->getProject($params['sSrcGroupId']);
@@ -40,7 +40,7 @@ class Docman_View_Admin_MetadataImport extends Docman_View_Extra
     }
 
 
-    function getImportForm($sthToImport)
+    public function getImportForm($sthToImport)
     {
         $html = '';
         if ($sthToImport) {
@@ -63,7 +63,7 @@ class Docman_View_Admin_MetadataImport extends Docman_View_Extra
     /**
      * Build page
      */
-    function _content($params)
+    public function _content($params)
     {
         $html = '';
 

@@ -12,7 +12,7 @@ require_once('Docman_View_View.class.php');
 class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
 {
 
-    /* protected */ function _content($params)
+    /* protected */ public function _content($params)
     {
         if (isset($params['redirect_to'])) {
             $url = $params['redirect_to'];
@@ -30,18 +30,18 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
 
         $GLOBALS['Response']->redirect($url);
     }
-    function visitFolder(&$item, $params = array())
+    public function visitFolder(&$item, $params = array())
     {
         trigger_error('Redirect view cannot be applied to Folders');
     }
-    function visitWiki(&$item, $params = array())
+    public function visitWiki(&$item, $params = array())
     {
         $project_id = $item->getGroupId();
         $pagename   = urlencode($item->getPagename());
         return '/wiki/?group_id='. $project_id .'&pagename='. $pagename;
     }
 
-    function visitLink(&$item, $params = array())
+    public function visitLink(&$item, $params = array())
     {
         if (isset($params['version_number'])) {
             $version_factory = new Docman_LinkVersionFactory();
@@ -55,16 +55,16 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
         return $item->getUrl();
     }
 
-    function visitFile(&$item, $params = array())
+    public function visitFile(&$item, $params = array())
     {
         trigger_error('Redirect view cannot be applied to Files');
     }
-    function visitEmbeddedFile(&$item, $params = array())
+    public function visitEmbeddedFile(&$item, $params = array())
     {
         trigger_error('Redirect view cannot be applied to Embedded Files');
     }
 
-    function visitEmpty(&$item, $params = array())
+    public function visitEmpty(&$item, $params = array())
     {
         trigger_error('Redirect view cannot be applied to Empty documents');
     }

@@ -101,7 +101,7 @@ class FRSFile
      */
     protected $release;
 
-    function __construct($data_array = null)
+    public function __construct($data_array = null)
     {
         $this->file_id       = null;
         $this->filename     = null;
@@ -124,22 +124,22 @@ class FRSFile
         }
     }
 
-    function getFileID()
+    public function getFileID()
     {
         return $this->file_id;
     }
 
-    function setFileID($file_id)
+    public function setFileID($file_id)
     {
         $this->file_id = (int) $file_id;
     }
 
-    function getFileName()
+    public function getFileName()
     {
         return $this->filename;
     }
 
-    function setFileName($filename)
+    public function setFileName($filename)
     {
         $this->filename = $filename;
     }
@@ -151,7 +151,7 @@ class FRSFile
      *
      * @return String
      */
-    function getFilePath()
+    public function getFilePath()
     {
         if ($this->filepath == null) {
             return $this->filename;
@@ -160,52 +160,52 @@ class FRSFile
         }
     }
 
-    function setFilePath($filepath)
+    public function setFilePath($filepath)
     {
         $this->filepath = $filepath;
     }
 
-    function getReleaseID()
+    public function getReleaseID()
     {
         return $this->release_id;
     }
 
-    function setReleaseID($release_id)
+    public function setReleaseID($release_id)
     {
         $this->release_id = (int) $release_id;
     }
 
-    function getTypeID()
+    public function getTypeID()
     {
         return $this->type_id;
     }
 
-    function setTypeID($type_id)
+    public function setTypeID($type_id)
     {
         $this->type_id = (int) $type_id;
     }
 
-    function getProcessorID()
+    public function getProcessorID()
     {
         return $this->processor_id;
     }
 
-    function setProcessorID($processor_id)
+    public function setProcessorID($processor_id)
     {
         $this->processor_id = (int) $processor_id;
     }
 
-    function getReleaseTime()
+    public function getReleaseTime()
     {
         return $this->release_time;
     }
 
-    function setReleaseTime($release_time)
+    public function setReleaseTime($release_time)
     {
         $this->release_time = (int) $release_time;
     }
 
-    function setFileLocation($location)
+    public function setFileLocation($location)
     {
         $this->file_location = $location;
     }
@@ -216,7 +216,7 @@ class FRSFile
      * @global $GLOBALS['ftp_frs_dir_prefix']
      * @return string the location of this file on the server
      */
-    function getFileLocation()
+    public function getFileLocation()
     {
         if ($this->file_location == null) {
             $group = $this->getGroup();
@@ -227,7 +227,7 @@ class FRSFile
         return $this->file_location;
     }
 
-    function getFileSize()
+    public function getFileSize()
     {
         if ($this->file_size == null) {
             require_once __DIR__ . '/../../www/file/file_utils.php';
@@ -238,12 +238,12 @@ class FRSFile
         return $this->file_size;
     }
 
-    function setFileSize($file_size)
+    public function setFileSize($file_size)
     {
         $this->file_size = $file_size;
     }
 
-    static function convertBytesToKbytes($size_in_bytes, $decimals_precision = 0)
+    public static function convertBytesToKbytes($size_in_bytes, $decimals_precision = 0)
     {
         $size_in_kbytes = $size_in_bytes / 1024;
 
@@ -256,7 +256,7 @@ class FRSFile
         return number_format($size_in_kbytes, $decimals_precision, $decimal_separator, $thousand_separator);
     }
 
-    function getDisplayFileSize()
+    public function getDisplayFileSize()
     {
         $decimals_precision = 0;
         if ($this->getFileSize() < 1024) {
@@ -265,73 +265,73 @@ class FRSFile
         return $this->convertBytesToKbytes($this->getFileSize(), $decimals_precision);
     }
 
-    function getPostDate()
+    public function getPostDate()
     {
         return $this->post_date;
     }
 
-    function setPostDate($post_date)
+    public function setPostDate($post_date)
     {
         $this->post_date = (int) $post_date;
     }
 
-    function getStatus()
+    public function getStatus()
     {
         return $this->status;
     }
 
-    function setStatus($status)
+    public function setStatus($status)
     {
         $this->status = $status;
     }
 
-    function isActive()
+    public function isActive()
     {
         return ($this->status == 'A');
     }
 
-    function isDeleted()
+    public function isDeleted()
     {
         return ($this->status == 'D');
     }
 
-    function setComputedMd5($computedMd5)
+    public function setComputedMd5($computedMd5)
     {
         $this->computed_md5 = $computedMd5;
     }
 
-    function getComputedMd5()
+    public function getComputedMd5()
     {
         return $this->computed_md5;
     }
 
-    function setReferenceMd5($referenceMd5)
+    public function setReferenceMd5($referenceMd5)
     {
         $this->reference_md5 = $referenceMd5;
     }
 
-    function getReferenceMd5()
+    public function getReferenceMd5()
     {
         return $this->reference_md5;
     }
 
-    function setUserID($userId)
+    public function setUserID($userId)
     {
         $this->user_id = $userId;
     }
 
-    function getUserID()
+    public function getUserID()
     {
         return $this->user_id;
     }
 
-    function setRelease($release)
+    public function setRelease($release)
     {
         $this->release    = $release;
         $this->release_id = $release->getReleaseID();
     }
 
-    function getRelease()
+    public function getRelease()
     {
         return $this->release;
     }
@@ -346,7 +346,7 @@ class FRSFile
         $this->comment = $comment;
     }
 
-    function initFromArray($array)
+    public function initFromArray($array)
     {
         if (isset($array['file_id'])) {
             $this->setFileID($array['file_id']);
@@ -392,7 +392,7 @@ class FRSFile
         }
     }
 
-    function toArray()
+    public function toArray()
     {
         $array = array();
         $array['file_id']       = $this->getFileID();
@@ -416,7 +416,7 @@ class FRSFile
 
     public $dao;
 
-    function &_getFRSFileDao()
+    public function &_getFRSFileDao()
     {
         if (!$this->dao) {
             $this->dao = new FRSFileDao(CodendiDataAccess::instance());
@@ -429,7 +429,7 @@ class FRSFile
      *
      * @return bool true if the file exists on the server, false otherwise
      */
-    function fileExists()
+    public function fileExists()
     {
         return file_exists($this->getFileLocation());
     }
@@ -439,7 +439,7 @@ class FRSFile
      *
      * @return int the packahe ID of this file
      */
-    function getPackageID()
+    public function getPackageID()
     {
         // retrieve the release the file belongs to
         $release_id = $this->getReleaseID();
@@ -455,7 +455,7 @@ class FRSFile
      *
      * @return Project the group the file belongs to
      */
-    function getGroup()
+    public function getGroup()
     {
         if (empty($this->group)) {
             $pm = ProjectManager::instance();
@@ -472,7 +472,7 @@ class FRSFile
     /**
      * Set the Group (the project) of this File
      */
-    function setGroup(Group $group)
+    public function setGroup(Group $group)
     {
         $this->group = $group;
     }
@@ -484,7 +484,7 @@ class FRSFile
      *
      * @return mixed the content of the file
      */
-    function getContent($offset = 0, $size = -1)
+    public function getContent($offset = 0, $size = -1)
     {
         if ($size == -1) {
             $size = $this->getFileSize();
@@ -502,7 +502,7 @@ class FRSFile
      * @param int $user_id the user that download the file (if 0, the current user will be taken)
      * @return bool true if there is no error, false otherwise
      */
-    function LogDownload($user_id = 0)
+    public function LogDownload($user_id = 0)
     {
         if ($user_id == 0) {
             $user_id = UserManager::instance()->getCurrentUser()->getId();
@@ -549,7 +549,7 @@ class FRSFile
      * Returns the HTML content for tooltip when hover a reference with the nature file
      * @returns string HTML content for file tooltip
      */
-    function getReferenceTooltip()
+    public function getReferenceTooltip()
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
         $tooltip = '';

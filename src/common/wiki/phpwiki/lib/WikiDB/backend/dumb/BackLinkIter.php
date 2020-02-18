@@ -12,14 +12,14 @@ require_once('lib/WikiDB/backend.php');
  */
 class WikiDB_backend_dumb_BackLinkIter extends WikiDB_backend_iterator
 {
-    function __construct(&$backend, &$all_pages, $pagename)
+    public function __construct(&$backend, &$all_pages, $pagename)
     {
         $this->_pages = $all_pages;
         $this->_backend = &$backend;
         $this->_target = $pagename;
     }
 
-    function next()
+    public function next()
     {
         while ($page = $this->_pages->next()) {
             $pagename = $page['pagename'];
@@ -33,7 +33,7 @@ class WikiDB_backend_dumb_BackLinkIter extends WikiDB_backend_iterator
         }
     }
 
-    function free()
+    public function free()
     {
         $this->_pages->free();
     }

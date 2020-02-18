@@ -45,7 +45,7 @@ class UserLogManager
         $this->user_manager        = $user_manager;
     }
 
-    function getDao()
+    public function getDao()
     {
         $da  = CodendiDataAccess::instance();
         $dao = new UserLogDao($da);
@@ -68,7 +68,7 @@ class UserLogManager
         );
     }
 
-    function displayNewOrIdem($key, $row, &$pval, $display = null)
+    public function displayNewOrIdem($key, $row, &$pval, $display = null)
     {
         if ($pval[$key] != $row[$key]) {
             if ($display === null) {
@@ -91,7 +91,7 @@ class UserLogManager
         return $dis;
     }
 
-    function initPval(&$pval)
+    public function initPval(&$pval)
     {
         $pval = array('time' => -1,
                       'hour' => -1,
@@ -105,7 +105,7 @@ class UserLogManager
                       'http_referer' => -1);
     }
 
-    function displayLogs($offset, $selected_day = null)
+    public function displayLogs($offset, $selected_day = null)
     {
         $count       = 100;
         $log_builder = new UserLogBuilder($this->getDao(), $this->user_manager);

@@ -36,7 +36,7 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
     public $docCounter;
     public $fldCounter;
 
-    function __construct($groupId, $user)
+    public function __construct($groupId, $user)
     {
         $this->dpm = Docman_PermissionsManager::instance($groupId);
         $this->user = $user;
@@ -111,31 +111,31 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
     }
 
 
-    function _itemIsWritable($item, $params)
+    public function _itemIsWritable($item, $params)
     {
         return $this->dpm->userCanWrite($this->user, $item->getId());
     }
 
-    function getItemIdList()
+    public function getItemIdList()
     {
         return array_merge($this->fldIdList, $this->docIdList);
     }
 
-    function getFolderIdList()
+    public function getFolderIdList()
     {
         return $this->fldIdList;
     }
 
-    function getDocumentIdList()
+    public function getDocumentIdList()
     {
         return $this->docIdList;
     }
 
-    function getDocumentCounter()
+    public function getDocumentCounter()
     {
         return $this->docCounter;
     }
-    function getFolderCounter()
+    public function getFolderCounter()
     {
         return $this->fldCounter;
     }

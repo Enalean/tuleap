@@ -44,7 +44,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
     /**
      * Process stored event
      */
-    function process()
+    public function process()
     {
         /** @var BackendSystem $backendSystem */
         $backendSystem      = Backend::instance('System');
@@ -182,7 +182,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         return true;
     }
 
-    function expireRestTokens(UserManager $user_manager)
+    public function expireRestTokens(UserManager $user_manager)
     {
         $token_dao     = new Rest_TokenDao();
         $token_factory = new Rest_TokenFactory($token_dao);

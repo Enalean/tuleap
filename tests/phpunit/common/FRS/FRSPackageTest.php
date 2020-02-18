@@ -22,7 +22,7 @@
 class FRSPackageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
-    function testIsActive()
+    public function testIsActive()
     {
         $active_value = 1;
         $deleted_value = 2;
@@ -39,7 +39,7 @@ class FRSPackageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $this->assertFalse($p->isActive());
     }
 
-    function testIsDeleted()
+    public function testIsDeleted()
     {
         $active_value = 1;
         $deleted_value = 2;
@@ -56,7 +56,7 @@ class FRSPackageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $this->assertFalse($p->isDeleted());
     }
 
-    function testIsHidden()
+    public function testIsHidden()
     {
         $active_value = 1;
         $deleted_value = 2;

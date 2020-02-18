@@ -22,7 +22,7 @@ class StockPlot extends Plot
     private $iStockColor3='darkred';
     //---------------
     // CONSTRUCTOR
-    function __construct($datay, $datax = false)
+    public function __construct($datay, $datax = false)
     {
         if (count($datay) % $this->iTupleSize) {
             JpGraphError::RaiseL(21001, $this->iTupleSize);
@@ -34,7 +34,7 @@ class StockPlot extends Plot
     //---------------
     // PUBLIC METHODS
 
-    function SetColor($aColor, $aColor1 = 'white', $aColor2 = 'darkred', $aColor3 = 'darkred')
+    public function SetColor($aColor, $aColor1 = 'white', $aColor2 = 'darkred', $aColor3 = 'darkred')
     {
         $this->color = $aColor;
         $this->iStockColor1 = $aColor1;
@@ -42,19 +42,19 @@ class StockPlot extends Plot
         $this->iStockColor3 = $aColor3;
     }
 
-    function SetWidth($aWidth)
+    public function SetWidth($aWidth)
     {
         // Make sure it's odd
         $this->iWidth = 2*floor($aWidth/2)+1;
     }
 
-    function HideEndLines($aHide = true)
+    public function HideEndLines($aHide = true)
     {
         $this->iEndLines = !$aHide;
     }
 
     // Gets called before any axis are stroked
-    function PreStrokeAdjust($graph)
+    public function PreStrokeAdjust($graph)
     {
         if ($this->center) {
             $a=0.5;
@@ -69,7 +69,7 @@ class StockPlot extends Plot
     }
 
     // Method description
-    function Stroke($img, $xscale, $yscale)
+    public function Stroke($img, $xscale, $yscale)
     {
         $n=$this->numpoints;
         if ($this->center) {
@@ -172,7 +172,7 @@ class StockPlot extends Plot
     }
 
     // A hook for subclasses to modify the plot
-    function ModBox($img, $xscale, $yscale, $i, $xl, $xr, $neg)
+    public function ModBox($img, $xscale, $yscale, $i, $xl, $xr, $neg)
     {
     }
 } // Class
@@ -185,19 +185,19 @@ class BoxPlot extends StockPlot
     private $iPColor='black';
     private $iNColor='white';
 
-    function __construct($datay, $datax = false)
+    public function __construct($datay, $datax = false)
     {
         $this->iTupleSize=5;
         parent::__construct($datay, $datax);
     }
 
-    function SetMedianColor($aPos, $aNeg)
+    public function SetMedianColor($aPos, $aNeg)
     {
         $this->iPColor = $aPos;
         $this->iNColor = $aNeg;
     }
 
-    function ModBox($img, $xscale, $yscale, $i, $xl, $xr, $neg)
+    public function ModBox($img, $xscale, $yscale, $i, $xl, $xr, $neg)
     {
         if ($neg) {
             $img->SetColor($this->iNColor);

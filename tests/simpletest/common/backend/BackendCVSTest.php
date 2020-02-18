@@ -45,7 +45,7 @@ Mock::generatePartial('BackendCVS', 'BackendCVS4RenameCVSNT', array('useCVSNT', 
 class BackendCVSTest extends TuleapTestCase
 {
 
-    function __construct($name = 'BackendCVS test')
+    public function __construct($name = 'BackendCVS test')
     {
         parent::__construct($name);
     }
@@ -80,13 +80,13 @@ class BackendCVSTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    function testConstructor()
+    public function testConstructor()
     {
         $backend = BackendCVS::instance();
     }
 
 
-    function testArchiveProjectCVS()
+    public function testArchiveProjectCVS()
     {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
@@ -117,7 +117,7 @@ class BackendCVSTest extends TuleapTestCase
         unlink(ForgeConfig::get('sys_project_backup_path')."/TestProj-cvs.tgz");
     }
 
-    function testCreateProjectCVS()
+    public function testCreateProjectCVS()
     {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
@@ -168,7 +168,7 @@ class BackendCVSTest extends TuleapTestCase
         rmdir($GLOBALS['cvslock_prefix']."/TestProj");
     }
 
-    function testCVSRootListUpdate()
+    public function testCVSRootListUpdate()
     {
         $backend = new BackendCVSTestVersion($this);
         $service_dao = new MockServiceDao($this);
@@ -425,7 +425,7 @@ class BackendCVSTest extends TuleapTestCase
         $backend->expectAt(1, 'updateCVSwriters', array(101));
     }
 
-    function testUpdateCVSWatchModeNotifyMissing()
+    public function testUpdateCVSWatchModeNotifyMissing()
     {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
@@ -440,7 +440,7 @@ class BackendCVSTest extends TuleapTestCase
         $this->assertFalse($backend->updateCVSWatchMode(1));
     }
 
-    function testUpdateCVSWatchModeNotifyExist()
+    public function testUpdateCVSWatchModeNotifyExist()
     {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
@@ -462,7 +462,7 @@ class BackendCVSTest extends TuleapTestCase
         rmdir($GLOBALS['cvs_prefix']."/TestProj");
     }
 
-    function testCheckCVSModeFilesMissing()
+    public function testCheckCVSModeFilesMissing()
     {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
@@ -500,7 +500,7 @@ class BackendCVSTest extends TuleapTestCase
         rmdir($GLOBALS['cvs_prefix']."/TestProj");
     }
 
-    function testCheckCVSModeNeedOwnerUpdate()
+    public function testCheckCVSModeNeedOwnerUpdate()
     {
         $cvsdir = $GLOBALS['cvs_prefix'].'/TestProj';
         mkdir($cvsdir .'/CVSROOT', 0700, true);
@@ -521,7 +521,7 @@ class BackendCVSTest extends TuleapTestCase
     /**
      * @return BackendCVS
      */
-    function GivenACVSRepositoryWithWrongOwnership($project, $cvsdir)
+    public function GivenACVSRepositoryWithWrongOwnership($project, $cvsdir)
     {
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(1));

@@ -36,7 +36,7 @@ abstract class HudsonWidget extends Widget
         $this->minimal_hudson_job_factory = $factory;
     }
 
-    function getCategory()
+    public function getCategory()
     {
         return dgettext('tuleap-hudson', 'Continuous integration');
     }
@@ -60,7 +60,7 @@ abstract class HudsonWidget extends Widget
         );
     }
 
-    function isAjax()
+    public function isAjax()
     {
         return true;
     }

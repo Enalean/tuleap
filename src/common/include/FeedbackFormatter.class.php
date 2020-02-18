@@ -24,7 +24,7 @@ class FeedbackFormatter
     /**
      * @return string html
      */
-    function format(array $logs)
+    public function format(array $logs)
     {
         $html      = '';
         $old_level = null;

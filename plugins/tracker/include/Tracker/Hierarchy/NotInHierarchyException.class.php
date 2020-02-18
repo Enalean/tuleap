@@ -21,7 +21,7 @@
 class Tracker_Hierarchy_NotInHierarchyException extends Exception
 {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct($GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'tracker_not_in_hierarchy'));
     }

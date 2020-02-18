@@ -19,23 +19,23 @@
  */
 class ArtifactReportFieldDao extends DataAccessObject
 {
-    function __construct($da)
+    public function __construct($da)
     {
         parent::__construct($da);
         $this->table_name = 'artifact_report_field';
     }
 
-    function prepareResultRanking($field_name, $report_id, $rank)
+    public function prepareResultRanking($field_name, $report_id, $rank)
     {
         return $this->prepareRanking($field_name, $report_id, $rank, 'field_name', 'report_id', 'place_result');
     }
 
-    function prepareQueryRanking($field_name, $report_id, $rank)
+    public function prepareQueryRanking($field_name, $report_id, $rank)
     {
         return $this->prepareRanking($field_name, $report_id, $rank, 'field_name', 'report_id', 'place_query');
     }
 
-    function searchByReportIdAndFieldName($report_id, $field_name)
+    public function searchByReportIdAndFieldName($report_id, $field_name)
     {
         $sql = "SELECT *
                 FROM ". $this->table_name ."
@@ -44,7 +44,7 @@ class ArtifactReportFieldDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function updateResultRanking($field_name, $report_id, $rank)
+    public function updateResultRanking($field_name, $report_id, $rank)
     {
         $rank = $this->prepareResultRanking($field_name, $report_id, $rank);
         $sql = "UPDATE ". $this->table_name ."
@@ -55,7 +55,7 @@ class ArtifactReportFieldDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function resizeColumns($report_id, $new_sizes)
+    public function resizeColumns($report_id, $new_sizes)
     {
         if (is_array($new_sizes) && count($new_sizes)) {
             $sql = '';

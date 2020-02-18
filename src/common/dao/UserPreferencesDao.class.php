@@ -25,7 +25,7 @@ require_once('include/DataAccessObject.class.php');
 class UserPreferencesDao extends DataAccessObject
 {
 
-    function __construct($da = null)
+    public function __construct($da = null)
     {
         parent::__construct($da);
     }
@@ -36,7 +36,7 @@ class UserPreferencesDao extends DataAccessObject
      * @param string $preference_name
      * @return DataAccessResult
      */
-    function search($user_id, $preference_name)
+    public function search($user_id, $preference_name)
     {
         $sql = sprintf(
             "SELECT * FROM user_preferences WHERE user_id = %d AND preference_name = %s",
@@ -54,7 +54,7 @@ class UserPreferencesDao extends DataAccessObject
      * @param string $preference_value
      * @return bool
      */
-    function set($user_id, $preference_name, $preference_value)
+    public function set($user_id, $preference_name, $preference_value)
     {
         $sql = sprintf(
             "INSERT INTO user_preferences (user_id, preference_name, preference_value) VALUES (%d, %s, %s)
@@ -70,7 +70,7 @@ class UserPreferencesDao extends DataAccessObject
     /**
      * Delete a preference
      */
-    function delete($user_id, $preference_name)
+    public function delete($user_id, $preference_name)
     {
         $sql = sprintf(
             "DELETE FROM user_preferences WHERE user_id = %d AND preference_name = %s",
@@ -80,7 +80,7 @@ class UserPreferencesDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function deleteByPreferenceNameAndValue($preference_name, $preference_value)
+    public function deleteByPreferenceNameAndValue($preference_name, $preference_value)
     {
         $preference_name  = $this->da->quoteSmart($preference_name);
         $preference_value = $this->da->quoteSmart($preference_value);

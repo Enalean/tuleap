@@ -50,7 +50,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @return void
      */
-    function __construct($plugin, $user, $maxFileSize, ProjectDao $project_dao)
+    public function __construct($plugin, $user, $maxFileSize, ProjectDao $project_dao)
     {
 
         $this->user = $user;
@@ -68,7 +68,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @see lib/Sabre/DAV/Sabre_DAV_IDirectory#getChildren()
      */
-    function getChildren()
+    public function getChildren()
     {
 
         if ($this->getUser()->isAnonymous()) {
@@ -89,7 +89,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
-    function getChild($projectName)
+    public function getChild($projectName)
     {
 
         $projectId = $this->getProjectIdByName($projectName);
@@ -137,7 +137,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @return String
      */
-    function getName()
+    public function getName()
     {
 
         return ' WebDAV Root';
@@ -150,7 +150,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
      */
-    function getLastModified()
+    public function getLastModified()
     {
 
         return;
@@ -161,7 +161,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @return PFUser
      */
-    function getUser()
+    public function getUser()
     {
 
         return $this->user;
@@ -172,7 +172,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @return int
      */
-    function getMaxFileSize()
+    public function getMaxFileSize()
     {
         return $this->maxFileSize;
     }
@@ -258,7 +258,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @return bool
      */
-    function isWebDAVAllowedForProject($groupId)
+    public function isWebDAVAllowedForProject($groupId)
     {
 
         return PluginManager::instance()->isPluginAllowedForProject($this->plugin, $groupId);

@@ -30,7 +30,7 @@ class Docman_MetadataListOfValuesElementFactory
 {
     public $metadataId;
 
-    function __construct($metadataId = null)
+    public function __construct($metadataId = null)
     {
         $this->metadataId = $metadataId;
     }
@@ -52,7 +52,7 @@ class Docman_MetadataListOfValuesElementFactory
      * Then keep metadata_value consistent: if there is no entry for a given
      * (item, $this->metadataId), create a default entry (NONE value).
      */
-    function delete(&$love)
+    public function delete(&$love)
     {
         $dao = $this->getDao();
         $deleted = $dao->delete($love->getId());
@@ -63,7 +63,7 @@ class Docman_MetadataListOfValuesElementFactory
         return $deleted;
     }
 
-    function deleteByMetadataId()
+    public function deleteByMetadataId()
     {
         $deleted = false;
         if ($this->metadataId !== null) {
@@ -73,7 +73,7 @@ class Docman_MetadataListOfValuesElementFactory
         return $deleted;
     }
 
-    function create(&$love)
+    public function create(&$love)
     {
         $dao = $this->getDao();
 
@@ -91,7 +91,7 @@ class Docman_MetadataListOfValuesElementFactory
         );
     }
 
-    function update($love)
+    public function update($love)
     {
         $dao = $this->getDao();
         return $dao->updateElement(
@@ -107,7 +107,7 @@ class Docman_MetadataListOfValuesElementFactory
     /**
      * Add 'None' value as a value of the list for metadata $this->metadataId.
      */
-    function createNoneValue()
+    public function createNoneValue()
     {
         $dao = $this->getDao();
         return $dao->createMetadataElementBond($this->metadataId, PLUGIN_DOCMAN_ITEM_STATUS_NONE);
@@ -166,7 +166,7 @@ class Docman_MetadataListOfValuesElementFactory
     /**
      * Return the all elements that match given name.
      */
-    function getByName($name, $mdLabel)
+    public function getByName($name, $mdLabel)
     {
         $ea = array();
         $ei = null;
@@ -209,7 +209,7 @@ class Docman_MetadataListOfValuesElementFactory
      *
      * @return Array Map between source and destination
      */
-    function cloneValues(Docman_Metadata $srcMd, Docman_Metadata $dstMd)
+    public function cloneValues(Docman_Metadata $srcMd, Docman_Metadata $dstMd)
     {
         $valuesMapping = array();
         $dstLoveFactory = $this->getMetadataListOfValuesElementFactory($dstMd->getId());
@@ -246,7 +246,7 @@ class Docman_MetadataListOfValuesElementFactory
      * @param Docman_Metadata $dstMd   Destination metadata
      * @param Array           $loveMap Map between elements of $srcMd and $dstMd
      */
-    function exportValues($srcMd, $dstMd, $loveMap)
+    public function exportValues($srcMd, $dstMd, $loveMap)
     {
         $dstLoveFactory = $this->getMetadataListOfValuesElementFactory($dstMd->getId());
 
@@ -275,7 +275,7 @@ class Docman_MetadataListOfValuesElementFactory
     /**
      * Try to find matching values between 2 metadata
      */
-    function getLoveMapping($md, $dstMdId, &$metadataMapping)
+    public function getLoveMapping($md, $dstMdId, &$metadataMapping)
     {
         // Special treatement for value 'Any' that is not recorded in the DB but
         // that is always 0.
@@ -365,7 +365,7 @@ class Docman_MetadataListOfValuesElementFactory
         return $ei;
     }
 
-    function getMetadataListOfValuesElementFactory($metadataId = null)
+    public function getMetadataListOfValuesElementFactory($metadataId = null)
     {
         return new Docman_MetadataListOfValuesElementFactory($metadataId);
     }

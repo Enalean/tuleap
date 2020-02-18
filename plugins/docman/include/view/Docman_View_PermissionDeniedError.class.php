@@ -21,7 +21,7 @@
 
 class Docman_View_PermissionDeniedError extends Docman_View_DocmanError
 {
-    function display($params = array())
+    public function display($params = array())
     {
         $sendMail = new Docman_Error_PermissionDenied();
         $sendMail->buildInterface($params['user'], ProjectManager::instance()->getProject($params['group_id']));

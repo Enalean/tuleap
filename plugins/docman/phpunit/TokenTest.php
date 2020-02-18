@@ -27,7 +27,7 @@ class TokenTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    function testGenerateRandomToken()
+    public function testGenerateRandomToken()
     {
         $dao  = \Mockery::spy(Docman_TokenDao::class);
         $http = \Mockery::spy(HTTPRequest::class);
@@ -66,7 +66,7 @@ class TokenTest extends TestCase
         $this->assertNotEquals($t1->getToken(), $t4->getToken(), 'Different users, different tokens');
     }
 
-    function testNullToken()
+    public function testNullToken()
     {
         $dao  = \Mockery::spy(Docman_TokenDao::class);
         $http = \Mockery::spy(HTTPRequest::class);
@@ -100,7 +100,7 @@ class TokenTest extends TestCase
         $this->assertNull($t3->getToken(), 'With anonymous user, we should have a null token');
     }
 
-    function testStorage()
+    public function testStorage()
     {
         $user_id = 123;
         $referer = 'http://codendi.com/?id=1&action=show';
@@ -118,7 +118,7 @@ class TokenTest extends TestCase
         $t1->__construct();
     }
 
-    function testInvalidReferer()
+    public function testInvalidReferer()
     {
         $dao  = \Mockery::spy(Docman_TokenDao::class);
         $http = \Mockery::spy(HTTPRequest::class);

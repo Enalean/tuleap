@@ -27,7 +27,7 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine
     public $duration;
     public $start_date;
 
-    function validData()
+    public function validData()
     {
         if ($this->duration && $this->duration > 1) {
             return true;

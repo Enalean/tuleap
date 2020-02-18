@@ -46,14 +46,14 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    function itRedirectToTheCurrentMilestone()
+    public function itRedirectToTheCurrentMilestone()
     {
         $GLOBALS['Response']->expectOnce('redirect', array(new PatternExpectation("/aid=$this->current_milestone_artifact_id/")));
         $controller = new Planning_MilestoneSelectorController($this->request, $this->milestone_factory);
         $controller->show();
     }
 
-    function itRedirectToTheCurrentMilestoneCardwallIfAny()
+    public function itRedirectToTheCurrentMilestoneCardwallIfAny()
     {
         $event_manager = \Mockery::mock(\EventManager::class);
         EventManager::setInstance($event_manager);
@@ -64,7 +64,7 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase
         $controller->show();
     }
 
-    function itDoesntRedirectIfNoMilestone()
+    public function itDoesntRedirectIfNoMilestone()
     {
         $milestone_factory = mock('Planning_MilestoneFactory');
         stub($milestone_factory)->getLastMilestoneCreated()->returns(mock('Planning_NoMilestone'));

@@ -28,12 +28,12 @@ class Docman_Log
 {
  /* implements EventListener */
 
-    function __construct()
+    public function __construct()
     {
         $this->_getDao();
     }
 
-    function log($event, $params)
+    public function log($event, $params)
     {
         $event = constant(strtoupper($event));
         switch ($event) {
@@ -71,7 +71,7 @@ class Docman_Log
         }
     }
 
-    function logsDaily($params)
+    public function logsDaily($params)
     {
         $params['logs'][] = array(
             'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
@@ -81,7 +81,7 @@ class Docman_Log
     }
 
     public $dao;
-    function _getDao()
+    public function _getDao()
     {
         if (!$this->dao) {
             $this->dao = new Docman_LogDao(CodendiDataAccess::instance());
@@ -90,13 +90,13 @@ class Docman_Log
     }
 
     public $dif;
-    function _getItemFactory($group_id)
+    public function _getItemFactory($group_id)
     {
         $this->dif = new Docman_ItemFactory($group_id);
         return $this->dif;
     }
 
-    function fetchLogsForItem($item_id, $display_access_logs)
+    public function fetchLogsForItem($item_id, $display_access_logs)
     {
         $html = '';
         $uh   = UserHelper::instance();
@@ -196,7 +196,7 @@ class Docman_Log
         return $html;
     }
 
-    function getText($type)
+    public function getText($type)
     {
         $txt = '';
         switch ($type) {
@@ -254,7 +254,7 @@ class Docman_Log
     /**
      * Search if user accessed the given item after the given date.
      */
-    function userAccessedSince($userId, $itemId, $date)
+    public function userAccessedSince($userId, $itemId, $date)
     {
         return $this->dao->searchUserAccessSince($userId, $itemId, $date);
     }

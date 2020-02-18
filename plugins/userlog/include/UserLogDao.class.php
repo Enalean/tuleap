@@ -25,7 +25,7 @@
 
 class UserLogDao extends DataAccessObject
 {
-    function getFoundRows()
+    public function getFoundRows()
     {
         $sql = 'SELECT FOUND_ROWS() as nb';
         $dar = $this->retrieve($sql);

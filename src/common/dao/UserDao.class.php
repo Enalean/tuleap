@@ -37,7 +37,7 @@ class UserDao extends DataAccessObject
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function searchAll()
+    public function searchAll()
     {
         $sql = "SELECT * FROM user";
         return $this->retrieve($sql);
@@ -47,7 +47,7 @@ class UserDao extends DataAccessObject
     * Searches User by Status (either one value or array)
     * @return DataAccessResult
     */
-    function searchByStatus($status)
+    public function searchByStatus($status)
     {
         if (is_array($status)) {
             $where_status=$this->da->quoteSmartImplode(" OR status = ", $status);
@@ -62,7 +62,7 @@ class UserDao extends DataAccessObject
     * Searches User by UserId
     * @return DataAccessResult
     */
-    function searchByUserId($userId)
+    public function searchByUserId($userId)
     {
         $sql = sprintf(
             "SELECT * FROM user WHERE user_id = %s",
@@ -75,7 +75,7 @@ class UserDao extends DataAccessObject
     * Searches User by UserName
     * @return DataAccessResult
     */
-    function searchByUserName($userName)
+    public function searchByUserName($userName)
     {
         $sql = sprintf(
             "SELECT * FROM user WHERE user_name = %s",
@@ -88,7 +88,7 @@ class UserDao extends DataAccessObject
     * Searches User by Email
     * @return DataAccessResult
     */
-    function searchByEmail($email)
+    public function searchByEmail($email)
     {
         $sql = sprintf(
             "SELECT * FROM user WHERE email = %s",
@@ -121,7 +121,7 @@ class UserDao extends DataAccessObject
      * Searches User by ldapid
      * @return DataAccessResult
      */
-    function searchByLdapId($ldap_id)
+    public function searchByLdapId($ldap_id)
     {
         $sql = sprintf(
             "SELECT * FROM user WHERE ldap_id = %s",
@@ -194,7 +194,7 @@ class UserDao extends DataAccessObject
      * @param $last_pwd_update
      * @return true or id(auto_increment) if there is no error
      */
-    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update)
+    public function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update)
     {
 
         $columns = array();
@@ -309,7 +309,7 @@ class UserDao extends DataAccessObject
         return $inserted;
     }
 
-    function updateByRow(array $user)
+    public function updateByRow(array $user)
     {
         $stmt = array();
         if (isset($user['clear_password'])) {
@@ -348,7 +348,7 @@ class UserDao extends DataAccessObject
      *
      * @return bool
      */
-    function assignNextUnixUid($userId)
+    public function assignNextUnixUid($userId)
     {
         $sql = 'UPDATE user, (SELECT MAX(unix_uid)+1 AS max_uid FROM user) AS R'.
                ' SET unix_uid = max_uid'.
@@ -368,7 +368,7 @@ class UserDao extends DataAccessObject
     * Searches User status by Email
     * @return DataAccessResult
     */
-    function searchStatusByEmail($email)
+    public function searchStatusByEmail($email)
     {
         //ST: with LDAP user_name can be an email
         $sql = sprintf(
@@ -391,7 +391,7 @@ class UserDao extends DataAccessObject
      * @todo: define a global time object that would give the same time to all
      * actions on an execution.
      */
-    function storeLoginSuccess($user_id, $time)
+    public function storeLoginSuccess($user_id, $time)
     {
         $sql = 'UPDATE user_access
                 SET nb_auth_failure = 0,
@@ -428,7 +428,7 @@ class UserDao extends DataAccessObject
      * was no bad attemps since the last successful login (ie. 'last_auth_success'
      * newer than 'last_auth_failure') the counter is reset to 1.
      */
-    function storeLoginFailure($login, $time)
+    public function storeLoginFailure($login, $time)
     {
         $sql = "UPDATE user_access
                 SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1),
@@ -469,7 +469,7 @@ class UserDao extends DataAccessObject
      *
      * @return string|false
      */
-    function foundRows()
+    public function foundRows()
     {
         $sql = "SELECT FOUND_ROWS() as nb;";
         $dar = $this->retrieve($sql);
@@ -512,7 +512,7 @@ class UserDao extends DataAccessObject
      * @param String $newName
      * @return Boolean
      */
-    function renameUser($user, $newName)
+    public function renameUser($user, $newName)
     {
         if (! TrackerV3::instance()->available()) {
             return true;
@@ -626,7 +626,7 @@ class UserDao extends DataAccessObject
      *
      * @return Array
      */
-    function getUserAccessInfo($userId)
+    public function getUserAccessInfo($userId)
     {
         $sql = 'SELECT * FROM user_access WHERE user_id = '.$this->da->escapeInt($userId);
         $dar  = $this->retrieve($sql);

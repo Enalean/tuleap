@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
 final class ApprovalTableTest extends TestCase
 {
 
-    function testTableStateRejected(): void
+    public function testTableStateRejected(): void
     {
         // Std case
         $row['nb_reviewers'] = 5;
@@ -58,7 +58,7 @@ final class ApprovalTableTest extends TestCase
         $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED, $t3->getApprovalState());
     }
 
-    function testTableStateApproved(): void
+    public function testTableStateApproved(): void
     {
         // Std case
         $row['nb_reviewers'] = 5;
@@ -97,7 +97,7 @@ final class ApprovalTableTest extends TestCase
         $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $t1->getApprovalState());
     }
 
-    function testTableStateNotYet(): void
+    public function testTableStateNotYet(): void
     {
         // Std case
         $row['nb_reviewers'] = 0;
@@ -145,7 +145,7 @@ final class ApprovalTableTest extends TestCase
         $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $t1->getApprovalState());
     }
 
-    function testNoData(): void
+    public function testNoData(): void
     {
         // Std case
         $row = array();

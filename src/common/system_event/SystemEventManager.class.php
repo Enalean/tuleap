@@ -133,12 +133,12 @@ class SystemEventManager
         return new SystemEventManager($dao, $followers_dao);
     }
 
-    function _getEventManager()
+    public function _getEventManager()
     {
         return EventManager::instance();
     }
 
-    function _getDao()
+    public function _getDao()
     {
         if (!$this->dao) {
             $this->dao = new SystemEventDao(CodendiDataAccess::instance());
@@ -146,7 +146,7 @@ class SystemEventManager
         return $this->dao;
     }
 
-    function _getFollowersDao()
+    public function _getFollowersDao()
     {
         if (!$this->followers_dao) {
             $this->followers_dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
@@ -154,7 +154,7 @@ class SystemEventManager
         return $this->followers_dao;
     }
 
-    function _getBackend()
+    public function _getBackend()
     {
         return Backend::instance('Backend');
     }
@@ -162,7 +162,7 @@ class SystemEventManager
     /*
      * Convert selected event into a system event, and store it accordingly
      */
-    function addSystemEvent($event, $params)
+    public function addSystemEvent($event, $params)
     {
         //$event = constant(strtoupper($event));
         switch ($event) {

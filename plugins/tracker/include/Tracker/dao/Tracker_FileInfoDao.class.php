@@ -25,7 +25,7 @@
 class Tracker_FileInfoDao extends DataAccessObject
 {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_fileinfo';
@@ -35,7 +35,7 @@ class Tracker_FileInfoDao extends DataAccessObject
     * Searches Tracker_FileInfo by Id
     * @return DataAccessResult
     */
-    function searchById($id)
+    public function searchById($id)
     {
         $id = $this->da->escapeInt($id);
         $sql = "SELECT *

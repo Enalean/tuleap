@@ -9,7 +9,7 @@ class RoseTheme extends Theme
     private $axis_color       = '#CC0000';
     private $grid_color       = '#CC3333';
 
-    function GetColorList()
+    public function GetColorList()
     {
         return array(
             '#FF0000',
@@ -33,7 +33,7 @@ class RoseTheme extends Theme
         );
     }
 
-    function SetupGraph($graph)
+    public function SetupGraph($graph)
     {
 
         // graph
@@ -83,7 +83,7 @@ class RoseTheme extends Theme
     }
 
 
-    function SetupPieGraph($graph)
+    public function SetupPieGraph($graph)
     {
 
         // graph
@@ -109,7 +109,7 @@ class RoseTheme extends Theme
     }
 
 
-    function PreStrokeApply($graph)
+    public function PreStrokeApply($graph)
     {
         if ($graph->legend->HasItems()) {
             $img = $graph->img;
@@ -122,7 +122,7 @@ class RoseTheme extends Theme
         }
     }
 
-    function ApplyPlot($plot)
+    public function ApplyPlot($plot)
     {
 
         switch (get_class($plot)) {

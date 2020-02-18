@@ -25,5 +25,5 @@ interface Cardwall_OnTop_Config_ColumnsVisitor
      *
      * @Pattern Visitor
      */
-    function accept($visitor, $parameter = '');
+    public function accept($visitor, $parameter = '');
 }

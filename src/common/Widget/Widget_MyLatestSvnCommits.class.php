@@ -154,7 +154,7 @@ class Widget_MyLatestSvnCommits extends Widget
             ';
     }
 
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
         $nbShow = new Valid_UInt('nb_svn_commits');
@@ -170,15 +170,15 @@ class Widget_MyLatestSvnCommits extends Widget
         return true;
     }
 
-    function getCategory()
+    public function getCategory()
     {
         return _('Source code management');
     }
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_latest_svn_commits', 'description');
     }
-    function isAjax()
+    public function isAjax()
     {
         return true;
     }

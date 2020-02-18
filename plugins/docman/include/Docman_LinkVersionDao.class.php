@@ -24,7 +24,7 @@ class Docman_LinkVersionDao extends DataAccessObject
     /**
      * @return DataAccessResult
      */
-    function searchByItemId($item_id)
+    public function searchByItemId($item_id)
     {
         $item_id = $this->da->escapeInt($item_id);
 
@@ -38,7 +38,7 @@ class Docman_LinkVersionDao extends DataAccessObject
     /**
      * @return DataAccessResult
      */
-    function searchByNumber($item_id, $number)
+    public function searchByNumber($item_id, $number)
     {
         $item_id = $this->da->escapeInt($item_id);
         $number  = $this->da->escapeInt($number);

@@ -69,7 +69,7 @@ class Artifact
      *          ONLY OPTIONAL WHEN YOU PLAN TO IMMEDIATELY CALL ->create()
      *  @return bool success.
      */
-    function __construct(&$ArtifactType, $data = false, $checkPerms = true)
+    public function __construct(&$ArtifactType, $data = false, $checkPerms = true)
     {
         global $Language;
 
@@ -120,7 +120,7 @@ class Artifact
      *  @param  int             The artifact ID.
      *  @return bool success.
      */
-    function fetchData($artifact_id)
+    public function fetchData($artifact_id)
     {
 
         global $art_field_fact,$Language;
@@ -172,7 +172,7 @@ class Artifact
      *
      *  @return object  ArtifactType.
      */
-    function getArtifactType()
+    public function getArtifactType()
     {
         return $this->ArtifactType;
     }
@@ -183,7 +183,7 @@ class Artifact
      *           @param name: the field name
      *  @return value
      */
-    function getValue($name)
+    public function getValue($name)
     {
         if (array_key_exists($name, $this->data_array)) {
             return $this->data_array[$name];
@@ -197,7 +197,7 @@ class Artifact
      *
      *  @return array
      */
-    function getMultiAssignedTo()
+    public function getMultiAssignedTo()
     {
         $aid=$this->getID();
         if (!$aid) {
@@ -224,7 +224,7 @@ class Artifact
      *
      *  @return int     The artifact_id #.
      */
-    function getID()
+    public function getID()
     {
         return $this->data_array['artifact_id'];
     }
@@ -233,7 +233,7 @@ class Artifact
      * useArtifactPermissions
      * @return bool true if the artifact has individual permissions set
      */
-    function useArtifactPermissions()
+    public function useArtifactPermissions()
     {
         return $this->data_array['use_artifact_permissions'];
     }
@@ -243,7 +243,7 @@ class Artifact
      *
      *  @return int     Status: (1) Open, (2) Closed, (3) Deleted.
      */
-    function getStatusID()
+    public function getStatusID()
     {
         return $this->data_array['status_id'];
     }
@@ -253,7 +253,7 @@ class Artifact
      *
      *  @return int user_id of submitter.
      */
-    function getSubmittedBy()
+    public function getSubmittedBy()
     {
         return $this->data_array['submitted_by'];
     }
@@ -263,7 +263,7 @@ class Artifact
      *
      *  @return int unix time.
      */
-    function getOpenDate()
+    public function getOpenDate()
     {
         return $this->data_array['open_date'];
     }
@@ -273,7 +273,7 @@ class Artifact
      *
      *  @return int unix time.
      */
-    function getLastUpdateDate()
+    public function getLastUpdateDate()
     {
         return $this->data_array['last_update_date'];
     }
@@ -283,7 +283,7 @@ class Artifact
      *
      *  @return int unix time.
      */
-    function getCloseDate()
+    public function getCloseDate()
     {
         return $this->data_array['close_date'];
     }
@@ -293,7 +293,7 @@ class Artifact
      *
      *  @return string The summary (subject).
      */
-    function getSummary()
+    public function getSummary()
     {
         return $this->data_array['summary'];
     }
@@ -303,7 +303,7 @@ class Artifact
      *
      *  @return string  The body (message).
      */
-    function getDetails()
+    public function getDetails()
     {
         return $this->data_array['details'];
     }
@@ -313,7 +313,7 @@ class Artifact
      *
      *  @return int
      */
-    function getSeverity()
+    public function getSeverity()
     {
         return $this->data_array['severity'];
     }
@@ -329,7 +329,7 @@ class Artifact
      *
      *  @return int : the artifact_history_id
      */
-    function addHistory($field, $old_value, $new_value, $type = false, $email = false, $ahid = false, $comment_format = self::FORMAT_TEXT)
+    public function addHistory($field, $old_value, $new_value, $type = false, $email = false, $ahid = false, $comment_format = self::FORMAT_TEXT)
     {
         //MLS: add case where we add CC and file_attachment into history for task #240
         if (!is_object($field)) {
@@ -395,7 +395,7 @@ class Artifact
      *              If $vfl is not false, the fields expected in this array are *all* the fields of this tracker that are allowed to be submited by the user.
      *  @return bool
      */
-    function create($vfl = false, $import = false, $row = 0)
+    public function create($vfl = false, $import = false, $row = 0)
     {
         global $ath,$art_field_fact,$Language;
 
@@ -620,7 +620,7 @@ class Artifact
      *
      *  @return bool
      */
-    function addComment($comment, $email, &$changes, $comment_format = self::FORMAT_TEXT)
+    public function addComment($comment, $email, &$changes, $comment_format = self::FORMAT_TEXT)
     {
 
         global $art_field_fact,$Language;
@@ -659,7 +659,7 @@ class Artifact
      * @param comment (IN) : the comment that the user typed in
      * @param canned_response (IN) : the id of the canned response
      */
-    function addFollowUpComment($comment, $comment_type_id, $canned_response, &$changes, $comment_format = self::FORMAT_TEXT)
+    public function addFollowUpComment($comment, $comment_type_id, $canned_response, &$changes, $comment_format = self::FORMAT_TEXT)
     {
         global $art_field_fact,$Language;
         if ($canned_response && $canned_response != 100) {
@@ -699,7 +699,7 @@ class Artifact
      *
      * @return ReferenceManager
      */
-    function getReferenceManager()
+    public function getReferenceManager()
     {
         return ReferenceManager::instance();
     }
@@ -711,7 +711,7 @@ class Artifact
      *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
      *  @return bool
      */
-    function addFollowUpComments($parsed_comments)
+    public function addFollowUpComments($parsed_comments)
     {
         global $Language;
 
@@ -755,7 +755,7 @@ class Artifact
     *
     * @return bool
     */
-    function updateFollowupComment($comment_id, $comment_txt, &$changes, $comment_format = self::FORMAT_TEXT)
+    public function updateFollowupComment($comment_id, $comment_txt, &$changes, $comment_format = self::FORMAT_TEXT)
     {
         if ($this->userCanEditFollowupComment($comment_id)) {
             $sql = 'SELECT field_name, new_value, type FROM artifact_history'
@@ -806,7 +806,7 @@ class Artifact
      *
      *  @return bool
      */
-    function handleUpdate($artifact_id_dependent, $canned_response, &$changes, $masschange = false, $vfl = false, $import = false)
+    public function handleUpdate($artifact_id_dependent, $canned_response, &$changes, $masschange = false, $vfl = false, $import = false)
     {
         global $art_field_fact,$Language;
         if ($masschange && !$this->ArtifactType->userIsAdmin()) {
@@ -1098,7 +1098,7 @@ class Artifact
     /**
      * Set the permissions
      */
-    function setPermissions($use_artifact_permissions, $ugroups)
+    public function setPermissions($use_artifact_permissions, $ugroups)
     {
         if ($this->ArtifactType->userIsAdmin()) {
             if ($use_artifact_permissions) {
@@ -1127,7 +1127,7 @@ class Artifact
      *
      * @return bool
      */
-    function existCC($cc)
+    public function existCC($cc)
     {
         $sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=". db_ei($this->getID()) ." AND email='". db_es($cc) ."'";
         $res = db_query($sql);
@@ -1144,7 +1144,7 @@ class Artifact
      *
      * @return bool
      */
-    function insertCC($cc, $added_by, $comment, $date)
+    public function insertCC($cc, $added_by, $comment, $date)
     {
         $sql = "INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ".
             "VALUES (". db_ei($this->getID()) .",'". db_es($cc) ."','". db_ei($added_by) ."','". db_es($comment) ."','". db_ei($date) ."')";
@@ -1162,7 +1162,7 @@ class Artifact
      *
      * @return bool
      */
-    function addCC($email, $comment, &$changes, $masschange = false)
+    public function addCC($email, $comment, &$changes, $masschange = false)
     {
         global $Language;
 
@@ -1213,7 +1213,7 @@ class Artifact
      *
      * @return bool
      */
-    function updateCC($email, $comment)
+    public function updateCC($email, $comment)
     {
         global $Language;
 
@@ -1269,7 +1269,7 @@ class Artifact
      *
      * @return bool
      */
-    function deleteCC($artifact_cc_id, &$changes, $masschange = false)
+    public function deleteCC($artifact_cc_id, &$changes, $masschange = false)
     {
         global $Language;
 
@@ -1308,7 +1308,7 @@ class Artifact
      *
      * @return bool
      */
-    function existDependency($id)
+    public function existDependency($id)
     {
         $sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=". db_ei($this->getID()) ." AND is_dependent_on_artifact_id=". db_ei($id);
         //echo $sql;
@@ -1323,7 +1323,7 @@ class Artifact
      *
      * @return bool
      */
-    function validArtifact($id)
+    public function validArtifact($id)
     {
         $sql = "SELECT * FROM artifact a, artifact_group_list agl WHERE ".
             "a.group_artifact_id = agl.group_artifact_id AND a.artifact_id=". db_ei($id) ." AND ".
@@ -1344,7 +1344,7 @@ class Artifact
      *
      * @return bool
      */
-    function insertDependency($id)
+    public function insertDependency($id)
     {
         $sql = "INSERT INTO artifact_dependencies (artifact_id,is_dependent_on_artifact_id) ".
             "VALUES (". db_ei($this->getID()) .",". db_ei($id) .")";
@@ -1357,7 +1357,7 @@ class Artifact
     /**
      * Delete all the CC Names of this Artifact
      */
-    function deleteAllCC()
+    public function deleteAllCC()
     {
         $sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=". db_ei($this->getID()) ;
         $res = db_query($sql);
@@ -1381,7 +1381,7 @@ class Artifact
      /**
       * Delete all the dependencies of this Artifact
       */
-    function deleteAllDependencies()
+    public function deleteAllDependencies()
     {
         $sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=". db_ei($this->getID()) ;
         $res = db_query($sql);
@@ -1411,7 +1411,7 @@ class Artifact
      *
      * @return bool
      */
-    function addDependencies($artifact_id_dependent, &$changes, $masschange, $import = false)
+    public function addDependencies($artifact_id_dependent, &$changes, $masschange, $import = false)
     {
         if (!$artifact_id_dependent) {
             return true;
@@ -1458,7 +1458,7 @@ class Artifact
      *
      * @return bool
      */
-    function deleteDependency($dependent_on_artifact_id, &$changes)
+    public function deleteDependency($dependent_on_artifact_id, &$changes)
     {
         global $Language;
 
@@ -1483,7 +1483,7 @@ class Artifact
      *
      * @return bool
      */
-    function deleteFollowupComment($aid, $comment_id)
+    public function deleteFollowupComment($aid, $comment_id)
     {
         if ($this->userCanEditFollowupComment($comment_id)) {
             //Delete the followup comment
@@ -1522,7 +1522,7 @@ class Artifact
      *
      * @return bool
      */
-    function isStatusClosed($status)
+    public function isStatusClosed($status)
     {
         return (($status == '3') || ($status == '10') );
     }
@@ -1533,7 +1533,7 @@ class Artifact
      *
      * @return array
      */
-    function getFieldsValues()
+    public function getFieldsValues()
     {
 
         // get the artifact data
@@ -1546,7 +1546,7 @@ class Artifact
      *
      * @return int
      */
-    function getCommenter($comment_id)
+    public function getCommenter($comment_id)
     {
 
         $sql = 'SELECT mod_by FROM artifact_history'
@@ -1563,7 +1563,7 @@ class Artifact
      *
      * @return array
      */
-    function getCommenters()
+    public function getCommenters()
     {
         $sql="SELECT DISTINCT mod_by FROM artifact_history ".
         "WHERE artifact_id=". db_ei($this->getID()) ." ".
@@ -1576,7 +1576,7 @@ class Artifact
      *
      * @return array
      */
-    function getAnonymousCommenters()
+    public function getAnonymousCommenters()
     {
         $sql="SELECT DISTINCT email FROM artifact_history ".
         "WHERE artifact_id=". db_ei($this->getID()) ." ".
@@ -1592,7 +1592,7 @@ class Artifact
      *
      * @return String
      */
-    function getFollowup($comment_id)
+    public function getFollowup($comment_id)
     {
         $res = $this->getFollowUpDetails($comment_id);
         return $res['new_value'];
@@ -1605,7 +1605,7 @@ class Artifact
      *
      * @return Array
      */
-    function getFollowUpDetails($comment_id)
+    public function getFollowUpDetails($comment_id)
     {
         $sql = 'SELECT * FROM artifact_history'
         .' WHERE (field_name="comment" OR field_name LIKE "lbl_%_comment")'
@@ -1623,7 +1623,7 @@ class Artifact
      *
      * @return array
      */
-    function getFollowups()
+    public function getFollowups()
     {
         global $art_field_fact;
 
@@ -1701,7 +1701,7 @@ class Artifact
      *
      * @return array
      */
-    function getHistory()
+    public function getHistory()
     {
 
         //Addition of new followup comments is not recorded in history (update and removal of followups is recorded)
@@ -1719,7 +1719,7 @@ class Artifact
      *
      * @return array
      */
-    function getCCList()
+    public function getCCList()
     {
 
         $sql="SELECT artifact_cc_id,artifact_cc.email,artifact_cc.added_by,artifact_cc.comment,artifact_cc.date,user.user_name ".
@@ -1734,7 +1734,7 @@ class Artifact
      *
      * @return array
      */
-    function getCCIdList()
+    public function getCCIdList()
     {
 
         $sql="SELECT u.user_id ".
@@ -1751,7 +1751,7 @@ class Artifact
      *
      * @return string
      */
-    function getCCEmails()
+    public function getCCEmails()
     {
 
         $sql="SELECT email ".
@@ -1778,7 +1778,7 @@ class Artifact
      *
      * @return array
      */
-    function getCC($artifact_cc_id)
+    public function getCC($artifact_cc_id)
     {
 
         $sql="SELECT artifact_cc_id,artifact_cc.email,artifact_cc.added_by,artifact_cc.comment,artifact_cc.date,user.user_name ".
@@ -1794,7 +1794,7 @@ class Artifact
      *
      * @return array
      */
-    function getDependencies()
+    public function getDependencies()
     {
 
         $sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, afvl.value as status, ag.group_artifact_id, ag.name, g.group_id, g.group_name ".
@@ -1817,7 +1817,7 @@ class Artifact
      *
      * @return array
      */
-    function getInverseDependencies()
+    public function getInverseDependencies()
     {
 
         $sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, afvl.value as status, ag.group_artifact_id, ag.name, g.group_id, g.group_name ".
@@ -1840,7 +1840,7 @@ class Artifact
      *
      * @return string
      */
-    function getAttachedFileNames()
+    public function getAttachedFileNames()
     {
         $sql="SELECT filename ".
             "FROM artifact_file ".
@@ -1864,7 +1864,7 @@ class Artifact
      *
      * @return array
      */
-    function getAttachedFiles()
+    public function getAttachedFiles()
     {
         $sql="SELECT id,artifact_id,filename,filesize,filetype,description,bin_data,adddate,user.user_name ".
             "FROM artifact_file,user ".
@@ -1881,7 +1881,7 @@ class Artifact
      *
      * @return array
      */
-    function getAttachedFile($id)
+    public function getAttachedFile($id)
     {
         $sql="SELECT id,filename,filesize,description,adddate,user.user_name ".
             "FROM artifact_file,user ".
@@ -1892,7 +1892,7 @@ class Artifact
         return db_fetch_array($res);
     }
 
-    function checkAssignees($field_name, $result, $art_field_fact, $changes, &$user_ids)
+    public function checkAssignees($field_name, $result, $art_field_fact, $changes, &$user_ids)
     {
 
         // check assignee  notification preferences
@@ -2001,7 +2001,7 @@ class Artifact
      *      @param $my_user_id    if not specified, use the current user id..
      *      @return bool user_can_view.
      */
-    function userCanView($my_user_id = 0)
+    public function userCanView($my_user_id = 0)
     {
 
         if (!$my_user_id) {
@@ -2088,7 +2088,7 @@ class Artifact
      *
      *    @return    array    array of data
      */
-    function &getExtraFieldData()
+    public function &getExtraFieldData()
     {
         global $art_field_fact;
         $extrafielddata = array();
@@ -2133,7 +2133,7 @@ class Artifact
      * @param concerned_addresses (OUT): email addresses of anonymous users (for instance in CC addresses)
      *
      */
-    function buildNotificationArrays($changes, &$concerned_ids, &$concerned_addresses)
+    public function buildNotificationArrays($changes, &$concerned_ids, &$concerned_addresses)
     {
 
         global $art_field_fact,$Language;
@@ -2244,7 +2244,7 @@ class Artifact
      * $ugroup_sets[x] are the ugroups that the users in $user_sets[x]
      * belong to
      */
-    function groupNotificationList($user_ids, &$user_sets, &$ugroup_sets)
+    public function groupNotificationList($user_ids, &$user_sets, &$ugroup_sets)
     {
 
         $group_id = $this->ArtifactType->getGroupID();
@@ -2291,7 +2291,7 @@ class Artifact
       *
       * @return bool
       */
-    function userCanEditFollowupComment($comment_id)
+    public function userCanEditFollowupComment($comment_id)
     {
 
         //if user is not logged in, he cannot update/delete comments
@@ -2321,7 +2321,7 @@ class Artifact
      *
      * @return bool
      */
-    function isFollowupCommentDeleted($comment_id)
+    public function isFollowupCommentDeleted($comment_id)
     {
 
         $sql = 'SELECT artifact_id, new_value
@@ -2352,7 +2352,7 @@ class Artifact
      *
      * @return result set
      */
-    function getOriginalCommentSubmitter($comment_id)
+    public function getOriginalCommentSubmitter($comment_id)
     {
 
         $sql = 'SELECT field_name, mod_by, email
@@ -2381,7 +2381,7 @@ class Artifact
      *
      * @return result set
      */
-    function getOriginalCommentDate($comment_id)
+    public function getOriginalCommentDate($comment_id)
     {
         $sql = 'SELECT field_name, date
                 FROM artifact_history
@@ -2411,7 +2411,7 @@ class Artifact
     *
     * @return void
     */
-    function mailFollowupWithPermissions($more_addresses = false, $changes = false)
+    public function mailFollowupWithPermissions($more_addresses = false, $changes = false)
     {
         global $art_field_fact,$Language;
 
@@ -2513,7 +2513,7 @@ class Artifact
      * @param Codendi_Mail_Interface $text_mail
      * @param Codendi_Mail_Interface $html_mail
      */
-    function sendNotification($addresses, $subject, $text_mail, $html_mail)
+    public function sendNotification($addresses, $subject, $text_mail, $html_mail)
     {
         $html_addresses = array();
         $text_addresses = array();
@@ -2545,7 +2545,7 @@ class Artifact
      * @param String                 $subject
      * @param Array                  $to
      */
-    function sendMail(Codendi_Mail_Interface $mail, $subject, array $to)
+    public function sendMail(Codendi_Mail_Interface $mail, $subject, array $to)
     {
         $mail->addAdditionalHeader("X-Codendi-Project", $this->ArtifactType->getGroup()->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Artifact", $this->ArtifactType->getItemName());
@@ -2559,7 +2559,7 @@ class Artifact
     /** for a certain set of users being part of the same ugroups
      * create the mail body containing only fields that they have the permission to read
      */
-    function createHTMLMailForUsers($ugroups, $changes, $group_id, $group_artifact_id, &$ok, &$subject)
+    public function createHTMLMailForUsers($ugroups, $changes, $group_id, $group_artifact_id, &$ok, &$subject)
     {
         global $art_field_fact,$art_fieldset_fact,$Language;
 
@@ -2722,7 +2722,7 @@ class Artifact
      *
      * @protected
      **/
-    function _getFieldLabelAndValueForHTMLMail($group_id, $group_artifact_id, $field, $field_perm)
+    public function _getFieldLabelAndValueForHTMLMail($group_id, $group_artifact_id, $field, $field_perm)
     {
         $html = false;
         $read_only = true;
@@ -2756,7 +2756,7 @@ class Artifact
     /** for a certain set of users being part of the same ugroups
      * create the mail body containing only fields that they have the permission to read
      */
-    function createMailForUsers($ugroups, $changes, $group_id, $group_artifact_id, &$ok, &$subject)
+    public function createMailForUsers($ugroups, $changes, $group_id, $group_artifact_id, &$ok, &$subject)
     {
         global $art_field_fact,$art_fieldset_fact,$Language;
 
@@ -2953,7 +2953,7 @@ class Artifact
     *
     * @return string
     */
-    function formatChanges($changes, $field_perm, &$visible_change)
+    public function formatChanges($changes, $field_perm, &$visible_change)
     {
 
         global $art_field_fact,$Language;
@@ -3041,7 +3041,7 @@ class Artifact
      *
      * @return string
      */
-    function formatChangesHTML($changes, $field_perm, $artifact_href, &$visible_change)
+    public function formatChangesHTML($changes, $field_perm, $artifact_href, &$visible_change)
     {
 
         global $art_field_fact,$Language;
@@ -3194,7 +3194,7 @@ class Artifact
          *                         else is an export csv/DB
          * @return string the follow-up comments to display in HTML or in ascii mode
          */
-    function showFollowUpComments($group_id, $pv, $output = self::OUTPUT_BROWSER)
+    public function showFollowUpComments($group_id, $pv, $output = self::OUTPUT_BROWSER)
     {
         $hp = $this->getHTMLPurifier();
         $uh = UserHelper::instance();
@@ -3415,7 +3415,7 @@ class Artifact
          *
          * @return string
          */
-    function showCCList($group_id, $group_artifact_id, $ascii = false, $pv = 0)
+    public function showCCList($group_id, $group_artifact_id, $ascii = false, $pv = 0)
     {
         $hp = Codendi_HTMLPurifier::instance();
         global $Language;
@@ -3520,7 +3520,7 @@ class Artifact
          *
          * @return string
          */
-    function showDependencies($group_id, $group_artifact_id, $ascii = false, $pv = 0)
+    public function showDependencies($group_id, $group_artifact_id, $ascii = false, $pv = 0)
     {
         $hp = Codendi_HTMLPurifier::instance();
         global $Language;
@@ -3617,7 +3617,7 @@ class Artifact
          *
          * @return string
          */
-    function showAttachedFiles($group_id, $group_artifact_id, $ascii = false, $pv = 0)
+    public function showAttachedFiles($group_id, $group_artifact_id, $ascii = false, $pv = 0)
     {
 
         global $Language;
@@ -3716,7 +3716,7 @@ class Artifact
 
     /** Update the last_update_date field in the Artifact table to 'now'
      */
-    function update_last_update_date()
+    public function update_last_update_date()
     {
         $sql="UPDATE artifact SET last_update_date=".time().
             " WHERE artifact_id=". db_ei($this->getID()) ;

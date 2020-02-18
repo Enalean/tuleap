@@ -37,7 +37,7 @@ class Docman_MetaMetadataHtml
         $this->str_no  = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_no');
     }
 
-    function getName(&$sthCanChange)
+    public function getName(&$sthCanChange)
     {
         $mdContent = '';
         $mdContent .= '<tr>';
@@ -60,7 +60,7 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getDescription(&$sthCanChange)
+    public function getDescription(&$sthCanChange)
     {
         $mdContent = '';
         $mdContent .= '<tr>';
@@ -78,7 +78,7 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getEmptyAllowed(&$sthCanChange)
+    public function getEmptyAllowed(&$sthCanChange)
     {
         $mdContent = '';
         $mdContent .= '<tr>';
@@ -104,7 +104,7 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getMultipleValuesAllowed(&$sthCanChange)
+    public function getMultipleValuesAllowed(&$sthCanChange)
     {
         $mdContent = '';
         $mdContent .= '<tr>';
@@ -130,7 +130,7 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getUseIt(&$sthCanChange)
+    public function getUseIt(&$sthCanChange)
     {
         $mdContent = '';
         $mdContent .= '<tr>';
@@ -157,7 +157,7 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getKeepHistory(&$sthCanChange)
+    public function getKeepHistory(&$sthCanChange)
     {
         $mdContent = '';
         $mdContent .= '<tr>';
@@ -174,7 +174,7 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getType(&$sthCanChange)
+    public function getType(&$sthCanChange)
     {
         $mdContent = '';
         $mdContent .= '<tr>';

@@ -28,12 +28,12 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
 {
     public $mdLabelToSkip;
 
-    function __construct($mdLabelToSkip = array())
+    public function __construct($mdLabelToSkip = array())
     {
         $this->mdLabelToSkip = $mdLabelToSkip;
     }
 
-    function buildFieldArray($mdIter, $params)
+    public function buildFieldArray($mdIter, $params)
     {
         $formName = '';
         if (isset($params['form_name'])) {

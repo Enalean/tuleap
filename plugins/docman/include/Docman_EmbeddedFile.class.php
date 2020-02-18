@@ -28,7 +28,7 @@ require_once('Docman_File.class.php');
 class Docman_EmbeddedFile extends Docman_File
 {
 
-    function __construct($data = null)
+    public function __construct($data = null)
     {
         parent::__construct($data);
     }
@@ -38,7 +38,7 @@ class Docman_EmbeddedFile extends Docman_File
         return $visitor->visitEmbeddedFile($this, $params);
     }
 
-    function toRow()
+    public function toRow()
     {
         $row = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;

@@ -29,7 +29,7 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
      *
      * @param Pie_Engine $engine object
      */
-    function buildProperties($engine)
+    public function buildProperties($engine)
     {
 
         parent::buildProperties($engine);

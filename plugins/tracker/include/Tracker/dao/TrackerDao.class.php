@@ -23,13 +23,13 @@ use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class TrackerDao extends DataAccessObject
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker';
     }
 
-    function searchById($id)
+    public function searchById($id)
     {
         $id      = $this->da->escapeInt($id);
         $sql = "SELECT *
@@ -38,7 +38,7 @@ class TrackerDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    function searchByGroupId($group_id)
+    public function searchByGroupId($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT *
@@ -135,7 +135,7 @@ class TrackerDao extends DataAccessObject
         }
     }
 
-    function duplicate($atid_template, $group_id, $name, $description, $item_name)
+    public function duplicate($atid_template, $group_id, $name, $description, $item_name)
     {
         $atid_template = $this->da->escapeInt($atid_template);
         $group_id      = $this->da->escapeInt($group_id);
@@ -184,7 +184,7 @@ class TrackerDao extends DataAccessObject
         return false;
     }
 
-    function create(
+    public function create(
         $group_id,
         $name,
         $description,
@@ -255,7 +255,7 @@ class TrackerDao extends DataAccessObject
         return false;
     }
 
-    function save(Tracker $tracker)
+    public function save(Tracker $tracker)
     {
         $id                  = $this->da->escapeInt($tracker->id);
         $group_id                     = $this->da->escapeInt($tracker->group_id);
@@ -291,7 +291,7 @@ class TrackerDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    function delete($id)
+    public function delete($id)
     {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);

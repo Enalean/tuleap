@@ -12,7 +12,7 @@ class Template
     /**
      * name optionally of form "theme/template" to include parent templates in children
      */
-    function __construct($name, $request, $args = false)
+    public function __construct($name, $request, $args = false)
     {
         global $WikiTheme;
 
@@ -53,7 +53,7 @@ class Template
         }
     }
 
-    function _munge_input($template)
+    public function _munge_input($template)
     {
         // Convert < ?plugin expr ? > to < ?php $this->_printPluginPI("expr"); ? >
         $template = preg_replace_callback(
@@ -71,7 +71,7 @@ class Template
         return preg_replace('/<\?=(.*?)\?>/s', '<?php $this->_print(\1);?>', $template);
     }
 
-    function _printPlugin($pi)
+    public function _printPlugin($pi)
     {
         include_once("lib/WikiPlugin.php");
         static $loader;
@@ -83,7 +83,7 @@ class Template
         $this->_print($loader->expandPI($pi, $this->_request, $this, $this->_basepage));
     }
 
-    function _print($val)
+    public function _print($val)
     {
         if (isa($val, 'Template')) {
             $this->_expandSubtemplate($val);
@@ -92,7 +92,7 @@ class Template
         }
     }
 
-    function _expandSubtemplate(&$template)
+    public function _expandSubtemplate(&$template)
     {
         // FIXME: big hack!
         //if (!$template->_request)
@@ -118,13 +118,13 @@ class Template
      *
      * @param $replacement string Replacement HTML text.
      */
-    function replace($varname, $value)
+    public function replace($varname, $value)
     {
         $this->_locals[$varname] = $value;
     }
 
 
-    function printExpansion($defaults = false)
+    public function printExpansion($defaults = false)
     {
         if (!is_array($defaults)) { // HTML object or template object
             $defaults = array('CONTENT' => $defaults);
@@ -156,7 +156,7 @@ class Template
     // Find a way to do template expansion less memory intensive and faster.
     // 1.3.4 needed no memory at all for dumphtml, now it needs +15MB.
     // Smarty? As before?
-    function getExpansion($defaults = false)
+    public function getExpansion($defaults = false)
     {
         ob_start();
         $this->printExpansion($defaults);
@@ -165,19 +165,19 @@ class Template
         return $xml;
     }
 
-    function printXML()
+    public function printXML()
     {
         $this->printExpansion();
     }
 
-    function asXML()
+    public function asXML()
     {
         return $this->getExpansion();
     }
 
 
     // Debugging:
-    function _dump_template()
+    public function _dump_template()
     {
         $lines = explode("\n", $this->_munge_input($this->_tmpl));
         $pre = HTML::pre();
@@ -188,7 +188,7 @@ class Template
         $pre->printXML();
     }
 
-    function _errorHandler($error)
+    public function _errorHandler($error)
     {
         //if (!preg_match('/: eval\(\)\'d code$/', $error->errfile))
     //    return false;

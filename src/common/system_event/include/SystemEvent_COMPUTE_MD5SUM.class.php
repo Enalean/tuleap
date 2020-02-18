@@ -130,7 +130,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
      *
      * @return FRSFileFactory
      */
-    function getFileFactory()
+    public function getFileFactory()
     {
         return new FRSFileFactory();
     }
@@ -144,7 +144,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
      *
      * @return bool
      */
-    function sendNotificationMail($user, $file, $bodyContent, $option)
+    public function sendNotificationMail($user, $file, $bodyContent, $option)
     {
         $mail =  new Codendi_Mail();
 
@@ -166,7 +166,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
      *
      * @return bool
      */
-    function compareMd5Checksums($file)
+    public function compareMd5Checksums($file)
     {
         $fileFactory = $this->getFileFactory();
         return $fileFactory->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5());

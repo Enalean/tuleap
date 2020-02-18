@@ -26,17 +26,17 @@ require_once('lib/PageList.php');
 
 class WikiPlugin_MostPopular extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("MostPopular");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("List the most popular pages.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -45,7 +45,7 @@ class WikiPlugin_MostPopular extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array_merge(
             PageList::supportedArgs(),
@@ -65,7 +65,7 @@ class WikiPlugin_MostPopular extends WikiPlugin
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
     // sortby: only pagename or hits. mtime not!
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);

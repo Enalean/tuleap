@@ -61,7 +61,7 @@ class _PageList_Column_base
 {
     public $_tdattr = array();
 
-    function __construct($default_heading, $align = false)
+    public function __construct($default_heading, $align = false)
     {
         $this->_heading = $default_heading;
 
@@ -74,7 +74,7 @@ class _PageList_Column_base
         }
     }
 
-    function format($pagelist, $page_handle, &$revision_handle)
+    public function format($pagelist, $page_handle, &$revision_handle)
     {
         return HTML::td(
             $this->_tdattr,
@@ -84,18 +84,18 @@ class _PageList_Column_base
         );
     }
 
-    function getHeading()
+    public function getHeading()
     {
         return $this->_heading;
     }
 
-    function setHeading($heading)
+    public function setHeading($heading)
     {
         $this->_heading = $heading;
     }
 
     // old-style heading
-    function heading()
+    public function heading()
     {
         // allow sorting?
         if (1 /* or in_array($this->_field, PageList::sortable_columns())*/) {
@@ -122,7 +122,7 @@ class _PageList_Column_base
 
     // new grid-style sortable heading
     // see activeui.js
-    function button_heading($pagelist, $colNum)
+    public function button_heading($pagelist, $colNum)
     {
         global $WikiTheme, $request;
         // allow sorting?
@@ -194,7 +194,7 @@ class _PageList_Column_base
      *
      * @return -1 if $a < $b, 1 if $a > $b, 0 otherwise.
      */
-    function _compare($colvala, $colvalb)
+    public function _compare($colvala, $colvalb)
     {
         if (is_string($colvala)) {
             return strcmp($colvala, $colvalb);
@@ -211,7 +211,7 @@ class _PageList_Column_base
 
 class _PageList_Column extends _PageList_Column_base
 {
-    function __construct($field, $default_heading, $align = false)
+    public function __construct($field, $default_heading, $align = false)
     {
         parent::__construct($default_heading, $align);
 
@@ -226,7 +226,7 @@ class _PageList_Column extends _PageList_Column_base
         }
     }
 
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         if ($this->_need_rev) {
             if (!$revision_handle) {
@@ -239,7 +239,7 @@ class _PageList_Column extends _PageList_Column_base
         }
     }
 
-    function _getSortableValue($page_handle, &$revision_handle)
+    public function _getSortableValue($page_handle, &$revision_handle)
     {
         $val = $this->_getValue($page_handle, $revision_handle);
         if ($this->_field == 'hits') {
@@ -259,7 +259,7 @@ class _PageList_Column extends _PageList_Column_base
  */
 class _PageList_Column_custom extends _PageList_Column
 {
-    function __construct($params)
+    public function __construct($params)
     {
         $this->_pagelist = $params[3];
         parent::__construct($params[0], $params[1], $params[2]);
@@ -268,7 +268,7 @@ class _PageList_Column_custom extends _PageList_Column
 
 class _PageList_Column_size extends _PageList_Column
 {
-    function format($pagelist, $page_handle, &$revision_handle)
+    public function format($pagelist, $page_handle, &$revision_handle)
     {
         return HTML::td(
             $this->_tdattr,
@@ -278,7 +278,7 @@ class _PageList_Column_size extends _PageList_Column
         );
     }
 
-    function _getValue($page_handle, &$revision_handle, &$pagelist = [])
+    public function _getValue($page_handle, &$revision_handle, &$pagelist = [])
     {
         if (!$revision_handle or (!$revision_handle->_data['%content']
                                   or $revision_handle->_data['%content'] === true)) {
@@ -293,7 +293,7 @@ class _PageList_Column_size extends _PageList_Column
         return $size;
     }
 
-    function _getSortableValue($page_handle, &$revision_handle)
+    public function _getSortableValue($page_handle, &$revision_handle)
     {
         if (!$revision_handle) {
             $revision_handle = $page_handle->getCurrentRevision(true);
@@ -302,7 +302,7 @@ class _PageList_Column_size extends _PageList_Column
                ? 0 : strlen($revision_handle->_data['%content']);
     }
 
-    function _getSize($revision_handle)
+    public function _getSize($revision_handle)
     {
         $bytes = @strlen($revision_handle->_data['%content']);
         return ByteFormatter($bytes);
@@ -312,14 +312,14 @@ class _PageList_Column_size extends _PageList_Column
 
 class _PageList_Column_bool extends _PageList_Column
 {
-    function __construct($field, $default_heading, $text = 'yes')
+    public function __construct($field, $default_heading, $text = 'yes')
     {
         parent::__construct($field, $default_heading, 'center');
         $this->_textIfTrue = $text;
         $this->_textIfFalse = new RawXml('&#8212;'); //mdash
     }
 
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         //FIXME: check if $this is available in the parent (->need_rev)
         $val = _PageList_Column::_getValue($page_handle, $revision_handle);
@@ -329,7 +329,7 @@ class _PageList_Column_bool extends _PageList_Column
 
 class _PageList_Column_checkbox extends _PageList_Column
 {
-    function __construct($field, $default_heading, $name = 'p')
+    public function __construct($field, $default_heading, $name = 'p')
     {
         $this->_name = $name;
         $heading = HTML::input(array('type'  => 'button',
@@ -341,7 +341,7 @@ class _PageList_Column_checkbox extends _PageList_Column
                                      ));
         parent::__construct($field, $heading, 'center');
     }
-    function _getValue($page_handle, &$revision_handle, $pagelist = [])
+    public function _getValue($page_handle, &$revision_handle, $pagelist = [])
     {
         $pagename = $page_handle->getName();
         $selected = !empty($pagelist->_selected[$pagename]);
@@ -359,7 +359,7 @@ class _PageList_Column_checkbox extends _PageList_Column
                                      'value' => 1));
         }
     }
-    function format($pagelist, $page_handle, &$revision_handle)
+    public function format($pagelist, $page_handle, &$revision_handle)
     {
         return HTML::td(
             $this->_tdattr,
@@ -369,7 +369,7 @@ class _PageList_Column_checkbox extends _PageList_Column
         );
     }
     // don't sort this javascript button
-    function button_heading($pagelist, $colNum)
+    public function button_heading($pagelist, $colNum)
     {
         $s = HTML(HTML::raw('&nbsp;'), $this->_heading, HTML::raw('&nbsp;'));
         return HTML::th(array('align' => 'center', 'valign' => 'middle',
@@ -379,14 +379,14 @@ class _PageList_Column_checkbox extends _PageList_Column
 
 class _PageList_Column_time extends _PageList_Column
 {
-    function __construct($field, $default_heading)
+    public function __construct($field, $default_heading)
     {
         parent::__construct($field, $default_heading, 'right');
         global $WikiTheme;
         $this->Theme = &$WikiTheme;
     }
 
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         $time = _PageList_Column::_getValue($page_handle, $revision_handle);
         return $this->Theme->formatDateTime($time);
@@ -395,7 +395,7 @@ class _PageList_Column_time extends _PageList_Column
 
 class _PageList_Column_version extends _PageList_Column
 {
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         if (!$revision_handle) {
             $revision_handle = $page_handle->getCurrentRevision();
@@ -409,7 +409,7 @@ class _PageList_Column_version extends _PageList_Column
 // (PHP memory limit exceeded)
 class _PageList_Column_content extends _PageList_Column
 {
-    function __construct($field, $default_heading, $align = false)
+    public function __construct($field, $default_heading, $align = false)
     {
         parent::__construct($field, $default_heading, $align);
         $this->bytes = 50;
@@ -429,7 +429,7 @@ class _PageList_Column_content extends _PageList_Column
         }
     }
 
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         if (!$revision_handle or (!$revision_handle->_data['%content']
                                   or $revision_handle->_data['%content'] === true)) {
@@ -484,7 +484,7 @@ class _PageList_Column_content extends _PageList_Column
         );
     }
 
-    function _getSortableValue($page_handle, &$revision_handle)
+    public function _getSortableValue($page_handle, &$revision_handle)
     {
         return substr(_PageList_Column::_getValue($page_handle, $revision_handle), 0, 50);
     }
@@ -492,13 +492,13 @@ class _PageList_Column_content extends _PageList_Column
 
 class _PageList_Column_author extends _PageList_Column
 {
-    function __construct($field, $default_heading, $align = false)
+    public function __construct($field, $default_heading, $align = false)
     {
         parent::__construct($field, $default_heading, $align);
         $this->dbi = $GLOBALS['request']->getDbh();
     }
 
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         $author = _PageList_Column::_getValue($page_handle, $revision_handle);
         if (isWikiWord($author) && $this->dbi->isWikiPage($author)) {
@@ -511,7 +511,7 @@ class _PageList_Column_author extends _PageList_Column
 
 class _PageList_Column_owner extends _PageList_Column_author
 {
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         $author = $page_handle->getOwner();
         if (isWikiWord($author) && $this->dbi->isWikiPage($author)) {
@@ -524,7 +524,7 @@ class _PageList_Column_owner extends _PageList_Column_author
 
 class _PageList_Column_creator extends _PageList_Column_author
 {
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         $author = $page_handle->getCreator();
         if (isWikiWord($author) && $this->dbi->isWikiPage($author)) {
@@ -539,14 +539,14 @@ class _PageList_Column_pagename extends _PageList_Column_base
 {
     public $_field = 'pagename';
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct(_("Page Name"));
         global $request;
         $this->dbi = &$request->getDbh();
     }
 
-    function _getValue($page_handle, &$revision_handle)
+    public function _getValue($page_handle, &$revision_handle)
     {
         if ($this->dbi->isWikiPage($page_handle->getName())) {
             return WikiLink($page_handle, 'known');
@@ -555,7 +555,7 @@ class _PageList_Column_pagename extends _PageList_Column_base
         }
     }
 
-    function _getSortableValue($page_handle, &$revision_handle)
+    public function _getSortableValue($page_handle, &$revision_handle)
     {
         return $page_handle->getName();
     }
@@ -563,7 +563,7 @@ class _PageList_Column_pagename extends _PageList_Column_base
     /**
      * Compare two pagenames for sorting.  See _PageList_Column::_compare.
      **/
-    function _compare($colvala, $colvalb)
+    public function _compare($colvala, $colvalb)
     {
         return strcmp($colvala, $colvalb);
     }
@@ -584,7 +584,7 @@ class PageList
     public $_sortby = array();
     public $_maxlen = 0;
 
-    function __construct($columns = false, $exclude = false, $options = false)
+    public function __construct($columns = false, $exclude = false, $options = false)
     {
         if ($options) {
             $this->_options = $options;
@@ -655,7 +655,7 @@ class PageList
     // 1: info, 2: exclude, 3: hash of options
     // Here we declare which options are supported, so that
     // the calling plugin may simply merge this with its own default arguments
-    function supportedArgs()
+    public function supportedArgs()
     {
         return array(// Currently supported options:
                      /* what columns, what pages */
@@ -693,12 +693,12 @@ class PageList
                      );
     }
 
-    function setCaption($caption_string)
+    public function setCaption($caption_string)
     {
         $this->_caption = $caption_string;
     }
 
-    function getCaption()
+    public function getCaption()
     {
         // put the total into the caption if needed
         if (is_string($this->_caption) && strstr($this->_caption, '%d')) {
@@ -707,24 +707,24 @@ class PageList
         return $this->_caption;
     }
 
-    function setMessageIfEmpty($msg)
+    public function setMessageIfEmpty($msg)
     {
         $this->_messageIfEmpty = $msg;
     }
 
 
-    function getTotal()
+    public function getTotal()
     {
         return !empty($this->_options['count'])
                ? (integer) $this->_options['count'] : count($this->_pages);
     }
 
-    function isEmpty()
+    public function isEmpty()
     {
         return empty($this->_pages);
     }
 
-    function addPage($page_handle)
+    public function addPage($page_handle)
     {
         if (!empty($this->_excluded_pages)) {
             if (!in_array(
@@ -738,7 +738,7 @@ class PageList
         }
     }
 
-    function pageNames()
+    public function pageNames()
     {
         $pages = array();
         foreach ($this->_pages as $page_handle) {
@@ -747,7 +747,7 @@ class PageList
         return $pages;
     }
 
-    function _getPageFromHandle($page_handle)
+    public function _getPageFromHandle($page_handle)
     {
         if (is_string($page_handle)) {
             if (empty($page_handle)) {
@@ -763,7 +763,7 @@ class PageList
      * Take a PageList_Page object, and return an HTML object to display
      * it in a table or list row.
      */
-    function _renderPageRow(&$page_handle, $i = 0)
+    public function _renderPageRow(&$page_handle, $i = 0)
     {
         $page_handle = $this->_getPageFromHandle($page_handle);
         //FIXME. only on sf.net
@@ -801,7 +801,7 @@ class PageList
         return $row;
     }
 
-    function addPages($page_iter)
+    public function addPages($page_iter)
     {
         //Todo: if limit check max(strlen(pagename))
         while ($page = $page_iter->next()) {
@@ -809,7 +809,7 @@ class PageList
         }
     }
 
-    function addPageList(&$list)
+    public function addPageList(&$list)
     {
         if (empty($list)) {
             return;  // Protect reset from a null arg
@@ -822,7 +822,7 @@ class PageList
         }
     }
 
-    function maxLen()
+    public function maxLen()
     {
         global $request;
         $dbi = $request->getDbh();
@@ -843,7 +843,7 @@ class PageList
         }
     }
 
-    function getContent()
+    public function getContent()
     {
         // Note that the <caption> element wants inline content.
         $caption = $this->getCaption();
@@ -857,12 +857,12 @@ class PageList
         }
     }
 
-    function printXML()
+    public function printXML()
     {
         PrintXML($this->getContent());
     }
 
-    function asXML()
+    public function asXML()
     {
         return AsXML($this->getContent());
     }
@@ -880,7 +880,7 @@ class PageList
      * Now all columns are sortable. (patch by DanFr)
      * Some columns have native DB backend methods, some not.
      */
-    function sortby($column, $action, $valid_fields = false)
+    public function sortby($column, $action, $valid_fields = false)
     {
         global $request;
 
@@ -951,7 +951,7 @@ class PageList
     }
 
     // echo implode(":",explodeList("Test*",array("xx","Test1","Test2")));
-    function explodePageList(
+    public function explodePageList(
         $input,
         $include_empty = false,
         $sortby = false,
@@ -987,7 +987,7 @@ class PageList
         }
     }
 
-    function allPagesByAuthor(
+    public function allPagesByAuthor(
         $wildcard,
         $include_empty = false,
         $sortby = false,
@@ -1021,7 +1021,7 @@ class PageList
         return $allPages;
     }
 
-    function allPagesByOwner(
+    public function allPagesByOwner(
         $wildcard,
         $include_empty = false,
         $sortby = false,
@@ -1054,7 +1054,7 @@ class PageList
         return $allPages;
     }
 
-    function allPagesByCreator(
+    public function allPagesByCreator(
         $wildcard,
         $include_empty = false,
         $sortby = false,
@@ -1094,7 +1094,7 @@ class PageList
      *  If the pageList is initialized with $options['types'] these types are also initialized,
      *  overriding the standard types.
      */
-    function _initAvailableColumns()
+    public function _initAvailableColumns()
     {
         global $customPageListColumns;
         $standard_types =
@@ -1181,7 +1181,7 @@ class PageList
         }
     }
 
-    function getOption($option)
+    public function getOption($option)
     {
         if (array_key_exists($option, $this->_options)) {
             return $this->_options[$option];
@@ -1206,7 +1206,7 @@ class PageList
      * @param column name
      * @return  true if column is added, false otherwise
      */
-    function _addColumn($column)
+    public function _addColumn($column)
     {
 
         if (isset($this->_columns_seen[$column])) {
@@ -1250,7 +1250,7 @@ class PageList
      *
      * @param $col object   An object derived from _PageList_Column.
      **/
-    function addColumnObject($col)
+    public function addColumnObject($col)
     {
         if (is_array($col)) {// custom column object
             $params = $col;
@@ -1270,7 +1270,7 @@ class PageList
     /**
      * Compare _PageList_Page objects.
      **/
-    function _pageCompare(&$a, &$b)
+    public function _pageCompare(&$a, &$b)
     {
         if (empty($this->_sortby) or count($this->_sortby) == 0) {
             // No columns to sort by
@@ -1310,7 +1310,7 @@ class PageList
      * If the sortby cols are already sorted by the DB call, don't do usort.
      * TODO: optimize for multiple sortable cols
      */
-    function _sortPages()
+    public function _sortPages()
     {
         if (count($this->_sortby) > 0) {
             $need_sort = $this->_options['dosort'];
@@ -1326,7 +1326,7 @@ class PageList
         //unset($GLOBALS['PhpWiki_pagelist']);
     }
 
-    function limit($limit)
+    public function limit($limit)
     {
         if (is_array($limit)) {
             return $limit;
@@ -1338,7 +1338,7 @@ class PageList
         }
     }
 
-    function pagingTokens($numrows = false, $ncolumns = false, $limit = false)
+    public function pagingTokens($numrows = false, $ncolumns = false, $limit = false)
     {
         if ($numrows === false) {
             $numrows = $this->getTotal();
@@ -1402,7 +1402,7 @@ class PageList
     }
 
     // make a table given the caption
-    function _generateTable($caption)
+    public function _generateTable($caption)
     {
         if (count($this->_sortby) > 0) {
             $this->_sortPages();
@@ -1486,7 +1486,7 @@ class PageList
         }
     }
 
-    function _jsFlipAll()
+    public function _jsFlipAll()
     {
         return JavaScript("
 function flipAll(formObj) {
@@ -1503,7 +1503,7 @@ function flipAll(formObj) {
     }
 
     /* recursive stack for private sublist options (azhead, cols) */
-    function _saveOptions($opts)
+    public function _saveOptions($opts)
     {
         $stack = array('pages' => $this->_pages);
         foreach ($opts as $k => $v) {
@@ -1515,7 +1515,7 @@ function flipAll(formObj) {
         }
         $this->_stack->push($stack);
     }
-    function _restoreOptions()
+    public function _restoreOptions()
     {
         assert($this->_stack);
         $stack = $this->_stack->pop();
@@ -1530,7 +1530,7 @@ function flipAll(formObj) {
     // 'azhead' - support <h3> grouping into initials
     // 'ordered' - OL or UL list (not yet inherited to all plugins)
     // 'comma'  - condensed comma-list only, 1: no links, >1: with links
-    function _generateList($caption = '')
+    public function _generateList($caption = '')
     {
         if (empty($this->_pages)) {
             return; // stop recursion
@@ -1650,7 +1650,7 @@ function flipAll(formObj) {
     // comma=1
     // Condense list without a href links: "Page1, Page2, ..."
     // Alternative $seperator = HTML::Raw(' &middot; ')
-    function _generateCommaListAsString()
+    public function _generateCommaListAsString()
     {
         if (defined($this->_options['commasep'])) {
             $seperator = $this->_options['commasep'];
@@ -1670,7 +1670,7 @@ function flipAll(formObj) {
     // Normal WikiLink list.
     // Future: 1 = reserved for plain string (see above)
     //         2 and more => HTML link specialization?
-    function _generateCommaList($style = false)
+    public function _generateCommaList($style = false)
     {
         if (defined($this->_options['commasep'])) {
             $seperator = HTLM::Raw($this->_options['commasep']);
@@ -1688,7 +1688,7 @@ function flipAll(formObj) {
         return $html;
     }
 
-    function _emptyList($caption)
+    public function _emptyList($caption)
     {
         $html = HTML();
         if ($caption) {
@@ -1708,7 +1708,7 @@ function flipAll(formObj) {
 class PageList_Selectable extends PageList
 {
 
-    function __construct($columns = false, $exclude = false, $options = false)
+    public function __construct($columns = false, $exclude = false, $options = false)
     {
         if ($columns) {
             if (!is_array($columns)) {
@@ -1723,7 +1723,7 @@ class PageList_Selectable extends PageList
         parent::__construct($columns, $exclude, $options);
     }
 
-    function addPageList(&$array)
+    public function addPageList(&$array)
     {
         foreach ($array as $pagename => $selected) {
             if ($selected) {
@@ -1733,7 +1733,7 @@ class PageList_Selectable extends PageList
         }
     }
 
-    function addPageSelected($pagename)
+    public function addPageSelected($pagename)
     {
         $this->_selected[$pagename] = 1;
     }

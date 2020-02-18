@@ -38,7 +38,7 @@ class FileFinder
      *
      * @param $path array A list of directories in which to search for files.
      */
-    function __construct($path = false)
+    public function __construct($path = false)
     {
         $this->_pathsep = $this->_get_syspath_separator();
         if (!isset($this->_path) and $path === false) {
@@ -53,7 +53,7 @@ class FileFinder
      * @param $file string File to search for.
      * @return string The filename (including path), if found, otherwise false.
      */
-    function findFile($file, $missing_okay = false)
+    public function findFile($file, $missing_okay = false)
     {
         if ($this->_is_abs($file)) {
             if (file_exists($file)) {
@@ -70,7 +70,7 @@ class FileFinder
      * Accepts array of paths also.
      * This might not work on Windows95 or FAT volumes. (not tested)
      */
-    function slashifyPath($path)
+    public function slashifyPath($path)
     {
         return $this->forcePathSlashes($path, $this->_pathsep);
     }
@@ -78,7 +78,7 @@ class FileFinder
     /**
      * Force using '/' as path seperator.
      */
-    function forcePathSlashes($path, $sep = '/')
+    public function forcePathSlashes($path, $sep = '/')
     {
         if (is_array($path)) {
             $result = array();
@@ -120,7 +120,7 @@ class FileFinder
      * @param $file string File to include.
      * @return bool True if file was successfully included.
      */
-    function includeOnce($file)
+    public function includeOnce($file)
     {
         if (($ret = @include_once($file))) {
             return $ret;
@@ -135,7 +135,7 @@ class FileFinder
         return $this->_not_found($file);
     }
 
-    function _isOtherPathsep()
+    public function _isOtherPathsep()
     {
         return $this->_pathsep != '/';
     }
@@ -149,7 +149,7 @@ class FileFinder
      * @access private
      * @return string path_separator.
      */
-    function _get_syspath_separator()
+    public function _get_syspath_separator()
     {
         if (!empty($this->_pathsep)) {
             return $this->_pathsep;
@@ -176,7 +176,7 @@ class FileFinder
      * @access private
      * @return string path_separator.
      */
-    function _use_path_separator($path)
+    public function _use_path_separator($path)
     {
         if (isWindows95()) {
             if (empty($path)) {
@@ -202,7 +202,7 @@ class FileFinder
      * @param $path string Path.
      * @return bool True if path is absolute.
      */
-    function _is_abs($path)
+    public function _is_abs($path)
     {
         if (preg_match('#^/#D', $path)) {
             return true;
@@ -220,7 +220,7 @@ class FileFinder
      * @param $path string Path.
      * @return bool New path (destructive)
      */
-    function _strip_last_pathchar(&$path)
+    public function _strip_last_pathchar(&$path)
     {
         if (isMac()) {
             if (substr($path, -1) == ':' or substr($path, -1) == "/") {
@@ -241,7 +241,7 @@ class FileFinder
      * @param $file string Name of missing file.
      * @return bool false.
      */
-    function _not_found($file)
+    public function _not_found($file)
     {
         trigger_error(sprintf(_("%s: file not found"), $file), E_USER_ERROR);
         return false;
@@ -256,7 +256,7 @@ class FileFinder
      * @return string Directory which contains $file, or false.
      * [5x,44ms]
      */
-    function _search_path($file)
+    public function _search_path($file)
     {
         foreach ($this->_path as $dir) {
             // ensure we use the same pathsep
@@ -282,7 +282,7 @@ class FileFinder
      * @access private
      * @return string path_separator.
      */
-    function _get_ini_separator()
+    public function _get_ini_separator()
     {
         return isWindows() ? ';' : ':';
         // return preg_match('/^Windows/', php_uname())
@@ -294,7 +294,7 @@ class FileFinder
      * @access private
      * @return array Include path.
      */
-    function _get_include_path()
+    public function _get_include_path()
     {
         if (defined("INCLUDE_PATH")) {
             $path = INCLUDE_PATH;
@@ -319,7 +319,7 @@ class FileFinder
      * @access private
      * @param $dir string Directory to add.
      */
-    function _append_to_include_path($dir)
+    public function _append_to_include_path($dir)
     {
         $dir = $this->slashifyPath($dir);
         if (!in_array($dir, $this->_path)) {
@@ -347,7 +347,7 @@ class FileFinder
      * @access private
      * @param $dir string Directory to add.
      */
-    function _prepend_to_include_path($dir)
+    public function _prepend_to_include_path($dir)
     {
         $dir = $this->slashifyPath($dir);
         // remove duplicates
@@ -362,7 +362,7 @@ class FileFinder
     // Most specific first.
     // de_DE.iso8859-1@euro => de_DE.iso8859-1, de_DE, de
     // This code might needed somewhere else also.
-    function locale_versions($lang)
+    public function locale_versions($lang)
     {
         // Try less specific versions of the locale
         $langs[] = $lang;
@@ -380,7 +380,7 @@ class FileFinder
      *@access private
      *@return string The value of $LANG.
      */
-    function _get_lang()
+    public function _get_lang()
     {
         if (!empty($GLOBALS['LANG'])) {
             return $GLOBALS['LANG'];
@@ -431,7 +431,7 @@ class PearFileFinder extends FileFinder
      * A good set of defaults is provided, so you can probably leave
      * this parameter blank.
      */
-    function __construct($path = array())
+    public function __construct($path = array())
     {
         parent::__construct(array_merge(
             $path,
@@ -463,7 +463,7 @@ class PearFileFinder extends FileFinder
  */
 class LocalizedFileFinder extends FileFinder
 {
-    function __construct()
+    public function __construct()
     {
         $this->_pathsep = $this->_get_syspath_separator();
         $include_path = $this->_get_include_path();
@@ -499,7 +499,7 @@ class LocalizedFileFinder extends FileFinder
  */
 class LocalizedButtonFinder extends FileFinder
 {
-    function __construct()
+    public function __construct()
     {
         global $WikiTheme;
         $this->_pathsep = $this->_get_syspath_separator();

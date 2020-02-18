@@ -22,16 +22,16 @@ abstract class Theme
 {
     protected $color_index;
 
-    function __construct()
+    public function __construct()
     {
         $this->color_index = 0;
     }
-    abstract function GetColorList();
+    abstract public function GetColorList();
 
-    abstract function ApplyPlot($plot);
+    abstract public function ApplyPlot($plot);
 
 
-    function SetupPlot($plot)
+    public function SetupPlot($plot)
     {
         if (is_array($plot)) {
             foreach ($plot as $obj) {
@@ -42,7 +42,7 @@ abstract class Theme
         }
     }
 
-    function ApplyGraph($graph)
+    public function ApplyGraph($graph)
     {
 
         $this->graph = $graph;
@@ -61,11 +61,11 @@ abstract class Theme
         }
     }
 
-    function PreStrokeApply($graph)
+    public function PreStrokeApply($graph)
     {
     }
 
-    function GetThemeColors($num = 30)
+    public function GetThemeColors($num = 30)
     {
         $result_list = array();
 
@@ -89,7 +89,7 @@ abstract class Theme
         return $result_list;
     }
 
-    function GetNextColor()
+    public function GetNextColor()
     {
         $color_list = $this->GetColorList();
 

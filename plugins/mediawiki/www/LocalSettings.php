@@ -383,22 +383,22 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         {
             public $dstappendself = false;
 
-            function getTitle($subpage = "")
+            public function getTitle($subpage = "")
             {
                   return 'SpecialForgeRedir';
             }
 
-            function getRedirect($subpage = "")
+            public function getRedirect($subpage = "")
             {
                   return $this;
             }
 
-            function getRedirectQuery()
+            public function getRedirectQuery()
             {
                   return $this;
             }
 
-            function getFullUrl()
+            public function getFullUrl()
             {
                   $u = $this->dst;
                 if ($this->dstappendself) {

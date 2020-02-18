@@ -34,18 +34,18 @@ rcs_id('$Id: ExternalSearch.php,v 1.12 2004/11/28 20:42:33 rurban Exp $');
 
 class WikiPlugin_ExternalSearch extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("ExternalSearch");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Redirects to an external web site based on form input");
         //fixme: better description
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -54,7 +54,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
         );
     }
 
-    function _getInterWikiUrl(&$request)
+    public function _getInterWikiUrl(&$request)
     {
         $intermap = getInterwikiMap();
         $map = $intermap->_map;
@@ -70,7 +70,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
         }
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array('s'        => false,
                      'formsize' => 30,
@@ -83,7 +83,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         if (empty($args['url'])) {

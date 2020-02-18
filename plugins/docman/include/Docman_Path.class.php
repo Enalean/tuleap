@@ -22,11 +22,11 @@
 class Docman_Path
 {
     public $path;
-    function __construct()
+    public function __construct()
     {
         $this->path = array();
     }
-    function get(&$item)
+    public function get(&$item)
     {
         if (!isset($this->path[$item->getId()])) {
             $this->path[$item->getId()] = '';

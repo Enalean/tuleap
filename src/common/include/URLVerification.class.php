@@ -48,7 +48,7 @@ class URLVerification
      *
      * @return Array
      */
-    function getUrlChunks()
+    public function getUrlChunks()
     {
         return $this->urlChunks;
     }
@@ -58,7 +58,7 @@ class URLVerification
      *
      * @return PFUser
      */
-    function getCurrentUser()
+    public function getCurrentUser()
     {
         return UserManager::instance()->getCurrentUser();
     }
@@ -103,7 +103,7 @@ class URLVerification
      *
      * @return bool
      */
-    function isScriptAllowedForAnonymous($server)
+    public function isScriptAllowedForAnonymous($server)
     {
         // Defaults
         $allowedAnonymous['/account/login.php']          = true;
@@ -140,7 +140,7 @@ class URLVerification
      *
      * @return bool
      */
-    function isException($server)
+    public function isException($server)
     {
         return preg_match('`^(?:/plugins/[^/]+)?/(?:soap|api)/`', $server['SCRIPT_NAME']);
     }
@@ -153,7 +153,7 @@ class URLVerification
      *
      * @return bool
      */
-    function isValidServerName($server, $host)
+    public function isValidServerName($server, $host)
     {
 
         return ($server['HTTP_HOST'] == $host);
@@ -183,7 +183,7 @@ class URLVerification
      *
      * @return String
      */
-    function getRedirectionURL(HTTPRequest $request, $server)
+    public function getRedirectionURL(HTTPRequest $request, $server)
     {
         $chunks   = $this->getUrlChunks($server);
 
@@ -268,7 +268,7 @@ class URLVerification
      *
      * @return void
      */
-    function checkRestrictedAccess($server)
+    public function checkRestrictedAccess($server)
     {
         $user = $this->getCurrentUser();
         if ($user->isRestricted()) {
@@ -520,7 +520,7 @@ class URLVerification
      *
      * @return Void
      */
-    function exitError($title, $text)
+    public function exitError($title, $text)
     {
         exit_error($title, $text);
     }
@@ -530,7 +530,7 @@ class URLVerification
      *
      * @return ProjectManager
      */
-    function getProjectManager()
+    public function getProjectManager()
     {
         return ProjectManager::instance();
     }
@@ -542,7 +542,7 @@ class URLVerification
      *
      * @return void
      */
-    function header($location)
+    public function header($location)
     {
         header('Location: '.$location);
         exit;

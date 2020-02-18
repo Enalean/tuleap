@@ -26,12 +26,12 @@ class Docman_ApprovalTableLink extends Docman_ApprovalTableVersionned
     private $item_id;
     private $versionId = null;
 
-    function setVersionId($v)
+    public function setVersionId($v)
     {
         $this->versionId = $v;
     }
 
-    function getVersionId()
+    public function getVersionId()
     {
         return $this->versionId;
     }
@@ -41,7 +41,7 @@ class Docman_ApprovalTableLink extends Docman_ApprovalTableVersionned
         return $this->item_id;
     }
 
-    function initFromRow($row)
+    public function initFromRow($row)
     {
         parent::initFromRow($row);
         if (isset($row['link_version_id'])) {

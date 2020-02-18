@@ -23,22 +23,22 @@
 class Docman_Validator
 {
     public $_errors = [];
-    function addError($error)
+    public function addError($error)
     {
         $this->_errors[] = $error;
     }
-    function getErrors()
+    public function getErrors()
     {
         return $this->_errors;
     }
-    function isValid()
+    public function isValid()
     {
         return count($this->_errors) ? false : true;
     }
 }
 class Docman_ValidatePresenceOf extends Docman_Validator
 {
-    function __construct($data, $field, $msg)
+    public function __construct($data, $field, $msg)
     {
         if (!$data || !isset($data[$field]) || trim($data[$field]) == '') {
             $this->addError($msg);
@@ -48,7 +48,7 @@ class Docman_ValidatePresenceOf extends Docman_Validator
 
 class Docman_ValidateValueNotEmpty extends Docman_Validator
 {
-    function __construct($value, $msg)
+    public function __construct($value, $msg)
     {
         if (!$value || $value === null || $value == '') {
             $this->addError($msg);

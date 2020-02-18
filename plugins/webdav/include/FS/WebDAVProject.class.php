@@ -57,7 +57,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return array
      */
-    function getChildren()
+    public function getChildren()
     {
         $children = array();
         if ($this->usesFile()) {
@@ -86,7 +86,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
-    function getChild($service)
+    public function getChild($service)
     {
         $children = $this->getChildren();
         if (isset($children[$service])) {
@@ -103,7 +103,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @see lib/Sabre/DAV/Sabre_DAV_INode#getName()
      */
-    function getName()
+    public function getName()
     {
 
         $utils = $this->getUtils();
@@ -118,7 +118,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
      */
-    function getLastModified()
+    public function getLastModified()
     {
 
         return;
@@ -129,7 +129,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return Project
      */
-    function getProject()
+    public function getProject()
     {
 
         return $this->project;
@@ -140,7 +140,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return int
      */
-    function getGroupId()
+    public function getGroupId()
     {
 
         return $this->getProject()->getGroupId();
@@ -151,7 +151,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return PFUser
      */
-    function getUser()
+    public function getUser()
     {
 
         return $this->user;
@@ -162,7 +162,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return WebDAVUtils
      */
-    function getUtils()
+    public function getUtils()
     {
 
         return WebDAVUtils::getInstance();
@@ -173,7 +173,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return int
      */
-    function getMaxFileSize()
+    public function getMaxFileSize()
     {
         return $this->maxFileSize;
     }
@@ -183,7 +183,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return bool
      */
-    function exist()
+    public function exist()
     {
 
         // D refers to deleted
@@ -195,7 +195,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return bool
      */
-    function isActive()
+    public function isActive()
     {
 
         return $this->getProject()->isActive();
@@ -206,7 +206,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return WebDAVFRS
      */
-    function getWebDAFRS()
+    public function getWebDAFRS()
     {
         return new WebDAVFRS($this->getUser(), $this->getProject(), $this->getMaxFileSize());
     }
@@ -216,7 +216,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @return bool
      */
-    function usesFile()
+    public function usesFile()
     {
 
         return $this->getProject()->usesFile();

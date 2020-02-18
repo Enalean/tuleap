@@ -45,17 +45,17 @@ rcs_id('$Id: Transclude.php,v 1.9 2004/06/14 11:31:39 rurban Exp $');
  */
 class WikiPlugin_Transclude extends WikiPlugin
 {
-    function getName()
+    public function getName()
     {
         return _("Transclude");
     }
 
-    function getDescription()
+    public function getDescription()
     {
         return _("Include an external web page within the body of a wiki page.");
     }
 
-    function getVersion()
+    public function getVersion()
     {
         return preg_replace(
             "/[Revision: $]/",
@@ -64,14 +64,14 @@ class WikiPlugin_Transclude extends WikiPlugin
         );
     }
 
-    function getDefaultArguments()
+    public function getDefaultArguments()
     {
         return array( 'src'     => false, // the src url to include
                       'height'  => 450 // height of the iframe
                     );
     }
 
-    function run($dbi, $argstr, &$request, $basepage)
+    public function run($dbi, $argstr, &$request, $basepage)
     {
         global $WikiTheme;
 
@@ -135,7 +135,7 @@ class WikiPlugin_Transclude extends WikiPlugin
      *
      * @access private
      */
-    function _js()
+    public function _js()
     {
         static $seen = false;
 

@@ -209,7 +209,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return ArtifactTypeFactory
      */
-    function getArtifactTypeFactory($project)
+    public function getArtifactTypeFactory($project)
     {
         return new ArtifactTypeFactory($project);
     }

@@ -40,7 +40,7 @@ class WikiService extends Controler
   /**
    * Constructor
    */
-    function __construct($id)
+    public function __construct($id)
     {
         global $LANG, $is_wiki_page;
 
@@ -89,7 +89,7 @@ class WikiService extends Controler
    *  wiki: whole wiki can be restricted.
    *  wikipage: each page of the wiki can be restricted.
    */
-    function checkPermissions()
+    public function checkPermissions()
     {
       // Check if user can access to whole wiki
         if (!$this->wiki->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
@@ -126,7 +126,7 @@ class WikiService extends Controler
   /**
    * Bind http request with views and actions
    */
-    function request()
+    public function request()
     {
         if (!isset($this->view)) {
             $this->view = 'browse';

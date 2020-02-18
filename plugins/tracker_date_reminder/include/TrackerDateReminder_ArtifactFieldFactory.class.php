@@ -21,7 +21,7 @@
 class TrackerDateReminder_ArtifactFieldFactory
 {
     protected $fieldsWithNotification = array();
-    function __construct()
+    public function __construct()
     {
     }
     /**
@@ -29,7 +29,7 @@ class TrackerDateReminder_ArtifactFieldFactory
      *
      *                @return array
      */
-    function getUsedDateFields(ArtifactFieldFactory $art_field_fact)
+    public function getUsedDateFields(ArtifactFieldFactory $art_field_fact)
     {
         $result_fields = array();
         foreach ($art_field_fact->USAGE_BY_NAME as $key => $field) {
@@ -40,7 +40,7 @@ class TrackerDateReminder_ArtifactFieldFactory
         return $result_fields;
     }
 
-    function cacheFieldsWithNotification($group_artifact_id)
+    public function cacheFieldsWithNotification($group_artifact_id)
     {
         $sql = 'SELECT field_id'.
                ' FROM artifact_date_reminder_settings'.
@@ -53,7 +53,7 @@ class TrackerDateReminder_ArtifactFieldFactory
         }
     }
 
-    function notificationEnabled($field_id)
+    public function notificationEnabled($field_id)
     {
         return isset($this->fieldsWithNotification[$field_id]);
     }

@@ -41,7 +41,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $this->setOwner($owner_id, $owner_type);
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $this->chart_title ?: 'Tracker Chart';
     }
@@ -146,7 +146,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $res = db_query($sql);
         return db_insertid($res);
     }
-    function loadContent($id)
+    public function loadContent($id)
     {
         $sql = "SELECT * FROM plugin_graphontrackersv5_widget_chart WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
@@ -157,7 +157,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             $this->content_id = $id;
         }
     }
-    function create(Codendi_Request $request)
+    public function create(Codendi_Request $request)
     {
         $content_id = false;
         $vId = new Valid_UInt('chart_id');
@@ -171,7 +171,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         }
         return $content_id;
     }
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
@@ -199,17 +199,17 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         }
         return $done;
     }
-    function destroy($id)
+    public function destroy($id)
     {
         $sql = 'DELETE FROM plugin_graphontrackersv5_widget_chart WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
         db_query($sql);
     }
-    function isUnique()
+    public function isUnique()
     {
         return false;
     }
 
-    function getCategory()
+    public function getCategory()
     {
         return dgettext('tuleap-tracker', 'Trackers');
     }
