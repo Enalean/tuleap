@@ -22,11 +22,11 @@ namespace Tuleap\Templating\Mustache;
 
 use EventManager;
 use Tuleap\Glyph\GlyphFinder;
-use Tuleap\Templating\TemplateCache;
+use Tuleap\Templating\TemplateCacheInterface;
 
 class MustacheEngine extends \Mustache_Engine
 {
-    public function __construct(\Mustache_Loader $loader, TemplateCache $cache, $escape_callback = null)
+    public function __construct(\Mustache_Loader $loader, TemplateCacheInterface $cache, $escape_callback = null)
     {
         $gettext_helper = new GettextHelper(new GettextSectionContentTransformer());
         $glyph_helper   = new GlyphHelper(new GlyphFinder(EventManager::instance()));

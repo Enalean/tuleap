@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Templating\Mustache\MustacheEngine;
-use Tuleap\Templating\TemplateCache;
+use Tuleap\Templating\TemplateCacheInterface;
 
 /**
  * Adapts the Mustache template engine to the expected Tuleap interface.
@@ -31,7 +31,7 @@ class MustacheRenderer extends TemplateRenderer
      */
     private $template_engine;
 
-    public function __construct(TemplateCache $template_cache, $plugin_templates_dir)
+    public function __construct(TemplateCacheInterface $template_cache, $plugin_templates_dir)
     {
         $templates_directories = (array) $plugin_templates_dir;
 
@@ -51,7 +51,7 @@ class MustacheRenderer extends TemplateRenderer
     /**
      * @return MustacheEngine
      */
-    protected function getEngine(\Mustache_Loader $loader, TemplateCache $template_cache)
+    protected function getEngine(\Mustache_Loader $loader, TemplateCacheInterface $template_cache)
     {
         return new MustacheEngine($loader, $template_cache);
     }

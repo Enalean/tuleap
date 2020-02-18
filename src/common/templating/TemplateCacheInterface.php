@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,35 +16,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Templating;
 
-class TemplateCache implements TemplateCacheInterface
+interface TemplateCacheInterface
 {
-    public const CACHE_FOLDER_NAME = 'template_engine';
+    public function getPath(): ?string;
 
-
-    public function getPath() : ?string
-    {
-        return \ForgeConfig::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . self::CACHE_FOLDER_NAME;
-    }
-
-    public function invalidate(): void
-    {
-        $path = $this->getPath();
-        if ($path === null) {
-            return;
-        }
-
-        if (! is_dir($path)) {
-            return;
-        }
-
-        foreach (new \DirectoryIterator($path) as $file_info) {
-            if ($file_info->isFile()) {
-                unlink($file_info->getPathname());
-            }
-        }
-    }
+    public function invalidate(): void;
 }
