@@ -48,4 +48,16 @@ class GitJenkinsAdministrationServerDao extends DataAccessObject
 
         return $this->getDB()->run($sql, $project_id);
     }
+
+    public function isJenkinsServerAlreadyDefinedInProject(int $project_id, string $jenkins_server_url): bool
+    {
+        $sql = "SELECT NULL
+                FROM plugin_hudson_git_project_server
+                WHERE project_id = ?
+                AND jenkins_server_url = ?";
+
+        $rows = $this->getDB()->row($sql, $project_id, $jenkins_server_url);
+
+        return count($rows) > 0;
+    }
 }

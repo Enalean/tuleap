@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit;
 
+use Feedback;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
@@ -78,14 +79,26 @@ class GitJenkinsAdministrationPOSTController implements DispatchableWithRequest
             throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected jenkins server URL not found"));
         }
 
-        $this->git_jenkins_administration_server_adder->addServerInProject(
-            $project,
-            trim($provided_url)
-        );
+        try {
+            $this->git_jenkins_administration_server_adder->addServerInProject(
+                $project,
+                trim($provided_url)
+            );
 
-        $layout->redirect(
-            GitJenkinsAdministrationURLBuilder::buildUrl($project)
-        );
+            $layout->addFeedback(
+                Feedback::INFO,
+                dgettext("tuleap-hudson_git", "The Jenkins server has successfully been added.")
+            );
+        } catch (GitJenkinsAdministrationServerAlreadyDefinedException $exception) {
+            $layout->addFeedback(
+                Feedback::WARN,
+                dgettext("tuleap-hudson_git", "The Jenkins server is already defined in project.")
+            );
+        } finally {
+            $layout->redirect(
+                GitJenkinsAdministrationURLBuilder::buildUrl($project)
+            );
+        }
     }
 
     /**
