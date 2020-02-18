@@ -3,6 +3,10 @@
     <a href="{{ keys_tokens_url }}" class="tlp-tab tlp-tab-active"> <i class="tlp-tab-icon fa fa-key"></i> {{# gettext }}Keys & tokens{{/ gettext }}</a>
 </nav>
 
+{{# ssh_keys_presenter }}
+    {{> ssh-keys }}
+{{/ ssh_keys_presenter }}
+
 {{# access_key_presenter }}
     {{> access-keys }}
 {{/ access_key_presenter }}

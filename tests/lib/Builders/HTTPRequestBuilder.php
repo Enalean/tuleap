@@ -25,7 +25,12 @@ namespace Tuleap\Test\Builders;
 
 class HTTPRequestBuilder
 {
-    private $user;
+    private $request;
+
+    public function __construct()
+    {
+        $this->request = new \HTTPRequest();
+    }
 
     public static function get(): self
     {
@@ -34,7 +39,7 @@ class HTTPRequestBuilder
 
     public function withUser(\PFUser $user): self
     {
-        $this->user = $user;
+        $this->request->setCurrentUser($user);
         return $this;
     }
 
@@ -43,12 +48,17 @@ class HTTPRequestBuilder
         return $this->withUser(UserTestBuilder::anAnonymousUser()->build());
     }
 
+    /**
+     * @psalm-param  string|array $value
+     */
+    public function withParam(string $key, $value): self
+    {
+        $this->request->set($key, $value);
+        return $this;
+    }
+
     public function build(): \HTTPRequest
     {
-        $request = new \HTTPRequest();
-        if ($this->user) {
-            $request->setCurrentUser($this->user);
-        }
-        return $request;
+        return $this->request;
     }
 }

@@ -24,34 +24,17 @@
         popover_is_displayed = false;
 
     $(document).ready(function() {
-        const ssh_keys_delete_button = $("#button-delete-keys"),
-            svn_tokens_delete_button = $("#button-delete-svn-tokens"),
-            access_keys_delete_button = $("#button-revoke-access-tokens"),
-            new_access_key_submit_button = $("#generate-new-access-key-button"),
-            ssk_keys_checkboxes = $('input[type="checkbox"][name="ssh_key_selected[]"]'),
-            svn_tokens_checkboxes = $('input[type="checkbox"][name="svn-tokens-selected[]"]'),
-            access_keys_checkboxes = $('input[type="checkbox"][name="access-keys-selected[]"]'),
-            access_key_scopes_checkboxes = $('input[type="checkbox"][name="access-key-scopes[]"]');
+        const svn_tokens_delete_button = $("#button-delete-svn-tokens"),
+            svn_tokens_checkboxes = $('input[type="checkbox"][name="svn-tokens-selected[]"]');
 
         loadAvatarReset();
         loadAvatarPreview();
         updateHeightValue();
 
         changeDeleteButtonStatusDependingCheckboxesStatus(
-            ssh_keys_delete_button,
-            ssk_keys_checkboxes
-        );
-        changeDeleteButtonStatusDependingCheckboxesStatus(
             svn_tokens_delete_button,
             svn_tokens_checkboxes
         );
-
-        ssk_keys_checkboxes.change(function() {
-            changeDeleteButtonStatusDependingCheckboxesStatus(
-                ssh_keys_delete_button,
-                ssk_keys_checkboxes
-            );
-        });
 
         svn_tokens_checkboxes.change(function() {
             changeDeleteButtonStatusDependingCheckboxesStatus(
@@ -60,21 +43,6 @@
             );
         });
 
-        access_keys_checkboxes.change(function() {
-            changeDeleteButtonStatusDependingCheckboxesStatus(
-                access_keys_delete_button,
-                access_keys_checkboxes
-            );
-        });
-
-        access_key_scopes_checkboxes.change(function() {
-            changeDeleteButtonStatusDependingCheckboxesStatus(
-                new_access_key_submit_button,
-                access_key_scopes_checkboxes
-            );
-        });
-
-        $("[data-ssh_key_value]").one("click", displayFullSSHKey);
         $(window).resize(updateHeightValue);
 
         initThemeVariantSelection();
@@ -189,14 +157,6 @@
             var url = URL.createObjectURL(this.files[0]);
             useImageInPreviewIfItIsValid(url);
         });
-    }
-
-    function displayFullSSHKey() {
-        var $element = $(this);
-        $element.html($element.attr("data-ssh_key_value"));
-        $element.css("cursor", "auto");
-
-        updateHeightValue();
     }
 
     function updateHeightValue() {

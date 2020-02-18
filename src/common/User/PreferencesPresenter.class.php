@@ -16,6 +16,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ *
+ * phpcs:ignoreFile
  */
 
 use Tuleap\User\Account\DisplayKeysTokensController;
@@ -266,34 +268,6 @@ class User_PreferencesPresenter
         return $GLOBALS['Language']->getText('account_options', 'shell_account_title');
     }
 
-    public function ssh_keys_count_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'shell_shared_keys');
-    }
-
-    public function ssh_keys_count()
-    {
-        return count($this->user->getAuthorizedKeysArray());
-    }
-
-    public function ssh_keys_label()
-    {
-        return 'Key';
-    }
-
-    public function ssh_keys_list()
-    {
-        $keys = array();
-        foreach ($this->user->getAuthorizedKeysArray() as $ssh_key_number => $ssh_key_value) {
-            $keys[] = array(
-                'ssh_key_ellipsis_value' => substr($ssh_key_value, 0, 40).'...'.substr($ssh_key_value, -40),
-                'ssh_key_value'          => $ssh_key_value,
-                'ssh_key_number'         => $ssh_key_number
-            );
-        }
-        return $keys;
-    }
-
     public function ssh_keys_extra_html()
     {
         return $this->ssh_keys_extra_html;
@@ -359,26 +333,6 @@ class User_PreferencesPresenter
         ob_start();
         include $GLOBALS['Language']->getContent('account/user_legal');
         return ob_get_clean();
-    }
-
-    public function add_ssh_key_button()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'shell_add_keys');
-    }
-
-    public function delete_ssh_key_button()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'shell_delete_ssh_keys');
-    }
-
-    public function has_ssh_key()
-    {
-        return $this->ssh_keys_count() > 0;
-    }
-
-    public function ssh_keys_no_key()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'ssh_keys_no_key');
     }
 
     public function has_svn_tokens()
@@ -590,19 +544,9 @@ class User_PreferencesPresenter
 
     /* MODAL */
 
-    public function add_keys_modal_title()
-    {
-        return $GLOBALS['Language']->getText('account_editsshkeys', 'add_keys_title');
-    }
-
     public function btn_close_label()
     {
         return $GLOBALS['Language']->getText('global', 'btn_close');
-    }
-
-    public function btn_save_keys_label()
-    {
-        return $GLOBALS['Language']->getText('account_editsshkeys', 'btn_save_keys');
     }
 
     public function edition_title()

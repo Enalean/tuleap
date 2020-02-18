@@ -21,36 +21,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\Account;
+namespace Tuleap\Test\Builders;
 
-use CSRFSynchronizerToken;
-
-/**
- * @psalm-immutable
- */
-final class KeysTokensPresenter
+final class LayoutInspector
 {
     /**
      * @var string
      */
-    public $keys_tokens_url = DisplayKeysTokensController::URL;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
-    /**
-     * @var SSHKeysPresenter
-     */
-    public $ssh_keys_presenter;
-    /**
-     * @var AccessKeyPresenter
-     */
-    public $access_key_presenter;
+    private $redirect_url;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, SSHKeysPresenter $ssh_keys_presenter, AccessKeyPresenter $access_key_presenter)
+    public function getRedirectUrl(): string
     {
-        $this->csrf_token = $csrf_token;
-        $this->access_key_presenter = $access_key_presenter;
-        $this->ssh_keys_presenter = $ssh_keys_presenter;
+        return $this->redirect_url;
+    }
+
+    public function setRedirectUrl(string $redirect_url): void
+    {
+        $this->redirect_url = $redirect_url;
     }
 }

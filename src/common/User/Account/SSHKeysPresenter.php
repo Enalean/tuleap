@@ -23,34 +23,27 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use CSRFSynchronizerToken;
+use PFUser;
 
 /**
  * @psalm-immutable
  */
-final class KeysTokensPresenter
+final class SSHKeysPresenter
 {
     /**
-     * @var string
+     * @var SSHKeyPresenter[]
      */
-    public $keys_tokens_url = DisplayKeysTokensController::URL;
+    public $ssh_keys_list = [];
     /**
-     * @var CSRFSynchronizerToken
+     * @var bool
      */
-    public $csrf_token;
-    /**
-     * @var SSHKeysPresenter
-     */
-    public $ssh_keys_presenter;
-    /**
-     * @var AccessKeyPresenter
-     */
-    public $access_key_presenter;
+    public $has_ssh_keys;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, SSHKeysPresenter $ssh_keys_presenter, AccessKeyPresenter $access_key_presenter)
+    public function __construct(PFUser $user)
     {
-        $this->csrf_token = $csrf_token;
-        $this->access_key_presenter = $access_key_presenter;
-        $this->ssh_keys_presenter = $ssh_keys_presenter;
+        foreach ($user->getAuthorizedKeysArray() as $ssh_key_number => $ssh_key_value) {
+            $this->ssh_keys_list[] = new SSHKeyPresenter($ssh_key_number, $ssh_key_value);
+        }
+        $this->has_ssh_keys = count($this->ssh_keys_list) > 0;
     }
 }

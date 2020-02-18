@@ -24,39 +24,16 @@ declare(strict_types=1);
 namespace Tuleap\Test\Builders;
 
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetCollection;
-use Widget_Static;
 
 class LayoutBuilder
 {
-    public static function build()
+    public static function build(): BaseLayout
     {
-        return new class () extends BaseLayout {
+        return new TestLayout(new LayoutInspector());
+    }
 
-            public function __construct()
-            {
-                $this->css_assets = new CssAssetCollection([]);
-            }
-
-            public function header(array $params)
-            {
-            }
-
-            public function footer(array $params)
-            {
-            }
-
-            public function displayStaticWidget(Widget_Static $widget)
-            {
-            }
-
-            public function includeCalendarScripts()
-            {
-            }
-
-            protected function getUser()
-            {
-            }
-        };
+    public static function buildWithInspector(LayoutInspector $inspector): BaseLayout
+    {
+        return new TestLayout($inspector);
     }
 }

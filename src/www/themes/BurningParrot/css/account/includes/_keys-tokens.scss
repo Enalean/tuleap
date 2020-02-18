@@ -21,3 +21,12 @@
 .access-keys-accesses-warning {
     cursor: help;
 }
+
+[data-ssh_key_value] {
+    word-break: break-all;
+    cursor: pointer;
+}
+
+.ssh-key-value-reset-cursor {
+    cursor: auto;
+}
