@@ -17,12 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BurndownData, MilestoneData, PointsWithDate, StoreOptions } from "../../../../../type";
+import {
+    BurndownData,
+    MilestoneData,
+    PointsWithDateForBurndown,
+    StoreOptions
+} from "../../../../../type";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import Burndown from "./Burndown.vue";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
-import { DefaultData } from "vue/types/options";
 import BurndownError from "./BurndownError.vue";
 import BurndownDisplayer from "./BurndownDisplayer.vue";
 
@@ -63,7 +67,7 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: true,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDate[]
+                points_with_date: [] as PointsWithDateForBurndown[]
             } as BurndownData
         } as MilestoneData;
 
@@ -76,8 +80,7 @@ describe("BurndownDisplayer", () => {
 
     it("When the burndown is under calculation, Then BurndownError component is rendered", async () => {
         component_options.propsData = {
-            release_data,
-            message_error_rest: null
+            release_data
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
         const burndown_error = wrapper.find(BurndownError);
@@ -85,7 +88,6 @@ describe("BurndownDisplayer", () => {
         expect(burndown_error.attributes("is_under_calculation")).toBeTruthy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
         expect(burndown_error.attributes("has_error_duration")).toBeFalsy();
-        expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
     it("When there isn't start date, Then BurndownError component is rendered", async () => {
@@ -99,13 +101,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDate[]
+                points_with_date: [] as PointsWithDateForBurndown[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data,
-            message_error_rest: null
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -114,7 +115,6 @@ describe("BurndownDisplayer", () => {
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeTruthy();
         expect(burndown_error.attributes("has_error_duration")).toBeFalsy();
-        expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
     it("When there duration is equal to 0, Then BurndownError component is rendered", async () => {
@@ -128,13 +128,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDate[]
+                points_with_date: [] as PointsWithDateForBurndown[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data,
-            message_error_rest: null
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -143,7 +142,6 @@ describe("BurndownDisplayer", () => {
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
         expect(burndown_error.attributes("has_error_duration")).toBeTruthy();
-        expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
     it("When duration is null, Then BurndownError component is rendered", async () => {
@@ -157,13 +155,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDate[]
+                points_with_date: [] as PointsWithDateForBurndown[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data,
-            message_error_rest: null
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -172,7 +169,6 @@ describe("BurndownDisplayer", () => {
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
         expect(burndown_error.attributes("has_error_duration")).toBeTruthy();
-        expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
     it("When duration is null and start date is null, Then BurndownError component is rendered", async () => {
@@ -186,13 +182,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDate[]
+                points_with_date: [] as PointsWithDateForBurndown[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data,
-            message_error_rest: null
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -201,7 +196,6 @@ describe("BurndownDisplayer", () => {
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeTruthy();
         expect(burndown_error.attributes("has_error_duration")).toBeTruthy();
-        expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
     it("When duration is null and it is under calculation, Then BurndownError component is rendered", async () => {
@@ -215,13 +209,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: true,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDate[]
+                points_with_date: [] as PointsWithDateForBurndown[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data,
-            message_error_rest: null
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -230,7 +223,6 @@ describe("BurndownDisplayer", () => {
         expect(burndown_error.attributes("is_under_calculation")).toBeTruthy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
         expect(burndown_error.attributes("has_error_duration")).toBeTruthy();
-        expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
     it("When the burndown can be created, Then component BurndownDisplayer is rendered", async () => {
@@ -244,40 +236,17 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDate[]
+                points_with_date: [] as PointsWithDateForBurndown[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data,
-            message_error_rest: null
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(BurndownDisplayer)).toBe(true);
-    });
-
-    it("When there is a rest error, Then BurndownError component is rendered", async () => {
-        component_options.data = (): DefaultData<Burndown> => {
-            return {
-                is_open: false
-            };
-        };
-
-        component_options.propsData = {
-            release_data,
-            message_error_rest: "404 Error"
-        };
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        wrapper.setData({ message_error_rest: "404 Error" });
-        const burndown_error = wrapper.find(BurndownError);
-
-        expect(burndown_error.attributes("is_under_calculation")).toBeTruthy();
-        expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
-        expect(burndown_error.attributes("has_error_duration")).toBeFalsy();
-        expect(burndown_error.attributes("has_error_rest")).toBeTruthy();
+        expect(wrapper.contains(Burndown)).toBe(true);
     });
 
     it("When the timeframe is not on duration field and end date field is null, Then there is an error", async () => {
@@ -293,13 +262,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDate[]
+                points_with_date: [] as PointsWithDateForBurndown[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data,
-            messsage_error_rest: null
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -324,18 +292,16 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDate[]
+                points_with_date: [] as PointsWithDateForBurndown[]
             } as BurndownData
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data,
-            messsage_error_rest: null
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(BurndownError);
 
-        expect(burndown_error.attributes("has_error_duration")).toBeFalsy();
+        expect(wrapper.contains(BurndownError)).toBeFalsy();
     });
 });

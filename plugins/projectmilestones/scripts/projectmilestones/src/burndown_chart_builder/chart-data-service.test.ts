@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PointsWithDate } from "../type";
+import { PointsWithDateForBurndown } from "../type";
 import { getDisplayableData } from "./chart-data-service";
 
 describe("chartDataService", () => {
@@ -30,7 +30,7 @@ describe("chartDataService", () => {
         });
     });
 
-    function getPointsWithDateWithMaxIs15(): PointsWithDate[] {
+    function getPointsWithDateWithMaxIs15(): PointsWithDateForBurndown[] {
         return [
             { date: "2019-07-01T00:00:00+00:00", remaining_effort: null },
             { date: "2019-07-02T00:00:00+00:00", remaining_effort: 10 },

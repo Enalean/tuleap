@@ -34,6 +34,7 @@ export interface MilestoneData {
     total_closed_sprint: number | null;
     open_sprints: MilestoneData[] | null;
     burndown_data: BurndownData | null;
+    burnup_data: BurnupData | null;
     description: string | null;
     resources: MilestoneResourcesData;
     number_of_artifact_by_trackers: TrackerNumberArtifacts[];
@@ -104,6 +105,7 @@ export interface StoreOptions {
         label_start_date?: string;
         label_timeframe?: string;
         user_can_view_sub_milestones_planning?: boolean;
+        activate_burnup?: boolean;
     };
     getters?: {
         has_rest_error?: boolean;
@@ -125,6 +127,7 @@ export interface State {
     label_start_date: string;
     label_timeframe: string;
     user_can_view_sub_milestones_planning: boolean;
+    activate_burnup: boolean;
 }
 
 export interface Context {
@@ -150,13 +153,36 @@ export interface BurndownData {
     points: Array<number>;
     is_under_calculation: boolean;
     opening_days: Array<number>;
-    points_with_date: Array<PointsWithDate>;
+    points_with_date: Array<PointsWithDateForBurndown>;
     label: string | null;
 }
 
-export interface PointsWithDate {
+export interface BurnupData {
+    start_date: string;
+    duration: number | null;
+    capacity: number | null;
+    is_under_calculation: boolean;
+    opening_days: Array<number>;
+    points_with_date: Array<PointsWithDateForBurnup>;
+    points_with_date_count_elements: Array<PointsCountElements>;
+    label: string | null;
+}
+
+export interface PointsCountElements {
+    date: string;
+    closed_elements: number;
+    total_elements: number;
+}
+
+export interface PointsWithDateForBurndown {
     date: string;
     remaining_effort: number | null;
+}
+
+export interface PointsWithDateForBurnup {
+    date: string;
+    team_effort: number;
+    total_effort: number;
 }
 
 export interface PointsNotNullWithDate {
@@ -179,7 +205,7 @@ export interface XYSizeElement {
 }
 
 export interface ArtifactMilestone {
-    values: [ArtifactMilestoneChartBurndown];
+    values: [ArtifactMilestoneChartBurndown, ArtifactMilestoneChartBurnup];
 }
 
 export interface ArtifactMilestoneChartBurndown {
@@ -187,4 +213,11 @@ export interface ArtifactMilestoneChartBurndown {
     field_id: number;
     label: string;
     type: "burndown";
+}
+
+export interface ArtifactMilestoneChartBurnup {
+    value: BurnupData;
+    field_id: number;
+    label: string;
+    type: "burnup";
 }

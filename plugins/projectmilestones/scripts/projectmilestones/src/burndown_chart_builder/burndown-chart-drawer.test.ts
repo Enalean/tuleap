@@ -19,7 +19,7 @@
 
 import { createBurndownChart, getMaxRemainingEffort } from "./burndown-chart-drawer";
 
-import { BurndownData, PointsWithDate } from "../type";
+import { BurndownData, PointsWithDateForBurndown } from "../type";
 import { ChartPropsBurndownWhithoutTooltip } from "../../../../../../src/www/scripts/charts-builders/type";
 import * as chart_badge_generator from "./chart-badge-generator";
 
@@ -164,7 +164,7 @@ describe("BurndownChartDrawer -", () => {
             capacity: null,
             is_under_calculation: false,
             points: [] as number[],
-            points_with_date: [] as PointsWithDate[]
+            points_with_date: [] as PointsWithDateForBurndown[]
         } as BurndownData;
     }
 
@@ -180,8 +180,8 @@ describe("BurndownChartDrawer -", () => {
         } as BurndownData;
     }
 
-    function getPointsWithDateWithMaxIs15(): PointsWithDate[] {
-        const points: PointsWithDate[] = [];
+    function getPointsWithDateWithMaxIs15(): PointsWithDateForBurndown[] {
+        const points: PointsWithDateForBurndown[] = [];
         points.push({
             date: "2019-07-01T00:00:00+00:00",
             remaining_effort: null
@@ -194,8 +194,8 @@ describe("BurndownChartDrawer -", () => {
         return points;
     }
 
-    function getPointsWithDateWithMaxIsNull(): PointsWithDate[] {
-        const points: PointsWithDate[] = [];
+    function getPointsWithDateWithMaxIsNull(): PointsWithDateForBurndown[] {
+        const points: PointsWithDateForBurndown[] = [];
         points.push({
             date: "2019-07-01T00:00:00+00:00",
             remaining_effort: null
@@ -204,8 +204,8 @@ describe("BurndownChartDrawer -", () => {
         return points;
     }
 
-    function getPointsWithDateWithMaxIsZero(): PointsWithDate[] {
-        const points: PointsWithDate[] = [];
+    function getPointsWithDateWithMaxIsZero(): PointsWithDateForBurndown[] {
+        const points: PointsWithDateForBurndown[] = [];
         points.push({
             date: "2019-07-01T00:00:00+00:00",
             remaining_effort: 0

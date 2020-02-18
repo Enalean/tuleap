@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.release-chart-burndown-row {
+.release-charts-row {
     flex: 0 0 auto;
     width: 220px + $tlp-spacing;
     margin: 0 $tlp-spacing 0 auto;
@@ -71,4 +71,8 @@
     to {
         filter: drop-shadow(0 0 12px transparent);
     }
+}
+
+.project-milestones-chart-label {
+    margin-top: $tlp-spacing;
 }

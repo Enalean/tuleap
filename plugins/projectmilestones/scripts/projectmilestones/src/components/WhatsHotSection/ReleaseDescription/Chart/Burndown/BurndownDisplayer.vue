@@ -20,11 +20,7 @@
 <template>
     <div>
         <burndown-error
-            v-if="
-                has_error_rest || has_error_duration || has_error_start_date || is_under_calculation
-            "
-            v-bind:has_error_rest="has_error_rest"
-            v-bind:message_error_rest="message_error_rest"
+            v-if="has_error_duration || has_error_start_date || is_under_calculation"
             v-bind:has_error_duration="has_error_duration"
             v-bind:message_error_duration="message_error_duration"
             v-bind:has_error_start_date="has_error_start_date"
@@ -52,18 +48,12 @@ import { sprintf } from "sprintf-js";
 export default class BurndownDisplayer extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-    @Prop()
-    readonly message_error_rest!: string | null;
     @State
     readonly is_timeframe_duration!: boolean;
     @State
     readonly label_start_date!: string;
     @State
     readonly label_timeframe!: string;
-
-    get has_error_rest(): boolean {
-        return this.message_error_rest !== null;
-    }
 
     get message_error_duration(): string {
         return sprintf(this.$gettext("'%s' field is empty or invalid."), this.label_timeframe);

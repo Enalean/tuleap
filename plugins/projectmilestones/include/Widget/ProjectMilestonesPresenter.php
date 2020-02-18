@@ -66,9 +66,23 @@ class ProjectMilestonesPresenter
      * @var bool
      */
     public $user_can_view_sub_milestones_planning;
+    /**
+     * @var bool
+     */
+    public $project_milestones_activate_burnup;
 
-    public function __construct(Project $project, int $nb_upcoming_releases, int $nb_backlog_items, array $trackers_id, string $label_tracker_planning, bool $is_timeframe_duration, string $label_start_date, string $label_timeframe, bool $user_can_view_sub_milestones_planning)
-    {
+    public function __construct(
+        Project $project,
+        int $nb_upcoming_releases,
+        int $nb_backlog_items,
+        array $trackers_id,
+        string $label_tracker_planning,
+        bool $is_timeframe_duration,
+        string $label_start_date,
+        string $label_timeframe,
+        bool $user_can_view_sub_milestones_planning,
+        bool $project_milestones_activate_burnup
+    ) {
         $this->project_id                            = $project->getID();
         $this->nb_upcoming_releases                  = $nb_upcoming_releases;
         $this->nb_backlog_items                      = $nb_backlog_items;
@@ -78,5 +92,6 @@ class ProjectMilestonesPresenter
         $this->label_start_date                      = $label_start_date;
         $this->label_timeframe                       = $label_timeframe;
         $this->user_can_view_sub_milestones_planning = $user_can_view_sub_milestones_planning;
+        $this->project_milestones_activate_burnup    = $project_milestones_activate_burnup;
     }
 }
