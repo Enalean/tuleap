@@ -46,7 +46,6 @@ class WebDAVPlugin extends Plugin
     /**
      * Returns information about the plugin
      *
-     * @return String
      *
      * @see src/common/plugin/Plugin#getPluginInfo()
      */

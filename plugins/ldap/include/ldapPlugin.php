@@ -1215,12 +1215,9 @@ class LdapPlugin extends Plugin
         $dao->duplicateLdapBinding($source_ugroup_id, $new_ugroup_id);
     }
 
-    /**
-     * @return bool
-     * */
-    private function isGroupSyncAdminNotificationsEnabled()
+    private function isGroupSyncAdminNotificationsEnabled(): bool
     {
-        return $this->getLdap()->getLDAPParam('grp_sync_admin_notifications_enabled');
+        return (bool) $this->getLdap()->getLDAPParam('grp_sync_admin_notifications_enabled');
     }
 
     /**

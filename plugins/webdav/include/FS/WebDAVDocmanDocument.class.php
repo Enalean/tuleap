@@ -84,9 +84,10 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
     /**
      * Returns mime-type of the file
      *
-     * @return string
+     * @return string|null
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getContentType()
+     * @psalm-suppress ImplementedReturnTypeMismatch Return type of the library is incorrect
      */
     public function getContentType()
     {
@@ -101,6 +102,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
                 return $GLOBALS['Language']->getText('plugin_webdav_common', 'empty');
                 break;
         }
+        return null;
     }
 
     /**
@@ -118,7 +120,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
     /**
      * Returns the last modification date
      *
-     * @return date
+     * @return int
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Node::getLastModified()
      */

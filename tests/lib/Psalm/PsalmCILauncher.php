@@ -84,6 +84,7 @@ final class PsalmCILauncher extends Command
         return ($this->shell_passthrough)(
             __DIR__ . '/../../../src/vendor/bin/psalm -c=' . escapeshellarg($config_path) . ' ' .
             '--show-info=false  --report-show-info=false ' .
+            '--threads=1 ' .
             '--root=' . escapeshellarg($base_dir) . ' ' .
             '--report=' . escapeshellarg($report_folder . '/checkstyle.xml') . ' ' .
             implode(' ', $files_to_inspect_shell_escaped)

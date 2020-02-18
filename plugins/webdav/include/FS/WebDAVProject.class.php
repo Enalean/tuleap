@@ -114,14 +114,12 @@ class WebDAVProject extends Sabre_DAV_Directory
      * Projects don't have a last modified date this
      * is used only to suit the class Sabre_DAV_Node
      *
-     * @return NULL
-     *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
      */
     public function getLastModified()
     {
 
-        return;
+        return 0;
     }
 
     /**

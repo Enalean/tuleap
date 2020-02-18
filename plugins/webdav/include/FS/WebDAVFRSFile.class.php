@@ -75,7 +75,7 @@ class WebDAVFRSFile extends Sabre_DAV_File
             ServerRequest::fromGlobals(),
             $this->getFileLocation(),
             $this->getName(),
-            $this->getContentType()
+            $this->getContentType() ?? 'application/octet-stream'
         )
             ->withHeader('ETag', $this->getETag())
             ->withHeader('Last-Modified', $this->getLastModified());
@@ -147,9 +147,11 @@ class WebDAVFRSFile extends Sabre_DAV_File
     /**
      * Returns mime-type of the file
      *
-     * @return String
+     * @return string|null
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_File#getContentType()
+     *
+     * @psalm-suppress ImplementedReturnTypeMismatch Return type of the library is incorrect
      */
     public function getContentType()
     {
@@ -157,6 +159,7 @@ class WebDAVFRSFile extends Sabre_DAV_File
             $mime = MIME::instance();
             return $mime->type($this->getFileLocation());
         }
+        return null;
     }
 
     /**

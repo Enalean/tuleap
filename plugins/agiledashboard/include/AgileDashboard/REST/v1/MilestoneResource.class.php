@@ -377,7 +377,7 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @param int $id Id of the milestone
      *
-     * @return Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation
+     * @return MilestoneRepresentation
      *
      * @throws RestException 403
      * @throws RestException 404

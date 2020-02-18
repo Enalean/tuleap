@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -88,7 +88,9 @@ class Tracker_Artifact_MailGateway_CitationStripper
 
     private function removeNode(DOMNode $node)
     {
-        $node->parentNode->removeChild($node);
+        if ($node->parentNode !== null) {
+            $node->parentNode->removeChild($node);
+        }
     }
 
     private function getContentInsideBody(DOMDocument $doc)

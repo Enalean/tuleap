@@ -64,7 +64,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      * or all public projects in case the user is anonymous
      * don't generate those for which WebDAV plugin is not available
      *
-     * @return Array
+     * @return Sabre_DAV_INode[]
      *
      * @see lib/Sabre/DAV/Sabre_DAV_IDirectory#getChildren()
      */
@@ -146,14 +146,12 @@ class WebDAVRoot extends Sabre_DAV_Directory
     /**
      * This is used only to suit the class Sabre_DAV_Node
      *
-     * @return NULL
-     *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
      */
     public function getLastModified()
     {
 
-        return;
+        return 0;
     }
 
     /**

@@ -87,6 +87,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
@@ -394,7 +395,7 @@ class ArtifactsResource extends AuthenticatedResource
      * @param string $values_format The format of the value {@from query} {@choice ,collection,by_field,all}
      * @param string $tracker_structure_format The format of the structure {@from query} {@choice ,minimal,complete}
      *
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
+     * @return ArtifactRepresentation
      *
      * @throws RestException 403
      */
@@ -443,7 +444,7 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @param int $id Id of the artifact
      *
-     * @return Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation
+     * @return ArtifactLinkRepresentation
      *
      * @throws RestException 403
      */
@@ -492,7 +493,8 @@ class ArtifactsResource extends AuthenticatedResource
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
-     * @return Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation
+     * @return array
+     * @psalm-return array{collection:list<\Tuleap\Tracker\REST\Artifact\ArtifactRepresentation>}
      *
      * @throws RestException 403
      */
