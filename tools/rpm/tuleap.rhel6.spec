@@ -1204,6 +1204,7 @@ fi
 %dir %{APP_DIR}/src/www/assets
 %{APP_DIR}/src/www/assets/*.js
 %{APP_DIR}/src/www/assets/manifest.json
+%{APP_DIR}/src/www/assets/account
 %{APP_DIR}/src/www/assets/admindelegation
 %{APP_DIR}/src/www/assets/ckeditor-*
 %{APP_DIR}/src/www/assets/dashboards

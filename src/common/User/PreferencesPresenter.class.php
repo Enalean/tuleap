@@ -18,8 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\User\Account\DisplayKeysTokensController;
+
 class User_PreferencesPresenter
 {
+    public $keys_tokens_url = DisplayKeysTokensController::URL;
 
     /** @var PFUser */
     private $user;
@@ -39,16 +42,6 @@ class User_PreferencesPresenter
 
     /** @var SVN_TokenPresenter[] */
     public $svn_tokens;
-
-    /**
-     * @var \Tuleap\User\AccessKey\AccessKeyMetadataPresenter[]
-     */
-    public $access_keys;
-
-    /**
-     * @var \Tuleap\User\AccessKey\Scope\AccessKeyScopePresenter[]
-     */
-    public $access_key_scopes;
 
     /**
      * @var CSRFSynchronizerToken
@@ -83,25 +76,12 @@ class User_PreferencesPresenter
      */
     public $default_formats;
 
-    /**
-     * @var string
-     */
-    public $last_access_key;
-
-    /**
-     * @var string
-     */
-    public $last_access_resolution;
-
     public $user_language;
     public $user_has_accessibility_mode;
     public $is_condensed;
     public $display_density_name;
     public $display_density_condensed;
 
-    /**
-     * @param \Tuleap\User\AccessKey\Scope\AccessKeyScopePresenter[] $access_key_scopes
-     */
     public function __construct(
         PFUser $user,
         $can_change_real_name,
@@ -111,8 +91,6 @@ class User_PreferencesPresenter
         array $user_access,
         $ssh_keys_extra_html,
         $svn_tokens,
-        $access_keys,
-        array $access_key_scopes,
         $third_party_html,
         CSRFSynchronizerToken $csrf_token,
         array $tracker_formats,
@@ -122,8 +100,7 @@ class User_PreferencesPresenter
         array $all_csv_separator,
         array $all_csv_dateformat,
         $last_svn_token,
-        array $default_formats,
-        $last_access_key
+        array $default_formats
     ) {
         $this->user                    = $user;
         $this->can_change_real_name    = $can_change_real_name;
@@ -133,8 +110,6 @@ class User_PreferencesPresenter
         $this->user_access             = $user_access;
         $this->ssh_keys_extra_html     = $ssh_keys_extra_html;
         $this->svn_tokens              = $svn_tokens;
-        $this->access_keys             = $access_keys;
-        $this->access_key_scopes       = $access_key_scopes;
         $this->third_party_html        = $third_party_html;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
@@ -146,9 +121,6 @@ class User_PreferencesPresenter
         $this->all_csv_dateformat      = $all_csv_dateformat;
         $this->last_svn_token          = $last_svn_token;
         $this->default_formats         = $default_formats;
-        $this->last_access_key         = $last_access_key;
-
-        $this->last_access_resolution  = DateHelper::distanceOfTimeInWords(0, ForgeConfig::get('last_access_resolution'));
 
         $this->user_language               = $user->getShortLocale();
         $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);
@@ -483,13 +455,6 @@ class User_PreferencesPresenter
     {
         return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button_help');
     }
-
-    public function has_access_keys()
-    {
-        return count($this->access_keys) > 0;
-    }
-
-
 
     /* PREFERENCES */
 

@@ -1,0 +1,155 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# gettext }}Personal access keys{{/ gettext }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>
+                {{# gettext }}You can use access keys to access resources from scripts or command line. However, these access keys are like password and should be guarded carefully.{{/ gettext }}
+            </p>
+
+            {{# last_access_key }}
+                <div class="tlp-alert-success">
+                    <p><i class="fa fa-check" aria-hidden="true"></i> {{# gettext }}Make sure you copy your new access key, you won't be able to see it again!{{/ gettext }}</p>
+                    <p><strong>{{ last_access_key }}</strong></p>
+                </div>
+            {{/ last_access_key }}
+
+            <form action="/account/access_key/revoke" method="post">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+
+                <div class="tlp-table-actions">
+                    <button
+                            type="button"
+                            class="tlp-button-primary tlp-table-actions-element"
+                            id="generate-access-key-button"
+                            data-target-modal-id="access-keys-generate-modal"
+                    >
+                        <i class="tlp-button-icon fa fa-plus"></i> {{# gettext }}Generate new key{{/ gettext }}
+                    </button>
+                    {{# has_access_keys }}
+                        <button type="submit"
+                                id="button-revoke-access-tokens"
+                                name="revoke-access-tokens"
+                                class="tlp-button-danger tlp-button-outline tlp-table-actions-element"
+                                disabled
+                        >
+                            <i class="tlp-button-icon fa fa-trash-o"></i> {{# gettext }}Revoke selected access keys{{/ gettext }}
+                        </button>
+                    {{/ has_access_keys }}
+                </div>
+
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>{{# gettext }}Generated on{{/ gettext }}</th>
+                        <th>
+                            {{# gettext }}Last used on{{/ gettext }}
+                            <span
+                                    class="access-keys-accesses-warning"
+                                    title="{{# gettext }}Accesses from less than %s might not be visible | {{ last_access_resolution }} {{/ gettext }}"
+                            >
+                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    </span>
+                        </th>
+                        <th>{{# gettext }}Last used by{{/ gettext }}</th>
+                        <th>{{# gettext }}Description{{/ gettext }}</th>
+                        <th>{{# gettext }}Expire on{{/ gettext }}</th>
+                        <th>{{# gettext }}Scopes{{/ gettext }}</th>
+                    </tr>
+                    </thead>
+                    {{# has_access_keys }}
+                        <tbody>
+                        {{# access_keys }}
+                            <tr>
+                                <td><input type="checkbox" name="access-keys-selected[]" value="{{ id }}"/></td>
+                                <td>{{ creation_date }}</td>
+                                <td>
+                                    {{# last_used_on }}{{ last_used_on }}{{/ last_used_on }}
+                                    {{^ last_used_on }}{{# gettext }}Never{{/ gettext }}{{/ last_used_on }}
+                                </td>
+                                <td>
+                                    {{# last_used_by }}{{ last_used_by }}{{/ last_used_by }}
+                                    {{^ last_used_by }}-{{/ last_used_by }}
+                                </td>
+                                <td>{{ description }}</td>
+                                <td>
+                                    {{# expiration_date }}{{ expiration_date }}{{/ expiration_date }}
+                                    {{^ expiration_date }}-{{/ expiration_date }}
+                                </td>
+                                <td>
+                                    {{# scopes }}<span title="{{ description }}">{{ name }}</span> {{/scopes}}
+                                </td>
+                            </tr>
+                        {{/ access_keys }}
+                        </tbody>
+                    {{/ has_access_keys }}
+                    {{^ has_access_keys }}
+                        <tbody>
+                        <tr>
+                            <td class="table-cell-empty" colspan="7">{{# gettext }}No access keys{{/ gettext }}</td>
+                        </tr>
+                        </tbody>
+                    {{/ has_access_keys }}
+                </table>
+            </form>
+        </section>
+    </div>
+</section>
+
+<div id="access-keys-generate-modal" class="tlp-modal" role="dialog" aria-labelledby="access-keys-generate-modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="access-keys-generate-modal-title">
+            <i class="fa fa-unlock-alt tlp-modal-title-icon"></i> {{# gettext }}New personal access key{{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+
+    <form action="/account/access_key/create" method="post">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <div class="tlp-modal-body">
+            <p>
+                {{# gettext }}A personal access key will be automatically generated at the form submission. The description is not required but it can help you to manage your access keys.{{/ gettext }}
+            </p>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="access-key-description">{{# gettext }}Access key description{{/ gettext }}</label>
+                <textarea id="access-key-description" name="access-key-description" rows="5" class="tlp-textarea"
+                          placeholder="{{# gettext }}What's this access key for?{{/ gettext }}"></textarea>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label">{{# gettext }}Access key scopes{{/ gettext }} <i class="fa fa-asterisk"></i></label>
+                {{# access_key_scopes }}
+                    <label class="tlp-label tlp-checkbox">
+                        <input type="checkbox" name="access-key-scopes[]" value="{{ identifier }}"> {{ name }}
+                    </label>
+                    <p class="tlp-text-info">{{ description }}</p>
+                {{/ access_key_scopes }}
+            </div>
+
+            <div class="tlp-form-element">
+                <label for="access-key-expiration-date-picker" class="tlp-label">{{# gettext }}Access key expiration date{{/ gettext }}</label>
+                <div class="tlp-form-element tlp-form-element-prepend">
+                    <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                    <input name="access-key-expiration-date" type="text" id="access-key-expiration-date-picker" class="tlp-input tlp-input-date" size="11">
+                </div>
+                <p class="tlp-text-info">
+                    {{# gettext }}The key will expire at the end of the selected date. Keep it empty if you don't want that this key will expire.{{/ gettext }}
+                </p>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/ gettext }}</button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action" id="generate-new-access-key-button" disabled>{{# gettext }}Generate new key{{/ gettext }}</button>
+        </div>
+    </form>
+</div>

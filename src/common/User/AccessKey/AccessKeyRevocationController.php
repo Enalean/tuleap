@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,13 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
+use CSRFSynchronizerToken;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\Account\DisplayKeysTokensController;
 
 class AccessKeyRevocationController implements DispatchableWithRequest
 {
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
+
+    public function __construct(CSRFSynchronizerToken $csrf_token)
+    {
+        $this->csrf_token = $csrf_token;
+    }
+
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
@@ -36,7 +48,7 @@ class AccessKeyRevocationController implements DispatchableWithRequest
             throw new ForbiddenException(_('Unauthorized action for anonymous'));
         }
 
-        (new \CSRFSynchronizerToken('/account/index.php'))->check();
+        $this->csrf_token->check(DisplayKeysTokensController::URL);
 
         $key_ids          = [];
         $selected_key_ids = $request->get('access-keys-selected');
@@ -50,6 +62,6 @@ class AccessKeyRevocationController implements DispatchableWithRequest
         $revoker->revokeASetOfUserAccessKeys($current_user, $key_ids);
 
         $layout->addFeedback(\Feedback::INFO, _('Access keys have been successfully deleted.'));
-        $layout->redirect('/account/');
+        $layout->redirect(DisplayKeysTokensController::URL);
     }
 }
