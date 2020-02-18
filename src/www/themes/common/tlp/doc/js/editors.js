@@ -153,6 +153,14 @@ import { sanitize } from "dompurify";
                 allowClear: true
             });
 
+            const example_links = example.querySelectorAll('a[href="#"]');
+            [].forEach.call(example_links, link => {
+                link.addEventListener(
+                    "click",
+                    event => event.preventDefault() && event.stopPropagation()
+                );
+            });
+
             var modal_buttons = example.querySelectorAll("[data-target^=modal-]");
             [].forEach.call(modal_buttons, function(button) {
                 var modal = tlp.modal(document.getElementById(button.dataset.target), {});
