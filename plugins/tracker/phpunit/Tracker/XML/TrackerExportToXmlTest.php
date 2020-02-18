@@ -228,7 +228,7 @@ class TrackerExportToXmlTest extends TestCase
             ->shouldReceive('getUsedFormElementForTracker')
             ->andReturn([$form_element_1, $form_element_2]);
 
-        $this->tracker->shouldReceive('getProjectUgroups')->andReturn([]);
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
