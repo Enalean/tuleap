@@ -494,7 +494,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function cssFile($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $assets = $this->getThemesIncludeAssets();
+            $assets = $this->getIncludeAssets();
             echo '<link rel="stylesheet" type="text/css" href="' . $assets->getFileURL('style-fp.css') . '" />';
         }
     }
@@ -503,12 +503,13 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         // Only show the javascript if we're actually in the svn pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/svn.js"></script>';
+            $script_url = $this->getIncludeAssets()->getFileURL('svn.js');
+            echo '<script type="text/javascript" src="' . $script_url . '"></script>';
         }
         if ($this->currentRequestIsForPlugin()) {
-            echo $this->getMinifiedAssetHTML().PHP_EOL;
+            $script_url = $this->getIncludeAssets()->getFileURL('svn-admin.js');
+            echo '<script type="text/javascript" src="' . $script_url . '"></script>';
         }
-        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
     }
 
     public function service_classnames(array &$params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
@@ -1156,7 +1157,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function burningParrotGetStylesheets(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0) {
-            $assets = $this->getThemesIncludeAssets();
+            $assets = $this->getIncludeAssets();
             $params['stylesheets'][] = $assets->getFileURL('style-bp.css');
         }
     }
@@ -1164,19 +1165,14 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
     {
-        $include_assets = new IncludeAssets(
-            SVN_BASE_DIR . '/../www/assets',
-            $this->getPluginPath() . '/assets'
-        );
-
-        $event->addJavascript($include_assets->getFileURL('permission-per-group.js'));
+        $event->addJavascript($this->getIncludeAssets()->getFileURL('permission-per-group.js'));
     }
 
-    private function getThemesIncludeAssets(): IncludeAssets
+    private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/svn/themes',
-            '/assets/svn/themes'
+            __DIR__ . '/../../../src/www/assets/svn',
+            '/assets/svn'
         );
     }
 
