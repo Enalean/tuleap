@@ -22,12 +22,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 final class TrackerCreationRequest
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var String
      */
