@@ -44,16 +44,22 @@ final class DisplayKeysTokensControllerTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|AccessKeyPresenterBuilder
      */
     private $access_keys_presenter_builder;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|\SVN_TokenHandler
+     */
+    private $svn_tokens_presenter_builder;
 
     public function setUp(): void
     {
         $csrf_token = M::mock(CSRFSynchronizerToken::class);
         $this->access_keys_presenter_builder = M::mock(AccessKeyPresenterBuilder::class);
+        $this->svn_tokens_presenter_builder = new SVNTokensPresenterBuilder(M::mock(\SVN_TokenHandler::class, ['getSVNTokensForUser' => []]));
 
         $this->controller = new DisplayKeysTokensController(
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $csrf_token,
             $this->access_keys_presenter_builder,
+            $this->svn_tokens_presenter_builder,
         );
 
         $_SESSION = array();
@@ -105,5 +111,19 @@ final class DisplayKeysTokensControllerTest extends TestCase
 
         $this->assertStringContainsString('SSH keys', $output);
         $this->assertStringContainsString('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZX...wQjaL4YMUZ3sx6eloxF3 someone@example.com', $output);
+    }
+
+    public function testItRendersThePageWithSVNToken(): void
+    {
+        $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
+
+        ob_start();
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::aUser()->withId(110)->build())->build(),
+            LayoutBuilder::build(),
+            []
+        );
+        $output = ob_get_clean();
+        $this->assertStringContainsString('SVN token', $output);
     }
 }

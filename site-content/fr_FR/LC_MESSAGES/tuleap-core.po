@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #, php-format
 msgid ""
@@ -115,6 +115,13 @@ msgstr ""
 
 msgid "A template without any service enabled."
 msgstr "Un template sans aucun service activé."
+
+msgid ""
+"A token will be automatically generated at the form submission. The comment "
+"is not required but it can help you to manage your tokens."
+msgstr ""
+"Un nouveau jeton sera généré lors de la soumission du formulaire. La "
+"description n'est pas requise mais peut vous aider à gérer vos jetons."
 
 msgid "Access"
 msgstr "Accès"
@@ -242,6 +249,12 @@ msgstr ""
 "Un courrier électronique vient d'être envoyé à votre nouvelle adresse e-"
 "mail. Suivez les instructions fournies dans ce message pour confirmer "
 "définitivement le changement."
+
+msgid "An error occurred during the SVN token deletion"
+msgstr "Une erreur est survenue lors de la suppression des jetons SVN"
+
+msgid "An error occurred during the SVN token generation."
+msgstr "Une erreur est survenue lors de la suppression des jetons SVN."
 
 msgid ""
 "An error occurred in form submission, a link is not valid. Please retry."
@@ -446,6 +459,9 @@ msgstr "Couleur"
 
 msgid "Comfortable"
 msgstr "Normale"
+
+msgid "Comment"
+msgstr "Commentaire"
 
 msgid "Compromised password"
 msgstr "Mot de passe compromis"
@@ -694,8 +710,14 @@ msgstr "Forums"
 msgid "General"
 msgstr "Général"
 
+msgid "Generate an SVN token"
+msgstr "Générer un jeton SVN"
+
 msgid "Generate new key"
 msgstr "Générer une nouvelle clé"
+
+msgid "Generate new token"
+msgstr "Générer un nouveau jeton"
 
 msgid "Generated on"
 msgstr "Générée le"
@@ -887,6 +909,12 @@ msgid "Mailing lists (Lists Service)"
 msgstr "Listes de diffusion (Service Listes)"
 
 msgid ""
+"Make sure you copy your new SVN token, you won't be able to see it again!"
+msgstr ""
+"Assurez-vous de copier votre nouveau jeton, vous ne pourrez plus le voir de "
+"nouveau !"
+
+msgid ""
 "Make sure you copy your new access key, you won't be able to see it again!"
 msgstr ""
 "Assurez-vous de copier votre nouvelle clé d'accès, vous ne pourrez plus la "
@@ -956,6 +984,10 @@ msgstr "Moderation"
 msgid "Month"
 msgstr "Mois"
 
+msgid "My comment so I won't forget the purpose of this token..."
+msgstr ""
+"Mon commentaire qui me permettra de ne pas oublier l'utilité de ce token..."
+
 msgid "My personnal page"
 msgstr "Ma page personnelle"
 
@@ -997,6 +1029,9 @@ msgstr "Annonces que {{ user_group_name }} peuvent voir"
 
 msgid "No"
 msgstr "Non"
+
+msgid "No SVN token"
+msgstr "Aucun jeton SVN"
 
 msgid "No access keys"
 msgstr "Aucune clé d'accès"
@@ -1393,6 +1428,9 @@ msgstr "Les utilisateurs restreints peuvent créer des projets"
 msgid "Restricted users removal"
 msgstr "Suppression des utilisateurs restreints"
 
+msgid "Revoke selected SVN token"
+msgstr "Supprimer les jetons SVN sélectionnés"
+
 msgid "Revoke selected access keys"
 msgstr "Révoquer les clés d'accès sélectionnées"
 
@@ -1410,6 +1448,12 @@ msgstr "SVN"
 
 msgid "SVN Commits"
 msgstr "Commits SVN"
+
+msgid "SVN tokens"
+msgstr "Jetons SVN"
+
+msgid "SVN tokens have been successfully deleted"
+msgstr "Les clés d'accès ont été supprimées avec succès"
 
 msgid "Save"
 msgstr "Enregistrer"
@@ -1881,6 +1925,9 @@ msgstr ""
 msgid "Today"
 msgstr "Aujourd'hui"
 
+msgid "Token comment"
+msgstr "Commentaire du jeton"
+
 msgid "Trace and Track all types of activities."
 msgstr "Suivez et gérez tous types d'activités."
 
@@ -2215,6 +2262,13 @@ msgstr "Vous ne pouvez pas supprimer un groupe utilisateurs système"
 
 msgid "You can only edit your own widgets."
 msgstr "Vous ne pouvez éditer que vos propres widgets."
+
+msgid ""
+"You can use SVN tokens as a replacement for your password on projects "
+"selected by the administrator."
+msgstr ""
+"Les jetons SVN sont utilisables en remplacement de votre mot de passe "
+"uniquement sur les projets définis par l'administrateur."
 
 msgid ""
 "You can use access keys to access resources from scripts or command line. "

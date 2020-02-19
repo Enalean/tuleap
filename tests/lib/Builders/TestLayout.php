@@ -68,4 +68,9 @@ final class TestLayout extends BaseLayout
     {
         $this->inspector->setRedirectUrl($url);
     }
+
+    public function addFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
+    {
+        $this->inspector->addFeedback($level, $message);
+    }
 }

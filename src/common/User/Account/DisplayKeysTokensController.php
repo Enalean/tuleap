@@ -52,15 +52,21 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
      * @var AccessKeyPresenterBuilder
      */
     private $access_key_presenter_builder;
+    /**
+     * @var SVNTokensPresenterBuilder
+     */
+    private $svn_tokens_presenter_builder;
 
     public function __construct(
         TemplateRendererFactory $renderer_factory,
         CSRFSynchronizerToken $csrf_token,
-        AccessKeyPresenterBuilder $access_key_presenter_builder
+        AccessKeyPresenterBuilder $access_key_presenter_builder,
+        SVNTokensPresenterBuilder $svn_tokens_presenter_builder
     ) {
         $this->renderer = $renderer_factory->getRenderer(__DIR__ . '/templates');
         $this->csrf_token = $csrf_token;
         $this->access_key_presenter_builder = $access_key_presenter_builder;
+        $this->svn_tokens_presenter_builder = $svn_tokens_presenter_builder;
     }
 
     /**
@@ -101,7 +107,8 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
             new KeysTokensPresenter(
                 $this->csrf_token,
                 new SSHKeysPresenter($user),
-                $this->access_key_presenter_builder->getForUser($user, $_SESSION)
+                $this->access_key_presenter_builder->getForUser($user, $_SESSION),
+                $this->svn_tokens_presenter_builder->getForUser($user, $_SESSION),
             )
         );
         $layout->footer([]);

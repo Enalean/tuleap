@@ -42,9 +42,6 @@ class User_PreferencesPresenter
 
     private $ssh_keys_extra_html;
 
-    /** @var SVN_TokenPresenter[] */
-    public $svn_tokens;
-
     /**
      * @var CSRFSynchronizerToken
      */
@@ -70,9 +67,6 @@ class User_PreferencesPresenter
     /** @var array */
     public $all_csv_dateformat;
 
-    /** @var string */
-    public $last_svn_token;
-
     /**
      * @var array
      */
@@ -92,7 +86,6 @@ class User_PreferencesPresenter
         array $extra_user_info,
         array $user_access,
         $ssh_keys_extra_html,
-        $svn_tokens,
         $third_party_html,
         CSRFSynchronizerToken $csrf_token,
         array $tracker_formats,
@@ -101,7 +94,6 @@ class User_PreferencesPresenter
         array $plugins_prefs,
         array $all_csv_separator,
         array $all_csv_dateformat,
-        $last_svn_token,
         array $default_formats
     ) {
         $this->user                    = $user;
@@ -111,7 +103,6 @@ class User_PreferencesPresenter
         $this->extra_user_info         = $extra_user_info;
         $this->user_access             = $user_access;
         $this->ssh_keys_extra_html     = $ssh_keys_extra_html;
-        $this->svn_tokens              = $svn_tokens;
         $this->third_party_html        = $third_party_html;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
@@ -121,7 +112,6 @@ class User_PreferencesPresenter
         $this->plugins_prefs           = $plugins_prefs;
         $this->all_csv_separator       = $all_csv_separator;
         $this->all_csv_dateformat      = $all_csv_dateformat;
-        $this->last_svn_token          = $last_svn_token;
         $this->default_formats         = $default_formats;
 
         $this->user_language               = $user->getShortLocale();
@@ -131,11 +121,6 @@ class User_PreferencesPresenter
         $this->display_density_condensed = PFUser::DISPLAY_DENSITY_CONDENSED;
 
         $this->is_condensed = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED;
-    }
-
-    public function generated_svn_token()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'generated_svn_token');
     }
 
     public function avatar()
@@ -333,81 +318,6 @@ class User_PreferencesPresenter
         ob_start();
         include $GLOBALS['Language']->getContent('account/user_legal');
         return ob_get_clean();
-    }
-
-    public function has_svn_tokens()
-    {
-        return count($this->svn_tokens) > 0;
-    }
-
-    public function svn_tokens_title()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'svn_tokens_title');
-    }
-
-    public function svn_tokens_help()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'svn_tokens_help');
-    }
-
-    public function svn_tokens_no_token()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'svn_tokens_no_token');
-    }
-
-    public function svn_token_generated_date()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'svn_token_generated_date');
-    }
-
-    public function svn_token_last_usage()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'svn_token_last_usage');
-    }
-
-    public function svn_token_last_ip()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'svn_token_last_ip');
-    }
-
-    public function svn_token_comment()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'svn_token_comment');
-    }
-
-    public function generate_svn_token_button()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_button');
-    }
-
-    public function delete_svn_tokens_button()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'delete_svn_tokens_button');
-    }
-
-    public function generate_svn_token_modal_title()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_title');
-    }
-
-    public function generate_svn_token_modal_button()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button');
-    }
-
-    public function generate_svn_token_modal_button_comment_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button_comment_label');
-    }
-
-    public function generate_svn_token_modal_button_comment_placeholder()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button_comment_placeholder');
-    }
-
-    public function generate_svn_token_modal_button_help()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button_help');
     }
 
     /* PREFERENCES */

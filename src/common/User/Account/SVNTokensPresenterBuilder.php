@@ -21,40 +21,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\Builders;
+namespace Tuleap\User\Account;
 
-final class LayoutInspector
+use SVN_TokenHandler;
+
+final class SVNTokensPresenterBuilder
 {
     /**
-     * @var string
+     * @var SVN_TokenHandler
      */
-    private $redirect_url;
+    private $token_handler;
 
-    private $feedbacks = [];
-
-    public function getRedirectUrl(): string
+    public function __construct(\SVN_TokenHandler $token_handler)
     {
-        return $this->redirect_url;
+        $this->token_handler = $token_handler;
     }
 
-    public function setRedirectUrl(string $redirect_url): void
+    public function getForUser(\PFUser $user, array &$storage): SVNTokensPresenter
     {
-        $this->redirect_url = $redirect_url;
+        $last_svn_token = '';
+        if (isset($storage['last_svn_token'])) {
+            $last_svn_token = $storage['last_svn_token'];
+            unset($storage['last_svn_token']);
+        }
+        return new SVNTokensPresenter($this->token_handler->getSVNTokensForUser($user), $last_svn_token);
     }
 
-    public function addFeedback(string $level, string $message): void
+    public static function build(): self
     {
-        $this->feedbacks[] = [
-            'level'   => $level,
-            'message' => $message,
-        ];
-    }
-
-    /**
-     * @retrun array{level:string, message:string}
-     */
-    public function getFeedback(): array
-    {
-        return $this->feedbacks;
+        return new self(SVN_TokenHandler::build());
     }
 }

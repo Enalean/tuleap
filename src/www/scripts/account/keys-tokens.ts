@@ -22,6 +22,7 @@ import { modal as createModal, datePicker } from "tlp";
 document.addEventListener("DOMContentLoaded", () => {
     handleSSHKeys();
     handleAccessKeys();
+    handleSVNTokens();
 });
 
 function handleSSHKeys(): void {
@@ -31,20 +32,9 @@ function handleSSHKeys(): void {
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const ssh_key = document.getElementById("ssh-key") as HTMLTextAreaElement;
-    ssh_key.addEventListener("input", () => {
-        const text = ssh_key.value;
-        if (!text) {
-            return;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        const button = document.getElementById("submit-new-ssh-key-button") as HTMLButtonElement;
-        if (text.trim() === "") {
-            button.disabled = true;
-        } else {
-            button.disabled = false;
-        }
-    });
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const button = document.getElementById("submit-new-ssh-key-button") as HTMLButtonElement;
+    changeButtonStatusDependingTextareaStatus(button, ssh_key);
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const ssh_keys_list = document.querySelectorAll("[data-ssh_key_value]") as NodeListOf<
@@ -98,6 +88,22 @@ function addAccessKeyDatePicker(): void {
     }
 
     datePicker(date_picker);
+}
+
+function handleSVNTokens(): void {
+    addSVNTokenButton();
+
+    toggleButtonAccordingToCheckBoxesStateWithIds(
+        "button-revoke-svn-tokens",
+        "svn-tokens-selected[]"
+    );
+}
+
+function addSVNTokenButton(): void {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const button = document.getElementById("generate-svn-token-button") as HTMLButtonElement;
+
+    popupModal(button);
 }
 
 function popupModal(button: HTMLButtonElement): void {
@@ -168,4 +174,22 @@ function changeButtonStatusDependingCheckboxesStatus(
     } else {
         button.disabled = true;
     }
+}
+
+function changeButtonStatusDependingTextareaStatus(
+    button: HTMLButtonElement,
+    textarea: HTMLTextAreaElement
+): void {
+    textarea.addEventListener("input", () => {
+        const text = textarea.value;
+        if (!text) {
+            return;
+        }
+
+        if (text.trim() === "") {
+            button.disabled = true;
+        } else {
+            button.disabled = false;
+        }
+    });
 }
