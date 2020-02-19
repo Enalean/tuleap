@@ -3,4 +3,4 @@ Hudson Git plugin
 
 This plugin allow usage of Jenkins "push notification" API for efficient polling
 
-https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin#GitPlugin-Pushnotificationfromrepository
+https://plugins.jenkins.io/git/#push-notification-from-repository
