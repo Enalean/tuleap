@@ -27,10 +27,12 @@
             v-bind:message_error_start_date="message_error_start_date"
             v-bind:is_under_calculation="is_under_calculation"
             v-bind:message_error_under_calculation="
-                $gettext('Burndown is under calculation. It will be available in a few minutes.')
+                $gettext('Burnup is under calculation. It will be available in a few minutes.')
             "
         />
-        <burndown v-else v-bind:release_data="release_data" />
+        <p v-else class="empty-pane-text" data-test="message-nothing-here" v-translate>
+            There is nothing here!
+        </p>
     </div>
 </template>
 
@@ -39,13 +41,12 @@ import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import ChartError from "../ChartError.vue";
-import Burndown from "./Burndown.vue";
 import { State } from "vuex-class";
 import { sprintf } from "sprintf-js";
 @Component({
-    components: { ChartError, Burndown }
+    components: { ChartError }
 })
-export default class BurndownDisplayer extends Vue {
+export default class BurnupDisplayer extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
     @State
@@ -68,13 +69,13 @@ export default class BurndownDisplayer extends Vue {
             return !this.release_data.end_date;
         }
 
-        if (!this.release_data.burndown_data) {
+        if (!this.release_data.burnup_data) {
             return true;
         }
 
         return (
-            this.release_data.burndown_data.duration === null ||
-            this.release_data.burndown_data.duration === 0
+            this.release_data.burnup_data.duration === null ||
+            this.release_data.burnup_data.duration === 0
         );
     }
 
@@ -83,11 +84,11 @@ export default class BurndownDisplayer extends Vue {
     }
 
     get is_under_calculation(): boolean {
-        if (!this.release_data.burndown_data) {
+        if (!this.release_data.burnup_data) {
             return false;
         }
 
-        return this.release_data.burndown_data.is_under_calculation;
+        return this.release_data.burnup_data.is_under_calculation;
     }
 }
 </script>
