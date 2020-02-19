@@ -71,6 +71,7 @@ use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerCrumbInContext;
+use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -1737,7 +1738,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $validated_tracker_color,
                 $validated_short_name
             );
-        } catch (\Tuleap\Tracker\Admin\TrackerIsInvalidException $exception) {
+        } catch (TrackerIsInvalidException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $exception->getTranslatedMessage()

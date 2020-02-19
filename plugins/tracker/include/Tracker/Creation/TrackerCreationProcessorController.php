@@ -30,6 +30,7 @@ use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerCreationProcessorController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
@@ -86,22 +87,18 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
 
         $this->permission_checker->checkANewTrackerCanBeCreated($project, $user);
 
-        $creation_request = new TrackerCreationRequest($request);
-
-        if (! $creation_request->areMandatoryFieldFilledForTrackerDuplication()) {
-            $this->redirectToTrackerCreation(
-                $project,
-                dgettext('tuleap-tracker', 'The request for the tracker creation is not valid.')
-            );
-        }
+        $tracker_name = $request->get('tracker-name');
+        $tracker_shortname = $request->get('tracker-shortname');
+        $tracker_description = $request->get('tracker-description') ?? '';
+        $tracker_template_id = $request->get('tracker-template-id');
 
         try {
             $tracker = $this->tracker_creator->duplicateTracker(
                 $project,
-                $creation_request->tracker_name,
-                $creation_request->tracker_description,
-                $creation_request->tracker_shortname,
-                $creation_request->tracker_template_id
+                (string)$tracker_name,
+                (string)$tracker_description,
+                (string)$tracker_shortname,
+                (string)$tracker_template_id
             );
 
             $this->redirectToTrackerAdmin($tracker);
@@ -110,6 +107,11 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                  $project,
                  dgettext('tuleap-tracker', 'An error occured while creating the tracker.')
              );
+        } catch (TrackerIsInvalidException $exception) {
+            $this->redirectToTrackerCreation(
+                $project,
+                $exception->getTranslatedMessage()
+            );
         }
     }
 

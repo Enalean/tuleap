@@ -788,7 +788,6 @@ plugin_tracker_common_type	perm_fail	Failed to create user permission: $1
 plugin_tracker_common_type	name_requ	Name, Color, and Short Name are required.
 plugin_tracker_common_type	invalid_shortname	Invalid short name: $1. Please use only alphanumerical characters or an unreserved reference. Press the "Back" button and update this information.
 plugin_tracker_common_type	invalid_templ	Invalid project template
-plugin_tracker_common_type	invalid_tracker_tmpl	Invalid tracker template
 plugin_tracker_common_type	load_fail	failed to load the new tracker
 plugin_tracker_common_type	invalid_at	Invalid ArtifactTrackerID
 plugin_tracker_common_type	invalid_date	Delay date must not be in the past

@@ -35,6 +35,10 @@ class TrackerXmlImportFeedbackCollector
      * @var string[]
      */
     private $warns = [];
+    /**
+     * @var string[]
+     */
+    private $errors = [];
 
     public function __construct(LoggerInterface $logger)
     {
@@ -54,8 +58,21 @@ class TrackerXmlImportFeedbackCollector
     public function displayWarnings(LoggerInterface $logger) : void
     {
         foreach ($this->warns as $warn) {
-            $GLOBALS['Response']->addFeedback('warning', $warn);
+            $GLOBALS['Response']->addFeedback(\Feedback::WARN, $warn);
             $logger->warning($warn);
+        }
+    }
+
+    public function addErrors(string $error) : void
+    {
+        $this->errors[] = $error;
+    }
+
+    public function displayErrors(LoggerInterface $logger) : void
+    {
+        foreach ($this->errors as $error) {
+            $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $error);
+            $logger->warning($error);
         }
     }
 }

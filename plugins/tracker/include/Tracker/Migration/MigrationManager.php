@@ -27,13 +27,15 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\TrackerIsInvalidException;
 
 class Tracker_Migration_MigrationManager
 {
@@ -65,9 +67,20 @@ class Tracker_Migration_MigrationManager
 
     /** @var Tracker_Migration_MailLogger */
     private $mail_logger;
+    /**
+     * @var TrackerCreationDataChecker
+     */
+    private $creation_data_checker;
 
-    public function __construct(Tracker_SystemEventManager $system_event_manager, TrackerFactory $tracker_factory, Tracker_ArtifactFactory $artifact_factory, Tracker_FormElementFactory $form_element_factory, UserManager $user_manager, ProjectManager $project_manager)
-    {
+    public function __construct(
+        Tracker_SystemEventManager $system_event_manager,
+        TrackerFactory $tracker_factory,
+        Tracker_ArtifactFactory $artifact_factory,
+        Tracker_FormElementFactory $form_element_factory,
+        UserManager $user_manager,
+        ProjectManager $project_manager,
+        TrackerCreationDataChecker $creation_data_checker
+    ) {
         $this->system_event_manager = $system_event_manager;
         $this->tracker_factory      = $tracker_factory;
         $this->user_manager         = $user_manager;
@@ -83,6 +96,7 @@ class Tracker_Migration_MigrationManager
             $backend_logger,
             $this->mail_logger
         );
+        $this->creation_data_checker = $creation_data_checker;
     }
 
     /**
@@ -97,7 +111,9 @@ class Tracker_Migration_MigrationManager
      */
     public function askForMigration(Project $project, $tracker_id, $name, $description, $short_name)
     {
-        if (! $this->tracker_factory->validMandatoryInfoOnCreate($name, $short_name, $project->getGroupId())) {
+        try {
+            $this->creation_data_checker->checkAtProjectCreation((int)$project->getID(), $name, $short_name);
+        } catch (TrackerIsInvalidException $exception) {
             return false;
         }
 

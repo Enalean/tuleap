@@ -777,7 +777,6 @@ plugin_tracker_common_type	perm_fail	La création des permissions utilisateurs a
 plugin_tracker_common_type	name_requ	Le nom, la couleur et le nom court sont obligatoires.
 plugin_tracker_common_type	invalid_shortname	Nom court invalide&nbsp;: $1. Veuillez utiliser uniquement des caractères alphanumériques ou un nom court non réservé. Retournez à la page précédente et modifiez ce champ.
 plugin_tracker_common_type	invalid_templ	Le modèle de projet selectionné est invalide
-plugin_tracker_common_type	invalid_tracker_tmpl	Le modèle d'outil de suivi selectionné est invalide
 plugin_tracker_common_type	load_fail	impossible de charger le nouvel outil de suivi
 plugin_tracker_common_type	invalid_at	ArtifactTrackerID invalide
 plugin_tracker_common_type	invalid_date	La date de report ne doit pas se situer dans le passé

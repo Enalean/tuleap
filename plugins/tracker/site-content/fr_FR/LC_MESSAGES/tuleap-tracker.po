@@ -438,6 +438,9 @@ msgstr ""
 "Nom invalide : %s. Veuillez utiliser uniquement des caractères "
 "alphanumériques ou un nom court non réservé."
 
+msgid "Invalid project template."
+msgstr "Le modèle de projet selectionné est invalide."
+
 #, php-format
 msgid ""
 "Invalid short name: %s. Please use only alphanumerical characters or an "
@@ -445,6 +448,9 @@ msgid ""
 msgstr ""
 "Nom court invalide : %s. Veuillez utiliser uniquement des caractères "
 "alphanumériques ou un nom court non réservé."
+
+msgid "Invalid tracker template."
+msgstr "Le modèle d'outil de suivi selectionné est invalide"
 
 msgid "Last push"
 msgstr "Dernier push"
@@ -1065,9 +1071,6 @@ msgid ""
 msgstr ""
 "Le rapport a été trié sur cette colonne. Cette colonne ne permet cependant "
 "pas le tri. Le tri a donc été ignoré. Veuillez choisir une autre colonne."
-
-msgid "The request for the tracker creation is not valid."
-msgstr "La requête pour la création de l'outil de suivi n'est pas valide."
 
 msgid "The same value cannot be source and destination at the same time."
 msgstr ""

@@ -96,7 +96,7 @@ class TrackerDao extends DataAccessObject
                   AND group_id = $group_id
                   AND deletion_date IS NULL
                 ".$search_tv3;
-        return count($this->retrieve($sql));
+        return count($this->retrieve($sql))  > 0;
     }
 
    /**
@@ -116,6 +116,20 @@ class TrackerDao extends DataAccessObject
                   AND group_id = $project_id
                   AND deletion_date IS NULL";
         return $this->retrieve($sql);
+    }
+
+    public function doesTrackerNameAlreadyExist(string $public_name, int $project_id): bool
+    {
+        $public_name = $this->da->quoteSmart($public_name);
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT *
+                FROM tracker
+                WHERE name = $public_name
+                  AND group_id = $project_id
+                  AND deletion_date IS NULL";
+        $res = $this->retrieve($sql);
+        return $res && count($res) > 0;
     }
 
     public function markAsDeleted($id)
