@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\AccessToken;
 
+use DateTimeImmutable;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -64,6 +65,7 @@ class OAuth2AccessTokenVerifier
      * @throws OAuth2AccessTokenNotFoundException
      * @throws InvalidOAuth2AccessTokenException
      * @throws OAuth2AccessTokenMatchingUnknownUserException
+     * @throws OAuth2AccessTokenExpiredException
      * @throws OAuth2AccessTokenDoesNotHaveRequiredScopeException
      */
     public function getUser(SplitToken $access_token, AuthenticationScope $required_scope): \PFUser
@@ -73,9 +75,13 @@ class OAuth2AccessTokenVerifier
             throw new OAuth2AccessTokenNotFoundException($access_token->getID());
         }
 
-        $is_valid_access_key = $this->hasher->verifyHash($access_token->getVerificationString(), $row['verifier']);
-        if (! $is_valid_access_key) {
+        $is_valid_access_token = $this->hasher->verifyHash($access_token->getVerificationString(), $row['verifier']);
+        if (! $is_valid_access_token) {
             throw new InvalidOAuth2AccessTokenException();
+        }
+
+        if ($this->isAccessTokenExpired($row['expiration_date'])) {
+            throw new OAuth2AccessTokenExpiredException($access_token);
         }
 
         if (! $this->hasNeededScopes($access_token, $required_scope)) {
@@ -87,6 +93,13 @@ class OAuth2AccessTokenVerifier
             throw new OAuth2AccessTokenMatchingUnknownUserException($row['user_id']);
         }
         return $user;
+    }
+
+    private function isAccessTokenExpired(int $expiration_timestamp): bool
+    {
+        $current_time = new DateTimeImmutable();
+
+        return $expiration_timestamp <= $current_time->getTimestamp();
     }
 
     /**

@@ -33,6 +33,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\OAuth2Exception;
@@ -197,6 +198,33 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals(
             'Bearer realm="Tuleap OAuth2 Protected Resource" error="invalid_token" error_description="Cannot authenticate user"',
+            $response->getHeaderLine('WWW-Authenticate')
+        );
+    }
+
+    public function testAccessIsNotAllowedWhenTheGivenAccessTokenHasExpired(): void
+    {
+        $handler = \Mockery::mock(RequestHandlerInterface::class);
+        $handler->shouldNotReceive('handle');
+
+        $split_token = \Mockery::mock(SplitToken::class);
+        $split_token->shouldReceive('getID')->andReturn(1);
+        $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
+            $split_token
+        );
+
+        $this->access_token_verifier->shouldReceive('getUser')->andThrow(
+            new OAuth2AccessTokenExpiredException($split_token)
+        );
+
+        $response = $this->middleware->process(
+            $this->buildServerRequest('Bearer FooToken'),
+            $handler
+        );
+
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(
+            'Bearer realm="Tuleap OAuth2 Protected Resource" error="invalid_token" error_description="Access token has expired"',
             $response->getHeaderLine('WWW-Authenticate')
         );
     }

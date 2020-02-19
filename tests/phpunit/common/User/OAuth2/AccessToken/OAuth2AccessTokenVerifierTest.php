@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\AccessToken;
 
+use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
@@ -80,7 +81,11 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
         $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(
-            ['user_id' => $expected_user->getId(), 'verifier' => 'expected_hashed_verification_string']
+            [
+                'user_id'         => $expected_user->getId(),
+                'verifier'        => 'expected_hashed_verification_string',
+                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+            ]
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
         $required_scope = $this->buildRequiredScope();
@@ -118,6 +123,26 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $this->verifier->getUser($access_token, $this->buildRequiredScope());
     }
 
+    public function testVerificationFailsWhenTheAccessTokenHasExpired(): void
+    {
+        $access_token = new SplitToken(
+            5,
+            new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+        );
+
+        $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(
+            [
+                'user_id'         => 102,
+                'verifier'        => 'expected_hashed_verification_string',
+                'expiration_date' => (new DateTimeImmutable('yesterday'))->getTimestamp()
+            ]
+        );
+        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+
+        $this->expectException(OAuth2AccessTokenExpiredException::class);
+        $this->verifier->getUser($access_token, $this->buildRequiredScope());
+    }
+
     public function testVerificationFailsWhenTheUserCanNotBeFound(): void
     {
         $this->user_manager->shouldReceive('getUserById')->andReturn(null);
@@ -127,7 +152,11 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
         $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(
-            ['user_id' => 404, 'verifier' => 'expected_hashed_verification_string']
+            [
+                'user_id'         => 404,
+                'verifier'        => 'expected_hashed_verification_string',
+                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+            ]
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
         $required_scope = $this->buildRequiredScope();
@@ -150,7 +179,11 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
         $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(
-            ['user_id' => $expected_user->getId(), 'verifier' => 'expected_hashed_verification_string']
+            [
+                'user_id'         => $expected_user->getId(),
+                'verifier'        => 'expected_hashed_verification_string',
+                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+            ]
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
         $this->scope_retriever->shouldReceive('getScopesByAccessToken')->andReturn($scopes_matching_access_token);
