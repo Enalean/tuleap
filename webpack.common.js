@@ -36,6 +36,9 @@ module.exports = [
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/botmattermost/")
         ),
+        externals: {
+            tlp: "tlp"
+        },
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
