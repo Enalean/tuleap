@@ -59,13 +59,22 @@
 
 .tracker-creation-step-interactive-content {
     margin: 0 0 $tlp-spacing 0;
-    padding: $tlp-spacing 0;
     border-bottom: 1px solid $tlp-ui-border-dark;
 }
 
 .tracker-creation-starting-point-options {
     display: flex;
     flex-wrap: wrap;
+    margin: $tlp-spacing 0 0;
+}
+
+#tracker-creation-form {
+    width: 600px;
+}
+
+#tracker-name,
+#tracker-shortname {
+    width: 400px;
 }
 
 .tracker-creation-navigation-buttons {
@@ -80,6 +89,14 @@
     > .tracker-creation-previous-step-button {
         align-self: center;
         color: $tlp-ui-dimmed;
+
+        &:hover {
+            text-decoration: none;
+
+            > .tracker-creation-previous-step-button-text {
+                text-decoration: underline;
+            }
+        }
 
         > .fa {
             margin: 0 0 0 4px;

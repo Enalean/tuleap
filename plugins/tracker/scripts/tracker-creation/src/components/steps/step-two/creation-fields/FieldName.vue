@@ -25,7 +25,7 @@
         </label>
         <input
             type="text"
-            class="tlp-input"
+            class="tlp-input tlp-input-large"
             id="tracker-name"
             name="tracker-name"
             v-bind:value="tracker_to_be_created.name"

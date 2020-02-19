@@ -27,7 +27,7 @@
             pattern="^[a-zA-Z0-9_]+$"
             type="text"
             maxlength="25"
-            class="tlp-input"
+            class="tlp-input tlp-input-large"
             id="tracker-shortname"
             name="tracker-shortname"
             v-on:keyup="setTrackerShortName($event.target.value)"
