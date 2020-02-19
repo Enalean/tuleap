@@ -761,7 +761,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $unix_id;
     }
 
-    public function getAuthorizedKeysRaw(): string
+    public function getAuthorizedKeysRaw(): ?string
     {
         return $this->authorized_keys;
     }
@@ -772,23 +772,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getAuthorizedKeysArray(): array
     {
         return array_filter(explode(self::SSH_KEY_SEPARATOR, $this->authorized_keys));
-    }
-
-    /**
-     *
-     * @deprecated Flag methods are evil
-     * @see User::getAuthorizedKeysRaw
-     * @see User::getAuthorizedKeysArray
-     *
-     * @return string|array
-     */
-    public function getAuthorizedKeys($split = false)
-    {
-        if ($split) {
-            return $this->getAuthorizedKeysArray();
-        } else {
-            return $this->authorized_keys;
-        }
     }
 
     /**

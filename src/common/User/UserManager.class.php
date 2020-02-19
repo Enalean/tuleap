@@ -951,7 +951,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $user->getMailSiteUpdates(),
             $user->getMailVA(),
             $user->getStickyLogin(),
-            $user->getAuthorizedKeys(),
+            $user->getAuthorizedKeysRaw(),
             $user->getNewMail(),
             $user->getTimezone(),
             $user->getLanguageID(),
