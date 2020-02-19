@@ -22,10 +22,11 @@
         <label class="tlp-label" for="tracker-description" v-translate>Description</label>
         <textarea
             type="text"
-            class="tlp-textarea"
+            class="tlp-textarea tlp-textarea-large"
             id="tracker-description"
             name="tracker-description"
             v-bind:placeholder="placeholder"
+            rows="4"
         ></textarea>
     </div>
 </template>

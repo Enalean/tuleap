@@ -25,14 +25,14 @@
             class="tracker-creation-previous-step-button"
             data-test="button-back"
         >
-            <translate>Back</translate>
             <i class="fa fa-long-arrow-left"></i>
+            <span class="tracker-creation-previous-step-button-text" v-translate>Back</span>
         </router-link>
 
         <button
             v-if="nextStepName"
             v-on:click="goToNextStepIfGood"
-            class="tlp-button-primary"
+            class="tlp-button-primary tlp-button-large"
             type="button"
             v-bind:class="{ 'tlp-button-disabled': !is_ready_for_step_2 }"
             v-bind:disabled="!is_ready_for_step_2"
@@ -43,7 +43,7 @@
         </button>
         <button
             v-else
-            class="tlp-button-primary tracker-creation-submit-button"
+            class="tlp-button-primary tlp-button-large tracker-creation-submit-button"
             type="submit"
             form="tracker-creation-form"
             data-test="button-create-my-tracker"
