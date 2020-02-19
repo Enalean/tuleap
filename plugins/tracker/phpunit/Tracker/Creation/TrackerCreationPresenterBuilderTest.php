@@ -46,9 +46,14 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
     private $project_manager;
 
     /**
-     * @var \Project
+     * @var \Project|\Mockery\MockInterface|\Project
      */
     private $current_project;
+
+    /**
+     * @var \CSRFSynchronizerToken|\Mockery\MockInterface|\CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
     protected function setUp(): void
     {
@@ -58,15 +63,20 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->current_project = \Mockery::mock(\Project::class);
 
         $this->current_project->shouldReceive('getUnixNameLowerCase')->andReturn('my-project-name');
+
+        $this->csrf_token = \Mockery::mock(\CSRFSynchronizerToken::class);
+
+        $this->csrf_token->shouldReceive('getTokenName')->andReturn('challenge');
+        $this->csrf_token->shouldReceive('getToken')->andReturn('12345abcdef');
     }
 
     public function testItReturnsAnEmptyArrayWhenPlatformHasNoProjectTemplates(): void
     {
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([]);
 
-        $presenter = $this->builder->build($this->current_project);
+        $presenter = $this->builder->build($this->current_project, $this->csrf_token);
 
-        $expected_template = new TrackerCreationPresenter([], $this->current_project);
+        $expected_template = new TrackerCreationPresenter([], $this->current_project, $this->csrf_token);
         $this->assertEquals($expected_template, $presenter);
     }
 
@@ -77,9 +87,9 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
         $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn(false);
 
-        $presenter = $this->builder->build($this->current_project);
+        $presenter = $this->builder->build($this->current_project, $this->csrf_token);
 
-        $expected_template = new TrackerCreationPresenter([], $this->current_project);
+        $expected_template = new TrackerCreationPresenter([], $this->current_project, $this->csrf_token);
         $this->assertEquals($expected_template, $presenter);
     }
 
@@ -90,9 +100,9 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
         $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn([]);
 
-        $presenter = $this->builder->build($this->current_project);
+        $presenter = $this->builder->build($this->current_project, $this->csrf_token);
 
-        $expected_template = new TrackerCreationPresenter([], $this->current_project);
+        $expected_template = new TrackerCreationPresenter([], $this->current_project, $this->csrf_token);
         $this->assertEquals($expected_template, $presenter);
     }
 
@@ -124,9 +134,9 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [$tracker_bugs, $tracker_epics]
         );
 
-        $expected_template = new TrackerCreationPresenter($project_template, $this->current_project);
+        $expected_template = new TrackerCreationPresenter($project_template, $this->current_project, $this->csrf_token);
 
-        $presenter = $this->builder->build($this->current_project);
+        $presenter = $this->builder->build($this->current_project, $this->csrf_token);
 
         $this->assertEquals($expected_template, $presenter);
     }

@@ -43,7 +43,7 @@ class TrackerCreationPresenterBuilder
         $this->tracker_dao     = $tracker_dao;
     }
 
-    public function build(\Project $current_project): TrackerCreationPresenter
+    public function build(\Project $current_project, \CSRFSynchronizerToken $csrf): TrackerCreationPresenter
     {
         $project_templates = [];
         foreach ($this->project_manager->getSiteTemplates() as $project) {
@@ -63,6 +63,6 @@ class TrackerCreationPresenterBuilder
             );
         }
 
-        return new TrackerCreationPresenter($project_templates, $current_project);
+        return new TrackerCreationPresenter($project_templates, $current_project, $csrf);
     }
 }

@@ -36,9 +36,18 @@ class TrackerCreationPresenter
      */
     public $project_unix_name;
 
-    public function __construct(array $project_templates, Project $current_project)
+    /**
+     * @var string
+     */
+    public $csrf_token;
+
+    public function __construct(array $project_templates, Project $current_project, \CSRFSynchronizerToken $csrf)
     {
         $this->project_templates = json_encode($project_templates, JSON_THROW_ON_ERROR);
         $this->project_unix_name = $current_project->getUnixNameLowerCase();
+        $this->csrf_token        = json_encode([
+            'name' => $csrf->getTokenName(),
+            'value' => $csrf->getToken()
+        ]);
     }
 }
