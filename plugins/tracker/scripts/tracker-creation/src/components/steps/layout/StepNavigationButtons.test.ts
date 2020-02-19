@@ -28,7 +28,8 @@ describe("StepNavigationButtons", () => {
     async function getWrapper(
         props: {},
         is_ready_for_step_2 = true,
-        is_ready_to_submit = true
+        is_ready_to_submit = true,
+        has_form_been_submitted = false
     ): Promise<Wrapper<StepNavigationButtons>> {
         const router: VueRouter = createRouter("my-project");
 
@@ -37,6 +38,9 @@ describe("StepNavigationButtons", () => {
         return shallowMount(StepNavigationButtons, {
             mocks: {
                 $store: createStoreMock({
+                    state: {
+                        has_form_been_submitted
+                    },
                     getters: {
                         is_ready_for_step_2,
                         is_ready_to_submit
@@ -75,6 +79,14 @@ describe("StepNavigationButtons", () => {
         const submit_button = wrapper.find("[data-test=button-create-my-tracker]");
 
         expect(submit_button.attributes("disabled")).toBe("disabled");
+    });
+
+    it("Disables the [Create my tracker] submit button when the form has been submitted", async () => {
+        const wrapper = await getWrapper({ previousStepName: "step-1" }, false, false, true);
+        const submit_button = wrapper.find("[data-test=button-create-my-tracker]");
+
+        expect(submit_button.attributes("disabled")).toBe("disabled");
+        expect(submit_button.find("i.fa-spin").exists()).toBe(true);
     });
 
     it("Disables the [next ->] button when the creation is not ready for the step 2 and to click on it does nothing", async () => {

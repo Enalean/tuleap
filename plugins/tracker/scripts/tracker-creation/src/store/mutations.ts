@@ -52,3 +52,7 @@ export function setTrackerName(state: State, name: string): void {
 export function setTrackerShortName(state: State, shortname: string): void {
     state.tracker_to_be_created.shortname = shortname;
 }
+
+export function setCreationFormHasBeenSubmitted(state: State): void {
+    state.has_form_been_submitted = true;
+}

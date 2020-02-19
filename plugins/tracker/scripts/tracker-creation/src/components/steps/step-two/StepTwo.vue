@@ -23,7 +23,11 @@
             <step-two-info />
         </template>
         <template v-slot:interactive_content>
-            <form v-on:submit="setFormHasBeenSubmitted" method="post" id="tracker-creation-form">
+            <form
+                v-on:submit="setCreationFormHasBeenSubmitted"
+                method="post"
+                id="tracker-creation-form"
+            >
                 <field-name />
                 <field-shortname />
                 <field-description />
@@ -34,6 +38,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
+import { Mutation, State } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import StepLayout from "../layout/StepLayout.vue";
 import StepTwoInfo from "./StepTwoInfo.vue";
@@ -53,7 +58,11 @@ import FieldTrackerTemplateId from "./creation-fields/FieldTrackerTemplateId.vue
     }
 })
 export default class StepTwo extends Vue {
-    private has_form_been_submitted = false;
+    @Mutation
+    readonly setCreationFormHasBeenSubmitted!: () => void;
+
+    @State
+    readonly has_form_been_submitted!: boolean;
 
     mounted(): void {
         window.addEventListener("beforeunload", this.beforeUnload);
@@ -61,10 +70,6 @@ export default class StepTwo extends Vue {
 
     beforeDestroy(): void {
         window.removeEventListener("beforeunload", this.beforeUnload);
-    }
-
-    setFormHasBeenSubmitted(): void {
-        this.has_form_been_submitted = true;
     }
 
     beforeUnload(event: Event): void {
