@@ -16,56 +16,44 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\Builders;
+namespace Tuleap\OAuth2Server\App;
 
-use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetCollection;
-use Widget_Static;
-
-final class TestLayout extends BaseLayout
+/**
+ * @psalm-immutable
+ */
+final class OAuth2App
 {
     /**
-     * @var LayoutInspector
+     * @var int
      */
-    private $inspector;
+    private $id;
+    /**
+     * @var string
+     */
+    private $name;
+    /**
+     * @var \Project
+     */
+    private $project;
 
-    public function __construct(LayoutInspector $inspector)
+    public function __construct(int $id, string $name, \Project $project)
     {
-        $this->css_assets = new CssAssetCollection([]);
-        $this->inspector = $inspector;
+        $this->id = $id;
+        $this->name = $name;
+        $this->project = $project;
     }
 
-    public function header(array $params)
+    public function getId(): int
     {
+        return $this->id;
     }
 
-    public function footer(array $params)
+    public function getName(): string
     {
-    }
-
-    public function displayStaticWidget(Widget_Static $widget)
-    {
-    }
-
-    public function includeCalendarScripts()
-    {
-    }
-
-    public function includeFooterJavascriptFile($file)
-    {
-    }
-
-    protected function getUser()
-    {
-    }
-
-    public function redirect($url)
-    {
-        $this->inspector->setRedirectUrl($url);
+        return $this->name;
     }
 }

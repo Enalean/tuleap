@@ -25,13 +25,24 @@
                         <tr>
                             <td>{{ name }}</td>
                             <td class="tlp-table-cell-actions">
-                                <button class="tlp-button-danger tlp-button-outline" disabled>
+                                <button
+                                    class="tlp-button-danger tlp-button-outline oauth2-server-delete-client-button"
+                                    data-app-id="{{ id }}"
+                                    data-app-name="{{ name }}"
+                                >
                                     <i class="fa fa-trash-o tlp-button-icon"></i>
                                     {{# dgettext }}tuleap-oauth2_server | Delete{{/ dgettext }}
                                 </button>
                             </td>
                         </tr>
                     {{/ apps }}
+                    {{^ apps }}
+                        <tr>
+                            <td colspan="2" class="tlp-table-cell-empty">
+                                {{# dgettext }}tuleap-oauth2_server | No App have been defined yet. Start by adding one. {{/ dgettext }}
+                            </td>
+                        </tr>
+                    {{/apps}}
                     </tbody>
                 </table>
             </section>
@@ -81,3 +92,4 @@
         </button>
     </div>
 </form>
+{{> app-delete-modal }}

@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,23 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+const base_config = require("../../tests/jest/jest.base.config.js");
 
-namespace Tuleap\OAuth2Server\ProjectAdmin;
-
-/**
- * @psalm-immutable
- */
-final class AppPresenter
-{
-    /** @var int */
-    public $id;
-    /** @var string */
-    public $name;
-
-    public function __construct(int $id, string $name)
-    {
-        $this->id   = $id;
-        $this->name = $name;
-    }
-}
+module.exports = {
+    ...base_config,
+    displayName: "oauth2_server"
+};

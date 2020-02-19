@@ -17,17 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal } from "tlp";
+import { setupAddModal, setupDeleteButtons } from "./modals";
+import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const button = document.getElementById("oauth2-server-add-client-button");
-    const modal_element = document.getElementById("oauth2-server-add-client-modal");
-    if (!button || !modal_element) {
-        return;
+document.addEventListener("DOMContentLoaded", async () => {
+    const language = document.body.dataset.userLocale;
+    if (language === undefined) {
+        throw new Error("Not able to find the user language.");
     }
 
-    const modal = createModal(modal_element, { keyboard: true });
-    button.addEventListener("click", () => {
-        modal.show();
-    });
+    const gettext_provider = await initGettext(language, "tuleap-oauth2_server", locale =>
+        import(/* webpackChunkName: "project-administration-po-" */ `../po/${locale}.po`)
+    );
+    setupAddModal(document);
+    setupDeleteButtons(document, gettext_provider);
 });

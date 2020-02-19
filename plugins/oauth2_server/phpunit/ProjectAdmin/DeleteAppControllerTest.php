@@ -27,17 +27,16 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppDao;
-use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class AddAppControllerTest extends TestCase
+final class DeleteAppControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var AddAppController */
+    /** @var DeleteAppController */
     private $controller;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
@@ -62,7 +61,7 @@ final class AddAppControllerTest extends TestCase
         $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
         $this->app_dao               = M::mock(AppDao::class);
         $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller            = new AddAppController(
+        $this->controller            = new DeleteAppController(
             $this->project_retriever,
             $this->administrator_checker,
             $this->app_dao,
@@ -70,12 +69,12 @@ final class AddAppControllerTest extends TestCase
         );
     }
 
-    public function testProcessRedirectsWithFeedbackWhenNameIsOmitted(): void
+    public function testProcessRedirectsWithErrorWhenAppIdIsOmitted(): void
     {
         $current_user = UserTestBuilder::aUser()->build();
-        $request      = HTTPRequestBuilder::get()->withUser($current_user)->withParam('name', '')->build();
+        $request      = HTTPRequestBuilder::get()->withUser($current_user)->withParam('app_id', '')->build();
         $layout       = M::mock(BaseLayout::class);
-        $this->mockValidProjectAndUserIsProjectAdmin($current_user);
+        $this->mockValidProjectAndUserIsProjecTAdmin($current_user);
 
         $layout->shouldReceive('addFeedback')
             ->once()
@@ -83,24 +82,27 @@ final class AddAppControllerTest extends TestCase
         $layout->shouldReceive('redirect')
             ->once()
             ->with('/plugins/oauth2_server/project/102/admin');
-        $this->app_dao->shouldNotReceive('create');
+        $this->app_dao->shouldNotReceive('delete');
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
     }
 
-    public function testProcessCreatesAppAndRedirects(): void
+    public function testProcessDeletesAppAndRedirects(): void
     {
         $current_user = UserTestBuilder::aUser()->build();
-        $request      = HTTPRequestBuilder::get()->withUser($current_user)->withParam('name', 'overdeliciously')->build();
+        $request      = HTTPRequestBuilder::get()->withUser($current_user)->withParam('app_id', '12')->build();
         $layout       = M::mock(BaseLayout::class);
-        $this->mockValidProjectAndUserIsProjectAdmin($current_user);
+        $this->mockValidProjectAndUserIsProjecTAdmin($current_user);
 
-        $this->app_dao->shouldReceive('create')
+        $layout->shouldReceive('addFeedback')
             ->once()
-            ->with(M::type(NewOAuth2App::class));
+            ->with(\Feedback::INFO, M::type('string'));
         $layout->shouldReceive('redirect')
             ->once()
             ->with('/plugins/oauth2_server/project/102/admin');
+        $this->app_dao->shouldReceive('delete')
+            ->once()
+            ->with(12);
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
     }
@@ -112,10 +114,10 @@ final class AddAppControllerTest extends TestCase
             ->andReturn(102)
             ->getMock();
 
-        $this->assertSame('/plugins/oauth2_server/project/102/admin/add-app', AddAppController::getUrl($project));
+        $this->assertSame('/plugins/oauth2_server/project/102/admin/delete-app', DeleteAppController::getUrl($project));
     }
 
-    private function mockValidProjectAndUserIsProjectAdmin(\PFUser $current_user): void
+    private function mockValidProjectAndUserIsProjecTAdmin(\PFUser $current_user): void
     {
         $project = M::mock(\Project::class)->shouldReceive('getID')
             ->once()

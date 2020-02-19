@@ -20,35 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\ProjectAdmin;
+namespace Tuleap\OAuth2Server\App;
 
-use Tuleap\OAuth2Server\App\AppDao;
-use Tuleap\OAuth2Server\App\AppFactory;
-
-class ProjectAdminPresenterBuilder
+class AppFactory
 {
     /**
-     * @var AppFactory
+     * @var AppDao
      */
-    private $app_factory;
+    private $app_dao;
 
-    public function __construct(AppFactory $app_factory)
+    public function __construct(AppDao $app_dao)
     {
-        $this->app_factory = $app_factory;
+        $this->app_dao = $app_dao;
     }
 
-    public static function buildSelf(): self
+    /**
+     * @return OAuth2App[]
+     */
+    public function getAppsForProject(\Project $project): array
     {
-        return new self(new AppFactory(new AppDao()));
-    }
-
-    public function build(\CSRFSynchronizerToken $csrf_token, \Project $project): ProjectAdminPresenter
-    {
-        $apps       = $this->app_factory->getAppsForProject($project);
-        $presenters = [];
-        foreach ($apps as $app) {
-            $presenters[] = new AppPresenter($app->getId(), $app->getName());
+        $apps = [];
+        $rows = $this->app_dao->searchByProject($project);
+        foreach ($rows as $row) {
+            $apps[] = new OAuth2App($row['id'], $row['name'], $project);
         }
-        return new ProjectAdminPresenter($presenters, $csrf_token, $project);
+        return $apps;
     }
 }

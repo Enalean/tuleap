@@ -25,3 +25,4 @@ export function initGettext(
     domain: string,
     load_translations_callback: (locale: string) => Promise<POFile>
 ): Promise<GetText>;
+export { GetText };

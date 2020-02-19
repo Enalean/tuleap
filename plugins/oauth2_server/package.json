@@ -4,11 +4,18 @@
     "homepage": "https://tuleap.org",
     "license": "GPL-2.0-or-later",
     "private": true,
+    "dependencies": {
+        "sprintf-js": "^1.1.2"
+    },
+    "devDependencies": {
+        "@types/sprintf-js": "^1.1.2"
+    },
     "config": {
         "bin": "../../node_modules/.bin"
     },
     "scripts": {
         "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-        "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+        "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+        "test": "$npm_package_config_bin/jest"
     }
 }

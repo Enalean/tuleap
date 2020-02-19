@@ -22,23 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppDao;
-use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ProjectRetriever;
 
-final class AddAppController implements DispatchableWithRequest
+final class DeleteAppController implements DispatchableWithRequest
 {
-    /** @var ProjectRetriever */
+
+    /**
+     * @var ProjectRetriever
+     */
     private $project_retriever;
-    /** @var ProjectAdministratorChecker */
+    /**
+     * @var ProjectAdministratorChecker
+     */
     private $administrator_checker;
-    /** @var AppDao */
+    /**
+     * @var AppDao
+     */
     private $app_dao;
-    /** @var \CSRFSynchronizerToken */
+    /**
+     * @var \CSRFSynchronizerToken
+     */
     private $csrf_token;
 
     public function __construct(
@@ -63,12 +70,12 @@ final class AddAppController implements DispatchableWithRequest
         );
     }
 
-    public static function getUrl(\Project $project): string
+    public static function getUrl(\Project $project)
     {
-        return sprintf('/plugins/oauth2_server/project/%d/admin/add-app', $project->getID());
+        return sprintf('/plugins/oauth2_server/project/%d/admin/delete-app', $project->getID());
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
@@ -76,16 +83,18 @@ final class AddAppController implements DispatchableWithRequest
         $list_clients_url = ListAppsController::getUrl($project);
         $this->csrf_token->check($list_clients_url);
 
-        $app_name = (string) $request->getValidated('name', 'String', '');
-        if ($app_name === '') {
-            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-oauth2_server', 'App name is required.'));
+        $app_id = (int) $request->getValidated('app_id', 'uint', 0);
+        if (! $app_id) {
+            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-oauth2_server', "The App's ID is required."));
             $layout->redirect($list_clients_url);
             return;
         }
+        $this->app_dao->delete($app_id);
 
-        $app_to_be_saved = new NewOAuth2App($app_name, $project);
-        $this->app_dao->create($app_to_be_saved);
-
+        $layout->addFeedback(
+            \Feedback::INFO,
+            dgettext('tuleap-oauth2_server', 'The App has been successfully deleted.')
+        );
         $layout->redirect($list_clients_url);
     }
 }
