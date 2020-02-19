@@ -78,6 +78,12 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $project = $this->getProject($variables);
         $user    = $this->user_manager->getCurrentUser();
 
+        $csrf = new \CSRFSynchronizerToken(
+            $this->getRouteToSelf($project)
+        );
+
+        $csrf->check();
+
         $this->permission_checker->checkANewTrackerCanBeCreated($project, $user);
 
         $creation_request = new TrackerCreationRequest($request);
@@ -129,5 +135,10 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
     private function redirectToTrackerAdmin(\Tracker $tracker): void
     {
         $GLOBALS['Response']->redirect($tracker->getAdministrationUrl());
+    }
+
+    private function getRouteToSelf(Project $project) : string
+    {
+        return '/' . urlencode($project->getUnixNameLowerCase()) . '/tracker/new-information';
     }
 }

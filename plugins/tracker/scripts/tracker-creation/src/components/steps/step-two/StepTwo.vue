@@ -28,6 +28,7 @@
                 method="post"
                 id="tracker-creation-form"
             >
+                <field-csrf-token />
                 <field-name />
                 <field-shortname />
                 <field-description />
@@ -46,6 +47,7 @@ import FieldName from "./creation-fields/FieldName.vue";
 import FieldShortname from "./creation-fields/FieldShortname.vue";
 import FieldDescription from "./creation-fields/FieldDescription.vue";
 import FieldTrackerTemplateId from "./creation-fields/FieldTrackerTemplateId.vue";
+import FieldCsrfToken from "./creation-fields/FieldCSRFToken.vue";
 
 @Component({
     components: {
@@ -54,7 +56,8 @@ import FieldTrackerTemplateId from "./creation-fields/FieldTrackerTemplateId.vue
         FieldName,
         FieldShortname,
         FieldDescription,
-        FieldTrackerTemplateId
+        FieldTrackerTemplateId,
+        FieldCsrfToken
     }
 })
 export default class StepTwo extends Vue {

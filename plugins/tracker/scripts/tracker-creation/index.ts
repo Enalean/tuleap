@@ -22,7 +22,7 @@ import Vuex from "vuex";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { createStore } from "./src/store/index";
-import { CreationOptions, ProjectTemplate, State } from "./src/store/type";
+import { CreationOptions, CSRFToken, ProjectTemplate, State } from "./src/store/type";
 import { createRouter } from "./src/router";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -38,6 +38,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AppComponent = Vue.extend(App);
     Vue.use(Vuex);
 
+    const csrf_token: CSRFToken | null =
+        typeof vue_mount_point.dataset.csrfToken !== "undefined"
+            ? JSON.parse(vue_mount_point.dataset.csrfToken)
+            : null;
+
+    if (!csrf_token) {
+        throw new Error("No CSRF token");
+    }
+
     const project_templates: Array<ProjectTemplate> =
         typeof vue_mount_point.dataset.projectTemplates !== "undefined"
             ? JSON.parse(vue_mount_point.dataset.projectTemplates)
@@ -50,6 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const initial_state: State = {
+        csrf_token,
         project_templates,
         active_option: CreationOptions.NONE_YET,
         selected_tracker_template: null,

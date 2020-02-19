@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Tracker\Creation;
 
+use CSRFSynchronizerToken;
 use HTTPRequest;
 use Project;
 use trackerPlugin;
@@ -115,7 +116,10 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
         $this->renderer_factory->getRenderer($templates_dir)
             ->renderToPage(
                 'tracker-creation-app',
-                $this->presenter_builder->build($project)
+                $this->presenter_builder->build(
+                    $project,
+                    $this->getCSRFTokenForSubmition($project)
+                )
             );
 
         $js_assets = new IncludeAssets(
@@ -139,5 +143,14 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
     public function getProject(array $variables) : Project
     {
         return $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);
+    }
+
+    private function getCSRFTokenForSubmition(Project $project): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(
+            '/'
+            . urlencode($project->getUnixNameLowerCase())
+            . '/tracker/new-information'
+        );
     }
 }

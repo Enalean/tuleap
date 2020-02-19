@@ -18,11 +18,17 @@
  */
 
 export interface State {
+    csrf_token: CSRFToken;
     project_templates: ProjectTemplate[];
     active_option: CreationOptions;
     selected_tracker_template: Tracker | null;
     tracker_to_be_created: TrackerToBeCreatedMandatoryData;
     has_form_been_submitted: boolean;
+}
+
+export interface CSRFToken {
+    name: string;
+    value: string;
 }
 
 export interface ProjectTemplate {
