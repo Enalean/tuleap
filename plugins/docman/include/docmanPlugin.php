@@ -1639,7 +1639,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 new PostFolderImporter(),
                 new PostDoNothingImporter(),
                 $logger
-            )
+            ),
+            new XML_RNGValidator()
         );
         $xml_importer->import(
             $params['xml_content']->docman,

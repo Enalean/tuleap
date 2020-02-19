@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="docman">
+    <element name="item">
+      <ref name="docman_folder"/>
+    </element>
+  </define>
+  <define name="docman_item">
+    <element name="properties">
+      <element name="title">
+        <data type="string"/>
+      </element>
+    </element>
+  </define>
+  <define name="docman_folder">
+    <attribute name="type">
+      <value>folder</value>
+    </attribute>
+    <ref name="docman_item"/>
+    <zeroOrMore>
+      <element name="item">
+        <choice>
+          <ref name="docman_folder"/>
+          <ref name="docman_file"/>
+          <ref name="docman_embedded"/>
+          <ref name="docman_wiki"/>
+          <ref name="docman_link"/>
+          <ref name="docman_empty"/>
+        </choice>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="docman_empty">
+    <attribute name="type">
+      <value>empty</value>
+    </attribute>
+    <ref name="docman_item"/>
+  </define>
+  <define name="docman_link">
+    <attribute name="type">
+      <value>link</value>
+    </attribute>
+    <ref name="docman_item"/>
+    <element name="url">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="docman_wiki">
+    <attribute name="type">
+      <value>wiki</value>
+    </attribute>
+    <ref name="docman_item"/>
+    <element name="pagename">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="docman_file">
+    <attribute name="type">
+      <value>file</value>
+    </attribute>
+    <ref name="docman_item"/>
+    <ref name="docman_file_versions"/>
+  </define>
+  <define name="docman_embedded">
+    <attribute name="type">
+      <value>embeddedfile</value>
+    </attribute>
+    <ref name="docman_item"/>
+    <ref name="docman_file_versions"/>
+  </define>
+  <define name="docman_file_versions">
+    <element name="versions">
+      <zeroOrMore>
+        <element name="version">
+          <element name="filename">
+            <data type="string"/>
+          </element>
+          <element name="filetype">
+            <data type="string"/>
+          </element>
+          <element name="filesize">
+            <data type="string"/>
+          </element>
+          <element name="content">
+            <data type="string"/>
+          </element>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+</grammar>

@@ -32,6 +32,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\XML\Import\NodeImporter;
+use XML_RNGValidator;
 
 class XMLImporterTest extends TestCase
 {
@@ -43,6 +44,7 @@ class XMLImporterTest extends TestCase
         $project       = Mockery::mock(Project::class)->shouldReceive(['getGroupId' => 113])->getMock();
         $logger        = Mockery::mock(LoggerInterface::class);
         $node_importer = Mockery::mock(NodeImporter::class);
+        $rng_validator = Mockery::mock(XML_RNGValidator::class);
 
         $user = Mockery::mock(PFUser::class);
         $node = new SimpleXMLElement(
@@ -53,6 +55,10 @@ class XMLImporterTest extends TestCase
             </docman>
             EOS
         );
+
+        $rng_validator
+            ->shouldReceive('validate')
+            ->once();
 
         $parent_item = Mockery::mock(Docman_Item::class);
         $item_factory->shouldReceive('getRoot')->with(113)->once()->andReturn($parent_item);
@@ -69,7 +75,7 @@ class XMLImporterTest extends TestCase
                 $user
             )->once();
 
-        $importer = new XMLImporter($item_factory, $project, $logger, $node_importer);
+        $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
         $importer->import($node, $user);
     }
 
@@ -79,6 +85,7 @@ class XMLImporterTest extends TestCase
         $project       = Mockery::mock(Project::class)->shouldReceive(['getGroupId' => 113])->getMock();
         $logger        = Mockery::mock(LoggerInterface::class);
         $node_importer = Mockery::mock(NodeImporter::class);
+        $rng_validator = Mockery::mock(XML_RNGValidator::class);
 
         $user = Mockery::mock(PFUser::class);
         $node = new SimpleXMLElement(
@@ -90,11 +97,43 @@ class XMLImporterTest extends TestCase
             EOS
         );
 
+        $rng_validator
+            ->shouldReceive('validate')
+            ->once();
+
         $item_factory->shouldReceive('getRoot')->with(113)->once()->andReturnNull();
         $node_importer->shouldReceive('import')->never();
         $logger->shouldReceive('error')->with('Unable to find a root element in project #113')->once();
 
-        $importer = new XMLImporter($item_factory, $project, $logger, $node_importer);
+        $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
+        $importer->import($node, $user);
+    }
+
+    public function testItRaisesParseExceptionWhenXMLIsInvalid(): void
+    {
+        $item_factory  = Mockery::mock(Docman_ItemFactory::class);
+        $project       = Mockery::mock(Project::class)->shouldReceive(['getGroupId' => 113])->getMock();
+        $logger        = Mockery::mock(LoggerInterface::class);
+        $node_importer = Mockery::mock(NodeImporter::class);
+        $rng_validator = Mockery::mock(XML_RNGValidator::class);
+
+        $user = Mockery::mock(PFUser::class);
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <docman>
+                <item type="empty" />
+            </docman>
+            EOS
+        );
+
+        $rng_validator
+            ->shouldReceive('validate')
+            ->once()
+            ->andThrow(Mockery::mock(\XML_ParseException::class));
+
+        $this->expectException(\XML_ParseException::class);
+        $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
         $importer->import($node, $user);
     }
 }
