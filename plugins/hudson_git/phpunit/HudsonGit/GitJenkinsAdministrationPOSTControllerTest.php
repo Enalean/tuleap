@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit;
 
+use CSRFSynchronizerToken;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
@@ -75,6 +76,11 @@ class GitJenkinsAdministrationPOSTControllerTest extends TestCase
      */
     private $git_jenkins_administration_server_adder;
 
+    /**
+     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $csrf_token;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -82,11 +88,13 @@ class GitJenkinsAdministrationPOSTControllerTest extends TestCase
         $this->project_manager                         = Mockery::mock(ProjectManager::class);
         $this->git_permissions_manager                 = Mockery::mock(GitPermissionsManager::class);
         $this->git_jenkins_administration_server_adder = Mockery::mock(GitJenkinsAdministrationServerAdder::class);
+        $this->csrf_token                              = Mockery::mock(CSRFSynchronizerToken::class);
 
         $this->controller = new GitJenkinsAdministrationPOSTController(
             $this->project_manager,
             $this->git_permissions_manager,
-            $this->git_jenkins_administration_server_adder
+            $this->git_jenkins_administration_server_adder,
+            $this->csrf_token
         );
 
         $this->layout  = Mockery::mock(BaseLayout::class);
@@ -95,6 +103,8 @@ class GitJenkinsAdministrationPOSTControllerTest extends TestCase
 
         $this->project->shouldReceive('isError')->andReturnFalse();
         $this->project->shouldReceive('getUnixName')->andReturn('test');
+
+        $this->csrf_token->shouldReceive('check');
     }
 
     public function testProcessThrowsNotFoundWhenProjectIdIsNotProvided(): void

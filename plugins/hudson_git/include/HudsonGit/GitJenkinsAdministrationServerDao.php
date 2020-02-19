@@ -60,4 +60,23 @@ class GitJenkinsAdministrationServerDao extends DataAccessObject
 
         return count($rows) > 0;
     }
+
+    public function getJenkinsServerById(int $jenkins_server_id): ?array
+    {
+        $sql = "SELECT *
+                FROM plugin_hudson_git_project_server
+                WHERE id = ?";
+
+        return $this->getDB()->row($sql, $jenkins_server_id);
+    }
+
+    public function deleteJenkinsServer(int $jenkins_server_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_hudson_git_project_server',
+            [
+                'id' => $jenkins_server_id
+            ]
+        );
+    }
 }

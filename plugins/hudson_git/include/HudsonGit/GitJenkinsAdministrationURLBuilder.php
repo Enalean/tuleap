@@ -30,4 +30,14 @@ class GitJenkinsAdministrationURLBuilder
     {
         return GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/administration/jenkins';
     }
+
+    public static function buildAddUrl(): string
+    {
+        return "/jenkins_server/";
+    }
+
+    public static function buildDeleteUrl(): string
+    {
+        return "/jenkins_server/delete";
+    }
 }

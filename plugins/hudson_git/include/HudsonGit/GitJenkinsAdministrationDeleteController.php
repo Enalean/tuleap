@@ -1,0 +1,116 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\HudsonGit;
+
+use CSRFSynchronizerToken;
+use Feedback;
+use GitPermissionsManager;
+use GitPlugin;
+use HTTPRequest;
+use ProjectManager;
+use RuntimeException;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
+
+class GitJenkinsAdministrationDeleteController implements DispatchableWithRequest
+{
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var GitPermissionsManager
+     */
+    private $git_permissions_manager;
+
+    /**
+     * @var GitJenkinsAdministrationServerFactory
+     */
+    private $git_jenkins_administration_server_factory;
+
+    /**
+     * @var GitJenkinsAdministrationServerDeleter
+     */
+    private $git_jenkins_administration_server_deleter;
+
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
+
+    public function __construct(
+        ProjectManager $project_manager,
+        GitPermissionsManager $git_permissions_manager,
+        GitJenkinsAdministrationServerFactory $git_jenkins_administration_server_factory,
+        GitJenkinsAdministrationServerDeleter $git_jenkins_administration_server_deleter,
+        CSRFSynchronizerToken $csrf_token
+    ) {
+        $this->project_manager                           = $project_manager;
+        $this->git_permissions_manager                   = $git_permissions_manager;
+        $this->git_jenkins_administration_server_factory = $git_jenkins_administration_server_factory;
+        $this->git_jenkins_administration_server_deleter = $git_jenkins_administration_server_deleter;
+        $this->csrf_token                                = $csrf_token;
+    }
+
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    {
+        if (! $request->exist('jenkins_server_id')) {
+            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected jenkins server ID not found"));
+        }
+
+        $jenkins_server_id = (int) $request->get("jenkins_server_id");
+        $jenkins_server    = $this->git_jenkins_administration_server_factory->getJenkinsServerById($jenkins_server_id);
+
+        if ($jenkins_server === null) {
+            throw new NotFoundException(dgettext("tuleap-git", "Jenkins server not found."));
+        }
+
+        $project = $jenkins_server->getProject();
+        $this->csrf_token->check(
+            GitJenkinsAdministrationURLBuilder::buildUrl($project)
+        );
+
+        if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+            throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+        }
+
+        $user = $request->getCurrentUser();
+        if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
+            throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
+        }
+
+        $this->git_jenkins_administration_server_deleter->deleteServer($jenkins_server);
+
+        $layout->addFeedback(
+            Feedback::INFO,
+            dgettext("tuleap-hudson_git", "The Jenkins server has successfully been Removed.")
+        );
+
+        $layout->redirect(
+            GitJenkinsAdministrationURLBuilder::buildUrl($project)
+        );
+    }
+}

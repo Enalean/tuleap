@@ -50,7 +50,7 @@
             {{# jenkins_server_presenters }}
                 <tr>
                     <td>
-                        {{ getJenkinsServerUrl }}
+                        {{ jenkins_server_url }}
                     </td>
                     <td class="action-buttons">
                         <a href="javascript:;"
@@ -59,7 +59,7 @@
                            data-trigger="click"
                            data-placement="left"
                            data-html="true"
-                           data-popover-id="remove-{{ getJenkinsServerId }}-popover"
+                           data-popover-id="remove-{{ jenkins_server_id }}-popover"
                         >
                             <i class="fa fa-trash-o"></i> {{# dgettext }} tuleap-hudson_git | Remove{{/ dgettext }}
                         </a>
