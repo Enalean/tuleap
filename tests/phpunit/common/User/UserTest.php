@@ -236,8 +236,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
             .'Rp2IZyp88CdZBoUYeW0MNbYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
         $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => $k1));
-        $this->assertEquals($user->getAuthorizedKeys(), $k1);
-        $res = $user->getAuthorizedKeys(true);
+        $this->assertEquals($user->getAuthorizedKeysRaw(), $k1);
+        $res = $user->getAuthorizedKeysArray();
         $this->assertEquals($res[0], $k1);
     }
 
@@ -258,8 +258,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $ssh = $k1.PFUser::SSH_KEY_SEPARATOR.$k2;
         $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => $ssh));
-        $this->assertEquals($user->getAuthorizedKeys(), $ssh);
-        $res = $user->getAuthorizedKeys(true);
+        $this->assertEquals($user->getAuthorizedKeysRaw(), $ssh);
+        $res = $user->getAuthorizedKeysArray();
         $this->assertEquals($k1, $res[0]);
         $this->assertEquals($k2, $res[1]);
     }
@@ -280,7 +280,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
             .'Hs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
         $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => $k1.PFUser::SSH_KEY_SEPARATOR.PFUser::SSH_KEY_SEPARATOR.$k2));
-        $res = $user->getAuthorizedKeys(true);
+        $res = $user->getAuthorizedKeysArray();
         $this->assertEquals($k1, $res[0]);
         $this->assertFalse(isset($res[1]));
         $this->assertEquals($k2, $res[2]);
@@ -332,7 +332,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     {
         $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => ''));
-        $res = $user->getAuthorizedKeys(true);
+        $res = $user->getAuthorizedKeysArray();
         $this->assertCount(0, $res);
     }
 
