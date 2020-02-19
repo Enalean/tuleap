@@ -141,4 +141,15 @@ class TrackerCreationDataChecker
     {
         return $this->tracker_dao->doesTrackerNameAlreadyExist($name, $project_id);
     }
+
+    /**
+     * Used in tracker creation context
+     * @throws TrackerIsInvalidException
+     */
+    public function checkAtTrackerDuplication(string $shortname): void
+    {
+        if (strlen($shortname) > Tracker::MAX_TRACKER_SHORTNAME_LENGTH) {
+            throw TrackerIsInvalidException::buildInvalidLength();
+        }
+    }
 }
