@@ -32,6 +32,13 @@
                             </td>
                         </tr>
                     {{/ apps }}
+                    {{^ apps }}
+                        <tr>
+                            <td colspan="2" class="tlp-table-cell-empty">
+                                {{# dgettext }}tuleap-oauth2_server | No App have been defined yet. Start by adding one. {{/ dgettext }}
+                            </td>
+                        </tr>
+                    {{/apps}}
                     </tbody>
                 </table>
             </section>

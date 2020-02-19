@@ -36,6 +36,9 @@ msgstr "Supprimer"
 msgid "My REST API consumer App"
 msgstr "Mon App utilisant l'API REST"
 
+msgid "No App have been defined yet. Start by adding one."
+msgstr "Aucune App n'a encore été configurée. Commencez par en ajouter une."
+
 msgid "OAuth2 Apps"
 msgstr "Apps OAuth2"
 
