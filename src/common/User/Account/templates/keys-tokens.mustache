@@ -1,12 +1,26 @@
-<nav class="tlp-tabs">
-    <a href="/account" class="tlp-tab">{{# gettext }}User preferences{{/ gettext }}</a>
-    <a href="{{ keys_tokens_url }}" class="tlp-tab tlp-tab-active"> <i class="tlp-tab-icon fa fa-key"></i> {{# gettext }}Keys & tokens{{/ gettext }}</a>
-</nav>
+<div class="user-preferences">
+    <h1 class="user-preferences-title">
+        {{# gettext }}Preferences{{/ gettext }}
+    </h1>
+    <div class="user-preferences-container">
+        <nav class="tlp-tabs tlp-tabs-vertical user-preferences-nav">
+            <a href="/account" class="tlp-tab">
+                {{# gettext }}User preferences{{/ gettext }}
+            </a>
+            <a href="{{ keys_tokens_url }}" class="tlp-tab tlp-tab-active">
+                <i class="tlp-tab-icon fa fa-key"></i>
+                {{# gettext }}Keys & tokens{{/ gettext }}
+            </a>
+        </nav>
 
-{{# ssh_keys_presenter }}
-    {{> ssh-keys }}
-{{/ ssh_keys_presenter }}
+        <div class="user-preferences-section">
+            {{# ssh_keys_presenter }}
+                {{> ssh-keys }}
+            {{/ ssh_keys_presenter }}
 
-{{# access_key_presenter }}
-    {{> access-keys }}
-{{/ access_key_presenter }}
+            {{# access_key_presenter }}
+                {{> access-keys }}
+            {{/ access_key_presenter }}
+        </div>
+    </div>
+</div>

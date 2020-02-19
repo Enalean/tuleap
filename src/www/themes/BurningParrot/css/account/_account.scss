@@ -18,3 +18,47 @@
  *
  */
 @import './includes/keys-tokens';
+
+.user-preferences {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.user-preferences-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+.user-preferences-title {
+    margin: 0 0 $tlp-spacing;
+}
+
+.user-preferences-nav {
+    min-width: 250px;
+    max-width: 250px;
+}
+
+.user-preferences-section {
+    width: 100%;
+    margin: 0 0 0 $tlp-spacing;
+}
+
+@media screen and (max-width: (1000px + $tlp-double-spacing)) {
+    .user-preferences {
+        width: 100%;
+    }
+
+    .user-preferences-container {
+        flex-direction: column;
+    }
+
+    .user-preferences-nav {
+        width: 100%;
+        min-width: auto;
+        max-width: none;
+    }
+
+    .user-preferences-section {
+        margin: 0;
+    }
+}
