@@ -56,7 +56,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         tracker_to_be_created: {
             name: "",
             shortname: ""
-        }
+        },
+        has_form_been_submitted: false
     };
 
     new AppComponent({

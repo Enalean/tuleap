@@ -22,6 +22,7 @@ export interface State {
     active_option: CreationOptions;
     selected_tracker_template: Tracker | null;
     tracker_to_be_created: TrackerToBeCreatedMandatoryData;
+    has_form_been_submitted: boolean;
 }
 
 export interface ProjectTemplate {
