@@ -1171,6 +1171,9 @@ msgstr "Processeurs"
 msgid "Project"
 msgstr "Projet"
 
+msgid "Project (read only)"
+msgstr "Projet (lecture seule)"
+
 msgid "Project Creation request is disabled"
 msgstr "La création de projects est désactivé"
 
@@ -1338,6 +1341,9 @@ msgstr "RSS"
 
 msgid "Rank"
 msgstr "Rang"
+
+msgid "Read only access to information about projects"
+msgstr "Accès en lecture seule aux informations concernant les projets"
 
 msgid "Recently"
 msgstr "Récemment"

@@ -125,7 +125,7 @@ class MilestoneRepresentationBase
     public $sub_milestones_uri;
 
     /**
-    * @var \Tuleap\Tracker\REST\TrackerReference|null
+    * @var \Tuleap\Tracker\REST\TrackerReference | null
     */
     public $sub_milestone_type;
 

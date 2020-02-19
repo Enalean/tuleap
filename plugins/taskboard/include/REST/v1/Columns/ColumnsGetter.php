@@ -29,7 +29,7 @@ use Planning;
 use Planning_ArtifactMilestone;
 use Tuleap\Cardwall\Column\ColumnColorRetriever;
 use Tuleap\REST\JsonCast;
-use Tuleap\REST\UserManager;
+use UserManager;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 
@@ -59,7 +59,7 @@ class ColumnsGetter
     public static function build(): self
     {
         return new self(
-            UserManager::build(),
+            UserManager::instance(),
             \Planning_MilestoneFactory::build(),
             MilestoneIsAllowedChecker::build(),
             new Cardwall_OnTop_ColumnDao()

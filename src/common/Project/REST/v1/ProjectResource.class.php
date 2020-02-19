@@ -244,6 +244,7 @@ class ProjectResource extends AuthenticatedResource
      *
      * @url    GET
      * @access hybrid
+     * @oauth2-scope read:project
      *
      * @param int    $limit  Number of elements displayed per page
      * @param int    $offset Position of the first element to display
@@ -374,6 +375,7 @@ class ProjectResource extends AuthenticatedResource
      *
      * @url    GET {id}
      * @access hybrid
+     * @oauth2-scope read:project
      *
      * @param int $id Id of the project
      *
@@ -585,6 +587,7 @@ class ProjectResource extends AuthenticatedResource
      *
      * @url    GET {id}/labels
      * @access hybrid
+     * @oauth2-scope read:project
      *
      * @param int    $id     Id of the project
      * @param string $query  Search particular label, if not used, returns all project labels
@@ -1087,6 +1090,7 @@ class ProjectResource extends AuthenticatedResource
      *
      * @url GET {id}/user_groups
      * @access hybrid
+     * @oauth2-scope read:project
      *
      * @param int    $id    Id of the project
      * @param string $query JSON object of filtering options {@from path} {@required false}
@@ -1448,6 +1452,7 @@ class ProjectResource extends AuthenticatedResource
       *
       * @url GET {id}/banner
       * @access hybrid
+      * @oauth2-scope read:project
       *
       * @param int $id id of the project
       * @throws RestException
@@ -1565,6 +1570,7 @@ class ProjectResource extends AuthenticatedResource
      *
      * @url GET {id}/project_services
      * @access hybrid
+     * @oauth2-scope read:project
      *
      * @param int $id     Id of the project
      * @param int $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}

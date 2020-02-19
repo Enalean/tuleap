@@ -33,7 +33,7 @@ use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\UserManager;
+use UserManager;
 use Tuleap\Taskboard\Swimlane\SwimlaneChildrenRetriever;
 
 class CellPatcher
@@ -67,7 +67,7 @@ class CellPatcher
     {
         $artifact_factory = Tracker_ArtifactFactory::instance();
         return new CellPatcher(
-            UserManager::build(),
+            UserManager::instance(),
             $artifact_factory,
             new SwimlaneChildrenRetriever(),
             ArtifactsRankOrderer::build(),
