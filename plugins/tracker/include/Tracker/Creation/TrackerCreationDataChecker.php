@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation;
 
 use Tracker;
 use TrackerDao;
+use TrackerFactory;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerCreationDataChecker
@@ -57,7 +58,7 @@ class TrackerCreationDataChecker
         return new TrackerCreationDataChecker(
             \ReferenceManager::instance(),
             new TrackerDao(),
-            \TrackerFactory::instance()
+            TrackerFactory::instance()
         );
     }
 
@@ -146,10 +147,18 @@ class TrackerCreationDataChecker
      * Used in tracker creation context
      * @throws TrackerIsInvalidException
      */
-    public function checkAtTrackerDuplication(string $shortname): void
+    public function checkAtTrackerDuplication(string $shortname, string $tracker_template_id, \PFUser $user): void
     {
         if (strlen($shortname) > Tracker::MAX_TRACKER_SHORTNAME_LENGTH) {
             throw TrackerIsInvalidException::buildInvalidLength();
+        }
+
+        $tracker = $this->tracker_factory->getTrackerById((int)$tracker_template_id);
+        if (! $tracker) {
+            throw TrackerIsInvalidException::trackerNotFound($tracker_template_id);
+        }
+        if (! $tracker->userCanView($user)) {
+            throw TrackerIsInvalidException::trackerNotFound($tracker_template_id);
         }
     }
 }

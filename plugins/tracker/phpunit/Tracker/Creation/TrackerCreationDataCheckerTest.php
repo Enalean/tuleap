@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use TrackerFactory;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 final class TrackerCreationDataCheckerTest extends TestCase
@@ -54,6 +55,12 @@ final class TrackerCreationDataCheckerTest extends TestCase
         $this->tracker_dao       = \Mockery::mock(\TrackerDao::class);
         $this->tracker_factory   = \Mockery::mock(\TrackerFactory::class);
         $this->checker           = new TrackerCreationDataChecker($this->reference_manager, $this->tracker_dao, $this->tracker_factory);
+        $this->tracker_factory   = \Mockery::mock(TrackerFactory::class);
+        $this->checker           = new TrackerCreationDataChecker(
+            $this->reference_manager,
+            $this->tracker_dao,
+            $this->tracker_factory
+        );
     }
 
     public function testItDoesNotCheckTrackerLengthInProjectDuplicationContext(): void
@@ -77,20 +84,60 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
     public function testItThrowAnExceptionWhenNewTrackerLengthIsInvalidDuringTrackerDuplication(): void
     {
-        $shortname   = "bugs_with_a_very_very_long_shortname";
+        $shortname = "bugs_with_a_very_very_long_shortname";
+        $template_id = "25";
+        $user =\Mockery::mock(\PFUser::class);
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Tracker shortname length must be inferior to 25 characters.');
         $this->checker->checkAtTrackerDuplication(
-            $shortname
+            $shortname,
+            $template_id,
+            $user
+        );
+    }
+
+    public function testItThrowAnExceptionWhenOriginalTrackerIsNotFound(): void
+    {
+        $shortname = "bugs";
+        $template_id = "12";
+        $user =\Mockery::mock(\PFUser::class);
+
+        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
+
+        $this->expectException(TrackerIsInvalidException::class);
+        $this->expectExceptionMessage('The template id 12 used for tracker creation was not found.');
+        $this->checker->checkAtTrackerDuplication(
+            $shortname,
+            $template_id,
+            $user
+        );
+    }
+
+    public function testItThrowAnExceptionWhenUserCanNotReadOriginalTrackerDuringTrackerDuplication(): void
+    {
+        $shortname = "bugs";
+        $template_id = "12";
+        $user =\Mockery::mock(\PFUser::class);
+
+        $tracker = \Mockery::mock(\Tracker::class);
+        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+        $tracker->shouldReceive('userCanView')->andReturnFalse();
+
+        $this->expectException(TrackerIsInvalidException::class);
+        $this->expectExceptionMessage('The template id 12 used for tracker creation was not found.');
+        $this->checker->checkAtTrackerDuplication(
+            $shortname,
+            $template_id,
+            $user
         );
     }
 
     public function testItDoesNotThrowAnExceptionWhenOldTrackerLengthWasInvalid(): void
     {
-        $project_id  = 101;
+        $project_id = 101;
         $public_name = "New bugs";
-        $shortname   = "new_bugs";
+        $shortname = "new_bugs";
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);

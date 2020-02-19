@@ -106,6 +106,16 @@ class TrackerIsInvalidException extends \Exception
         );
     }
 
+    public static function trackerNotFound(string $template_id): self
+    {
+        return new self(
+            sprintf(
+                dgettext('plugin_tracker', 'The template id %s used for tracker creation was not found.'),
+                $template_id
+            )
+        );
+    }
+
     public function getTranslatedMessage(): string
     {
         return $this->translated_message;
