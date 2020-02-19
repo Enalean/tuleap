@@ -485,6 +485,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
                 echo '</script>'."\n";
             }
         }
+        foreach ($this->javascript_assets as $javascript_asset) {
+            echo sprintf('<script type="text/javascript" src="%s"></script>%s', $javascript_asset->getFileURL(), PHP_EOL) ;
+        }
         echo '<script type="text/javascript">'."\n";
         echo $this->getFooterSiteJs();
         echo '

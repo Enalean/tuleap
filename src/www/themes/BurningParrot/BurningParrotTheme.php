@@ -206,6 +206,7 @@ class BurningParrotTheme extends BaseLayout
 
         $footer = new FooterPresenter(
             $this->javascript_in_footer,
+            $this->javascript_assets,
             $this->canShowFooter($params),
             $this->version->getFullDescriptiveVersion()
         );

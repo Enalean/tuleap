@@ -90,6 +90,10 @@ abstract class BaseLayout extends Response
      * @var CssAssetCollection
      */
     protected $css_assets;
+    /**
+     * @var JavascriptAsset[]
+     */
+    protected $javascript_assets = [];
 
     public function __construct($root)
     {
@@ -192,6 +196,11 @@ abstract class BaseLayout extends Response
     public function includeFooterJavascriptFile($file)
     {
         $this->javascript_in_footer[] = array('file' => $file);
+    }
+
+    public function addJavascriptAsset(JavascriptAsset $asset)
+    {
+        $this->javascript_assets[] = $asset;
     }
 
     /**
