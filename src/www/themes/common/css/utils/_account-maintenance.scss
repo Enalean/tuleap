@@ -42,7 +42,7 @@ h3.account-title {
 }
 
 
-#account-shell .ssh-keys-table,
+#account-shell,
 #account-svn-tokens .svn-tokens-table {
     width: 100%;
 
@@ -314,11 +314,6 @@ i.help-button {
 
 #theme_variant_list {
     padding-top: 5px;
-}
-
-[data-ssh_key_value] {
-    word-break: break-all;
-    cursor: pointer;
 }
 
 .account-maintenance > .wrapper {

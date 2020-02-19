@@ -20,14 +20,87 @@
 import { modal as createModal, datePicker } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
-    addAccessKeyButton();
-    addAccessKeyDatePicker();
-    toggleButtonsAccordingToCheckBoxesStates();
+    handleSSHKeys();
+    handleAccessKeys();
 });
 
-function addAccessKeyButton(): void {
-    const button = document.getElementById("generate-access-key-button");
+function handleSSHKeys(): void {
+    addSSHKeyButton();
 
+    toggleButtonAccordingToCheckBoxesStateWithIds("remove-ssh-keys-button", "ssh_key_selected[]");
+
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const ssh_key = document.getElementById("ssh-key") as HTMLTextAreaElement;
+    ssh_key.addEventListener("input", () => {
+        const text = ssh_key.value;
+        if (!text) {
+            return;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const button = document.getElementById("submit-new-ssh-key-button") as HTMLButtonElement;
+        if (text.trim() === "") {
+            button.disabled = true;
+        } else {
+            button.disabled = false;
+        }
+    });
+
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const ssh_keys_list = document.querySelectorAll("[data-ssh_key_value]") as NodeListOf<
+        HTMLTableRowElement
+    >;
+    ssh_keys_list.forEach(row => {
+        row.addEventListener("click", () => {
+            const full_ssh_key = row.getAttribute("data-ssh_key_value");
+            if (!full_ssh_key) {
+                return;
+            }
+            row.innerHTML = full_ssh_key;
+            row.className = "ssh-key-value-reset-cursor";
+        });
+    });
+}
+
+function addSSHKeyButton(): void {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const button = document.getElementById("add-ssh-key-button") as HTMLButtonElement;
+
+    popupModal(button);
+}
+
+function handleAccessKeys(): void {
+    addAccessKeyButton();
+    addAccessKeyDatePicker();
+
+    toggleButtonAccordingToCheckBoxesStateWithIds(
+        "button-revoke-access-tokens",
+        "access-keys-selected[]"
+    );
+    toggleButtonAccordingToCheckBoxesStateWithIds(
+        "generate-new-access-key-button",
+        "access-key-scopes[]"
+    );
+}
+
+function addAccessKeyButton(): void {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const button = document.getElementById("generate-access-key-button") as HTMLButtonElement;
+
+    popupModal(button);
+}
+
+function addAccessKeyDatePicker(): void {
+    const date_picker = document.getElementById("access-key-expiration-date-picker");
+
+    if (!date_picker) {
+        return;
+    }
+
+    datePicker(date_picker);
+}
+
+function popupModal(button: HTMLButtonElement): void {
     if (button && button.dataset) {
         const modal_target_id = button.dataset.targetModalId;
 
@@ -45,27 +118,6 @@ function addAccessKeyButton(): void {
             modal.show();
         });
     }
-}
-
-function addAccessKeyDatePicker(): void {
-    const date_picker = document.getElementById("access-key-expiration-date-picker");
-
-    if (!date_picker) {
-        return;
-    }
-
-    datePicker(date_picker);
-}
-
-function toggleButtonsAccordingToCheckBoxesStates(): void {
-    toggleButtonAccordingToCheckBoxesStateWithIds(
-        "button-revoke-access-tokens",
-        "access-keys-selected[]"
-    );
-    toggleButtonAccordingToCheckBoxesStateWithIds(
-        "generate-new-access-key-button",
-        "access-key-scopes[]"
-    );
 }
 
 function toggleButtonAccordingToCheckBoxesStateWithIds(

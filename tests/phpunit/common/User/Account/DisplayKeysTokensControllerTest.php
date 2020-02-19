@@ -75,7 +75,7 @@ final class DisplayKeysTokensControllerTest extends TestCase
         );
     }
 
-    public function testItRendersThePage(): void
+    public function testItRendersThePageWithPersonalAccessKey(): void
     {
         $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
 
@@ -87,5 +87,23 @@ final class DisplayKeysTokensControllerTest extends TestCase
         );
         $output = ob_get_clean();
         $this->assertStringContainsString('Personal access keys', $output);
+    }
+
+    public function testItRendersThePageWithSSHKeys(): void
+    {
+        $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
+        $user = UserTestBuilder::aUser()->withId(110)->build();
+        $user->setAuthorizedKeys('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZXBYZ8xW1Rstzx/j9MEaWyeQy+2FjJwn6nBRlVqrvHZNP5vEoPdejGABJnnyJroCZ71v2/g5QWjwQjaL4YMUZ3sx6eloxF3 someone@example.com');
+
+        ob_start();
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($user)->build(),
+            LayoutBuilder::build(),
+            []
+        );
+        $output = ob_get_clean();
+
+        $this->assertStringContainsString('SSH keys', $output);
+        $this->assertStringContainsString('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZX...wQjaL4YMUZ3sx6eloxF3 someone@example.com', $output);
     }
 }

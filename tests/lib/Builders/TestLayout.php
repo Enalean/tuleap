@@ -21,36 +21,47 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\Account;
+namespace Tuleap\Test\Builders;
 
-use CSRFSynchronizerToken;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAssetCollection;
+use Widget_Static;
 
-/**
- * @psalm-immutable
- */
-final class KeysTokensPresenter
+final class TestLayout extends BaseLayout
 {
     /**
-     * @var string
+     * @var LayoutInspector
      */
-    public $keys_tokens_url = DisplayKeysTokensController::URL;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
-    /**
-     * @var SSHKeysPresenter
-     */
-    public $ssh_keys_presenter;
-    /**
-     * @var AccessKeyPresenter
-     */
-    public $access_key_presenter;
+    private $inspector;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, SSHKeysPresenter $ssh_keys_presenter, AccessKeyPresenter $access_key_presenter)
+    public function __construct(LayoutInspector $inspector)
     {
-        $this->csrf_token = $csrf_token;
-        $this->access_key_presenter = $access_key_presenter;
-        $this->ssh_keys_presenter = $ssh_keys_presenter;
+        $this->css_assets = new CssAssetCollection([]);
+        $this->inspector = $inspector;
+    }
+
+    public function header(array $params)
+    {
+    }
+
+    public function footer(array $params)
+    {
+    }
+
+    public function displayStaticWidget(Widget_Static $widget)
+    {
+    }
+
+    public function includeCalendarScripts()
+    {
+    }
+
+    protected function getUser()
+    {
+    }
+
+    public function redirect($url)
+    {
+        $this->inspector->setRedirectUrl($url);
     }
 }

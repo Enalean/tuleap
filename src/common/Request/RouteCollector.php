@@ -108,6 +108,8 @@ use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
+use Tuleap\User\SSHKey\SSHKeyCreateController;
+use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\Widget\WidgetFactory;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
@@ -268,6 +270,16 @@ class RouteCollector
             DisplayKeysTokensController::getCSRFToken(),
             AccessKeyPresenterBuilder::build(),
         );
+    }
+
+    public static function postAccountSSHKeyCreate(): DispatchableWithRequest
+    {
+        return new SSHKeyCreateController(DisplayKeysTokensController::getCSRFToken(), \UserManager::instance());
+    }
+
+    public static function postAccountSSHKeyDelete(): DispatchableWithRequest
+    {
+        return new SSHKeyDeleteController(DisplayKeysTokensController::getCSRFToken(), \UserManager::instance());
     }
 
     public static function postAccountAccessKeyCreate(): DispatchableWithRequest
@@ -550,6 +562,8 @@ class RouteCollector
 
         $r->addGroup('/account', function (FastRoute\RouteCollector $r) {
             $r->get('/keys-tokens', [self::class, 'getAccountToken']);
+            $r->post('/ssh_key/create', [self::class, 'postAccountSSHKeyCreate']);
+            $r->post('/ssh_key/delete', [self::class, 'postAccountSSHKeyDelete']);
             $r->post('/access_key/create', [self::class, 'postAccountAccessKeyCreate']);
             $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
             $r->post('/avatar', [self::class, 'postAccountAvatar']);

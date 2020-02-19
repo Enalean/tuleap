@@ -163,6 +163,9 @@ msgstr "Actions"
 msgid "Activate synchronized project membership management"
 msgstr "Activer la gestion synchronisée de l'appartenance au projet"
 
+msgid "Add SSH key"
+msgstr "Ajouter une clef SSH"
+
 msgid "Add a new service"
 msgstr "Ajouter un nouveau service"
 
@@ -180,6 +183,9 @@ msgstr "Ajouter un lien"
 
 msgid "Add member"
 msgstr "Ajouter un membre"
+
+msgid "Add new key"
+msgstr "Ajouter une nouvelle clef"
 
 msgid "Add parent project"
 msgstr "Ajouter projet parent"
@@ -553,6 +559,9 @@ msgstr "Supprimer le tableau de bord"
 msgid "Delete parent"
 msgstr "Supprimer le parent"
 
+msgid "Delete selected SSH keys"
+msgstr "Supprimer les clefs SSH sélectionnées"
+
 msgid "Delete service"
 msgstr "Supprimer le service"
 
@@ -806,6 +815,9 @@ msgstr "Erreur JpGraph pour le graphique \"%s\": %s"
 
 msgid "Kanban"
 msgstr "Kanban"
+
+msgid "Key"
+msgstr "Clef"
 
 msgid "Keys & Tokens"
 msgstr "Clefs et Tokens"
@@ -1371,6 +1383,12 @@ msgstr "Révoquer les clés d'accès sélectionnées"
 
 msgid "SOAP API"
 msgstr "API SOAP"
+
+msgid "SSH key"
+msgstr "Clef SSH"
+
+msgid "SSH keys"
+msgstr "Clefs SSH"
 
 msgid "SVN"
 msgstr "SVN"
