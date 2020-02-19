@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,66 +17,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jQuery:readonly tuleap:readonly */
+import $ from "jquery";
+import { escaper } from "../../../src/www/scripts/tuleap/escaper.js";
 
-(function($) {
-    "use strict";
+document.addEventListener("DOMContentLoaded", function() {
+    var select_bot = document.querySelector("#select_bot");
+    var inputs_channels = document.querySelectorAll(".input_channels");
 
-    document.addEventListener("DOMContentLoaded", function() {
-        var select_bot = document.querySelector("#select_bot");
-        var inputs_channels = document.querySelectorAll(".input_channels");
+    if (select_bot) {
+        loadBotSelectList(select_bot);
+    }
 
-        if (select_bot) {
-            loadBotSelectList(select_bot);
-        }
+    if (inputs_channels.length === 0) {
+        return;
+    }
+    [].forEach.call(inputs_channels, function(input) {
+        loadChannelAutoCompleter(input);
+    });
+});
 
-        if (inputs_channels.length == 0) {
-            return;
-        } else {
-            [].forEach.call(inputs_channels, function(input) {
-                loadChannelAutoCompleter(input);
+function loadChannelAutoCompleter(input) {
+    $(input).select2({
+        width: "100%",
+        tokenSeparators: [",", " "],
+        placeholder: input.dataset.placeholder,
+        tags: [],
+        initSelection: function(element, callback) {
+            var data = [];
+            $(element.val().split(", ")).each(function() {
+                data.push({ id: this, text: this });
             });
+            callback(data);
         }
     });
+}
 
-    function loadChannelAutoCompleter(input) {
-        $(input).select2({
-            width: "100%",
-            tokenSeparators: [",", " "],
-            placeholder: input.dataset.placeholder,
-            tags: [],
-            initSelection: function(element, callback) {
-                var data = [];
-                $(element.val().split(", ")).each(function() {
-                    data.push({ id: this, text: this });
-                });
-                callback(data);
-            }
-        });
-    }
+function loadBotSelectList(input) {
+    $(input).select2({
+        width: "50%",
+        placeholder: "Select a bot",
+        minimumResultsForSearch: Infinity,
+        formatResult: formatItem,
+        formatSelection: formatItem
+    });
 
-    function loadBotSelectList(input) {
-        $(input).select2({
-            width: "50%",
-            placeholder: "Select a bot",
-            minimumResultsForSearch: Infinity,
-            formatResult: formatItem,
-            formatSelection: formatItem
-        });
+    function formatItem(item) {
+        var src_image = $(item.element).data("image");
+        var format_item = escaper.html(item.text);
 
-        function formatItem(item) {
-            var src_image = $(item.element).data("image");
-            var format_item = tuleap.escaper.html(item.text);
-
-            if (src_image) {
-                format_item =
-                    '<img src="' +
-                    src_image +
-                    '" class="img-circle" width="20" height="20"/> ' +
-                    format_item;
-            }
-
-            return format_item;
+        if (src_image) {
+            format_item =
+                '<img src="' +
+                src_image +
+                '" class="img-circle" width="20" height="20"/> ' +
+                format_item;
         }
+
+        return format_item;
     }
-})(jQuery);
+}
