@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BurnupChartDrawer createBurnupChart When the chart is created, Then there are a G element and 2 lines scale 1`] = `
+exports[`BurnupChartDrawer createBurnupChart When the chart is created, Then there are a G element and 2 lines scale with scale label 1`] = `
 <svg
   id="chart-100"
 >
@@ -8,6 +8,102 @@ exports[`BurnupChartDrawer createBurnupChart When the chart is created, Then the
     height="100"
     width="100"
   >
+    <g
+      class="chart-x-axis"
+      fill="none"
+      font-family="sans-serif"
+      font-size="10"
+      text-anchor="middle"
+      transform="translate(0, 80)"
+    >
+      <g
+        class="tick"
+        opacity="1"
+        transform="translate(20.5,0)"
+      >
+        <text
+          dy="0.71em"
+          fill="currentColor"
+          y="11"
+        >
+          2019-07-01
+        </text>
+      </g>
+      <g
+        class="tick"
+        opacity="1"
+        transform="translate(80.5,0)"
+      >
+        <text
+          dy="0.71em"
+          fill="currentColor"
+          y="11"
+        >
+          2019-07-02
+        </text>
+      </g>
+    </g>
+    <g
+      class="chart-y-axis"
+      fill="none"
+      font-family="sans-serif"
+      font-size="10"
+      text-anchor="end"
+      transform="translate(20, 0)"
+    >
+      <g
+        class="tick"
+        opacity="1"
+        transform="translate(0,80.5)"
+      >
+        <text
+          dy="0.32em"
+          fill="currentColor"
+          x="-5"
+        >
+          0
+        </text>
+      </g>
+      <g
+        class="tick"
+        opacity="1"
+        transform="translate(0,61.75)"
+      >
+        <text
+          dy="0.32em"
+          fill="currentColor"
+          x="-5"
+        >
+          5
+        </text>
+      </g>
+      <g
+        class="tick"
+        opacity="1"
+        transform="translate(0,43)"
+      >
+        <text
+          dy="0.32em"
+          fill="currentColor"
+          x="-5"
+        >
+          10
+        </text>
+      </g>
+      <g
+        class="tick"
+        opacity="1"
+        transform="translate(0,24.25)"
+      >
+        <text
+          dy="0.32em"
+          fill="currentColor"
+          x="-5"
+        >
+          15
+        </text>
+      </g>
+    </g>
     <g
       class="ideal-line"
     >
