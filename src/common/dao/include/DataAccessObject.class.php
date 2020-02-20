@@ -40,7 +40,11 @@ class DataAccessObject
      */
     private $throw_exception_on_errors = false;
 
-    //! A constructor
+    /**
+     * @var string
+     * @deprecated
+     */
+    protected $table_name;
 
     /**
      * Constructs the Dao
@@ -264,6 +268,7 @@ class DataAccessObject
      *          that sth wrong happended.
      */
     protected function prepareRanking(
+        string $table_name,
         $id,
         $parent_id,
         $rank,
@@ -287,7 +292,7 @@ class DataAccessObject
         // First, check if there is already some items
         $sql = sprintf(
             'SELECT NULL'.
-                       ' FROM '. $this->table_name .
+                       ' FROM '. $this->da->quoteSmartSchema($table_name) .
                        ' WHERE '. $parent_key .' = %d '.
                        ' %s',
             $parent_id,
@@ -302,7 +307,7 @@ class DataAccessObject
                 case '--':
                     $sql = sprintf(
                         'SELECT '. $rank_key .
-                               ' FROM '. $this->table_name .
+                               ' FROM '. $this->da->quoteSmartSchema($table_name) .
                                ' WHERE '. $primary_key .' = %d',
                         (int)$id
                     );
@@ -317,7 +322,7 @@ class DataAccessObject
                     // and add 1 to be laster than the first.
                     $sql = sprintf(
                         'SELECT MAX('. $rank_key .')+1 as '. $rank_key .
-                               ' FROM '. $this->table_name .
+                               ' FROM '. $this->da->quoteSmartSchema($table_name) .
                                ' WHERE '. $parent_key .' = %d '.
                                ' %s',
                         $parent_id,
@@ -361,8 +366,8 @@ class DataAccessObject
                     // that group all the items in one list.
                     $sql = sprintf(
                         'SELECT i1.'. $primary_key .' as id, i1.'. $rank_key .' as '. $rank_key .
-                                   ' FROM '. $this->table_name .' i1'.
-                                   '  INNER JOIN '. $this->table_name .' i2 USING('. $parent_key .')'.
+                                   ' FROM '. $this->da->quoteSmartSchema($table_name) .' i1'.
+                                   '  INNER JOIN '. $this->da->quoteSmartSchema($table_name) .' i2 USING('. $parent_key .')'.
                                    ' WHERE i2.'. $primary_key .' = %d'.
                                    '   AND i1.'. $parent_key .' = %d'.
                                    '   AND i1.'. $rank_key .' %s i2.'. $rank_key .
@@ -380,7 +385,7 @@ class DataAccessObject
                         // Warning: the order is very important, please check that
                         // your final query work as expected.
                         $sql = sprintf(
-                            'UPDATE '. $this->table_name .' i1, '. $this->table_name .' i2'.
+                            'UPDATE '. $this->da->quoteSmartSchema($table_name) .' i1, '. $this->da->quoteSmartSchema($table_name) .' i2'.
                                    ' SET i1.'. $rank_key .' = i2.'. $rank_key .', i2.'. $rank_key .' = %d'.
                                    ' WHERE i1.'. $primary_key .' = %d '.
                                    '  AND i2.'. $primary_key .' = %d',
@@ -398,7 +403,7 @@ class DataAccessObject
                     // in the table
                     $sql = sprintf(
                         'SELECT MIN('. $rank_key .') as '. $rank_key .
-                               ' FROM '. $this->table_name .
+                               ' FROM '. $this->da->quoteSmartSchema($table_name) .
                                ' WHERE '. $parent_key .' = %d '.
                                ' %s',
                         $parent_id,
@@ -419,7 +424,7 @@ class DataAccessObject
                     // The idea is to move up all the ranks upper to this value and to
                     // return the current value as the new rank.
                     $sql = sprintf(
-                        'UPDATE '. $this->table_name .
+                        'UPDATE '. $this->da->quoteSmartSchema($table_name) .
                                ' SET '. $rank_key .' = '. $rank_key .' + 1'.
                                ' WHERE '. $parent_key .' = %d'.
                                '  AND '. $rank_key .' >= %d '.

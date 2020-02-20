@@ -23,13 +23,6 @@
 
 class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tracker_Semantic_IRetrieveSemanticDARByTracker
 {
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->table_name = 'plugin_cardwall_semantic_cardfields';
-    }
-
     /**
      * @return mixed either false if error or object DataAccessResult
      */
@@ -52,7 +45,7 @@ class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tr
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
-        $rank       = $this->da->escapeInt($this->prepareRanking(0, $tracker_id, $rank, 'id', 'tracker_id'));
+        $rank       = $this->da->escapeInt($this->prepareRanking('plugin_cardwall_semantic_cardfields', 0, $tracker_id, $rank, 'id', 'tracker_id'));
         $sql = "REPLACE INTO plugin_cardwall_semantic_cardfields (tracker_id, field_id, rank)
                 VALUES ($tracker_id, $field_id, $rank)";
 

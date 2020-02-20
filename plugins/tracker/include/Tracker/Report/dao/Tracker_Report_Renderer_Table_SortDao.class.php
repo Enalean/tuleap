@@ -31,7 +31,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
         $renderer_id  = $this->da->escapeInt($renderer_id);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE renderer_id = $renderer_id 
+                WHERE renderer_id = $renderer_id
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
@@ -50,7 +50,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
         if (!isset($rank)) {
-            $rank        = (int)$this->prepareRanking(0, $renderer_id, 'end', 'field_id', 'renderer_id');
+            $rank        = (int)$this->prepareRanking('tracker_report_renderer_table_sort', 0, $renderer_id, 'end', 'field_id', 'renderer_id');
         } else {
             $rank = $this->da->escapeInt($rank);
         }
@@ -70,7 +70,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
 
-        $sql = "DELETE FROM $this->table_name 
+        $sql = "DELETE FROM $this->table_name
                 WHERE renderer_id = $renderer_id
                   AND field_id = $field_id";
         return $this->update($sql);
@@ -86,7 +86,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
     {
         $renderer_id      = $this->da->escapeInt($renderer_id);
         $field_id_to_keep = $this->da->escapeInt($field_id_to_keep);
-        $sql = "DELETE FROM $this->table_name 
+        $sql = "DELETE FROM $this->table_name
                 WHERE renderer_id = $renderer_id
                   AND field_id <> $field_id_to_keep";
         return $this->update($sql);
@@ -105,7 +105,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
         foreach ($field_mapping as $mapping) {
             $from  = $this->da->escapeInt($mapping['from']);
             $to    = $this->da->escapeInt($mapping['to']);
-            $sql = "UPDATE $this->table_name 
+            $sql = "UPDATE $this->table_name
                     SET field_id = $to
                     WHERE renderer_id = $to_renderer_id
                       AND field_id = $from";

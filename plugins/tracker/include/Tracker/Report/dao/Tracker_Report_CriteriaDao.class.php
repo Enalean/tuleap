@@ -40,7 +40,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
         $report_id  = $this->da->escapeInt($report_id);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE report_id = $report_id 
+                WHERE report_id = $report_id
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
@@ -64,7 +64,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
     {
         $report_id    = $this->da->escapeInt($report_id);
         $field_id     = $this->da->escapeInt($field_id);
-        $rank         = (int)$this->prepareRanking(0, $report_id, 'end', 'id', 'report_id');
+        $rank         = (int)$this->prepareRanking('tracker_report_criteria', 0, $report_id, 'end', 'id', 'report_id');
         $is_advanced  = $this->da->escapeInt($is_advanced);
         $sql = "INSERT INTO $this->table_name
                        (report_id, field_id, rank, is_advanced)
@@ -77,7 +77,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
         $report_id = $this->da->escapeInt($report_id);
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "UPDATE $this->table_name
-                SET is_advanced = 1 - is_advanced 
+                SET is_advanced = 1 - is_advanced
                 WHERE report_id = $report_id AND field_id = $field_id";
         return $this->retrieve($sql);
     }
@@ -95,7 +95,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
         foreach ($field_mapping as $mapping) {
             $from  = $this->da->escapeInt($mapping['from']);
             $to    = $this->da->escapeInt($mapping['to']);
-            $sql = "UPDATE $this->table_name 
+            $sql = "UPDATE $this->table_name
                     SET field_id = $to
                     WHERE report_id = $to_report_id
                       AND field_id = $from";

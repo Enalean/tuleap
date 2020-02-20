@@ -319,6 +319,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
     public function save($field)
     {
         $rank = (int) $this->prepareRanking(
+            'tracker_field',
             $field->id,
             $field->parent_id,
             $field->rank,
@@ -514,6 +515,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
             $rank = (int) $rank;
         } else {
             $rank = (int) $this->prepareRanking(
+                'tracker_field',
                 0,
                 $parent_id,
                 $rank,
