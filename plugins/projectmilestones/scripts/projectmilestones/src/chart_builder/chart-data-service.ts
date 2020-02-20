@@ -20,9 +20,12 @@
 import { getFormattedDates } from "../../../../../../src/www/scripts/charts-builders/chart-dates-service";
 import { PointsWithDate } from "../../../../../../src/www/scripts/charts-builders/type";
 import { PointsNotNullWithDate } from "../type";
-import { GenericBurnupDatas } from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
+import {
+    PointsNotNullWithDateForGenericBurnup,
+    PointsWithDateForGenericBurnup
+} from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
 
-export { getDisplayableData, getLastData, getLastGenericBurnupData };
+export { getDisplayableData, getLastData, getLastGenericBurnupData, getDisplayableDataForBurnup };
 
 function getDisplayableData(dataset: PointsWithDate[]): PointsNotNullWithDate[] {
     const formatted_data = getFormattedDates(dataset);
@@ -46,10 +49,29 @@ function getLastData(dataset: PointsNotNullWithDate[]): PointsNotNullWithDate | 
     return dataset[dataset.length - 1];
 }
 
-function getLastGenericBurnupData(dataset: GenericBurnupDatas[]): GenericBurnupDatas | null {
+function getLastGenericBurnupData(
+    dataset: PointsWithDateForGenericBurnup[]
+): PointsWithDateForGenericBurnup | null {
     if (!dataset.length) {
         return null;
     }
 
     return dataset[dataset.length - 1];
+}
+
+function getDisplayableDataForBurnup(
+    generic_burnup_data: PointsWithDateForGenericBurnup[]
+): PointsNotNullWithDateForGenericBurnup[] {
+    const formatted_data = getFormattedDates(generic_burnup_data);
+    const points_not_null: PointsNotNullWithDateForGenericBurnup[] = [];
+
+    formatted_data.forEach(point => {
+        const total = point.total;
+        const progression = point.progression;
+        if (total !== null && progression !== null) {
+            points_not_null.push({ ...point, total, progression });
+        }
+    });
+
+    return points_not_null;
 }

@@ -47,10 +47,16 @@ export interface GenericBurnupData {
     capacity: number | null;
     is_under_calculation: boolean;
     opening_days: Array<number>;
-    points_with_date: GenericBurnupDatas[];
+    points_with_date: PointsWithDateForGenericBurnup[];
 }
 
-export interface GenericBurnupDatas {
+export interface PointsWithDateForGenericBurnup {
+    date: string;
+    total: number | null;
+    progression: number | null;
+}
+
+export interface PointsNotNullWithDateForGenericBurnup {
     date: string;
     total: number;
     progression: number;

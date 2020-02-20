@@ -21,7 +21,7 @@ import { createBurnupChart, getTotal } from "./burnup-chart-drawer";
 import { ChartPropsWhithoutTooltip } from "../../../../../../../src/www/scripts/charts-builders/type";
 import {
     GenericBurnupData,
-    GenericBurnupDatas
+    PointsWithDateForGenericBurnup
 } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
 jest.mock("../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
 jest.mock("../time-scale-label-formatter");
@@ -52,7 +52,7 @@ describe("BurnupChartDrawer", () => {
         it("When points are null, Then capacity returns", () => {
             const generic: GenericBurnupData = {
                 capacity: 30,
-                points_with_date: [] as GenericBurnupDatas[]
+                points_with_date: [] as PointsWithDateForGenericBurnup[]
             } as GenericBurnupData;
 
             const total = getTotal(generic);
@@ -62,7 +62,7 @@ describe("BurnupChartDrawer", () => {
         it("When points and capacity are null, Then DEFAULT_TOTAL_EFFORT returns", () => {
             const generic: GenericBurnupData = {
                 capacity: null,
-                points_with_date: [] as GenericBurnupDatas[]
+                points_with_date: [] as PointsWithDateForGenericBurnup[]
             } as GenericBurnupData;
 
             const total = getTotal(generic);
@@ -108,8 +108,8 @@ describe("BurnupChartDrawer", () => {
             };
         }
 
-        function getGenericMaxIs15(): GenericBurnupDatas[] {
-            const points: GenericBurnupDatas[] = [];
+        function getGenericMaxIs15(): PointsWithDateForGenericBurnup[] {
+            const points: PointsWithDateForGenericBurnup[] = [];
             points.push({
                 date: "2019-07-01T00:00:00+00:00",
                 progression: 10,

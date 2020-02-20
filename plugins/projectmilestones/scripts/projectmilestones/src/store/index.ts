@@ -36,7 +36,6 @@ export function createStore(
     label_start_date: string,
     label_timeframe: string,
     user_can_view_sub_milestones_planning: boolean,
-    activate_burnup: boolean,
     burnup_mode: BurnupMode
 ): Store<State> {
     const state: State = {
@@ -54,7 +53,6 @@ export function createStore(
         label_start_date,
         label_timeframe,
         user_can_view_sub_milestones_planning,
-        activate_burnup,
         burnup_mode
     };
 

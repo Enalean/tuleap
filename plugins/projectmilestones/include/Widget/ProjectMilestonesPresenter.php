@@ -67,10 +67,6 @@ class ProjectMilestonesPresenter
      */
     public $user_can_view_sub_milestones_planning;
     /**
-     * @var bool
-     */
-    public $project_milestones_activate_burnup;
-    /**
      * @var string
      */
     public $burnup_mode;
@@ -85,7 +81,6 @@ class ProjectMilestonesPresenter
         string $label_start_date,
         string $label_timeframe,
         bool $user_can_view_sub_milestones_planning,
-        bool $project_milestones_activate_burnup,
         string $burnup_mode
     ) {
         $this->project_id                            = $project->getID();
@@ -97,7 +92,6 @@ class ProjectMilestonesPresenter
         $this->label_start_date                      = $label_start_date;
         $this->label_timeframe                       = $label_timeframe;
         $this->user_can_view_sub_milestones_planning = $user_can_view_sub_milestones_planning;
-        $this->project_milestones_activate_burnup    = $project_milestones_activate_burnup;
         $this->burnup_mode                           = $burnup_mode;
     }
 }

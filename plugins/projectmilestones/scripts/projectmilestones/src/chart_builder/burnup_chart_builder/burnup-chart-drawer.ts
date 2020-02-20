@@ -27,13 +27,17 @@ import { getDaysToDisplay } from "../../../../../../../src/www/scripts/charts-bu
 import { max } from "d3-array";
 import { buildGraphScales } from "../../../../../../../src/www/scripts/charts-builders/line-chart-scales-factory";
 import { select } from "d3-selection";
-import { drawIdealLine } from "../../../../../../../src/www/scripts/charts-builders/chart-lines-service";
+import {
+    drawCurve,
+    drawIdealLine
+} from "../../../../../../../src/www/scripts/charts-builders/chart-lines-service";
 import { getLastGenericBurnupData } from "../chart-data-service";
 import { addScaleLines } from "../chart-scale-drawer";
 import { getCoordinatesScaleLines } from "../chart-scale-helper";
 import { buildChartLayout } from "../../../../../../../src/www/scripts/charts-builders/chart-layout-builder";
 import { TimeScaleLabelsFormatter } from "../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
 import { removeAllLabelsOverlapsOthersLabels } from "../time-scale-label-formatter";
+import { getDisplayableDataForBurnup } from "../chart-data-service";
 
 export { createBurnupChart, getTotal };
 
@@ -45,6 +49,7 @@ function createBurnupChart(
     generic_burnup_data: GenericBurnupData
 ): void {
     const x_axis_tick_values = getDaysToDisplay(generic_burnup_data),
+        displayable_data = getDisplayableDataForBurnup(generic_burnup_data.points_with_date),
         total_effort = getTotal(generic_burnup_data);
 
     const properties = {
@@ -97,6 +102,9 @@ function createBurnupChart(
         removeAllLabelsOverlapsOthersLabels(svg_burnup);
 
         addScaleLines(svg_burnup, coordinates_scale_lines);
+
+        drawCurve(svg_burnup, { x_scale, y_scale }, displayable_data, "total");
+        drawCurve(svg_burnup, { x_scale, y_scale }, displayable_data, "progression");
     }
 
     function getLastDataTotal(): number {

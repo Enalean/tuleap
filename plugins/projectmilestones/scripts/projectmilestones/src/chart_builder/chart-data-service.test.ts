@@ -18,7 +18,8 @@
  */
 
 import { PointsWithDateForBurndown } from "../type";
-import { getDisplayableData } from "./chart-data-service";
+import { getDisplayableData, getDisplayableDataForBurnup } from "./chart-data-service";
+import { PointsWithDateForGenericBurnup } from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
 
 describe("chartDataService", () => {
     describe("getDisplayableData", () => {
@@ -30,12 +31,30 @@ describe("chartDataService", () => {
         });
     });
 
+    describe("getDisplayableDataForBurnup", () => {
+        it("Get only data without empty total and progression", () => {
+            const points = getDisplayableDataForBurnup(getPointsWithDateForGenericBurnup());
+            expect(points.length).toEqual(1);
+            expect(points[0].total).toEqual(40);
+            expect(points[0].progression).toEqual(30);
+        });
+    });
+
     function getPointsWithDateWithMaxIs15(): PointsWithDateForBurndown[] {
         return [
             { date: "2019-07-01T00:00:00+00:00", remaining_effort: null },
             { date: "2019-07-02T00:00:00+00:00", remaining_effort: 10 },
             { date: "2019-07-03T00:00:00+00:00", remaining_effort: null },
             { date: "2019-07-04T00:00:00+00:00", remaining_effort: 15 }
+        ];
+    }
+
+    function getPointsWithDateForGenericBurnup(): PointsWithDateForGenericBurnup[] {
+        return [
+            { date: "2019-07-01T00:00:00+00:00", total: null, progression: null },
+            { date: "2019-07-02T00:00:00+00:00", total: null, progression: 10 },
+            { date: "2019-07-03T00:00:00+00:00", total: 15, progression: null },
+            { date: "2019-07-04T00:00:00+00:00", total: 40, progression: 30 }
         ];
     }
 });
