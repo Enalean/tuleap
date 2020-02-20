@@ -896,6 +896,8 @@ class Docman_ItemFactory
         ?int $obsolescence_date,
         $user_id,
         $item_type_id,
+        DateTimeImmutable $create_date,
+        DateTimeImmutable $update_date,
         $wiki_page = null,
         $link_url = null
     ) {
@@ -904,8 +906,8 @@ class Docman_ItemFactory
             'description'       => $description,
             'parent_id'         => $parent_id,
             'group_id'          => $this->groupId,
-            'create_date'       => time(),
-            'update_date'       => time(),
+            'create_date'       => $create_date->getTimestamp(),
+            'update_date'       => $update_date->getTimestamp(),
             'user_id'           => $user_id,
             'status'            => $status_id,
             'obsolescence_date' => $obsolescence_date,

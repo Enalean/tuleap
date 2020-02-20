@@ -28,9 +28,14 @@ class ImportPropertiesTest extends TestCase
 {
     public function testWiki(): void
     {
-        $properties = ImportProperties::buildWiki('title', 'description', 'wiki page name');
+        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+
+        $properties = ImportProperties::buildWiki('title', 'description', 'wiki page name', $create_date, $update_date);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
+        $this->assertEquals($create_date, $properties->getCreateDate());
+        $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals('wiki page name', $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $properties->getItemTypeId());
@@ -38,9 +43,14 @@ class ImportPropertiesTest extends TestCase
 
     public function testLink(): void
     {
-        $properties = ImportProperties::buildLink('title', 'description', 'link url');
+        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+
+        $properties = ImportProperties::buildLink('title', 'description', 'link url', $create_date, $update_date);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
+        $this->assertEquals($create_date, $properties->getCreateDate());
+        $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals('link url', $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_LINK, $properties->getItemTypeId());
@@ -48,9 +58,14 @@ class ImportPropertiesTest extends TestCase
 
     public function testEmpty(): void
     {
-        $properties = ImportProperties::buildEmpty('title', 'description');
+        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+
+        $properties = ImportProperties::buildEmpty('title', 'description', $create_date, $update_date);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
+        $this->assertEquals($create_date, $properties->getCreateDate());
+        $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $properties->getItemTypeId());
@@ -58,9 +73,14 @@ class ImportPropertiesTest extends TestCase
 
     public function testFolder(): void
     {
-        $properties = ImportProperties::buildFolder('title', 'description');
+        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+
+        $properties = ImportProperties::buildFolder('title', 'description', $create_date, $update_date);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
+        $this->assertEquals($create_date, $properties->getCreateDate());
+        $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $properties->getItemTypeId());
@@ -68,9 +88,14 @@ class ImportPropertiesTest extends TestCase
 
     public function testFile(): void
     {
-        $properties = ImportProperties::buildFile('title', 'description');
+        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+
+        $properties = ImportProperties::buildFile('title', 'description', $create_date, $update_date);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
+        $this->assertEquals($create_date, $properties->getCreateDate());
+        $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FILE, $properties->getItemTypeId());
@@ -78,9 +103,14 @@ class ImportPropertiesTest extends TestCase
 
     public function testEmbbeded(): void
     {
-        $properties = ImportProperties::buildEmbedded('title', 'description');
+        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+
+        $properties = ImportProperties::buildEmbedded('title', 'description', $create_date, $update_date);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
+        $this->assertEquals($create_date, $properties->getCreateDate());
+        $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $properties->getItemTypeId());

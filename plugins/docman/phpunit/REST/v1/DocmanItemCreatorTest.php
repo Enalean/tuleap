@@ -182,7 +182,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, null, null)
+            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, \Mockery::any(), \Mockery::any(), null, null)
             ->once()
             ->andReturns($created_item);
 
@@ -272,7 +272,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, "Monchichi", null)
+            ->with('Title', '', 11, 100, (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, \Mockery::any(), \Mockery::any(), "Monchichi", null)
             ->once()
             ->andReturns($created_item);
 
@@ -516,6 +516,8 @@ class DocmanItemCreatorTest extends TestCase
                 0,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                \Mockery::any(),
+                \Mockery::any(),
                 null,
                 'https://my.example.test'
             )
@@ -591,7 +593,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, null, null)
+            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, \Mockery::any(), \Mockery::any(), null, null)
             ->once()
             ->andReturns($created_item);
 
@@ -665,7 +667,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Embedded file', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, null, null)
+            ->with('Embedded file', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, \Mockery::any(), \Mockery::any(), null, null)
             ->once()
             ->andReturns($created_item);
 
@@ -809,6 +811,8 @@ class DocmanItemCreatorTest extends TestCase
                 0,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+                \Mockery::any(),
+                \Mockery::any(),
                 null,
                 null
             )
@@ -872,7 +876,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, $obsolescence_date_time_stamp, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, null, null)
+            ->with('Title', '', 11, 100, $obsolescence_date_time_stamp, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, \Mockery::any(), \Mockery::any(), null, null)
             ->once()
             ->andReturns($created_item);
 
@@ -941,6 +945,8 @@ class DocmanItemCreatorTest extends TestCase
                 $obsolescence_date_time_stamp,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+                \Mockery::any(),
+                \Mockery::any(),
                 null,
                 null
             )
@@ -1012,6 +1018,8 @@ class DocmanItemCreatorTest extends TestCase
                 $obsolescence_date_time_stamp,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                \Mockery::any(),
+                \Mockery::any(),
                 null,
                 'https://my.example.test'
             )
@@ -1087,6 +1095,8 @@ class DocmanItemCreatorTest extends TestCase
                 $obsolescence_date_time_stamp,
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+                \Mockery::any(),
+                \Mockery::any(),
                 "Monchocho",
                 null
             )

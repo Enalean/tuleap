@@ -29,6 +29,8 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
+use Tuleap\xml\InvalidDateException;
 
 class NodeImporterTest extends TestCase
 {
@@ -66,14 +68,19 @@ class NodeImporterTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */
     private $user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ImportPropertiesExtractor
+     */
+    private $properties_extractor;
 
     protected function setUp(): void
     {
-        $this->logger              = Mockery::mock(LoggerInterface::class);
-        $this->item_importer       = Mockery::mock(ItemImporter::class);
-        $this->file_importer       = Mockery::mock(PostFileImporter::class);
-        $this->folder_importer     = Mockery::mock(PostFolderImporter::class);
-        $this->do_nothing_importer = Mockery::mock(PostDoNothingImporter::class);
+        $this->logger               = Mockery::mock(LoggerInterface::class);
+        $this->item_importer        = Mockery::mock(ItemImporter::class);
+        $this->file_importer        = Mockery::mock(PostFileImporter::class);
+        $this->folder_importer      = Mockery::mock(PostFolderImporter::class);
+        $this->do_nothing_importer  = Mockery::mock(PostDoNothingImporter::class);
+        $this->properties_extractor = Mockery::mock(ImportPropertiesExtractor::class);
 
         $this->parent_item = Mockery::mock(Docman_Item::class);
         $this->user        = Mockery::mock(PFUser::class);
@@ -83,8 +90,133 @@ class NodeImporterTest extends TestCase
             $this->file_importer,
             $this->folder_importer,
             $this->do_nothing_importer,
-            $this->logger
+            $this->logger,
+            $this->properties_extractor
         );
+    }
+
+    public function testImportCannotInstantiateItemWeHaveJustCreatedInDBException(): void
+    {
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <item type="file">
+                <properties>
+                    <title>My document</title>
+                </properties>
+            </item>
+            EOS
+        );
+
+        $properties = ImportProperties::buildFile(
+            'My document',
+            '',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
+        $this->logger
+            ->shouldReceive('debug')
+            ->with('Importing file: My document')
+            ->once();
+        $this->item_importer
+            ->shouldReceive('import')
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
+            ->once()
+            ->andThrow(CannotInstantiateItemWeHaveJustCreatedInDBException::class);
+        $this->logger
+            ->shouldReceive('error')
+            ->with('An error occurred while creating in DB the item: ' . $node->properties->title)
+            ->once();
+
+        $this->importer->import($node, $this->parent_item, $this->user);
+    }
+
+    public function testImportInvalidDateException(): void
+    {
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <item type="file">
+                <properties>
+                    <title>My document</title>
+                </properties>
+            </item>
+            EOS
+        );
+
+        $properties = ImportProperties::buildFile(
+            'My document',
+            '',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
+        $this->logger
+            ->shouldReceive('debug')
+            ->with('Importing file: My document')
+            ->once();
+        $this->item_importer
+            ->shouldReceive('import')
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
+            ->once()
+            ->andThrow(InvalidDateException::class);
+        $this->logger
+            ->shouldReceive('error')
+            ->once();
+
+        $this->importer->import($node, $this->parent_item, $this->user);
+    }
+
+    public function testImportUnknownItemTypeException(): void
+    {
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <item type="file">
+                <properties>
+                    <title>My document</title>
+                </properties>
+            </item>
+            EOS
+        );
+
+        $properties = ImportProperties::buildFile(
+            'My document',
+            '',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
+        $this->logger
+            ->shouldReceive('debug')
+            ->with('Importing file: My document')
+            ->once();
+        $this->item_importer
+            ->shouldReceive('import')
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
+            ->once()
+            ->andThrow(UnknownItemTypeException::class);
+        $this->logger
+            ->shouldReceive('error')
+            ->once();
+
+        $this->importer->import($node, $this->parent_item, $this->user);
     }
 
     public function testImportEmpty(): void
@@ -100,22 +232,26 @@ class NodeImporterTest extends TestCase
             EOS
         );
 
+        $properties = ImportProperties::buildEmpty(
+            'My document',
+            '',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
         $this->logger
             ->shouldReceive('debug')
             ->with('Importing empty: My document')
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with(
-                $node,
-                $this->importer,
-                $this->do_nothing_importer,
-                $this->parent_item,
-                $this->user,
-                Mockery::on(static function (ImportProperties $properties): bool {
-                    return $properties->getItemTypeId() === PLUGIN_DOCMAN_ITEM_TYPE_EMPTY;
-                })
-            )->once();
+            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $this->user, $properties)
+            ->once();
 
 
         $this->importer->import($node, $this->parent_item, $this->user);
@@ -135,23 +271,27 @@ class NodeImporterTest extends TestCase
             EOS
         );
 
+        $properties = ImportProperties::buildWiki(
+            'My document',
+            '',
+            'MyWikiPage',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
         $this->logger
             ->shouldReceive('debug')
             ->with('Importing wiki: My document')
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with(
-                $node,
-                $this->importer,
-                $this->do_nothing_importer,
-                $this->parent_item,
-                $this->user,
-                Mockery::on(static function (ImportProperties $properties): bool {
-                    return $properties->getItemTypeId() === PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-                        && $properties->getWikiPage() === 'MyWikiPage';
-                })
-            )->once();
+            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $this->user, $properties)
+            ->once();
 
 
         $this->importer->import($node, $this->parent_item, $this->user);
@@ -171,23 +311,27 @@ class NodeImporterTest extends TestCase
             EOS
         );
 
+        $properties = ImportProperties::buildLink(
+            'My document',
+            '',
+            'https://example.test',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
         $this->logger
             ->shouldReceive('debug')
             ->with('Importing link: My document')
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with(
-                $node,
-                $this->importer,
-                $this->do_nothing_importer,
-                $this->parent_item,
-                $this->user,
-                Mockery::on(static function (ImportProperties $properties): bool {
-                    return $properties->getItemTypeId() === PLUGIN_DOCMAN_ITEM_TYPE_LINK
-                        && $properties->getLinkUrl() === 'https://example.test';
-                })
-            )->once();
+            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $this->user, $properties)
+            ->once();
 
 
         $this->importer->import($node, $this->parent_item, $this->user);
@@ -206,22 +350,26 @@ class NodeImporterTest extends TestCase
             EOS
         );
 
+        $properties = ImportProperties::buildFolder(
+            'My document',
+            '',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
         $this->logger
             ->shouldReceive('debug')
             ->with('Importing folder: My folder')
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with(
-                $node,
-                $this->importer,
-                $this->folder_importer,
-                $this->parent_item,
-                $this->user,
-                Mockery::on(static function (ImportProperties $properties): bool {
-                    return $properties->getItemTypeId() === PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
-                })
-            )->once();
+            ->with($node, $this->importer, $this->folder_importer, $this->parent_item, $this->user, $properties)
+            ->once();
 
 
         $this->importer->import($node, $this->parent_item, $this->user);
@@ -240,22 +388,26 @@ class NodeImporterTest extends TestCase
             EOS
         );
 
+        $properties = ImportProperties::buildFile(
+            'My document',
+            '',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
         $this->logger
             ->shouldReceive('debug')
             ->with('Importing file: My document')
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with(
-                $node,
-                $this->importer,
-                $this->file_importer,
-                $this->parent_item,
-                $this->user,
-                Mockery::on(static function (ImportProperties $properties): bool {
-                    return $properties->getItemTypeId() === PLUGIN_DOCMAN_ITEM_TYPE_FILE;
-                })
-            )->once();
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
+            ->once();
 
 
         $this->importer->import($node, $this->parent_item, $this->user);
@@ -274,58 +426,26 @@ class NodeImporterTest extends TestCase
             EOS
         );
 
+        $properties = ImportProperties::buildEmbedded(
+            'My document',
+            '',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable()
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
         $this->logger
             ->shouldReceive('debug')
             ->with('Importing embeddedfile: My document')
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with(
-                $node,
-                $this->importer,
-                $this->file_importer,
-                $this->parent_item,
-                $this->user,
-                Mockery::on(static function (ImportProperties $properties): bool {
-                    return $properties->getItemTypeId() === PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
-                })
-            )->once();
-
-
-        $this->importer->import($node, $this->parent_item, $this->user);
-    }
-
-    public function testImportItemWithItsDescription(): void
-    {
-        $node = new SimpleXMLElement(
-            <<<EOS
-            <?xml version="1.0" encoding="UTF-8"?>
-            <item type="empty">
-                <properties>
-                    <title>My document</title>
-                    <description>The description</description>
-                </properties>
-            </item>
-            EOS
-        );
-
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing empty: My document')
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
             ->once();
-        $this->item_importer
-            ->shouldReceive('import')
-            ->with(
-                $node,
-                $this->importer,
-                $this->do_nothing_importer,
-                $this->parent_item,
-                $this->user,
-                Mockery::on(static function (ImportProperties $properties): bool {
-                    return $properties->getDescription() === 'The description'
-                        && $properties->getTitle() === 'My document';
-                })
-            )->once();
 
 
         $this->importer->import($node, $this->parent_item, $this->user);

@@ -176,6 +176,8 @@ class DocmanItemCreator
         } else {
             $obsolescence_date_time_stamp = (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE;
         }
+
+        $current_date = new \DateTimeImmutable();
         $item = $this->item_factory->createWithoutOrdering(
             $title,
             $description,
@@ -184,6 +186,8 @@ class DocmanItemCreator
             $obsolescence_date_time_stamp,
             $user->getId(),
             $item_type_id,
+            $current_date,
+            $current_date,
             $wiki_page,
             $link_url
         );

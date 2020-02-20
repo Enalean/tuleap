@@ -64,6 +64,8 @@ class ItemImporter
             0,
             $user->getId(),
             $properties->getItemTypeId(),
+            $properties->getCreateDate(),
+            $properties->getUpdateDate(),
             $properties->getWikiPage(),
             $properties->getLinkUrl()
         );
