@@ -25,40 +25,40 @@ namespace Tuleap\OAuth2Server\App;
 /**
  * @psalm-immutable
  */
-final class OAuth2App
+final class ClientIdentifier
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var \Project
-     */
-    private $project;
+    /** @var int */
+    private $identifier;
+    /** @var string */
+    private $prefixed_identifier;
 
-    public function __construct(int $id, string $name, \Project $project)
+    private function __construct(int $identifier, string $identifier_key)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->project = $project;
+        $this->identifier          = $identifier;
+        $this->prefixed_identifier = $identifier_key;
     }
 
-    public function getId(): int
+    /**
+     * @psalm-pure
+     * @psalm-return self
+     * @throws InvalidClientIdentifierKey
+     */
+    public static function fromClientId(string $identifier_key): self
     {
-        return $this->id;
+        if (preg_match('/^tlp-client-id-(?<id>\d+)$/', $identifier_key, $matches) !== 1) {
+            throw new InvalidClientIdentifierKey($identifier_key);
+        }
+
+        return new self((int) $matches['id'], $identifier_key);
     }
 
-    public function getName(): string
+    public function getInternalId(): int
     {
-        return $this->name;
+        return $this->identifier;
     }
 
-    public function getProject(): \Project
+    public function toString()
     {
-        return $this->project;
+        return $this->prefixed_identifier;
     }
 }

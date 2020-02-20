@@ -1,0 +1,61 @@
+<div class="oauth2-server-authorization-form">
+    <h1>{{# dgettext }}tuleap-oauth2_server | Authorize application{{/ dgettext }}</h1>
+
+    <h2>{{# dgettext }}tuleap-oauth2_server |
+        %s by project %s wants to connect to your Tuleap account. |
+        {{ app_name }} |
+        {{ project_name }}
+    {{/ dgettext }}</h2>
+
+    <p>{{# dgettext }}tuleap-oauth2_server | Please review the permissions you are about to give to %s: |
+        {{ app_name }}
+    {{/ dgettext }}</p>
+
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <section class="tlp-pane-section-for-cards">
+                <div class="tlp-card">
+                    <p>First permission
+                        <small class="oauth2-server-scope-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua.</small>
+                    </p>
+                </div>
+                <div class="tlp-card">
+                    <p>Second permission
+                        <small class="oauth2-server-scope-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua.</small>
+                    </p>
+                </div>
+                <div class="tlp-card">
+                    <p>Third permission
+                        <small class="oauth2-server-scope-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua.</small>
+                    </p>
+                </div>
+                <div class="tlp-card">
+                    <p>Fourth permission
+                        <small class="oauth2-server-scope-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua.</small>
+                    </p>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <div class="oauth2-server-authorization-form-actions">
+        <button
+            type="button"
+            disabled
+            class="tlp-button-outline tlp-button-primary tlp-button-large"
+        >
+            {{# dgettext }}tuleap-oauth2_server | Cancel{{/ dgettext }}
+        </button>
+        <button
+            type="button"
+            disabled
+            class="tlp-button-primary tlp-button-large oauth2-server-authorization-form-action-authorize"
+        >
+            {{# dgettext }}tuleap-oauth2_server | Authorize{{/ dgettext }}
+        </button>
+    </div>
+</div>

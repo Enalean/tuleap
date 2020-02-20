@@ -38,11 +38,16 @@ final class AppFactoryTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|AppDao
      */
     private $app_dao;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|\ProjectManager
+     */
+    private $project_manager;
 
     protected function setUp(): void
     {
-        $this->app_dao     = M::mock(AppDao::class);
-        $this->app_factory = new AppFactory($this->app_dao);
+        $this->app_dao         = M::mock(AppDao::class);
+        $this->project_manager = M::mock(\ProjectManager::class);
+        $this->app_factory     = new AppFactory($this->app_dao, $this->project_manager);
     }
 
     public function testGetAppsForProject(): void
@@ -62,5 +67,47 @@ final class AppFactoryTest extends TestCase
             [new OAuth2App(1, 'Jenkins', $project), new OAuth2App(2, 'My custom REST client', $project)],
             $result
         );
+    }
+
+    public function testGetAppMatchingClientIdThrowsWhenIDNotFoundInDatabase(): void
+    {
+        $this->app_dao->shouldReceive('searchByClientId')
+            ->once()
+            ->andReturnNull();
+        $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
+
+        $this->expectException(OAuth2AppNotFoundException::class);
+        $this->app_factory->getAppMatchingClientId($client_id);
+    }
+
+    public function testGetAppMatchingClientIdThrowsWhenProjectNotFound(): void
+    {
+        $this->app_dao->shouldReceive('searchByClientId')
+            ->once()
+            ->andReturn(['id' => 1, 'name' => 'Jenkins', 'project_id' => 404]);
+        $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
+        $this->project_manager->shouldReceive('getValidProject')
+            ->once()
+            ->with(404)
+            ->andThrow(new \Project_NotFoundException());
+
+        $this->expectException(OAuth2AppNotFoundException::class);
+        $this->app_factory->getAppMatchingClientId($client_id);
+    }
+
+    public function testGetAppMatchingClientIdReturnsAnApp(): void
+    {
+        $this->app_dao->shouldReceive('searchByClientId')
+            ->once()
+            ->andReturn(['id' => 1, 'name' => 'Jenkins', 'project_id' => 102]);
+        $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
+        $project   = M::mock(\Project::class);
+        $this->project_manager->shouldReceive('getValidProject')
+            ->once()
+            ->with(102)
+            ->andReturn($project);
+
+        $result = $this->app_factory->getAppMatchingClientId($client_id);
+        $this->assertEquals(new OAuth2App(1, 'Jenkins', $project), $result);
     }
 }

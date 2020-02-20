@@ -25,40 +25,10 @@ namespace Tuleap\OAuth2Server\App;
 /**
  * @psalm-immutable
  */
-final class OAuth2App
+final class InvalidClientIdentifierKey extends \RuntimeException
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var \Project
-     */
-    private $project;
-
-    public function __construct(int $id, string $name, \Project $project)
+    public function __construct(string $invalid_identifier_key)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->project = $project;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getProject(): \Project
-    {
-        return $this->project;
+        parent::__construct("$invalid_identifier_key is not a valid identifier key, expected something formatted tlp-client-id-<integer>");
     }
 }

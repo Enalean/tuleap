@@ -20,11 +20,21 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
+const entry_points = {
+    "project-administration": "./scripts/src/project-administration.ts"
+};
+
+const colors = ["blue", "green", "grey", "orange", "purple", "red"];
+for (const color of colors) {
+    entry_points[`authorization-form-${color}`] = `./themes/authorization-form-${color}.scss`;
+    entry_points[
+        `authorization-form-${color}-condensed`
+    ] = `./themes/authorization-form-${color}-condensed.scss`;
+}
+
 module.exports = [
     {
-        entry: {
-            "project-administration": "./scripts/src/project-administration.ts"
-        },
+        entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/oauth2_server"),
@@ -38,7 +48,8 @@ module.exports = [
                 ...webpack_configurator.configureTypescriptRules(
                     webpack_configurator.babel_options_ie11
                 ),
-                webpack_configurator.rule_po_files
+                webpack_configurator.rule_po_files,
+                webpack_configurator.rule_scss_loader
             ]
         },
         resolve: {
@@ -47,7 +58,8 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(false)
+            webpack_configurator.getTypescriptCheckerPlugin(false),
+            ...webpack_configurator.getCSSExtractionPlugins()
         ]
     }
 ];

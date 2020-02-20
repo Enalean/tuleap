@@ -27,6 +27,16 @@ use Tuleap\DB\DataAccessObject;
 class AppDao extends DataAccessObject
 {
     /**
+     * @psalm-return array{id:int, project_id:int, name:string}
+     */
+    public function searchByClientId(ClientIdentifier $client_id): ?array
+    {
+        $sql = 'SELECT * FROM plugin_oauth2_server_app
+            WHERE id = ?';
+        return $this->getDB()->row($sql, $client_id->getInternalId());
+    }
+
+    /**
      * @psalm-return array<array{id:int, project_id:int, name:string}>
      */
     public function searchByProject(\Project $project): array
