@@ -23,13 +23,6 @@
 
 class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
 {
-
-    public function __construct($da)
-    {
-        parent::__construct($da);
-        $this->table_name = 'plugin_docman_approval_user';
-    }
-
     public function getUgroupMembers($ugroupId, $groupId)
     {
         require_once __DIR__ . '/../../../../../src/www/project/admin/ugroup_utils.php';
@@ -91,7 +84,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
 
     public function prepareUserRanking($tableId, $userId, $rank)
     {
-        return parent::prepareRanking($userId, $tableId, $rank, 'reviewer_id', 'table_id');
+        return parent::prepareRanking('plugin_docman_approval_user', $userId, $tableId, $rank, 'reviewer_id', 'table_id');
     }
 
     public function addUser($tableId, $userId)

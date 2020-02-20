@@ -27,12 +27,12 @@ class ArtifactReportFieldDao extends DataAccessObject
 
     public function prepareResultRanking($field_name, $report_id, $rank)
     {
-        return $this->prepareRanking($field_name, $report_id, $rank, 'field_name', 'report_id', 'place_result');
+        return $this->prepareRanking('artifact_report_field', $field_name, $report_id, $rank, 'field_name', 'report_id', 'place_result');
     }
 
     public function prepareQueryRanking($field_name, $report_id, $rank)
     {
-        return $this->prepareRanking($field_name, $report_id, $rank, 'field_name', 'report_id', 'place_query');
+        return $this->prepareRanking('artifact_report_field', $field_name, $report_id, $rank, 'field_name', 'report_id', 'place_query');
     }
 
     public function searchByReportIdAndFieldName($report_id, $field_name)
