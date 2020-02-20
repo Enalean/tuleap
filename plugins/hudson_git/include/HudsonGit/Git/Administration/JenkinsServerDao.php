@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
 use Tuleap\DB\DataAccessObject;
 
-class GitJenkinsAdministrationServerDao extends DataAccessObject
+class JenkinsServerDao extends DataAccessObject
 {
     public function addJenkinsServer(int $project_id, string $jenkins_server_url): void
     {

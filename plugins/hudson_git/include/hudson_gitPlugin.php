@@ -32,15 +32,15 @@ use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\HudsonGit\GitJenkinsAdministrationController;
-use Tuleap\HudsonGit\GitJenkinsAdministrationDeleteController;
-use Tuleap\HudsonGit\GitJenkinsAdministrationPaneBuilder;
-use Tuleap\HudsonGit\GitJenkinsAdministrationPOSTController;
-use Tuleap\HudsonGit\GitJenkinsAdministrationServerAdder;
-use Tuleap\HudsonGit\GitJenkinsAdministrationServerDao;
-use Tuleap\HudsonGit\GitJenkinsAdministrationServerDeleter;
-use Tuleap\HudsonGit\GitJenkinsAdministrationServerFactory;
-use Tuleap\HudsonGit\GitJenkinsAdministrationURLBuilder;
+use Tuleap\HudsonGit\Git\Administration\AddController;
+use Tuleap\HudsonGit\Git\Administration\AdministrationController;
+use Tuleap\HudsonGit\Git\Administration\AdministrationPaneBuilder;
+use Tuleap\HudsonGit\Git\Administration\DeleteController;
+use Tuleap\HudsonGit\Git\Administration\JenkinsServerAdder;
+use Tuleap\HudsonGit\Git\Administration\JenkinsServerDao;
+use Tuleap\HudsonGit\Git\Administration\JenkinsServerDeleter;
+use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
+use Tuleap\HudsonGit\Git\Administration\URLBuilder;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\Hook;
@@ -143,31 +143,31 @@ class hudson_gitPlugin extends Plugin
         });
     }
 
-    public static function getDeleteGitAdministrationJenkinsServer(): GitJenkinsAdministrationDeleteController
+    public static function getDeleteGitAdministrationJenkinsServer(): DeleteController
     {
-        return new GitJenkinsAdministrationDeleteController(
+        return new DeleteController(
             ProjectManager::instance(),
             self::getGitPermissionsManager(),
-            new GitJenkinsAdministrationServerFactory(
-                new GitJenkinsAdministrationServerDao(),
+            new JenkinsServerFactory(
+                new JenkinsServerDao(),
                 ProjectManager::instance()
             ),
-            new GitJenkinsAdministrationServerDeleter(
-                new GitJenkinsAdministrationServerDao()
+            new JenkinsServerDeleter(
+                new JenkinsServerDao()
             ),
-            new CSRFSynchronizerToken(GitJenkinsAdministrationURLBuilder::buildDeleteUrl())
+            new CSRFSynchronizerToken(URLBuilder::buildDeleteUrl())
         );
     }
 
-    public static function getPostGitAdministrationJenkinsServer(): GitJenkinsAdministrationPOSTController
+    public static function getPostGitAdministrationJenkinsServer(): AddController
     {
-        return new GitJenkinsAdministrationPOSTController(
+        return new AddController(
             ProjectManager::instance(),
             self::getGitPermissionsManager(),
-            new GitJenkinsAdministrationServerAdder(
-                new GitJenkinsAdministrationServerDao()
+            new JenkinsServerAdder(
+                new JenkinsServerDao()
             ),
-            new CSRFSynchronizerToken(GitJenkinsAdministrationURLBuilder::buildAddUrl())
+            new CSRFSynchronizerToken(URLBuilder::buildAddUrl())
         );
     }
 
@@ -179,17 +179,17 @@ class hudson_gitPlugin extends Plugin
         );
     }
 
-    public function routeGetGitJenkinsAdministration(): GitJenkinsAdministrationController
+    public function routeGetGitJenkinsAdministration(): AdministrationController
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         assert($git_plugin instanceof GitPlugin);
 
-        return new GitJenkinsAdministrationController(
+        return new AdministrationController(
             ProjectManager::instance(),
             self::getGitPermissionsManager(),
             $git_plugin->getMirrorDataMapper(),
-            new GitJenkinsAdministrationServerFactory(
-                new GitJenkinsAdministrationServerDao(),
+            new JenkinsServerFactory(
+                new JenkinsServerDao(),
                 ProjectManager::instance()
             ),
             $git_plugin->getHeaderRenderer(),
@@ -281,6 +281,6 @@ class hudson_gitPlugin extends Plugin
             return;
         }
 
-        $event->addExternalPanePresenter(GitJenkinsAdministrationPaneBuilder::buildPane($event->getProject()));
+        $event->addExternalPanePresenter(AdministrationPaneBuilder::buildPane($event->getProject()));
     }
 }

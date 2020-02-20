@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
 use CSRFSynchronizerToken;
 use GitPermissionsManager;
@@ -37,12 +37,12 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class GitJenkinsAdministrationPOSTControllerTest extends TestCase
+class AddControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var GitJenkinsAdministrationPOSTController
+     * @var AddController
      */
     private $controller;
 
@@ -72,7 +72,7 @@ class GitJenkinsAdministrationPOSTControllerTest extends TestCase
     private $git_permissions_manager;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitJenkinsAdministrationServerAdder
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerAdder
      */
     private $git_jenkins_administration_server_adder;
 
@@ -87,10 +87,10 @@ class GitJenkinsAdministrationPOSTControllerTest extends TestCase
 
         $this->project_manager                         = Mockery::mock(ProjectManager::class);
         $this->git_permissions_manager                 = Mockery::mock(GitPermissionsManager::class);
-        $this->git_jenkins_administration_server_adder = Mockery::mock(GitJenkinsAdministrationServerAdder::class);
+        $this->git_jenkins_administration_server_adder = Mockery::mock(JenkinsServerAdder::class);
         $this->csrf_token                              = Mockery::mock(CSRFSynchronizerToken::class);
 
-        $this->controller = new GitJenkinsAdministrationPOSTController(
+        $this->controller = new AddController(
             $this->project_manager,
             $this->git_permissions_manager,
             $this->git_jenkins_administration_server_adder,

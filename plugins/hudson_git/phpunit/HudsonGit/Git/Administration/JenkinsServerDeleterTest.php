@@ -20,29 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 
-class GitJenkinsAdministrationServerDeleterTest extends TestCase
+class JenkinsServerDeleterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var GitJenkinsAdministrationServerDeleter
+     * @var JenkinsServerDeleter
      */
     private $deleter;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitJenkinsAdministrationServerDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerDao
      */
     private $git_jenkins_administration_server_dao;
 
     /**
-     * @var GitJenkinsAdministrationServer
+     * @var JenkinsServer
      */
     private $jenkins_server;
 
@@ -50,13 +50,13 @@ class GitJenkinsAdministrationServerDeleterTest extends TestCase
     {
         parent::setUp();
 
-        $this->git_jenkins_administration_server_dao = Mockery::mock(GitJenkinsAdministrationServerDao::class);
+        $this->git_jenkins_administration_server_dao = Mockery::mock(JenkinsServerDao::class);
 
-        $this->deleter = new GitJenkinsAdministrationServerDeleter(
+        $this->deleter = new JenkinsServerDeleter(
             $this->git_jenkins_administration_server_dao
         );
 
-        $this->jenkins_server = new GitJenkinsAdministrationServer(
+        $this->jenkins_server = new JenkinsServer(
             1,
             'url',
             Mockery::mock(Project::class)

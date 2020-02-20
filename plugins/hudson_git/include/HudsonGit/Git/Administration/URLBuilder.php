@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 
-class GitJenkinsAdministrationURLBuilderTest extends TestCase
+class URLBuilder
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItBuildsAnURL()
+    public static function buildUrl(Project $project): string
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getUnixName')->once()->andReturn('testprj');
+        return GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/administration/jenkins';
+    }
 
-        $url = GitJenkinsAdministrationURLBuilder::buildUrl($project);
+    public static function buildAddUrl(): string
+    {
+        return "/jenkins_server/";
+    }
 
-        $this->assertEquals(
-            '/plugins/git/testprj/administration/jenkins',
-            $url
-        );
+    public static function buildDeleteUrl(): string
+    {
+        return "/jenkins_server/delete";
     }
 }

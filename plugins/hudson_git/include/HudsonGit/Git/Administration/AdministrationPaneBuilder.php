@@ -20,10 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
-use Exception;
+use Project;
+use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 
-class GitJenkinsAdministrationServerAlreadyDefinedException extends Exception
+class AdministrationPaneBuilder
 {
+    public static function buildPane(Project $project): AdminExternalPanePresenter
+    {
+        return new AdminExternalPanePresenter(
+            'Jenkins',
+            URLBuilder::buildUrl($project),
+            false
+        );
+    }
+
+    public static function buildActivePane(Project $project): AdminExternalPanePresenter
+    {
+        return new AdminExternalPanePresenter(
+            'Jenkins',
+            URLBuilder::buildUrl($project),
+            true
+        );
+    }
 }

@@ -20,33 +20,49 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
-use CSRFSynchronizerToken;
-use GitPresenters_AdminPresenter;
+use Project;
 
-class GitJenkinsAdministrationPresenter extends GitPresenters_AdminPresenter
+/**
+ * @psalm-immutable
+ */
+class JenkinsServer
 {
     /**
-     * @var CSRFSynchronizerToken
+     * @var int
      */
-    public $csrf_token;
+    private $id;
 
     /**
-     * @var GitJenkinsAdministrationServerPresenter[]
+     * @var string
      */
-    public $jenkins_server_presenters;
+    private $jenkins_server_url;
 
-    public function __construct(
-        $project_id,
-        bool $are_mirrors_defined,
-        array $external_pane_presenters,
-        array $jenkins_server_presenters,
-        CSRFSynchronizerToken $csrf_token
-    ) {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
+    /**
+     * @var Project
+     */
+    private $project;
 
-        $this->csrf_token = $csrf_token;
-        $this->jenkins_server_presenters = $jenkins_server_presenters;
+    public function __construct(int $id, string $jenkins_server_url, Project $project)
+    {
+        $this->id = $id;
+        $this->jenkins_server_url = $jenkins_server_url;
+        $this->project = $project;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getServerURL(): string
+    {
+        return $this->jenkins_server_url;
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
     }
 }

@@ -20,37 +20,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
 
-class GitJenkinsAdministrationServerAdder
+class JenkinsServerAdder
 {
     /**
-     * @var GitJenkinsAdministrationServerDao
+     * @var JenkinsServerDao
      */
-    private $git_jenkins_administration_server_dao;
+    private $jenkins_server_dao;
 
-    public function __construct(GitJenkinsAdministrationServerDao $git_jenkins_administration_server_dao)
+    public function __construct(JenkinsServerDao $jenkins_server_dao)
     {
-        $this->git_jenkins_administration_server_dao = $git_jenkins_administration_server_dao;
+        $this->jenkins_server_dao = $jenkins_server_dao;
     }
 
     /**
-     * @throws GitJenkinsAdministrationServerAlreadyDefinedException
+     * @throws JenkinsServerAlreadyDefinedException
      */
     public function addServerInProject(Project $project, string $jenkins_server_url): void
     {
         $project_id = (int) $project->getID();
 
-        if ($this->git_jenkins_administration_server_dao->isJenkinsServerAlreadyDefinedInProject(
+        if ($this->jenkins_server_dao->isJenkinsServerAlreadyDefinedInProject(
             $project_id,
             $jenkins_server_url
         )) {
-            throw new GitJenkinsAdministrationServerAlreadyDefinedException();
+            throw new JenkinsServerAlreadyDefinedException();
         }
 
-        $this->git_jenkins_administration_server_dao->addJenkinsServer(
+        $this->jenkins_server_dao->addJenkinsServer(
             $project_id,
             $jenkins_server_url
         );

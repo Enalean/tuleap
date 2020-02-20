@@ -20,33 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
-use CSRFSynchronizerToken;
-
-class GitJenkinsAdministrationServerPresenter
+class JenkinsServerDeleter
 {
     /**
-     * @var string
+     * @var JenkinsServerDao
      */
-    public $jenkins_server_url;
+    private $jenkins_server_dao;
 
-    /**
-     * @var int
-     */
-    public $jenkins_server_id;
-
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_delete;
-
-    public function __construct(GitJenkinsAdministrationServer $git_jenkins_administration_server)
+    public function __construct(JenkinsServerDao $jenkins_server_dao)
     {
-        $this->jenkins_server_id  = $git_jenkins_administration_server->getId();
-        $this->jenkins_server_url = $git_jenkins_administration_server->getServerURL();
-        $this->csrf_delete        = new CSRFSynchronizerToken(
-            GitJenkinsAdministrationURLBuilder::buildDeleteUrl()
-        );
+        $this->jenkins_server_dao = $jenkins_server_dao;
+    }
+
+    public function deleteServer(JenkinsServer $jenkins_server): void
+    {
+        $this->jenkins_server_dao->deleteJenkinsServer($jenkins_server->getId());
     }
 }

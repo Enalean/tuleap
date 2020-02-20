@@ -20,24 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 
-class GitJenkinsAdministrationServerAdderTest extends TestCase
+class JenkinsServerAdderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var GitJenkinsAdministrationServerAdder
+     * @var JenkinsServerAdder
      */
     private $adder;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitJenkinsAdministrationServerDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerDao
      */
     private $git_jenkins_administration_server_dao;
 
@@ -50,9 +50,9 @@ class GitJenkinsAdministrationServerAdderTest extends TestCase
     {
         parent::setUp();
 
-        $this->git_jenkins_administration_server_dao = Mockery::mock(GitJenkinsAdministrationServerDao::class);
+        $this->git_jenkins_administration_server_dao = Mockery::mock(JenkinsServerDao::class);
 
-        $this->adder = new GitJenkinsAdministrationServerAdder(
+        $this->adder = new JenkinsServerAdder(
             $this->git_jenkins_administration_server_dao
         );
 
@@ -69,7 +69,7 @@ class GitJenkinsAdministrationServerAdderTest extends TestCase
 
         $this->git_jenkins_administration_server_dao->shouldNotReceive('addJenkinsServer');
 
-        $this->expectException(GitJenkinsAdministrationServerAlreadyDefinedException::class);
+        $this->expectException(JenkinsServerAlreadyDefinedException::class);
 
         $this->adder->addServerInProject(
             $this->project,

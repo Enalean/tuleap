@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 
-class GitJenkinsAdministrationPaneBuilderTest extends TestCase
+class AdministrationPaneBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -46,7 +46,7 @@ class GitJenkinsAdministrationPaneBuilderTest extends TestCase
 
     public function testItBuildsAPane()
     {
-        $pane = GitJenkinsAdministrationPaneBuilder::buildPane($this->project);
+        $pane = AdministrationPaneBuilder::buildPane($this->project);
 
         $this->assertEquals('Jenkins', $pane->getPaneName());
         $this->assertStringContainsString(
@@ -58,7 +58,7 @@ class GitJenkinsAdministrationPaneBuilderTest extends TestCase
 
     public function testItBuildsAnActivePane()
     {
-        $pane = GitJenkinsAdministrationPaneBuilder::buildActivePane($this->project);
+        $pane = AdministrationPaneBuilder::buildActivePane($this->project);
 
         $this->assertEquals('Jenkins', $pane->getPaneName());
         $this->assertStringContainsString(
