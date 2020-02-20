@@ -25,6 +25,7 @@
         <template v-slot:interactive_content>
             <div class="tracker-creation-starting-point-options">
                 <tracker-template-card />
+                <tracker-xml-file-card />
             </div>
         </template>
     </step-layout>
@@ -33,6 +34,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import TrackerTemplateCard from "./cards/TrackerTemplate/TrackerTemplateCard.vue";
+import TrackerXmlFileCard from "./cards/TrackerXmlFile/TrackerXmlFileCard.vue";
 import StepLayout from "../layout/StepLayout.vue";
 import StepOneInfo from "./StepOneInfo.vue";
 
@@ -40,6 +42,7 @@ import StepOneInfo from "./StepOneInfo.vue";
     components: {
         StepLayout,
         TrackerTemplateCard,
+        TrackerXmlFileCard,
         StepOneInfo
     }
 })

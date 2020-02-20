@@ -25,7 +25,8 @@ describe("getters", () => {
         it("Is not ready if no option is selected", () => {
             const state: State = {
                 active_option: CreationOptions.NONE_YET,
-                selected_tracker_template: null
+                selected_tracker_template: null,
+                is_a_xml_file_selected: false
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(false);
@@ -34,16 +35,28 @@ describe("getters", () => {
         it("Is not ready if no tracker template is selected", () => {
             const state: State = {
                 active_option: CreationOptions.TRACKER_TEMPLATE,
-                selected_tracker_template: null
+                selected_tracker_template: null,
+                is_a_xml_file_selected: false
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(false);
         });
 
-        it("Is ready otherwise", () => {
+        it("Is ready if TRACKER_TEMPLATE option is selected along with a tracker", () => {
             const state: State = {
                 active_option: CreationOptions.TRACKER_TEMPLATE,
-                selected_tracker_template: { id: "101", name: "Bugs" } as Tracker
+                selected_tracker_template: { id: "101", name: "Bugs" } as Tracker,
+                is_a_xml_file_selected: false
+            } as State;
+
+            expect(getters.is_ready_for_step_2(state)).toBe(true);
+        });
+
+        it("Is ready if TRACKER_XML_FILE option is selected along with a xml file", () => {
+            const state: State = {
+                active_option: CreationOptions.TRACKER_XML_FILE,
+                selected_tracker_template: null,
+                is_a_xml_file_selected: true
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(true);

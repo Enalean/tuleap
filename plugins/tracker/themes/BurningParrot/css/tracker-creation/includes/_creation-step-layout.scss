@@ -70,6 +70,10 @@
 
 #tracker-creation-form {
     width: 600px;
+
+    #tracker-creation-xml-file-selector {
+        display: none;
+    }
 }
 
 #tracker-name,

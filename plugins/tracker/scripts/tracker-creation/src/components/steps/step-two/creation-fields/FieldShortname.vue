@@ -31,6 +31,7 @@
             id="tracker-shortname"
             name="tracker-shortname"
             v-on:keyup="setTrackerShortName($event.target.value)"
+            v-bind:value="tracker_to_be_created.shortname"
             required
         />
         <p class="tlp-text-info">
