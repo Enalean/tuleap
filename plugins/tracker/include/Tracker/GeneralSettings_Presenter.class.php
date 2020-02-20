@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,14 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 
 class Tracker_GeneralSettings_Presenter
 {
+    /**
+     * @var bool
+     */
+    public $has_excessive_shortname_length;
+    /**
+     * @var int
+     */
+    public $max_tracker_length;
 
     /** @var Tracker */
     private $tracker;
@@ -54,6 +62,8 @@ class Tracker_GeneralSettings_Presenter
         $this->config                     = $config;
         $this->artifactbyemail_status     = $artifactbyemail_status;
         $this->cannot_configure_instantiate_for_new_projects = $cannot_configure_instantiate_for_new_projects;
+        $this->has_excessive_shortname_length = strlen($tracker->getItemName()) > Tracker::MAX_TRACKER_SHORTNAME_LENGTH;
+        $this->max_tracker_length = Tracker::MAX_TRACKER_SHORTNAME_LENGTH;
     }
 
     public function is_insecure_emailgateway_properly_configured()

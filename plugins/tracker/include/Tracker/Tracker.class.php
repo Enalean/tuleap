@@ -34,6 +34,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\NewLayoutDao;
+use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
@@ -108,6 +109,10 @@ class Tracker implements Tracker_Dispatchable_Interface
     public const IMPEDIMENT_FIELD_NAME       = "impediment";
     public const TYPE_FIELD_NAME             = "type";
     public const NO_PARENT                   = -1;
+
+    // The limit to 25 char is due to cross references
+    // extraction fails if length is more than 25
+    public const MAX_TRACKER_SHORTNAME_LENGTH = 25;
 
     public const XML_ID_PREFIX = 'T';
 
@@ -1708,18 +1713,51 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayFooter($layout);
     }
 
-    protected function editOptions(HTTPRequest $request)
+    protected function editOptions(HTTPRequest $request): void
     {
-        $old_item_name = $this->getItemName();
-        $old_name      = $this->getName();
-        $cannot_configure_instantiate_for_new_projects = false;
-        $params = array('cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker'=>$this);
-        EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
-        $this->name            = trim($request->getValidated('name', 'string', ''));
-        $this->description     = trim($request->getValidated('description', 'text', ''));
-        $request_tracker_color = $request->get('tracker_color');
+        $previous_shortname = $this->getItemName();
+        $previous_public_name      = $this->getName();
 
-        $this->item_name                    = trim($request->getValidated('item_name', 'string', ''));
+        $reference_manager                = ReferenceManager::instance();
+        $tracker_general_settings_checker = new TrackerGeneralSettingsChecker(
+            TrackerFactory::instance(),
+            $reference_manager
+        );
+
+        $validated_tracker_color = $request->get('tracker_color');
+        $validated_public_name = trim($request->getValidated('name', 'string', ''));
+        $validated_short_name  = trim($request->getValidated('item_name', 'string', ''));
+
+        try {
+            $tracker_general_settings_checker->check(
+                $this->group_id,
+                $previous_shortname,
+                $previous_public_name,
+                $validated_public_name,
+                $validated_tracker_color,
+                $validated_short_name
+            );
+        } catch (\Tuleap\Tracker\Admin\TrackerIsInvalidException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $exception->getTranslatedMessage()
+            );
+
+            return;
+        }
+
+        $cannot_configure_instantiate_for_new_projects = false;
+        $params = [
+            'cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects,
+            'tracker'                                       => $this
+        ];
+        EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
+
+        $this->name            = $validated_public_name;
+        $request_tracker_color = $validated_tracker_color;
+        $this->item_name                    = $validated_short_name;
+
+        $this->description     = trim($request->getValidated('description', 'text', ''));
         $this->allow_copy                   = $request->getValidated('allow_copy') ? 1 : 0;
         $this->enable_emailgateway          = $request->getValidated('enable_emailgateway') ? 1 : 0;
         $this->submit_instructions          = $request->getValidated('submit_instructions', 'text', '');
@@ -1727,74 +1765,28 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->instantiate_for_new_projects = $request->getValidated('instantiate_for_new_projects') || $cannot_configure_instantiate_for_new_projects ? 1 : 0;
         $this->log_priority_changes         = $request->getValidated('log_priority_changes') ? 1 : 0;
 
-        if (!$this->name || !$request_tracker_color || !$this->item_name) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'name_requ'));
-        } else {
-            if ($old_name != $this->name) {
-                if (TrackerFactory::instance()->isNameExists($this->name, $this->group_id)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'name_already_exists', $this->name));
-                    return false;
-                }
-            }
-            if ($old_item_name != $this->item_name) {
-                if (!$this->itemNameIsValid($this->item_name)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'invalid_shortname', $this->item_name, CODENDI_PURIFIER_CONVERT_HTML));
-                    return false;
-                }
+        try {
+            $this->color = TrackerColor::fromName((string) $request_tracker_color);
 
-                if (TrackerFactory::instance()->isShortNameExists($this->item_name, $this->group_id)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'shortname_already_exists', $this->item_name));
-                    return false;
-                }
+            //Update reference and cross references
+            //WARNING this replace existing reference(s) so that all old_item_name reference won't be extracted anymore
+            $reference_manager->updateProjectReferenceShortName($this->group_id, $previous_shortname, $this->item_name);
 
-                $reference_manager = ReferenceManager::instance();
-                if (!$reference_manager->checkKeyword($this->item_name)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'invalid_shortname', $this->item_name, CODENDI_PURIFIER_CONVERT_HTML));
-                    return false;
-                }
-
-                if ($reference_manager->_isKeywordExists($this->item_name, $this->group_id)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'shortname_already_exists', $this->item_name, CODENDI_PURIFIER_CONVERT_HTML));
-                    return false;
-                }
-
-                //Update reference and cross references
-                //WARNING this replace existing reference(s) so that all old_item_name reference won't be extracted anymore
-                $reference_manager->updateProjectReferenceShortName($this->group_id, $old_item_name, $this->item_name);
-
-                $artifact_link_value_dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
-                $artifact_link_value_dao->updateItemName($this->group_id, $old_item_name, $this->item_name);
-            }
-
-            if ($request_tracker_color !== false) {
-                try {
-                    $this->color = TrackerColor::fromName((string) $request_tracker_color);
-                } catch (InvalidArgumentException $ex) {
-                    $GLOBALS['Response']->addFeedback(
-                        Feedback::ERROR,
-                        dgettext('tuleap-tracker', 'Invalid color tracker name')
-                    );
-                    return false;
-                }
-            }
+            $artifact_link_value_dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+            $artifact_link_value_dao->updateItemName($this->group_id, $previous_shortname, $this->item_name);
 
             $dao = new TrackerDao();
             if ($dao->save($this)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin', 'successfully_updated'));
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_admin', 'successfully_updated'));
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error'));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'error'));
             }
+        } catch (InvalidArgumentException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-tracker', 'Invalid color tracker name')
+            );
         }
-    }
-
-    /**
-     * Validate the format of the item name
-     * @param string $item_name
-     * @return bool
-     */
-    public function itemNameIsValid($item_name)
-    {
-        return (bool) preg_match("/^[a-zA-Z0-9_]+$/i", $item_name);
     }
 
     /**
