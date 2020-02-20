@@ -33,3 +33,29 @@
         }
     }
 }
+
+.remove-jenkins-server-popover {
+    display: none;
+}
+
+.git-administration-jenkins-server {
+    > .popover {
+        h3 {
+            border: 0;
+            background: #da5353;
+            color: #ffffff;
+        }
+
+        form {
+            margin: 0;
+
+            .remove-jenkins-server-confirm-actions {
+                text-align: right;
+            }
+        }
+
+        p {
+            font-size: 13px;
+        }
+    }
+}

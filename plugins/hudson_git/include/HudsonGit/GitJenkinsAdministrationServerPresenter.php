@@ -29,13 +29,24 @@ class GitJenkinsAdministrationServerPresenter
      */
     private $jenkins_server_url;
 
-    public function __construct(string $jenkins_server_url)
+    /**
+     * @var int
+     */
+    private $id;
+
+    public function __construct(int $id, string $jenkins_server_url)
     {
+        $this->id = $id;
         $this->jenkins_server_url = $jenkins_server_url;
     }
 
     public function getJenkinsServerUrl(): string
     {
         return $this->jenkins_server_url;
+    }
+
+    public function getJenkinsServerId(): int
+    {
+        return $this->id;
     }
 }

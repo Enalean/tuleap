@@ -168,7 +168,8 @@ class hudson_gitPlugin extends Plugin
             $git_plugin->getMirrorDataMapper(),
             new GitJenkinsAdministrationServerDao(),
             $git_plugin->getHeaderRenderer(),
-            TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates')
+            TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates'),
+            $this->getIncludeAssets()
         );
     }
 

@@ -35,6 +35,7 @@ use ProjectManager;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
@@ -92,6 +93,11 @@ class GitJenkinsAdministrationControllerTest extends TestCase
      */
     private $git_jenkins_administration_server_dao;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
+     */
+    private $include_assets;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -102,6 +108,7 @@ class GitJenkinsAdministrationControllerTest extends TestCase
         $this->renderer                              = Mockery::mock(TemplateRenderer::class);
         $this->mirror_data_mapper                    = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
         $this->git_jenkins_administration_server_dao = Mockery::mock(GitJenkinsAdministrationServerDao::class);
+        $this->include_assets                        = Mockery::mock(IncludeAssets::class);
 
         $this->controller = new GitJenkinsAdministrationController(
             $this->project_manager,
@@ -109,7 +116,8 @@ class GitJenkinsAdministrationControllerTest extends TestCase
             $this->mirror_data_mapper,
             $this->git_jenkins_administration_server_dao,
             $this->header_renderer,
-            $this->renderer
+            $this->renderer,
+            $this->include_assets
         );
 
         $this->layout  = Mockery::mock(BaseLayout::class);
@@ -226,6 +234,8 @@ class GitJenkinsAdministrationControllerTest extends TestCase
         $this->header_renderer->shouldReceive('renderServiceAdministrationHeader')->once();
         $this->renderer->shouldReceive('renderToPage')->once();
         $this->layout->shouldReceive('footer')->once();
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->once();
+        $this->include_assets->shouldReceive('getFileURL')->once();
 
         $this->controller->process($this->request, $this->layout, $variables);
     }
