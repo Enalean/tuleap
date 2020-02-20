@@ -123,7 +123,8 @@ class XMLExportVisitorTest extends TestCase
                     'path' => '/toto',
                     'filetype' => 'image/png',
                     'filesize' => 256,
-                    'filename' => 'toto.png'
+                    'filename' => 'toto.png',
+                    'date' => 1234567890
                 ]),
             ])->once();
         $this->archive->shouldReceive('addFile')->with('documents/content-142.bin', '/toto')->once();
@@ -146,6 +147,7 @@ class XMLExportVisitorTest extends TestCase
                     <filename><![CDATA[toto.png]]></filename>
                     <filetype><![CDATA[image/png]]></filetype>
                     <filesize><![CDATA[256]]></filesize>
+                    <date format="ISO8601"><![CDATA[2009-02-14T00:31:30+01:00]]></date>
                     <content><![CDATA[documents/content-142.bin]]></content>
                   </version>
                   <version>

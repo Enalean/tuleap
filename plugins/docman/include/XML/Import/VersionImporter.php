@@ -28,6 +28,8 @@ use Docman_VersionFactory;
 use PFUser;
 use Project;
 use SimpleXMLElement;
+use Tuleap\xml\InvalidDateException;
+use Tuleap\xml\XMLDateHelper;
 
 class VersionImporter
 {
@@ -47,26 +49,33 @@ class VersionImporter
      * @var Project
      */
     private $project;
+    /**
+     * @var \DateTimeImmutable
+     */
+    private $current_date;
 
     public function __construct(
         Docman_VersionFactory $version_factory,
         Docman_FileStorage $docman_file_storage,
         Project $project,
-        string $extraction_path
+        string $extraction_path,
+        \DateTimeImmutable $current_date
     ) {
         $this->version_factory     = $version_factory;
         $this->docman_file_storage = $docman_file_storage;
         $this->project             = $project;
         $this->extraction_path     = $extraction_path;
+        $this->current_date        = $current_date;
     }
 
     /**
-     * @throws UnableToCreateFileOnFilesystemException|UnableToCreateVersionInDbException
+     * @throws UnableToCreateFileOnFilesystemException|UnableToCreateVersionInDbException|InvalidDateException
      */
     public function import(SimpleXMLElement $node, Docman_Item $item, \PFUser $user, int $version_number)
     {
+        $date      = $this->getDate($node);
         $file_path = $this->createFileOnFilesystem($node, $item, $version_number);
-        $this->createVersionEntryInDb($item, $version_number, $user, $node, $file_path);
+        $this->createVersionEntryInDb($item, $version_number, $user, $node, $file_path, $date);
     }
 
     /**
@@ -96,7 +105,8 @@ class VersionImporter
         int $version_number,
         PFUser $user,
         SimpleXMLElement $version,
-        string $file_path
+        string $file_path,
+        \DateTimeImmutable $date
     ): void {
         $is_item_created = $this->version_factory->create(
             [
@@ -107,12 +117,24 @@ class VersionImporter
                 'filesize' => (int) $version->filesize,
                 'filetype' => (string) $version->filetype,
                 'path'     => $file_path,
-                'date'     => (new \DateTimeImmutable)->getTimestamp(),
+                'date'     => $date->getTimestamp(),
             ]
         );
         if ($is_item_created === false) {
             \unlink($file_path);
             throw new UnableToCreateVersionInDbException($version_number, $item);
         }
+    }
+
+    /**
+     * @throws InvalidDateException
+     */
+    private function getDate(SimpleXMLElement $version): \DateTimeImmutable
+    {
+        if (! isset($version->date)) {
+            return $this->current_date;
+        }
+
+        return XMLDateHelper::extractFromNode($version->date);
     }
 }

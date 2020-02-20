@@ -38,6 +38,7 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\xml\XMLDateHelper;
 use XML_SimpleXMLCDATAFactory;
 
 /**
@@ -157,6 +158,10 @@ class XMLExportVisitor implements ItemVisitor
         $this->appendTextChild($node, 'filename', $version->getFileName());
         $this->appendTextChild($node, 'filetype', $version->getFileType());
         $this->appendTextChild($node, 'filesize', $version->getFilesize());
+        $date = $version->getDate();
+        if ($date) {
+            XMLDateHelper::addChild($node, 'date', (new \DateTimeImmutable())->setTimestamp($date));
+        }
         $file_name = 'documents/' . sprintf('content-%d.bin', $version->getId());
         $this->appendTextChild($node, 'content', $file_name);
         $this->archive->addFile($file_name, $version->getPath());
