@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\AccessToken;
 
-use Tuleap\DB\DataAccessObject;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\User\OAuth2\OAuth2Exception;
 
-class OAuth2AccessTokenDAO extends DataAccessObject
+final class OAuth2AccessTokenExpiredException extends \RuntimeException implements OAuth2Exception
 {
-    /**
-     * @psalm-return null|array{verifier:string,user_id:int,expiration_date:int}
-     */
-    public function searchAccessToken(int $access_token_id): ?array
+    public function __construct(SplitToken $token)
     {
-        return $this->getDB()->row('SELECT verifier, user_id, expiration_date FROM oauth2_access_token WHERE id = ?', $access_token_id);
+        parent::__construct(sprintf('The OAuth2 access token #%d has expired', $token->getID()));
     }
 }

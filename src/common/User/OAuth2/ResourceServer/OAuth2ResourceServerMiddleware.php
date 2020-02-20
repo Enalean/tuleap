@@ -31,6 +31,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\OAuth2Exception;
@@ -105,6 +106,12 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
                 ->withHeader(
                     'WWW-Authenticate',
                     self::WWW_AUTHENTICATE_HEADER_BASE . 'error="invalid_token" error_description="Access token is malformed"'
+                );
+        } catch (OAuth2AccessTokenExpiredException $exception) {
+            return $this->response_factory->createResponse(401)
+                ->withHeader(
+                    'WWW-Authenticate',
+                    self::WWW_AUTHENTICATE_HEADER_BASE . 'error="invalid_token" error_description="Access token has expired"'
                 );
         } catch (OAuth2AccessTokenDoesNotHaveRequiredScopeException $exception) {
             $needed_scope_identifier = $exception->getNeededScope()->getIdentifier()->toString();

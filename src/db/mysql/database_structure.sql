@@ -27,7 +27,6 @@
 # Host: localhost    Database: tuleap
 #-------------------------------------------------------
 # Server version	3.23.51-log
-
 CREATE TABLE tuleap_installed_version
 (
     version VARCHAR(254) NULL
@@ -953,7 +952,9 @@ CREATE TABLE user_access_key_scope (
 CREATE TABLE oauth2_access_token (
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT(11) NOT NULL,
-    verifier VARCHAR(255) NOT NULL
+    verifier VARCHAR(255) NOT NULL,
+    expiration_date INT(11) UNSIGNED NOT NULL,
+    INDEX idx_expiration_date (expiration_date)
 );
 
 CREATE TABLE oauth2_access_token_scope (
