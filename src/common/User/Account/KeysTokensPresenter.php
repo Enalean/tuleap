@@ -50,10 +50,15 @@ final class KeysTokensPresenter
      * @var SVNTokensPresenter
      */
     public $svn_tokens_presenter;
+    /**
+     * @var AccountTabPresenterCollection
+     */
+    public $tabs;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, SSHKeysPresenter $ssh_keys_presenter, AccessKeyPresenter $access_key_presenter, SVNTokensPresenter $svn_tokens_presenter)
+    public function __construct(CSRFSynchronizerToken $csrf_token, AccountTabPresenterCollection $tabs, SSHKeysPresenter $ssh_keys_presenter, AccessKeyPresenter $access_key_presenter, SVNTokensPresenter $svn_tokens_presenter)
     {
         $this->csrf_token = $csrf_token;
+        $this->tabs = $tabs;
         $this->access_key_presenter = $access_key_presenter;
         $this->ssh_keys_presenter = $ssh_keys_presenter;
         $this->svn_tokens_presenter = $svn_tokens_presenter;

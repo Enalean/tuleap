@@ -20,6 +20,7 @@
  * phpcs:ignoreFile
  */
 
+use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\DisplayKeysTokensController;
 
 class User_PreferencesPresenter
@@ -77,6 +78,10 @@ class User_PreferencesPresenter
     public $is_condensed;
     public $display_density_name;
     public $display_density_condensed;
+    /**
+     * @var AccountTabPresenterCollection
+     */
+    public $tabs;
 
     public function __construct(
         PFUser $user,
@@ -94,7 +99,8 @@ class User_PreferencesPresenter
         array $plugins_prefs,
         array $all_csv_separator,
         array $all_csv_dateformat,
-        array $default_formats
+        array $default_formats,
+        AccountTabPresenterCollection $tabs
     ) {
         $this->user                    = $user;
         $this->can_change_real_name    = $can_change_real_name;
@@ -121,6 +127,7 @@ class User_PreferencesPresenter
         $this->display_density_condensed = PFUser::DISPLAY_DENSITY_CONDENSED;
 
         $this->is_condensed = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED;
+        $this->tabs = $tabs;
     }
 
     public function avatar()

@@ -28,6 +28,7 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use Tuleap\Git\Account\AccountGerritController;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
@@ -153,6 +154,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
@@ -161,6 +163,7 @@ use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
+use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\PasswordVerifier;
 
 require_once 'constants.php';
@@ -316,6 +319,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(CLICommandsCollector::NAME);
         $this->addHook(AccessKeyScopeBuilderCollector::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
+        $this->addHook(AccountTabPresenterCollection::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2697,6 +2701,15 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
+    public function routeGetAccountGerrit(): DispatchableWithRequest
+    {
+        return new AccountGerritController(
+            EventManager::instance(),
+            TemplateRendererFactory::build(),
+            $this->getGerritServerFactory(),
+        );
+    }
+
     public function routeGetGit()
     {
         return new GitRepositoryListController(
@@ -2763,6 +2776,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
         $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
             EventManager::instance()->processEvent(new \Tuleap\Git\CollectGitRoutesEvent($r));
+
+            $r->get('/account/gerrit', $this->getRouteHandler('routeGetAccountGerrit'));
 
             $r->get('/index.php/{project_id:\d+}/view/{repository_id:\d+}/[{args}]', $this->getRouteHandler('routeGetLegacyURLForRepository'));
 
@@ -2942,5 +2957,10 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
+    }
+
+    public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
+    {
+        (new \Tuleap\Git\Account\AccountTabsBuilder($this->getGerritServerFactory()))->addTabs($collection);
     }
 }

@@ -1,9 +1,11 @@
 <div id="account-handler" class="row-fluid">
     <div id="account-maintenance" class="span7">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="/account">{{# gettext }}User preferences{{/ gettext }}</a></li>
-            <li><a href="{{ keys_tokens_url }}"><i class="fa fa-key"></i> {{# gettext }}Keys & Tokens{{/ gettext }}</a></li>
+        {{# tabs }}
+            <li {{# is_active }}class="active"{{/ is_active }}><a href="{{ href }}">{{ label }}</a></li>
+        {{/ tabs }}
         </ul>
+
         {{> info }}
         {{> shell }}
         {{> details }}

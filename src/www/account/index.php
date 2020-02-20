@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\User\Account\AccountTabPresenterCollection;
+
 require_once __DIR__ . '/../include/pre.php';
 
 session_require(array('isloggedin'=>'1'));
@@ -174,6 +176,9 @@ $default_formats = array(
     )
 );
 
+$tabs = $em->dispatch(new AccountTabPresenterCollection($user, '/account'));
+assert($tabs instanceof AccountTabPresenterCollection);
+
 $presenter = new User_PreferencesPresenter(
     $user,
     $can_change_realname,
@@ -191,6 +196,7 @@ $presenter = new User_PreferencesPresenter(
     $all_csv_separator,
     $all_csv_dateformat,
     $default_formats,
+    $tabs,
 );
 
 $HTML->header(array(

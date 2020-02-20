@@ -270,6 +270,7 @@ class RouteCollector
     public static function getAccountToken(): DispatchableWithRequest
     {
         return new DisplayKeysTokensController(
+            EventManager::instance(),
             TemplateRendererFactory::build(),
             DisplayKeysTokensController::getCSRFToken(),
             AccessKeyPresenterBuilder::build(),
