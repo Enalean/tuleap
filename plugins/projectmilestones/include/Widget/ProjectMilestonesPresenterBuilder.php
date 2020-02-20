@@ -41,6 +41,8 @@ use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -55,6 +57,9 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class ProjectMilestonesPresenterBuilder
 {
+    private const COUNT_ELEMENTS_MODE = "count";
+    private const EFFORT_MODE = "effort";
+
     /**
      * @var HTTPRequest
      */
@@ -99,6 +104,10 @@ class ProjectMilestonesPresenterBuilder
      * @var SemanticTimeframe
      */
     private $semantic_timeframe;
+    /**
+     * @var CountElementsModeChecker
+     */
+    private $count_elements_mode_checker;
 
     public function __construct(
         HTTPRequest $request,
@@ -109,7 +118,8 @@ class ProjectMilestonesPresenterBuilder
         ExplicitBacklogDao $explicit_backlog_dao,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         Planning $root_planning,
-        SemanticTimeframe $semantic_timeframe
+        SemanticTimeframe $semantic_timeframe,
+        CountElementsModeChecker $count_elements_mode_checker
     ) {
         $this->request                                                           = $request;
         $this->agile_dashboard_milestone_backlog_backlog_factory                 = $agile_dashboard_milestone_backlog_backlog_factory;
@@ -122,6 +132,7 @@ class ProjectMilestonesPresenterBuilder
         $this->artifacts_in_explicit_backlog_dao                                 = $artifacts_in_explicit_backlog_dao;
         $this->root_planning                                                     = $root_planning;
         $this->semantic_timeframe                                                = $semantic_timeframe;
+        $this->count_elements_mode_checker                                       = $count_elements_mode_checker;
     }
 
     public static function build(Planning $root_planning): ProjectMilestonesPresenterBuilder
@@ -130,6 +141,7 @@ class ProjectMilestonesPresenterBuilder
             new SemanticTimeframeDao(),
             Tracker_FormElementFactory::instance()
         );
+
         $planning_factory = new PlanningFactory(
             new PlanningDao(),
             TrackerFactory::instance(),
@@ -183,7 +195,8 @@ class ProjectMilestonesPresenterBuilder
             new ExplicitBacklogDao(),
             new ArtifactsInExplicitBacklogDao(),
             $root_planning,
-            $semantic_timeframe_builder->getSemantic($root_planning->getPlanningTracker())
+            $semantic_timeframe_builder->getSemantic($root_planning->getPlanningTracker()),
+            new CountElementsModeChecker(new ProjectsCountModeDao())
         );
     }
 
@@ -199,7 +212,8 @@ class ProjectMilestonesPresenterBuilder
             $this->getLabelStartDateField(),
             $this->getLabelTimeframeField(),
             $this->userCanViewSubMilestonesPlanning(),
-            $this->activateBurnupChart()
+            $this->activateBurnupChart(),
+            $this->getBurnupMode()
         );
     }
 
@@ -300,5 +314,14 @@ class ProjectMilestonesPresenterBuilder
         }
 
         return true;
+    }
+
+    private function getBurnupMode(): string
+    {
+        if ($this->count_elements_mode_checker->burnupMustUseCountElementsMode($this->request->getProject())) {
+            return self::COUNT_ELEMENTS_MODE;
+        }
+
+        return self::EFFORT_MODE;
     }
 }

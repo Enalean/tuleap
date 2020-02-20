@@ -41,6 +41,7 @@ use Tracker;
 use TrackerFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Tuleap\Tracker\TrackerColor;
@@ -118,6 +119,10 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframe
      */
     private $semantic_timeframe;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CountElementsModeChecker
+     */
+    private $count_elements_mode_checker;
 
     public function setUp(): void
     {
@@ -138,6 +143,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->root_planning                                            = Mockery::mock(Planning::class);
         $this->tracker                                                  = Mockery::mock(Tracker::class);
         $this->semantic_timeframe                                       = Mockery::mock(SemanticTimeframe::class);
+        $this->count_elements_mode_checker                              = Mockery::mock(CountElementsModeChecker::class);
 
         $this->root_planning->shouldReceive('getPlanningTracker')->andReturn($this->tracker);
         $this->tracker->shouldReceive('getName')->andReturn("Releases");
@@ -160,7 +166,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
             $this->explicit_backlog_dao,
             $this->artifacts_in_explicit_backlog_dao,
             $this->root_planning,
-            $this->semantic_timeframe
+            $this->semantic_timeframe,
+            $this->count_elements_mode_checker
         );
     }
 
@@ -182,6 +189,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
+
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
@@ -210,6 +219,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
 
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
         $this->assertEquals(3, $built_presenter->nb_upcoming_releases);
@@ -236,6 +247,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
+
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
@@ -269,6 +282,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
+
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter();
         $tracker_json = '[{"id":122,"color_name":"fiesta-red","label":"Bug"},{"id":124,"color_name":"deep-blue","label":"Story"}]';
@@ -306,6 +321,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
 
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
         $this->assertEquals(50, $built_presenter->nb_backlog_items);
@@ -331,6 +348,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
+
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
@@ -361,6 +380,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
 
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
         $this->assertFalse($built_presenter->is_timeframe_duration);
@@ -390,6 +411,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
+
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
@@ -448,6 +471,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(false);
 
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
         $this->assertFalse($built_presenter->user_can_view_sub_milestones_planning);
@@ -475,6 +500,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker, Mockery::mock(Tracker::class)]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
 
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
         $this->assertTrue($built_presenter->user_can_view_sub_milestones_planning);
@@ -500,6 +527,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
             ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
 
         $this->tracker->shouldReceive('getChildren')->andReturn([]);
+
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
@@ -527,10 +556,70 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->tracker->shouldReceive('getChildren')->andReturn([]);
 
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+
         ForgeConfig::set("project_milestones_activate_burnup", 1);
         $built_presenter = $this->builder->getProjectMilestonePresenter();
 
         $this->assertTrue($built_presenter->project_milestones_activate_burnup);
+    }
+
+    public function testBurnupUseEffortMode(): void
+    {
+        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+
+        $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
+
+        $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
+        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+
+        $this->mockTimeframe($this->semantic_timeframe);
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getAllFutureMilestones')
+            ->once()
+            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+
+        $this->tracker->shouldReceive('getChildren')->andReturn([]);
+
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(false);
+
+        ForgeConfig::set("project_milestones_activate_burnup", 1);
+        $built_presenter = $this->builder->getProjectMilestonePresenter();
+
+        $this->assertEquals($built_presenter->burnup_mode, "effort");
+    }
+
+    public function testBurnupUseCountMode(): void
+    {
+        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+
+        $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
+
+        $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
+        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+
+        $this->mockTimeframe($this->semantic_timeframe);
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getAllFutureMilestones')
+            ->once()
+            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+
+        $this->tracker->shouldReceive('getChildren')->andReturn([]);
+
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+
+        ForgeConfig::set("project_milestones_activate_burnup", 1);
+        $built_presenter = $this->builder->getProjectMilestonePresenter();
+
+        $this->assertEquals($built_presenter->burnup_mode, "count");
     }
 
     private function mockAnArtifact(string $name, string $color)
