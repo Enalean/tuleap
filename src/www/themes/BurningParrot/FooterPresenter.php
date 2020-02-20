@@ -20,6 +20,8 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
+use Tuleap\Layout\JavascriptAsset;
+
 class FooterPresenter
 {
     public $javascript_in_footer = array();
@@ -27,8 +29,12 @@ class FooterPresenter
     public $is_footer_shown;
     public $footer;
 
+    /**
+     * @param JavascriptAsset[] $javascript_assets
+     */
     public function __construct(
         array $javascript_in_footer,
+        array $javascript_assets,
         $is_footer_shown,
         $tuleap_version
     ) {
@@ -51,6 +57,9 @@ class FooterPresenter
                 $is_snippet_already_included[$content] = true;
             }
             $this->javascript_in_footer[] = new JavascriptPresenter($content, $is_snippet);
+        }
+        foreach ($javascript_assets as $javascript_asset) {
+            $this->javascript_in_footer[] = new JavascriptPresenter($javascript_asset->getFileURL(), false);
         }
 
         $this->tuleap_version  = $tuleap_version;
