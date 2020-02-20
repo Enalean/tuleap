@@ -62,6 +62,7 @@ class TemplateFactory
             ScrumTemplate::NAME => new ScrumTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
             KanbanTemplate::NAME => new KanbanTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
             IssuesTemplate::NAME => new IssuesTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
+            EmptyTemplate::NAME => new EmptyTemplate($glyph_finder),
         ];
         $this->project_manager = $project_manager;
         $this->glyph_finder    = $glyph_finder;
@@ -95,6 +96,11 @@ class TemplateFactory
                 $templates[] = $template;
             }
         }
+
+        if (count($templates) === 0) {
+            $templates[] = new EmptyTemplate($this->glyph_finder);
+        }
+
         return $templates;
     }
 
