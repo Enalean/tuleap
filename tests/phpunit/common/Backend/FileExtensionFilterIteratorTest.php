@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Backend;
 
-use TuleapTestCase;
+use PHPUnit\Framework\TestCase;
+use RecursiveIteratorIterator;
 
-class FileExtensionFilterIteratorTest extends TuleapTestCase
+final class FileExtensionFilterIteratorTest extends TestCase
 {
-
-    public function itGetsAllTheFiles()
+    public function testItGetsAllTheFiles() : void
     {
-        $iterator = $this->getRecurseDirectoryIterator(array());
+        $iterator = $this->getRecurseDirectoryIterator([]);
         $filtered_files = $this->extractFilenames($iterator);
-        $expected_files = array(
+        $expected_files = [
             'dir1',
             'dir11',
             'file11.js',
@@ -39,27 +41,28 @@ class FileExtensionFilterIteratorTest extends TuleapTestCase
             'file2.txt',
             'file0',
             'file0.php'
-        );
-        $this->assertTrue($this->isArrayEquals($expected_files, $filtered_files));
+        ];
+
+        $this->assertEqualsCanonicalizing($expected_files, $filtered_files);
     }
 
-    public function itFiltersByFileExtension()
+    public function testItFiltersByFileExtension(): void
     {
-        $iterator_php_files = $this->getRecurseDirectoryIterator(array('php'));
+        $iterator_php_files = $this->getRecurseDirectoryIterator(['php']);
         $filtered_php_files = $this->extractFilenames($iterator_php_files);
-        $expected_php_files = array(
+        $expected_php_files = [
             'dir1',
             'dir11',
             'file1.html.php',
             'file1.php',
             'dir2',
             'file0.php'
-        );
-        $this->assertTrue($this->isArrayEquals($expected_php_files, $filtered_php_files));
+        ];
+        $this->assertEqualsCanonicalizing($expected_php_files, $filtered_php_files);
 
-        $iterator_php_js_files = $this->getRecurseDirectoryIterator(array('php', 'js'));
+        $iterator_php_js_files = $this->getRecurseDirectoryIterator(['php', 'js']);
         $filtered_php_js_files = $this->extractFilenames($iterator_php_js_files);
-        $expected_php_js_files = array(
+        $expected_php_js_files = [
             'dir1',
             'dir11',
             'file11.js',
@@ -67,32 +70,29 @@ class FileExtensionFilterIteratorTest extends TuleapTestCase
             'file1.php',
             'dir2',
             'file0.php'
-        );
-        $this->assertTrue($this->isArrayEquals($expected_php_js_files, $filtered_php_js_files));
+        ];
+        $this->assertEqualsCanonicalizing($expected_php_js_files, $filtered_php_js_files);
     }
 
-    public function itFiltersByFileWithoutExtension()
+    public function testItFiltersByFileWithoutExtension(): void
     {
-        $iterator_no_extension_files = $this->getRecurseDirectoryIterator(array(''));
+        $iterator_no_extension_files = $this->getRecurseDirectoryIterator(['']);
         $filtered_no_extension_files = $this->extractFilenames($iterator_no_extension_files);
-        $expected_files = array(
+        $expected_files              = [
             'dir1',
             'dir11',
             'dir2',
             'file0'
-        );
-        $this->assertTrue($this->isArrayEquals($expected_files, $filtered_no_extension_files));
+        ];
+        $this->assertEqualsCanonicalizing($expected_files, $filtered_no_extension_files);
     }
 
-    /**
-     * @return \RecursiveIteratorIterator
-     */
-    private function getRecurseDirectoryIterator(array $allowed_extension)
+    private function getRecurseDirectoryIterator(array $allowed_extension): RecursiveIteratorIterator
     {
         return new \RecursiveIteratorIterator(
             new FileExtensionFilterIterator(
                 new \RecursiveDirectoryIterator(
-                    dirname(__FILE__) . '/_fixtures/iterator_test',
+                    __DIR__ . '/_fixtures/iterator_test',
                     \FilesystemIterator::SKIP_DOTS
                 ),
                 $allowed_extension
@@ -104,20 +104,12 @@ class FileExtensionFilterIteratorTest extends TuleapTestCase
     /**
      * @return string[]
      */
-    private function extractFilenames(\Iterator $iterator)
+    private function extractFilenames(\Iterator $iterator): array
     {
         $filenames = array();
         foreach ($iterator as $path => $file_information) {
             $filenames[] = $file_information->getFilename();
         }
         return $filenames;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isArrayEquals(array $array1, array $array2)
-    {
-        return count($array1) === count($array2) && array_count_values($array1) == array_count_values($array2);
     }
 }
