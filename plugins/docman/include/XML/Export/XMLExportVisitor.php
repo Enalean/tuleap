@@ -86,6 +86,10 @@ class XMLExportVisitor implements ItemVisitor
 
         $properties = $node->addChild('properties');
         $this->appendTextChild($properties, 'title', $item->getTitle());
+        $description = $item->getDescription();
+        if ($description) {
+            $this->appendTextChild($properties, 'description', $description);
+        }
 
         return $node;
     }

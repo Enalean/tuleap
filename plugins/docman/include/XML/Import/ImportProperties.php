@@ -29,6 +29,10 @@ final class ImportProperties
      */
     private $title;
     /**
+     * @var string
+     */
+    private $description;
+    /**
      * @var int
      */
     private $item_type_id;
@@ -43,44 +47,46 @@ final class ImportProperties
 
     private function __construct(
         string $title,
+        string $description,
         int $item_type_id,
         ?string $wiki_page,
         ?string $link_url
     ) {
-        $this->title = $title;
+        $this->title        = $title;
+        $this->description  = $description;
         $this->item_type_id = $item_type_id;
-        $this->wiki_page = $wiki_page;
-        $this->link_url = $link_url;
+        $this->wiki_page    = $wiki_page;
+        $this->link_url     = $link_url;
     }
 
-    public static function buildWiki(string $title, string $wiki_page): self
+    public static function buildWiki(string $title, string $description, string $wiki_page): self
     {
-        return new self($title, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $wiki_page, null);
+        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $wiki_page, null);
     }
 
-    public static function buildLink(string $title, string $link_url): self
+    public static function buildLink(string $title, string $description, string $link_url): self
     {
-        return new self($title, PLUGIN_DOCMAN_ITEM_TYPE_LINK, null, $link_url);
+        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_LINK, null, $link_url);
     }
 
-    public static function buildEmpty(string $title): self
+    public static function buildEmpty(string $title, string $description): self
     {
-        return new self($title, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, null, null);
+        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, null, null);
     }
 
-    public static function buildEmbedded(string $title): self
+    public static function buildEmbedded(string $title, string $description): self
     {
-        return new self($title, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, null, null);
+        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, null, null);
     }
 
-    public static function buildFile(string $title): self
+    public static function buildFile(string $title, string $description): self
     {
-        return new self($title, PLUGIN_DOCMAN_ITEM_TYPE_FILE, null, null);
+        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_FILE, null, null);
     }
 
-    public static function buildFolder(string $title): self
+    public static function buildFolder(string $title, string $description): self
     {
-        return new self($title, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, null, null);
+        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, null, null);
     }
 
     public function getTitle(): string
@@ -101,5 +107,10 @@ final class ImportProperties
     public function getLinkUrl(): ?string
     {
         return $this->link_url;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 }

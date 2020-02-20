@@ -103,30 +103,33 @@ class NodeImporter
      */
     private function getImportProperties(SimpleXMLElement $node): ImportProperties
     {
-        $type = (string) $node['type'];
+        $type        = (string) $node['type'];
+        $title       = (string) $node->properties->title;
+        $description = (string) $node->properties->description;
+
         switch ($type) {
             case self::TYPE_FILE:
-                $properties = ImportProperties::buildFile($node->properties->title);
+                $properties = ImportProperties::buildFile($title, $description);
                 break;
 
             case self::TYPE_EMBEDDEDFILE:
-                $properties = ImportProperties::buildEmbedded($node->properties->title);
+                $properties = ImportProperties::buildEmbedded($title, $description);
                 break;
 
             case self::TYPE_WIKI:
-                $properties = ImportProperties::buildWiki($node->properties->title, (string) $node->pagename);
+                $properties = ImportProperties::buildWiki($title, $description, (string) $node->pagename);
                 break;
 
             case self::TYPE_LINK:
-                $properties = ImportProperties::buildLink($node->properties->title, (string) $node->url);
+                $properties = ImportProperties::buildLink($title, $description, (string) $node->url);
                 break;
 
             case self::TYPE_EMPTY:
-                $properties = ImportProperties::buildEmpty($node->properties->title);
+                $properties = ImportProperties::buildEmpty($title, $description);
                 break;
 
             case self::TYPE_FOLDER:
-                $properties = ImportProperties::buildFolder($node->properties->title);
+                $properties = ImportProperties::buildFolder($title, $description);
                 break;
             default:
                 throw new UnknownItemTypeException($type);
