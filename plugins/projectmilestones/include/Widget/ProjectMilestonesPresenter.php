@@ -70,6 +70,10 @@ class ProjectMilestonesPresenter
      * @var bool
      */
     public $project_milestones_activate_burnup;
+    /**
+     * @var string
+     */
+    public $burnup_mode;
 
     public function __construct(
         Project $project,
@@ -81,7 +85,8 @@ class ProjectMilestonesPresenter
         string $label_start_date,
         string $label_timeframe,
         bool $user_can_view_sub_milestones_planning,
-        bool $project_milestones_activate_burnup
+        bool $project_milestones_activate_burnup,
+        string $burnup_mode
     ) {
         $this->project_id                            = $project->getID();
         $this->nb_upcoming_releases                  = $nb_upcoming_releases;
@@ -93,5 +98,6 @@ class ProjectMilestonesPresenter
         $this->label_timeframe                       = $label_timeframe;
         $this->user_can_view_sub_milestones_planning = $user_can_view_sub_milestones_planning;
         $this->project_milestones_activate_burnup    = $project_milestones_activate_burnup;
+        $this->burnup_mode                           = $burnup_mode;
     }
 }
