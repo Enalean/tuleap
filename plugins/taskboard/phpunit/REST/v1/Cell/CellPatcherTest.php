@@ -30,7 +30,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\UserManager;
+use UserManager;
 use Tuleap\Taskboard\Swimlane\SwimlaneChildrenRetriever;
 
 final class CellPatcherTest extends TestCase

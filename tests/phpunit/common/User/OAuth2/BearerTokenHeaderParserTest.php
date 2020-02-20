@@ -28,6 +28,23 @@ final class BearerTokenHeaderParserTest extends TestCase
 {
     /**
      * @dataProvider dataProviderValidHeaderLines
+     * @dataProvider dataProviderInvalidHeaderLinesLookingLikeABearerToken
+     */
+    public function testDetectsHeaderLinesThatMayContainABearerToken(string $header_line): void
+    {
+        $this->assertTrue((new BearerTokenHeaderParser())->doesHeaderLineContainsBearerTokenInformation($header_line));
+    }
+
+    /**
+     * @dataProvider dataProviderInvalidHeaderLinesThatDoesNotEvenHaveABearerTag
+     */
+    public function testDoesNotDetectHeaderLinesThatCannotContainABearerToken(string $header_line): void
+    {
+        $this->assertFalse((new BearerTokenHeaderParser())->doesHeaderLineContainsBearerTokenInformation($header_line));
+    }
+
+    /**
+     * @dataProvider dataProviderValidHeaderLines
      */
     public function testExtractBearerTokenFromValidHeaderLine(string $header_line, string $expected_identifier): void
     {
@@ -49,7 +66,8 @@ final class BearerTokenHeaderParserTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProviderInvalidHeaderLines
+     * @dataProvider dataProviderInvalidHeaderLinesLookingLikeABearerToken
+     * @dataProvider dataProviderInvalidHeaderLinesThatDoesNotEvenHaveABearerTag
      */
     public function testDoesNotExtractBearerTokenFromInvalidHeaderLine(string $header_line): void
     {
@@ -58,13 +76,20 @@ final class BearerTokenHeaderParserTest extends TestCase
         $this->assertNull($parser->parseHeaderLine($header_line));
     }
 
-    public function dataProviderInvalidHeaderLines(): array
+    public function dataProviderInvalidHeaderLinesLookingLikeABearerToken(): array
     {
         return [
-            ['Basic aaaaaaaaa'],
             ['Bearer  a'],
             ['Bearer a foo'],
             ['Bearer $NotBase64Charset$'],
+        ];
+    }
+
+    public function dataProviderInvalidHeaderLinesThatDoesNotEvenHaveABearerTag(): array
+    {
+        return [
+            ['Basic aaaaaaaaa'],
+            ['']
         ];
     }
 }

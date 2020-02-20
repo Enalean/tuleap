@@ -19,7 +19,10 @@
 
 namespace Tuleap\REST;
 
+use Luracast\Restler\Data\ApiMethodInfo;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
@@ -29,6 +32,14 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
+use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
+use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
+use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\User\OAuth2\BearerTokenHeaderParser;
+use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeExtractorRESTEndpoint;
 use Tuleap\User\PasswordVerifier;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -70,28 +81,57 @@ class UserManager
     public const HTTP_ACCESS_KEY_HEADER     = 'X-Auth-AccessKey';
 
     /**
+     * @var BearerTokenHeaderParser
+     */
+    private $bearer_token_header_parser;
+    /**
      * @var RestReadOnlyAdminUserBuilder
      */
     private $read_only_admin_user_builder;
+    /**
+     * @var OAuth2AccessTokenVerifier
+     */
+    private $oauth2_access_token_verifier;
+    /**
+     * @var SplitTokenIdentifierTranslator
+     */
+    private $access_token_identifier_unserializer;
+    /**
+     * @var OAuth2ScopeExtractorRESTEndpoint
+     */
+    private $oauth2_scope_extractor_endpoint;
 
     public function __construct(
         \UserManager $user_manager,
         User_LoginManager $login_manager,
         AccessKeyHeaderExtractor $access_key_header_extractor,
         AccessKeyVerifier $access_key_verifier,
+        BearerTokenHeaderParser $bearer_token_header_parser,
+        SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
+        OAuth2ScopeExtractorRESTEndpoint $oauth2_scope_extractor_endpoint,
+        OAuth2AccessTokenVerifier $oauth2_access_token_verifier,
         RestReadOnlyAdminUserBuilder $read_only_admin_user_builder
     ) {
-        $this->user_manager                       = $user_manager;
-        $this->login_manager                      = $login_manager;
-        $this->access_key_header_extractor        = $access_key_header_extractor;
-        $this->access_key_verifier                = $access_key_verifier;
-        $this->read_only_admin_user_builder       = $read_only_admin_user_builder;
+        $this->user_manager                         = $user_manager;
+        $this->login_manager                        = $login_manager;
+        $this->access_key_header_extractor          = $access_key_header_extractor;
+        $this->access_key_verifier                  = $access_key_verifier;
+        $this->bearer_token_header_parser           = $bearer_token_header_parser;
+        $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
+        $this->oauth2_scope_extractor_endpoint      = $oauth2_scope_extractor_endpoint;
+        $this->oauth2_access_token_verifier         = $oauth2_access_token_verifier;
+        $this->read_only_admin_user_builder         = $read_only_admin_user_builder;
     }
 
     public static function build(): self
     {
         $user_manager     = \UserManager::instance();
         $password_handler = PasswordHandlerFactory::getPasswordHandler();
+
+        $oauth2_scope_builder = new AuthenticationScopeBuilderFromClassNames(
+            OAuth2ProjectReadScope::class
+        );
+
         return new self(
             $user_manager,
             new User_LoginManager(
@@ -111,6 +151,18 @@ class UserManager
                     CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder()
                 )
             ),
+            new BearerTokenHeaderParser(),
+            new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
+            new OAuth2ScopeExtractorRESTEndpoint($oauth2_scope_builder),
+            new OAuth2AccessTokenVerifier(
+                new OAuth2AccessTokenDAO(),
+                new OAuth2AccessTokenScopeRetriever(
+                    new OAuth2AccessTokenScopeDAO(),
+                    $oauth2_scope_builder
+                ),
+                $user_manager,
+                new SplitTokenVerificationStringHasher(),
+            ),
             new RestReadOnlyAdminUserBuilder(
                 new User_ForgeUserGroupPermissionsManager(
                     new User_ForgeUserGroupPermissionsDao()
@@ -123,7 +175,7 @@ class UserManager
      * Return user of current request in REST context
      *
      * Tries to get authentication scheme from cookie if any, fallback on token
-     * or access key authentication
+     * or access key authentication or OAuth2 access token
      *
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_StatusDeletedException
@@ -131,10 +183,8 @@ class UserManager
      * @throws \User_StatusInvalidException
      * @throws \User_StatusPendingException
      * @throws \User_PasswordExpiredException
-     *
-     * @return \PFUser
      */
-    public function getCurrentUser()
+    public function getCurrentUser(?ApiMethodInfo $api_method_info): \PFUser
     {
         $user = $this->getUserFromCookie();
         if (! $user->isAnonymous()) {
@@ -143,7 +193,7 @@ class UserManager
             return $user;
         }
         try {
-            $user = $this->getUserFromTuleapRESTAuthenticationFlows();
+            $user = $this->getUserFromTuleapRESTAuthenticationFlows($api_method_info);
         } catch (NoAuthenticationHeadersException $exception) {
             return $this->user_manager->getUserAnonymous();
         }
@@ -171,14 +221,16 @@ class UserManager
     }
 
     /**
-     * @return null|\PFUser
      * @throws NoAuthenticationHeadersException
      * @throws \Rest_Exception_InvalidTokenException
      */
-    private function getUserFromTuleapRESTAuthenticationFlows()
+    private function getUserFromTuleapRESTAuthenticationFlows(?ApiMethodInfo $api_method_info): ?\PFUser
     {
         if ($this->isTryingToUseAccessKeyAuthentication()) {
             return $this->getUserFromAccessKey();
+        }
+        if ($this->isTryingToUseOAuth2AccessToken($api_method_info)) {
+            return $this->getUserFromOAuth2AccessToken($api_method_info);
         }
         if ($this->isTryingToUseTokenAuthentication()) {
             return $this->getUserFromToken();
@@ -208,6 +260,33 @@ class UserManager
 
         $request = \HTTPRequest::instance();
         return $this->access_key_verifier->getUser($access_key, RESTAccessKeyScope::fromItself(), $request->getIPAddress());
+    }
+
+    /**
+     * @psalm-assert-if-true !null $api_method_info
+     */
+    private function isTryingToUseOAuth2AccessToken(?ApiMethodInfo $api_method_info): bool
+    {
+        return $api_method_info !== null &&
+            $this->bearer_token_header_parser->doesHeaderLineContainsBearerTokenInformation($_SERVER['HTTP_AUTHORIZATION'] ?? '');
+    }
+
+    private function getUserFromOAuth2AccessToken(ApiMethodInfo $api_method_info): \PFUser
+    {
+        $authorization_header_line = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+
+        $access_token = $this->bearer_token_header_parser->parseHeaderLine($authorization_header_line);
+
+        if ($access_token === null) {
+            throw new NoAuthenticationHeadersException('Authorization');
+        }
+
+        $required_scope = $this->oauth2_scope_extractor_endpoint->extractRequiredScope($api_method_info);
+
+        return $this->oauth2_access_token_verifier->getUser(
+            $this->access_token_identifier_unserializer->getSplitToken($access_token),
+            $required_scope
+        );
     }
 
     /**

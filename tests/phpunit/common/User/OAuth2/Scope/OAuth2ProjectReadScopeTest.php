@@ -20,35 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\OAuth2;
+namespace Tuleap\User\OAuth2\Scope;
 
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
-/**
- * @see https://tools.ietf.org/html/rfc6750#section-2.1
- */
-final class BearerTokenHeaderParser
+final class OAuth2ProjectReadScopeTest extends AuthenticationScopeTestCase
 {
-    /**
-     * @psalm-pure
-     */
-    public function doesHeaderLineContainsBearerTokenInformation(string $header_line): bool
+    public function getAuthenticationScopeClassname(): string
     {
-        return preg_match('/^\s*Bearer\s.+$/', $header_line) === 1;
-    }
-
-    /**
-     * @psalm-pure
-     */
-    public function parseHeaderLine(string $header_line): ?ConcealedString
-    {
-        $matches = [];
-        preg_match('/^\s*Bearer\s(?<token>(?:[a-zA-Z0-9]|-|\.|\_|\~|\+|\/|=)+)$/', $header_line, $matches);
-
-        if (! isset($matches['token'])) {
-            return null;
-        }
-
-        return new ConcealedString($matches['token']);
+        return OAuth2ProjectReadScope::class;
     }
 }
