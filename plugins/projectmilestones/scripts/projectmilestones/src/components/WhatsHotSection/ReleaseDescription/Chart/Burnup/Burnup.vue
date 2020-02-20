@@ -15,25 +15,30 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
     <div class="release-chart-container">
-        <svg class="release-chart" v-bind:id="`chart-burndown-${release_data.id}`"></svg>
+        <svg class="release-chart" v-bind:id="`chart-burnup-${release_data.id}`"></svg>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../../../type";
+import { BurnupMode, MilestoneData } from "../../../../../type";
 import Vue from "vue";
-import { createBurndownChart } from "../../../../../chart_builder/burndown_chart_builder/burndown-chart-drawer";
+import { createBurnupChart } from "../../../../../chart_builder/burnup_chart_builder/burnup-chart-drawer";
 import { ChartPropsWhithoutTooltip } from "../../../../../../../../../../src/www/scripts/charts-builders/type";
+import { transformToGenericBurnupData } from "../../../../../../../../../agiledashboard/scripts/burnup-chart/src/burnup-data-transformer";
+import { State } from "vuex-class";
 
 @Component
-export default class Burndown extends Vue {
+export default class Burnup extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @State
+    readonly burnup_mode!: BurnupMode;
 
     getChartProps(container_width: number, container_height: number): ChartPropsWhithoutTooltip {
         return {
@@ -49,18 +54,21 @@ export default class Burndown extends Vue {
     }
 
     mounted(): void {
-        if (!this.release_data.burndown_data) {
+        if (!this.release_data.burnup_data) {
             return;
         }
 
-        const chart_container = document.getElementById("chart-burndown-" + this.release_data.id);
+        const generic_burnup_data = transformToGenericBurnupData(
+            this.release_data.burnup_data,
+            this.burnup_mode
+        );
+        const chart_container = document.getElementById("chart-burnup-" + this.release_data.id);
 
         if (chart_container) {
-            createBurndownChart(
+            createBurnupChart(
                 chart_container,
                 this.getChartProps(chart_container.clientWidth, chart_container.clientHeight),
-                this.release_data.burndown_data,
-                this.release_data.id
+                generic_burnup_data
             );
         }
     }

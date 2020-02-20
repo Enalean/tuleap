@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { addScaleLines } from "./burndown-scale-drawer";
+import { addScaleLines } from "./chart-scale-drawer";
 import { Selection, select } from "d3-selection";
 
-describe("BurndownScaleDrawer -", () => {
+describe("ScaleDrawer -", () => {
     describe("addScaleLines -", () => {
         it("When the scales are created, Then there are 2 line element with their attributes", () => {
             const chart_div = getDocument();

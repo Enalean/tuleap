@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,29 +15,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { extent, max } from "d3-array";
+import { max } from "d3-array";
 import { select } from "d3-selection";
-import { buildGraphScales } from "../../../../../../src/www/scripts/charts-builders/line-chart-scales-factory";
-import { getDaysToDisplay } from "../../../../../../src/www/scripts/charts-builders/chart-dates-service";
-import { BurndownData } from "../type";
+import { buildGraphScales } from "../../../../../../../src/www/scripts/charts-builders/line-chart-scales-factory";
+import { getDaysToDisplay } from "../../../../../../../src/www/scripts/charts-builders/chart-dates-service";
+import { BurndownData } from "../../type";
 
 import {
-    ChartPropsBurndownWhithoutTooltip,
+    ChartPropsWhithoutTooltip,
     PropertiesBuilderGraph,
     XYScale
-} from "../../../../../../src/www/scripts/charts-builders/type";
-import { addScaleLines } from "./burndown-scale-drawer";
+} from "../../../../../../../src/www/scripts/charts-builders/type";
+import { addScaleLines } from "../chart-scale-drawer";
 import {
     drawCurve,
     drawIdealLine
-} from "../../../../../../src/www/scripts/charts-builders/chart-lines-service";
-import { buildChartLayout } from "../../../../../../src/www/scripts/charts-builders/chart-layout-builder";
-import { TimeScaleLabelsFormatter } from "../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
-import { removeAllLabelsOverlapsOthersLabels } from "./burndown-time-scale-label-formatter";
-import { getDisplayableData, getLastData } from "./chart-data-service";
-import { addBadgeCaption } from "./chart-badge-generator";
+} from "../../../../../../../src/www/scripts/charts-builders/chart-lines-service";
+import { buildChartLayout } from "../../../../../../../src/www/scripts/charts-builders/chart-layout-builder";
+import { TimeScaleLabelsFormatter } from "../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
+import { removeAllLabelsOverlapsOthersLabels } from "../time-scale-label-formatter";
+import { getDisplayableData, getLastData } from "../chart-data-service";
+import { addBadgeCaption } from "../chart-badge-generator";
+import { getCoordinatesScaleLines } from "../chart-scale-helper";
 
 const DEFAULT_REMAINING_EFFORT = 5;
 
@@ -45,7 +47,7 @@ export { createBurndownChart, getMaxRemainingEffort };
 
 function createBurndownChart(
     chart_container: HTMLElement,
-    chart_props: ChartPropsBurndownWhithoutTooltip,
+    chart_props: ChartPropsWhithoutTooltip,
     burndown_data: BurndownData,
     id_milestone: number
 ): void {
@@ -61,25 +63,7 @@ function createBurndownChart(
 
     const { x_scale, y_scale }: XYScale = buildGraphScales(properties);
 
-    const [x_minimum, x_maximum] = extent(x_scale.domain());
-
-    if (!x_minimum || !x_maximum) {
-        return;
-    }
-
-    const x_scale_minimum = x_scale(x_minimum);
-    const x_scale_maximum = x_scale(x_maximum);
-
-    if (!x_scale_minimum || !x_scale_maximum) {
-        return;
-    }
-
-    const coordinates_scale_lines = {
-        x_coordinate_minimum: x_scale_minimum,
-        y_coordinate_minimum: y_scale(0),
-        x_coordinate_maximum: x_scale_maximum,
-        y_coordinate_maximum: y_scale(y_axis_maximum)
-    };
+    const coordinates_scale_lines = getCoordinatesScaleLines({ x_scale, y_scale }, y_axis_maximum);
 
     const first_ideal_line_point = burndown_data.capacity ? burndown_data.capacity : y_axis_maximum;
 
@@ -89,6 +73,10 @@ function createBurndownChart(
     drawBurndownChart();
 
     function drawBurndownChart(): void {
+        if (!coordinates_scale_lines) {
+            return;
+        }
+
         const svg_burndown = buildChartLayout(
             chart_container,
             chart_props,

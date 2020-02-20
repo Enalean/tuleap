@@ -45,7 +45,7 @@ export function addBadgeCaption(
     buildBadgeBackground();
     addIconFlag();
 
-    badge.append("use").attr("xlink:href", `#release-chart-badge-value-${id_milestone}`);
+    badge.append("use").attr("xlink:href", `#release-chart-burndown-badge-value-${id_milestone}`);
 
     function addIconFlag(): void {
         badge
@@ -62,7 +62,7 @@ export function addBadgeCaption(
     function buildBadgeContent(): Selection<SVGTextElement, unknown, null, undefined> {
         return badge
             .append("text")
-            .attr("id", `release-chart-badge-value-${id_milestone}`)
+            .attr("id", `release-chart-burndown-badge-value-${id_milestone}`)
             .attr("class", "release-chart-badge-value")
             .text(badge_value);
     }

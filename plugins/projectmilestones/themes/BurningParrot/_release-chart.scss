@@ -24,12 +24,12 @@
     padding: 0 0 0 $tlp-half-spacing;
 }
 
-.release-chart-burndown-container {
+.release-chart-container {
     position: relative;
     padding-top: calc(45% + 20px);
 }
 
-.release-chart-burndown {
+.release-chart {
     position: absolute;
     top: 0;
     left: 0;
@@ -38,7 +38,7 @@
 }
 
 .release-line-scale,
-.release-chart-burndown .ideal-line > path {
+.release-chart .ideal-line > path {
     stroke-width: 2px;
     stroke: $tlp-ui-border-normal;
     fill: transparent;

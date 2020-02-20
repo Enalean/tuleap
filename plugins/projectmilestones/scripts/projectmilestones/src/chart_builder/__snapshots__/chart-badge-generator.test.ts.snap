@@ -12,7 +12,7 @@ exports[`ChartBadgeGenerator - When the badge is created, Then value of remainin
     >
       <text
         class="release-chart-badge-value"
-        id="release-chart-badge-value-103"
+        id="release-chart-burndown-badge-value-103"
       >
         1
       </text>
@@ -34,7 +34,7 @@ exports[`ChartBadgeGenerator - When the badge is created, Then value of remainin
         
       </text>
       <use
-        href="#release-chart-badge-value-103"
+        href="#release-chart-burndown-badge-value-103"
       />
     </g>
   </svg>

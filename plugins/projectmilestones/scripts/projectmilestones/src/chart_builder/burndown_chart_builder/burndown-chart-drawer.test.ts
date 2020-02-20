@@ -19,13 +19,13 @@
 
 import { createBurndownChart, getMaxRemainingEffort } from "./burndown-chart-drawer";
 
-import { BurndownData, PointsWithDateForBurndown } from "../type";
-import { ChartPropsBurndownWhithoutTooltip } from "../../../../../../src/www/scripts/charts-builders/type";
-import * as chart_badge_generator from "./chart-badge-generator";
+import { BurndownData, PointsWithDateForBurndown } from "../../type";
+import { ChartPropsWhithoutTooltip } from "../../../../../../../src/www/scripts/charts-builders/type";
+import * as chart_badge_generator from "../chart-badge-generator";
 
-jest.mock("../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
-jest.mock("./burndown-time-scale-label-formatter");
-jest.mock("./chart-badge-generator", () => ({
+jest.mock("../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
+jest.mock("../time-scale-label-formatter");
+jest.mock("../chart-badge-generator", () => ({
     addBadgeCaption: jest.fn()
 }));
 
@@ -131,7 +131,7 @@ describe("BurndownChartDrawer -", () => {
         }
     });
 
-    function getChartProps(): ChartPropsBurndownWhithoutTooltip {
+    function getChartProps(): ChartPropsWhithoutTooltip {
         return {
             graph_width: 100,
             graph_height: 100,

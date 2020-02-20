@@ -28,6 +28,7 @@ import { createStoreMock } from "../../../../../../../../../../src/www/scripts/v
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import ChartError from "../ChartError.vue";
 import BurnupDisplayer from "./BurnupDisplayer.vue";
+import Burnup from "./Burnup.vue";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<BurnupDisplayer> = {};
@@ -259,9 +260,7 @@ describe("BurnupDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.find("[data-test=message-nothing-here]").text()).toBe(
-            "There is nothing here!"
-        );
+        expect(wrapper.contains(Burnup)).toBe(true);
     });
 
     it("When the timeframe is not on duration field and end date field is null, Then there is an error", async () => {

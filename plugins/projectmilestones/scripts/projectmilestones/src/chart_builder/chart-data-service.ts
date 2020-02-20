@@ -20,8 +20,9 @@
 import { getFormattedDates } from "../../../../../../src/www/scripts/charts-builders/chart-dates-service";
 import { PointsWithDate } from "../../../../../../src/www/scripts/charts-builders/type";
 import { PointsNotNullWithDate } from "../type";
+import { GenericBurnupDatas } from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
 
-export { getDisplayableData, getLastData };
+export { getDisplayableData, getLastData, getLastGenericBurnupData };
 
 function getDisplayableData(dataset: PointsWithDate[]): PointsNotNullWithDate[] {
     const formatted_data = getFormattedDates(dataset);
@@ -38,6 +39,14 @@ function getDisplayableData(dataset: PointsWithDate[]): PointsNotNullWithDate[] 
 }
 
 function getLastData(dataset: PointsNotNullWithDate[]): PointsNotNullWithDate | null {
+    if (!dataset.length) {
+        return null;
+    }
+
+    return dataset[dataset.length - 1];
+}
+
+function getLastGenericBurnupData(dataset: GenericBurnupDatas[]): GenericBurnupDatas | null {
     if (!dataset.length) {
         return null;
     }

@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Burndown When component is renderer, Then there is a svg element with id of release 1`] = `
+exports[`Burnup When component is renderer, Then there is a svg element with id of release 1`] = `
 <div
   class="release-chart-container"
 >
   <svg
     class="release-chart"
-    id="chart-burndown-2"
+    id="chart-burnup-2"
   />
 </div>
 `;
