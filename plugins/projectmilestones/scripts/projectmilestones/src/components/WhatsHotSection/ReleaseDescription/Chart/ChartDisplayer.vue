@@ -27,7 +27,7 @@
             </div>
             <div v-if="activate_burnup && burnup_exists" data-test="burnup-exists">
                 <h2 class="tlp-pane-subtitle project-milestones-chart-label">{{ burnup_label }}</h2>
-                <p class="empty-pane-text" v-translate>There is nothing here!</p>
+                <burnup-displayer v-bind:release_data="release_data" />
             </div>
         </div>
         <div v-if="has_rest_error" class="tlp-alert-danger" data-test="error-rest">
@@ -45,9 +45,10 @@ import { getChartData } from "../../../../api/rest-querier";
 import { getBurndownDataFromType, getBurnupDataFromType } from "../../../../helpers/chart-helper";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
 import { State } from "vuex-class";
+import BurnupDisplayer from "./Burnup/BurnupDisplayer.vue";
 
 @Component({
-    components: { BurndownDisplayer }
+    components: { BurnupDisplayer, BurndownDisplayer }
 })
 export default class ChartDisplayer extends Vue {
     @Prop()

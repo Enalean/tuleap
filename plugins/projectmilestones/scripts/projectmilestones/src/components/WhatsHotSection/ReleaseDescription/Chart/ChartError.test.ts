@@ -17,31 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { StoreOptions } from "../../../../../type";
+import { StoreOptions } from "../../../../type";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
-import BurndownError from "./BurndownError.vue";
+import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
+import ChartError from "./ChartError.vue";
 
-const component_options: ShallowMountOptions<BurndownError> = {};
+const component_options: ShallowMountOptions<ChartError> = {};
 const message_error_duration = "'duration' field is empty or invalid.";
 const message_error_start_date = "'start_date' field is empty or invalid.";
 const message_error_under_calculation =
     "Burndown is under calculation. It will be available in a few minutes.";
 
-describe("BurndownError", () => {
+describe("ChartError", () => {
     let store_options: StoreOptions;
     let store;
 
     async function getPersonalWidgetInstance(
         store_options: StoreOptions
-    ): Promise<Wrapper<BurndownError>> {
+    ): Promise<Wrapper<ChartError>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
-        return shallowMount(BurndownError, component_options);
+        return shallowMount(ChartError, component_options);
     }
 
     beforeEach(() => {
