@@ -33,7 +33,7 @@ final class XMLImportTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItImportsConfigurationFromXMLContent()
+    public function testItImportsConfigurationFromXMLContent(): void
     {
         $config          = Mockery::mock(Config::class);
         $tracker_checker = Mockery::mock(TrackerChecker::class);
@@ -59,7 +59,47 @@ final class XMLImportTest extends TestCase
         $xml_import->import($project, $extraction_path, $tracker_mapping);
     }
 
-    public function testItThrowsAnExceptionIfAtLeastOneProvidedTrackerIdIsNotUsable()
+    public function testItImportsNothingIfConfigIsNotSet(): void
+    {
+        $config          = Mockery::mock(Config::class);
+        $tracker_checker = Mockery::mock(TrackerChecker::class);
+
+        $xml_import = new XMLImport($config, $tracker_checker);
+
+        $project         = Mockery::mock(Project::class);
+        $extraction_path = __DIR__ . '/_fixtures';
+        $tracker_mapping = [];
+
+        $tracker_checker->shouldReceive('checkTrackerIsInProject')->never();
+        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->never();
+        $config->shouldReceive('setProjectConfiguration')->never();
+
+        $xml_import->import($project, $extraction_path, $tracker_mapping);
+    }
+
+    public function testItIDoesNotImportANonProperlySetConfiguration(): void
+    {
+        $config          = Mockery::mock(Config::class);
+        $tracker_checker = Mockery::mock(TrackerChecker::class);
+
+        $xml_import = new XMLImport($config, $tracker_checker);
+
+        $project         = Mockery::mock(Project::class);
+        $extraction_path = __DIR__ . '/_fixtures';
+        $tracker_mapping = [
+            'T2' => 102,
+            'T3' => 103
+        ];
+
+        $tracker_checker->shouldReceive('checkTrackerIsInProject')->never();
+        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->never();
+
+        $config->shouldReceive('setProjectConfiguration')->never();
+
+        $xml_import->import($project, $extraction_path, $tracker_mapping);
+    }
+
+    public function testItThrowsAnExceptionIfAtLeastOneProvidedTrackerIdIsNotUsable(): void
     {
         $config          = Mockery::mock(Config::class);
         $tracker_checker = Mockery::mock(TrackerChecker::class);
