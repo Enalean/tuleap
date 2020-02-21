@@ -37,10 +37,6 @@ server {
     listen       [::]:80;
     server_name  %sys_default_domain%;
 
-    location /.well-known/ {
-      root /opt/letsencrypt;
-    }
-
     location / {
       return 301 https://$server_name:443$request_uri;
     }
