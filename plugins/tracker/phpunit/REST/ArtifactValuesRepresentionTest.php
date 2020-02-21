@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,21 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-require_once __DIR__.'/../bootstrap.php';
+use PHPUnit\Framework\TestCase;
 
-class ArtifactValuesRepresentionTest extends \TuleapTestCase
+final class ArtifactValuesRepresentionTest extends TestCase
 {
-    public function itDoesNotFindAValueWhenNoneIsProvided()
+    public function testItDoesNotFindAValueWhenNoneIsProvided(): void
     {
         $artifact_value_representation           = new ArtifactValuesRepresentation();
         $artifact_value_representation->field_id = 1;
 
         $expected_array = array('field_id' => 1);
 
-        $this->assertEqual($artifact_value_representation->toArray(), $expected_array);
+        $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
 
-    public function itAcceptsEmptyArrayAsValue()
+    public function testItAcceptsEmptyArrayAsValue(): void
     {
         $artifact_value_representation           = new ArtifactValuesRepresentation();
         $artifact_value_representation->field_id = 1;
@@ -42,10 +42,10 @@ class ArtifactValuesRepresentionTest extends \TuleapTestCase
 
         $expected_array = array('field_id' => 1, 'value' => array());
 
-        $this->assertEqual($artifact_value_representation->toArray(), $expected_array);
+        $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
 
-    public function itAcceptsEmptyStringAsValue()
+    public function testItAcceptsEmptyStringAsValue(): void
     {
         $artifact_value_representation           = new ArtifactValuesRepresentation();
         $artifact_value_representation->field_id = 1;
@@ -53,10 +53,10 @@ class ArtifactValuesRepresentionTest extends \TuleapTestCase
 
         $expected_array = array('field_id' => 1, 'value' => '');
 
-        $this->assertEqual($artifact_value_representation->toArray(), $expected_array);
+        $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
 
-    public function itAccepts0StringAsValue()
+    public function testItAccepts0StringAsValue(): void
     {
         $artifact_value_representation           = new ArtifactValuesRepresentation();
         $artifact_value_representation->field_id = 1;
@@ -64,10 +64,10 @@ class ArtifactValuesRepresentionTest extends \TuleapTestCase
 
         $expected_array = array('field_id' => 1, 'value' => '0');
 
-        $this->assertEqual($artifact_value_representation->toArray(), $expected_array);
+        $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
 
-    public function itAccepts0IntegerAsValue()
+    public function testItAccepts0IntegerAsValue(): void
     {
         $artifact_value_representation           = new ArtifactValuesRepresentation();
         $artifact_value_representation->field_id = 1;
@@ -75,10 +75,10 @@ class ArtifactValuesRepresentionTest extends \TuleapTestCase
 
         $expected_array = array('field_id' => 1, 'value' => 0);
 
-        $this->assertEqual($artifact_value_representation->toArray(), $expected_array);
+        $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
 
-    public function itAccepts0FloatAsValue()
+    public function testItAccepts0FloatAsValue(): void
     {
         $artifact_value_representation           = new ArtifactValuesRepresentation();
         $artifact_value_representation->field_id = 1;
@@ -86,6 +86,6 @@ class ArtifactValuesRepresentionTest extends \TuleapTestCase
 
         $expected_array = array('field_id' => 1, 'value' => 0.0);
 
-        $this->assertEqual($artifact_value_representation->toArray(), $expected_array);
+        $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
 }
