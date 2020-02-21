@@ -109,6 +109,11 @@ msgid_plural "days to go"
 msgstr[0] "jour restant"
 msgstr[1] "jours restants"
 
+msgid "pt done"
+msgid_plural "pts done"
+msgstr[0] "pt terminé"
+msgstr[1] "pts terminés"
+
 msgid "pt to go"
 msgid_plural "pts to go"
 msgstr[0] "pt restant"

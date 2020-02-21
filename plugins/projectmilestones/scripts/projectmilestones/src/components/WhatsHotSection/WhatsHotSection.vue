@@ -26,6 +26,7 @@
             v-bind:is-open="index === 0"
             v-bind:release_data="milestone"
             v-bind:data-test="`current-milestones-test-${milestone.label}`"
+            v-bind:is-past-release="false"
         />
     </div>
 </template>
@@ -34,8 +35,8 @@
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 import Vue from "vue";
 import { State } from "vuex-class";
-import { MilestoneData } from "../../type";
 import { Component } from "vue-property-decorator";
+import { MilestoneData } from "../../type";
 
 @Component({
     components: { ReleaseDisplayer }
