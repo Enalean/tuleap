@@ -23,39 +23,35 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use CSRFSynchronizerToken;
+use SVN_TokenPresenter;
 
 /**
  * @psalm-immutable
  */
-final class KeysTokensPresenter
+final class SVNTokensPresenter
 {
     /**
-     * @var string
+     * @var SVN_TokenPresenter[]
      */
-    public $keys_tokens_url = DisplayKeysTokensController::URL;
+    public $svn_tokens = [];
     /**
-     * @var CSRFSynchronizerToken
+     * @var bool
      */
-    public $csrf_token;
+    public $has_svn_tokens;
     /**
-     * @var SSHKeysPresenter
+     * @var string|null
      */
-    public $ssh_keys_presenter;
-    /**
-     * @var AccessKeyPresenter
-     */
-    public $access_key_presenter;
-    /**
-     * @var SVNTokensPresenter
-     */
-    public $svn_tokens_presenter;
+    public $last_svn_token;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, SSHKeysPresenter $ssh_keys_presenter, AccessKeyPresenter $access_key_presenter, SVNTokensPresenter $svn_tokens_presenter)
+    /**
+     * @param \SVN_Token[] $svn_tokens
+     */
+    public function __construct(array $svn_tokens, ?string $last_svn_token)
     {
-        $this->csrf_token = $csrf_token;
-        $this->access_key_presenter = $access_key_presenter;
-        $this->ssh_keys_presenter = $ssh_keys_presenter;
-        $this->svn_tokens_presenter = $svn_tokens_presenter;
+        foreach ($svn_tokens as $token) {
+            $this->svn_tokens[] = new SVN_TokenPresenter($token);
+        }
+        $this->has_svn_tokens = count($this->svn_tokens) > 0;
+        $this->last_svn_token = $last_svn_token;
     }
 }

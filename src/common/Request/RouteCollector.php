@@ -28,6 +28,7 @@ use FastRoute;
 use FRSFileFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
+use SVN_TokenHandler;
 use TemplateRendererFactory;
 use TroveCatDao;
 use TroveCatFactory;
@@ -104,12 +105,15 @@ use Tuleap\User\Account\ChangeAvatarController;
 use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
 use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\LogoutController;
+use Tuleap\User\Account\SVNTokensPresenterBuilder;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
 use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
+use Tuleap\User\SVNToken\SVNTokenCreateController;
+use Tuleap\User\SVNToken\SVNTokenRevokeController;
 use Tuleap\Widget\WidgetFactory;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
@@ -269,6 +273,7 @@ class RouteCollector
             TemplateRendererFactory::build(),
             DisplayKeysTokensController::getCSRFToken(),
             AccessKeyPresenterBuilder::build(),
+            SVNTokensPresenterBuilder::build(),
         );
     }
 
@@ -290,6 +295,16 @@ class RouteCollector
     public static function postAccountAccessKeyRevoke(): DispatchableWithRequest
     {
         return new AccessKeyRevocationController(DisplayKeysTokensController::getCSRFToken());
+    }
+
+    public static function postAccountSVNTokenCreate(): DispatchableWithRequest
+    {
+        return new SVNTokenCreateController(DisplayKeysTokensController::getCSRFToken(), SVN_TokenHandler::build());
+    }
+
+    public static function postAccountSVNTokenRevoke(): DispatchableWithRequest
+    {
+        return new SVNTokenRevokeController(DisplayKeysTokensController::getCSRFToken(), SVN_TokenHandler::build());
     }
 
     public static function postAccountAvatar()
@@ -566,6 +581,8 @@ class RouteCollector
             $r->post('/ssh_key/delete', [self::class, 'postAccountSSHKeyDelete']);
             $r->post('/access_key/create', [self::class, 'postAccountAccessKeyCreate']);
             $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
+            $r->post('/svn_token/create', [self::class, 'postAccountSVNTokenCreate']);
+            $r->post('/svn_token/revoke', [self::class, 'postAccountSVNTokenRevoke']);
             $r->post('/avatar', [self::class, 'postAccountAvatar']);
             $r->post('/logout', [self::class, 'postLogoutAccount']);
             $r->post('/disable_legacy_browser_warning', [self::class, 'postDisableLegacyBrowsersWarningMessage']);

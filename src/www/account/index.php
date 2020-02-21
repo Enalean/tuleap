@@ -159,22 +159,6 @@ if (! $user_access_info) {
     );
 }
 
-$svn_token_handler    = new SVN_TokenHandler(
-    new SVN_TokenDao(),
-    new RandomNumberGenerator(),
-    PasswordHandlerFactory::getPasswordHandler()
-);
-$svn_token_presenters = array();
-foreach ($svn_token_handler->getSVNTokensForUser($user) as $user_svn_token) {
-    $svn_token_presenters[] = new SVN_TokenPresenter($user_svn_token);
-}
-
-$last_svn_token = '';
-if (isset($_SESSION['last_svn_token'])) {
-    $last_svn_token = $_SESSION['last_svn_token'];
-    unset($_SESSION['last_svn_token']);
-}
-
 $user_default_format = user_get_preference('user_edition_default_format');
 
 $default_formats = array(
@@ -198,7 +182,6 @@ $presenter = new User_PreferencesPresenter(
     $extra_user_info,
     $user_access_info,
     $ssh_keys_extra_html,
-    $svn_token_presenters,
     $third_paty_html,
     $csrf,
     $tracker_formats,
@@ -207,7 +190,6 @@ $presenter = new User_PreferencesPresenter(
     $plugins_prefs,
     $all_csv_separator,
     $all_csv_dateformat,
-    $last_svn_token,
     $default_formats,
 );
 

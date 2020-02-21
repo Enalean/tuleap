@@ -41,40 +41,6 @@ h3.account-title {
     display: block;
 }
 
-
-#account-shell,
-#account-svn-tokens .svn-tokens-table {
-    width: 100%;
-
-    > tbody > tr > td {
-        &:first-child {
-            width: 20px;
-            text-align: center;
-
-            > input {
-                margin: 0;
-            }
-        }
-    }
-}
-
-.svn-generated-token {
-    font-weight: bold;
-}
-
-#svn-tokens-generate-modal {
-    .modal-body {
-        > p {
-            margin: 0 0 20px;
-        }
-
-        > textarea {
-            width: 100%;
-            box-sizing: border-box;
-        }
-    }
-}
-
 .user-info-label {
     color: grey;
 }

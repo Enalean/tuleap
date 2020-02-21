@@ -10,7 +10,7 @@
 
             {{# last_access_key }}
                 <div class="tlp-alert-success">
-                    <p><i class="fa fa-check" aria-hidden="true"></i> {{# gettext }}Make sure you copy your new access key, you won't be able to see it again!{{/ gettext }}</p>
+                    <p>{{# gettext }}Make sure you copy your new access key, you won't be able to see it again!{{/ gettext }}</p>
                     <p><strong>{{ last_access_key }}</strong></p>
                 </div>
             {{/ last_access_key }}
@@ -90,7 +90,7 @@
                     {{^ has_access_keys }}
                         <tbody>
                         <tr>
-                            <td class="table-cell-empty" colspan="7">{{# gettext }}No access keys{{/ gettext }}</td>
+                            <td class="tlp-table-cell-empty" colspan="7">{{# gettext }}No access keys{{/ gettext }}</td>
                         </tr>
                         </tbody>
                     {{/ has_access_keys }}

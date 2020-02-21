@@ -24,24 +24,9 @@
         popover_is_displayed = false;
 
     $(document).ready(function() {
-        const svn_tokens_delete_button = $("#button-delete-svn-tokens"),
-            svn_tokens_checkboxes = $('input[type="checkbox"][name="svn-tokens-selected[]"]');
-
         loadAvatarReset();
         loadAvatarPreview();
         updateHeightValue();
-
-        changeDeleteButtonStatusDependingCheckboxesStatus(
-            svn_tokens_delete_button,
-            svn_tokens_checkboxes
-        );
-
-        svn_tokens_checkboxes.change(function() {
-            changeDeleteButtonStatusDependingCheckboxesStatus(
-                svn_tokens_delete_button,
-                svn_tokens_checkboxes
-            );
-        });
 
         $(window).resize(updateHeightValue);
 
@@ -168,23 +153,6 @@
         );
 
         $("#account-preferences").height(new_height);
-    }
-
-    function changeDeleteButtonStatusDependingCheckboxesStatus(button, checkboxes) {
-        var at_least_one_checkbox_is_checked = false;
-
-        checkboxes.each(function() {
-            if ($(this)[0].checked) {
-                at_least_one_checkbox_is_checked = true;
-                return;
-            }
-        });
-
-        if (at_least_one_checkbox_is_checked) {
-            button.removeAttr("disabled");
-        } else {
-            button.attr("disabled", true);
-        }
     }
 
     function initThemeVariantSelection() {
