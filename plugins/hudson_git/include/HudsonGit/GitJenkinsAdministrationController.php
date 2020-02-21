@@ -66,9 +66,9 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
     private $mirror_data_mapper;
 
     /**
-     * @var GitJenkinsAdministrationServerDao
+     * @var GitJenkinsAdministrationServerFactory
      */
-    private $git_jenkins_administration_server_dao;
+    private $git_jenkins_administration_server_factory;
 
     /**
      * @var IncludeAssets
@@ -79,18 +79,18 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GitJenkinsAdministrationServerDao $git_jenkins_administration_server_dao,
+        GitJenkinsAdministrationServerFactory $git_jenkins_administration_server_factory,
         HeaderRenderer $header_renderer,
         TemplateRenderer $renderer,
         IncludeAssets $include_assets
     ) {
-        $this->project_manager                       = $project_manager;
-        $this->git_permissions_manager               = $git_permissions_manager;
-        $this->renderer                              = $renderer;
-        $this->header_renderer                       = $header_renderer;
-        $this->mirror_data_mapper                    = $mirror_data_mapper;
-        $this->git_jenkins_administration_server_dao = $git_jenkins_administration_server_dao;
-        $this->include_assets                        = $include_assets;
+        $this->project_manager                           = $project_manager;
+        $this->git_permissions_manager                   = $git_permissions_manager;
+        $this->renderer                                  = $renderer;
+        $this->header_renderer                           = $header_renderer;
+        $this->mirror_data_mapper                        = $mirror_data_mapper;
+        $this->git_jenkins_administration_server_factory = $git_jenkins_administration_server_factory;
+        $this->include_assets                            = $include_assets;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -126,7 +126,7 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
                 ],
                 $this->buildServerPresenters($project),
                 new CSRFSynchronizerToken(
-                    GitJenkinsAdministrationURLBuilder::buildUrl($project)
+                    GitJenkinsAdministrationURLBuilder::buildAddUrl()
                 )
             )
         );
@@ -150,11 +150,8 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
     private function buildServerPresenters(Project $project): array
     {
         $presenters = [];
-        foreach ($this->git_jenkins_administration_server_dao->getJenkinsServerOfProject((int) $project->getID()) as $jenkins_server) {
-            $presenters[] = new GitJenkinsAdministrationServerPresenter(
-                (int) $jenkins_server['id'],
-                (string) $jenkins_server['jenkins_server_url']
-            );
+        foreach ($this->git_jenkins_administration_server_factory->getJenkinsServerOfProject($project) as $jenkins_server) {
+            $presenters[] = new GitJenkinsAdministrationServerPresenter($jenkins_server);
         }
 
         return $presenters;

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit;
 
+use CSRFSynchronizerToken;
 use Feedback;
 use GitPermissionsManager;
 use GitPlugin;
@@ -51,19 +52,29 @@ class GitJenkinsAdministrationPOSTController implements DispatchableWithRequest
      */
     private $git_jenkins_administration_server_adder;
 
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
+
     public function __construct(
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
-        GitJenkinsAdministrationServerAdder $git_jenkins_administration_server_adder
+        GitJenkinsAdministrationServerAdder $git_jenkins_administration_server_adder,
+        CSRFSynchronizerToken $csrf_token
     ) {
         $this->project_manager                         = $project_manager;
         $this->git_permissions_manager                 = $git_permissions_manager;
         $this->git_jenkins_administration_server_adder = $git_jenkins_administration_server_adder;
+        $this->csrf_token                              = $csrf_token;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProjectFromRequest($request);
+        $this->csrf_token->check(
+            GitJenkinsAdministrationURLBuilder::buildUrl($project)
+        );
 
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));

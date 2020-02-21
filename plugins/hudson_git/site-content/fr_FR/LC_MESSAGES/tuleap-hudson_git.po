@@ -20,6 +20,9 @@ msgstr ""
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+msgid "Expected jenkins server ID not found"
+msgstr "L'ID attendu du serveur Jenkins n'a pas été trouvée"
+
 msgid "Expected jenkins server URL not found"
 msgstr "L'adresse attendue du serveur Jenkins n'a pas été trouvée"
 
@@ -41,6 +44,9 @@ msgstr "Enlever"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "The Jenkins server has successfully been Removed."
+msgstr "Le serveur Jenkins a été supprimé."
 
 msgid "The Jenkins server has successfully been added."
 msgstr "Le serveur Jenkins a été ajouté."

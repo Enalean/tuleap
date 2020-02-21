@@ -22,31 +22,47 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit;
 
-use CSRFSynchronizerToken;
+use Project;
 
-class GitJenkinsAdministrationServerPresenter
+/**
+ * @psalm-immutable
+ */
+class GitJenkinsAdministrationServer
 {
-    /**
-     * @var string
-     */
-    public $jenkins_server_url;
-
     /**
      * @var int
      */
-    public $jenkins_server_id;
+    private $id;
 
     /**
-     * @var CSRFSynchronizerToken
+     * @var string
      */
-    public $csrf_delete;
+    private $jenkins_server_url;
 
-    public function __construct(GitJenkinsAdministrationServer $git_jenkins_administration_server)
+    /**
+     * @var Project
+     */
+    private $project;
+
+    public function __construct(int $id, string $jenkins_server_url, Project $project)
     {
-        $this->jenkins_server_id  = $git_jenkins_administration_server->getId();
-        $this->jenkins_server_url = $git_jenkins_administration_server->getServerURL();
-        $this->csrf_delete        = new CSRFSynchronizerToken(
-            GitJenkinsAdministrationURLBuilder::buildDeleteUrl()
-        );
+        $this->id = $id;
+        $this->jenkins_server_url = $jenkins_server_url;
+        $this->project = $project;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getServerURL(): string
+    {
+        return $this->jenkins_server_url;
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
     }
 }

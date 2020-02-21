@@ -33,10 +33,14 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\GitJenkinsAdministrationController;
+use Tuleap\HudsonGit\GitJenkinsAdministrationDeleteController;
 use Tuleap\HudsonGit\GitJenkinsAdministrationPaneBuilder;
 use Tuleap\HudsonGit\GitJenkinsAdministrationPOSTController;
 use Tuleap\HudsonGit\GitJenkinsAdministrationServerAdder;
 use Tuleap\HudsonGit\GitJenkinsAdministrationServerDao;
+use Tuleap\HudsonGit\GitJenkinsAdministrationServerDeleter;
+use Tuleap\HudsonGit\GitJenkinsAdministrationServerFactory;
+use Tuleap\HudsonGit\GitJenkinsAdministrationURLBuilder;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\Hook;
@@ -135,7 +139,24 @@ class hudson_gitPlugin extends Plugin
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeGetPostLegacyController'));
 
             $r->post('/jenkins_server', $this->getRouteHandler('getPostGitAdministrationJenkinsServer'));
+            $r->post('/jenkins_server/delete', $this->getRouteHandler('getDeleteGitAdministrationJenkinsServer'));
         });
+    }
+
+    public static function getDeleteGitAdministrationJenkinsServer(): GitJenkinsAdministrationDeleteController
+    {
+        return new GitJenkinsAdministrationDeleteController(
+            ProjectManager::instance(),
+            self::getGitPermissionsManager(),
+            new GitJenkinsAdministrationServerFactory(
+                new GitJenkinsAdministrationServerDao(),
+                ProjectManager::instance()
+            ),
+            new GitJenkinsAdministrationServerDeleter(
+                new GitJenkinsAdministrationServerDao()
+            ),
+            new CSRFSynchronizerToken(GitJenkinsAdministrationURLBuilder::buildDeleteUrl())
+        );
     }
 
     public static function getPostGitAdministrationJenkinsServer(): GitJenkinsAdministrationPOSTController
@@ -145,7 +166,8 @@ class hudson_gitPlugin extends Plugin
             self::getGitPermissionsManager(),
             new GitJenkinsAdministrationServerAdder(
                 new GitJenkinsAdministrationServerDao()
-            )
+            ),
+            new CSRFSynchronizerToken(GitJenkinsAdministrationURLBuilder::buildAddUrl())
         );
     }
 
@@ -166,9 +188,12 @@ class hudson_gitPlugin extends Plugin
             ProjectManager::instance(),
             self::getGitPermissionsManager(),
             $git_plugin->getMirrorDataMapper(),
-            new GitJenkinsAdministrationServerDao(),
+            new GitJenkinsAdministrationServerFactory(
+                new GitJenkinsAdministrationServerDao(),
+                ProjectManager::instance()
+            ),
             $git_plugin->getHeaderRenderer(),
-            TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates'),
+            TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates/git-administration'),
             $this->getIncludeAssets()
         );
     }
