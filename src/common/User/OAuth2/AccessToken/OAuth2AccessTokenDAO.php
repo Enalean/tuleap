@@ -26,6 +26,18 @@ use Tuleap\DB\DataAccessObject;
 
 class OAuth2AccessTokenDAO extends DataAccessObject
 {
+    public function create(int $user_id, string $hashed_verification_string, int $expiration_date_timestamp): int
+    {
+        return (int) $this->getDB()->insertReturnId(
+            'oauth2_access_token',
+            [
+                'user_id'         => $user_id,
+                'verifier'        => $hashed_verification_string,
+                'expiration_date' => $expiration_date_timestamp
+            ]
+        );
+    }
+
     /**
      * @psalm-return null|array{verifier:string,user_id:int,expiration_date:int}
      */

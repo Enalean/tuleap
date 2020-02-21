@@ -24,6 +24,13 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
+use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
+use Tuleap\OAuth2Server\Grant\AuthCodeGrantController;
+use Tuleap\OAuth2Server\Grant\AuthorizationCodeGrantResponseBuilder;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
@@ -110,6 +117,10 @@ final class oauth2_serverPlugin extends Plugin
                     '/testendpoint',
                     $this->getRouteHandler('routeTestEndpoint')
                 );
+                $r->post(
+                    '/access_token',
+                    $this->getRouteHandler('routeAccessTokenCreation')
+                );
             }
         );
     }
@@ -131,11 +142,11 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController
     {
-        $response_factory = \Tuleap\Http\HTTPFactoryBuilder::responseFactory();
+        $response_factory = HTTPFactoryBuilder::responseFactory();
         $password_handler = \PasswordHandlerFactory::getPasswordHandler();
         return new \Tuleap\OAuth2Server\TestEndpointController(
-            \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
-            \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
             UserManager::instance(),
             new SapiEmitter(),
             new \Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware(
@@ -162,6 +173,26 @@ final class oauth2_serverPlugin extends Plugin
                     $password_handler
                 )
             )
+        );
+    }
+
+    public function routeAccessTokenCreation(): AuthCodeGrantController
+    {
+        return new AuthCodeGrantController(
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new AuthorizationCodeGrantResponseBuilder(
+                new OAuth2AccessTokenCreator(
+                    new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
+                    new SplitTokenVerificationStringHasher(),
+                    new OAuth2AccessTokenDAO(),
+                    new OAuth2AccessTokenScopeSaver(new OAuth2AccessTokenScopeDAO()),
+                    new DateInterval('PT1H'),
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                )
+            ),
+            UserManager::instance(),
+            new SapiEmitter(),
         );
     }
 }
