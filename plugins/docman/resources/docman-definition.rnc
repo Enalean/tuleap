@@ -53,6 +53,11 @@ docman_file_versions =
             element filename { xsd:string },
             element filetype { xsd:string },
             element filesize { xsd:string },
+            element date { docman_date_content }?,
             element content { xsd:string }
         }*
     }
+
+docman_date_content =
+    attribute format { "ISO8601" },
+    xsd:string

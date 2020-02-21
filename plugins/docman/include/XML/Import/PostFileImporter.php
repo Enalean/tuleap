@@ -25,6 +25,7 @@ namespace Tuleap\Docman\XML\Import;
 use Docman_Item;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Tuleap\xml\InvalidDateException;
 
 class PostFileImporter implements PostImporter
 {
@@ -52,7 +53,7 @@ class PostFileImporter implements PostImporter
             $this->logger->debug("└ Importing version #$version_number");
             try {
                 $this->version_importer->import($version, $item, $user, $version_number);
-            } catch (UnableToCreateFileOnFilesystemException|UnableToCreateVersionInDbException $exception) {
+            } catch (UnableToCreateFileOnFilesystemException | UnableToCreateVersionInDbException | InvalidDateException $exception) {
                 $this->logger->error($exception->getMessage());
             }
             $version_number++;

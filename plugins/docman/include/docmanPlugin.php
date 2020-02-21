@@ -1621,6 +1621,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         $project             = $params['project'];
         $docman_item_factory = Docman_ItemFactory::instance($project->getGroupId());
+        $current_date        = new DateTimeImmutable();
         $xml_importer        = new XMLImporter(
             $docman_item_factory,
             $project,
@@ -1632,7 +1633,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                         new Docman_VersionFactory(),
                         new Docman_FileStorage($root_path),
                         $project,
-                        $params['extraction_path']
+                        $params['extraction_path'],
+                        $current_date
                     ),
                     $logger
                 ),

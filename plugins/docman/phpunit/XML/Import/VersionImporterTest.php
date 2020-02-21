@@ -33,6 +33,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
+use Tuleap\xml\InvalidDateException;
 
 class VersionImporterTest extends TestCase
 {
@@ -70,6 +71,10 @@ class VersionImporterTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */
     private $user;
+    /**
+     * @var \DateTimeImmutable
+     */
+    private $current_date;
 
     protected function setUp(): void
     {
@@ -77,6 +82,7 @@ class VersionImporterTest extends TestCase
         $this->docman_file_storage = Mockery::mock(Docman_FileStorage::class);
         $this->project             = Mockery::mock(Project::class)->shouldReceive(['getGroupId' => 114])->getMock();
         $this->extraction_path     = '/path/to/extracted/archive';
+        $this->current_date        = new \DateTimeImmutable();
 
         $this->node = new SimpleXMLElement(
             <<<EOS
@@ -97,8 +103,39 @@ class VersionImporterTest extends TestCase
             $this->version_factory,
             $this->docman_file_storage,
             $this->project,
-            $this->extraction_path
+            $this->extraction_path,
+            $this->current_date
         );
+    }
+
+    public function testItRaisesExceptionWhenDateIsInvalid(): void
+    {
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <version>
+                <filename>Pan-Pan-Artwork1.png</filename>
+                <filetype>image/png</filetype>
+                <filesize>799789</filesize>
+                <date format="ISO8601">invalid</date>
+                <content>documents/content-214.bin</content>
+            </version>
+            EOS
+        );
+
+        $this->docman_file_storage
+            ->shouldReceive('copy')
+            ->with(
+                $this->extraction_path . '/documents/content-214.bin',
+                'Pan-Pan-Artwork1.png',
+                114,
+                13,
+                1
+            )->never();
+
+        $this->expectException(InvalidDateException::class);
+
+        $this->importer->import($node, $this->item, $this->user, 1);
     }
 
     public function testItRaisesExceptionWhenFileCannotBeCopiedOnFilesystem(): void
@@ -148,7 +185,7 @@ class VersionImporterTest extends TestCase
                     'filesize' => 799789,
                     'filetype' => 'image/png',
                     'path'     => $file_path,
-                    'date'     => (new \DateTimeImmutable)->getTimestamp(),
+                    'date'     => $this->current_date->getTimestamp(),
                 ]
             )->once()
             ->andReturnFalse();
@@ -192,12 +229,63 @@ class VersionImporterTest extends TestCase
                     'filesize' => 799789,
                     'filetype' => 'image/png',
                     'path'     => $file_path,
-                    'date'     => (new \DateTimeImmutable)->getTimestamp(),
+                    'date'     => $this->current_date->getTimestamp(),
                 ]
             )->once()
             ->andReturn(Mockery::mock(Docman_Version::class));
 
         $this->importer->import($this->node, $this->item, $this->user, 1);
+        $this->assertFileExists($file_path);
+    }
+
+    public function testSuccessfulImportWithDateInThePast(): void
+    {
+        $root         = vfsStream::setup();
+        $created_file = vfsStream::newFile('file.png')->at($root);
+        $file_path    = $created_file->url();
+        $this->assertFileExists($file_path);
+
+        $this->docman_file_storage
+            ->shouldReceive('copy')
+            ->with(
+                $this->extraction_path . '/documents/content-214.bin',
+                'Pan-Pan-Artwork1.png',
+                114,
+                13,
+                1
+            )->once()
+            ->andReturn($file_path);
+
+        $this->version_factory
+            ->shouldReceive('create')
+            ->with(
+                [
+                    'item_id'  => 13,
+                    'number'   => 1,
+                    'user_id'  => 101,
+                    'filename' => 'Pan-Pan-Artwork1.png',
+                    'filesize' => 799789,
+                    'filetype' => 'image/png',
+                    'path'     => $file_path,
+                    'date'     => 1234567890,
+                ]
+            )->once()
+            ->andReturn(Mockery::mock(Docman_Version::class));
+
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <version>
+                <filename>Pan-Pan-Artwork1.png</filename>
+                <filetype>image/png</filetype>
+                <filesize>799789</filesize>
+                <date format="ISO8601">2009-02-14T00:31:30+01:00</date>
+                <content>documents/content-214.bin</content>
+            </version>
+            EOS
+        );
+
+        $this->importer->import($node, $this->item, $this->user, 1);
         $this->assertFileExists($file_path);
     }
 }

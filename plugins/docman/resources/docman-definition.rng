@@ -86,11 +86,22 @@
           <element name="filesize">
             <data type="string"/>
           </element>
+          <optional>
+            <element name="date">
+              <ref name="docman_date_content"/>
+            </element>
+          </optional>
           <element name="content">
             <data type="string"/>
           </element>
         </element>
       </zeroOrMore>
     </element>
+  </define>
+  <define name="docman_date_content">
+    <attribute name="format">
+      <value>ISO8601</value>
+    </attribute>
+    <data type="string"/>
   </define>
 </grammar>
