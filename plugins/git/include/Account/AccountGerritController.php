@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Account;
 
+use CSRFSynchronizerToken;
+use Git_RemoteServer_GerritServerFactory;
 use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\BaseLayout;
@@ -46,11 +48,11 @@ final class AccountGerritController implements DispatchableWithRequest, Dispatch
      */
     private $renderer;
     /**
-     * @var \Git_RemoteServer_GerritServerFactory
+     * @var Git_RemoteServer_GerritServerFactory
      */
     private $gerrit_server_factory;
 
-    public function __construct(EventDispatcherInterface $dispatcher, \TemplateRendererFactory $renderer_factory, \Git_RemoteServer_GerritServerFactory $gerrit_server_factory)
+    public function __construct(EventDispatcherInterface $dispatcher, \TemplateRendererFactory $renderer_factory, Git_RemoteServer_GerritServerFactory $gerrit_server_factory)
     {
         $this->renderer   = $renderer_factory->getRenderer(__DIR__ . '/templates');
         $this->dispatcher = $dispatcher;
@@ -79,8 +81,17 @@ final class AccountGerritController implements DispatchableWithRequest, Dispatch
         $layout->header(['title' => dgettext('tuleap-git', 'Gerrit'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]);
         $this->renderer->renderToPage(
             'gerrit',
-            new GerritPresenter($tabs)
+            new GerritPresenter(
+                self::getCSRFToken(),
+                $tabs,
+                $this->gerrit_server_factory->getRemoteServersForUser($user)
+            )
         );
         $layout->footer([]);
+    }
+
+    public static function getCSRFToken(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(self::URL);
     }
 }

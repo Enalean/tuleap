@@ -21,12 +21,9 @@
  */
 
 use Tuleap\User\Account\AccountTabPresenterCollection;
-use Tuleap\User\Account\DisplayKeysTokensController;
 
 class User_PreferencesPresenter
 {
-    public $keys_tokens_url = DisplayKeysTokensController::URL;
-
     /** @var PFUser */
     private $user;
     public $can_change_real_name;
@@ -40,8 +37,6 @@ class User_PreferencesPresenter
 
     /** string */
     private $third_party_html;
-
-    private $ssh_keys_extra_html;
 
     /**
      * @var CSRFSynchronizerToken
@@ -90,7 +85,6 @@ class User_PreferencesPresenter
         $can_change_password,
         array $extra_user_info,
         array $user_access,
-        $ssh_keys_extra_html,
         $third_party_html,
         CSRFSynchronizerToken $csrf_token,
         array $tracker_formats,
@@ -108,7 +102,6 @@ class User_PreferencesPresenter
         $this->can_change_password     = $can_change_password;
         $this->extra_user_info         = $extra_user_info;
         $this->user_access             = $user_access;
-        $this->ssh_keys_extra_html     = $ssh_keys_extra_html;
         $this->third_party_html        = $third_party_html;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
@@ -253,16 +246,6 @@ class User_PreferencesPresenter
     public function extra_user_info()
     {
         return $this->extra_user_info;
-    }
-
-    public function shell_account_title()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'shell_account_title');
-    }
-
-    public function ssh_keys_extra_html()
-    {
-        return $this->ssh_keys_extra_html;
     }
 
     public function authentication_attempts_title()

@@ -34,7 +34,6 @@ $can_change_password = true;
 $can_change_realname = true;
 $can_change_email    = true;
 $extra_user_info     = array();
-$ssh_keys_extra_html = '';
 
 $em->processEvent(
     Event::MANAGE_THIRD_PARTY_APPS,
@@ -70,14 +69,6 @@ $em->processEvent(
     array(
         'user'      => $user,
         'user_info' => &$extra_user_info,
-    )
-);
-
-$em->processEvent(
-    Event::LIST_SSH_KEYS,
-    array(
-        'user' => $user,
-        'html' => &$ssh_keys_extra_html
     )
 );
 
@@ -186,7 +177,6 @@ $presenter = new User_PreferencesPresenter(
     $can_change_password,
     $extra_user_info,
     $user_access_info,
-    $ssh_keys_extra_html,
     $third_paty_html,
     $csrf,
     $tracker_formats,

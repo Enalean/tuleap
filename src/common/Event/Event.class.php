@@ -62,15 +62,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const DUMP_SSH_KEYS = 'dump_ssh_keys';
 
     /**
-     * The user is accessing a list of their keys
-     *
-     * Parameters:
-     *   'user' => PFUser
-     *   'html' => string An emty string of html output- passed by reference
-     */
-    public const LIST_SSH_KEYS = 'list_ssh_keys';
-
-    /**
      * Force aliases database update.
      *
      * No Parameters.

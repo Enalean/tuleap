@@ -29,6 +29,7 @@ use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Account\AccountGerritController;
+use Tuleap\Git\Account\PushSSHKeysController;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
@@ -225,7 +226,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook('plugin_statistics_disk_usage_service_label', 'plugin_statistics_disk_usage_service_label', false);
         $this->addHook('plugin_statistics_color', 'plugin_statistics_color', false);
 
-        $this->addHook(Event::LIST_SSH_KEYS, 'getRemoteServersForUser', false);
         $this->addHook(Event::DUMP_SSH_KEYS);
         $this->addHook(Event::EDIT_SSH_KEYS);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
@@ -1041,92 +1041,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function setUserAccountManager(Git_UserAccountManager $manager)
     {
         $this->user_account_manager = $manager;
-    }
-
-    /**
-     * Method called as a hook.
-     *
-     * @param array $params Should contain two entries:
-     *     'user' => PFUser,
-     *     'html' => string An emty string of html output- passed by reference
-     */
-    public function getRemoteServersForUser(array $params)
-    {
-        if (! $user = $this->getUserFromParameters($params)) {
-            return;
-        }
-
-        if (! isset($params['html']) || ! is_string($params['html'])) {
-            return;
-        }
-        $html = $params['html'];
-
-        $remote_servers = $this->getGerritServerFactory()->getRemoteServersForUser($user);
-
-        if (count($remote_servers) > 0) {
-            $purifier = Codendi_HTMLPurifier::instance();
-            $html     = '<br />'.
-                $purifier->purify(dgettext('tuleap-git', 'Old keys need to be pushed manually. All new keys are automatically pushed to the following Gerrit servers:')) .
-                '<ul>';
-
-            foreach ($remote_servers as $server) {
-                $html .= '<li>
-                        <a href="'. $purifier->purify($server->getBaseUrl()) .'/#/settings/ssh-keys">'.
-                            $purifier->purify($server->getBaseUrl()) .'
-                        </a>
-                    </li>';
-            }
-
-            $html .= '</ul>
-                <form action="" method="post">
-                    <input type="submit"
-                        class="btn btn-small"
-                        title="'. $purifier->purify(dgettext('tuleap-git', 'Push SSH keys to remote servers')) .'"
-                        value="'. $purifier->purify(dgettext('tuleap-git', 'Manually push SSH keys')) .'"
-                        name="ssh_key_push"/>
-                </form>';
-        }
-
-        if (isset($_POST['ssh_key_push'])) {
-            $this->pushUserSSHKeysToRemoteServers($user);
-        }
-
-        $params['html'] = $html;
-    }
-
-    /**
-     * Method called as a hook.
-
-     * Copies all SSH Keys to Remote Git Servers
-     */
-    private function pushUserSSHKeysToRemoteServers(PFUser $user)
-    {
-        $this->getLogger()->info('Trying to push ssh keys for user: '.$user->getUnixName());
-        $git_user_account_manager = $this->getUserAccountManager();
-
-        try {
-            $git_user_account_manager->pushSSHKeys(
-                $user
-            );
-        } catch (Git_UserSynchronisationException $e) {
-            $message = dgettext('tuleap-git', 'Error pushing SSH Keys. Please add them manually.');
-            $GLOBALS['Response']->addFeedback('error', $message);
-
-            $this->getLogger()->error('Unable to push ssh keys: ' . $e->getMessage());
-            return;
-        }
-
-        $this->getLogger()->info('Successfully pushed ssh keys for user: '.$user->getUnixName());
-    }
-
-    private function getUserFromParameters($params)
-    {
-        if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
-            $this->getLogger()->error('Invalid user passed in params: ' . print_r($params, true));
-            return false;
-        }
-
-        return $params['user'];
     }
 
     public function permission_get_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -2710,6 +2624,16 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
+    public function routePostAccountGerrit(): DispatchableWithRequest
+    {
+        return new PushSSHKeysController(
+            AccountGerritController::getCSRFToken(),
+            $this->getUserAccountManager(),
+            $this->getGerritServerFactory(),
+            $this->getLogger(),
+        );
+    }
+
     public function routeGetGit()
     {
         return new GitRepositoryListController(
@@ -2778,6 +2702,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             EventManager::instance()->processEvent(new \Tuleap\Git\CollectGitRoutesEvent($r));
 
             $r->get('/account/gerrit', $this->getRouteHandler('routeGetAccountGerrit'));
+            $r->post('/account/gerrit', $this->getRouteHandler('routePostAccountGerrit'));
 
             $r->get('/index.php/{project_id:\d+}/view/{repository_id:\d+}/[{args}]', $this->getRouteHandler('routeGetLegacyURLForRepository'));
 
