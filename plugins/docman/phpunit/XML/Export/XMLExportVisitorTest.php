@@ -29,6 +29,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use UserXMLExporter;
 
 class XMLExportVisitorTest extends TestCase
 {
@@ -50,14 +51,30 @@ class XMLExportVisitorTest extends TestCase
      * @var Docman_VersionFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $version_factory;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
+     */
+    private $user_manager;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserXMLExportedCollection
+     */
+    private $user_collection;
 
     protected function setUp(): void
     {
         $this->version_factory = Mockery::mock(Docman_VersionFactory::class);
         $this->logger          = Mockery::mock(LoggerInterface::class);
         $this->archive         = Mockery::mock(ArchiveInterface::class);
+        $this->user_manager    = Mockery::mock(\UserManager::class);
+        $this->user_collection = Mockery::mock(\UserXMLExportedCollection::class);
+        $user_exporter         = new UserXMLExporter($this->user_manager, $this->user_collection);
 
-        $this->visitor = new XMLExportVisitor($this->logger, $this->archive, $this->version_factory);
+        $this->visitor = new XMLExportVisitor(
+            $this->logger,
+            $this->archive,
+            $this->version_factory,
+            $user_exporter
+        );
     }
 
     public function testEmpty(): void
@@ -110,29 +127,35 @@ class XMLExportVisitorTest extends TestCase
         $this->logger->shouldReceive('debug')->with('Exporting file item #42: My document')->once();
         $this->version_factory
             ->shouldReceive('getAllVersionForItem')
-            ->andReturn([
-                new Docman_Version([
-                    'id' => 241,
-                    'path' => '/titi',
-                    'filetype' => 'image/png',
-                    'filesize' => 4096,
-                    'filename' => 'titi.png'
-                ]),
-                new Docman_Version([
-                    'id' => 142,
-                    'path' => '/toto',
-                    'filetype' => 'image/png',
-                    'filesize' => 256,
-                    'filename' => 'toto.png',
-                    'date' => 1234567890
-                ]),
-            ])->once();
+            ->andReturn(
+                [
+                    new Docman_Version(
+                        [
+                            'id'       => 241,
+                            'path'     => '/titi',
+                            'filetype' => 'image/png',
+                            'filesize' => 4096,
+                            'filename' => 'titi.png'
+                        ]
+                    ),
+                    new Docman_Version(
+                        [
+                            'id'       => 142,
+                            'path'     => '/toto',
+                            'filetype' => 'image/png',
+                            'filesize' => 256,
+                            'filename' => 'toto.png',
+                            'date'     => 1234567890
+                        ]
+                    ),
+                ]
+            )->once();
         $this->archive->shouldReceive('addFile')->with('documents/content-142.bin', '/toto')->once();
         $this->archive->shouldReceive('addFile')->with('documents/content-241.bin', '/titi')->once();
 
         $this->visitor->export($xml, $file);
 
-        $dom = dom_import_simplexml($xml)->ownerDocument;
+        $dom               = dom_import_simplexml($xml)->ownerDocument;
         $dom->formatOutput = true;
         $this->assertEquals(
             <<<EOS
@@ -173,32 +196,34 @@ class XMLExportVisitorTest extends TestCase
         $this->logger->shouldReceive('debug')->with('Exporting embeddedfile item #42: My document')->once();
         $this->version_factory
             ->shouldReceive('getAllVersionForItem')
-            ->andReturn([
-                new Docman_Version(
-                    [
-                        'id'       => 241,
-                        'path'     => '/titi',
-                        'filetype' => 'image/png',
-                        'filesize' => 4096,
-                        'filename' => 'file'
-                    ]
-                ),
-                new Docman_Version(
-                    [
-                        'id'       => 142,
-                        'path'     => '/toto',
-                        'filetype' => 'image/png',
-                        'filesize' => 256,
-                        'filename' => 'file'
-                    ]
-                ),
-            ])->once();
+            ->andReturn(
+                [
+                    new Docman_Version(
+                        [
+                            'id'       => 241,
+                            'path'     => '/titi',
+                            'filetype' => 'image/png',
+                            'filesize' => 4096,
+                            'filename' => 'file'
+                        ]
+                    ),
+                    new Docman_Version(
+                        [
+                            'id'       => 142,
+                            'path'     => '/toto',
+                            'filetype' => 'image/png',
+                            'filesize' => 256,
+                            'filename' => 'file'
+                        ]
+                    ),
+                ]
+            )->once();
         $this->archive->shouldReceive('addFile')->with('documents/content-142.bin', '/toto')->once();
         $this->archive->shouldReceive('addFile')->with('documents/content-241.bin', '/titi')->once();
 
         $this->visitor->export($xml, $embedded_file);
 
-        $dom = dom_import_simplexml($xml)->ownerDocument;
+        $dom               = dom_import_simplexml($xml)->ownerDocument;
         $dom->formatOutput = true;
         $this->assertEquals(
             <<<EOS
@@ -249,7 +274,7 @@ class XMLExportVisitorTest extends TestCase
 
         $this->visitor->export($xml, $folder);
 
-        $dom = dom_import_simplexml($xml)->ownerDocument;
+        $dom               = dom_import_simplexml($xml)->ownerDocument;
         $dom->formatOutput = true;
         $this->assertEquals(
             <<<EOS
@@ -269,6 +294,81 @@ class XMLExportVisitorTest extends TestCase
                     <title><![CDATA[My sub folder]]></title>
                   </properties>
                 </item>
+              </item>
+            </docman>
+
+            EOS,
+            $dom->saveXML()
+        );
+    }
+
+    public function testItExportUsers(): void
+    {
+        $embedded_file = new \Docman_EmbeddedFile(['title' => 'My document', 'item_id' => 42, 'user_id' => 103]);
+        $xml           = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
+
+        $this->logger->shouldReceive('debug');
+        $this->version_factory
+            ->shouldReceive('getAllVersionForItem')
+            ->andReturn(
+                [
+                    new Docman_Version(
+                        [
+                            'id'       => 241,
+                            'path'     => '/titi',
+                            'filetype' => 'image/png',
+                            'filesize' => 4096,
+                            'filename' => 'file',
+                            'user_id'  => 104
+                        ]
+                    )
+                ]
+            )->once();
+        $this->archive->shouldReceive('addFile');
+
+        $project_admin  = Mockery::mock(\PFUser::class)->shouldReceive(['getLdapId' => 103])->getMock();
+        $project_member = Mockery::mock(\PFUser::class)->shouldReceive(['getLdapId' => 104])->getMock();
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(103)
+            ->once()
+            ->andReturn($project_admin);
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(104)
+            ->once()
+            ->andReturn($project_member);
+        $this->user_collection
+            ->shouldReceive('add')
+            ->with($project_admin)
+            ->once();
+        $this->user_collection
+            ->shouldReceive('add')
+            ->with($project_member)
+            ->once();
+
+        $this->visitor->export($xml, $embedded_file);
+
+        $dom               = dom_import_simplexml($xml)->ownerDocument;
+        $dom->formatOutput = true;
+        $this->assertEquals(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <docman>
+              <item type="embeddedfile">
+                <properties>
+                  <title><![CDATA[My document]]></title>
+                  <owner format="ldap">103</owner>
+                </properties>
+                <versions>
+                  <version>
+                    <filename><![CDATA[file]]></filename>
+                    <filetype><![CDATA[image/png]]></filetype>
+                    <filesize><![CDATA[4096]]></filesize>
+                    <author format="ldap">104</author>
+                    <content><![CDATA[documents/content-241.bin]]></content>
+                  </version>
+                </versions>
               </item>
             </docman>
 

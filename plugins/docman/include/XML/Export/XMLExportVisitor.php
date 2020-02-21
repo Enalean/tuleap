@@ -39,6 +39,7 @@ use SimpleXMLElement;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\xml\XMLDateHelper;
+use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
 /**
@@ -58,15 +59,21 @@ class XMLExportVisitor implements ItemVisitor
      * @var Docman_VersionFactory
      */
     private $version_factory;
+    /**
+     * @var UserXMLExporter
+     */
+    private $user_exporter;
 
     public function __construct(
         LoggerInterface $logger,
         ArchiveInterface $archive,
-        Docman_VersionFactory $version_factory
+        Docman_VersionFactory $version_factory,
+        UserXMLExporter $user_exporter
     ) {
         $this->logger          = $logger;
         $this->archive         = $archive;
         $this->version_factory = $version_factory;
+        $this->user_exporter   = $user_exporter;
     }
 
     public function export(SimpleXMLElement $xml, Docman_Item $item): void
@@ -153,10 +160,17 @@ class XMLExportVisitor implements ItemVisitor
         $this->appendTextChild($node, 'filename', $version->getFileName());
         $this->appendTextChild($node, 'filetype', $version->getFileType());
         $this->appendTextChild($node, 'filesize', $version->getFilesize());
+
         $date = $version->getDate();
         if ($date) {
             XMLDateHelper::addChild($node, 'date', (new \DateTimeImmutable())->setTimestamp($date));
         }
+
+        $user_id = $version->getAuthorId();
+        if ($user_id) {
+            $this->user_exporter->exportUserByUserId($user_id, $node, 'author');
+        }
+
         $file_name = 'documents/' . sprintf('content-%d.bin', $version->getId());
         $this->appendTextChild($node, 'content', $file_name);
         $this->archive->addFile($file_name, $version->getPath());
@@ -194,7 +208,7 @@ class XMLExportVisitor implements ItemVisitor
         }
 
         $create_date = $item->getCreateDate();
-        $date_time = new \DateTimeImmutable();
+        $date_time   = new \DateTimeImmutable();
         if ($create_date) {
             XMLDateHelper::addChild($properties, 'create_date', $date_time->setTimestamp($create_date));
         }
@@ -202,6 +216,11 @@ class XMLExportVisitor implements ItemVisitor
         $update_date = $item->getUpdateDate();
         if ($update_date) {
             XMLDateHelper::addChild($properties, 'update_date', ($date_time)->setTimestamp($update_date));
+        }
+
+        $user_id = $item->getOwnerId();
+        if ($user_id) {
+            $this->user_exporter->exportUserByUserId($user_id, $properties, 'owner');
         }
     }
 }

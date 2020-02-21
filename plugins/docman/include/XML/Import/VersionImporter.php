@@ -30,6 +30,8 @@ use Project;
 use SimpleXMLElement;
 use Tuleap\xml\InvalidDateException;
 use Tuleap\xml\XMLDateHelper;
+use User\XML\Import\IFindUserFromXMLReference;
+use User\XML\Import\UserNotFoundException;
 
 class VersionImporter
 {
@@ -53,27 +55,43 @@ class VersionImporter
      * @var \DateTimeImmutable
      */
     private $current_date;
+    /**
+     * @var IFindUserFromXMLReference
+     */
+    private $user_finder;
+    /**
+     * @var PFUser
+     */
+    private $current_user;
 
     public function __construct(
+        IFindUserFromXMLReference $user_finder,
         Docman_VersionFactory $version_factory,
         Docman_FileStorage $docman_file_storage,
         Project $project,
         string $extraction_path,
-        \DateTimeImmutable $current_date
+        \DateTimeImmutable $current_date,
+        PFUser $current_user
     ) {
         $this->version_factory     = $version_factory;
         $this->docman_file_storage = $docman_file_storage;
         $this->project             = $project;
         $this->extraction_path     = $extraction_path;
         $this->current_date        = $current_date;
+        $this->user_finder         = $user_finder;
+        $this->current_user        = $current_user;
     }
 
     /**
-     * @throws UnableToCreateFileOnFilesystemException|UnableToCreateVersionInDbException|InvalidDateException
+     * @throws UnableToCreateFileOnFilesystemException
+     * @throws UnableToCreateVersionInDbException
+     * @throws InvalidDateException
+     * @throws UserNotFoundException
      */
-    public function import(SimpleXMLElement $node, Docman_Item $item, \PFUser $user, int $version_number)
+    public function import(SimpleXMLElement $node, Docman_Item $item, int $version_number)
     {
         $date      = $this->getDate($node);
+        $user      = $this->getUser($node);
         $file_path = $this->createFileOnFilesystem($node, $item, $version_number);
         $this->createVersionEntryInDb($item, $version_number, $user, $node, $file_path, $date);
     }
@@ -136,5 +154,17 @@ class VersionImporter
         }
 
         return XMLDateHelper::extractFromNode($version->date);
+    }
+
+    /**
+     * @throws UserNotFoundException
+     */
+    private function getUser(SimpleXMLElement $version): PFUser
+    {
+        if (! isset($version->author)) {
+            return $this->current_user;
+        }
+
+        return $this->user_finder->getUser($version->author);
     }
 }

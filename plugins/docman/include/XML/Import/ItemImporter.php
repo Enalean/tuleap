@@ -23,7 +23,6 @@ namespace Tuleap\Docman\XML\Import;
 
 use Docman_Item;
 use Docman_ItemFactory;
-use PFUser;
 use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
 
 class ItemImporter
@@ -53,7 +52,6 @@ class ItemImporter
         NodeImporter $node_importer,
         PostImporter $post_importer,
         Docman_Item $parent_item,
-        PFUser $user,
         ImportProperties $properties
     ): void {
         $item = $this->item_factory->createWithoutOrdering(
@@ -62,7 +60,7 @@ class ItemImporter
             $parent_item->getId(),
             PLUGIN_DOCMAN_ITEM_STATUS_NONE,
             0,
-            $user->getId(),
+            $properties->getOwner()->getId(),
             $properties->getItemTypeId(),
             $properties->getCreateDate(),
             $properties->getUpdateDate(),
@@ -70,7 +68,7 @@ class ItemImporter
             $properties->getLinkUrl()
         );
         $this->clonePermissions($parent_item, $item);
-        $post_importer->postImport($node_importer, $node, $item, $user);
+        $post_importer->postImport($node_importer, $node, $item);
     }
 
     private function clonePermissions(Docman_Item $parent_item, Docman_Item $item): void

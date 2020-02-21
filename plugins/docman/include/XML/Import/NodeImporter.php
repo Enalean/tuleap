@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
 use Tuleap\xml\InvalidDateException;
+use User\XML\Import\UserNotFoundException;
 
 class NodeImporter
 {
@@ -77,13 +78,13 @@ class NodeImporter
         $this->properties_extractor = $properties_extractor;
     }
 
-    public function import(SimpleXMLElement $node, Docman_Item $parent_item, \PFUser $user): void
+    public function import(SimpleXMLElement $node, Docman_Item $parent_item): void
     {
         try {
-            $this->importNode($node, $parent_item, $user);
+            $this->importNode($node, $parent_item);
         } catch (CannotInstantiateItemWeHaveJustCreatedInDBException $exception) {
             $this->logger->error('An error occurred while creating in DB the item: ' . $node->properties->title);
-        } catch (InvalidDateException|UnknownItemTypeException $exception) {
+        } catch (InvalidDateException|UnknownItemTypeException|UserNotFoundException $exception) {
             $this->logger->error($exception->getMessage());
         }
     }
@@ -92,8 +93,9 @@ class NodeImporter
      * @throws CannotInstantiateItemWeHaveJustCreatedInDBException
      * @throws InvalidDateException
      * @throws UnknownItemTypeException
+     * @throws UserNotFoundException
      */
-    private function importNode(SimpleXMLElement $node, Docman_Item $parent_item, \PFUser $user): void
+    private function importNode(SimpleXMLElement $node, Docman_Item $parent_item): void
     {
         $this->logger->debug("Importing {$node['type']}: " . $node->properties->title);
 
@@ -102,7 +104,6 @@ class NodeImporter
             $this,
             $this->getPostImporter($node),
             $parent_item,
-            $user,
             $this->properties_extractor->getImportProperties($node)
         );
     }

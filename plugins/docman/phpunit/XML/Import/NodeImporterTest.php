@@ -31,6 +31,7 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
 use Tuleap\xml\InvalidDateException;
+use User\XML\Import\UserNotFoundException;
 
 class NodeImporterTest extends TestCase
 {
@@ -112,7 +113,8 @@ class NodeImporterTest extends TestCase
             'My document',
             '',
             new \DateTimeImmutable(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $this->user
         );
         $this->properties_extractor
             ->shouldReceive('getImportProperties')
@@ -126,7 +128,7 @@ class NodeImporterTest extends TestCase
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
             ->once()
             ->andThrow(CannotInstantiateItemWeHaveJustCreatedInDBException::class);
         $this->logger
@@ -134,7 +136,7 @@ class NodeImporterTest extends TestCase
             ->with('An error occurred while creating in DB the item: ' . $node->properties->title)
             ->once();
 
-        $this->importer->import($node, $this->parent_item, $this->user);
+        $this->importer->import($node, $this->parent_item);
     }
 
     public function testImportInvalidDateException(): void
@@ -154,7 +156,8 @@ class NodeImporterTest extends TestCase
             'My document',
             '',
             new \DateTimeImmutable(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $this->user
         );
         $this->properties_extractor
             ->shouldReceive('getImportProperties')
@@ -168,14 +171,14 @@ class NodeImporterTest extends TestCase
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
             ->once()
             ->andThrow(InvalidDateException::class);
         $this->logger
             ->shouldReceive('error')
             ->once();
 
-        $this->importer->import($node, $this->parent_item, $this->user);
+        $this->importer->import($node, $this->parent_item);
     }
 
     public function testImportUnknownItemTypeException(): void
@@ -195,7 +198,8 @@ class NodeImporterTest extends TestCase
             'My document',
             '',
             new \DateTimeImmutable(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $this->user
         );
         $this->properties_extractor
             ->shouldReceive('getImportProperties')
@@ -209,14 +213,56 @@ class NodeImporterTest extends TestCase
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
             ->once()
             ->andThrow(UnknownItemTypeException::class);
         $this->logger
             ->shouldReceive('error')
             ->once();
 
-        $this->importer->import($node, $this->parent_item, $this->user);
+        $this->importer->import($node, $this->parent_item);
+    }
+
+    public function testImportUserNotFoundException(): void
+    {
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <item type="file">
+                <properties>
+                    <title>My document</title>
+                </properties>
+            </item>
+            EOS
+        );
+
+        $properties = ImportProperties::buildFile(
+            'My document',
+            '',
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable(),
+            $this->user
+        );
+        $this->properties_extractor
+            ->shouldReceive('getImportProperties')
+            ->with($node)
+            ->once()
+            ->andReturn($properties);
+
+        $this->logger
+            ->shouldReceive('debug')
+            ->with('Importing file: My document')
+            ->once();
+        $this->item_importer
+            ->shouldReceive('import')
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
+            ->once()
+            ->andThrow(UserNotFoundException::class);
+        $this->logger
+            ->shouldReceive('error')
+            ->once();
+
+        $this->importer->import($node, $this->parent_item);
     }
 
     public function testImportEmpty(): void
@@ -236,7 +282,8 @@ class NodeImporterTest extends TestCase
             'My document',
             '',
             new \DateTimeImmutable(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $this->user
         );
         $this->properties_extractor
             ->shouldReceive('getImportProperties')
@@ -250,11 +297,11 @@ class NodeImporterTest extends TestCase
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $this->user, $properties)
+            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties)
             ->once();
 
 
-        $this->importer->import($node, $this->parent_item, $this->user);
+        $this->importer->import($node, $this->parent_item);
     }
 
     public function testImportWiki(): void
@@ -276,7 +323,8 @@ class NodeImporterTest extends TestCase
             '',
             'MyWikiPage',
             new \DateTimeImmutable(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $this->user
         );
         $this->properties_extractor
             ->shouldReceive('getImportProperties')
@@ -290,11 +338,11 @@ class NodeImporterTest extends TestCase
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $this->user, $properties)
+            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties)
             ->once();
 
 
-        $this->importer->import($node, $this->parent_item, $this->user);
+        $this->importer->import($node, $this->parent_item);
     }
 
     public function testImportLink(): void
@@ -316,7 +364,8 @@ class NodeImporterTest extends TestCase
             '',
             'https://example.test',
             new \DateTimeImmutable(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $this->user
         );
         $this->properties_extractor
             ->shouldReceive('getImportProperties')
@@ -330,11 +379,11 @@ class NodeImporterTest extends TestCase
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $this->user, $properties)
+            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties)
             ->once();
 
 
-        $this->importer->import($node, $this->parent_item, $this->user);
+        $this->importer->import($node, $this->parent_item);
     }
 
     public function testImportFolder(): void
@@ -354,7 +403,8 @@ class NodeImporterTest extends TestCase
             'My document',
             '',
             new \DateTimeImmutable(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $this->user
         );
         $this->properties_extractor
             ->shouldReceive('getImportProperties')
@@ -368,11 +418,11 @@ class NodeImporterTest extends TestCase
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with($node, $this->importer, $this->folder_importer, $this->parent_item, $this->user, $properties)
+            ->with($node, $this->importer, $this->folder_importer, $this->parent_item, $properties)
             ->once();
 
 
-        $this->importer->import($node, $this->parent_item, $this->user);
+        $this->importer->import($node, $this->parent_item);
     }
 
     public function testImportFile(): void
@@ -392,7 +442,8 @@ class NodeImporterTest extends TestCase
             'My document',
             '',
             new \DateTimeImmutable(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $this->user
         );
         $this->properties_extractor
             ->shouldReceive('getImportProperties')
@@ -406,11 +457,11 @@ class NodeImporterTest extends TestCase
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
             ->once();
 
 
-        $this->importer->import($node, $this->parent_item, $this->user);
+        $this->importer->import($node, $this->parent_item);
     }
 
     public function testImportEmbedded(): void
@@ -430,7 +481,8 @@ class NodeImporterTest extends TestCase
             'My document',
             '',
             new \DateTimeImmutable(),
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $this->user
         );
         $this->properties_extractor
             ->shouldReceive('getImportProperties')
@@ -444,10 +496,10 @@ class NodeImporterTest extends TestCase
             ->once();
         $this->item_importer
             ->shouldReceive('import')
-            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $this->user, $properties)
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
             ->once();
 
 
-        $this->importer->import($node, $this->parent_item, $this->user);
+        $this->importer->import($node, $this->parent_item);
     }
 }
