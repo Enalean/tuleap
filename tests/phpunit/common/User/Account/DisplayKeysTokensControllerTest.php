@@ -25,6 +25,7 @@ use CSRFSynchronizerToken;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -51,11 +52,18 @@ final class DisplayKeysTokensControllerTest extends TestCase
 
     public function setUp(): void
     {
+        $event_manager = new class implements EventDispatcherInterface {
+            public function dispatch(object $event)
+            {
+                return $event;
+            }
+        };
         $csrf_token = M::mock(CSRFSynchronizerToken::class);
         $this->access_keys_presenter_builder = M::mock(AccessKeyPresenterBuilder::class);
         $this->svn_tokens_presenter_builder = new SVNTokensPresenterBuilder(M::mock(\SVN_TokenHandler::class, ['getSVNTokensForUser' => []]));
 
         $this->controller = new DisplayKeysTokensController(
+            $event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $csrf_token,
             $this->access_keys_presenter_builder,

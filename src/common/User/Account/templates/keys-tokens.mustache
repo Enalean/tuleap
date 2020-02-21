@@ -4,13 +4,12 @@
     </h1>
     <div class="user-preferences-container">
         <nav class="tlp-tabs tlp-tabs-vertical user-preferences-nav">
-            <a href="/account" class="tlp-tab">
-                {{# gettext }}User preferences{{/ gettext }}
+        {{# tabs }}
+            <a href="{{ href }}" class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}">
+                <i class="tlp-tab-icon fa {{ icon }}"></i>
+                {{ label }}
             </a>
-            <a href="{{ keys_tokens_url }}" class="tlp-tab tlp-tab-active">
-                <i class="tlp-tab-icon fa fa-key"></i>
-                {{# gettext }}Keys & tokens{{/ gettext }}
-            </a>
+        {{/ tabs }}
         </nav>
 
         <div class="user-preferences-section">
