@@ -20,24 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
-use Project;
+use CSRFSynchronizerToken;
+use GitPresenters_AdminPresenter;
 
-class GitJenkinsAdministrationURLBuilder
+class AdministrationPresenter extends GitPresenters_AdminPresenter
 {
-    public static function buildUrl(Project $project): string
-    {
-        return GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/administration/jenkins';
-    }
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
-    public static function buildAddUrl(): string
-    {
-        return "/jenkins_server/";
-    }
+    /**
+     * @var JenkinsServerPresenter[]
+     */
+    public $jenkins_server_presenters;
 
-    public static function buildDeleteUrl(): string
-    {
-        return "/jenkins_server/delete";
+    public function __construct(
+        $project_id,
+        bool $are_mirrors_defined,
+        array $external_pane_presenters,
+        array $jenkins_server_presenters,
+        CSRFSynchronizerToken $csrf_token
+    ) {
+        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
+
+        $this->csrf_token = $csrf_token;
+        $this->jenkins_server_presenters = $jenkins_server_presenters;
     }
 }

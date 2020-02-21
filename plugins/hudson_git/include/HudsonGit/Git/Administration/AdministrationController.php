@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
 use CSRFSynchronizerToken;
 use Git_Mirror_MirrorDataMapper;
@@ -38,7 +38,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class GitJenkinsAdministrationController implements DispatchableWithRequest, DispatchableWithProject
+class AdministrationController implements DispatchableWithRequest, DispatchableWithProject
 {
     /**
      * @var ProjectManager
@@ -66,9 +66,9 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
     private $mirror_data_mapper;
 
     /**
-     * @var GitJenkinsAdministrationServerFactory
+     * @var JenkinsServerFactory
      */
-    private $git_jenkins_administration_server_factory;
+    private $jenkins_server_factory;
 
     /**
      * @var IncludeAssets
@@ -79,18 +79,18 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GitJenkinsAdministrationServerFactory $git_jenkins_administration_server_factory,
+        JenkinsServerFactory $jenkins_server_factory,
         HeaderRenderer $header_renderer,
         TemplateRenderer $renderer,
         IncludeAssets $include_assets
     ) {
-        $this->project_manager                           = $project_manager;
-        $this->git_permissions_manager                   = $git_permissions_manager;
-        $this->renderer                                  = $renderer;
-        $this->header_renderer                           = $header_renderer;
-        $this->mirror_data_mapper                        = $mirror_data_mapper;
-        $this->git_jenkins_administration_server_factory = $git_jenkins_administration_server_factory;
-        $this->include_assets                            = $include_assets;
+        $this->project_manager         = $project_manager;
+        $this->git_permissions_manager = $git_permissions_manager;
+        $this->renderer                = $renderer;
+        $this->header_renderer         = $header_renderer;
+        $this->mirror_data_mapper      = $mirror_data_mapper;
+        $this->jenkins_server_factory  = $jenkins_server_factory;
+        $this->include_assets          = $include_assets;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -118,15 +118,15 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
 
         $this->renderer->renderToPage(
             'git-administration-jenkins',
-            new GitJenkinsAdministrationPresenter(
+            new AdministrationPresenter(
                 (int) $project->getID(),
                 count($this->mirror_data_mapper->fetchAllForProject($project)) > 0,
                 [
-                    GitJenkinsAdministrationPaneBuilder::buildActivePane($project)
+                    AdministrationPaneBuilder::buildActivePane($project)
                 ],
                 $this->buildServerPresenters($project),
                 new CSRFSynchronizerToken(
-                    GitJenkinsAdministrationURLBuilder::buildAddUrl()
+                    URLBuilder::buildAddUrl()
                 )
             )
         );
@@ -150,8 +150,8 @@ class GitJenkinsAdministrationController implements DispatchableWithRequest, Dis
     private function buildServerPresenters(Project $project): array
     {
         $presenters = [];
-        foreach ($this->git_jenkins_administration_server_factory->getJenkinsServerOfProject($project) as $jenkins_server) {
-            $presenters[] = new GitJenkinsAdministrationServerPresenter($jenkins_server);
+        foreach ($this->jenkins_server_factory->getJenkinsServerOfProject($project) as $jenkins_server) {
+            $presenters[] = new JenkinsServerPresenter($jenkins_server);
         }
 
         return $presenters;

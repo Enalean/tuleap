@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 
-class GitJenkinsAdministrationPaneBuilder
+class URLBuilderTest extends TestCase
 {
-    public static function buildPane(Project $project): AdminExternalPanePresenter
-    {
-        return new AdminExternalPanePresenter(
-            'Jenkins',
-            GitJenkinsAdministrationURLBuilder::buildUrl($project),
-            false
-        );
-    }
+    use MockeryPHPUnitIntegration;
 
-    public static function buildActivePane(Project $project): AdminExternalPanePresenter
+    public function testItBuildsAnURL()
     {
-        return new AdminExternalPanePresenter(
-            'Jenkins',
-            GitJenkinsAdministrationURLBuilder::buildUrl($project),
-            true
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getUnixName')->once()->andReturn('testprj');
+
+        $url = URLBuilder::buildUrl($project);
+
+        $this->assertEquals(
+            '/plugins/git/testprj/administration/jenkins',
+            $url
         );
     }
 }

@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
-use Git_Mirror_MirrorDataMapper;
+use CSRFSynchronizerToken;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
@@ -32,19 +32,17 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
-use TemplateRenderer;
-use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use RuntimeException;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class GitJenkinsAdministrationControllerTest extends TestCase
+class DeleteControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var GitJenkinsAdministrationController
+     * @var DeleteController
      */
     private $controller;
 
@@ -59,6 +57,11 @@ class GitJenkinsAdministrationControllerTest extends TestCase
     private $git_permissions_manager;
 
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerFactory
+     */
+    private $git_jenkins_administration_server_factory;
+
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
      */
     private $layout;
@@ -69,34 +72,24 @@ class GitJenkinsAdministrationControllerTest extends TestCase
     private $request;
 
     /**
+     * @var JenkinsServer
+     */
+    private $jenkins_server;
+
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
      */
     private $project;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TemplateRenderer
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerDeleter
      */
-    private $renderer;
+    private $git_jenkins_administration_server_deleter;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HeaderRenderer
+     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
-    private $header_renderer;
-
-    /**
-     * @var Git_Mirror_MirrorDataMapper|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $mirror_data_mapper;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitJenkinsAdministrationServerFactory
-     */
-    private $git_jenkins_administration_server_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
-     */
-    private $include_assets;
+    private $csrf_token;
 
     protected function setUp(): void
     {
@@ -104,60 +97,75 @@ class GitJenkinsAdministrationControllerTest extends TestCase
 
         $this->project_manager                           = Mockery::mock(ProjectManager::class);
         $this->git_permissions_manager                   = Mockery::mock(GitPermissionsManager::class);
-        $this->header_renderer                           = Mockery::mock(HeaderRenderer::class);
-        $this->renderer                                  = Mockery::mock(TemplateRenderer::class);
-        $this->mirror_data_mapper                        = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
-        $this->git_jenkins_administration_server_factory = Mockery::mock(GitJenkinsAdministrationServerFactory::class);
-        $this->include_assets                            = Mockery::mock(IncludeAssets::class);
+        $this->git_jenkins_administration_server_factory = Mockery::mock(JenkinsServerFactory::class);
+        $this->git_jenkins_administration_server_deleter = Mockery::mock(JenkinsServerDeleter::class);
+        $this->csrf_token                                = Mockery::mock(CSRFSynchronizerToken::class);
 
-        $this->controller = new GitJenkinsAdministrationController(
+        $this->controller = new DeleteController(
             $this->project_manager,
             $this->git_permissions_manager,
-            $this->mirror_data_mapper,
             $this->git_jenkins_administration_server_factory,
-            $this->header_renderer,
-            $this->renderer,
-            $this->include_assets
+            $this->git_jenkins_administration_server_deleter,
+            $this->csrf_token
         );
 
         $this->layout  = Mockery::mock(BaseLayout::class);
         $this->request = Mockery::mock(HTTPRequest::class);
         $this->project = Mockery::mock(Project::class);
 
+        $this->jenkins_server = new JenkinsServer(
+            1,
+            'url',
+            $this->project
+        );
+
         $this->project->shouldReceive('isError')->andReturnFalse();
-        $this->project->shouldReceive('getID')->andReturn(101);
-        $this->project->shouldReceive('getUnixName')->andReturn('project01');
+        $this->project->shouldReceive('getUnixName')->andReturn('test');
+
+        $this->csrf_token->shouldReceive('check');
     }
 
-    protected function tearDown(): void
+    public function testItThrowsRuntimeIfJenkinsServerIDNotProvided(): void
     {
-        unset($GLOBALS['_SESSION']);
+        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnFalse();
 
-        parent::tearDown();
+        $this->expectException(RuntimeException::class);
+
+        $this->controller->process(
+            $this->request,
+            $this->layout,
+            []
+        );
     }
 
-    public function testProcessThrowsNotFoundWhenProjectIsInError(): void
+    public function testItThrowsNotFoundIfJenkinsServerDoesNotExists(): void
     {
-        $variables = ['project_name' => 'test'];
+        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnTrue();
+        $this->request->shouldReceive('get')->with('jenkins_server_id')->andReturn(1);
 
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
-            ->with('test')
+        $this->git_jenkins_administration_server_factory->shouldReceive('getJenkinsServerById')
             ->once()
+            ->with(1)
             ->andReturnNull();
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, $this->layout, $variables);
+        $this->controller->process(
+            $this->request,
+            $this->layout,
+            []
+        );
     }
 
     public function testProcessThrowsNotFoundExceptionWhenProjectDoesNotUseGitService(): void
     {
-        $variables = ['project_name' => 'test'];
+        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnTrue();
+        $this->request->shouldReceive('get')->with('jenkins_server_id')->andReturn(1);
 
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
-            ->with('test')
+        $this->git_jenkins_administration_server_factory->shouldReceive('getJenkinsServerById')
             ->once()
-            ->andReturn($this->project);
+            ->with(1)
+            ->andReturn($this->jenkins_server);
 
         $this->project->shouldReceive('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
@@ -166,17 +174,22 @@ class GitJenkinsAdministrationControllerTest extends TestCase
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, $this->layout, $variables);
+        $this->controller->process(
+            $this->request,
+            $this->layout,
+            []
+        );
     }
 
     public function testProcessThrowsForbiddenWhenUserIsNotGitAdmin(): void
     {
-        $variables = ['project_name' => 'test'];
+        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnTrue();
+        $this->request->shouldReceive('get')->with('jenkins_server_id')->andReturn(1);
 
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
-            ->with('test')
+        $this->git_jenkins_administration_server_factory->shouldReceive('getJenkinsServerById')
             ->once()
-            ->andReturn($this->project);
+            ->with(1)
+            ->andReturn($this->jenkins_server);
 
         $this->project->shouldReceive('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
@@ -196,17 +209,22 @@ class GitJenkinsAdministrationControllerTest extends TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process($this->request, $this->layout, $variables);
+        $this->controller->process(
+            $this->request,
+            $this->layout,
+            []
+        );
     }
 
-    public function testProcessDisplaysThePage(): void
+    public function testProcessDeletesTheJenkinsServer(): void
     {
-        $variables = ['project_name' => 'test'];
+        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnTrue();
+        $this->request->shouldReceive('get')->with('jenkins_server_id')->andReturn(1);
 
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
-            ->with('test')
+        $this->git_jenkins_administration_server_factory->shouldReceive('getJenkinsServerById')
             ->once()
-            ->andReturn($this->project);
+            ->with(1)
+            ->andReturn($this->jenkins_server);
 
         $this->project->shouldReceive('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
@@ -224,19 +242,17 @@ class GitJenkinsAdministrationControllerTest extends TestCase
             )
             ->andReturnTrue();
 
-        $this->mirror_data_mapper->shouldReceive('fetchAllForProject')->andReturn([]);
+        $this->git_jenkins_administration_server_deleter->shouldReceive('deleteServer')
+            ->with($this->jenkins_server)
+            ->once();
 
-        $this->git_jenkins_administration_server_factory    ->shouldReceive('getJenkinsServerOfProject')
-            ->once()
-            ->with($this->project)
-            ->andReturn([]);
+        $this->layout->shouldReceive('redirect');
+        $this->layout->shouldReceive('addFeedback');
 
-        $this->header_renderer->shouldReceive('renderServiceAdministrationHeader')->once();
-        $this->renderer->shouldReceive('renderToPage')->once();
-        $this->layout->shouldReceive('footer')->once();
-        $this->layout->shouldReceive('includeFooterJavascriptFile')->once();
-        $this->include_assets->shouldReceive('getFileURL')->once();
-
-        $this->controller->process($this->request, $this->layout, $variables);
+        $this->controller->process(
+            $this->request,
+            $this->layout,
+            []
+        );
     }
 }

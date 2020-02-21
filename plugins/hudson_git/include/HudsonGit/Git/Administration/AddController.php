@@ -20,13 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
 use CSRFSynchronizerToken;
 use Feedback;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
+use Project;
 use ProjectManager;
 use RuntimeException;
 use Tuleap\Layout\BaseLayout;
@@ -34,7 +35,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class GitJenkinsAdministrationDeleteController implements DispatchableWithRequest
+class AddController implements DispatchableWithRequest
 {
     /**
      * @var ProjectManager
@@ -47,14 +48,9 @@ class GitJenkinsAdministrationDeleteController implements DispatchableWithReques
     private $git_permissions_manager;
 
     /**
-     * @var GitJenkinsAdministrationServerFactory
+     * @var JenkinsServerAdder
      */
-    private $git_jenkins_administration_server_factory;
-
-    /**
-     * @var GitJenkinsAdministrationServerDeleter
-     */
-    private $git_jenkins_administration_server_deleter;
+    private $jenkins_server_adder;
 
     /**
      * @var CSRFSynchronizerToken
@@ -64,33 +60,20 @@ class GitJenkinsAdministrationDeleteController implements DispatchableWithReques
     public function __construct(
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
-        GitJenkinsAdministrationServerFactory $git_jenkins_administration_server_factory,
-        GitJenkinsAdministrationServerDeleter $git_jenkins_administration_server_deleter,
+        JenkinsServerAdder $jenkins_server_adder,
         CSRFSynchronizerToken $csrf_token
     ) {
-        $this->project_manager                           = $project_manager;
-        $this->git_permissions_manager                   = $git_permissions_manager;
-        $this->git_jenkins_administration_server_factory = $git_jenkins_administration_server_factory;
-        $this->git_jenkins_administration_server_deleter = $git_jenkins_administration_server_deleter;
-        $this->csrf_token                                = $csrf_token;
+        $this->project_manager         = $project_manager;
+        $this->git_permissions_manager = $git_permissions_manager;
+        $this->jenkins_server_adder    = $jenkins_server_adder;
+        $this->csrf_token              = $csrf_token;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        if (! $request->exist('jenkins_server_id')) {
-            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected jenkins server ID not found"));
-        }
-
-        $jenkins_server_id = (int) $request->get("jenkins_server_id");
-        $jenkins_server    = $this->git_jenkins_administration_server_factory->getJenkinsServerById($jenkins_server_id);
-
-        if ($jenkins_server === null) {
-            throw new NotFoundException(dgettext("tuleap-git", "Jenkins server not found."));
-        }
-
-        $project = $jenkins_server->getProject();
+        $project = $this->getProjectFromRequest($request);
         $this->csrf_token->check(
-            GitJenkinsAdministrationURLBuilder::buildUrl($project)
+            URLBuilder::buildUrl($project)
         );
 
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
@@ -102,15 +85,48 @@ class GitJenkinsAdministrationDeleteController implements DispatchableWithReques
             throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
         }
 
-        $this->git_jenkins_administration_server_deleter->deleteServer($jenkins_server);
+        $provided_url = $request->get('url');
+        if ($provided_url === false) {
+            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected jenkins server URL not found"));
+        }
 
-        $layout->addFeedback(
-            Feedback::INFO,
-            dgettext("tuleap-hudson_git", "The Jenkins server has successfully been Removed.")
-        );
+        try {
+            $this->jenkins_server_adder->addServerInProject(
+                $project,
+                trim($provided_url)
+            );
 
-        $layout->redirect(
-            GitJenkinsAdministrationURLBuilder::buildUrl($project)
-        );
+            $layout->addFeedback(
+                Feedback::INFO,
+                dgettext("tuleap-hudson_git", "The Jenkins server has successfully been added.")
+            );
+        } catch (JenkinsServerAlreadyDefinedException $exception) {
+            $layout->addFeedback(
+                Feedback::WARN,
+                dgettext("tuleap-hudson_git", "The Jenkins server is already defined in project.")
+            );
+        } finally {
+            $layout->redirect(
+                URLBuilder::buildUrl($project)
+            );
+        }
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    private function getProjectFromRequest(HTTPRequest $request): Project
+    {
+        $project_id = $request->get('project_id');
+        if ($project_id === false) {
+            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+        }
+
+        $project = $this->project_manager->getProject((int) $project_id);
+        if (! $project || $project->isError()) {
+            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+        }
+
+        return $project;
     }
 }

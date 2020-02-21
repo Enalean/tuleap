@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
 use ProjectManager;
 
-class GitJenkinsAdministrationServerFactory
+class JenkinsServerFactory
 {
     /**
-     * @var GitJenkinsAdministrationServerDao
+     * @var JenkinsServerDao
      */
-    private $git_jenkins_administration_server_dao;
+    private $jenkins_server_dao;
 
     /**
      * @var ProjectManager
@@ -38,21 +38,21 @@ class GitJenkinsAdministrationServerFactory
     private $project_manager;
 
     public function __construct(
-        GitJenkinsAdministrationServerDao $git_jenkins_administration_server_dao,
+        JenkinsServerDao $jenkins_server_dao,
         ProjectManager $project_manager
     ) {
-        $this->git_jenkins_administration_server_dao = $git_jenkins_administration_server_dao;
-        $this->project_manager                       = $project_manager;
+        $this->jenkins_server_dao = $jenkins_server_dao;
+        $this->project_manager    = $project_manager;
     }
 
     /**
-     * @return GitJenkinsAdministrationServer[]
+     * @return JenkinsServer[]
      */
     public function getJenkinsServerOfProject(Project $project): array
     {
         $servers = [];
-        foreach ($this->git_jenkins_administration_server_dao->getJenkinsServerOfProject((int) $project->getID()) as $jenkins_server) {
-            $servers[] = new GitJenkinsAdministrationServer(
+        foreach ($this->jenkins_server_dao->getJenkinsServerOfProject((int) $project->getID()) as $jenkins_server) {
+            $servers[] = new JenkinsServer(
                 (int) $jenkins_server['id'],
                 (string) $jenkins_server['jenkins_server_url'],
                 $project
@@ -62,9 +62,9 @@ class GitJenkinsAdministrationServerFactory
         return $servers;
     }
 
-    public function getJenkinsServerById(int $jenkins_server_id): ?GitJenkinsAdministrationServer
+    public function getJenkinsServerById(int $jenkins_server_id): ?JenkinsServer
     {
-        $row = $this->git_jenkins_administration_server_dao->getJenkinsServerById($jenkins_server_id);
+        $row = $this->jenkins_server_dao->getJenkinsServerById($jenkins_server_id);
         if (empty($row)) {
             return null;
         }
@@ -77,7 +77,7 @@ class GitJenkinsAdministrationServerFactory
             return null;
         }
 
-        return new GitJenkinsAdministrationServer(
+        return new JenkinsServer(
             $jenkins_server_id,
             $jenkins_server_url,
             $project

@@ -20,49 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit;
+namespace Tuleap\HudsonGit\Git\Administration;
 
-use Project;
+use Exception;
 
-/**
- * @psalm-immutable
- */
-class GitJenkinsAdministrationServer
+class JenkinsServerAlreadyDefinedException extends Exception
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $jenkins_server_url;
-
-    /**
-     * @var Project
-     */
-    private $project;
-
-    public function __construct(int $id, string $jenkins_server_url, Project $project)
-    {
-        $this->id = $id;
-        $this->jenkins_server_url = $jenkins_server_url;
-        $this->project = $project;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getServerURL(): string
-    {
-        return $this->jenkins_server_url;
-    }
-
-    public function getProject(): Project
-    {
-        return $this->project;
-    }
 }
