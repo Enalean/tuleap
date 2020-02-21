@@ -329,6 +329,9 @@ msgstr "Cloner ou télécharger"
 msgid "Clone or download:"
 msgstr "Cloner ou télécharger :"
 
+msgid "Command sent to remote gerrit servers"
+msgstr "Commande transmise au(x) serveur(s) gerrit"
+
 msgid "Commits"
 msgstr "Commits"
 
@@ -666,10 +669,10 @@ msgstr "Fichier d'identité"
 
 msgid ""
 "In order to make sure I have the correct access on Gerrit, it can be "
-"necessary to update my group and project membership"
+"necessary to update my group and project membership."
 msgstr ""
 "Pour avoir les bons droits sur Gerrit, il est parfois nécessaire de mettre à "
-"jour les groupes et les projets auxquels j'appartiens"
+"jour les groupes et les projets auxquels j'appartiens."
 
 #, php-format
 msgid "Into project <b>%1$s</b>"
@@ -1015,6 +1018,9 @@ msgstr "Projet retiré avec succès"
 #, php-format
 msgid "Projects allowed to use %1$s"
 msgstr "Projets autorisés à utiliser %1$s"
+
+msgid "Projects and groups membership"
+msgstr "Appartenance aux groupes et projets"
 
 msgid "Projects authorized to go over object's size limit"
 msgstr "Projets autorisés à dépasser la taille maximale des objets"
@@ -1765,8 +1771,9 @@ msgstr ""
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes utilisateur."
 
-msgid "You may need to log into Gerrit first"
-msgstr "Cela nécessite parfois une connexion à Gerrit au préalable"
+msgid "You may need to log into Gerrit first."
+msgstr ""
+"Vous aurez probablement besoin de vous connecter à Gerrit au préalable."
 
 #, php-format
 msgid ""

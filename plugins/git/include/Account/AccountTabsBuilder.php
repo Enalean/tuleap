@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Git\Account;
 
 use Git_RemoteServer_GerritServerFactory;
+use PFUser;
 use Tuleap\User\Account\AccountTabPresenter;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
@@ -41,12 +42,22 @@ final class AccountTabsBuilder
 
     public function addTabs(AccountTabPresenterCollection $collection): void
     {
-        $servers = $this->gerrit_server_factory->getRemoteServersForUser($collection->getUser());
-        if (count($servers) === 0) {
+        if ($this->noServerForUser($collection->getUser()) && $this->noRemoteAvailable()) {
             return;
         }
+
         $collection->add(
             new AccountTabPresenter(dgettext('tuleap-git', 'Gerrit'), AccountGerritController::URL, 'fa-snowflake-o', $collection->getCurrentHref())
         );
+    }
+
+    private function noServerForUser(PFUser $user): bool
+    {
+        return count($this->gerrit_server_factory->getRemoteServersForUser($user)) === 0;
+    }
+
+    private function noRemoteAvailable(): bool
+    {
+        return $this->gerrit_server_factory->hasRemotesSetUp();
     }
 }

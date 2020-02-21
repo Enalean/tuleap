@@ -30,6 +30,7 @@ use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Account\AccountGerritController;
 use Tuleap\Git\Account\PushSSHKeysController;
+use Tuleap\Git\Account\ResynchronizeGroupsController;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
@@ -269,9 +270,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         // Project hierarchy modification
         $this->addHook(Event::PROJECT_SET_PARENT_PROJECT, 'project_admin_parent_project_modification');
         $this->addHook(Event::PROJECT_UNSET_PARENT_PROJECT, 'project_admin_parent_project_modification');
-
-        //Gerrit user synch help
-        $this->addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
 
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(RestrictedUsersAreHandledByPluginEvent::NAME);
@@ -1947,45 +1945,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     }
 
     /**
-     * @param array $params
-     * Parameters:
-     *     'user' => PFUser
-     *     'html' => string
-     */
-    public function manage_third_party_apps($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $this->resynch_gerrit_groups_with_user($params);
-    }
-
-    /**
-     * @param array $params
-     * Parameters:
-     *     'user' => PFUser
-     *     'html' => string
-     */
-    private function resynch_gerrit_groups_with_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (! $this->getGerritServerFactory()->hasRemotesSetUp()) {
-            return;
-        }
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-        $presenter = new GitPresenters_GerritAsThirdPartyPresenter();
-        $params['html'] .= $renderer->renderToString('gerrit_as_third_party', $presenter);
-
-        $request = HTTPRequest::instance();
-        $action = $request->get('action');
-        if ($action && $action = $presenter->form_action) {
-            $this->addMissingGerritAccess($params['user']);
-        }
-    }
-
-    private function addMissingGerritAccess($user)
-    {
-        $this->getGerritMembershipManager()->addUserToAllTheirGroups($user);
-    }
-
-    /**
      * @see Event::USER_RENAME
      */
     public function systemevent_user_rename($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -2624,13 +2583,22 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    public function routePostAccountGerrit(): DispatchableWithRequest
+    public function routePostAccountGerritSSH(): DispatchableWithRequest
     {
         return new PushSSHKeysController(
             AccountGerritController::getCSRFToken(),
             $this->getUserAccountManager(),
             $this->getGerritServerFactory(),
             $this->getLogger(),
+        );
+    }
+
+    public function routePostAccountGerritGroups(): DispatchableWithRequest
+    {
+        return new ResynchronizeGroupsController(
+            AccountGerritController::getCSRFToken(),
+            $this->getGerritServerFactory(),
+            $this->getGerritMembershipManager(),
         );
     }
 
@@ -2702,7 +2670,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             EventManager::instance()->processEvent(new \Tuleap\Git\CollectGitRoutesEvent($r));
 
             $r->get('/account/gerrit', $this->getRouteHandler('routeGetAccountGerrit'));
-            $r->post('/account/gerrit', $this->getRouteHandler('routePostAccountGerrit'));
+            $r->post('/account/gerrit/ssh', $this->getRouteHandler('routePostAccountGerritSSH'));
+            $r->post('/account/gerrit/groups', $this->getRouteHandler('routePostAccountGerritGroups'));
 
             $r->get('/index.php/{project_id:\d+}/view/{repository_id:\d+}/[{args}]', $this->getRouteHandler('routeGetLegacyURLForRepository'));
 
