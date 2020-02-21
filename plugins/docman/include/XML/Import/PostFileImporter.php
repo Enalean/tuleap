@@ -26,6 +26,7 @@ use Docman_Item;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\xml\InvalidDateException;
+use User\XML\Import\UserNotFoundException;
 
 class PostFileImporter implements PostImporter
 {
@@ -46,14 +47,14 @@ class PostFileImporter implements PostImporter
         $this->logger           = $logger;
     }
 
-    public function postImport(NodeImporter $node_importer, SimpleXMLElement $node, Docman_Item $item, \PFUser $user)
+    public function postImport(NodeImporter $node_importer, SimpleXMLElement $node, Docman_Item $item): void
     {
         $version_number = 1;
         foreach ($node->versions->version as $version) {
             $this->logger->debug("└ Importing version #$version_number");
             try {
-                $this->version_importer->import($version, $item, $user, $version_number);
-            } catch (UnableToCreateFileOnFilesystemException | UnableToCreateVersionInDbException | InvalidDateException $exception) {
+                $this->version_importer->import($version, $item, $version_number);
+            } catch (UnableToCreateFileOnFilesystemException | UnableToCreateVersionInDbException | InvalidDateException | UserNotFoundException $exception) {
                 $this->logger->error($exception->getMessage());
             }
             $version_number++;

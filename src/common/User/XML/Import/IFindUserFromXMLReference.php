@@ -19,13 +19,13 @@
  */
 namespace User\XML\Import;
 
+use PFUser;
 use SimpleXMLElement;
 
 interface IFindUserFromXMLReference
 {
-
     /**
-     * @return \PFUser
+     * @throws UserNotFoundException
      */
-    public function getUser(SimpleXMLElement $xml_element);
+    public function getUser(SimpleXMLElement $xml_element): PFUser;
 }

@@ -22,20 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML\Import;
 
+use Mockery;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 
 class ImportPropertiesTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     public function testWiki(): void
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+        $owner = Mockery::mock(PFUser::class);
 
-        $properties = ImportProperties::buildWiki('title', 'description', 'wiki page name', $create_date, $update_date);
+        $properties = ImportProperties::buildWiki('title', 'description', 'wiki page name', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals($create_date, $properties->getCreateDate());
         $this->assertEquals($update_date, $properties->getUpdateDate());
+        $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals('wiki page name', $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $properties->getItemTypeId());
@@ -45,12 +51,14 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+        $owner = Mockery::mock(PFUser::class);
 
-        $properties = ImportProperties::buildLink('title', 'description', 'link url', $create_date, $update_date);
+        $properties = ImportProperties::buildLink('title', 'description', 'link url', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals($create_date, $properties->getCreateDate());
         $this->assertEquals($update_date, $properties->getUpdateDate());
+        $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals('link url', $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_LINK, $properties->getItemTypeId());
@@ -60,12 +68,14 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+        $owner = Mockery::mock(PFUser::class);
 
-        $properties = ImportProperties::buildEmpty('title', 'description', $create_date, $update_date);
+        $properties = ImportProperties::buildEmpty('title', 'description', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals($create_date, $properties->getCreateDate());
         $this->assertEquals($update_date, $properties->getUpdateDate());
+        $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $properties->getItemTypeId());
@@ -75,12 +85,14 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+        $owner = Mockery::mock(PFUser::class);
 
-        $properties = ImportProperties::buildFolder('title', 'description', $create_date, $update_date);
+        $properties = ImportProperties::buildFolder('title', 'description', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals($create_date, $properties->getCreateDate());
         $this->assertEquals($update_date, $properties->getUpdateDate());
+        $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $properties->getItemTypeId());
@@ -90,12 +102,14 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+        $owner = Mockery::mock(PFUser::class);
 
-        $properties = ImportProperties::buildFile('title', 'description', $create_date, $update_date);
+        $properties = ImportProperties::buildFile('title', 'description', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals($create_date, $properties->getCreateDate());
         $this->assertEquals($update_date, $properties->getUpdateDate());
+        $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FILE, $properties->getItemTypeId());
@@ -105,12 +119,14 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+        $owner = Mockery::mock(PFUser::class);
 
-        $properties = ImportProperties::buildEmbedded('title', 'description', $create_date, $update_date);
+        $properties = ImportProperties::buildEmbedded('title', 'description', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
         $this->assertEquals('description', $properties->getDescription());
         $this->assertEquals($create_date, $properties->getCreateDate());
         $this->assertEquals($update_date, $properties->getUpdateDate());
+        $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals(null, $properties->getLinkUrl());
         $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $properties->getItemTypeId());

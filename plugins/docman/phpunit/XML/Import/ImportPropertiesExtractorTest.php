@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML\Import;
 
+use Mockery;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
+use User\XML\Import\IFindUserFromXMLReference;
 
 class ImportPropertiesExtractorTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var \DateTimeImmutable
      */
@@ -35,11 +39,22 @@ class ImportPropertiesExtractorTest extends TestCase
      * @var ImportPropertiesExtractor
      */
     private $properties_extractor;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IFindUserFromXMLReference
+     */
+    private $user_finder;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     */
+    private $current_user;
 
     protected function setUp(): void
     {
         $this->current_date = new \DateTimeImmutable();
-        $this->properties_extractor = new ImportPropertiesExtractor($this->current_date);
+        $this->user_finder  = Mockery::mock(IFindUserFromXMLReference::class);
+        $this->current_user = Mockery::mock(\PFUser::class);
+
+        $this->properties_extractor = new ImportPropertiesExtractor($this->current_date, $this->current_user, $this->user_finder);
     }
 
     public function testImportEmpty(): void
@@ -62,6 +77,7 @@ class ImportPropertiesExtractorTest extends TestCase
         $this->assertEquals('', $properties->getDescription());
         $this->assertEquals($this->current_date, $properties->getCreateDate());
         $this->assertEquals($this->current_date, $properties->getUpdateDate());
+        $this->assertEquals($this->current_user, $properties->getOwner());
         $this->assertNull($properties->getLinkUrl());
         $this->assertNull($properties->getWikiPage());
     }
@@ -175,6 +191,31 @@ class ImportPropertiesExtractorTest extends TestCase
             (new \DateTimeImmutable())->setTimestamp(1324567890),
             $properties->getUpdateDate()
         );
+    }
+
+    public function testImportOwner(): void
+    {
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <item type="empty">
+                <properties>
+                    <title>My document</title>
+                    <owner format="ldap">103</owner>
+                </properties>
+            </item>
+            EOS
+        );
+
+        $user = Mockery::mock(\PFUser::class);
+        $this->user_finder
+            ->shouldReceive('getUser')
+            ->once()
+            ->andReturn($user);
+
+        $properties = $this->properties_extractor->getImportProperties($node);
+
+        $this->assertEquals($user, $properties->getOwner());
     }
 
     public function testImportWiki(): void

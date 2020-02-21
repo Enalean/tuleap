@@ -1604,7 +1604,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             $event->getLogger(),
             Docman_ItemFactory::instance($event->getProject()->getGroupId()),
             new Docman_VersionFactory(),
-            UserManager::instance()
+            UserManager::instance(),
+            $event->getUserXMLExporter()
         );
         $export->export($event->getProject(), $event->getIntoXml(), $archive);
     }
@@ -1620,6 +1621,12 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $logger = new WrapperLogger($params['logger'], 'docman');
         $logger->info('Start import');
 
+        $user_finder = $params['user_finder'];
+        assert($user_finder instanceof \User\XML\Import\IFindUserFromXMLReference);
+
+        $current_user = UserManager::instance()->getCurrentUser();
+        assert($current_user !== null);
+
         $project             = $params['project'];
         $docman_item_factory = Docman_ItemFactory::instance($project->getGroupId());
         $current_date        = new DateTimeImmutable();
@@ -1631,25 +1638,24 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 new ItemImporter(PermissionsManager::instance(), $docman_item_factory),
                 new PostFileImporter(
                     new VersionImporter(
+                        $user_finder,
                         new Docman_VersionFactory(),
                         new Docman_FileStorage($root_path),
                         $project,
                         $params['extraction_path'],
-                        $current_date
+                        $current_date,
+                        $current_user
                     ),
                     $logger
                 ),
                 new PostFolderImporter(),
                 new PostDoNothingImporter(),
                 $logger,
-                new ImportPropertiesExtractor($current_date)
+                new ImportPropertiesExtractor($current_date, $current_user, $user_finder)
             ),
             new XML_RNGValidator()
         );
-        $xml_importer->import(
-            $params['xml_content']->docman,
-            UserManager::instance()->getCurrentUser()
-        );
+        $xml_importer->import($params['xml_content']->docman, $current_user);
 
         $logger->info('Import completed');
     }

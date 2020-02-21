@@ -25,7 +25,6 @@ namespace Tuleap\Docman\XML\Import;
 use Docman_Item;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
@@ -47,7 +46,6 @@ class PostFolderImporterTest extends TestCase
 
         $node_importer = Mockery::mock(NodeImporter::class);
         $item          = Mockery::mock(Docman_Item::class);
-        $user          = Mockery::mock(PFUser::class);
 
         $node_importer
             ->shouldReceive('import')
@@ -56,7 +54,6 @@ class PostFolderImporterTest extends TestCase
                     return (string) $node['type'] === 'empty';
                 }),
                 $item,
-                $user
             )->once()
             ->ordered();
         $node_importer
@@ -66,11 +63,10 @@ class PostFolderImporterTest extends TestCase
                     return (string) $node['type'] === 'wiki';
                 }),
                 $item,
-                $user
             )->once()
             ->ordered();
 
         $importer = new PostFolderImporter();
-        $importer->postImport($node_importer, $node, $item, $user);
+        $importer->postImport($node_importer, $node, $item);
     }
 }

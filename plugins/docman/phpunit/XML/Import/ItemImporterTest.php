@@ -48,7 +48,7 @@ class ItemImporterTest extends TestCase
 
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $properties    = ImportProperties::buildLink('My document', 'The description', 'https://example.test', $create_date, $update_date);
+        $properties    = ImportProperties::buildLink('My document', 'The description', 'https://example.test', $create_date, $update_date, $user);
 
         $created_item = Mockery::mock(Docman_Item::class)->shouldReceive(['getId' => 14])->getMock();
 
@@ -65,9 +65,9 @@ class ItemImporterTest extends TestCase
 
         $post_importer
             ->shouldReceive('postImport')
-            ->with($node_importer, $node, $created_item, $user);
+            ->with($node_importer, $node, $created_item);
 
         $importer = new ItemImporter($permission_manager, $item_factory);
-        $importer->import($node, $node_importer, $post_importer, $parent_item, $user, $properties);
+        $importer->import($node, $node_importer, $post_importer, $parent_item, $properties);
     }
 }

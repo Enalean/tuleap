@@ -21,23 +21,43 @@
 
 namespace Tuleap\Docman\XML\Import;
 
+use DateTimeImmutable;
+use PFUser;
 use SimpleXMLElement;
+use Tuleap\xml\InvalidDateException;
 use Tuleap\xml\XMLDateHelper;
+use User\XML\Import\IFindUserFromXMLReference;
+use User\XML\Import\UserNotFoundException;
 
 class ImportPropertiesExtractor
 {
     /**
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     private $current_date;
+    /**
+     * @var IFindUserFromXMLReference
+     */
+    private $user_finder;
+    /**
+     * @var PFUser
+     */
+    private $current_user;
 
-    public function __construct(\DateTimeImmutable $current_date)
-    {
+    public function __construct(
+        DateTimeImmutable $current_date,
+        PFUser $current_user,
+        IFindUserFromXMLReference $user_finder
+    ) {
         $this->current_date = $current_date;
+        $this->user_finder  = $user_finder;
+        $this->current_user = $current_user;
     }
 
     /**
-     * @throws UnknownItemTypeException|\Tuleap\xml\InvalidDateException
+     * @throws UnknownItemTypeException
+     * @throws InvalidDateException
+     * @throws UserNotFoundException
      */
     public function getImportProperties(SimpleXMLElement $node): ImportProperties
     {
@@ -55,13 +75,18 @@ class ImportPropertiesExtractor
             $create_date = XMLDateHelper::extractFromNode($node->properties->create_date);
         }
 
+        $owner = $this->current_user;
+        if ($node->properties->owner) {
+            $owner = $this->user_finder->getUser($node->properties->owner);
+        }
+
         switch ($type) {
             case NodeImporter::TYPE_FILE:
-                $properties = ImportProperties::buildFile($title, $description, $create_date, $update_date);
+                $properties = ImportProperties::buildFile($title, $description, $create_date, $update_date, $owner);
                 break;
 
             case NodeImporter::TYPE_EMBEDDEDFILE:
-                $properties = ImportProperties::buildEmbedded($title, $description, $create_date, $update_date);
+                $properties = ImportProperties::buildEmbedded($title, $description, $create_date, $update_date, $owner);
                 break;
 
             case NodeImporter::TYPE_WIKI:
@@ -70,7 +95,8 @@ class ImportPropertiesExtractor
                     $description,
                     (string) $node->pagename,
                     $create_date,
-                    $update_date
+                    $update_date,
+                    $owner
                 );
                 break;
 
@@ -80,16 +106,17 @@ class ImportPropertiesExtractor
                     $description,
                     (string) $node->url,
                     $create_date,
-                    $update_date
+                    $update_date,
+                    $owner
                 );
                 break;
 
             case NodeImporter::TYPE_EMPTY:
-                $properties = ImportProperties::buildEmpty($title, $description, $create_date, $update_date);
+                $properties = ImportProperties::buildEmpty($title, $description, $create_date, $update_date, $owner);
                 break;
 
             case NodeImporter::TYPE_FOLDER:
-                $properties = ImportProperties::buildFolder($title, $description, $create_date, $update_date);
+                $properties = ImportProperties::buildFolder($title, $description, $create_date, $update_date, $owner);
                 break;
             default:
                 throw new UnknownItemTypeException($type);

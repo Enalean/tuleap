@@ -8,7 +8,8 @@ docman_item =
         element title { xsd:string },
         element description { xsd:string }?,
         element create_date { docman_date_content }?,
-        element update_date { docman_date_content }?
+        element update_date { docman_date_content }?,
+        element owner { docman_user_content }?
     }
 
 docman_folder =
@@ -56,6 +57,7 @@ docman_file_versions =
             element filetype { xsd:string },
             element filesize { xsd:string },
             element date { docman_date_content }?,
+            element author { docman_user_content }?,
             element content { xsd:string }
         }*
     }
@@ -63,3 +65,14 @@ docman_file_versions =
 docman_date_content =
     attribute format { "ISO8601" },
     xsd:string
+
+docman_user_content =
+        (
+            (
+                attribute format { "username" | "ldap" | "id" | "email" }
+            ) | (
+                attribute format { "email" },
+                attribute is_anonymous { xsd:boolean }
+            )
+        ),
+        xsd:string

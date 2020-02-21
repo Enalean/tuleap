@@ -27,7 +27,7 @@ use SimpleXMLElement;
 
 class PostDoNothingImporter implements PostImporter
 {
-    public function postImport(NodeImporter $node_importer, SimpleXMLElement $node, Docman_Item $item, \PFUser $user)
+    public function postImport(NodeImporter $node_importer, SimpleXMLElement $node, Docman_Item $item): void
     {
     }
 }

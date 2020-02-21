@@ -19,6 +19,7 @@
  */
 namespace User\XML\Import;
 
+use PFUser;
 use SimpleXMLElement;
 use UserManager;
 use Psr\Log\LoggerInterface;
@@ -46,9 +47,9 @@ class Mapping implements IFindUserFromXMLReference
     }
 
     /**
-     * @return PFUser
+     * @inheritDoc
      */
-    public function getUser(SimpleXMLElement $xml_element)
+    public function getUser(SimpleXMLElement $xml_element): PFUser
     {
         try {
             return $this->getUserFromXML($xml_element);
@@ -62,7 +63,10 @@ class Mapping implements IFindUserFromXMLReference
         }
     }
 
-    private function getUserFromXML(SimpleXMLElement $xml_element)
+    /**
+     * @throws UserNotFoundException
+     */
+    private function getUserFromXML(SimpleXMLElement $xml_element): PFUser
     {
         $format = (string) $xml_element['format'];
 

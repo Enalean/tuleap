@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\XML\Import;
 
 use DateTimeImmutable;
+use PFUser;
 
 final class ImportProperties
 {
@@ -54,6 +55,10 @@ final class ImportProperties
      * @var DateTimeImmutable
      */
     private $update_date;
+    /**
+     * @var PFUser
+     */
+    private $owner;
 
     private function __construct(
         string $title,
@@ -61,6 +66,7 @@ final class ImportProperties
         int $item_type_id,
         \DateTimeImmutable $create_date,
         \DateTimeImmutable $update_date,
+        PFUser $owner,
         ?string $wiki_page,
         ?string $link_url
     ) {
@@ -71,6 +77,7 @@ final class ImportProperties
         $this->update_date  = $update_date;
         $this->wiki_page    = $wiki_page;
         $this->link_url     = $link_url;
+        $this->owner        = $owner;
     }
 
     public static function buildWiki(
@@ -78,7 +85,8 @@ final class ImportProperties
         string $description,
         string $wiki_page,
         DateTimeImmutable $create_date,
-        DateTimeImmutable $update_date
+        DateTimeImmutable $update_date,
+        PFUser $owner
     ): self {
         return new self(
             $title,
@@ -86,6 +94,7 @@ final class ImportProperties
             PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
             $create_date,
             $update_date,
+            $owner,
             $wiki_page,
             null
         );
@@ -96,7 +105,8 @@ final class ImportProperties
         string $description,
         string $link_url,
         DateTimeImmutable $create_date,
-        DateTimeImmutable $update_date
+        DateTimeImmutable $update_date,
+        PFUser $owner
     ): self {
         return new self(
             $title,
@@ -104,6 +114,7 @@ final class ImportProperties
             PLUGIN_DOCMAN_ITEM_TYPE_LINK,
             $create_date,
             $update_date,
+            $owner,
             null,
             $link_url
         );
@@ -113,7 +124,8 @@ final class ImportProperties
         string $title,
         string $description,
         DateTimeImmutable $create_date,
-        DateTimeImmutable $update_date
+        DateTimeImmutable $update_date,
+        PFUser $owner
     ): self {
         return new self(
             $title,
@@ -121,6 +133,7 @@ final class ImportProperties
             PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
             $create_date,
             $update_date,
+            $owner,
             null,
             null
         );
@@ -130,7 +143,8 @@ final class ImportProperties
         string $title,
         string $description,
         DateTimeImmutable $create_date,
-        DateTimeImmutable $update_date
+        DateTimeImmutable $update_date,
+        PFUser $owner
     ): self {
         return new self(
             $title,
@@ -138,6 +152,7 @@ final class ImportProperties
             PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
             $create_date,
             $update_date,
+            $owner,
             null,
             null
         );
@@ -147,7 +162,8 @@ final class ImportProperties
         string $title,
         string $description,
         DateTimeImmutable $create_date,
-        DateTimeImmutable $update_date
+        DateTimeImmutable $update_date,
+        PFUser $owner
     ): self {
         return new self(
             $title,
@@ -155,6 +171,7 @@ final class ImportProperties
             PLUGIN_DOCMAN_ITEM_TYPE_FILE,
             $create_date,
             $update_date,
+            $owner,
             null,
             null
         );
@@ -164,7 +181,8 @@ final class ImportProperties
         string $title,
         string $description,
         DateTimeImmutable $create_date,
-        DateTimeImmutable $update_date
+        DateTimeImmutable $update_date,
+        PFUser $owner
     ): self {
         return new self(
             $title,
@@ -172,6 +190,7 @@ final class ImportProperties
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             $create_date,
             $update_date,
+            $owner,
             null,
             null
         );
@@ -210,5 +229,10 @@ final class ImportProperties
     public function getUpdateDate(): DateTimeImmutable
     {
         return $this->update_date;
+    }
+
+    public function getOwner(): PFUser
+    {
+        return $this->owner;
     }
 }

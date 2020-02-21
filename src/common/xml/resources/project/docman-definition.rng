@@ -25,6 +25,11 @@
           <ref name="docman_date_content"/>
         </element>
       </optional>
+      <optional>
+        <element name="owner">
+          <ref name="docman_user_content"/>
+        </element>
+      </optional>
     </element>
   </define>
   <define name="docman_folder">
@@ -101,6 +106,11 @@
               <ref name="docman_date_content"/>
             </element>
           </optional>
+          <optional>
+            <element name="author">
+              <ref name="docman_user_content"/>
+            </element>
+          </optional>
           <element name="content">
             <data type="string"/>
           </element>
@@ -112,6 +122,27 @@
     <attribute name="format">
       <value>ISO8601</value>
     </attribute>
+    <data type="string"/>
+  </define>
+  <define name="docman_user_content">
+    <choice>
+      <attribute name="format">
+        <choice>
+          <value>username</value>
+          <value>ldap</value>
+          <value>id</value>
+          <value>email</value>
+        </choice>
+      </attribute>
+      <group>
+        <attribute name="format">
+          <value>email</value>
+        </attribute>
+        <attribute name="is_anonymous">
+          <data type="boolean"/>
+        </attribute>
+      </group>
+    </choice>
     <data type="string"/>
   </define>
 </grammar>

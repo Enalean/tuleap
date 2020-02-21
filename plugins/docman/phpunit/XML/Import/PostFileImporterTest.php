@@ -25,7 +25,6 @@ namespace Tuleap\Docman\XML\Import;
 use Docman_Item;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
@@ -50,7 +49,6 @@ class PostFileImporterTest extends TestCase
 
         $node_importer = Mockery::mock(NodeImporter::class);
         $item          = Mockery::mock(Docman_Item::class);
-        $user          = Mockery::mock(PFUser::class);
 
         $version_importer = Mockery::mock(VersionImporter::class);
         $logger           = Mockery::mock(LoggerInterface::class);
@@ -65,7 +63,6 @@ class PostFileImporterTest extends TestCase
                     }
                 ),
                 $item,
-                $user,
                 1
             )->once()
             ->ordered();
@@ -79,12 +76,11 @@ class PostFileImporterTest extends TestCase
                     }
                 ),
                 $item,
-                $user,
                 2
             )->once()
             ->ordered();
 
         $importer = new PostFileImporter($version_importer, $logger);
-        $importer->postImport($node_importer, $node, $item, $user);
+        $importer->postImport($node_importer, $node, $item);
     }
 }
