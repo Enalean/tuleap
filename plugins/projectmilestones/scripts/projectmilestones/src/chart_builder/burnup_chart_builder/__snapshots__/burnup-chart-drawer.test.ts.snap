@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BurnupChartDrawer createBurnupChart When the chart is created, Then there are a G element and 2 lines scale 1`] = `
+<svg
+  id="chart-100"
+>
+  <svg
+    height="100"
+    width="100"
+  >
+    <g
+      class="ideal-line"
+    >
+      <path
+        d="M20,80L80,23.75"
+      />
+    </g>
+    <line
+      class="release-line-scale"
+      x1="20"
+      x2="90"
+      y1="80"
+      y2="80"
+    />
+    <line
+      class="release-line-scale"
+      x1="20"
+      x2="20"
+      y1="80"
+      y2="13.75"
+    />
+  </svg>
+</svg>
+`;

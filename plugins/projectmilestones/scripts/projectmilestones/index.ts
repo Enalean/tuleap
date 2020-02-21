@@ -24,7 +24,7 @@ import App from "./src/components/App.vue";
 import { createStore } from "./src/store";
 import { setUserLocale } from "./src/helpers/user-locale-helper";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
-import { TrackerAgileDashboard } from "./src/type";
+import { BurnupMode, TrackerAgileDashboard } from "./src/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             label_timeframe,
             user_can_view_sub_milestones_planning,
             activate_burnup,
-            burnup_mode
+            burnup_mode === "count" ? BurnupMode.COUNT : BurnupMode.EFFORT
         )
     }).$mount(vue_mount_point);
 });

@@ -30,9 +30,7 @@
                 $gettext('Burnup is under calculation. It will be available in a few minutes.')
             "
         />
-        <p v-else class="empty-pane-text" data-test="message-nothing-here" v-translate>
-            There is nothing here!
-        </p>
+        <burnup v-else v-bind:release_data="release_data" />
     </div>
 </template>
 
@@ -43,8 +41,9 @@ import Vue from "vue";
 import ChartError from "../ChartError.vue";
 import { State } from "vuex-class";
 import { sprintf } from "sprintf-js";
+import Burnup from "./Burnup.vue";
 @Component({
-    components: { ChartError }
+    components: { Burnup, ChartError }
 })
 export default class BurnupDisplayer extends Vue {
     @Prop()

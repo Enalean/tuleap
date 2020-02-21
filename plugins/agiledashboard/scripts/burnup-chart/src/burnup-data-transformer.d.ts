@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,15 +15,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { ChartPropsWhithoutTooltip, XYScale } from "./type";
-import { Selection } from "d3-selection";
+import { BurnupData, GenericBurnupData } from "./type";
 
-export function buildChartLayout(
-    chart_container: HTMLElement | null,
-    { graph_width, graph_height, margins }: ChartPropsWhithoutTooltip,
-    scales: XYScale,
-    ticks?: number,
-    tick_padding?: number
-): Selection<SVGSVGElement, unknown, null, undefined>;
+export function transformToGenericBurnupData(
+    burnup_data: BurnupData,
+    mode: string
+): GenericBurnupData;

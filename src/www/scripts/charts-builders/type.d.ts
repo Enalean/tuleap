@@ -32,7 +32,7 @@ export interface XYScale {
     y_scale: d3Scale.ScaleLinear<number, number>;
 }
 
-export interface ChartPropsBurndownWhithoutTooltip {
+export interface ChartPropsWhithoutTooltip {
     graph_width: number;
     graph_height: number;
     margins: MarginsGraph;
@@ -53,6 +53,6 @@ export interface PointsWithDate {
 export interface DaysDisplayingBurndownData {
     opening_days: Array<number>;
     duration: number | null;
-    points_with_date: Array<PointsWithDate>;
+    points_with_date: Array<{ date: string }>;
     start_date: string;
 }

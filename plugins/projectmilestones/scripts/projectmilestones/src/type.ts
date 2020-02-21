@@ -17,6 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export enum BurnupMode {
+    COUNT = "count",
+    EFFORT = "effort"
+}
+
 export interface MilestoneData {
     label: string;
     id: number;
@@ -129,7 +134,7 @@ export interface State {
     label_timeframe: string;
     user_can_view_sub_milestones_planning: boolean;
     activate_burnup: boolean;
-    burnup_mode: string;
+    burnup_mode: BurnupMode;
 }
 
 export interface Context {
@@ -137,13 +142,13 @@ export interface Context {
     commit: Function;
 }
 
-interface ParametersRequestWithId {
+export interface ParametersRequestWithId {
     project_id: number;
     limit: number;
     offset: number;
 }
 
-interface ParametersRequestWithoutId {
+export interface ParametersRequestWithoutId {
     limit: number;
     offset: number;
 }
