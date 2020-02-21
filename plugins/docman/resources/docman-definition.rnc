@@ -6,7 +6,9 @@ docman =
 docman_item =
     element properties {
         element title { xsd:string },
-        element description { xsd:string }?
+        element description { xsd:string }?,
+        element create_date { docman_date_content }?,
+        element update_date { docman_date_content }?
     }
 
 docman_folder =

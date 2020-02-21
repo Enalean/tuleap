@@ -65,6 +65,7 @@ use Tuleap\Docman\Upload\Version\VersionDataStore;
 use Tuleap\Docman\Upload\Version\VersionUploadCanceler;
 use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
+use Tuleap\Docman\XML\Import\ImportPropertiesExtractor;
 use Tuleap\Docman\XML\Import\ItemImporter;
 use Tuleap\Docman\XML\Import\NodeImporter;
 use Tuleap\Docman\XML\Import\PostDoNothingImporter;
@@ -1640,7 +1641,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 ),
                 new PostFolderImporter(),
                 new PostDoNothingImporter(),
-                $logger
+                $logger,
+                new ImportPropertiesExtractor($current_date)
             ),
             new XML_RNGValidator()
         );

@@ -85,12 +85,7 @@ class XMLExportVisitor implements ItemVisitor
         $node = $xml->addChild('item');
         $node->addAttribute('type', $type);
 
-        $properties = $node->addChild('properties');
-        $this->appendTextChild($properties, 'title', $item->getTitle());
-        $description = $item->getDescription();
-        if ($description) {
-            $this->appendTextChild($properties, 'description', $description);
-        }
+        $this->exportProperties($node, $item);
 
         return $node;
     }
@@ -186,5 +181,27 @@ class XMLExportVisitor implements ItemVisitor
                 $item->getTitle()
             )
         );
+    }
+
+    private function exportProperties(SimpleXMLElement $node, Docman_Item $item): void
+    {
+        $properties = $node->addChild('properties');
+        $this->appendTextChild($properties, 'title', $item->getTitle());
+
+        $description = $item->getDescription();
+        if ($description) {
+            $this->appendTextChild($properties, 'description', $description);
+        }
+
+        $create_date = $item->getCreateDate();
+        $date_time = new \DateTimeImmutable();
+        if ($create_date) {
+            XMLDateHelper::addChild($properties, 'create_date', $date_time->setTimestamp($create_date));
+        }
+
+        $update_date = $item->getUpdateDate();
+        if ($update_date) {
+            XMLDateHelper::addChild($properties, 'update_date', ($date_time)->setTimestamp($update_date));
+        }
     }
 }

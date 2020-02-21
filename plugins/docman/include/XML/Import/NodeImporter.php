@@ -25,15 +25,16 @@ use Docman_Item;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
+use Tuleap\xml\InvalidDateException;
 
 class NodeImporter
 {
-    private const TYPE_FILE         = 'file';
-    private const TYPE_EMBEDDEDFILE = 'embeddedfile';
-    private const TYPE_WIKI         = 'wiki';
-    private const TYPE_LINK         = 'link';
-    private const TYPE_EMPTY        = 'empty';
-    private const TYPE_FOLDER       = 'folder';
+    public const TYPE_FILE         = 'file';
+    public const TYPE_EMBEDDEDFILE = 'embeddedfile';
+    public const TYPE_WIKI         = 'wiki';
+    public const TYPE_LINK         = 'link';
+    public const TYPE_EMPTY        = 'empty';
+    public const TYPE_FOLDER       = 'folder';
 
     /**
      * @var LoggerInterface
@@ -55,19 +56,25 @@ class NodeImporter
      * @var PostDoNothingImporter
      */
     private $do_nothing_importer;
+    /**
+     * @var ImportPropertiesExtractor
+     */
+    private $properties_extractor;
 
     public function __construct(
         ItemImporter $item_importer,
         PostFileImporter $file_importer,
         PostFolderImporter $folder_importer,
         PostDoNothingImporter $do_nothing_importer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ImportPropertiesExtractor $properties_extractor
     ) {
-        $this->logger              = $logger;
-        $this->item_importer       = $item_importer;
-        $this->file_importer       = $file_importer;
-        $this->folder_importer     = $folder_importer;
-        $this->do_nothing_importer = $do_nothing_importer;
+        $this->logger               = $logger;
+        $this->item_importer        = $item_importer;
+        $this->file_importer        = $file_importer;
+        $this->folder_importer      = $folder_importer;
+        $this->do_nothing_importer  = $do_nothing_importer;
+        $this->properties_extractor = $properties_extractor;
     }
 
     public function import(SimpleXMLElement $node, Docman_Item $parent_item, \PFUser $user): void
@@ -76,13 +83,15 @@ class NodeImporter
             $this->importNode($node, $parent_item, $user);
         } catch (CannotInstantiateItemWeHaveJustCreatedInDBException $exception) {
             $this->logger->error('An error occurred while creating in DB the item: ' . $node->properties->title);
-        } catch (UnknownItemTypeException $exception) {
+        } catch (InvalidDateException|UnknownItemTypeException $exception) {
             $this->logger->error($exception->getMessage());
         }
     }
 
     /**
-     * @throws CannotInstantiateItemWeHaveJustCreatedInDBException|UnknownItemTypeException
+     * @throws CannotInstantiateItemWeHaveJustCreatedInDBException
+     * @throws InvalidDateException
+     * @throws UnknownItemTypeException
      */
     private function importNode(SimpleXMLElement $node, Docman_Item $parent_item, \PFUser $user): void
     {
@@ -94,48 +103,8 @@ class NodeImporter
             $this->getPostImporter($node),
             $parent_item,
             $user,
-            $this->getImportProperties($node)
+            $this->properties_extractor->getImportProperties($node)
         );
-    }
-
-    /**
-     * @throws UnknownItemTypeException
-     */
-    private function getImportProperties(SimpleXMLElement $node): ImportProperties
-    {
-        $type        = (string) $node['type'];
-        $title       = (string) $node->properties->title;
-        $description = (string) $node->properties->description;
-
-        switch ($type) {
-            case self::TYPE_FILE:
-                $properties = ImportProperties::buildFile($title, $description);
-                break;
-
-            case self::TYPE_EMBEDDEDFILE:
-                $properties = ImportProperties::buildEmbedded($title, $description);
-                break;
-
-            case self::TYPE_WIKI:
-                $properties = ImportProperties::buildWiki($title, $description, (string) $node->pagename);
-                break;
-
-            case self::TYPE_LINK:
-                $properties = ImportProperties::buildLink($title, $description, (string) $node->url);
-                break;
-
-            case self::TYPE_EMPTY:
-                $properties = ImportProperties::buildEmpty($title, $description);
-                break;
-
-            case self::TYPE_FOLDER:
-                $properties = ImportProperties::buildFolder($title, $description);
-                break;
-            default:
-                throw new UnknownItemTypeException($type);
-        }
-
-        return $properties;
     }
 
     private function getPostImporter(SimpleXMLElement $node)

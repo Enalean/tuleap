@@ -45,13 +45,16 @@ class ItemImporterTest extends TestCase
         $post_importer = Mockery::mock(PostDoNothingImporter::class);
         $parent_item   = Mockery::mock(Docman_Item::class)->shouldReceive(['getId' => 13])->getMock();
         $user          = Mockery::mock(PFUser::class)->shouldReceive(['getId' => 101])->getMock();
-        $properties    = ImportProperties::buildLink('My document', 'The description', 'https://example.test');
+
+        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
+        $properties    = ImportProperties::buildLink('My document', 'The description', 'https://example.test', $create_date, $update_date);
 
         $created_item = Mockery::mock(Docman_Item::class)->shouldReceive(['getId' => 14])->getMock();
 
         $item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('My document', 'The description', 13, 100, 0, 101, 3, null, 'https://example.test')
+            ->with('My document', 'The description', 13, 100, 0, 101, 3, $create_date, $update_date, null, 'https://example.test')
             ->once()
             ->andReturn($created_item);
 

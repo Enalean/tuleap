@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML\Import;
 
+use DateTimeImmutable;
+
 final class ImportProperties
 {
     /**
@@ -44,49 +46,135 @@ final class ImportProperties
      * @var string|null
      */
     private $link_url;
+    /**
+     * @var \DateTimeImmutable
+     */
+    private $create_date;
+    /**
+     * @var DateTimeImmutable
+     */
+    private $update_date;
 
     private function __construct(
         string $title,
         string $description,
         int $item_type_id,
+        \DateTimeImmutable $create_date,
+        \DateTimeImmutable $update_date,
         ?string $wiki_page,
         ?string $link_url
     ) {
         $this->title        = $title;
         $this->description  = $description;
         $this->item_type_id = $item_type_id;
+        $this->create_date  = $create_date;
+        $this->update_date  = $update_date;
         $this->wiki_page    = $wiki_page;
         $this->link_url     = $link_url;
     }
 
-    public static function buildWiki(string $title, string $description, string $wiki_page): self
-    {
-        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $wiki_page, null);
+    public static function buildWiki(
+        string $title,
+        string $description,
+        string $wiki_page,
+        DateTimeImmutable $create_date,
+        DateTimeImmutable $update_date
+    ): self {
+        return new self(
+            $title,
+            $description,
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            $create_date,
+            $update_date,
+            $wiki_page,
+            null
+        );
     }
 
-    public static function buildLink(string $title, string $description, string $link_url): self
-    {
-        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_LINK, null, $link_url);
+    public static function buildLink(
+        string $title,
+        string $description,
+        string $link_url,
+        DateTimeImmutable $create_date,
+        DateTimeImmutable $update_date
+    ): self {
+        return new self(
+            $title,
+            $description,
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            $create_date,
+            $update_date,
+            null,
+            $link_url
+        );
     }
 
-    public static function buildEmpty(string $title, string $description): self
-    {
-        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, null, null);
+    public static function buildEmpty(
+        string $title,
+        string $description,
+        DateTimeImmutable $create_date,
+        DateTimeImmutable $update_date
+    ): self {
+        return new self(
+            $title,
+            $description,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
+            $create_date,
+            $update_date,
+            null,
+            null
+        );
     }
 
-    public static function buildEmbedded(string $title, string $description): self
-    {
-        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, null, null);
+    public static function buildEmbedded(
+        string $title,
+        string $description,
+        DateTimeImmutable $create_date,
+        DateTimeImmutable $update_date
+    ): self {
+        return new self(
+            $title,
+            $description,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+            $create_date,
+            $update_date,
+            null,
+            null
+        );
     }
 
-    public static function buildFile(string $title, string $description): self
-    {
-        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_FILE, null, null);
+    public static function buildFile(
+        string $title,
+        string $description,
+        DateTimeImmutable $create_date,
+        DateTimeImmutable $update_date
+    ): self {
+        return new self(
+            $title,
+            $description,
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE,
+            $create_date,
+            $update_date,
+            null,
+            null
+        );
     }
 
-    public static function buildFolder(string $title, string $description): self
-    {
-        return new self($title, $description, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, null, null);
+    public static function buildFolder(
+        string $title,
+        string $description,
+        DateTimeImmutable $create_date,
+        DateTimeImmutable $update_date
+    ): self {
+        return new self(
+            $title,
+            $description,
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+            $create_date,
+            $update_date,
+            null,
+            null
+        );
     }
 
     public function getTitle(): string
@@ -112,5 +200,15 @@ final class ImportProperties
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function getCreateDate(): \DateTimeImmutable
+    {
+        return $this->create_date;
+    }
+
+    public function getUpdateDate(): DateTimeImmutable
+    {
+        return $this->update_date;
     }
 }
