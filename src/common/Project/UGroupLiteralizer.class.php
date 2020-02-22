@@ -82,7 +82,12 @@ class UGroupLiteralizer
     {
         $groups = $this->getUserGroupsForUser($user);
 
-        return array_map(array($this, 'injectArobase'), $groups);
+        return array_map(
+            static function (string $value): string {
+                return '@' . $value;
+            },
+            $groups
+        );
     }
 
     /**
@@ -155,14 +160,6 @@ class UGroupLiteralizer
     private function ugroupIdToStringWithoutArobase($ugroup_id, $project_name)
     {
         return str_replace('@', '', $this->ugroupIdToString($ugroup_id, $project_name));
-    }
-
-    /**
-     * @see ugroupIdToString
-     */
-    private function injectArobase($value)
-    {
-        return '@'. $value;
     }
 
     /**

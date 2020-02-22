@@ -42,7 +42,6 @@ if (! $detector->isGitolite3()) {
 $broker_log->info("Starting parse gitolite3 logs.");
 $gitolite_parser = new Gitolite3LogParser(
     $broker_log,
-    new System_Command(),
     new HttpUserValidator(),
     new Dao(),
     new GitRepositoryFactory(new GitDao(), ProjectManager::instance()),

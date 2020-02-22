@@ -40,10 +40,6 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TestCase
      */
     private $dao;
     /**
-     * @var Cardwall_OnTop_Dao|M\LegacyMockInterface|M\MockInterface
-     */
-    private $on_top_dao;
-    /**
      * @var Cardwall_OnTop_Config_ColumnFactory
      */
     private $factory;
@@ -73,8 +69,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TestCase
         $this->tracker = M::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(42);
         $this->dao        = M::mock(Cardwall_OnTop_ColumnDao::class);
-        $this->on_top_dao = M::mock(Cardwall_OnTop_Dao::class);
-        $this->factory    = new Cardwall_OnTop_Config_ColumnFactory($this->dao, $this->on_top_dao);
+        $this->factory    = new Cardwall_OnTop_Config_ColumnFactory($this->dao);
     }
 
     public function testItBuildsColumnsFromTheDataStorage(): void

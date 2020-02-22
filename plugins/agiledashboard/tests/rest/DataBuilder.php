@@ -20,9 +20,7 @@
 
 namespace Tuleap\AgileDashboard\REST;
 
-use AgileDashboard_HierarchyChecker;
 use AgileDashboard_KanbanDao;
-use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanManager;
 use BackendLogger;
 use BrokerLogger;
@@ -30,7 +28,6 @@ use EventManager;
 use Exception;
 use ForgeConfig;
 use Log_ConsoleLogger;
-use PlanningFactory;
 use REST_TestDataBuilder;
 use SystemEvent;
 use SystemEventManager;
@@ -73,17 +70,9 @@ class DataBuilder extends REST_TestDataBuilder
         $this->instanciateFactories();
 
         $kanban_dao            = new AgileDashboard_KanbanDao();
-        $kanban_factory        = new AgileDashboard_KanbanFactory($this->tracker_factory, $kanban_dao);
-        $planning_factory      = PlanningFactory::build();
-        $hierarchy_checker     = new AgileDashboard_HierarchyChecker(
-            $planning_factory,
-            $kanban_factory,
-            $this->tracker_factory
-        );
         $this->kanban_manager  = new AgileDashboard_KanbanManager(
             $kanban_dao,
-            $this->tracker_factory,
-            $hierarchy_checker
+            $this->tracker_factory
         );
 
         $this->tracker_artifact_factory = \Tracker_ArtifactFactory::instance();

@@ -82,12 +82,6 @@ class Project_OneStepCreation_OneStepCreationRequest
 
     /**
      *
-     * @var bool
-     */
-    private $is_valid = true;
-
-    /**
-     *
      * @var string
      */
     private $form_submission_path;

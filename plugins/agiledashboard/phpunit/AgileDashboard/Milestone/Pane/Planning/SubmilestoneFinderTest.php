@@ -33,11 +33,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
      * @var \Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'
      */
     private $mono_milestone_checker;
@@ -155,13 +150,11 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
         $this->planning_factory          = \Mockery::spy(\PlanningFactory::class);
 
         $this->mono_milestone_checker = \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class);
-        $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
 
         $this->finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             $this->tracker_hierarchy_factory,
             $this->planning_factory,
-            $this->mono_milestone_checker,
-            $this->tracker_factory
+            $this->mono_milestone_checker
         );
 
         $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);

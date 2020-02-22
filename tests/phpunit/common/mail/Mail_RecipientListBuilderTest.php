@@ -36,7 +36,6 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
     private $active_user_name        = 'Valid User';
     private $suspended_user_name     = 'Suspended User';
     private $deleted_user_name       = 'Deleted User';
-    private $regular_user_name       = 'Regular User';
     private $bob_suspended_user_name = 'Suspended Bob';
     private $bob_active_user_name    = 'Active Bob';
 

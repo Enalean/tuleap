@@ -20,15 +20,8 @@
 
 namespace Tuleap\Project\Quota;
 
-use Project;
-
 class ProjectQuotaInformation
 {
-    /**
-     * @var \Project
-     */
-    private $project;
-
     /**
      * @var int
      */
@@ -39,9 +32,8 @@ class ProjectQuotaInformation
      */
     private $project_disk_usage;
 
-    public function __construct(Project $project, $project_quota, $project_disk_usage)
+    public function __construct($project_quota, $project_disk_usage)
     {
-        $this->project            = $project;
         $this->project_quota      = $project_quota;
         $this->project_disk_usage = $project_disk_usage;
     }

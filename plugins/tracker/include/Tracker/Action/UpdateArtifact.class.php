@@ -98,7 +98,6 @@ class Tracker_Action_UpdateArtifact
                 $render = new Tracker_Artifact_ReadOnlyRenderer(
                     $this->event_manager,
                     $this->artifact,
-                    $this->form_element_factory,
                     $layout,
                     $this->artifact_retriever,
                     $this->visit_recorder,
@@ -114,7 +113,6 @@ class Tracker_Action_UpdateArtifact
                 $render = new Tracker_Artifact_ReadOnlyRenderer(
                     $this->event_manager,
                     $this->artifact,
-                    $this->form_element_factory,
                     $layout,
                     $this->artifact_retriever,
                     $this->visit_recorder,

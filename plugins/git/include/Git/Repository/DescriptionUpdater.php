@@ -25,26 +25,19 @@ use GitRepository;
 use Feedback;
 use GitDaoException;
 use ProjectHistoryDao;
-use Git_SystemEventManager;
 
 class DescriptionUpdater
 {
     public const MAX_LENGTH = 1024;
 
     /**
-     * @var Git_SystemEventManager
-     */
-    private $git_system_event_manager;
-
-    /**
      * @var ProjectHistoryDao
      */
     private $history_dao;
 
-    public function __construct(ProjectHistoryDao $history_dao, Git_SystemEventManager $git_system_event_manager)
+    public function __construct(ProjectHistoryDao $history_dao)
     {
         $this->history_dao              = $history_dao;
-        $this->git_system_event_manager = $git_system_event_manager;
     }
 
     public function updateDescription(GitRepository $repository, $description)

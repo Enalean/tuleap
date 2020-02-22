@@ -321,7 +321,6 @@ class LegendStyle
     public $iShow=true;
     public $iFormatString='%.1f';
     public $iTxtMargin=6;
-    private $iTxt='';
     public $iZCircleTxt='Calm';
 
     public function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
@@ -425,11 +424,6 @@ class LegendStyle
     public function SetFormat($aFmt)
     {
         $this->iFormatString=$aFmt;
-    }
-
-    public function SetText($aTxt)
-    {
-        $this->iTxt = $aTxt ;
     }
 }
 
@@ -1618,15 +1612,11 @@ class WindrosePlot
 //============================================================
 class WindroseGraph extends Graph
 {
-    private $posx;
-    private $posy;
     public $plots=array();
 
     public function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)
     {
         parent::__construct($width, $height, $cachedName, $timeout, $inline);
-        $this->posx=$width/2;
-        $this->posy=$height/2;
         $this->SetColor('white');
         $this->title->SetFont(FF_VERDANA, FS_NORMAL, 12);
         $this->title->SetMargin(8);

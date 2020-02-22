@@ -24,14 +24,8 @@
 class Cardwall_CardFields
 {
 
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    public function __construct(UserManager $user_manager, Tracker_FormElementFactory $factory)
+    public function __construct(Tracker_FormElementFactory $factory)
     {
-        $this->user_manager         = $user_manager;
         $this->form_element_factory = $factory;
     }
 

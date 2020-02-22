@@ -35,28 +35,18 @@ class WebDAVFRSFile extends Sabre_DAV_File
 
     private $user;
     private $project;
-    private $package;
-    private $release;
     private $file;
 
     /**
-     * Constuctor of the class
-     *
      * @param PFUser $user
      * @param Project $project
-     * @param FRSPackage $package
-     * @param FRSRelease $release
      * @param FRSFile $file
-     *
-     * @return void
      */
-    public function __construct($user, $project, $package, $release, $file)
+    public function __construct($user, $project, $file)
     {
 
         $this->user = $user;
         $this->project = $project;
-        $this->package = $package;
-        $this->release = $release;
         $this->file = $file;
     }
 

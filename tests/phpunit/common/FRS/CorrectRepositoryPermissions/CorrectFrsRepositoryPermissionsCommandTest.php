@@ -24,18 +24,12 @@ namespace Tuleap\FRS;
 use DirectoryIterator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var vfsStreamDirectory
-     */
-    private $root;
 
     /**
      * @var DirectoryIterator
@@ -74,7 +68,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->root            = vfsStream::setup('slash');
+        vfsStream::setup('slash');
         $this->base            = vfsStream::url('slash');
         $this->project_manager = \Mockery::mock(\ProjectManager::class);
 

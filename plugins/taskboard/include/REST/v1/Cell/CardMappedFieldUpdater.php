@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 use Cardwall_Column;
 use Cardwall_OnTop_ColumnDao;
 use Cardwall_OnTop_Config_ColumnFactory;
-use Cardwall_OnTop_Dao;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
@@ -80,7 +79,7 @@ class CardMappedFieldUpdater
     {
         $column_dao = new Cardwall_OnTop_ColumnDao();
         return new self(
-            new Cardwall_OnTop_Config_ColumnFactory($column_dao, new Cardwall_OnTop_Dao()),
+            new Cardwall_OnTop_Config_ColumnFactory($column_dao),
             new MilestoneTrackerRetriever($column_dao, TrackerFactory::instance()),
             new AddValidator(),
             Tracker_REST_Artifact_ArtifactUpdater::build(),

@@ -28,11 +28,6 @@ class Admin_PermissionDelegationGroupPresenter
     public $id;
 
     /**
-     * @var bool
-     */
-    private $is_current;
-
-    /**
      * @var  Tuleap\admin\PermissionDelegation\PermissionPresenter[]
      */
     private $permissions;
@@ -50,7 +45,6 @@ class Admin_PermissionDelegationGroupPresenter
     public function __construct(UserForgeUGroupPresenter $group, array $permissions, $users)
     {
         $this->id          = $group->id;
-        $this->is_current  = false;
         $this->permissions = $permissions;
         $this->users       = $users;
         $this->group       = $group;

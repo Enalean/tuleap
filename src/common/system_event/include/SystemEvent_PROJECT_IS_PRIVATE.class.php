@@ -23,7 +23,6 @@
 
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\Project\UserRemover;
-use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 
 /**
 * System Event classes
@@ -31,10 +30,6 @@ use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 */
 class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 {
-    /**
-     * @var SVNAuthenticationCacheInvalidator
-     */
-    private $svn_authentication_cache_invalidator;
     /**
      * @var UserRemover
      */
@@ -45,11 +40,9 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
     private $ugroup_manager;
 
     public function injectDependencies(
-        SVNAuthenticationCacheInvalidator $svn_authentication_cache_invalidator,
         UserRemover $user_remover,
         UGroupManager $ugroup_manager
     ) {
-        $this->svn_authentication_cache_invalidator = $svn_authentication_cache_invalidator;
         $this->user_remover                         = $user_remover;
         $this->ugroup_manager                       = $ugroup_manager;
     }

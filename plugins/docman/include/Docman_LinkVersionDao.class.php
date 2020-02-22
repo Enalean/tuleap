@@ -82,15 +82,4 @@ class Docman_LinkVersionDao extends DataAccessObject
 
         return $this->update($sql);
     }
-
-    private function getNextVersionNumber($item_id)
-    {
-        $item_id = $this->da->quoteSmart($item_id);
-
-        $sql    = "SELECT MAX(number) as num FROM plugin_docman_link_version WHERE item_id = $item_id";
-        $row    = $this->retrieveFirstRow($sql);
-        $number = ($row) ? $row['num'] : 0;
-
-        return ($number + 1);
-    }
 }

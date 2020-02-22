@@ -32,7 +32,6 @@ class ManifestManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private $manifest_directory;
     /** @var Git_Mirror_ManifestManager */
     private $manager;
     /** @var Git_Mirror_ManifestFileGenerator */
@@ -52,9 +51,6 @@ class ManifestManagerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $fixture_dir              = dirname(__FILE__) .'/_fixtures';
-        $this->manifest_directory = $fixture_dir .'/manifests';
-
         $this->repository = $this->buildMockedRepository('linux/kernel.git', 'Linux4ever');
         $this->another_repository = $this->buildMockedRepository('mozilla/firefox.git', 'free and open-source web browser');
 

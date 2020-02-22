@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_String;
 
@@ -36,19 +35,12 @@ class TrackerFormElementJsonTest extends TestCase
      */
     private $form_element;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-
     protected function setUp(): void
     {
         $this->form_element = Mockery::mock(Tracker_FormElement_Field_String::class)->makePartial();
         $this->form_element->setId(300);
         $this->form_element->shouldReceive('getLabel')->andReturn("My field");
         $this->form_element->shouldReceive('getName')->andReturn('my_field');
-
-        $this->user = Mockery::mock(PFUser::class);
     }
 
     public function testItHasAllFieldElementsInJsonReadyArray()

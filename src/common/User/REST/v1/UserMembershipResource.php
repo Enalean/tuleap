@@ -23,7 +23,6 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
-use Tuleap\REST\JsonDecoder;
 use UGroupLiteralizer;
 use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
 use User_ForgeUserGroupPermission_UserManagement;
@@ -43,9 +42,6 @@ class UserMembershipResource extends AuthenticatedResource
     /** @var UserManager */
     private $user_manager;
 
-    /** @var JsonDecoder */
-    private $json_decoder;
-
     /** @var UGroupLiteralizer */
     private $ugroup_literalizer;
 
@@ -55,7 +51,6 @@ class UserMembershipResource extends AuthenticatedResource
     public function __construct()
     {
         $this->user_manager       = UserManager::instance();
-        $this->json_decoder       = new JsonDecoder();
         $this->ugroup_literalizer = new UGroupLiteralizer();
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(

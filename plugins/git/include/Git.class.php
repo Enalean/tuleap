@@ -20,7 +20,6 @@
   */
 
 use Tuleap\Git\GerritCanMigrateChecker;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
@@ -75,10 +74,6 @@ class Git extends PluginController
 
     public const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
 
-    /**
-     * @var VersionDetector
-     */
-    private $detector;
     /**
      * @var RegexpFineGrainedRetriever
      */
@@ -303,7 +298,6 @@ class Git extends PluginController
         ProjectHistoryDao $history_dao,
         DescriptionUpdater $description_updater,
         GitPhpAccessLogger $access_loger,
-        VersionDetector $detector,
         RegexpFineGrainedRetriever $regexp_retriever,
         RegexpFineGrainedEnabler $regexp_enabler,
         RegexpFineGrainedDisabler $regexp_disabler,
@@ -333,7 +327,6 @@ class Git extends PluginController
         $this->project_creator_status     = $project_creator_status;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
         $this->access_loger               = $access_loger;
-        $this->detector                   = $detector;
 
         $valid = new Valid_GroupId('group_id');
         $valid->required();

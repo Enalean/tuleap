@@ -101,10 +101,6 @@ class InvalidComparisonCollectorVisitor implements Visitor
      */
     private $metadata_lesser_than_or_equal_comparison_checker;
     /**
-     * @var InvalidMetadata\GreaterThanOrEqualComparisonChecker
-     */
-    private $metadata_greater_than_or_equal_comparison_checker;
-    /**
      * @var InvalidMetadata\BetweenComparisonChecker
      */
     private $metadata_between_comparison_checker;
@@ -132,7 +128,6 @@ class InvalidComparisonCollectorVisitor implements Visitor
         InvalidMetadata\LesserThanComparisonChecker $metadata_lesser_than_comparison_checker,
         InvalidMetadata\GreaterThanComparisonChecker $metadata_greater_than_comparison_checker,
         InvalidMetadata\LesserThanOrEqualComparisonChecker $metadata_lesser_than_or_equal_comparison_checker,
-        InvalidMetadata\GreaterThanOrEqualComparisonChecker $metadata_greater_than_or_equal_comparison_checker,
         InvalidMetadata\BetweenComparisonChecker $metadata_between_comparison_checker,
         InvalidMetadata\InComparisonChecker $metadata_in_comparison_checker,
         InvalidMetadata\NotInComparisonChecker $metadata_not_in_comparison_checker,
@@ -153,7 +148,6 @@ class InvalidComparisonCollectorVisitor implements Visitor
         $this->metadata_lesser_than_comparison_checker           = $metadata_lesser_than_comparison_checker;
         $this->metadata_greater_than_comparison_checker          = $metadata_greater_than_comparison_checker;
         $this->metadata_lesser_than_or_equal_comparison_checker  = $metadata_lesser_than_or_equal_comparison_checker;
-        $this->metadata_greater_than_or_equal_comparison_checker = $metadata_greater_than_or_equal_comparison_checker;
         $this->metadata_between_comparison_checker               = $metadata_between_comparison_checker;
         $this->metadata_in_comparison_checker                    = $metadata_in_comparison_checker;
         $this->metadata_not_in_comparison_checker                = $metadata_not_in_comparison_checker;

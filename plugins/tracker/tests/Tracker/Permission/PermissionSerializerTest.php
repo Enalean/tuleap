@@ -28,7 +28,6 @@ class Tracker_Permission_PermissionSerializer_ArtifactBuilder
 
     private $assignees                = array();
     private $artifact_ugroups         = array();
-    private $use_artifact_permissions = true;
 
     public function __construct($artifact_builder, $assignee_retriever, $default_submitter)
     {
@@ -52,12 +51,6 @@ class Tracker_Permission_PermissionSerializer_ArtifactBuilder
     public function withArtifactAuthorizedUGroups(array $ugroups)
     {
         $this->artifact_ugroups = $ugroups;
-        return $this;
-    }
-
-    public function withUseArtifactPermissions($use)
-    {
-        $this->use_artifact_permissions = $use;
         return $this;
     }
 

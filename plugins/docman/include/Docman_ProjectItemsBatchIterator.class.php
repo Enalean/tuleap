@@ -28,12 +28,9 @@ class Docman_ProjectItemsBatchIterator
     /* Docman_ItemFactory */
     private $item_factory;
 
-    private $project_id;
-
-    public function __construct(Docman_ItemFactory $item_factory, $project_id)
+    public function __construct(Docman_ItemFactory $item_factory)
     {
         $this->item_factory = $item_factory;
-        $this->project_id   = $project_id;
     }
 
     /**

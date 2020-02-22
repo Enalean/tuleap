@@ -25,16 +25,12 @@ use CSRFSynchronizerToken;
 use Codendi_Request;
 use Response;
 use Feedback;
-use ProjectManager;
 use Tuleap\Admin\AdminPageRenderer;
 
 class NatureConfigController
 {
     private static $TEMPLATE = 'siteadmin-config/natures';
     private static $URL      = '/plugins/tracker/config.php?action=natures';
-
-    /** @var ProjectManager */
-    private $project_manager;
 
     /** @var NatureCreator */
     private $nature_creator;
@@ -55,7 +51,6 @@ class NatureConfigController
     private $nature_usage_presenter_factory;
 
     public function __construct(
-        ProjectManager $project_manager,
         NatureCreator $nature_creator,
         NatureEditor $nature_editor,
         NatureDeletor $nature_deletor,
@@ -63,7 +58,6 @@ class NatureConfigController
         NatureUsagePresenterFactory $nature_usage_presenter_factory,
         AdminPageRenderer $admin_page_rendered
     ) {
-        $this->project_manager                = $project_manager;
         $this->nature_creator                 = $nature_creator;
         $this->nature_presenter_factory       = $nature_presenter_factory;
         $this->nature_editor                  = $nature_editor;

@@ -42,21 +42,15 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
      * @var ScrumForMonoMilestoneChecker
      */
     private $mono_milestone_checker;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
 
     public function __construct(
         Tracker_HierarchyFactory $hierarchy_factory,
         PlanningFactory $planning_factory,
-        ScrumForMonoMilestoneChecker $mono_milestone_checker,
-        TrackerFactory $tracker_factory
+        ScrumForMonoMilestoneChecker $mono_milestone_checker
     ) {
         $this->hierarchy_factory      = $hierarchy_factory;
         $this->planning_factory       = $planning_factory;
         $this->mono_milestone_checker = $mono_milestone_checker;
-        $this->tracker_factory        = $tracker_factory;
     }
 
     public function findFirstSubmilestoneTracker(Planning_Milestone $milestone)

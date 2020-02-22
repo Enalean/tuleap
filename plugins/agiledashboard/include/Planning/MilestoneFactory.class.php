@@ -48,11 +48,6 @@ class Planning_MilestoneFactory
     private $formelement_factory;
 
     /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
      *
      * @var AgileDashboard_Milestone_MilestoneStatusCounter
      */
@@ -94,7 +89,6 @@ class Planning_MilestoneFactory
         PlanningFactory $planning_factory,
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElementFactory $formelement_factory,
-        TrackerFactory $tracker_factory,
         AgileDashboard_Milestone_MilestoneStatusCounter $status_counter,
         PlanningPermissionsManager $planning_permissions_manager,
         AgileDashboard_Milestone_MilestoneDao $milestone_dao,
@@ -105,7 +99,6 @@ class Planning_MilestoneFactory
         $this->planning_factory             = $planning_factory;
         $this->artifact_factory             = $artifact_factory;
         $this->formelement_factory          = $formelement_factory;
-        $this->tracker_factory              = $tracker_factory;
         $this->status_counter               = $status_counter;
         $this->planning_permissions_manager = $planning_permissions_manager;
         $this->milestone_dao                = $milestone_dao;
@@ -124,7 +117,6 @@ class Planning_MilestoneFactory
             $planning_factory,
             $artifact_factory,
             $form_element_factory,
-            TrackerFactory::instance(),
             new AgileDashboard_Milestone_MilestoneStatusCounter(
                 new AgileDashboard_BacklogItemDao(),
                 new Tracker_ArtifactDao(),
@@ -134,7 +126,6 @@ class Planning_MilestoneFactory
             new AgileDashboard_Milestone_MilestoneDao(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             new TimeframeBuilder(
-                $form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
                 new BackendLogger()
             ),

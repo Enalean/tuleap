@@ -49,16 +49,10 @@ class Test_Planning_MilestoneBuilder
      */
     private $artifact;
 
-    /**
-     * @var array of Planning_Milestone
-     */
-    private $sub_milestones;
-
     public function __construct()
     {
         $this->project                      = mock('Project');
         $this->planning                     = aPlanning()->build();
-        $this->sub_milestones               = array();
         $this->artifact                     = anArtifact()->build();
         $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
     }

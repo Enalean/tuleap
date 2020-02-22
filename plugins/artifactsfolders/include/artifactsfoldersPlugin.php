@@ -290,8 +290,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
             $this->getHierarchyOfFolderBuilder(),
             new FolderHierarchicalRepresentationCollectionBuilder(
                 Tracker_ArtifactFactory::instance(),
-                new Dao(),
-                $this->getNatureIsChildLinkRetriever()
+                new Dao()
             )
         );
 
@@ -322,7 +321,6 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
 
         $augmentor = new DataFromRequestAugmentor(
             $request,
-            Tracker_ArtifactFactory::instance(),
             $this->getHierarchyOfFolderBuilder()
         );
 

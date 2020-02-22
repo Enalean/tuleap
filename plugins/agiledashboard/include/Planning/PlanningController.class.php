@@ -213,7 +213,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->request->get('period'),
             $this->getProjectFromRequest()->getPublicName(),
             $kanban_is_activated,
-            $user,
             $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id, $user),
             $this->getKanbanSummaryPresenters(),
             $this->config_manager->scrumIsActivatedForProject($this->group_id),

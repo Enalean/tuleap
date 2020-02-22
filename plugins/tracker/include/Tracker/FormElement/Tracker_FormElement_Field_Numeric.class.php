@@ -441,7 +441,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         return new ArtifactTimeframeHelper(
             $semantic_timeframe_builder,
             new TimeframeBuilder(
-                $form_element_factory,
                 $semantic_timeframe_builder,
                 new \BackendLogger()
             )

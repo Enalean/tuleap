@@ -121,7 +121,6 @@ $repository_creator = new RepositoryCreator(
     SystemEventManager::instance(),
     new ProjectHistoryDao(),
     new SvnPermissionManager(
-        new \User_ForgeUserGroupFactory(new \UserGroupDao()),
         \PermissionsManager::instance()
     ),
     new HookConfigUpdator(
@@ -173,7 +172,6 @@ $svn_creator = new BareRepositoryCreator(
 );
 
 $permission_manager = new SvnPermissionManager(
-    new User_ForgeUserGroupFactory(new UserGroupDao()),
     new PermissionsManager(new PermissionsDao())
 );
 

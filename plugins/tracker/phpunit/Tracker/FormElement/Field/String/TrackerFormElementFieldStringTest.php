@@ -35,10 +35,6 @@ class TrackerFormElementFieldStringTest extends TestCase
     use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
 
     /**
-     * @var Mockery\Mock|Tracker_FormElement_Field_String
-     */
-    private $str_field;
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
      */
     private $artifact;

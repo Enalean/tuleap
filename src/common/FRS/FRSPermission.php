@@ -25,14 +25,10 @@ class FRSPermission
     public const FRS_ADMIN  = 'FRS_ADMIN';
     public const FRS_READER = 'FRS_READ';
 
-    private $project_id;
-    private $permission_type;
     private $ugroup_id;
 
-    public function __construct($project_id, $permission_type, $ugroup_id)
+    public function __construct($ugroup_id)
     {
-        $this->project_id      = $project_id;
-        $this->permission_type = $permission_type;
         $this->ugroup_id       = $ugroup_id;
     }
 

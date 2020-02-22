@@ -99,11 +99,7 @@ class EmailsToBeNotifiedRetrieverTest extends TestCase
         $this->user_suspended->shouldReceive('isAlive')->andReturn(false);
 
         $this->retriever = new EmailsToBeNotifiedRetriever(
-            $this->notification_manager,
-            $this->user_dao,
-            $notified_ugroups_dao,
-            $ugroup_manager,
-            \Mockery::spy(\UserManager::class)
+            $this->notification_manager
         );
     }
 

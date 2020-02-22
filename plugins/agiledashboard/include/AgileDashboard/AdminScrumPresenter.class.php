@@ -53,7 +53,6 @@ class AdminScrumPresenter
      */
     public $does_configuration_allows_planning_creation;
 
-    private $root_planning_tracker_url;
     private $root_planning_name;
     private $planning_hierarchy = array();
     private $can_create_planning;
@@ -83,7 +82,6 @@ class AdminScrumPresenter
         array $plannings,
         $group_id,
         $can_create_planning,
-        $root_planning_tracker_url,
         $root_planning_name,
         array $hierarchy,
         $scrum_activated,
@@ -101,7 +99,6 @@ class AdminScrumPresenter
         $this->plannings                                   = $plannings;
         $this->group_id                                    = $group_id;
         $this->can_create_planning                         = $can_create_planning;
-        $this->root_planning_tracker_url                   = $root_planning_tracker_url;
         $this->root_planning_name                          = $root_planning_name;
         $this->scrum_activated                             = $scrum_activated;
         $this->scrum_title                                 = $scrum_title;

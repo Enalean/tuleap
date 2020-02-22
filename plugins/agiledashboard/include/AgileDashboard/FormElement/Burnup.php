@@ -454,7 +454,6 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return new ChartConfigurationValueRetriever(
             $this->getConfigurationFieldRetriever(),
             new TimeframeBuilder(
-                $form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
                 $this->getLogger()
             ),

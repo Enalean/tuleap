@@ -25,17 +25,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_ArtifactId;
-use Tracker_Report;
 use Tracker_Report_Renderer_Table;
 
 class TrackerReportRendererTableTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|Tracker_Report
-     */
-    private $tracker_report;
 
     /**
      * @var Mockery\MockInterface|Tracker_Report_Renderer_Table
@@ -67,15 +61,10 @@ class TrackerReportRendererTableTest extends TestCase
      * @var SimpleXMLElement
      */
     private $xml;
-    /**
-     * @var Mockery\Mock|Tracker_Report_Renderer_Table
-     */
-    private $report;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->tracker_report = Mockery::mock(Tracker_Report::class);
         $this->tracker_report_renderer_table  = \Mockery::mock(Tracker_Report_Renderer_Table::class)->makePartial();
         $GLOBALS['sys_server_join'] = 20;
 

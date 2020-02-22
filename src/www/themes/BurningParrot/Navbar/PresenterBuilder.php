@@ -21,7 +21,6 @@
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
 use EventManager;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinkPresentersBuilder;
@@ -34,9 +33,6 @@ use URLRedirect;
 
 class PresenterBuilder
 {
-    /** @var HTTPRequest */
-    private $request;
-
     /** @var PFUser */
     private $current_user;
 
@@ -51,14 +47,12 @@ class PresenterBuilder
     private $registration_user_permission_checker;
 
     public function build(
-        HTTPRequest $request,
         PFUser $current_user,
         array $extra_tabs,
         array $help_menu_items,
         URLRedirect $url_redirect,
         ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
     ) {
-        $this->request         = $request;
         $this->current_user    = $current_user;
         $this->extra_tabs      = $extra_tabs;
         $this->help_menu_items = $help_menu_items;
@@ -71,7 +65,6 @@ class PresenterBuilder
             ),
             new SearchPresenter($current_user),
             new UserNavPresenter(
-                $this->request,
                 $this->current_user,
                 $this->displayNewAccountMenuItem(),
                 $url_redirect

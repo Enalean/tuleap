@@ -53,7 +53,7 @@ class Cardwall_OnTop_ConfigFactory
     public function getOnTopConfig(Tracker $tracker)
     {
 
-        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao(), $this->getOnTopDao());
+        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
 
         $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
             $this->element_factory,

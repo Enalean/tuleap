@@ -32,7 +32,6 @@ class Legend
     private $mark_abs_hsize=_DEFAULT_LPM_SIZE;
     private $mark_abs_vsize=_DEFAULT_LPM_SIZE;
     private $xmargin=10;
-    private $ymargin=0;
     private $shadow_width=2;
     private $xlmargin=4;
     private $ylinespacing=5;

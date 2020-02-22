@@ -1003,7 +1003,6 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             new DashboardWidgetDao(
                 $factory
             ),
-            $factory,
             EventManager::instance()
         );
     }

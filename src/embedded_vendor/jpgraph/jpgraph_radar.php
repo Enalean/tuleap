@@ -110,8 +110,6 @@ class RadarLinearTicks extends Ticks
 
     private $minor_step=1;
     private $major_step=2;
-    private $xlabel_offset=0;
-    private $xtick_offset=0;
 
     public function __construct()
     {
@@ -226,13 +224,10 @@ class RadarLinearTicks extends Ticks
 class RadarAxis extends AxisPrototype
 {
     public $title=null;
-    private $title_color='navy';
-    private $len=0;
 
     public function __construct($img, $aScale, $color = array(0,0,0))
     {
         parent::__construct($img, $aScale, $color);
-        $this->len = $img->plotheight;
         $this->title = new Text();
         $this->title->SetFont(FF_FONT1, FS_BOLD);
         $this->color = array(0,0,0);

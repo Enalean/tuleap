@@ -64,9 +64,6 @@ $membership_delegation_dao = new MembershipDelegationDao();
 
 $index_controller = new IndexController(
     new ProjectUGroupPresenterBuilder(
-        PermissionsManager::instance(),
-        $event_manager,
-        new FRSReleaseFactory(),
         new BindingPresenterBuilder(
             $ugroup_binding,
             $project_manager,

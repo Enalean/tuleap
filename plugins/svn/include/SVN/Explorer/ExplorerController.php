@@ -24,7 +24,6 @@ use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use Project;
-use SystemEventManager;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
@@ -43,9 +42,6 @@ class ExplorerController
 
     /** @var RepositoryManager */
     private $repository_manager;
-
-    /** @var SystemEventManager */
-    private $system_event_manager;
     /**
      * @var RepositoryBuilder
      */
@@ -63,7 +59,6 @@ class ExplorerController
     ) {
         $this->repository_manager   = $repository_manager;
         $this->permissions_manager  = $permissions_manager;
-        $this->system_event_manager = SystemEventManager::instance();
         $this->repository_builder   = $repository_builder;
         $this->repository_creator   = $repository_creator;
     }

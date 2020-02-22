@@ -24,7 +24,6 @@ use Tuleap\ReferenceAliasTracker\Reference\ArtifactReference;
 use Tuleap\ReferenceAliasTracker\Reference\TrackerReference;
 use Reference;
 use ReferenceInstance;
-use ProjectManager;
 
 class OriginalReferencesBuilder
 {
@@ -34,15 +33,9 @@ class OriginalReferencesBuilder
      */
     private $dao;
 
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-
-    public function __construct(Dao $dao, ProjectManager $project_manager)
+    public function __construct(Dao $dao)
     {
-        $this->dao             = $dao;
-        $this->project_manager = $project_manager;
+        $this->dao = $dao;
     }
 
     /**

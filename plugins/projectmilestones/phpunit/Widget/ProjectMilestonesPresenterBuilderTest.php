@@ -35,7 +35,6 @@ use Planning;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
-use PlanningFactory;
 use Project;
 use Tracker;
 use TrackerFactory;
@@ -54,10 +53,6 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
      * @var HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $http_request;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
     /**
      * @var ProjectMilestonesPresenterBuilder
      */
@@ -127,7 +122,6 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
     {
         parent::setUp();
         $this->http_request                                             = Mockery::mock(HTTPRequest::class);
-        $this->planning_factory                                         = Mockery::mock(PlanningFactory::class);
         $this->planning_milestone_factory                               = Mockery::mock(Planning_MilestoneFactory::class);
         $this->project                                                  = Mockery::mock(Project::class, ['getID' => 101]);
         $this->john_doe                                                 = Mockery::mock(PFUser::class);

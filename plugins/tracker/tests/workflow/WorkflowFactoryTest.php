@@ -44,9 +44,6 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase
     /** @var Tracker_FormElement */
     private $field_close_date;
 
-    /** @var Tracker_FormElement */
-    private $field_due_date;
-
     /** @var WorkflowFactory */
     private $workflow_factory;
 
@@ -61,7 +58,6 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase
         $this->field_status     = $this->setUpField($tracker, 1001);
         $this->field_start_date = $this->setUpField($tracker, 1002);
         $this->field_close_date = $this->setUpField($tracker, 1003);
-        $this->field_due_date   = $this->setUpField($tracker, 1004);
 
         $workflow = mock('Workflow');
         stub($workflow)->getFieldId()->returns($this->field_status->getId());

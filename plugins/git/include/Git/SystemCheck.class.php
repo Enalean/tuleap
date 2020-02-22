@@ -32,11 +32,6 @@ class Git_SystemCheck
     private $git_plugin;
 
     /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var PluginConfigChecker
      */
     private $config_checker;

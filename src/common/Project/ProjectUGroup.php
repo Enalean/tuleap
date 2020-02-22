@@ -114,10 +114,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      * @var UGroupUserDao
      */
     private $ugroup_user_dao;
-    /**
-     * @var UserGroupDao
-     */
-    private $user_group_dao;
 
     /**
      * Constructor of the class

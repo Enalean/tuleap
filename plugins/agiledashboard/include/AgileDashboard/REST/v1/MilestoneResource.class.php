@@ -46,7 +46,6 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElementFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
-use TrackerFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
@@ -143,13 +142,11 @@ class MilestoneResource extends AuthenticatedResource
             $planning_factory,
             $this->tracker_artifact_factory,
             $this->tracker_form_element_factory,
-            TrackerFactory::instance(),
             $status_counter,
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
             $scrum_for_mono_milestone_checker,
             new TimeframeBuilder(
-                $this->tracker_form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $this->tracker_form_element_factory),
                 new \BackendLogger()
             ),
@@ -180,7 +177,6 @@ class MilestoneResource extends AuthenticatedResource
         $this->milestone_validator = new MilestoneResourceValidator(
             $planning_factory,
             $this->tracker_artifact_factory,
-            $this->tracker_form_element_factory,
             $this->backlog_factory,
             $this->milestone_factory,
             $this->backlog_item_collection_factory,
@@ -197,7 +193,7 @@ class MilestoneResource extends AuthenticatedResource
         $this->event_manager = EventManager::instance();
 
         $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager);
-        $this->milestone_content_updater = new MilestoneContentUpdater($this->tracker_form_element_factory, $this->artifactlink_updater);
+        $this->milestone_content_updater = new MilestoneContentUpdater($this->artifactlink_updater);
         $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,
             $this->tracker_artifact_factory,

@@ -33,7 +33,6 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Sabre_DAV_Exception_FileNotFound;
 use Sabre_DAV_Exception_Forbidden;
-use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\GlobalLanguageMock;
 use WebDAVFRS;
 use WebDAVFRSPackage;
@@ -45,17 +44,6 @@ use WebDAVUtils;
 final class WebDAVFRSTest extends TestCase
 {
     use MockeryPHPUnitIntegration, GlobalLanguageMock;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FRSPermissionManager
-     */
-    private $frs_permission_manager;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->frs_permission_manager = Mockery::spy(FRSPermissionManager::class);
-    }
 
     /**
      * Testing when The project have no packages

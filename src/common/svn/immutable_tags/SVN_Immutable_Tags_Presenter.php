@@ -51,29 +51,29 @@ class SVN_ImmutableTagsPresenter
         $this->immutable_tags_whitelist = $immutable_tags_whitelist;
         $this->immutable_tags_path      = $immutable_tags_path;
 
-        $existing_tree = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));
+        $existing_tree = array_filter(
+            $existing_tree,
+            static function ($path) {
+                return substr($path, -1) === '/';
+            }
+        );
         if ($existing_tree === self::$SO_MUCH_FOLDERS || count($existing_tree) > self::MAX_NUMBER_OF_FOLDERS) {
             $this->exceeds_max_number_of_folders = true;
             $existing_tree = array();
         } else {
             $this->exceeds_max_number_of_folders = false;
-            array_walk($existing_tree, array($this, 'addSlasheAsPrefix'));
+            array_walk(
+                $existing_tree,
+                static function (&$path) {
+                    if ($path !== '/') {
+                        $path = '/'. $path;
+                    }
+                }
+            );
             usort($existing_tree, 'strnatcasecmp');
         }
 
         $this->existing_tree = json_encode($existing_tree);
-    }
-
-    private function keepOnlyDirectories($path)
-    {
-        return substr($path, -1) === '/';
-    }
-
-    private function addSlasheAsPrefix(&$path)
-    {
-        if ($path !== '/') {
-            $path = '/'. $path;
-        }
     }
 
     public function svn_allow_tag_immutable_title()

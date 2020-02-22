@@ -700,10 +700,6 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
-    private function getTracker($tracker_id)
-    {
-        return $this->tracker_representations[$tracker_id];
-    }
     /**
      * @param $response
      * @throws Exception

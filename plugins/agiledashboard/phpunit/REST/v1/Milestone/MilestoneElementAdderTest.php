@@ -32,7 +32,6 @@ use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
-use Tuleap\DB\DBConnection;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\v1\BacklogAddRepresentation;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -40,10 +39,7 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 class MilestoneElementAdderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DBConnection
-     */
-    private $db_connection;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DBTransactionExecutorWithConnection
      */
@@ -90,7 +86,6 @@ class MilestoneElementAdderTest extends TestCase
         $this->resources_patcher                   = Mockery::mock(ResourcesPatcher::class);
         $this->explicit_backlog_dao                = Mockery::mock(ExplicitBacklogDao::class);
         $this->unplanned_artifact_adder            = Mockery::mock(UnplannedArtifactsAdder::class);
-        $this->db_connection                       = Mockery::mock(DBConnection::class);
         $this->top_backlog_elements_to_add_checker = Mockery::mock(TopBacklogElementsToAddChecker::class);
 
         $this->transaction_executor = new DBTransactionExecutorPassthrough();

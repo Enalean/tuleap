@@ -27,15 +27,9 @@ class CardwallPaneInfo extends PaneInfo
 {
     public const IDENTIFIER = 'cardwall';
 
-    /**
-     * @var string
-     */
-    private $plugin_theme_path;
-
-    public function __construct(Planning_Milestone $milestone, $plugin_theme_path)
+    public function __construct(Planning_Milestone $milestone)
     {
         parent::__construct($milestone);
-        $this->plugin_theme_path = $plugin_theme_path;
     }
 
     /**

@@ -97,7 +97,6 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
 
         $this->frs_importer = new FRSXMLImporter(
             \Mockery::spy(\Psr\Log\LoggerInterface::class),
-            new XML_RNGValidator(),
             $this->package_factory,
             $this->release_factory,
             $this->file_factory,

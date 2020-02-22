@@ -157,7 +157,9 @@ class ChartMessageFetcher
     private function getLinksToChildTrackersWithoutRemainingEffort(Tracker $tracker)
     {
         return array_map(
-            array($this, 'getLinkToTracker'),
+            function (Tracker $tracker): string {
+                return $this->getLinkToTracker($tracker);
+            },
             $this->getChildTrackersWithoutRemainingEffort($tracker)
         );
     }

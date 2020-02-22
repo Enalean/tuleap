@@ -59,7 +59,9 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
 
         array_walk(
             $files,
-            [$this, 'appendFileToFieldChangeNode'],
+            function (Tracker_FileInfo $file_info, $index, SimpleXMLElement $field_xml) {
+                $this->appendFileToFieldChangeNode($file_info, $index, $field_xml);
+            },
             $field_change
         );
 

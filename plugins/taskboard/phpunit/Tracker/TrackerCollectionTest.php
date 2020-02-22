@@ -31,9 +31,6 @@ final class TrackerCollectionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var TrackerCollection */
-    private $tracker_collection;
-
     public function testMapReturnsArrayOfResultsOfClosure(): void
     {
         $milestone_tracker = M::mock(Tracker::class);

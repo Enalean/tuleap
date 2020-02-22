@@ -28,9 +28,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_FileInfo;
 use Tracker_FormElement_Field_File;
-use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
-use Tuleap\Upload\PathAllocator;
 
 class AttachmentForTusUploadCreatorTest extends TestCase
 {
@@ -44,14 +42,6 @@ class AttachmentForTusUploadCreatorTest extends TestCase
      * @var Mockery\MockInterface|FileOngoingUploadDao
      */
     private $ongoing_upload_dao;
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var Mockery\MockInterface|PathAllocator
-     */
-    private $path_allocator;
     /**
      * @var Mockery\MockInterface|AttachmentCreator
      */
@@ -79,7 +69,6 @@ class AttachmentForTusUploadCreatorTest extends TestCase
         $this->current_user          = Mockery::mock(PFUser::class);
         $this->field                 = Mockery::mock(Tracker_FormElement_Field_File::class);
         $this->ongoing_upload_dao    = Mockery::mock(FileOngoingUploadDao::class);
-        $this->form_element_factory  = Mockery::mock(Tracker_FormElementFactory::class);
         $this->provider              = Mockery::mock(FileInfoForTusUploadedFileReadyToBeAttachedProvider::class);
         $this->url_mapping           = Mockery::mock(CreatedFileURLMapping::class);
 

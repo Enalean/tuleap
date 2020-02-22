@@ -847,7 +847,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $renderer = new Tracker_Artifact_CopyRenderer(
                     $this->getEventManager(),
                     $this,
-                    $this->getFormElementFactory(),
                     $layout,
                     $this->getNatureIsChildLinkRetriever(),
                     $this->getVisitRecorder(),
@@ -880,7 +879,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $renderer = new Tracker_Artifact_ReadOnlyRenderer(
                         $this->getEventManager(),
                         $this,
-                        $this->getFormElementFactory(),
                         $layout,
                         $this->getNatureIsChildLinkRetriever(),
                         $this->getVisitRecorder(),
@@ -2181,7 +2179,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 new ChartConfigurationValueRetriever(
                     $field_retriever,
                     new TimeframeBuilder(
-                        $form_element_factory,
                         $semantic_timeframe_builder,
                         $logger
                     ),

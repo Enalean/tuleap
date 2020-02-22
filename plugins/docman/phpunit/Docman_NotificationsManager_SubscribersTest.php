@@ -24,7 +24,6 @@ declare(strict_types = 1);
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
-use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_NotificationsManager_SubscribersTest extends TestCase
@@ -34,10 +33,6 @@ class Docman_NotificationsManager_SubscribersTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ILinkUrlProvider
      */
     private $link_provider;
-    /**
-     * @var DocumentLinkProvider
-     */
-    private $Url_provider;
 
     /**
      * @var Docman_NotificationsManager_Add

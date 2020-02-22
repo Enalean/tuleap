@@ -80,17 +80,6 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     }
 
     /**
-     * Get all non dynamic fields where the condition may occur
-     *
-     * @return array Array of Tracker_FormElement_Field
-     */
-    private function getSelectableFields()
-    {
-        $tracker = $this->transition->getWorkflow()->getTracker();
-        return $this->formElementFactory->getUsedNonDynamicFields($tracker);
-    }
-
-    /**
      *
      * @return bool
      */

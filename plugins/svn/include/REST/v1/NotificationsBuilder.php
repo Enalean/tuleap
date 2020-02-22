@@ -22,7 +22,6 @@ namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\SVN\Admin\MailNotification;
-use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Notifications\UgroupsToNotifyDao;
 use Tuleap\SVN\Notifications\UsersToNotifyDao;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -47,19 +46,13 @@ class NotificationsBuilder
      * @var UsersToNotifyDao
      */
     private $user_dao;
-    /**
-     * @var NotificationsEmailsBuilder
-     */
-    private $emails_builder;
 
     public function __construct(
-        NotificationsEmailsBuilder $notifications_emails_builder,
         UsersToNotifyDao $user_dao,
         UserManager $user_manager,
         UgroupsToNotifyDao $ugroup_dao,
         UGroupManager $ugroup_manager
     ) {
-        $this->emails_builder = $notifications_emails_builder;
         $this->user_dao       = $user_dao;
         $this->user_manager   = $user_manager;
         $this->ugroup_dao     = $ugroup_dao;

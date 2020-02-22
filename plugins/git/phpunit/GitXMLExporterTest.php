@@ -58,11 +58,6 @@ class GitXMLExporterTest extends TestCase
     private $xml_tree;
 
     /**
-     * @var \PFUser
-     */
-    private $user;
-
-    /**
      * @var ZipArchive
      */
     private $zip;
@@ -130,7 +125,6 @@ class GitXMLExporterTest extends TestCase
             $ugroup_manager,
             $repository_factory,
             \Mockery::spy(\Psr\Log\LoggerInterface::class),
-            \Mockery::spy(\System_Command::class),
             \Mockery::spy(\Tuleap\GitBundle::class),
             $this->git_log_dao,
             $this->user_manager,
@@ -145,7 +139,6 @@ class GitXMLExporterTest extends TestCase
         $this->xml_tree = new SimpleXMLElement($data);
 
         $this->zip  = new ZipArchive($this->export_folder . '/archive.zip');
-        $this->user = \Mockery::spy(\PFUser::class);
 
         ForgeConfig::set('tmp_dir', $this->export_folder);
     }

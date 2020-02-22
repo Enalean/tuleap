@@ -25,10 +25,7 @@ class Contour
     private $dataPoints = array();
     private $nbrCols=0;
     private $nbrRows=0;
-    private $horizEdges = array();
-    private $vertEdges=array();
     private $isobarValues = array();
-    private $stack = null;
     private $isobarCoord = array();
     private $nbrIsobars = 10;
     private $isobarColors = array();
@@ -415,7 +412,6 @@ class ContourPlot extends Plot
     private $contourCoord;
     private $contourVal;
     private $contourColor;
-    private $nbrCountours = 0 ;
     private $dataMatrix = array();
     private $invertLegend = false;
     private $interpFactor = 1;

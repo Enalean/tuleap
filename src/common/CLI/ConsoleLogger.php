@@ -20,7 +20,6 @@
 
 namespace Tuleap\CLI;
 
-use Exception;
 use Psr\Log\LoggerInterface;
 use Psr\Log\AbstractLogger;
 use Symfony\Component\Console\Formatter\OutputFormatter;
@@ -41,17 +40,6 @@ class ConsoleLogger extends AbstractLogger implements LoggerInterface
     public function log($level, $message, array $context = [])
     {
         $this->output->writeln($this->colorize($level, $message));
-    }
-
-    private function generateLogWithException($message, ?Exception $e = null)
-    {
-        $log_string = $message;
-        if ($e !== null) {
-            $error_message = $e->getMessage();
-            $stack_trace   = $e->getTraceAsString();
-            $log_string    .= ": $error_message:\n$stack_trace";
-        }
-        return $log_string;
     }
 
     private function colorize($level, $message)

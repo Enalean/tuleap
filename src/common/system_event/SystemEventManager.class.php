@@ -558,7 +558,6 @@ class SystemEventManager
                 $klass          = $this->getClassForType($row['type']);
                 $ugroup_manager = new UGroupManager();
                 $klass_params   = [
-                $this->getSVNAuthenticationCacheInvalidator(),
                 new UserRemover(
                     ProjectManager::instance(),
                     EventManager::instance(),

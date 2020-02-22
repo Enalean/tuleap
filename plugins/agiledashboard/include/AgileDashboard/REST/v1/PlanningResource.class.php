@@ -63,13 +63,11 @@ class PlanningResource extends AuthenticatedResource
             $planning_factory,
             $artifact_factory,
             \Tracker_FormElementFactory::instance(),
-            \TrackerFactory::instance(),
             $status_counter,
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             new TimeframeBuilder(
-                $form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
                 new \BackendLogger()
             ),

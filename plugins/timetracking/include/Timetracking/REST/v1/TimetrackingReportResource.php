@@ -100,8 +100,6 @@ class TimetrackingReportResource extends AuthenticatedResource
         $this->tracker_representation_factory = new TrackerRepresentationFactory(
             new TimeDao(),
             new PermissionsRetriever(new TimetrackingUgroupRetriever(new TimetrackingUgroupDao())),
-            \TrackerFactory::instance(),
-            \Tracker_ArtifactFactory::instance(),
             UserHelper::instance()
         );
     }

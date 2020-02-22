@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Tracker;
-use TransitionFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
@@ -42,10 +41,6 @@ class ModeUpdater
      * @var TransitionReplicator
      */
     private $transition_replicator;
-    /**
-     * @var TransitionFactory
-     */
-    private $transition_factory;
 
     /**
      * @var FrozenFieldsDao

@@ -350,7 +350,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->getUGroupManager(),
             $this->getRepositoryFactory(),
             $this->getLogger(),
-            new System_Command(),
             new GitBundle(new System_Command(), $this->getLogger()),
             $this->getGitLogDao(),
             $user_manager,
@@ -480,8 +479,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $params['class'] = 'SystemEvent_GIT_REPO_UPDATE';
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
-                    $this->getSystemEventDao(),
-                    $this->getLogger(),
                     $this->getGitSystemEventManager()
                 );
                 break;
@@ -614,8 +611,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $params['class'] = 'SystemEvent_GIT_REPO_RESTORE';
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
-                    $this->getGitSystemEventManager(),
-                    $this->getLogger()
+                    $this->getGitSystemEventManager()
                 );
                 break;
             case SystemEvent_GIT_PROJECTS_UPDATE::NAME:
@@ -680,11 +676,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function getTemplateFactory()
     {
         return new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao());
-    }
-
-    private function getSystemEventDao()
-    {
-        return new SystemEventDao();
     }
 
     public function getReferenceKeywords($params)
@@ -844,7 +835,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 new ProjectHistoryDao()
             ),
             $project_manager,
-            $this->getManifestManager(),
             $this->getGitSystemEventManager(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
@@ -1546,7 +1536,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getGerritUserFinder()
     {
-        return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), $this->getUGroupManager());
+        return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance());
     }
 
     private function getProjectCreatorStatus()
@@ -1558,7 +1548,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getDescriptionUpdater()
     {
-        return new DescriptionUpdater(new ProjectHistoryDao(), $this->getGitSystemEventManager());
+        return new DescriptionUpdater(new ProjectHistoryDao());
     }
 
     private function getGitController()
@@ -1596,7 +1586,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             new ProjectHistoryDao(),
             $this->getDescriptionUpdater(),
             $this->getGitPhpAccessLogger(),
-            new VersionDetector(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getRegexpFineGrainedDisabler(),
@@ -2328,7 +2317,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->getRepositoryManager(),
             $this->getRepositoryFactory(),
             $this->getBackendGitolite(),
-            new XML_RNGValidator(),
             $this->getGitSystemEventManager(),
             PermissionsManager::instance(),
             EventManager::instance(),
@@ -2384,7 +2372,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         return new Gitolite3LogParser(
             new GitBackendLogger(),
-            new System_Command(),
             new HttpUserValidator(),
             new HistoryDao(),
             $this->getRepositoryFactory(),
@@ -2491,10 +2478,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getJSONRepositoriesRetriever()
     {
-        $ugroup_manager = $this->getUGroupManager();
         $ugroup_representation_builder = new PermissionPerGroupUGroupRepresentationBuilder($this->getUGroupManager());
         $ugroup_builder = new CollectionOfUGroupRepresentationBuilder(
-            $ugroup_manager,
             $ugroup_representation_builder
         );
         $admin_url_builder = new AdminUrlBuilder();
@@ -2606,7 +2591,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         return new GitRepositoryListController(
             $this->getProjectManager(),
-            $this->getRepositoryFactory(),
             new ListPresenterBuilder(
                 $this->getGitPermissionsManager(),
                 $this->getGitDao(),
@@ -2643,7 +2627,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->getProjectManager(),
             $this->getMirrorDataMapper(),
             $this->getGitPhpAccessLogger(),
-            $this->getThemeManager(),
             $this->getGitRepositoryHeaderDisplayer(),
             new FilesHeaderPresenterBuilder(
                 new GitPHPProjectRetriever(),

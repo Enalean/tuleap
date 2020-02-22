@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
@@ -37,10 +36,6 @@ final class ProjectCreationDataTest extends TestCase
      * @var M\MockInterface|ProjectManager
      */
     private $project_manager;
-    /**
-     * @var M\MockInterface|LoggerInterface
-     */
-    private $logger;
     /**
      * @var M\MockInterface|XML_RNGValidator
      */
@@ -78,7 +73,6 @@ final class ProjectCreationDataTest extends TestCase
 
         $this->project_manager  = M::mock(ProjectManager::class);
         $this->project_manager->shouldReceive('getProject')->with(100)->andReturns(M::mock(Project::class));
-        $this->logger           = M::spy(LoggerInterface::class);
         ForgeConfig::store();
     }
 

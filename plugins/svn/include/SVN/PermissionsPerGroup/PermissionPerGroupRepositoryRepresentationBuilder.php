@@ -23,7 +23,6 @@ namespace Tuleap\SVN\PermissionsPerGroup;
 use Project;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
-use UGroupManager;
 
 class PermissionPerGroupRepositoryRepresentationBuilder
 {
@@ -31,15 +30,10 @@ class PermissionPerGroupRepositoryRepresentationBuilder
      * @var RepositoryManager
      */
     private $repository_manager;
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
 
-    public function __construct(RepositoryManager $repository_manager, UGroupManager $ugroup_manager)
+    public function __construct(RepositoryManager $repository_manager)
     {
         $this->repository_manager = $repository_manager;
-        $this->ugroup_manager     = $ugroup_manager;
     }
 
     public function build(Project $project)

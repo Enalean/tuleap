@@ -381,7 +381,6 @@ class StatisticsPlugin extends Plugin
 
         $project_quota_requester->setProjectQuotaInformation(
             new ProjectQuotaInformation(
-                $project,
                 $project_quota_manager->getProjectAuthorizedQuota($project->getID()),
                 $disk_usage_manager->returnTotalProjectSize($project->getID())
             )

@@ -32,22 +32,15 @@ class DataFromRequestAugmentor
     private $request;
 
     /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
      * @var HierarchyOfFolderBuilder
      */
     private $hierarchy_builder;
 
     public function __construct(
         Codendi_Request $request,
-        Tracker_ArtifactFactory $artifact_factory,
         HierarchyOfFolderBuilder $hierarchy_builder
     ) {
         $this->request           = $request;
-        $this->artifact_factory  = $artifact_factory;
         $this->hierarchy_builder = $hierarchy_builder;
     }
 

@@ -26,7 +26,6 @@ use Codendi_HTMLPurifier;
 class SystemEventPresenter
 {
     private static $NULL_DATE = '0000-00-00 00:00:00';
-    private static $NULL_TIME = '00:00:00';
 
     private static $BADGES_PER_STATUS = array(
         SystemEvent::STATUS_RUNNING => 'info',

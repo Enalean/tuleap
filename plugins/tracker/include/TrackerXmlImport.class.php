@@ -233,7 +233,7 @@ class TrackerXmlImport
             new WebhookFactory(new WebhookDao()),
             new TrackerXMLFieldMappingFromExistingTracker(),
             new ExternalFieldsExtractor($event_manager),
-            new TrackerXmlImportFeedbackCollector($logger),
+            new TrackerXmlImportFeedbackCollector(),
             TrackerCreationDataChecker::build()
         );
     }

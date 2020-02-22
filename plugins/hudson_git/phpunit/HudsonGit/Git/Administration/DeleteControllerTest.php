@@ -31,7 +31,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use ProjectManager;
 use RuntimeException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
@@ -45,16 +44,6 @@ class DeleteControllerTest extends TestCase
      * @var DeleteController
      */
     private $controller;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var GitPermissionsManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $git_permissions_manager;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerFactory
@@ -95,14 +84,12 @@ class DeleteControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->project_manager                           = Mockery::mock(ProjectManager::class);
         $this->git_permissions_manager                   = Mockery::mock(GitPermissionsManager::class);
         $this->git_jenkins_administration_server_factory = Mockery::mock(JenkinsServerFactory::class);
         $this->git_jenkins_administration_server_deleter = Mockery::mock(JenkinsServerDeleter::class);
         $this->csrf_token                                = Mockery::mock(CSRFSynchronizerToken::class);
 
         $this->controller = new DeleteController(
-            $this->project_manager,
             $this->git_permissions_manager,
             $this->git_jenkins_administration_server_factory,
             $this->git_jenkins_administration_server_deleter,

@@ -34,16 +34,11 @@ class DocumentUsageRetrieverTest extends TestCase
      * @var DocumentUsageRetriever
      */
     public $retriever;
-    /**
-     * @var \Docman_MetadataFactory|\Mockery\MockInterface
-     */
-    private $metadata_factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->metadata_factory = \Mockery::mock(\Docman_MetadataFactory::class);
         $this->retriever        = new DocumentUsageRetriever();
 
         ForgeConfig::store();

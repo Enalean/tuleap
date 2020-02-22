@@ -108,9 +108,6 @@ class AgileDashboardRouter
     /** @var PlanningPermissionsManager */
     private $planning_permissions_manager;
 
-    /** @var AgileDashboard_HierarchyChecker */
-    private $hierarchy_checker;
-
     /**
      * @var ScrumForMonoMilestoneChecker
      */
@@ -242,7 +239,6 @@ class AgileDashboardRouter
         $agile_dashboard_xml_controller = new AgileDashboard_XMLController(
             $request,
             $this->planning_factory,
-            $this->milestone_factory,
             $xml_rng_validator,
             $this->agile_dashboard_exporter,
             new AgileDashboard_XMLImporter(),
@@ -259,7 +255,6 @@ class AgileDashboardRouter
                     new PlannedArtifactDao()
                 )
             ),
-            $this->plugin->getThemePath(),
             $external_field_extractor
         );
 

@@ -35,9 +35,6 @@ class Chart
      */
     protected $colors_for_charts;
 
-    private $width  = null;
-    private $height = null;
-
     protected $jpgraph_instance;
 
     /**
@@ -53,9 +50,6 @@ class Chart
     */
     public function __construct($aWidth = 600, $aHeight = 400, $aCachedName = "", $aTimeOut = 0, $aInline = true)
     {
-        $this->width  = $aWidth;
-        $this->height = $aHeight;
-
         $this->colors_for_charts = new ColorsForCharts();
 
         $classname = $this->getGraphClass();

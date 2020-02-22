@@ -54,11 +54,6 @@ class Project_OneStepCreation_OneStepCreationPresenter //phpcs:ignore PSR1.Class
     private $required_custom_description_presenters;
 
     /**
-     * @var PFUser
-     */
-    private $creator;
-
-    /**
      * @var ProjectManager
      */
     private $project_manager;

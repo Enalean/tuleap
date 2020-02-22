@@ -29,7 +29,6 @@ class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase
      */
     private $parent;
     private $artifact;
-    private $user;
     private $rules_processor;
     private $target_field_id;
     private $target_value_id;
@@ -45,7 +44,6 @@ class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase
         $this->parent->shouldReceive('getTrackerId')->andReturn(899);
         $this->task_tracker = aTracker()->withId(899)->build();
         $this->artifact = anArtifact()->withChangesets(array(mock('Tracker_Artifact_Changeset')))->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
-        $this->user = new PFUser(['language_id' => 'en']);
         $this->rules_processor = partial_mock(
             'Tracker_Workflow_Trigger_RulesProcessor',
             array('getRuleStrategy'),

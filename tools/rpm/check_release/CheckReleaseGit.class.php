@@ -48,12 +48,12 @@ class LastReleaseFinder
 
     public function maxVersion($versions)
     {
-        return array_reduce($versions, array($this, 'max'));
-    }
-
-    private function max($v1, $v2)
-    {
-        return version_compare($v1, $v2, '>') ? $v1 : $v2;
+        return array_reduce(
+            $versions,
+            static function ($v1, $v2) {
+                return version_compare($v1, $v2, '>') ? $v1 : $v2;
+            }
+        );
     }
 }
 
@@ -95,7 +95,14 @@ class NonIncrementedPathFinder
     public function pathsThatWereNotProperlyIncremented()
     {
         $changed_paths = $this->change_detector->findPathsThatChangedSince($this->old_revision);
-        return array_values(array_filter($changed_paths, array($this, 'incremented')));
+        return array_values(
+            array_filter(
+                $changed_paths,
+                function ($path) {
+                    return $this->incremented($path);
+                }
+            )
+        );
     }
 
     private function incremented($path)

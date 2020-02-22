@@ -19,7 +19,6 @@
 
 namespace Tuleap\User\REST\v1;
 
-use EventManager;
 use Luracast\Restler\RestException;
 use PaginatedUserCollection;
 use PFUser;
@@ -72,9 +71,6 @@ class UserResource extends AuthenticatedResource
      */
     private $history_retriever;
 
-    /** @var EventManager */
-    private $event_manager;
-
     /** @var User_ForgeUserGroupPermissionsManager */
     private $forge_ugroup_permissions_manager;
 
@@ -84,7 +80,6 @@ class UserResource extends AuthenticatedResource
         $this->json_decoder       = new JsonDecoder();
         $this->ugroup_literalizer = new UGroupLiteralizer();
         $this->history_retriever  = new HistoryRetriever(\EventManager::instance());
-        $this->event_manager      = EventManager::instance();
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()

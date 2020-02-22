@@ -241,15 +241,6 @@ class CleanUnusedDao extends DataAccessObject
         return $this->retrieveCount($sql) === 0;
     }
 
-    private function purgeIfOrphan($database_name, $dry_run)
-    {
-        if (! $this->doesDatabaseNameCorrespondToAnActiveProject($database_name)) {
-            $this->logger->warning("Project seems no longer referenced, please double check");
-        } else {
-            $this->logger->warning("Database $database_name cannot be associated to an active project, please check");
-        }
-    }
-
     public function doesDatabaseNameCorrespondToAnActiveProject($database_name)
     {
         $identifier = substr($database_name, strlen(MediawikiDao::DEDICATED_DATABASE_PREFIX));

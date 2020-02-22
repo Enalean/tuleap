@@ -48,7 +48,6 @@ final class WebDAVTreeTest extends TestCase
     private $release;
     private $file;
     private $docman_folder;
-    private $docman_document;
 
     protected function setUp(): void
     {
@@ -60,7 +59,6 @@ final class WebDAVTreeTest extends TestCase
         $this->release         = \Mockery::spy(FRSRelease::class);
         $this->file            = \Mockery::spy(\FRSFile::class);
         $this->docman_folder   = \Mockery::spy(\Docman_Folder::class);
-        $this->docman_document = \Mockery::spy(\Docman_Document::class);
 
         $docman_item_factory = \Mockery::spy(\Docman_ItemFactory::class)->shouldReceive('getItemFromDb')->with()->andReturns(\Mockery::spy(\Docman_Item::class));
         Docman_ItemFactory::setInstance(101, $docman_item_factory);

@@ -25,16 +25,12 @@
 class Git_Driver_Gerrit_UserFinder
 {
 
-    /** @var UGroupManager */
-    private $ugroup_manager;
-
     /** @var PermissionsManager */
     private $permissions_manager;
 
-    public function __construct(PermissionsManager $permissions_manager, UGroupManager $ugroup_manager)
+    public function __construct(PermissionsManager $permissions_manager)
     {
         $this->permissions_manager = $permissions_manager;
-        $this->ugroup_manager      = $ugroup_manager;
     }
 
 

@@ -25,7 +25,6 @@ use TemplateRendererFactory;
 use Project;
 use Service;
 use ForgeConfig;
-use UGroupManager;
 use User_UGroup;
 use Feedback;
 use PFUser;
@@ -36,8 +35,6 @@ use TemplateRenderer;
 
 class PermissionController extends BaseFrsPresenter
 {
-    /** @var UGroupManager */
-    private $ugroup_manager;
     /** @var FRSPermissionFactory */
     private $permission_factory;
     /** @var FRSPermissionCreator */
@@ -48,13 +45,11 @@ class PermissionController extends BaseFrsPresenter
     private $ugroup_factory;
 
     public function __construct(
-        UGroupManager $ugroup_manager,
         FRSPermissionFactory $permission_factory,
         FRSPermissionCreator $permission_creator,
         FRSPermissionManager $permission_manager,
         User_ForgeUserGroupFactory $ugroup_factory
     ) {
-        $this->ugroup_manager     = $ugroup_manager;
         $this->permission_factory = $permission_factory;
         $this->ugroup_factory     = $ugroup_factory;
         $this->permission_creator = $permission_creator;

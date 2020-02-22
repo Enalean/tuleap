@@ -88,11 +88,6 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
         return null;
     }
 
-    private function isMappedTo($tracker, $artifact_status, Cardwall_Column $column)
-    {
-        return false;
-    }
-
     public function isInColumn(
         Tracker_Artifact                                     $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
@@ -111,14 +106,6 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
      */
     public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns)
     {
-        return false;
-    }
-
-    private function fillMappingsByDuckType(
-        Cardwall_MappingCollection             $mappings,
-        array                                  $fields,
-        Cardwall_OnTop_Config_ColumnCollection $columns
-    ) {
         return false;
     }
 

@@ -21,21 +21,9 @@
 namespace Tuleap\Cardwall\Semantic;
 
 use Cardwall_Semantic_CardFields;
-use Cardwall_UserPreferences_UserPreferencesDisplayUser;
 
 class SingleCardPreviewDetailsBuilder
 {
-    /**
-     * @var Cardwall_UserPreferences_UserPreferencesDisplayUser
-     */
-    private $card_preferences;
-
-    public function __construct(
-        Cardwall_UserPreferences_UserPreferencesDisplayUser $card_preferences
-    ) {
-        $this->card_preferences = $card_preferences;
-    }
-
     public function build(Cardwall_Semantic_CardFields $semantic_card, array $possible_background)
     {
         $card_preview = [];

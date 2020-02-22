@@ -33,10 +33,6 @@ class NotificationsForProjectMemberCleaner
      */
     private $item_factory;
     /**
-     * @var UsersToNotifyDao
-     */
-    private $users_to_notify_dao;
-    /**
      * @var Docman_NotificationsManager
      */
     private $notifications_manager;
@@ -48,11 +44,9 @@ class NotificationsForProjectMemberCleaner
     public function __construct(
         Docman_ItemFactory $item_factory,
         Docman_NotificationsManager $notifications_manager,
-        UserManager $user_manager,
-        UsersToNotifyDao $users_to_notify_dao
+        UserManager $user_manager
     ) {
         $this->item_factory          = $item_factory;
-        $this->users_to_notify_dao   = $users_to_notify_dao;
         $this->notifications_manager = $notifications_manager;
         $this->user_manager          = $user_manager;
     }

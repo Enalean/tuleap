@@ -55,15 +55,9 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
         $form_element_factory = new class extends Tracker_FormElementFactory {
             private $mapping = array();
 
-            /**
-             * @var \Mockery\MockInterface|TrackerXmlImportFeedbackCollector
-             */
-            private $error_logger;
-
             public function __construct()
             {
-                $this->mapping      = [];
-                $this->error_logger = \Mockery::mock(TrackerXmlImportFeedbackCollector::class);
+                $this->mapping = [];
             }
 
             public function getInstanceFromXML(

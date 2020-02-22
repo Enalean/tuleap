@@ -30,10 +30,6 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
  */
 class AgileDashboard_Milestone_Backlog_Backlog
 {
-
-    /** @var AgileDashboard_BacklogItemDao */
-    private $dao;
-
     /** @var Tracker[] */
     private $descendant_trackers;
 
@@ -61,10 +57,6 @@ class AgileDashboard_Milestone_Backlog_Backlog
      * @var MonoMilestoneItemsFinder
      */
     private $mono_milestone_items_finder;
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
@@ -79,7 +71,6 @@ class AgileDashboard_Milestone_Backlog_Backlog
     ) {
         $this->milestone                    = $milestone;
         $this->backlogitem_trackers         = $item_names;
-        $this->dao                          = $item_dao;
         $this->descendant_trackers          = $descendant_trackers;
         $this->limit                        = $limit;
         $this->offset                       = $offset;
@@ -92,7 +83,6 @@ class AgileDashboard_Milestone_Backlog_Backlog
             $milestone,
             $this->getDescendantTrackerIds()
         );
-        $this->artifact_factory            = $artifact_factory;
         $this->mono_milestone_items_finder = $mono_milestone_items_finder;
     }
 

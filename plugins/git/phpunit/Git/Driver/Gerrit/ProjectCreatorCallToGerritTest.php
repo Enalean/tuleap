@@ -93,11 +93,6 @@ class ProjectCreatorCallToGerritTest extends TestCase
     /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
     protected $template_processor;
 
-    /**
-     * @var Git_Exec
-     */
-    private $git_exec;
-
     protected function setUp(): void
     {
         parent::setUp();

@@ -19,7 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
@@ -31,16 +30,11 @@ require_once __DIR__.'/../../../../bootstrap.php';
 
 class SizeValidatorTest extends TuleapTestCase
 {
-    private $tracker;
-    private $user;
     private $validator;
 
     public function setUp()
     {
         parent::setUp();
-
-        $this->tracker = aTracker()->withId(101)->build();
-        $this->user    = new PFUser(['language_id' => 'en']);
 
         $this->validator = new SizeValidatorVisitor(2);
     }

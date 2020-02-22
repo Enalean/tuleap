@@ -61,7 +61,9 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter extends 
         } else {
             array_walk(
                 $values,
-                array($this, 'appendValueToFieldChangeNode'),
+                function ($value, $index, SimpleXMLElement $field_xml) {
+                    $this->appendValueToFieldChangeNode($value, $index, $field_xml);
+                },
                 $field_change
             );
         }

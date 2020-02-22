@@ -78,7 +78,11 @@ class GitViews_ShowRepo_Content
 
         if ($default_mirrors) {
             $default_mirrors_names = array_map(
-                array($this, 'extractMirrorName'),
+                static function (Git_Mirror_Mirror $mirror): string {
+                    $purifier = Codendi_HTMLPurifier::instance();
+
+                    return $purifier->purify($mirror->name);
+                },
                 $default_mirrors
             );
 
@@ -88,12 +92,5 @@ class GitViews_ShowRepo_Content
 
         $html .= '</div>';
         return $html;
-    }
-
-    private function extractMirrorName(Git_Mirror_Mirror $mirror)
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-
-        return $purifier->purify($mirror->name);
     }
 }

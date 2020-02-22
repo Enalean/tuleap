@@ -35,7 +35,7 @@ class NotificationsForProjectMemberCleaner
     /**
      * @var Tracker_NotificationsManager
      */
-    private $mails_to_notify_manager;
+    private $emails_to_notify_manager;
 
     /**
      * @var UsersToNotifyDao

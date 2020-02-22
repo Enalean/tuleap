@@ -24,24 +24,17 @@ use ForgeConfig;
 use SvnPlugin;
 use TemplateRendererFactory;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
-use UGroupManager;
 
 class PaneCollector
 {
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
     /**
      * @var PermissionPerGroupSVNServicePaneBuilder
      */
     private $group_pane_builder;
 
     public function __construct(
-        UGroupManager $ugroup_manager,
         PermissionPerGroupSVNServicePaneBuilder $group_pane_builder
     ) {
-        $this->ugroup_manager          = $ugroup_manager;
         $this->group_pane_builder      = $group_pane_builder;
     }
 

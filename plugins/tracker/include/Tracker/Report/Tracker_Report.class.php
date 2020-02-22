@@ -2076,7 +2076,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 new InvalidMetadata\LesserThanComparisonChecker(),
                 new InvalidMetadata\GreaterThanComparisonChecker(),
                 new InvalidMetadata\LesserThanOrEqualComparisonChecker(),
-                new InvalidMetadata\GreaterThanOrEqualComparisonChecker(),
                 new InvalidMetadata\BetweenComparisonChecker(),
                 new InvalidMetadata\InComparisonChecker(),
                 new InvalidMetadata\NotInComparisonChecker(),

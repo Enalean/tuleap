@@ -34,7 +34,6 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Workflow\BeforeEvent;
-use Tuleap\Velocity\Semantic\BacklogRequiredTrackerCollectionFormatter;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 use Tuleap\Velocity\VelocityChartPresenter;
@@ -246,7 +245,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $mapping = $parameters['xml_mapping'];
 
         if ($type == SemanticVelocity::NAME) {
-            $factory                = new SemanticVelocityFactory(new BacklogRequiredTrackerCollectionFormatter());
+            $factory                = new SemanticVelocityFactory();
             $parameters['semantic'] = $factory->getInstanceFromXML($xml, $tracker, $mapping);
         }
     }
@@ -256,9 +255,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $form_element_factory = Tracker_FormElementFactory::instance();
 
         $builder = new VelocityRepresentationBuilder(
-            new SemanticVelocityFactory(
-                new BacklogRequiredTrackerCollectionFormatter()
-            ),
+            new SemanticVelocityFactory(),
             new SemanticDoneFactory(
                 new SemanticDoneDao(),
                 new SemanticDoneValueChecker()
@@ -268,7 +265,6 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                 PlanningFactory::build(),
                 Tracker_ArtifactFactory::instance(),
                 $form_element_factory,
-                TrackerFactory::instance(),
                 new AgileDashboard_Milestone_MilestoneStatusCounter(
                     new AgileDashboard_BacklogItemDao(),
                     new Tracker_ArtifactDao(),
@@ -281,7 +277,6 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                     PlanningFactory::build()
                 ),
                 new TimeframeBuilder(
-                    $form_element_factory,
                     $this->getSemanticTimeframeBuilder($form_element_factory),
                     new \BackendLogger()
                 ),

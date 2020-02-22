@@ -47,7 +47,6 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         $this->user_manager = \Mockery::spy(\UserManager::class);
         $this->builder = new UsersToBeImportedCollectionBuilder(
             $this->user_manager,
-            \Mockery::spy(\Psr\Log\LoggerInterface::class),
             new XML_Security(),
             \Mockery::spy(\XML_RNGValidator::class)
         );

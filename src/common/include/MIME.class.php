@@ -248,8 +248,29 @@ class MIME
 
             // initialize XML parser
             $xml_parser = xml_parser_create();
-            xml_set_element_handler($xml_parser, array($this, 'description_StartElement'), array($this, 'description_EndElement'));
-            xml_set_character_data_handler($xml_parser, array($this, 'description_Data'));
+            xml_set_element_handler(
+                $xml_parser,
+                function ($parser, $name, $attrs) {
+                    $this->read = false;
+                    if ($name == 'COMMENT') {
+                        if (!isset($attrs['XML:LANG']) || $attrs['XML:LANG'] == $this->lang) {
+                            $this->read = true;
+                        }
+                    }
+                },
+                function ($parser, $name) {
+                    $this->read = false;
+                }
+            );
+            xml_set_character_data_handler(
+                $xml_parser,
+                function ($parser, $data) {
+                    /** @psalm-suppress TypeDoesNotContainType */
+                    if ($this->read == true) {
+                        $this->description = $data;
+                    }
+                }
+            );
 
             // read the file and parse
             while ($data = str_replace("\n", "", fread($fp, 4096))) {
@@ -263,37 +284,6 @@ class MIME
         }
 
         return $this->description;
-    }
-
-    /**
-     * helper function for description()
-     */
-    private function description_StartElement($parser, $name, $attrs)
-    {
-        $this->read = false;
-        if ($name == 'COMMENT') {
-            if (!isset($attrs['XML:LANG']) || $attrs['XML:LANG'] == $this->lang) {
-                $this->read = true;
-            }
-        }
-    }
-
-    /**
-     * helper function for description()
-     */
-    private function description_EndElement($parser, $name)
-    {
-        $this->read = false;
-    }
-
-    /**
-     * helper function for description()
-     */
-    private function description_Data($parser, $data)
-    {
-        if ($this->read == true) {
-            $this->description = $data;
-        }
     }
 
     private $XDG_DATA_DIRS;

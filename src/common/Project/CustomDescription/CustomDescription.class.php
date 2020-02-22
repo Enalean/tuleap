@@ -36,7 +36,6 @@ class Project_CustomDescription_CustomDescription
     private $is_required;
     private $type;
     private $rank;
-    private $value;
 
     public function __construct($id, $name, $description, $is_required, $type, $rank)
     {

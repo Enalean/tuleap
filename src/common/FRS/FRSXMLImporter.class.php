@@ -29,9 +29,6 @@ class FRSXMLImporter
 
     public const MAPPING_KEY = 'frs_release_mapping';
 
-    /** @var XML_RNGValidator */
-    private $xml_validator;
-
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
@@ -68,7 +65,6 @@ class FRSXMLImporter
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
-        XML_RNGValidator $xml_validator,
         FRSPackageFactory $package_factory,
         FRSReleaseFactory $release_factory,
         FRSFileFactory $file_factory,
@@ -82,7 +78,6 @@ class FRSXMLImporter
         ?PermissionsManager $permission_manager = null
     ) {
         $this->logger             = new WrapperLogger($logger, "FRSXMLImporter");
-        $this->xml_validator      = $xml_validator;
         $this->package_factory    = $package_factory;
         $this->release_factory    = $release_factory;
         $this->file_factory       = $file_factory;

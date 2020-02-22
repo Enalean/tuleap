@@ -182,7 +182,7 @@ class Tracker_ArtifactLinkInfo
         return $this->artifact;
     }
 
-    private function setArtifact(Tracker_Artifact $artifact) : self
+    private function setArtifact(Tracker_Artifact $artifact): self // phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedMethod
     {
         $this->artifact    = $artifact;
         $this->artifact_id = $artifact->getId();

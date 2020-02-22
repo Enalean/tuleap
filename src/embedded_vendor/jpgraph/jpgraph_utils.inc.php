@@ -18,8 +18,6 @@ class FuncGenerator
 {
     private $iFunc='';
     private $iXFunc='';
-    private $iMin;
-    private $iMax;
     private $iStepSize;
 
     public function __construct($aFunc, $aXFunc = '')
@@ -30,8 +28,6 @@ class FuncGenerator
 
     public function E($aXMin, $aXMax, $aSteps = 50)
     {
-        $this->iMin = $aXMin;
-        $this->iMax = $aXMax;
         $this->iStepSize = ($aXMax-$aXMin)/$aSteps;
 
         if ($this->iXFunc != '') {

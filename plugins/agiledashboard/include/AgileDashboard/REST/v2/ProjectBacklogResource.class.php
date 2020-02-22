@@ -37,7 +37,6 @@ use Project;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use TrackerFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
@@ -104,13 +103,11 @@ class ProjectBacklogResource
             $this->planning_factory,
             Tracker_ArtifactFactory::instance(),
             $tracker_form_element_factory,
-            TrackerFactory::instance(),
             $status_counter,
             $this->planning_permissions_manager,
             new AgileDashboard_Milestone_MilestoneDao(),
             $scrum_mono_milestone_checker,
             new TimeframeBuilder(
-                $tracker_form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $tracker_form_element_factory),
                 new \BackendLogger()
             ),

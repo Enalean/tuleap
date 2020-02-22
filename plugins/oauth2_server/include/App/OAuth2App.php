@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
+use Project;
+
 /**
  * @psalm-immutable
  */
@@ -36,14 +38,14 @@ final class OAuth2App
      */
     private $name;
     /**
-     * @var \Project
+     * @var Project
      */
     private $project;
 
-    public function __construct(int $id, string $name, \Project $project)
+    public function __construct(int $id, string $name, Project $project)
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->id      = $id;
+        $this->name    = $name;
         $this->project = $project;
     }
 

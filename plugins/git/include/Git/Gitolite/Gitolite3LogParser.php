@@ -27,7 +27,6 @@ use GitRepositoryFactory;
 use GitRepositoryGitoliteAdmin;
 use Psr\Log\LoggerInterface;
 use PFUser;
-use System_Command;
 use Tuleap\Git\History\Dao;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use UserDao;
@@ -45,9 +44,6 @@ class Gitolite3LogParser
 
     /** @var LoggerInterface */
     private $logger;
-
-    /** @var System_Command */
-    private $system_command;
 
     /**
      * @var HttpUserValidator
@@ -87,16 +83,10 @@ class Gitolite3LogParser
     /**
      * @var array
      */
-    private $day_accesses_cache = array();
-
-    /**
-     * @var array
-     */
     private $user_last_access_cache = [];
 
     public function __construct(
         LoggerInterface $logger,
-        System_Command $system_command,
         HttpUserValidator $user_validator,
         Dao $history_dao,
         GitRepositoryFactory $repository_factory,
@@ -105,7 +95,6 @@ class Gitolite3LogParser
         UserDao $user_dao
     ) {
         $this->logger             = $logger;
-        $this->system_command     = $system_command;
         $this->user_validator     = $user_validator;
         $this->history_dao        = $history_dao;
         $this->repository_factory = $repository_factory;
@@ -206,7 +195,6 @@ class Gitolite3LogParser
     private function resetCaches()
     {
         $this->access_cache = array();
-        $this->day_accesses_cache = array();
     }
 
     private function cacheAccess(GitRepository $repository, $user_id, DateTime $day)

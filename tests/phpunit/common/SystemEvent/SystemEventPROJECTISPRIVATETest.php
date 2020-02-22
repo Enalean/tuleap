@@ -36,7 +36,6 @@ use SystemEvent_PROJECT_IS_PRIVATE;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\UserRemover;
-use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 
 final class SystemEventPROJECTISPRIVATETest extends TestCase
 {
@@ -67,7 +66,6 @@ final class SystemEventPROJECTISPRIVATETest extends TestCase
         $user_remover = Mockery::mock(UserRemover::class);
         $ugroup_manager = Mockery::mock(\UGroupManager::class);
         $system_event->injectDependencies(
-            Mockery::mock(SVNAuthenticationCacheInvalidator::class),
             $user_remover,
             $ugroup_manager
         );

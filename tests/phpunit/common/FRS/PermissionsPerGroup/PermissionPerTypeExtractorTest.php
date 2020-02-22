@@ -128,8 +128,6 @@ class PermissionPerTypeExtractorTest extends TestCase
         $this->permission_factory->method('getFrsUGroupsByPermission')->willReturn(
             array(
                 ProjectUGroup::PROJECT_MEMBERS => new FRSPermission(
-                    101,
-                    FRSPermission::FRS_ADMIN,
                     ProjectUGroup::PROJECT_MEMBERS
                 )
             )
@@ -182,8 +180,6 @@ class PermissionPerTypeExtractorTest extends TestCase
         $this->permission_factory->method('getFrsUGroupsByPermission')->willReturn(
             array(
                 ProjectUGroup::PROJECT_MEMBERS => new FRSPermission(
-                    101,
-                    FRSPermission::FRS_READER,
                     ProjectUGroup::PROJECT_MEMBERS
                 )
             )
@@ -231,8 +227,6 @@ class PermissionPerTypeExtractorTest extends TestCase
         $this->permission_factory->method('getFrsUGroupsByPermission')->willReturn(
             array(
                 ProjectUGroup::PROJECT_MEMBERS => new FRSPermission(
-                    101,
-                    FRSPermission::FRS_ADMIN,
                     ProjectUGroup::PROJECT_MEMBERS
                 )
             )

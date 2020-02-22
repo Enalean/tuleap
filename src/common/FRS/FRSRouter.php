@@ -28,8 +28,6 @@ use PFUser;
 
 class FRSRouter
 {
-    /** @var Project */
-    private $project;
     /** @var PermissionController */
     private $permission_controller;
 

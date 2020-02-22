@@ -134,7 +134,6 @@ class SVN_RepositoryListing
         $date_parts = explode(' (', $info[1]);
 
         return new SVN_RevisionPathInfo(
-            $revision['revision'],
             $revision['path'],
             $this->getUserId($info[0]),
             strtotime($date_parts[0]),

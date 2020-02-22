@@ -75,15 +75,10 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest ex
 
 class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest
 {
-
-    private $bug_tracker;
-
     public function setUp()
     {
         parent::setUp();
         $this->setUpGlobalsMockery();
-
-        $this->bug_tracker  = aTracker()->withId(901)->build();
 
         $this->strategy = new Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy($this->artifact, $this->rule);
     }

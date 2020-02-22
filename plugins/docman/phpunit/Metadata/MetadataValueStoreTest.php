@@ -38,10 +38,6 @@ class MetadataValueStoreTest extends TestCase
      */
     private $store;
     /**
-     * @var MetadataValueCreator
-     */
-    private $creator;
-    /**
      * @var \Mockery\MockInterface|ReferenceManager
      */
     private $reference_manager;
@@ -49,15 +45,6 @@ class MetadataValueStoreTest extends TestCase
      * @var Docman_MetadataValueDao|\Mockery\MockInterface
      */
     private $metadata_value_dao;
-    /**
-     * @var \Mockery\MockInterface|MetadataValueObjectFactory
-     */
-    private $metadata_value_object_factory;
-
-    /**
-     * @var \Mockery\MockInterface|DocmanMetadataInputValidator
-     */
-    private $validator;
 
     protected function setUp(): void
     {

@@ -43,7 +43,6 @@ final class DocumentUploadFinisherTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $project_manager;
-    private $metadata_to_upload_finisher;
     private $logger;
     private $item_factory;
     private $version_factory;
@@ -63,7 +62,6 @@ final class DocumentUploadFinisherTest extends TestCase
         $this->item_dao                    = \Mockery::mock(\Docman_ItemDao::class);
         $this->file_storage                = \Mockery::mock(\Docman_FileStorage::class);
         $this->user_manager                = \Mockery::mock(\UserManager::class);
-        $this->metadata_to_upload_finisher = \Mockery::mock(DocumentMetadataCreator::class);
         $this->event_adder                 = \Mockery::mock(DocmanItemsEventAdder::class);
         $this->project_manager             = \Mockery::mock(\ProjectManager::instance());
     }

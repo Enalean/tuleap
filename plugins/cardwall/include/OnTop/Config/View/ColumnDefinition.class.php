@@ -269,7 +269,13 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
     {
         $placeholders = explode('|', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholders'));
         foreach ($this->config->getDashboardColumns() as $column) {
-            array_walk($placeholders, array($this, 'removeUsedColumns'), $column->getLabel());
+            array_walk(
+                $placeholders,
+                function (&$placeholder, $key, $column_label) {
+                    $this->removeUsedColumns($placeholder, $key, $column_label);
+                },
+                $column->getLabel()
+            );
         }
         $filtered_placeholders = array_filter($placeholders);
         $suggestion = array_shift($filtered_placeholders);

@@ -32,7 +32,6 @@ use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
-use UserManager;
 
 class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCase
 {
@@ -62,10 +61,6 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
      */
     private $permission_manager;
     /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
      * @var ItemRepresentationCollectionBuilder
      */
     private $item_representation_collection_builder;
@@ -83,7 +78,6 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
     protected function setUp() : void
     {
         parent::setUp();
-        $this->user_manager                           = Mockery::mock(UserManager::class);
         $this->item_factory                           = Mockery::mock(Docman_ItemFactory::class);
         $this->permission_manager                     = Mockery::mock(Docman_PermissionsManager::class);
         $this->item_representation_builder            = Mockery::mock(ItemRepresentationBuilder::class);

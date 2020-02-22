@@ -29,10 +29,6 @@ class WidgetReorderTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var DashboardWidgetLine[]
-     */
-    private $lines;
-    /**
      * @var DashboardWidgetColumn[]
      */
     private $line_one_columns;
@@ -63,10 +59,6 @@ class WidgetReorderTest extends TestCase
     /**
      * @var DashboardWidget
      */
-    private $widget_four;
-    /**
-     * @var DashboardWidget
-     */
     private $widget_five;
 
     protected function setUp(): void
@@ -74,7 +66,6 @@ class WidgetReorderTest extends TestCase
         $this->widget_one   = new DashboardWidget(1, 'image', 10, 1, 0, 0);
         $this->widget_two   = new DashboardWidget(2, 'image', 11, 2, 0, 0);
         $this->widget_three = new DashboardWidget(3, 'image', 12, 1, 1, 0);
-        $this->widget_four  = new DashboardWidget(4, 'image', 13, 2, 1, 0);
         $this->widget_five  = new DashboardWidget(5, 'image', 14, 3, 0, 0);
 
         $this->line_one_column_one_widgets   = array($this->widget_one, $this->widget_three);
@@ -82,22 +73,17 @@ class WidgetReorderTest extends TestCase
         $this->line_one_column_three_widgets = array($this->widget_five);
 
         $this->line_one_columns = array(
-            new DashboardWidgetColumn(1, 1, 0, $this->line_one_column_one_widgets),
-            new DashboardWidgetColumn(2, 1, 1, $this->line_one_column_two_widgets),
-            new DashboardWidgetColumn(3, 1, 2, $this->line_one_column_three_widgets)
-        );
-
-        $this->lines = array(
-            new DashboardWidgetLine(1, 1, 'user', 'one-column', 0, $this->line_one_columns)
+            new DashboardWidgetColumn(1, 0, $this->line_one_column_one_widgets),
+            new DashboardWidgetColumn(2, 1, $this->line_one_column_two_widgets),
+            new DashboardWidgetColumn(3, 2, $this->line_one_column_three_widgets)
         );
     }
 
     public function testItReordersWidgetsInSameColumn()
     {
         $dao              = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
-        $retriever        = new DashboardWidgetRetriever($dao);
         $remover          = new DashboardWidgetRemoverInList();
-        $widget_reorder   = new DashboardWidgetReorder($dao, $retriever, $remover);
+        $widget_reorder   = new DashboardWidgetReorder($dao, $remover);
         $widget_to_update = new DashboardWidget(1, 'image', 10, 1, 0, 0);
 
         $dao->shouldReceive('updateColumnIdByWidgetId')->never();
@@ -109,9 +95,8 @@ class WidgetReorderTest extends TestCase
     public function testItReordersWidgetsInNewColumn()
     {
         $dao              = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
-        $retriever        = new DashboardWidgetRetriever($dao);
         $remover          = new DashboardWidgetRemoverInList();
-        $widget_reorder   = new DashboardWidgetReorder($dao, $retriever, $remover);
+        $widget_reorder   = new DashboardWidgetReorder($dao, $remover);
 
         $dao->shouldReceive('searchAllWidgetByColumnId')->andReturns(\TestHelper::arrayToDar(array(
             'id'         => 3,

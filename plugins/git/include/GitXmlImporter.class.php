@@ -72,11 +72,6 @@ class GitXmlImporter
     private $system_event_manager;
 
     /**
-     * @var XML_RNGValidator
-     */
-    private $xml_validator;
-
-    /**
      * @var EventManager
      */
     private $event_manager;
@@ -125,7 +120,6 @@ class GitXmlImporter
         GitRepositoryManager   $repository_manager,
         GitRepositoryFactory   $repository_factory,
         Git_Backend_Gitolite   $gitolite_backend,
-        XML_RNGValidator $rng_validator,
         Git_SystemEventManager $system_event_manager,
         PermissionsManager $permissions_manager,
         EventManager $event_manager,
@@ -143,7 +137,6 @@ class GitXmlImporter
         $this->repository_manager            = $repository_manager;
         $this->repository_factory            = $repository_factory;
         $this->gitolite_backend              = $gitolite_backend;
-        $this->xml_validator                 = $rng_validator;
         $this->system_event_manager          = $system_event_manager;
         $this->event_manager                 = $event_manager;
         $this->fine_grained_updater          = $fine_grained_updater;

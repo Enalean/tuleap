@@ -323,7 +323,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
                 $background_color_dao
             );
 
-            $field_builder = new CardFieldsPresenterBuilder($tracker_form_element_factory);
+            $field_builder = new CardFieldsPresenterBuilder();
 
             $background_field_retriever = new BackgroundColorFieldRetriever(
                 $tracker_form_element_factory,
@@ -332,9 +332,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
 
             $xml_exporter = new CardFieldXmlExporter($background_color_dao);
 
-            $single_card_preview_details_builder = new SingleCardPreviewDetailsBuilder(
-                new Cardwall_UserPreferences_UserPreferencesDisplayUser(true)
-            );
+            $single_card_preview_details_builder = new SingleCardPreviewDetailsBuilder();
 
             $card_preview_builder = new CardsPreviewBuilder($single_card_preview_details_builder);
 

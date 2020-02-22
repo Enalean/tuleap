@@ -93,8 +93,8 @@ class ProjectDashboardDuplicatorTest extends TestCase
 
         $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard));
 
-        $line_01 = new DashboardWidgetLine(1, 1, 'project', 'one-column', 1, array());
-        $line_02 = new DashboardWidgetLine(2, 1, 'project', 'one-column', 2, array());
+        $line_01 = new DashboardWidgetLine(1, 'one-column', array());
+        $line_02 = new DashboardWidgetLine(2, 'one-column', array());
 
         $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns(array($line_01, $line_02));
 
@@ -109,15 +109,12 @@ class ProjectDashboardDuplicatorTest extends TestCase
 
         $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard));
 
-        $column_01 = new DashboardWidgetColumn(1, 1, 1, array());
-        $column_02 = new DashboardWidgetColumn(2, 1, 2, array());
+        $column_01 = new DashboardWidgetColumn(1, 1, array());
+        $column_02 = new DashboardWidgetColumn(2, 2, array());
 
         $line = new DashboardWidgetLine(
             1,
-            1,
-            'project',
             'two-columns',
-            1,
             array($column_01, $column_02)
         );
 
@@ -137,13 +134,10 @@ class ProjectDashboardDuplicatorTest extends TestCase
         $widget_01 = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
         $widget_02 = new DashboardWidget(2, 'projectcontacts', 0, 1, 2, 0);
 
-        $column = new DashboardWidgetColumn(1, 1, 1, array($widget_01, $widget_02));
+        $column = new DashboardWidgetColumn(1, 1, array($widget_01, $widget_02));
         $line   = new DashboardWidgetLine(
             1,
-            1,
-            'project',
             'one-column',
-            1,
             array($column)
         );
 
@@ -181,13 +175,10 @@ class ProjectDashboardDuplicatorTest extends TestCase
         $widget_01 = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
         $widget_02 = new DashboardWidget(2, 'projectcontacts', 0, 1, 2, 0);
 
-        $column = new DashboardWidgetColumn(1, 1, 1, array($widget_01, $widget_02));
+        $column = new DashboardWidgetColumn(1, 1, array($widget_01, $widget_02));
         $line   = new DashboardWidgetLine(
             1,
-            1,
-            'project',
             'one-column',
-            1,
             array($column)
         );
 
@@ -224,13 +215,10 @@ class ProjectDashboardDuplicatorTest extends TestCase
 
         $widget = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
 
-        $column = new DashboardWidgetColumn(1, 1, 1, array($widget));
+        $column = new DashboardWidgetColumn(1, 1, array($widget));
         $line   = new DashboardWidgetLine(
             1,
-            1,
-            'project',
             'one-column',
-            1,
             array($column)
         );
 

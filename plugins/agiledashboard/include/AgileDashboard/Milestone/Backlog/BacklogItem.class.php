@@ -36,9 +36,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     /** @var String */
     private $short_type;
 
-    /** @var String */
-    private $url;
-
     /** @var Int */
     private $initial_effort;
 
@@ -73,7 +70,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     {
         $this->id              = $artifact->getId();
         $this->title           = $artifact->getTitle();
-        $this->url             = $artifact->getUri();
         $this->artifact        = $artifact;
         $this->color           = $this->artifact->getTracker()->getColor()->getName();
         $this->type            = $this->artifact->getTracker()->getName();

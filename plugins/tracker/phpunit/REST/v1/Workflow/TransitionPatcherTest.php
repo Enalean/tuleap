@@ -39,10 +39,6 @@ class TransitionPatcherTest extends TestCase
     private $patcher;
     /** @var Mockery\MockInterface */
     private $updater;
-    /** @var Mockery\MockInterface */
-    private $retriever;
-    /** @var Mockery\MockInterface */
-    private $transaction_executor;
 
     private $state_factory;
     private $transition_updater;

@@ -39,10 +39,6 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      */
     private $project_manager;
     /**
-     * @var \GitRepositoryFactory
-     */
-    private $repository_factory;
-    /**
      * @var Project
      */
     private $project;
@@ -62,13 +58,11 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
 
     public function __construct(
         \ProjectManager $project_manager,
-        \GitRepositoryFactory $repository_factory,
         ListPresenterBuilder $list_presenter_builder,
         IncludeAssets $include_assets,
         EventManager $event_manager
     ) {
         $this->project_manager        = $project_manager;
-        $this->repository_factory     = $repository_factory;
         $this->list_presenter_builder = $list_presenter_builder;
         $this->include_assets         = $include_assets;
         $this->event_manager          = $event_manager;

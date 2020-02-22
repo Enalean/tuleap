@@ -41,10 +41,6 @@ class SVNRefreshAllAccessFilesCommand extends Command
      */
     private $access_file_history_factory;
     /**
-     * @var \SVN_AccessFile_Writer
-     */
-    private $access_file_writer;
-    /**
      * @var AccessFileHistoryCreator
      */
     private $access_file_history_creator;

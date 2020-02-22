@@ -29,9 +29,6 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var  Tracker_HierarchyFactory */
-    private $hierarchy_factory;
-
     /** @var PlanningFactory */
     private $planning_factory;
 
@@ -50,9 +47,6 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    /** @var PFUser */
-    private $user;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -61,10 +55,6 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
         $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(12);
         $this->tracker->shouldReceive('getProject')->andReturn($project);
-
-        $this->user = new PFUser(['language_id' => 'en']);
-
-        $this->hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);
         $this->kanban_factory    = \Mockery::spy(\AgileDashboard_KanbanFactory::class);
         $this->hierarchy         = \Mockery::spy(\Tracker_Hierarchy::class);

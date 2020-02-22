@@ -79,11 +79,6 @@ class LabelsUpdater
         }
     }
 
-    private function getLabelId(LabelRepresentation $label_representation)
-    {
-        return $label_representation->id;
-    }
-
     private function getOrCreateLabelId(LabelRepresentation $label_representation, $project_id)
     {
         if ($label_representation->id) {
@@ -100,7 +95,12 @@ class LabelsUpdater
     private function getLabelIdsToRemove(LabelsPATCHRepresentation $body)
     {
         $labels_to_remove             = $body->remove ?: array();
-        $array_of_label_ids_to_remove = array_map(array($this, 'getLabelId'), $labels_to_remove);
+        $array_of_label_ids_to_remove = array_map(
+            static function (LabelRepresentation $label_representation) {
+                return $label_representation->id;
+            },
+            $labels_to_remove
+        );
 
         return $array_of_label_ids_to_remove;
     }
@@ -112,7 +112,13 @@ class LabelsUpdater
 
         $this->checkThatUserDoesNotTryToAddEmptyLabels($labels_to_add);
 
-        $array_of_label_ids_to_add = array_map(array($this, 'getOrCreateLabelId'), $labels_to_add, $project_ids);
+        $array_of_label_ids_to_add = array_map(
+            function (LabelRepresentation $label_representation, $project_id) {
+                return $this->getOrCreateLabelId($label_representation, $project_id);
+            },
+            $labels_to_add,
+            $project_ids
+        );
 
         return $array_of_label_ids_to_add;
     }

@@ -86,7 +86,6 @@ class MediawikiAdminController
                     new MediawikiAdminPermissionsPanePresenter(
                         $project,
                         $this->getMappedGroupPresenter($project),
-                        $this->mapper->isDefaultMapping($project),
                         $this->manager->isCompatibilityViewEnabled($project),
                         $read_ugroups,
                         $write_ugroups

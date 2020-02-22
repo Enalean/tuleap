@@ -91,10 +91,6 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
      * @var Mockery\MockInterface|\Tracker
      */
     private $sprint_tracker;
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElement_Field_Date
-     */
-    private $start_date_field;
 
     protected function setUp(): void
     {

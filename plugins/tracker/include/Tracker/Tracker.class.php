@@ -781,7 +781,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $action = new Tracker_Action_CreateArtifact(
                     $this,
                     $this->getTrackerArtifactFactory(),
-                    $this->getTrackerFactory(),
                     $this->getFormElementFactory()
                 );
                 $action->process($layout, $request, $current_user);

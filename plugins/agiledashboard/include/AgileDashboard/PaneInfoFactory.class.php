@@ -26,29 +26,18 @@ use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
  */
 class AgileDashboard_PaneInfoFactory
 {
-
-    /** @var PFUser */
-    private $user;
-
     /** @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder */
     private $submilestone_finder;
 
-    /** @var string */
-    private $theme_path;
-
     public function __construct(
-        PFUser $user,
-        AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
-        $theme_path
+        AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder
     ) {
-        $this->user                         = $user;
         $this->submilestone_finder          = $submilestone_finder;
-        $this->theme_path                   = $theme_path;
     }
 
     public function getDetailsPaneInfo(Planning_Milestone $milestone)
     {
-        return new DetailsPaneInfo($milestone, $this->theme_path);
+        return new DetailsPaneInfo($milestone);
     }
 
     public function getPlanningV2PaneInfo(Planning_Milestone $milestone)
@@ -58,6 +47,6 @@ class AgileDashboard_PaneInfoFactory
             return;
         }
 
-        return new PlanningV2PaneInfo($milestone, $this->theme_path, $submilestone_tracker);
+        return new PlanningV2PaneInfo($milestone, $submilestone_tracker);
     }
 }

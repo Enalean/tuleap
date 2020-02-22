@@ -208,19 +208,6 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject
         $this->update($sql);
     }
 
-    private function insertDefaultValuesIsNoneForMsbFields($tv3_id, $tv5_id)
-    {
-        $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
-                SELECT f.id, old.default_value
-                FROM tracker_field AS f
-                    INNER JOIN artifact_field AS old ON (
-                        f.old_id = old.field_id AND
-                        f.tracker_id = $tv5_id AND old.group_artifact_id = $tv3_id AND
-                        f.formElement_type = 'msb' AND
-                        old.default_value = 100)";
-        $this->update($sql);
-    }
-
     private function insertMultipleDefaultValuesForStaticMsbFields($tv3_id, $tv5_id)
     {
         $sql = "SELECT f.id, old.default_value

@@ -561,11 +561,8 @@ class GTextTable
 {
     public $iCells = array(); // Need to be public since they are used by the cell
     public $iSize=array(0,0); // Need to be public since they are used by the cell
-    private $iWidth=0;
-    private $iHeight=0;
     private $iColWidth=null;
     private $iRowHeight=null;
-    private $iImg=null;
     private $iXPos=0;
     private $iYPos=0;
     private $iScaleXPos=null;

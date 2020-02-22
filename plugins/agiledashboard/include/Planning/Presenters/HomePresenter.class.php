@@ -44,9 +44,6 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
     /** @var bool */
     private $kanban_activated;
 
-    /** @var PFUser */
-    private $user;
-
     /** @var bool */
     public $scrum_activated;
 
@@ -66,7 +63,6 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         $period,
         $project_name,
         $kanban_activated,
-        PFUser $user,
         $trackers,
         array $kanban_summary_presenters,
         $scrum_activated,
@@ -82,7 +78,6 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         $this->period                          = $period;
         $this->project_name                    = $project_name;
         $this->kanban_activated                = $kanban_activated;
-        $this->user                            = $user;
         $this->trackers                        = $trackers;
         $this->kanban_summary_presenters       = $kanban_summary_presenters;
         $this->scrum_activated                 = $scrum_activated;

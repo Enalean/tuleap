@@ -38,7 +38,6 @@ use Tracker_Artifact_ChangesetValue_Integer;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
-use Tracker_FormElementFactory;
 use Tuleap\GlobalLanguageMock;
 
 final class TimeframeBuilderTest extends TestCase
@@ -50,7 +49,6 @@ final class TimeframeBuilderTest extends TestCase
      */
     private $builder;
 
-    private $formelement_factory;
     /**
      * @var Mockery\MockInterface|Tracker
      */
@@ -68,12 +66,10 @@ final class TimeframeBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);
         $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
 
         $this->logger  = Mockery::mock(LoggerInterface::class);
         $this->builder = new TimeframeBuilder(
-            $this->formelement_factory,
             $this->semantic_timeframe_builder,
             $this->logger
         );

@@ -205,7 +205,12 @@ class XMLDocmanImport
     private function reorderItemNodes(array $nodes)
     {
         if (isset($this->reorder) && ($this->reorder == true)) {
-            usort($nodes, array('XMLDocmanImport', 'compareItemNodes'));
+            usort(
+                $nodes,
+                static function ($node1, $node2) {
+                    return self::compareItemNodes($node1, $node2);
+                }
+            );
         }
         return $nodes;
     }

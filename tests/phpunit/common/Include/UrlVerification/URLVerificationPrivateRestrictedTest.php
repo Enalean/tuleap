@@ -34,15 +34,11 @@ class URLVerificationPrivateRestrictedTest extends TestCase
     use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
     private $url_verification;
-    private $user;
-    private $project;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->url_verification = new URLVerification();
-        $this->user             = \Mockery::spy(\PFUser::class);
-        $this->project          = \Mockery::spy(\Project::class);
 
         ForgeConfig::set('sys_default_domain', 'default.example.test');
         ForgeConfig::set('sys_https_host', 'default');

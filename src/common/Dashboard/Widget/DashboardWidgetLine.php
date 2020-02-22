@@ -23,10 +23,7 @@ namespace Tuleap\Dashboard\Widget;
 class DashboardWidgetLine
 {
     private $id;
-    private $dashboard_id;
-    private $dashboard_type;
     private $layout;
-    private $rank;
 
     /**
      * @var DashboardWidgetColumn[]
@@ -35,17 +32,11 @@ class DashboardWidgetLine
 
     public function __construct(
         $id,
-        $dashboard_id,
-        $dashboard_type,
         $layout,
-        $rank,
         array $widget_columns
     ) {
         $this->id             = $id;
-        $this->dashboard_id   = $dashboard_id;
-        $this->dashboard_type = $dashboard_type;
         $this->layout         = $layout;
-        $this->rank           = $rank;
         $this->widget_columns = $widget_columns;
     }
 
