@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\HudsonGit\Job\ProjectJobDao;
+
 class JenkinsServerDeleter
 {
     /**
@@ -29,13 +32,31 @@ class JenkinsServerDeleter
      */
     private $jenkins_server_dao;
 
-    public function __construct(JenkinsServerDao $jenkins_server_dao)
-    {
-        $this->jenkins_server_dao = $jenkins_server_dao;
+    /**
+     * @var ProjectJobDao
+     */
+    private $project_job_dao;
+
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
+
+    public function __construct(
+        JenkinsServerDao $jenkins_server_dao,
+        ProjectJobDao $project_job_dao,
+        DBTransactionExecutor $transaction_executor
+    ) {
+        $this->jenkins_server_dao   = $jenkins_server_dao;
+        $this->project_job_dao      = $project_job_dao;
+        $this->transaction_executor = $transaction_executor;
     }
 
     public function deleteServer(JenkinsServer $jenkins_server): void
     {
-        $this->jenkins_server_dao->deleteJenkinsServer($jenkins_server->getId());
+        $this->transaction_executor->execute(function () use ($jenkins_server) {
+            $this->project_job_dao->deleteLogsOfServer($jenkins_server->getId());
+            $this->jenkins_server_dao->deleteJenkinsServer($jenkins_server->getId());
+        });
     }
 }

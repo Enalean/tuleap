@@ -25,35 +25,67 @@
 namespace Tuleap\HudsonGit\Job;
 
 use GitRepository;
+use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 
 class JobManager
 {
-    private $dao;
+    /**
+     * @var JobDao
+     */
+    private $job_dao;
 
-    public function __construct(JobDao $dao)
+    /**
+     * @var ProjectJobDao
+     */
+    private $project_job_dao;
+
+    public function __construct(JobDao $job_dao, ProjectJobDao $project_job_dao)
     {
-        $this->dao = $dao;
+        $this->job_dao         = $job_dao;
+        $this->project_job_dao = $project_job_dao;
     }
 
+    /**
+     * @throws CannotCreateJobException
+     */
     public function create(Job $job)
     {
-        $id = $this->dao->create($job);
+        $id = $this->job_dao->create($job);
         if (! $id) {
             throw new CannotCreateJobException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
         }
     }
 
+    /**
+     * @throws CannotCreateJobException
+     */
+    public function createJobLogForProject(JenkinsServer $jenkins_server, Job $job)
+    {
+        if ((int) $jenkins_server->getProject()->getID() !== (int) $job->getRepository()->getProject()->getID()) {
+            throw new CannotCreateJobException(
+                dgettext("tuleap-hudson_git", "Provided job does not belong to the jenkins server's project.")
+            );
+        }
+
+        $this->project_job_dao->create(
+            $jenkins_server->getId(),
+            $job->getRepository()->getId(),
+            $job->getPushDate(),
+            $job->getJobUrl()
+        );
+    }
+
     public function getJobByRepository(GitRepository $repository)
     {
         $jobs = array();
-        foreach ($this->dao->searchJobsByRepositoryId($repository->getId()) as $row) {
+        foreach ($this->job_dao->searchJobsByRepositoryId($repository->getId()) as $row) {
             $jobs[] = $this->instantiateFromRow($row, $repository);
         }
 
         return $jobs;
     }
 
-    public function instantiateFromRow(array $row, GitRepository $repository)
+    private function instantiateFromRow(array $row, GitRepository $repository)
     {
         return new Job(
             $repository,

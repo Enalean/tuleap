@@ -122,6 +122,7 @@ class HookTriggerControllerTest extends TestCase
 
         $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);
         $this->job_manager->shouldReceive('create')->times(2);
+        $this->job_manager->shouldReceive('createJobLogForProject')->never();
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('error')->never();
@@ -154,6 +155,7 @@ class HookTriggerControllerTest extends TestCase
 
         $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);
         $this->job_manager->shouldReceive('create')->never();
+        $this->job_manager->shouldReceive('createJobLogForProject')->times(2);
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('error')->never();

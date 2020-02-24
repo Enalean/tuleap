@@ -52,6 +52,9 @@ msgstr ""
 msgid "No Jenkins server configured yet."
 msgstr "Aucun serveur Jenkins n'a été configuré."
 
+msgid "Provided job does not belong to the jenkins server's project."
+msgstr "Le job et le serveur Jenkins ne sont pas dans le même projet."
+
 msgid "Remove"
 msgstr "Enlever"
 

@@ -26,6 +26,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Tuleap\HudsonGit\Job\ProjectJobDao;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class JenkinsServerDeleterTest extends TestCase
 {
@@ -39,21 +41,29 @@ class JenkinsServerDeleterTest extends TestCase
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerDao
      */
-    private $git_jenkins_administration_server_dao;
+    private $jenkins_server_dao;
 
     /**
      * @var JenkinsServer
      */
     private $jenkins_server;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectJobDao
+     */
+    private $project_job_dao;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->git_jenkins_administration_server_dao = Mockery::mock(JenkinsServerDao::class);
+        $this->jenkins_server_dao = Mockery::mock(JenkinsServerDao::class);
+        $this->project_job_dao    = Mockery::mock(ProjectJobDao::class);
 
         $this->deleter = new JenkinsServerDeleter(
-            $this->git_jenkins_administration_server_dao
+            $this->jenkins_server_dao,
+            $this->project_job_dao,
+            new DBTransactionExecutorPassthrough()
         );
 
         $this->jenkins_server = new JenkinsServer(
@@ -65,7 +75,8 @@ class JenkinsServerDeleterTest extends TestCase
 
     public function testItDeletesAJenkinsServer(): void
     {
-        $this->git_jenkins_administration_server_dao->shouldReceive('deleteJenkinsServer')->once();
+        $this->project_job_dao->shouldReceive('deleteLogsOfServer')->with(1)->once();
+        $this->jenkins_server_dao->shouldReceive('deleteJenkinsServer')->with(1)->once();
 
         $this->deleter->deleteServer($this->jenkins_server);
     }
