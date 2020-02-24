@@ -26,6 +26,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\XML\Import\NodeImporter;
+use Tuleap\Docman\XML\Import\PostFolderImporter;
 use XML_RNGValidator;
 
 class XMLImporter
@@ -76,6 +77,7 @@ class XMLImporter
             return;
         }
 
-        $this->node_importer->import($xml_docman->item, $parent_item);
+        $folder_importer = new PostFolderImporter();
+        $folder_importer->postImport($this->node_importer, $xml_docman->item, $parent_item);
     }
 }
