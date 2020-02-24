@@ -127,7 +127,8 @@ class hudson_gitPlugin extends Plugin
             $xzibit = new GitWebhooksSettingsEnhancer(
                 new Hook\HookDao(),
                 new JobManager(new JobDao()),
-                $this->getCSRF()
+                $this->getCSRF(),
+                self::getJenkinsServerFactory()
             );
             $xzibit->pimp($params);
         }
@@ -148,10 +149,7 @@ class hudson_gitPlugin extends Plugin
         return new DeleteController(
             ProjectManager::instance(),
             self::getGitPermissionsManager(),
-            new JenkinsServerFactory(
-                new JenkinsServerDao(),
-                ProjectManager::instance()
-            ),
+            self::getJenkinsServerFactory(),
             new JenkinsServerDeleter(
                 new JenkinsServerDao()
             ),
@@ -188,10 +186,7 @@ class hudson_gitPlugin extends Plugin
             ProjectManager::instance(),
             self::getGitPermissionsManager(),
             $git_plugin->getMirrorDataMapper(),
-            new JenkinsServerFactory(
-                new JenkinsServerDao(),
-                ProjectManager::instance()
-            ),
+            self::getJenkinsServerFactory(),
             $git_plugin->getHeaderRenderer(),
             TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates/git-administration'),
             $this->getIncludeAssets()
@@ -282,5 +277,13 @@ class hudson_gitPlugin extends Plugin
         }
 
         $event->addExternalPanePresenter(AdministrationPaneBuilder::buildPane($event->getProject()));
+    }
+
+    private static function getJenkinsServerFactory(): JenkinsServerFactory
+    {
+        return new JenkinsServerFactory(
+            new JenkinsServerDao(),
+            ProjectManager::instance()
+        );
     }
 }

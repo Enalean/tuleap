@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\HudsonGit;
 
+use GitRepository;
+use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Hook\HookDao;
 use Tuleap\HudsonGit\Hook\ModalsPresenter;
 use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
@@ -49,18 +51,40 @@ class GitWebhooksSettingsEnhancer
      */
     private $csrf;
 
-    public function __construct(HookDao $dao, JobManager $job_manager, CSRFSynchronizerToken $csrf)
-    {
-        $this->dao         = $dao;
-        $this->csrf        = $csrf;
-        $this->job_manager = $job_manager;
+    /**
+     * @var JenkinsServerFactory
+     */
+    private $jenkins_server_factory;
+
+    public function __construct(
+        HookDao $dao,
+        JobManager $job_manager,
+        CSRFSynchronizerToken $csrf,
+        JenkinsServerFactory $jenkins_server_factory
+    ) {
+        $this->dao                    = $dao;
+        $this->csrf                   = $csrf;
+        $this->job_manager            = $job_manager;
+        $this->jenkins_server_factory = $jenkins_server_factory;
     }
 
     public function pimp(array $params)
     {
         $repository = $params['repository'];
+        assert($repository instanceof GitRepository);
 
         $params['description'] = $GLOBALS['Language']->getText('plugin_hudson_git', 'hooks_desc');
+
+        $project = $repository->getProject();
+        $nb_project_jenkins_server = count($this->jenkins_server_factory->getJenkinsServerOfProject($project));
+        if ($nb_project_jenkins_server > 0) {
+            $params['additional_description'] = dngettext(
+                'tuleap-hudson_git',
+                'A jenkins server has been defined globally for the project and will be triggered after git pushes.',
+                'Some jenkins servers have been defined globally for the project and will be triggered after git pushes.',
+                $nb_project_jenkins_server
+            );
+        }
 
         $url = '';
         $dar = $this->dao->searchById($repository->getId());

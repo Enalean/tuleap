@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,10 +39,16 @@ class WebhookSettingsPresenter
     public $btn_cancel;
     public $csrf_token;
 
+    /**
+     * @var string
+     */
+    public $additional_description;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
         $description,
+        string $additional_description,
         array $create_buttons,
         array $sections,
         WebhookModalPresenter $create_modal,
@@ -68,5 +74,7 @@ class WebhookSettingsPresenter
 
         $this->btn_close       = $GLOBALS['Language']->getText('global', 'btn_close');
         $this->btn_cancel      = $GLOBALS['Language']->getText('global', 'btn_cancel');
+
+        $this->additional_description = $additional_description;
     }
 }
