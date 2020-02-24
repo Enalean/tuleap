@@ -1655,7 +1655,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             ),
             new XML_RNGValidator()
         );
-        $xml_importer->import($params['xml_content']->docman, $current_user);
+        $xml_importer->import($params['xml_content']->docman);
 
         $logger->info('Import completed');
     }

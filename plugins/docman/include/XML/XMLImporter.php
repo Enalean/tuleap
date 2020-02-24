@@ -62,7 +62,7 @@ class XMLImporter
         $this->rng_validator = $rng_validator;
     }
 
-    public function import(SimpleXMLElement $xml_docman, \PFUser $user): void
+    public function import(SimpleXMLElement $xml_docman): void
     {
         $this->rng_validator->validate(
             $xml_docman,
@@ -76,6 +76,6 @@ class XMLImporter
             return;
         }
 
-        $this->node_importer->import($xml_docman->item, $parent_item, $user);
+        $this->node_importer->import($xml_docman->item, $parent_item);
     }
 }

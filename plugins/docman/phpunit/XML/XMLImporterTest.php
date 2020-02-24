@@ -26,7 +26,6 @@ use Docman_Item;
 use Docman_ItemFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
@@ -46,7 +45,6 @@ class XMLImporterTest extends TestCase
         $node_importer = Mockery::mock(NodeImporter::class);
         $rng_validator = Mockery::mock(XML_RNGValidator::class);
 
-        $user = Mockery::mock(PFUser::class);
         $node = new SimpleXMLElement(
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
@@ -71,12 +69,11 @@ class XMLImporterTest extends TestCase
                         return (string) $node['type'] === 'folder';
                     }
                 ),
-                $parent_item,
-                $user
+                $parent_item
             )->once();
 
         $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
-        $importer->import($node, $user);
+        $importer->import($node);
     }
 
     public function testItDoesNotImportWhenThereIsNoRoot(): void
@@ -87,7 +84,6 @@ class XMLImporterTest extends TestCase
         $node_importer = Mockery::mock(NodeImporter::class);
         $rng_validator = Mockery::mock(XML_RNGValidator::class);
 
-        $user = Mockery::mock(PFUser::class);
         $node = new SimpleXMLElement(
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
@@ -106,7 +102,7 @@ class XMLImporterTest extends TestCase
         $logger->shouldReceive('error')->with('Unable to find a root element in project #113')->once();
 
         $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
-        $importer->import($node, $user);
+        $importer->import($node);
     }
 
     public function testItRaisesParseExceptionWhenXMLIsInvalid(): void
@@ -117,7 +113,6 @@ class XMLImporterTest extends TestCase
         $node_importer = Mockery::mock(NodeImporter::class);
         $rng_validator = Mockery::mock(XML_RNGValidator::class);
 
-        $user = Mockery::mock(PFUser::class);
         $node = new SimpleXMLElement(
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
@@ -134,6 +129,6 @@ class XMLImporterTest extends TestCase
 
         $this->expectException(\XML_ParseException::class);
         $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
-        $importer->import($node, $user);
+        $importer->import($node);
     }
 }
