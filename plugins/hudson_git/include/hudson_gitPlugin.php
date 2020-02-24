@@ -237,9 +237,15 @@ class hudson_gitPlugin extends Plugin
                     new JenkinsCSRFCrumbRetriever($http_client, $request_factory)
                 ),
                 $this->getLogger(),
-                new JobManager(new JobDao())
+                new JobManager(new JobDao()),
+                self::getJenkinsServerFactory()
             );
-            $controller->trigger($params['repository'], $params['newrev']);
+
+            $controller->trigger(
+                $params['repository'],
+                $params['newrev'],
+                new DateTimeImmutable()
+            );
         }
     }
 
