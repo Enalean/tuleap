@@ -1,7 +1,7 @@
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("BacklogItemService", () => {
     let mockBackend, wrapPromise, BacklogItemService, BacklogItemFactory;

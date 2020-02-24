@@ -2,7 +2,7 @@ import planning_module from "../app.js";
 import _ from "lodash";
 import angular from "angular";
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("DroppedService", () => {
     let $q,
