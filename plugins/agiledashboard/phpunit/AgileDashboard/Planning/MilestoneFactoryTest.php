@@ -62,10 +62,6 @@ class MilestoneFactoryTest extends TestCase
      */
     private $planning;
     /**
-     * @var Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
      * @var Mockery\MockInterface|Tracker_Artifact
      */
     private $artifact_closed_passed;
@@ -179,7 +175,6 @@ class MilestoneFactoryTest extends TestCase
             $planning_factory,
             $artifact_factory,
             $formelement_factory,
-            $tracker_factory,
             $status_counter,
             $planning_permissions_manager,
             $milestone_dao,

@@ -59,7 +59,6 @@ class Gitolite3LogParserTest extends \PHPUnit\Framework\TestCase
         $this->user_dao       = \Mockery::spy(UserDao::class);
         $this->parser         = new Gitolite3LogParser(
             $this->logger,
-            \Mockery::spy(\System_Command::class),
             $this->user_validator,
             $this->history_dao,
             $this->factory,

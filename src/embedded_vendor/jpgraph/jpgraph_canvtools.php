@@ -23,7 +23,6 @@ define('CORNER_BOTTOMLEFT', 3);
 
 class CanvasScale
 {
-    private $g;
     private $w;
     private $h;
     private $ixmin=0;
@@ -33,7 +32,6 @@ class CanvasScale
 
     public function __construct($graph, $xmin = 0, $xmax = 10, $ymin = 0, $ymax = 10)
     {
-        $this->g = $graph;
         $this->w = $graph->img->width;
         $this->h = $graph->img->height;
         $this->ixmin = $xmin;

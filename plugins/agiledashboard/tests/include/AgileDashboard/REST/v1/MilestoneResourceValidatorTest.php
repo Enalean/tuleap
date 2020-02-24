@@ -52,7 +52,6 @@ class MilestoneResourceValidatorTest extends TuleapTestCase
         $this->todo_collection                = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $this->planning_factory               = \Mockery::spy(\PlanningFactory::class);
         $this->tracker_artifact_factory       = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $tracker_form_element_factory         = \Mockery::spy(\Tracker_FormElementFactory::class);
         $backlog_factory                      = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $milestone_factory                    = \Mockery::spy(\Planning_MilestoneFactory::class);
         $backlog_row_collection_factory       = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
@@ -69,7 +68,6 @@ class MilestoneResourceValidatorTest extends TuleapTestCase
         $this->milestone_resource_validator = new MilestoneResourceValidator(
             $this->planning_factory,
             $this->tracker_artifact_factory,
-            $tracker_form_element_factory,
             $backlog_factory,
             $milestone_factory,
             $backlog_row_collection_factory,

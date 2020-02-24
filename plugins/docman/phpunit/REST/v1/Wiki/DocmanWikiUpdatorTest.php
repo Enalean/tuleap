@@ -31,8 +31,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionCreator;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
@@ -62,18 +60,6 @@ class DocmanWikiUpdatorTest extends TestCase
      */
     private $transaction_executor;
     /**
-     * @var Mockery\MockInterface|ItemStatusMapper
-     */
-    private $status_mapper;
-    /**
-     * @var Mockery\MockInterface|HardcodedMetadataObsolescenceDateRetriever
-     */
-    private $date_retriever;
-    /**
-     * @var \Docman_PermissionsManager|Mockery\MockInterface
-     */
-    private $docman_permissions_manager;
-    /**
      * @var DocmanWikiVersionCreator
      */
     public $wiki_updator;
@@ -87,9 +73,6 @@ class DocmanWikiUpdatorTest extends TestCase
         $this->event_manager              = Mockery::mock(\EventManager::class);
         $this->updator                    = Mockery::mock(DocmanItemUpdator::class);
         $this->transaction_executor       = Mockery::mock(DBTransactionExecutor::class);
-        $this->status_mapper              = Mockery::mock(ItemStatusMapper::class);
-        $this->date_retriever             = Mockery::mock(HardcodedMetadataObsolescenceDateRetriever::class);
-        $this->docman_permissions_manager = Mockery::mock(\Docman_PermissionsManager::class);
 
         $this->wiki_updator = new DocmanWikiVersionCreator(
             $this->version_factory,

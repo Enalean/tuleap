@@ -21,33 +21,13 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
-use EventManager;
-use FRSReleaseFactory;
-use PermissionsManager;
 use PFUser;
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\Details\MembersPresenterBuilder;
 
 class ProjectUGroupPresenterBuilder
 {
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var FRSReleaseFactory
-     */
-    private $release_factory;
-    /**
-     * @var Codendi_HTMLPurifier
-     */
-    private $html_purifier;
     /**
      * @var MembersPresenterBuilder
      */
@@ -62,18 +42,10 @@ class ProjectUGroupPresenterBuilder
     private $permissions_delegation_builder;
 
     public function __construct(
-        PermissionsManager $permissions_manager,
-        EventManager $event_manager,
-        FRSReleaseFactory $release_factory,
         BindingPresenterBuilder $binding_builder,
         MembersPresenterBuilder $members_builder,
         PermissionsDelegationPresenterBuilder $permissions_delegation_builder
     ) {
-        $this->html_purifier = Codendi_HTMLPurifier::instance();
-
-        $this->permissions_manager  = $permissions_manager;
-        $this->event_manager        = $event_manager;
-        $this->release_factory      = $release_factory;
         $this->binding_builder      = $binding_builder;
         $this->members_builder      = $members_builder;
 

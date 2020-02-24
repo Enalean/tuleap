@@ -31,10 +31,6 @@ class ChangesetValueComputedTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Artifact_Changeset
      */
     private $changeset;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_FormElement_Field_Computed
@@ -46,7 +42,6 @@ class ChangesetValueComputedTest extends TestCase
         parent::setUp();
 
         $this->field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
-        $this->user  = Mockery::mock(\PFUser::class);
 
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
     }

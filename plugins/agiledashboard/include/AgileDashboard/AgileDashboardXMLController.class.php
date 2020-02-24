@@ -28,18 +28,6 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 class AgileDashboard_XMLController extends MVC2_PluginController
 {
     /**
-     *
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
-    /**
-     *
-     * @var string
-     */
-    private $plugin_theme_path;
-
-    /**
      * @var PlanningFactory
      */
     private $planning_factory;
@@ -76,21 +64,17 @@ class AgileDashboard_XMLController extends MVC2_PluginController
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
-        Planning_MilestoneFactory $milestone_factory,
         XML_RNGValidator $xml_rng_validator,
         AgileDashboard_XMLExporter $agiledashboard_xml_exporter,
         AgileDashboard_XMLImporter $agiledashboard_xml_importer,
         Planning_RequestValidator $planning_request_validator,
         XMLImporter $explicit_backlog_xml_import,
-        $plugin_theme_path,
         ExternalFieldsExtractor $external_field_extractor
     ) {
         parent::__construct('agiledashboard', $request);
 
         $this->group_id                    = $request->getValidated('project_id', 'uint');
         $this->planning_factory            = $planning_factory;
-        $this->milestone_factory           = $milestone_factory;
-        $this->plugin_theme_path           = $plugin_theme_path;
         $this->xml_rng_validator           = $xml_rng_validator;
         $this->agiledashboard_xml_exporter = $agiledashboard_xml_exporter;
         $this->agiledashboard_xml_importer = $agiledashboard_xml_importer;

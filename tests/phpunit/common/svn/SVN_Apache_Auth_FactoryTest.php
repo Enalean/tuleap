@@ -29,7 +29,6 @@ class SVN_Apache_Auth_FactoryTest extends TestCase
     private $cache_parameters;
     private $factory;
     private $project_info;
-    private $mod_from_plugin;
 
     /**
      * @var SVN_Apache

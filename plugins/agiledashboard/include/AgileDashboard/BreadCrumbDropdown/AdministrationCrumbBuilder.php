@@ -26,17 +26,6 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 
 class AdministrationCrumbBuilder
 {
-    /** @var string */
-    private $plugin_path;
-
-    /**
-     * @param string $plugin_path
-     */
-    public function __construct($plugin_path)
-    {
-        $this->plugin_path = $plugin_path;
-    }
-
     public function build(Project $project)
     {
         $admin_url = AGILEDASHBOARD_BASE_URL . '/?' .

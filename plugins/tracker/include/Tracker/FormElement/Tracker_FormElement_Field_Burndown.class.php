@@ -836,10 +836,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function getTimeframeBuilder() : TimeframeBuilder
     {
-        $form_element_factory = $this->getFormElementFactory();
-
         return new TimeframeBuilder(
-            $form_element_factory,
             $this->getSemanticTimeframeBuilder(),
             $this->getLogger()
         );

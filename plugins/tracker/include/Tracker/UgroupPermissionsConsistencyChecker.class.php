@@ -69,10 +69,20 @@ class Tracker_UgroupPermissionsConsistencyChecker
             return;
         }
 
-        $template_ugroups_names = array_map(array($this, 'extractUGroupName'), $ugroups);
+        $template_ugroups_names = array_map(
+            static function (ProjectUGroup $ugroup) {
+                return $ugroup->getName();
+            },
+            $ugroups
+        );
 
         $target_ugroups = $this->ugroup_manager->getStaticUGroups($target_project);
-        $target_ugroups_names = array_map(array($this, 'extractUGroupName'), $target_ugroups);
+        $target_ugroups_names = array_map(
+            static function (ProjectUGroup $ugroup) {
+                return $ugroup->getName();
+            },
+            $target_ugroups
+        );
 
         $diff = array_diff($template_ugroups_names, $target_ugroups_names);
         if ($diff) {
@@ -80,10 +90,5 @@ class Tracker_UgroupPermissionsConsistencyChecker
         } else {
             $this->messenger->ugroupsAreTheSame($template_ugroups_names);
         }
-    }
-
-    private function extractUGroupName(ProjectUGroup $ugroup)
-    {
-        return $ugroup->getName();
     }
 }

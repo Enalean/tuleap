@@ -37,16 +37,6 @@ class HookConfigCheckerTest extends TestCase
     private $repository;
 
     /**
-     * @var HookConfigSanitizer
-     */
-    private $hook_config_sanitizer;
-
-    /**
-     * @var RepositoryManager
-     */
-    private $repository_manager;
-
-    /**
      * @var HookConfigChecker
      */
     private $config_hook_checker;
@@ -55,13 +45,11 @@ class HookConfigCheckerTest extends TestCase
     {
         parent::setUp();
 
-        $this->repository_manager    = \Mockery::spy(\Tuleap\SVN\Repository\RepositoryManager::class);
         $this->config_hook_retriever = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class);
         $this->config_hook_checker   = new HookConfigChecker($this->config_hook_retriever);
 
         $project                     = \Mockery::mock(\Project::class);
         $this->repository            = new Repository(12, 'repo01', '', '', $project);
-        $this->hook_config_sanitizer = new HookConfigSanitizer();
     }
 
     public function testItReturnsTrueWhenCommitMessageParameterHaveChanged(): void

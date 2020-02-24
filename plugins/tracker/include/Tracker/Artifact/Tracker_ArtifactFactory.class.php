@@ -447,12 +447,12 @@ class Tracker_ArtifactFactory
 
     private function getArtifactIds(array $artifacts)
     {
-        return array_map(array($this, 'getArtifactId'), $artifacts);
-    }
-
-    private function getArtifactId(Tracker_Artifact $artifact)
-    {
-        return $artifact->getId();
+        return array_map(
+            static function (Tracker_Artifact $artifact) {
+                return $artifact->getId();
+            },
+            $artifacts
+        );
     }
 
     /**
@@ -470,7 +470,7 @@ class Tracker_ArtifactFactory
         }
 
         $sorted_artifacts = array();
-        $ids              = array_map(array($this, 'getArtifactId'), $artifacts);
+        $ids              = $this->getArtifactIds($artifacts);
 
         if ($ids) {
             $artifacts        = array_combine($ids, $artifacts);

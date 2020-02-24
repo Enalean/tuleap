@@ -16,8 +16,6 @@
 //===================================================
 class PiePlot3D extends PiePlot
 {
-    private $labelhintcolor="red";
-    private $showlabelhint=true;
     private $angle=50;
     private $edgecolor="";
     private $edgeweight=1;
@@ -153,18 +151,6 @@ class PiePlot3D extends PiePlot
     public function SetLabelMargin($m)
     {
         $this->value->SetMargin($m);
-    }
-
-    // Show a thin line from the pie to the label for a specific slice
-    public function ShowLabelHint($f = true)
-    {
-        $this->showlabelhint=$f;
-    }
-
-    // Set color of hint line to label for each slice
-    public function SetLabelHintColor($c)
-    {
-        $this->labelhintcolor=$c;
     }
 
     public function SetHeight($aHeight)

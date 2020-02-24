@@ -41,7 +41,6 @@ use Tracker_Artifact_XMLImport;
 use Tracker_ArtifactCreator;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
@@ -114,11 +113,6 @@ class XmlImportTest extends TestCase
     private $logger;
 
     /**
-     * @var Response
-     */
-    private $response;
-
-    /**
      * @var XML_RNGValidator
      */
     private $rng_validator;
@@ -127,11 +121,6 @@ class XmlImportTest extends TestCase
      * @var Tracker_Artifact_XMLImport
      */
     private $importer;
-
-    /**
-     * @var Tracker_XML_Importer_ArtifactImportedMapping
-     */
-    private $artifacts_id_mapping;
 
     /**
      * @var TrackerXmlFieldsMapping_FromAnotherPlatform
@@ -159,16 +148,6 @@ class XmlImportTest extends TestCase
     private $tracker_formelement_field_string;
 
     /**
-     * @var Tracker_FormElement_Field_Integer
-     */
-    private $tracker_formelement_field_source_id;
-
-    /**
-     * @var Tracker_FormElement_Field_Integer
-     */
-    private $tracker_formelement_field_effort;
-
-    /**
      * @var XMLArtifactSourcePlatformExtractor
      */
     private $xml_artifact_source_platform_extractor;
@@ -193,8 +172,6 @@ class XmlImportTest extends TestCase
         $this->formelement_factory                    = Mockery::mock(Tracker_FormElementFactory::class);
         $this->tracker_artifact_factory               = Mockery::mock(Tracker_ArtifactFactory::class);
         $this->existing_artifact_source_id_extractor  = Mockery::mock(ExistingArtifactSourceIdFromTrackerExtractor::class);
-        $this->tracker_formelement_field_source_id    = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $this->tracker_formelement_field_effort       = Mockery::mock(Tracker_FormElement_Field_Integer::class);
         $this->static_value_dao                       = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
         $this->xml_artifact_source_platform_extractor = Mockery::mock(XMLArtifactSourcePlatformExtractor::class);
         $this->response                               = Mockery::mock(Response::class);

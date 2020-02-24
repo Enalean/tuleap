@@ -43,8 +43,8 @@ class Text
     private $iBoxType = 1; // Which variant of filled box around text we want
 
     // for __get, __set
-    private $_margin;
-    private $_font_size=8; // old. 12
+    private $_margin; // phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedProperty
+    private $_font_size=8; // phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedProperty
 
     //---------------
     // CONSTRUCTOR

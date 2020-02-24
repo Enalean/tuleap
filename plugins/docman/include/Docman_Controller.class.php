@@ -93,7 +93,7 @@ class Docman_Controller extends Controler
         $log_event_adder = new LogEventAdder($event_manager, $this->logger);
         $log_event_adder->addLogEventManagement();
 
-        $notifications_builders = new NotificationBuilders($this->feedback, $this->getProject(), $this->getDefaultUrl());
+        $notifications_builders = new NotificationBuilders($this->feedback, $this->getProject());
         $this->notificationsManager = $notifications_builders->buildNotificationManager();
         $this->notificationsManager_Add  = $notifications_builders->buildNotificationManagerAdd();
         $this->notificationsManager_Delete = $notifications_builders->buildNotificationManagerDelete();

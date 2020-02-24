@@ -24,7 +24,6 @@ use PFUser;
 use Project;
 use Tracker_Artifact;
 use Tracker_ArtifactFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class FolderHierarchicalRepresentationCollectionBuilder
 {
@@ -36,19 +35,13 @@ class FolderHierarchicalRepresentationCollectionBuilder
      * @var Dao
      */
     private $folder_dao;
-    /**
-     * @var NatureIsChildLinkRetriever
-     */
-    private $child_retriever;
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
-        Dao $folder_dao,
-        NatureIsChildLinkRetriever $child_retriever
+        Dao $folder_dao
     ) {
         $this->artifact_factory = $artifact_factory;
         $this->folder_dao       = $folder_dao;
-        $this->child_retriever  = $child_retriever;
     }
 
     /** @return FolderHierarchicalRepresentationCollection */

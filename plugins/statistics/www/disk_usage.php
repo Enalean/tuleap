@@ -105,7 +105,6 @@ $user_details_builder = new DiskUsageUserDetailsPresenterBuilder(
 );
 
 $disk_usage_router = new DiskUsageRouter(
-    $duMgr,
     $disk_usage_services_builder,
     $disk_usage_projects_builder,
     $top_users_builder,

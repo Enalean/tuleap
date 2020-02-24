@@ -161,7 +161,6 @@ class ImportProjectXMLCommand extends Command
         $broker_log  = new BrokerLogger(array($file_logger, $console_logger));
         $builder     = new \User\XML\Import\UsersToBeImportedCollectionBuilder(
             $user_manager,
-            $broker_log,
             $security,
             $xml_validator
         );

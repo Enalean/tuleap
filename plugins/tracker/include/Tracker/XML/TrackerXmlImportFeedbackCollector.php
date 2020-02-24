@@ -27,11 +27,6 @@ use Psr\Log\LoggerInterface;
 class TrackerXmlImportFeedbackCollector
 {
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var string[]
      */
     private $warns = [];
@@ -39,11 +34,6 @@ class TrackerXmlImportFeedbackCollector
      * @var string[]
      */
     private $errors = [];
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
 
     public function getWarnings() : array
     {

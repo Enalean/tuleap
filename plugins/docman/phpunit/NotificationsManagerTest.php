@@ -37,20 +37,11 @@ class Docman_NotificationsManagerTest extends \PHPUnit\Framework\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ILinkUrlProvider
      */
     private $link_url_provider;
-    /**
-     * @var Tuleap\Mail\MailFilter
-     */
-    private $mail_filter;
 
     /**
      * @var Docman_NotificationsManager
      */
     private $notification_manager;
-
-    /**
-     * @var Project
-     */
-    private $project;
 
     /**
      * @var Tuleap\Docman\Notifications\UsersRetriever

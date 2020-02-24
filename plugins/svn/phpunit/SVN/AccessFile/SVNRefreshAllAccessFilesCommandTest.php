@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\AccessControl;
 
-use BackendSVN;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use ProjectManager;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryByProjectCollection;
@@ -44,16 +42,6 @@ class SVNRefreshAllAccessFilesCommandTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AccessFileHistoryFactory
      */
     private $access_file_history_factory;
-
-    /**
-     * @var Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var Mockery\MockInterface|BackendSVN
-     */
-    private $backend_svn;
 
     /**
      * @var Mockery\MockInterface|RepositoryManager

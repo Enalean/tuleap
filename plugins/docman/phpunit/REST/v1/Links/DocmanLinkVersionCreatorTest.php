@@ -33,12 +33,9 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
-use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
 use Tuleap\Docman\Version\LinkVersionDataUpdator;
 
@@ -64,10 +61,6 @@ class DocmanLinkVersionCreatorTest extends TestCase
      */
     private $event_manager;
     /**
-     * @var DocmanLinksValidityChecker
-     */
-    private $links_validity_checker;
-    /**
      * @var \Docman_LinkVersionFactory|Mockery\MockInterface
      */
     private $docman_link_version_factory;
@@ -75,18 +68,6 @@ class DocmanLinkVersionCreatorTest extends TestCase
      * @var Mockery\MockInterface|DBTransactionExecutor
      */
     private $transaction_executor;
-    /**
-     * @var Mockery\MockInterface|ItemStatusMapper
-     */
-    private $status_mapper;
-    /**
-     * @var Mockery\MockInterface|HardcodedMetadataObsolescenceDateRetriever
-     */
-    private $date_retriever;
-    /**
-     * @var \Docman_PermissionsManager|Mockery\MockInterface
-     */
-    private $docman_permissions_manager;
     /**
      * @var DocmanLinkVersionCreator
      */

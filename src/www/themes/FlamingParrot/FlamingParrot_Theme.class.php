@@ -254,8 +254,6 @@ class FlamingParrot_Theme extends Layout
             $current_project_navbar_info,
             $_SERVER['REQUEST_URI'],
             $selected_top_tab,
-            HTTPRequest::instance(),
-            $params['title'],
             $search_form_presenter,
             $this->displayNewAccount(),
             $this->getMOTD(),

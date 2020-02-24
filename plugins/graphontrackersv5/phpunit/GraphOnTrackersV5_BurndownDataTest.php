@@ -36,15 +36,9 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
      * @var GraphOnTrackersV5_Burndown_Data
      */
     private $burndown_data;
-    /**
-     * @var array
-     */
-    private $artifacts_ids;
-
     public function setUp() : void
     {
         parent::setUp();
-        $this->artifacts_ids = array(5215, 5217, 5239, 5241);
         $this->burndown_data = \Mockery::spy(\GraphOnTrackersV5_Burndown_Data::class);
     }
 

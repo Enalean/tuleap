@@ -44,15 +44,10 @@ class GitViews_GitPhpViewer
      * @var GitRepository
      */
     private $repository;
-    /**
-     * @var PFUser
-     */
-    private $current_user;
 
-    public function __construct(GitRepository $repository, PFUser $current_user)
+    public function __construct(GitRepository $repository)
     {
         $this->repository   = $repository;
-        $this->current_user = $current_user;
     }
 
     public function displayContent(HTTPRequest $request)

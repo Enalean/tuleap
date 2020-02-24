@@ -23,7 +23,6 @@ use AgileDashboard_MilestonesCardwallRepresentation;
 use EventManager;
 use Planning_Milestone;
 use PlanningFactory;
-use TrackerFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Project\REST\ProjectReference;
@@ -108,8 +107,7 @@ class MilestoneRepresentation extends MilestoneRepresentationBase
         $finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             \Tracker_HierarchyFactory::instance(),
             PlanningFactory::build(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), PlanningFactory::build()),
-            TrackerFactory::instance()
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), PlanningFactory::build())
         );
         $submilestone_tracker = $finder->findFirstSubmilestoneTracker($milestone);
 

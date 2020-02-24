@@ -106,7 +106,6 @@ class ScrumPresenterBuilder
             $this->getPlanningAdminPresenterList($user, $project, $root_planning_name),
             $group_id,
             $can_create_planning,
-            $tracker_uri,
             $root_planning_name,
             $potential_planning_trackers,
             $scrum_activated,

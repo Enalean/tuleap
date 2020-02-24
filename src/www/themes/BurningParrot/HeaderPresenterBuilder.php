@@ -22,7 +22,6 @@ namespace Tuleap\Theme\BurningParrot;
 
 use Event;
 use EventManager;
-use HTTPRequest;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
@@ -40,9 +39,6 @@ class HeaderPresenterBuilder
 {
     /** @var NavbarPresenterBuilder */
     private $navbar_presenter_builder;
-
-    /** @var HTTPRequest */
-    private $request;
 
     /** @var PFUser */
     private $current_user;
@@ -70,7 +66,6 @@ class HeaderPresenterBuilder
 
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
-        HTTPRequest $request,
         PFUser $current_user,
         $imgroot,
         $title,
@@ -88,7 +83,6 @@ class HeaderPresenterBuilder
         ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
-        $this->request                               = $request;
         $this->current_user                          = $current_user;
         $this->imgroot                               = $imgroot;
         $this->title                                 = $title;
@@ -106,7 +100,6 @@ class HeaderPresenterBuilder
             $this->getPageTitle(),
             $this->imgroot,
             $this->navbar_presenter_builder->build(
-                $this->request,
                 $this->current_user,
                 $this->getExtraTabs(),
                 $this->getHelpMenuItems(),

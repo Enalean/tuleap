@@ -24,8 +24,6 @@ use Service;
 use HTTPRequest;
 use SvnPlugin;
 use TemplateRendererFactory;
-use User_ForgeUserGroupFactory;
-use UserGroupDao;
 use PermissionsManager;
 
 class ServiceSvn extends Service
@@ -49,7 +47,6 @@ class ServiceSvn extends Service
     {
         if (empty($this->permissions_manager)) {
             $this->permissions_manager = new SvnPermissionManager(
-                new User_ForgeUserGroupFactory(new UserGroupDao()),
                 PermissionsManager::instance()
             );
         }

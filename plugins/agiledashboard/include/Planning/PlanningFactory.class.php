@@ -126,26 +126,6 @@ class PlanningFactory
     }
 
     /**
-     * $tracker_mapping = array(1 => 4,
-     *                          2 => 5,
-     *                          3 => 6);
-     *
-     * $factory->filterByKeys($tracker_mapping, array(1, 3))
-     *
-     * => array(1 => 4,
-     *          3 => 6)
-     *
-     * @param array $array The array to filter.
-     * @param array $keys  The keys used for filtering.
-     *
-     * @return array
-     */
-    private function filterByKeys(array $array, array $keys)
-    {
-        return array_intersect_key($array, array_flip($keys));
-    }
-
-    /**
      * Get a list of planning defined in a group_id
      *
      * @param PFUser $user     The user who will see the planning
@@ -278,7 +258,12 @@ class PlanningFactory
      */
     private function getLastLevelPlanningTrackersIds($plannings)
     {
-        $tracker_ids = array_map(array($this, 'getPlanningTrackerId'), $plannings);
+        $tracker_ids = array_map(
+            static function (Planning $planning) {
+                return $planning->getPlanningTrackerId();
+            },
+            $plannings
+        );
 
         if (count($plannings) > 1) {
             $hierarchy = $this->tracker_factory->getHierarchy($tracker_ids);
@@ -333,7 +318,12 @@ class PlanningFactory
         if (! $plannings) {
             return;
         }
-        $tracker_ids = array_map(array($this, 'getPlanningTrackerId'), $plannings);
+        $tracker_ids = array_map(
+            static function (Planning $planning) {
+                return $planning->getPlanningTrackerId();
+            },
+            $plannings
+        );
         $hierarchy   = $this->tracker_factory->getHierarchy($tracker_ids);
         $tmp_tracker_ids_to_sort_plannings = $hierarchy->sortTrackerIds($tracker_ids);
         usort($plannings, static function (Planning $a, Planning $b) use ($tmp_tracker_ids_to_sort_plannings) : int {
@@ -342,11 +332,6 @@ class PlanningFactory
                 array_search($b->getPlanningTrackerId(), $tmp_tracker_ids_to_sort_plannings)
             );
         });
-    }
-
-    private function getPlanningTrackerId(Planning $planning)
-    {
-        return $planning->getPlanningTrackerId();
     }
 
     /**

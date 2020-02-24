@@ -45,8 +45,7 @@ class DocmanItemsEventAdder
         $feedback                         = new NullResponseFeedbackWrapper();
         $notifications_builders           = new NotificationBuilders(
             $feedback,
-            $project,
-            '/plugins/docman/?group_id=' . urlencode((string) $project->getID())
+            $project
         );
         $notification_manager             = $notifications_builders->buildNotificationManager();
         $notification_manager_add         = $notifications_builders->buildNotificationManagerAdd();

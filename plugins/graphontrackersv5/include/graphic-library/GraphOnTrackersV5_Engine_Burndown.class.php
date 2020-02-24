@@ -47,7 +47,6 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine
         $burndown->setDescription($this->description);
         $burndown->setWidth($this->width);
         $burndown->setHeight($this->height);
-        $burndown->setStartDate($this->start_date);
         $burndown->setDuration($this->duration);
 
         $this->graph = $burndown->buildGraph();

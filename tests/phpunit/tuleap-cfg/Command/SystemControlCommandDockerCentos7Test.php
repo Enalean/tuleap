@@ -29,16 +29,10 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Process\Process;
 
 class SystemControlCommandDockerCentos7Test extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var MockInterface|Process
-     */
-    private $process;
     /**
      * @var MockInterface|ProcessFactory
      */
@@ -57,7 +51,6 @@ class SystemControlCommandDockerCentos7Test extends TestCase
     protected function setUp() : void
     {
         $this->root            = vfsStream::setup('slash');
-        $this->process         = \Mockery::mock(Process::class, [ 'isSuccessful' => true, 'getExitCode' => 0 ]);
         $this->process_factory = \Mockery::mock(ProcessFactory::class);
         $this->control_command = new SystemControlCommand($this->process_factory, $this->root->url());
         $this->command_tester  = new CommandTester($this->control_command);

@@ -348,7 +348,6 @@ class GanttGraph extends Graph
     public $scale;  // Public accessible
     public $hgrid=null;
     private $iObj=array();    // Gantt objects
-    private $iLabelHMarginFactor=0.2; // 10% margin on each side of the labels
     private $iLabelVMarginFactor=0.4; // 40% margin on top and bottom of label
     private $iLayout=GANTT_FROMTOP; // Could also be GANTT_EVEN
     private $iSimpleFont = FF_FONT1;
@@ -3403,7 +3402,6 @@ define('GANTT_HGRID2', 1);
 //===================================================
 class HorizontalGridLine
 {
-    private $iGraph=null;
     private $iRowColor1 = '';
     private $iRowColor2 = '';
     private $iShow=false;
@@ -3499,7 +3497,6 @@ class GanttBar extends GanttPlotObject
     private $iShadow=false;
     private $iShadowColor="darkgray";
     private $iShadowWidth=1;
-    private $iShadowFrame="black";
     private $iPattern=GANTT_RDIAG;
     private $iPatternColor="blue";
     private $iPatternDensity=95;

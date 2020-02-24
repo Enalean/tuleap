@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest;
 
 use GitRepositoryFactory;
 use TemplateRenderer;
-use ThemeManager;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
@@ -32,10 +31,6 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullrequestDisplayer
 {
-    /**
-     * @var ThemeManager
-     */
-    private $theme_manager;
     /**
      * @var Factory
      */
@@ -58,14 +53,12 @@ class PullrequestDisplayer
     private $repository_factory;
 
     public function __construct(
-        ThemeManager $theme_manager,
         Factory $factory,
         TemplateRenderer $template_renderer,
         MergeSettingRetriever $merge_setting_retriever,
         GitRepositoryHeaderDisplayer $header_displayer,
         GitRepositoryFactory $repository_factory
     ) {
-        $this->theme_manager           = $theme_manager;
         $this->factory                 = $factory;
         $this->template_renderer       = $template_renderer;
         $this->merge_setting_retriever = $merge_setting_retriever;

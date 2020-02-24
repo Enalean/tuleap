@@ -31,7 +31,6 @@ use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use UGroupManager;
 use UserHelper;
 use UserManager;
 use Valid_GroupId;
@@ -39,10 +38,6 @@ use Valid_String;
 
 class BindMembersConfirmController implements DispatchableWithRequest
 {
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
     /**
      * @var LDAP_ProjectGroupManager
      */

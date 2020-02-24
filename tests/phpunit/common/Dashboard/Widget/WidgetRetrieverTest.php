@@ -24,84 +24,11 @@ namespace Tuleap\Dashboard\User;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Dashboard\Widget\DashboardWidget;
-use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
-use Tuleap\Dashboard\Widget\DashboardWidgetLine;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 
 class WidgetRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var DashboardWidgetLine[]
-     */
-    private $lines;
-    /**
-     * @var DashboardWidgetColumn[]
-     */
-    private $line_one_columns;
-    /**
-     * @var DashboardWidget[]
-     */
-    private $line_one_column_two_widgets;
-    /**
-     * @var DashboardWidget[]
-     */
-    private $line_one_column_one_widgets;
-    /**
-     * @var DashboardWidget[]
-     */
-    private $line_one_column_three_widgets;
-    /**
-     * @var DashboardWidget
-     */
-    private $widget_one;
-    /**
-     * @var DashboardWidget
-     */
-    private $widget_two;
-    /**
-     * @var DashboardWidget
-     */
-    private $widget_three;
-    /**
-     * @var DashboardWidget
-     */
-    private $widget_four;
-    /**
-     * @var DashboardWidget
-     */
-    private $widget_five;
-
-    protected function setUp(): void
-    {
-        $this->widget_one   = new DashboardWidget(1, 'image', 10, 1, 0, 0);
-        $this->widget_two   = new DashboardWidget(2, 'image', 11, 2, 0, 0);
-        $this->widget_three = new DashboardWidget(3, 'image', 12, 1, 1, 0);
-        $this->widget_four  = new DashboardWidget(4, 'image', 13, 2, 1, 0);
-        $this->widget_five  = new DashboardWidget(5, 'image', 14, 3, 0, 0);
-
-        $this->line_one_column_one_widgets   = array($this->widget_one, $this->widget_three);
-        $this->line_one_column_two_widgets   = array($this->widget_two, $this->widget_three);
-        $this->line_one_column_three_widgets = array($this->widget_five);
-
-        $this->line_one_columns = array(
-            new DashboardWidgetColumn(1, 1, 0, $this->line_one_column_one_widgets),
-            new DashboardWidgetColumn(2, 1, 1, $this->line_one_column_two_widgets),
-            new DashboardWidgetColumn(3, 1, 2, $this->line_one_column_three_widgets)
-        );
-
-        $this->lines = array(
-            new DashboardWidgetLine(
-                1,
-                1,
-                'user',
-                'one-column',
-                0,
-                $this->line_one_columns
-            )
-        );
-    }
 
     public function testItReturnsAllWidgets()
     {

@@ -51,7 +51,6 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\BetweenComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\EqualComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\GreaterThanComparisonChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\GreaterThanOrEqualComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanOrEqualComparisonChecker;
@@ -109,7 +108,6 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
             new LesserThanComparisonChecker(),
             new GreaterThanComparisonChecker(),
             new LesserThanOrEqualComparisonChecker(),
-            new GreaterThanOrEqualComparisonChecker(),
             new BetweenComparisonChecker(),
             new InComparisonChecker(),
             new NotInComparisonChecker(),

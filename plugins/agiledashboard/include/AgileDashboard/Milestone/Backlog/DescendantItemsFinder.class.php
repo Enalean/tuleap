@@ -31,9 +31,6 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Planning_Milestone */
-    private $milestone;
-
     /** @var int */
     private $milestone_id;
 
@@ -56,7 +53,6 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
         $this->item_dao               = $item_dao;
         $this->artifact_dao           = $artifact_dao;
         $this->artifact_factory       = $artifact_factory;
-        $this->milestone              = $milestone;
         $this->milestone_id           = $milestone->getArtifactId();
 
         $this->descendant_tracker_ids = $descendant_tracker_ids;

@@ -20,7 +20,6 @@
 namespace User\XML\Import;
 
 use UserManager;
-use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use PFUser;
 use XML_Security;
@@ -43,17 +42,12 @@ class UsersToBeImportedCollectionBuilder
     /** @var UserManager */
     private $user_manager;
 
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
         UserManager $user_manager,
-        LoggerInterface $logger,
         XML_Security $security,
         XML_RNGValidator $xml_validator
     ) {
         $this->user_manager  = $user_manager;
-        $this->logger        = $logger;
         $this->security      = $security;
         $this->xml_validator = $xml_validator;
     }

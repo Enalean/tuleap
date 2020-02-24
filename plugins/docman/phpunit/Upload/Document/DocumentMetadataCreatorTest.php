@@ -45,10 +45,6 @@ class DocumentMetadataCreatorTest extends TestCase
      * @var Docman_MetadataDao|Mockery\MockInterface
      */
     private $metadata_dao;
-    /**
-     * @var Mockery\MockInterface|MetadataValueCreator
-     */
-    private $list_value_dao;
 
     protected function setUp(): void
     {

@@ -55,7 +55,6 @@ use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\TemporaryTestDirectory;
 use UGroupManager;
 use UserManager;
-use XML_RNGValidator;
 use XMLImportHelper;
 
 final class GitXmlImporterTest extends TestCase
@@ -77,7 +76,6 @@ final class GitXmlImporterTest extends TestCase
      * @var GitPlugin
      */
     private $git_plugin;
-    private $temp_project_dir;
     /**
      * @var GitRepositoryFactory
      */
@@ -230,7 +228,6 @@ final class GitXmlImporterTest extends TestCase
             $this->git_manager,
             $this->git_factory,
             $gitolite,
-            new XML_RNGValidator(),
             $this->git_systemeventmanager,
             $permissions_manager,
             $this->event_manager,
@@ -243,8 +240,6 @@ final class GitXmlImporterTest extends TestCase
             $this->git_dao,
             $this->user_finder
         );
-
-        $this->temp_project_dir = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'test_project';
 
         $userManager = \Mockery::spy(\UserManager::class);
         $userManager->shouldReceive('getUserById')->andReturns(new PFUser());

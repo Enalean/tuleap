@@ -151,11 +151,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         }
     }
 
-    private function getMediaWikiDataDir()
-    {
-        return forge_get_config('mwdata_path', 'mediawiki');
-    }
-
     public function exportXmlProject(ExportXmlProject $event): void
     {
         if (! isset($event->getOptions()['all']) || $event->getOptions()['all'] === false) {

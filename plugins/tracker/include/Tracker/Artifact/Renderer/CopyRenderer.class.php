@@ -32,13 +32,12 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
     public function __construct(
         EventManager $event_manager,
         Tracker_Artifact $artifact,
-        Tracker_FormElementFactory $formelement_factory,
         Tracker_IDisplayTrackerLayout $layout,
         NatureIsChildLinkRetriever $retriever,
         VisitRecorder $visit_recorder,
         HiddenFieldsetsDetector $hidden_fieldsets_detector
     ) {
-        parent::__construct($event_manager, $artifact, $formelement_factory, $layout, $retriever, $visit_recorder, $hidden_fieldsets_detector);
+        parent::__construct($event_manager, $artifact, $layout, $retriever, $visit_recorder, $hidden_fieldsets_detector);
         $this->redirect->query_parameters = array(
             'tracker' => $artifact->getTrackerId(),
             'func'    => 'submit-copy-artifact',
@@ -119,7 +118,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
     protected function fetchView(Codendi_Request $request, PFUser $user)
     {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
-        $view_collection->add(new Tracker_Artifact_View_Copy($this->artifact, $request, $user, $this, $this->event_manager));
+        $view_collection->add(new Tracker_Artifact_View_Copy($this->artifact, $request, $user, $this));
 
         return $view_collection->fetchRequestedView($request);
     }

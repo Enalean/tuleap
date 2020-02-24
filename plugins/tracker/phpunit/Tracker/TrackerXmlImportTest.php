@@ -61,11 +61,6 @@ final class TrackerXmlImportTest extends TestCase
     use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     /**
-     * @var string
-     */
-    private $temporary_directory;
-
-    /**
      * @var MappingsRegistry
      */
     private $mapping_registery;
@@ -132,10 +127,6 @@ final class TrackerXmlImportTest extends TestCase
      * @var int
      */
     private $contributors_ugroup_id;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\Project\UGroupRetrieverWithLegacy
      */

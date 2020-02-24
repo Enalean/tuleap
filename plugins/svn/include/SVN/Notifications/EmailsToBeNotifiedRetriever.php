@@ -24,8 +24,6 @@ use ProjectUGroup;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Repository\Repository;
-use UGroupManager;
-use UserManager;
 
 class EmailsToBeNotifiedRetriever
 {
@@ -33,35 +31,11 @@ class EmailsToBeNotifiedRetriever
      * @var MailNotificationManager
      */
     private $notification_manager;
-    /**
-     * @var UsersToNotifyDao
-     */
-    private $user_dao;
-    /**
-     * @var UgroupsToNotifyDao
-     */
-    private $ugroup_dao;
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
 
     public function __construct(
-        MailNotificationManager $notification_manager,
-        UsersToNotifyDao $user_dao,
-        UgroupsToNotifyDao $ugroup_dao,
-        UGroupManager $ugroup_manager,
-        UserManager $user_manager
+        MailNotificationManager $notification_manager
     ) {
         $this->notification_manager = $notification_manager;
-        $this->user_dao             = $user_dao;
-        $this->ugroup_dao           = $ugroup_dao;
-        $this->ugroup_manager       = $ugroup_manager;
-        $this->user_manager         = $user_manager;
     }
 
     public function getEmailsToBeNotifiedForPath(Repository $repository, $path)

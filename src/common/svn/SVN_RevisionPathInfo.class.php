@@ -22,16 +22,13 @@
  */
 class SVN_RevisionPathInfo
 {
-
-    private $revision_id;
     private $path;
     private $author_id;
     private $timestamp;
     private $commit_message;
 
-    public function __construct($revision_id, $path, $author_id, $timestamp, $commit_message)
+    public function __construct($path, $author_id, $timestamp, $commit_message)
     {
-        $this->revision_id      = $revision_id;
         $this->path             = $path;
         $this->author_id        = $author_id;
         $this->timestamp        = $timestamp;

@@ -31,17 +31,15 @@ class BackendSVN
      * @var LoggerInterface
      */
     private $logger;
-    private $pidOne;
     /**
      * @var LogrotateDeployer
      */
     private $logrotate_deployer;
 
-    public function __construct(LoggerInterface $logger, $application_user, $pidOne, LogrotateDeployer $logrotate_deployer)
+    public function __construct(LoggerInterface $logger, $application_user, LogrotateDeployer $logrotate_deployer)
     {
         $this->application_user   = $application_user;
         $this->logger             = new Wrapper($logger, 'Apache');
-        $this->pidOne             = $pidOne;
         $this->logrotate_deployer = $logrotate_deployer;
     }
 

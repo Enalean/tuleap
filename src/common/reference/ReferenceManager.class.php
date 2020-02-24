@@ -640,7 +640,9 @@ class ReferenceManager
     {
         $html = preg_replace_callback(
             '/(^|\W)@([a-zA-Z][a-zA-Z0-9\-_\.]{2,})/',
-            array($this,"insertMentionCallback"),
+            function ($match) {
+                return $this->insertMentionCallback($match);
+            },
             $html
         );
     }

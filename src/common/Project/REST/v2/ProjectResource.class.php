@@ -130,11 +130,6 @@ class ProjectResource extends AuthenticatedResource
         Header::allowOptionsGet();
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size)
-    {
-        Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
-    }
-
     private function checkAgileEndpointsAvailable()
     {
         $available = false;

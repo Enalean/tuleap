@@ -47,8 +47,6 @@ class AssetsIncluderTest extends TestCase
     /** @var CssAssetCollection */
     private $css_asset_collection;
 
-    private $backup_globals;
-
     protected function setUp() : void
     {
         parent::setUp();

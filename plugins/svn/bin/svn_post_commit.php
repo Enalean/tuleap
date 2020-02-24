@@ -82,11 +82,7 @@ try {
                 new ProjectHistoryDao(),
                 new NotificationsEmailsBuilder(),
                 new UGroupManager()
-            ),
-            new UsersToNotifyDao(),
-            new UgroupsToNotifyDao(),
-            new UGroupManager(),
-            UserManager::instance()
+            )
         ),
         new MailBuilder(
             TemplateRendererFactory::build(),

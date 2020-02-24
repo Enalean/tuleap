@@ -142,7 +142,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     /** @var UGroupManager */
     private $ugroup_manager;
 
-    /** @var PermissionsManager */
+    /** @var SvnPermissionManager */
     private $permissions_manager;
 
     public function __construct($id)
@@ -473,7 +473,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function getPermissionsManager()
     {
         if (empty($this->permissions_manager)) {
-            $this->permissions_manager = new SvnPermissionManager($this->getForgeUserGroupFactory(), PermissionsManager::instance());
+            $this->permissions_manager = new SvnPermissionManager(PermissionsManager::instance());
         }
         return $this->permissions_manager;
     }
@@ -556,7 +556,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function routeSvnPlugin() : DispatchableWithRequest
     {
         $repository_manager  = $this->getRepositoryManager();
-        $ugroup_manager      = $this->getUGroupManager();
         $permissions_manager = $this->getPermissionsManager();
 
         $history_dao         = $this->getProjectHistoryDao();
@@ -570,7 +569,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
         return new SvnRouter(
             $repository_manager,
-            $ugroup_manager,
             $permissions_manager,
             new AccessControlController(
                 $repository_manager,
@@ -634,8 +632,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             new RestoreController($this->getRepositoryManager()),
             new SVNJSONPermissionsRetriever(
                 new PermissionPerGroupRepositoryRepresentationBuilder(
-                    $this->getRepositoryManager(),
-                    $this->getUGroupManager()
+                    $this->getRepositoryManager()
                 )
             ),
             $this,
@@ -1149,7 +1146,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $ugroup_manager
         );
 
-        $collector = new PaneCollector($this->getUGroupManager(), $service_pane_builder);
+        $collector = new PaneCollector($service_pane_builder);
         $collector->collectPane($event);
     }
 

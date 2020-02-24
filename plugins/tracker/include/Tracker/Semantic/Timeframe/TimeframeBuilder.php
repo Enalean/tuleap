@@ -34,15 +34,9 @@ use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_Numeric;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Date;
-use Tracker_FormElementFactory;
 
 class TimeframeBuilder
 {
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $formelement_factory;
-
     /**
      * @var SemanticTimeframeBuilder
      */
@@ -53,11 +47,9 @@ class TimeframeBuilder
     private $logger;
 
     public function __construct(
-        Tracker_FormElementFactory $formelement_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         LoggerInterface $logger
     ) {
-        $this->formelement_factory        = $formelement_factory;
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
         $this->logger                     = $logger;
     }

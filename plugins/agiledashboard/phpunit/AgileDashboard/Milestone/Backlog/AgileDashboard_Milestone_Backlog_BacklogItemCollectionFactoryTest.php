@@ -42,10 +42,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
      */
     private $artifact_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_MilestoneFactory
      */
     private $milestone_factory;

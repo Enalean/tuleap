@@ -31,19 +31,12 @@ class AgileDashboard_KanbanManager
      */
     private $dao;
 
-    /**
-     * @var AgileDashboard_HierarchyChecker
-     */
-    private $hierarchy_checker;
-
     public function __construct(
         AgileDashboard_KanbanDao $dao,
-        TrackerFactory $tracker_factory,
-        AgileDashboard_HierarchyChecker $hierarchy_checker
+        TrackerFactory $tracker_factory
     ) {
         $this->dao               = $dao;
         $this->tracker_factory   = $tracker_factory;
-        $this->hierarchy_checker = $hierarchy_checker;
     }
 
     public function doesKanbanExistForTracker(Tracker $tracker)

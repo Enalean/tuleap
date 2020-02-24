@@ -31,15 +31,9 @@ class Cardwall_OnTop_Config_ColumnFactory
      */
     private $dao;
 
-    /**
-     * @var Cardwall_OnTop_Dao
-     */
-    private $on_top_dao;
-
-    public function __construct(Cardwall_OnTop_ColumnDao $dao, Cardwall_OnTop_Dao $on_top_dao)
+    public function __construct(Cardwall_OnTop_ColumnDao $dao)
     {
         $this->dao        = $dao;
-        $this->on_top_dao = $on_top_dao;
     }
 
     /**

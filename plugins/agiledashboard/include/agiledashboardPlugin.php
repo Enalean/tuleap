@@ -1261,15 +1261,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         return new $class_with_right_namespace;
     }
 
-    private function getStatusCounter()
-    {
-        return new AgileDashboard_Milestone_MilestoneStatusCounter(
-            new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao(),
-            $this->getArtifactFactory()
-        );
-    }
-
     /** @see Event::GET_PROJECTID_FROM_URL */
     public function get_projectid_from_url($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -1378,8 +1369,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         return new AgileDashboard_KanbanManager(
             new AgileDashboard_KanbanDao(),
-            $this->getTrackerFactory(),
-            $this->getHierarchyChecker()
+            $this->getTrackerFactory()
         );
     }
 
@@ -1391,18 +1381,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     private function getPlanningPermissionsManager()
     {
         return new PlanningPermissionsManager();
-    }
-
-    /**
-     * @return AgileDashboard_HierarchyChecker
-     */
-    private function getHierarchyChecker()
-    {
-        return new AgileDashboard_HierarchyChecker(
-            $this->getPlanningFactory(),
-            $this->getKanbanFactory(),
-            $this->getTrackerFactory()
-        );
     }
 
     /**
@@ -2052,17 +2030,14 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $submilestone_finder    = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             $hierarchy_factory,
             $planning_factory,
-            $mono_milestone_checker,
-            $this->getTrackerFactory()
+            $mono_milestone_checker
         );
 
         $milestone_representation_builder                = $this->getMilestoneRepresentationBuilder();
         $paginated_backlog_items_representations_builder = $this->getPaginatedBacklogItemsRepresentationsBuilder();
 
         $pane_info_factory = new AgileDashboard_PaneInfoFactory(
-            $request->getCurrentUser(),
-            $submilestone_finder,
-            $this->getThemePath()
+            $submilestone_finder
         );
 
         $pane_factory = new Planning_MilestonePaneFactory(

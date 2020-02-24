@@ -37,9 +37,6 @@ class PluginsAdministrationViews extends Views
     /** @var PluginDependencySolver */
     private $dependency_solver;
 
-    /** @var TemplateRendererFactory */
-    private $renderer;
-
     /**
      * @var PluginDisablerVerifier
      */
@@ -50,9 +47,6 @@ class PluginsAdministrationViews extends Views
         $this->View($controler, $view);
         $this->plugin_manager           = PluginManager::instance();
         $this->dependency_solver        = new PluginDependencySolver($this->plugin_manager);
-        $this->renderer                 = TemplateRendererFactory::build()->getRenderer(
-            PLUGINSADMINISTRATION_TEMPLATE_DIR
-        );
         $plugin_administration          = $this->plugin_manager->getPluginByName('pluginsadministration');
         $this->plugin_disabler_verifier = new PluginDisablerVerifier(
             $plugin_administration,

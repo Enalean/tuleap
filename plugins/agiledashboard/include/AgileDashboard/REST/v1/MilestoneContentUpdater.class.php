@@ -22,7 +22,6 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tracker_FormElement_Field_ArtifactLink;
-use Tracker_FormElementFactory;
 use Tracker_ArtifactFactory;
 use Planning_Milestone;
 use PFUser;
@@ -30,19 +29,14 @@ use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 class MilestoneContentUpdater
 {
-
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory, ArtifactLinkUpdater $artifactlink_updater)
+    public function __construct(ArtifactLinkUpdater $artifactlink_updater)
     {
-        $this->form_element_factory     = $form_element_factory;
         $this->artifact_factory         = Tracker_ArtifactFactory::instance();
         $this->artifactlink_updater     = $artifactlink_updater;
     }

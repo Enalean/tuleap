@@ -34,7 +34,6 @@ use Tuleap\Project\UGroups\Membership\MemberAdder;
 use UGroupBinding;
 use UGroupDao;
 use UGroupManager;
-use UGroupUserDao;
 
 class UgroupDuplicatorTest extends TestCase
 {
@@ -52,10 +51,6 @@ class UgroupDuplicatorTest extends TestCase
      * @var M\MockInterface|UGroupBinding
      */
     private $binding;
-    /**
-     * @var M\MockInterface|UGroupUserDao
-     */
-    private $ugroup_user_dao;
     /**
      * @var EventManager|M\MockInterface
      */

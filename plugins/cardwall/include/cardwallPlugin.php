@@ -184,7 +184,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $params['row']['description'],
                 $params['row']['rank'],
                 $this->getFieldForInstance($params),
-                $this->getPluginInfo()->getPropVal('display_qr_code')
             );
 
             if ($params['store_in_session']) {
@@ -365,12 +364,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         echo PHP_EOL;
     }
 
-    private function denyAccess($tracker_id)
-    {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id);
-    }
-
     /**
      * @see Event::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS
      */
@@ -413,14 +406,14 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             return;
         }
 
-        return new CardwallPaneInfo($milestone, $this->getThemePath());
+        return new CardwallPaneInfo($milestone);
     }
 
     public function agiledashboard_event_index_page($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // Only display a cardwall if there is something to display
         if ($params['milestone'] && $params['milestone']->getPlannedArtifacts() && count($params['milestone']->getPlannedArtifacts()->getChildren()) > 0) {
-            $pane_info = new CardwallPaneInfo($params['milestone'], $this->getThemePath());
+            $pane_info = new CardwallPaneInfo($params['milestone']);
             $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
         }
     }

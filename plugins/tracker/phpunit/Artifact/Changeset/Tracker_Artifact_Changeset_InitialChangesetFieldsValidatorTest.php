@@ -34,21 +34,6 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
     /** @var Tracker_Artifact */
     private $artifact;
 
-    /** @var Tracker_Artifact */
-    private $artifact_update;
-
-    /** @var Tracker_Artifact_Changeset */
-    private $changeset;
-
-    /** @var Tracker_Artifact_ChangesetValue */
-    private $changeset_value1;
-
-    /** @var Tracker_Artifact_ChangesetValue */
-    private $changeset_value2;
-
-    /** @var Tracker_Artifact_ChangesetValue */
-    private $changeset_value3;
-
     protected function setUp(): void
     {
         $this->factory    = \Mockery::spy(\Tracker_FormElementFactory::class);
@@ -66,12 +51,6 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $this->artifact = Mockery::mock(Tracker_Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn(\Mockery::spy(\Tracker::class));
         $this->artifact->shouldReceive('getWorkflow')->andReturns($this->workflow);
-
-        $this->changeset        = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $this->changeset_value1 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
-        $this->changeset_value2 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
-        $this->changeset_value3 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
-
         $this->artifact->shouldReceive('getLastChangeset')->andReturns(new Tracker_Artifact_Changeset_Null());
     }
 

@@ -27,7 +27,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use PlanningFactory;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact;
-use Tracker_FormElementFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_Backlog;
@@ -56,9 +55,6 @@ class MilestoneResourceValidator
     /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
 
-    /** @var Tracker_FormElementFactory */
-    private $tracker_form_element_factory;
-
     /**
      * @var ScrumForMonoMilestoneChecker
      */
@@ -67,7 +63,6 @@ class MilestoneResourceValidator
     public function __construct(
         PlanningFactory $planning_factory,
         Tracker_ArtifactFactory $tracker_artifact_factory,
-        Tracker_FormElementFactory $tracker_form_element_factory,
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_row_collection_factory,
@@ -75,7 +70,6 @@ class MilestoneResourceValidator
     ) {
         $this->planning_factory                = $planning_factory;
         $this->tracker_artifact_factory        = $tracker_artifact_factory;
-        $this->tracker_form_element_factory    = $tracker_form_element_factory;
         $this->backlog_factory                 = $backlog_factory;
         $this->milestone_factory               = $milestone_factory;
         $this->backlog_item_collection_factory = $backlog_row_collection_factory;

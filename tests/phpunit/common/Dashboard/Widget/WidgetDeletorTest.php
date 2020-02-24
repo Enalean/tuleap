@@ -29,14 +29,6 @@ class WidgetDeletorTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var DashboardWidgetLine[]
-     */
-    private $lines;
-    /**
-     * @var DashboardWidgetColumn[]
-     */
-    private $line_one_columns;
-    /**
      * @var DashboardWidget
      */
     private $widget_one;
@@ -60,7 +52,7 @@ class WidgetDeletorTest extends TestCase
 
         $this->widgets = array($this->widget_one, $this->widget_two);
 
-        $this->column = new DashboardWidgetColumn(1, 1, 0, $this->widgets);
+        $this->column = new DashboardWidgetColumn(1, 0, $this->widgets);
     }
 
     public function testItDeletesColumn()

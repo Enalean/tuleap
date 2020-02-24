@@ -85,7 +85,6 @@ $transformer   = new User\XML\Import\MappingFileOptimusPrimeTransformer($user_ma
 $console       = new Log_ConsoleLogger();
 $builder       = new User\XML\Import\UsersToBeImportedCollectionBuilder(
     $user_manager,
-    $logger,
     $security,
     $xml_validator
 );

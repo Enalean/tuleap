@@ -33,7 +33,9 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
         if (isset($submitted_value['u_groups'])) {
             array_walk(
                 $submitted_value['u_groups'],
-                array($this, 'appendUgroupToFieldChangeNode'),
+                function ($ugroup_id, $index, SimpleXMLElement $field_xml) {
+                    $this->appendUgroupToFieldChangeNode($ugroup_id, $index, $field_xml);
+                },
                 $field_change_xml
             );
         }

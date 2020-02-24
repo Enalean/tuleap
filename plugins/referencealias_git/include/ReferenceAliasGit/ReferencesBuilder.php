@@ -22,7 +22,6 @@ namespace Tuleap\ReferenceAliasGit;
 
 use GitRepositoryFactory;
 use ReferenceInstance;
-use ProjectManager;
 
 class ReferencesBuilder
 {
@@ -37,18 +36,11 @@ class ReferencesBuilder
      */
     private $dao;
 
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-
     public function __construct(
         Dao $dao,
-        ProjectManager $project_manager,
         GitRepositoryFactory $repository_factory
     ) {
         $this->dao                = $dao;
-        $this->project_manager    = $project_manager;
         $this->repository_factory = $repository_factory;
     }
 

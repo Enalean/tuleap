@@ -25,24 +25,14 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
-    /** @var SystemEventDao */
-    private $system_event_dao;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
     /** @var Git_SystemEventManager */
     private $system_event_manager;
 
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
-        SystemEventDao $system_event_dao,
-        \Psr\Log\LoggerInterface $logger,
         Git_SystemEventManager $system_event_manager
     ) {
         $this->repository_factory   = $repository_factory;
-        $this->system_event_dao     = $system_event_dao;
-        $this->logger               = $logger;
         $this->system_event_manager = $system_event_manager;
     }
 

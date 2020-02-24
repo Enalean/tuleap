@@ -30,14 +30,6 @@ class FileTest extends RestBase
 {
     public const PROJECT_NAME = 'frs-test';
 
-    private $project_id;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->project_id = $this->getProjectId(self::PROJECT_NAME);
-    }
-
     public function testOPTIONSFile(): void
     {
         $response = $this->getResponse($this->client->options('frs_files/1'));

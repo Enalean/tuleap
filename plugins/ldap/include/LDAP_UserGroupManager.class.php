@@ -32,11 +32,6 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     private $project_manager;
 
     /**
-     * @var LDAP
-     */
-    private $ldap;
-
-    /**
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;

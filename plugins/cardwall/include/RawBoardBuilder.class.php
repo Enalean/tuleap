@@ -59,7 +59,7 @@ class Cardwall_RawBoardBuilder
         );
         $presenter_builder        = new Cardwall_CardInCellPresenterBuilder(
             new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
-            new Cardwall_CardFields(UserManager::instance(), $form_element_factory),
+            new Cardwall_CardFields($form_element_factory),
             $this->getDisplayPreferences($milestone, $user),
             $user,
             $background_color_builder,

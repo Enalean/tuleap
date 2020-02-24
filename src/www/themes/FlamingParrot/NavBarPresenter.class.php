@@ -37,11 +37,6 @@ class FlamingParrot_NavBarPresenter
 
     private $request_uri;
 
-    /** @var HTTPRequest */
-    private $request;
-
-    private $title;
-
     /** @var FlamingParrot_SearchFormPresenter */
     private $search_form_presenter;
 
@@ -94,8 +89,6 @@ class FlamingParrot_NavBarPresenter
         $current_project_navbar_info,
         $request_uri,
         $selected_top_tab,
-        HTTPRequest $request,
-        $title,
         $search_form_presenter,
         $display_new_account,
         $motd,
@@ -108,9 +101,7 @@ class FlamingParrot_NavBarPresenter
         $this->user                        = $user;
         $this->current_project_navbar_info = $current_project_navbar_info;
         $this->request_uri                 = $request_uri;
-        $this->request                     = $request;
         $this->selected_top_tab            = $selected_top_tab;
-        $this->title                       = $title;
         $this->search_form_presenter       = $search_form_presenter;
         $this->display_new_account         = $display_new_account;
         $this->motd                        = $motd;

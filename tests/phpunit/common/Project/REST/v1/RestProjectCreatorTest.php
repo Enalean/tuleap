@@ -81,12 +81,7 @@ class RestProjectCreatorTest extends TestCase
     private $user;
     private $project;
     private $project_creator;
-    private $plugin_manager;
     private $project_XML_importer;
-    /**
-     * @var string
-     */
-    private $base_dir;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|ProjectRegistrationUserPermissionChecker
      */

@@ -50,11 +50,6 @@ class SemanticTimeframeAdministrationPresenter
     public $start_date_field;
 
     /**
-     * @var \Tracker_FormElement_Field_Date|null
-     */
-    private $end_date_field;
-
-    /**
      * @var \Tracker_FormElement_Field_Numeric|null
      */
     public $duration_field;
@@ -84,11 +79,6 @@ class SemanticTimeframeAdministrationPresenter
      */
     public $is_semantic_in_start_date_duration_mode;
 
-    /**
-     * @var \Tracker
-     */
-    private $tracker;
-
     public function __construct(
         \CSRFSynchronizerToken $csrf,
         \Tracker $tracker,
@@ -104,7 +94,6 @@ class SemanticTimeframeAdministrationPresenter
     ) {
         $this->csrf                                    = $csrf;
         $this->start_date_field                        = $start_date_field;
-        $this->end_date_field                          = $end_date_field;
         $this->duration_field                          = $duration_field;
         $this->usable_start_date_fields                = $usable_start_date_fields;
         $this->usable_end_date_fields                  = $usable_end_date_fields;

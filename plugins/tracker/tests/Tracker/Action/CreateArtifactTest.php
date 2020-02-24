@@ -60,7 +60,6 @@ abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase
         $this->action = new Tracker_Action_CreateArtifact_ProtectedToPublic(
             $this->tracker,
             $this->artifact_factory,
-            $this->tracker_factory,
             $this->formelement_factory
         );
     }

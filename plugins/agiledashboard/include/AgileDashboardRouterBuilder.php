@@ -95,13 +95,12 @@ class AgileDashboardRouterBuilder
 
         $top_milestone_pane_factory = $this->getTopMilestonePaneFactory(
             $request,
-            $plugin,
             $milestone_representation_builder,
             $paginated_backlog_items_representations_builder
         );
 
         $service_crumb_builder        = new AgileDashboardCrumbBuilder($plugin->getPluginPath());
-        $admin_crumb_builder          = new AdministrationCrumbBuilder($plugin->getPluginPath());
+        $admin_crumb_builder          = new AdministrationCrumbBuilder();
         $milestone_controller_factory = new Planning_MilestoneControllerFactory(
             ProjectManager::instance(),
             $milestone_factory,
@@ -179,13 +178,11 @@ class AgileDashboardRouterBuilder
      */
     private function getTopMilestonePaneFactory(
         $request,
-        Plugin $plugin,
         AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
         AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
     ) {
         return new Planning_VirtualTopMilestonePaneFactory(
             $request,
-            $plugin->getThemePath(),
             $milestone_representation_builder,
             $paginated_backlog_items_representations_builder,
             new ExplicitBacklogDao()
@@ -214,13 +211,11 @@ class AgileDashboardRouterBuilder
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
             $form_element_factory,
-            $this->getTrackerFactory(),
             $this->getStatusCounter(),
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
             $this->getMonoMileStoneChecker(),
             new TimeframeBuilder(
-                $form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
                 new \BackendLogger()
             ),
@@ -255,19 +250,6 @@ class AgileDashboardRouterBuilder
     {
         return new AgileDashboard_KanbanManager(
             new AgileDashboard_KanbanDao(),
-            $this->getTrackerFactory(),
-            $this->getHierarchyChecker()
-        );
-    }
-
-    /**
-     * @return AgileDashboard_HierarchyChecker
-     */
-    private function getHierarchyChecker()
-    {
-        return new AgileDashboard_HierarchyChecker(
-            $this->getPlanningFactory(),
-            $this->getKanbanFactory(),
             $this->getTrackerFactory()
         );
     }

@@ -43,4 +43,4 @@ $supervisord->configure();
 $mysql_config->configure();
 
 $setup = new \Tuleap\Configuration\Setup\DistributedSVN();
-$setup->backendSVN(\Tuleap\Configuration\Setup\DistributedSVN::PID_ONE_SUPERVISORD);
+$setup->backendSVN();

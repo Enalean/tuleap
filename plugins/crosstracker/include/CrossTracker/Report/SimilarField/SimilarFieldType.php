@@ -26,17 +26,13 @@ class SimilarFieldType
     private $field_type;
     /** @var string | null */
     private $bind_name;
-    /** @var \Tracker_FormElement_Field */
-    private $field;
 
     public function __construct(
         $field_type,
-        \Tracker_FormElement_Field $field,
         $bind_name = null
     ) {
         $this->field_type = $field_type;
         $this->bind_name  = $bind_name;
-        $this->field      = $field;
     }
 
     public function getTypeIdentifierString()

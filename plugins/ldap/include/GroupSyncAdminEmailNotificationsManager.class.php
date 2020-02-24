@@ -37,11 +37,6 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
     private $ldap_user_manager;
 
     /**
-     * @var \ProjectManager
-     * */
-    private $project_manager;
-
-    /**
      * @var \Codendi_Mail
      * */
     private $mail;
@@ -58,12 +53,10 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
 
     public function __construct(
         \LDAP_UserManager $ldap_user_manager,
-        \ProjectManager $project_manager,
         \Codendi_Mail $mail,
         \UserManager $user_manager
     ) {
         $this->ldap_user_manager = $ldap_user_manager;
-        $this->project_manager   = $project_manager;
         $this->mail              = $mail;
         $this->renderer          = \TemplateRendererFactory::build()->getRenderer(LDAP_TEMPLATE_DIR);
         $this->user_manager      = $user_manager;

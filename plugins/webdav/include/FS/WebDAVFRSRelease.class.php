@@ -274,7 +274,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
     public function getWebDAVFRSFile($file)
     {
 
-        return new WebDAVFRSFile($this->getUser(), $this->getProject(), $this->getPackage(), $this->getRelease(), $file);
+        return new WebDAVFRSFile($this->getUser(), $this->getProject(), $file);
     }
 
     /**

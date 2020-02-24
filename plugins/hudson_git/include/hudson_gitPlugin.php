@@ -147,7 +147,6 @@ class hudson_gitPlugin extends Plugin
     public static function getDeleteGitAdministrationJenkinsServer(): DeleteController
     {
         return new DeleteController(
-            ProjectManager::instance(),
             self::getGitPermissionsManager(),
             self::getJenkinsServerFactory(),
             new JenkinsServerDeleter(

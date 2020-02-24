@@ -37,10 +37,6 @@ class AgileDashboard_XMLExporterTest extends TestCase
      */
     private $xml_tree;
     /**
-     * @var Planning[]|\Mockery\LegacyMockInterface[]|\Mockery\MockInterface[]|
-     */
-    private $plannings;
-    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|KanbanXMLExporter
      */
     private $kanban_XML_exporter;

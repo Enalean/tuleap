@@ -41,11 +41,6 @@ class PostActionCollectionUpdaterTest extends TestCase
     /**
      * @var MockInterface
      */
-    private $transaction_executor;
-
-    /**
-     * @var MockInterface
-     */
     private $post_action_updater1;
     /**
      * @var MockInterface

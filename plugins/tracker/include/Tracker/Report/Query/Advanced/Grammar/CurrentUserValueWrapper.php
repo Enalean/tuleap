@@ -20,7 +20,6 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 use PFUser;
-use UserManager;
 
 class CurrentUserValueWrapper implements ValueWrapper
 {
@@ -29,14 +28,8 @@ class CurrentUserValueWrapper implements ValueWrapper
      */
     private $value;
 
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
     public function __construct($user_manager)
     {
-        $this->user_manager = $user_manager;
         $this->value        = null;
 
         $current_user = $user_manager->getCurrentUser();

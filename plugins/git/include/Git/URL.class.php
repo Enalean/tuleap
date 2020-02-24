@@ -63,9 +63,6 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
     /** @var bool **/
     private $is_standard = false;
 
-    /** @var bool **/
-    private $is_smart_http = false;
-
     /** @var ProjectManager **/
     private $project_manager;
 
@@ -178,8 +175,6 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
         if ($params_position !== false) {
             $this->query_string = substr($this->uri, $params_position+1);
         }
-
-        $this->is_smart_http = true;
     }
 
     public function getPathInfo()

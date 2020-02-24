@@ -23,7 +23,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactDao;
 use Tracker_FormElementFactory;
-use TrackerFactory;
 use PlanningFactory;
 use Planning_MilestoneFactory;
 use PFUser;
@@ -69,9 +68,6 @@ class ProjectMilestonesResource
     /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
 
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
     /** @var AgileDashboard_Milestone_MilestoneStatusCounter */
     private $status_counter;
 
@@ -86,7 +82,6 @@ class ProjectMilestonesResource
         $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
         $this->planning_factory             = PlanningFactory::build();
         $this->tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
-        $this->tracker_factory              = TrackerFactory::instance();
         $this->status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
             new Tracker_ArtifactDao(),
@@ -107,13 +102,11 @@ class ProjectMilestonesResource
             $this->planning_factory,
             $this->tracker_artifact_factory,
             $this->tracker_form_element_factory,
-            $this->tracker_factory,
             $this->status_counter,
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory),
             new TimeframeBuilder(
-                $this->tracker_form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $this->tracker_form_element_factory),
                 new \BackendLogger()
             ),

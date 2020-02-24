@@ -24,7 +24,6 @@ require_once __DIR__ . '/../../../../src/www/project/admin/permissions.php';
 
 use Project;
 use PFUser;
-use User_ForgeUserGroupFactory;
 use PermissionsManager;
 
 class SvnPermissionManager
@@ -33,17 +32,12 @@ class SvnPermissionManager
     public const PERMISSION_ADMIN = 'PLUGIN_SVN_ADMIN';
 
     /**
-     * @var User_ForgeUserGroupFactory
-     */
-    private $ugroup_factory;
-    /**
      * @var PermissionsManager
      */
     private $permission_manager;
 
-    public function __construct(User_ForgeUserGroupFactory $ugroup_factory, PermissionsManager $permission_manager)
+    public function __construct(PermissionsManager $permission_manager)
     {
-        $this->ugroup_factory     = $ugroup_factory;
         $this->permission_manager = $permission_manager;
     }
 

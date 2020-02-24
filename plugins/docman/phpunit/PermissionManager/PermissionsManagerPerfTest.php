@@ -46,8 +46,6 @@ class PermissionsManagerPerfTest extends TestCase
      * @var Mockery\Mock
      */
     private $docmanPm;
-
-    private $refOnNull;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
      */
@@ -65,7 +63,6 @@ class PermissionsManagerPerfTest extends TestCase
         $this->docmanPm->allows(['_itemIsLockedForUser' => false]);
         $this->docmanPm->shouldReceive('getProject')->andReturn($project);
         $this->docmanPm->shouldReceive('getProjectAccessChecker')->andReturn($this->project_access_checker);
-        $this->refOnNull = null;
     }
 
     public function testSuperAdminHasAllAccess(): void

@@ -25,8 +25,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
 {
 
     private $driver;
-    private $packagesFile;
-    private $configFile;
     //path MUST end with a '/'
     private $gitRootPath;
 
@@ -39,8 +37,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     {
         $this->gitRootPath  = '';
         $this->driver       = new GitDriver();
-        $this->packagesFile = 'etc/packages.ini';
-        $this->configFile   = 'etc/config.ini';
         $this->dao          = new GitDao();
         //WARN : this is much safer to set it to an absolute path
         $this->gitRootPath  = Git_Backend_Interface::GIT_ROOT_PATH ;

@@ -727,7 +727,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     {
         $header_builder = new GitRepositoryHeaderDisplayerBuilder();
         return new PullrequestDisplayer(
-            $this->getThemeManager(),
             $this->getPullRequestFactory(),
             $this->getTemplateRenderer(),
             new MergeSettingRetriever(new MergeSettingDAO()),

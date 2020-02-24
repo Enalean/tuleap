@@ -92,7 +92,6 @@ class referencealias_gitPlugin extends Plugin //phpcs:ignore
 
         return new ReferencesBuilder(
             $this->getCompatDao(),
-            $project_manager,
             new GitRepositoryFactory($this->getGitDao(), $project_manager)
         );
     }

@@ -36,21 +36,12 @@ class QueueInstrumentation
     public const STATUS_TIMEDOUT  = 'timedout';
     public const STATUS_DONE      = 'done';
 
-    private const STATUS_VALUES = [
-        self::STATUS_ENQUEUED,
-        self::STATUS_DEQUEUED,
-        self::STATUS_REQUEUED,
-        self::STATUS_DISCARDED,
-        self::STATUS_TIMEDOUT,
-        self::STATUS_DONE,
-    ];
-
     private const DURATION_NAME = 'queue_events_duration';
     private const DURATION_HELP = 'Duration of background worker events (from enqueue to done) in seconds';
     private const DURATION_BUCKETS = [0.1, 0.5, 1, 2, 5, 10, 20, 60, 120];
 
     /**
-     * @psalm-param value-of<self::STATUS_VALUES> $status
+     * @psalm-param self::STATUS_* $status
      */
     public static function increment(string $queue, string $topic, string $status): void
     {

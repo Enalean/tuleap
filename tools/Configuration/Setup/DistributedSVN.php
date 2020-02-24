@@ -85,13 +85,13 @@ class DistributedSVN
         exit(1);
     }
 
-    public function backendSVN($pidOne = self::PID_ONE_SYSTEMD)
+    public function backendSVN()
     {
         $vars = $this->getVars();
 
         $fpm           = new Configuration\FPM\BackendSVN($this->logger, $vars->getApplicationBaseDir(), $vars->getApplicationUser());
         $nginx         = new Configuration\Nginx\BackendSVN($this->logger, $vars->getApplicationBaseDir(), '/etc/nginx', $vars->getServerName());
-        $apache_config = new Configuration\Apache\BackendSVN($this->logger, $vars->getApplicationUser(), $pidOne, new LogrotateDeployer($this->logger));
+        $apache_config = new Configuration\Apache\BackendSVN($this->logger, $vars->getApplicationUser(), new LogrotateDeployer($this->logger));
 
         $fpm->configure();
         $nginx->configure();

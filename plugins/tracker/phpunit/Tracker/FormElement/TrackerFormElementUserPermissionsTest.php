@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_String;
 use Tracker_Workflow_WorkflowUser;
@@ -31,7 +30,6 @@ class TrackerFormElementUserPermissionsTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private $user;
     private $form_element;
     private $workflow_user;
 
@@ -42,7 +40,6 @@ class TrackerFormElementUserPermissionsTest extends TestCase
         $this->form_element->shouldReceive('getLabel')->andReturn("My field");
         $this->form_element->shouldReceive('getName')->andReturn('my_field');
 
-        $this->user = Mockery::mock(PFUser::class);
         $this->workflow_user = new Tracker_Workflow_WorkflowUser();
     }
 

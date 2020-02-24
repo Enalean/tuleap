@@ -1345,10 +1345,6 @@ class PiePlotC extends PiePlot
 //===================================================
 class PieGraph extends Graph
 {
-    private $posx;
-    private $posy;
-    private $radius;
-    private $legends=array();
     public $plots=array();
     public $pieaa = false ;
     //---------------
@@ -1356,8 +1352,6 @@ class PieGraph extends Graph
     public function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)
     {
         parent::__construct($width, $height, $cachedName, $timeout, $inline);
-        $this->posx=$width/2;
-        $this->posy=$height/2;
         $this->SetColor(array(255,255,255));
 
         if ($this->graph_theme) {

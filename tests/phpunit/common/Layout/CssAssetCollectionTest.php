@@ -30,9 +30,6 @@ class CssAssetCollectionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var CssAssetCollection */
-    private $collection;
-
     public function testGetDeduplicatedAssets()
     {
         $asset_one = Mockery::mock(CssAsset::class);

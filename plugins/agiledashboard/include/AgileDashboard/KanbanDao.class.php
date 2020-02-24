@@ -65,7 +65,12 @@ class AgileDashboard_KanbanDao extends DataAccessObject
             return;
         }
 
-        array_walk($value_mapping, array($this, 'convertValueIdToWhenThenStatement'));
+        array_walk(
+            $value_mapping,
+            function (&$new_value_id, $old_value_id): void {
+                $this->convertValueIdToWhenThenStatement($new_value_id, $old_value_id);
+            }
+        );
         $new_value_id = "CASE value_id ". implode(' ', $value_mapping) ." END";
 
         $sql = "INSERT INTO plugin_agiledashboard_kanban_configuration_column (kanban_id, value_id, wip_limit)

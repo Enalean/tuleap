@@ -49,9 +49,6 @@ class Planning_VirtualTopMilestonePaneFactory
     /** @var Codendi_Request */
     private $request;
 
-    /** @var string */
-    private $theme_path;
-
     /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
     private $milestone_representation_builder;
 
@@ -64,13 +61,11 @@ class Planning_VirtualTopMilestonePaneFactory
 
     public function __construct(
         Codendi_Request $request,
-        $theme_path,
         AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
         AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder,
         ExplicitBacklogDao $explicit_backlog_dao
     ) {
         $this->request                                         = $request;
-        $this->theme_path                                      = $theme_path;
         $this->milestone_representation_builder                = $milestone_representation_builder;
         $this->paginated_backlog_items_representations_builder = $paginated_backlog_items_representations_builder;
         $this->explicit_backlog_dao                            = $explicit_backlog_dao;
@@ -147,7 +142,7 @@ class Planning_VirtualTopMilestonePaneFactory
             return;
         }
 
-        $pane_info = new TopPlanningV2PaneInfo($milestone, $this->theme_path, $milestone_tracker);
+        $pane_info = new TopPlanningV2PaneInfo($milestone, $milestone_tracker);
         $pane_info->setActive(true);
         $project                                   = $this->request->getProject();
         $user                                      = $this->request->getCurrentUser();

@@ -24,16 +24,9 @@ use CSRFSynchronizerToken;
 use Feedback;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
-use UserManager;
 
 class Controller
 {
-
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
     /**
      * @var ProviderManager
      */
@@ -45,11 +38,9 @@ class Controller
     private $user_mapping_manager;
 
     public function __construct(
-        UserManager $user_manager,
         ProviderManager $provider_manager,
         UserMappingManager $user_mapping_manager
     ) {
-        $this->user_manager         = $user_manager;
         $this->provider_manager     = $provider_manager;
         $this->user_mapping_manager = $user_mapping_manager;
     }

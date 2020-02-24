@@ -1132,7 +1132,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return new ArtifactTimeframeHelper(
             $semantic_timeframe_builder,
             new TimeframeBuilder(
-                $form_element_factory,
                 $semantic_timeframe_builder,
                 new \BackendLogger()
             )

@@ -27,7 +27,6 @@ use Feedback;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
-use ProjectManager;
 use RuntimeException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -36,11 +35,6 @@ use Tuleap\Request\NotFoundException;
 
 class DeleteController implements DispatchableWithRequest
 {
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-
     /**
      * @var GitPermissionsManager
      */
@@ -62,13 +56,11 @@ class DeleteController implements DispatchableWithRequest
     private $csrf_token;
 
     public function __construct(
-        ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
         JenkinsServerFactory $jenkins_server_factory,
         JenkinsServerDeleter $jenkins_server_deleter,
         CSRFSynchronizerToken $csrf_token
     ) {
-        $this->project_manager         = $project_manager;
         $this->git_permissions_manager = $git_permissions_manager;
         $this->jenkins_server_factory  = $jenkins_server_factory;
         $this->jenkins_server_deleter  = $jenkins_server_deleter;

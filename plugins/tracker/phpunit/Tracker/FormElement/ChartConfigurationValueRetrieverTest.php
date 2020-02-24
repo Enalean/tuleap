@@ -38,11 +38,6 @@ class ChartConfigurationValueRetrieverTest extends TestCase
     private $field_retriever;
 
     /**
-     * @var \Tracker_FormElement_Field_Date
-     */
-    private $start_date_field;
-
-    /**
      * @var \Tracker
      */
     private $tracker;
@@ -56,11 +51,6 @@ class ChartConfigurationValueRetrieverTest extends TestCase
      * @var \PFUser
      */
     private $user;
-
-    /**
-     * @var \Tracker_Artifact_ChangesetValue_Date
-     */
-    private $start_date_value;
 
     /**
      * @var ChartConfigurationValueRetriever
@@ -77,19 +67,7 @@ class ChartConfigurationValueRetrieverTest extends TestCase
      */
     private $capacity_field;
 
-    /**
-     * @var \Tracker_FormElement_Field_Integer
-     */
-    private $duration_field;
-
-    /**
-     * @var \Tracker_Artifact_ChangesetValue_Integer
-     */
-    private $duration_value;
-
-    private $start_date;
     private $capacity;
-    private $duration;
 
 
     protected function setUp() : void
@@ -104,17 +82,9 @@ class ChartConfigurationValueRetrieverTest extends TestCase
         $this->artifact_sprint->shouldReceive('getTracker')->andReturn($this->tracker);
         $this->artifact_sprint->shouldReceive('getId')->andReturn(201);
 
-        $this->start_date_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $this->start_date_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);
-        $this->start_date       = mktime(23, 59, 59, 01, 9, 2016);
-
         $this->capacity_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $this->capacity_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Integer::class);
         $this->capacity       = 20;
-
-        $this->duration_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $this->duration_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Integer::class);
-        $this->duration       = 5;
 
         $this->configuration_value_retriever = new ChartConfigurationValueRetriever(
             $this->field_retriever,

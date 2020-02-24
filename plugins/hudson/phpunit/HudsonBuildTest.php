@@ -37,7 +37,6 @@ final class HudsonBuildTest extends TestCase
 
     /** @var XML_Security */
     private $xml_security;
-    private $http_client;
 
     protected function setUp() : void
     {

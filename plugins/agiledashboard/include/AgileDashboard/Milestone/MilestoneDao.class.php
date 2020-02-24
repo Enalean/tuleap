@@ -300,7 +300,15 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 
     private function getSelectFragments(array $list_of_trackers_ids)
     {
-        return implode(', ', array_map(array($this, 'extractSelectFragments'), $list_of_trackers_ids));
+        return implode(
+            ', ',
+            array_map(
+                function ($tracker_id) {
+                    return $this->extractSelectFragments($tracker_id);
+                },
+                $list_of_trackers_ids
+            )
+        );
     }
 
     private function extractSelectFragments($tracker_id)

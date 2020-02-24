@@ -124,10 +124,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private $dashboard_duplicator;
     /**
-     * @var ServiceCreator
-     */
-    private $service_creator;
-    /**
      * @var LabelDao
      */
     private $label_dao;

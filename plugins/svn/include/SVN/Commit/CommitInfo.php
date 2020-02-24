@@ -28,7 +28,6 @@ class CommitInfo
 {
 
     private $commit_message;
-    private $revision;
     private $user;
     private $date;
     private $file_added;
@@ -70,11 +69,6 @@ class CommitInfo
     public function setDeletedFiles(array $file_deleted)
     {
         return $this->file_deleted = $file_deleted;
-    }
-
-    public function setRevision($revision)
-    {
-        return $this->revision = $revision;
     }
 
     public function setChangedDirectories($directories)

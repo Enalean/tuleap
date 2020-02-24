@@ -37,11 +37,6 @@ class BurndownDataBuilderForLegacyTest extends TestCase
      * @var string
      */
     private $original_timezone;
-
-    /**
-     * @var TimezoneRetriever
-     */
-    private $timezone_retriever;
     /**
      * @var \PFUser
      */

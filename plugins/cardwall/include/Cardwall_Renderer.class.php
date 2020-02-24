@@ -31,8 +31,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     /** @var Plugin  */
     protected $plugin;
 
-    private $enable_qr_code;
-
     /** @var Cardwall_OnTop_Config */
     private $config;
 
@@ -52,7 +50,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      * @param string $description    the description of the renderer
      * @param int    $rank           the rank
      * @param Tracker_FormElement_Field_Selectbox    $field       the field
-     * @param bool   $enable_qr_code Display the QR code to ease usage of tablets
      */
     public function __construct(
         Plugin $plugin,
@@ -62,13 +59,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $name,
         $description,
         $rank,
-        ?Tracker_FormElement_Field_Selectbox $field = null,
-        $enable_qr_code = false
+        ?Tracker_FormElement_Field_Selectbox $field = null
     ) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->plugin         = $plugin;
         $this->field          = $field;
-        $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;
     }
 
@@ -169,7 +164,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             );
             $presenter_builder = new Cardwall_CardInCellPresenterBuilder(
                 new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
-                new Cardwall_CardFields(UserManager::instance(), Tracker_FormElementFactory::instance()),
+                new Cardwall_CardFields(Tracker_FormElementFactory::instance()),
                 $display_preferences,
                 $user,
                 $background_color_builder,
@@ -224,7 +219,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      */
     public function fetchWidget(PFUser $user)
     {
-        $this->enable_qr_code = false;
         $html  = '';
 
         $additional_button_presenter = new WidgetAdditionalButtonPresenter(

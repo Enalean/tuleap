@@ -23,7 +23,6 @@ namespace Tuleap\Statistics;
 use Feedback;
 use ForgeConfig;
 use HTTPRequest;
-use Statistics_DiskUsageManager;
 use Tuleap\Admin\AdminPageRenderer;
 
 class DiskUsageRouter
@@ -32,10 +31,6 @@ class DiskUsageRouter
      * @var DiskUsageGlobalPresenterBuilder
      */
     public $global_builder;
-    /**
-     * @var Statistics_DiskUsageManager
-     */
-    private $usage_manager;
     /**
      * @var DiskUsageServicesPresenterBuilder
      */
@@ -56,14 +51,12 @@ class DiskUsageRouter
     private $user_details_builder;
 
     public function __construct(
-        Statistics_DiskUsageManager $usage_manager,
         DiskUsageServicesPresenterBuilder $services_builder,
         DiskUsageProjectsPresenterBuilder $projects_builder,
         DiskUsageTopUsersPresenterBuilder $top_users_builder,
         DiskUsageGlobalPresenterBuilder $global_builder,
         DiskUsageUserDetailsPresenterBuilder $user_details_builder
     ) {
-        $this->usage_manager        = $usage_manager;
         $this->services_builder     = $services_builder;
         $this->projects_builder     = $projects_builder;
         $this->top_users_builder    = $top_users_builder;

@@ -70,11 +70,6 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
      * @var UserRetriever
      */
     private $user_retriever;
-
-    /**
-     * @var \PFUser
-     */
-    private $user;
     /**
      * @var Prometheus
      */

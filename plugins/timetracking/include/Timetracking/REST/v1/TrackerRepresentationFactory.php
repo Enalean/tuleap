@@ -43,16 +43,6 @@ class TrackerRepresentationFactory
     private $permissions_retriever;
 
     /**
-     * @var \TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
      * @var UserHelper
      */
     private $user_helper;
@@ -60,14 +50,10 @@ class TrackerRepresentationFactory
     public function __construct(
         TimeDao $time_dao,
         PermissionsRetriever $permissions_retriever,
-        \TrackerFactory $tracker_factory,
-        \Tracker_ArtifactFactory $artifact_factory,
         UserHelper $user_helper
     ) {
         $this->time_dao              = $time_dao;
         $this->permissions_retriever = $permissions_retriever;
-        $this->tracker_factory       = $tracker_factory;
-        $this->artifact_factory      = $artifact_factory;
         $this->user_helper           = $user_helper;
     }
 

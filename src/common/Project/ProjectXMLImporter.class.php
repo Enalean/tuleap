@@ -345,7 +345,6 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
         $frs = new FRSXMLImporter(
             $this->logger,
-            $this->xml_validator,
             new FRSPackageFactory(),
             new FRSReleaseFactory(),
             new FRSFileFactory($this->logger),

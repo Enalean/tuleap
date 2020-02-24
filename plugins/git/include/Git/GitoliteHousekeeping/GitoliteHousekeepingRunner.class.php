@@ -27,9 +27,6 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner
     /** @var Git_GitoliteHousekeeping_GitoliteHousekeepingDao */
     private $housekeeping_dao;
 
-    /** @var SystemEventDao */
-    private $system_event_dao;
-
     /** @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse */
     private $response;
 

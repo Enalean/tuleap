@@ -98,7 +98,6 @@ $router                     = new UserDashboardRouter(
         $dashboard_widget_retriever,
         new DashboardWidgetReorder(
             $dashboard_widget_dao,
-            $dashboard_widget_retriever,
             new DashboardWidgetRemoverInList()
         ),
         new DashboardWidgetChecker($dashboard_widget_dao),

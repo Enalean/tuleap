@@ -1810,7 +1810,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function routeConfig(): ConfigController
     {
-        $project_manager         = ProjectManager::instance();
         $nature_dao              = new NatureDao();
         $nature_validator        = new NatureValidator($nature_dao);
         $admin_page_renderer     = new AdminPageRenderer();
@@ -1828,7 +1827,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $admin_page_renderer
             ),
             new NatureConfigController(
-                $project_manager,
                 new NatureCreator(
                     $nature_dao,
                     $nature_validator

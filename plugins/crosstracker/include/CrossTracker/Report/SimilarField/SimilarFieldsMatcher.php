@@ -83,7 +83,7 @@ class SimilarFieldsMatcher
             $bind = $field->getBind();
             $bind_name = $bind->accept($this->bind_name_visitor, new BindParameters($field));
         }
-        $type = new SimilarFieldType($type_shortname, $field, $bind_name);
+        $type = new SimilarFieldType($type_shortname, $bind_name);
 
         $identifier = new SimilarFieldIdentifier($field->getName(), $bind_name);
 

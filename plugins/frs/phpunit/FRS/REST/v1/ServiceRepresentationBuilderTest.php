@@ -113,8 +113,8 @@ final class ServiceRepresentationBuilderTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $static_ugroup_id)->andReturn($static_ugroup);
 
         $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_READER)->andReturn([
-            new FRSPermission($this->project_id, FRSPermission::FRS_READER, ProjectUGroup::PROJECT_MEMBERS),
-            new FRSPermission($this->project_id, FRSPermission::FRS_READER, $static_ugroup_id),
+            new FRSPermission(ProjectUGroup::PROJECT_MEMBERS),
+            new FRSPermission($static_ugroup_id),
         ]);
 
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
@@ -134,7 +134,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $static_ugroup_id)->andReturn($static_ugroup);
 
         $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturn([
-            new FRSPermission($this->project_id, FRSPermission::FRS_ADMIN, $static_ugroup_id),
+            new FRSPermission($static_ugroup_id),
         ]);
 
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
@@ -160,10 +160,10 @@ final class ServiceRepresentationBuilderTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $static_ugroup_id)->andReturn($static_ugroup);
 
         $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_READER)->andReturn([
-            new FRSPermission($this->project_id, FRSPermission::FRS_READER, ProjectUGroup::PROJECT_MEMBERS),
+            new FRSPermission(ProjectUGroup::PROJECT_MEMBERS),
         ]);
         $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturn([
-            new FRSPermission($this->project_id, FRSPermission::FRS_ADMIN, $static_ugroup_id),
+            new FRSPermission($static_ugroup_id),
         ]);
 
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
@@ -193,7 +193,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::NONE)->andReturn($nobody);
 
         $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_READER)->andReturn([
-            new FRSPermission($this->project_id, FRSPermission::FRS_READER, (string) ProjectUGroup::NONE),
+            new FRSPermission((string) ProjectUGroup::NONE),
         ]);
 
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);

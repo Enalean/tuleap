@@ -42,11 +42,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     public const EVENT_ADD_VIEW_IN_COLLECTION = 'tracker_artifact_editrenderer_add_view_in_collection';
 
     /**
-     * @var Tracker_FormElementFactory
-     */
-    private $formelement_factory;
-
-    /**
      * @var Tracker_IDisplayTrackerLayout
      */
     protected $layout;
@@ -65,14 +60,12 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     public function __construct(
         EventManager $event_manager,
         Tracker_Artifact $artifact,
-        Tracker_FormElementFactory $formelement_factory,
         Tracker_IDisplayTrackerLayout $layout,
         NatureIsChildLinkRetriever $retriever,
         VisitRecorder $visit_recorder,
         HiddenFieldsetsDetector $hidden_fieldsets_detector
     ) {
         parent::__construct($artifact, $event_manager, $visit_recorder);
-        $this->formelement_factory       = $formelement_factory;
         $this->layout                    = $layout;
         $this->retriever                 = $retriever;
         $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
@@ -146,7 +139,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     protected function fetchView(Codendi_Request $request, PFUser $user)
     {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
-        $view_collection->add(new Tracker_Artifact_View_Edit($this->artifact, $request, $user, $this, $this->event_manager));
+        $view_collection->add(new Tracker_Artifact_View_Edit($this->artifact, $request, $user, $this));
 
         if ($this->artifact->getTracker()->isProjectAllowedToUseNature()) {
             $artifact_links = $this->retriever->getChildren($this->artifact);

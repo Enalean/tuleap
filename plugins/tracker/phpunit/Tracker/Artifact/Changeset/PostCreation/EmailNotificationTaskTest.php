@@ -38,7 +38,6 @@ class EmailNotificationTaskTest extends TestCase
     private $config_notification_assigned_to;
     private $mail_gateway_recipient_factory;
     private $user_helper;
-    private $actions_runner_dao;
     private $custom_email_sender;
 
     private $tracker;
@@ -52,7 +51,6 @@ class EmailNotificationTaskTest extends TestCase
         $this->config_notification_assigned_to = \Mockery::spy(\ConfigNotificationAssignedTo::class);
         $this->mail_gateway_recipient_factory  = \Mockery::spy(\Tracker_Artifact_MailGateway_RecipientFactory::class);
         $this->user_helper                     = \Mockery::spy(\UserHelper::class);
-        $this->actions_runner_dao              = \Mockery::spy(ActionsRunnerDao::class);
         $this->custom_email_sender = \Mockery::mock(ConfigNotificationEmailCustomSender::class);
 
         $this->custom_email_sender->shouldReceive('getCustomSender')->andReturns(array('format' => '', 'enabled' => 0));

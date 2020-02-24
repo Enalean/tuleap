@@ -36,9 +36,6 @@ class AdminSidebarPresenterBuilder
     /** @var ProjectManager */
     private $project_manager;
 
-    /** @var EventManager */
-    private $event_manager;
-
     /** @var NewsRetriever */
     private $news_manager;
 
@@ -46,7 +43,6 @@ class AdminSidebarPresenterBuilder
     {
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
-        $this->event_manager   = EventManager::instance();
         $this->news_manager    = new NewsRetriever(new AdminNewsDao());
     }
 

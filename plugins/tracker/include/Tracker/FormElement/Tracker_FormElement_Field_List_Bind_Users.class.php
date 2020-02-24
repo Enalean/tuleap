@@ -40,8 +40,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     protected $userManager;
     protected $value_function = array();
     protected $values;
-    /** @var UserHelper */
-    private $user_helper;
 
 
     public function __construct($field, $value_function, $default_values, $decorators)
@@ -571,11 +569,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     protected function getUserManager(): UserManager
     {
         return $this->userManager;
-    }
-
-    private function getOpenValueDao()
-    {
-        return new Tracker_FormElement_Field_List_OpenValueDao();
     }
 
     public function getValueDao()

@@ -153,12 +153,17 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
         return;
     }
 
-    /** @return Tracker[] */
+    /** @return int[] */
     private function getPlanningTrackersIds(Tracker $nearest_planning_tracker)
     {
         $parents = $this->getParentsWithPlanningAndOrderedFromTopToBottom($nearest_planning_tracker);
 
-        return array_map(array($this, 'extractTrackerId'), $parents);
+        return array_map(
+            static function (Tracker $tracker) {
+                return $tracker->getId();
+            },
+            $parents
+        );
     }
 
     /** @return Tracker[] */
@@ -183,11 +188,5 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
         $parents[] = $nearest_planning_tracker;
 
         return $parents;
-    }
-
-    /** @return int */
-    private function extractTrackerId(Tracker $tracker)
-    {
-        return $tracker->getId();
     }
 }

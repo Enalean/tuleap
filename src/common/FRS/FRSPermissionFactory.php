@@ -52,6 +52,6 @@ class FRSPermissionFactory
 
     private function instantiateFromRow(array $row)
     {
-        return new FRSPermission($row['project_id'], $row['permission_type'], $row['ugroup_id']);
+        return new FRSPermission($row['ugroup_id']);
     }
 }

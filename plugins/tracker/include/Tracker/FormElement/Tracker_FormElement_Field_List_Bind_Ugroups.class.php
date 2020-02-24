@@ -429,7 +429,12 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $html .= '<input type="hidden" name="'. $select_name .'" value="" />';
         $html .= '<select multiple="multiple" name="'. $select_name .'" size="'. min(9, max(5, count($ugroups))) .'">';
 
-        $selected_ugroup_ids = array_map(array(self::class, 'getSelectedUgroupIds'), $values);
+        $selected_ugroup_ids = array_map(
+            static function ($value) {
+                return self::getSelectedUgroupIds($value);
+            },
+            $values
+        );
         foreach ($ugroups as $ugroup) {
             $selected = "";
             if (in_array($ugroup->getId(), $selected_ugroup_ids)) {

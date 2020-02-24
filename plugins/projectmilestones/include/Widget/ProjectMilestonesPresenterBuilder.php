@@ -162,12 +162,11 @@ class ProjectMilestonesPresenterBuilder
             $planning_factory,
             Tracker_ArtifactFactory::instance(),
             Tracker_FormElementFactory::instance(),
-            TrackerFactory::instance(),
             new AgileDashboard_Milestone_MilestoneStatusCounter(new AgileDashboard_BacklogItemDao(), new Tracker_ArtifactDao(), Tracker_ArtifactFactory::instance()),
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
             $scrum_mono_milestone_checker,
-            new TimeframeBuilder(Tracker_FormElementFactory::instance(), new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()), new \BackendLogger()),
+            new TimeframeBuilder(new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()), new \BackendLogger()),
             new MilestoneBurndownFieldChecker(Tracker_FormElementFactory::instance())
         );
 

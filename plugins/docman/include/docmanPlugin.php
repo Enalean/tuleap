@@ -1202,8 +1202,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 $this->getUsersUpdater(),
                 $this->getUGroupsUpdater()
             ),
-            $this->getUserManager(),
-            $this->getUsersToNotifyDao()
+            $this->getUserManager()
         );
     }
 

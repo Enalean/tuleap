@@ -84,7 +84,6 @@ $logger        = new ProjectXMLImporterLogger();
 $console       = new Log_ConsoleLogger();
 $builder       = new User\XML\Import\UsersToBeImportedCollectionBuilder(
     $user_manager,
-    $logger,
     $security,
     $xml_validator
 );

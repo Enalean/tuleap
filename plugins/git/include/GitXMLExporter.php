@@ -29,7 +29,6 @@ use Psr\Log\LoggerInterface;
 use Project;
 use ProjectUGroup;
 use SimpleXMLElement;
-use System_Command;
 use Tuleap\GitBundle;
 use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -64,11 +63,6 @@ class GitXmlExporter
      * @var LoggerInterface
      */
     private $logger;
-
-    /**
-     * @var System_Command
-     */
-    private $command;
     /**
      * @var GitBundle
      */
@@ -92,7 +86,6 @@ class GitXmlExporter
         UGroupManager $ugroup_manager,
         GitRepositoryFactory $repository_factory,
         LoggerInterface $logger,
-        System_Command $command,
         GitBundle $git_bundle,
         Git_LogDao $git_log_dao,
         UserManager $user_manager,
@@ -103,7 +96,6 @@ class GitXmlExporter
         $this->ugroup_manager     = $ugroup_manager;
         $this->repository_factory = $repository_factory;
         $this->logger             = $logger;
-        $this->command            = $command;
         $this->git_bundle         = $git_bundle;
         $this->git_log_dao        = $git_log_dao;
         $this->user_manager       = $user_manager;

@@ -22,24 +22,17 @@ namespace Tuleap\Git\PermissionsPerGroup;
 
 use Project;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
-use UGroupManager;
 
 class CollectionOfUGroupRepresentationBuilder
 {
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
     /**
      * @var PermissionPerGroupUGroupRepresentationBuilder
      */
     private $ugroup_representation_builder;
 
     public function __construct(
-        UGroupManager $ugroup_manager,
         PermissionPerGroupUGroupRepresentationBuilder $ugroup_representation_builder
     ) {
-        $this->ugroup_manager                = $ugroup_manager;
         $this->ugroup_representation_builder = $ugroup_representation_builder;
     }
 

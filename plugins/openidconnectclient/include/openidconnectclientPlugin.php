@@ -458,7 +458,6 @@ class openidconnectclientPlugin extends Plugin
             $unlinked_account_manager
         );
         $user_mapping_controller   = new UserMapping\Controller(
-            $user_manager,
             $provider_manager,
             $user_mapping_manager
         );

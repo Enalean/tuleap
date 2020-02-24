@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\Column;
 use Cardwall_Column;
 use Cardwall_OnTop_ColumnDao;
 use Cardwall_OnTop_Config_ColumnFactory;
-use Cardwall_OnTop_Dao;
 use PFUser;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 
@@ -47,7 +46,7 @@ class ColumnPresenterCollectionRetriever
     public static function build(): self
     {
         return new self(
-            new Cardwall_OnTop_Config_ColumnFactory(new Cardwall_OnTop_ColumnDao(), new Cardwall_OnTop_Dao()),
+            new Cardwall_OnTop_Config_ColumnFactory(new Cardwall_OnTop_ColumnDao()),
             TrackerMappingPresenterBuilder::build()
         );
     }

@@ -36,7 +36,6 @@ use Tuleap\SVN\Explorer\RepositoryDisplayController;
 use Tuleap\SVN\PermissionsPerGroup\SVNJSONPermissionsRetriever;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
-use UGroupManager;
 
 class SvnRouter implements DispatchableWithRequest
 {
@@ -55,9 +54,6 @@ class SvnRouter implements DispatchableWithRequest
 
     /** @var RepositoryManager */
     private $repository_manager;
-
-    /** @var UGroupManager */
-    private $ugroup_manager;
 
     /** @var SvnPermissionManager */
     private $permissions_manager;
@@ -85,7 +81,6 @@ class SvnRouter implements DispatchableWithRequest
 
     public function __construct(
         RepositoryManager $repository_manager,
-        UGroupManager $ugroup_manager,
         SvnPermissionManager $permissions_manager,
         AccessControlController $access_control_controller,
         AdminController $notification_controller,
@@ -100,7 +95,6 @@ class SvnRouter implements DispatchableWithRequest
     ) {
         $this->repository_manager        = $repository_manager;
         $this->permissions_manager       = $permissions_manager;
-        $this->ugroup_manager            = $ugroup_manager;
         $this->access_control_controller = $access_control_controller;
         $this->admin_controller          = $notification_controller;
         $this->explorer_controller       = $explorer_controller;

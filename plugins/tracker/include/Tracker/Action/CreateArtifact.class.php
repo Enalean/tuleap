@@ -24,18 +24,15 @@ class Tracker_Action_CreateArtifact
 {
     private $tracker;
     private $artifact_factory;
-    private $tracker_factory;
     private $formelement_factory;
 
     public function __construct(
         Tracker                            $tracker,
         Tracker_ArtifactFactory            $artifact_factory,
-        TrackerFactory                     $tracker_factory,
         Tracker_FormElementFactory         $formelement_factory
     ) {
         $this->tracker             = $tracker;
         $this->artifact_factory    = $artifact_factory;
-        $this->tracker_factory     = $tracker_factory;
         $this->formelement_factory = $formelement_factory;
     }
 

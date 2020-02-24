@@ -26,23 +26,6 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $this->label;
     }
 
-    private function getRenderedAdditionalInformationsForLabel($additional_informations)
-    {
-        $html = $this->getTemplateRenderer()->renderToString(
-            'additional_column_title',
-            array(
-                'additional_title' => $additional_informations
-            )
-        );
-
-        return $html;
-    }
-
-    private function getTemplateRenderer()
-    {
-        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
-    }
-
     public function getCriteriaFrom($criteria)
     {
         return ' INNER JOIN tracker_artifact_priority_rank ON artifact.id = tracker_artifact_priority_rank.artifact_id';

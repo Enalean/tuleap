@@ -25,22 +25,17 @@ class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
     public $read_ugroups;
     public $write_ugroups;
 
-    /** @var bool */
-    private $is_default_mapping;
-
     private $is_compatibility_view_enabled = true;
 
     public function __construct(
         Project $project,
         array $groups_permissions,
-        $is_default_mapping,
         $is_compatibility_view_enabled,
         array $read_ugroups,
         array $write_ugroups
     ) {
         parent::__construct($project);
         $this->groups_permissions            = $groups_permissions;
-        $this->is_default_mapping            = $is_default_mapping;
         $this->is_compatibility_view_enabled = $is_compatibility_view_enabled;
         $this->read_ugroups                  = $read_ugroups;
         $this->write_ugroups                 = $write_ugroups;

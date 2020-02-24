@@ -156,15 +156,18 @@ class HistoryValueFormatter
     private function formatUgroups(array $ugroups, $key)
     {
         $value = "$key: ";
-        $value .= implode(', ', array_map(array($this, 'extractUgroupName'), $ugroups));
+        $value .= implode(
+            ', ',
+            array_map(
+                static function (ProjectUGroup $ugroup) {
+                    return NameTranslator::getUserGroupDisplayName($ugroup->getName());
+                },
+                $ugroups
+            )
+        );
         $value .= PHP_EOL;
 
         return $value;
-    }
-
-    private function extractUgroupName(ProjectUGroup $ugroup)
-    {
-        return NameTranslator::getUserGroupDisplayName($ugroup->getName());
     }
 
     /**

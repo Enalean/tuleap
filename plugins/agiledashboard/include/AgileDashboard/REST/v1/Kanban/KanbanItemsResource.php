@@ -20,25 +20,18 @@
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use AgileDashboard_Kanban;
-use AgileDashboard_KanbanActionsChecker;
 use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_KanbanColumnDao;
-use AgileDashboard_KanbanColumnFactory;
-use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanItemDao;
 use AgileDashboard_KanbanItemManager;
 use AgileDashboard_KanbanNotFoundException;
-use AgileDashboard_KanbanUserPreferences;
-use AgileDashboard_PermissionsManager;
 use AgileDashboardStatisticsAggregator;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator as ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactValidator as ArtifactValidator;
@@ -58,12 +51,6 @@ class KanbanItemsResource extends AuthenticatedResource
 
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
-
-    /** @var AgileDashboard_KankanColumnFactory */
-    private $kanban_column_factory;
-
-    /** @var AgileDashboard_KanbanColumnManager */
-    private $kanban_column_manager;
 
     /** @var TrackerFactory */
     private $tracker_factory;
@@ -94,22 +81,6 @@ class KanbanItemsResource extends AuthenticatedResource
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
             $this->tracker_factory,
             new AgileDashboard_KanbanDao()
-        );
-
-        $kanban_column_dao           = new AgileDashboard_KanbanColumnDao();
-        $permissions_manager         = new AgileDashboard_PermissionsManager();
-        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
-            $kanban_column_dao,
-            new AgileDashboard_KanbanUserPreferences()
-        );
-        $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
-            $kanban_column_dao,
-            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
-            new AgileDashboard_KanbanActionsChecker(
-                $this->tracker_factory,
-                $permissions_manager,
-                $this->form_element_factory
-            )
         );
 
         $kanban_item_dao                   = new AgileDashboard_KanbanItemDao();

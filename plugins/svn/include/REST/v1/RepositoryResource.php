@@ -170,7 +170,6 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->user_manager       = \UserManager::instance();
         $this->permission_manager = new SvnPermissionManager(
-            new \User_ForgeUserGroupFactory(new \UserGroupDao()),
             \PermissionsManager::instance()
         );
 
@@ -235,7 +234,6 @@ class RepositoryResource extends AuthenticatedResource
             $access_file_history_factory,
             $mail_notification_manager,
             new NotificationsBuilder(
-                $this->emails_builder,
                 $user_to_notify_dao,
                 $this->user_manager,
                 $ugroup_to_notify_dao,
@@ -261,11 +259,7 @@ class RepositoryResource extends AuthenticatedResource
             new NotificationUpdateChecker(
                 $mail_notification_manager,
                 new EmailsToBeNotifiedRetriever(
-                    $mail_notification_manager,
-                    $user_to_notify_dao,
-                    $ugroup_to_notify_dao,
-                    $this->ugroup_manager,
-                    $this->user_manager
+                    $mail_notification_manager
                 )
             )
         );

@@ -27,21 +27,15 @@ class DashboardWidgetReorder
      */
     private $dao;
     /**
-     * @var DashboardWidgetRetriever
-     */
-    private $retriever;
-    /**
      * @var DashboardWidgetRemoverInList
      */
     private $remover_in_list;
 
     public function __construct(
         DashboardWidgetDao $dao,
-        DashboardWidgetRetriever $retriever,
         DashboardWidgetRemoverInList $remover_in_list
     ) {
         $this->dao             = $dao;
-        $this->retriever       = $retriever;
         $this->remover_in_list = $remover_in_list;
     }
 

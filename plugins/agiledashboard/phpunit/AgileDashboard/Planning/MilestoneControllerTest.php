@@ -73,9 +73,6 @@ class MilestoneControllerTest extends TestCase
     /** @var \Planning_MilestonePaneFactory */
     private $pane_factory;
 
-    /** @var \AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
-    private $pane_presenter_builder_factory;
-
     /** @var \PFUser */
     private $current_user;
 
@@ -108,10 +105,7 @@ class MilestoneControllerTest extends TestCase
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../..');
 
-        $this->pane_factory                   = Mockery::mock(\Planning_MilestonePaneFactory::class);
-        $this->pane_presenter_builder_factory = Mockery::mock(
-            \AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory::class
-        );
+        $this->pane_factory = Mockery::mock(\Planning_MilestonePaneFactory::class);
 
         $this->plugin_path       = '/plugin/path';
         $this->milestone_factory = Mockery::mock(\Planning_MilestoneFactory::class);

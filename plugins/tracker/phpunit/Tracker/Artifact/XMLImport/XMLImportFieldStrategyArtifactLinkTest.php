@@ -39,9 +39,6 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
     /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink */
     private $artlink_strategy;
 
-    /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator */
-    private $nature_creator;
-
     /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao */
     private $nature_dao;
 
@@ -55,7 +52,6 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
         $this->logger           = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->nature_dao       = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class);
-        $this->nature_creator   = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator::class);
         $this->artifact         = \Mockery::spy(\Tracker_Artifact::class);
         $this->artifact->shouldReceive('getTrackerId')->andReturns(888);
 
@@ -71,8 +67,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
             $mapping,
             $this->logger,
             $this->artifact_factory,
-            $this->nature_dao,
-            $this->nature_creator
+            $this->nature_dao
         );
 
         $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
@@ -99,8 +94,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
             $mapping,
             $this->logger,
             $this->artifact_factory,
-            $this->nature_dao,
-            $this->nature_creator
+            $this->nature_dao
         );
 
         $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
@@ -130,8 +124,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
             $mapping,
             $this->logger,
             $this->artifact_factory,
-            $this->nature_dao,
-            $this->nature_creator
+            $this->nature_dao
         );
         $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="artlink" type="art_link">
@@ -156,8 +149,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
             $mapping,
             $this->logger,
             $this->artifact_factory,
-            $this->nature_dao,
-            $this->nature_creator
+            $this->nature_dao
         );
         $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="artlink" type="art_link">
@@ -183,8 +175,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
             $mapping,
             $this->logger,
             $this->artifact_factory,
-            $this->nature_dao,
-            $this->nature_creator
+            $this->nature_dao
         );
         $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="artlink" type="art_link">

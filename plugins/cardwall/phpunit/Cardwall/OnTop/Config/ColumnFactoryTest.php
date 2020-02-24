@@ -37,9 +37,6 @@ class ColumnFactoryTest extends TestCase
     /** @var Mockery\MockInterface */
     private $dao;
 
-    /** @var Mockery\MockInterface */
-    private $on_top_dao;
-
     /** @var \Cardwall_OnTop_Config_ColumnFactory */
     private $column_factory;
 
@@ -48,10 +45,9 @@ class ColumnFactoryTest extends TestCase
         parent::setUp();
 
         $this->dao        = Mockery::mock(\Cardwall_OnTop_ColumnDao::class);
-        $this->on_top_dao = Mockery::mock(\Cardwall_OnTop_Dao::class);
         $this->field      = Mockery::mock(Tracker_FormElement_Field_List::class)->makePartial();
 
-        $this->column_factory = new \Cardwall_OnTop_Config_ColumnFactory($this->dao, $this->on_top_dao);
+        $this->column_factory = new \Cardwall_OnTop_Config_ColumnFactory($this->dao);
     }
 
     public function testItShouldNotFatalErrorOnInvalidBindValue()

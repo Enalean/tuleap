@@ -41,10 +41,6 @@ class IndexController
      */
     private $url_builder;
     /**
-     * @var IncludeAssets
-     */
-    private $assets;
-    /**
      * @var ColorPresenterFactory
      */
     private $color_factory;
@@ -57,13 +53,11 @@ class IndexController
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
         CollectionOfLabelableDao $labelable_daos,
-        IncludeAssets $assets,
         ColorPresenterFactory $color_factory
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;
         $this->labelable_daos = $labelable_daos;
-        $this->assets         = $assets;
         $this->color_factory  = $color_factory;
     }
 

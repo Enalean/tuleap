@@ -19,9 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
 
 /**
  * I convert the xml changeset data into data structure in order to create changeset in one artifact
@@ -104,7 +102,6 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
                 $logger,
                 $tracker_artifact_factory,
                 $nature_dao,
-                new NatureCreator($nature_dao, new NatureValidator($nature_dao))
             ),
             self::FIELDTYPE_COMPUTED      => new XMLImportFieldStrategyComputed()
         );

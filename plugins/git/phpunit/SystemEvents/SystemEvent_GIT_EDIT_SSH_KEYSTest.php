@@ -28,7 +28,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
 {
 
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
-    private $event;
     private $user_account_manager;
     private $logger;
     private $user;

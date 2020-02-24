@@ -25,19 +25,17 @@ class Tracker_Artifact_Attachment_TemporaryFile
     private $name;
     private $tempname;
     private $description;
-    private $last_modified;
     private $current_offset;
     private $creator_id;
     private $size;
     private $mimetype;
 
-    public function __construct($id, $name, $tempname, $description, $last_modified, $current_offset, $creator_id, $size, $mimetype)
+    public function __construct($id, $name, $tempname, $description, $current_offset, $creator_id, $size, $mimetype)
     {
         $this->id             = $id;
         $this->name           = $name;
         $this->tempname       = $tempname;
         $this->description    = $description;
-        $this->last_modified  = $last_modified;
         $this->current_offset = $current_offset;
         $this->creator_id     = $creator_id;
         $this->size           = $size;

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
-use HTTPRequest;
 use PFUser;
 use CSRFSynchronizerToken;
 use URLRedirect;
@@ -31,9 +30,6 @@ use Tuleap\Theme\BurningParrot\Navbar\MenuItem\LogoutPresenter;
 
 class UserNavPresenter
 {
-    /** @var HTTPRequest */
-    private $request;
-
     /** @var PFUser */
     private $current_user;
 
@@ -45,12 +41,10 @@ class UserNavPresenter
     private $url_redirect;
 
     public function __construct(
-        HTTPRequest $request,
         PFUser $current_user,
         $display_new_user_menu_item,
         URLRedirect $url_redirect
     ) {
-        $this->request                    = $request;
         $this->current_user               = $current_user;
         $this->display_new_user_menu_item = $display_new_user_menu_item;
         $this->url_redirect               = $url_redirect;

@@ -1228,7 +1228,6 @@ class LdapPlugin extends Plugin
         if ($this->isGroupSyncAdminNotificationsEnabled()) {
             return new GroupSyncAdminEmailNotificationsManager(
                 $this->getLdapUserManager(),
-                ProjectManager::instance(),
                 new \Codendi_Mail(),
                 \UserManager::instance()
             );

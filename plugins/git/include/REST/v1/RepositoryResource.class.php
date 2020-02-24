@@ -144,10 +144,6 @@ class RepositoryResource extends AuthenticatedResource
      */
     private $ci_token_manager;
     /**
-     * @var Git_GitRepositoryUrlManager
-     */
-    private $url_manager;
-    /**
      * @var GitCommitRepresentationBuilder
      */
     private $commit_representation_builder;

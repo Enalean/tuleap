@@ -42,22 +42,15 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
      */
     protected $renderer;
 
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
     public function __construct(
         Tracker_Artifact $artifact,
         Codendi_Request $request,
         PFUser $user,
-        Tracker_Artifact_ArtifactRenderer $renderer,
-        EventManager $event_manager
+        Tracker_Artifact_ArtifactRenderer $renderer
     ) {
         parent::__construct($artifact, $request, $user);
 
         $this->renderer      = $renderer;
-        $this->event_manager = $event_manager;
     }
 
     /** @see Tracker_Artifact_View_View::getURL() */

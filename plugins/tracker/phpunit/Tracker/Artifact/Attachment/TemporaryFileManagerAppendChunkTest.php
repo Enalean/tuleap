@@ -78,7 +78,6 @@ class TemporaryFileManagerAppendChunkTest extends TestCase
             'random_tmpname',
             'Mugshot',
             0,
-            0,
             101,
             0,
             'image/png'
@@ -90,7 +89,6 @@ class TemporaryFileManagerAppendChunkTest extends TestCase
             'jette_lit.png',
             'wrong_path',
             'Mugshot',
-            0,
             0,
             101,
             0,

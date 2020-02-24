@@ -55,13 +55,11 @@ class NotificationBuilders
      * @var Project
      */
     private $project;
-    private $base_url;
 
-    public function __construct(ResponseFeedbackWrapper $feedback, Project $project, string $base_url)
+    public function __construct(ResponseFeedbackWrapper $feedback, Project $project)
     {
         $this->feedback = $feedback;
         $this->project  = $project;
-        $this->base_url = $base_url;
     }
 
     public function buildNotificationManager()

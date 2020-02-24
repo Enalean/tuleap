@@ -54,10 +54,6 @@ class GitRepository implements DVCSRepository
     private $mailPrefix;
     private $notifiedMails;
 
-    private $hooks;
-    private $branches;
-    private $config;
-
     private $parent;
     private $loaded;
     private $dao;
@@ -91,11 +87,6 @@ class GitRepository implements DVCSRepository
         $this->access          = 'private';
         $this->mailPrefix      = self::DEFAULT_MAIL_PREFIX;
         $this->notifiedMails;
-
-        $this->hooks           = array();
-        $this->branches        = array();
-
-        $this->config          = array();
         $this->parent          = null;
         $this->parentId        = 0;
         $this->loaded          = false;

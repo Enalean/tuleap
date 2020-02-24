@@ -21,20 +21,9 @@
 namespace Tuleap\Cardwall\Semantic;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElementFactory;
 
 class CardFieldsPresenterBuilder
 {
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
-    {
-        $this->form_element_factory = $form_element_factory;
-    }
-
     /**
      * @param Tracker_FormElement_Field[] $used_fields
      * @param Tracker_FormElement_Field[] $form_elements_fields

@@ -28,7 +28,6 @@ use Docman_MetadataValueDao;
 use Docman_Wiki;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
@@ -90,10 +89,6 @@ class DocmanItemCreatorTest extends TestCase
      * @var \Mockery\MockInterface|DocumentToUploadCreator
      */
     private $document_to_upload_creator;
-    /**
-     * @var vfsStreamDirectory
-     */
-    private $docman_file_system;
     /**
      * @var \Mockery\MockInterface|EmptyFileToUploadFinisher
      */

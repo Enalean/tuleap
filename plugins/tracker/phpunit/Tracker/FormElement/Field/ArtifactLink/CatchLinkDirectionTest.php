@@ -76,10 +76,6 @@ final class CatchLinkDirectionTest extends TestCase
      */
     private $artifact_124;
     /**
-     * @var array
-     */
-    private $all_artifacts;
-    /**
      * @var \Mockery\Mock
      */
     private $field;
@@ -130,8 +126,6 @@ final class CatchLinkDirectionTest extends TestCase
 
         $artifact_factory->shouldReceive('getArtifactById')->with(123)->andReturn($this->artifact_123);
         $artifact_factory->shouldReceive('getArtifactById')->with(124)->andReturn($this->artifact_124);
-
-        $this->all_artifacts = [$this->artifact_123, $this->artifact_124];
 
         $this->field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
 

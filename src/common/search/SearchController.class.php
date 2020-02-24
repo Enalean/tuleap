@@ -35,9 +35,6 @@ class Search_SearchController
 
     private $search_types = array();
 
-    /** @var PluginManager */
-    private $plugin_manager;
-
     public function __construct(EventManager $event_manager)
     {
         $this->event_manager = $event_manager;
@@ -53,8 +50,6 @@ class Search_SearchController
             Search_SearchForum::NAME     => new Search_SearchForum(new ForumDao()),
             Search_SearchWiki::NAME      => new Search_SearchWiki(new WikiDao()),
         );
-
-        $this->plugin_manager = PluginManager::instance();
     }
 
     public function index(Codendi_Request $request)

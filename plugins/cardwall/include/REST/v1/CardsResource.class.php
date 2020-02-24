@@ -70,7 +70,6 @@ class CardsResource
         $this->single_card_builder = new Cardwall_SingleCardBuilder(
             $this->config_factory,
             new Cardwall_CardFields(
-                $this->user_manager,
                 $this->formelement_factory
             ),
             Tracker_ArtifactFactory::instance(),

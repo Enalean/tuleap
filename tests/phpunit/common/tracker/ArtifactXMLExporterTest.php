@@ -164,16 +164,6 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    private function dumpXML()
-    {
-        $xsl = new DOMDocument();
-        $xsl->load(__DIR__ .'/../../../../src/utils/xml/indent.xsl');
-
-        $proc = new XSLTProcessor();
-        $proc->importStyleSheet($xsl);
-        echo '<pre>'.htmlentities($proc->transformToXML($this->dom)).'</pre>';
-    }
-
     private function findValue(SimpleXMLElement $field_change, $name)
     {
         foreach ($field_change as $change) {

@@ -23,7 +23,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
-use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
@@ -52,11 +51,6 @@ class TopBacklogElementsToAddCheckerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
      */
     private $artifact_factory;
-
-    /**
-     * @var Logger|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $logger;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
@@ -95,7 +89,6 @@ class TopBacklogElementsToAddCheckerTest extends TestCase
             $this->artifact_factory
         );
 
-        $this->logger  = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->project = Mockery::mock(Project::class);
         $this->user    = Mockery::mock(PFUser::class);
 

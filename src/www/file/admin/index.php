@@ -52,7 +52,6 @@ if (! $permission_manager->isAdmin($project, $user)) {
 
 $frs_router = new FRSRouter(
     new PermissionController(
-        new UGroupManager(),
         $permission_factory,
         new FRSPermissionCreator(
             $permission_dao,

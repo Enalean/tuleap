@@ -20,7 +20,6 @@
 namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
@@ -40,16 +39,10 @@ class TrackerArtifactChangesetValueFileTest extends TestCase
      * @var Tracker_Artifact|\Mockery\MockInterface|Tracker_Artifact
      */
     private $artifact;
-    /**
-     * @var PFUser|\Mockery\MockInterface|PFUser
-     */
-    private $user;
 
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->user = \Mockery::mock(\PFUser::class);
 
         $this->artifact  = \Mockery::mock(\Tracker_Artifact::class);
         $this->changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);

@@ -26,7 +26,6 @@ class Tracker_FormElement_Field_ComputedDaoCache
     private static $instance;
 
     private $dao;
-    private $field_values_at_timestamp = array();
 
     public function __construct(Tracker_FormElement_Field_ComputedDao $dao)
     {

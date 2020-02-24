@@ -42,7 +42,9 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
 
         array_walk(
             $ugroup_names,
-            array($this, 'appendUgroupToFieldChangeNode'),
+            function ($ugroup_name, $index, SimpleXMLElement $field_xml) {
+                $this->appendUgroupToFieldChangeNode($ugroup_name, $index, $field_xml);
+            },
             $field_change
         );
     }

@@ -570,7 +570,12 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         }
 
         $members = $this->decodeGerritResponse($response->getBody()->getContents());
-        return array_map(array($this, 'pluckUsername'), $members);
+        return array_map(
+            static function ($member) {
+                return $member['username'];
+            },
+            $members
+        );
     }
 
     private function getAllIncludedGroups(
@@ -588,7 +593,12 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
         $members = $this->decodeGerritResponse($response->getBody()->getContents());
 
-        return array_map(array($this, 'pluckGroupname'), $members);
+        return array_map(
+            function ($member) {
+                return $member['name'];
+            },
+            $members
+        );
     }
 
     private function getGroupInfoFromGerrit(Git_RemoteServer_GerritServer $server, $group_name)
@@ -659,17 +669,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $message = $base_message . sprintf(': HTTP status %d %s', $response->getStatusCode(), $response->getReasonPhrase());
         $this->logger->error($message);
         throw new Git_Driver_Gerrit_Exception($message);
-    }
-
-
-    private function pluckUsername($member)
-    {
-        return $member['username'];
-    }
-
-    private function pluckGroupname($member)
-    {
-        return $member['name'];
     }
 
     /**
