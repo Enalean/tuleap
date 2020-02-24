@@ -22,38 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
-use CSRFSynchronizerToken;
+use Tuleap\HudsonGit\Job\Job;
 
-class JenkinsServerPresenter
+class JenkinsServerLogsPresenter
 {
     /**
      * @var string
      */
-    public $jenkins_server_url;
+    public $repository_name;
 
     /**
-     * @var int
+     * @var string
      */
-    public $jenkins_server_id;
+    public $push_date;
 
     /**
-     * @var CSRFSynchronizerToken
+     * @var String[]
      */
-    public $csrf_delete;
+    public $triggered_jobs;
 
-    /**
-     * @var JenkinsServerLogsPresenter[]
-     */
-    public $logs_presenters;
-
-    public function __construct(JenkinsServer $jenkins_server, array $logs_presenters)
+    public function __construct(string $repository_name, string $formatted_push_date, array $triggered_jobs)
     {
-        $this->jenkins_server_id  = $jenkins_server->getId();
-        $this->jenkins_server_url = $jenkins_server->getServerURL();
-        $this->csrf_delete        = new CSRFSynchronizerToken(
-            URLBuilder::buildDeleteUrl()
-        );
+        $this->repository_name = $repository_name;
+        $this->push_date       = $formatted_push_date;
+        $this->triggered_jobs  = $triggered_jobs;
+    }
 
-        $this->logs_presenters = $logs_presenters;
+    public static function buildFromJob(Job $job): self
+    {
+        return new self(
+            (string) $job->getRepository()->getName(),
+            (string) $job->getFormattedPushDate(),
+            $job->getJobUrlList()
+        );
     }
 }

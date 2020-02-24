@@ -48,4 +48,16 @@ class ProjectJobDao extends DataAccessObject
             ]
         );
     }
+
+    public function searchJobsByJenkinsServer(int $jenkins_server_id): array
+    {
+        $sql = "SELECT *
+                FROM plugin_hudson_git_project_server_job
+                WHERE project_server_id=?
+                ORDER BY push_date
+                DESC
+                LIMIT 30";
+
+        return $this->getDB()->run($sql, $jenkins_server_id);
+    }
 }

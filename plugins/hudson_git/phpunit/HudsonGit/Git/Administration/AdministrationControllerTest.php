@@ -25,6 +25,7 @@ namespace Tuleap\HudsonGit\Git\Administration;
 use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPlugin;
+use GitRepository;
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -34,6 +35,9 @@ use Project;
 use ProjectManager;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\HudsonGit\Job\Job;
+use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
@@ -41,7 +45,7 @@ use Tuleap\Request\NotFoundException;
 
 class AdministrationControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     /**
      * @var AdministrationController
@@ -91,30 +95,37 @@ class AdministrationControllerTest extends TestCase
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerFactory
      */
-    private $git_jenkins_administration_server_factory;
+    private $jenkins_server_factory;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
      */
     private $include_assets;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JobManager
+     */
+    private $job_manager;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->project_manager                           = Mockery::mock(ProjectManager::class);
-        $this->git_permissions_manager                   = Mockery::mock(GitPermissionsManager::class);
-        $this->header_renderer                           = Mockery::mock(HeaderRenderer::class);
-        $this->renderer                                  = Mockery::mock(TemplateRenderer::class);
-        $this->mirror_data_mapper                        = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
-        $this->git_jenkins_administration_server_factory = Mockery::mock(JenkinsServerFactory::class);
-        $this->include_assets                            = Mockery::mock(IncludeAssets::class);
+        $this->project_manager         = Mockery::mock(ProjectManager::class);
+        $this->git_permissions_manager = Mockery::mock(GitPermissionsManager::class);
+        $this->header_renderer         = Mockery::mock(HeaderRenderer::class);
+        $this->renderer                = Mockery::mock(TemplateRenderer::class);
+        $this->mirror_data_mapper      = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
+        $this->jenkins_server_factory  = Mockery::mock(JenkinsServerFactory::class);
+        $this->include_assets          = Mockery::mock(IncludeAssets::class);
+        $this->job_manager             = Mockery::mock(JobManager::class);
 
         $this->controller = new AdministrationController(
             $this->project_manager,
             $this->git_permissions_manager,
             $this->mirror_data_mapper,
-            $this->git_jenkins_administration_server_factory,
+            $this->jenkins_server_factory,
+            $this->job_manager,
             $this->header_renderer,
             $this->renderer,
             $this->include_assets
@@ -226,10 +237,18 @@ class AdministrationControllerTest extends TestCase
 
         $this->mirror_data_mapper->shouldReceive('fetchAllForProject')->andReturn([]);
 
-        $this->git_jenkins_administration_server_factory    ->shouldReceive('getJenkinsServerOfProject')
+        $jenkins_server = new JenkinsServer(1, 'url', $this->project);
+        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')
             ->once()
             ->with($this->project)
-            ->andReturn([]);
+            ->andReturn([$jenkins_server]);
+
+        $repository = Mockery::mock(GitRepository::class);
+        $repository->shouldReceive('getName')->andReturn('repo01');
+        $job = new Job($repository, 1582622782, 'job_url');
+        $this->job_manager->shouldReceive('getLastJobLogsByProjectServer')
+            ->with($jenkins_server)
+            ->andReturn([$job]);
 
         $this->header_renderer->shouldReceive('renderServiceAdministrationHeader')->once();
         $this->renderer->shouldReceive('renderToPage')->once();

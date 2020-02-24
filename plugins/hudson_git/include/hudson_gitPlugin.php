@@ -129,7 +129,14 @@ class hudson_gitPlugin extends Plugin
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $xzibit = new GitWebhooksSettingsEnhancer(
                 new Hook\HookDao(),
-                new JobManager(new JobDao(), new ProjectJobDao()),
+                new JobManager(
+                    new JobDao(),
+                    new ProjectJobDao(),
+                    new GitRepositoryFactory(
+                        new GitDao(),
+                        ProjectManager::instance()
+                    )
+                ),
                 $this->getCSRF(),
                 self::getJenkinsServerFactory()
             );
@@ -193,6 +200,14 @@ class hudson_gitPlugin extends Plugin
             self::getGitPermissionsManager(),
             $git_plugin->getMirrorDataMapper(),
             self::getJenkinsServerFactory(),
+            new JobManager(
+                new JobDao(),
+                new ProjectJobDao(),
+                new GitRepositoryFactory(
+                    new GitDao(),
+                    ProjectManager::instance()
+                )
+            ),
             $git_plugin->getHeaderRenderer(),
             TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates/git-administration'),
             $this->getIncludeAssets()
@@ -244,7 +259,14 @@ class hudson_gitPlugin extends Plugin
                     new JenkinsCSRFCrumbRetriever($http_client, $request_factory)
                 ),
                 $this->getLogger(),
-                new JobManager(new JobDao(), new ProjectJobDao()),
+                new JobManager(
+                    new JobDao(),
+                    new ProjectJobDao(),
+                    new GitRepositoryFactory(
+                        new GitDao(),
+                        ProjectManager::instance()
+                    )
+                ),
                 self::getJenkinsServerFactory()
             );
 

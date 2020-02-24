@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright Enalean (c) 2016. All rights reserved.
+/**
+ * Copyright Enalean (c) 2016 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,6 +25,7 @@
 namespace Tuleap\HudsonGit\Job;
 
 use GitRepository;
+use GitRepositoryFactory;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 
 class JobManager
@@ -39,10 +40,16 @@ class JobManager
      */
     private $project_job_dao;
 
-    public function __construct(JobDao $job_dao, ProjectJobDao $project_job_dao)
+    /**
+     * @var GitRepositoryFactory
+     */
+    private $git_repository_factory;
+
+    public function __construct(JobDao $job_dao, ProjectJobDao $project_job_dao, GitRepositoryFactory $git_repository_factory)
     {
-        $this->job_dao         = $job_dao;
-        $this->project_job_dao = $project_job_dao;
+        $this->job_dao                = $job_dao;
+        $this->project_job_dao        = $project_job_dao;
+        $this->git_repository_factory = $git_repository_factory;
     }
 
     /**
@@ -85,7 +92,22 @@ class JobManager
         return $jobs;
     }
 
-    private function instantiateFromRow(array $row, GitRepository $repository)
+    public function getLastJobLogsByProjectServer(JenkinsServer $jenkins_server): array
+    {
+        $jobs = [];
+        foreach ($this->project_job_dao->searchJobsByJenkinsServer($jenkins_server->getId()) as $row) {
+            $repository = $this->git_repository_factory->getRepositoryById((int) $row['repository_id']);
+            if ($repository === null) {
+                continue;
+            }
+
+            $jobs[] = $this->instantiateFromRow($row, $repository);
+        }
+
+        return $jobs;
+    }
+
+    private function instantiateFromRow(array $row, GitRepository $repository): Job
     {
         return new Job(
             $repository,
