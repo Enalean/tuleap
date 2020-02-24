@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - present. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,45 +20,72 @@
 
 namespace Tuleap\AgileDashboard\Semantic;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use TuleapTestCase;
 
-require_once dirname(__FILE__) . '/../../../bootstrap.php';
-
-class SemanticDoneTest extends TuleapTestCase
+class SemanticDoneTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticDoneValueChecker
+     */
+    private $value_checker;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Dao\SemanticDoneDao
+     */
+    private $dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Semantic_Status
+     */
+    private $semantic_status;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
+     */
+    private $tracker;
+    /**
+     * @var Tracker_FormElement_Field_List_Bind_StaticValue
+     */
+    private $done_value;
+    /**
+     * @var Tracker_FormElement_Field_List_Bind_StaticValue
+     */
+    private $on_going_value;
 
-    public function setUp()
+    /**
+     * @var Tracker_FormElement_Field_List_Bind_StaticValue
+     */
+    private $to_do_value;
+
+    protected function setUp(): void
     {
-        parent::setUp();
-
         $this->to_do_value    = new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'todo', '', 1, false);
         $this->on_going_value = new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'on-going', '', 2, false);
         $this->done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue(3, 'done', '', 3, false);
 
-        $this->tracker         = aMockTracker()->build();
-        $this->semantic_status = mock('Tracker_Semantic_Status');
-        $this->dao             = mock('Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao');
-        $this->value_checker   = mock('Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker');
+        $this->tracker         = \Mockery::mock(\Tracker::class);
+        $this->semantic_status = \Mockery::spy(\Tracker_Semantic_Status::class);
+        $this->dao             = \Mockery::spy(\Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao::class);
+        $this->value_checker   = \Mockery::spy(\Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker::class);
     }
 
-    public function itExportsTheSemanticInXml()
+    public function testItExportsTheSemanticInXml(): void
     {
-        stub($this->semantic_status)->getOpenValues()->returns(array(
+        $this->semantic_status->shouldReceive('getOpenValues')->andReturns(array(
             1,
             2
         ));
 
-        $field = stub('Tracker_FormElement_Field_List')->getId()->returns(101);
+        $field = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(101)->getMock();
 
-        stub($field)->getAllVisibleValues()->returns(array(
+        $field->shouldReceive('getAllVisibleValues')->andReturns(array(
             1 => $this->to_do_value,
             2 => $this->on_going_value,
             3 => $this->done_value
         ));
 
-        stub($this->semantic_status)->getField()->returns($field);
+        $this->semantic_status->shouldReceive('getField')->andReturns($field);
 
         $xml               = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = array(
@@ -80,14 +107,14 @@ class SemanticDoneTest extends TuleapTestCase
 
         $semantic_done->exportToXML($xml, $array_xml_mapping);
 
-        $this->assertEqual((string)$xml->semantic->shortname, 'done');
-        $this->assertEqual((string)$xml->semantic->label, 'Done');
-        $this->assertEqual((string)$xml->semantic->closed_values->closed_value[0]['REF'], 'F14-V68');
+        $this->assertEquals('done', (string)$xml->semantic->shortname);
+        $this->assertEquals('Done', (string)$xml->semantic->label);
+        $this->assertEquals('F14-V68', (string)$xml->semantic->closed_values->closed_value[0]['REF']);
     }
 
-    public function itExportsNothingIfNoSemanticStatusDefined()
+    public function testItExportsNothingIfNoSemanticStatusDefined(): void
     {
-        stub($this->semantic_status)->getField()->returns(null);
+        $this->semantic_status->shouldReceive('getField')->andReturns(null);
 
         $xml               = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = array(
@@ -109,6 +136,6 @@ class SemanticDoneTest extends TuleapTestCase
 
         $semantic_done->exportToXML($xml, $array_xml_mapping);
 
-        $this->assertEqual((string) $xml->semantic, '');
+        $this->assertEquals('', (string) $xml->semantic);
     }
 }
