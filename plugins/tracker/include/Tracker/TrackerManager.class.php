@@ -23,6 +23,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\GlobalAdminController;
+use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
@@ -598,7 +599,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     {
         $user_finder        = new XMLImportHelper(UserManager::instance());
         $tracker_xml_import = TrackerXmlImport::build($user_finder);
-        return new TrackerCreator($tracker_xml_import, $this->getTrackerFactory());
+        return new TrackerCreator($tracker_xml_import, $this->getTrackerFactory(), $this->getCreationDataChecker());
     }
 
     /**
@@ -1216,12 +1217,18 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             $this->getArtifactFactory(),
             $this->getTrackerFormElementFactory(),
             UserManager::instance(),
-            ProjectManager::instance()
+            ProjectManager::instance(),
+            $this->getCreationDataChecker()
         );
     }
 
     private function getTrackerFormElementFactory()
     {
         return Tracker_FormElementFactory::instance();
+    }
+
+    private function getCreationDataChecker(): TrackerCreationDataChecker
+    {
+        return TrackerCreationDataChecker::build();
     }
 }

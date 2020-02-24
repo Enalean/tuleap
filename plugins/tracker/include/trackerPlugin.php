@@ -78,6 +78,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationController;
+use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
 use Tuleap\Tracker\Creation\TrackerCreationPresenterBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationProcessorController;
@@ -1234,7 +1235,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getArtifactFactory(),
             $this->getTrackerFormElementFactory(),
             $this->getUserManager(),
-            $this->getProjectManager()
+            $this->getProjectManager(),
+            $this->getTrackerChecker()
         );
     }
 
@@ -2040,7 +2042,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             \ProjectManager::instance(),
             new TrackerCreator(
                 TrackerXmlImport::build(new XMLImportHelper($user_manager)),
-                $this->getTrackerFactory()
+                $this->getTrackerFactory(),
+                TrackerCreationDataChecker::build()
             ),
             new TrackerCreationPermissionChecker(new TrackerManager())
         );
@@ -2137,5 +2140,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
+    }
+
+    private function getTrackerChecker(): TrackerCreationDataChecker
+    {
+        return TrackerCreationDataChecker::build();
     }
 }

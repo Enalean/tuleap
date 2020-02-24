@@ -46,6 +46,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
@@ -184,7 +185,8 @@ final class TrackerXmlImportTest extends TestCase
                 Mockery::spy(WebhookFactory::class),
                 $this->mapping_from_existing_tracker,
                 $this->external_validator,
-                Mockery::mock(TrackerXmlImportFeedbackCollector::class)
+                Mockery::mock(TrackerXmlImportFeedbackCollector::class),
+                Mockery::mock(TrackerCreationDataChecker::class)
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

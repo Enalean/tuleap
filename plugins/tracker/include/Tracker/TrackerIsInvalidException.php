@@ -21,7 +21,7 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Tracker\Admin;
+namespace Tuleap\Tracker;
 
 class TrackerIsInvalidException extends \Exception
 {
@@ -89,6 +89,20 @@ class TrackerIsInvalidException extends \Exception
                 dgettext('plugin_tracker', 'The tracker short name %s is already used. Please use another one.'),
                 $shortname
             )
+        );
+    }
+
+    public static function invalidTrackerTemplate(): self
+    {
+        return new self(
+            dgettext('plugin_tracker', 'Invalid tracker template.')
+        );
+    }
+
+    public static function invalidProjectTemplate(): self
+    {
+        return new self(
+            dgettext('plugin_tracker', 'Invalid project template.')
         );
     }
 
