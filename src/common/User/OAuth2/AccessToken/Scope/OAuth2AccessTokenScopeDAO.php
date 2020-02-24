@@ -26,6 +26,17 @@ use Tuleap\DB\DataAccessObject;
 
 class OAuth2AccessTokenScopeDAO extends DataAccessObject
 {
+    public function saveScopeKeysByOAuth2AccessTokenID(int $access_token_id, string ...$scope_keys): void
+    {
+        $data_to_insert = [];
+
+        foreach ($scope_keys as $scope_key) {
+            $data_to_insert[] = ['access_token_id' => $access_token_id, 'scope_key' => $scope_key];
+        }
+
+        $this->getDB()->insertMany('oauth2_access_token_scope', $data_to_insert);
+    }
+
     /**
      * @return string[][]
      * @psalm-return array<array{scope_key:string}>
