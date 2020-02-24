@@ -35,9 +35,6 @@ class User_PreferencesPresenter
     /** @var array */
     private $user_access;
 
-    /** string */
-    private $third_party_html;
-
     /**
      * @var CSRFSynchronizerToken
      */
@@ -82,7 +79,6 @@ class User_PreferencesPresenter
         $can_change_password,
         array $extra_user_info,
         array $user_access,
-        $third_party_html,
         CSRFSynchronizerToken $csrf_token,
         array $languages_html,
         array $user_helper_preferences,
@@ -98,7 +94,6 @@ class User_PreferencesPresenter
         $this->can_change_password     = $can_change_password;
         $this->extra_user_info         = $extra_user_info;
         $this->user_access             = $user_access;
-        $this->third_party_html        = $third_party_html;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
         $this->languages_html          = $languages_html;
@@ -286,16 +281,6 @@ class User_PreferencesPresenter
     public function previous_successful_login_value()
     {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->user_access['prev_auth_success']);
-    }
-
-    public function third_party_applications_title()
-    {
-        return 'Third party applications';
-    }
-
-    public function third_party_applications_content()
-    {
-        return $this->third_party_html;
     }
 
     public function user_legal()

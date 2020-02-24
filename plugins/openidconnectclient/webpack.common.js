@@ -23,7 +23,8 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 const entry_points = {
     default: "./themes/default/css/style.scss",
     "fp-style": "./themes/FlamingParrot/css/style.scss",
-    "open-id-connect-client": "./scripts/open-id-connect-client.js"
+    "open-id-connect-client": "./scripts/open-id-connect-client.js",
+    "user-account-style": "./themes/Account/style.scss"
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];

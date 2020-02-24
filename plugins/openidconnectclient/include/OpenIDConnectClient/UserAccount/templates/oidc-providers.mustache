@@ -1,0 +1,66 @@
+<div class="user-preferences">
+    <h1 class="user-preferences-title">
+        {{# gettext }}Preferences{{/ gettext }}
+    </h1>
+    <div class="user-preferences-container">
+        {{> user-account-tabs }}
+
+        <div class="user-preferences-section">
+            <section class="tlp-pane">
+                <form action="{{ unlink_oidc_url }}" method="post" class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">{{# dgettext }} tuleap-openidconnectclient | OpenID Connect providers{{/ dgettext }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+
+                        {{# unique_authentication_endpoint }}
+                            <p>{{# dgettext }} tuleap-openidconnectclient | OpenID Connect provider last login information.{{/ dgettext }}</p>
+                        {{/ unique_authentication_endpoint }}
+                        {{^ unique_authentication_endpoint }}
+                            <p>{{# dgettext }} tuleap-openidconnectclient | List all OpenID Connect providers you authorized for authentication.{{/ dgettext }}</p>
+                            <p>{{# dgettext }} tuleap-openidconnectclient | If you no longer trust one of those provider, you can unlink it.{{/ dgettext }}</p>
+                        {{/ unique_authentication_endpoint }}
+
+                        <table class="tlp-table">
+                            <thead>
+                                <tr>
+                                    <th class="oidc-user-account-provider">{{# dgettext }} tuleap-openidconnectclient | Provider{{/ dgettext }}</th>
+                                    <th class="oidc-user-account-last-login">{{# dgettext }} tuleap-openidconnectclient | Last login date{{/ dgettext }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{# user_mappings }}
+                                    <tr>
+                                        <td><i class="fa fa-fw fa-{{ provider_icon }}"></i> {{ provider_name }}</td>
+                                        <td>{{ last_usage }}</td>
+                                        <td>
+                                            {{^ unique_authentication_endpoint }}
+                                                <button
+                                                        type="submit"
+                                                        class="tlp-button-primary tlp-button-small"
+                                                        name="provider_to_unlink"
+                                                        value="{{ user_mapping_id }}"
+                                                >
+                                                    <i class="tlp-button-icon fa fa-unlink"></i> {{# dgettext }} tuleap-openidconnectclient | Unlink{{/ dgettext }}
+                                                </button>
+                                            {{/ unique_authentication_endpoint }}
+                                        </td>
+                                    </tr>
+                                {{/ user_mappings }}
+                                {{# no_mappings }}
+                                    <tr>
+                                        <td colspan="3" class="tlp-table-cell-empty">{{# dgettext }} tuleap-openidconnectclient | There are no authorized providers yet {{/ dgettext }}</td>
+                                    </tr>
+                                {{/ no_mappings }}
+                            </tbody>
+                        </table>
+                    </section>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>

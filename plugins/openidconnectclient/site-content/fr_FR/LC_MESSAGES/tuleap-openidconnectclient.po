@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.4\n"
 
 msgid "Add Azure Active Directory provider"
 msgstr "Ajouter un fournisseur s'appuyant sur Azure Active Directory"
@@ -88,11 +88,21 @@ msgstr ""
 msgid "Icon"
 msgstr "Icône"
 
-msgid "Last login date:"
-msgstr "Dernière connexion :"
+msgid "If you no longer trust one of those provider, you can unlink it."
+msgstr ""
+"Si vous ne faites plus confiance à un fournisseur, vous pouvez supprimer le "
+"lien."
+
+msgid "Last login date"
+msgstr "Dernière connexion"
 
 msgid "Link an account"
 msgstr "Liez un compte"
+
+msgid "List all OpenID Connect providers you authorized for authentication."
+msgstr ""
+"Liste de tous les fournisseurs OpenID Connect que vous avez autorisés à vous "
+"identifier."
 
 msgid "Name"
 msgstr "Nom"
@@ -102,14 +112,17 @@ msgstr "Uniquement les utilisateurs disposant d'un compte Microsoft personnel"
 
 msgid "Only users with a work/school account from Azure Active Directory"
 msgstr ""
-"Uniquement les utilisateurs disposant d'un compte professionnel/scolaire "
-"de Azure Active Directory"
+"Uniquement les utilisateurs disposant d'un compte professionnel/scolaire de "
+"Azure Active Directory"
 
 msgid "OpenID Connect"
 msgstr "OpenID Connect"
 
 msgid "OpenID Connect Client"
 msgstr "OpenID Connect Client"
+
+msgid "OpenID Connect provider last login information."
+msgstr "Dernière information de connexion au fournisseur OpenID Connect."
 
 msgid "OpenID Connect providers"
 msgstr "Fournisseurs OpenID Connect"
@@ -119,6 +132,9 @@ msgstr "Aperçu"
 
 msgid "Preview of the login page button"
 msgstr "Aperçu du bouton de la page de connexion"
+
+msgid "Provider"
+msgstr "Fournisseur"
 
 msgid "Register a new account"
 msgstr "Créer un nouveau compte"
@@ -155,6 +171,9 @@ msgstr "Le fournisseur %1$s a été supprimé."
 msgid "The provider %1$s have been successfully updated."
 msgstr "Le fournisseur %1$s a été mis à jour avec succès."
 
+msgid "There are no authorized providers yet"
+msgstr "Il n'y a aucun fournisseur autorisé pour le moment"
+
 msgid "There is nothing here,"
 msgstr "Il n'y a rien ici,"
 
@@ -184,7 +203,7 @@ msgid ""
 "confirm this deletion?"
 msgstr ""
 "Vous êtes sur le point de supprimer un fournisseur. Cette action est "
-"irréversible. Veuillez confirmer votre action."
+"irréversible. Confirmez-vous cette action ?"
 
 msgid ""
 "You can only enable this provider as unique authentication method if you are "

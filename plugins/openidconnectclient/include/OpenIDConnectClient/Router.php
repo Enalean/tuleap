@@ -38,29 +38,17 @@ class Router implements DispatchableWithRequestNoAuthz
      */
     private $account_linker_controller;
 
-    /**
-     * @var UserMapping\Controller
-     */
-    private $user_mapping_controller;
-
     public function __construct(
         Login\Controller $login_controller,
-        AccountLinker\Controller $account_linker_controller,
-        UserMapping\Controller $user_mapping_controller
+        AccountLinker\Controller $account_linker_controller
     ) {
         $this->login_controller          = $login_controller;
         $this->account_linker_controller = $account_linker_controller;
-        $this->user_mapping_controller   = $user_mapping_controller;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $action = $request->get('action');
-
-        if ($action === 'remove-user-mapping') {
-            $this->user_mapping_controller->removeMapping($request->get('user_mapping_id'));
-            return;
-        }
 
         $this->checkTLSPresence($request, $layout);
         switch ($action) {
