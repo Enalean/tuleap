@@ -18,6 +18,7 @@
  */
 
 import { DaysDisplayingBurndownData, PointsWithDate } from "./type";
+import { PointsWithDateForGenericBurnup } from "../../../../plugins/agiledashboard/scripts/burnup-chart/src/type";
 
 export function getDaysToDisplay({
     opening_days,
@@ -27,3 +28,7 @@ export function getDaysToDisplay({
 }: DaysDisplayingBurndownData): string[] | [];
 
 export function getFormattedDates(dataset: PointsWithDate[]): PointsWithDate[];
+
+export function getFormattedDates(
+    dataset: PointsWithDateForGenericBurnup[]
+): PointsWithDateForGenericBurnup[];

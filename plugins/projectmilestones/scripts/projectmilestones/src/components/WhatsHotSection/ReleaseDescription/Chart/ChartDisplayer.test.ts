@@ -55,8 +55,7 @@ describe("ChartDisplayer", () => {
         store_options = {
             state: {
                 project_id,
-                is_timeframe_duration: true,
-                activate_burnup: true
+                is_timeframe_duration: true
             }
         };
 

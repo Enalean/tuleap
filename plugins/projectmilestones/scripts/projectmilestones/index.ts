@@ -54,7 +54,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const label_timeframe = vue_mount_point.dataset.labelTimeframe;
     const user_can_view_sub_milestones_planning_dataset =
         vue_mount_point.dataset.userCanViewSubMilestonesPlanning;
-    const activate_burnup_dataset = vue_mount_point.dataset.projectMilestonesActivateBurnup;
     const burnup_mode = vue_mount_point.dataset.burnupMode;
 
     if (!project_id_dataset) {
@@ -99,7 +98,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user_can_view_sub_milestones_planning = Boolean(
         user_can_view_sub_milestones_planning_dataset
     );
-    const activate_burnup = Boolean(activate_burnup_dataset);
 
     const AppComponent = Vue.extend(App);
 
@@ -114,7 +112,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             label_start_date,
             label_timeframe,
             user_can_view_sub_milestones_planning,
-            activate_burnup,
             burnup_mode === "count" ? BurnupMode.COUNT : BurnupMode.EFFORT
         )
     }).$mount(vue_mount_point);

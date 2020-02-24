@@ -110,7 +110,6 @@ export interface StoreOptions {
         label_start_date?: string;
         label_timeframe?: string;
         user_can_view_sub_milestones_planning?: boolean;
-        activate_burnup?: boolean;
         burnup_mode?: string;
     };
     getters?: {
@@ -133,7 +132,6 @@ export interface State {
     label_start_date: string;
     label_timeframe: string;
     user_can_view_sub_milestones_planning: boolean;
-    activate_burnup: boolean;
     burnup_mode: BurnupMode;
 }
 

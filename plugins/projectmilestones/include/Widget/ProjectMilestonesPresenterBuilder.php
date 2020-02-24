@@ -212,7 +212,6 @@ class ProjectMilestonesPresenterBuilder
             $this->getLabelStartDateField(),
             $this->getLabelTimeframeField(),
             $this->userCanViewSubMilestonesPlanning(),
-            $this->activateBurnupChart(),
             $this->getBurnupMode()
         );
     }
@@ -305,15 +304,6 @@ class ProjectMilestonesPresenterBuilder
         }
 
         return 'start date';
-    }
-
-    private function activateBurnupChart(): bool
-    {
-        if (! \ForgeConfig::get('project_milestones_activate_burnup')) {
-            return false;
-        }
-
-        return true;
     }
 
     private function getBurnupMode(): string

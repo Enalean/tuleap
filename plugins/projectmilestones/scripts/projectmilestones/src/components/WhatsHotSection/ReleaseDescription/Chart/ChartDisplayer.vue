@@ -25,7 +25,7 @@
                 <h2 class="tlp-pane-subtitle">{{ burndown_label }}</h2>
                 <burndown-displayer v-bind:release_data="release_data" />
             </div>
-            <div v-if="activate_burnup && burnup_exists" data-test="burnup-exists">
+            <div v-if="burnup_exists" data-test="burnup-exists">
                 <h2 class="tlp-pane-subtitle project-milestones-chart-label">{{ burnup_label }}</h2>
                 <burnup-displayer v-bind:release_data="release_data" />
             </div>
@@ -44,7 +44,6 @@ import { FetchWrapperError } from "tlp";
 import { getChartData } from "../../../../api/rest-querier";
 import { getBurndownDataFromType, getBurnupDataFromType } from "../../../../helpers/chart-helper";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
-import { State } from "vuex-class";
 import BurnupDisplayer from "./Burnup/BurnupDisplayer.vue";
 
 @Component({
@@ -53,8 +52,6 @@ import BurnupDisplayer from "./Burnup/BurnupDisplayer.vue";
 export default class ChartDisplayer extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-    @State
-    readonly activate_burnup!: boolean;
 
     is_loading = true;
     message_error_rest: string | null = null;
