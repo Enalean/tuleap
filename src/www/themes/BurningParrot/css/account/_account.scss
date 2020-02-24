@@ -43,6 +43,10 @@
     margin: 0 0 0 $tlp-spacing;
 }
 
+.user-preferences-section-submit {
+    justify-content: flex-start;
+}
+
 @media screen and (max-width: (1000px + $tlp-double-spacing)) {
     .user-preferences {
         width: 100%;
