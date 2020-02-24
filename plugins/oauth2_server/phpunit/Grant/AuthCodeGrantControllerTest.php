@@ -34,29 +34,72 @@ final class AuthCodeGrantControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testBuildsHTTPResponse(): void
-    {
-        $response_builder = \Mockery::mock(AuthorizationCodeGrantResponseBuilder::class);
-        $user_manager     = \Mockery::mock(\UserManager::class);
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthorizationCodeGrantResponseBuilder
+     */
+    private $response_builder;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     */
+    private $user_manager;
+    /**
+     * @var AuthCodeGrantController
+     */
+    private $controller;
 
-        $controller = new AuthCodeGrantController(
+    protected function setUp(): void
+    {
+        $this->response_builder = \Mockery::mock(AuthorizationCodeGrantResponseBuilder::class);
+        $this->user_manager     = \Mockery::mock(\UserManager::class);
+
+        $this->controller = new AuthCodeGrantController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            $response_builder,
-            $user_manager,
+            $this->response_builder,
+            $this->user_manager,
             \Mockery::mock(EmitterInterface::class)
         );
+    }
 
-        $user_manager->shouldReceive('getUserByUserName')->andReturn(new \PFUser(['language_id' => 'en']));
-        $response_builder->shouldReceive('buildResponse')->andReturn(
+    public function testBuildsHTTPResponse(): void
+    {
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturn(new \PFUser(['language_id' => 'en']));
+        $this->response_builder->shouldReceive('buildResponse')->andReturn(
             OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessToken(
                 new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
                 new \DateTimeImmutable('@10')
             )
         );
 
-        $response = $controller->handle(\Mockery::mock(ServerRequestInterface::class));
+        $request = \Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getParsedBody')->andReturn(['grant_type' => 'authorization_code']);
+
+        $response = $this->controller->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
+    }
+
+    public function testRejectsRequestThatDoesNotHaveAnExplicitGrantType(): void
+    {
+        $request = \Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getParsedBody')->andReturn(null);
+
+        $this->response_builder->shouldNotReceive('buildResponse');
+        $response = $this->controller->handle($request);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
+        $this->assertJsonStringEqualsJsonString('{"error":"invalid_request"}', $response->getBody()->getContents());
+    }
+
+    public function testRejectsRequestWithAnUnsupportedGrantType(): void
+    {
+        $request = \Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getParsedBody')->andReturn(['grant_type' => 'password']);
+
+        $this->response_builder->shouldNotReceive('buildResponse');
+        $response = $this->controller->handle($request);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
+        $this->assertJsonStringEqualsJsonString('{"error":"invalid_grant"}', $response->getBody()->getContents());
     }
 }
