@@ -22,12 +22,19 @@ import {
     getOpenSprints,
     getMilestonesContent,
     getChartData,
-    getNbOfClosedSprints
+    getNbOfClosedSprints,
+    getNbOfPastRelease
 } from "./rest-querier";
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
-import { ArtifactMilestone, BurndownData, MilestoneContent, MilestoneData } from "../type";
+import {
+    ArtifactMilestone,
+    BurndownData,
+    MilestoneContent,
+    MilestoneData,
+    ParametersRequestWithId
+} from "../type";
 
 jest.mock("tlp");
 
@@ -215,5 +222,27 @@ describe("getProject() -", () => {
         );
 
         expect(result).toEqual(sprints.length);
+    });
+
+    it("the REST API will be queried and the past milestones returned", async () => {
+        const tlpGetMock = jest.spyOn(tlp, "get");
+
+        mockFetchSuccess(tlpGetMock, {
+            headers: {
+                // X-PAGINATION-SIZE
+                get: (): number => 10
+            }
+        });
+
+        const query = JSON.stringify({
+            status: "closed"
+        });
+
+        const result = await getNbOfPastRelease({ project_id } as ParametersRequestWithId);
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/milestones", {
+            params: { limit: 1, offset: 0, query }
+        });
+
+        expect(result).toEqual(10);
     });
 });

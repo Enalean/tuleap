@@ -14,7 +14,7 @@ exports[`RoadmapSection Given user display widget, Then a good link to top plann
     class="project-other-releases"
   >
     <div
-      class="project-release-roadmap-icon"
+      class="project-release-time-stripe-icon"
     >
       <i
         class="fa fa-angle-double-up"

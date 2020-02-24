@@ -20,6 +20,11 @@ msgid_plural "%{ nb_backlog_items } items in the backlog."
 msgstr[0] "%{nb_backlog_items} item dans le backlog."
 msgstr[1] "%{nb_backlog_items} items dans le backlog."
 
+msgid "%{nb_past} past %{label_tracker}"
+msgid_plural "%{nb_past} past %{label_tracker}"
+msgstr[0] "%{nb_past} %{label_tracker} passé(e)"
+msgstr[1] "%{nb_past} %{label_tracker} passé(e)s"
+
 msgid "%{nb_upcoming_releases} upcoming %{label_tracker}."
 msgid_plural "%{nb_upcoming_releases} upcoming %{label_tracker}."
 msgstr[0] "%{nb_upcoming_releases} prochain(e) %{label_tracker}."
@@ -89,6 +94,9 @@ msgstr "Oups, une erreur s'est produite !"
 
 msgid "Overview"
 msgstr "Résumé"
+
+msgid "Past"
+msgstr "Passé"
 
 msgid "What's hot"
 msgstr "En cours"

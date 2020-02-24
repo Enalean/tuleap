@@ -31,7 +31,8 @@ export {
     getOpenSprints,
     getMilestonesContent,
     getChartData,
-    getNbOfClosedSprints
+    getNbOfClosedSprints,
+    getNbOfPastRelease
 };
 
 function recursiveGetProjectMilestonesWithQuery(
@@ -118,4 +119,19 @@ function getPaginationSizeFromHeader(header: Headers): number {
 async function getChartData(milestone_id: number): Promise<ArtifactMilestone> {
     const chart_data = await get(`/api/v1/artifacts/${encodeURIComponent(milestone_id)}`);
     return chart_data.json();
+}
+
+async function getNbOfPastRelease({ project_id }: ParametersRequestWithId): Promise<number> {
+    const query = JSON.stringify({
+        status: "closed"
+    });
+    const response = await get(`/api/v1/projects/${encodeURIComponent(project_id)}/milestones`, {
+        params: {
+            limit: 1,
+            offset: 0,
+            query
+        }
+    });
+
+    return getPaginationSizeFromHeader(response.headers);
 }

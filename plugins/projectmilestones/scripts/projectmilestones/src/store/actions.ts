@@ -21,7 +21,8 @@ import {
     getCurrentMilestones as getAllCurrentMilestones,
     getMilestonesContent as getContent,
     getNbOfClosedSprints,
-    getOpenSprints
+    getOpenSprints,
+    getNbOfPastRelease
 } from "../api/rest-querier";
 
 import { Context, MilestoneContent, MilestoneData, TrackerNumberArtifacts } from "../type";
@@ -63,12 +64,28 @@ export function getEnhancedMilestones(
 export async function getMilestones(context: Context): Promise<void> {
     try {
         context.commit("setIsLoading", true);
+        await getNumberOfPastRelease(context);
         await getCurrentMilestones(context);
     } catch (error) {
         await handleErrorMessage(context, error);
     } finally {
         context.commit("setIsLoading", false);
     }
+}
+
+async function getNumberOfPastRelease(context: Context): Promise<void> {
+    context.commit("resetErrorMessage");
+    const project_id = context.state.project_id;
+    let total = 0;
+    if (project_id !== null) {
+        total = await getNbOfPastRelease({
+            project_id,
+            limit: context.state.limit,
+            offset: context.state.offset
+        });
+    }
+
+    return context.commit("setNbPastReleases", total);
 }
 
 async function getInitialEffortAndNumberArtifactsInTrackers(
