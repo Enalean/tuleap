@@ -25,6 +25,7 @@ use Docman_VersionFactory;
 use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Tuleap\Docman\XML\Export\PermissionsExporter;
 use Tuleap\Docman\XML\Export\XMLExportVisitor;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use UserManager;
@@ -52,19 +53,25 @@ class XMLExporter
      * @var UserXMLExporter
      */
     private $user_exporter;
+    /**
+     * @var PermissionsExporter
+     */
+    private $permissions_exporter;
 
     public function __construct(
         LoggerInterface $logger,
         Docman_ItemFactory $item_factory,
         Docman_VersionFactory $version_factory,
         UserManager $user_manager,
-        UserXMLExporter $user_exporter
+        UserXMLExporter $user_exporter,
+        PermissionsExporter $permissions_exporter
     ) {
-        $this->logger          = $logger;
-        $this->item_factory    = $item_factory;
-        $this->user_manager    = $user_manager;
-        $this->version_factory = $version_factory;
-        $this->user_exporter   = $user_exporter;
+        $this->logger               = $logger;
+        $this->item_factory         = $item_factory;
+        $this->user_manager         = $user_manager;
+        $this->version_factory      = $version_factory;
+        $this->user_exporter        = $user_exporter;
+        $this->permissions_exporter = $permissions_exporter;
     }
 
     public function export(Project $project, SimpleXMLElement $xml, ArchiveInterface $archive): void
@@ -79,7 +86,13 @@ class XMLExporter
         $tree   = $this->item_factory->getItemSubTree($root, $user, true, true);
         assert($tree !== null);
 
-        $export = new XMLExportVisitor($this->logger, $archive, $this->version_factory, $this->user_exporter);
+        $export = new XMLExportVisitor(
+            $this->logger,
+            $archive,
+            $this->version_factory,
+            $this->user_exporter,
+            $this->permissions_exporter
+        );
         $export->export($docman, $tree);
     }
 }

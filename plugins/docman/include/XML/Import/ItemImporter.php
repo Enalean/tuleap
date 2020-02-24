@@ -32,16 +32,16 @@ class ItemImporter
      */
     private $item_factory;
     /**
-     * @var \PermissionsManager
+     * @var PermissionsImporter
      */
-    private $permission_manager;
+    private $permissions_importer;
 
     public function __construct(
-        \PermissionsManager $permission_manager,
+        PermissionsImporter $permissions_importer,
         Docman_ItemFactory $item_factory
     ) {
-        $this->item_factory       = $item_factory;
-        $this->permission_manager = $permission_manager;
+        $this->item_factory         = $item_factory;
+        $this->permissions_importer = $permissions_importer;
     }
 
     /**
@@ -67,16 +67,7 @@ class ItemImporter
             $properties->getWikiPage(),
             $properties->getLinkUrl()
         );
-        $this->clonePermissions($parent_item, $item);
+        $this->permissions_importer->importPermissions($parent_item, $item, $node);
         $post_importer->postImport($node_importer, $node, $item);
-    }
-
-    private function clonePermissions(Docman_Item $parent_item, Docman_Item $item): void
-    {
-        $this->permission_manager->clonePermissions(
-            $parent_item->getId(),
-            $item->getId(),
-            ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE']
-        );
     }
 }

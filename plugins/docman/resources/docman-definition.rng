@@ -31,6 +31,24 @@
         </element>
       </optional>
     </element>
+    <optional>
+      <element name="permissions">
+        <zeroOrMore>
+          <element name="permission">
+            <attribute name="ugroup">
+              <data type="string"/>
+            </attribute>
+            <attribute name="type">
+              <choice>
+                <value>PLUGIN_DOCMAN_READ</value>
+                <value>PLUGIN_DOCMAN_WRITE</value>
+                <value>PLUGIN_DOCMAN_MANAGE</value>
+              </choice>
+            </attribute>
+          </element>
+        </zeroOrMore>
+      </element>
+    </optional>
   </define>
   <define name="docman_folder">
     <attribute name="type">
