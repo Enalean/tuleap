@@ -60,6 +60,7 @@ class GetWhitelistedKeys implements Dispatchable
         Widget_MyProjects::CONFIG_DISABLE_CONTACT => true,
         ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE => true,
         BackendLogger::CONFIG_LOGGER => true,
+        UserSuspensionManager::CONFIG_INACTIVE_EMAIL => true
     ];
 
     public function addPluginsKeys($key_name)

@@ -36,7 +36,9 @@ use Psr\Log\LoggerInterface;
 use TemplateRenderer;
 use Tuleap\Dao\UserSuspensionDao;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Mail\MailAccountSuspensionAlertPresenter;
+use Tuleap\Mail\MailAccountSuspensionPresenter;
 use UserManager;
 
 class UserSuspensionManagerTest extends TestCase
@@ -57,6 +59,7 @@ class UserSuspensionManagerTest extends TestCase
     private $user_manager;
     private $user_suspension_logger;
     private $user_suspension_manager;
+    private $mail_account_suspension_presenter;
 
     public function setUp() : void
     {
@@ -65,12 +68,14 @@ class UserSuspensionManagerTest extends TestCase
         ForgeConfig::set('sys_suspend_inactive_accounts_delay', 10);
         ForgeConfig::set('sys_suspend_inactive_accounts_notification_delay', 4);
         ForgeConfig::set('sys_suspend_non_project_member_delay', 4);
+        ForgeConfig::set('sys_suspend_send_account_suspension_email', 1);
 
         $this->query = array(array('user_id' => 102, 'last_access_date' => 1579267252));
         $this->email = "jane.doe@domain.com";
         $this->user_info = array('user_id' => 102, 'user_name' => 'janedoe');
 
         $this->mail_account_suspension_alert_presenter = Mockery::mock(MailAccountSuspensionAlertPresenter::class);
+        $this->mail_account_suspension_presenter = Mockery::mock(MailAccountSuspensionPresenter::class);
         $this->mail_presenter_factory = Mockery::mock(MailPresenterFactory::class);
         $this->template_renderer = Mockery::mock(TemplateRenderer::class);
         $this->mail = Mockery::mock(Codendi_Mail::class);
@@ -85,12 +90,12 @@ class UserSuspensionManagerTest extends TestCase
         $this->user_suspension_manager = new UserSuspensionManager(
             $this->mail_presenter_factory,
             $this->template_renderer,
-            'mail-suspension-alert',
             $this->mail,
             $this->dao,
             $this->user_manager,
             $this->lang_factory,
-            $this->user_suspension_logger
+            $this->user_suspension_logger,
+            new LocaleSwitcher()
         );
     }
 
@@ -147,5 +152,36 @@ class UserSuspensionManagerTest extends TestCase
         $this->dao->shouldReceive('suspendExpiredAccounts')->with($test_date)->once();
 
         $this->user_suspension_manager->checkUserAccountValidity($test_date);
+    }
+
+    public function testSendNotificationMailToInactiveAccountsIsCalled()
+    {
+        $test_date = (new \DateTimeImmutable())->setTimestamp(1579616700);
+        $last_access_date = (new \DateTimeImmutable())->setTimestamp(1578752699);
+
+        // Disable mailing to idle accounts
+        ForgeConfig::set('sys_suspend_inactive_accounts_notification_delay', 0);
+
+        $inactive_user = new PFUser(array("email" => "valid_mail@domain.com", "user_id" => 111, "user_name" => "inactive_user", "language_id" => "fr_FR"));
+
+        $this->dao->shouldReceive('getUsersWithoutConnectionOrAccessBetweenDates')
+            ->andReturn(array(array('user_id' => 111, 'last_access_date' => 1578752699)));
+        $this->user_manager->shouldReceive('getUserbyId')->with(111)->andReturn($inactive_user);
+        $this->lang_factory->shouldReceive('getBaseLanguage')->andReturn($this->language);
+        $this->user_suspension_logger->shouldReceive('info');
+        $this->mail_presenter_factory->shouldReceive('createMailAccountSuspensionPresenter')
+            ->with(Matchers::equalTo($last_access_date), $this->language)
+            ->andReturn($this->mail_account_suspension_presenter);
+
+        $this->mail->shouldReceive('setFrom')->with(ForgeConfig::get('sys_noreply'));
+        $this->mail->shouldReceive('setTo')->with($inactive_user->getEmail());
+        $this->mail->shouldReceive('setSubject');
+        $this->mail->shouldReceive('setBodyHtml');
+        $this->mail->shouldReceive('send')->andReturn(true);
+        $this->template_renderer->shouldReceive('renderToString')
+            ->with('mail-suspension', $this->mail_account_suspension_presenter)
+            ->andReturn('Rendered_Email');
+
+        $this->user_suspension_manager->sendSuspensionMailToInactiveAccounts($test_date);
     }
 }
