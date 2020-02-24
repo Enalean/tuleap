@@ -47,7 +47,7 @@ class ProjectAdminPresenterBuilder
         $apps       = $this->app_factory->getAppsForProject($project);
         $presenters = [];
         foreach ($apps as $app) {
-            $presenters[] = new AppPresenter($app->getId(), $app->getName());
+            $presenters[] = new AppPresenter($app->getId(), $app->getName(), $app->getRedirectEndpoint());
         }
         return new ProjectAdminPresenter($presenters, $csrf_token, $project);
     }

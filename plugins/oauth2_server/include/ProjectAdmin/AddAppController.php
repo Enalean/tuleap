@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\ProjectAdmin;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppDao;
+use Tuleap\OAuth2Server\App\InvalidAppDataException;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\DispatchableWithRequest;
@@ -76,14 +77,18 @@ final class AddAppController implements DispatchableWithRequest
         $list_clients_url = ListAppsController::getUrl($project);
         $this->csrf_token->check($list_clients_url);
 
-        $app_name = (string) $request->getValidated('name', 'String', '');
-        if ($app_name === '') {
-            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-oauth2_server', 'App name is required.'));
+        $raw_app_name          = (string) $request->get('name');
+        $raw_redirect_endpoint = (string) $request->get('redirect_uri');
+        try {
+            $app_to_be_saved = NewOAuth2App::fromAppData($raw_app_name, $raw_redirect_endpoint, $project);
+        } catch (InvalidAppDataException $e) {
+            $layout->addFeedback(
+                \Feedback::ERROR,
+                dgettext('tuleap-oauth2_server', 'The provided app data is not valid.')
+            );
             $layout->redirect($list_clients_url);
             return;
         }
-
-        $app_to_be_saved = new NewOAuth2App($app_name, $project);
         $this->app_dao->create($app_to_be_saved);
 
         $layout->redirect($list_clients_url);

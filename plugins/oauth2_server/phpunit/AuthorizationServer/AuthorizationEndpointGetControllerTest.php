@@ -106,7 +106,7 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $request = HTTPRequestBuilder::get()->withUser($user)->withParam('client_id', 'tlp-client-id-1')->build();
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', $project));
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
 
         ob_start();
         $this->controller->process($request, LayoutBuilder::build(), []);

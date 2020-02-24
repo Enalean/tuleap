@@ -21,9 +21,6 @@ msgstr "Ajouter une App"
 msgid "App name"
 msgstr "Nom de l'App"
 
-msgid "App name is required."
-msgstr "Le nom de l'App est obligatoire."
-
 msgid "Authorize"
 msgstr "Autoriser"
 
@@ -58,10 +55,24 @@ msgid "OAuth2 Server"
 msgstr "Server OAuth2"
 
 msgid "Please review the permissions you are about to give to %s:"
-msgstr "Veuillez prendre connaissance des permissions que vous allez accorder à %s :"
+msgstr ""
+"Veuillez prendre connaissance des permissions que vous allez accorder à %s :"
+
+msgid "Redirect endpoint"
+msgstr "Route de redirection"
+
+msgid ""
+"Redirect endpoint must use HTTPS. It must not include a fragment component "
+"(#anchor)"
+msgstr ""
+"La route de redirection doit utiliser HTTPS. Elle ne doit pas inclure un "
+"identificateur de fragment (#ancre)"
 
 msgid "The App has been successfully deleted."
 msgstr "L'App a correctement été supprimée."
 
 msgid "The App's ID is required."
 msgstr "L'ID de l'App est obligatoire."
+
+msgid "The provided app data is not valid."
+msgstr "Les informations fournies pour l'app ne sont pas valides."

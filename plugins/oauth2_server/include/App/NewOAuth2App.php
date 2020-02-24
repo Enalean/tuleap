@@ -32,19 +32,55 @@ final class NewOAuth2App
      */
     private $name;
     /**
+     * @var string
+     */
+    private $redirect_endpoint;
+    /**
      * @var \Project
      */
     private $project;
 
-    public function __construct(string $name, \Project $project)
+    private function __construct(string $name, string $redirect_endpoint, \Project $project)
     {
-        $this->name = $name;
-        $this->project = $project;
+        $this->name              = $name;
+        $this->redirect_endpoint = $redirect_endpoint;
+        $this->project           = $project;
+    }
+
+    /**
+     * @throws InvalidAppDataException
+     */
+    public static function fromAppData(string $name, string $redirect_endpoint, \Project $project): self
+    {
+        $is_data_valid = self::isAppDataValid($name, $redirect_endpoint);
+
+        if (! $is_data_valid) {
+            throw new InvalidAppDataException();
+        }
+
+        return new self($name, $redirect_endpoint, $project);
+    }
+
+    private static function isAppDataValid(string $name, string $redirect_endpoint): bool
+    {
+        $string_validator = new \Valid_String();
+        $string_validator->required();
+        // See https://tools.ietf.org/html/rfc6749#section-3.1.2
+        $redirect_endpoint_validator = new \Valid_String();
+        $redirect_endpoint_validator->required();
+        $redirect_endpoint_validator->addRule(new \Rule_Regexp('/^https:\/\/[^#]*$/i'));
+
+        return $string_validator->validate($name) && $redirect_endpoint_validator->validate($redirect_endpoint);
     }
 
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getRedirectEndpoint(): string
+    {
+        return $this->redirect_endpoint;
     }
 
     public function getProject(): \Project

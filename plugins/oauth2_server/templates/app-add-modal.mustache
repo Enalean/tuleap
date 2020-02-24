@@ -1,0 +1,57 @@
+<form
+    id="oauth2-server-add-client-modal"
+    class="tlp-modal"
+    role="dialog"
+    aria-labelledby="oauth2-server-add-modal-label"
+    action="{{ add_client_url }}"
+    method="post"
+>
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="oauth2-server-add-modal-label">
+            <i class="fa fa-plus tlp-modal-title-icon"></i> {{# dgettext }}tuleap-oauth2_server | Add an App{{/ dgettext }}
+        </h1>
+        <div
+            class="tlp-modal-close"
+            data-dismiss="modal"
+            aria-label="{{# dgettext }}tuleap-oauth2_server | Close{{/dgettext}}"
+        >&times;</div>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label for="oauth2-server-add-modal-app-name" class="tlp-label">{{# dgettext }}tuleap-oauth2_server | App name {{/ dgettext }} <i class="fa fa-asterisk"></i></label>
+            <input
+                type="text"
+                class="tlp-input"
+                id="oauth2-server-add-modal-app-name"
+                name="name"
+                placeholder="{{# dgettext }}tuleap-oauth2_server | My REST API consumer App{{/ dgettext }}"
+                required
+            >
+        </div>
+        <div class="tlp-form-element">
+            <label for="oauth2-server-add-modal-redirect-uri" class="tlp-label">{{# dgettext }}tuleap-oauth2_server | Redirect endpoint {{/ dgettext }} <i class="fa fa-asterisk"></i></label>
+            <input
+                type="url"
+                class="tlp-input"
+                id="oauth2-server-add-modal-redirect-uri"
+                name="redirect_uri"
+                placeholder="https://"
+                pattern="^https:\/\/[^#]*$"
+                required
+            >
+            <p class="tlp-text-info"><i class="fa fa-life-saver"></i> {{# dgettext }}tuleap-oauth2_server | Redirect endpoint must use HTTPS. It must not include a fragment component (#anchor){{/ dgettext}}</p>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }}tuleap-oauth2_server | Cancel {{/ dgettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa fa-plus tlp-button-icon"></i>
+            {{# dgettext }}tuleap-oauth2_server | Add an App {{/ dgettext }}
+        </button>
+    </div>
+</form>
