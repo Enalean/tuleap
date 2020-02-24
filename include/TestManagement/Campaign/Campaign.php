@@ -38,9 +38,7 @@ class Campaign
     /**
      *
      *
-     * @param \Tracker_Artifact $artifact
      * @param string            $label
-     * @param JobConfiguration  $job_configuration
      */
     public function __construct(\Tracker_Artifact $artifact, $label, JobConfiguration $job_configuration)
     {
@@ -81,9 +79,6 @@ class Campaign
         $this->label = $label;
     }
 
-    /**
-     * @param JobConfiguration $job_configuration
-     */
     public function setJobConfiguration(JobConfiguration $job_configuration)
     {
         $this->job_configuration = $job_configuration;

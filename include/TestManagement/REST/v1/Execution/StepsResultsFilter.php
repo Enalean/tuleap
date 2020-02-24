@@ -28,8 +28,6 @@ use Tuleap\TestManagement\Step\Step;
 class StepsResultsFilter
 {
     /**
-     * @param StepDefinitionChangesetValue $definition_changeset_value
-     * @param StepExecutionChangesetValue $execution_changeset_value
      * @return StepResult[]
      */
     public function filterStepResultsNotInDefinition(

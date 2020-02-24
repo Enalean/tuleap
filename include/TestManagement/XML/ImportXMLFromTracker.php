@@ -44,8 +44,7 @@ class ImportXMLFromTracker
     public function __construct(
         XML_RNGValidator $rng_validator,
         UGroupRetrieverWithLegacy $ugroup_retriever_with_legacy
-    )
-    {
+    ) {
         $this->rng_validator                = $rng_validator;
         $this->ugroup_retriever_with_legacy = $ugroup_retriever_with_legacy;
     }
@@ -53,7 +52,9 @@ class ImportXMLFromTracker
     public function validateXMLImport(SimpleXMLElement $xml): void
     {
         $this->rng_validator->validate(
-            $xml, realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement_external_fields.rng'));
+            $xml,
+            realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement_external_fields.rng')
+        );
     }
 
     public function getInstanceFromXML(SimpleXMLElement $testmanagement, $project, $feedback_collector): StepDefinition

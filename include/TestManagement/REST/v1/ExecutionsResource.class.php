@@ -176,7 +176,6 @@ class ExecutionsResource
         $this->realtime_message_sender = new RealTimeMessageSender(
             $this->node_js_client,
             $this->permissions_serializer,
-            $this->testmanagement_artifact_factory,
             $artifact_message_sender
         );
 
@@ -716,8 +715,6 @@ class ExecutionsResource
 
     /**
      *
-     * @param PFUser           $user
-     * @param Tracker_Artifact $execution_artifact
      *
      * @return Tracker_Artifact
      * @throws RestException

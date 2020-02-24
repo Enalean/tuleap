@@ -36,9 +36,6 @@ class TrackerComesFromLegacyEngineException extends \Exception
         $this->tracker_shortname = $tracker_shortname;
     }
 
-    /**
-     * @return string
-     */
     public function getTrackerShortname(): string
     {
         return $this->tracker_shortname;

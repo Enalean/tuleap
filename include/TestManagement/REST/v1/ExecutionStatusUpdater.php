@@ -64,9 +64,7 @@ class ExecutionStatusUpdater
     }
 
     /**
-     * @param Tracker_Artifact $execution_artifact
      * @param array            $changes
-     * @param PFUser           $user
      *
      * @throws RestException
      */

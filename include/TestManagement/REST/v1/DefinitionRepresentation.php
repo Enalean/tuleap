@@ -94,11 +94,6 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         }
     }
 
-    /**
-     * @param string $field_shortname
-     *
-     * @return string
-     */
     private function getTextFieldValueWithCrossReferences(Tracker_Artifact $artifact, string $field_shortname): string
     {
         $field_value = $this->getFieldValue($field_shortname);

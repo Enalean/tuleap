@@ -131,8 +131,6 @@ class ExecutionRepresentationBuilder
     }
 
     /**
-     * @param PFUser           $user
-     * @param Tracker_Artifact $execution
      *
      * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
      * @throws DefinitionNotFoundException
@@ -145,8 +143,6 @@ class ExecutionRepresentationBuilder
     }
 
     /**
-     * @param PFUser           $user
-     * @param Tracker_Artifact $execution
      * @param array            $definitions_changeset_ids
      *
      * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
@@ -183,8 +179,6 @@ class ExecutionRepresentationBuilder
     }
 
     /**
-     * @param PFUser $user
-     * @param PaginatedExecutions $executions
      *
      * @return array
      */
@@ -278,8 +272,6 @@ class ExecutionRepresentationBuilder
     }
 
     /**
-     * @param Tracker_Artifact $execution
-     * @param Tracker_Artifact $definition
      * @param array            $definitions_changeset_ids
      *
      * @return null|\Tracker_Artifact_Changeset
@@ -364,8 +356,6 @@ class ExecutionRepresentationBuilder
     }
 
     /**
-     * @param PFUser           $user
-     * @param Tracker_Artifact $execution
      * @param  string          $field_name
      *
      * @return null|\Tracker_Artifact_ChangesetValue
