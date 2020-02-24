@@ -20,45 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\App;
+namespace Tuleap\OAuth2Server\AuthorizationServer;
+
+use Tuleap\OAuth2Server\App\OAuth2App;
 
 /**
  * @psalm-immutable
  */
-final class OAuth2App
+final class AuthorizationFormPresenter
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var \Project
-     */
-    private $project;
+    /** @var string */
+    public $app_name;
+    /** @var string */
+    public $project_name;
 
-    public function __construct(int $id, string $name, \Project $project)
+    public function __construct(OAuth2App $app)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->project = $project;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getProject(): \Project
-    {
-        return $this->project;
+        $this->app_name     = $app->getName();
+        $this->project_name = $app->getProject()->getPublicName();
     }
 }

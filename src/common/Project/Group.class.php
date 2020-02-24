@@ -42,7 +42,7 @@ function group_get_object_by_name($groupname)
     return $pm->getProjectByUnixName($groupname);
 }
 
-class Group
+class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     //associative array of data from db
@@ -145,7 +145,7 @@ class Group
      */
     public function isProject()
     {
-        $template = $this->_getTemplateSingleton();
+        $template = $this->getTemplateSingleton();
         return $template->isProject($this->data_array['type']);
     }
 
@@ -184,6 +184,9 @@ class Group
         return '/projects/'.urlencode($this->getUnixNameMixedCase());
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getPublicName()
     {
         return $this->data_array['group_name'];
@@ -371,7 +374,7 @@ class Group
      */
     public function isTemplate()
     {
-        return $this->_getTemplateSingleton()->isTemplate($this->data_array['type']);
+        return $this->getTemplateSingleton()->isTemplate($this->data_array['type']);
     }
 
 
@@ -391,7 +394,7 @@ class Group
      *
      * @return TemplateSingleton
      */
-    private function _getTemplateSingleton()
+    private function getTemplateSingleton()
     {
         return TemplateSingleton::instance();
     }

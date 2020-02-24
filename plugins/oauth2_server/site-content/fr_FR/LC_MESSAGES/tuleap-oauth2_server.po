@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.3\n"
 
+msgid "%s by project %s wants to connect to your Tuleap account."
+msgstr "%s du projet %s souhaite se connecter à votre compte Tuleap."
+
 msgid "Add an App"
 msgstr "Ajouter une App"
 
@@ -20,6 +23,12 @@ msgstr "Nom de l'App"
 
 msgid "App name is required."
 msgstr "Le nom de l'App est obligatoire."
+
+msgid "Authorize"
+msgstr "Autoriser"
+
+msgid "Authorize application"
+msgstr "Autoriser l'application"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -47,6 +56,9 @@ msgstr "Apps OAuth2"
 
 msgid "OAuth2 Server"
 msgstr "Server OAuth2"
+
+msgid "Please review the permissions you are about to give to %s:"
+msgstr "Veuillez prendre connaissance des permissions que vous allez accorder à %s :"
 
 msgid "The App has been successfully deleted."
 msgstr "L'App a correctement été supprimée."

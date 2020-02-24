@@ -112,6 +112,10 @@ final class oauth2_serverPlugin extends Plugin
                 );
             }
         );
+        $routes->getRouteCollector()->get(
+            '/oauth2_server/authorize',
+            $this->getRouteHandler('routeAuthorizationEndpointGet')
+        );
     }
 
     public function routeGetProjectAdmin(): DispatchableWithRequest
@@ -127,6 +131,11 @@ final class oauth2_serverPlugin extends Plugin
     public function routeDeleteProjectAdmin(): DispatchableWithRequest
     {
         return \Tuleap\OAuth2Server\ProjectAdmin\DeleteAppController::buildSelf();
+    }
+
+    public function routeAuthorizationEndpointGet(): DispatchableWithRequest
+    {
+        return \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController::buildSelf();
     }
 
     public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController

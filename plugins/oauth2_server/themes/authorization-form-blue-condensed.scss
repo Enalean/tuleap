@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
@@ -18,47 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\OAuth2Server\App;
-
-/**
- * @psalm-immutable
- */
-final class OAuth2App
-{
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var \Project
-     */
-    private $project;
-
-    public function __construct(int $id, string $name, \Project $project)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->project = $project;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getProject(): \Project
-    {
-        return $this->project;
-    }
-}
+@import '../../../src/www/themes/common/tlp/src/scss/variables/variables-blue-condensed';
+@import './authorization-form';

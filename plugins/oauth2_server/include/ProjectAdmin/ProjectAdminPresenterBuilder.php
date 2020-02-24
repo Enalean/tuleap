@@ -39,7 +39,7 @@ class ProjectAdminPresenterBuilder
 
     public static function buildSelf(): self
     {
-        return new self(new AppFactory(new AppDao()));
+        return new self(new AppFactory(new AppDao(), \ProjectManager::instance()));
     }
 
     public function build(\CSRFSynchronizerToken $csrf_token, \Project $project): ProjectAdminPresenter

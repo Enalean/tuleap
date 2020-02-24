@@ -28,10 +28,32 @@ class AppFactory
      * @var AppDao
      */
     private $app_dao;
+    /**
+     * @var \ProjectManager
+     */
+    private $project_manager;
 
-    public function __construct(AppDao $app_dao)
+    public function __construct(AppDao $app_dao, \ProjectManager $project_manager)
     {
-        $this->app_dao = $app_dao;
+        $this->app_dao         = $app_dao;
+        $this->project_manager = $project_manager;
+    }
+
+    /**
+     * @throws OAuth2AppNotFoundException
+     */
+    public function getAppMatchingClientId(ClientIdentifier $client_identifier): OAuth2App
+    {
+        $row = $this->app_dao->searchByClientId($client_identifier);
+        if (! $row) {
+            throw new OAuth2AppNotFoundException($client_identifier);
+        }
+        try {
+            $project = $this->project_manager->getValidProject($row['project_id']);
+        } catch (\Project_NotFoundException $e) {
+            throw new OAuth2AppNotFoundException($client_identifier);
+        }
+        return new OAuth2App($row['id'], $row['name'], $project);
     }
 
     /**

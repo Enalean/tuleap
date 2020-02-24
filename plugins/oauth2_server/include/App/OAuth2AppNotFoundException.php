@@ -22,43 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
-/**
- * @psalm-immutable
- */
-final class OAuth2App
+final class OAuth2AppNotFoundException extends \RuntimeException
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var \Project
-     */
-    private $project;
-
-    public function __construct(int $id, string $name, \Project $project)
+    public function __construct(ClientIdentifier $client_identifier)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->project = $project;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getProject(): \Project
-    {
-        return $this->project;
+        parent::__construct("OAuth2 App matching " . $client_identifier->toString() . " could not be found");
     }
 }
