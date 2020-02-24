@@ -31,6 +31,9 @@ import { drawIdealLine } from "../../../../../../../src/www/scripts/charts-build
 import { getLastGenericBurnupData } from "../chart-data-service";
 import { addScaleLines } from "../chart-scale-drawer";
 import { getCoordinatesScaleLines } from "../chart-scale-helper";
+import { buildChartLayout } from "../../../../../../../src/www/scripts/charts-builders/chart-layout-builder";
+import { TimeScaleLabelsFormatter } from "../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
+import { removeAllLabelsOverlapsOthersLabels } from "../time-scale-label-formatter";
 
 export { createBurnupChart, getTotal };
 
@@ -55,6 +58,8 @@ function createBurnupChart(
     const coordinates_scale_lines = getCoordinatesScaleLines({ x_scale, y_scale }, total_effort);
 
     const last_day_data = getLastGenericBurnupData(generic_burnup_data.points_with_date);
+    const nb_ticks = 4,
+        tick_padding = 5;
 
     drawBurnupChart();
 
@@ -63,10 +68,13 @@ function createBurnupChart(
             return;
         }
 
-        const svg_burnup = select(chart_container)
-            .append("svg")
-            .attr("width", chart_props.graph_width)
-            .attr("height", chart_props.graph_height);
+        const svg_burnup = buildChartLayout(
+            chart_container,
+            chart_props,
+            { x_scale, y_scale },
+            nb_ticks,
+            tick_padding
+        );
 
         drawIdealLine(
             svg_burnup,
@@ -76,6 +84,17 @@ function createBurnupChart(
         select(chart_container)
             .selectAll("circle")
             .remove();
+        select(chart_container)
+            .selectAll(".chart-y-axis > .tick > line")
+            .remove();
+
+        new TimeScaleLabelsFormatter({
+            layout: svg_burnup,
+            first_date: x_axis_tick_values[0],
+            last_date: x_axis_tick_values[x_axis_tick_values.length - 1]
+        }).formatTicks();
+
+        removeAllLabelsOverlapsOthersLabels(svg_burnup);
 
         addScaleLines(svg_burnup, coordinates_scale_lines);
     }

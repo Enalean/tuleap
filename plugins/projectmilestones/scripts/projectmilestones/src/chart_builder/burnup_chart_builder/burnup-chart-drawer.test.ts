@@ -23,6 +23,8 @@ import {
     GenericBurnupData,
     GenericBurnupDatas
 } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
+jest.mock("../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
+jest.mock("../time-scale-label-formatter");
 
 describe("BurnupChartDrawer", () => {
     describe("getTotal", () => {
@@ -68,7 +70,7 @@ describe("BurnupChartDrawer", () => {
         });
     });
     describe("createBurnupChart", () => {
-        it("When the chart is created, Then there are a G element and 2 lines scale", () => {
+        it("When the chart is created, Then there are a G element and 2 lines scale with scale label", () => {
             const chart_svg_element = getDocument();
             createBurnupChart(chart_svg_element, getChartProps(), getGenericBurnupData());
 
