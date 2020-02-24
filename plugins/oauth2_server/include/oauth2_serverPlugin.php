@@ -27,6 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
@@ -207,7 +208,8 @@ final class oauth2_serverPlugin extends Plugin
             ),
             UserManager::instance(),
             new SapiEmitter(),
-            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory)
+            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
+            new DisableCacheMiddleware()
         );
     }
 }
