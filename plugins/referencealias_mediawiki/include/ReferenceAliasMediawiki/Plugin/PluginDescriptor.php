@@ -30,7 +30,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_referencealias_mediawiki', 'descriptor_description')
         );
-
-        $this->setVersionFromFile(REFERENCEALIAS_MEDIAWIKI_BASE_DIR.'/VERSION');
     }
 }

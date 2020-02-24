@@ -33,6 +33,5 @@ class LdapPluginDescriptor extends PluginDescriptor
     public function __construct()
     {
         parent::__construct('Ldap', false, $GLOBALS['Language']->getText('plugin_ldap', 'descriptor_description'));
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

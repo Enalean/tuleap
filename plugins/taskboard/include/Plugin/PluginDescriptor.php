@@ -31,7 +31,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-taskboard', 'Visually keep track of things that need to get done in a task board, used in Agile Dashboard.')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

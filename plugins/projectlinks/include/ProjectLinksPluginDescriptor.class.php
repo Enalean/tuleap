@@ -31,6 +31,5 @@ class ProjectLinksPluginDescriptor extends PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_description')
         );
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

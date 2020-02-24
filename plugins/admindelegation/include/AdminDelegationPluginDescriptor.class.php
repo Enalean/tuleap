@@ -27,6 +27,5 @@ class AdminDelegationPluginDescriptor extends PluginDescriptor //phpcs:ignore
     public function __construct()
     {
         parent::__construct(dgettext('tuleap-admindelegation', 'AdminDelegation'), false, dgettext('tuleap-admindelegation', 'Delegation of site admin rights to mere mortals'));
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

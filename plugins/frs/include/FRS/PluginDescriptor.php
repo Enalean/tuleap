@@ -29,6 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-frs', 'Extends file release system included into the Tuleap core with new features')
         );
-        $this->setVersionFromFile(dirname(__FILE__).'/../../VERSION');
     }
 }

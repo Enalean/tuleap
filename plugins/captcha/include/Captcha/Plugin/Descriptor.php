@@ -29,6 +29,5 @@ class Descriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-captcha', 'Add a captcha protection to sensitive operations')
         );
-        $this->setVersionFromFile(__DIR__ . '/../../../VERSION');
     }
 }

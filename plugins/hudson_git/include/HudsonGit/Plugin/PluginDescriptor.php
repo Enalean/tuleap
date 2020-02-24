@@ -30,7 +30,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_hudson_git', 'descriptor_description')
         );
-
-        $this->setVersionFromFile(HUDSON_GIT_BASE_DIR.'/VERSION');
     }
 }

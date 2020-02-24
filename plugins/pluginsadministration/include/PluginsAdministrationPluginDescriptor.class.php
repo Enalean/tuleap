@@ -33,6 +33,5 @@ class PluginsAdministrationPluginDescriptor extends PluginDescriptor
         $name        = dgettext('tuleap-pluginsadministration', 'Plugins Administration');
         $description = dgettext('tuleap-pluginsadministration', 'Offers a web interface for managing plugins.');
         parent::__construct($name, false, $description);
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

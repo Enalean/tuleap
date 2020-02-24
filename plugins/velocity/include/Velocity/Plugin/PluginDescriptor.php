@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-velocity', 'Adds velocity chart into Agiledashboard')
         );
-
-        $this->setVersionFromFile(VELOCITY_BASE_DIR . '/VERSION');
     }
 }

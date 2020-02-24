@@ -32,6 +32,5 @@ class ProftpdPluginDescriptor extends PluginDescriptor
             false,
             dgettext('tuleap-proftpd', 'Control and interfact with Proftpd as FTP server')
         );
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

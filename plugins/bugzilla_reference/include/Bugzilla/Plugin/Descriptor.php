@@ -29,6 +29,5 @@ class Descriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-bugzilla_reference', 'References between Bugzilla and Tuleap')
         );
-        $this->setVersionFromFile(BUGZILLA_REFERENCE_BASE_DIR . '/VERSION');
     }
 }

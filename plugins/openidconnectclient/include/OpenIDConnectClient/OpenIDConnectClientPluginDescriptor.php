@@ -28,6 +28,5 @@ class OpenIDConnectClientPluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-openidconnectclient', 'Authenticate users with OpenID Connect')
         );
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

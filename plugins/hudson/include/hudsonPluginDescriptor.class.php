@@ -23,6 +23,5 @@ class hudsonPluginDescriptor extends PluginDescriptor
     public function __construct()
     {
         parent::__construct($GLOBALS['Language']->getText('plugin_hudson', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_hudson', 'descriptor_description'));
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
