@@ -27,6 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
 use Tuleap\OAuth2Server\Grant\AuthCodeGrantController;
@@ -152,12 +153,14 @@ final class oauth2_serverPlugin extends Plugin
     public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
         $password_handler = \PasswordHandlerFactory::getPasswordHandler();
         return new \Tuleap\OAuth2Server\TestEndpointController(
-            HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
+            $response_factory,
+            $stream_factory,
             UserManager::instance(),
             new SapiEmitter(),
+            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
             new \Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware(
                 $response_factory,
                 new BearerTokenHeaderParser(),
@@ -187,9 +190,11 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeAccessTokenCreation(): AuthCodeGrantController
     {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
         return new AuthCodeGrantController(
-            HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
+            $response_factory,
+            $stream_factory,
             new AuthorizationCodeGrantResponseBuilder(
                 new OAuth2AccessTokenCreator(
                     new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
@@ -202,6 +207,7 @@ final class oauth2_serverPlugin extends Plugin
             ),
             UserManager::instance(),
             new SapiEmitter(),
+            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory)
         );
     }
 }
