@@ -23,11 +23,15 @@ declare(strict_types = 1);
 
 namespace Tuleap\Tracker\Creation;
 
+use Feedback;
 use Project;
 use Tracker;
 use TrackerFactory;
 use TrackerFromXmlException;
 use TrackerXmlImport;
+use UserManager;
+use XML_ParseException;
+use XMLImportHelper;
 
 class TrackerCreator
 {
@@ -40,12 +44,31 @@ class TrackerCreator
      */
     private $tracker_factory;
 
+    /**
+     * @var TrackerCreatorXmlErrorDisplayer
+     */
+    private $xml_error_displayer;
+
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        TrackerCreatorXmlErrorDisplayer $xml_error_displayer
     ) {
         $this->tracker_xml_import = $tracker_xml_import;
         $this->tracker_factory = $tracker_factory;
+        $this->xml_error_displayer = $xml_error_displayer;
+    }
+
+    public static function build(): self
+    {
+        $user_finder        = new XMLImportHelper(UserManager::instance());
+        $tracker_xml_import = TrackerXmlImport::build($user_finder);
+
+        return new TrackerCreator(
+            $tracker_xml_import,
+            TrackerFactory::instance(),
+            TrackerCreatorXmlErrorDisplayer::build()
+        );
     }
 
     /**
@@ -59,13 +82,21 @@ class TrackerCreator
         string $description,
         string $itemname
     ): ?Tracker {
-        return $this->tracker_xml_import->createFromXMLFileWithInfo(
-            $project,
-            $file_path,
-            $name,
-            $description,
-            $itemname
-        );
+        try {
+            return $this->tracker_xml_import->createFromXMLFileWithInfo(
+                $project,
+                $file_path,
+                $name,
+                $description,
+                $itemname
+            );
+        } catch (XML_ParseException $exception) {
+            $this->xml_error_displayer->displayErrors($project, $exception->getErrors(), $exception->getFileLines());
+            return null;
+        } catch (TrackerFromXmlException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+            return null;
+        }
     }
 
     /**
