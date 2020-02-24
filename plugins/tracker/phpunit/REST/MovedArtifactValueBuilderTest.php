@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,17 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tracker;
+use Tracker_Artifact;
+use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use TuleapTestCase;
 
-require_once __DIR__.'/../../bootstrap.php';
-
-class MovedArtifactValueBuilderTest extends TuleapTestCase
+class MovedArtifactValueBuilderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var  MovedArtifactValueBuilder */
     private $builder;
 
@@ -39,40 +43,38 @@ class MovedArtifactValueBuilderTest extends TuleapTestCase
     /** @var Tracker_FormElement_Field_String */
     private $field_string;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
         $this->builder      = new MovedArtifactValueBuilder();
-        $this->artifact     = mock('Tracker_Artifact');
-        $this->tracker      = mock('Tracker');
-        $this->field_string = stub('Tracker_FormElement_Field_String')->getId()->returns(101);
+        $this->artifact     = \Mockery::spy(\Tracker_Artifact::class);
+        $this->tracker      = \Mockery::spy(\Tracker::class);
+        $this->field_string = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(101)->getMock();
     }
 
-    public function itThrowsAnExceptionIfArtifactHasNoTitle()
+    public function testItThrowsAnExceptionIfArtifactHasNoTitle() : void
     {
-        stub($this->artifact)->getTitle()->returns(null);
-        stub($this->tracker)->getTitleField()->returns($this->field_string);
+        $this->artifact->shouldReceive('getTitle')->andReturns(null);
+        $this->tracker->shouldReceive('getTitleField')->andReturns($this->field_string);
 
-        $this->expectException('Tuleap\Tracker\Exception\SemanticTitleNotDefinedException');
+        $this->expectException(\Tuleap\Tracker\Exception\SemanticTitleNotDefinedException::class);
 
         $this->builder->getValues($this->artifact, $this->tracker);
     }
 
-    public function itThrowsAnExceptionIfTrackerHasNoTitle()
+    public function testItThrowsAnExceptionIfTrackerHasNoTitle() : void
     {
-        stub($this->artifact)->getTitle()->returns("title");
-        stub($this->tracker)->getTitleField()->returns(null);
+        $this->artifact->shouldReceive('getTitle')->andReturns("title");
+        $this->tracker->shouldReceive('getTitleField')->andReturns(null);
 
-        $this->expectException('Tuleap\Tracker\Exception\SemanticTitleNotDefinedException');
+        $this->expectException(\Tuleap\Tracker\Exception\SemanticTitleNotDefinedException::class);
 
         $this->builder->getValues($this->artifact, $this->tracker);
     }
 
-    public function itBuildsArtifactValuesRepresentation()
+    public function testItBuildsArtifactValuesRepresentation() : void
     {
-        stub($this->artifact)->getTitle()->returns("title");
-        stub($this->tracker)->getTitleField()->returns($this->field_string);
+        $this->artifact->shouldReceive('getTitle')->andReturns("title");
+        $this->tracker->shouldReceive('getTitleField')->andReturns($this->field_string);
 
         $values = $this->builder->getValues($this->artifact, $this->tracker);
 
@@ -84,6 +86,6 @@ class MovedArtifactValueBuilderTest extends TuleapTestCase
             $representation
         );
 
-        $this->assertEqual($values, $expected);
+        $this->assertEquals($expected, $values);
     }
 }

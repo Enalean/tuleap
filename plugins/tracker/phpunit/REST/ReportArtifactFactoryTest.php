@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,31 +20,32 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Report\Query\FromWhere;
 
-require_once __DIR__.'/../bootstrap.php';
-
-class ReportArtifactFactoryTest extends \TuleapTestCase
+class ReportArtifactFactoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var ReportArtifactFactory */
     private $report_artifact_factory;
     /** @var \Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->tracker_artifact_factory = mock('\Tracker_ArtifactFactory');
+        $this->tracker_artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
         $this->report_artifact_factory = new ReportArtifactFactory(
             $this->tracker_artifact_factory
         );
     }
 
-    public function itReturnsAnEmptyCollectionWhenTheReportDoesNotMatchArtifacts()
+    public function testItReturnsAnEmptyCollectionWhenTheReportDoesNotMatchArtifacts() : void
     {
-        $empty_report = mock('\Tracker_Report');
+        $empty_report = \Mockery::spy(\Tracker_Report::class);
         $from_where   = new FromWhere('', '');
 
         $collection = $this->report_artifact_factory->getArtifactsMatchingReportWithAdditionalFromWhere(
@@ -54,21 +55,21 @@ class ReportArtifactFactoryTest extends \TuleapTestCase
             0
         );
 
-        $this->assertEqual(array(), $collection->getArtifacts());
-        $this->assertEqual(0, $collection->getTotalSize());
+        $this->assertEquals(array(), $collection->getArtifacts());
+        $this->assertEquals(0, $collection->getTotalSize());
     }
 
-    public function itReturnsACollectionOfMatchingArtifactsCorrespondingToLimitAndOffset()
+    public function testItReturnsACollectionOfMatchingArtifactsCorrespondingToLimitAndOffset() : void
     {
-        $report     = mock('\Tracker_Report');
+        $report     = \Mockery::spy(\Tracker_Report::class);
         $from_where = new FromWhere('', '');
 
-        stub($report)->getMatchingIdsWithAdditionalFromWhere()->returns(array('id' => '12,85,217,98'));
-        $artifact_one = anArtifact()->withId(85)->build();
-        $artifact_two = anArtifact()->withId(217)->build();
-        stub($this->tracker_artifact_factory)->getArtifactsByArtifactIdList()->returns(
-            array($artifact_one, $artifact_two)
-        );
+        $report->shouldReceive('getMatchingIdsWithAdditionalFromWhere')->andReturns(array('id' => '12,85,217,98'));
+        $artifact_one = Mockery::spy(\Tracker_Artifact::class);
+        $artifact_one->shouldReceive('getId')->andReturn(85);
+        $artifact_two = Mockery::spy(\Tracker_Artifact::class);
+        $artifact_two->shouldReceive('getId')->andReturn(217);
+        $this->tracker_artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->andReturns(array($artifact_one, $artifact_two));
 
         $collection = $this->report_artifact_factory->getArtifactsMatchingReportWithAdditionalFromWhere(
             $report,
@@ -77,7 +78,7 @@ class ReportArtifactFactoryTest extends \TuleapTestCase
             1
         );
 
-        $this->assertEqual(array($artifact_one, $artifact_two), $collection->getArtifacts());
-        $this->assertEqual(4, $collection->getTotalSize());
+        $this->assertEquals(array($artifact_one, $artifact_two), $collection->getArtifacts());
+        $this->assertEquals(4, $collection->getTotalSize());
     }
 }

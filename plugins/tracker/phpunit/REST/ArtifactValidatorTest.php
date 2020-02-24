@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../../bootstrap.php';
-
-class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase
+final class Tracker_REST_Artifact_ArtifactValidator_Test extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $field_int;
     private $field_float;
@@ -31,11 +30,10 @@ class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase
     private $validator;
     private $tracker;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->tracker = aTracker()->withId(101)->build();
+        $this->tracker = Mockery::spy(Tracker::class);
+        $this->tracker->shouldReceive('getId')->andReturn(101);
 
         $this->field_int = new Tracker_FormElement_Field_Integer(
             1,
@@ -107,12 +105,12 @@ class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase
             1
         );
 
-        $this->form_element_factory = mock('Tracker_FormElementFactory');
+        $this->form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
         $this->validator = new Tracker_REST_Artifact_ArtifactValidator($this->form_element_factory);
     }
 
-    public function itGeneratesFieldDataFromRestValuesByField()
+    public function testItGeneratesFieldDataFromRestValuesByField(): void
     {
         $values = array(
             'integer' => array(
@@ -132,10 +130,10 @@ class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase
             )
         );
 
-        stub($this->form_element_factory)->getUsedFieldByName(101, 'integer')->returns($this->field_int);
-        stub($this->form_element_factory)->getUsedFieldByName(101, 'floatibulle')->returns($this->field_float);
-        stub($this->form_element_factory)->getUsedFieldByName(101, 'string')->returns($this->field_string);
-        stub($this->form_element_factory)->getUsedFieldByName(101, 'text')->returns($this->field_text);
+        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'integer')->andReturns($this->field_int);
+        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'floatibulle')->andReturns($this->field_float);
+        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'string')->andReturns($this->field_string);
+        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'text')->andReturns($this->field_text);
 
         $fields_data = $this->validator->getFieldsDataOnCreateFromValuesByField($values, $this->tracker);
 
@@ -149,10 +147,10 @@ class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase
             ),
         );
 
-        $this->assertEqual($fields_data, $expected);
+        $this->assertEquals($expected, $fields_data);
     }
 
-    public function itThrowsAnExceptionIfFieldIsNotUsedInTracker()
+    public function testItThrowsAnExceptionIfFieldIsNotUsedInTracker(): void
     {
         $values = array(
             'integerV2'   => 42,
@@ -164,25 +162,25 @@ class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase
             )
         );
 
-        stub($this->form_element_factory)->getUsedFieldByName(101, 'integer')->returns($this->field_int);
-        stub($this->form_element_factory)->getUsedFieldByName(101, 'floatibulle')->returns($this->field_float);
-        stub($this->form_element_factory)->getUsedFieldByName(101, 'string')->returns($this->field_string);
-        stub($this->form_element_factory)->getUsedFieldByName(101, 'text')->returns($this->field_text);
+        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'integer')->andReturns($this->field_int);
+        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'floatibulle')->andReturns($this->field_float);
+        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'string')->andReturns($this->field_string);
+        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'text')->andReturns($this->field_text);
 
-        $this->expectException('Tracker_FormElement_InvalidFieldException');
+        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
 
         $this->validator->getFieldsDataOnCreateFromValuesByField($values, $this->tracker);
     }
 
-    public function itThrowsAnExceptionIfFieldIsNotAlphaNumeric()
+    public function testItThrowsAnExceptionIfFieldIsNotAlphaNumeric(): void
     {
         $values = array(
             'msb' => ['whatever']
         );
 
-        stub($this->form_element_factory)->getUsedFieldByName(101, 'msb')->returns($this->field_msb);
+        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'msb')->andReturns($this->field_msb);
 
-        $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
+        $this->expectException(\Tracker_FormElement_RESTValueByField_NotImplementedException::class);
 
         $this->validator->getFieldsDataOnCreateFromValuesByField($values, $this->tracker);
     }
