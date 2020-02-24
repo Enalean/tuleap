@@ -33,6 +33,14 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 final class AuthCodeGrantController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
+    private const CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
+
+    private const GRANT_TYPE_PARAMETER = 'grant_type';
+    private const ALLOWED_GRANT_TYPES  = ['authorization_code'];
+
+    private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
+    private const ERROR_CODE_INVALID_GRANT   = 'invalid_grant';
+
     /**
      * @var ResponseFactoryInterface
      */
@@ -67,17 +75,39 @@ final class AuthCodeGrantController extends DispatchablePSR15Compatible implemen
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $body_params = $request->getParsedBody();
+
+        if (! is_array($body_params) || ! isset($body_params[self::GRANT_TYPE_PARAMETER])) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST);
+        }
+
+        if (! in_array($body_params[self::GRANT_TYPE_PARAMETER], self::ALLOWED_GRANT_TYPES, true)) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
+        }
+
         $representation = $this->response_builder->buildResponse(
             new \DateTimeImmutable(),
             OAuth2AuthorizationCode::approveForDemoScope($this->user_manager->getUserByUserName('admin'))
         );
 
         return $this->response_factory->createResponse()
-            ->withHeader('Content-Type', 'application/json;charset=UTF-8')
+            ->withHeader('Content-Type', self::CONTENT_TYPE_RESPONSE)
             ->withBody(
                 $this->stream_factory->createStream(
                     json_encode($representation, JSON_THROW_ON_ERROR)
                 )
+            );
+    }
+
+    /**
+     * @psalm-param self::ERROR_CODE_* $error_code See https://tools.ietf.org/html/rfc6749#section-5.2
+     */
+    private function buildErrorResponse(string $error_code): ResponseInterface
+    {
+        return $this->response_factory->createResponse(400)
+            ->withHeader('Content-Type', self::CONTENT_TYPE_RESPONSE)
+            ->withBody(
+                $this->stream_factory->createStream(json_encode(['error' => $error_code], JSON_THROW_ON_ERROR))
             );
     }
 }
