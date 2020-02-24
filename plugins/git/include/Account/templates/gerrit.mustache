@@ -13,6 +13,34 @@
         </nav>
 
         <div class="user-preferences-section">
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">{{# gettext }}SSH keys{{/ gettext }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <form action="/plugins/git/account/gerrit" method="post">
+                            {{# csrf_token }}
+                                {{> csrf_token_input }}
+                            {{/ csrf_token }}
+
+                            <p>{{# dgettext }} tuleap-git | You can use the following button to force push your <a href="%s">ssh keys</a> to following gerrit servers:| {{ keys_tokens_url }}{{/ dgettext }}</p>
+                            <ul>
+                                {{# gerrit_servers }}
+                                <li><a href="{{ base_url }}/#/settings/ssh-keys">{{ base_url }}</a></li>
+                                {{/ gerrit_servers }}
+                            </ul>
+                            <p>
+                                <input type="submit"
+                                       class="tlp-button-primary"
+                                       title="{{# dgettext }} tuleap-git | Push SSH keys to remote servers{{/ dgettext }}"
+                                       value="{{# dgettext }} tuleap-git | Manually push SSH keys{{/ dgettext }}"
+                                       name="ssh_key_push"/>
+                            </p>
+                        </form>
+                    </section>
+                </div>
+            </section>
         </div>
     </div>
 </div>

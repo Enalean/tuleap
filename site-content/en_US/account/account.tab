@@ -37,8 +37,6 @@ account_options	btn_save_avatar_label	Save avatar
 account_options	preferences	Preferences
 account_options	theme	Theme:
 account_options	theme_variant	Choose your color:
-account_options	shell_account_title	Shell Account Information
-account_options	shell_box	Shell Box
 account_options	remember_me	"Remember me" <span style="color:#666">($1 remembers your login/password. If you change this preference make sure to logout and login again)</span>
 account_options	csv_separator	CSV separator:
 account_options	comma	comma

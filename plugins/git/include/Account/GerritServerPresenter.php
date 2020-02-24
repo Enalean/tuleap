@@ -23,37 +23,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Account;
 
-use Tuleap\User\Account\AccountTabPresenterCollection;
-use Tuleap\User\Account\DisplayKeysTokensController;
-
-class GerritPresenter
+/**
+ * @psalm-immutable
+ */
+final class GerritServerPresenter
 {
     /**
      * @var string
      */
-    public $keys_tokens_url = DisplayKeysTokensController::URL;
-    /**
-     * @var AccountTabPresenterCollection
-     */
-    public $tabs;
-    /**
-     * @var GerritServerPresenter[]
-     */
-    public $gerrit_servers;
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    public $csrf_token;
+    public $base_url;
 
-    /**
-     * @param \Git_RemoteServer_GerritServer[] $gerrit_servers
-     */
-    public function __construct(\CSRFSynchronizerToken $csrf_token, AccountTabPresenterCollection $tabs, array $gerrit_servers)
+    public function __construct(string $base_url)
     {
-        $this->csrf_token = $csrf_token;
-        $this->tabs = $tabs;
-        foreach ($gerrit_servers as $server) {
-            $this->gerrit_servers[] = new GerritServerPresenter($server->getBaseUrl());
-        }
+        $this->base_url = $base_url;
     }
 }

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #, php-format
 msgid "%1$s"
@@ -910,13 +910,6 @@ msgstr ""
 "automatiquements ajoutés à la liste des projets autorisés. A partir de "
 "maintenant, seuls les projets autorisés pourront utiliser ce miroir."
 
-msgid ""
-"Old keys need to be pushed manually. All new keys are automatically pushed "
-"to the following Gerrit servers:"
-msgstr ""
-"Vos anciennes clés ne sont pas poussées automatiquement. Toute nouvelle clé "
-"sera automatiquement poussée sur les serveurs suivants :"
-
 msgid "Only one replication SSH key is allowed by server"
 msgstr "Seulement une clé SSH pour la réplication est acceptée par serveur"
 
@@ -1761,6 +1754,13 @@ msgstr ""
 "Vous ne pouvez modifier QUE les permissions en <strong>LECTURE</strong>, car "
 "elles sont gérés par un serveur Gerrit distant. Ces modifications affectent "
 "uniquement %1$s et <strong>NE SONT PAS propagées vers Gerrit</strong>."
+
+msgid ""
+"You can use the following button to force push your <a href=\"%s\">ssh keys</"
+"a> to following gerrit servers:"
+msgstr ""
+"Vous pouvez utiliser le bouton suivant pour forcer la synchronisation de vos "
+"<a href=\"%s\">clefs SSH</a> sur les serveurs gerrit suivants : "
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes utilisateur."

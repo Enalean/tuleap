@@ -31,10 +31,6 @@ use CSRFSynchronizerToken;
 final class KeysTokensPresenter
 {
     /**
-     * @var string
-     */
-    public $keys_tokens_url = DisplayKeysTokensController::URL;
-    /**
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
