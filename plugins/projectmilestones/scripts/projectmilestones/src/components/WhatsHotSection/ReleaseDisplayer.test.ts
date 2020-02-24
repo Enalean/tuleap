@@ -59,7 +59,8 @@ describe("ReleaseDisplayer", () => {
 
         component_options = {
             propsData: {
-                release_data
+                release_data,
+                isOpen: true
             },
             data(): DefaultData<ReleaseDisplayer> {
                 return {
@@ -83,13 +84,33 @@ describe("ReleaseDisplayer", () => {
         expect(wrapper.contains("[data-test=show-error-message]")).toBe(true);
     });
 
-    it("When the widget is rendered, Then toggle is closed", async () => {
+    it("When the widget is rendered and it's the first release, Then toggle is open", async () => {
         component_options.data = (): DefaultData<ReleaseDisplayer> => {
             return {
                 is_open: false,
                 is_loading: false,
                 error_message: null
             };
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains("[data-test=toggle-open]")).toBe(true);
+    });
+
+    it("When the widget is rendered and it's not the first release, Then toggle is closed", async () => {
+        component_options.data = (): DefaultData<ReleaseDisplayer> => {
+            return {
+                is_open: false,
+                is_loading: false,
+                error_message: null
+            };
+        };
+
+        component_options = {
+            propsData: {
+                release_data,
+                isOpen: false
+            }
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);

@@ -85,10 +85,12 @@ import ReleaseBadgesOpenSprint from "./ReleaseBadgesOpenSprint.vue";
 export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @Prop()
+    readonly isOpen!: boolean;
     @State
     readonly user_can_view_sub_milestones_planning!: boolean;
 
-    open_sprints_details = false;
+    open_sprints_details = this.isOpen;
 
     on_click_open_sprints_details(): void {
         this.open_sprints_details = true;

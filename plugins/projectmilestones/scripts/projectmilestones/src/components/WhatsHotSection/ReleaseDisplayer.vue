@@ -37,7 +37,10 @@
                 {{ error_message }}
             </div>
             <div v-else data-test="display-release-data">
-                <release-badges-displayer v-bind:release_data="displayed_release" />
+                <release-badges-displayer
+                    v-bind:release_data="displayed_release"
+                    v-bind:is-open="isOpen"
+                />
                 <release-description v-bind:release_data="displayed_release" />
             </div>
         </div>
@@ -63,7 +66,9 @@ import { FetchWrapperError } from "tlp";
 })
 export default class ReleaseDisplayer extends Vue {
     @Prop()
-    release_data!: MilestoneData;
+    readonly release_data!: MilestoneData;
+    @Prop()
+    readonly isOpen!: boolean;
     @Action
     getEnhancedMilestones!: (release_data: MilestoneData) => Promise<MilestoneData>;
 
@@ -83,6 +88,7 @@ export default class ReleaseDisplayer extends Vue {
     async created(): Promise<void> {
         try {
             this.release_data_enhanced = await this.getEnhancedMilestones(this.release_data);
+            this.is_open = this.isOpen;
         } catch (rest_error) {
             await this.handle_error(rest_error);
         } finally {

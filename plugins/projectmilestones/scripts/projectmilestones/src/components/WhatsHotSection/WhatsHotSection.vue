@@ -21,8 +21,9 @@
     <div class="project-release-timeframe">
         <span class="project-release-label" v-translate>What's hot</span>
         <release-displayer
-            v-for="milestone in current_milestones"
+            v-for="(milestone, index) in current_milestones"
             v-bind:key="milestone.id"
+            v-bind:is-open="index === 0"
             v-bind:release_data="milestone"
             v-bind:data-test="`current-milestones-test-${milestone.label}`"
         />
