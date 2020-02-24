@@ -73,15 +73,6 @@ $em->processEvent(
 );
 
 $csrf = new CSRFSynchronizerToken('/account/index.php');
-$mail_manager = new MailManager();
-$tracker_formats = array();
-
-foreach ($mail_manager->getAllMailFormats() as $format) {
-    $tracker_formats[] = array(
-        'format'      => $format,
-        'is_selected' => $format === $mail_manager->getMailPreferencesByUser($user)
-    );
-}
 
 $languages_html = array();
 $language_factory = new BaseLanguageFactory();
@@ -179,7 +170,6 @@ $presenter = new User_PreferencesPresenter(
     $user_access_info,
     $third_paty_html,
     $csrf,
-    $tracker_formats,
     $languages_html,
     $user_helper_preferences,
     $plugins_prefs,

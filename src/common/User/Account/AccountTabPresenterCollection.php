@@ -45,6 +45,7 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
     {
         $this->all_tabs = [
             new AccountTabPresenter(_('User preferences'), '/account', 'fa-address-card-o', $current_href),
+            new AccountTabPresenter(_('Notifications'), DisplayNotificationsController::URL, 'fa-bell-o', $current_href),
             new AccountTabPresenter(_('Keys & tokens'), DisplayKeysTokensController::URL, 'fa-key', $current_href),
         ];
         $this->current_href = $current_href;

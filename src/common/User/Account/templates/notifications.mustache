@@ -1,0 +1,53 @@
+<div class="user-preferences">
+    <h1 class="user-preferences-title">
+        {{# gettext }}Preferences{{/ gettext }}
+    </h1>
+    <div class="user-preferences-container">
+        {{> user-account-tabs }}
+
+        <div class="user-preferences-section">
+            <section class="tlp-pane">
+                <form class="tlp-pane-container" action="/account/notifications" method="post">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-bell-o" aria-hidden="true"></i>{{# gettext }}Notifications{{/ gettext }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-checkbox">
+                                <input type="checkbox" name="site_email_updates" value="1" {{# site_email_updates_checked }}checked{{/ site_email_updates_checked }}>
+                                {{# gettext }}Receive emails about site updates, including security notices{{/ gettext }}
+                            </label>
+                            <p class="tlp-text-info">{{# gettext }}Low traffic, highly recommended.{{/ gettext }}</p>
+                        </div>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-checkbox">
+                                <input type="checkbox" name="site_email_community" value="1" {{# site_email_community_checked }}checked{{/ site_email_community_checked }}>
+                                {{# gettext }}Receive additional community mailing{{/ gettext }}
+                            </label>
+                            <p class="tlp-text-info">{{# gettext }}Low traffic.{{/ gettext }}</p>
+                        </div>
+
+                        <div class="tlp-form-element">
+                            <label class="tlp-label">{{# gettext }}Tracker email format{{/ gettext }}</label>
+                            <label class="tlp-label tlp-radio">
+                                <input type="radio" name="email_format" value="html" {{# email_format_html }}checked{{/ email_format_html }}> HTML
+                            </label>
+                            <label class="tlp-label tlp-radio">
+                                <input type="radio" name="email_format" value="text" {{# email_format_text }}checked{{/ email_format_text }}> {{# gettext }}Text{{/ gettext }}
+                            </label>
+                        </div>
+                    </section>
+                    <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+
+                        <button type="submit" class="tlp-button-primary">
+                            <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update notifications settings{{/ gettext }}
+                        </button>
+                    </section>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>

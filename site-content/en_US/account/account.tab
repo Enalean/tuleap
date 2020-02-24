@@ -57,7 +57,6 @@ account_options	auth_attempt_sessions	Open sessions:
 #
 #-----------------------------------------------
 #
-account_preferences	email_settings	Email settings
 account_preferences	session	Session
 account_preferences	appearance	Appearance
 account_preferences	import_export	Import/export
@@ -67,15 +66,11 @@ account_preferences	day_month_year	day/month/year
 account_preferences	lab_features_title	$1 Lab
 account_preferences	lab_features_description	$1 experimental features in preview mode for bleeding edge users. Only use it if you know what you are doing.
 account_preferences	lab_features_cblabel	Enable $1 Lab
-account_preferences	tracker_mail_format	Tracker emails format:
-account_preferences	error_form_mail_site	Verify site updates value
-account_preferences	error_form_mail_va	Verify additional community mailings value
 account_preferences	error_form_sticky_login	Verify remember me value
 account_preferences	error_language_id	Verify language value
 account_preferences	error_user_csv_separator	Verify CSV separator value
 account_preferences	error_user_csv_dateformat	Verify CSV date format value
 account_preferences	error_username_display	Verify username display value
-account_preferences	error_user_tracker_mailformat	Verify emails format value
 account_preferences	save_preferences	Save preferences
 account_preferences	edition_title	Edition
 account_preferences	default_format_label	Default format:

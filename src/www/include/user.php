@@ -177,7 +177,10 @@ function user_get_timezone()
     }
 }
 
-//Deprecated. Use User->setPreference() instead.
+/**
+ * @deprecated
+ * @see PFUser::setPreference()
+ */
 function user_set_preference($preference_name, $value)
 {
     global $user_pref;

@@ -35,24 +35,6 @@ $request = HTTPRequest::instance();
 $csrf = new CSRFSynchronizerToken('/account/index.php');
 $csrf->check();
 
-$form_mail_site = 0;
-if ($request->existAndNonEmpty('form_mail_site')) {
-    if ($request->valid(new Valid_WhiteList('form_mail_site', array(0, 1)))) {
-        $form_mail_site = (int) $request->get('form_mail_site');
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_form_mail_site'));
-    }
-}
-
-$form_mail_va = 0;
-if ($request->existAndNonEmpty('form_mail_va')) {
-    if ($request->valid(new Valid_WhiteList('form_mail_va', array(0, 1)))) {
-        $form_mail_va = (int) $request->get('form_mail_va');
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_form_mail_va'));
-    }
-}
-
 $user_theme_variant = null;
 $requested_variant  = 'current_theme_variant';
 $theme_variant      = new ThemeVariant();
@@ -120,16 +102,6 @@ if ($request->existAndNonEmpty('username_display')) {
     }
 }
 
-$mailManager = new MailManager();
-$user_tracker_mailformat = $mailManager->getMailPreferencesByUser($user);
-if ($request->existAndNonEmpty(Codendi_Mail_Interface::PREF_FORMAT)) {
-    if ($request->valid(new Valid_WhiteList(Codendi_Mail_Interface::PREF_FORMAT, $mailManager->getAllMailFormats()))) {
-        $user_tracker_mailformat = $request->get(Codendi_Mail_Interface::PREF_FORMAT);
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_tracker_mailformat'));
-    }
-}
-
 $form_accessibility_mode = 0;
 if ($request->existAndNonEmpty('form_accessibility_mode')) {
     if ($request->valid(new Valid_WhiteList('form_accessibility_mode', [0, 1]))) {
@@ -144,8 +116,6 @@ if ($request->existAndNonEmpty('form_accessibility_mode')) {
 // Perform the update
 // User
 db_query("UPDATE user SET "
-         . "mail_siteupdates=" . $form_mail_site . ","
-         . "mail_va=" . $form_mail_va . ","
          . "sticky_login=" . $form_sticky_login . ","
          . "language_id='" . db_es($language_id) . "' WHERE "
          . "user_id=" . db_ei(UserManager::instance()->getCurrentUser()->getId()));
@@ -153,7 +123,6 @@ db_query("UPDATE user SET "
 // Preferences
 user_set_preference("user_csv_separator", $user_csv_separator);
 user_set_preference("user_csv_dateformat", $user_csv_dateformat);
-user_set_preference(Codendi_Mail_Interface::PREF_FORMAT, $user_tracker_mailformat);
 
 if ($username_display !== null) {
     user_set_preference("username_display", $username_display);

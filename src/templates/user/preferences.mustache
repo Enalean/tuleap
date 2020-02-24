@@ -3,39 +3,6 @@
 <form action="updateprefs.php" method="post" class="form-horizontal acco unt-form">
     {{{ csrf_input_html }}}
 
-        <fieldset id="account-email-settings">
-            <h3><i class="fa fa-envelope"></i> {{ email_settings }}</h3>
-            <label class="checkbox">
-                <input type="checkbox"
-                     name="form_mail_site"
-                     value="1"
-                     {{# user_has_mail_site_updates }} checked="checked" {{/ user_has_mail_site_updates }}
-                />
-                {{{ site_update_label }}}
-            </label>
-
-            <label class="checkbox">
-                <input type="checkbox"
-                     name="form_mail_va" value="1"
-                     {{# user_has_mail_va }} checked="checked" {{/ user_has_mail_va }}
-                />
-                {{{ community_mail_label }}}
-            </label>
-
-            <div class="control-group user-account-group">
-                <label class="control-label user-account-label">{{ tracker_mail_format_label }}</label>
-                <div class="controls">
-                    <select name="{{ tracker_mail_format_select_name }}" class="select-user-preferences">
-                    {{# tracker_formats }}
-                        <option value="{{ format }}" {{# is_selected }} selected="selected" {{/ is_selected }}>
-                            {{ format }}
-                        </option>
-                    {{/ tracker_formats }}
-                    </select>
-                </div>
-            </div>
-        </fieldset>
-
         <fieldset>
             <h3><i class="fa fa-user"></i> {{ session_label }}</h3>
             <label class="checkbox">

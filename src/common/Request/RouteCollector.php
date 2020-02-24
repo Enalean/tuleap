@@ -28,6 +28,7 @@ use FastRoute;
 use FRSFileFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
+use MailManager;
 use SVN_TokenHandler;
 use TemplateRendererFactory;
 use TroveCatDao;
@@ -104,8 +105,10 @@ use Tuleap\User\Account\AccessKeyPresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
 use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
 use Tuleap\User\Account\DisplayKeysTokensController;
+use Tuleap\User\Account\DisplayNotificationsController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
+use Tuleap\User\Account\UpdateNotificationsPreferences;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
@@ -306,6 +309,24 @@ class RouteCollector
     public static function postAccountSVNTokenRevoke(): DispatchableWithRequest
     {
         return new SVNTokenRevokeController(DisplayKeysTokensController::getCSRFToken(), SVN_TokenHandler::build());
+    }
+
+    public static function getAccountNotifications(): DispatchableWithRequest
+    {
+        return new DisplayNotificationsController(
+            EventManager::instance(),
+            TemplateRendererFactory::build(),
+            DisplayNotificationsController::getCSRFToken(),
+            new MailManager(),
+        );
+    }
+
+    public static function postAccountNotifications(): DispatchableWithRequest
+    {
+        return new UpdateNotificationsPreferences(
+            DisplayNotificationsController::getCSRFToken(),
+            \UserManager::instance(),
+        );
     }
 
     public static function postAccountAvatar()
@@ -576,7 +597,10 @@ class RouteCollector
         });
 
 
-        $r->addGroup('/account', function (FastRoute\RouteCollector $r) {
+        $r->addGroup('/account', static function (FastRoute\RouteCollector $r) {
+            $r->get('/notifications', [self::class, 'getAccountNotifications']);
+            $r->post('/notifications', [self::class, 'postAccountNotifications']);
+
             $r->get('/keys-tokens', [self::class, 'getAccountToken']);
             $r->post('/ssh_key/create', [self::class, 'postAccountSSHKeyCreate']);
             $r->post('/ssh_key/delete', [self::class, 'postAccountSSHKeyDelete']);
@@ -584,6 +608,7 @@ class RouteCollector
             $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
             $r->post('/svn_token/create', [self::class, 'postAccountSVNTokenCreate']);
             $r->post('/svn_token/revoke', [self::class, 'postAccountSVNTokenRevoke']);
+
             $r->post('/avatar', [self::class, 'postAccountAvatar']);
             $r->post('/logout', [self::class, 'postLogoutAccount']);
             $r->post('/disable_legacy_browser_warning', [self::class, 'postDisableLegacyBrowsersWarningMessage']);

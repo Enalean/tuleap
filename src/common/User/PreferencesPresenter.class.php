@@ -46,9 +46,6 @@ class User_PreferencesPresenter
     public $csrf_input_html;
 
     /** @var array */
-    public $tracker_formats;
-
-    /** @var array */
     public $languages_html;
 
     /** @var array */
@@ -87,7 +84,6 @@ class User_PreferencesPresenter
         array $user_access,
         $third_party_html,
         CSRFSynchronizerToken $csrf_token,
-        array $tracker_formats,
         array $languages_html,
         array $user_helper_preferences,
         array $plugins_prefs,
@@ -105,7 +101,6 @@ class User_PreferencesPresenter
         $this->third_party_html        = $third_party_html;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
-        $this->tracker_formats         = $tracker_formats;
         $this->languages_html          = $languages_html;
         $this->user_helper_preferences = $user_helper_preferences;
         $this->plugins_prefs           = $plugins_prefs;
@@ -317,44 +312,9 @@ class User_PreferencesPresenter
         return $GLOBALS['Language']->getText('account_options', 'preferences');
     }
 
-    public function email_settings()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'email_settings');
-    }
-
-    public function user_has_mail_site_updates()
-    {
-        return $this->user->getMailSiteUpdates();
-    }
-
     public function user_has_sticky_login()
     {
         return $this->user->getStickyLogin();
-    }
-
-    public function user_has_mail_va()
-    {
-        return $this->user->getMailVA();
-    }
-
-    public function site_update_label()
-    {
-        return $GLOBALS['Language']->getText('account_register', 'siteupdate');
-    }
-
-    public function community_mail_label()
-    {
-        return $GLOBALS['Language']->getText('account_register', 'communitymail');
-    }
-
-    public function tracker_mail_format_label()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'tracker_mail_format');
-    }
-
-    public function tracker_mail_format_select_name()
-    {
-        return Codendi_Mail_Interface::PREF_FORMAT;
     }
 
     public function session_label()
