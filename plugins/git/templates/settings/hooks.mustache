@@ -2,6 +2,9 @@
     <h2>{{ title }}</h2>
 
     <p class="hooks-desc">{{ description }}</p>
+    {{# additional_description }}
+        <p class="hooks-desc">{{ . }}</p>
+    {{/ additional_description }}
 
     {{# create_buttons }}
         {{# has_reached_the_limit }}

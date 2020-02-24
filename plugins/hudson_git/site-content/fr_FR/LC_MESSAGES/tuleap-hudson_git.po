@@ -1,6 +1,19 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid ""
+"A jenkins server has been defined globally for the project and will be "
+"triggered after git pushes."
+msgid_plural ""
+"Some jenkins servers have been defined globally for the project and will be "
+"triggered after git pushes."
+msgstr[0] ""
+"Un serveur jenkins a été défini dans le projet et sera utilisé après tout "
+"git push fait dans ce dépôt."
+msgstr[1] ""
+"Plusieurs serveurs jenkins ont été définis dans le projet et seront utilisés "
+"après tout git push fait dans ce dépôt."
+
 msgid "Actions"
 msgstr "Actions"
 

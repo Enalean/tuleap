@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -95,7 +95,8 @@ class Hooks extends Pane
      */
     public function getContent()
     {
-        $description    = dgettext('tuleap-git', 'You can define several generic webhooks.');
+        $description            = dgettext('tuleap-git', 'You can define several generic webhooks.');
+        $additional_description = '';
 
         $create_buttons       = array();
         $sections             = array();
@@ -104,12 +105,13 @@ class Hooks extends Pane
         EventManager::instance()->processEvent(
             self::ADDITIONAL_WEBHOOKS,
             array(
-                'request'              => $this->request,
-                'repository'           => $this->repository,
-                'description'          => &$description,
-                'create_buttons'       => &$create_buttons,
-                'sections'             => &$sections,
-                'additional_html_bits' => &$additional_html_bits
+                'request'                => $this->request,
+                'repository'             => $this->repository,
+                'description'            => &$description,
+                'create_buttons'         => &$create_buttons,
+                'sections'               => &$sections,
+                'additional_html_bits'   => &$additional_html_bits,
+                'additional_description' => &$additional_description,
             )
         );
 
@@ -124,6 +126,7 @@ class Hooks extends Pane
                 $csrf,
                 $this->getTitle(),
                 $description,
+                $additional_description,
                 $create_buttons,
                 $sections,
                 new CreateWebhookModalPresenter($this->repository),
