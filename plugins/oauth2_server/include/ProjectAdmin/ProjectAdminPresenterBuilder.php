@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2Server\ProjectAdmin;
 
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
+use Tuleap\OAuth2Server\App\ClientIdentifier;
 
 class ProjectAdminPresenterBuilder
 {
@@ -47,7 +48,12 @@ class ProjectAdminPresenterBuilder
         $apps       = $this->app_factory->getAppsForProject($project);
         $presenters = [];
         foreach ($apps as $app) {
-            $presenters[] = new AppPresenter($app->getId(), $app->getName(), $app->getRedirectEndpoint());
+            $presenters[] = new AppPresenter(
+                $app->getId(),
+                $app->getName(),
+                $app->getRedirectEndpoint(),
+                ClientIdentifier::fromOAuth2App($app)->toString()
+            );
         }
         return new ProjectAdminPresenter($presenters, $csrf_token, $project);
     }

@@ -27,15 +27,14 @@ namespace Tuleap\OAuth2Server\App;
  */
 final class ClientIdentifier
 {
+    private const PREFIX = 'tlp-client-id-';
+
     /** @var int */
     private $identifier;
-    /** @var string */
-    private $prefixed_identifier;
 
-    private function __construct(int $identifier, string $identifier_key)
+    private function __construct(int $identifier)
     {
-        $this->identifier          = $identifier;
-        $this->prefixed_identifier = $identifier_key;
+        $this->identifier = $identifier;
     }
 
     /**
@@ -45,11 +44,19 @@ final class ClientIdentifier
      */
     public static function fromClientId(string $identifier_key): self
     {
-        if (preg_match('/^tlp-client-id-(?<id>\d+)$/', $identifier_key, $matches) !== 1) {
+        if (preg_match('/^' . preg_quote(self::PREFIX, '/') . '(?<id>\d+)$/', $identifier_key, $matches) !== 1) {
             throw new InvalidClientIdentifierKey($identifier_key);
         }
 
-        return new self((int) $matches['id'], $identifier_key);
+        return new self((int) $matches['id']);
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function fromOAuth2App(OAuth2App $app): self
+    {
+        return new self($app->getId());
     }
 
     public function getInternalId(): int
@@ -57,8 +64,8 @@ final class ClientIdentifier
         return $this->identifier;
     }
 
-    public function toString()
+    public function toString(): string
     {
-        return $this->prefixed_identifier;
+        return self::PREFIX . $this->identifier;
     }
 }

@@ -17,6 +17,7 @@
                     <thead>
                     <tr>
                         <th>{{# dgettext }}tuleap-oauth2_server | App name{{/ dgettext }}</th>
+                        <th>{{# dgettext }}tuleap-oauth2_server | Application (client) ID{{/ dgettext }}</th>
                         <th>{{# dgettext }}tuleap-oauth2_server | Redirect endpoint{{/ dgettext }}</th>
                         <th></th>
                     </tr>
@@ -25,6 +26,7 @@
                     {{# apps }}
                         <tr>
                             <td>{{ name }}</td>
+                            <td>{{ client_id }}</td>
                             <td>{{ redirect_endpoint }}</td>
                             <td class="tlp-table-cell-actions">
                                 <button
@@ -40,7 +42,7 @@
                     {{/ apps }}
                     {{^ apps }}
                         <tr>
-                            <td colspan="3" class="tlp-table-cell-empty">
+                            <td colspan="4" class="tlp-table-cell-empty">
                                 {{# dgettext }}tuleap-oauth2_server | No App have been defined yet. Start by adding one. {{/ dgettext }}
                             </td>
                         </tr>

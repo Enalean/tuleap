@@ -33,11 +33,14 @@ final class AppPresenter
     public $name;
     /** @var string */
     public $redirect_endpoint;
+    /** @var string */
+    public $client_id;
 
-    public function __construct(int $id, string $name, string $redirect_endpoint)
+    public function __construct(int $id, string $name, string $redirect_endpoint, string $client_id)
     {
         $this->id                = $id;
         $this->name              = $name;
         $this->redirect_endpoint = $redirect_endpoint;
+        $this->client_id         = $client_id;
     }
 }
