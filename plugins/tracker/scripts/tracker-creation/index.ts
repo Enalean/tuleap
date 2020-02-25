@@ -63,11 +63,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_templates,
         active_option: CreationOptions.NONE_YET,
         selected_tracker_template: null,
+        selected_xml_file_input: null,
         tracker_to_be_created: {
             name: "",
             shortname: ""
         },
-        has_form_been_submitted: false
+        has_form_been_submitted: false,
+        is_a_xml_file_selected: false
     };
 
     new AppComponent({

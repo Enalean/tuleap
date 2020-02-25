@@ -22,8 +22,10 @@ export interface State {
     project_templates: ProjectTemplate[];
     active_option: CreationOptions;
     selected_tracker_template: Tracker | null;
+    selected_xml_file_input: HTMLInputElement | null;
     tracker_to_be_created: TrackerToBeCreatedMandatoryData;
     has_form_been_submitted: boolean;
+    is_a_xml_file_selected: boolean;
 }
 
 export interface CSRFToken {
@@ -48,5 +50,6 @@ export interface TrackerToBeCreatedMandatoryData {
 
 export enum CreationOptions {
     NONE_YET = "none_yet",
-    TRACKER_TEMPLATE = "tracker_template"
+    TRACKER_TEMPLATE = "tracker_template",
+    TRACKER_XML_FILE = "tracker_xml_file"
 }

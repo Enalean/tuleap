@@ -24,22 +24,24 @@
         </template>
         <template v-slot:interactive_content>
             <form
+                ref="tracker_creation_form"
                 v-on:submit="setCreationFormHasBeenSubmitted"
                 method="post"
                 id="tracker-creation-form"
+                v-bind:enctype="form_enctype"
             >
                 <field-csrf-token />
                 <field-name />
                 <field-shortname />
                 <field-description />
-                <field-tracker-template-id />
+                <field-tracker-template-id v-if="is_a_duplication" />
             </form>
         </template>
     </step-layout>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Mutation, State } from "vuex-class";
+import { Mutation, State, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import StepLayout from "../layout/StepLayout.vue";
 import StepTwoInfo from "./StepTwoInfo.vue";
@@ -67,7 +69,36 @@ export default class StepTwo extends Vue {
     @State
     readonly has_form_been_submitted!: boolean;
 
+    @Getter
+    readonly is_a_duplication!: boolean;
+
+    @Getter
+    readonly is_a_xml_import!: boolean;
+
+    @Mutation
+    readonly initTrackerNameWithTheSelectedTemplateName!: () => void;
+
+    @Mutation
+    readonly initTrackerToBeCreatedFromXml!: () => void;
+
+    @State
+    readonly selected_xml_file_input!: HTMLInputElement;
+
     mounted(): void {
+        if (this.is_a_duplication) {
+            this.initTrackerNameWithTheSelectedTemplateName();
+        } else if (this.is_a_xml_import) {
+            this.initTrackerToBeCreatedFromXml();
+
+            const form = this.$refs.tracker_creation_form;
+
+            if (!(form instanceof Element)) {
+                return;
+            }
+
+            form.appendChild(this.selected_xml_file_input);
+        }
+
         window.addEventListener("beforeunload", this.beforeUnload);
     }
 
@@ -82,6 +113,14 @@ export default class StepTwo extends Vue {
             event.preventDefault();
             event.returnValue = false;
         }
+    }
+
+    get form_enctype(): string {
+        if (this.is_a_xml_import) {
+            return "multipart/form-data";
+        }
+
+        return "application/x-www-form-urlencoded";
     }
 }
 </script>

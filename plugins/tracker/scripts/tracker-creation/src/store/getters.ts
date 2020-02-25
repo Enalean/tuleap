@@ -20,14 +20,35 @@
 import { CreationOptions, State } from "./type";
 
 export const is_ready_for_step_2 = (state: State): boolean => {
-    return (
-        state.active_option !== CreationOptions.NONE_YET && state.selected_tracker_template !== null
-    );
+    if (state.active_option === CreationOptions.NONE_YET) {
+        return false;
+    }
+
+    return isDuplicationReady(state) || isXmlImportReady(state);
 };
+
+function isDuplicationReady(state: State): boolean {
+    return (
+        state.active_option === CreationOptions.TRACKER_TEMPLATE &&
+        state.selected_tracker_template !== null
+    );
+}
+
+function isXmlImportReady(state: State): boolean {
+    return state.active_option === CreationOptions.TRACKER_XML_FILE && state.is_a_xml_file_selected;
+}
 
 export const is_ready_to_submit = (state: State): boolean => {
     return (
         state.tracker_to_be_created.name.length > 0 &&
         state.tracker_to_be_created.shortname.length > 0
     );
+};
+
+export const is_a_duplication = (state: State): boolean => {
+    return state.active_option === CreationOptions.TRACKER_TEMPLATE;
+};
+
+export const is_a_xml_import = (state: State): boolean => {
+    return state.active_option === CreationOptions.TRACKER_XML_FILE;
 };

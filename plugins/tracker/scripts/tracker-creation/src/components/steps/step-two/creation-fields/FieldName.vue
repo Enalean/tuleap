@@ -46,13 +46,6 @@ export default class StepTwo extends Vue {
     readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
 
     @Mutation
-    readonly initTrackerName!: () => void;
-
-    @Mutation
     readonly setTrackerName!: (name: string) => void;
-
-    mounted(): void {
-        this.initTrackerName();
-    }
 }
 </script>

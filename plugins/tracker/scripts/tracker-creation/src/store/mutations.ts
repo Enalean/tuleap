@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CreationOptions, State, Tracker } from "./type";
+import { CreationOptions, State, Tracker, TrackerToBeCreatedMandatoryData } from "./type";
+import { extractNameAndShortnameFromXmlFile } from "../helpers/xml-data-extractor";
 
 export function setActiveOption(state: State, option: CreationOptions): void {
     state.active_option = option;
@@ -39,10 +40,31 @@ export function setSelectedTrackerTemplate(state: State, tracker_id: string): vo
     state.selected_tracker_template = tracker;
 }
 
-export function initTrackerName(state: State): void {
+export function initTrackerNameWithTheSelectedTemplateName(state: State): void {
     if (state.selected_tracker_template) {
-        state.tracker_to_be_created.name = state.selected_tracker_template.name;
+        state.tracker_to_be_created = {
+            name: state.selected_tracker_template.name,
+            shortname: ""
+        };
     }
+}
+
+export async function initTrackerToBeCreatedFromXml(state: State): Promise<void> {
+    if (!state.selected_xml_file_input || !state.selected_xml_file_input.files) {
+        return;
+    }
+
+    const file = state.selected_xml_file_input.files.item(0);
+
+    if (!file) {
+        return;
+    }
+
+    await extractNameAndShortnameFromXmlFile(file).then(
+        (xml_data: TrackerToBeCreatedMandatoryData) => {
+            state.tracker_to_be_created = xml_data;
+        }
+    );
 }
 
 export function setTrackerName(state: State, name: string): void {
@@ -55,4 +77,12 @@ export function setTrackerShortName(state: State, shortname: string): void {
 
 export function setCreationFormHasBeenSubmitted(state: State): void {
     state.has_form_been_submitted = true;
+}
+
+export function setSelectedTrackerXmlFileInput(state: State, input: HTMLInputElement): void {
+    state.selected_xml_file_input = input;
+}
+
+export function setIsXmlAFileSelected(state: State): void {
+    state.is_a_xml_file_selected = true;
 }
