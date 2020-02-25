@@ -116,6 +116,13 @@ class TrackerIsInvalidException extends \Exception
         );
     }
 
+    public static function invalidXmlFile(): self
+    {
+        return new self(
+            dgettext('plugin_tracker', 'The provided file is not a valid file')
+        );
+    }
+
     public function getTranslatedMessage(): string
     {
         return $this->translated_message;

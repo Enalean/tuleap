@@ -26,9 +26,11 @@ namespace Tuleap\Tracker\Creation;
 use Feedback;
 use Project;
 use Tracker;
+use Tracker_Exception;
 use TrackerFactory;
 use TrackerFromXmlException;
 use TrackerXmlImport;
+use Tuleap\Tracker\TrackerIsInvalidException;
 use UserManager;
 use XML_ParseException;
 use XMLImportHelper;
@@ -83,8 +85,9 @@ class TrackerCreator
     }
 
     /**
-     * @throws TrackerFromXmlException
-     * @throws \Tracker_Exception
+     * @throws Tracker_Exception
+     * @throws TrackerIsInvalidException
+     * @throws TrackerCreationHasFailedException
      */
     public function createTrackerFromXml(
         Project $project,
@@ -92,7 +95,7 @@ class TrackerCreator
         string $name,
         string $description,
         string $itemname
-    ): ?Tracker {
+    ): Tracker {
         try {
             return $this->tracker_xml_import->createFromXMLFileWithInfo(
                 $project,
@@ -103,10 +106,10 @@ class TrackerCreator
             );
         } catch (XML_ParseException $exception) {
             $this->xml_error_displayer->displayErrors($project, $exception->getErrors(), $exception->getFileLines());
-            return null;
+            throw new TrackerCreationHasFailedException();
         } catch (TrackerFromXmlException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            return null;
+            throw new TrackerCreationHasFailedException();
         }
     }
 
