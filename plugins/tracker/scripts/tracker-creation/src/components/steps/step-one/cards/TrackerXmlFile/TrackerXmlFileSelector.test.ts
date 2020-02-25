@@ -73,4 +73,23 @@ describe("TrackerXmlFileSelector", () => {
         expect(wrapper.find("[data-test=tracker-creation-xml-file-selector]").exists()).toBe(false);
         expect(wrapper.find("[data-test=injected-file-input]").exists()).toBe(true);
     });
+
+    it("Displays an error when the provided file is not parsable", async () => {
+        const local_document = document.implementation.createHTMLDocument();
+        const file_input = local_document.createElement("input");
+
+        file_input.setAttribute("type", "file");
+        file_input.setAttribute("data-test", "injected-file-input");
+
+        const state: State = {
+            selected_xml_file_input: file_input,
+            has_xml_file_error: true
+        } as State;
+
+        const wrapper = await getWrapper(state);
+
+        expect(wrapper.find("[data-test=tracker-creation-xml-file-selector]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=injected-file-input]").exists()).toBe(true);
+        expect(wrapper.find(".tracker-creation-xml-file-error").exists()).toBe(true);
+    });
 });

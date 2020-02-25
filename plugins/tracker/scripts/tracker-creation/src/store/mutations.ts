@@ -49,7 +49,9 @@ export function initTrackerNameWithTheSelectedTemplateName(state: State): void {
     }
 }
 
-export async function initTrackerToBeCreatedFromXml(state: State): Promise<void> {
+export async function setTrackerToBeCreatedFromXml(state: State): Promise<void> {
+    state.has_xml_file_error = false;
+
     if (!state.selected_xml_file_input || !state.selected_xml_file_input.files) {
         return;
     }
@@ -60,11 +62,14 @@ export async function initTrackerToBeCreatedFromXml(state: State): Promise<void>
         return;
     }
 
-    await extractNameAndShortnameFromXmlFile(file).then(
-        (xml_data: TrackerToBeCreatedMandatoryData) => {
+    await extractNameAndShortnameFromXmlFile(file)
+        .then((xml_data: TrackerToBeCreatedMandatoryData) => {
+            state.is_a_xml_file_selected = true;
             state.tracker_to_be_created = xml_data;
-        }
-    );
+        })
+        .catch(() => {
+            state.has_xml_file_error = true;
+        });
 }
 
 export function setTrackerName(state: State, name: string): void {

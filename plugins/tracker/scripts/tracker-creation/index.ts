@@ -69,7 +69,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             shortname: ""
         },
         has_form_been_submitted: false,
-        is_a_xml_file_selected: false
+        is_a_xml_file_selected: false,
+        has_xml_file_error: false
     };
 
     new AppComponent({

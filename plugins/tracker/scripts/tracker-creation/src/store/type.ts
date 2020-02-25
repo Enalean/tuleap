@@ -26,6 +26,7 @@ export interface State {
     tracker_to_be_created: TrackerToBeCreatedMandatoryData;
     has_form_been_submitted: boolean;
     is_a_xml_file_selected: boolean;
+    has_xml_file_error: boolean;
 }
 
 export interface CSRFToken {

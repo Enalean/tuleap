@@ -72,6 +72,9 @@ msgstr "Nom court"
 msgid "Template"
 msgstr "Modèle"
 
+msgid "The provided file is not a valid XML file"
+msgstr "Le fichier fourni n'est pas un fichier XML valide"
+
 msgid ""
 "The tracker template you will select provides preconfigured fields, "
 "permissions,\n"
