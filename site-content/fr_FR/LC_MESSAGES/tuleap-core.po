@@ -653,6 +653,9 @@ msgstr "Confirmation de changement d'adresse e-mail"
 msgid "Email format invalid"
 msgstr "Le formal de l'e-mail n'est pas valide"
 
+msgid "Email format preference successfully updated"
+msgstr "La préférence de format de courriel a été mise à jour"
+
 msgid "Emergency"
 msgstr "Urgent"
 
@@ -905,6 +908,12 @@ msgstr "Affiche la liste des membres du projet."
 msgid "Login"
 msgstr "Se connecter"
 
+msgid "Low traffic, highly recommended."
+msgstr "Trafic faible, fortement recommandé."
+
+msgid "Low traffic."
+msgstr "Trafic faible."
+
 msgid "Mailing lists (Lists Service)"
 msgstr "Listes de diffusion (Service Listes)"
 
@@ -1068,6 +1077,12 @@ msgstr "Page non trouvée"
 
 msgid "Note"
 msgstr "Note"
+
+msgid "Nothing changed"
+msgstr "Rien n'a changé"
+
+msgid "Notifications"
+msgstr "Notifications"
 
 msgid "Only project members can access its content."
 msgstr "Seuls les membres du projet peuvent accéder à son contenu."
@@ -1386,6 +1401,15 @@ msgstr "Rang"
 msgid "Read only access to information about projects"
 msgstr "Accès en lecture seule aux informations concernant les projets"
 
+msgid "Receive additional community mailing"
+msgstr ""
+"Recevoir du courrier électronique supplémentaire au sujet de la communauté"
+
+msgid "Receive emails about site updates, including security notices"
+msgstr ""
+"Recevoir du courrier électronique à propos des mises à jour du site mais "
+"également des informations relatives à la sécurité"
+
 msgid "Recently"
 msgstr "Récemment"
 
@@ -1593,6 +1617,9 @@ msgstr "Modèle utilisé par ce projet"
 
 msgid "Templates"
 msgstr "Modèles de projet"
+
+msgid "Text"
+msgstr "Texte"
 
 msgid "That user does not exist."
 msgstr "Cet utilisateur n'existe pas"
@@ -1934,6 +1961,9 @@ msgstr "Suivez et gérez tous types d'activités."
 msgid "Tracker"
 msgstr "Suivi"
 
+msgid "Tracker email format"
+msgstr "Format des notifications de l'outil de suivi"
+
 msgid "Trackers"
 msgstr "Outils de suivi"
 
@@ -1959,6 +1989,12 @@ msgstr "Impossible de récupérer les dernières activités du projet"
 msgid "Unable to send email to user, please contact %s"
 msgstr "Impossible d'envoyer l'email à l'utilisateur, veuillez contacter %s"
 
+msgid "Unable to update email format preference"
+msgstr "La mise à jour des préférences de format de courriel a échoué"
+
+msgid "Unable to update user preferences"
+msgstr "La mise à jour des préférences utilisateur a échoué"
+
 msgid "Unauthorized action for anonymous"
 msgstr "Cette action n'est pas autorisée pour les anonymes"
 
@@ -1976,6 +2012,9 @@ msgstr "La mise à jour a échoué"
 
 msgid "Update label"
 msgstr "Mettre à jour le label"
+
+msgid "Update notifications settings"
+msgstr "Mettre à jour les paramètres de notification"
 
 msgid "Update of service label is not supported"
 msgstr "La mise à jour du label du service n'est pas supportée"
@@ -2030,6 +2069,9 @@ msgstr "Nom d'utilisateur"
 
 msgid "User preferences"
 msgstr "Préférences utilisateur"
+
+msgid "User preferences successfully updated"
+msgstr "Les préférences utilisateur ont été mises à jour"
 
 msgid "User status"
 msgstr "Statut de l'utilisateur"
