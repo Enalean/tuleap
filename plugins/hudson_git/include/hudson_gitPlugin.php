@@ -26,6 +26,8 @@ require_once __DIR__ . '/constants.php';
 use FastRoute\RouteCollector;
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -42,6 +44,7 @@ use Tuleap\HudsonGit\Git\Administration\JenkinsServerDeleter;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Git\Administration\URLBuilder;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
+use Tuleap\HudsonGit\Job\ProjectJobDao;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\Logger;
@@ -126,7 +129,7 @@ class hudson_gitPlugin extends Plugin
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $xzibit = new GitWebhooksSettingsEnhancer(
                 new Hook\HookDao(),
-                new JobManager(new JobDao()),
+                new JobManager(new JobDao(), new ProjectJobDao()),
                 $this->getCSRF(),
                 self::getJenkinsServerFactory()
             );
@@ -150,7 +153,11 @@ class hudson_gitPlugin extends Plugin
             self::getGitPermissionsManager(),
             self::getJenkinsServerFactory(),
             new JenkinsServerDeleter(
-                new JenkinsServerDao()
+                new JenkinsServerDao(),
+                new ProjectJobDao(),
+                new DBTransactionExecutorWithConnection(
+                    DBFactory::getMainTuleapDBConnection()
+                )
             ),
             new CSRFSynchronizerToken(URLBuilder::buildDeleteUrl())
         );
@@ -237,7 +244,7 @@ class hudson_gitPlugin extends Plugin
                     new JenkinsCSRFCrumbRetriever($http_client, $request_factory)
                 ),
                 $this->getLogger(),
-                new JobManager(new JobDao()),
+                new JobManager(new JobDao(), new ProjectJobDao()),
                 self::getJenkinsServerFactory()
             );
 

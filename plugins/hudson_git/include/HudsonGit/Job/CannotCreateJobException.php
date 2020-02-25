@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright Enalean (c) 2016. All rights reserved.
+/**
+ * Copyright Enalean (c) 2016 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -28,8 +28,8 @@ use Exception;
 
 class CannotCreateJobException extends Exception
 {
-    public function __construct()
+    public function __construct(string $message)
     {
-        parent::__construct($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
+        parent::__construct($message);
     }
 }

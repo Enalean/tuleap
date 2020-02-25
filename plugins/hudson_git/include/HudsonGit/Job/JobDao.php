@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright Enalean (c) 2016. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
