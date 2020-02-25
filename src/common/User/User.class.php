@@ -804,12 +804,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey
 
     /**
      * Return the local of the user. Ex: en_US, fr_FR
-     *
-     * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
-        return $this->locale;
+        return (string) $this->locale;
     }
 
     /**

@@ -46,9 +46,6 @@ class User_PreferencesPresenter
     public $csrf_input_html;
 
     /** @var array */
-    public $languages_html;
-
-    /** @var array */
     public $user_helper_preferences;
 
     /** @var array */
@@ -84,7 +81,6 @@ class User_PreferencesPresenter
         array $user_access,
         $third_party_html,
         CSRFSynchronizerToken $csrf_token,
-        array $languages_html,
         array $user_helper_preferences,
         array $plugins_prefs,
         array $all_csv_separator,
@@ -101,7 +97,6 @@ class User_PreferencesPresenter
         $this->third_party_html        = $third_party_html;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
-        $this->languages_html          = $languages_html;
         $this->user_helper_preferences = $user_helper_preferences;
         $this->plugins_prefs           = $plugins_prefs;
         $this->all_csv_separator       = $all_csv_separator;
@@ -345,11 +340,6 @@ class User_PreferencesPresenter
     public function theme_variant_label()
     {
         return $GLOBALS['Language']->getText('account_options', 'theme_variant');
-    }
-
-    public function language_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'language');
     }
 
     public function username_display_label()

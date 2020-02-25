@@ -65,13 +65,6 @@ if ($request->existAndNonEmpty('form_sticky_login')) {
     }
 }
 
-$language_id = $GLOBALS['sys_lang'];
-if ($request->existAndNonEmpty('language_id') && $GLOBALS['Language']->isLanguageSupported($request->get('language_id'))) {
-    $language_id= $request->get('language_id');
-} else {
-    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_language_id'));
-}
-
 $user_csv_separator = PFUser::DEFAULT_CSV_SEPARATOR;
 if ($request->existAndNonEmpty('user_csv_separator')) {
     if ($request->valid(new Valid_WhiteList('user_csv_separator', PFUser::$csv_separators))) {
@@ -115,10 +108,8 @@ if ($request->existAndNonEmpty('form_accessibility_mode')) {
 }
 // Perform the update
 // User
-db_query("UPDATE user SET "
-         . "sticky_login=" . $form_sticky_login . ","
-         . "language_id='" . db_es($language_id) . "' WHERE "
-         . "user_id=" . db_ei(UserManager::instance()->getCurrentUser()->getId()));
+db_query("UPDATE user SET sticky_login = $form_sticky_login WHERE user_id = " .
+    db_ei(UserManager::instance()->getCurrentUser()->getId()));
 
 // Preferences
 user_set_preference("user_csv_separator", $user_csv_separator);

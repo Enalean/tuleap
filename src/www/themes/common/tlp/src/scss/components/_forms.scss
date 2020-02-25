@@ -118,6 +118,12 @@ $tlp-form-element-select-small-background-size: 6px;
         font-size: 10px;
         vertical-align: text-top;
     }
+
+    &:not(.tlp-checkbox) ~ &.tlp-checkbox,
+    &:not(.tlp-radio) ~ &.tlp-radio {
+        color: inherit;
+        font-weight: normal;
+    }
 }
 
 /**

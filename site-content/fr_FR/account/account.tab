@@ -56,7 +56,6 @@ account_preferences	csv_dateformat	Format de date CSV :
 account_preferences	month_day_year	mois/jour/année
 account_preferences	day_month_year	jour/mois/année
 account_preferences	error_form_sticky_login	Vérifiez la valeur du souviens-toi de moi
-account_preferences	error_language_id	Vérifiez la valeur de la langue
 account_preferences	error_user_csv_separator	Vérifiez la valeur du séparateur CSV
 account_preferences	error_user_csv_dateformat	Vérifiez la valeur de format de date CSV
 account_preferences	error_username_display	Vérifiez la valeur de l'affichage des noms
