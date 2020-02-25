@@ -70,11 +70,10 @@ function getDifference(start_date, end_date) {
 
 function getFormattedDates(dataset) {
     return dataset.map(data => {
-        return {
-            ...data,
-            date: moment(data.date, moment.ISO_8601)
-                .utc()
-                .format("YYYY-MM-DD")
-        };
+        const new_data = Object.assign({}, data);
+        new_data.date = moment(data.date, moment.ISO_8601)
+            .utc()
+            .format("YYYY-MM-DD");
+        return new_data;
     });
 }
