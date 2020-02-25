@@ -33,6 +33,10 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerCreationDataChecker
+     */
+    private $creation_data_checker;
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerCreatorXmlErrorDisplayer
      */
     private $xml_error_displayer;
@@ -55,11 +59,13 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
         $this->tracker_xml_import    = Mockery::mock(TrackerXmlImport::class);
         $this->tracker_factory       = Mockery::mock(TrackerFactory::class);
         $this->xml_error_displayer   = Mockery::mock(TrackerCreatorXmlErrorDisplayer::class);
+        $this->creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
 
         $this->creator = new TrackerCreator(
             $this->tracker_xml_import,
             $this->tracker_factory,
-            $this->xml_error_displayer
+            $this->xml_error_displayer,
+            $this->creation_data_checker
         );
     }
 
