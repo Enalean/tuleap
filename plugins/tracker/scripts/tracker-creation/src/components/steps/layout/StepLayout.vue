@@ -20,7 +20,7 @@
 <template>
     <div class="tracker-creation-step">
         <div class="tracker-creation-starting-point-illustration">
-            <step-layout-svg-placeholder />
+            <step-layout-svg-illustration />
         </div>
         <div class="tracker-creation-step-content">
             <div class="tracker-creation-step-info">
@@ -40,12 +40,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import StepLayoutSvgPlaceholder from "./StepLayoutSvgPlaceholder.vue";
+import StepLayoutSvgIllustration from "./StepLayoutSvgIllustration.vue";
 import StepNavigationButtons from "./StepNavigationButtons.vue";
 
 @Component({
     components: {
-        StepLayoutSvgPlaceholder,
+        StepLayoutSvgIllustration,
         StepNavigationButtons
     }
 })
