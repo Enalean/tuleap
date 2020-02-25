@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\App;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 
 final class ClientIdentifierTest extends TestCase
 {
@@ -63,5 +64,15 @@ final class ClientIdentifierTest extends TestCase
 
         $this->assertEquals(8, $identifier->getInternalId());
         $this->assertEquals('tlp-client-id-8', $identifier->toString());
+    }
+
+    public function testClientIdentifierCanBeBuiltFromTheLastCreatedApp(): void
+    {
+        $last_created_app = new LastCreatedOAuth2App(9, new ConcealedString('secret'));
+
+        $identifier = ClientIdentifier::fromLastCreatedOAuth2App($last_created_app);
+
+        $this->assertEquals(9, $identifier->getInternalId());
+        $this->assertEquals('tlp-client-id-9', $identifier->toString());
     }
 }

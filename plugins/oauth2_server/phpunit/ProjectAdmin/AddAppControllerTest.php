@@ -25,8 +25,10 @@ namespace Tuleap\OAuth2Server\ProjectAdmin;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppDao;
+use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
@@ -52,20 +54,27 @@ final class AddAppControllerTest extends TestCase
      */
     private $app_dao;
     /**
+     * @var M\LegacyMockInterface|M\MockInterface|LastCreatedOAuth2AppStore
+     */
+    private $last_created_app_store;
+    /**
      * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
      */
     private $csrf_token;
 
     protected function setUp(): void
     {
-        $this->project_retriever     = M::mock(ProjectRetriever::class);
-        $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
-        $this->app_dao               = M::mock(AppDao::class);
-        $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller            = new AddAppController(
+        $this->project_retriever      = M::mock(ProjectRetriever::class);
+        $this->administrator_checker  = M::mock(ProjectAdministratorChecker::class);
+        $this->app_dao                = M::mock(AppDao::class);
+        $this->last_created_app_store = M::mock(LastCreatedOAuth2AppStore::class);
+        $this->csrf_token             = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller             = new AddAppController(
             $this->project_retriever,
             $this->administrator_checker,
             $this->app_dao,
+            new SplitTokenVerificationStringHasher(),
+            $this->last_created_app_store,
             $this->csrf_token
         );
     }
@@ -101,7 +110,11 @@ final class AddAppControllerTest extends TestCase
 
         $this->app_dao->shouldReceive('create')
             ->once()
-            ->with(M::type(NewOAuth2App::class));
+            ->with(M::type(NewOAuth2App::class))
+            ->andReturn(1);
+        $this->last_created_app_store->shouldReceive('storeLastCreatedApp')
+            ->once()
+            ->with(1, M::type(NewOAuth2App::class));
         $layout->shouldReceive('redirect')
             ->once()
             ->with('/plugins/oauth2_server/project/102/admin');

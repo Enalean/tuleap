@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,10 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-CREATE TABLE plugin_oauth2_server_app(
-    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    project_id int(11) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    redirect_endpoint TEXT NOT NULL,
-    verifier VARCHAR(255) NOT NULL
-) ENGINE=InnoDB;
+declare(strict_types=1);
+
+namespace Tuleap\OAuth2Server\App;
+
+use PHPUnit\Framework\TestCase;
+
+final class PrefixOAuth2ClientSecretTest extends TestCase
+{
+    public function testHasSpecificPrefix(): void
+    {
+        $prefix = new PrefixOAuth2ClientSecret();
+        $this->assertStringContainsString('oauth2', $prefix->getString());
+        $this->assertStringContainsString('c1', $prefix->getString());
+    }
+}

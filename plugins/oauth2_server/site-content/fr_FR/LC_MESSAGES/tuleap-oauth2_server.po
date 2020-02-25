@@ -79,3 +79,10 @@ msgstr "L'ID de l'App est obligatoire."
 
 msgid "The provided app data is not valid."
 msgstr "Les informations fournies pour l'app ne sont pas valides."
+
+msgid ""
+"Your new app %s has been created, make sure to copy the following secret. "
+"You won't be able to see it again!"
+msgstr ""
+"Votre nouvelle app %s vient d'être créée, prenez soin de copier le secret "
+"qui suit. Vous ne pourrez pas le voir de nouveau !"

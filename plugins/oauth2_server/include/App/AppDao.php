@@ -31,7 +31,7 @@ class AppDao extends DataAccessObject
      */
     public function searchByClientId(ClientIdentifier $client_id): ?array
     {
-        $sql = 'SELECT * FROM plugin_oauth2_server_app
+        $sql = 'SELECT id, project_id, name, redirect_endpoint FROM plugin_oauth2_server_app
             WHERE id = ?';
         return $this->getDB()->row($sql, $client_id->getInternalId());
     }
@@ -41,21 +41,23 @@ class AppDao extends DataAccessObject
      */
     public function searchByProject(\Project $project): array
     {
-        $sql = "SELECT * FROM plugin_oauth2_server_app
+        $sql = "SELECT id, project_id, name, redirect_endpoint FROM plugin_oauth2_server_app
             WHERE project_id = ?";
         return $this->getDB()->run($sql, $project->getID());
     }
 
-    public function create(NewOAuth2App $app): void
+    public function create(NewOAuth2App $app): int
     {
         $this->getDB()->insert(
             'plugin_oauth2_server_app',
             [
                 'project_id'        => $app->getProject()->getID(),
                 'name'              => $app->getName(),
-                'redirect_endpoint' => $app->getRedirectEndpoint()
+                'redirect_endpoint' => $app->getRedirectEndpoint(),
+                'verifier'          => $app->getHashedSecret(),
             ]
         );
+        return (int) $this->getDB()->lastInsertId();
     }
 
     public function delete(int $app_id): void

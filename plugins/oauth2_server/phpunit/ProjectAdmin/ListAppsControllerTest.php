@@ -80,7 +80,7 @@ final class ListAppsControllerTest extends TestCase
         $this->include_assets->shouldReceive('getFileURL')
             ->once()
             ->with('project-administration.js');
-        $presenter = new ProjectAdminPresenter([], $this->csrf_token, $project);
+        $presenter = new ProjectAdminPresenter([], $this->csrf_token, $project, null);
         $this->presenter_builder->shouldReceive('build')
             ->once()
             ->with($this->csrf_token, $project)

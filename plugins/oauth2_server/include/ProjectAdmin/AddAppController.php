@@ -23,10 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
 use HTTPRequest;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\InvalidAppDataException;
+use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
+use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ProjectRetriever;
@@ -39,6 +44,14 @@ final class AddAppController implements DispatchableWithRequest
     private $administrator_checker;
     /** @var AppDao */
     private $app_dao;
+    /**
+     * @var SplitTokenVerificationStringHasher
+     */
+    private $hasher;
+    /**
+     * @var LastCreatedOAuth2AppStore
+     */
+    private $last_created_app_store;
     /** @var \CSRFSynchronizerToken */
     private $csrf_token;
 
@@ -46,20 +59,31 @@ final class AddAppController implements DispatchableWithRequest
         ProjectRetriever $project_retriever,
         ProjectAdministratorChecker $administrator_checker,
         AppDao $app_dao,
+        SplitTokenVerificationStringHasher $hasher,
+        LastCreatedOAuth2AppStore $last_created_app_store,
         \CSRFSynchronizerToken $csrf_token
     ) {
-        $this->project_retriever     = $project_retriever;
-        $this->administrator_checker = $administrator_checker;
-        $this->app_dao               = $app_dao;
-        $this->csrf_token            = $csrf_token;
+        $this->project_retriever      = $project_retriever;
+        $this->administrator_checker  = $administrator_checker;
+        $this->app_dao                = $app_dao;
+        $this->hasher                 = $hasher;
+        $this->last_created_app_store = $last_created_app_store;
+        $this->csrf_token             = $csrf_token;
     }
 
     public static function buildSelf(): self
     {
+        $storage =& $_SESSION ?? [];
         return new self(
             ProjectRetriever::buildSelf(),
             new ProjectAdministratorChecker(),
             new AppDao(),
+            new SplitTokenVerificationStringHasher(),
+            new LastCreatedOAuth2AppStore(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
+                (new KeyFactory())->getEncryptionKey(),
+                $storage
+            ),
             new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN)
         );
     }
@@ -69,7 +93,7 @@ final class AddAppController implements DispatchableWithRequest
         return sprintf('/plugins/oauth2_server/project/%d/admin/add-app', $project->getID());
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
@@ -80,7 +104,7 @@ final class AddAppController implements DispatchableWithRequest
         $raw_app_name          = (string) $request->get('name');
         $raw_redirect_endpoint = (string) $request->get('redirect_uri');
         try {
-            $app_to_be_saved = NewOAuth2App::fromAppData($raw_app_name, $raw_redirect_endpoint, $project);
+            $app_to_be_saved = NewOAuth2App::fromAppData($raw_app_name, $raw_redirect_endpoint, $project, $this->hasher);
         } catch (InvalidAppDataException $e) {
             $layout->addFeedback(
                 \Feedback::ERROR,
@@ -89,7 +113,9 @@ final class AddAppController implements DispatchableWithRequest
             $layout->redirect($list_clients_url);
             return;
         }
-        $this->app_dao->create($app_to_be_saved);
+        $app_id = $this->app_dao->create($app_to_be_saved);
+
+        $this->last_created_app_store->storeLastCreatedApp($app_id, $app_to_be_saved);
 
         $layout->redirect($list_clients_url);
     }

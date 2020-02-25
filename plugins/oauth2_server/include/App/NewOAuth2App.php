@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+
 /**
  * @psalm-immutable
  */
@@ -36,29 +39,56 @@ final class NewOAuth2App
      */
     private $redirect_endpoint;
     /**
+     * @var SplitTokenVerificationString
+     */
+    private $secret;
+    /**
+     * @var string
+     */
+    private $hashed_secret;
+    /**
      * @var \Project
      */
     private $project;
 
-    private function __construct(string $name, string $redirect_endpoint, \Project $project)
-    {
+    private function __construct(
+        string $name,
+        string $redirect_endpoint,
+        SplitTokenVerificationString $secret,
+        string $hashed_secret,
+        \Project $project
+    ) {
         $this->name              = $name;
         $this->redirect_endpoint = $redirect_endpoint;
+        $this->secret            = $secret;
+        $this->hashed_secret     = $hashed_secret;
         $this->project           = $project;
     }
 
     /**
      * @throws InvalidAppDataException
      */
-    public static function fromAppData(string $name, string $redirect_endpoint, \Project $project): self
-    {
+    public static function fromAppData(
+        string $name,
+        string $redirect_endpoint,
+        \Project $project,
+        SplitTokenVerificationStringHasher $hasher
+    ): self {
         $is_data_valid = self::isAppDataValid($name, $redirect_endpoint);
 
         if (! $is_data_valid) {
             throw new InvalidAppDataException();
         }
 
-        return new self($name, $redirect_endpoint, $project);
+        $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+
+        return new self(
+            $name,
+            $redirect_endpoint,
+            $secret,
+            $hasher->computeHash($secret),
+            $project
+        );
     }
 
     private static function isAppDataValid(string $name, string $redirect_endpoint): bool
@@ -86,5 +116,15 @@ final class NewOAuth2App
     public function getProject(): \Project
     {
         return $this->project;
+    }
+
+    public function getSecret(): SplitTokenVerificationString
+    {
+        return $this->secret;
+    }
+
+    public function getHashedSecret(): string
+    {
+        return $this->hashed_secret;
     }
 }
