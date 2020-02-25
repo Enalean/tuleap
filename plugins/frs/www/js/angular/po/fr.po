@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Arch."
@@ -98,6 +98,9 @@ msgstr "Date de soumission"
 
 msgid "Summary"
 msgstr "Titre"
+
+msgid "There are neither release notes nor files in this release."
+msgstr "Il n'y a ni notes ni fichiers dans cette version."
 
 msgid "There are no artifact links defined in this release."
 msgstr "Aucun lien d'artéfact n'a été créé pour cette version."

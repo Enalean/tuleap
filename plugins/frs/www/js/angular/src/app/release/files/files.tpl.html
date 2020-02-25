@@ -102,3 +102,7 @@
         <section class="tlp-pane-section" markdown-to-html="$ctrl.release.changelog"></section>
     </div>
 </section>
+
+<div class="empty-page" ng-if="$ctrl.isEmpty()">
+    <span class="empty-page-text" translate>There are neither release notes nor files in this release.</span>
+</div>
