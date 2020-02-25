@@ -29,17 +29,9 @@ $um = UserManager::instance();
 
 $user = $um->getCurrentUser();
 
-$can_change_password = true;
 $can_change_realname = true;
 $can_change_email    = true;
 $extra_user_info     = array();
-
-$em->processEvent(
-    'display_change_password',
-    array(
-        'allow' => &$can_change_password
-    )
-);
 
 $em->processEvent(
     'display_change_realname',
@@ -146,7 +138,6 @@ $presenter = new User_PreferencesPresenter(
     $user,
     $can_change_realname,
     $can_change_email,
-    $can_change_password,
     $extra_user_info,
     $user_access_info,
     $csrf,

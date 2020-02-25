@@ -42,4 +42,18 @@ final class ConcealedStringTest extends TestCase
 
         $this->assertStringNotContainsString($value_to_hide, print_r($concealed_string, true));
     }
+
+    public function testCompareWithIdenticatlStringsSucceeds() : void
+    {
+        $string_a = new ConcealedString('some content');
+        $string_b = new ConcealedString('some content');
+        $this->assertTrue($string_a->isIdenticalTo($string_b));
+    }
+
+    public function testCompareWithDifferentStringsFails() : void
+    {
+        $string_a = new ConcealedString('some content');
+        $string_b = new ConcealedString('another content');
+        $this->assertFalse($string_a->isIdenticalTo($string_b));
+    }
 }

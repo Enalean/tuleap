@@ -64,11 +64,6 @@ class URLVerificationTest extends TestCase
         );
         $this->assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
-                array('REQUEST_URI' => '/account/change_pw.php', 'SCRIPT_NAME' => '/account/change_pw.php')
-            )
-        );
-        $this->assertTrue(
-            $urlVerification->isScriptAllowedForAnonymous(
                 array('REQUEST_URI' => '/include/check_pw.php', 'SCRIPT_NAME' => '/include/check_pw.php')
             )
         );

@@ -92,7 +92,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $this->addHook('site_admin_option_hook');
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE);
         $this->addHook(PasswordPreUpdateEvent::NAME);
         $this->addHook(Event::GET_LOGIN_URL);
         $this->addHook('display_newaccount');
@@ -167,14 +166,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     {
         return $this->canPluginAuthenticateUser() &&
         $provider_manager->isAProviderConfiguredAsUniqueAuthenticationEndpoint();
-    }
-
-    public function old_password_required_for_password_change($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $provider_manager                = $this->getProviderManager();
-        $params['old_password_required'] = !$this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint(
-            $provider_manager
-        );
     }
 
     public function passwordPreUpdateEvent(PasswordPreUpdateEvent $event)

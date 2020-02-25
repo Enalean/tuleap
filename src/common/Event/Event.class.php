@@ -659,14 +659,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const REST_PROJECT_ADDITIONAL_INFORMATIONS = 'rest_project_additional_informations';
 
     /**
-     * Check if the old password is required to change the current password
-     *
-     * Parameters:
-     *   'old_password_required' => Boolean (OUT)
-     */
-    public const IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE = 'old_password_required_for_password_change';
-
-    /**
      * Allow plugin to deal with authentication
      *
      * Parameters:

@@ -22,6 +22,7 @@
 use Tuleap\CookieManager;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\InvalidSessionException;
 use Tuleap\User\SessionManager;
@@ -572,7 +573,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (User_PasswordExpiredException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            $GLOBALS['Response']->redirect('/account/change_pw.php?user_id=' . $exception->getUser()->getId());
+            $GLOBALS['Response']->redirect(DisplaySecurityController::URL);
         } catch (User_StatusInvalidException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (SessionNotCreatedException $exception) {

@@ -27,7 +27,14 @@ use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 
 class PasswordSanityChecker
 {
+    /**
+     * @var Configuration\PasswordConfiguration
+     */
     private $password_configuration;
+    /**
+     * @psalm-var list<string>
+     * @var array
+     */
     private $errors = [];
     /**
      * @var \BaseLanguage
@@ -40,7 +47,7 @@ class PasswordSanityChecker
         $this->language               = $language;
     }
 
-    public static function build()
+    public static function build(): self
     {
         return new self(
             new PasswordConfigurationRetriever(new PasswordConfigurationDAO()),
@@ -48,7 +55,7 @@ class PasswordSanityChecker
         );
     }
 
-    public function check($password)
+    public function check(string $password): bool
     {
         $password_strategy = new PasswordStrategy($this->password_configuration);
         include($this->language->getContent('account/password_strategy'));
@@ -57,7 +64,10 @@ class PasswordSanityChecker
         return $valid;
     }
 
-    public function getErrors()
+    /**
+     * @psalm-return list<string>
+     */
+    public function getErrors(): array
     {
         return $this->errors;
     }
