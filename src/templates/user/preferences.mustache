@@ -4,18 +4,6 @@
     {{{ csrf_input_html }}}
 
         <fieldset>
-            <h3><i class="fa fa-user"></i> {{ session_label }}</h3>
-            <label class="checkbox">
-                <input type="checkbox"
-                       name="form_sticky_login"
-                       value="1"
-                       {{# user_has_sticky_login }} checked="checked" {{/ user_has_sticky_login }}
-                />
-                {{{ remember_me }}}
-            </label>
-        </fieldset>
-
-        <fieldset>
             <h3><i class="icon-desktop"></i> {{ appearance_title }}</h3>
             <div class="control-group user-account-group">
                 <label class="control-label user-account-label">{{# gettext }}Display density:{{/ gettext }}</label>

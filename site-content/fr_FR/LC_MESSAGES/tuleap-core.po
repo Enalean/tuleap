@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #, php-format
 msgid ""
@@ -670,6 +670,13 @@ msgstr "Vide"
 
 msgid "Empty group"
 msgstr "Groupe vide"
+
+msgid ""
+"Enable \"remember me\" so your session is kept open and you don't have to "
+"login too often."
+msgstr ""
+"Active l'option \"se souvenir de moi\" qui conserve votre session ouverte "
+"afin de limiter le besoin de vous identifier à nouveau."
 
 msgid "Enable accessibility mode"
 msgstr "Activer le mode d'accessiblilité"
@@ -1536,6 +1543,9 @@ msgstr "Scrum"
 msgid "Search"
 msgstr "Rechercher"
 
+msgid "Security"
+msgstr "Sécurité"
+
 msgid "See permissions"
 msgstr "Voir les permissions"
 
@@ -1559,6 +1569,9 @@ msgstr "Permissions des services"
 
 msgid "Services"
 msgstr "Services"
+
+msgid "Session"
+msgstr "Session"
 
 msgid "Set default"
 msgstr "Enregistrer la valeur par défaut"
@@ -2440,6 +2453,11 @@ msgstr "Vous pouvez seulement accéder aux projets dont vous êtes membre."
 msgid "You must be a project admin to edit this widget."
 msgstr ""
 "Vous devez être administrateur du projet pour pouvoir éditer ce widget."
+
+msgid "You need to logout & login again for this to be taken into account"
+msgstr ""
+"Vous devez vous déconnecter et reconnecter pour que cette option soit prise "
+"en compte"
 
 msgid ""
 "You need to provide a simple file, containing in each line the email address "

@@ -41,15 +41,6 @@ if ($request->existAndNonEmpty($requested_default_format)) {
     $user_edition_default_format = $request->get($requested_default_format);
 }
 
-$form_sticky_login = 0;
-if ($request->existAndNonEmpty('form_sticky_login')) {
-    if ($request->valid(new Valid_WhiteList('form_sticky_login', array(0, 1)))) {
-        $form_sticky_login = (int) $request->get('form_sticky_login');
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_form_sticky_login'));
-    }
-}
-
 $user_csv_separator = PFUser::DEFAULT_CSV_SEPARATOR;
 if ($request->existAndNonEmpty('user_csv_separator')) {
     if ($request->valid(new Valid_WhiteList('user_csv_separator', PFUser::$csv_separators))) {
@@ -92,9 +83,6 @@ if ($request->existAndNonEmpty('form_accessibility_mode')) {
     }
 }
 // Perform the update
-// User
-db_query("UPDATE user SET sticky_login = $form_sticky_login WHERE user_id = " .
-    db_ei(UserManager::instance()->getCurrentUser()->getId()));
 
 // Preferences
 user_set_preference("user_csv_separator", $user_csv_separator);

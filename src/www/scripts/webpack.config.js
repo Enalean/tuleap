@@ -233,7 +233,8 @@ const webpack_config_for_project_registration_modal = {
 const webpack_config_for_account = {
     entry: {
         "keys-tokens": "./account/keys-tokens.ts",
-        appearance: "./account/appearance.ts"
+        appearance: "./account/appearance.ts",
+        security: "./account/security.ts"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path + "/account/scripts/"),

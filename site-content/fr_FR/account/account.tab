@@ -27,7 +27,6 @@ account_options	use_default_avatar	Utiliser l'avatar par défaut
 account_options	select_avatar	Sélectionner
 account_options	btn_save_avatar_label	Sauvegarder l'avatar
 account_options	preferences	Préférences
-account_options	remember_me	"Souviens-toi de moi" <u><span style="color:#666">($1 garde trace de votre login/mot de passe. Vous devez vous déconnecter puis vous reconnecter pour que ce changement prenne effet)</span></u>
 account_options	csv_separator	Séparateur CSV :
 account_options	comma	virgule
 account_options	semicolon	point-virgule
@@ -47,13 +46,11 @@ account_options	auth_attempt_sessions	Sessions ouvertes :
 #
 #-----------------------------------------------
 #
-account_preferences	session	Session
 account_preferences	appearance	Apparence
 account_preferences	import_export	Import/export
 account_preferences	csv_dateformat	Format de date CSV :
 account_preferences	month_day_year	mois/jour/année
 account_preferences	day_month_year	jour/mois/année
-account_preferences	error_form_sticky_login	Vérifiez la valeur du souviens-toi de moi
 account_preferences	error_user_csv_separator	Vérifiez la valeur du séparateur CSV
 account_preferences	error_user_csv_dateformat	Vérifiez la valeur de format de date CSV
 account_preferences	error_username_display	Vérifiez la valeur de l'affichage des noms
