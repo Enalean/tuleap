@@ -35,6 +35,7 @@ use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -42,6 +43,12 @@ use Tuleap\Request\ForbiddenException;
 
 final class AuthorizationEndpointGetController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
 {
+    // see https://tools.ietf.org/html/rfc6749#section-4.1.1
+    private const RESPONSE_TYPE_PARAMETER    = 'response_type';
+    private const CLIENT_ID_PARAMETER        = 'client_id';
+    private const REDIRECT_URI_PARAMETER     = 'redirect_uri';
+    private const ALLOWED_RESPONSE_TYPE      = 'code';
+    private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     /**
      * @var ResponseFactoryInterface
      */
@@ -116,7 +123,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         }
 
         $query_params = $request->getQueryParams();
-        $client_id    = (string) ($query_params['client_id'] ?? '');
+        $client_id    = (string) ($query_params[self::CLIENT_ID_PARAMETER] ?? '');
         try {
             $client_identifier = ClientIdentifier::fromClientId($client_id);
             $client_app        = $this->app_factory->getAppMatchingClientId($client_identifier);
@@ -124,14 +131,22 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             throw new ForbiddenException();
         }
 
-        $redirect_uri = (string) ($query_params['redirect_uri'] ?? '');
+        $redirect_uri = (string) ($query_params[self::REDIRECT_URI_PARAMETER] ?? '');
         if ($redirect_uri !== $client_app->getRedirectEndpoint()) {
             throw new ForbiddenException();
         }
 
+        if (! isset($query_params[self::RESPONSE_TYPE_PARAMETER]) || $query_params[self::RESPONSE_TYPE_PARAMETER] !== self::ALLOWED_RESPONSE_TYPE) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST, $redirect_uri);
+        }
+
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
+        return $this->buildValidResponse($client_app, $layout);
+    }
 
+    private function buildValidResponse(OAuth2App $client_app, BaseLayout $layout): ResponseInterface
+    {
         $presenter = new AuthorizationFormPresenter($client_app);
         $layout->addCssAsset(
             new CssAsset(
@@ -153,5 +168,23 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         return $this->response_factory->createResponse()->withBody(
             $this->stream_factory->createStream((string) ob_get_clean())
         );
+    }
+
+    /**
+     * @psalm-param self::ERROR_CODE_* $error_code See https://tools.ietf.org/html/rfc6749#section-4.1.2.1
+     */
+    private function buildErrorResponse(string $error_code, string $redirect_uri): ResponseInterface
+    {
+        $url_parts = parse_url($redirect_uri);
+        if (isset($url_parts['query'])) {
+            parse_str($url_parts['query'], $query);
+        } else {
+            $query = [];
+        }
+        $query['error']     = $error_code;
+        $url_parts['query'] = http_build_query($query);
+        $error_url          = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . '?' . $url_parts['query'];
+        return $this->response_factory->createResponse(302)
+            ->withHeader('Location', $error_url);
     }
 }
