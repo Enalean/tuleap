@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\App;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
 final class NewOAuth2AppTest extends TestCase
 {
@@ -33,25 +34,25 @@ final class NewOAuth2AppTest extends TestCase
     public function testFromAppDataThrowsWhenAppNameIsEmpty(): void
     {
         $this->expectException(InvalidAppDataException::class);
-        NewOAuth2App::fromAppData('', 'https://example.com/redirect', M::mock(\Project::class));
+        NewOAuth2App::fromAppData('', 'https://example.com/redirect', M::mock(\Project::class), new SplitTokenVerificationStringHasher());
     }
 
     public function testFromAppDataThrowsWhenRedirectEndpointIsEmpty(): void
     {
         $this->expectException(InvalidAppDataException::class);
-        NewOAuth2App::fromAppData('Jenkins', '', M::mock(\Project::class));
+        NewOAuth2App::fromAppData('Jenkins', '', M::mock(\Project::class), new SplitTokenVerificationStringHasher());
     }
 
     public function testFromAppDataThrowsWhenRedirectEndpointIsNotHTTPS(): void
     {
         $this->expectException(InvalidAppDataException::class);
-        NewOAuth2App::fromAppData('Jenkins', 'http://insecure.example.com', M::mock(\Project::class));
+        NewOAuth2App::fromAppData('Jenkins', 'http://insecure.example.com', M::mock(\Project::class), new SplitTokenVerificationStringHasher());
     }
 
     public function testFromAppDataThrowsWhenRedirectEndpointContainsAnAnchor(): void
     {
         $this->expectException(InvalidAppDataException::class);
-        NewOAuth2App::fromAppData('Jenkins', 'https://example.com/redirect#fragment', M::mock(\Project::class));
+        NewOAuth2App::fromAppData('Jenkins', 'https://example.com/redirect#fragment', M::mock(\Project::class), new SplitTokenVerificationStringHasher());
     }
 
     public function testFromAppDataReturnsANewOauth2AppToBeSavedInDatabase(): void
@@ -59,7 +60,7 @@ final class NewOAuth2AppTest extends TestCase
         $app_name          = 'Jenkins';
         $redirect_endpoint = 'https://example.com/redirect';
         $project           = M::mock(\Project::class);
-        $new_app           = NewOAuth2App::fromAppData($app_name, $redirect_endpoint, $project);
+        $new_app           = NewOAuth2App::fromAppData($app_name, $redirect_endpoint, $project, new SplitTokenVerificationStringHasher());
         $this->assertSame($app_name, $new_app->getName());
         $this->assertSame($redirect_endpoint, $new_app->getRedirectEndpoint());
         $this->assertSame($project, $new_app->getProject());
@@ -68,7 +69,25 @@ final class NewOAuth2AppTest extends TestCase
     public function testFromAppDataAllowsRedirectEndpointWithQuery(): void
     {
         $redirect_endpoint = 'https://example.com/redirect?key=value';
-        $new_app = NewOAuth2App::fromAppData('Jenkins', $redirect_endpoint, M::mock(\Project::class));
+        $new_app = NewOAuth2App::fromAppData('Jenkins', $redirect_endpoint, M::mock(\Project::class), new SplitTokenVerificationStringHasher());
         $this->assertSame($redirect_endpoint, $new_app->getRedirectEndpoint());
+    }
+
+    public function testNewAppSecretCanBeHashed(): void
+    {
+        $hasher  = new SplitTokenVerificationStringHasher();
+        $new_app = NewOAuth2App::fromAppData('App', 'https://example.com', M::mock(\Project::class), $hasher);
+
+        $this->assertEquals($hasher->computeHash($new_app->getSecret()), $new_app->getHashedSecret());
+    }
+
+    public function testEachNewAppIsAssignedADifferentSecret(): void
+    {
+        $hasher    = new SplitTokenVerificationStringHasher();
+        $new_app_1 = NewOAuth2App::fromAppData('App1', 'https://example.com', M::mock(\Project::class), $hasher);
+        $new_app_2 = NewOAuth2App::fromAppData('App2', 'https://example.com', M::mock(\Project::class), $hasher);
+
+        $this->assertNotEquals($new_app_1->getSecret(), $new_app_2->getSecret());
+        $this->assertNotEquals($new_app_1->getHashedSecret(), $new_app_2->getHashedSecret());
     }
 }

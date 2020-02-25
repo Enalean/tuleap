@@ -22,9 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
+use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
+use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 
 class ProjectAdminPresenterBuilder
 {
@@ -32,15 +36,28 @@ class ProjectAdminPresenterBuilder
      * @var AppFactory
      */
     private $app_factory;
+    /**
+     * @var LastCreatedOAuth2AppStore
+     */
+    private $last_created_app_store;
 
-    public function __construct(AppFactory $app_factory)
+    public function __construct(AppFactory $app_factory, LastCreatedOAuth2AppStore $last_created_app_store)
     {
-        $this->app_factory = $app_factory;
+        $this->app_factory            = $app_factory;
+        $this->last_created_app_store = $last_created_app_store;
     }
 
     public static function buildSelf(): self
     {
-        return new self(new AppFactory(new AppDao(), \ProjectManager::instance()));
+        $storage =& $_SESSION ?? [];
+        return new self(
+            new AppFactory(new AppDao(), \ProjectManager::instance()),
+            new LastCreatedOAuth2AppStore(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
+                (new KeyFactory())->getEncryptionKey(),
+                $storage
+            )
+        );
     }
 
     public function build(\CSRFSynchronizerToken $csrf_token, \Project $project): ProjectAdminPresenter
@@ -55,6 +72,19 @@ class ProjectAdminPresenterBuilder
                 ClientIdentifier::fromOAuth2App($app)->toString()
             );
         }
-        return new ProjectAdminPresenter($presenters, $csrf_token, $project);
+
+        return new ProjectAdminPresenter($presenters, $csrf_token, $project, $this->getLastCreatedAppPresenter());
+    }
+
+    private function getLastCreatedAppPresenter(): ?LastCreatedOAuth2AppPresenter
+    {
+        $last_created_app = $this->last_created_app_store->getLastCreatedApp();
+        if ($last_created_app === null) {
+            return null;
+        }
+        return new LastCreatedOAuth2AppPresenter(
+            ClientIdentifier::fromLastCreatedOAuth2App($last_created_app)->toString(),
+            $last_created_app->getSecret()
+        );
     }
 }

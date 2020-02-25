@@ -59,6 +59,14 @@ final class ClientIdentifier
         return new self($app->getId());
     }
 
+    /**
+     * @psalm-pure
+     */
+    public static function fromLastCreatedOAuth2App(LastCreatedOAuth2App $app): self
+    {
+        return new self($app->getAppID());
+    }
+
     public function getInternalId(): int
     {
         return $this->identifier;

@@ -22,35 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
+use Tuleap\Cryptography\ConcealedString;
+
 /**
  * @psalm-immutable
  */
-final class ProjectAdminPresenter
+final class LastCreatedOAuth2AppPresenter
 {
-    /** @var AppPresenter[] */
-    public $apps;
-    /** @var \CSRFSynchronizerToken */
-    public $csrf_token;
-    /** @var string */
-    public $add_client_url;
-    /** @var string */
-    public $delete_client_url;
-    /** @var LastCreatedOAuth2AppPresenter|null */
-    public $last_created_app;
-
     /**
-     * @param $apps AppPresenter[]
+     * @var string
      */
-    public function __construct(
-        array $apps,
-        \CSRFSynchronizerToken $csrf_token,
-        \Project $project,
-        ?LastCreatedOAuth2AppPresenter $last_created_app
-    ) {
-        $this->apps              = $apps;
-        $this->csrf_token        = $csrf_token;
-        $this->add_client_url    = AddAppController::getUrl($project);
-        $this->delete_client_url = DeleteAppController::getUrl($project);
-        $this->last_created_app  = $last_created_app;
+    public $client_id;
+    /**
+     * @var ConcealedString
+     */
+    public $client_secret;
+
+    public function __construct(string $client_id, ConcealedString $client_secret)
+    {
+        $this->client_id     = $client_id;
+        $this->client_secret = $client_secret;
     }
 }

@@ -8,6 +8,18 @@
                 </h1>
             </div>
             <section class="tlp-pane-section">
+                {{# last_created_app }}
+                    <div class="tlp-alert-success">
+                        <p>
+                            {{# dgettext }}
+                                tuleap-oauth2_server |
+                                Your new app %s has been created, make sure to copy the following secret. You won't be able to see it again! |
+                                {{ client_id }}
+                            {{/ dgettext }}
+                        </p>
+                        <p><strong>{{ client_secret }}</strong></p>
+                    </div>
+                {{/ last_created_app }}
                 <div class="tlp-table-actions">
                     <button type="button" class="tlp-button-primary tlp-table-actions-element" id="oauth2-server-add-client-button">
                         <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }}tuleap-oauth2_server | Add an App{{/ dgettext }}
