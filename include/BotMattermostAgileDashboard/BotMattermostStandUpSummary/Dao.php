@@ -161,17 +161,6 @@ class Dao extends DataAccessObject
         return $this->retrieveFirstRow($sql);
     }
 
-    private function searchNotificationsIdsByBot(Bot $bot)
-    {
-        $bot_id = $this->da->escapeInt($bot->getId());
-
-        $sql = "SELECT id
-                FROM plugin_botmattermost_agiledashboard_notification
-                WHERE bot_id = $bot_id";
-
-        return $this->retrieveIds($sql);
-    }
-
     private function createBotNotification($bot_id, $project_id, $send_time)
     {
         $bot_id     = $this->da->escapeInt($bot_id);

@@ -23,7 +23,6 @@ namespace Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary;
 use Psr\Log\LoggerInterface;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
-use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
 use Tuleap\BotMattermostAgileDashboard\Exception\CannotCreateBotNotificationException;
 use Tuleap\BotMattermostAgileDashboard\Exception\CannotDeleteBotNotificationException;
