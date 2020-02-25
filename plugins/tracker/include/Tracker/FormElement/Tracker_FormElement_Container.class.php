@@ -183,9 +183,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         parent::exportPermissionsToXML($node_perms, $ugroups, $xmlMapping);
         $subfields = $this->getAllFormElements();
         foreach ($subfields as $subfield) {
-            if ($subfield->getTagNameForXMLExport() === Tracker_FormElement::XML_TAG_EXTERNAL_FIELD) {
-                continue;
-            }
             $subfield->exportPermissionsToXML($node_perms, $ugroups, $xmlMapping);
         }
     }

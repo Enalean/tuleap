@@ -284,7 +284,7 @@ class TrackerXmlImport
             return;
         }
 
-        $partial_element = clone $xml_input;
+        $partial_element = new SimpleXMLElement((string)$xml_input->asXML());
         $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
 
         $this->rng_validator->validate(
@@ -426,7 +426,7 @@ class TrackerXmlImport
         if (! $xml_input->trackers) {
             return '';
         }
-        $partial_element = clone $xml_input;
+        $partial_element = new SimpleXMLElement((string)$xml_input->asXML());
         $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
 
         $this->rng_validator->validate($partial_element->trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
@@ -723,7 +723,7 @@ class TrackerXmlImport
     public function createFromXML(SimpleXMLElement $xml_element, Project $project, $name, $description, $itemname)
     {
         $tracker = null;
-        $partial_element = clone $xml_element;
+        $partial_element = new SimpleXMLElement((string)$xml_element->asXML());
         try {
             $this->creation_data_checker->checkAtProjectCreation((int)$project->getId(), (string)$name, (string)$itemname);
         } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {

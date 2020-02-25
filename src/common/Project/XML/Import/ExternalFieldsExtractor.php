@@ -42,8 +42,10 @@ class ExternalFieldsExtractor
     {
         foreach ($xml_element as $index => $form_element) {
             if ($form_element->externalField) {
+                $external_field_id        = (string)$form_element->externalField['ID'];
                 $validate_external_fields = new ImportValidateExternalFields($form_element->externalField);
                 $this->event_manager->processEvent($validate_external_fields);
+                $this->removeReferencesToExternalField($xml_element, $external_field_id);
                 unset($form_element->externalField);
             }
             $this->extractExternalFieldsFromFormElements($form_element);
@@ -56,6 +58,13 @@ class ExternalFieldsExtractor
             foreach ($xml_element->trackers->tracker as $xml_tracker) {
                 $this->extractExternalFieldsFromFormElements($xml_tracker->formElements);
             }
+        }
+    }
+
+    private function removeReferencesToExternalField(SimpleXMLElement $xml_element, string $external_field_id): void
+    {
+        foreach ($xml_element->xpath("//*[@REF='$external_field_id']") as $unused) {
+            unset($xml_element->xpath("//*[@REF='$external_field_id']")[0][0]);
         }
     }
 }

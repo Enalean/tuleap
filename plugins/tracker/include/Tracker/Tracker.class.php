@@ -2381,9 +2381,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         // fields permission
         if ($formelements = $this->getFormElementFactory()->getUsedFormElementForTracker($this)) {
             foreach ($formelements as $formelement) {
-                if ($formelement->getTagNameForXMLExport() === Tracker_FormElement::XML_TAG) {
-                    $formelement->exportPermissionsToXML($node_perms, $project_ugroups, $xmlMapping);
-                }
+                $formelement->exportPermissionsToXML($node_perms, $project_ugroups, $xmlMapping);
             }
         }
 
