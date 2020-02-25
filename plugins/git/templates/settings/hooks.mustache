@@ -53,6 +53,12 @@
             </tbody>
             <tbody>
                 {{# webhooks }}
+                    {{# isSimple }}
+                    <tr>
+                        <td colspan="3">{{ webhook_url }}</td>
+                    </tr>
+                    {{/ isSimple }}
+                    {{^ isSimple }}
                     <tr>
                         <td>{{ webhook_url }}</td>
                         <td class="last-push">{{{ purified_last_push_info }}}</td>
@@ -78,7 +84,13 @@
                             {{> popover-remove-hook }}
                         </td>
                     </tr>
+                    {{/ isSimple }}
                 {{/ webhooks }}
+                {{# external_information }}
+                    <tr>
+                        <td colspan="3">{{ title }}</td>
+                    </tr>
+                {{/ external_information }}
             </tbody>
         {{/ sections }}
         {{^ has_sections }}
