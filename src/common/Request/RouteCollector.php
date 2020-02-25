@@ -104,10 +104,12 @@ use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Account\AccessKeyPresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
 use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
+use Tuleap\User\Account\DisplayExperimentalController;
 use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
+use Tuleap\User\Account\UpdateExperimentalPreferences;
 use Tuleap\User\Account\UpdateNotificationsPreferences;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
@@ -279,6 +281,19 @@ class RouteCollector
             AccessKeyPresenterBuilder::build(),
             SVNTokensPresenterBuilder::build(),
         );
+    }
+
+    public static function getExperimentalController(): DispatchableWithRequest
+    {
+        return new DisplayExperimentalController(
+            EventManager::instance(),
+            TemplateRendererFactory::build(),
+            DisplayExperimentalController::getCSRFToken()
+        );
+    }
+    public static function postExperimentalController(): DispatchableWithRequest
+    {
+        return new UpdateExperimentalPreferences(DisplayExperimentalController::getCSRFToken());
     }
 
     public static function postAccountSSHKeyCreate(): DispatchableWithRequest
@@ -608,6 +623,9 @@ class RouteCollector
             $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
             $r->post('/svn_token/create', [self::class, 'postAccountSVNTokenCreate']);
             $r->post('/svn_token/revoke', [self::class, 'postAccountSVNTokenRevoke']);
+
+            $r->get('/experimental', [self::class, 'getExperimentalController']);
+            $r->post('/experimental', [self::class, 'postExperimentalController']);
 
             $r->post('/avatar', [self::class, 'postAccountAvatar']);
             $r->post('/logout', [self::class, 'postLogoutAccount']);

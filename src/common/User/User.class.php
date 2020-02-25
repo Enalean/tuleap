@@ -1511,26 +1511,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             'avatar';
     }
 
-     /**
-      * Lab features mode
-      *
-      * @return bool true if the user want lab features
-      */
-    public function useLabFeatures()
+    public function useLabFeatures(): bool
     {
-        return $this->getPreference(self::PREF_NAME_LAB_FEATURE);
+        return (bool) $this->getPreference(self::PREF_NAME_LAB_FEATURE);
     }
 
-     /**
-      * (de)Activate lab features mode
-      *
-      * @param bool $toggle true if user wants to enable lab features
-      *
-      * @return void
-      */
-    public function setLabFeatures($toggle)
+    public function setLabFeatures(bool $is_enabled): bool
     {
-        $this->setPreference(self::PREF_NAME_LAB_FEATURE, $toggle ? 1 : 0);
+        return $this->setPreference(self::PREF_NAME_LAB_FEATURE, $is_enabled ? '1' : '0');
     }
 
      /**

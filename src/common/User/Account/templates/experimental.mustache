@@ -1,0 +1,39 @@
+<div class="user-preferences">
+    <h1 class="user-preferences-title">
+        {{# gettext }}Experimental{{/ gettext }}
+    </h1>
+    <div class="user-preferences-container">
+        {{> user-account-tabs }}
+
+        <div class="user-preferences-section">
+            <section class="tlp-pane">
+                <form class="tlp-pane-container" action="/account/experimental" method="post">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="tlp-pane-title-icon fa fa-flask" aria-hidden="true"></i>
+                            {{# gettext }}Experimental{{/ gettext }}
+                        </h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <p>{{# gettext }}Tuleap experimental features in preview mode for bleeding edge users. Only use it if you know what you are doing.{{/ gettext }}</p>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-checkbox">
+                                <input type="checkbox" name="lab_features" value="1" {{# lab_features_checked }}checked{{/ lab_features_checked }}>
+                                {{# gettext }}Enable lab mode{{/ gettext }}
+                            </label>
+                        </div>
+                    </section>
+                    <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+
+                        <button type="submit" class="tlp-button-primary">
+                            <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
+                        </button>
+                    </section>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>

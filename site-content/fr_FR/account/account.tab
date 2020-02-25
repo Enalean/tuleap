@@ -55,9 +55,6 @@ account_preferences	import_export	Import/export
 account_preferences	csv_dateformat	Format de date CSV :
 account_preferences	month_day_year	mois/jour/année
 account_preferences	day_month_year	jour/mois/année
-account_preferences	lab_features_title	$1 Lab
-account_preferences	lab_features_description	Fonctionnalités expérimentales $1 en avant première pour les intrépides. N'activez ce mode que si vous savez ce que vous faites.
-account_preferences	lab_features_cblabel	Activer $1 Lab
 account_preferences	error_form_sticky_login	Vérifiez la valeur du souviens-toi de moi
 account_preferences	error_language_id	Vérifiez la valeur de la langue
 account_preferences	error_user_csv_separator	Vérifiez la valeur du séparateur CSV

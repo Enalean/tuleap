@@ -128,8 +128,6 @@ if ($username_display !== null) {
     user_set_preference("username_display", $username_display);
 }
 
-$user->setLabFeatures($request->existAndNonEmpty('form_lab_features'));
-
 if ($user_theme_variant) {
     $user->setPreference('theme_variant', $user_theme_variant);
 }
