@@ -52,11 +52,23 @@ describe("getters", () => {
             expect(getters.is_ready_for_step_2(state)).toBe(true);
         });
 
+        it("Is not ready if TRACKER_XML_FILE option is selected along with an invalid xml file", () => {
+            const state: State = {
+                active_option: CreationOptions.TRACKER_XML_FILE,
+                selected_tracker_template: null,
+                is_a_xml_file_selected: true,
+                has_xml_file_error: true
+            } as State;
+
+            expect(getters.is_ready_for_step_2(state)).toBe(false);
+        });
+
         it("Is ready if TRACKER_XML_FILE option is selected along with a xml file", () => {
             const state: State = {
                 active_option: CreationOptions.TRACKER_XML_FILE,
                 selected_tracker_template: null,
-                is_a_xml_file_selected: true
+                is_a_xml_file_selected: true,
+                has_xml_file_error: false
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(true);

@@ -78,9 +78,6 @@ export default class StepTwo extends Vue {
     @Mutation
     readonly initTrackerNameWithTheSelectedTemplateName!: () => void;
 
-    @Mutation
-    readonly initTrackerToBeCreatedFromXml!: () => void;
-
     @State
     readonly selected_xml_file_input!: HTMLInputElement;
 
@@ -88,8 +85,6 @@ export default class StepTwo extends Vue {
         if (this.is_a_duplication) {
             this.initTrackerNameWithTheSelectedTemplateName();
         } else if (this.is_a_xml_import) {
-            this.initTrackerToBeCreatedFromXml();
-
             const form = this.$refs.tracker_creation_form;
 
             if (!(form instanceof Element)) {

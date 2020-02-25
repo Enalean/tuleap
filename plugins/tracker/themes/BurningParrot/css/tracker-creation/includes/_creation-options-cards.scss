@@ -89,6 +89,10 @@
                 line-height: 18px;
             }
 
+            > .tracker-creation-xml-file-error {
+                margin: 0;
+            }
+
             > .card-description {
                 display: flex;
                 flex-direction: column;
@@ -104,5 +108,6 @@
 }
 
 #tracker-creation-xml-file-selector {
-    width: 100%;
+    padding: 0;
+    border: 0;
 }

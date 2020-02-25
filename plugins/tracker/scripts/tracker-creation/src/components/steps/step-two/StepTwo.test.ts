@@ -97,10 +97,6 @@ describe("StepTwo", () => {
             expect(wrapper.find("field-tracker-template-id-stub").exists()).toBe(false);
         });
 
-        it("auto-fills the tracker name and shortname with the data contained in the selected xml file", () => {
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("initTrackerToBeCreatedFromXml");
-        });
-
         it("Sets the right encription type for the form", () => {
             expect(wrapper.find("#tracker-creation-form").attributes("enctype")).toEqual(
                 "multipart/form-data"

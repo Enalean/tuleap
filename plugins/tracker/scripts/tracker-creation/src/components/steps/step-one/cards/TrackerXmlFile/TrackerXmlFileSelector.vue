@@ -18,7 +18,10 @@
 -->
 
 <template>
-    <div class="tlp-form-element card-content card-tracker-template-selector">
+    <div
+        class="tlp-form-element card-content card-tracker-template-selector"
+        v-bind:class="{ 'tlp-form-element-error': has_xml_file_error }"
+    >
         <label class="tlp-label card-title" for="tracker-creation-xml-file-selector" v-translate>
             Tracker XML file
         </label>
@@ -26,12 +29,17 @@
             ref="file_input"
             v-if="should_render_fresh_input"
             id="tracker-creation-xml-file-selector"
+            class="tlp-input"
             type="file"
             name="tracker-xml-file"
             accept="text/xml"
             data-test="tracker-creation-xml-file-selector"
-            v-on:input="setIsXmlAFileSelected"
+            v-on:input="setTrackerToBeCreatedFromXml"
         />
+        <p v-if="has_xml_file_error" class="tlp-text-danger tracker-creation-xml-file-error">
+            <translate>The provided file is not a valid XML file</translate>
+            <i class="fa fa-frown-o"></i>
+        </p>
     </div>
 </template>
 <script lang="ts">
@@ -44,11 +52,14 @@ export default class TrackerXmlFileSelector extends Vue {
     @State
     readonly selected_xml_file_input!: HTMLInputElement | null;
 
+    @State
+    readonly has_xml_file_error!: boolean;
+
     @Mutation
     readonly setSelectedTrackerXmlFileInput!: (list: HTMLInputElement) => void;
 
     @Mutation
-    readonly setIsXmlAFileSelected!: () => void;
+    readonly setTrackerToBeCreatedFromXml!: () => void;
 
     private should_render_fresh_input = true;
 
@@ -60,7 +71,7 @@ export default class TrackerXmlFileSelector extends Vue {
         }
 
         this.should_render_fresh_input = false;
-        this.$el.appendChild(this.selected_xml_file_input);
+        this.$el.insertBefore(this.selected_xml_file_input, this.$el.children[1]);
     }
 
     initXmlFileInput(): void {
