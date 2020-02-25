@@ -1,0 +1,55 @@
+<div id="modal-logs-{{ jenkins_server_id }}"
+    class="modal hide fade modal-webhook"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modal-logs-title"
+    aria-hidden="true"
+>
+    <div class="modal-header">
+        <a role="button" class="close" data-dismiss="modal">×</a>
+        <h3 id="modal-create-logs-title">{{# dgettext }} tuleap-hudson_git | Logs for %s | {{ jenkins_server_url }}{{/ dgettext }}</h3>
+    </div>
+
+    <div class="modal-body">
+        <table class="table hooks-jobs-list">
+            <thead>
+                <tr>
+                    <th>{{# dgettext }} tuleap-hudson_git | Repository {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-hudson_git | Push date {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-hudson_git | Triggered jobs {{/ dgettext }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# logs_presenters }}
+                    <tr>
+                        <td>
+                            {{ repository_name }}
+                        </td>
+                        <td>
+                            {{ push_date }}
+                        </td>
+                        <td>
+                            {{# triggered_jobs }}
+                                <a href="{{ . }}">{{ . }}</a><br/>
+                            {{/ triggered_jobs }}
+                            {{^ triggered_jobs }}
+                                {{# dgettext }} tuleap-hudson_git | No triggered jobs {{/ dgettext }}
+                            {{/ triggered_jobs }}
+                        </td>
+                    </tr>
+                {{/ logs_presenters }}
+                {{^ logs_presenters }}
+                    <tr>
+                        <td class="table-cell-empty" colspan="3">
+                            {{# dgettext }} tuleap-hudson_git | No logs yet{{/ dgettext }}
+                        </td>
+                    </tr>
+                {{/ logs_presenters }}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{# dgettext }} tuleap-hudson_git | Close {{/ dgettext }}</button>
+    </div>
+</div>

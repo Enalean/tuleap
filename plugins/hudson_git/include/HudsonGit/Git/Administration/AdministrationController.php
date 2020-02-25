@@ -31,6 +31,7 @@ use Project;
 use ProjectManager;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithProject;
@@ -75,11 +76,17 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
      */
     private $include_assets;
 
+    /**
+     * @var JobManager
+     */
+    private $job_manager;
+
     public function __construct(
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         JenkinsServerFactory $jenkins_server_factory,
+        JobManager $job_manager,
         HeaderRenderer $header_renderer,
         TemplateRenderer $renderer,
         IncludeAssets $include_assets
@@ -91,6 +98,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
         $this->mirror_data_mapper      = $mirror_data_mapper;
         $this->jenkins_server_factory  = $jenkins_server_factory;
         $this->include_assets          = $include_assets;
+        $this->job_manager             = $job_manager;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -151,7 +159,20 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
     {
         $presenters = [];
         foreach ($this->jenkins_server_factory->getJenkinsServerOfProject($project) as $jenkins_server) {
-            $presenters[] = new JenkinsServerPresenter($jenkins_server);
+            $presenters[] = new JenkinsServerPresenter(
+                $jenkins_server,
+                $this->buildServerLogsPresenters($jenkins_server)
+            );
+        }
+
+        return $presenters;
+    }
+
+    private function buildServerLogsPresenters(JenkinsServer $jenkins_server): array
+    {
+        $presenters = [];
+        foreach ($this->job_manager->getLastJobLogsByProjectServer($jenkins_server) as $job) {
+            $presenters[] = JenkinsServerLogsPresenter::buildFromJob($job);
         }
 
         return $presenters;
