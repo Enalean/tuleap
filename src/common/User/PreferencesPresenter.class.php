@@ -327,31 +327,6 @@ class User_PreferencesPresenter
         return $GLOBALS['Language']->getText('account_options', 'remember_me', $GLOBALS['sys_name']);
     }
 
-    public function lab_features_title()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'lab_features_title', array($GLOBALS['sys_name']));
-    }
-
-    public function lab_features_description()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'lab_features_description', array($GLOBALS['sys_name']));
-    }
-
-    public function user_uses_lab_features()
-    {
-        return $this->user->useLabFeatures();
-    }
-
-    public function lab_features_checkbox_label()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'lab_features_cblabel', $GLOBALS['sys_name']);
-    }
-
-    public function lab_features_default_image()
-    {
-        return $GLOBALS['HTML']->getImage('lab_features_default.png');
-    }
-
     public function appearance_title()
     {
         return $GLOBALS['Language']->getText('account_preferences', 'appearance');

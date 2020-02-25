@@ -144,22 +144,6 @@
         </label>
     </fieldset>
 
-        <fieldset>
-            <h3><i class="fa fa-flask"></i> {{ lab_features_title }}</h3>
-            <p>{{ lab_features_description }}</p>
-            <p>
-                <label class="checkbox">
-                    <input type="checkbox"
-                           name="form_lab_features"
-                           id="form_lab_features"
-                           value="1"
-                           {{# user_uses_lab_features }} checked="checked" {{/ user_uses_lab_features }}
-                    />
-                    {{{ lab_features_checkbox_label }}}
-                </label>
-            </p>
-        </fieldset>
-
     <hr/>
     <div class="button-centered">
         <input type="submit"
