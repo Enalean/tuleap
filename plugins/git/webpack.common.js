@@ -24,7 +24,7 @@ const manifest_plugin = webpack_configurator.getManifestPlugin();
 const context = path.resolve(__dirname);
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "../../src/www/assets/git"),
-    "/assets/git"
+    "/assets/git/"
 );
 
 const webpack_config_for_vue = {
