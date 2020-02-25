@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,17 @@
 
 namespace Tuleap\HudsonGit\Hook;
 
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use GitRepository;
 use Exception;
+use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Job\CannotCreateJobException;
 use Tuleap\HudsonGit\Job\Job;
 use Tuleap\HudsonGit\Job\JobManager;
 
 class HookTriggerController
 {
-
     /**
      * @var HookDao
      */
@@ -49,34 +50,29 @@ class HookTriggerController
      */
     private $logger;
 
-    public function __construct(HookDao $dao, JenkinsClient $jenkins_client, LoggerInterface $logger, JobManager $job_manager)
-    {
-        $this->dao            = $dao;
-        $this->jenkins_client = $jenkins_client;
-        $this->logger         = $logger;
-        $this->job_manager    = $job_manager;
+    /**
+     * @var JenkinsServerFactory
+     */
+    private $jenkins_server_factory;
+
+    public function __construct(
+        HookDao $dao,
+        JenkinsClient $jenkins_client,
+        LoggerInterface $logger,
+        JobManager $job_manager,
+        JenkinsServerFactory $jenkins_server_factory
+    ) {
+        $this->dao                    = $dao;
+        $this->jenkins_client         = $jenkins_client;
+        $this->logger                 = $logger;
+        $this->job_manager            = $job_manager;
+        $this->jenkins_server_factory = $jenkins_server_factory;
     }
 
-    public function trigger(GitRepository $repository, string $commit_reference) : void
+    public function trigger(GitRepository $repository, string $commit_reference, DateTimeImmutable $date_time) : void
     {
-        $date_job = $_SERVER['REQUEST_TIME'];
-        $dar = $this->dao->searchById($repository->getId());
-        foreach ($dar as $row) {
-            try {
-                $transports = $repository->getAccessURL();
-                foreach ($transports as $protocol => $url) {
-                    $response = $this->jenkins_client->pushGitNotifications($row['jenkins_server_url'], $url, $commit_reference);
-
-                    $this->logger->debug('repository #'.$repository->getId().' : '.$response->getBody());
-                    if (count($response->getJobPaths()) > 0) {
-                        $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
-                        $this->addHudsongitJob($repository, implode(',', $response->getJobPaths()), $date_job);
-                    }
-                }
-            } catch (Exception $exception) {
-                $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
-            }
-        }
+        $this->triggerRepositoryJenkinsServer($repository, $commit_reference, $date_time);
+        $this->triggerProjectJenkinsServers($repository, $commit_reference);
     }
 
     private function addHudsongitJob(GitRepository $repository, $job_name, $date_job)
@@ -86,6 +82,48 @@ class HookTriggerController
             $this->job_manager->create($job);
         } catch (CannotCreateJobException $exception) {
             $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
+        }
+    }
+
+    private function triggerRepositoryJenkinsServer(GitRepository $repository, string $commit_reference, DateTimeImmutable $date_time): void
+    {
+        $date_job = $date_time->getTimestamp();
+        $dar = $this->dao->searchById($repository->getId());
+        foreach ($dar as $row) {
+            try {
+                $transports = $repository->getAccessURL();
+                foreach ($transports as $protocol => $url) {
+                    $response = $this->jenkins_client->pushGitNotifications($row['jenkins_server_url'], $url, $commit_reference);
+
+                    $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
+                    if (count($response->getJobPaths()) > 0) {
+                        $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
+                        $this->addHudsongitJob($repository, implode(',', $response->getJobPaths()), $date_job);
+                    }
+                }
+            } catch (Exception $exception) {
+                $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
+            }
+        }
+    }
+
+    private function triggerProjectJenkinsServers(GitRepository $repository, string $commit_reference): void
+    {
+        $project  = $repository->getProject();
+        foreach ($this->jenkins_server_factory->getJenkinsServerOfProject($project) as $jenkins_server) {
+            try {
+                $transports = $repository->getAccessURL();
+                foreach ($transports as $protocol => $url) {
+                    $response = $this->jenkins_client->pushGitNotifications($jenkins_server->getServerURL(), $url, $commit_reference);
+
+                    $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
+                    if (count($response->getJobPaths()) > 0) {
+                        $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
+                    }
+                }
+            } catch (Exception $exception) {
+                $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
+            }
         }
     }
 }
