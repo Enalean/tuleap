@@ -148,7 +148,15 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeAuthorizationEndpointGet(): DispatchableWithRequest
     {
-        return \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController::buildSelf();
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
+        return \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController::buildSelf(
+            $response_factory,
+            $stream_factory,
+            new SapiEmitter(),
+            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
+            new DisableCacheMiddleware()
+        );
     }
 
     public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController

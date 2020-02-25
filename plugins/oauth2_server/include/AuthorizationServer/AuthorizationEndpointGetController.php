@@ -22,7 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
-use HTTPRequest;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
@@ -31,16 +36,28 @@ use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
+use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
-use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
-final class AuthorizationEndpointGetController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final class AuthorizationEndpointGetController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
 {
+    /**
+     * @var ResponseFactoryInterface
+     */
+    private $response_factory;
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $stream_factory;
     /**
      * @var \TemplateRenderer
      */
     private $renderer;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
     /**
      * @var AppFactory
      */
@@ -51,44 +68,61 @@ final class AuthorizationEndpointGetController implements DispatchableWithReques
     private $redirect;
 
     public function __construct(
+        ResponseFactoryInterface $response_factory,
+        StreamFactoryInterface $stream_factory,
         \TemplateRendererFactory $renderer_factory,
+        \UserManager $user_manager,
         AppFactory $app_factory,
-        \URLRedirect $redirect
+        \URLRedirect $redirect,
+        EmitterInterface $emitter,
+        MiddlewareInterface ...$middleware_stack
     ) {
-        $this->renderer    = $renderer_factory->getRenderer(__DIR__ . '/../../templates');
-        $this->app_factory = $app_factory;
-        $this->redirect    = $redirect;
+        parent::__construct($emitter, ...$middleware_stack);
+        $this->response_factory = $response_factory;
+        $this->stream_factory   = $stream_factory;
+        $this->renderer         = $renderer_factory->getRenderer(__DIR__ . '/../../templates');
+        $this->user_manager     = $user_manager;
+        $this->app_factory      = $app_factory;
+        $this->redirect         = $redirect;
     }
 
-    public static function buildSelf(): self
-    {
+    public static function buildSelf(
+        ResponseFactoryInterface $response_factory,
+        StreamFactoryInterface $stream_factory,
+        EmitterInterface $emitter,
+        MiddlewareInterface ...$middleware_stack
+    ): self {
         return new self(
+            $response_factory,
+            $stream_factory,
             \TemplateRendererFactory::build(),
+            \UserManager::instance(),
             new AppFactory(new AppDao(), \ProjectManager::instance()),
-            new \URLRedirect(\EventManager::instance())
+            new \URLRedirect(\EventManager::instance()),
+            $emitter,
+            ...$middleware_stack
         );
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $user = $request->getCurrentUser();
+        $user = $this->user_manager->getCurrentUser();
         if ($user->isAnonymous()) {
-            $this->redirect->redirectToLogin();
-            return;
+            return $this->response_factory->createResponse(302)
+                ->withHeader('Location', $this->redirect->buildReturnToLogin($request->getServerParams()));
         }
-        $client_id = $request->get('client_id');
-        if (! is_string($client_id)) {
-            throw new ForbiddenException();
-        }
+
+        $query_params = $request->getQueryParams();
+        $client_id    = (string) ($query_params['client_id'] ?? '');
         try {
             $client_identifier = ClientIdentifier::fromClientId($client_id);
             $client_app        = $this->app_factory->getAppMatchingClientId($client_identifier);
         } catch (InvalidClientIdentifierKey | OAuth2AppNotFoundException $exception) {
             throw new ForbiddenException();
         }
+
+        $layout = $request->getAttribute(BaseLayout::class);
+        assert($layout instanceof BaseLayout);
 
         $presenter = new AuthorizationFormPresenter($client_app);
         $layout->addCssAsset(
@@ -97,6 +131,8 @@ final class AuthorizationEndpointGetController implements DispatchableWithReques
                 'authorization-form'
             )
         );
+
+        ob_start();
         $layout->header(
             [
                 'title'        => dgettext('tuleap-oauth2_server', 'Authorize application'),
@@ -105,5 +141,9 @@ final class AuthorizationEndpointGetController implements DispatchableWithReques
         );
         $this->renderer->renderToPage('authorization-form', $presenter);
         $layout->footer([]);
+
+        return $this->response_factory->createResponse()->withBody(
+            $this->stream_factory->createStream((string) ob_get_clean())
+        );
     }
 }

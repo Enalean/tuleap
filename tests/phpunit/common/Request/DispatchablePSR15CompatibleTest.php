@@ -50,9 +50,26 @@ final class DispatchablePSR15CompatibleTest extends TestCase
         };
         $emitter = Mockery::mock(EmitterInterface::class);
 
-        $dispatchable = new class($emitter, $middleware) extends DispatchablePSR15Compatible {
+        $base_layout = Mockery::mock(BaseLayout::class);
+
+        $dispatchable = new class($emitter, $base_layout, $middleware) extends DispatchablePSR15Compatible {
+            /**
+             * @var BaseLayout
+             */
+            private $expected_base_layout;
+
+            public function __construct(
+                EmitterInterface $emitter,
+                BaseLayout $expected_base_layout,
+                MiddlewareInterface ...$middleware_stack
+            ) {
+                parent::__construct($emitter, ...$middleware_stack);
+                $this->expected_base_layout = $expected_base_layout;
+            }
+
             public function handle(ServerRequestInterface $request) : ResponseInterface
             {
+                TestCase::assertSame($this->expected_base_layout, $request->getAttribute(BaseLayout::class));
                 return HTTPFactoryBuilder::responseFactory()->createResponse()->withHeader(
                     'dispatchable_got_front_controller_param',
                     $request->getAttribute('front_controller_attribute')
@@ -69,7 +86,7 @@ final class DispatchablePSR15CompatibleTest extends TestCase
 
         $dispatchable->process(
             Mockery::mock(HTTPRequest::class),
-            Mockery::mock(BaseLayout::class),
+            $base_layout,
             ['front_controller_attribute' => 'front_controller_param']
         );
     }

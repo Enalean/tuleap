@@ -57,6 +57,7 @@ abstract class DispatchablePSR15Compatible implements DispatchableWithRequest, R
         foreach ($variables as $variable_name => $variable_value) {
             $server_request = $server_request->withAttribute($variable_name, $variable_value);
         }
+        $server_request = $server_request->withAttribute(BaseLayout::class, $layout);
 
         $has_response_been_emitted = $this->emitter->emit($this->middleware_dispatcher->handle($server_request));
 
