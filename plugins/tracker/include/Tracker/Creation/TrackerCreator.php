@@ -48,15 +48,21 @@ class TrackerCreator
      * @var TrackerCreatorXmlErrorDisplayer
      */
     private $xml_error_displayer;
+    /**
+     * @var TrackerCreationDataChecker
+     */
+    private $creation_data_checker;
 
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
         TrackerFactory $tracker_factory,
-        TrackerCreatorXmlErrorDisplayer $xml_error_displayer
+        TrackerCreatorXmlErrorDisplayer $xml_error_displayer,
+        TrackerCreationDataChecker $creation_data_checker
     ) {
-        $this->tracker_xml_import = $tracker_xml_import;
-        $this->tracker_factory = $tracker_factory;
-        $this->xml_error_displayer = $xml_error_displayer;
+        $this->tracker_xml_import    = $tracker_xml_import;
+        $this->tracker_factory       = $tracker_factory;
+        $this->xml_error_displayer   = $xml_error_displayer;
+        $this->creation_data_checker = $creation_data_checker;
     }
 
     public static function build(): self
@@ -67,7 +73,12 @@ class TrackerCreator
         return new TrackerCreator(
             $tracker_xml_import,
             TrackerFactory::instance(),
-            TrackerCreatorXmlErrorDisplayer::build()
+            TrackerCreatorXmlErrorDisplayer::build(),
+            new TrackerCreationDataChecker(
+                \ReferenceManager::instance(),
+                new \TrackerDao(),
+                TrackerFactory::instance()
+            )
         );
     }
 
