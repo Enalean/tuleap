@@ -26,7 +26,6 @@ use Docman_Item;
 use Docman_ItemFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
@@ -37,8 +36,8 @@ class ItemImporterTest extends TestCase
 
     public function testImport(): void
     {
-        $permission_manager = Mockery::mock(PermissionsManager::class);
-        $item_factory       = Mockery::mock(Docman_ItemFactory::class);
+        $permission_importer = Mockery::mock(PermissionsImporter::class);
+        $item_factory        = Mockery::mock(Docman_ItemFactory::class);
 
         $node          = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><item/>');
         $node_importer = Mockery::mock(NodeImporter::class);
@@ -58,16 +57,16 @@ class ItemImporterTest extends TestCase
             ->once()
             ->andReturn($created_item);
 
-        $permission_manager
-            ->shouldReceive('clonePermissions')
-            ->with(13, 14, ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'])
+        $permission_importer
+            ->shouldReceive('importPermissions')
+            ->with($parent_item, $created_item, $node)
             ->once();
 
         $post_importer
             ->shouldReceive('postImport')
             ->with($node_importer, $node, $created_item);
 
-        $importer = new ItemImporter($permission_manager, $item_factory);
+        $importer = new ItemImporter($permission_importer, $item_factory);
         $importer->import($node, $node_importer, $post_importer, $parent_item, $properties);
     }
 }

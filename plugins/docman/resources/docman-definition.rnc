@@ -10,7 +10,13 @@ docman_item =
         element create_date { docman_date_content }?,
         element update_date { docman_date_content }?,
         element owner { docman_user_content }?
-    }
+    },
+    element permissions {
+        element permission {
+            attribute ugroup { xsd:string },
+            attribute type { "PLUGIN_DOCMAN_READ" | "PLUGIN_DOCMAN_WRITE" | "PLUGIN_DOCMAN_MANAGE" }
+        }*
+    }?
 
 docman_folder =
     attribute type { "folder" },

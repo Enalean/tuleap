@@ -59,6 +59,10 @@ class XMLExportVisitorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserXMLExportedCollection
      */
     private $user_collection;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PermissionsExporter
+     */
+    private $perms_exporter;
 
     protected function setUp(): void
     {
@@ -67,13 +71,15 @@ class XMLExportVisitorTest extends TestCase
         $this->archive         = Mockery::mock(ArchiveInterface::class);
         $this->user_manager    = Mockery::mock(\UserManager::class);
         $this->user_collection = Mockery::mock(\UserXMLExportedCollection::class);
+        $this->perms_exporter  = Mockery::mock(PermissionsExporter::class);
         $user_exporter         = new UserXMLExporter($this->user_manager, $this->user_collection);
 
         $this->visitor = new XMLExportVisitor(
             $this->logger,
             $this->archive,
             $this->version_factory,
-            $user_exporter
+            $user_exporter,
+            $this->perms_exporter
         );
     }
 
@@ -81,6 +87,8 @@ class XMLExportVisitorTest extends TestCase
     {
         $empty = new \Docman_Empty(['title' => 'My document', 'description' => 'desc', 'item_id' => 42]);
         $xml   = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
+
+        $this->perms_exporter->shouldReceive('exportPermissions')->once();
 
         $this->logger->shouldReceive('debug')->with('Exporting empty item #42: My document')->once();
         $this->visitor->export($xml, $empty);
@@ -96,6 +104,8 @@ class XMLExportVisitorTest extends TestCase
         $wiki = new \Docman_Wiki(['title' => 'My document', 'item_id' => 42, 'wiki_page' => 'WikiPage']);
         $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
+        $this->perms_exporter->shouldReceive('exportPermissions')->once();
+
         $this->logger->shouldReceive('debug')->with('Exporting wiki item #42: My document')->once();
         $this->visitor->export($xml, $wiki);
 
@@ -110,6 +120,8 @@ class XMLExportVisitorTest extends TestCase
         $link = new \Docman_Link(['title' => 'My document', 'item_id' => 42, 'link_url' => 'https://example.test']);
         $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
+        $this->perms_exporter->shouldReceive('exportPermissions')->once();
+
         $this->logger->shouldReceive('debug')->with('Exporting link item #42: My document')->once();
         $this->visitor->export($xml, $link);
 
@@ -123,6 +135,8 @@ class XMLExportVisitorTest extends TestCase
     {
         $file = new \Docman_File(['title' => 'My document', 'item_id' => 42]);
         $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
+
+        $this->perms_exporter->shouldReceive('exportPermissions')->once();
 
         $this->logger->shouldReceive('debug')->with('Exporting file item #42: My document')->once();
         $this->version_factory
@@ -192,6 +206,8 @@ class XMLExportVisitorTest extends TestCase
     {
         $embedded_file = new \Docman_EmbeddedFile(['title' => 'My document', 'item_id' => 42]);
         $xml           = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
+
+        $this->perms_exporter->shouldReceive('exportPermissions')->once();
 
         $this->logger->shouldReceive('debug')->with('Exporting embeddedfile item #42: My document')->once();
         $this->version_factory
@@ -268,6 +284,8 @@ class XMLExportVisitorTest extends TestCase
             )
         );
 
+        $this->perms_exporter->shouldReceive('exportPermissions')->times(3);
+
         $this->logger->shouldReceive('debug')->with('Exporting folder item #42: My folder')->once();
         $this->logger->shouldReceive('debug')->with('Exporting empty item #43: My sub document')->once();
         $this->logger->shouldReceive('debug')->with('Exporting folder item #44: My sub folder')->once();
@@ -306,6 +324,8 @@ class XMLExportVisitorTest extends TestCase
     {
         $embedded_file = new \Docman_EmbeddedFile(['title' => 'My document', 'item_id' => 42, 'user_id' => 103]);
         $xml           = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
+
+        $this->perms_exporter->shouldReceive('exportPermissions')->once();
 
         $this->logger->shouldReceive('debug');
         $this->version_factory

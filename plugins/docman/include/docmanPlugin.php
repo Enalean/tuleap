@@ -24,6 +24,7 @@
  *
  */
 
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
@@ -65,9 +66,11 @@ use Tuleap\Docman\Upload\Version\VersionDataStore;
 use Tuleap\Docman\Upload\Version\VersionUploadCanceler;
 use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
+use Tuleap\Docman\XML\Export\PermissionsExporterDao;
 use Tuleap\Docman\XML\Import\ImportPropertiesExtractor;
 use Tuleap\Docman\XML\Import\ItemImporter;
 use Tuleap\Docman\XML\Import\NodeImporter;
+use Tuleap\Docman\XML\Import\PermissionsImporter;
 use Tuleap\Docman\XML\Import\PostDoNothingImporter;
 use Tuleap\Docman\XML\Import\PostFileImporter;
 use Tuleap\Docman\XML\Import\PostFolderImporter;
@@ -91,6 +94,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\REST\BasicAuthentication;
@@ -101,7 +105,6 @@ use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 use Tuleap\Widget\Event\GetPublicAreas;
 use Tuleap\wiki\Events\GetItemsReferencingWikiPageCollectionEvent;
-use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -1593,20 +1596,29 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function exportXmlProject(ExportXmlProject $event): void
     {
-        if (! $event->getProject()->usesService($this->getServiceShortname())) {
+        $project = $event->getProject();
+        if (! $project->usesService($this->getServiceShortname())) {
             return;
         }
 
+        $ugroup_retriever                   = new UGroupRetrieverWithLegacy(new UGroupManager());
+        $project_ugroups_id_indexed_by_name = $ugroup_retriever->getProjectUgroupIds($project);
+
         $archive = $event->getArchive();
         $archive->addEmptyDir('documents');
+
         $export = new XMLExporter(
             $event->getLogger(),
-            Docman_ItemFactory::instance($event->getProject()->getGroupId()),
+            Docman_ItemFactory::instance($project->getGroupId()),
             new Docman_VersionFactory(),
             UserManager::instance(),
-            $event->getUserXMLExporter()
+            $event->getUserXMLExporter(),
+            new \Tuleap\Docman\XML\Export\PermissionsExporter(
+                new PermissionsExporterDao(),
+                $project_ugroups_id_indexed_by_name
+            )
         );
-        $export->export($event->getProject(), $event->getIntoXml(), $archive);
+        $export->export($project, $event->getIntoXml(), $archive);
     }
 
     /** @see Event::IMPORT_XML_PROJECT */
@@ -1634,7 +1646,15 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             $project,
             $logger,
             new NodeImporter(
-                new ItemImporter(PermissionsManager::instance(), $docman_item_factory),
+                new ItemImporter(
+                    new PermissionsImporter(
+                        $logger,
+                        PermissionsManager::instance(),
+                        new UGroupRetrieverWithLegacy(new UGroupManager()),
+                        $project
+                    ),
+                    $docman_item_factory
+                ),
                 new PostFileImporter(
                     new VersionImporter(
                         $user_finder,

@@ -73,7 +73,7 @@ class UGroupRetrieverWithLegacy
         $static_groups  = $this->ugroup_manager->getStaticUGroups($project);
 
         foreach ($static_groups as $ugroup) {
-            $ugroups[$ugroup->getName()] = $ugroup->getId();
+            $ugroups[$ugroup->getName()] = (int) $ugroup->getId();
         }
 
         return $ugroups;

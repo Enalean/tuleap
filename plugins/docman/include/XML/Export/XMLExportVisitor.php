@@ -63,17 +63,23 @@ class XMLExportVisitor implements ItemVisitor
      * @var UserXMLExporter
      */
     private $user_exporter;
+    /**
+     * @var PermissionsExporter
+     */
+    private $permissions_exporter;
 
     public function __construct(
         LoggerInterface $logger,
         ArchiveInterface $archive,
         Docman_VersionFactory $version_factory,
-        UserXMLExporter $user_exporter
+        UserXMLExporter $user_exporter,
+        PermissionsExporter $permissions_exporter
     ) {
-        $this->logger          = $logger;
-        $this->archive         = $archive;
-        $this->version_factory = $version_factory;
-        $this->user_exporter   = $user_exporter;
+        $this->logger               = $logger;
+        $this->archive              = $archive;
+        $this->version_factory      = $version_factory;
+        $this->user_exporter        = $user_exporter;
+        $this->permissions_exporter = $permissions_exporter;
     }
 
     public function export(SimpleXMLElement $xml, Docman_Item $item): void
@@ -93,6 +99,7 @@ class XMLExportVisitor implements ItemVisitor
         $node->addAttribute('type', $type);
 
         $this->exportProperties($node, $item);
+        $this->permissions_exporter->exportPermissions($node, $item);
 
         return $node;
     }

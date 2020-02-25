@@ -56,7 +56,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
             $fields = ' ug.name, ';
             $joins  = ' JOIN ugroup AS ug USING(ugroup_id) ';
         }
-        $sql = 'SELECT '.$fields.' p.ugroup_id'.
+        $sql = 'SELECT '.$fields.' p.ugroup_id, p.permission_type'.
                ' FROM permissions p '.$joins.
                ' WHERE p.object_id = '.$this->da->quoteSmart($objectId, array('force_string' => true)).
                ' AND p.permission_type LIKE '.$this->da->quoteSmart($permissionType).
@@ -95,7 +95,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
             $fields = ' ug.*, ';
             $joins  = ' JOIN ugroup AS ug USING(ugroup_id) ';
         }
-        $sql = 'SELECT '.$fields.' pv.ugroup_id'.
+        $sql = 'SELECT '.$fields.' pv.ugroup_id, pv.permission_type'.
                ' FROM permissions_values pv '.$joins.
                ' WHERE pv.permission_type='.$this->da->quoteSmart($permissionType).
                ' AND pv.is_default=1'.
@@ -202,7 +202,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
                 $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id)
                             SELECT permission_type, '.$to.','. $new_ugroup.'
                             FROM permissions
-                            WHERE object_id = '.$from.' 
+                            WHERE object_id = '.$from.'
                                 AND ugroup_id = '.$template_ugroup.'
                                 AND permission_type IN '.$permission_type;
                 $this->update($sql);
