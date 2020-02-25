@@ -14,30 +14,14 @@
     <section class="tlp-pane">
         <div class="tlp-pane-container">
             <section class="tlp-pane-section-for-cards">
-                <div class="tlp-card">
-                    <p>First permission
-                        <small class="oauth2-server-scope-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua.</small>
-                    </p>
-                </div>
-                <div class="tlp-card">
-                    <p>Second permission
-                        <small class="oauth2-server-scope-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua.</small>
-                    </p>
-                </div>
-                <div class="tlp-card">
-                    <p>Third permission
-                        <small class="oauth2-server-scope-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua.</small>
-                    </p>
-                </div>
-                <div class="tlp-card">
-                    <p>Fourth permission
-                        <small class="oauth2-server-scope-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua.</small>
-                    </p>
-                </div>
+                {{# scope_presenters }}
+                    <div class="tlp-card">
+                        <p>
+                            <strong>{{ name }}</strong>
+                            <small class="oauth2-server-scope-description">{{ description }}</small>
+                        </p>
+                    </div>
+                {{/ scope_presenters }}
             </section>
         </div>
     </section>
