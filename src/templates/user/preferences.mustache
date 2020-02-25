@@ -37,19 +37,6 @@
                 </div>
             </div>
             <div class="control-group user-account-group">
-                <label class="control-label user-account-label">{{ language_label }}</label>
-                <div class="controls">
-                    <select name="language_id" class="select-user-preferences">
-                    {{# languages_html }}
-                        <option value="{{{ code }}}"
-                                {{# is_selected }} selected="selected" {{/ is_selected }}
-                        > {{{ lang }}}
-                        </option>
-                    {{/ languages_html }}
-                    </select>
-                </div>
-            </div>
-            <div class="control-group user-account-group">
                 <label class="control-label user-account-label">{{ username_display_label }}</label>
                 <div class="controls">
                     <select name="username_display" class="select-user-preferences">

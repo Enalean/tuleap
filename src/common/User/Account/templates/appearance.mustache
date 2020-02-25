@@ -7,20 +7,22 @@
 
         <div class="user-preferences-section">
             <section class="tlp-pane">
-                <form class="tlp-pane-container" action="/account/experimental" method="post">
+                <form class="tlp-pane-container" action="/account/appearance" method="post">
                     <div class="tlp-pane-header">
                         <h1 class="tlp-pane-title">
-                            <i class="tlp-pane-title-icon fa fa-flask" aria-hidden="true"></i>
-                            {{# gettext }}Experimental{{/ gettext }}
+                            <i class="tlp-pane-title-icon fa fa-paint-brush" aria-hidden="true"></i>
+                            {{# gettext }}Appearance & language{{/ gettext }}
                         </h1>
                     </div>
                     <section class="tlp-pane-section">
-                        <p>{{# gettext }}Tuleap experimental features in preview mode for bleeding edge users. Only use it if you know what you are doing.{{/ gettext }}</p>
                         <div class="tlp-form-element">
-                            <label class="tlp-label tlp-checkbox">
-                                <input type="checkbox" name="lab_features" value="1" {{# lab_features_checked }}checked{{/ lab_features_checked }}>
-                                {{# gettext }}Enable lab mode{{/ gettext }}
-                            </label>
+                            <label class="tlp-label">{{# gettext }}Language{{/ gettext }}</label>
+                            {{# languages }}
+                                <label class="tlp-label tlp-radio">
+                                    <input type="radio" name="language_id" value="{{ id }}" {{# is_checked }}checked{{/ is_checked }}>
+                                    {{ label }}
+                                </label>
+                            {{/ languages }}
                         </div>
                     </section>
                     <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit">

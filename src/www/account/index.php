@@ -65,16 +65,6 @@ $em->processEvent(
 
 $csrf = new CSRFSynchronizerToken('/account/index.php');
 
-$languages_html = array();
-$language_factory = new BaseLanguageFactory();
-foreach ($language_factory->getAvailableLanguages() as $code => $lang) {
-    $languages_html[] = array(
-        'lang'        => $lang,
-        'code'        => $code,
-        'is_selected' => $user->getLocale() === $code
-    );
-}
-
 $user_helper_preferences = array(
     array(
         'preference_name'  => UserHelper::PREFERENCES_NAME_AND_LOGIN,
@@ -160,7 +150,6 @@ $presenter = new User_PreferencesPresenter(
     $extra_user_info,
     $user_access_info,
     $csrf,
-    $languages_html,
     $user_helper_preferences,
     $plugins_prefs,
     $all_csv_separator,

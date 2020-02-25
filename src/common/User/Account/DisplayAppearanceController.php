@@ -32,10 +32,11 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\Account\Appearance\AppareancePresenterBuilder;
 
-final class DisplayExperimentalController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final class DisplayAppearanceController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/account/experimental';
+    public const URL = '/account/appearance';
 
     /**
      * @var TemplateRenderer
@@ -49,15 +50,21 @@ final class DisplayExperimentalController implements DispatchableWithRequest, Di
      * @var EventDispatcherInterface
      */
     private $dispatcher;
+    /**
+     * @var AppareancePresenterBuilder
+     */
+    private $appareance_presenter_builder;
 
     public function __construct(
         EventDispatcherInterface $dispatcher,
         TemplateRendererFactory $renderer_factory,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
+        AppareancePresenterBuilder $appareance_presenter_builder
     ) {
-        $this->dispatcher = $dispatcher;
-        $this->renderer = $renderer_factory->getRenderer(__DIR__ . '/templates');
-        $this->csrf_token = $csrf_token;
+        $this->dispatcher                   = $dispatcher;
+        $this->renderer                     = $renderer_factory->getRenderer(__DIR__ . '/templates');
+        $this->csrf_token                   = $csrf_token;
+        $this->appareance_presenter_builder = $appareance_presenter_builder;
     }
 
     /**
@@ -75,15 +82,16 @@ final class DisplayExperimentalController implements DispatchableWithRequest, Di
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
-        $layout->header(['title' => _('Experimental'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]);
-        $this->renderer->renderToPage(
-            'experimental',
-            new ExperimentalPresenter(
-                $this->csrf_token,
-                $tabs,
-                $user->useLabFeatures()
-            )
+        $presenter = $this->appareance_presenter_builder->getAppareancePresenterForUser(
+            $this->csrf_token,
+            $tabs,
+            $user
         );
+
+        $layout->header(
+            ['title' => _('Appearance & language'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]
+        );
+        $this->renderer->renderToPage('appearance', $presenter);
         $layout->footer([]);
     }
 

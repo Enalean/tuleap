@@ -64,7 +64,6 @@ account_preferences	csv_dateformat	CSV Date format:
 account_preferences	month_day_year	month/day/year
 account_preferences	day_month_year	day/month/year
 account_preferences	error_form_sticky_login	Verify remember me value
-account_preferences	error_language_id	Verify language value
 account_preferences	error_user_csv_separator	Verify CSV separator value
 account_preferences	error_user_csv_dateformat	Verify CSV date format value
 account_preferences	error_username_display	Verify username display value

@@ -308,6 +308,9 @@ msgstr[1] "Et %d autres groupes que vous ne pouvez pas administrer."
 msgid "Anonymous user"
 msgstr "Utilisateur anonyme"
 
+msgid "Appearance & language"
+msgstr "Apparence et langue"
+
 msgid "Ask to join"
 msgstr "Demander à rejoindre"
 
@@ -879,6 +882,9 @@ msgstr "Le label n'a pas été édité."
 
 msgid "Labels"
 msgstr "Labels"
+
+msgid "Language"
+msgstr "Langue"
 
 msgid "Last used by"
 msgstr "Utilisée pour la dernière fois par"
@@ -1742,6 +1748,9 @@ msgid ""
 msgstr ""
 "Ce service ne peut pas être ouvert à la fois dans un nouvel onglet et dans "
 "une iframe. Veuillez choisir l'un des deux."
+
+msgid "The submitted language is not supported."
+msgstr "La langue requise n'est pas supportée."
 
 msgid "The user will automatically be added as project member."
 msgstr "L'utilisateur sera ajouté automatiquement aux membres du projet."

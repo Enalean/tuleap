@@ -102,13 +102,17 @@ use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Account\AccessKeyPresenterBuilder;
+use Tuleap\User\Account\Appearance\AppareancePresenterBuilder;
+use Tuleap\User\Account\Appearance\LanguagePresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
 use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
+use Tuleap\User\Account\DisplayAppearanceController;
 use Tuleap\User\Account\DisplayExperimentalController;
 use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
+use Tuleap\User\Account\UpdateAppearancePreferences;
 use Tuleap\User\Account\UpdateExperimentalPreferences;
 use Tuleap\User\Account\UpdateNotificationsPreferences;
 use Tuleap\User\Account\UserAvatarSaver;
@@ -283,6 +287,26 @@ class RouteCollector
         );
     }
 
+    public static function getAppearanceController(): DispatchableWithRequest
+    {
+        return new DisplayAppearanceController(
+            EventManager::instance(),
+            TemplateRendererFactory::build(),
+            DisplayAppearanceController::getCSRFToken(),
+            new AppareancePresenterBuilder(
+                new LanguagePresenterBuilder(new \BaseLanguageFactory())
+            )
+        );
+    }
+    public static function postAppearanceController(): DispatchableWithRequest
+    {
+        return new UpdateAppearancePreferences(
+            DisplayAppearanceController::getCSRFToken(),
+            \UserManager::instance(),
+            $GLOBALS['Language']
+        );
+    }
+
     public static function getExperimentalController(): DispatchableWithRequest
     {
         return new DisplayExperimentalController(
@@ -291,6 +315,7 @@ class RouteCollector
             DisplayExperimentalController::getCSRFToken()
         );
     }
+
     public static function postExperimentalController(): DispatchableWithRequest
     {
         return new UpdateExperimentalPreferences(DisplayExperimentalController::getCSRFToken());
@@ -623,6 +648,9 @@ class RouteCollector
             $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
             $r->post('/svn_token/create', [self::class, 'postAccountSVNTokenCreate']);
             $r->post('/svn_token/revoke', [self::class, 'postAccountSVNTokenRevoke']);
+
+            $r->get('/appearance', [self::class, 'getAppearanceController']);
+            $r->post('/appearance', [self::class, 'postAppearanceController']);
 
             $r->get('/experimental', [self::class, 'getExperimentalController']);
             $r->post('/experimental', [self::class, 'postExperimentalController']);
