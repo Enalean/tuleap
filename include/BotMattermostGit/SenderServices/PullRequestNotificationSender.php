@@ -54,13 +54,6 @@ class PullRequestNotificationSender
         $this->logger                 = $logger;
     }
 
-    /**
-     * @param PullRequest $pull_request
-     * @param PFUser $user
-     * @param HTTPRequest $request
-     * @param Project $project
-     * @param GitRepository $repository_destination
-     */
     public function send(
         PullRequest $pull_request,
         PFUser $user,

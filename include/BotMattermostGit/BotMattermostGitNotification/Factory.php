@@ -47,7 +47,6 @@ class Factory
 
             $bot = new BotMattermostGitNotification(
                 $this->bot_factory->getBotById($res['bot_id']),
-                $repository_id,
                 $channels
             );
         }

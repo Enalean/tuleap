@@ -50,7 +50,6 @@ class PullRequestNotificationBuilder
             $pull_request,
             $user,
             $request,
-            $project,
             $repository_destination
         );
 
@@ -61,7 +60,6 @@ class PullRequestNotificationBuilder
         PullRequest $pull_request,
         PFUser $user,
         HTTPRequest $request,
-        Project $project,
         GitRepository $repository_destination
     ) {
         $renderer =  TemplateRendererFactory::build()->getRenderer(
@@ -74,7 +72,6 @@ class PullRequestNotificationBuilder
                 $pull_request,
                 $user,
                 $request,
-                $project,
                 $repository_destination,
                 $this->repository_url_manager
             )

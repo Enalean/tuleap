@@ -24,16 +24,12 @@ use Git_GitRepositoryUrlManager;
 use GitRepository;
 use HTTPRequest;
 use PFUser;
-use Project;
 use Tuleap\PullRequest\PullRequest;
 
 class AttachmentPreTextPresenter
 {
 
-    private $pull_request;
-    private $user;
     private $request;
-    private $project;
     private $repository_destination;
     private $repository_url_manager;
 
@@ -43,31 +39,18 @@ class AttachmentPreTextPresenter
     public $branch_destination;
     public $pre_text_message;
 
-    /**
-     *
-     * @param PullRequest $pull_request
-     * @param PFUser $user
-     * @param HTTPRequest $request
-     * @param Project $project
-     * @param GitRepository $repository_destination
-     * @param Git_GitRepositoryUrlManager $repository_url_manager
-     */
     public function __construct(
         PullRequest $pull_request,
         PFUser $user,
         HTTPRequest $request,
-        Project $project,
         GitRepository $repository_destination,
         Git_GitRepositoryUrlManager $repository_url_manager
     ) {
-        $this->pull_request           = $pull_request;
         $this->user                   = $user;
         $this->request                = $request;
-        $this->project                = $project;
         $this->repository_destination = $repository_destination;
         $this->repository_url_manager = $repository_url_manager;
 
-        $this->project_name                = $project->getPublicName();
         $this->branch_source               = $pull_request->getBranchSrc();
         $this->branch_destination          = $pull_request->getBranchDest();
         $this->repository_destination_name = $repository_destination->getName();

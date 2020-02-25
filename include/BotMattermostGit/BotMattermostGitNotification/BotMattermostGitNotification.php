@@ -25,16 +25,13 @@ use Tuleap\BotMattermost\Bot\Bot;
 class BotMattermostGitNotification
 {
     private $bot;
-    private $repository_ids;
     private $channels;
 
     public function __construct(
         Bot $bot,
-        $repository_id,
         $channels
     ) {
         $this->bot            = $bot;
-        $this->repository_ids = $repository_id;
         $this->channels       = $channels;
     }
 
