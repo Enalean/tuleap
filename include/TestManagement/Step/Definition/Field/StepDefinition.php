@@ -625,9 +625,4 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         return $steps;
     }
-
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context, UserXMLExporter $user_xml_exporter)
-    {
-        parent::exportToXML($root, $xmlMapping, $project_export_context, $user_xml_exporter);
-    }
 }

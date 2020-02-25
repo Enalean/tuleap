@@ -91,28 +91,6 @@ class ImportXMLFromTracker
             $original_field
         );
 
-        $this->setPermissions($testmanagement, $step_def, $project, $feedback_collector);
-
         return $step_def;
-    }
-
-    public function setPermissions(
-        SimpleXMLElement $xml,
-        StepDefinition $step_def,
-        Project $project,
-        TrackerXmlImportFeedbackCollector $feedback_collector
-    ): void {
-        foreach ($xml->permissions->permission as $permission) {
-            $ugroup_name = (string)$permission['ugroup'];
-            $ugroup_id   = $this->ugroup_retriever_with_legacy->getUGroupId($project, $ugroup_name);
-            if (!$ugroup_id) {
-                $feedback_collector->addWarnings(
-                    "Custom ugroup '$ugroup_name' does not seem to exist for " . $project->getUnixName() . " project."
-                );
-                continue;
-            }
-            $type = (string)$permission['type'];
-            $step_def->setCachePermission($ugroup_id, $type);
-        }
     }
 }

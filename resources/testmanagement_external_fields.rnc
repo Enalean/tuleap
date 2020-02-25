@@ -16,5 +16,5 @@ element externalField {
             attribute ugroup { xsd:string },
             attribute type { xsd:string }
         }*
-    }
+    }?
 }

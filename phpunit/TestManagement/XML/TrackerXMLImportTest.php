@@ -76,11 +76,6 @@ final class TrackerXMLImportTest extends TestCase
 	            <name>steps</name>
 	            <label>Steps definition</label>
 	            <description>Definition</description>
-	            <permissions>
-	                <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-   	                <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-                    <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-	            </permissions>
             </externalField>'
         );
 
@@ -96,11 +91,6 @@ final class TrackerXMLImportTest extends TestCase
                   <name>steps</name>
                   <label>Steps definition</label>
                   <description>Definition of the test\'s steps</description>
-                 <permissions>
-                    <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                    <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-                    <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-                 </permissions>
              </externalField>'
         );
 
@@ -108,20 +98,6 @@ final class TrackerXMLImportTest extends TestCase
         $feedback_collector->shouldReceive('addWarnings');
 
         $project     = Mockery::mock(Project::class);
-        $permissions = [
-            1 => [
-                'type'   => "PLUGIN_TRACKER_FIELD_READ",
-                'ugroup' => 1
-            ],
-            2 => [
-                'type'   => "PLUGIN_TRACKER_FIELD_SUBMIT",
-                'ugroup' => 2
-            ],
-            3 =>  [
-                'type'   => "PLUGIN_TRACKER_FIELD_UPDATE",
-                'ugroup' => 3
-            ]
-        ];
 
         $step_def = new StepDefinition(
             0,
@@ -137,22 +113,6 @@ final class TrackerXMLImportTest extends TestCase
             2,
             null
         );
-
-        foreach ($permissions as $permission) {
-            $step_def->setCachePermission($permission['ugroup'], $permission['type']);
-        }
-        $this->ugroup_retriever
-            ->shouldReceive('getUGroupId')
-            ->withArgs([$project,'UGROUP_ANONYMOUS'])
-            ->andReturn(1);
-        $this->ugroup_retriever
-            ->shouldReceive('getUGroupId')
-            ->withArgs([$project,'UGROUP_REGISTERED'])
-            ->andReturn(2);
-        $this->ugroup_retriever
-            ->shouldReceive('getUGroupId')
-            ->withArgs([$project,'UGROUP_PROJECT_MEMBERS'])
-            ->andReturn(3);
 
         $result = $this->xml_validator->getInstanceFromXML($xml_input, $project, $feedback_collector);
 
