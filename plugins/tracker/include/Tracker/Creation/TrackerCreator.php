@@ -39,19 +39,13 @@ class TrackerCreator
      * @var TrackerFactory
      */
     private $tracker_factory;
-    /**
-     * @var TrackerCreationDataChecker
-     */
-    private $creation_data_checker;
 
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
-        TrackerFactory $tracker_factory,
-        TrackerCreationDataChecker $creation_data_checker
+        TrackerFactory $tracker_factory
     ) {
         $this->tracker_xml_import = $tracker_xml_import;
         $this->tracker_factory = $tracker_factory;
-        $this->creation_data_checker = $creation_data_checker;
     }
 
     /**

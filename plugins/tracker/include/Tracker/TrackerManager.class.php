@@ -599,7 +599,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     {
         $user_finder        = new XMLImportHelper(UserManager::instance());
         $tracker_xml_import = TrackerXmlImport::build($user_finder);
-        return new TrackerCreator($tracker_xml_import, $this->getTrackerFactory(), $this->getCreationDataChecker());
+        return new TrackerCreator($tracker_xml_import, $this->getTrackerFactory());
     }
 
     private function getTrackersV3ForProject(Project $project)
