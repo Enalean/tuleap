@@ -374,6 +374,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                     Feedback::ERROR,
                     dgettext("tuleap-tracker", "The provided file is invalid")
                 );
+                $this->displayCreateTracker($project, $request, $name, $description, $itemname);
                 return;
             }
 
@@ -597,9 +598,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
     private function getTrackerCreator(): TrackerCreator
     {
-        $user_finder        = new XMLImportHelper(UserManager::instance());
-        $tracker_xml_import = TrackerXmlImport::build($user_finder);
-        return new TrackerCreator($tracker_xml_import, $this->getTrackerFactory());
+        return TrackerCreator::build();
     }
 
     private function getTrackersV3ForProject(Project $project)

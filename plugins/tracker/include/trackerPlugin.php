@@ -2038,10 +2038,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new TrackerCreationProcessorController(
             $user_manager,
             \ProjectManager::instance(),
-            new TrackerCreator(
-                TrackerXmlImport::build(new XMLImportHelper($user_manager)),
-                $this->getTrackerFactory()
-            ),
+            TrackerCreator::build(),
             new TrackerCreationPermissionChecker(new TrackerManager())
         );
     }
