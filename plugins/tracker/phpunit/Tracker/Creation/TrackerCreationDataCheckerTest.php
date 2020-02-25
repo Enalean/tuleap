@@ -75,6 +75,17 @@ final class TrackerCreationDataCheckerTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testItThrowAnExceptionWhenNewTrackerLengthIsInvalidDuringTrackerDuplication(): void
+    {
+        $shortname   = "bugs_with_a_very_very_long_shortname";
+
+        $this->expectException(TrackerIsInvalidException::class);
+        $this->expectExceptionMessage('Tracker shortname length must be inferior to 25 characters.');
+        $this->checker->checkAtTrackerDuplication(
+            $shortname
+        );
+    }
+
     public function testItDoesNotThrowAnExceptionWhenOldTrackerLengthWasInvalid(): void
     {
         $project_id  = 101;

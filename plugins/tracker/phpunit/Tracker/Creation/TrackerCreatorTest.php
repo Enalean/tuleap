@@ -98,6 +98,7 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
                 "tracker-shortname"
             ]
         )->once()->andReturn(['tracker' => $tracker]);
+        $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();
 
         $created_tracker = $this->creator->duplicateTracker(
             $project,
@@ -114,6 +115,7 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
     {
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn("110");
+        $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();
         $this->tracker_factory->shouldReceive('create')->withArgs(
             [
                 $project->getId(),

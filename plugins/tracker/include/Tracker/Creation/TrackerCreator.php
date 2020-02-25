@@ -79,6 +79,7 @@ class TrackerCreator
         string $itemname,
         string $atid_template
     ): Tracker {
+        $this->creation_data_checker->checkAtTrackerDuplication($itemname);
         $duplicate = $this->tracker_factory->create(
             $project->getId(),
             -1,
