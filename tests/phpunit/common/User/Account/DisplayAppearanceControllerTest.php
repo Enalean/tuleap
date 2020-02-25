@@ -83,7 +83,7 @@ class DisplayAppearanceControllerTest extends TestCase
         );
     }
 
-    public function testItRendersThePageWithExperimental(): void
+    public function testItRendersThePageWithAppearance(): void
     {
         $user = M::mock(\PFUser::class);
         $user->shouldReceive(['useLabFeatures' => true, 'isAnonymous' => false]);
@@ -95,6 +95,7 @@ class DisplayAppearanceControllerTest extends TestCase
                 new AppearancePresenter(
                     $this->csrf_token,
                     M::mock(AccountTabPresenterCollection::class),
+                    [],
                     []
                 )
             );

@@ -18,14 +18,6 @@
         <fieldset>
             <h3><i class="icon-desktop"></i> {{ appearance_title }}</h3>
             <div class="control-group user-account-group">
-                <label class="control-label user-account-label">{{ theme_label }}</label>
-                <div class="controls">
-                    <div id="theme_variant_list"></div>
-                    <input type="hidden" name="user_theme" class="select-user-preferences" value="FlamingParrot">
-                    <input type="hidden" name="current_theme_variant" id="current_theme_variant" value=""/>
-                </div>
-            </div>
-            <div class="control-group user-account-group">
                 <label class="control-label user-account-label">{{# gettext }}Display density:{{/ gettext }}</label>
                 <div class="controls">
                     <select name="{{ display_density_name }}" class="select-user-preferences">

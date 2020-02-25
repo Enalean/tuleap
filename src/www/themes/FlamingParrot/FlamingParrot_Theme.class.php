@@ -152,11 +152,10 @@ class FlamingParrot_Theme extends Layout
     {
         $current_user = UserManager::instance()->getCurrentUser();
 
-        $theme_variant     = new ThemeVariant();
-        $css_file_provider = new FlamingParrot_CSSFilesProvider($theme_variant, $include_assets);
-        $variant_used      = $theme_variant->getVariantForUser($current_user);
+        $theme_variant = new ThemeVariant();
+        $variant_used  = $theme_variant->getVariantForUser($current_user);
 
-        return $css_file_provider->getCSSFileForVariant($variant_used);
+        return $include_assets->getFileURL($variant_used . '.css');
     }
 
     private function body($params)
@@ -204,7 +203,7 @@ class FlamingParrot_Theme extends Layout
 
     private function navbar($params, PFUser $current_user, $selected_top_tab)
     {
-        list($search_options, $selected_entry, $hidden_fields) = $this->getSearchEntries();
+        [$search_options, $selected_entry, $hidden_fields] = $this->getSearchEntries();
 
         $project_id_from_params = $this->getProjectIdFromParams($params);
         $event_manager          = EventManager::instance();

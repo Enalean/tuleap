@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,43 @@
 
 class ThemeVariantColor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    /** @var string */
+    private const ORANGE = 'orange';
+    private const GREEN  = 'green';
+    private const GREY   = 'grey';
+    private const PURPLE = 'purple';
+    private const RED    = 'red';
+    private const BLUE   = 'blue';
+
+    private const VARIANT_ORANGE    = 'FlamingParrot_Orange';
+    private const VARIANT_GREEN     = 'FlamingParrot_Green';
+    private const VARIANT_BLUE_GREY = 'FlamingParrot_BlueGrey';
+    private const VARIANT_PURPLE    = 'FlamingParrot_Purple';
+    private const VARIANT_RED       = 'FlamingParrot_Red';
+    private const VARIANT_BLUE      = 'FlamingParrot_Blue';
+
+    /**
+     * @var string
+     */
     private $name;
-
-    /** @var string */
+    /**
+     * @var string
+     */
     private $hexa_code;
+    /**
+     * @var string
+     */
+    private $label;
+    /**
+     * @var string
+     */
+    private $variant;
 
-    public function __construct($name, $hexa_code)
+    private function __construct(string $name, string $label, string $hexa_code, string $variant)
     {
         $this->name      = $name;
         $this->hexa_code = $hexa_code;
+        $this->label     = $label;
+        $this->variant   = $variant;
     }
 
     public static function buildFromDefaultVariant()
@@ -42,36 +69,72 @@ class ThemeVariantColor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     public static function buildFromVariant(string $variant): ThemeVariantColor
     {
         switch ($variant) {
-            case 'FlamingParrot_Orange':
-                $color = new ThemeVariantColor('orange', '#f79514');
+            case self::VARIANT_ORANGE:
+                $color = new ThemeVariantColor(self::ORANGE, _('Orange'), '#f79514', $variant);
                 break;
-            case 'FlamingParrot_Green':
-                $color = new ThemeVariantColor('green', '#67af45');
+            case self::VARIANT_GREEN:
+                $color = new ThemeVariantColor(self::GREEN, _('Green'), '#67af45', $variant);
                 break;
-            case 'FlamingParrot_BlueGrey':
-                $color = new ThemeVariantColor('grey', '#5b6c79');
+            case self::VARIANT_BLUE_GREY:
+                $color = new ThemeVariantColor(self::GREY, _('Grey'), '#5b6c79', $variant);
                 break;
-            case 'FlamingParrot_Purple':
-                $color = new ThemeVariantColor('purple', '#79558a');
+            case self::VARIANT_PURPLE:
+                $color = new ThemeVariantColor(self::PURPLE, _('Purple'), '#79558a', $variant);
                 break;
-            case 'FlamingParrot_Red':
-                $color = new ThemeVariantColor('red', '#bd2626');
+            case self::VARIANT_RED:
+                $color = new ThemeVariantColor(self::RED, _('Red'), '#bd2626', $variant);
                 break;
-            case 'FlamingParrot_Blue':
+            case self::VARIANT_BLUE:
             default:
-                $color = new ThemeVariantColor('blue', '#1593c4');
+                $color = new ThemeVariantColor(self::BLUE, _('Blue'), '#1593c4', $variant);
         }
 
         return $color;
     }
 
-    public function getName()
+    public static function buildFromName(string $name): ThemeVariantColor
+    {
+        switch ($name) {
+            case self::ORANGE:
+                $color = new ThemeVariantColor($name, _('Orange'), '#f79514', self::VARIANT_ORANGE);
+                break;
+            case self::GREEN:
+                $color = new ThemeVariantColor($name, _('Green'), '#67af45', self::VARIANT_GREEN);
+                break;
+            case self::GREY:
+                $color = new ThemeVariantColor($name, _('Grey'), '#5b6c79', self::VARIANT_BLUE_GREY);
+                break;
+            case self::PURPLE:
+                $color = new ThemeVariantColor($name, _('Purple'), '#79558a', self::VARIANT_PURPLE);
+                break;
+            case self::RED:
+                $color = new ThemeVariantColor($name, _('Red'), '#bd2626', self::VARIANT_RED);
+                break;
+            case self::BLUE:
+            default:
+                $color = new ThemeVariantColor($name, _('Blue'), '#1593c4', self::VARIANT_BLUE);
+        }
+
+        return $color;
+    }
+
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getHexaCode()
+    public function getHexaCode(): string
     {
         return $this->hexa_code;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    public function getVariant(): string
+    {
+        return $this->variant;
     }
 }

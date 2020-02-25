@@ -230,12 +230,13 @@ const webpack_config_for_project_registration_modal = {
     }
 };
 
-const webpack_config_for_account_token = {
+const webpack_config_for_account = {
     entry: {
-        "keys-tokens": "./account/keys-tokens.ts"
+        "keys-tokens": "./account/keys-tokens.ts",
+        appearance: "./account/appearance.ts"
     },
     context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
+    output: webpack_configurator.configureOutput(assets_dir_path + "/account/scripts/"),
     externals: {
         tlp: "tlp"
     },
@@ -247,7 +248,10 @@ const webpack_config_for_account_token = {
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
         ]
     },
-    plugins: [webpack_configurator.getTypescriptCheckerPlugin(false)],
+    plugins: [
+        webpack_configurator.getManifestPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(false)
+    ],
     resolve: {
         extensions: [".ts", ".js"]
     }
@@ -355,8 +359,7 @@ const configs_with_manifest = [
     webpack_config_for_vue_components,
     webpack_config_for_rich_text_editor,
     webpack_config_for_project_banner,
-    webpack_config_for_frs_admin,
-    webpack_config_for_account_token
+    webpack_config_for_frs_admin
 ].map(config =>
     merge(config, {
         plugins: [manifest_plugin]
@@ -371,5 +374,6 @@ module.exports = [
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
     ...configs_with_manifest,
-    webpack_config_for_project_registration_modal
+    webpack_config_for_project_registration_modal,
+    webpack_config_for_account
 ];

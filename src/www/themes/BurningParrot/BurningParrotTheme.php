@@ -171,6 +171,9 @@ class BurningParrotTheme extends BaseLayout
             $body_classes = $params['body_class'];
         }
 
+        $color = \ThemeVariantColor::buildFromVariant((new \ThemeVariant())->getVariantForUser($this->user));
+        $body_classes[] = 'theme-'. $color->getName();
+
         if ($current_project_navbar_info_presenter !== null && $current_project_navbar_info_presenter->project_banner_is_visible) {
             $body_classes[] = 'has-visible-project-banner';
         }

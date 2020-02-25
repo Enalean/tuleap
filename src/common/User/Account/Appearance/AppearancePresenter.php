@@ -43,14 +43,24 @@ final class AppearancePresenter
      * @var LanguagePresenter[]
      */
     public $languages;
+    /**
+     * @var false|string
+     */
+    public $json_encoded_colors;
 
+    /**
+     * @param LanguagePresenter[]   $languages
+     * @param ThemeColorPresenter[] $colors
+     */
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
         AccountTabPresenterCollection $tabs,
-        array $languages
+        array $languages,
+        array $colors
     ) {
-        $this->csrf_token           = $csrf_token;
-        $this->tabs                 = $tabs;
-        $this->languages            = $languages;
+        $this->csrf_token          = $csrf_token;
+        $this->tabs                = $tabs;
+        $this->languages           = $languages;
+        $this->json_encoded_colors = json_encode($colors);
     }
 }

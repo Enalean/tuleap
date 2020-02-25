@@ -26,6 +26,7 @@ use CSRFSynchronizerToken;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use ThemeVariant;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -51,18 +52,32 @@ class UpdateAppearancePreferencesTest extends TestCase
      * @var UpdateAppearancePreferences
      */
     private $controller;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ThemeVariant
+     */
+    private $theme_variant;
 
     public function setUp(): void
     {
-        $this->csrf_token   = Mockery::mock(CSRFSynchronizerToken::class);
-        $this->user_manager = Mockery::mock(\UserManager::class);
-        $this->language     = Mockery::mock(\BaseLanguage::class);
+        $this->csrf_token    = Mockery::mock(CSRFSynchronizerToken::class);
+        $this->user_manager  = Mockery::mock(\UserManager::class);
+        $this->language      = Mockery::mock(\BaseLanguage::class);
+        $this->theme_variant = Mockery::mock(ThemeVariant::class);
+
+        $this->theme_variant->shouldReceive('getAllowedVariants')->andReturn(
+            ['FlamingParrot_Orange', 'FlamingParrot_Green']
+        );
 
         $this->language->shouldReceive('isLanguageSupported')->with('fr_FR')->andReturnTrue();
         $this->language->shouldReceive('isLanguageSupported')->with('en_US')->andReturnTrue();
         $this->language->shouldReceive('isLanguageSupported')->with('pt_BR')->andReturnFalse();
 
-        $this->controller = new UpdateAppearancePreferences($this->csrf_token, $this->user_manager, $this->language);
+        $this->controller = new UpdateAppearancePreferences(
+            $this->csrf_token,
+            $this->user_manager,
+            $this->language,
+            $this->theme_variant
+        );
     }
 
     public function testItCannotUpdateWhenUserIsAnonymous(): void
@@ -86,9 +101,7 @@ class UpdateAppearancePreferencesTest extends TestCase
 
         $this->user_manager->shouldReceive('updateDB')->never();
 
-        $request = HTTPRequestBuilder::get()
-                                     ->withUser($user)
-                                     ->build();
+        $request = HTTPRequestBuilder::get()->withUser($user)->build();
 
         $layout_inspector = new LayoutInspector();
         $this->controller->process(
@@ -120,9 +133,9 @@ class UpdateAppearancePreferencesTest extends TestCase
         $this->user_manager->shouldReceive('updateDB')->never();
 
         $request = HTTPRequestBuilder::get()
-                                     ->withUser($user)
-                                     ->withParam('language_id', 'pt_BR')
-                                     ->build();
+            ->withUser($user)
+            ->withParam('language_id', 'pt_BR')
+            ->build();
 
         $layout_inspector = new LayoutInspector();
         $this->controller->process(
@@ -134,7 +147,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $this->assertEquals(
             [
                 [
-                    'level' => \Feedback::ERROR,
+                    'level'   => \Feedback::ERROR,
                     'message' => 'The submitted language is not supported.'
                 ],
                 [
@@ -158,9 +171,118 @@ class UpdateAppearancePreferencesTest extends TestCase
         $this->user_manager->shouldReceive('updateDB')->never();
 
         $request = HTTPRequestBuilder::get()
-                                     ->withUser($user)
-                                     ->withParam('language_id', 'fr_FR')
-                                     ->build();
+            ->withUser($user)
+            ->withParam('language_id', 'fr_FR')
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
+    public function testItDoesNothingIfColorIsNotSubmitted(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('setLanguageID')->never();
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+
+        $request = HTTPRequestBuilder::get()->withUser($user)->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
+    public function testItDoesNothingIfColorIsNotSupported(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('setLanguageID')->never();
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->theme_variant->shouldReceive('getVariantForUser')->once()->andReturn('FlamingParrot_Orange');
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+        $user->shouldReceive('setPreference')->never();
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('color', 'red')
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::ERROR,
+                    'message' => 'The chosen color is not allowed.'
+                ],
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
+    public function testItDoesNothingIfUserKeepsItsColor(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('setLanguageID')->never();
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->theme_variant->shouldReceive('getVariantForUser')->once()->andReturn('FlamingParrot_Orange');
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+        $user->shouldReceive('setPreference')->never();
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('color', 'orange')
+            ->build();
 
         $layout_inspector = new LayoutInspector();
         $this->controller->process(
@@ -191,10 +313,18 @@ class UpdateAppearancePreferencesTest extends TestCase
 
         $this->user_manager->shouldReceive('updateDB')->once()->andReturnTrue();
 
+        $this->theme_variant->shouldReceive('getVariantForUser')->once()->andReturn('FlamingParrot_Orange');
+        $user
+            ->shouldReceive('setPreference')
+            ->with('theme_variant', 'FlamingParrot_Green')
+            ->once()
+            ->andReturnTrue();
+
         $request = HTTPRequestBuilder::get()
-                                     ->withUser($user)
-                                     ->withParam('language_id', 'en_US')
-                                     ->build();
+            ->withUser($user)
+            ->withParam('language_id', 'en_US')
+            ->withParam('color', 'green')
+            ->build();
 
         $layout_inspector = new LayoutInspector();
         $this->controller->process(
