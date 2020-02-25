@@ -21,6 +21,9 @@ msgstr "Ajouter une App"
 msgid "App name"
 msgstr "Nom de l'App"
 
+msgid "Application (client) ID"
+msgstr "ID de l'application (client)"
+
 msgid "Authorize"
 msgstr "Autoriser"
 

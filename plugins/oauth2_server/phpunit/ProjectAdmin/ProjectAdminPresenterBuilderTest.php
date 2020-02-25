@@ -68,8 +68,8 @@ final class ProjectAdminPresenterBuilderTest extends TestCase
 
         $expected = new ProjectAdminPresenter(
             [
-                new AppPresenter(1, 'Jenkins', 'https://jenkins.example.com'),
-                new AppPresenter(2, 'My custom REST client', 'https://my-custom-client.example.com')
+                new AppPresenter(1, 'Jenkins', 'https://jenkins.example.com', 'tlp-client-id-1'),
+                new AppPresenter(2, 'My custom REST client', 'https://my-custom-client.example.com', 'tlp-client-id-2')
             ],
             $csrf_token,
             $project

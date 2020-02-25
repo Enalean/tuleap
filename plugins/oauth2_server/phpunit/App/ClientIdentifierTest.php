@@ -20,11 +20,9 @@
 
 declare(strict_types=1);
 
-namespace TuleapCodingStandard\Tuleap\OAuth2Server\App;
+namespace Tuleap\OAuth2Server\App;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\OAuth2Server\App\ClientIdentifier;
-use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
 
 final class ClientIdentifierTest extends TestCase
 {
@@ -55,5 +53,15 @@ final class ClientIdentifierTest extends TestCase
         $identifier = ClientIdentifier::fromClientId('tlp-client-id-007');
 
         $this->assertSame(7, $identifier->getInternalId());
+    }
+
+    public function testClientIdentifierCanBeBuiltFromTheApp(): void
+    {
+        $app = new OAuth2App(8, 'Name', 'https://example.com', new \Project(['group_id' => 102]));
+
+        $identifier = ClientIdentifier::fromOAuth2App($app);
+
+        $this->assertEquals(8, $identifier->getInternalId());
+        $this->assertEquals('tlp-client-id-8', $identifier->toString());
     }
 }
