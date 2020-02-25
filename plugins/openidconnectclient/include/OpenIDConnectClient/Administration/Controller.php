@@ -25,6 +25,9 @@ use Feedback;
 use HTTPRequest;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
@@ -67,6 +70,10 @@ class Controller
      * @var AzureADProviderManager
      */
     private $azure_provider_manager;
+    /**
+     * @var IncludeAssets
+     */
+    private $assets;
 
     public function __construct(
         ProviderManager $provider_manager,
@@ -75,7 +82,8 @@ class Controller
         EnableUniqueAuthenticationEndpointVerifier $enable_unique_authentication_endpoint_verifier,
         IconPresenterFactory $icon_presenter_factory,
         ColorPresenterFactory $color_presenter_factory,
-        AdminPageRenderer $admin_page_renderer
+        AdminPageRenderer $admin_page_renderer,
+        IncludeAssets $assets
     ) {
         $this->provider_manager                               = $provider_manager;
         $this->generic_provider_manager                       = $generic_provider_manager;
@@ -84,6 +92,7 @@ class Controller
         $this->icon_presenter_factory                         = $icon_presenter_factory;
         $this->color_presenter_factory                        = $color_presenter_factory;
         $this->admin_page_renderer                            = $admin_page_renderer;
+        $this->assets                                         = $assets;
     }
 
     public function showAdministration(CSRFSynchronizerToken $csrf_token, PFUser $user)
@@ -117,6 +126,20 @@ class Controller
             $this->color_presenter_factory->getColorsPresenters(),
             AzureADTenantSetupPresenter::fromAllAcceptableValues(AzureADTenantSetup::allPossibleSetups(), AzureADTenantSetup::tenantSpecific()),
             $csrf_token
+        );
+
+        $this->admin_page_renderer->addJavascriptAsset(
+            new JavascriptAsset(
+                $this->assets,
+                'open-id-connect-client.js',
+            ),
+        );
+
+        $this->admin_page_renderer->addCssAsset(
+            new CssAsset(
+                $this->assets,
+                'bp-style',
+            )
         );
 
         $this->admin_page_renderer->renderAPresenter(

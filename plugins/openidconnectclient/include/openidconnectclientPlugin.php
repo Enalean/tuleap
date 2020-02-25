@@ -91,7 +91,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $this->addHook('site_admin_option_hook');
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE);
         $this->addHook(Event::GET_LOGIN_URL);
         $this->addHook('display_newaccount');
@@ -133,7 +132,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
     public function burning_parrot_get_stylesheets($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if ($this->isInBurningParrotCompatiblePage()) {
+        if ($_SERVER['REQUEST_URI'] === '/') {
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getAssets()->getFileURL('bp-style-' . $variant->getName() . '.css');
         }
@@ -144,24 +143,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         return new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/openidconnectclient',
             '/assets/openidconnectclient'
-        );
-    }
-
-    public function burning_parrot_get_javascript_files($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['javascript_files'][] = $this->getAssets()->getFileURL('open-id-connect-client.js');
-        }
-    }
-
-    private function isInBurningParrotCompatiblePage()
-    {
-        $uri = $_SERVER['REQUEST_URI'];
-
-        return (
-            strpos($uri, '/account') === 0
-            || strpos($uri, '/plugins/openidconnectclient') === 0
-            || $uri === '/'
         );
     }
 
@@ -513,7 +494,8 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $enable_unique_authentication_endpoint_verifier,
             $icon_presenter_factory,
             $color_presenter_factory,
-            $admin_page_renderer
+            $admin_page_renderer,
+            $this->getAssets(),
         );
         $csrf_token                                     = new CSRFSynchronizerToken(
             OPENIDCONNECTCLIENT_BASE_URL . '/admin'

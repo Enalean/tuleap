@@ -23,6 +23,8 @@ namespace Tuleap\Admin;
 use ForgeConfig;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\JavascriptAsset;
 use UserManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\SidebarPresenter;
@@ -98,5 +100,15 @@ class AdminPageRenderer
         $presenter = $builder->build();
 
         return $presenter;
+    }
+
+    public function addJavascriptAsset(JavascriptAsset $asset): void
+    {
+        $GLOBALS['HTML']->addJavascriptAsset($asset);
+    }
+
+    public function addCssAsset(CssAsset $asset): void
+    {
+        $GLOBALS['HTML']->addCssAsset($asset);
     }
 }
