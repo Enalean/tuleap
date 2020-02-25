@@ -104,6 +104,9 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         );
     }
 
+    /**
+     * @throws ForbiddenException
+     */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $user = $this->user_manager->getCurrentUser();
@@ -118,6 +121,11 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             $client_identifier = ClientIdentifier::fromClientId($client_id);
             $client_app        = $this->app_factory->getAppMatchingClientId($client_identifier);
         } catch (InvalidClientIdentifierKey | OAuth2AppNotFoundException $exception) {
+            throw new ForbiddenException();
+        }
+
+        $redirect_uri = (string) ($query_params['redirect_uri'] ?? '');
+        if ($redirect_uri !== $client_app->getRedirectEndpoint()) {
             throw new ForbiddenException();
         }
 

@@ -74,7 +74,7 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         );
     }
 
-    public function testProcessRedirectsAnonymousToLogin(): void
+    public function testHandleRedirectsAnonymousToLogin(): void
     {
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
             UserTestBuilder::anAnonymousUser()->build()
@@ -87,26 +87,26 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->assertEquals('/login', $response->getHeaderLine('Location'));
     }
 
-    public function testProcessThrowsWhenClientIdIsMissing(): void
+    public function testHandleThrowsWhenClientIdIsMissing(): void
     {
-        $user    = UserTestBuilder::aUser()->withId(102)->build();
+        $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
         $this->expectException(ForbiddenException::class);
         $this->controller->handle(new NullServerRequest());
     }
 
-    public function testProcessThrowsWhenClientIdHasWrongFormat(): void
+    public function testHandleThrowsWhenClientIdHasWrongFormat(): void
     {
-        $user    = UserTestBuilder::aUser()->withId(102)->build();
+        $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
         $this->expectException(ForbiddenException::class);
         $request = new NullServerRequest();
         $this->controller->handle($request->withQueryParams(['client_id' => 'bad_client_id']));
     }
 
-    public function testProcessThrowsWhenNoAppMatchesClientId(): void
+    public function testHandleThrowsWhenNoAppMatchesClientId(): void
     {
-        $user    = UserTestBuilder::aUser()->withId(102)->build();
+        $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
         $request = (new NullServerRequest())->withQueryParams(['client_id' => 'tlp-client-id-1']);
         $this->app_factory->shouldReceive('getAppMatchingClientId')
@@ -117,14 +117,50 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
-    public function testProcessRendersAuthorizationForm(): void
+    public function testHandleThrowsWhenRedirectURIIsMissing(): void
     {
-        $user    = UserTestBuilder::aUser()->withId(102)->build();
+        $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
         $project = M::mock(\Project::class)->shouldReceive('getPublicName')
             ->andReturn('Test Project')
             ->getMock();
         $request = (new NullServerRequest())->withQueryParams(['client_id' => 'tlp-client-id-1']);
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+
+        $this->expectException(ForbiddenException::class);
+        $this->controller->handle($request);
+    }
+
+    public function testHandleThrowsWhenRedirectURIDoesNotMatchAppRegisteredURI(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/invalid-redirect-uri']
+        );
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+
+        $this->expectException(ForbiddenException::class);
+        $this->controller->handle($request);
+    }
+
+    public function testHandleRendersAuthorizationForm(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect']
+        );
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
             ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
