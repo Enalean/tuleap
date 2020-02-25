@@ -27,7 +27,7 @@ use Tuleap\DB\DataAccessObject;
 class AppDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{id:int, project_id:int, name:string}
+     * @psalm-return array{id:int, project_id:int, name:string, redirect_endpoint: string}
      */
     public function searchByClientId(ClientIdentifier $client_id): ?array
     {
@@ -37,7 +37,7 @@ class AppDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array<array{id:int, project_id:int, name:string}>
+     * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint: string}>
      */
     public function searchByProject(\Project $project): array
     {
@@ -50,7 +50,11 @@ class AppDao extends DataAccessObject
     {
         $this->getDB()->insert(
             'plugin_oauth2_server_app',
-            ['project_id' => $app->getProject()->getID(), 'name' => $app->getName()]
+            [
+                'project_id'        => $app->getProject()->getID(),
+                'name'              => $app->getName(),
+                'redirect_endpoint' => $app->getRedirectEndpoint()
+            ]
         );
     }
 

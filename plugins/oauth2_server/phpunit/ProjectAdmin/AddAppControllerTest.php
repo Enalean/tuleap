@@ -70,7 +70,7 @@ final class AddAppControllerTest extends TestCase
         );
     }
 
-    public function testProcessRedirectsWithFeedbackWhenNameIsOmitted(): void
+    public function testProcessRedirectsWithFeedbackWhenDataIsInvalid(): void
     {
         $current_user = UserTestBuilder::aUser()->build();
         $request      = HTTPRequestBuilder::get()->withUser($current_user)->withParam('name', '')->build();
@@ -91,7 +91,11 @@ final class AddAppControllerTest extends TestCase
     public function testProcessCreatesAppAndRedirects(): void
     {
         $current_user = UserTestBuilder::aUser()->build();
-        $request      = HTTPRequestBuilder::get()->withUser($current_user)->withParam('name', 'overdeliciously')->build();
+        $request      = HTTPRequestBuilder::get()
+            ->withUser($current_user)
+            ->withParam('name', 'overdeliciously')
+            ->withParam('redirect_uri', 'https://example.com/redirect')
+            ->build();
         $layout       = M::mock(BaseLayout::class);
         $this->mockValidProjectAndUserIsProjectAdmin($current_user);
 

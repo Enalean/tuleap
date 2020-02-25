@@ -17,6 +17,7 @@
                     <thead>
                     <tr>
                         <th>{{# dgettext }}tuleap-oauth2_server | App name{{/ dgettext }}</th>
+                        <th>{{# dgettext }}tuleap-oauth2_server | Redirect endpoint{{/ dgettext }}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -24,6 +25,7 @@
                     {{# apps }}
                         <tr>
                             <td>{{ name }}</td>
+                            <td>{{ redirect_endpoint }}</td>
                             <td class="tlp-table-cell-actions">
                                 <button
                                     class="tlp-button-danger tlp-button-outline oauth2-server-delete-client-button"
@@ -38,7 +40,7 @@
                     {{/ apps }}
                     {{^ apps }}
                         <tr>
-                            <td colspan="2" class="tlp-table-cell-empty">
+                            <td colspan="3" class="tlp-table-cell-empty">
                                 {{# dgettext }}tuleap-oauth2_server | No App have been defined yet. Start by adding one. {{/ dgettext }}
                             </td>
                         </tr>
@@ -49,47 +51,5 @@
         </div>
     </section>
 </div>
-<form
-    id="oauth2-server-add-client-modal"
-    class="tlp-modal"
-    role="dialog"
-    aria-labelledby="oauth2-server-add-modal-label"
-    action="{{ add_client_url }}"
-    method="post"
->
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-    <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" id="oauth2-server-add-modal-label">
-            <i class="fa fa-plus tlp-modal-title-icon"></i> {{# dgettext }}tuleap-oauth2_server | Add an App{{/ dgettext }}
-        </h1>
-        <div class="tlp-modal-close"
-             data-dismiss="modal"
-             aria-label="{{# dgettext }}tuleap-oauth2_server | Close{{/dgettext}}"
-        >&times;</div>
-    </div>
-    <div class="tlp-modal-body">
-        <div class="tlp-form-element">
-            <label for="oauth2-server-add-modal-app-name" class="tlp-label">{{# dgettext }}tuleap-oauth2_server | App name {{/ dgettext }} <i class="fa fa-asterisk"></i></label>
-            <input
-                type="text"
-                class="tlp-input"
-                id="oauth2-server-add-modal-app-name"
-                name="name"
-                placeholder="{{# dgettext }}tuleap-oauth2_server | My REST API consumer App{{/ dgettext }}"
-                required
-            >
-        </div>
-    </div>
-    <div class="tlp-modal-footer">
-        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
-            {{# dgettext }}tuleap-oauth2_server | Cancel {{/ dgettext }}
-        </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">
-            <i class="fa fa-plus tlp-button-icon"></i>
-            {{# dgettext }}tuleap-oauth2_server | Add an App {{/ dgettext }}
-        </button>
-    </div>
-</form>
+{{> app-add-modal }}
 {{> app-delete-modal }}

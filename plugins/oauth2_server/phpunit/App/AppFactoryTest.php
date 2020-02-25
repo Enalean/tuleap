@@ -53,8 +53,8 @@ final class AppFactoryTest extends TestCase
     public function testGetAppsForProject(): void
     {
         $rows    = [
-            ['id' => 1, 'name' => 'Jenkins'],
-            ['id' => 2, 'name' => 'My custom REST client']
+            ['id' => 1, 'name' => 'Jenkins', 'redirect_endpoint' => 'https://jenkins.example.com'],
+            ['id' => 2, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com']
         ];
         $project = M::mock(\Project::class);
         $this->app_dao->shouldReceive('searchByProject')
@@ -64,7 +64,10 @@ final class AppFactoryTest extends TestCase
 
         $result = $this->app_factory->getAppsForProject($project);
         $this->assertEquals(
-            [new OAuth2App(1, 'Jenkins', $project), new OAuth2App(2, 'My custom REST client', $project)],
+            [
+                new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project),
+                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', $project)
+            ],
             $result
         );
     }
@@ -84,7 +87,9 @@ final class AppFactoryTest extends TestCase
     {
         $this->app_dao->shouldReceive('searchByClientId')
             ->once()
-            ->andReturn(['id' => 1, 'name' => 'Jenkins', 'project_id' => 404]);
+            ->andReturn(
+                ['id' => 1, 'name' => 'Jenkins', 'project_id' => 404, 'redirect_endpoint' => 'https://jenkins.example.com']
+            );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
         $this->project_manager->shouldReceive('getValidProject')
             ->once()
@@ -99,7 +104,9 @@ final class AppFactoryTest extends TestCase
     {
         $this->app_dao->shouldReceive('searchByClientId')
             ->once()
-            ->andReturn(['id' => 1, 'name' => 'Jenkins', 'project_id' => 102]);
+            ->andReturn(
+                ['id' => 1, 'name' => 'Jenkins', 'project_id' => 102, 'redirect_endpoint' => 'https://jenkins.example.com']
+            );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
         $project   = M::mock(\Project::class);
         $this->project_manager->shouldReceive('getValidProject')
@@ -108,6 +115,6 @@ final class AppFactoryTest extends TestCase
             ->andReturn($project);
 
         $result = $this->app_factory->getAppMatchingClientId($client_id);
-        $this->assertEquals(new OAuth2App(1, 'Jenkins', $project), $result);
+        $this->assertEquals(new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project), $result);
     }
 }
