@@ -36,7 +36,6 @@ class RouterTest extends TestCase
     {
         $login_controller          = \Mockery::spy(\Tuleap\OpenIDConnectClient\Login\Controller::class);
         $account_linker_controller = \Mockery::spy(\Tuleap\OpenIDConnectClient\AccountLinker\Controller::class);
-        $user_mapping_controller   = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\Controller::class);
         $request                   = \Mockery::spy(\HTTPRequest::class);
         $request->shouldReceive('isSecure')->andReturns(false);
 
@@ -44,7 +43,7 @@ class RouterTest extends TestCase
         $response->shouldReceive('addFeedback')->once();
         $response->shouldReceive('redirect')->once();
 
-        $router = new Router($login_controller, $account_linker_controller, $user_mapping_controller);
+        $router = new Router($login_controller, $account_linker_controller);
         $router->process($request, $response, []);
     }
 }

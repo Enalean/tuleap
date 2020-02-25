@@ -863,15 +863,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const REST_PATCH_PROJECT_BACKLOG = 'rest_patch_project_backlog';
 
     /**
-     * Fetch interface html to manage 3rd party apps
-     *
-     * Parameters:
-     *     'user' => PFUser
-     *     'html' => string
-     */
-    public const MANAGE_THIRD_PARTY_APPS = 'manage_third_party_apps';
-
-    /**
      * Detect the project id in a url
      *
      * Parameters:

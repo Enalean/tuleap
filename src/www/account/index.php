@@ -29,19 +29,10 @@ $um = UserManager::instance();
 
 $user = $um->getCurrentUser();
 
-$third_paty_html     = '';
 $can_change_password = true;
 $can_change_realname = true;
 $can_change_email    = true;
 $extra_user_info     = array();
-
-$em->processEvent(
-    Event::MANAGE_THIRD_PARTY_APPS,
-    array(
-        'user' => $user,
-        'html' => &$third_paty_html
-    )
-);
 
 $em->processEvent(
     'display_change_password',
@@ -168,7 +159,6 @@ $presenter = new User_PreferencesPresenter(
     $can_change_password,
     $extra_user_info,
     $user_access_info,
-    $third_paty_html,
     $csrf,
     $languages_html,
     $user_helper_preferences,

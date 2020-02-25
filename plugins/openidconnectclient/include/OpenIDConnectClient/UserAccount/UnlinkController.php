@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,16 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\OpenIDConnectClient\UserMapping;
+namespace Tuleap\OpenIDConnectClient\UserAccount;
 
 use CSRFSynchronizerToken;
 use Feedback;
+use HTTPRequest;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
+use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDataAccessException;
+use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
+use Tuleap\OpenIDConnectClient\UserMapping\UserMappingNotFoundException;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
 
-class Controller
+final class UnlinkController implements DispatchableWithRequest
 {
     /**
      * @var ProviderManager
@@ -36,24 +44,43 @@ class Controller
      * @var UserMappingManager
      */
     private $user_mapping_manager;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
     public function __construct(
+        CSRFSynchronizerToken $csrf_token,
         ProviderManager $provider_manager,
         UserMappingManager $user_mapping_manager
     ) {
+        $this->csrf_token           = $csrf_token;
         $this->provider_manager     = $provider_manager;
         $this->user_mapping_manager = $user_mapping_manager;
     }
 
-    public function removeMapping($user_mapping_id)
+    /**
+     * @inheritDoc
+     */
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $csrf_token = new CSRFSynchronizerToken('openid-connect-user-preferences');
-        $csrf_token->check('/account/');
+        $user = $request->getCurrentUser();
+        if ($user->isAnonymous()) {
+            throw new ForbiddenException();
+        }
+
+        $this->csrf_token->check(OIDCProvidersController::URL);
+
+        $user_mapping_id = $request->get('provider_to_unlink');
+        if (! $user_mapping_id) {
+            throw new ForbiddenException();
+        }
 
         try {
             $user_mapping = $this->user_mapping_manager->getById($user_mapping_id);
         } catch (UserMappingNotFoundException $ex) {
             $this->redirectToAccountPage(
+                $layout,
                 dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry'),
                 Feedback::ERROR
             );
@@ -62,6 +89,7 @@ class Controller
             $provider = $this->provider_manager->getById($user_mapping->getProviderId());
         } catch (ProviderNotFoundException $ex) {
             $this->redirectToAccountPage(
+                $layout,
                 dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry'),
                 Feedback::ERROR
             );
@@ -69,6 +97,7 @@ class Controller
 
         if ($provider->isUniqueAuthenticationEndpoint()) {
             $this->redirectToAccountPage(
+                $layout,
                 sprintf(dgettext('tuleap-openidconnectclient', 'An error occurred while removing the link with %1$s.'), $provider->getName()),
                 Feedback::ERROR
             );
@@ -77,11 +106,13 @@ class Controller
         try {
             $this->user_mapping_manager->remove($user_mapping);
             $this->redirectToAccountPage(
+                $layout,
                 sprintf(dgettext('tuleap-openidconnectclient', 'The link with %1$s have been removed.'), $provider->getName()),
                 Feedback::INFO
             );
         } catch (UserMappingDataAccessException $ex) {
             $this->redirectToAccountPage(
+                $layout,
                 sprintf(dgettext('tuleap-openidconnectclient', 'An error occurred while removing the link with %1$s.'), $provider->getName()),
                 Feedback::ERROR
             );
@@ -91,13 +122,13 @@ class Controller
     /**
      * @psalm-return never-return
      */
-    private function redirectToAccountPage($message, $feedback_type): void
+    private function redirectToAccountPage(BaseLayout $layout, string $message, string $feedback_type): void
     {
-        $GLOBALS['Response']->addFeedback(
+        $layout->addFeedback(
             $feedback_type,
             $message
         );
-        $GLOBALS['Response']->redirect('/account/');
+        $layout->redirect(OIDCProvidersController::URL);
         exit();
     }
 }
