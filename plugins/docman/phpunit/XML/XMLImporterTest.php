@@ -49,7 +49,10 @@ class XMLImporterTest extends TestCase
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
             <docman>
-                <item type="folder" />
+                <item type="folder">
+                    <item type="wiki"/>
+                    <item type="file"/>
+                </item>
             </docman>
             EOS
         );
@@ -66,7 +69,17 @@ class XMLImporterTest extends TestCase
             ->with(
                 Mockery::on(
                     static function (SimpleXMLElement $node): bool {
-                        return (string) $node['type'] === 'folder';
+                        return (string) $node['type'] === 'wiki';
+                    }
+                ),
+                $parent_item
+            )->once();
+        $node_importer
+            ->shouldReceive('import')
+            ->with(
+                Mockery::on(
+                    static function (SimpleXMLElement $node): bool {
+                        return (string) $node['type'] === 'file';
                     }
                 ),
                 $parent_item
@@ -88,7 +101,10 @@ class XMLImporterTest extends TestCase
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
             <docman>
-                <item type="folder" />
+                <item type="folder">
+                    <item type="wiki"/>
+                    <item type="file"/>
+                </item>
             </docman>
             EOS
         );
