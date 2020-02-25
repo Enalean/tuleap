@@ -199,7 +199,6 @@ class CampaignsResource
         $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao, $key_factory);
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
-            $this->user_manager,
             $this->formelement_factory,
             $this->testmanagement_artifact_factory,
             $this->campaign_retriever
@@ -279,7 +278,6 @@ class CampaignsResource
         $this->realtime_message_sender = new RealTimeMessageSender(
             $node_js_client,
             $permissions_serializer,
-            $this->testmanagement_artifact_factory,
             $artifact_message_sender
         );
 
@@ -621,10 +619,8 @@ class CampaignsResource
     }
 
     /**
-     * @param PFUser                              $user
      * @param int                                 $id
      * @param string|null                         $label
-     * @param JobConfigurationRepresentation|null $job_representation
      *
      * @return Campaign
      * @throws RestException
@@ -643,7 +639,6 @@ class CampaignsResource
     }
 
     /**
-     * @param PFUser $user
      * @param int    $id
      *
      * @return Campaign
@@ -662,8 +657,6 @@ class CampaignsResource
     }
 
     /**
-     * @param PFUser   $user
-     * @param Campaign $campaign
      *
      * @throws RestException
      */
@@ -687,9 +680,7 @@ class CampaignsResource
     }
 
     /**
-     * @param Campaign                            $campaign
      * @param string|null                         $label
-     * @param JobConfigurationRepresentation|null $job_representation
      */
     private function overrideWithSubmittedData(
         Campaign $campaign,

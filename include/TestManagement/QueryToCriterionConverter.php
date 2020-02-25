@@ -20,7 +20,6 @@
 
 namespace Tuleap\TestManagement;
 
-use Tracker_ArtifactFactory;
 use Tuleap\TestManagement\Criterion\StatusAll;
 use Tuleap\TestManagement\Criterion\StatusClosed;
 use Tuleap\TestManagement\Criterion\StatusOpen;
@@ -29,21 +28,6 @@ use Tuleap\TestManagement\Criterion\MilestoneFilter;
 
 class QueryToCriterionConverter
 {
-
-    /** @var ConfigConformanceValidator */
-    private $config_validator;
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    public function __construct(
-        ConfigConformanceValidator $config_validator,
-        Tracker_ArtifactFactory $artifact_factory
-    ) {
-        $this->config_validator = $config_validator;
-        $this->artifact_factory = $artifact_factory;
-    }
-
     /**
      * @param string $query
      * @return StatusAll|StatusClosed|StatusOpen

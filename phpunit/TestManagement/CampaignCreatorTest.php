@@ -27,7 +27,6 @@ use ProjectManager;
 use TrackerFactory;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 require_once __DIR__ .'/../bootstrap.php';
 
@@ -121,13 +120,6 @@ class CampaignCreatorTest extends TestCase
         $this->artifact_creator->shouldReceive('create')->andReturn($artifact_ref);
 
         return $campaign_artifact;
-    }
-
-    private function aMockValue($field_id)
-    {
-        $field_value           = new ArtifactValuesRepresentation();
-        $field_value->field_id = $field_id;
-        return $field_value;
     }
 
     /**

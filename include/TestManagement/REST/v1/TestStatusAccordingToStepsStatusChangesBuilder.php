@@ -28,7 +28,6 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 class TestStatusAccordingToStepsStatusChangesBuilder
 {
     /**
-     * @param Tracker_FormElement_Field_List $status_field
      * @param array                          $changes
      * @param Step[]                         $steps_defined_in_test
      * @param array                          $steps_changes

@@ -37,8 +37,6 @@ class DefinitionForExecutionRetriever
     }
 
     /**
-     * @param PFUser $user
-     * @param Tracker_Artifact $execution
      *
      * @return Tracker_Artifact
      * @throws DefinitionNotFoundException

@@ -392,10 +392,8 @@ class testmanagementPlugin extends Plugin
         );
 
         $router = new Tuleap\TestManagement\Router(
-            $this,
             $config,
             $tracker_factory,
-            $project_manager,
             $user_manager,
             $event_manager,
             $this->getArtifactLinksUsageUpdater(),
@@ -765,9 +763,6 @@ class testmanagementPlugin extends Plugin
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
     }
 
-    /**
-     * @return ImportXMLFromTracker
-     */
     private function getImportXmlFromTracker(): ImportXMLFromTracker
     {
         return new ImportXMLFromTracker(new XML_RNGValidator(), new UGroupRetrieverWithLegacy(new UGroupManager()));

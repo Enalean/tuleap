@@ -38,8 +38,6 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      *
      * @param int                        $id
-     * @param Tracker_Artifact_Changeset $changeset
-     * @param StepDefinition             $field
      * @param bool                       $has_changed
      * @param Step[]                     $steps
      */
@@ -104,7 +102,6 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
     /**
      * Return the REST value of this changeset value
      *
-     * @param PFUser $user
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
@@ -115,7 +112,6 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
     /**
      * Return the full REST value of this changeset value
      *
-     * @param PFUser $user
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */

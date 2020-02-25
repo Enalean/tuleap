@@ -276,7 +276,6 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact                $artifact
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of the field
      *
      * @return string
@@ -548,7 +547,6 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     }
 
     /**
-     * @param Tracker_Artifact_ChangesetValue|null $value
      *
      * @return StepPresenter[]
      */

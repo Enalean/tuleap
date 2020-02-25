@@ -57,9 +57,6 @@ class StepsResultsChangesBuilder
 
     /**
      * @param StepResultRepresentation[] $submitted_steps_results
-     * @param Tracker_Artifact           $execution_artifact
-     * @param Tracker_Artifact           $definition_artifact
-     * @param PFUser                     $user
      *
      * @return ArtifactValuesRepresentation[]
      * @throws RestException
@@ -153,8 +150,6 @@ class StepsResultsChangesBuilder
     }
 
     /**
-     * @param Tracker_Artifact $execution_artifact
-     * @param StepExecution    $execution_field
      *
      * @return StepResult[]
      */

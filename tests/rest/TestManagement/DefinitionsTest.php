@@ -62,17 +62,6 @@ final class DefinitionsTest extends BaseTest
         return $execution['definition'];
     }
 
-    private function getFirstCampaign(string $user_name)
-    {
-        $campaigns_request  = $this->client->get("projects/$this->project_id/testmanagement_campaigns");
-        $campaigns          = $this->getResponse(
-            $campaigns_request,
-            $user_name
-        )->json();
-
-        return $campaigns[0];
-    }
-
     private function getFirstExecution($campaign_id, string $user_name)
     {
         $executions_request = $this->client->get('testmanagement_campaigns/'.$campaign_id.'/testmanagement_executions');

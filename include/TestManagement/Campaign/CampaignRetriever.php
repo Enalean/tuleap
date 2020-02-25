@@ -69,7 +69,6 @@ class CampaignRetriever
 
     /**
      *
-     * @param Tracker_Artifact $artifact
      *
      * @return Campaign
      */

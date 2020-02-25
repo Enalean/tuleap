@@ -46,9 +46,6 @@ class StepsResultsRepresentationBuilder
     }
 
     /**
-     * @param PFUser $user
-     * @param Tracker_Artifact $execution
-     * @param Tracker_Artifact $definition
      *
      * @return StepResultRepresentation[]
      */
@@ -72,9 +69,6 @@ class StepsResultsRepresentationBuilder
     }
 
     /**
-     * @param PFUser $user
-     * @param Tracker_Artifact $execution
-     * @param Tracker_Artifact $definition
      *
      * @return StepResult[]
      */
@@ -105,8 +99,6 @@ class StepsResultsRepresentationBuilder
     }
 
     /**
-     * @param PFUser $user
-     * @param Tracker_Artifact $execution
      * @param  string $field_name
      *
      * @return null | StepDefinitionChangesetValue | StepExecutionChangesetValue

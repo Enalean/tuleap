@@ -25,7 +25,6 @@ use Tracker_Artifact;
 use Tracker_Permission_PermissionsSerializer;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
-use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\REST\v1\BugRepresentation;
 use Tuleap\Tracker\RealTime\ArtifactRightsPresenter;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -49,10 +48,6 @@ class RealTimeMessageSender
      */
     private $permissions_serializer;
     /**
-     * @var ArtifactFactory
-     */
-    private $testmanagement_artifact_factory;
-    /**
      * @var RealTimeArtifactMessageSender
      */
     private $artifact_message_sender;
@@ -60,12 +55,10 @@ class RealTimeMessageSender
     public function __construct(
         NodeJSClient $node_js_client,
         Tracker_Permission_PermissionsSerializer $permissions_serializer,
-        ArtifactFactory $testmanagement_artifact_factory,
         RealTimeArtifactMessageSender $artifact_message_sender
     ) {
         $this->node_js_client                  = $node_js_client;
         $this->permissions_serializer          = $permissions_serializer;
-        $this->testmanagement_artifact_factory = $testmanagement_artifact_factory;
         $this->artifact_message_sender         = $artifact_message_sender;
     }
 

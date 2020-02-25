@@ -33,10 +33,6 @@ class StepFieldUsageDetector
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
-    /**
-     * @param TrackerFactory             $tracker_factory
-     * @param Tracker_FormElementFactory $form_element_factory
-     */
     public function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $form_element_factory)
     {
         $this->tracker_factory      = $tracker_factory;

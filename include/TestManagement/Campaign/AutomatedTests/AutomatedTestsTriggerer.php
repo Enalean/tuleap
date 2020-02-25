@@ -34,7 +34,6 @@ class AutomatedTestsTriggerer
     }
 
     /**
-     * @param Campaign $campaign
      *
      * @throws NoJobConfiguredForCampaignException
      * @throws \Jenkins_ClientUnableToLaunchBuildException

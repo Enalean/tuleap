@@ -223,7 +223,7 @@ class AdminController extends TestManagementController
             );
 
             return $original_id;
-        }  catch (TrackerDoesntExistException $exception) {
+        } catch (TrackerDoesntExistException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 sprintf(

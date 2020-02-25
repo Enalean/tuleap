@@ -105,16 +105,12 @@ class ProjectResource
         $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new KeyFactory());
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
-            $this->user_manager,
             $this->tracker_form_element_factory,
             $this->testmanagement_artifact_factory,
             $campaign_retriever
         );
 
-        $this->query_to_criterion_converter = new QueryToCriterionConverter(
-            $conformance_validator,
-            $artifact_factory
-        );
+        $this->query_to_criterion_converter = new QueryToCriterionConverter();
     }
 
     /**

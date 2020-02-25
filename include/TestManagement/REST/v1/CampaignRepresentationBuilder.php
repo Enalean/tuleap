@@ -28,16 +28,9 @@ use Tuleap\TestManagement\Campaign\CampaignRetriever;
 use Tuleap\TestManagement\Criterion\ISearchOnMilestone;
 use Tuleap\TestManagement\Criterion\ISearchOnStatus;
 use Tuleap\TestManagement\PaginatedCampaignsRepresentations;
-use UserManager;
 
 class CampaignRepresentationBuilder
 {
-
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
     /**
      * @var Tracker_FormElementFactory
      */
@@ -54,12 +47,10 @@ class CampaignRepresentationBuilder
     private $campaign_retriever;
 
     public function __construct(
-        UserManager $user_manager,
         Tracker_FormElementFactory $tracker_form_element_factory,
         ArtifactFactory $testmanagement_artifact_factory,
         CampaignRetriever $campaign_retriever
     ) {
-        $this->user_manager                    = $user_manager;
         $this->tracker_form_element_factory    = $tracker_form_element_factory;
         $this->testmanagement_artifact_factory = $testmanagement_artifact_factory;
         $this->campaign_retriever              = $campaign_retriever;
@@ -78,9 +69,7 @@ class CampaignRepresentationBuilder
     }
 
     /**
-     * @param PFUser $user
      * @param $campaign_tracker_id
-     * @param ISearchOnStatus $status_criterion
      * @param ISearchOnMilestoneId $milestone_criterion
      * @param $limit
      * @param $offset

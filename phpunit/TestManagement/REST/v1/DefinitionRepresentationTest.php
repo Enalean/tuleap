@@ -63,7 +63,7 @@ class DefinitionRepresentationTest extends TestCase
 
 
         $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_STEPS, null);
-        $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_SUMMARY,  null);
+        $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_SUMMARY, null);
         $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_AUTOMATED_TESTS, null);
         $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_DESCRIPTION, $field);
 

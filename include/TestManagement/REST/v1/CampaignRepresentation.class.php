@@ -151,9 +151,6 @@ class CampaignRepresentation
     }
 
     /**
-     * @param PFUser                    $user
-     * @param Tracker_Artifact          $artifact
-     * @param Tracker_FormElement_Field $label_field
      *
      * @return bool
      */

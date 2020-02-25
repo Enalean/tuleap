@@ -25,7 +25,6 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use PFUser;
-use Plugin;
 use Project;
 use ProjectManager;
 use TrackerFactory;
@@ -40,12 +39,6 @@ use XMLImportHelper;
 
 class Router
 {
-
-    /**
-     * @var Plugin
-     */
-    private $plugin;
-
     /**
      * @var Config
      */
@@ -58,11 +51,6 @@ class Router
      * @param \Service
      */
     private $service;
-
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
 
     /**
      * @var ProjectManager
@@ -97,10 +85,8 @@ class Router
     private $int_validator;
 
     public function __construct(
-        Plugin $plugin,
         Config $config,
         TrackerFactory $tracker_factory,
-        ProjectManager $project_manager,
         UserManager $user_manager,
         EventManager $event_manager,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
@@ -110,9 +96,7 @@ class Router
         Valid_UInt $int_validator
     ) {
         $this->config                       = $config;
-        $this->plugin                       = $plugin;
         $this->tracker_factory              = $tracker_factory;
-        $this->project_manager              = $project_manager;
         $this->user_manager                 = $user_manager;
         $this->event_manager                = $event_manager;
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
@@ -263,7 +247,6 @@ class Router
     /**
      * Retrieves the Agile Dashboard Service instance matching the request group id.
      *
-     * @param Codendi_Request $request
      *
      * @return \Service
      */
@@ -324,7 +307,6 @@ class Router
     /**
      * Renders the bottom footer for all Agile Dashboard pages.
      *
-     * @param Codendi_Request $request
      */
     private function displayFooter(Codendi_Request $request)
     {
