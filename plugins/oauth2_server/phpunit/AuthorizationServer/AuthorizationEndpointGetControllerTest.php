@@ -151,6 +151,54 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
+    public function testHandleRedirectsAsInvalidRequestWhenResponseTypeIsMissing(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value']
+        );
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect?key=value', $project));
+
+        $response = $this->controller->handle($request);
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertSame(
+            'https://example.com/redirect?key=value&error=invalid_request',
+            $response->getHeaderLine('Location')
+        );
+    }
+
+    public function testHandleRedirectsAsInvalidRequestWhenResponseTypeIsNotAllowed(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'     => 'tlp-client-id-1',
+                'redirect_uri'  => 'https://example.com/redirect?key=value',
+                'response_type' => 'invalid_response_type'
+            ]
+        );
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect?key=value', $project));
+
+        $response = $this->controller->handle($request);
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertSame(
+            'https://example.com/redirect?key=value&error=invalid_request',
+            $response->getHeaderLine('Location')
+        );
+    }
+
     public function testHandleRendersAuthorizationForm(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
@@ -159,7 +207,11 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
             ->andReturn('Test Project')
             ->getMock();
         $request = (new NullServerRequest())->withQueryParams(
-            ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect']
+            [
+                'client_id'     => 'tlp-client-id-1',
+                'redirect_uri'  => 'https://example.com/redirect',
+                'response_type' => 'code'
+            ]
         );
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
