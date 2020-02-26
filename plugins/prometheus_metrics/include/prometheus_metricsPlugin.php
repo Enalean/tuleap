@@ -24,6 +24,7 @@ use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\PrometheusMetrics\MetricsAuthentication;
 use Tuleap\PrometheusMetrics\MetricsCollectorDao;
 use Tuleap\PrometheusMetrics\MetricsController;
@@ -87,6 +88,7 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
             (new PrometheusFlushableStorageProvider())->getFlushableStorage(),
             new MetricsAuthentication(
                 $response_factory,
+                new BasicAuthLoginExtractor(),
                 $this->getPluginEtcRoot()
             )
         );
