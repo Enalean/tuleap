@@ -26,9 +26,10 @@ use HTTPRequest;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OpenIDConnectClient\Administration\Controller;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
-class AdminRouter implements DispatchableWithRequest
+class AdminRouter implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var Controller

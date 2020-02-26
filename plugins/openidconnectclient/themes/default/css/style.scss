@@ -10,38 +10,6 @@ body.openid-connect-link {
     font-size: 30px;
 }
 
-#linked-providers > .provider {
-    display: inline-block;
-    width: 20%;
-    min-width: 200px;
-    margin: 0 4% 20px 0;
-    border: 1px solid #dddddd;
-    border-radius: 3px;
-
-    > .provider-header {
-        background: #eeeeee;
-        border-bottom: 2px solid #333333;
-        padding: 10px;
-
-        > .provider-name {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 600;
-        }
-    }
-
-    > .provider-content {
-        padding: 10px;
-        text-align: right;
-
-        > .provider-last-login-date {
-            color: #888888;
-            font-size: 12px;
-            text-align: left;
-        }
-    }
-}
-
 #providers-configuration {
     .modal {
         .modal-header {
