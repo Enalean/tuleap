@@ -26,6 +26,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\BaseLayout;
@@ -34,17 +35,19 @@ use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AuthorizationEndpointGetControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
 
     /** @var AuthorizationEndpointGetController */
     private $controller;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationFormRenderer
+     */
+    private $form_renderer;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|AppFactory
      */
@@ -57,19 +60,25 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|\URLRedirect
      */
     private $redirect;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|ScopeExtractor
+     */
+    private $scope_extractor;
 
     protected function setUp(): void
     {
-        $this->app_factory  = M::mock(AppFactory::class);
-        $this->redirect     = M::mock(\URLRedirect::class);
-        $this->user_manager = M::mock(\UserManager::class);
-        $this->controller  = new AuthorizationEndpointGetController(
+        $this->form_renderer   = M::mock(AuthorizationFormRenderer::class);
+        $this->app_factory     = M::mock(AppFactory::class);
+        $this->redirect        = M::mock(\URLRedirect::class);
+        $this->user_manager    = M::mock(\UserManager::class);
+        $this->scope_extractor = M::mock(ScopeExtractor::class);
+        $this->controller      = new AuthorizationEndpointGetController(
             HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
-            TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
+            $this->form_renderer,
             $this->user_manager,
             $this->app_factory,
             $this->redirect,
+            $this->scope_extractor,
             \Mockery::mock(EmitterInterface::class)
         );
     }
@@ -199,6 +208,36 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         );
     }
 
+    public function testHandleRedirectsAsInvalidScopeWhenScopeIsMissingOrInvalid(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'     => 'tlp-client-id-1',
+                'redirect_uri'  => 'https://example.com/redirect',
+                'response_type' => 'code',
+                'scope'         => 'invalid_scope'
+            ]
+        );
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+        $this->scope_extractor->shouldReceive('extractScopes')
+            ->once()
+            ->andThrow(new InvalidOAuth2ScopeException());
+
+        $response = $this->controller->handle($request);
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertSame(
+            'https://example.com/redirect?error=invalid_scope',
+            $response->getHeaderLine('Location')
+        );
+    }
+
     public function testHandleRendersAuthorizationForm(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
@@ -216,9 +255,11 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
             ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+        $this->scope_extractor->shouldReceive('extractScopes')
+            ->once()
+            ->andReturn([M::mock(AuthenticationScope::class)]);
+        $this->form_renderer->shouldReceive('renderForm')->once();
 
-        $response = $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('Authorize application', $response->getBody()->getContents());
+        $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
     }
 }

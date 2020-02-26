@@ -22,24 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 
 /**
  * @psalm-immutable
  */
-final class AuthorizationFormPresenter
+final class OAuth2ScopeDefinitionPresenter
 {
-    /** @var string */
-    public $app_name;
-    /** @var string */
-    public $project_name;
-    /** @var OAuth2ScopeDefinitionPresenter[] */
-    public $scope_presenters;
+    /**
+     * @var string
+     */
+    public $name;
+    /**
+     * @var string
+     */
+    public $description;
 
-    public function __construct(OAuth2App $app, OAuth2ScopeDefinitionPresenter ...$scope_presenters)
+    public function __construct(AuthenticationScopeDefinition $scope_definition)
     {
-        $this->app_name         = $app->getName();
-        $this->project_name     = $app->getProject()->getPublicName();
-        $this->scope_presenters = $scope_presenters;
+        $this->name = $scope_definition->getName();
+        $this->description = $scope_definition->getDescription();
     }
 }

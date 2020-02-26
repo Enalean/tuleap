@@ -31,6 +31,8 @@ use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
+use Tuleap\OAuth2Server\App\AppDao;
+use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\Grant\AuthCodeGrantController;
 use Tuleap\OAuth2Server\Grant\AuthorizationCodeGrantResponseBuilder;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
@@ -45,6 +47,7 @@ use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
+use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
 use Tuleap\User\PasswordVerifier;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -150,9 +153,20 @@ final class oauth2_serverPlugin extends Plugin
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
-        return \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController::buildSelf(
+        return new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController(
             $response_factory,
-            $stream_factory,
+            new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormRenderer(
+                $response_factory,
+                $stream_factory,
+                TemplateRendererFactory::build(),
+                new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormPresenterBuilder()
+            ),
+            \UserManager::instance(),
+            new AppFactory(new AppDao(), \ProjectManager::instance()),
+            new \URLRedirect(\EventManager::instance()),
+            new \Tuleap\OAuth2Server\AuthorizationServer\ScopeExtractor(
+                new AuthenticationScopeBuilderFromClassNames(DemoOAuth2Scope::class, OAuth2ProjectReadScope::class)
+            ),
             new SapiEmitter(),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
             new DisableCacheMiddleware()

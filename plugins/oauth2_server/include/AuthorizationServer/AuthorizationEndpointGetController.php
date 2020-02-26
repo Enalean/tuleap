@@ -26,16 +26,11 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
-use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -44,23 +39,22 @@ use Tuleap\Request\ForbiddenException;
 final class AuthorizationEndpointGetController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
 {
     // see https://tools.ietf.org/html/rfc6749#section-4.1.1
-    private const RESPONSE_TYPE_PARAMETER    = 'response_type';
-    private const CLIENT_ID_PARAMETER        = 'client_id';
-    private const REDIRECT_URI_PARAMETER     = 'redirect_uri';
-    private const ALLOWED_RESPONSE_TYPE      = 'code';
+    private const RESPONSE_TYPE_PARAMETER = 'response_type';
+    private const CLIENT_ID_PARAMETER     = 'client_id';
+    private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
+    public const  SCOPE_PARAMETER         = 'scope';
+    private const ALLOWED_RESPONSE_TYPE   = 'code';
+    // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
     private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
+    private const ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
     /**
      * @var ResponseFactoryInterface
      */
     private $response_factory;
     /**
-     * @var StreamFactoryInterface
+     * @var AuthorizationFormRenderer
      */
-    private $stream_factory;
-    /**
-     * @var \TemplateRenderer
-     */
-    private $renderer;
+    private $form_renderer;
     /**
      * @var \UserManager
      */
@@ -73,42 +67,28 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
      * @var \URLRedirect
      */
     private $redirect;
+    /**
+     * @var ScopeExtractor
+     */
+    private $scope_extractor;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
-        StreamFactoryInterface $stream_factory,
-        \TemplateRendererFactory $renderer_factory,
+        AuthorizationFormRenderer $form_renderer,
         \UserManager $user_manager,
         AppFactory $app_factory,
         \URLRedirect $redirect,
+        ScopeExtractor $scope_extractor,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory = $response_factory;
-        $this->stream_factory   = $stream_factory;
-        $this->renderer         = $renderer_factory->getRenderer(__DIR__ . '/../../templates');
+        $this->form_renderer    = $form_renderer;
         $this->user_manager     = $user_manager;
         $this->app_factory      = $app_factory;
         $this->redirect         = $redirect;
-    }
-
-    public static function buildSelf(
-        ResponseFactoryInterface $response_factory,
-        StreamFactoryInterface $stream_factory,
-        EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
-    ): self {
-        return new self(
-            $response_factory,
-            $stream_factory,
-            \TemplateRendererFactory::build(),
-            \UserManager::instance(),
-            new AppFactory(new AppDao(), \ProjectManager::instance()),
-            new \URLRedirect(\EventManager::instance()),
-            $emitter,
-            ...$middleware_stack
-        );
+        $this->scope_extractor  = $scope_extractor;
     }
 
     /**
@@ -140,34 +120,15 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST, $redirect_uri);
         }
 
+        try {
+            $scopes = $this->scope_extractor->extractScopes($query_params);
+        } catch (InvalidOAuth2ScopeException $e) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_SCOPE, $redirect_uri);
+        }
+
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
-        return $this->buildValidResponse($client_app, $layout);
-    }
-
-    private function buildValidResponse(OAuth2App $client_app, BaseLayout $layout): ResponseInterface
-    {
-        $presenter = new AuthorizationFormPresenter($client_app);
-        $layout->addCssAsset(
-            new CssAsset(
-                new IncludeAssets(__DIR__ . '/../../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
-                'authorization-form'
-            )
-        );
-
-        ob_start();
-        $layout->header(
-            [
-                'title'        => dgettext('tuleap-oauth2_server', 'Authorize application'),
-                'main_classes' => ['tlp-framed']
-            ]
-        );
-        $this->renderer->renderToPage('authorization-form', $presenter);
-        $layout->footer([]);
-
-        return $this->response_factory->createResponse()->withBody(
-            $this->stream_factory->createStream((string) ob_get_clean())
-        );
+        return $this->form_renderer->renderForm($client_app, $layout, ...$scopes);
     }
 
     /**

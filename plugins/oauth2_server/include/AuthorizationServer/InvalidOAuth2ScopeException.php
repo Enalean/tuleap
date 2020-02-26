@@ -22,24 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
-use Tuleap\OAuth2Server\App\OAuth2App;
-
-/**
- * @psalm-immutable
- */
-final class AuthorizationFormPresenter
+final class InvalidOAuth2ScopeException extends \RuntimeException
 {
-    /** @var string */
-    public $app_name;
-    /** @var string */
-    public $project_name;
-    /** @var OAuth2ScopeDefinitionPresenter[] */
-    public $scope_presenters;
-
-    public function __construct(OAuth2App $app, OAuth2ScopeDefinitionPresenter ...$scope_presenters)
-    {
-        $this->app_name         = $app->getName();
-        $this->project_name     = $app->getProject()->getPublicName();
-        $this->scope_presenters = $scope_presenters;
-    }
 }
