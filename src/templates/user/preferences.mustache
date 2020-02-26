@@ -6,17 +6,6 @@
         <fieldset>
             <h3><i class="icon-desktop"></i> {{ appearance_title }}</h3>
             <div class="control-group user-account-group">
-                <label class="control-label user-account-label">{{# gettext }}Display density:{{/ gettext }}</label>
-                <div class="controls">
-                    <select name="{{ display_density_name }}" class="select-user-preferences">
-                        <option value="">{{# gettext }}Comfortable{{/ gettext }}</option>
-                        <option value="{{ display_density_condensed }}" {{# is_condensed }}selected{{/ is_condensed }}>
-                            {{# gettext }}Condensed{{/ gettext }}
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="control-group user-account-group">
                 <label class="control-label user-account-label">{{ username_display_label }}</label>
                 <div class="controls">
                     <select name="username_display" class="select-user-preferences">

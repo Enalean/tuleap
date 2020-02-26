@@ -96,7 +96,8 @@ class DisplayAppearanceControllerTest extends TestCase
                     $this->csrf_token,
                     M::mock(AccountTabPresenterCollection::class),
                     [],
-                    []
+                    [],
+                    true
                 )
             );
 
