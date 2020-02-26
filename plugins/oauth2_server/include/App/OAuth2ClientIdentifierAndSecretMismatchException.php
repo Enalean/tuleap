@@ -24,10 +24,12 @@ namespace Tuleap\OAuth2Server\App;
 
 use Tuleap\OAuth2Server\OAuth2ServerException;
 
-final class OAuth2AppNotFoundException extends \RuntimeException implements OAuth2ServerException
+final class OAuth2ClientIdentifierAndSecretMismatchException extends \RuntimeException implements OAuth2ServerException
 {
     public function __construct(ClientIdentifier $client_identifier)
     {
-        parent::__construct("OAuth2 App matching " . $client_identifier->toString() . " could not be found");
+        parent::__construct(
+            sprintf('The client identifier %s cannot match the given client secret', $client_identifier->toString())
+        );
     }
 }

@@ -27,14 +27,18 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
+use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
+use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2Server\Grant\AuthCodeGrantController;
 use Tuleap\OAuth2Server\Grant\AuthorizationCodeGrantResponseBuilder;
+use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
@@ -215,6 +219,7 @@ final class oauth2_serverPlugin extends Plugin
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
+        $app_dao          = new AppDao();
         return new AuthCodeGrantController(
             $response_factory,
             $stream_factory,
@@ -231,7 +236,17 @@ final class oauth2_serverPlugin extends Plugin
             UserManager::instance(),
             new SapiEmitter(),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
-            new DisableCacheMiddleware()
+            new DisableCacheMiddleware(),
+            new OAuth2ClientAuthenticationMiddleware(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
+                new OAuth2AppCredentialVerifier(
+                    new AppFactory($app_dao, ProjectManager::instance()),
+                    $app_dao,
+                    new SplitTokenVerificationStringHasher()
+                ),
+                new BasicAuthLoginExtractor(),
+                BackendLogger::getDefaultLogger()
+            )
         );
     }
 }

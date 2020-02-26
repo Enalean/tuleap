@@ -24,10 +24,16 @@ namespace Tuleap\OAuth2Server\App;
 
 use Tuleap\OAuth2Server\OAuth2ServerException;
 
-final class OAuth2AppNotFoundException extends \RuntimeException implements OAuth2ServerException
+final class OAuth2MissingVerifierStringException extends \LogicException implements OAuth2ServerException
 {
-    public function __construct(ClientIdentifier $client_identifier)
+
+    public function __construct(OAuth2App $app)
     {
-        parent::__construct("OAuth2 App matching " . $client_identifier->toString() . " could not be found");
+        parent::__construct(
+            sprintf(
+                'The app #%d does not seem to have a verifier string. Corrupted DB?',
+                $app->getId()
+            )
+        );
     }
 }

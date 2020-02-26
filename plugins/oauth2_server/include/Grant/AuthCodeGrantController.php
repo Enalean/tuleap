@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
@@ -40,6 +41,7 @@ final class AuthCodeGrantController extends DispatchablePSR15Compatible implemen
 
     private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     private const ERROR_CODE_INVALID_GRANT   = 'invalid_grant';
+    private const ERROR_CODE_INVALID_CLIENT  = 'invalid_client';
 
     /**
      * @var ResponseFactoryInterface
@@ -75,6 +77,11 @@ final class AuthCodeGrantController extends DispatchablePSR15Compatible implemen
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $app = $request->getAttribute(OAuth2ClientAuthenticationMiddleware::class);
+        if (! $app instanceof OAuth2App) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_CLIENT);
+        }
+
         $body_params = $request->getParsedBody();
 
         if (! is_array($body_params) || ! isset($body_params[self::GRANT_TYPE_PARAMETER])) {
@@ -104,7 +111,13 @@ final class AuthCodeGrantController extends DispatchablePSR15Compatible implemen
      */
     private function buildErrorResponse(string $error_code): ResponseInterface
     {
-        return $this->response_factory->createResponse(400)
+        if ($error_code === self::ERROR_CODE_INVALID_CLIENT) {
+            $response = $this->response_factory->createResponse(401)
+                ->withHeader('WWW-Authenticate', 'Basic realm="Tuleap OAuth2 Token Endpoint"');
+        } else {
+            $response = $this->response_factory->createResponse(400);
+        }
+        return $response
             ->withHeader('Content-Type', self::CONTENT_TYPE_RESPONSE)
             ->withBody(
                 $this->stream_factory->createStream(json_encode(['error' => $error_code], JSON_THROW_ON_ERROR))
