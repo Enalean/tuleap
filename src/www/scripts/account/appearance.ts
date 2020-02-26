@@ -20,11 +20,15 @@
 import { DataFormat, GroupedDataFormat, IdTextPair, LoadingData, select2 } from "tlp";
 import { sanitize } from "dompurify";
 import { render } from "mustache";
+import $ from "jquery";
 
 initThemeColorSelector();
 
 function initThemeColorSelector(): void {
-    const selector = document.getElementById("user-preferences-color-selector");
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const selector = document.getElementById(
+        "user-preferences-color-selector"
+    ) as HTMLSelectElement;
     if (selector === null || !selector.dataset.colors) {
         return;
     }
@@ -53,4 +57,18 @@ function initThemeColorSelector(): void {
             );
         }
     });
+
+    $(selector).on("change", changePreviewColor);
+    changePreviewColor();
+
+    function changePreviewColor(): void {
+        const preview = document.getElementById("user-preferences-section-appearance-preview");
+        if (preview === null) {
+            return;
+        }
+
+        const class_prefix = "user-preferences-section-appearance-preview-";
+        colors.forEach((color: DataFormat) => preview.classList.remove(class_prefix + color.id));
+        preview.classList.add(class_prefix + selector.value);
+    }
 }

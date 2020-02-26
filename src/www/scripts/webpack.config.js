@@ -239,7 +239,8 @@ const webpack_config_for_account = {
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path + "/account/scripts/"),
     externals: {
-        tlp: "tlp"
+        tlp: "tlp",
+        jquery: "jQuery"
     },
     module: {
         rules: [

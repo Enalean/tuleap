@@ -14,10 +14,15 @@
                             {{# gettext }}Appearance & language{{/ gettext }}
                         </h1>
                     </div>
-                    <section class="tlp-pane-section">
-                        {{> appearance/language }}
-                        {{> appearance/color }}
-                        {{> appearance/condensed }}
+                    <section class="tlp-pane-section user-preferences-section-appearance-form">
+                        <div class="user-preferences-section-appearance-fields">
+                            {{> appearance/language }}
+                            {{> appearance/color }}
+                            {{> appearance/condensed }}
+                        </div>
+                        <div class="user-preferences-section-appearance-preview">
+                            {{> appearance/preview }}
+                        </div>
                     </section>
                     <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit">
                         {{# csrf_token }}
