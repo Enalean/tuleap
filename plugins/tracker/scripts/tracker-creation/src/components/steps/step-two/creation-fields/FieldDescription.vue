@@ -44,7 +44,8 @@ export default class StepTwo extends Vue {
     get placeholder(): string {
         return this.$gettextInterpolate(
             this.$gettext("My %{ tracker_name } tracker description..."),
-            { tracker_name: this.tracker_to_be_created.name }
+            { tracker_name: this.tracker_to_be_created.name },
+            true
         );
     }
 }
