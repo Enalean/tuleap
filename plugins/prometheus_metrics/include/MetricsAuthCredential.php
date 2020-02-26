@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\PrometheusMetrics;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Http\Server\Authentication\LoginCredentialSet;
 
 /**
  * @psalm-immutable
  */
-final class BasicAuthCredential
+final class MetricsAuthCredential
 {
     /**
      * @var string|null
@@ -55,9 +56,9 @@ final class BasicAuthCredential
     /**
      * @psalm-pure
      */
-    public static function fromGivenInformation(string $user_username, ConcealedString $user_password) : self
+    public static function fromLoginCredentialSet(LoginCredentialSet $credential_set): self
     {
-        return new self($user_username, $user_password);
+        return new self($credential_set->getUsername(), $credential_set->getPassword());
     }
 
     public function doesCredentialMatch(string $known_username, ConcealedString $known_password) : bool

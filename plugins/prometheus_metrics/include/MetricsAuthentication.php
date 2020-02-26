@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 
 final class MetricsAuthentication implements MiddlewareInterface
 {
@@ -38,12 +39,23 @@ final class MetricsAuthentication implements MiddlewareInterface
      * @var ResponseFactoryInterface
      */
     private $response_factory;
+    /**
+     * @var BasicAuthLoginExtractor
+     */
+    private $basic_auth_login_extractor;
+    /**
+     * @var string
+     */
     private $config_dir_root;
 
-    public function __construct(ResponseFactoryInterface $response_factory, string $config_dir_root)
-    {
-        $this->response_factory = $response_factory;
-        $this->config_dir_root  = $config_dir_root;
+    public function __construct(
+        ResponseFactoryInterface $response_factory,
+        BasicAuthLoginExtractor $basic_auth_login_extractor,
+        string $config_dir_root
+    ) {
+        $this->response_factory           = $response_factory;
+        $this->basic_auth_login_extractor = $basic_auth_login_extractor;
+        $this->config_dir_root            = $config_dir_root;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -60,22 +72,14 @@ final class MetricsAuthentication implements MiddlewareInterface
         return $handler->handle($request);
     }
 
-
-    private function extractAuthentication(ServerRequestInterface $request) : BasicAuthCredential
+    private function extractAuthentication(ServerRequestInterface $request) : MetricsAuthCredential
     {
-        $authorization_header = $request->getHeaderLine('Authorization');
-        $match_success        = preg_match("/Basic\s+(.*)$/i", $authorization_header, $matches);
-        if ($match_success !== 1) {
-            return BasicAuthCredential::noCredentialSet();
-        }
-        $base64_encoded_basic_auth_credential = $matches[1];
-        $basic_auth_credential                = explode(':', base64_decode($base64_encoded_basic_auth_credential), 2);
-        if (count($basic_auth_credential) !== 2) {
-            return BasicAuthCredential::noCredentialSet();
+        $credential_set = $this->basic_auth_login_extractor->extract($request);
+        if ($credential_set === null) {
+            return MetricsAuthCredential::noCredentialSet();
         }
 
-        [$basic_auth_username, $basic_auth_password] = $basic_auth_credential;
-        return BasicAuthCredential::fromGivenInformation($basic_auth_username, new ConcealedString($basic_auth_password));
+        return MetricsAuthCredential::fromLoginCredentialSet($credential_set);
     }
 
     private function getSecret() : ConcealedString

@@ -24,30 +24,37 @@ namespace Tuleap\PrometheusMetrics;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Http\Server\Authentication\LoginCredentialSet;
 
-final class BasicAuthCredentialTest extends TestCase
+final class MetricsAuthCredentialTest extends TestCase
 {
     public function testCredentialDoesNotMatchWhenNoneWereSet() : void
     {
-        $basic_auth_credential = BasicAuthCredential::noCredentialSet();
+        $basic_auth_credential = MetricsAuthCredential::noCredentialSet();
         $this->assertFalse($basic_auth_credential->doesCredentialMatch('username', new ConcealedString('')));
     }
 
     public function testCredentialMatchesWhenUsernameAndPasswordAreCorrects() : void
     {
-        $basic_auth_credential = BasicAuthCredential::fromGivenInformation('username', new ConcealedString('password'));
+        $basic_auth_credential = MetricsAuthCredential::fromLoginCredentialSet(
+            new LoginCredentialSet('username', new ConcealedString('password'))
+        );
         $this->assertTrue($basic_auth_credential->doesCredentialMatch('username', new ConcealedString('password')));
     }
 
     public function testCredentialDoesNotMatchWhenUsernameIsIncorrect() : void
     {
-        $basic_auth_credential = BasicAuthCredential::fromGivenInformation('wrong', new ConcealedString('password'));
+        $basic_auth_credential = MetricsAuthCredential::fromLoginCredentialSet(
+            new LoginCredentialSet('wrong', new ConcealedString('password'))
+        );
         $this->assertFalse($basic_auth_credential->doesCredentialMatch('username', new ConcealedString('password')));
     }
 
     public function testCredentialDoesNotMatchWhenPasswordIsIncorrect() : void
     {
-        $basic_auth_credential = BasicAuthCredential::fromGivenInformation('username', new ConcealedString('wrong'));
+        $basic_auth_credential = MetricsAuthCredential::fromLoginCredentialSet(
+            new LoginCredentialSet('username', new ConcealedString('wrong'))
+        );
         $this->assertFalse($basic_auth_credential->doesCredentialMatch('username', new ConcealedString('password')));
     }
 }
