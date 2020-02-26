@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013-2018. All rights reserved.
+ * Copyright Enalean (c) 2013-present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,28 +22,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ .'/../../../../bootstrap.php';
-
-class BacklogItemPresenterCollectionTest extends TuleapTestCase
+final class BacklogItemPresenterCollectionTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function itReturnsFalseWhenCollectionIsEmpty()
+    public function testItReturnsFalseWhenCollectionIsEmpty(): void
     {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $this->assertFalse($collection->containsId(5));
     }
 
-    public function itReturnsTrueWhenItemBelongsToCollection()
+    public function testItReturnsTrueWhenItemBelongsToCollection(): void
     {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
-        $collection->push(stub('AgileDashboard_Milestone_Backlog_IBacklogItem')->id()->returns(5));
+        $item       = Mockery::mock(AgileDashboard_Milestone_Backlog_IBacklogItem::class);
+        $item->shouldReceive('id')->andReturn(5);
+        $collection->push($item);
         $this->assertTrue($collection->containsId(5));
     }
 
-    public function itReturnsFalseWhenItemDoesntBelongToCollection()
+    public function testItReturnsFalseWhenItemDoesntBelongToCollection(): void
     {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
-        $collection->push(stub('AgileDashboard_Milestone_Backlog_IBacklogItem')->id()->returns(5));
+        $item       = Mockery::mock(AgileDashboard_Milestone_Backlog_IBacklogItem::class);
+        $item->shouldReceive('id')->andReturn(5);
+        $collection->push($item);
         $this->assertFalse($collection->containsId(2));
     }
 }
