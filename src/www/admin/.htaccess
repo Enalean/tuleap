@@ -1,3 +1,0 @@
-<Files ~ "(approve-pending|approve_pending_users|groupedit).php">
-    php_flag register_globals off
-</Files>
