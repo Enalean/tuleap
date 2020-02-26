@@ -79,7 +79,6 @@ class ImportPropertiesExtractorTest extends TestCase
         $this->assertEquals($this->current_date, $properties->getUpdateDate());
         $this->assertEquals($this->current_user, $properties->getOwner());
         $this->assertNull($properties->getLinkUrl());
-        $this->assertNull($properties->getWikiPage());
     }
 
     public function testImportWithDescription(): void
@@ -224,18 +223,13 @@ class ImportPropertiesExtractorTest extends TestCase
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
             <item type="wiki">
-                <properties>
-                    <title>My document</title>
-                </properties>
-                <pagename>MyWikiPage</pagename>
             </item>
             EOS
         );
 
-        $properties = $this->properties_extractor->getImportProperties($node);
+        $this->expectException(UnknownItemTypeException::class);
 
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $properties->getItemTypeId());
-        $this->assertEquals('MyWikiPage', $properties->getWikiPage());
+        $this->properties_extractor->getImportProperties($node);
     }
 
     public function testImportLink(): void

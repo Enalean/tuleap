@@ -32,7 +32,6 @@ class NodeImporter
 {
     public const TYPE_FILE         = 'file';
     public const TYPE_EMBEDDEDFILE = 'embeddedfile';
-    public const TYPE_WIKI         = 'wiki';
     public const TYPE_LINK         = 'link';
     public const TYPE_EMPTY        = 'empty';
     public const TYPE_FOLDER       = 'folder';

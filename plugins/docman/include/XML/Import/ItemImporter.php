@@ -64,7 +64,6 @@ class ItemImporter
             $properties->getItemTypeId(),
             $properties->getCreateDate(),
             $properties->getUpdateDate(),
-            $properties->getWikiPage(),
             $properties->getLinkUrl()
         );
         $this->permissions_importer->importPermissions($parent_item, $item, $node);

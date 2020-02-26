@@ -30,23 +30,6 @@ class ImportPropertiesTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testWiki(): void
-    {
-        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
-        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner = Mockery::mock(PFUser::class);
-
-        $properties = ImportProperties::buildWiki('title', 'description', 'wiki page name', $create_date, $update_date, $owner);
-        $this->assertEquals('title', $properties->getTitle());
-        $this->assertEquals('description', $properties->getDescription());
-        $this->assertEquals($create_date, $properties->getCreateDate());
-        $this->assertEquals($update_date, $properties->getUpdateDate());
-        $this->assertEquals($owner, $properties->getOwner());
-        $this->assertEquals(null, $properties->getLinkUrl());
-        $this->assertEquals('wiki page name', $properties->getWikiPage());
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $properties->getItemTypeId());
-    }
-
     public function testLink(): void
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
@@ -60,7 +43,6 @@ class ImportPropertiesTest extends TestCase
         $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals('link url', $properties->getLinkUrl());
-        $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_LINK, $properties->getItemTypeId());
     }
 
@@ -77,7 +59,6 @@ class ImportPropertiesTest extends TestCase
         $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals(null, $properties->getLinkUrl());
-        $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $properties->getItemTypeId());
     }
 
@@ -94,7 +75,6 @@ class ImportPropertiesTest extends TestCase
         $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals(null, $properties->getLinkUrl());
-        $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $properties->getItemTypeId());
     }
 
@@ -111,7 +91,6 @@ class ImportPropertiesTest extends TestCase
         $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals(null, $properties->getLinkUrl());
-        $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FILE, $properties->getItemTypeId());
     }
 
@@ -128,7 +107,6 @@ class ImportPropertiesTest extends TestCase
         $this->assertEquals($update_date, $properties->getUpdateDate());
         $this->assertEquals($owner, $properties->getOwner());
         $this->assertEquals(null, $properties->getLinkUrl());
-        $this->assertEquals(null, $properties->getWikiPage());
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $properties->getItemTypeId());
     }
 }

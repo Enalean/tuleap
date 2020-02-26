@@ -898,7 +898,6 @@ class Docman_ItemFactory
         $item_type_id,
         DateTimeImmutable $create_date,
         DateTimeImmutable $update_date,
-        $wiki_page = null,
         $link_url = null
     ) {
         $row = [
@@ -912,7 +911,7 @@ class Docman_ItemFactory
             'status'            => $status_id,
             'obsolescence_date' => $obsolescence_date,
             'item_type'         => $item_type_id,
-            'wiki_page'         => $wiki_page,
+            'wiki_page'         => null,
             'link_url'          => $link_url
 
         ];

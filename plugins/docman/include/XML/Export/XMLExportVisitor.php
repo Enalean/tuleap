@@ -122,10 +122,18 @@ class XMLExportVisitor implements ItemVisitor
 
     public function visitWiki(Docman_Wiki $item, array $params = []): SimpleXMLElement
     {
-        $node = $this->visitDocument($item, $params);
-        $this->appendTextChild($node, 'pagename', $item->getPagename());
+        $this->logger->warning(
+            sprintf(
+                "Cannot export wiki item #%d (%s). Export/import of wiki documents is not supported.",
+                $item->getId(),
+                $item->getTitle()
+            )
+        );
 
-        return $node;
+        $xml = $params['xml'];
+        assert($xml instanceof SimpleXMLElement);
+
+        return $xml;
     }
 
     public function visitLink(Docman_Link $item, array $params = []): SimpleXMLElement
