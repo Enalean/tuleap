@@ -45,10 +45,10 @@
             v-else
             class="tlp-button-primary tlp-button-large tracker-creation-submit-button"
             type="submit"
-            form="tracker-creation-form"
             data-test="button-create-my-tracker"
             v-bind:class="{ 'tlp-button-disabled': !is_ready_to_submit || has_form_been_submitted }"
             v-bind:disabled="!is_ready_to_submit || has_form_been_submitted"
+            v-on:click="setCreationFormHasBeenSubmitted"
         >
             <translate>Create my tracker</translate>
             <i
@@ -63,7 +63,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Getter, State } from "vuex-class";
+import { Getter, State, Mutation } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
 
 @Component
@@ -82,6 +82,9 @@ export default class StepNavigationButtons extends Vue {
 
     @State
     readonly has_form_been_submitted!: boolean;
+
+    @Mutation
+    readonly setCreationFormHasBeenSubmitted!: () => void;
 
     goToNextStepIfGood(): void {
         if (this.is_ready_for_step_2) {

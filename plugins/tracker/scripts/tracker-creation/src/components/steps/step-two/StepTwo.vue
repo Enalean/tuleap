@@ -25,7 +25,6 @@
         <template v-slot:interactive_content>
             <form
                 ref="tracker_creation_form"
-                v-on:submit="setCreationFormHasBeenSubmitted"
                 method="post"
                 id="tracker-creation-form"
                 v-bind:enctype="form_enctype"
@@ -42,7 +41,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Mutation, State, Getter } from "vuex-class";
-import { Component } from "vue-property-decorator";
+import { Component, Watch, Ref } from "vue-property-decorator";
 import StepLayout from "../layout/StepLayout.vue";
 import StepTwoInfo from "./StepTwoInfo.vue";
 import FieldName from "./creation-fields/FieldName.vue";
@@ -63,9 +62,6 @@ import FieldCsrfToken from "./creation-fields/FieldCSRFToken.vue";
     }
 })
 export default class StepTwo extends Vue {
-    @Mutation
-    readonly setCreationFormHasBeenSubmitted!: () => void;
-
     @State
     readonly has_form_been_submitted!: boolean;
 
@@ -80,6 +76,16 @@ export default class StepTwo extends Vue {
 
     @State
     readonly selected_xml_file_input!: HTMLInputElement;
+
+    @Ref("tracker_creation_form")
+    readonly creation_form!: HTMLFormElement;
+
+    @Watch("has_form_been_submitted", { deep: true, immediate: true })
+    submitTheForm(current_value: boolean): void {
+        if (current_value === true) {
+            this.creation_form.submit();
+        }
+    }
 
     mounted(): void {
         if (this.is_a_duplication) {
