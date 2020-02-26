@@ -18,11 +18,11 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
 const assets_dir_path = path.resolve(
     __dirname,
-    "../../../../../src/www/assets/agiledashboard/planning-v2"
+    "../../../../src/www/assets/agiledashboard/planning-v2"
 );
 
 const webpack_config = {

@@ -5,7 +5,7 @@ import _ from "lodash";
 
 import BaseBacklogController from "./backlog-controller.js";
 import BacklogFilterValue from "../backlog-filter-terms.js";
-import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
 function createElement(tag_name, class_name) {
     const local_document = document.implementation.createHTMLDocument();

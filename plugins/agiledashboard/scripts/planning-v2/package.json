@@ -26,10 +26,10 @@
     "jquery": "^3.2.1"
   },
   "config": {
-    "bin": "../../../../../node_modules/.bin/"
+    "bin": "../../../../node_modules/.bin/"
   },
   "scripts": {
-    "build": "rm -rf ../../../../../src/www/assets/agiledashboard/planning-v2/* && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
+    "build": "rm -rf ../../../../src/www/assets/agiledashboard/planning-v2/** && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "test": "BABEL_ENV=test $npm_package_config_bin/jest",
     "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'"
   }
