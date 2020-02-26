@@ -182,12 +182,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                         switch ($request->get('func')) {
                             case 'docreate':
                                 if ($this->userCanCreateTracker($group_id)) {
-                                    if ($request->exist('preview_xml') && $request->get('preview_xml')) {
-                                        //todo: check that a file is uploaded
-                                        $this->displayTrackerPreview($_FILES["file"]["tmp_name"]);
-                                    } else {
-                                        $this->doCreateTracker($project, $request);
-                                    }
+                                      $this->doCreateTracker($project, $request);
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
                                 }
@@ -940,23 +935,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         }
         $html .= '</select>';
         return $html;
-    }
-
-    /**
-     * Preview of the tracker before import using XSL transformation
-     *
-     * @param string $filename The xml tracker structure
-     *
-     * @return void
-     */
-    protected function displayTrackerPreview($filename)
-    {
-        // inject xsl reference to the xml file
-        $xml = DOMDocument::load($filename);
-        $xslt = $xml->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="resources/tracker_preview.xsl"');
-        $xml->insertBefore($xslt, $xml->firstChild);
-        header('Content-Type: text/xml');
-        echo $xml->saveXML();
     }
 
     /**
