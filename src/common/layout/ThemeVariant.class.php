@@ -43,11 +43,11 @@ class ThemeVariant
         $this->allowed = array_map('trim', $this->allowed);
         $this->allowed = array_filter($this->allowed);
 
-        if (! is_file('../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php')) {
+        if (! is_file(__DIR__ . '/../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php')) {
             return;
         }
 
-        require_once '../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
+        require_once __DIR__ . '/../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
         $this->unsetInvalidThemes();
     }
 

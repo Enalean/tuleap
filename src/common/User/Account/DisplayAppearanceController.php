@@ -29,6 +29,8 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -78,6 +80,15 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
         }
 
         $layout->addCssAsset(new AccountCssAsset());
+        $layout->addJavascriptAsset(
+            new JavascriptAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../../../www/assets/account/scripts',
+                    '/assets/account/scripts',
+                ),
+                'appearance.js'
+            )
+        );
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);

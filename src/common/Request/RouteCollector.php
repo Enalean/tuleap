@@ -31,6 +31,7 @@ use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use MailManager;
 use SVN_TokenHandler;
 use TemplateRendererFactory;
+use ThemeVariant;
 use TroveCatDao;
 use TroveCatFactory;
 use Tuleap\Admin\AdminPageRenderer;
@@ -104,6 +105,7 @@ use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Account\AccessKeyPresenterBuilder;
 use Tuleap\User\Account\Appearance\AppareancePresenterBuilder;
 use Tuleap\User\Account\Appearance\LanguagePresenterBuilder;
+use Tuleap\User\Account\Appearance\ThemeColorPresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
 use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
 use Tuleap\User\Account\DisplayAppearanceController;
@@ -294,7 +296,8 @@ class RouteCollector
             TemplateRendererFactory::build(),
             DisplayAppearanceController::getCSRFToken(),
             new AppareancePresenterBuilder(
-                new LanguagePresenterBuilder(new \BaseLanguageFactory())
+                new LanguagePresenterBuilder(new \BaseLanguageFactory()),
+                new ThemeColorPresenterBuilder(new \ThemeVariant())
             )
         );
     }
@@ -303,7 +306,8 @@ class RouteCollector
         return new UpdateAppearancePreferences(
             DisplayAppearanceController::getCSRFToken(),
             \UserManager::instance(),
-            $GLOBALS['Language']
+            $GLOBALS['Language'],
+            new ThemeVariant()
         );
     }
 

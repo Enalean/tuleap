@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,26 +16,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\User\Account;
+namespace Tuleap\User\Account\Appearance;
 
-use Tuleap\Layout\CssAsset;
-use Tuleap\Layout\IncludeAssets;
-
-class AccountCssAsset extends CssAsset
+class ThemeColorPresenter
 {
-    public function __construct()
+    /**
+     * @var string
+     */
+    public $id;
+    /**
+     * @var string
+     */
+    public $text;
+    /**
+     * @var bool
+     */
+    public $selected;
+
+    public function __construct(\ThemeVariantColor $color, bool $is_selected)
     {
-        parent::__construct(
-            new IncludeAssets(
-                __DIR__ . '/../../../www/assets/account/css',
-                '/assets/account/css',
-            ),
-            'account'
-        );
+        $this->id       = $color->getName();
+        $this->text     = $color->getLabel();
+        $this->selected = $is_selected;
     }
 }

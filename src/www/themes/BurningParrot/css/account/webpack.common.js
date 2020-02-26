@@ -32,7 +32,7 @@ const project_registration_config = {
     entry: entry_points,
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(
-        path.resolve(__dirname, "../../../../assets/account")
+        path.resolve(__dirname, "../../../../assets/account/css")
     ),
     module: {
         rules: [webpack_configurator.rule_scss_loader]

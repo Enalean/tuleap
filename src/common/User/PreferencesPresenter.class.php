@@ -312,21 +312,6 @@ class User_PreferencesPresenter
         return $GLOBALS['Language']->getText('account_preferences', 'appearance');
     }
 
-    public function theme_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'theme');
-    }
-
-    public function default_theme()
-    {
-        return $GLOBALS['Language']->getText('global', 'default');
-    }
-
-    public function theme_variant_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'theme_variant');
-    }
-
     public function username_display_label()
     {
         return $GLOBALS['Language']->getText('account_options', 'username_display');

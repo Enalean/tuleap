@@ -15,15 +15,8 @@
                         </h1>
                     </div>
                     <section class="tlp-pane-section">
-                        <div class="tlp-form-element">
-                            <label class="tlp-label">{{# gettext }}Language{{/ gettext }}</label>
-                            {{# languages }}
-                                <label class="tlp-label tlp-radio">
-                                    <input type="radio" name="language_id" value="{{ id }}" {{# is_checked }}checked{{/ is_checked }}>
-                                    {{ label }}
-                                </label>
-                            {{/ languages }}
-                        </div>
+                        {{> appearance/language }}
+                        {{> appearance/color }}
                     </section>
                     <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit">
                         {{# csrf_token }}

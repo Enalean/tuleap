@@ -35,21 +35,6 @@ $request = HTTPRequest::instance();
 $csrf = new CSRFSynchronizerToken('/account/index.php');
 $csrf->check();
 
-$user_theme_variant = null;
-$requested_variant  = 'current_theme_variant';
-$theme_variant      = new ThemeVariant();
-if ($request->existAndNonEmpty($requested_variant)) {
-    $validator = new Valid_WhiteList(
-        'current_theme_variant',
-        $theme_variant->getAllowedVariants()
-    );
-    if ($request->valid($validator)) {
-        $user_theme_variant = $request->get($requested_variant);
-    } else {
-        $user_theme_variant = $theme_variant->getDefault();
-    }
-}
-
 $user_edition_default_format = null;
 $requested_default_format    = 'user_text_default_format';
 if ($request->existAndNonEmpty($requested_default_format)) {
@@ -117,10 +102,6 @@ user_set_preference("user_csv_dateformat", $user_csv_dateformat);
 
 if ($username_display !== null) {
     user_set_preference("username_display", $username_display);
-}
-
-if ($user_theme_variant) {
-    $user->setPreference('theme_variant', $user_theme_variant);
 }
 
 if ($user_edition_default_format) {

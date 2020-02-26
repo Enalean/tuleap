@@ -1,0 +1,9 @@
+<div class="tlp-form-element">
+    <label class="tlp-label">{{# gettext }}Language{{/ gettext }}</label>
+    {{# languages }}
+        <label class="tlp-label tlp-radio">
+            <input type="radio" name="language_id" value="{{ id }}" {{# is_checked }}checked{{/ is_checked }}>
+            {{ label }}
+        </label>
+    {{/ languages }}
+</div>

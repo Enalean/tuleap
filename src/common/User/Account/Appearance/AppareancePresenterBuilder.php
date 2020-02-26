@@ -32,10 +32,17 @@ class AppareancePresenterBuilder
      * @var LanguagePresenterBuilder
      */
     private $language_presenter_builder;
+    /**
+     * @var ThemeColorPresenterBuilder
+     */
+    private $color_presenter_builder;
 
-    public function __construct(LanguagePresenterBuilder $language_presenter_builder)
-    {
+    public function __construct(
+        LanguagePresenterBuilder $language_presenter_builder,
+        ThemeColorPresenterBuilder $color_presenter_builder
+    ) {
         $this->language_presenter_builder = $language_presenter_builder;
+        $this->color_presenter_builder    = $color_presenter_builder;
     }
 
     public function getAppareancePresenterForUser(
@@ -46,7 +53,8 @@ class AppareancePresenterBuilder
         return new AppearancePresenter(
             $csrf_token,
             $tabs,
-            $this->language_presenter_builder->getLanguagePresenterCollectionForUser($user)
+            $this->language_presenter_builder->getLanguagePresenterCollectionForUser($user),
+            $this->color_presenter_builder->getColorPresenterCollection($user)
         );
     }
 }

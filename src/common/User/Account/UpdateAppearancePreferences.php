@@ -26,6 +26,8 @@ namespace Tuleap\User\Account;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use ThemeVariant;
+use ThemeVariantColor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -45,12 +47,21 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
      * @var \BaseLanguage
      */
     private $language;
+    /**
+     * @var ThemeVariant
+     */
+    private $variant;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, UserManager $user_manager, \BaseLanguage $language)
-    {
+    public function __construct(
+        CSRFSynchronizerToken $csrf_token,
+        UserManager $user_manager,
+        \BaseLanguage $language,
+        ThemeVariant $variant
+    ) {
         $this->csrf_token   = $csrf_token;
         $this->user_manager = $user_manager;
         $this->language     = $language;
+        $this->variant      = $variant;
     }
 
     /**
@@ -65,9 +76,13 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
 
         $this->csrf_token->check(DisplayAppearanceController::URL);
 
-        $needs_update = $this->setNewLanguage($request, $layout, $user);
-        if (! $needs_update) {
+        $something_has_been_updated = $this->setNewColor($request, $layout, $user);
+
+        $needs_update_db = $this->prepareNewLanguage($request, $layout, $user);
+        if (! $needs_update_db && ! $something_has_been_updated) {
             $layout->addFeedback(Feedback::INFO, _('Nothing changed'));
+        } elseif (! $needs_update_db && $something_has_been_updated) {
+            $layout->addFeedback(Feedback::INFO, _('User preferences successfully updated'));
         } elseif ($this->user_manager->updateDb($user)) {
             $layout->addFeedback(Feedback::INFO, _('User preferences successfully updated'));
         } else {
@@ -77,7 +92,35 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         $layout->redirect(DisplayAppearanceController::URL);
     }
 
-    private function setNewLanguage(HTTPRequest $request, BaseLayout $layout, \PFUser $user): bool
+    private function setNewColor(HTTPRequest $request, BaseLayout $layout, \PFUser $user): bool
+    {
+        $color = (string) $request->get('color');
+        if (! $color) {
+            return false;
+        }
+
+        $current_theme_variant = $this->variant->getVariantForUser($user);
+        $current_color = ThemeVariantColor::buildFromVariant($current_theme_variant);
+
+        if ($current_color->getName() === $color) {
+            return false;
+        }
+
+        $new_variant = ThemeVariantColor::buildFromName($color)->getVariant();
+        if (! in_array($new_variant, $this->variant->getAllowedVariants(), true)) {
+            $layout->addFeedback(Feedback::ERROR, _('The chosen color is not allowed.'));
+            return false;
+        }
+
+        if (! $user->setPreference(ThemeVariant::PREFERENCE_NAME, $new_variant)) {
+            $layout->addFeedback(Feedback::ERROR, _('Unable to change the color.'));
+            return false;
+        }
+
+        return true;
+    }
+
+    private function prepareNewLanguage(HTTPRequest $request, BaseLayout $layout, \PFUser $user): bool
     {
         $language_id = (string) $request->get('language_id');
         if (! $language_id) {
@@ -86,6 +129,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
 
         if (! $this->language->isLanguageSupported($language_id)) {
             $layout->addFeedback(Feedback::ERROR, _('The submitted language is not supported.'));
+
             return false;
         }
 
@@ -94,6 +138,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         }
 
         $user->setLanguageID($language_id);
+
         return true;
     }
 }
