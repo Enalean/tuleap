@@ -64,6 +64,7 @@ class ItemImporter
             $properties->getItemTypeId(),
             $properties->getCreateDate(),
             $properties->getUpdateDate(),
+            null,
             $properties->getLinkUrl()
         );
         $this->permissions_importer->importPermissions($parent_item, $item, $node);
