@@ -10,7 +10,7 @@
         <h2>{{ kanban_title }}</h2>
         {{# is_user_admin }}
             {{# are_trackers_available }}
-                <a id="add_kanban_button" href="#add-kanban-modal" data-toggle="modal" class="btn add-kanban">
+                <a id="add_kanban_button" href="#add-kanban-modal" data-toggle="modal" class="btn add-kanban" data-test="add-kanban-button">
             {{/are_trackers_available }}
             {{^ are_trackers_available }}
                 <a id="add_kanban_button" data-toggle="tooltip" data-placement="right" title="{{ no_tracker_available }}" class="btn add-kanban disabled">
@@ -24,7 +24,7 @@
         {{# kanban_summary_presenters }}
         <div class="milestone">
             <div class="header">
-                <p class="title">{{ name }} </p>
+                <p class="title" data-test="kanban-home-kanban-title">{{ name }} </p>
             </div>
             <div class="content">
                 <div class="open"><span class="number">{{ count_open_kanban_items }}</span>{{ open }}</div>
@@ -44,6 +44,7 @@
         role="dialog"
         aria-labelledby="myModalLabel"
         aria-hidden="true"
+        data-test="add-kanban-modal"
 >
     <div class="modal-header">
         <h3> {{ add_kanban_modal_title }}</h3>
@@ -56,7 +57,7 @@
                      <div class="control-group">
                         <label class="control-label" for="kanban-name">{{ kanban_name_label }}</label>
                         <div class="controls">
-                            <input type="text" id="kanban-name" name="kanban-name" placeholder="Name" required>
+                            <input type="text" id="kanban-name" name="kanban-name" placeholder="Name" data-test="kanban-name" required>
                         </div>
                     </div>
                 </li>
@@ -64,7 +65,7 @@
                     <div class="control-group">
                         <label class="control-label" for="tracker-kanban">{{ tracker_kanban_label }}</label>
                         <div class="controls">
-                            <select id="tracker-kanban" name="tracker-kanban">
+                            <select id="tracker-kanban" name="tracker-kanban" data-test="tracker-kanban">
                                 {{# trackers }}
                                 <option value="{{ id }}" {{# used }} disabled {{/ used }}> {{ name }} </option>
                                 {{/ trackers }}
@@ -77,7 +78,7 @@
 
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true"> {{ btn_close_label }} </button>
-            <input type="submit" class="btn btn-primary" name="add-keys" value="{{ btn_add_modal_label }}">
+            <input type="submit" class="btn btn-primary" name="add-keys" value="{{ btn_add_modal_label }}" data-test="create-kanban-modal-submit">
         </div>
     </form>
 </div>
