@@ -144,7 +144,8 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         }
         $query['error']     = $error_code;
         $url_parts['query'] = http_build_query($query);
-        $error_url          = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . '?' . $url_parts['query'];
+        $path               = $url_parts['path'] ?? '';
+        $error_url          = $url_parts['scheme'] . '://' . $url_parts['host'] . $path . '?' . $url_parts['query'];
         return $this->response_factory->createResponse(302)
             ->withHeader('Location', $error_url);
     }
