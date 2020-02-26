@@ -396,11 +396,17 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             }
         } else {
             try {
-                $new_tracker = $this->getTrackerCreator()->duplicateTracker($project, $name, $name, $itemname, $atid_template);
+                $user = UserManager::instance()->getCurrentUser();
+                $new_tracker = $this->getTrackerCreator()->duplicateTracker($project, $name, $name, $itemname, $atid_template, $user);
             } catch (\Tuleap\Tracker\Creation\TrackerCreationHasFailedException $exception) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
                     dgettext("tuleap-tracker", "Tracker creation has failed.")
+                );
+            } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $exception->getTranslatedMessage()
                 );
             }
         }

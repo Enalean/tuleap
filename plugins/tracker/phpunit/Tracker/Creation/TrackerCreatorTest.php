@@ -117,7 +117,8 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
             "Tracker Name",
             "",
             "tracker-shortname",
-            "101"
+            "101",
+            Mockery::mock(\PFUser::class)
         );
 
         $this->assertEquals($tracker, $created_tracker);
@@ -145,7 +146,8 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
             "Tracker Name",
             "",
             "tracker-shortname",
-            "101"
+            "101",
+            Mockery::mock(\PFUser::class)
         );
     }
 }

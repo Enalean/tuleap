@@ -1092,6 +1092,12 @@ msgid "The submitted URL is not valid."
 msgstr "L'URL soumise n'est pas valide."
 
 #, php-format
+msgid "The template id %s used for tracker creation was not found."
+msgstr ""
+"Le patron avec l'identifiant %s utilisé pour la création de l'outil de suivi "
+"n'a pas été trouvé."
+
+#, php-format
 msgid "The text field '%s' cannot be compared to MYSELF()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à MYSELF()."
 

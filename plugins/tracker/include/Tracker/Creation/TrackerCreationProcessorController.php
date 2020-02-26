@@ -98,7 +98,8 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                 (string)$tracker_name,
                 (string)$tracker_description,
                 (string)$tracker_shortname,
-                (string)$tracker_template_id
+                (string)$tracker_template_id,
+                $user
             );
 
             $this->redirectToTrackerAdmin($tracker);
