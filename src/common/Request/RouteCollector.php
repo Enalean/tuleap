@@ -112,11 +112,13 @@ use Tuleap\User\Account\DisplayAppearanceController;
 use Tuleap\User\Account\DisplayExperimentalController;
 use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
+use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
 use Tuleap\User\Account\UpdateAppearancePreferences;
 use Tuleap\User\Account\UpdateExperimentalPreferences;
 use Tuleap\User\Account\UpdateNotificationsPreferences;
+use Tuleap\User\Account\UpdateSessionPreferencesController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
@@ -323,6 +325,23 @@ class RouteCollector
     public static function postExperimentalController(): DispatchableWithRequest
     {
         return new UpdateExperimentalPreferences(DisplayExperimentalController::getCSRFToken());
+    }
+
+    public static function getAccountSecurity(): DispatchableWithRequest
+    {
+        return new DisplaySecurityController(
+            EventManager::instance(),
+            TemplateRendererFactory::build(),
+            DisplaySecurityController::getCSRFToken(),
+        );
+    }
+
+    public function postAccountSecuritySession(): DispatchableWithRequest
+    {
+        return new UpdateSessionPreferencesController(
+            DisplaySecurityController::getCSRFToken(),
+            \UserManager::instance(),
+        );
     }
 
     public static function postAccountSSHKeyCreate(): DispatchableWithRequest
@@ -658,6 +677,9 @@ class RouteCollector
 
             $r->get('/experimental', [self::class, 'getExperimentalController']);
             $r->post('/experimental', [self::class, 'postExperimentalController']);
+
+            $r->get('/security', [self::class, 'getAccountSecurity']);
+            $r->post('/security/session', [self::class, 'postAccountSecuritySession']);
 
             $r->post('/avatar', [self::class, 'postAccountAvatar']);
             $r->post('/logout', [self::class, 'postLogoutAccount']);

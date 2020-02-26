@@ -292,21 +292,6 @@ class User_PreferencesPresenter
         return $GLOBALS['Language']->getText('account_options', 'preferences');
     }
 
-    public function user_has_sticky_login()
-    {
-        return $this->user->getStickyLogin();
-    }
-
-    public function session_label()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'session');
-    }
-
-    public function remember_me()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'remember_me', $GLOBALS['sys_name']);
-    }
-
     public function appearance_title()
     {
         return $GLOBALS['Language']->getText('account_preferences', 'appearance');

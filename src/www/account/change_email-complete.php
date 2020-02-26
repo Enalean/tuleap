@@ -20,5 +20,5 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
-$controller = new \Tuleap\User\Account\ChangePasswordController(UserManager::instance(), EventManager::instance());
+$controller = new \Tuleap\User\Account\ChangeEmailController(UserManager::instance(), EventManager::instance());
 $controller->complete(HTTPRequest::instance(), $GLOBALS['Response']);

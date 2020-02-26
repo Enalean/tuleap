@@ -23,7 +23,7 @@ namespace Tuleap\User\Account;
 
 use Tuleap\Layout\BaseLayout;
 
-class ChangePasswordController
+class ChangeEmailController
 {
     public const URL = '/account/change_email.php';
 
@@ -54,7 +54,7 @@ class ChangePasswordController
 
         $response->header(['title' =>_('Change email address')]);
 
-        $presenter = new ChangePasswordPresenter(
+        $presenter = new ChangeEmailPresenter(
             new \CSRFSynchronizerToken(self::URL),
             $current_user->getId()
         );

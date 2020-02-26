@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,22 +19,34 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\Account;
 
-class ChangePasswordPresenter
+use CSRFSynchronizerToken;
+
+/**
+ * @psalm-immutable
+ */
+final class SecurityPresenter
 {
     /**
-     * @var int
+     * @var AccountTabPresenterCollection
      */
-    public $user_id;
+    public $tabs;
     /**
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
+    /**
+     * @var bool
+     */
+    public $remember_me_activated;
 
-    public function __construct(\CSRFSynchronizerToken $csrf_token, $user_id)
+    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, \PFUser $user)
     {
+        $this->tabs = $tabs;
         $this->csrf_token = $csrf_token;
-        $this->user_id    = $user_id;
+        $this->remember_me_activated = (int) $user->getStickyLogin() === 1;
     }
 }
