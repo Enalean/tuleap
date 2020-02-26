@@ -58,6 +58,10 @@ class JenkinsServerDao extends DataAccessObject
 
         $rows = $this->getDB()->row($sql, $project_id, $jenkins_server_url);
 
+        if (empty($rows)) {
+            return false;
+        }
+
         return count($rows) > 0;
     }
 

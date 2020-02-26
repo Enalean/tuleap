@@ -494,7 +494,7 @@ XML;
 XML;
         $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
 
-        $this->event_manager->shouldReceive('processEvent')->times(2);
+        $this->event_manager->shouldReceive('processEvent')->times(3);
 
         $this->import(new SimpleXMLElement($xml));
     }

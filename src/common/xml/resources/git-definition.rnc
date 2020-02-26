@@ -1,3 +1,4 @@
+
 git = element repository {
     attribute bundle-path { xsd:string } &
     attribute name { xsd:string } &
@@ -42,6 +43,13 @@ git = element repository {
 
 element ugroups-admin {
     element ugroup { xsd:string }*
+}? &
+
+element jenkins-servers-admin {
+    element jenkins-server {
+        attribute url { xsd:string },
+        empty
+    }+
 }?
 
 user_last_push_date =

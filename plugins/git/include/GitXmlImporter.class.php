@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Events\XMLImportExternalContentEvent;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
@@ -178,8 +179,19 @@ class GitXmlImporter
         }
 
         $this->importAdmins($project, $xml_git->{"ugroups-admin"});
+        $this->importExternalContent($project, $xml_git);
 
         return true;
+    }
+
+    private function importExternalContent(Project $project, SimpleXMLElement $xml_git): void
+    {
+        $this->event_manager->processEvent(
+            new XMLImportExternalContentEvent(
+                $project,
+                $xml_git
+            )
+        );
     }
 
     private function importAdmins(Project $project, SimpleXMLElement $admins_xmlnode)
