@@ -23,6 +23,7 @@ import { render } from "mustache";
 import $ from "jquery";
 
 initThemeColorSelector();
+initAccessibilitySelector();
 
 function initThemeColorSelector(): void {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -70,5 +71,32 @@ function initThemeColorSelector(): void {
         const class_prefix = "user-preferences-section-appearance-preview-";
         colors.forEach((color: DataFormat) => preview.classList.remove(class_prefix + color.id));
         preview.classList.add(class_prefix + selector.value);
+    }
+}
+
+function initAccessibilitySelector(): void {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const selector = document.getElementById(
+        "user-preferences-accessibility-selector"
+    ) as HTMLInputElement;
+    if (!selector) {
+        return;
+    }
+
+    selector.addEventListener("change", changePreviewAccessibility);
+    changePreviewAccessibility();
+
+    function changePreviewAccessibility(): void {
+        const preview = document.getElementById("user-preferences-section-appearance-preview");
+        if (preview === null) {
+            return;
+        }
+
+        const classname = "user-preferences-section-appearance-preview-without-accessibility";
+        if (selector.checked) {
+            preview.classList.remove(classname);
+        } else {
+            preview.classList.add(classname);
+        }
     }
 }

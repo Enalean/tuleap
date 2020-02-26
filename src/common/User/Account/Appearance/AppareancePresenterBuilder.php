@@ -53,12 +53,15 @@ class AppareancePresenterBuilder
     ): AppearancePresenter {
         $is_condensed = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED;
 
+        $is_accessibility_enabled = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
+
         return new AppearancePresenter(
             $csrf_token,
             $tabs,
             $this->language_presenter_builder->getLanguagePresenterCollectionForUser($user),
             $this->color_presenter_builder->getColorPresenterCollection($user),
-            $is_condensed
+            $is_condensed,
+            $is_accessibility_enabled
         );
     }
 }

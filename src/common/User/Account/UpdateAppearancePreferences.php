@@ -79,6 +79,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
 
         $something_has_been_updated = $this->setNewColor($request, $layout, $user);
         $something_has_been_updated = $this->setNewDisplayDensity($request, $layout, $user) || $something_has_been_updated;
+        $something_has_been_updated = $this->setNewAccessibilityMode($request, $layout, $user) || $something_has_been_updated;
 
         $needs_update_db = $this->prepareNewLanguage($request, $layout, $user);
         if (! $needs_update_db && ! $something_has_been_updated) {
@@ -96,6 +97,24 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         }
 
         $layout->redirect(DisplayAppearanceController::URL);
+    }
+
+    private function setNewAccessibilityMode(HTTPRequest $request, BaseLayout $layout, \PFUser $user): bool
+    {
+        $has_accessibility   = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
+        $wants_accessibility = (bool) $request->get('accessibility_mode');
+
+        if ($has_accessibility === $wants_accessibility) {
+            return false;
+        }
+
+        if (! $user->setPreference(PFUser::ACCESSIBILITY_MODE, $wants_accessibility ? '1' : '0')) {
+            $layout->addFeedback(Feedback::ERROR, _('Unable to change the accessibility mode.'));
+
+            return false;
+        }
+
+        return true;
     }
 
     private function setNewDisplayDensity(HTTPRequest $request, BaseLayout $layout, \PFUser $user): bool
