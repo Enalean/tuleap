@@ -99,7 +99,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         $html .= '<td>';
         $html .= '<a href="/plugins/tracker/?tracker='. $mapping_tracker->getId() .'&func=admin">'. $this->purify($mapping_tracker->getName()) .'</a><br />';
         $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]" disabled="disabled">';
-        $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
+        $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
         foreach ($used_sb_fields as $sb_field) {
             $html .= '<option value="'. (int)$sb_field->getId() .'">'. $this->purify($sb_field->getLabel()) .'</option>';
         }
@@ -135,7 +135,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         $html .= '</td>';
         foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<td>';
-            $html .= $mapping->getSelectedValueLabel($column, '<em>'.$this->translate('plugin_cardwall', 'on_top_no_matching_for_column').'</em>');
+            $html .= $mapping->getSelectedValueLabel($column, '<em>'.$GLOBALS['Language']->getText('plugin_cardwall', 'on_top_no_matching_for_column').'</em>');
             $html .= '</td>';
         }
         return $html;
@@ -152,7 +152,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         $html .= '<td>';
         $html .= '<a href="/plugins/tracker/?tracker='. $mapping_tracker->getId() .'&func=admin">'. $this->purify($mapping_tracker->getName()) .'</a><br />';
         $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]">';
-        $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
+        $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
         foreach ($used_sb_fields as $sb_field) {
             $selected = $field == $sb_field ? 'selected="selected"' : '';
             $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $this->purify($sb_field->getLabel()) .'</option>';
@@ -178,7 +178,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         $name = 'custom_mapping['.(int)$mapping_tracker->getId() .']';
         $html .= '<p>';
         $html .= '<input type="hidden" name="'. $name .'" value="0" />';
-        $html .= '<label><input type="checkbox" name="'. $name .'" '.$selected.' value="1" /> '.$this->translate('plugin_cardwall', 'on_top_custom_mapping').'</label>';
+        $html .= '<label><input type="checkbox" name="'. $name .'" '.$selected.' value="1" /> '.$GLOBALS['Language']->getText('plugin_cardwall', 'on_top_custom_mapping').'</label>';
         $html .= '</p>';
         return $html;
     }
@@ -202,7 +202,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
             }
             $html .= '</select>';
         } else {
-            $html .= '<em>'. $this->translate('plugin_cardwall', 'on_top_no_values') .'</em>';
+            $html .= '<em>'. $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_no_values') .'</em>';
         }
 
         return $html;
@@ -211,9 +211,9 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
     protected function fetchSpeech()
     {
         if (! count($this->config->getDashboardColumns())) {
-            return $this->translate('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_no_column');
+            return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_no_column');
         } else {
-            return $this->translate('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_with_columns');
+            return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_with_columns');
         }
     }
 
@@ -259,7 +259,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
     protected function fetchAdditionalColumnHeader()
     {
         $suggestion = $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_suggestion', $this->getPlaceholderSuggestion());
-        return '<label>'. $this->translate('plugin_cardwall', 'on_top_new_column') . '<br /><input type="text" name="new_column" value="" placeholder="'. $suggestion  .'" /></label>';
+        return '<label>'. $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_new_column') . '<br /><input type="text" name="new_column" value="" placeholder="'. $suggestion  .'" /></label>';
     }
 
     /**
@@ -295,13 +295,5 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
     protected function purify($value)
     {
         return $this->hp->purify($value);
-    }
-
-    /**
-     * @return string
-     */
-    protected function translate($page, $category, $args = "")
-    {
-        return $GLOBALS['Language']->getText($page, $category, $args);
     }
 }
