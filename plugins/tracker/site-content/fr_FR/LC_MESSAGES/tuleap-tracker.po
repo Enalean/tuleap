@@ -1443,6 +1443,9 @@ msgstr "Workflow"
 msgid "Workflow mode is incompatible with PostAction of type %s"
 msgstr "Le mode du Workflow est incompatible avec la PostAction de type %s"
 
+msgid "XML file doesn't have correct format"
+msgstr "Le fichier XML a un format incorrect"
+
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
