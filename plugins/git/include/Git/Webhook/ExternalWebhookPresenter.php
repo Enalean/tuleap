@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,20 @@
 
 namespace Tuleap\Git\Webhook;
 
-class SectionOfWebhooksPresenter
+class ExternalWebhookPresenter implements WebhookPresenter
 {
     /**
      * @var string
      */
-    public $label;
+    public $webhook_url;
 
-    /**
-     * @var WebhookPresenter[]
-     */
-    public $webhooks;
-
-    public function __construct($label, array $webhooks)
+    public function __construct(string $webhook_url)
     {
-        $this->label    = $label;
-        $this->webhooks = $webhooks;
+        $this->webhook_url = $webhook_url;
+    }
+
+    public function isSimple(): bool
+    {
+        return true;
     }
 }

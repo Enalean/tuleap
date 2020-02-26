@@ -22,7 +22,7 @@ namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
 use Tuleap\Git\Webhook\WebhookSettingsPresenter;
 use Tuleap\Git\Webhook\CreateWebhookButtonPresenter;
-use Tuleap\Git\Webhook\WebhookPresenter;
+use Tuleap\Git\Webhook\GenericWebhookPresenter;
 use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
 use Tuleap\Git\Webhook\CreateWebhookModalPresenter;
 use Tuleap\Git\Webhook\EditWebhookModalPresenter;
@@ -150,7 +150,7 @@ class Hooks extends Pane
         foreach ($webhooks as $webhook) {
             $webhook_logs = $this->getLogsForWebhook($webhook);
 
-            $webhooks_presenters[] = new WebhookPresenter(
+            $webhooks_presenters[] = new GenericWebhookPresenter(
                 $this->repository,
                 $webhook->getId(),
                 $webhook->getUrl(),

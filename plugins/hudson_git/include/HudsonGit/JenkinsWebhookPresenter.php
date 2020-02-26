@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,13 @@
 
 namespace Tuleap\HudsonGit;
 
-use Tuleap\Git\Webhook\WebhookPresenter;
+use Tuleap\Git\Webhook\GenericWebhookPresenter;
 use Tuleap\Git\Webhook\WebhookLogPresenter;
 use Codendi_HTMLPurifier;
 use GitRepository;
 use CSRFSynchronizerToken;
 
-class JenkinsWebhookPresenter extends WebhookPresenter
+class JenkinsWebhookPresenter extends GenericWebhookPresenter
 {
     public function __construct(GitRepository $repository, $url, array $hooklogs, CSRFSynchronizerToken $csrf)
     {
