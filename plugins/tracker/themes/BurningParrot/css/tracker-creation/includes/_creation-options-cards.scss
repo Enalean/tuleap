@@ -19,9 +19,13 @@
 
 .tracker-creation-template-card {
     display: flex;
-    width: calc(50% - 10px);
+    width: calc(50% - #{$tlp-half-spacing});
     min-height: 120px;
-    margin: 0 10px 20px 0;
+    margin: 0 0 $tlp-spacing;
+
+    @media screen and (max-width: $creation-small-screen-width) {
+        width: 100%;
+    }
 
     .tracker-creation-template-card-radio-button {
         display: none;
