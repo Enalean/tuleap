@@ -129,6 +129,16 @@
               <ref name="docman_user_content"/>
             </element>
           </optional>
+          <optional>
+            <element name="label">
+              <data type="string"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="changelog">
+              <data type="string"/>
+            </element>
+          </optional>
           <element name="content">
             <data type="string"/>
           </element>

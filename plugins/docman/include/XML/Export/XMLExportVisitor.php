@@ -178,6 +178,16 @@ class XMLExportVisitor implements ItemVisitor
             $this->user_exporter->exportUserByUserId($user_id, $node, 'author');
         }
 
+        $label = $version->getLabel();
+        if ($label) {
+            $this->appendTextChild($node, 'label', $label);
+        }
+
+        $changelog = $version->getChangelog();
+        if ($changelog) {
+            $this->appendTextChild($node, 'changelog', $changelog);
+        }
+
         $file_name = 'documents/' . sprintf('content-%d.bin', $version->getId());
         $this->appendTextChild($node, 'content', $file_name);
         $this->archive->addFile($file_name, $version->getPath());
