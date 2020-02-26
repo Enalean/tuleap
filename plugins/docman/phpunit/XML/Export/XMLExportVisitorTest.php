@@ -104,15 +104,10 @@ class XMLExportVisitorTest extends TestCase
         $wiki = new \Docman_Wiki(['title' => 'My document', 'item_id' => 42, 'wiki_page' => 'WikiPage']);
         $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
-        $this->perms_exporter->shouldReceive('exportPermissions')->once();
-
-        $this->logger->shouldReceive('debug')->with('Exporting wiki item #42: My document')->once();
+        $this->logger->shouldReceive('warning')->with('Cannot export wiki item #42 (My document). Export/import of wiki documents is not supported.')->once();
         $this->visitor->export($xml, $wiki);
 
-        $this->assertEquals(
-            '<item type="wiki"><properties><title><![CDATA[My document]]></title></properties><pagename><![CDATA[WikiPage]]></pagename></item>',
-            $xml->item->asXML()
-        );
+        $this->assertEmpty($xml->item);
     }
 
     public function testLink(): void

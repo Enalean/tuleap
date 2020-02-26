@@ -61,7 +61,6 @@
           <ref name="docman_folder"/>
           <ref name="docman_file"/>
           <ref name="docman_embedded"/>
-          <ref name="docman_wiki"/>
           <ref name="docman_link"/>
           <ref name="docman_empty"/>
         </choice>
@@ -80,15 +79,6 @@
     </attribute>
     <ref name="docman_item"/>
     <element name="url">
-      <data type="string"/>
-    </element>
-  </define>
-  <define name="docman_wiki">
-    <attribute name="type">
-      <value>wiki</value>
-    </attribute>
-    <ref name="docman_item"/>
-    <element name="pagename">
       <data type="string"/>
     </element>
   </define>

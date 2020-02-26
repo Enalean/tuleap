@@ -89,17 +89,6 @@ class ImportPropertiesExtractor
                 $properties = ImportProperties::buildEmbedded($title, $description, $create_date, $update_date, $owner);
                 break;
 
-            case NodeImporter::TYPE_WIKI:
-                $properties = ImportProperties::buildWiki(
-                    $title,
-                    $description,
-                    (string) $node->pagename,
-                    $create_date,
-                    $update_date,
-                    $owner
-                );
-                break;
-
             case NodeImporter::TYPE_LINK:
                 $properties = ImportProperties::buildLink(
                     $title,

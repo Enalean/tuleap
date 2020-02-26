@@ -26,7 +26,6 @@ docman_folder =
             docman_folder |
             docman_file |
             docman_embedded |
-            docman_wiki |
             docman_link |
             docman_empty
         )
@@ -40,11 +39,6 @@ docman_link =
     attribute type { "link" },
     docman_item,
     element url { xsd:string }
-
-docman_wiki =
-    attribute type { "wiki" },
-    docman_item,
-    element pagename { xsd:string }
 
 docman_file =
     attribute type { "file" },

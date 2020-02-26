@@ -304,47 +304,6 @@ class NodeImporterTest extends TestCase
         $this->importer->import($node, $this->parent_item);
     }
 
-    public function testImportWiki(): void
-    {
-        $node = new SimpleXMLElement(
-            <<<EOS
-            <?xml version="1.0" encoding="UTF-8"?>
-            <item type="wiki">
-                <properties>
-                    <title>My document</title>
-                </properties>
-                <pagename>MyWikiPage</pagename>
-            </item>
-            EOS
-        );
-
-        $properties = ImportProperties::buildWiki(
-            'My document',
-            '',
-            'MyWikiPage',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
-            $this->user
-        );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
-
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing wiki: My document')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
-            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties)
-            ->once();
-
-
-        $this->importer->import($node, $this->parent_item);
-    }
-
     public function testImportLink(): void
     {
         $node = new SimpleXMLElement(

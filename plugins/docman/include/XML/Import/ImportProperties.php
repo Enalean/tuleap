@@ -42,10 +42,6 @@ final class ImportProperties
     /**
      * @var string|null
      */
-    private $wiki_page;
-    /**
-     * @var string|null
-     */
     private $link_url;
     /**
      * @var \DateTimeImmutable
@@ -67,7 +63,6 @@ final class ImportProperties
         \DateTimeImmutable $create_date,
         \DateTimeImmutable $update_date,
         PFUser $owner,
-        ?string $wiki_page,
         ?string $link_url
     ) {
         $this->title        = $title;
@@ -75,29 +70,8 @@ final class ImportProperties
         $this->item_type_id = $item_type_id;
         $this->create_date  = $create_date;
         $this->update_date  = $update_date;
-        $this->wiki_page    = $wiki_page;
         $this->link_url     = $link_url;
         $this->owner        = $owner;
-    }
-
-    public static function buildWiki(
-        string $title,
-        string $description,
-        string $wiki_page,
-        DateTimeImmutable $create_date,
-        DateTimeImmutable $update_date,
-        PFUser $owner
-    ): self {
-        return new self(
-            $title,
-            $description,
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
-            $create_date,
-            $update_date,
-            $owner,
-            $wiki_page,
-            null
-        );
     }
 
     public static function buildLink(
@@ -115,7 +89,6 @@ final class ImportProperties
             $create_date,
             $update_date,
             $owner,
-            null,
             $link_url
         );
     }
@@ -134,7 +107,6 @@ final class ImportProperties
             $create_date,
             $update_date,
             $owner,
-            null,
             null
         );
     }
@@ -153,7 +125,6 @@ final class ImportProperties
             $create_date,
             $update_date,
             $owner,
-            null,
             null
         );
     }
@@ -172,7 +143,6 @@ final class ImportProperties
             $create_date,
             $update_date,
             $owner,
-            null,
             null
         );
     }
@@ -191,7 +161,6 @@ final class ImportProperties
             $create_date,
             $update_date,
             $owner,
-            null,
             null
         );
     }
@@ -204,11 +173,6 @@ final class ImportProperties
     public function getItemTypeId(): int
     {
         return $this->item_type_id;
-    }
-
-    public function getWikiPage(): ?string
-    {
-        return $this->wiki_page;
     }
 
     public function getLinkUrl(): ?string
