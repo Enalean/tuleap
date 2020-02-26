@@ -186,14 +186,16 @@ class VersionImporterTest extends TestCase
             ->shouldReceive('create')
             ->with(
                 [
-                    'item_id'  => 13,
-                    'number'   => 1,
-                    'user_id'  => 101,
-                    'filename' => 'Pan-Pan-Artwork1.png',
-                    'filesize' => 799789,
-                    'filetype' => 'image/png',
-                    'path'     => $file_path,
-                    'date'     => $this->current_date->getTimestamp(),
+                    'item_id'   => 13,
+                    'number'    => 1,
+                    'user_id'   => 101,
+                    'filename'  => 'Pan-Pan-Artwork1.png',
+                    'filesize'  => 799789,
+                    'filetype'  => 'image/png',
+                    'path'      => $file_path,
+                    'date'      => $this->current_date->getTimestamp(),
+                    'label'     => '',
+                    'changelog' => ''
                 ]
             )->once()
             ->andReturnFalse();
@@ -230,14 +232,16 @@ class VersionImporterTest extends TestCase
             ->shouldReceive('create')
             ->with(
                 [
-                    'item_id'  => 13,
-                    'number'   => 1,
-                    'user_id'  => 101,
-                    'filename' => 'Pan-Pan-Artwork1.png',
-                    'filesize' => 799789,
-                    'filetype' => 'image/png',
-                    'path'     => $file_path,
-                    'date'     => $this->current_date->getTimestamp(),
+                    'item_id'   => 13,
+                    'number'    => 1,
+                    'user_id'   => 101,
+                    'filename'  => 'Pan-Pan-Artwork1.png',
+                    'filesize'  => 799789,
+                    'filetype'  => 'image/png',
+                    'path'      => $file_path,
+                    'date'      => $this->current_date->getTimestamp(),
+                    'label'     => '',
+                    'changelog' => ''
                 ]
             )->once()
             ->andReturn(Mockery::mock(Docman_Version::class));
@@ -261,14 +265,16 @@ class VersionImporterTest extends TestCase
             ->shouldReceive('create')
             ->with(
                 [
-                    'item_id'  => 13,
-                    'number'   => 1,
-                    'user_id'  => 103,
-                    'filename' => 'Pan-Pan-Artwork1.png',
-                    'filesize' => 799789,
-                    'filetype' => 'image/png',
-                    'path'     => $file_path,
-                    'date'     => $this->current_date->getTimestamp(),
+                    'item_id'   => 13,
+                    'number'    => 1,
+                    'user_id'   => 103,
+                    'filename'  => 'Pan-Pan-Artwork1.png',
+                    'filesize'  => 799789,
+                    'filetype'  => 'image/png',
+                    'path'      => $file_path,
+                    'date'      => $this->current_date->getTimestamp(),
+                    'label'     => '',
+                    'changelog' => ''
                 ]
             )->once()
             ->andReturn(Mockery::mock(Docman_Version::class));
@@ -316,14 +322,16 @@ class VersionImporterTest extends TestCase
             ->shouldReceive('create')
             ->with(
                 [
-                    'item_id'  => 13,
-                    'number'   => 1,
-                    'user_id'  => 101,
-                    'filename' => 'Pan-Pan-Artwork1.png',
-                    'filesize' => 799789,
-                    'filetype' => 'image/png',
-                    'path'     => $file_path,
-                    'date'     => 1234567890,
+                    'item_id'   => 13,
+                    'number'    => 1,
+                    'user_id'   => 101,
+                    'filename'  => 'Pan-Pan-Artwork1.png',
+                    'filesize'  => 799789,
+                    'filetype'  => 'image/png',
+                    'path'      => $file_path,
+                    'date'      => 1234567890,
+                    'label'     => '',
+                    'changelog' => ''
                 ]
             )->once()
             ->andReturn(Mockery::mock(Docman_Version::class));
@@ -336,6 +344,60 @@ class VersionImporterTest extends TestCase
                 <filetype>image/png</filetype>
                 <filesize>799789</filesize>
                 <date format="ISO8601">2009-02-14T00:31:30+01:00</date>
+                <content>documents/content-214.bin</content>
+            </version>
+            EOS
+        );
+
+        $this->importer->import($node, $this->item, 1);
+        $this->assertFileExists($file_path);
+    }
+
+    public function testSuccessfulImportWithLabelAndChangelog(): void
+    {
+        $root         = vfsStream::setup();
+        $created_file = vfsStream::newFile('file.png')->at($root);
+        $file_path    = $created_file->url();
+        $this->assertFileExists($file_path);
+
+        $this->docman_file_storage
+            ->shouldReceive('copy')
+            ->with(
+                $this->extraction_path . '/documents/content-214.bin',
+                'Pan-Pan-Artwork1.png',
+                114,
+                13,
+                1
+            )->once()
+            ->andReturn($file_path);
+
+        $this->version_factory
+            ->shouldReceive('create')
+            ->with(
+                [
+                    'item_id'   => 13,
+                    'number'    => 1,
+                    'user_id'   => 101,
+                    'filename'  => 'Pan-Pan-Artwork1.png',
+                    'filesize'  => 799789,
+                    'filetype'  => 'image/png',
+                    'path'      => $file_path,
+                    'date'      => $this->current_date->getTimestamp(),
+                    'label'     => 'The label',
+                    'changelog' => 'The changelog'
+                ]
+            )->once()
+            ->andReturn(Mockery::mock(Docman_Version::class));
+
+        $node = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <version>
+                <filename>Pan-Pan-Artwork1.png</filename>
+                <filetype>image/png</filetype>
+                <filesize>799789</filesize>
+                <label>The label</label>
+                <changelog>The changelog</changelog>
                 <content>documents/content-214.bin</content>
             </version>
             EOS

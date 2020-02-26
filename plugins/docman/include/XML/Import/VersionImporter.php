@@ -128,14 +128,16 @@ class VersionImporter
     ): void {
         $is_item_created = $this->version_factory->create(
             [
-                'item_id'  => $item->getId(),
-                'number'   => $version_number,
-                'user_id'  => $user->getId(),
-                'filename' => (string) $version->filename,
-                'filesize' => (int) $version->filesize,
-                'filetype' => (string) $version->filetype,
-                'path'     => $file_path,
-                'date'     => $date->getTimestamp(),
+                'item_id'   => $item->getId(),
+                'number'    => $version_number,
+                'user_id'   => $user->getId(),
+                'filename'  => (string) $version->filename,
+                'filesize'  => (int) $version->filesize,
+                'filetype'  => (string) $version->filetype,
+                'path'      => $file_path,
+                'date'      => $date->getTimestamp(),
+                'label'     => (string) $version->label,
+                'changelog' => (string) $version->changelog
             ]
         );
         if ($is_item_created === false) {

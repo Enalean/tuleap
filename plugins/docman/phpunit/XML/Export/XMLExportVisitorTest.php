@@ -149,17 +149,19 @@ class XMLExportVisitorTest extends TestCase
                             'path'     => '/titi',
                             'filetype' => 'image/png',
                             'filesize' => 4096,
-                            'filename' => 'titi.png'
+                            'filename' => 'titi.png',
+                            'label'    => 'The label'
                         ]
                     ),
                     new Docman_Version(
                         [
-                            'id'       => 142,
-                            'path'     => '/toto',
-                            'filetype' => 'image/png',
-                            'filesize' => 256,
-                            'filename' => 'toto.png',
-                            'date'     => 1234567890
+                            'id'        => 142,
+                            'path'      => '/toto',
+                            'filetype'  => 'image/png',
+                            'filesize'  => 256,
+                            'filename'  => 'toto.png',
+                            'date'      => 1234567890,
+                            'changelog' => 'The changelog'
                         ]
                     ),
                 ]
@@ -185,12 +187,14 @@ class XMLExportVisitorTest extends TestCase
                     <filetype><![CDATA[image/png]]></filetype>
                     <filesize><![CDATA[256]]></filesize>
                     <date format="ISO8601"><![CDATA[2009-02-14T00:31:30+01:00]]></date>
+                    <changelog><![CDATA[The changelog]]></changelog>
                     <content><![CDATA[documents/content-142.bin]]></content>
                   </version>
                   <version>
                     <filename><![CDATA[titi.png]]></filename>
                     <filetype><![CDATA[image/png]]></filetype>
                     <filesize><![CDATA[4096]]></filesize>
+                    <label><![CDATA[The label]]></label>
                     <content><![CDATA[documents/content-241.bin]]></content>
                   </version>
                 </versions>
