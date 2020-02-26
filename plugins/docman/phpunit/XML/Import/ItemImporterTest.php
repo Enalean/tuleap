@@ -53,7 +53,7 @@ class ItemImporterTest extends TestCase
 
         $item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('My document', 'The description', 13, 100, 0, 101, 3, $create_date, $update_date, 'https://example.test')
+            ->with('My document', 'The description', 13, 100, 0, 101, 3, $create_date, $update_date, null, 'https://example.test')
             ->once()
             ->andReturn($created_item);
 
