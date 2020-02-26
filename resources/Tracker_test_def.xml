@@ -23,11 +23,11 @@
           <description><![CDATA[A full description of the artifact]]></description>
           <properties rows="10" cols="103"/>
         </formElement>
-        <formElement type="ttmstepdef" ID="F38461" rank="2">
+        <externalField type="ttmstepdef" ID="F38461" rank="2">
           <name>steps</name>
           <label><![CDATA[Steps definition]]></label>
           <description><![CDATA[Definition of the test's steps]]></description>
-        </formElement>
+        </externalField>
         <formElement type="string" ID="F12747" rank="3">
           <name>automated_tests</name>
           <label><![CDATA[Automated tests]]></label>

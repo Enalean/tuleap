@@ -18,26 +18,4 @@
   <element name="description">
     <data type="string"/>
   </element>
-    <optional>
-        <element name="permissions">
-        <zeroOrMore>
-          <element name="permission">
-            <optional>
-              <attribute name="REF">
-                <data type="IDREF"/>
-              </attribute>
-            </optional>
-            <attribute name="scope">
-              <value>field</value>
-            </attribute>
-            <attribute name="ugroup">
-              <data type="string"/>
-            </attribute>
-            <attribute name="type">
-              <data type="string"/>
-            </attribute>
-          </element>
-        </zeroOrMore>
-      </element>
-    </optional>
 </element>
