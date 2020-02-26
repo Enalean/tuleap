@@ -75,19 +75,20 @@ class ExternalFieldsExtractorTest extends TestCase
                                      <name>steps</name>
                                      <label><![CDATA[Steps definition]]></label>
                                      <description><![CDATA[Definition of the test\'s steps]]></description>
-                                <permissions>
-                                 <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                                 <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-                                     <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-                                </permissions>
                                 </externalField>
                         </formElements>
+                          <permissions>
+                             <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                             <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                             <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                           </permissions>
                     </tracker>'
         );
 
         $this->event_manager->shouldReceive('processEvent')->once();
         $this->external_field_extractor->extractExternalFieldsFromFormElements($xml_input);
         $this->assertEquals([], $xml_input->xpath('externalField'));
+        $this->assertEquals([], $xml_input->xpath('permission'));
     }
 
     public function testItExtractMultipleExternalField()
@@ -122,11 +123,6 @@ class ExternalFieldsExtractorTest extends TestCase
                                          <name>steps</name>
                                          <label><![CDATA[Steps definition]]></label>
                                          <description><![CDATA[Definition of the test\'s steps]]></description>
-                                    <permissions>
-                                     <permission scope="field" REF="F1612" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                                     <permission scope="field" REF="F1612" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-                                     <permission scope="field" REF="F1612" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-                                    </permissions>
                                     </externalField>
                                 </formElements>
                             </formElement>
@@ -134,19 +130,23 @@ class ExternalFieldsExtractorTest extends TestCase
                                      <name>steps</name>
                                      <label><![CDATA[Steps definition]]></label>
                                      <description><![CDATA[Definition of the test\'s steps]]></description>
-                                <permissions>
-                                 <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                                 <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-                                 <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-                                </permissions>
                                 </externalField>
                         </formElements>
+                        <permissions>
+                            <permission scope="field" REF="F1612" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                            <permission scope="field" REF="F1612" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                            <permission scope="field" REF="F1612" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                            <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                            <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                            <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                        </permissions>
                     </tracker>'
         );
 
         $this->event_manager->shouldReceive('processEvent')->twice();
         $this->external_field_extractor->extractExternalFieldsFromFormElements($xml_input);
         $this->assertEquals([], $xml_input->xpath('externalField'));
+        $this->assertEquals([], $xml_input->xpath('permission'));
     }
 
     public function testItExtractMultipleExternalFieldFromProjectElement()
@@ -198,15 +198,15 @@ class ExternalFieldsExtractorTest extends TestCase
                                              <name>steps</name>
                                              <label><![CDATA[Steps definition]]></label>
                                              <description><![CDATA[Definition of the test\'s steps]]></description>
-                                        <permissions>
-                                         <permission scope="field" REF="F1612" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                                         <permission scope="field" REF="F1612" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-                                         <permission scope="field" REF="F1612" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-                                        </permissions>
                                         </externalField>
                                     </formElements>
                                 </formElement>
                             </formElements>
+                            <permissions>
+                                <permission scope="field" REF="F1612" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                                <permission scope="field" REF="F1612" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                                <permission scope="field" REF="F1612" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                            </permissions>
                         </tracker>
                         <tracker id="T102" parent_id="0" instantiate_for_new_projects="1">
                             <name><![CDATA[Name]]></name>
@@ -223,13 +223,13 @@ class ExternalFieldsExtractorTest extends TestCase
                                          <name>steps</name>
                                          <label><![CDATA[Steps definition]]></label>
                                          <description><![CDATA[Definition of the test\'s steps]]></description>
-                                    <permissions>
-                                     <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                                     <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-                                     <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-                                    </permissions>
                                     </externalField>
                             </formElements>
+                            <permissions>
+                                <permission scope="field" REF="F1602" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                                <permission scope="field" REF="F1602" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                                <permission scope="field" REF="F1602" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                            </permissions>
                         </tracker>
                     </trackers>
                 </project>'
@@ -238,5 +238,6 @@ class ExternalFieldsExtractorTest extends TestCase
         $this->event_manager->shouldReceive('processEvent')->twice();
         $this->external_field_extractor->extractExternalFieldFromProjectElement($xml_input);
         $this->assertEquals([], $xml_input->xpath('externalField'));
+        $this->assertEquals([], $xml_input->xpath('permission'));
     }
 }
