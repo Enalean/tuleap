@@ -19,6 +19,14 @@
 
 <template>
     <div class="project-release-timeframe">
+        <span class="project-release-label" v-if="last_release" v-translate>
+            Recently closed
+        </span>
+        <release-displayer
+            v-if="last_release"
+            v-bind:key="last_release.id"
+            v-bind:release_data="last_release"
+        />
         <span class="project-release-label" v-translate>Past</span>
         <div class="project-other-releases">
             <div class="project-release-time-stripe-icon">
@@ -44,13 +52,21 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
+import ReleaseDisplayer from "../WhatsHotSection/ReleaseDisplayer.vue";
+import { MilestoneData } from "../../type";
 
-@Component
+@Component({
+    components: {
+        ReleaseDisplayer
+    }
+})
 export default class PastSection extends Vue {
     @State
     readonly project_id!: number;
     @State
     readonly nb_past_releases!: number;
+    @State
+    readonly last_release!: MilestoneData | null;
     @Prop()
     readonly label_tracker_planning!: string;
 

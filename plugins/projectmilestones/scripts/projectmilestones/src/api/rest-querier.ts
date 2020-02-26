@@ -32,7 +32,8 @@ export {
     getMilestonesContent,
     getChartData,
     getNbOfClosedSprints,
-    getNbOfPastRelease
+    getNbOfPastRelease,
+    getLastRelease
 };
 
 function recursiveGetProjectMilestonesWithQuery(
@@ -134,4 +135,26 @@ async function getNbOfPastRelease({ project_id }: ParametersRequestWithId): Prom
     });
 
     return getPaginationSizeFromHeader(response.headers);
+}
+
+async function getLastRelease(
+    project_id: number,
+    nb_past_releases: number
+): Promise<MilestoneData[] | null> {
+    const query = JSON.stringify({
+        status: "closed"
+    });
+    if (nb_past_releases === 0) {
+        return null;
+    }
+
+    const milestones = await get(`/api/v1/projects/${encodeURIComponent(project_id)}/milestones`, {
+        params: {
+            limit: 1,
+            offset: nb_past_releases - 1,
+            query
+        }
+    });
+
+    return milestones.json();
 }

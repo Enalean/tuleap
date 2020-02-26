@@ -98,6 +98,9 @@ msgstr "Résumé"
 msgid "Past"
 msgstr "Passé"
 
+msgid "Recently closed"
+msgstr "Récemment fermé(e)"
+
 msgid "What's hot"
 msgstr "En cours"
 

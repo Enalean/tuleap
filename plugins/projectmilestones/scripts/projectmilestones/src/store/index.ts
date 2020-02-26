@@ -54,7 +54,8 @@ export function createStore(
         label_timeframe,
         user_can_view_sub_milestones_planning,
         burnup_mode,
-        nb_past_releases: 0
+        nb_past_releases: 0,
+        last_release: null
     };
 
     return new Vuex.Store({

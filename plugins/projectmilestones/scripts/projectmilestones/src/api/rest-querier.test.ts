@@ -23,7 +23,8 @@ import {
     getMilestonesContent,
     getChartData,
     getNbOfClosedSprints,
-    getNbOfPastRelease
+    getNbOfPastRelease,
+    getLastRelease
 } from "./rest-querier";
 
 import * as tlp from "tlp";
@@ -244,5 +245,41 @@ describe("getProject() -", () => {
         });
 
         expect(result).toEqual(10);
+    });
+
+    describe("getLastMiletsone", () => {
+        it("the REST API will be queried and the last closed milestone is returned", async () => {
+            const last_release: MilestoneData = {
+                label: "last",
+                id: 10
+            } as MilestoneData;
+
+            const tlpGetMock = jest.spyOn(tlp, "get");
+
+            mockFetchSuccess(tlpGetMock, {
+                headers: {
+                    // X-PAGINATION-SIZE
+                    get: (): number => 1
+                },
+                return_json: last_release
+            });
+
+            const query = JSON.stringify({
+                status: "closed"
+            });
+
+            const result = await getLastRelease(project_id, 100);
+            expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/milestones", {
+                params: { limit: 1, offset: 99, query }
+            });
+
+            expect(result).toEqual(last_release);
+        });
+
+        it("When there isn't last release, Then null is returned", async () => {
+            const result = await getLastRelease(project_id, 0);
+
+            expect(result).toEqual(null);
+        });
     });
 });

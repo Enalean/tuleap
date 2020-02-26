@@ -38,5 +38,9 @@ export default {
 
     setCurrentMilestones(state: State, milestones: MilestoneData[]): void {
         state.current_milestones = milestones;
+    },
+
+    setLastRelease(state: State, milestone: MilestoneData): void {
+        state.last_release = milestone;
     }
 };
