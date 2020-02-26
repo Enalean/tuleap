@@ -34,7 +34,7 @@
             name="tracker-xml-file"
             accept="text/xml"
             data-test="tracker-creation-xml-file-selector"
-            v-on:input="setTrackerToBeCreatedFromXml"
+            v-on:change="setTrackerToBeCreatedFromXml"
         />
         <p v-if="has_xml_file_error" class="tlp-text-danger tracker-creation-xml-file-error">
             <translate>The provided file is not a valid XML file</translate>
