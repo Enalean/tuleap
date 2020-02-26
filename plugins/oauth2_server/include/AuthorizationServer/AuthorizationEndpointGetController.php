@@ -44,7 +44,9 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
     private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
     public const  SCOPE_PARAMETER         = 'scope';
     private const ALLOWED_RESPONSE_TYPE   = 'code';
+    private const STATE_PARAMETER         = 'state';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
+    private const ERROR_PARAMETER            = 'error';
     private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     private const ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
     /**
@@ -116,14 +118,19 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             throw new ForbiddenException();
         }
 
+        $state_value = null;
+        if (isset($query_params[self::STATE_PARAMETER])) {
+            $state_value = $query_params[self::STATE_PARAMETER];
+        }
+
         if (! isset($query_params[self::RESPONSE_TYPE_PARAMETER]) || $query_params[self::RESPONSE_TYPE_PARAMETER] !== self::ALLOWED_RESPONSE_TYPE) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST, $redirect_uri);
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST, $redirect_uri, $state_value);
         }
 
         try {
             $scopes = $this->scope_extractor->extractScopes($query_params);
         } catch (InvalidOAuth2ScopeException $e) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_SCOPE, $redirect_uri);
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_SCOPE, $redirect_uri, $state_value);
         }
 
         $layout = $request->getAttribute(BaseLayout::class);
@@ -134,15 +141,21 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
     /**
      * @psalm-param self::ERROR_CODE_* $error_code See https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      */
-    private function buildErrorResponse(string $error_code, string $redirect_uri): ResponseInterface
-    {
+    private function buildErrorResponse(
+        string $error_code,
+        string $redirect_uri,
+        ?string $state_value
+    ): ResponseInterface {
         $url_parts = parse_url($redirect_uri);
         if (isset($url_parts['query'])) {
             parse_str($url_parts['query'], $query);
         } else {
             $query = [];
         }
-        $query['error']     = $error_code;
+        if ($state_value !== null) {
+            $query[self::STATE_PARAMETER] = $state_value;
+        }
+        $query[self::ERROR_PARAMETER]     = $error_code;
         $url_parts['query'] = http_build_query($query);
         $path               = $url_parts['path'] ?? '';
         $error_url          = $url_parts['scheme'] . '://' . $url_parts['host'] . $path . '?' . $url_parts['query'];
