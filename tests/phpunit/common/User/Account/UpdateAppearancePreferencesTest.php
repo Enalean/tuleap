@@ -96,6 +96,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('setLanguageID')->never();
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -127,6 +128,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('setLanguageID')->never();
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -165,6 +167,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('setLanguageID')->never();
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -199,6 +202,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('setLanguageID')->never();
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -230,6 +234,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('setLanguageID')->never();
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -271,6 +276,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('setLanguageID')->never();
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -303,11 +309,117 @@ class UpdateAppearancePreferencesTest extends TestCase
         $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
     }
 
+    public function testItDoesNothingIfUserStillDoesNotWantCondensed(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+        $user->shouldReceive('setPreference')->never();
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('display_density', '')
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
+    public function testItDoesNothingIfUserStillWantsCondensed(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('getPreference')->with('display_density')->andReturn('condensed');
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+        $user->shouldReceive('setPreference')->never();
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('display_density', 'condensed')
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
+    public function testItRemovesTheCondensedMode(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('getPreference')->with('display_density')->andReturn('condensed');
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+        $user->shouldReceive('delPreference')->with('display_density')->once()->andReturnTrue();
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('display_density', '')
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'User preferences successfully updated'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
     public function testItUpdatesTheUser(): void
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('setLanguageID')->with('en_US')->once();
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -319,10 +431,16 @@ class UpdateAppearancePreferencesTest extends TestCase
             ->with('theme_variant', 'FlamingParrot_Green')
             ->once()
             ->andReturnTrue();
+        $user
+            ->shouldReceive('setPreference')
+            ->with('display_density', 'condensed')
+            ->once()
+            ->andReturnTrue();
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withParam('language_id', 'en_US')
+            ->withParam('display_density', 'condensed')
             ->withParam('color', 'green')
             ->build();
 

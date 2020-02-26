@@ -47,6 +47,10 @@ final class AppearancePresenter
      * @var false|string
      */
     public $json_encoded_colors;
+    /**
+     * @var bool
+     */
+    public $is_condensed;
 
     /**
      * @param LanguagePresenter[]   $languages
@@ -56,11 +60,13 @@ final class AppearancePresenter
         CSRFSynchronizerToken $csrf_token,
         AccountTabPresenterCollection $tabs,
         array $languages,
-        array $colors
+        array $colors,
+        bool $is_condensed
     ) {
         $this->csrf_token          = $csrf_token;
         $this->tabs                = $tabs;
         $this->languages           = $languages;
         $this->json_encoded_colors = json_encode($colors);
+        $this->is_condensed        = $is_condensed;
     }
 }

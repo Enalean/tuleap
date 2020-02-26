@@ -464,7 +464,7 @@ msgid "Color"
 msgstr "Couleur"
 
 msgid "Comfortable"
-msgstr "Normale"
+msgstr "Confortable"
 
 msgid "Comment"
 msgstr "Commentaire"
@@ -602,8 +602,8 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
-msgid "Display density:"
-msgstr "Densité d'affichage :"
+msgid "Display density"
+msgstr "Densité d'affichage"
 
 msgid "Display platform statistics on home page."
 msgstr "Afficher les statistiques de la plateforme sur la page d'accueil."
@@ -2043,6 +2043,9 @@ msgstr ""
 
 msgid "Unable to change the color."
 msgstr "Impossible de changer la couleur."
+
+msgid "Unable to change the display density."
+msgstr "Impossible de changer la densité d'affichage."
 
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"

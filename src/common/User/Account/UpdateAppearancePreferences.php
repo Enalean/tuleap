@@ -26,6 +26,7 @@ namespace Tuleap\User\Account;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
 use Tuleap\Layout\BaseLayout;
@@ -77,19 +78,48 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         $this->csrf_token->check(DisplayAppearanceController::URL);
 
         $something_has_been_updated = $this->setNewColor($request, $layout, $user);
+        $something_has_been_updated = $this->setNewDisplayDensity($request, $layout, $user) || $something_has_been_updated;
 
         $needs_update_db = $this->prepareNewLanguage($request, $layout, $user);
         if (! $needs_update_db && ! $something_has_been_updated) {
             $layout->addFeedback(Feedback::INFO, _('Nothing changed'));
-        } elseif (! $needs_update_db && $something_has_been_updated) {
-            $layout->addFeedback(Feedback::INFO, _('User preferences successfully updated'));
-        } elseif ($this->user_manager->updateDb($user)) {
-            $layout->addFeedback(Feedback::INFO, _('User preferences successfully updated'));
         } else {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to update user preferences'));
+            if (! $needs_update_db && $something_has_been_updated) {
+                $layout->addFeedback(Feedback::INFO, _('User preferences successfully updated'));
+            } else {
+                if ($this->user_manager->updateDb($user)) {
+                    $layout->addFeedback(Feedback::INFO, _('User preferences successfully updated'));
+                } else {
+                    $layout->addFeedback(Feedback::ERROR, _('Unable to update user preferences'));
+                }
+            }
         }
 
         $layout->redirect(DisplayAppearanceController::URL);
+    }
+
+    private function setNewDisplayDensity(HTTPRequest $request, BaseLayout $layout, \PFUser $user): bool
+    {
+        $preference   = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY);
+        $is_condensed = $preference === PFUser::DISPLAY_DENSITY_CONDENSED;
+
+        $wants_condensed = (string) $request->get('display_density') === PFUser::DISPLAY_DENSITY_CONDENSED;
+
+        if ($is_condensed === $wants_condensed) {
+            return false;
+        }
+
+        if ($wants_condensed) {
+            $success = $user->setPreference(PFUser::PREFERENCE_DISPLAY_DENSITY, PFUser::DISPLAY_DENSITY_CONDENSED);
+        } else {
+            $success = $user->delPreference(PFUser::PREFERENCE_DISPLAY_DENSITY);
+        }
+
+        if (! $success) {
+            $layout->addFeedback(Feedback::ERROR, _('Unable to change the display density.'));
+        }
+
+        return $success;
     }
 
     private function setNewColor(HTTPRequest $request, BaseLayout $layout, \PFUser $user): bool
@@ -100,7 +130,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         }
 
         $current_theme_variant = $this->variant->getVariantForUser($user);
-        $current_color = ThemeVariantColor::buildFromVariant($current_theme_variant);
+        $current_color         = ThemeVariantColor::buildFromVariant($current_theme_variant);
 
         if ($current_color->getName() === $color) {
             return false;
@@ -109,11 +139,13 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         $new_variant = ThemeVariantColor::buildFromName($color)->getVariant();
         if (! in_array($new_variant, $this->variant->getAllowedVariants(), true)) {
             $layout->addFeedback(Feedback::ERROR, _('The chosen color is not allowed.'));
+
             return false;
         }
 
         if (! $user->setPreference(ThemeVariant::PREFERENCE_NAME, $new_variant)) {
             $layout->addFeedback(Feedback::ERROR, _('Unable to change the color.'));
+
             return false;
         }
 

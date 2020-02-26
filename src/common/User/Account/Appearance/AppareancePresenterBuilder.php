@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account\Appearance;
 
 use CSRFSynchronizerToken;
+use PFUser;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 class AppareancePresenterBuilder
@@ -50,11 +51,14 @@ class AppareancePresenterBuilder
         AccountTabPresenterCollection $tabs,
         \PFUser $user
     ): AppearancePresenter {
+        $is_condensed = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED;
+
         return new AppearancePresenter(
             $csrf_token,
             $tabs,
             $this->language_presenter_builder->getLanguagePresenterCollectionForUser($user),
-            $this->color_presenter_builder->getColorPresenterCollection($user)
+            $this->color_presenter_builder->getColorPresenterCollection($user),
+            $is_condensed
         );
     }
 }
