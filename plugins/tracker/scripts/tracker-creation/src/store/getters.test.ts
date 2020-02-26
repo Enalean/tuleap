@@ -57,7 +57,20 @@ describe("getters", () => {
                 active_option: CreationOptions.TRACKER_XML_FILE,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
-                has_xml_file_error: true
+                has_xml_file_error: true,
+                is_parsing_a_xml_file: false
+            } as State;
+
+            expect(getters.is_ready_for_step_2(state)).toBe(false);
+        });
+
+        it("Is not ready if TRACKER_XML_FILE option is selected but the selected XML file is being parsed", () => {
+            const state: State = {
+                active_option: CreationOptions.TRACKER_XML_FILE,
+                selected_tracker_template: null,
+                is_a_xml_file_selected: true,
+                has_xml_file_error: true,
+                is_parsing_a_xml_file: true
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(false);
@@ -68,7 +81,8 @@ describe("getters", () => {
                 active_option: CreationOptions.TRACKER_XML_FILE,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
-                has_xml_file_error: false
+                has_xml_file_error: false,
+                is_parsing_a_xml_file: false
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(true);

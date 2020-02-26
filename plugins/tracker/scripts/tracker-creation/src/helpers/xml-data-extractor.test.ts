@@ -20,14 +20,12 @@
 import { extractNameAndShortnameFromXmlFile } from "./xml-data-extractor";
 
 describe("xml-data-extractor", () => {
-    it("throws an error when the file is not a valid xml file", async () => {
+    it("throws an error when the file type is not text/xml", async () => {
         expect.assertions(1);
 
-        const file = new File(["I am not a xml file"], "message.txt");
+        const file = new File(["I am not a xml file"], "message.txt", { type: "text/plain" });
 
-        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
-            "The provided XML file does not provide any name and/or shortname"
-        );
+        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual("Not a xml file");
     });
 
     it("throws an error when the file does not contain a tracker name", async () => {
@@ -35,7 +33,8 @@ describe("xml-data-extractor", () => {
 
         const file = new File(
             [`<tracker instantiate_for_new_projects="1"></tracker>`],
-            "tracker.xml"
+            "tracker.xml",
+            { type: "text/xml" }
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
@@ -52,7 +51,8 @@ describe("xml-data-extractor", () => {
                     <name>Bugs</name>
                 </tracker>`
             ],
-            "tracker.xml"
+            "tracker.xml",
+            { type: "text/xml" }
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
@@ -70,7 +70,8 @@ describe("xml-data-extractor", () => {
                     <item_name>bugs_tracker</item_name>
                 </tracker>`
             ],
-            "tracker.xml"
+            "tracker.xml",
+            { type: "text/xml" }
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
@@ -88,7 +89,8 @@ describe("xml-data-extractor", () => {
                     <item_name></item_name>
                 </tracker>`
             ],
-            "tracker.xml"
+            "tracker.xml",
+            { type: "text/xml" }
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
@@ -104,7 +106,8 @@ describe("xml-data-extractor", () => {
                     <item_name>bugs_tracker</item_name>
                 </tracker>`
             ],
-            "tracker.xml"
+            "tracker.xml",
+            { type: "text/xml" }
         );
 
         const result = await extractNameAndShortnameFromXmlFile(file);

@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         has_form_been_submitted: false,
         is_a_xml_file_selected: false,
+        is_parsing_a_xml_file: false,
         has_xml_file_error: false
     };
 
