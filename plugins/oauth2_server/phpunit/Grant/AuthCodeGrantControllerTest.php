@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
+use Tuleap\OAuth2Server\App\OAuth2App;
 
 final class AuthCodeGrantControllerTest extends TestCase
 {
@@ -72,6 +73,7 @@ final class AuthCodeGrantControllerTest extends TestCase
         );
 
         $request = \Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
         $request->shouldReceive('getParsedBody')->andReturn(['grant_type' => 'authorization_code']);
 
         $response = $this->controller->handle($request);
@@ -82,6 +84,7 @@ final class AuthCodeGrantControllerTest extends TestCase
     public function testRejectsRequestThatDoesNotHaveAnExplicitGrantType(): void
     {
         $request = \Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
         $request->shouldReceive('getParsedBody')->andReturn(null);
 
         $this->response_builder->shouldNotReceive('buildResponse');
@@ -94,6 +97,7 @@ final class AuthCodeGrantControllerTest extends TestCase
     public function testRejectsRequestWithAnUnsupportedGrantType(): void
     {
         $request = \Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
         $request->shouldReceive('getParsedBody')->andReturn(['grant_type' => 'password']);
 
         $this->response_builder->shouldNotReceive('buildResponse');
@@ -101,5 +105,23 @@ final class AuthCodeGrantControllerTest extends TestCase
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_grant"}', $response->getBody()->getContents());
+    }
+
+    public function testRejectsRequestWhereTheClientHasNotBeenAuthenticated(): void
+    {
+        $request = \Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn(null);
+
+        $this->response_builder->shouldNotReceive('buildResponse');
+        $response = $this->controller->handle($request);
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('WWW-Authenticate'));
+        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
+        $this->assertJsonStringEqualsJsonString('{"error":"invalid_client"}', $response->getBody()->getContents());
+    }
+
+    private function buildOAuth2App(): OAuth2App
+    {
+        return new OAuth2App(1, 'name', 'https://example.com', \Mockery::mock(\Project::class));
     }
 }
