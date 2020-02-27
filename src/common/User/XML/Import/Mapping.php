@@ -46,9 +46,6 @@ class Mapping implements IFindUserFromXMLReference
         $this->logger       = $logger;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getUser(SimpleXMLElement $xml_element): PFUser
     {
         try {
