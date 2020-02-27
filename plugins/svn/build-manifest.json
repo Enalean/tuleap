@@ -1,14 +1,10 @@
 {
     "name": "svn",
-    "javascript": [
-        "www/scripts/svn-admin-notifications.js",
-        "www/scripts/svn-admin-notifications-popover.js"
-    ],
-    "components": ["www/scripts", "themes"],
+    "components": ["./"],
     "gettext-vue": {
         "permissions-per-group": {
-            "src": "www/scripts/permissions-per-group/src",
-            "po": "www/scripts/permissions-per-group/po"
+            "src": "scripts/permissions-per-group/src",
+            "po": "scripts/permissions-per-group/po"
         }
     }
 }

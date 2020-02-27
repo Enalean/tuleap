@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global tuleap:readonly jQuery:readonly */
+import jQuery from "jquery";
+import {
+    resetPlaceholder,
+    addDataToAutocompleter,
+    enableAutocompleter,
+    loadUserAndUgroupAutocompleter
+} from "../../../src/www/scripts/tuleap/user-and-ugroup-autocompleter";
 
 (function($) {
     document.addEventListener("DOMContentLoaded", function() {
@@ -67,7 +73,7 @@
                 hideEditMode();
                 add_row.classList.remove("svn-notifications-row-add-hidden");
                 add_button.classList.add("svn-notifications-add-hidden");
-                tuleap.resetPlaceholder("#add_email");
+                resetPlaceholder("#add_email");
             });
         }
 
@@ -114,11 +120,11 @@
                 selected_ugroups = JSON.parse(input.dataset.ugroups),
                 selected_users = JSON.parse(input.dataset.users),
                 selected_emails = JSON.parse(input.dataset.emails);
-            tuleap.addDataToAutocompleter(
+            addDataToAutocompleter(
                 input,
                 selected_ugroups.concat(selected_users).concat(selected_emails)
             );
-            tuleap.enableAutocompleter(input);
+            enableAutocompleter(input);
         }
 
         function initializeAutocompleter(input_id) {
@@ -129,8 +135,8 @@
             }
 
             [].forEach.call(inputs, function(input) {
-                tuleap.loadUserAndUgroupAutocompleter(input);
-                tuleap.addDataToAutocompleter(input);
+                loadUserAndUgroupAutocompleter(input);
+                addDataToAutocompleter(input);
             });
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
-
-module.exports = webpack_configurator.extendProdConfiguration(common);
+import "./svn-admin-notifications";
+import "./svn-admin-notifications-popover";
