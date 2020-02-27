@@ -42,6 +42,7 @@ use Tracker_Workflow_Trigger_RulesProcessor;
 use TrackerFactory;
 use TrackerXmlExport;
 use Tuleap\DB\DBFactory;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -93,7 +94,8 @@ class ArchiveAndDeleteArtifactTaskBuilder
                     $user_xml_exporter,
                     $event_manager,
                     new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
-                    new ArtifactLinksUsageDao()
+                    new ArtifactLinksUsageDao(),
+                    new ExternalFieldsExtractor($event_manager)
                 ),
                 new \Tuleap\XMLConvertor()
             ),

@@ -30,6 +30,7 @@ use Tracker_Artifact_XMLExport;
 use TrackerFactory;
 use TrackerXmlExport;
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -54,6 +55,10 @@ class TrackerXmlExportTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactLinksUsageDao
      */
     private $artifact_link_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExternalFieldsExtractor
+     */
+    private $external_field_extractor;
 
     public function setUp() : void
     {
@@ -80,6 +85,8 @@ class TrackerXmlExportTest extends TestCase
         $rng_validator = Mockery::mock(\XML_RNGValidator::class);
         $rng_validator->shouldReceive('validate');
 
+        $this->external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
+
         $this->xml_export = new TrackerXmlExport(
             $tracker_factory,
             $trigger_rules_manager,
@@ -88,7 +95,8 @@ class TrackerXmlExportTest extends TestCase
             Mockery::mock(\UserXMLExporter::class),
             Mockery::mock(\EventManager::class),
             $this->nature_presenter_factory,
-            $this->artifact_link_dao
+            $this->artifact_link_dao,
+            $this->external_field_extractor
         );
     }
 
@@ -103,6 +111,8 @@ class TrackerXmlExportTest extends TestCase
 
         $this->tracker1->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
         $this->tracker2->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
+
+        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromFormElements")->twice();
 
         $type = new NaturePresenter('fixed_in', '', '', true);
 
@@ -126,6 +136,8 @@ class TrackerXmlExportTest extends TestCase
 
         $this->tracker1->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
         $this->tracker2->shouldReceive('exportToXML')->never();
+
+        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromFormElements")->once();
 
         $type = new NaturePresenter('fixed_in', '', '', true);
 

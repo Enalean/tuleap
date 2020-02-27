@@ -42,6 +42,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\WorkerEvent;
@@ -1024,7 +1025,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $user_xml_exporter,
             EventManager::instance(),
             new NaturePresenterFactory(new NatureDao(), $artifact_link_usage_dao),
-            $artifact_link_usage_dao
+            $artifact_link_usage_dao,
+            new ExternalFieldsExtractor(EventManager::instance())
         );
     }
 
