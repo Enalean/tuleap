@@ -88,13 +88,17 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
+        $password_pre_update = $this->dispatcher->dispatch(new PasswordPreUpdateEvent($user));
+        assert($password_pre_update instanceof PasswordPreUpdateEvent);
+
         $layout->header(['title' => _('Security'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]);
         $this->renderer->renderToPage(
             'security',
             new SecurityPresenter(
                 $tabs,
                 $this->csrf_token,
-                $user
+                $user,
+                $password_pre_update
             )
         );
         $layout->footer([]);

@@ -118,6 +118,7 @@ use Tuleap\User\Account\SVNTokensPresenterBuilder;
 use Tuleap\User\Account\UpdateAppearancePreferences;
 use Tuleap\User\Account\UpdateExperimentalPreferences;
 use Tuleap\User\Account\UpdateNotificationsPreferences;
+use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\Account\UpdateSessionPreferencesController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
@@ -342,6 +343,11 @@ class RouteCollector
             DisplaySecurityController::getCSRFToken(),
             \UserManager::instance(),
         );
+    }
+
+    public function postAccountSecurityPassword(): DispatchableWithRequest
+    {
+        return UpdatePasswordController::buildSelf();
     }
 
     public static function postAccountSSHKeyCreate(): DispatchableWithRequest
@@ -680,6 +686,7 @@ class RouteCollector
 
             $r->get('/security', [self::class, 'getAccountSecurity']);
             $r->post('/security/session', [self::class, 'postAccountSecuritySession']);
+            $r->post('/security/password', [self::class, 'postAccountSecurityPassword']);
 
             $r->post('/avatar', [self::class, 'postAccountAvatar']);
             $r->post('/logout', [self::class, 'postLogoutAccount']);
