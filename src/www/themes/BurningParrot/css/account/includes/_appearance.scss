@@ -61,3 +61,78 @@
     color: $tlp-ui-white;
 }
 /* stylelint-enable selector-class-pattern */
+
+.user-preferences-section-appearance-form {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-preferences-section-appearance-preview,
+.user-preferences-section-appearance-fields {
+    width: calc(100% - #{$tlp-spacing});
+}
+
+.user-preferences-section-appearance-preview-text {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.user-preferences-section-appearance-preview-blue {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-blue;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-blue;
+    }
+}
+
+.user-preferences-section-appearance-preview-grey {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-grey;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-grey;
+    }
+}
+
+.user-preferences-section-appearance-preview-orange {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-orange;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-orange;
+    }
+}
+
+.user-preferences-section-appearance-preview-red {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-red;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-red;
+    }
+}
+
+.user-preferences-section-appearance-preview-green {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-green;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-green;
+    }
+}
+
+.user-preferences-section-appearance-preview-purple {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-purple;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-purple;
+    }
+}

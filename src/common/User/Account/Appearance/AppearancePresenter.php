@@ -51,6 +51,10 @@ final class AppearancePresenter
      * @var bool
      */
     public $is_condensed;
+    /**
+     * @var string
+     */
+    public $current_color;
 
     /**
      * @param LanguagePresenter[]   $languages
@@ -68,5 +72,12 @@ final class AppearancePresenter
         $this->languages           = $languages;
         $this->json_encoded_colors = json_encode($colors);
         $this->is_condensed        = $is_condensed;
+
+        $this->current_color = '';
+        foreach ($colors as $color) {
+            if ($color->selected) {
+                $this->current_color = $color->id;
+            }
+        }
     }
 }
