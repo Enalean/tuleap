@@ -40,7 +40,7 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
 {
     public const URL = '/account/keys-tokens';
 
-    public const MAIN_CLASSES = [ 'tlp-framed' ];
+    public const MAIN_CLASSES = [ 'tlp-framed', 'user-preferences-frame' ];
 
     /**
      * @var TemplateRenderer
