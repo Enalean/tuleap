@@ -24,11 +24,13 @@ use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
+use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher
 {
@@ -373,13 +375,19 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 return;
             }
 
-            $new_tracker = $this->getTrackerCreator()->createTrackerFromXml(
-                $project,
-                $_FILES["tracker_new_xml_file"]["tmp_name"],
-                $name,
-                $description,
-                $itemname
-            );
+            try {
+                $new_tracker = $this->getTrackerCreator()->createTrackerFromXml(
+                    $project,
+                    $_FILES["tracker_new_xml_file"]["tmp_name"],
+                    $name,
+                    $description,
+                    $itemname
+                );
+            } catch (TrackerIsInvalidException $exception) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getTranslatedMessage());
+            } catch (Tracker_Exception|TrackerCreationHasFailedException $exception) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+            }
         } elseif ($request->get('create_mode') == 'tv3') {
             $atid = $request->get('tracker_new_tv3');
             $user = UserManager::instance()->getCurrentUser();
@@ -407,7 +415,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         }
 
         if ($new_tracker) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&tracker='. $new_tracker->id);
+            $GLOBALS['Response']->redirect(
+                TRACKER_BASE_URL.'/?group_id='. urlencode($project->group_id) .'&tracker='. urlencode($new_tracker->id)
+            );
         } else {
             $tracker_template = $this->getTrackerFactory()->getTrackerById($atid_template);
             $this->displayCreateTracker($project, $request, $name, $description, $itemname, $tracker_template);

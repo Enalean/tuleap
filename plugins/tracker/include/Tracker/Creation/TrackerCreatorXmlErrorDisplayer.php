@@ -64,11 +64,13 @@ class TrackerCreatorXmlErrorDisplayer
         $params      = [];
 
         $this->tracker_manager->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
+        echo '<main class="tlp-framed">';
         echo '<h2>XML file doesnt have correct format</h2>';
 
         $errors = $this->buildErrors($parse_errors);
 
         echo $this->buildErrorLineDiff($xml_file, $errors);
+        echo '</main>';
         $this->tracker_manager->displayFooter($project);
         exit;
     }

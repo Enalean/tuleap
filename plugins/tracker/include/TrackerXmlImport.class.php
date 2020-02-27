@@ -31,6 +31,7 @@ use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerFromXmlImportCannotBeUpdatedException;
+use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -268,10 +269,12 @@ class TrackerXmlImport
     /**
      *
      * @param $extraction_path
+     *
      * @return Tracker[]|void
      * @throws TrackerFromXmlException
      * @throws TrackerFromXmlImportCannotBeCreatedException
      * @throws Tracker_Exception
+     * @throws XML_ParseException
      */
     public function import(
         ImportConfig $configuration,
@@ -561,38 +564,40 @@ class TrackerXmlImport
 
     /**
      * protected for testing purpose
-     * @return Tracker the link between xml id and new id given by Tuleap
      *
      * @throws TrackerFromXmlException
      * @throws TrackerFromXmlImportCannotBeCreatedException
+     * @throws TrackerFromXmlImportCannotBeUpdatedException
      * @throws Tracker_Exception
+     * @throws XML_ParseException
      */
     protected function instantiateTrackerFromXml(
         Project $project,
         SimpleXMLElement $xml_tracker,
         ImportConfig $configuration
-    ) {
+    ): Tracker {
         $tracker_existing = $this->getTrackerToReUse($project, $xml_tracker, $configuration);
         if ($tracker_existing !== null) {
             return $tracker_existing;
         }
 
         if ($configuration->isUpdate()) {
-            $tracker_created = $this->updateFromXML($project, $xml_tracker);
-        } else {
-            $tracker_created = $this->createFromXML(
+            return $this->updateFromXML($project, $xml_tracker);
+        }
+
+        try {
+            return $this->createFromXML(
                 $xml_tracker,
                 $project,
-                (String)$xml_tracker->name,
-                (String)$xml_tracker->description,
-                (String)$xml_tracker->item_name
+                (String) $xml_tracker->name,
+                (String) $xml_tracker->description,
+                (String) $xml_tracker->item_name
             );
-
-            if (! $tracker_created) {
-                throw new TrackerFromXmlImportCannotBeCreatedException((String)$xml_tracker->name);
-            }
+        } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
+            $this->feedback_collector->addErrors($exception->getTranslatedMessage());
+            $this->feedback_collector->displayErrors($this->logger);
+            throw new TrackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name);
         }
-        return $tracker_created;
     }
 
     /**
@@ -657,80 +662,81 @@ class TrackerXmlImport
      *
      * @param type $filepath
      *
-     * @throws TrackerFromXmlException
      * @return Tracker
+     * @throws TrackerFromXmlException
      * @throws Tracker_Exception
+     * @throws XML_ParseException
      */
     public function createFromXMLFile(Project $project, $filepath)
     {
-        $xml_security = new XML_Security();
-        $tracker_xml = $xml_security->loadFile($filepath);
-        if ($tracker_xml !== false) {
-            $name        = $tracker_xml->name;
-            $description = $tracker_xml->description;
-            $item_name   = $tracker_xml->item_name;
+        $tracker_xml = $this->loadXmlFile($filepath);
+        if (! $tracker_xml) {
+            return null;
+        }
+
+        try {
+            $name        = (string)$tracker_xml->name;
+            $description = (string)$tracker_xml->description;
+            $item_name   = (string)$tracker_xml->item_name;
 
             return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name);
+        } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
+            $this->feedback_collector->addErrors($exception->getTranslatedMessage());
+            $this->feedback_collector->displayErrors($this->logger);
+            return null;
         }
     }
 
     public function getTrackerItemNameFromXMLFile($filepath)
     {
-        $xml_security = new XML_Security();
-        $tracker_xml = $xml_security->loadFile($filepath);
+        $tracker_xml = $this->loadXmlFile($filepath);
         if ($tracker_xml !== false) {
             return (string)$tracker_xml->item_name;
         }
     }
 
     /**
-     *
-     * @param string $filepath
-     * @param string $name
-     * @param string $description
-     * @param string $item_name
-     *
-     * @return Tracker|null
      * @throws TrackerFromXmlException
      * @throws Tracker_Exception
+     * @throws XML_ParseException
+     * @throws \Tuleap\Tracker\TrackerIsInvalidException
      */
-    public function createFromXMLFileWithInfo(Project $project, $filepath, $name, $description, $item_name)
-    {
-        $xml_security = new XML_Security();
-        $tracker_xml  = $xml_security->loadFile($filepath);
-        if ($tracker_xml) {
-            $event = new CreateTrackerFromXMLEvent($project, $tracker_xml);
-            $this->event_manager->processEvent($event);
-
-            return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name);
+    public function createFromXMLFileWithInfo(
+        Project $project,
+        string $filepath,
+        string $name,
+        string $description,
+        string $item_name
+    ): Tracker {
+        $tracker_xml = $this->loadXmlFile($filepath);
+        if (! $tracker_xml) {
+            throw TrackerIsInvalidException::invalidXmlFile();
         }
+        $event = new CreateTrackerFromXMLEvent($project, $tracker_xml);
+        $this->event_manager->processEvent($event);
+
+        return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name);
     }
 
     /**
      * First, creates a new Tracker Object by importing its structure from an XML file,
      * then, imports it into the Database, before verifying the consistency
      *
-     * @param SimpleXMLElement $xml_element the location of the imported file
-     * @param Project $project the project to create the tracker
-     * @param string $name the name of the tracker (label)
-     * @param string $description the description of the tracker
-     * @param string $itemname the short name of the tracker
-     *
-     * @return null|Tracker or null if error
      * @throws TrackerFromXmlException
      * @throws Tracker_Exception
+     * @throws XML_ParseException
+     * @throws \Tuleap\Tracker\TrackerIsInvalidException
      */
-    public function createFromXML(SimpleXMLElement $xml_element, Project $project, $name, $description, $itemname)
-    {
+    public function createFromXML(
+        SimpleXMLElement $xml_element,
+        Project $project,
+        string $name,
+        string $description,
+        string $itemname
+    ): Tracker {
         $tracker = null;
         $partial_element = new SimpleXMLElement((string)$xml_element->asXML());
-        try {
-            $this->creation_data_checker->checkAtProjectCreation((int)$project->getId(), (string)$name, (string)$itemname);
-        } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
-            $this->feedback_collector->addErrors($exception->getTranslatedMessage());
-            $this->feedback_collector->displayErrors($this->logger);
-            return;
-        }
+        $this->creation_data_checker->checkAtProjectCreation((int)$project->getId(), $name, $itemname);
 
         $this->external_fields_extractor->extractExternalFieldsFromFormElements($partial_element->formElements);
 
@@ -783,7 +789,6 @@ class TrackerXmlImport
     }
 
     /**
-     * @return Tracker
      * @throws Tracker_Exception
      */
     protected function getInstanceFromXML(
@@ -792,7 +797,7 @@ class TrackerXmlImport
         string $name,
         string $description,
         string $itemname
-    ) {
+    ): Tracker {
         $row     = $this->setTrackerGeneralInformation($xml, $project, $name, $description, $itemname);
         $tracker = $this->tracker_factory->getInstanceFromRow($row);
 
@@ -1165,5 +1170,12 @@ class TrackerXmlImport
                     break;
             }
         }
+    }
+
+    protected function loadXmlFile(string $filepath)
+    {
+        $xml_security = new XML_Security();
+
+        return $xml_security->loadFile($filepath);
     }
 }

@@ -1057,6 +1057,9 @@ msgstr ""
 msgid "The provided file is invalid"
 msgstr "Le fichier fourni est invalide"
 
+msgid "The provided file is not a valid file"
+msgstr "Le fichier fourni est invalide"
+
 msgid ""
 "The query is considered too complex to be executed by the server.\n"
 "                                Please simplify it (e.g remove comparisons) "

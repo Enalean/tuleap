@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\Creation;
 
 use HTTPRequest;
 use Project;
+use Tracker_Exception;
+use TrackerFromXmlException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerCreationProcessorController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
@@ -67,12 +67,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
     }
 
     /**
-     * Is able to process a request routed by FrontRouter
-     *
-     * @param array $variables
-     *
-     * @throws NotFoundException
-     * @throws ForbiddenException
+     * @inheritDoc
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
@@ -93,36 +88,47 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $tracker_template_id = $request->get('tracker-template-id');
 
         try {
-            $tracker = $this->tracker_creator->duplicateTracker(
-                $project,
-                (string)$tracker_name,
-                (string)$tracker_description,
-                (string)$tracker_shortname,
-                (string)$tracker_template_id,
-                $user
-            );
+            if ($tracker_template_id) {
+                $tracker = $this->tracker_creator->duplicateTracker(
+                    $project,
+                    (string) $tracker_name,
+                    (string) $tracker_description,
+                    (string) $tracker_shortname,
+                    (string) $tracker_template_id,
+                    $user
+                );
+            } else {
+                $file    = $_FILES;
+                $tracker = $this->tracker_creator->createTrackerFromXml(
+                    $project,
+                    $file['tracker-xml-file']['tmp_name'],
+                    (string) $tracker_name,
+                    (string) $tracker_description,
+                    (string) $tracker_shortname
+                );
+            }
 
             $this->redirectToTrackerAdmin($tracker);
         } catch (TrackerCreationHasFailedException $exception) {
-             $this->redirectToTrackerCreation(
-                 $project,
-                 dgettext('tuleap-tracker', 'An error occured while creating the tracker.')
-             );
+            $this->redirectToTrackerCreation(
+                $project,
+                dgettext('tuleap-tracker', 'An error occured while creating the tracker.')
+            );
         } catch (TrackerIsInvalidException $exception) {
             $this->redirectToTrackerCreation(
                 $project,
                 $exception->getTranslatedMessage()
             );
+        } catch (Tracker_Exception|TrackerFromXmlException|\XML_ParseException $exception) {
+            $this->redirectToTrackerCreation(
+                $project,
+                $exception->getMessage()
+            );
         }
     }
 
     /**
-     * Return the project that corresponds to current URI
-     *
-     * This part of controller is needed when you implement a new route without providing a $group_id.
-     * It's the preferred way to deal with those kind of URLs over Event::GET_PROJECTID_FROM_URL
-     *
-     * @param array $variables
+     * @inheritDoc
      */
     public function getProject(array $variables) : Project
     {
