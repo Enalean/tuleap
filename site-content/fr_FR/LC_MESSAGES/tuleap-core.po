@@ -153,9 +153,6 @@ msgstr "Accès à l'API REST"
 msgid "Accesses from less than %s might not be visible"
 msgstr "Les accès d'il y a moins de %s peuvent ne pas apparaître"
 
-msgid "Accessibility"
-msgstr "Accessibilité"
-
 #, php-format
 msgid ""
 "Account %s is restricted and the project does not allow restricted users. "
@@ -2050,6 +2047,9 @@ msgstr ""
 "efficacement et de meilleure qualité.\n"
 "Venez planifier, suivre, développer & collaborer sur vos projets logiciels."
 
+msgid "Unable to change the accessibility mode."
+msgstr "Impossible de changer le mode d'accessibilité."
+
 msgid "Unable to change the color."
 msgstr "Impossible de changer la couleur."
 
@@ -2164,9 +2164,6 @@ msgstr "Groupes d'utilisateurs"
 
 msgid "Users groups bound to this one"
 msgstr "Groupes liés à celui-ci"
-
-msgid "Verify accessiblity mode value"
-msgstr "Vérifiez la valeur du mode d'accessibilité"
 
 msgid "View members"
 msgstr "Voir les membres"

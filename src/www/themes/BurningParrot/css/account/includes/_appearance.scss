@@ -69,7 +69,7 @@
 
 .user-preferences-section-appearance-preview,
 .user-preferences-section-appearance-fields {
-    width: calc(100% - #{$tlp-spacing});
+    width: calc(50% - #{$tlp-spacing});
 }
 
 .user-preferences-section-appearance-preview-text {
@@ -135,4 +135,8 @@
     > .user-preferences-section-appearance-preview-color-stroke {
         stroke: $tlp-theme-purple;
     }
+}
+
+.user-preferences-section-appearance-preview-without-accessibility > .user-preferences-section-appearance-preview-accessibility {
+    display: none;
 }

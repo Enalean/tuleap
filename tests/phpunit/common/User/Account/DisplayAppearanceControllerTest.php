@@ -97,6 +97,7 @@ class DisplayAppearanceControllerTest extends TestCase
                     M::mock(AccountTabPresenterCollection::class),
                     [],
                     [],
+                    true,
                     true
                 )
             );

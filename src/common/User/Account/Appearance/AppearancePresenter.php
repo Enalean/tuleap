@@ -55,6 +55,10 @@ final class AppearancePresenter
      * @var string
      */
     public $current_color;
+    /**
+     * @var bool
+     */
+    public $is_accessibility_enabled;
 
     /**
      * @param LanguagePresenter[]   $languages
@@ -65,13 +69,15 @@ final class AppearancePresenter
         AccountTabPresenterCollection $tabs,
         array $languages,
         array $colors,
-        bool $is_condensed
+        bool $is_condensed,
+        bool $is_accessibility_enabled
     ) {
-        $this->csrf_token          = $csrf_token;
-        $this->tabs                = $tabs;
-        $this->languages           = $languages;
-        $this->json_encoded_colors = json_encode($colors);
-        $this->is_condensed        = $is_condensed;
+        $this->csrf_token               = $csrf_token;
+        $this->tabs                     = $tabs;
+        $this->languages                = $languages;
+        $this->json_encoded_colors      = json_encode($colors);
+        $this->is_condensed             = $is_condensed;
+        $this->is_accessibility_enabled = $is_accessibility_enabled;
 
         $this->current_color = '';
         foreach ($colors as $color) {

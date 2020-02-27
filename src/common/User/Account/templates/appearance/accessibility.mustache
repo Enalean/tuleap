@@ -1,0 +1,13 @@
+<div class="tlp-form-element">
+    <label class="tlp-label tlp-checkbox">
+        <input type="checkbox"
+               name="accessibility_mode"
+               id="user-preferences-accessibility-selector"
+               value="1"
+               {{# is_accessibility_enabled }}checked{{/ is_accessibility_enabled }}
+        > {{# gettext }}Enable accessibility mode{{/ gettext }}
+    </label>
+    <p class="tlp-text-info">
+        {{# gettext }}This option displays special patterns on colored cards in Agiledashboard and Cardwall tracker reports. This helps distinguish between colors and their variants.{{/ gettext }}
+    </p>
+</div>
