@@ -44,6 +44,9 @@ msgstr "Créer mon outil de suivi"
 msgid "Create your new tracker based on a tracker template XML file."
 msgstr "Créez votre nouvel outil de suivi basé sur un fichier au format XML."
 
+msgid "Create your new tracker without any configuration."
+msgstr "Créez votre nouvel outil de suivi sans aucune configuration."
+
 msgid "Description"
 msgstr "Description"
 
@@ -53,6 +56,9 @@ msgid ""
 msgstr ""
 "Ne vous inquiétez pas, vous serez toujours en mesure de modifier votre outil "
 "de suivi après sa création."
+
+msgid "Empty"
+msgstr "Vide"
 
 msgid "Give your tracker some basic info"
 msgstr "Donnez à votre outil de suivi quelques infos de base"

@@ -27,7 +27,8 @@ describe("StepTwo", () => {
     async function getWrapper(
         state: State = {} as State,
         is_a_duplication = false,
-        is_a_xml_import = false
+        is_a_xml_import = false,
+        is_created_from_empty = false
     ): Promise<Wrapper<StepTwo>> {
         return mount(StepTwo, {
             mocks: {
@@ -36,6 +37,7 @@ describe("StepTwo", () => {
                     getters: {
                         is_a_duplication,
                         is_a_xml_import,
+                        is_created_from_empty,
                         is_ready_to_submit: true
                     }
                 })
@@ -47,7 +49,8 @@ describe("StepTwo", () => {
                 "field-shortname": true,
                 "field-description": true,
                 "field-tracker-template-id": true,
-                "router-link": true
+                "router-link": true,
+                "field-tracker-empty": true
             }
         });
     }
@@ -69,7 +72,7 @@ describe("StepTwo", () => {
             expect(wrapper.find("field-tracker-template-id-stub").exists()).toBe(true);
         });
 
-        it("Sets the right encription type for the form", () => {
+        it("Sets the right encoding type for the form", () => {
             expect(wrapper.find("#tracker-creation-form").attributes("enctype")).toEqual(
                 "application/x-www-form-urlencoded"
             );
@@ -97,9 +100,39 @@ describe("StepTwo", () => {
             expect(wrapper.find("field-tracker-template-id-stub").exists()).toBe(false);
         });
 
-        it("Sets the right encription type for the form", () => {
+        it("Sets the right encoding type for the form", () => {
             expect(wrapper.find("#tracker-creation-form").attributes("enctype")).toEqual(
                 "multipart/form-data"
+            );
+        });
+    });
+
+    describe("Create from empty", () => {
+        let wrapper: Wrapper<StepTwo>;
+
+        beforeEach(async () => {
+            const file_input = document.implementation.createHTMLDocument().createElement("input");
+            file_input.setAttribute("data-test", "injected-file-input");
+
+            wrapper = await getWrapper(
+                {
+                    selected_xml_file_input: file_input
+                } as State,
+                false,
+                false,
+                true
+            );
+        });
+
+        it("appends the hidden input", () => {
+            expect(wrapper.find("[data-test=injected-file-input]").exists()).toBe(false);
+            expect(wrapper.find("field-tracker-template-id-stub").exists()).toBe(false);
+            expect(wrapper.find("field-tracker-empty-stub").exists()).toBe(true);
+        });
+
+        it("Sets the right encoding type for the form", () => {
+            expect(wrapper.find("#tracker-creation-form").attributes("enctype")).toEqual(
+                "application/x-www-form-urlencoded"
             );
         });
     });

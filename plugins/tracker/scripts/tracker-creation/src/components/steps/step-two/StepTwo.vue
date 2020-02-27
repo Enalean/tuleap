@@ -34,6 +34,7 @@
                 <field-shortname />
                 <field-description />
                 <field-tracker-template-id v-if="is_a_duplication" />
+                <field-tracker-empty v-if="is_created_from_empty" />
             </form>
         </template>
     </step-layout>
@@ -49,9 +50,11 @@ import FieldShortname from "./creation-fields/FieldShortname.vue";
 import FieldDescription from "./creation-fields/FieldDescription.vue";
 import FieldTrackerTemplateId from "./creation-fields/FieldTrackerTemplateId.vue";
 import FieldCsrfToken from "./creation-fields/FieldCSRFToken.vue";
+import FieldTrackerEmpty from "./creation-fields/FieldTrackerEmpty.vue";
 
 @Component({
     components: {
+        FieldTrackerEmpty,
         StepLayout,
         StepTwoInfo,
         FieldName,
@@ -64,6 +67,9 @@ import FieldCsrfToken from "./creation-fields/FieldCSRFToken.vue";
 export default class StepTwo extends Vue {
     @State
     readonly has_form_been_submitted!: boolean;
+
+    @Getter
+    readonly is_created_from_empty!: boolean;
 
     @Getter
     readonly is_a_duplication!: boolean;
