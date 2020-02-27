@@ -179,7 +179,8 @@ class hudson_gitPlugin extends Plugin
             ProjectManager::instance(),
             self::getGitPermissionsManager(),
             new JenkinsServerAdder(
-                new JenkinsServerDao()
+                new JenkinsServerDao(),
+                new Valid_HTTPURI()
             ),
             new CSRFSynchronizerToken(URLBuilder::buildAddUrl())
         );
@@ -333,7 +334,8 @@ class hudson_gitPlugin extends Plugin
 
         $xml_importer = new XMLImporter(
             new JenkinsServerAdder(
-                new JenkinsServerDao()
+                new JenkinsServerDao(),
+                new Valid_HTTPURI()
             )
         );
 

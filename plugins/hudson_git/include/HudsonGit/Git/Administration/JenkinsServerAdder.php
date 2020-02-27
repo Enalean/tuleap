@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
+use Valid_HTTPURI;
 
 class JenkinsServerAdder
 {
@@ -31,18 +32,28 @@ class JenkinsServerAdder
      */
     private $jenkins_server_dao;
 
-    public function __construct(JenkinsServerDao $jenkins_server_dao)
+    /**
+     * @var Valid_HTTPURI
+     */
+    private $valid_HTTPURI;
+
+    public function __construct(JenkinsServerDao $jenkins_server_dao, Valid_HTTPURI $valid_HTTPURI)
     {
         $this->jenkins_server_dao = $jenkins_server_dao;
+        $this->valid_HTTPURI      = $valid_HTTPURI;
     }
 
     /**
+     * @throws JenkinsServerURLNotValidException
      * @throws JenkinsServerAlreadyDefinedException
      */
     public function addServerInProject(Project $project, string $jenkins_server_url): void
     {
-        $project_id = (int) $project->getID();
+        if (! $this->valid_HTTPURI->validate($jenkins_server_url)) {
+            throw new JenkinsServerURLNotValidException();
+        }
 
+        $project_id = (int) $project->getID();
         if ($this->jenkins_server_dao->isJenkinsServerAlreadyDefinedInProject(
             $project_id,
             $jenkins_server_url

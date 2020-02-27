@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Valid_HTTPURI;
 
 class JenkinsServerAdderTest extends TestCase
 {
@@ -53,18 +54,31 @@ class JenkinsServerAdderTest extends TestCase
         $this->git_jenkins_administration_server_dao = Mockery::mock(JenkinsServerDao::class);
 
         $this->adder = new JenkinsServerAdder(
-            $this->git_jenkins_administration_server_dao
+            $this->git_jenkins_administration_server_dao,
+            new Valid_HTTPURI()
         );
 
         $this->project = Mockery::mock(Project::class);
         $this->project->shouldReceive('getID')->andReturn('101');
     }
 
+    public function testItThrowsAnExceptionIfProvidedURLIsNotAnURL(): void
+    {
+        $this->git_jenkins_administration_server_dao->shouldNotReceive('addJenkinsServer');
+
+        $this->expectException(JenkinsServerURLNotValidException::class);
+
+        $this->adder->addServerInProject(
+            $this->project,
+            'url'
+        );
+    }
+
     public function testItThrowsAnExceptionIfServerAlreadyDefined(): void
     {
         $this->git_jenkins_administration_server_dao->shouldReceive('isJenkinsServerAlreadyDefinedInProject')
             ->once()
-            ->with(101, 'url')
+            ->with(101, 'https://url')
             ->andReturnTrue();
 
         $this->git_jenkins_administration_server_dao->shouldNotReceive('addJenkinsServer');
@@ -73,7 +87,7 @@ class JenkinsServerAdderTest extends TestCase
 
         $this->adder->addServerInProject(
             $this->project,
-            'url'
+            'https://url'
         );
     }
 
@@ -81,14 +95,14 @@ class JenkinsServerAdderTest extends TestCase
     {
         $this->git_jenkins_administration_server_dao->shouldReceive('isJenkinsServerAlreadyDefinedInProject')
             ->once()
-            ->with(101, 'url')
+            ->with(101, 'https://url')
             ->andReturnFalse();
 
         $this->git_jenkins_administration_server_dao->shouldReceive('addJenkinsServer')->once();
 
         $this->adder->addServerInProject(
             $this->project,
-            'url'
+            'https://url'
         );
     }
 }
