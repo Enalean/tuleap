@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Http\HTTPFactoryBuilder;
 
 final class RedirectURIBuilderTest extends TestCase
 {
@@ -31,8 +32,9 @@ final class RedirectURIBuilderTest extends TestCase
      */
     public function testBuildRedirectURI(array $parameters, string $expected_result_uri): void
     {
-        $result = RedirectURIBuilder::buildRedirectURI(...$parameters);
-        $this->assertSame($result->__toString(), $expected_result_uri);
+        $builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
+        $result = $builder->buildRedirectURI(...$parameters);
+        $this->assertSame((string) $result, $expected_result_uri);
     }
 
     public function dataProviderValidURIs(): array
@@ -49,6 +51,10 @@ final class RedirectURIBuilderTest extends TestCase
             'Base redirect URI has no path'      => [
                 ['https://example.com?key=value', null, 'error_type'],
                 'https://example.com?key=value&error=error_type',
+            ],
+            'Base redirect URI has a port'      => [
+                ['https://example.com:8080/redirect?key=value', null, 'error_type'],
+                'https://example.com:8080/redirect?key=value&error=error_type',
             ],
             'State parameter is kept unmodified' => [
                 ['https://example.com/redirect?key=value', 'state_value', 'error_type'],

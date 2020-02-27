@@ -36,6 +36,7 @@ use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
+use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AuthCodeGrantController;
 use Tuleap\OAuth2Server\Grant\AuthorizationCodeGrantResponseBuilder;
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
@@ -168,6 +169,7 @@ final class oauth2_serverPlugin extends Plugin
             \UserManager::instance(),
             new AppFactory(new AppDao(), \ProjectManager::instance()),
             new \URLRedirect(\EventManager::instance()),
+            new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
             new \Tuleap\OAuth2Server\AuthorizationServer\ScopeExtractor(
                 new AuthenticationScopeBuilderFromClassNames(DemoOAuth2Scope::class, OAuth2ProjectReadScope::class)
             ),

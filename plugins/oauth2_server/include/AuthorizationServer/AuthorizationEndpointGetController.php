@@ -69,7 +69,11 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
     /**
      * @var \URLRedirect
      */
-    private $redirect;
+    private $login_redirect;
+    /**
+     * @var RedirectURIBuilder
+     */
+    private $client_uri_redirect_builder;
     /**
      * @var ScopeExtractor
      */
@@ -80,18 +84,20 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         AuthorizationFormRenderer $form_renderer,
         \UserManager $user_manager,
         AppFactory $app_factory,
-        \URLRedirect $redirect,
+        \URLRedirect $login_redirect,
+        RedirectURIBuilder $client_uri_redirect_builder,
         ScopeExtractor $scope_extractor,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->response_factory = $response_factory;
-        $this->form_renderer    = $form_renderer;
-        $this->user_manager     = $user_manager;
-        $this->app_factory      = $app_factory;
-        $this->redirect         = $redirect;
-        $this->scope_extractor  = $scope_extractor;
+        $this->response_factory            = $response_factory;
+        $this->form_renderer               = $form_renderer;
+        $this->user_manager                = $user_manager;
+        $this->app_factory                 = $app_factory;
+        $this->login_redirect              = $login_redirect;
+        $this->client_uri_redirect_builder = $client_uri_redirect_builder;
+        $this->scope_extractor             = $scope_extractor;
     }
 
     /**
@@ -102,7 +108,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         $user = $this->user_manager->getCurrentUser();
         if ($user->isAnonymous()) {
             return $this->response_factory->createResponse(302)
-                ->withHeader('Location', $this->redirect->buildReturnToLogin($request->getServerParams()));
+                ->withHeader('Location', $this->login_redirect->buildReturnToLogin($request->getServerParams()));
         }
 
         $query_params = $request->getQueryParams();
@@ -119,10 +125,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             throw new ForbiddenException();
         }
 
-        $state_value = null;
-        if (isset($query_params[self::STATE_PARAMETER])) {
-            $state_value = $query_params[self::STATE_PARAMETER];
-        }
+        $state_value = $query_params[self::STATE_PARAMETER] ?? null;
 
         if (! isset($query_params[self::RESPONSE_TYPE_PARAMETER]) || $query_params[self::RESPONSE_TYPE_PARAMETER] !== self::ALLOWED_RESPONSE_TYPE) {
             return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST, $redirect_uri, $state_value);
@@ -136,7 +139,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
 
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
-        $deny_authorization_uri = RedirectURIBuilder::buildRedirectURI(
+        $deny_authorization_uri = $this->client_uri_redirect_builder->buildRedirectURI(
             $redirect_uri,
             $state_value,
             self::ERROR_CODE_ACCESS_DENIED
@@ -152,8 +155,8 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         string $redirect_uri,
         ?string $state_value
     ): ResponseInterface {
-        $error_uri = RedirectURIBuilder::buildRedirectURI($redirect_uri, $state_value, $error_code);
+        $error_uri = $this->client_uri_redirect_builder->buildRedirectURI($redirect_uri, $state_value, $error_code);
         return $this->response_factory->createResponse(302)
-            ->withHeader('Location', $error_uri->__toString());
+            ->withHeader('Location', (string) $error_uri);
     }
 }
