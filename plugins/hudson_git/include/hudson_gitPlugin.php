@@ -30,6 +30,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
+use Tuleap\Git\Events\XMLExportExternalContentEvent;
 use Tuleap\Git\Events\XMLImportExternalContentEvent;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -44,6 +45,7 @@ use Tuleap\HudsonGit\Git\Administration\JenkinsServerDao;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerDeleter;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Git\Administration\URLBuilder;
+use Tuleap\HudsonGit\Git\Administration\XML\XMLExporter;
 use Tuleap\HudsonGit\Git\Administration\XML\XMLImporter;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
@@ -80,6 +82,7 @@ class hudson_gitPlugin extends Plugin
             $this->addHook(GitAdminGetExternalPanePresenters::NAME);
             $this->addHook(CollectGitRoutesEvent::NAME);
             $this->addHook(XMLImportExternalContentEvent::NAME);
+            $this->addHook(XMLExportExternalContentEvent::NAME);
         }
     }
 
@@ -340,6 +343,23 @@ class hudson_gitPlugin extends Plugin
         );
 
         $xml_importer->import(
+            $project,
+            $event->getXMLGit()
+        );
+    }
+
+    public function xmlExportExternalContentEvent(XMLExportExternalContentEvent $event): void
+    {
+        $project = $event->getProject();
+        if (! $this->isAllowed((int) $project->getID())) {
+            return;
+        }
+
+        $xml_importer = new XMLExporter(
+            self::getJenkinsServerFactory()
+        );
+
+        $xml_importer->export(
             $project,
             $event->getXMLGit()
         );
