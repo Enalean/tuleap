@@ -623,4 +623,9 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         return $steps;
     }
+
+    public function getTagNameForXMLExport(): string
+    {
+        return self::XML_TAG_EXTERNAL_FIELD;
+    }
 }

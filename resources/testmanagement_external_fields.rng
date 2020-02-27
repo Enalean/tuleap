@@ -15,7 +15,9 @@
   <element name="label">
     <data type="string"/>
   </element>
-  <element name="description">
-    <data type="string"/>
-  </element>
+  <optional>
+    <element name="description">
+      <data type="string"/>
+    </element>
+  </optional>
 </element>

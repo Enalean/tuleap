@@ -7,5 +7,5 @@ element externalField {
     attribute rank { xsd:int },
     element name { xsd:string },
     element label { xsd:string },
-    element description { xsd:string }
+    element description { xsd:string }?
 }
