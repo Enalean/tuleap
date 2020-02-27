@@ -18,7 +18,8 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
+    <field-shortname-slugified v-if="can_display_slugify_mode" />
+    <div class="tlp-form-element" v-else>
         <label class="tlp-label" for="tracker-shortname">
             <translate>Shortname</translate>
             <i class="fa fa-asterisk"></i>
@@ -30,6 +31,7 @@
             class="tlp-input tlp-input-large"
             id="tracker-shortname"
             name="tracker-shortname"
+            data-test="tracker-shortname-input"
             v-on:keyup="setTrackerShortName($event.target.value)"
             v-bind:value="tracker_to_be_created.shortname"
             required
@@ -42,14 +44,22 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { State, Mutation } from "vuex-class";
+import { State, Mutation, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
+import FieldShortnameSlugified from "./FieldShortnameSlugified.vue";
 
-@Component
-export default class StepTwo extends Vue {
+@Component({
+    components: {
+        FieldShortnameSlugified
+    }
+})
+export default class FieldShortname extends Vue {
     @State
     readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
+
+    @Getter
+    readonly can_display_slugify_mode!: boolean;
 
     @Mutation
     readonly setTrackerShortName!: (name: string) => void;

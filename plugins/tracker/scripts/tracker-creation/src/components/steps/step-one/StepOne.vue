@@ -33,6 +33,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
+import { Mutation } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import TrackerTemplateCard from "./cards/TrackerTemplate/TrackerTemplateCard.vue";
 import TrackerXmlFileCard from "./cards/TrackerXmlFile/TrackerXmlFileCard.vue";
@@ -49,5 +50,12 @@ import TrackerEmptyCard from "./cards/TrackerEmpty/TrackerEmptyCard.vue";
         StepOneInfo
     }
 })
-export default class StepOne extends Vue {}
+export default class StepOne extends Vue {
+    @Mutation
+    readonly setSlugifyShortnameMode!: (is_active: boolean) => void;
+
+    mounted(): void {
+        this.setSlugifyShortnameMode(true);
+    }
+}
 </script>

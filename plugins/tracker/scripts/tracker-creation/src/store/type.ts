@@ -28,6 +28,7 @@ export interface State {
     is_a_xml_file_selected: boolean;
     is_parsing_a_xml_file: boolean;
     has_xml_file_error: boolean;
+    is_in_slugify_mode: boolean;
 }
 
 export interface CSRFToken {
