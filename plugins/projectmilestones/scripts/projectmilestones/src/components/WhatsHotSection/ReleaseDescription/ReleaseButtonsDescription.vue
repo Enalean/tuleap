@@ -19,36 +19,37 @@
 
 <template>
     <div class="release-description-link">
-        <a v-if="get_overview_link" v-bind:href="get_overview_link" data-test="overview-link">
-            <i class="release-description-link-icon fa fa-bar-chart" />
-            <translate>
-                Overview
-            </translate>
+        <a
+            v-if="get_overview_link"
+            v-bind:href="get_overview_link"
+            data-test="overview-link"
+            class="release-planning-link-item"
+        >
+            <i class="release-description-link-icon fa fa-bar-chart"></i>
+            <span class="release-planning-link-item-text"><translate>Overview</translate></span>
         </a>
         <slot></slot>
         <a
             v-if="get_cardwall_link"
             v-bind:href="get_cardwall_link"
             data-test="cardwall-link"
-            class="release-planning-link"
+            class="release-planning-link release-planning-link-item"
         >
-            <i class="release-description-link-icon fa fa-table" />
-            <translate>
-                Cardwall
-            </translate>
+            <i class="release-description-link-icon fa fa-table"></i>
+            <span class="release-planning-link-item-text"><translate>Cardwall</translate></span>
         </a>
         <a
             v-if="get_taskboard_pane"
             v-bind:href="get_taskboard_pane.uri"
             data-test="taskboard-link"
-            class="release-planning-link"
+            class="release-planning-link release-planning-link-item"
         >
             <i
                 class="release-description-link-icon fa"
                 data-test="taskboard-icon"
                 v-bind:class="get_taskboard_pane.icon_name"
-            />
-            {{ get_taskboard_pane.title }}
+            ></i>
+            <span class="release-planning-link-item-text">{{ get_taskboard_pane.title }}</span>
         </a>
     </div>
 </template>
