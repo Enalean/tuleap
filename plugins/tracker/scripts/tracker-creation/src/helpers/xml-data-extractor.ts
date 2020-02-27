@@ -19,9 +19,15 @@
 
 import { TrackerToBeCreatedMandatoryData } from "../store/type";
 
+const XML_MIME_TYPE = "text/xml";
+
 export async function extractNameAndShortnameFromXmlFile(
     file: File
 ): Promise<TrackerToBeCreatedMandatoryData> {
+    if (file.type !== XML_MIME_TYPE) {
+        return Promise.reject("Not a xml file");
+    }
+
     const xml_content = await readFile(file);
 
     if (!isContentAString(xml_content)) {
@@ -29,7 +35,7 @@ export async function extractNameAndShortnameFromXmlFile(
     }
 
     const parser = new DOMParser();
-    const xml_file = parser.parseFromString(xml_content, "text/xml");
+    const xml_file = parser.parseFromString(xml_content, XML_MIME_TYPE);
 
     const name: Element | null = xml_file.querySelector("tracker > name");
     const shortname: Element | null = xml_file.querySelector("tracker > item_name");

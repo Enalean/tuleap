@@ -32,14 +32,20 @@
         <button
             v-if="nextStepName"
             v-on:click="goToNextStepIfGood"
-            class="tlp-button-primary tlp-button-large"
+            class="tlp-button-primary tlp-button-large tracker-creation-next-step-button"
             type="button"
             v-bind:class="{ 'tlp-button-disabled': !is_ready_for_step_2 }"
             v-bind:disabled="!is_ready_for_step_2"
             data-test="button-next"
         >
             <translate>Next</translate>
-            <i class="fa fa-long-arrow-right tlp-button-icon-right"></i>
+            <i
+                class="fa tlp-button-icon-right"
+                v-bind:class="{
+                    'fa-long-arrow-right ': !is_parsing_a_xml_file,
+                    'fa-circle-o-notch fa-spin': is_parsing_a_xml_file
+                }"
+            ></i>
         </button>
         <button
             v-else
@@ -85,6 +91,9 @@ export default class StepNavigationButtons extends Vue {
 
     @Mutation
     readonly setCreationFormHasBeenSubmitted!: () => void;
+
+    @State
+    readonly is_parsing_a_xml_file!: boolean;
 
     goToNextStepIfGood(): void {
         if (this.is_ready_for_step_2) {

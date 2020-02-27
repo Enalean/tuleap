@@ -38,7 +38,8 @@ function isXmlImportReady(state: State): boolean {
     return (
         state.active_option === CreationOptions.TRACKER_XML_FILE &&
         state.is_a_xml_file_selected &&
-        state.has_xml_file_error === false
+        state.has_xml_file_error === false &&
+        state.is_parsing_a_xml_file === false
     );
 }
 

@@ -116,6 +116,7 @@
     display: flex;
     justify-content: flex-end;
 
+    > .tracker-creation-next-step-button,
     > .tracker-creation-submit-button {
         margin: 0 0 0 $tlp-spacing;
         overflow: visible;
