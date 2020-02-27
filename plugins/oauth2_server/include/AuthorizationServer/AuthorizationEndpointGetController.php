@@ -44,11 +44,12 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
     private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
     public const  SCOPE_PARAMETER         = 'scope';
     private const ALLOWED_RESPONSE_TYPE   = 'code';
-    private const STATE_PARAMETER         = 'state';
+    public const  STATE_PARAMETER         = 'state';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
-    private const ERROR_PARAMETER            = 'error';
+    public const  ERROR_PARAMETER            = 'error';
     private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     private const ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
+    private const ERROR_CODE_ACCESS_DENIED   = 'access_denied';
     /**
      * @var ResponseFactoryInterface
      */
@@ -135,7 +136,12 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
 
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
-        return $this->form_renderer->renderForm($client_app, $layout, ...$scopes);
+        $deny_authorization_uri = RedirectURIBuilder::buildRedirectURI(
+            $redirect_uri,
+            $state_value,
+            self::ERROR_CODE_ACCESS_DENIED
+        );
+        return $this->form_renderer->renderForm($client_app, $deny_authorization_uri, $layout, ...$scopes);
     }
 
     /**
@@ -146,20 +152,8 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         string $redirect_uri,
         ?string $state_value
     ): ResponseInterface {
-        $url_parts = parse_url($redirect_uri);
-        if (isset($url_parts['query'])) {
-            parse_str($url_parts['query'], $query);
-        } else {
-            $query = [];
-        }
-        if ($state_value !== null) {
-            $query[self::STATE_PARAMETER] = $state_value;
-        }
-        $query[self::ERROR_PARAMETER]     = $error_code;
-        $url_parts['query'] = http_build_query($query);
-        $path               = $url_parts['path'] ?? '';
-        $error_url          = $url_parts['scheme'] . '://' . $url_parts['host'] . $path . '?' . $url_parts['query'];
+        $error_uri = RedirectURIBuilder::buildRedirectURI($redirect_uri, $state_value, $error_code);
         return $this->response_factory->createResponse(302)
-            ->withHeader('Location', $error_url);
+            ->withHeader('Location', $error_uri->__toString());
     }
 }

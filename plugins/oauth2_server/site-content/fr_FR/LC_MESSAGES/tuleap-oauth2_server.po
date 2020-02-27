@@ -45,6 +45,9 @@ msgstr "Supprimer"
 msgid "Delete App"
 msgstr "Supprimer l'App"
 
+msgid "Deny"
+msgstr "Refuser"
+
 msgid "My REST API consumer App"
 msgstr "Mon App utilisant l'API REST"
 
