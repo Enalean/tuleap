@@ -574,16 +574,14 @@ class Planning_MilestoneFactory
     private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, LegacyDataAccessResultInterface $sub_milestone_artifacts)
     {
         $sub_milestones          = array();
-        $sub_milestone_artifacts = $sub_milestone_artifacts->instanciateWith(
-            array($this->artifact_factory, 'getInstanceFromRow')
-        );
 
         foreach ($sub_milestone_artifacts as $sub_milestone_artifact) {
-            if (! $sub_milestone_artifact->userCanView($user)) {
+            $artifact = $this->artifact_factory->getInstanceFromRow($sub_milestone_artifact);
+            if (! $artifact->userCanView($user)) {
                 continue;
             }
 
-            $planning = $this->planning_factory->getPlanningByPlanningTracker($sub_milestone_artifact->getTracker());
+            $planning = $this->planning_factory->getPlanningByPlanningTracker($artifact->getTracker());
             if (! $planning) {
                 continue;
             }
@@ -591,7 +589,7 @@ class Planning_MilestoneFactory
             $sub_milestone = new Planning_ArtifactMilestone(
                 $milestone->getProject(),
                 $planning,
-                $sub_milestone_artifact,
+                $artifact,
                 $this->scrum_mono_milestone_checker
             );
             $this->addMilestoneAncestors($user, $sub_milestone);
