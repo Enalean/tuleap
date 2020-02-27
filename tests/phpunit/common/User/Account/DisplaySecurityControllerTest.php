@@ -27,6 +27,7 @@ use CSRFSynchronizerToken;
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -90,6 +91,7 @@ final class DisplaySecurityControllerTest extends TestCase
             $this->event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->csrf_token,
+            M::mock(PasswordSanityChecker::class, [ 'getValidators' => [] ]),
         );
         $this->user = UserTestBuilder::aUser()->withId(110)->withUserName('alice')->build();
     }

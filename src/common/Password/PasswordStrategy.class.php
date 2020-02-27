@@ -29,14 +29,11 @@ use Tuleap\Password\PasswordCompromiseValidator;
 class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
-    public $validators;
-    public $errors;
+    public $validators = [];
+    public $errors = [];
 
     public function __construct(PasswordConfiguration $password_configuration)
     {
-        $this->validators = array();
-        $this->errors     = array();
-
         if ($password_configuration->isBreachedPasswordVerificationEnabled()) {
             $pwned_password_range_retriever = new PwnedPasswordRangeRetriever(
                 HttpClientFactory::createClient(),

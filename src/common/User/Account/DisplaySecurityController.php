@@ -31,9 +31,11 @@ use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\Password\PasswordValidatorPresenter;
 
 final class DisplaySecurityController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -50,16 +52,32 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
      * @var TemplateRenderer
      */
     private $renderer;
+    /**
+     * @var PasswordSanityChecker
+     */
+    private $password_sanity_checker;
 
     public function __construct(
         EventDispatcherInterface $dispatcher,
         TemplateRendererFactory $renderer_factory,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
+        PasswordSanityChecker $password_sanity_checker
     ) {
 
         $this->dispatcher = $dispatcher;
         $this->renderer   = $renderer_factory->getRenderer(__DIR__ . '/templates');
         $this->csrf_token = $csrf_token;
+        $this->password_sanity_checker = $password_sanity_checker;
+    }
+
+    public static function buildSelf(): self
+    {
+        return new self(
+            \EventManager::instance(),
+            TemplateRendererFactory::build(),
+            self::getCSRFToken(),
+            PasswordSanityChecker::build(),
+        );
     }
 
     /**
@@ -83,6 +101,7 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
                 'security.js'
             )
         );
+        $layout->includeFooterJavascriptFile('/scripts/check_pw.js');
 
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
@@ -91,6 +110,16 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
         $password_pre_update = $this->dispatcher->dispatch(new PasswordPreUpdateEvent($user));
         assert($password_pre_update instanceof PasswordPreUpdateEvent);
 
+        $purifier = \Codendi_HTMLPurifier::instance();
+        $passwords_validators = [];
+        foreach ($this->password_sanity_checker->getValidators() as $key => $validator) {
+            $passwords_validators[] = new PasswordValidatorPresenter(
+                'password_validator_msg_'. $purifier->purify($key),
+                $purifier->purify($key, CODENDI_PURIFIER_JS_QUOTE),
+                $purifier->purify($validator->description())
+            );
+        }
+
         $layout->header(['title' => _('Security'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]);
         $this->renderer->renderToPage(
             'security',
@@ -98,7 +127,8 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
                 $tabs,
                 $this->csrf_token,
                 $user,
-                $password_pre_update
+                $password_pre_update,
+                $passwords_validators
             )
         );
         $layout->footer([]);

@@ -45,15 +45,15 @@
                     has_errors = true;
                     $(this)
                         .addClass("fa-times")
-                        .addClass("password_strategy_bad")
+                        .addClass("password-strategy-bad")
                         .removeClass("fa-check")
-                        .removeClass("password_strategy_good");
+                        .removeClass("password-strategy-good");
                 } else {
                     $(this)
                         .addClass("fa-check")
-                        .addClass("password_strategy_good")
+                        .addClass("password-strategy-good")
                         .removeClass("fa-times")
-                        .removeClass("password_strategy_bad");
+                        .removeClass("password-strategy-bad");
                 }
             });
         });
@@ -62,14 +62,14 @@
     }
 
     function setRobustnessToGood() {
-        $(".robustness .password_strategy_bad").hide();
-        $(".robustness .password_strategy_good").show();
+        $(".robustness .password-strategy-bad").hide();
+        $(".robustness .password-strategy-good").show();
         $(".robustness .password_validators_loading").hide();
     }
 
     function setRobustnessToBad() {
-        $(".robustness .password_strategy_bad").show();
-        $(".robustness .password_strategy_good").hide();
+        $(".robustness .password-strategy-bad").show();
+        $(".robustness .password-strategy-good").hide();
         $(".robustness .password_validators_loading").hide();
     }
 

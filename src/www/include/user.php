@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Password\Configuration\PasswordConfigurationDAO;
-use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 
 $USER_RES=array();
 
@@ -272,59 +270,3 @@ function user_del_preference($preference_name)
         return false;
     }
 }
-
-function user_display_choose_password($page, $user_id = false)
-{
-    $purifier = Codendi_HTMLPurifier::instance();
-    ?>
-    <table><tr valign='top'><td>
-    <?php
-
-    if ($page == 'admin_creation') {
-        echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password'));
-        ?>:
-     <br><div class="input-append"><input type="text" value="" id="form_pw" name="form_pw"></div>
-     <script type="text/javascript" src="/scripts/user.js"></script>
-
-
-    <?php } else {
-        echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password')); ?>:
-    <br><input type="password" value="" id="form_pw" name="form_pw" autocomplete="new-password">
-    <p><?php echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password2')); ?>:
-    <br><input type="password" value="" name="form_pw2" autocomplete="new-password">
-    <?php } ?>
-    </td><td>
-    <div class="password_strategy">
-        <p class="robustness"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'password_robustness'))?>
-            <span class="password_strategy_good"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'good')); ?></span>
-            <span class="password_strategy_bad"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'bad')); ?></span>
-            <img class="password_validators_loading" src="/themes/common/images/ic/spinner-16.gif">
-        </p>
-        <?php
-        $password_configuration_retriever = new PasswordConfigurationRetriever(new PasswordConfigurationDAO());
-        $password_configuration           = $password_configuration_retriever->getPasswordConfiguration();
-        $password_strategy                = new PasswordStrategy($password_configuration);
-        include($GLOBALS['Language']->getContent('account/password_strategy'));
-        foreach ($password_strategy->validators as $key => $v) {
-            echo '<p class="password_validator_msg_'. $purifier->purify($key) .'"><i class="fa fa-times password_strategy_bad"></i> '. $purifier->purify($v->description()) .'</p>';
-        }
-        ?>
-    </blockquote>
-    </td></tr></table>
-    <script type="text/javascript">
-    <?php
-    $password_validators_js = array();
-    $validator_keys = array_keys($password_strategy->validators);
-    foreach ($validator_keys as $validator_key) {
-        $password_validators_js[] = "'" . $purifier->purify($validator_key, CODENDI_PURIFIER_JS_QUOTE) . "'";
-    }
-    ?>
-    var password_validators = [<?php echo implode(', ', $password_validators_js) ?>];
-    </script>
-    <?php
-    if ($user_id) {
-        echo '<input type="hidden" name="user_id" value="'. $purifier->purify($user_id) .'" />';
-    }
-}
-
-?>

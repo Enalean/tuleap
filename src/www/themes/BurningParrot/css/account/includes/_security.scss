@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+/*!
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,28 +15,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-.user-change-password-modal-body {
+.account-security-password-form {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-.user-change-password-modal-body-additional-messages {
-    width: 100%;
-    margin: 0 0 $tlp-spacing * 2;
-}
-
-.user-change-password-modal-body-fields {
+.account-security-password-fields {
     width: calc(50% - #{$tlp-spacing});
-    margin: 0 $tlp-spacing 0 0;
 }
 
-.user-change-password-modal-body-robustness {
+.account-security-password-robustness {
     width: calc(50% - #{$tlp-spacing});
-    margin: 0 0 0 $tlp-spacing;
 
-    // scss-lint:disable SelectorFormat
     > .robustness {
         margin: $tlp-spacing 0;
         font-size: 30px;
@@ -53,24 +46,24 @@
     }
 }
 
-.user-change-password-modal-passwords-validator {
+.account-security-password-passwords-validator {
     margin: 0 0 5px;
     font-size: 14px;
     line-height: 20px;
 
     > .fa-times::before {
+        content: '\f00d'; // fa-remove
         margin: 0 3px 0 0;
         color: $tlp-ui-danger;
         font-family: 'FontAwesome';
         font-style: normal;
-        content: '\f00d'; // fa-remove
     }
 
     > .fa-check::before {
+        content: '\f00c'; // fa-check
         margin: 0 3px 0 0;
         color: $tlp-ui-success;
         font-family: 'FontAwesome';
         font-style: normal;
-        content: '\f00c'; // fa-check
     }
 }

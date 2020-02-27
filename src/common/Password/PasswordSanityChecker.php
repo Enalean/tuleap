@@ -57,8 +57,7 @@ class PasswordSanityChecker
 
     public function check(string $password): bool
     {
-        $password_strategy = new PasswordStrategy($this->password_configuration);
-        include($this->language->getContent('account/password_strategy'));
+        $password_strategy = $this->getStrategy();
         $valid  = $password_strategy->validate($password);
         $this->errors = $password_strategy->errors;
         return $valid;
@@ -70,5 +69,20 @@ class PasswordSanityChecker
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    /**
+     * @return \PasswordValidator[]
+     */
+    public function getValidators(): array
+    {
+        return $this->getStrategy()->validators;
+    }
+
+    private function getStrategy(): PasswordStrategy
+    {
+        $password_strategy = new PasswordStrategy($this->password_configuration);
+        include($this->language->getContent('account/password_strategy'));
+        return $password_strategy;
     }
 }
