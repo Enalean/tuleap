@@ -30,6 +30,9 @@ use CSRFSynchronizerToken;
  */
 final class SecurityPresenter
 {
+    public $change_password_url = UpdatePasswordController::URL;
+    public $session_update_url  = UpdateSessionPreferencesController::URL;
+
     /**
      * @var AccountTabPresenterCollection
      */
@@ -42,11 +45,26 @@ final class SecurityPresenter
      * @var bool
      */
     public $remember_me_activated;
+    /**
+     * @var string
+     */
+    public $username;
+    /**
+     * @var bool
+     */
+    public $old_password_is_required;
+    /**
+     * @var bool
+     */
+    public $user_can_change_password;
 
-    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, \PFUser $user)
+    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, \PFUser $user, PasswordPreUpdateEvent $password_pre_update_event)
     {
         $this->tabs = $tabs;
         $this->csrf_token = $csrf_token;
         $this->remember_me_activated = (int) $user->getStickyLogin() === 1;
+        $this->username = $user->getUserName();
+        $this->old_password_is_required = $password_pre_update_event->isOldPasswordRequiredToUpdatePassword();
+        $this->user_can_change_password = $password_pre_update_event->areUsersAllowedToChangePassword();
     }
 }

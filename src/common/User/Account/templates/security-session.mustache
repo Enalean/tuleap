@@ -1,0 +1,23 @@
+<section class="tlp-pane">
+    <form id="account-security-session-form" class="tlp-pane-container" action="{{ session_update_url }}" method="post">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="tlp-pane-title-icon fa fa-lock" aria-hidden="true"></i>
+                {{# gettext }}Session{{/ gettext }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="account-remember-me">{{# gettext }}Enable "remember me" so your session is kept open and you don't have to login too often.{{/ gettext }}</label>
+                <div class="tlp-switch">
+                    <input type="checkbox" id="account-remember-me" class="tlp-switch-checkbox" name="account-remember-me" value="1" {{# remember_me_activated }}checked{{/ remember_me_activated }}>
+                    <label for="account-remember-me" class="tlp-switch-button" aria-hidden="true"></label>
+                </div>
+            </div>
+        </section>
+    </form>
+</section>

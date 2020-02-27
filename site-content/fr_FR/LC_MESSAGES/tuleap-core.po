@@ -526,6 +526,9 @@ msgstr "Créer une nouvelle licence"
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
 
+msgid "Current password"
+msgstr "Ancien mot de passe"
+
 msgid "Custom groups"
 msgstr "Groupes personnalisés"
 
@@ -1055,6 +1058,9 @@ msgstr "Jamais"
 msgid "New email address:"
 msgstr "Nouvelle adresse e-mail"
 
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
 msgid "New personal access key"
 msgstr "Nouvelle clé personnelle d'accès"
 
@@ -1476,6 +1482,9 @@ msgstr "Retirer du groupe"
 
 msgid "Remove group member"
 msgstr "Retirer un membre du groupe"
+
+msgid "Repeat new password"
+msgstr "Répétez le nouveau mot de passe"
 
 msgid "Restricted users are allowed in this project."
 msgstr "Les utilisateurs restreints sont autorisés dans ce projet."
@@ -2086,6 +2095,9 @@ msgstr "La mise à jour du label du service n'est pas supportée"
 
 msgid "Update of service name is not supported"
 msgstr "La mise à jour du nom du service n'est pas supportée"
+
+msgid "Update password"
+msgstr "Mettre à jour le mot de passe"
 
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
