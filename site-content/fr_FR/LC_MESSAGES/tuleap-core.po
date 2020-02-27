@@ -61,6 +61,12 @@ msgstr "Annonces site %s"
 msgid "%s project news highlights"
 msgstr "Annonces phares des projets %s"
 
+msgid "(day/month/year)"
+msgstr "(jour/mois/année)"
+
+msgid "(month/day/year)"
+msgstr "(mois/jour/année)"
+
 msgid "-- None --"
 msgstr "-- Aucun --"
 
@@ -359,6 +365,12 @@ msgstr ""
 "\"><b>avoir lu cette politique d'échange de code</b></a> et être en accord "
 "avec son contenu."
 
+msgid "CSV date format"
+msgstr "Format de date CSV"
+
+msgid "CSV separator"
+msgstr "Séparateur CSV"
+
 msgid "CVS"
 msgstr "CVS"
 
@@ -463,6 +475,9 @@ msgstr "Couleur"
 msgid "Comfortable"
 msgstr "Confortable"
 
+msgid "Comma"
+msgstr "Virgule"
+
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -562,6 +577,9 @@ msgstr "Jour"
 msgid "Dear   {{ tuleap_server_name}} user,"
 msgstr "Cher utilisateur {{tuleap_server_name}},"
 
+msgid "Default format for trackers text fields"
+msgstr "Format par défaut pour les champs texte des trackers"
+
 msgid "Default license agreement"
 msgstr "Licence par défaut"
 
@@ -646,6 +664,9 @@ msgstr "Éditer les paramètres"
 
 msgid "Edit widget"
 msgstr "Éditer le widget"
+
+msgid "Edition & CSV"
+msgstr "Édition & CSV"
 
 msgid "Email"
 msgstr "E-mail"
@@ -1555,6 +1576,9 @@ msgstr "Sécurité"
 msgid "See permissions"
 msgstr "Voir les permissions"
 
+msgid "Semicolon"
+msgstr "Point virgule"
+
 msgid "Send an email when the project visibility changes"
 msgstr "Envoyer un email lorsque la visibilité d'un projet change"
 
@@ -1641,6 +1665,15 @@ msgstr ""
 msgid "Style"
 msgstr "Style"
 
+msgid "Submitted CSV date format is not valid"
+msgstr "Le format de date CSV n'est pas valide"
+
+msgid "Submitted CSV separator is not valid"
+msgstr "Le séparateur CSV n'est pas valide"
+
+msgid "Submitted text format is not valid"
+msgstr "Le formal de texte n'est pas valide"
+
 msgid ""
 "Submitting the form below will mail a confirmation URL to the new email "
 "address. Visiting this link will complete the email change."
@@ -1660,6 +1693,9 @@ msgstr "Gestion synchronisée de l'appartenance au projet"
 
 msgid "System groups"
 msgstr "Groupes système"
+
+msgid "Tab"
+msgstr "Tabulation"
 
 msgid "Template used by project"
 msgstr "Modèle utilisé par ce projet"
@@ -2046,6 +2082,15 @@ msgstr ""
 "Avec Tuleap, les équipes livrent les applications plus rapidement, plus "
 "efficacement et de meilleure qualité.\n"
 "Venez planifier, suivre, développer & collaborer sur vos projets logiciels."
+
+msgid "Unable to change CSV date format"
+msgstr "Impossible de changer le format de date CSV"
+
+msgid "Unable to change CSV separator"
+msgstr "Impossible de changer le séparateur CSV"
+
+msgid "Unable to change default text format"
+msgstr "Impossible de changer le format de texte"
 
 msgid "Unable to change the accessibility mode."
 msgstr "Impossible de changer le mode d'accessibilité."

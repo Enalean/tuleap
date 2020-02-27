@@ -94,26 +94,6 @@ $em->processEvent(
     array('preferences' => &$plugins_prefs)
 );
 
-$all_csv_separator = array();
-
-foreach (PFUser::$csv_separators as $separator) {
-    $all_csv_separator[] = array(
-        'separator_name'  => $separator,
-        'separator_label' => $Language->getText('account_options', $separator),
-        'is_selected'     => $separator === user_get_preference("user_csv_separator")
-    );
-}
-
-$all_csv_dateformat = array();
-
-foreach (PFUser::$csv_dateformats as $dateformat) {
-    $all_csv_dateformat[] = array(
-        'dateformat_name'  => $dateformat,
-        'dateformat_label' => $Language->getText('account_preferences', $dateformat),
-        'is_selected'      => $dateformat === user_get_preference("user_csv_dateformat")
-    );
-}
-
 $user_access_info = $um->getUserAccessInfo($user);
 if (! $user_access_info) {
     $user_access_info = array(
@@ -124,25 +104,11 @@ if (! $user_access_info) {
     );
 }
 
-$user_default_format = user_get_preference('user_edition_default_format');
-
-$default_formats = array(
-    array(
-        'label'    => $Language->getText('account_preferences', 'html_format'),
-        'value'    => 'html',
-        'selected' => $user_default_format === 'html'
-    ),
-    array(
-        'label'    => $Language->getText('account_preferences', 'text_format'),
-        'value'    => 'text',
-        'selected' => ($user_default_format === false || $user_default_format === 'text')
-    )
-);
-
 $tabs = $em->dispatch(new AccountTabPresenterCollection($user, '/account'));
 assert($tabs instanceof AccountTabPresenterCollection);
 
-$presenter = new User_PreferencesPresenter(
+$presenter = new
+User_PreferencesPresenter(
     $user,
     $can_change_realname,
     $can_change_email,
@@ -152,9 +118,6 @@ $presenter = new User_PreferencesPresenter(
     $csrf,
     $user_helper_preferences,
     $plugins_prefs,
-    $all_csv_separator,
-    $all_csv_dateformat,
-    $default_formats,
     $tabs,
 );
 

@@ -27,10 +27,6 @@ account_options	use_default_avatar	Utiliser l'avatar par défaut
 account_options	select_avatar	Sélectionner
 account_options	btn_save_avatar_label	Sauvegarder l'avatar
 account_options	preferences	Préférences
-account_options	csv_separator	Séparateur CSV :
-account_options	comma	virgule
-account_options	semicolon	point-virgule
-account_options	tab	tabulation
 account_options	username_display	Affichage des noms :
 account_options	tuleap_login_and_name	Login (nom complet)
 account_options	tuleap_name_and_login	Nom complet (login)
@@ -48,16 +44,8 @@ account_options	auth_attempt_sessions	Sessions ouvertes :
 #
 account_preferences	appearance	Apparence
 account_preferences	import_export	Import/export
-account_preferences	csv_dateformat	Format de date CSV :
-account_preferences	month_day_year	mois/jour/année
-account_preferences	day_month_year	jour/mois/année
-account_preferences	error_user_csv_separator	Vérifiez la valeur du séparateur CSV
-account_preferences	error_user_csv_dateformat	Vérifiez la valeur de format de date CSV
 account_preferences	error_username_display	Vérifiez la valeur de l'affichage des noms
 account_preferences	save_preferences	Sauvegarder les préférences
-account_preferences	edition_title	Édition
-account_preferences	default_format_label	Format par défaut :
-account_preferences	default_format_intro	Cette option permet de choisir le format par défaut des champs textes dans les outils de suivi.
 account_preferences	html_format	HTML
 account_preferences	text_format	Texte
 #

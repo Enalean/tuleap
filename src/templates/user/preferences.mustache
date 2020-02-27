@@ -28,63 +28,6 @@
                 </div>
             {{/ plugins_prefs }}
         </fieldset>
-
-        <fieldset>
-            <h3><i class="fa fa-pencil-square-o"></i> {{ edition_title }} </h3>
-            <div class="control-group user-account-group">
-                <p>{{ default_format_intro }}</p>
-                <label class="control-label user-account-label">{{ default_format_label }}</label>
-                <div class="controls">
-                    <select name="user_text_default_format" class="select-user-preferences">
-                        {{# default_formats }}
-                        <option {{# selected }} selected="selected" {{/ selected }}
-                            value="{{ value }}"
-                        >{{ label }}</option>
-                        {{/ default_formats }}
-                    </select>
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <h3><i class="fa fa-exchange"></i> {{ import_export_title }}</h3>
-            <div class="control-group user-account-group">
-                <label class="control-label user-account-label">{{{ csv_separator_label }}}</label>
-                <div class="controls">
-                    <select name="user_csv_separator" class="select-user-preferences">
-                        {{# all_csv_separator }}
-                            <option value="{{ separator_name }}"
-                                    {{# is_selected }} selected="selected" {{/ is_selected }}
-                            > {{ separator_label }}
-                            </option>
-                        {{/ all_csv_separator }}
-                    </select>
-
-                    <a href="javascript:help_window('/doc/{{ user_language }}/user-guide/citizen.html#account-maintenance')">
-                        <i class="fa fa-question-circle help-button"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div class="control-group user-account-group">
-                <label class="control-label user-account-label">{{{ csv_dateformat_label }}}</label>
-                <div class="controls">
-                    <select name="user_csv_dateformat" class="select-user-preferences">
-                        {{# all_csv_dateformat }}
-                            <option value="{{ dateformat_name }}"
-                                    {{# is_selected }} selected="selected" {{/ is_selected }}
-                            > {{ dateformat_label }}
-                            </option>
-                        {{/ all_csv_dateformat }}
-                    </select>
-
-                    <a href="javascript:help_window('/doc/{{ user_language }}/user-guide/citizen.html#account-maintenance')">
-                        <i class="fa fa-question-circle help-button"></i>
-                    </a>
-                </div>
-            </div>
-        </fieldset>
-
     <hr/>
     <div class="button-centered">
         <input type="submit"

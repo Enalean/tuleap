@@ -54,9 +54,6 @@ function get_csv_separator()
     }
     $separator = '';
     switch ($u_separator) {
-        case 'comma':
-            $separator = ",";
-            break;
         case 'semicolon':
             $separator = ";";
             break;
@@ -64,7 +61,7 @@ function get_csv_separator()
             $separator = "\t";
             break;
         default:
-            $separator = PFUser::DEFAULT_CSV_SEPARATOR;
+            $separator = ',';
             break;
     }
     return $separator;

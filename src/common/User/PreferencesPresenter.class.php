@@ -48,17 +48,6 @@ class User_PreferencesPresenter
     /** @var array */
     public $plugins_prefs;
 
-    /** @var array */
-    public $all_csv_separator;
-
-    /** @var array */
-    public $all_csv_dateformat;
-
-    /**
-     * @var array
-     */
-    public $default_formats;
-
     public $user_language;
     public $user_has_accessibility_mode;
     /**
@@ -76,9 +65,6 @@ class User_PreferencesPresenter
         CSRFSynchronizerToken $csrf_token,
         array $user_helper_preferences,
         array $plugins_prefs,
-        array $all_csv_separator,
-        array $all_csv_dateformat,
-        array $default_formats,
         AccountTabPresenterCollection $tabs
     ) {
         $this->user                    = $user;
@@ -91,9 +77,6 @@ class User_PreferencesPresenter
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
         $this->user_helper_preferences = $user_helper_preferences;
         $this->plugins_prefs           = $plugins_prefs;
-        $this->all_csv_separator       = $all_csv_separator;
-        $this->all_csv_dateformat      = $all_csv_dateformat;
-        $this->default_formats         = $default_formats;
 
         $this->user_language               = $user->getShortLocale();
         $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);
@@ -300,16 +283,6 @@ class User_PreferencesPresenter
         return $GLOBALS['Language']->getText('account_preferences', 'import_export');
     }
 
-    public function csv_separator_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'csv_separator');
-    }
-
-    public function csv_dateformat_label()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'csv_dateformat');
-    }
-
     public function preference_save_button()
     {
         return $GLOBALS['Language']->getText('account_preferences', 'save_preferences');
@@ -320,20 +293,5 @@ class User_PreferencesPresenter
     public function btn_close_label()
     {
         return $GLOBALS['Language']->getText('global', 'btn_close');
-    }
-
-    public function edition_title()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'edition_title');
-    }
-
-    public function default_format_label()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'default_format_label');
-    }
-
-    public function default_format_intro()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'default_format_intro');
     }
 }
