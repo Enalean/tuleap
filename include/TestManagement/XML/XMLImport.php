@@ -83,17 +83,19 @@ class XMLImport
                     $this->tracker_checker->checkTrackerIsInProject($project, $issue_tracker_id);
                 }
 
-                $this->tracker_checker->checkTrackerIsInProject($project, $campaign_tracker_id);
-                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $definition_tracker_id);
-                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $execution_tracker_id);
+                if ($campaign_tracker_id !== '' && $definition_tracker_id !== '' && $execution_tracker_id !== '') {
+                    $this->tracker_checker->checkTrackerIsInProject($project, $campaign_tracker_id);
+                    $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $definition_tracker_id);
+                    $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $execution_tracker_id);
 
-                $this->config->setProjectConfiguration(
-                    $project,
-                    $campaign_tracker_id,
-                    $definition_tracker_id,
-                    $execution_tracker_id,
-                    $issue_tracker_id
-                );
+                    $this->config->setProjectConfiguration(
+                        $project,
+                        $campaign_tracker_id,
+                        $definition_tracker_id,
+                        $execution_tracker_id,
+                        $issue_tracker_id
+                    );
+                }
             } catch (TrackerNotInProjectException |
                 TrackerHasAtLeastOneFrozenFieldsPostActionException |
                 TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception
