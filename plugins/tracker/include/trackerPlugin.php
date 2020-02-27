@@ -395,7 +395,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
 
         if ($include_tracker_css_file ||
-            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], "/tracker/new-information") !== 0
         ) {
             $theme_include_assets    = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/tracker/themes',

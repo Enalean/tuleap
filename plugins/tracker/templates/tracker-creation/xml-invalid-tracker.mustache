@@ -1,0 +1,20 @@
+<main class="tlp-framed">
+    <h2>{{# dgettext }}tuleap-tracker | XML file doesn't have correct format{{/ dgettext }}</h2>
+
+    <pre class="global-error-section">
+        {{# xml_file_lines }}
+            <div>
+                <div id="line_{{line_id}}" class="xml-line-display">
+                    <div class="xml-line-number">{{line_id}}</div>
+                    <div>{{ line_content }}</div>
+                </div>
+                {{# has_error }}
+                    <div>
+                        <div><span class="xml-error-line-indicator"> {{ add_extra_spaces }} ^</span></div>
+                        <div class="xml-error-line"> {{ add_extra_spaces }} {{ error_message }} </div>
+                    </div>
+                {{/ has_error }}
+            </div>
+        {{/ xml_file_lines }}
+    </pre>
+</main>
