@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+
 /**
  * @psalm-immutable
  */
-class ConcealedString
+final class ConcealedString
 {
     /**
      * @var string
@@ -50,6 +52,27 @@ class ConcealedString
     public function __debugInfo() : array
     {
         return ['value' => '** protected value, invoke getString instead of trying to dump it **'];
+    }
+
+    public function __sleep()
+    {
+        self::throwSerializationException();
+    }
+
+    public function __wakeup()
+    {
+        self::throwSerializationException();
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    private static function throwSerializationException(): void
+    {
+        throw new \LogicException(
+            'A concealed string is not supposed to be serialized directly, if need to do so please call ' .
+            SymmetricCrypto::class . '::encrypt() and ' . SymmetricCrypto::class . '::decrypt()'
+        );
     }
 
     public function isIdenticalTo(ConcealedString $string_b): bool
