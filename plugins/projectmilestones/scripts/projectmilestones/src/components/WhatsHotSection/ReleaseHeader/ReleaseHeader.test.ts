@@ -23,6 +23,9 @@ import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-com
 import { MilestoneData, StoreOptions } from "../../../type";
 import { setUserLocale } from "../../../helpers/user-locale-helper";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
+import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
+import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
+import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue";
 
 let release_data: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseHeader>;
@@ -111,5 +114,31 @@ describe("ReleaseHeader", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.find("[data-test=title-release]").text()).toEqual("1 > 2");
+    });
+
+    describe("Display PastReleaseHeader", () => {
+        it("When the release is not past, Then ReleaseHeaderRemaining components are displayed", async () => {
+            component_options.propsData = {
+                release_data,
+                isPastRelease: false
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+            expect(wrapper.contains(ReleaseHeaderRemainingDays)).toBe(true);
+            expect(wrapper.contains(ReleaseHeaderRemainingPoints)).toBe(true);
+            expect(wrapper.contains(PastReleaseHeaderInitialPoints)).toBe(false);
+        });
+
+        it("When the release is past, Then PastReleaseHeaderInitialPoints component are displayed", async () => {
+            component_options.propsData = {
+                release_data,
+                isPastRelease: true
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+            expect(wrapper.contains(ReleaseHeaderRemainingDays)).toBe(false);
+            expect(wrapper.contains(ReleaseHeaderRemainingPoints)).toBe(false);
+            expect(wrapper.contains(PastReleaseHeaderInitialPoints)).toBe(true);
+        });
     });
 });

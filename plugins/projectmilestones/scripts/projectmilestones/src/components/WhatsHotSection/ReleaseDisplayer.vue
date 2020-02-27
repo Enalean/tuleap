@@ -31,6 +31,7 @@
             v-bind:release_data="displayed_release"
             v-bind:is-loading="is_loading"
             v-bind:class="{ 'project-release-toggle-closed': !is_open, disabled: is_loading }"
+            v-bind:is-past-release="isPastRelease"
         />
         <div v-if="is_open" data-test="toggle-open" class="release-toggle">
             <div v-if="has_error" class="tlp-alert-danger" data-test="show-error-message">
@@ -69,6 +70,8 @@ export default class ReleaseDisplayer extends Vue {
     readonly release_data!: MilestoneData;
     @Prop()
     readonly isOpen!: boolean;
+    @Prop()
+    isPastRelease!: boolean;
     @Action
     getEnhancedMilestones!: (release_data: MilestoneData) => Promise<MilestoneData>;
 
