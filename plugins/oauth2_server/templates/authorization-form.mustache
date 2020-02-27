@@ -27,19 +27,14 @@
     </section>
 
     <div class="oauth2-server-authorization-form-actions">
-        <button
-            type="button"
-            disabled
+        <a
             class="tlp-button-outline tlp-button-primary tlp-button-large"
-        >
-            {{# dgettext }}tuleap-oauth2_server | Cancel{{/ dgettext }}
-        </button>
+            href="{{ deny_authorization_uri }}"
+        >{{# dgettext }}tuleap-oauth2_server | Deny{{/ dgettext }}</a>
         <button
             type="button"
             disabled
             class="tlp-button-primary tlp-button-large oauth2-server-authorization-form-action-authorize"
-        >
-            {{# dgettext }}tuleap-oauth2_server | Authorize{{/ dgettext }}
-        </button>
+        >{{# dgettext }}tuleap-oauth2_server | Authorize{{/ dgettext }}</button>
     </div>
 </div>

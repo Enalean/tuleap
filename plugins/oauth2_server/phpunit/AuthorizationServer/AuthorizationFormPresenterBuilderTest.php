@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
+use GuzzleHttp\Psr7\Uri;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -73,6 +74,7 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
                 'https://example.com',
                 new \Project(['group_id' => 101, 'group_name' => 'Test Project'])
             ),
+            new Uri('https://example.com?error=access_denied'),
             $foobar_scope,
             $typevalue_scope
         );

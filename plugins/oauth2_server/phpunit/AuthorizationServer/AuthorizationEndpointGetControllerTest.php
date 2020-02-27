@@ -168,10 +168,6 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value'],
                 'https://example.com/redirect?key=value&error=invalid_request'
             ],
-            'Redirect handles URI without path'    => [
-                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com?key=value'],
-                'https://example.com?key=value&error=invalid_request'
-            ],
             'Response type is not allowed'         => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'invalid_response_type'],
                 'https://example.com/redirect?key=value&error=invalid_request'

@@ -22,21 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
-use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\OAuth2Server\App\OAuth2App;
 
-class AuthorizationFormPresenterBuilder
+/**
+ * @psalm-immutable
+ */
+class RedirectURIBuilder
 {
-    public function build(
-        OAuth2App $app,
-        UriInterface $deny_authorization_uri,
-        AuthenticationScope ...$scopes
-    ): AuthorizationFormPresenter {
-        $scope_presenters = [];
-        foreach ($scopes as $scope) {
-            $scope_presenters[] = new OAuth2ScopeDefinitionPresenter($scope->getDefinition());
+    public static function buildRedirectURI(
+        string $base_redirect_uri,
+        ?string $state_value,
+        string $error_code
+    ): UriInterface {
+        $url_parts = parse_url($base_redirect_uri);
+        if (isset($url_parts['query'])) {
+            parse_str($url_parts['query'], $query);
+        } else {
+            $query = [];
         }
-        return new AuthorizationFormPresenter($app, $deny_authorization_uri, ...$scope_presenters);
+        if ($state_value !== null) {
+            $query[AuthorizationEndpointGetController::STATE_PARAMETER] = $state_value;
+        }
+        $query[AuthorizationEndpointGetController::ERROR_PARAMETER] = $error_code;
+
+        $url_parts['query'] = http_build_query($query);
+        return Uri::fromParts($url_parts);
     }
 }
