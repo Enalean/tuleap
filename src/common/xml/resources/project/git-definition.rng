@@ -168,6 +168,18 @@
           </zeroOrMore>
         </element>
       </optional>
+      <optional>
+        <element name="jenkins-servers-admin">
+          <oneOrMore>
+            <element name="jenkins-server">
+              <attribute name="url">
+                <data type="string"/>
+              </attribute>
+              <empty/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
     </interleave>
   </define>
   <define name="user_last_push_date">
