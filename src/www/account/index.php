@@ -57,35 +57,6 @@ $em->processEvent(
 
 $csrf = new CSRFSynchronizerToken('/account/index.php');
 
-$user_helper_preferences = array(
-    array(
-        'preference_name'  => UserHelper::PREFERENCES_NAME_AND_LOGIN,
-        'preference_label' => $Language->getText('account_options', 'tuleap_name_and_login'),
-        'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_NAME_AND_LOGIN
-    ),
-    array(
-        'preference_name'  => UserHelper::PREFERENCES_LOGIN_AND_NAME,
-        'preference_label' => $Language->getText('account_options', 'tuleap_login_and_name'),
-        'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN_AND_NAME
-    ),
-    array(
-        'preference_name'  => UserHelper::PREFERENCES_LOGIN,
-        'preference_label' => $Language->getText('account_options', 'tuleap_login'),
-        'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN
-    ),
-    array(
-        'preference_name'  => UserHelper::PREFERENCES_REAL_NAME,
-        'preference_label' => $Language->getText('account_options', 'real_name'),
-        'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_REAL_NAME
-    )
-);
-
-$plugins_prefs = array();
-$em->processEvent(
-    'user_preferences_appearance',
-    array('preferences' => &$plugins_prefs)
-);
-
 $user_access_info = $um->getUserAccessInfo($user);
 if (! $user_access_info) {
     $user_access_info = array(
@@ -107,9 +78,7 @@ User_PreferencesPresenter(
     $extra_user_info,
     $user_access_info,
     $csrf,
-    $user_helper_preferences,
-    $plugins_prefs,
-    $tabs,
+    $tabs
 );
 
 $HTML->header(array(

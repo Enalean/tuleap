@@ -35,9 +35,6 @@ account_options	use_default_avatar	Use default avatar
 account_options	select_avatar	Select
 account_options	btn_save_avatar_label	Save avatar
 account_options	preferences	Preferences
-account_options	username_display	Username Display:
-account_options	tuleap_login_and_name	Login (real name)
-account_options	tuleap_name_and_login	Real name (login)
 account_options	tuleap_login	Login
 account_options	realname	Real name
 account_options	auth_attempt_title	Authentication details
@@ -52,7 +49,6 @@ account_options	auth_attempt_sessions	Open sessions:
 #
 account_preferences	appearance	Appearance
 account_preferences	import_export	Import/export
-account_preferences	error_username_display	Verify username display value
 account_preferences	save_preferences	Save preferences
 account_preferences	html_format	HTML
 account_preferences	text_format	Text

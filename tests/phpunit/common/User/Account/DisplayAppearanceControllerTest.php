@@ -98,6 +98,10 @@ class DisplayAppearanceControllerTest extends TestCase
                     [],
                     [],
                     true,
+                    true,
+                    true,
+                    true,
+                    true,
                     true
                 )
             );

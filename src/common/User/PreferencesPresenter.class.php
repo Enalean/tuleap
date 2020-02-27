@@ -41,12 +41,6 @@ class User_PreferencesPresenter
 
     public $csrf_input_html;
 
-    /** @var array */
-    public $user_helper_preferences;
-
-    /** @var array */
-    public $plugins_prefs;
-
     public $user_language;
     public $user_has_accessibility_mode;
     /**
@@ -61,8 +55,6 @@ class User_PreferencesPresenter
         array $extra_user_info,
         array $user_access,
         CSRFSynchronizerToken $csrf_token,
-        array $user_helper_preferences,
-        array $plugins_prefs,
         AccountTabPresenterCollection $tabs
     ) {
         $this->user                    = $user;
@@ -72,8 +64,6 @@ class User_PreferencesPresenter
         $this->user_access             = $user_access;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
-        $this->user_helper_preferences = $user_helper_preferences;
-        $this->plugins_prefs           = $plugins_prefs;
 
         $this->user_language               = $user->getShortLocale();
         $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);
@@ -241,33 +231,6 @@ class User_PreferencesPresenter
         ob_start();
         include $GLOBALS['Language']->getContent('account/user_legal');
         return ob_get_clean();
-    }
-
-    /* PREFERENCES */
-
-    public function preference_title()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'preferences');
-    }
-
-    public function appearance_title()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'appearance');
-    }
-
-    public function username_display_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'username_display');
-    }
-
-    public function import_export_title()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'import_export');
-    }
-
-    public function preference_save_button()
-    {
-        return $GLOBALS['Language']->getText('account_preferences', 'save_preferences');
     }
 
     /* MODAL */

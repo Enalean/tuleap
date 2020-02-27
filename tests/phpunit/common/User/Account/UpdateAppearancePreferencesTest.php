@@ -98,6 +98,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('setLanguageID')->never();
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -131,6 +132,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('setLanguageID')->never();
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -171,6 +173,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('setLanguageID')->never();
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -207,6 +210,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('setLanguageID')->never();
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -240,6 +244,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('setLanguageID')->never();
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -283,6 +288,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('setLanguageID')->never();
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -321,6 +327,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -357,6 +364,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('getPreference')->with('display_density')->andReturn('condensed');
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -393,6 +401,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('getPreference')->with('display_density')->andReturn('condensed');
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -423,12 +432,91 @@ class UpdateAppearancePreferencesTest extends TestCase
         $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
     }
 
+    public function testItDoesNothingIfUserKeepsTheSameUsernameDisplay(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturn('2');
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+        $user->shouldReceive('setPreference')->never();
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('username_display', '2')
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
+    public function testRejectsInvalidUsernameDisplay(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturn('2');
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+        $user->shouldReceive('setPreference')->never();
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('username_display', '666')
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::ERROR,
+                    'message' => 'Submitted username display is not valid.'
+                ],
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
     public function testItDoesNothingIfUserStillDoesNotWantAccessibility(): void
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -465,6 +553,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturn('1');
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -501,6 +590,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturn('1');
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -538,6 +628,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('setLanguageID')->with('en_US')->once();
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -559,6 +650,11 @@ class UpdateAppearancePreferencesTest extends TestCase
             ->with('accessibility_mode', '1')
             ->once()
             ->andReturnTrue();
+        $user
+            ->shouldReceive('setPreference')
+            ->with('username_display', '2')
+            ->once()
+            ->andReturnTrue();
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -566,6 +662,7 @@ class UpdateAppearancePreferencesTest extends TestCase
             ->withParam('display_density', 'condensed')
             ->withParam('accessibility_mode', '1')
             ->withParam('color', 'green')
+            ->withParam('username_display', '2')
             ->build();
 
         $layout_inspector = new LayoutInspector();

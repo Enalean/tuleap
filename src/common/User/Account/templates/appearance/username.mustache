@@ -1,0 +1,17 @@
+<div class="tlp-form-element">
+    <label class="tlp-label">{{# gettext }}Username display{{/ gettext }}</label>
+    <select class="tlp-select tlp-select-adjusted" name="username_display">
+        <option value="{{ username_display_value_realname_login }}" {{# is_realname_login }}selected{{/ is_realname_login }}>
+            {{# gettext }}Real Name (login){{/ gettext }}
+        </option>
+        <option value="{{ username_display_value_login_realname }}" {{# is_login_realname }}selected{{/ is_login_realname }}>
+            {{# gettext }}login (Real Name){{/ gettext }}
+        </option>
+        <option value="{{ username_display_value_login }}" {{# is_login }}selected{{/ is_login }}>
+            {{# gettext }}login{{/ gettext }}
+        </option>
+        <option value="{{ username_display_value_realname }}" {{# is_realname }}selected{{/ is_realname }}>
+            {{# gettext }}Real Name{{/ gettext }}
+        </option>
+    </select>
+</div>

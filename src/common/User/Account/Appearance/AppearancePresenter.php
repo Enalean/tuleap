@@ -59,6 +59,38 @@ final class AppearancePresenter
      * @var bool
      */
     public $is_accessibility_enabled;
+    /**
+     * @var bool
+     */
+    public $is_realname_login;
+    /**
+     * @var bool
+     */
+    public $is_login_realname;
+    /**
+     * @var bool
+     */
+    public $is_login;
+    /**
+     * @var bool
+     */
+    public $is_realname;
+    /**
+     * @var int
+     */
+    public $username_display_value_realname_login;
+    /**
+     * @var int
+     */
+    public $username_display_value_login_realname;
+    /**
+     * @var int
+     */
+    public $username_display_value_login;
+    /**
+     * @var int
+     */
+    public $username_display_value_realname;
 
     /**
      * @param LanguagePresenter[]   $languages
@@ -70,7 +102,11 @@ final class AppearancePresenter
         array $languages,
         array $colors,
         bool $is_condensed,
-        bool $is_accessibility_enabled
+        bool $is_accessibility_enabled,
+        bool $is_realname_login,
+        bool $is_login_realname,
+        bool $is_login,
+        bool $is_realname
     ) {
         $this->csrf_token               = $csrf_token;
         $this->tabs                     = $tabs;
@@ -78,6 +114,15 @@ final class AppearancePresenter
         $this->json_encoded_colors      = json_encode($colors);
         $this->is_condensed             = $is_condensed;
         $this->is_accessibility_enabled = $is_accessibility_enabled;
+        $this->is_realname_login        = $is_realname_login;
+        $this->is_login_realname        = $is_login_realname;
+        $this->is_login                 = $is_login;
+        $this->is_realname              = $is_realname;
+
+        $this->username_display_value_realname_login = \UserHelper::PREFERENCES_NAME_AND_LOGIN;
+        $this->username_display_value_login_realname = \UserHelper::PREFERENCES_LOGIN_AND_NAME;
+        $this->username_display_value_login          = \UserHelper::PREFERENCES_LOGIN;
+        $this->username_display_value_realname       = \UserHelper::PREFERENCES_REAL_NAME;
 
         $this->current_color = '';
         foreach ($colors as $color) {
