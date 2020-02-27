@@ -22,31 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
-use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
 
-/**
- * @psalm-immutable
- */
 class RedirectURIBuilder
 {
-    public static function buildRedirectURI(
+    /**
+     * @var UriFactoryInterface
+     */
+    private $uri_factory;
+
+    public function __construct(UriFactoryInterface $uri_factory)
+    {
+        $this->uri_factory = $uri_factory;
+    }
+
+    public function buildRedirectURI(
         string $base_redirect_uri,
         ?string $state_value,
         string $error_code
     ): UriInterface {
-        $url_parts = parse_url($base_redirect_uri);
-        if (isset($url_parts['query'])) {
-            parse_str($url_parts['query'], $query);
-        } else {
-            $query = [];
-        }
+        $uri = $this->uri_factory->createUri($base_redirect_uri);
+
+        parse_str($uri->getQuery(), $query);
+
         if ($state_value !== null) {
             $query[AuthorizationEndpointGetController::STATE_PARAMETER] = $state_value;
         }
         $query[AuthorizationEndpointGetController::ERROR_PARAMETER] = $error_code;
 
-        $url_parts['query'] = http_build_query($query);
-        return Uri::fromParts($url_parts);
+        return $uri->withQuery(http_build_query($query));
     }
 }

@@ -78,6 +78,7 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
             $this->user_manager,
             $this->app_factory,
             $this->redirect,
+            new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
             $this->scope_extractor,
             \Mockery::mock(EmitterInterface::class)
         );
