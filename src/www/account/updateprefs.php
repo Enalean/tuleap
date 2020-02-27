@@ -35,30 +35,6 @@ $request = HTTPRequest::instance();
 $csrf = new CSRFSynchronizerToken('/account/index.php');
 $csrf->check();
 
-$user_edition_default_format = null;
-$requested_default_format    = 'user_text_default_format';
-if ($request->existAndNonEmpty($requested_default_format)) {
-    $user_edition_default_format = $request->get($requested_default_format);
-}
-
-$user_csv_separator = PFUser::DEFAULT_CSV_SEPARATOR;
-if ($request->existAndNonEmpty('user_csv_separator')) {
-    if ($request->valid(new Valid_WhiteList('user_csv_separator', PFUser::$csv_separators))) {
-        $user_csv_separator = $request->get('user_csv_separator');
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_csv_separator'));
-    }
-}
-
-$user_csv_dateformat = PFUser::DEFAULT_CSV_DATEFORMAT;
-if ($request->existAndNonEmpty('user_csv_dateformat')) {
-    if ($request->valid(new Valid_WhiteList('user_csv_dateformat', PFUser::$csv_dateformats))) {
-        $user_csv_dateformat = $request->get('user_csv_dateformat');
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_csv_dateformat'));
-    }
-}
-
 $username_display = null;
 if ($request->existAndNonEmpty('username_display')) {
     if ($request->valid(new Valid_WhiteList('username_display', array(UserHelper::PREFERENCES_NAME_AND_LOGIN,
@@ -71,16 +47,8 @@ if ($request->existAndNonEmpty('username_display')) {
     }
 }
 
-// Preferences
-user_set_preference("user_csv_separator", $user_csv_separator);
-user_set_preference("user_csv_dateformat", $user_csv_dateformat);
-
 if ($username_display !== null) {
     user_set_preference("username_display", $username_display);
-}
-
-if ($user_edition_default_format) {
-    $user->setPreference(PFUser::EDITION_DEFAULT_FORMAT, $user_edition_default_format);
 }
 
 // Output

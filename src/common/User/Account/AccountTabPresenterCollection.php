@@ -49,6 +49,7 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
             new AccountTabPresenter(_('Notifications'), DisplayNotificationsController::URL, 'fa-bell-o', $current_href),
             new AccountTabPresenter(_('Keys & tokens'), DisplayKeysTokensController::URL, 'fa-key', $current_href),
             new AccountTabPresenter(_('Appearance & language'), DisplayAppearanceController::URL, 'fa-paint-brush', $current_href),
+            new AccountTabPresenter(_('Edition & CSV'), DisplayEditionController::URL, 'fa-pencil', $current_href),
             new AccountTabPresenter(_('Experimental'), DisplayExperimentalController::URL, 'fa-flask', $current_href),
         ];
         $this->current_href = $current_href;

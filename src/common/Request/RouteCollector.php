@@ -109,6 +109,7 @@ use Tuleap\User\Account\Appearance\ThemeColorPresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
 use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
 use Tuleap\User\Account\DisplayAppearanceController;
+use Tuleap\User\Account\DisplayEditionController;
 use Tuleap\User\Account\DisplayExperimentalController;
 use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
@@ -116,6 +117,7 @@ use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
 use Tuleap\User\Account\UpdateAppearancePreferences;
+use Tuleap\User\Account\UpdateEditionController;
 use Tuleap\User\Account\UpdateExperimentalPreferences;
 use Tuleap\User\Account\UpdateNotificationsPreferences;
 use Tuleap\User\Account\UpdatePasswordController;
@@ -292,6 +294,22 @@ class RouteCollector
         );
     }
 
+    public static function getEditionController(): DispatchableWithRequest
+    {
+        return new DisplayEditionController(
+            EventManager::instance(),
+            TemplateRendererFactory::build(),
+            DisplayEditionController::getCSRFToken()
+        );
+    }
+
+    public static function postEditionController(): DispatchableWithRequest
+    {
+        return new UpdateEditionController(
+            DisplayEditionController::getCSRFToken()
+        );
+    }
+
     public static function getAppearanceController(): DispatchableWithRequest
     {
         return new DisplayAppearanceController(
@@ -304,6 +322,7 @@ class RouteCollector
             )
         );
     }
+
     public static function postAppearanceController(): DispatchableWithRequest
     {
         return new UpdateAppearancePreferences(
@@ -677,6 +696,9 @@ class RouteCollector
             $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
             $r->post('/svn_token/create', [self::class, 'postAccountSVNTokenCreate']);
             $r->post('/svn_token/revoke', [self::class, 'postAccountSVNTokenRevoke']);
+
+            $r->get('/edition', [self::class, 'getEditionController']);
+            $r->post('/edition', [self::class, 'postEditionController']);
 
             $r->get('/appearance', [self::class, 'getAppearanceController']);
             $r->post('/appearance', [self::class, 'postAppearanceController']);

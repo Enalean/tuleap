@@ -93,7 +93,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public const DEFAULT_AVATAR_URL = '/themes/common/images/avatar_default.png';
 
-    public const DEFAULT_CSV_SEPARATOR = ',';
+    public const DEFAULT_CSV_SEPARATOR = 'comma';
 
     public const DEFAULT_CSV_DATEFORMAT = 'month_day_year';
 
@@ -101,16 +101,20 @@ class PFUser implements PFO_User, IHaveAnSSHKey
 
     public const ACCESSIBILITY_MODE = 'accessibility_mode';
 
-    /**
-     * @var array of allowed separators for CSV export
-     */
-    public static $csv_separators = array("comma", "semicolon", "tab");
+    public const PREFERENCE_NAME_CSV_SEPARATOR          = 'user_csv_separator';
+    public const PREFERENCE_NAME_CSV_DATEFORMAT         = 'user_csv_dateformat';
+    public const PREFERENCE_NAME_EDITION_DEFAULT_FORMAT = 'user_edition_default_format';
 
+    public const PREFERENCE_CSV_COMMA     = 'comma';
+    public const PREFERENCE_CSV_SEMICOLON = 'semicolon';
+    public const PREFERENCE_CSV_TAB       = 'tab';
 
-    /**
-     * @var array of allowed date formats for CSV export
-     */
-    public static $csv_dateformats = array("month_day_year", "day_month_year");
+    public const PREFERENCE_CSV_MONTH_DAY_YEAR = 'month_day_year';
+    public const PREFERENCE_CSV_DAY_MONTH_YEAR = 'day_month_year';
+
+    public const PREFERENCE_EDITION_TEXT = 'text';
+    public const PREFERENCE_EDITION_HTML = 'html';
+
 
     /**
      * the id of the user
