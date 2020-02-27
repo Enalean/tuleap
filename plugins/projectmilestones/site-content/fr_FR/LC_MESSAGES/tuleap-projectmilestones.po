@@ -23,8 +23,21 @@ msgstr "Id du projet"
 msgid "Project Milestones"
 msgstr "Jalons de projet"
 
+msgid "Project does not exist."
+msgstr "Le project n'existe pas."
+
 msgid ""
 "The plugin is not supported under IE11. Please use a more recent browser."
 msgstr ""
 "Le plugin n'est pas supporté pour IE11. Merci d'utiliser un navigateur plus "
 "récent."
+
+msgid ""
+"This is a private project. You may only have access to private projects you "
+"are member of."
+msgstr ""
+"Ce projet est privé. Vous pouvez seulement accéder aux projets privés dont "
+"vous êtes membre."
+
+msgid "You can not access to this project."
+msgstr "Vous ne pouvez pas accéder à ce projet."

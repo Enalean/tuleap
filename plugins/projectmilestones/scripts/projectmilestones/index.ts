@@ -38,81 +38,79 @@ document.addEventListener("DOMContentLoaded", async () => {
         import(/* webpackChunkName: "projectmilestones-po-" */ `./po/${locale}.po`)
     );
 
-    const vue_mount_point = document.getElementById("projectmilestones");
+    const widgets: NodeListOf<HTMLElement> = document.querySelectorAll(".projectmilestones");
 
-    if (!vue_mount_point) {
-        return;
+    for (const widget of widgets) {
+        const project_id_dataset = widget.dataset.projectId;
+        const nb_upcoming_releases_dataset = widget.dataset.nbUpcomingReleases;
+        const nb_backlog_items_dataset = widget.dataset.nbBacklogItems;
+        const trackers_agile_dashboard_dataset = widget.dataset.jsonTrackersAgileDashboard;
+        const label_tracker_planning = widget.dataset.labelTrackerPlanning;
+        const is_timeframe_duration_dataset = widget.dataset.isTimeframeDuration;
+        const label_start_date = widget.dataset.labelStartDate;
+        const label_timeframe = widget.dataset.labelTimeframe;
+        const user_can_view_sub_milestones_planning_dataset =
+            widget.dataset.userCanViewSubMilestonesPlanning;
+        const burnup_mode = widget.dataset.burnupMode;
+
+        if (!project_id_dataset) {
+            throw new Error("Project Id is missing.");
+        }
+
+        if (!nb_upcoming_releases_dataset) {
+            throw new Error("Number Upcoming Releases is missing.");
+        }
+
+        if (!nb_backlog_items_dataset) {
+            throw new Error("Number Backlog Items is missing.");
+        }
+
+        if (!trackers_agile_dashboard_dataset) {
+            throw new Error("Trackers Agile Dashboard is missing.");
+        }
+
+        if (!label_tracker_planning) {
+            throw new Error("Label Tracker Planning is missing.");
+        }
+
+        if (!label_start_date) {
+            throw new Error("Label Start Date is missing.");
+        }
+
+        if (!label_timeframe) {
+            throw new Error("Label Timeframe is missing.");
+        }
+
+        if (!burnup_mode) {
+            throw new Error("Mode Burnup is missing.");
+        }
+
+        const project_id = Number.parseInt(project_id_dataset, 10);
+        const nb_upcoming_releases = Number.parseInt(nb_upcoming_releases_dataset, 10);
+        const nb_backlog_items = Number.parseInt(nb_backlog_items_dataset, 10);
+        const trackers_agile_dashboard: TrackerAgileDashboard[] = JSON.parse(
+            trackers_agile_dashboard_dataset
+        );
+        const is_timeframe_duration = Boolean(is_timeframe_duration_dataset);
+        const user_can_view_sub_milestones_planning = Boolean(
+            user_can_view_sub_milestones_planning_dataset
+        );
+
+        const AppComponent = Vue.extend(App);
+
+        new AppComponent({
+            store: createStore(
+                project_id,
+                nb_upcoming_releases,
+                nb_backlog_items,
+                trackers_agile_dashboard,
+                label_tracker_planning,
+                is_timeframe_duration,
+                label_start_date,
+                label_timeframe,
+                user_can_view_sub_milestones_planning,
+                burnup_mode === "count" ? BurnupMode.COUNT : BurnupMode.EFFORT
+            )
+        }).$mount(widget);
     }
-
-    const project_id_dataset = vue_mount_point.dataset.projectId;
-    const nb_upcoming_releases_dataset = vue_mount_point.dataset.nbUpcomingReleases;
-    const nb_backlog_items_dataset = vue_mount_point.dataset.nbBacklogItems;
-    const trackers_agile_dashboard_dataset = vue_mount_point.dataset.jsonTrackersAgileDashboard;
-    const label_tracker_planning = vue_mount_point.dataset.labelTrackerPlanning;
-    const is_timeframe_duration_dataset = vue_mount_point.dataset.isTimeframeDuration;
-    const label_start_date = vue_mount_point.dataset.labelStartDate;
-    const label_timeframe = vue_mount_point.dataset.labelTimeframe;
-    const user_can_view_sub_milestones_planning_dataset =
-        vue_mount_point.dataset.userCanViewSubMilestonesPlanning;
-    const burnup_mode = vue_mount_point.dataset.burnupMode;
-
-    if (!project_id_dataset) {
-        throw new Error("Project Id is missing.");
-    }
-
-    if (!nb_upcoming_releases_dataset) {
-        throw new Error("Number Upcoming Releases is missing.");
-    }
-
-    if (!nb_backlog_items_dataset) {
-        throw new Error("Number Backlog Items is missing.");
-    }
-
-    if (!trackers_agile_dashboard_dataset) {
-        throw new Error("Trackers Agile Dashboard is missing.");
-    }
-
-    if (!label_tracker_planning) {
-        throw new Error("Label Tracker Planning is missing.");
-    }
-
-    if (!label_start_date) {
-        throw new Error("Label Start Date is missing.");
-    }
-
-    if (!label_timeframe) {
-        throw new Error("Label Timeframe is missing.");
-    }
-
-    if (!burnup_mode) {
-        throw new Error("Mode Burnup is missing.");
-    }
-
-    const project_id = Number.parseInt(project_id_dataset, 10);
-    const nb_upcoming_releases = Number.parseInt(nb_upcoming_releases_dataset, 10);
-    const nb_backlog_items = Number.parseInt(nb_backlog_items_dataset, 10);
-    const trackers_agile_dashboard: TrackerAgileDashboard[] = JSON.parse(
-        trackers_agile_dashboard_dataset
-    );
-    const is_timeframe_duration = Boolean(is_timeframe_duration_dataset);
-    const user_can_view_sub_milestones_planning = Boolean(
-        user_can_view_sub_milestones_planning_dataset
-    );
-
-    const AppComponent = Vue.extend(App);
-
-    new AppComponent({
-        store: createStore(
-            project_id,
-            nb_upcoming_releases,
-            nb_backlog_items,
-            trackers_agile_dashboard,
-            label_tracker_planning,
-            is_timeframe_duration,
-            label_start_date,
-            label_timeframe,
-            user_can_view_sub_milestones_planning,
-            burnup_mode === "count" ? BurnupMode.COUNT : BurnupMode.EFFORT
-        )
-    }).$mount(vue_mount_point);
 });

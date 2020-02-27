@@ -49,11 +49,21 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Project;
+use Tuleap\Project\ProjectAccessChecker;
+use Planning_VirtualTopMilestone;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use PermissionsOverrider_PermissionsOverriderManager;
+use Project_AccessPrivateException;
+use Tuleap\Project\ProjectAccessSuspendedException;
+use Project_AccessRestrictedException;
+use Project_AccessProjectNotFoundException;
+use Project_AccessDeletedException;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 
 class ProjectMilestonesPresenterBuilder
 {
@@ -108,6 +118,18 @@ class ProjectMilestonesPresenterBuilder
      * @var CountElementsModeChecker
      */
     private $count_elements_mode_checker;
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var ProjectAccessChecker
+     */
+    private $project_access_checker;
+    /**
+     * @var SemanticTimeframeBuilder
+     */
+    private $semantic_timeframe_builder;
 
     public function __construct(
         HTTPRequest $request,
@@ -117,25 +139,24 @@ class ProjectMilestonesPresenterBuilder
         TrackerFactory $tracker_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        Planning $root_planning,
-        SemanticTimeframe $semantic_timeframe,
-        CountElementsModeChecker $count_elements_mode_checker
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
+        CountElementsModeChecker $count_elements_mode_checker,
+        ProjectAccessChecker $project_access_checker
     ) {
         $this->request                                                           = $request;
         $this->agile_dashboard_milestone_backlog_backlog_factory                 = $agile_dashboard_milestone_backlog_backlog_factory;
         $this->agile_dashboard_milestone_backlog_backlog_item_collection_factory = $agile_dashboard_milestone_backlog_backlog_item_collection_factory;
         $this->planning_milestone_factory                                        = $planning_milestone_factory;
         $this->current_user                                                      = $this->request->getCurrentUser();
-        $this->planning_virtual_top_milestone                                    = $this->planning_milestone_factory->getVirtualTopMilestone($this->current_user, $this->request->getProject());
         $this->tracker_factory                                                   = $tracker_factory;
         $this->explicit_backlog_dao                                              = $explicit_backlog_dao;
         $this->artifacts_in_explicit_backlog_dao                                 = $artifacts_in_explicit_backlog_dao;
-        $this->root_planning                                                     = $root_planning;
-        $this->semantic_timeframe                                                = $semantic_timeframe;
+        $this->semantic_timeframe_builder                                        = $semantic_timeframe_builder;
         $this->count_elements_mode_checker                                       = $count_elements_mode_checker;
+        $this->project_access_checker                                            = $project_access_checker;
     }
 
-    public static function build(Planning $root_planning): ProjectMilestonesPresenterBuilder
+    public static function build(): ProjectMilestonesPresenterBuilder
     {
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
@@ -193,16 +214,50 @@ class ProjectMilestonesPresenterBuilder
             TrackerFactory::instance(),
             new ExplicitBacklogDao(),
             new ArtifactsInExplicitBacklogDao(),
-            $root_planning,
-            $semantic_timeframe_builder->getSemantic($root_planning->getPlanningTracker()),
-            new CountElementsModeChecker(new ProjectsCountModeDao())
+            $semantic_timeframe_builder,
+            new CountElementsModeChecker(new ProjectsCountModeDao()),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                \EventManager::instance()
+            )
         );
     }
 
-    public function getProjectMilestonePresenter(): ProjectMilestonesPresenter
+    /**
+     * @param Planning|false $root_planning
+     * @param Project|false $project
+     * @throws ProjectMilestonesException
+     * @throws ProjectMilestonesException
+     * @throws TimeframeBrokenConfigurationException
+     */
+    public function getProjectMilestonePresenter($project, $root_planning): ProjectMilestonesPresenter
     {
+        if ($this->request->getBrowser()->isIE11()) {
+            throw ProjectMilestonesException::buildBrowserIsIE11();
+        }
+
+        if (!$project) {
+            throw ProjectMilestonesException::buildProjectDontExist();
+        }
+
+        try {
+            $this->project_access_checker->checkUserCanAccessProject($this->request->getCurrentUser(), $project);
+        } catch (Project_AccessPrivateException $e) {
+            throw ProjectMilestonesException::buildUserNotAccessToPrivateProject();
+        } catch (Project_AccessDeletedException | Project_AccessProjectNotFoundException | Project_AccessRestrictedException | ProjectAccessSuspendedException $e) {
+            throw ProjectMilestonesException::buildUserNotAccessToProject();
+        }
+
+        if (!$root_planning) {
+            throw ProjectMilestonesException::buildRootPlanningDontExist();
+        }
+
+        $this->project       = $project;
+        $this->root_planning = $root_planning;
+
         return new ProjectMilestonesPresenter(
-            $this->request->getProject(),
+            $project,
             $this->getNumberUpcomingReleases(),
             $this->getNumberBacklogItems(),
             $this->getTrackersIdAgileDashboard(),
@@ -224,7 +279,7 @@ class ProjectMilestonesPresenterBuilder
 
     private function getNumberBacklogItems(): int
     {
-        $project_id = (int) $this->request->getProject()->getID();
+        $project_id = (int) $this->project->getID();
 
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
             return $this->artifacts_in_explicit_backlog_dao->getNumberOfItemsInExplicitBacklog($project_id);
@@ -233,8 +288,8 @@ class ProjectMilestonesPresenterBuilder
         $backlog = $this->agile_dashboard_milestone_backlog_backlog_item_collection_factory
             ->getUnassignedOpenCollection(
                 $this->current_user,
-                $this->planning_virtual_top_milestone,
-                $this->agile_dashboard_milestone_backlog_backlog_factory->getSelfBacklog($this->planning_virtual_top_milestone),
+                $this->getVirturalTopMilestone(),
+                $this->agile_dashboard_milestone_backlog_backlog_factory->getSelfBacklog($this->getVirturalTopMilestone()),
                 false
             );
 
@@ -244,12 +299,12 @@ class ProjectMilestonesPresenterBuilder
     private function getTrackersIdAgileDashboard(): array
     {
         $trackers_agile_dashboard    = [];
-        $trackers_id_agile_dashboard = $this->planning_virtual_top_milestone->getPlanning()->getBacklogTrackersIds();
+        $trackers_id_agile_dashboard = $this->getVirturalTopMilestone()->getPlanning()->getBacklogTrackersIds();
 
         foreach ($trackers_id_agile_dashboard as $tracker_id) {
             $tracker                 = $this->tracker_factory->getTrackerById($tracker_id);
             $tracker_agile_dashboard = [
-                'id' => (int)$tracker_id,
+                'id' => (int) $tracker_id,
                 'color_name' => $tracker->getColor()->getName(),
                 'label' => $tracker->getName()
             ];
@@ -276,13 +331,16 @@ class ProjectMilestonesPresenterBuilder
 
     private function isTimeframeDurationField(): bool
     {
-        return $this->semantic_timeframe->getDurationField() !== null;
+        return $this->getTimeframeSemantic()->getDurationField() !== null;
     }
 
+    /**
+     * @throws TimeframeBrokenConfigurationException
+     */
     private function getLabelTimeframeField(): string
     {
-        $duration_field = $this->semantic_timeframe->getDurationField();
-        $end_date_field = $this->semantic_timeframe->getEndDateField();
+        $duration_field = $this->getTimeframeSemantic()->getDurationField();
+        $end_date_field = $this->getTimeframeSemantic()->getEndDateField();
 
         if ($duration_field) {
             return $duration_field->getLabel();
@@ -291,12 +349,12 @@ class ProjectMilestonesPresenterBuilder
             return $end_date_field->getLabel();
         }
 
-        throw new TimeframeBrokenConfigurationException($this->semantic_timeframe->getTracker());
+        throw new TimeframeBrokenConfigurationException($this->getTimeframeSemantic()->getTracker());
     }
 
     private function getLabelStartDateField(): string
     {
-        $start_date_field = $this->semantic_timeframe->getStartDateField();
+        $start_date_field = $this->getTimeframeSemantic()->getStartDateField();
 
         if ($start_date_field) {
             return $start_date_field->getLabel();
@@ -307,10 +365,27 @@ class ProjectMilestonesPresenterBuilder
 
     private function getBurnupMode(): string
     {
-        if ($this->count_elements_mode_checker->burnupMustUseCountElementsMode($this->request->getProject())) {
+        if ($this->count_elements_mode_checker->burnupMustUseCountElementsMode($this->project)) {
             return self::COUNT_ELEMENTS_MODE;
         }
 
         return self::EFFORT_MODE;
+    }
+
+    private function getVirturalTopMilestone(): Planning_VirtualTopMilestone
+    {
+        if (!isset($this->planning_virtual_top_milestone)) {
+            $this->planning_virtual_top_milestone = $this->planning_milestone_factory->getVirtualTopMilestone($this->current_user, $this->project);
+        }
+
+        return $this->planning_virtual_top_milestone;
+    }
+
+    private function getTimeframeSemantic(): SemanticTimeframe
+    {
+        if (!isset($this->semantic_timeframe)) {
+            $this->semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($this->root_planning->getPlanningTracker());
+        }
+        return $this->semantic_timeframe;
     }
 }
