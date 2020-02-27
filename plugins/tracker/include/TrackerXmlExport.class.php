@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2020. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -52,6 +53,10 @@ class TrackerXmlExport
      * @var ArtifactLinksUsageDao
      */
     private $artifact_links_usage_dao;
+    /**
+     * @var ExternalFieldsExtractor
+     */
+    private $external_field_extractor;
 
     public function __construct(
         TrackerFactory $tracker_factory,
@@ -61,7 +66,8 @@ class TrackerXmlExport
         UserXMLExporter $user_xml_exporter,
         EventManager $event_manager,
         NaturePresenterFactory $nature_presenter_factory,
-        ArtifactLinksUsageDao $artifact_links_usage_dao
+        ArtifactLinksUsageDao $artifact_links_usage_dao,
+        ExternalFieldsExtractor $external_field_extractor
     ) {
         $this->tracker_factory          = $tracker_factory;
         $this->trigger_rules_manager    = $trigger_rules_manager;
@@ -71,6 +77,7 @@ class TrackerXmlExport
         $this->event_manager            = $event_manager;
         $this->nature_presenter_factory = $nature_presenter_factory;
         $this->artifact_links_usage_dao = $artifact_links_usage_dao;
+        $this->external_field_extractor = $external_field_extractor;
     }
 
     public function exportToXmlFull(
@@ -179,7 +186,11 @@ class TrackerXmlExport
     private function validateTrackerExport(SimpleXMLElement $xml_trackers)
     {
         try {
-            $this->rng_validator->validate($xml_trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
+            $partial_element = new SimpleXMLElement((string)$xml_trackers->asXML());
+            foreach ($partial_element->tracker as $xml_tracker) {
+                $this->external_field_extractor->extractExternalFieldsFromFormElements($xml_tracker->formElements);
+            }
+            $this->rng_validator->validate($partial_element, dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng');
             return $xml_trackers;
         } catch (XML_ParseException $exception) {
             foreach ($exception->getErrors() as $parse_error) {
