@@ -31,7 +31,6 @@ include_account	dns_error	Short name cannot contain underscore or dot.
 include_account	used_by_svn	This short name is not available: An SVN directory already exists with this name
 include_account	used_by_cvs	This short name is not available: An CVS directory already exists with this name
 include_account	used_by_sys	This short name is not available: A home project already exists with this name
-include_account	change_pwd_err	Please update your password first
 #
 #-----------------------------------------------
 # Script: SF/www/include/account.php

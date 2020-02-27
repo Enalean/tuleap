@@ -55,6 +55,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withLastPwdUpdate(string $timestamp)
+    {
+        $this->params['last_pwd_update'] = $timestamp;
+        return $this;
+    }
+
     public function build(): \PFUser
     {
         return new \PFUser($this->params);

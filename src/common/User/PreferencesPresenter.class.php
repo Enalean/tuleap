@@ -28,7 +28,6 @@ class User_PreferencesPresenter
     private $user;
     public $can_change_real_name;
     private $can_change_email;
-    private $can_change_password;
 
     private $extra_user_info;
 
@@ -70,7 +69,6 @@ class User_PreferencesPresenter
         PFUser $user,
         $can_change_real_name,
         $can_change_email,
-        $can_change_password,
         array $extra_user_info,
         array $user_access,
         CSRFSynchronizerToken $csrf_token,
@@ -84,7 +82,6 @@ class User_PreferencesPresenter
         $this->user                    = $user;
         $this->can_change_real_name    = $can_change_real_name;
         $this->can_change_email        = $can_change_email;
-        $this->can_change_password     = $can_change_password;
         $this->extra_user_info         = $extra_user_info;
         $this->user_access             = $user_access;
         $this->csrf_token              = $csrf_token;
@@ -151,11 +148,6 @@ class User_PreferencesPresenter
         return $this->can_change_email;
     }
 
-    public function password_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'password_label');
-    }
-
     public function change_email()
     {
         return $GLOBALS['Language']->getText('account_options', 'change_email_address');
@@ -184,16 +176,6 @@ class User_PreferencesPresenter
     public function btn_save_avatar_label()
     {
         return $GLOBALS['Language']->getText('account_options', 'btn_save_avatar_label');
-    }
-
-    public function can_change_password()
-    {
-        return $this->can_change_password;
-    }
-
-    public function change_password()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'change_password');
     }
 
     public function member_since_label()

@@ -24,7 +24,6 @@ include_account	dns_error	Les noms de projet ne peuvent comporter de caractères
 include_account	used_by_svn	Ce nom n'est pas disponible : Un répertoire SVN existe déjà avec ce nom.
 include_account	used_by_cvs	Ce nom n'est pas disponible : Un répertoire CVS existe déjà avec ce nom.
 include_account	used_by_sys	Ce nom n'est pas disponible : Un home projet  existe déjà avec ce nom.
-include_account	change_pwd_err	Merci de mettre à jour votre mot de passe d'abord
 
 #
 #-----------------------------------------------

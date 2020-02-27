@@ -24,16 +24,6 @@
             <td class="user-info-label table-label">{{ user_id_label }}</td>
             <td>{{ user_id_value }}</td>
         </tr>
-        {{# can_change_password }}
-            <tr>
-                <td class="user-info-label table-label">{{ password_label }}</td>
-                <td>
-                    <a href="change_pw.php" class="btn btn-small">
-                        {{ change_password }}
-                    </a>
-                </td>
-            </tr>
-        {{/ can_change_password }}
         <tr>
             <td class="user-info-label table-label">{{ user_email_label }}</td>
             <td>{{ user_email_value }} {{# can_change_email }}<a href="change_email.php" class="btn btn-small">{{ change_email }}</a>{{/ can_change_email }}</td>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,44 +16,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Cryptography;
+namespace Tuleap\User\Account;
 
-/**
- * @psalm-immutable
- */
-class ConcealedString
+final class UpdatePasswordSanityCheckerException extends \RuntimeException
 {
     /**
-     * @var string
+     * @var array
+     * @psalm-var list<string>
      */
-    private $value;
+    private $errors;
 
-    public function __construct(string $value)
+    /**
+     * @param-param list<string> $errors
+     */
+    public function __construct(array $errors)
     {
-        $this->value = $value;
+        $this->errors = $errors;
     }
 
-    public function getString() : string
+    public function getErrors(): array
     {
-        return $this->value;
-    }
-
-    public function __toString() : string
-    {
-        return $this->value;
-    }
-
-    public function __debugInfo() : array
-    {
-        return ['value' => '** protected value, invoke getString instead of trying to dump it **'];
-    }
-
-    public function isIdenticalTo(ConcealedString $string_b): bool
-    {
-        return \hash_equals($string_b->getString(), $this->value);
+        return $this->errors;
     }
 }

@@ -106,11 +106,9 @@ class LdapPlugin extends Plugin
         $this->addHook('before_change_email-complete', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_change_email-confirm', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_change_email', 'cancelChangeAndUserLdap', false);
-        $this->addHook('before_change_pw', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_change_realname', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_lostpw-confirm', 'cancelChange', false);
         $this->addHook('before_lostpw', 'cancelChange', false);
-        $this->addHook('display_change_password', 'forbidIfLdapAuthAndUserLdap', false);
         $this->addHook('display_change_email', 'forbidIfLdapAuthAndUserLdap', false);
         // Comment if want to allow real name change in LDAP mode
         $this->addHook('display_change_realname', 'forbidIfLdapAuthAndUserLdap', false);

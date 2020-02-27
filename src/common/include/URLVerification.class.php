@@ -33,6 +33,8 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectAccessSuspendedException;
 use Tuleap\Project\RestrictedUserCanAccessUrlOrProjectVerifier;
 use Tuleap\Request\RequestInstrumentation;
+use Tuleap\User\Account\DisplaySecurityController;
+use Tuleap\User\Account\UpdatePasswordController;
 
 /**
  * Check the URL validity (protocol, host name, query) regarding server constraints
@@ -108,7 +110,6 @@ class URLVerification
         // Defaults
         $allowedAnonymous['/account/login.php']          = true;
         $allowedAnonymous['/account/register.php']       = true;
-        $allowedAnonymous['/account/change_pw.php']      = true;
         $allowedAnonymous['/include/check_pw.php']       = true;
         $allowedAnonymous['/account/lostpw.php']         = true;
         $allowedAnonymous['/account/lostlogin.php']      = true;
@@ -437,10 +438,11 @@ class URLVerification
             } catch (ProjectAccessSuspendedException $exception) {
                 $this->displaySuspendedProjectError($user, $project);
             } catch (User_PasswordExpiredException $exception) {
-                if (! $this->isScriptAllowedForAnonymous($server)) {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('include_account', 'change_pwd_err'));
-                    $GLOBALS['Response']->redirect('/account/change_pw.php?user_id'.$user->getId());
+                if ($server['REQUEST_URI'] === DisplaySecurityController::URL || $server['REQUEST_URI'] === UpdatePasswordController::URL) {
+                    return;
                 }
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Please update your password first'));
+                $GLOBALS['Response']->redirect(DisplaySecurityController::URL);
             }
         }
     }

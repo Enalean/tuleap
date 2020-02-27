@@ -161,6 +161,9 @@ msgstr ""
 "Le compte %s est restreint et le project n'autorise pas les utilisateurs "
 "restreints. L'utilisateur n'a pas été ajouté."
 
+msgid "Account must be active to change password"
+msgstr "Le compte doit être actif pour changer le mot de passe"
+
 msgid "Account status"
 msgstr "Statut du compte utilisateur"
 
@@ -523,8 +526,14 @@ msgstr "Créer une nouvelle licence"
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
 
+msgid "Current and new passwords are identical"
+msgstr "L'ancien et le nouveau mot de passe sont identiques"
+
 msgid "Current password"
 msgstr "Ancien mot de passe"
+
+msgid "Current password is incorrect"
+msgstr "L'ancien mot de passe est incorrect"
 
 msgid "Custom groups"
 msgstr "Groupes personnalisés"
@@ -843,6 +852,9 @@ msgstr "Hérité?"
 
 msgid "Initial layout creation"
 msgstr "Création de la structure initiale"
+
+msgid "Internal error: Could not update password"
+msgstr "Erreur interne : le mot de passe n'a pas été mis à jour"
 
 msgid "Internal server error"
 msgstr "Erreur interne du serveur"
@@ -1166,6 +1178,12 @@ msgstr "Projet parent"
 msgid "Password policy"
 msgstr "Politique des mots de passe"
 
+msgid "Password successfully updated"
+msgstr "Le mot de passe a été mis à jour avec succès"
+
+msgid "Passwords do not match"
+msgstr "Les deux mots de passe soumis sont différents"
+
 msgid "People in this group will be able to manage project members."
 msgstr ""
 "Les personnes dans ce groupe seront capables de gérer les membres du projet."
@@ -1199,6 +1217,10 @@ msgstr "Clés personnelles d'accès"
 
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
+
+msgid "Platform configuration forbid users to change password"
+msgstr ""
+"La configuration de la plateforme ne permet pas de changer de mot de passe"
 
 msgid "Platform statistics"
 msgstr "Statistiques de la plateforme"
@@ -1239,6 +1261,9 @@ msgstr ""
 
 msgid "Please select a file to upload"
 msgstr "Veuillez sélectionner un fichier à téléverser"
+
+msgid "Please update your password first"
+msgstr "Merci de mettre à jour votre mot de passe d'abord"
 
 msgid "Please write something meaningful for the admin."
 msgstr "Veuillez soumettre un message pertinent afin d'aider l'administrateur."
