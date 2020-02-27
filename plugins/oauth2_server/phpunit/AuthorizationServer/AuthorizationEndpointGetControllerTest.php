@@ -96,168 +96,95 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->assertEquals('/login', $response->getHeaderLine('Location'));
     }
 
-    public function testHandleThrowsWhenClientIdIsMissing(): void
+    /**
+     * @dataProvider dataProviderInvalidEssentialQueryParameters
+     */
+    public function testHandleThrowsForbiddenWhenEssentialQueryParametersAreInvalid(array $query_parameters): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->expectException(ForbiddenException::class);
-        $this->controller->handle(new NullServerRequest());
-    }
-
-    public function testHandleThrowsWhenClientIdHasWrongFormat(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->expectException(ForbiddenException::class);
-        $request = new NullServerRequest();
-        $this->controller->handle($request->withQueryParams(['client_id' => 'bad_client_id']));
-    }
-
-    public function testHandleThrowsWhenNoAppMatchesClientId(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $request = (new NullServerRequest())->withQueryParams(['client_id' => 'tlp-client-id-1']);
+        $request = (new NullServerRequest())->withQueryParams($query_parameters);
+        $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
         $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andThrow(new OAuth2AppNotFoundException(ClientIdentifier::fromClientId('tlp-client-id-1')));
+            ->with(
+                M::on(
+                    static function (ClientIdentifier $identifier) {
+                        return 'tlp-client-id-1' === $identifier->toString();
+                    }
+                )
+            )
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->with(
+                M::on(
+                    static function (ClientIdentifier $identifier) {
+                        return 'tlp-client-id-404' === $identifier->toString();
+                    }
+                )
+            )
+            ->andThrow(new OAuth2AppNotFoundException(ClientIdentifier::fromClientId('tlp-client-id-404')));
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
     }
 
-    public function testHandleThrowsWhenRedirectURIIsMissing(): void
+    public function dataProviderInvalidEssentialQueryParameters(): array
     {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
-        $request = (new NullServerRequest())->withQueryParams(['client_id' => 'tlp-client-id-1']);
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
-
-        $this->expectException(ForbiddenException::class);
-        $this->controller->handle($request);
+        return [
+            'No client ID'                                     => [[]],
+            'Client ID has wrong format'                       => [['client_id' => 'bad_client_id']],
+            'Client ID matches no App'                         => [['client_id' => 'tlp-client-id-404']],
+            'No redirect URI'                                  => [['client_id' => 'tlp-client-id-1']],
+            "Redirect URI does not match App's registered URI" => [['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/invalid-redirect-uri']]
+        ];
     }
 
-    public function testHandleThrowsWhenRedirectURIDoesNotMatchAppRegisteredURI(): void
-    {
+    /**
+     * @dataProvider dataProviderInvalidQueryParameters
+     */
+    public function testHandleRedirectsWithErrorWhenQueryParametersAreInvalid(
+        array $query_parameters,
+        string $expected_redirection_url
+    ): void {
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
-        $request = (new NullServerRequest())->withQueryParams(
-            ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/invalid-redirect-uri']
-        );
+        $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
+        $request = (new NullServerRequest())->withQueryParams($query_parameters);
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
-
-        $this->expectException(ForbiddenException::class);
-        $this->controller->handle($request);
-    }
-
-    public function testHandleRedirectsAsInvalidRequestWhenResponseTypeIsMissing(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
-        $request = (new NullServerRequest())->withQueryParams(
-            ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value']
-        );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect?key=value', $project));
-
-        $response = $this->controller->handle($request);
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertSame(
-            'https://example.com/redirect?key=value&error=invalid_request',
-            $response->getHeaderLine('Location')
-        );
-    }
-
-    public function testHandleRedirectsEvenWhenRedirectURIHasNoPath(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
-        $request = (new NullServerRequest())->withQueryParams(
-            ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com?key=value']
-        );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com?key=value', $project));
-
-        $response = $this->controller->handle($request);
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertSame(
-            'https://example.com?key=value&error=invalid_request',
-            $response->getHeaderLine('Location')
-        );
-    }
-
-    public function testHandleRedirectsAsInvalidRequestWhenResponseTypeIsNotAllowed(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
-        $request = (new NullServerRequest())->withQueryParams(
-            [
-                'client_id'     => 'tlp-client-id-1',
-                'redirect_uri'  => 'https://example.com/redirect?key=value',
-                'response_type' => 'invalid_response_type'
-            ]
-        );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect?key=value', $project));
-
-        $response = $this->controller->handle($request);
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertSame(
-            'https://example.com/redirect?key=value&error=invalid_request',
-            $response->getHeaderLine('Location')
-        );
-    }
-
-    public function testHandleRedirectsAsInvalidScopeWhenScopeIsMissingOrInvalid(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
-        $request = (new NullServerRequest())->withQueryParams(
-            [
-                'client_id'     => 'tlp-client-id-1',
-                'redirect_uri'  => 'https://example.com/redirect',
-                'response_type' => 'code',
-                'scope'         => 'invalid_scope'
-            ]
-        );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+            ->andReturn(new OAuth2App(1, 'Jenkins', $query_parameters['redirect_uri'], $project));
         $this->scope_extractor->shouldReceive('extractScopes')
-            ->once()
             ->andThrow(new InvalidOAuth2ScopeException());
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertSame(
-            'https://example.com/redirect?error=invalid_scope',
-            $response->getHeaderLine('Location')
-        );
+        $this->assertSame($expected_redirection_url, $response->getHeaderLine('Location'));
+    }
+
+    public function dataProviderInvalidQueryParameters(): array
+    {
+        return [
+            'No response type'                     => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value'],
+                'https://example.com/redirect?key=value&error=invalid_request'
+            ],
+            'Redirect handles URI without path'    => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com?key=value'],
+                'https://example.com?key=value&error=invalid_request'
+            ],
+            'Response type is not allowed'         => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'invalid_response_type'],
+                'https://example.com/redirect?key=value&error=invalid_request'
+            ],
+            'State parameter is passed unmodified' => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'invalid_response_type', 'state' => 'xyz'],
+                'https://example.com/redirect?key=value&state=xyz&error=invalid_request'
+            ],
+            'Scope is unknown'                     => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz', 'scope' => 'invalid_scope'],
+                'https://example.com/redirect?key=value&state=xyz&error=invalid_scope'
+            ]
+        ];
     }
 
     public function testHandleRendersAuthorizationForm(): void
