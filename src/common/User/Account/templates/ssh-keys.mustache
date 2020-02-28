@@ -30,11 +30,11 @@
                     {{/ has_ssh_keys }}
                 </div>
 
-                <table class="tlp-table ssh-keys-table">
+                <table class="tlp-table">
                     <thead>
                     <tr>
                         <th></th>
-                        <th>{{# gettext }}Key{{/ gettext }}</th>
+                        <th class="ssh-keys-table-key">{{# gettext }}Key{{/ gettext }}</th>
                     </tr>
                     </thead>
                         <tbody>
@@ -45,6 +45,13 @@
                                 </td>
                                 <td data-ssh_key_value="{{ ssh_key_value }}">
                                     {{ ssh_key_ellipsis_value }}
+                                </td>
+                            </tr>
+                        {{/ ssh_keys_list }}
+                        {{^ ssh_keys_list }}
+                            <tr>
+                                <td class="tlp-table-cell-empty" colspan="2">
+                                    {{# gettext }}You don't have any SSH keys yet.{{/ gettext }}
                                 </td>
                             </tr>
                         {{/ ssh_keys_list }}

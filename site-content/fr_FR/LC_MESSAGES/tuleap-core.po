@@ -820,15 +820,15 @@ msgid ""
 "Here is your new SVN token. Please make sure you copy it, you won't be able "
 "to see it again!"
 msgstr ""
-"Voici votre nouveau jeton SVN. Assurez-vous de l'avoir copié, vous ne pourrez plus le voir de "
-"nouveau !"
+"Voici votre nouveau jeton SVN. Assurez-vous de l'avoir copié, vous ne "
+"pourrez plus le voir de nouveau !"
 
 msgid ""
 "Here is your new access key. Please make sure to copy it, you won't be able "
 "to see it again!"
 msgstr ""
-"Voici votre nouvelle clé d'accès. Assurez-vous de l'avoir copiée, vous ne pourrez plus la "
-"voir de nouveau !"
+"Voici votre nouvelle clé d'accès. Assurez-vous de l'avoir copiée, vous ne "
+"pourrez plus la voir de nouveau !"
 
 msgid "History"
 msgstr "Historique"
@@ -1104,12 +1104,6 @@ msgstr "Annonces que {{ user_group_name }} peuvent voir"
 
 msgid "No"
 msgstr "Non"
-
-msgid "No SVN token"
-msgstr "Aucun jeton SVN"
-
-msgid "No access keys"
-msgstr "Aucune clé d'accès"
 
 msgid "No children projects"
 msgstr "Aucun projet enfant"
@@ -2506,6 +2500,15 @@ msgstr "Vous ne pouvez pas accéder à cette page."
 
 msgid "You cannot create an already expired access key."
 msgstr "Vous ne pouvez pas créer une clé déja expirée."
+
+msgid "You don't have any SSH keys yet."
+msgstr "Vous n'avez pas de clef SSH."
+
+msgid "You don't have any SVN tokens yet."
+msgstr "Vous n'avez pas de jetons SVN."
+
+msgid "You don't have any access keys yet."
+msgstr "Vous n'avez pas de clef d'accès."
 
 msgid "You don't have any dashboards."
 msgstr "Vous n'avez aucun tableau de bord."
