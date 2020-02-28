@@ -226,13 +226,6 @@ class User_PreferencesPresenter
         return format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->user_access['prev_auth_success']);
     }
 
-    public function user_legal()
-    {
-        ob_start();
-        include $GLOBALS['Language']->getContent('account/user_legal');
-        return ob_get_clean();
-    }
-
     /* MODAL */
 
     public function btn_close_label()

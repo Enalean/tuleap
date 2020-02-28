@@ -19,7 +19,6 @@
 
 class Account_RegisterByUserPresenter extends Account_RegisterPresenter
 {
-
     public $title;
     public $submit;
     public $mandatory;
@@ -33,9 +32,5 @@ class Account_RegisterByUserPresenter extends Account_RegisterPresenter
         $this->submit        = $GLOBALS['Language']->getText('account_register', 'btn_register');
         $this->mandatory     = $GLOBALS['Language']->getText('account_register', 'mandatory');
         $this->new_password2 = $GLOBALS['Language']->getText('account_change_pw', 'new_password2');
-
-        ob_start();
-        include $GLOBALS['Language']->getContent('account/user_legal');
-        $this->legal = ob_get_clean();
     }
 }
