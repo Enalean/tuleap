@@ -69,6 +69,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Project name not provided, app can't be routed.");
     }
 
+    const project_id = vue_mount_point.dataset.projectId;
+    if (!project_id) {
+        throw new Error("Project id not provided.");
+    }
+
     const initial_state: State = {
         csrf_token,
         project_templates,
@@ -84,7 +89,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         is_a_xml_file_selected: false,
         is_parsing_a_xml_file: false,
         has_xml_file_error: false,
-        is_in_slugify_mode: true
+        is_in_slugify_mode: true,
+        project_id: parseInt(project_id, 10)
     };
 
     new AppComponent({

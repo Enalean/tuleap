@@ -30,6 +30,7 @@ export interface State {
     has_xml_file_error: boolean;
     is_in_slugify_mode: boolean;
     existing_trackers: ExistingTrackersList;
+    project_id: number;
 }
 
 export interface CSRFToken {

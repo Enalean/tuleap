@@ -23,6 +23,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\GlobalAdminController;
+use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 use Tuleap\Tracker\Creation\TrackerCreator;
@@ -452,7 +453,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $hp = Codendi_HTMLPurifier::instance();
 
+        echo '<div class="tracker-creation-header">';
         echo '<h2>'.$Language->getText('plugin_tracker_include_type', 'create_tracker').'</h2>';
+        echo '<a href="'.TrackerCreationController::getRouteToTrackerCreationController($project).'" class="btn btn-primary tracker-creation-link">
+                <i class="fa fa-flask"></i> '. dgettext('tuleap-tracker', 'Try new tracker creation flow').
+            '</a>';
+        echo '</div>';
 
         echo '<form name="form_create" method="post" enctype="multipart/form-data" id="tracker_create_new">
           <input type="hidden" name="group_id" value="'.$project->getId().'">
