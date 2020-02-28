@@ -83,7 +83,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
     }
 
     /**
-     * Serves the route /<project_name>/tracker/new
+     * Serves the route /plugins/tracker/<project_name>/new
      *
      * @throws NotFoundException
      * @throws ForbiddenException
@@ -118,7 +118,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
                 'tracker-creation-app',
                 $this->presenter_builder->build(
                     $project,
-                    $this->getCSRFTokenForSubmition($project)
+                    $this->getCSRFTokenForSubmission($project)
                 )
             );
 
@@ -145,12 +145,15 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
         return $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);
     }
 
-    private function getCSRFTokenForSubmition(Project $project): CSRFSynchronizerToken
+    private function getCSRFTokenForSubmission(Project $project): CSRFSynchronizerToken
     {
         return new CSRFSynchronizerToken(
-            '/'
-            . urlencode($project->getUnixNameLowerCase())
-            . '/tracker/new-information'
+            TrackerCreationProcessorController::getRouteToSubmissionController($project)
         );
+    }
+
+    public static function getRouteToTrackerCreationController(Project $project): string
+    {
+        return '/plugins/tracker/' . urlencode($project->getUnixNameLowerCase()) . '/new';
     }
 }
