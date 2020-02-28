@@ -301,7 +301,8 @@ class hudson_gitPlugin extends Plugin
                 ProjectManager::instance()
             ),
             new Hook\HookDao(),
-            $this->getCSRF()
+            $this->getCSRF(),
+            new Valid_HTTPURI()
         );
     }
 
