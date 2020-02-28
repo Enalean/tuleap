@@ -25,7 +25,9 @@ namespace Tuleap\HudsonGit\Hook;
 use Http\Mock\Client;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 final class JenkinsClientTest extends TestCase
@@ -34,13 +36,15 @@ final class JenkinsClientTest extends TestCase
 
     public function testJenkinsIsNotified() : void
     {
-        $http_client = new Client();
+        $http_client          = new Client();
         $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
 
         $jenkins_client = new JenkinsClient(
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
-            $csrf_crumb_retriever
+            $csrf_crumb_retriever,
+            Mockery::mock(JenkinsTuleapPluginHookPayload::class),
+            Mockery::mock(StreamFactoryInterface::class)
         );
 
         $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
@@ -51,8 +55,8 @@ final class JenkinsClientTest extends TestCase
 
         $http_client->addResponse(
             $http_response_factory->createResponse()
-                ->withHeader('Triggered', $triggered_jobs)
-                ->withBody(HTTPFactoryBuilder::streamFactory()->createStream($body_content))
+                                  ->withHeader('Triggered', $triggered_jobs)
+                                  ->withBody(HTTPFactoryBuilder::streamFactory()->createStream($body_content))
         );
 
         $polling_response = $jenkins_client->pushGitNotifications(
@@ -63,5 +67,84 @@ final class JenkinsClientTest extends TestCase
 
         $this->assertEqualsCanonicalizing($triggered_jobs, $polling_response->getJobPaths());
         $this->assertEquals($body_content, $polling_response->getBody());
+    }
+
+    public function testJenkinsTuleapBranchSourcePluginIsNotified(): void
+    {
+        $http_client          = new Client();
+        $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
+
+        $payload = Mockery::mock(JenkinsTuleapPluginHookPayload::class);
+
+        $payload_content = [
+            'tuleapProjectId' => '1',
+            'repositoryName'  => 'AMG',
+            'branchName'      => 'A35'
+        ];
+
+        $payload->shouldReceive('getPayload')->andReturn($payload_content);
+
+        $stream_factory = Mockery::mock(StreamFactoryInterface::class);
+        $stream_factory->shouldReceive('createStream')->with(json_encode($payload->getPayload()))->once();
+
+        $jenkins_client = new JenkinsClient(
+            $http_client,
+            HTTPFactoryBuilder::requestFactory(),
+            $csrf_crumb_retriever,
+            $payload,
+            $stream_factory
+        );
+
+        $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $http_response_factory = HTTPFactoryBuilder::responseFactory();
+
+        $http_client->addResponse(
+            $http_response_factory->createResponse()
+                                  ->withStatus(200)
+        );
+
+        $jenkins_client->pushJenkinsTuleapPluginNotification(
+            'https://jenkins.example.com'
+        );
+    }
+
+    public function testThrowsExceptionWhenTheBuildCannotBeTriggered(): void
+    {
+        $http_client          = new Client();
+        $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
+
+        $payload = Mockery::mock(JenkinsTuleapPluginHookPayload::class);
+
+        $payload_content = [
+            'tuleapProjectId' => '1',
+            'repositoryName'  => 'AMG',
+            'branchName'      => 'A35'
+        ];
+
+        $payload->shouldReceive('getPayload')->andReturn($payload_content);
+
+        $stream_factory = Mockery::mock(StreamFactoryInterface::class);
+        $stream_factory->shouldReceive('createStream')->with(json_encode($payload->getPayload()))->once();
+
+        $jenkins_client = new JenkinsClient(
+            $http_client,
+            HTTPFactoryBuilder::requestFactory(),
+            $csrf_crumb_retriever,
+            $payload,
+            $stream_factory
+        );
+
+        $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $http_response_factory = HTTPFactoryBuilder::responseFactory();
+
+        $http_client->addResponse(
+            $http_response_factory->createResponse()
+                                  ->withStatus(400)
+        );
+
+        $this->expectException(UnableToLaunchBuildException::class);
+        $jenkins_client->pushJenkinsTuleapPluginNotification(
+            'https://jenkins.example.com'
+        );
     }
 }
