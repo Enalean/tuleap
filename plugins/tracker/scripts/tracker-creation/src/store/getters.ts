@@ -24,8 +24,12 @@ export const is_ready_for_step_2 = (state: State): boolean => {
         return false;
     }
 
-    return isDuplicationReady(state) || isXmlImportReady(state);
+    return isDuplicationReady(state) || isXmlImportReady(state) || isEmptyReady(state);
 };
+
+function isEmptyReady(state: State): boolean {
+    return state.active_option === CreationOptions.TRACKER_EMPTY;
+}
 
 function isDuplicationReady(state: State): boolean {
     return (
@@ -48,6 +52,10 @@ export const is_ready_to_submit = (state: State): boolean => {
         state.tracker_to_be_created.name.length > 0 &&
         state.tracker_to_be_created.shortname.length > 0
     );
+};
+
+export const is_created_from_empty = (state: State): boolean => {
+    return state.active_option === CreationOptions.TRACKER_EMPTY;
 };
 
 export const is_a_duplication = (state: State): boolean => {

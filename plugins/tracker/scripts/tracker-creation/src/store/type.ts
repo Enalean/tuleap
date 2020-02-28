@@ -53,5 +53,6 @@ export interface TrackerToBeCreatedMandatoryData {
 export enum CreationOptions {
     NONE_YET = "none_yet",
     TRACKER_TEMPLATE = "tracker_template",
-    TRACKER_XML_FILE = "tracker_xml_file"
+    TRACKER_XML_FILE = "tracker_xml_file",
+    TRACKER_EMPTY = "tracker_empty"
 }

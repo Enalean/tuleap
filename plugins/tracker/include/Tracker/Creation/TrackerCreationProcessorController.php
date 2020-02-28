@@ -86,6 +86,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $tracker_shortname = $request->get('tracker-shortname');
         $tracker_description = $request->get('tracker-description') ?? '';
         $tracker_template_id = $request->get('tracker-template-id');
+        $from_empty_tracker = $request->get('from-tracker-empty');
 
         try {
             if ($tracker_template_id) {
@@ -96,6 +97,14 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     (string) $tracker_shortname,
                     (string) $tracker_template_id,
                     $user
+                );
+            } elseif ($from_empty_tracker) {
+                $tracker = $this->tracker_creator->createTrackerFromXml(
+                    $project,
+                    __DIR__ . '/../../../www/resources/templates/Tracker_Empty.xml',
+                    (string) $tracker_name,
+                    (string) $tracker_description,
+                    (string) $tracker_shortname
                 );
             } else {
                 $file    = $_FILES;
