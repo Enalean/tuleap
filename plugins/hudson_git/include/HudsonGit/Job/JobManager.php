@@ -70,7 +70,7 @@ class JobManager
     {
         if ((int) $jenkins_server->getProject()->getID() !== (int) $job->getRepository()->getProject()->getID()) {
             throw new CannotCreateJobException(
-                dgettext("tuleap-hudson_git", "Provided job does not belong to the jenkins server's project.")
+                dgettext("tuleap-hudson_git", "Provided job does not belong to the Jenkins server's project.")
             );
         }
 

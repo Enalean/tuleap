@@ -1,6 +1,6 @@
 <div id="remove-{{ jenkins_server_id }}-popover" class="remove-jenkins-server-popover">
     <form action="/plugins/hudson_git/jenkins_server/delete" method="POST">
-        <p>{{# dgettext }} tuleap-hudson_git | You are about to remove the jenkins server. Please confirm your action.{{/ dgettext }}</p>
+        <p>{{# dgettext }} tuleap-hudson_git | You are about to remove the Jenkins server. Please confirm your action.{{/ dgettext }}</p>
 
         {{# csrf_delete }}
             {{> csrf_token_input }}
