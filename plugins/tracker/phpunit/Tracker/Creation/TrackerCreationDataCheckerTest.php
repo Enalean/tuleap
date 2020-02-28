@@ -122,10 +122,33 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
         $tracker = \Mockery::mock(\Tracker::class);
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
-        $tracker->shouldReceive('userCanView')->andReturnFalse();
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('isTemplate')->andReturnFalse();
+        $tracker->shouldReceive('userIsAdmin')->andReturnFalse();
+        $tracker->shouldReceive('getProject')->andReturn($project);
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The template id 12 used for tracker creation was not found.');
+        $this->checker->checkAtTrackerDuplication(
+            $shortname,
+            $template_id,
+            $user
+        );
+    }
+
+    public function testItDoesNotCheckUserPermissionsWhenTrackerComeFromAProjectTemplate(): void
+    {
+        $shortname = "bugs";
+        $template_id = "12";
+        $user =\Mockery::mock(\PFUser::class);
+
+        $tracker = \Mockery::mock(\Tracker::class);
+        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('isTemplate')->andReturnTrue();
+        $tracker->shouldReceive('userIsAdmin')->never();
+        $tracker->shouldReceive('getProject')->andReturn($project);
+
         $this->checker->checkAtTrackerDuplication(
             $shortname,
             $template_id,
