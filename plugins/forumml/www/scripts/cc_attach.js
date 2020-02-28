@@ -32,6 +32,7 @@ function addHeader(cc, file, header_type) {
 
     newdiv.setAttribute("id", divIdName);
     if (header_type === 1) {
+        // eslint-disable-next-line no-unsanitized/property
         newdiv.innerHTML +=
             "<table><tr><td width='65' align='right'><b><i>CC: </i></b></td><td align=center width=350><input name='ccs[" +
             num +
@@ -41,6 +42,7 @@ function addHeader(cc, file, header_type) {
             divIdName +
             "')\"><img border='0' src=\"/themes/common/images/ic/trash.png\"></a></td></tr></table>";
     } else {
+        // eslint-disable-next-line no-unsanitized/property
         newdiv.innerHTML +=
             "<table><tr><td width='65' align='right'><b><i>Attach </i></b></td><td align=center width=350><input name='files[" +
             num +

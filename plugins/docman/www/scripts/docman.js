@@ -1061,6 +1061,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                         // Search item title
                         var title = $("docman_item_title_link_" + this.item_id).firstChild
                             .nodeValue;
+                        // eslint-disable-next-line no-unsanitized/property
                         li.innerHTML =
                             '"' +
                             tuleap.escaper.html(title) +

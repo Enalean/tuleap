@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2016 - 2018. All rights reserved
+ * Copyright (c) Enalean SAS - 2016 - Present. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSelect2();
 
     function changeWarningTextAccordinglyToDestination() {
-        warning_element.innerHTML =
+        warning_element.innerText =
             destination_element[destination_element.selectedIndex].dataset.warning;
 
         submit_button.disabled =
@@ -104,13 +104,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!response) {
             preview_feedback.classList.add("tlp-alert-danger");
-            preview_feedback.innerHTML = "Something is wrong with your request";
+            preview_feedback.innerText = "Something is wrong with your request";
         } else if (!response.success) {
             preview_feedback.classList.add("tlp-alert-danger");
-            preview_feedback.innerHTML = response.message;
+            preview_feedback.innerText = response.message;
         } else {
             preview_feedback.classList.add("tlp-alert-success");
-            preview_feedback.innerHTML = response.message;
+            preview_feedback.innerText = response.message;
         }
 
         preview_timeout = window.setTimeout(clearFeedback, 5000);
