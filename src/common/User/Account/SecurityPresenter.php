@@ -26,9 +26,6 @@ namespace Tuleap\User\Account;
 use CSRFSynchronizerToken;
 use Tuleap\User\Password\PasswordValidatorPresenter;
 
-/**
- * @psalm-immutable
- */
 final class SecurityPresenter
 {
     public $change_password_url = UpdatePasswordController::URL;
@@ -36,37 +33,65 @@ final class SecurityPresenter
 
     /**
      * @var AccountTabPresenterCollection
+     * @psalm-readonly
      */
     public $tabs;
     /**
      * @var CSRFSynchronizerToken
+     * @psalm-readonly
      */
     public $csrf_token;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $remember_me_activated;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $username;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $old_password_is_required;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $user_can_change_password;
     /**
      * @var PasswordValidatorPresenter[]
+     * @psalm-readonly
      */
     public $passwords_validators;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $last_successful_login;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $last_login_failure;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
+    public $number_of_login_failure;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $previous_successful_login;
 
     /**
      * @param PasswordValidatorPresenter[]  $password_validator_presenter
+     * @psalm-param array{last_auth_success: string, last_auth_failure: string, nb_auth_failure: string, prev_auth_success: string} $user_access
      */
-    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, \PFUser $user, PasswordPreUpdateEvent $password_pre_update_event, array $password_validator_presenter)
+    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, \PFUser $user, PasswordPreUpdateEvent $password_pre_update_event, array $password_validator_presenter, array $user_access)
     {
         $this->tabs = $tabs;
         $this->csrf_token = $csrf_token;
@@ -75,5 +100,9 @@ final class SecurityPresenter
         $this->old_password_is_required = $password_pre_update_event->isOldPasswordRequiredToUpdatePassword();
         $this->user_can_change_password = $password_pre_update_event->areUsersAllowedToChangePassword();
         $this->passwords_validators = $password_validator_presenter;
+        $this->last_successful_login = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user_access['last_auth_success']);
+        $this->last_login_failure    = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user_access['last_auth_failure']);
+        $this->number_of_login_failure = (int) $user_access['nb_auth_failure'];
+        $this->previous_successful_login = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user_access['prev_auth_success']);
     }
 }

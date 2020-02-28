@@ -7,11 +7,12 @@
 
         <div class="user-preferences-section">
             {{# user_can_change_password }}
-                {{> security-password }}
+                {{> security/password }}
             {{/ user_can_change_password }}
 
-            {{> security-session }}
+            {{> security/session }}
 
+            {{> security/access }}
         </div>
     </div>
 </div>

@@ -519,7 +519,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *
      * @param PFUser $user
      *
-     * @return Array
+     * @return array{last_auth_success: string, last_auth_failure: string, nb_auth_failure: string, prev_auth_success: string}
      */
     public function getUserAccessInfo($user)
     {

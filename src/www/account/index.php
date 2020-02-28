@@ -57,16 +57,6 @@ $em->processEvent(
 
 $csrf = new CSRFSynchronizerToken('/account/index.php');
 
-$user_access_info = $um->getUserAccessInfo($user);
-if (! $user_access_info) {
-    $user_access_info = array(
-        'last_auth_success' => false,
-        'last_auth_failure' => false,
-        'nb_auth_failure'   => false,
-        'prev_auth_success' => false,
-    );
-}
-
 $tabs = $em->dispatch(new AccountTabPresenterCollection($user, '/account'));
 assert($tabs instanceof AccountTabPresenterCollection);
 
@@ -76,7 +66,6 @@ User_PreferencesPresenter(
     $can_change_realname,
     $can_change_email,
     $extra_user_info,
-    $user_access_info,
     $csrf,
     $tabs
 );

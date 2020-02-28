@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
+use EventManager;
 use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
@@ -36,6 +37,7 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Password\PasswordValidatorPresenter;
+use UserManager;
 
 final class DisplaySecurityController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -56,33 +58,37 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
      * @var PasswordSanityChecker
      */
     private $password_sanity_checker;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         EventDispatcherInterface $dispatcher,
         TemplateRendererFactory $renderer_factory,
         CSRFSynchronizerToken $csrf_token,
-        PasswordSanityChecker $password_sanity_checker
+        PasswordSanityChecker $password_sanity_checker,
+        UserManager $user_manager
     ) {
 
         $this->dispatcher = $dispatcher;
         $this->renderer   = $renderer_factory->getRenderer(__DIR__ . '/templates');
         $this->csrf_token = $csrf_token;
         $this->password_sanity_checker = $password_sanity_checker;
+        $this->user_manager = $user_manager;
     }
 
     public static function buildSelf(): self
     {
         return new self(
-            \EventManager::instance(),
+            EventManager::instance(),
             TemplateRendererFactory::build(),
             self::getCSRFToken(),
             PasswordSanityChecker::build(),
+            UserManager::instance(),
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
@@ -137,7 +143,8 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
                 $this->csrf_token,
                 $user,
                 $password_pre_update,
-                $passwords_validators
+                $passwords_validators,
+                $this->user_manager->getUserAccessInfo($user),
             )
         );
         $layout->footer([]);
