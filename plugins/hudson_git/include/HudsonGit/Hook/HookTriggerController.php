@@ -21,9 +21,9 @@
 namespace Tuleap\HudsonGit\Hook;
 
 use DateTimeImmutable;
-use Psr\Log\LoggerInterface;
-use GitRepository;
 use Exception;
+use GitRepository;
+use Psr\Log\LoggerInterface;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Job\CannotCreateJobException;
@@ -96,6 +96,7 @@ class HookTriggerController
             } catch (Exception $exception) {
                 $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
             }
+            $this->jenkins_client->pushJenkinsTuleapPluginNotification($row['jenkins_server_url']);
         }
     }
 
@@ -134,6 +135,7 @@ class HookTriggerController
             } catch (Exception $exception) {
                 $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
             }
+            $this->jenkins_client->pushJenkinsTuleapPluginNotification($jenkins_server->getServerURL());
         }
     }
 

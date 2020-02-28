@@ -31,6 +31,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\Events\XMLImportExternalContentEvent;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Http\HttpClientFactory;
@@ -45,15 +46,15 @@ use Tuleap\HudsonGit\Git\Administration\JenkinsServerDeleter;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Git\Administration\URLBuilder;
 use Tuleap\HudsonGit\Git\Administration\XML\XMLImporter;
-use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
-use Tuleap\HudsonGit\Job\ProjectJobDao;
-use Tuleap\HudsonGit\Plugin\PluginInfo;
-use Tuleap\HudsonGit\Hook;
-use Tuleap\HudsonGit\Logger;
-use Tuleap\HudsonGit\Job\JobManager;
-use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
-use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
+use Tuleap\HudsonGit\Hook;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
+use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
+use Tuleap\HudsonGit\Job\JobDao;
+use Tuleap\HudsonGit\Job\JobManager;
+use Tuleap\HudsonGit\Job\ProjectJobDao;
+use Tuleap\HudsonGit\Logger;
+use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
@@ -254,12 +255,15 @@ class hudson_gitPlugin extends Plugin
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $http_client     = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
             $request_factory = HTTPFactoryBuilder::requestFactory();
+            $stream_factory  = HTTPFactoryBuilder::streamFactory();
             $controller      = new Hook\HookTriggerController(
                 new Hook\HookDao(),
                 new Hook\JenkinsClient(
                     $http_client,
                     $request_factory,
-                    new JenkinsCSRFCrumbRetriever($http_client, $request_factory)
+                    new JenkinsCSRFCrumbRetriever($http_client, $request_factory),
+                    new JenkinsTuleapPluginHookPayload($params['repository'], $params['refname']),
+                    $stream_factory
                 ),
                 $this->getLogger(),
                 new JobManager(
