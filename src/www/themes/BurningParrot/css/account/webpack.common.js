@@ -28,7 +28,7 @@ for (const color of colors) {
     entry_points[`account-${color}-condensed`] = `./account-${color}-condensed.scss`;
 }
 
-const project_registration_config = {
+const config = {
     entry: entry_points,
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(
@@ -44,4 +44,4 @@ const project_registration_config = {
     ]
 };
 
-module.exports = [project_registration_config];
+module.exports = [config];
