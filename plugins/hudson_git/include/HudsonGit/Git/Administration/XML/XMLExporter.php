@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration\XML;
 
 use Project;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 
@@ -33,9 +34,15 @@ class XMLExporter
      */
     private $jenkins_server_factory;
 
-    public function __construct(JenkinsServerFactory $jenkins_server_factory)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(JenkinsServerFactory $jenkins_server_factory, LoggerInterface $logger)
     {
         $this->jenkins_server_factory = $jenkins_server_factory;
+        $this->logger                 = $logger;
     }
 
     public function export(Project $project, SimpleXMLElement $xml_git): void
@@ -45,8 +52,10 @@ class XMLExporter
             return;
         }
 
+        $this->logger->info("Exporting all project jenkins servers.");
         $jenkins_servers_admin_node = $xml_git->addChild("jenkins-servers-admin");
         foreach ($project_jenkins_server as $jenkins_server) {
+            $this->logger->info("Exporting project jenkins server: " . $jenkins_server->getServerURL());
             $jenkins_server_node = $jenkins_servers_admin_node->addChild("jenkins-server");
             $jenkins_server_node->addAttribute("url", $jenkins_server->getServerURL());
         }

@@ -189,7 +189,8 @@ class GitXmlImporter
         $this->event_manager->processEvent(
             new XMLImportExternalContentEvent(
                 $project,
-                $xml_git
+                $xml_git,
+                $this->logger
             )
         );
     }

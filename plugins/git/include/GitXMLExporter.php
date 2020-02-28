@@ -154,7 +154,8 @@ class GitXmlExporter
         $this->event_manager->processEvent(
             new XMLExportExternalContentEvent(
                 $this->project,
-                $xml_content
+                $xml_content,
+                $this->logger
             )
         );
     }

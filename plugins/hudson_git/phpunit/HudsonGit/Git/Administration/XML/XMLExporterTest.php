@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
@@ -49,14 +50,21 @@ class XMLExporterTest extends TestCase
      */
     private $project;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->jenkins_server_factory = Mockery::mock(JenkinsServerFactory::class);
+        $this->logger                 = Mockery::mock(LoggerInterface::class);
 
         $this->exporter = new XMLExporter(
-            $this->jenkins_server_factory
+            $this->jenkins_server_factory,
+            $this->logger
         );
 
         $this->project = Mockery::mock(Project::class);
@@ -74,6 +82,8 @@ class XMLExporterTest extends TestCase
         $xml_git = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <git/>
         ');
+
+        $this->logger->shouldReceive('info');
 
         $this->exporter->export(
             $this->project,
