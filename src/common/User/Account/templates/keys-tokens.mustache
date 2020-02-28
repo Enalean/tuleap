@@ -1,3 +1,21 @@
+{{# access_key_presenter }}
+    {{# last_access_key }}
+        <div class="tlp-alert-success">
+            <p>{{# gettext }}Here is your new access key. Please make sure to copy it, you won't be able to see it again!{{/ gettext }}</p>
+            <p><code><strong>{{ last_access_key }}</strong></code></p>
+        </div>
+    {{/ last_access_key }}
+{{/ access_key_presenter }}
+
+{{# svn_tokens_presenter }}
+    {{# last_svn_token }}
+        <div class="tlp-alert-success">
+            <p>{{# gettext }}Here is your new SVN token. Please make sure you copy it, you won't be able to see it again!{{/ gettext }}</p>
+            <p><code><strong>{{ last_svn_token }}</strong></code></p>
+        </div>
+    {{/ last_svn_token }}
+{{/ svn_tokens_presenter }}
+
 <div class="user-preferences">
     <h1 class="user-preferences-title">
         {{# gettext }}Preferences{{/ gettext }}

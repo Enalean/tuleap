@@ -816,6 +816,20 @@ msgstr "Groupes"
 msgid "Heartbeat"
 msgstr "Activité"
 
+msgid ""
+"Here is your new SVN token. Please make sure you copy it, you won't be able "
+"to see it again!"
+msgstr ""
+"Voici votre nouveau jeton SVN. Assurez-vous de l'avoir copié, vous ne pourrez plus le voir de "
+"nouveau !"
+
+msgid ""
+"Here is your new access key. Please make sure to copy it, you won't be able "
+"to see it again!"
+msgstr ""
+"Voici votre nouvelle clé d'accès. Assurez-vous de l'avoir copiée, vous ne pourrez plus la "
+"voir de nouveau !"
+
 msgid "History"
 msgstr "Historique"
 
@@ -977,18 +991,6 @@ msgstr "Trafic faible."
 
 msgid "Mailing lists (Lists Service)"
 msgstr "Listes de diffusion (Service Listes)"
-
-msgid ""
-"Make sure you copy your new SVN token, you won't be able to see it again!"
-msgstr ""
-"Assurez-vous de copier votre nouveau jeton, vous ne pourrez plus le voir de "
-"nouveau !"
-
-msgid ""
-"Make sure you copy your new access key, you won't be able to see it again!"
-msgstr ""
-"Assurez-vous de copier votre nouvelle clé d'accès, vous ne pourrez plus la "
-"voir de nouveau !"
 
 msgid "Massmail to project members is disabled."
 msgstr "L'envoi de mails vers les membres du projet est désactivé."

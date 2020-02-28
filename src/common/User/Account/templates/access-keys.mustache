@@ -8,13 +8,6 @@
                 {{# gettext }}You can use access keys to access resources from scripts or command line. However, these access keys are like password and should be guarded carefully.{{/ gettext }}
             </p>
 
-            {{# last_access_key }}
-                <div class="tlp-alert-success">
-                    <p>{{# gettext }}Make sure you copy your new access key, you won't be able to see it again!{{/ gettext }}</p>
-                    <p><strong>{{ last_access_key }}</strong></p>
-                </div>
-            {{/ last_access_key }}
-
             <form action="/account/access_key/revoke" method="post">
                 {{# csrf_token }}
                     {{> csrf_token_input }}
