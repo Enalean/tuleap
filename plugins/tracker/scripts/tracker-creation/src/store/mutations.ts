@@ -87,6 +87,10 @@ export function setCreationFormHasBeenSubmitted(state: State): void {
     state.has_form_been_submitted = true;
 }
 
+export function cancelCreationFormSubmition(state: State): void {
+    state.has_form_been_submitted = false;
+}
+
 export function setSelectedTrackerXmlFileInput(state: State, input: HTMLInputElement): void {
     state.selected_xml_file_input = input;
 }
