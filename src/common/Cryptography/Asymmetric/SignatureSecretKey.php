@@ -30,7 +30,10 @@ class SignatureSecretKey extends Key
 {
     public function __construct(ConcealedString $key_data)
     {
-        if (\mb_strlen($key_data->getString(), '8bit') !== \SODIUM_CRYPTO_SIGN_SECRETKEYBYTES) {
+        $raw_key_data        = $key_data->getString();
+        $raw_key_data_length = \mb_strlen($raw_key_data, '8bit');
+        \sodium_memzero($raw_key_data);
+        if ($raw_key_data_length !== \SODIUM_CRYPTO_SIGN_SECRETKEYBYTES) {
             throw new InvalidKeyException('Signature secret key must be SODIUM_CRYPTO_SIGN_SECRETKEYBYTES long');
         }
         parent::__construct($key_data);

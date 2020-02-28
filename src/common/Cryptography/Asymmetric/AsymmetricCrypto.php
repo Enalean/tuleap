@@ -33,7 +33,13 @@ final class AsymmetricCrypto
 
     public static function sign(string $message, SignatureSecretKey $secret_key) : string
     {
-        return \sodium_crypto_sign_detached($message, $secret_key->getRawKeyMaterial());
+        $raw_key_material = $secret_key->getRawKeyMaterial();
+
+        $signature = \sodium_crypto_sign_detached($message, $raw_key_material);
+
+        \sodium_memzero($raw_key_material);
+
+        return $signature;
     }
 
     /**
@@ -45,6 +51,12 @@ final class AsymmetricCrypto
             throw new InvalidSignatureException('Signature must be SODIUM_CRYPTO_SIGN_BYTES long');
         }
 
-        return \sodium_crypto_sign_verify_detached($signature, $message, $public_key->getRawKeyMaterial());
+        $raw_key_material = $public_key->getRawKeyMaterial();
+
+        $is_valid = \sodium_crypto_sign_verify_detached($signature, $message, $raw_key_material);
+
+        \sodium_memzero($raw_key_material);
+
+        return $is_valid;
     }
 }

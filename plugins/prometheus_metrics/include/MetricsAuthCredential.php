@@ -71,6 +71,6 @@ final class MetricsAuthCredential
             return false;
         }
 
-        return \hash_equals($known_password->getString(), $this->password->getString());
+        return $known_password->isIdenticalTo($this->password);
     }
 }

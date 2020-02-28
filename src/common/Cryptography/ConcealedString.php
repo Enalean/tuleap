@@ -77,6 +77,18 @@ final class ConcealedString
 
     public function isIdenticalTo(ConcealedString $string_b): bool
     {
-        return \hash_equals($string_b->getString(), $this->value);
+        return \hash_equals($string_b->value, $this->value);
+    }
+
+    public function __destruct()
+    {
+        /**
+         * While is indeed correct about this, it is only an issue if a developer manually call __destruct() (please don't)
+         * In the expected object lifecycle this method will only called when the object will not be reused
+         * again so mutability is not a problem.
+         * @psalm-suppress ImpureFunctionCall
+         * @psalm-suppress InaccessibleProperty
+         */
+        \sodium_memzero($this->value);
     }
 }

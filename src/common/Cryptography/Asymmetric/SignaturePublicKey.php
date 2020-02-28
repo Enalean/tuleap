@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +30,10 @@ class SignaturePublicKey extends Key
 {
     public function __construct(ConcealedString $key_data)
     {
-        if (\mb_strlen($key_data->getString(), '8bit') !== \SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
+        $raw_key_data        = $key_data->getString();
+        $raw_key_data_length = \mb_strlen($raw_key_data, '8bit');
+        \sodium_memzero($raw_key_data);
+        if ($raw_key_data_length !== \SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
             throw new InvalidKeyException('Signature public key must be SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES long');
         }
         parent::__construct($key_data);
