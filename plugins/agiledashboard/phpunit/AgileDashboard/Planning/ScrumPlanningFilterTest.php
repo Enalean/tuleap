@@ -20,12 +20,14 @@
 
 namespace Tuleap\AgileDashboard\Planning;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tracker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
-require_once dirname(__FILE__) . '/../../../bootstrap.php';
-
-class ScrumPlanningFilterTest extends \TuleapTestCase
+class ScrumPlanningFilterTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
     /**
      * @var \PFUser
      */
@@ -42,7 +44,7 @@ class ScrumPlanningFilterTest extends \TuleapTestCase
     private $planning_factory;
 
     /**
-     * @var Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker
+     * @var ScrumForMonoMilestoneChecker
      */
     private $mono_milestone_checker;
 
@@ -51,14 +53,12 @@ class ScrumPlanningFilterTest extends \TuleapTestCase
      */
     private $scrum_planning_filter;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
-        $this->planning_factory       = mock('PlanningFactory');
-        $this->planning               = mock('Planning');
-        $this->user                   = mock('PFUser');
+        $this->mono_milestone_checker = \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class);
+        $this->planning_factory       = \Mockery::spy(\PlanningFactory::class);
+        $this->planning               = \Mockery::spy(\Planning::class);
+        $this->user                   = \Mockery::spy(\PFUser::class);
 
         $this->scrum_planning_filter  = new ScrumPlanningFilter(
             $this->mono_milestone_checker,
@@ -66,33 +66,35 @@ class ScrumPlanningFilterTest extends \TuleapTestCase
         );
     }
 
-    public function itRetrieveMonoMilestoneTrackerWhenScrumMonoMilestoneIsEnabled()
+    public function testItRetrieveMonoMilestoneTrackerWhenScrumMonoMilestoneIsEnabled(): void
     {
-        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled(101)->returns(true);
-        stub($this->planning_factory)->getAvailableBacklogTrackers()->returns(array());
-        stub($this->planning_factory)->getPotentialPlanningTrackers()->returns(array());
-        expect($this->planning_factory)->getAvailableBacklogTrackers()->once();
-        expect($this->planning_factory)->getPotentialPlanningTrackers()->once();
+        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->with(101)->andReturns(true);
+        $this->planning_factory->shouldReceive('getAvailableBacklogTrackers')->andReturns(array())->once();
+        $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->andReturns(array())->once();
 
         $this->scrum_planning_filter->getPlanningTrackersFiltered(
             $this->planning,
             $this->user,
             101
         );
+
+        $this->addToAssertionCount(1);
     }
 
-    public function itRetrieveMultiMilestoneTrackerWhenScrumMonoMilestoneIsDisabled()
+    public function testItRetrieveMultiMilestoneTrackerWhenScrumMonoMilestoneIsDisabled(): void
     {
-        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled(101)->returns(false);
-        expect($this->planning_factory)->getAvailablePlanningTrackers()->once();
+        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->with(101)->andReturns(false);
+        $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once();
         $tracker = \Mockery::spy(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(888);
-        stub($this->planning_factory)->getAvailablePlanningTrackers()->returns([$tracker]);
+        $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->andReturns([$tracker]);
 
         $this->scrum_planning_filter->getPlanningTrackersFiltered(
             $this->planning,
             $this->user,
             101
         );
+
+        $this->addToAssertionCount(1);
     }
 }
