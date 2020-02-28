@@ -8,13 +8,6 @@
                 {{# gettext }}You can use SVN tokens as a replacement for your password on projects selected by the administrator.{{/ gettext }}
             </p>
 
-            {{# last_svn_token }}
-                <div class="tlp-alert-success">
-                    <p>{{# gettext }}Make sure you copy your new SVN token, you won't be able to see it again!{{/ gettext }}</p>
-                    <p><strong>{{ last_svn_token }}</strong></p>
-                </div>
-            {{/ last_svn_token }}
-
             <form action="/account/svn_token/revoke" method="post">
                 {{# csrf_token }}
                     {{> csrf_token_input }}

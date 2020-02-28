@@ -38,6 +38,10 @@
         font-family: FontAwesome;
         font-size: 18px;
     }
+
+    code {
+        color: inherit;
+    }
 }
 
 .tlp-alert-info {
@@ -49,6 +53,10 @@
 
     &::before {
         content: '\f05a'; // fa-info-circle
+    }
+
+    code {
+        background: transparentize($tlp-ui-info, .9);
     }
 }
 
@@ -62,6 +70,10 @@
     &::before {
         content: '\f087'; // fa-thumbs-o-up
     }
+
+    code {
+        background: transparentize($tlp-ui-success, .9);
+    }
 }
 
 .tlp-alert-warning {
@@ -74,6 +86,10 @@
     &::before {
         content: '\f071'; // fa-exclamation-triangle
     }
+
+    code {
+        background: transparentize($tlp-ui-warning, .9);
+    }
 }
 
 .tlp-alert-danger {
@@ -85,5 +101,9 @@
 
     &::before {
         content: '\f06a'; // fa-exclamation-circle
+    }
+
+    code {
+        background: transparentize($tlp-ui-danger, .9);
     }
 }
