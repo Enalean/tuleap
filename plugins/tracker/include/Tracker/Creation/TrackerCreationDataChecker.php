@@ -157,7 +157,12 @@ class TrackerCreationDataChecker
         if (! $tracker) {
             throw TrackerIsInvalidException::trackerNotFound($tracker_template_id);
         }
-        if (! $tracker->userCanView($user)) {
+
+        if ($tracker->getProject()->isTemplate()) {
+            return;
+        }
+
+        if (! $tracker->userIsAdmin($user)) {
             throw TrackerIsInvalidException::trackerNotFound($tracker_template_id);
         }
     }
