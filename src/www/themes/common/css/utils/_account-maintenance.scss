@@ -120,36 +120,6 @@ body input[type=file].change-avatar-modal-actions-select-file {
     margin-top: 30px;
 }
 
-#account-preferences {
-    background-color: #F6F6F6;
-    padding-left: 25px;
-
-    border-left: solid 1px #EBEBEB;
-
-    > h2 {
-        padding-top: 15px;
-    }
-
-    > form {
-        > hr {
-            margin-right: 25px;
-            border-color: #EBEBEB;
-        }
-
-        > fieldset {
-            margin-bottom: 15px;
-
-            > label {
-                margin-bottom: 10px;
-            }
-        }
-
-        select {
-            margin: 0;
-        }
-    }
-}
-
 #account-email-settings {
     > p {
         margin: 0;
@@ -161,34 +131,6 @@ body input[type=file].change-avatar-modal-actions-select-file {
     vertical-align: middle;
 }
 
-.button-centered {
-    text-align: center;
-}
-
-.control-label.user-account-label {
-    display: block;
-    text-align: right;
-    color: #9B9B9B;
-}
-
-.control-group.user-account-group {
-    margin: 0;
-}
-
-.form-horizontal.account-form {
-    > fieldset > .control-group {
-
-        > label.control-label {
-            padding-top: 0;
-            width: 170px;
-        }
-
-        > .controls {
-            margin-left: 190px;
-        }
-    }
-}
-
 #user-info-separation {
     margin-bottom: 30px;
 }
@@ -198,47 +140,6 @@ i.help-button {
     vertical-align: middle;
     color: #C2C2C2;
     text-decoration: none
-}
-
-.select-user-preferences {
-    width: 80%;
-    max-width: 206px;
-}
-
-@-webkit-keyframes bounce-picker {
-    0% {
-        -webkit-transform: scale(0.75);
-    }
-
-    50% {
-        -webkit-transform: scale(1);
-    }
-
-    75% {
-        -webkit-transform: scale(0.9);
-    }
-
-    100% {
-        -webkit-transform: scale(1);
-    }
-}
-
-@keyframes bounce-picker {
-    0% {
-        transform: scale(0.75);
-    }
-
-    50% {
-        transform: scale(1);
-    }
-
-    75% {
-        transform: scale(0.9);
-    }
-
-    100% {
-        transform: scale(1);
-    }
 }
 
 .account-maintenance > .wrapper {

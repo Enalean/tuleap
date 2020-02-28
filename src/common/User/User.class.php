@@ -30,6 +30,7 @@ use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 class PFUser implements PFO_User, IHaveAnSSHKey
 {
 
+    public const PREFERENCE_NAME_DISPLAY_USERS = 'username_display';
     /**
      * The user is active
      */

@@ -23,9 +23,6 @@
     $(document).ready(function() {
         loadAvatarReset();
         loadAvatarPreview();
-        updateHeightValue();
-
-        $(window).resize(updateHeightValue);
 
         initApiAccessKeyExpirationDatePicker();
     });
@@ -138,16 +135,5 @@
             var url = URL.createObjectURL(this.files[0]);
             useImageInPreviewIfItIsValid(url);
         });
-    }
-
-    function updateHeightValue() {
-        $("#account-maintenance, #account-preferences").height("auto");
-
-        var new_height = Math.max(
-            $("#account-maintenance").height(),
-            $("#account-preferences").height()
-        );
-
-        $("#account-preferences").height(new_height);
     }
 })(window.jQuery);

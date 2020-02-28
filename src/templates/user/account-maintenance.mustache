@@ -1,5 +1,5 @@
 <div id="account-handler" class="row-fluid">
-    <div id="account-maintenance" class="span7">
+    <div id="account-maintenance" class="span12">
         <ul class="nav nav-tabs">
         {{# tabs }}
             <li {{# is_active }}class="active"{{/ is_active }}><a href="{{ href }}">{{ label }}</a></li>
@@ -9,9 +9,5 @@
         {{> info }}
         {{> details }}
         {{{ user_legal }}}
-    </div>
-
-    <div id="account-preferences" class="span5">
-        {{> preferences }}
     </div>
 </div>

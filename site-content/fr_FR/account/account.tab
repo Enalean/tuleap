@@ -27,9 +27,6 @@ account_options	use_default_avatar	Utiliser l'avatar par défaut
 account_options	select_avatar	Sélectionner
 account_options	btn_save_avatar_label	Sauvegarder l'avatar
 account_options	preferences	Préférences
-account_options	username_display	Affichage des noms :
-account_options	tuleap_login_and_name	Login (nom complet)
-account_options	tuleap_name_and_login	Nom complet (login)
 account_options	tuleap_login	Login
 account_options	realname	Nom complet
 account_options	auth_attempt_title	Détails d'authentification
@@ -44,7 +41,6 @@ account_options	auth_attempt_sessions	Sessions ouvertes :
 #
 account_preferences	appearance	Apparence
 account_preferences	import_export	Import/export
-account_preferences	error_username_display	Vérifiez la valeur de l'affichage des noms
 account_preferences	save_preferences	Sauvegarder les préférences
 account_preferences	html_format	HTML
 account_preferences	text_format	Texte

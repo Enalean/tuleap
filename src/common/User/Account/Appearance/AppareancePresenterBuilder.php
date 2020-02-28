@@ -26,6 +26,7 @@ namespace Tuleap\User\Account\Appearance;
 use CSRFSynchronizerToken;
 use PFUser;
 use Tuleap\User\Account\AccountTabPresenterCollection;
+use UserHelper;
 
 class AppareancePresenterBuilder
 {
@@ -55,13 +56,23 @@ class AppareancePresenterBuilder
 
         $is_accessibility_enabled = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
 
+        $preference        = (int) $user->getPreference(PFUser::PREFERENCE_NAME_DISPLAY_USERS);
+        $is_realname_login = $preference === UserHelper::PREFERENCES_NAME_AND_LOGIN;
+        $is_login_realname = $preference === UserHelper::PREFERENCES_LOGIN_AND_NAME;
+        $is_login          = $preference === UserHelper::PREFERENCES_LOGIN;
+        $is_realname       = $preference === UserHelper::PREFERENCES_REAL_NAME;
+
         return new AppearancePresenter(
             $csrf_token,
             $tabs,
             $this->language_presenter_builder->getLanguagePresenterCollectionForUser($user),
             $this->color_presenter_builder->getColorPresenterCollection($user),
             $is_condensed,
-            $is_accessibility_enabled
+            $is_accessibility_enabled,
+            $is_realname_login,
+            $is_login_realname,
+            $is_login,
+            $is_realname
         );
     }
 }
