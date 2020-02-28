@@ -58,9 +58,10 @@
     }
 
     .user-preferences-nav {
-        width: 100%;
+        width: calc(100% + #{$tlp-spacing} * 2);
         min-width: auto;
         max-width: none;
+        margin: 0 (-$tlp-spacing) $tlp-spacing;
     }
 
     .user-preferences-section {

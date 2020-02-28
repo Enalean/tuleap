@@ -232,6 +232,7 @@ const webpack_config_for_project_registration_modal = {
 
 const webpack_config_for_account = {
     entry: {
+        "preferences-nav": "./account/preferences-nav.ts",
         "keys-tokens": "./account/keys-tokens.ts",
         appearance: "./account/appearance.ts",
         security: "./account/security.ts"
