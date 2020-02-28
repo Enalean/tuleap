@@ -46,7 +46,7 @@ function handleSSHKeys(): void {
             if (!full_ssh_key) {
                 return;
             }
-            row.innerHTML = full_ssh_key;
+            row.innerText = full_ssh_key;
             row.className = "ssh-key-value-reset-cursor";
         });
     });
