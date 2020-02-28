@@ -242,14 +242,6 @@ eslint-fix: ## Execute eslint with --fix to try to fix problems automatically. U
 	$(eval FILES ?= .)
 	@npm run eslint -- --fix --quiet $(FILES)
 
-prettier: ## Execute prettier. Use FILES parameter to execute on specific file/glob.
-	$(eval FILES ?= "**/*.{js,ts,vue}")
-	@npm run prettier -- --list-different $(FILES)
-
-prettier-fix: ## Execute prettier in write mode (things might break!). Use FILES parameter to execute on specific file/glob.
-	$(eval FILES ?= "**/*.{js,ts,vue}")
-	@npm run prettier -- --write $(FILES)
-
 bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
 
