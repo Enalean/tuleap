@@ -159,6 +159,9 @@ msgstr "Accès à l'API REST"
 msgid "Accesses from less than %s might not be visible"
 msgstr "Les accès d'il y a moins de %s peuvent ne pas apparaître"
 
+msgid "Account"
+msgstr "Compte"
+
 #, php-format
 msgid ""
 "Account %s is restricted and the project does not allow restricted users. "
@@ -166,6 +169,9 @@ msgid ""
 msgstr ""
 "Le compte %s est restreint et le project n'autorise pas les utilisateurs "
 "restreints. L'utilisateur n'a pas été ajouté."
+
+msgid "Account information"
+msgstr "Informations personnelles"
 
 msgid "Account must be active to change password"
 msgstr "Le compte doit être actif pour changer le mot de passe"
@@ -1040,6 +1046,9 @@ msgstr[1] "Membre de {{ nb_projects }} projets"
 
 msgid "Member removal"
 msgstr "Suppression de membre"
+
+msgid "Member since"
+msgstr "Membre depuis"
 
 msgid "Member since %s"
 msgstr "Membre depuis le %s"

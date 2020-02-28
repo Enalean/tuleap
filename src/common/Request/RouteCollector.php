@@ -113,6 +113,7 @@ use Tuleap\User\Account\DisplayEditionController;
 use Tuleap\User\Account\DisplayExperimentalController;
 use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
+use Tuleap\User\Account\DisplayAccountInformationController;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
@@ -393,6 +394,11 @@ class RouteCollector
     public static function postAccountSVNTokenRevoke(): DispatchableWithRequest
     {
         return new SVNTokenRevokeController(DisplayKeysTokensController::getCSRFToken(), SVN_TokenHandler::build());
+    }
+
+    public static function getAccountPreferences(): DispatchableWithRequest
+    {
+        return DisplayAccountInformationController::buildSelf();
     }
 
     public static function getAccountNotifications(): DispatchableWithRequest
@@ -682,6 +688,8 @@ class RouteCollector
 
 
         $r->addGroup('/account', static function (FastRoute\RouteCollector $r) {
+            $r->get('/prefs', [self::class, 'getAccountPreferences']);
+
             $r->get('/notifications', [self::class, 'getAccountNotifications']);
             $r->post('/notifications', [self::class, 'postAccountNotifications']);
 

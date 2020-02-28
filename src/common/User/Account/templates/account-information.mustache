@@ -1,0 +1,41 @@
+<div class="user-preferences">
+    <h1 class="user-preferences-title">
+        {{# gettext }}Preferences{{/ gettext }}
+    </h1>
+    <div class="user-preferences-container">
+        {{> user-account-tabs }}
+
+        <div class="user-preferences-section">
+            <section class="tlp-pane">
+                <form class="tlp-pane-container" action="{{ update_preferences_url }}" method="post">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">{{# gettext }}Account information{{/ gettext }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <div class="tlp-property">
+                            <label class="tlp-label">{{# gettext }}Id{{/ gettext }}</label>
+                            <p>{{ user_id }}</p>
+                        </div>
+                        <div class="tlp-property">
+                            <label class="tlp-label">{{# gettext }}User name{{/ gettext }}</label>
+                            <p>@{{ user_name }}</p>
+                        </div>
+                        <div class="tlp-property">
+                            <label class="tlp-label">{{# gettext }}Member since{{/ gettext }}</label>
+                            <p>{{ member_since }}</p>
+                        </div>
+                    </section>
+                    <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+                        <button type="submit" class="tlp-button-primary" disabled>
+                            <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
+                        </button>
+                    </section>
+                </form>
+            </section>
+
+        </div>
+    </div>
+</div>
