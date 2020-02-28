@@ -26,6 +26,7 @@ use Project;
 use SimpleXMLElement;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerAdder;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerAlreadyDefinedException;
+use Tuleap\HudsonGit\Git\Administration\JenkinsServerURLNotValidException;
 
 class XMLImporter
 {
@@ -51,7 +52,7 @@ class XMLImporter
                     $project,
                     (string) $xml_jenkins_server['url']
                 );
-            } catch (JenkinsServerAlreadyDefinedException $exception) {
+            } catch (JenkinsServerAlreadyDefinedException | JenkinsServerURLNotValidException $exception) {
                 //Do nothing but log
             }
         }

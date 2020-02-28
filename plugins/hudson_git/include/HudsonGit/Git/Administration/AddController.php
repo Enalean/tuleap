@@ -105,6 +105,11 @@ class AddController implements DispatchableWithRequest
                 Feedback::WARN,
                 dgettext("tuleap-hudson_git", "The Jenkins server is already defined in project.")
             );
+        } catch (JenkinsServerURLNotValidException $exception) {
+            $layout->addFeedback(
+                Feedback::WARN,
+                dgettext("tuleap-hudson_git", "The Jenkins server URL provided is not well formed.")
+            );
         } finally {
             $layout->redirect(
                 URLBuilder::buildUrl($project)

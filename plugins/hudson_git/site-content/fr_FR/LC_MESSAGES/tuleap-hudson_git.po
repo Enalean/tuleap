@@ -82,6 +82,9 @@ msgstr "Dépôt"
 msgid "Save"
 msgstr "Sauvegarder"
 
+msgid "The Jenkins server URL provided is not well formed."
+msgstr "L'URL du serveur Jenkins n'est pas au bon format."
+
 msgid "The Jenkins server has successfully been Removed."
 msgstr "Le serveur Jenkins a été supprimé."
 
