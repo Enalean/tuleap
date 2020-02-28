@@ -30,7 +30,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-prometheus_metrics', 'Exposes tuleap instrumentation for prometheus consumption')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

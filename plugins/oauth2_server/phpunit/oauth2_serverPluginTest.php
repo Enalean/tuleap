@@ -31,7 +31,6 @@ final class oauth2_serverPluginTest extends TestCase // phpcs:ignore Squiz.Class
         $plugin      = new \oauth2_serverPlugin(78);
         $plugin_info = $plugin->getPluginInfo();
 
-        $this->assertNotEmpty($plugin_info->getPluginDescriptor()->getVersion());
         $this->assertNotEmpty($plugin_info->getPluginDescriptor()->getFullName());
         $this->assertNotEmpty($plugin_info->getPluginDescriptor()->getDescription());
     }

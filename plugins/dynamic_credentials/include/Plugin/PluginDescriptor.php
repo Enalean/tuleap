@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-dynamic_credentials', 'Allow your support staff to access your instance when needed')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-projectmilestones', 'A widget for milestones monitoring.')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

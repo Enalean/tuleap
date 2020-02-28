@@ -30,7 +30,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_referencealias_git', 'descriptor_description')
         );
-
-        $this->setVersionFromFile(REFERENCEALIAS_GIT_BASE_DIR.'/VERSION');
     }
 }

@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-project_ownership', 'Adds project owner role')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

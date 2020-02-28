@@ -44,7 +44,7 @@ final class api_explorerPlugin extends Plugin
             $plugin_info->setPluginDescriptor(
                 new PluginDescriptor(
                     dgettext('tuleap-api_explorer', 'API Explorer'),
-                    file_get_contents(__DIR__ . '/../VERSION'),
+                    '',
                     dgettext('tuleap-api_explorer', 'Web API Explorer')
                 )
             );

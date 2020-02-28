@@ -30,7 +30,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_referencealias_tracker', 'descriptor_description')
         );
-
-        $this->setVersionFromFile(REFERENCEALIAS_TRACKER_BASE_DIR.'/VERSION');
     }
 }

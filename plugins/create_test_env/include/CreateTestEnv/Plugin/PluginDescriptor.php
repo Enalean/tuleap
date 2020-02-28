@@ -30,7 +30,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-create_test_env', 'Automate creation of test users and environments')
         );
-
-        $this->setVersionFromFile(__DIR__.'/../../../VERSION');
     }
 }

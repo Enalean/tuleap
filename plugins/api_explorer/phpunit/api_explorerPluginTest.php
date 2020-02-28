@@ -32,7 +32,6 @@ final class api_explorerPluginTest extends TestCase // phpcs:ignore Squiz.Classe
         $plugin      = new \api_explorerPlugin(12);
         $plugin_info = $plugin->getPluginInfo();
 
-        $this->assertNotEmpty($plugin_info->getPluginDescriptor()->getVersion());
         $this->assertNotEmpty($plugin_info->getPluginDescriptor()->getFullName());
         $this->assertNotEmpty($plugin_info->getPluginDescriptor()->getDescription());
     }

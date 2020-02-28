@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-mfa', 'Add multi-factor authentication support')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-crosstracker', 'Search artifacts that are in different trackers')
         );
-
-        $this->setVersionFromFile(CROSSTRACKER_BASE_DIR.'/VERSION');
     }
 }

@@ -34,6 +34,5 @@ class ArtifactsFoldersPluginDescriptor extends PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_folders', 'descriptor_description')
         );
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

@@ -30,7 +30,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_template', 'descriptor_description')
         );
-
-        $this->setVersionFromFile(__DIR__.'/../../../VERSION');
     }
 }

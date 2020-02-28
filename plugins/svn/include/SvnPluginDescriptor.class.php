@@ -27,7 +27,5 @@ class SvnPluginDescriptor extends PluginDescriptor
             false,
             dgettext('tuleap-svn', 'SVN repository manager. Supports multiple repositories for the same project.')
         );
-
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

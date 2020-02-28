@@ -30,7 +30,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_referencealias_svn', 'descriptor_description')
         );
-
-        $this->setVersionFromFile(REFERENCEALIAS_SVN_BASE_DIR.'/VERSION');
     }
 }

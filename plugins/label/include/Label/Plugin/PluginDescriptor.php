@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-label', 'Adds a project widget to search for labeled items')
         );
-
-        $this->setVersionFromFile(LABEL_BASE_DIR.'/VERSION');
     }
 }

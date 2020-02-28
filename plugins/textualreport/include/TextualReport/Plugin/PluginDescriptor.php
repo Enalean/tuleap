@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-textualreport', 'Allows users to download a tracker report as a single page document.')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../../VERSION');
     }
 }

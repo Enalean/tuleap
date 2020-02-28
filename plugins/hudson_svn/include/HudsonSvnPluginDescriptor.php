@@ -30,7 +30,5 @@ class HudsonSvnPluginDescriptor extends \PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_hudson_svn', 'descriptor_description')
         );
-
-        $this->setVersionFromFile(HUDSON_SVN_BASE_DIR.'/VERSION');
     }
 }

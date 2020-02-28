@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-document', 'Provides a modern interface for the Document Manager service')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

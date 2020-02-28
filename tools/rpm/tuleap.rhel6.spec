@@ -109,8 +109,6 @@ recommanded to uninstall it after.
 %package core-mailman
 Summary: Mailman component for Tuleap
 Group: Development/Tools
-Version: @@CORE_MAILMAN_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Requires: mailman-tuleap
 Provides: tuleap-core-mailman
@@ -143,8 +141,6 @@ seems to have memory leak issues.
 %package core-cvs
 Summary: CVS component for Tuleap
 Group: Development/Tools
-Version: @@CORE_CVS_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, xinetd, rcs, cvsgraph, perl-CGI
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
 Requires: cvs-tuleap
@@ -158,8 +154,6 @@ Manage dependencies for Tuleap CVS integration
 %package plugin-forumml
 Summary: ForumML plugin for Tuleap
 Group: Development/Tools
-Version: @@PLUGIN_FORUMML_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php73-php-pecl-mailparse
 Requires: tuleap-core-mailman
 Provides: tuleap-plugin-forumml = %{version}
@@ -170,8 +164,6 @@ to send mails through the web interface. It can replace the forums.
 %package plugin-svn
 Summary: Subversion plugin for Tuleap
 Group: Development/Tools
-Version: @@PLUGIN_SVN_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, subversion, mod_dav_svn, subversion-perl, tuleap-core-subversion-modperl
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
@@ -181,8 +173,6 @@ Integration of Subversion software configuration management tool with Tuleap.
 %package plugin-git
 Summary: Git plugin for Tuleap
 Group: Development/Tools
-Version: @@PLUGIN_GIT_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git > 1.7.4, gitolite = 2.3.1
 Requires: sudo
@@ -196,8 +186,6 @@ This package is integrated with gitolite v2 (legacy)
 %package plugin-git-gitolite3
 Summary: Git plugin for Tuleap
 Group: Development/Tools
-Version: @@PLUGIN_GIT_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires(pre): shadow-utils
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, sclo-git212-git, gitolite3
@@ -211,8 +199,6 @@ This package is integrated with gitolite v3 (new version)
 
 %package plugin-gitlfs
 Summary: Support of large file upload and download in Git
-Version: @@PLUGIN_GITLFS_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git-gitolite3, sudo
 Group: Development/Tools
 %description plugin-gitlfs
@@ -220,8 +206,6 @@ Group: Development/Tools
 
 %package plugin-pullrequest
 Summary: Pullrequest management for Tuleap
-Version: @@PLUGIN_PULLREQUEST_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, sclo-git212-git
 Group: Development/Tools
 %description plugin-pullrequest
@@ -230,8 +214,6 @@ Group: Development/Tools
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
-Version: @@PLUGIN_LDAP_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, perl-LDAP, php73-php-ldap
 Provides: tuleap-plugin-ldap = %{version}
 %description plugin-ldap
@@ -241,8 +223,6 @@ authentication, user and group management.
 %package plugin-hudson
 Summary: Hudson plugin for Tuleap
 Group: Development/Tools/Building
-Version: @@PLUGIN_HUDSON_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-hudson
 Plugin to install the Tuleap Hudson plugin for continuous integration
@@ -250,8 +230,6 @@ Plugin to install the Tuleap Hudson plugin for continuous integration
 %package plugin-hudson-svn
 Summary: Hudson/Jenkins plugin for Tuleap SVN multiple repositories
 Group: Development/Tools
-Version: @@PLUGIN_HUDSON_SVN_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-hudson, tuleap-plugin-svn
 %description plugin-hudson-svn
 Hudson/Jenkins plugin for Tuleap SVN multiple repositories
@@ -259,8 +237,6 @@ Hudson/Jenkins plugin for Tuleap SVN multiple repositories
 %package plugin-hudson-git
 Summary: Hudson/Jenkins plugin for Tuleap Git repositories
 Group: Development/Tools
-Version: @@PLUGIN_HUDSON_GIT_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-hudson, tuleap-plugin-git
 %description plugin-hudson-git
 Hudson/Jenkins plugin for Tuleap Git repositories
@@ -268,8 +244,6 @@ Hudson/Jenkins plugin for Tuleap Git repositories
 %package plugin-webdav
 Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
-Version: @@PLUGIN_WEBDAV_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Obsoletes: php-sabredav
 %description plugin-webdav
@@ -279,8 +253,6 @@ Plugin to access to file releases & docman though WebDAV
 AutoReqProv: no
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
-Version: @@PLUGIN_TRACKER_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php73-php-pecl-mailparse
 %description plugin-tracker
 New tracker generation for Tuleap.
@@ -288,8 +260,6 @@ New tracker generation for Tuleap.
 %package plugin-graphontrackers
 Summary: Graphs for Tracker v5
 Group: Development/Tools
-Version: @@PLUGIN_GRAPHONTRACKERS_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker >= 0.8.4
 %description plugin-graphontrackers
 Graphs for new tracker generation
@@ -297,8 +267,6 @@ Graphs for new tracker generation
 %package plugin-tracker-encryption
 Summary: Encryption for tracker
 Group: Development/Tools
-Version: @@PLUGIN_TRACKER_ENCRYPTION_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-tracker-encryption
 Adding a new type of tracker fields that are encrypted.
@@ -307,8 +275,6 @@ This plugin is still in beta.
 %package plugin-cardwall
 Summary: Graphs for Tracker v5
 Group: Development/Tools
-Version: @@PLUGIN_CARDWALL_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Requires: tuleap-plugin-tracker
 %description plugin-cardwall
@@ -317,8 +283,6 @@ Fancy cardwall output on top of Tracker v5
 %package plugin-agiledashboard
 Summary: Agile dashboard
 Group: Development/Tools
-Version: @@PLUGIN_AGILEDASHBOARD_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall
 %description plugin-agiledashboard
 Agile Dashboard aims to provide an nice integration of Scrum/Kanban
@@ -327,8 +291,6 @@ tool on top of Tracker.
 %package plugin-archivedeleteditems
 Summary: Archiving plugin
 Group: Development/Tools
-Version: @@PLUGIN_ARCHIVEDELETEDITEMS_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-archivedeleteditems
 Archive deleted items before purging them from filesystem
@@ -345,8 +307,6 @@ Please check Tuleap deployment guide for more information.
 %package plugin-mediawiki
 Summary: Mediawiki plugin
 Group: Development/Tools
-Version: @@PLUGIN_MEDIAWIKI_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Requires: php-mediawiki-tuleap-123 >= 1.23.9-7
 %description plugin-mediawiki
@@ -355,8 +315,6 @@ This plugin provides Mediawiki integration in Tuleap.
 %package plugin-openidconnectclient
 Summary: OpenId consumer plugin
 Group: Development/Tools
-Version: @@PLUGIN_OPENIDCONNECTCLIENT_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-openidconnectclient
 Connect to Tuleap using an OpenID Connect provider
@@ -364,8 +322,6 @@ Connect to Tuleap using an OpenID Connect provider
 %package plugin-proftpd
 Summary: Proftpd plugin
 Group: Development/Tools
-Version: @@PLUGIN_PROFTPD_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-proftpd
 Control and interfact with Proftpd as FTP server
@@ -374,8 +330,6 @@ Control and interfact with Proftpd as FTP server
 AutoReqProv: no
 Summary: File release system plugin
 Group: Development/Tools
-Version: @@PLUGIN_FRS_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
 %description plugin-frs
 Add features to the file release system provided by Tuleap
@@ -383,8 +337,6 @@ Add features to the file release system provided by Tuleap
 %package plugin-referencealias-core
 Summary: Reference aliases plugin
 Group: Development/Tools
-Version: @@PLUGIN_REFERENCEALIAS_CORE_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-referencealias-core
 This plugin allows to have references defined with "pkgXXX" syntax as an alias for Tuleap FRS refrences.
@@ -392,8 +344,6 @@ This plugin allows to have references defined with "pkgXXX" syntax as an alias f
 %package plugin-referencealias-git
 Summary: Reference aliases for git plugin
 Group: Development/Tools
-Version: @@PLUGIN_REFERENCEALIAS_GIT_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-git
 %description plugin-referencealias-git
 This plugin allows to use cmmtXXX as aliases for git references
@@ -401,8 +351,6 @@ This plugin allows to use cmmtXXX as aliases for git references
 %package plugin-referencealias-svn
 Summary: Reference aliases for svn plugin
 Group: Development/Tools
-Version: @@PLUGIN_REFERENCEALIAS_SVN_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-svn
 %description plugin-referencealias-svn
 This plugin allows to use cmmtXXX references as aliases for svn plugin commit references
@@ -410,8 +358,6 @@ This plugin allows to use cmmtXXX references as aliases for svn plugin commit re
 %package plugin-referencealias-mediawiki
 Summary: Reference aliases for mediawiki plugin
 Group: Development/Tools
-Version: @@PLUGIN_REFERENCEALIAS_MEDIAWIKI_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-mediawiki
 %description plugin-referencealias-mediawiki
 This plugin allows to use wikiXXXX references to point to mediawiki pages
@@ -419,8 +365,6 @@ This plugin allows to use wikiXXXX references to point to mediawiki pages
 %package plugin-referencealias-tracker
 Summary: Reference aliases for tracker plugin
 Group: Development/Tools
-Version: @@PLUGIN_REFERENCEALIAS_TRACKER_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
 %description plugin-referencealias-tracker
 This plugin allows to import references like "artfXXX" or "trackerYYYY" for the tracker plugin.
@@ -428,8 +372,6 @@ This plugin allows to import references like "artfXXX" or "trackerYYYY" for the 
 %package plugin-artifactsfolders
 Summary: Artifacts Folders
 Group: Development/Tools
-Version: @@PLUGIN_ARTIFACTSFOLDERS_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
 %description plugin-artifactsfolders
 Add a "Folder" tab in an artifact
@@ -437,8 +379,6 @@ Add a "Folder" tab in an artifact
 %package plugin-captcha
 Summary: Add a captcha protection to sensitive operations
 Group: Development/Tools
-Version: @@PLUGIN_CAPTCHA_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-captcha
 %{summary}.
@@ -446,8 +386,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %package plugin-bugzilla-reference
 Summary: References between Bugzilla and Tuleap
 Group: Development/Tools
-Version: @@PLUGIN_BUGZILLA_REFERENCE_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-bugzilla-reference
 %{summary}.
@@ -455,8 +393,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %package plugin-create-test-env
 Summary: Create test environment on a Tuleap server
 Group: Development/Tools
-Version: @@PLUGIN_CREATE_TEST_ENV_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-botmattermost
 %description plugin-create-test-env
 %{summary}.
@@ -464,8 +400,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tule
 %package plugin-api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
-Version: @@PLUGIN_API_EXPLORER_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Obsoletes: tuleap-api-explorer, restler-api-explorer
 Provides: tuleap-api-explorer, restler-api-explorer
@@ -477,8 +411,6 @@ Provides: tuleap-api-explorer, restler-api-explorer
 %package plugin-crosstracker
 Summary: Cross tracker search widget
 Group: Development/Tools
-Version: @@PLUGIN_CROSS_TRACKER_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist},  tuleap-plugin-tracker
 %description plugin-crosstracker
 %{summary}.
@@ -486,8 +418,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist},  tuleap-plugin-tracker
 %package plugin-document
 Summary: Document UI
 Group: Development/Tools
-Version: @@PLUGIN_DOCUMENT_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-document
 %{summary}.
@@ -495,8 +425,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %package plugin-dynamic-credentials
 Summary: Dynamic credentials generation
 Group: Development/Tools
-Version: @@PLUGIN_DYNAMIC_CREDENTIALS_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-dynamic-credentials
 %{summary}.
@@ -504,8 +432,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %package plugin-label
 Summary: Label widget
 Group: Development/Tools
-Version: @@PLUGIN_LABEL_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-label
 %{summary}.
@@ -513,8 +439,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %package plugin-project-ownership
 Summary: Project ownership
 Group: Development/Tools
-Version: @@PLUGIN_PROJECT_OWNERSHIP_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Obsoletes: tuleap-plugin-project-certification
 %description plugin-project-ownership
@@ -523,8 +447,6 @@ Obsoletes: tuleap-plugin-project-certification
 %package plugin-projectmilestones
 Summary: A widget for milestones monitoring
 Group: Development/Tools
-Version: @@PLUGIN_PROJECTMILESTONES_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboard
 %description plugin-projectmilestones
 %{summary}.
@@ -532,8 +454,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 %package plugin-prometheus-metrics
 Summary: Prometheus metrics end point
 Group: Development/Tools
-Version: @@PLUGIN_PROMETHEUS_METRICS_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-prometheus-metrics
 %{summary}.
@@ -541,8 +461,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %package plugin-taskboard
 Summary: Taskboard
 Group: Development/Tools
-Version: @@PLUGIN_TASKBOARD_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboard
 %description plugin-taskboard
 %{summary}.
@@ -550,8 +468,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 %package plugin-textualreport
 Summary: Textual Report
 Group: Development/Tools
-Version: @@PLUGIN_TEXTUAL_REPORT_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-textualreport
 %{summary}.
@@ -559,8 +475,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %package plugin-timetracking
 Summary: Timetracking plugin for Tuleap
 Group: Development/Tools
-Version: @@PLUGIN_TIMETRACKING_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-timetracking
 %{summary}.
@@ -568,8 +482,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %package plugin-velocity
 Summary: Velocity chart
 Group: Development/Tools
-Version: @@PLUGIN_VELOCITY_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboard
 %description plugin-velocity
 %{summary}.
@@ -581,8 +493,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 %package plugin-oauth2-server
 Summary: OAuth2 Server
 Group: Development/Tools
-Version: @@PLUGIN_OAUTH2_SERVER_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-oauth2-server
 %{summary}.
@@ -596,8 +506,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %package theme-flamingparrot
 Summary: FlamingParrot, default theme starting Tuleap 7
 Group: Development/Tools
-Version: @@THEME_FLAMINGPARROT_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Provides: tuleap-theme-experimental %{PKG_NAME}-theme-steerforge  %{PKG_NAME}-theme-codexstn  %{PKG_NAME}-theme-sttab  %{PKG_NAME}-theme-savannah  %{PKG_NAME}-theme-dawn
 Obsoletes: tuleap-theme-experimental %{PKG_NAME}-theme-steerforge  %{PKG_NAME}-theme-codexstn  %{PKG_NAME}-theme-sttab  %{PKG_NAME}-theme-savannah  %{PKG_NAME}-theme-dawn
@@ -607,8 +515,6 @@ FlamingParrot, default theme starting Tuleap 7
 %package theme-burningparrot
 Summary: BurningParrot, default theme starting Tuleap 10
 Group: Development/Tools
-Version: @@THEME_BURNINGPARROT_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description theme-burningparrot
 BurningParrot, default theme starting Tuleap 10
@@ -1327,7 +1233,6 @@ fi
 #
 %files core-mailman
 %defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/CORE_MAILMAN_VERSION
 
 %files core-subversion
 %defattr(-,%{APP_USER},%{APP_USER},-)
@@ -1338,7 +1243,6 @@ fi
 
 %files core-cvs
 %defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/CORE_CVS_VERSION
 
 #
 # Plugins

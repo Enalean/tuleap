@@ -29,7 +29,5 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             dgettext('tuleap-gitlfs', 'Support of large file upload and download in Git')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

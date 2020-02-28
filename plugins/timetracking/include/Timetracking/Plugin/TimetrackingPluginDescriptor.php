@@ -31,7 +31,5 @@ class TimetrackingPluginDescriptor extends PluginDescriptor
             false,
             dgettext('tuleap-timetracking', 'Time tracking for Tuleap artifacts')
         );
-
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
