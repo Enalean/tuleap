@@ -108,7 +108,8 @@ final class oauth2_serverPlugin extends Plugin
 
     public function collectRoutesEvent(CollectRoutesEvent $routes): void
     {
-        $routes->getRouteCollector()->addGroup(
+        $route_collector = $routes->getRouteCollector();
+        $route_collector->addGroup(
             $this->getPluginPath(),
             function (FastRoute\RouteCollector $r): void {
                 $r->get(
@@ -127,15 +128,20 @@ final class oauth2_serverPlugin extends Plugin
                     '/testendpoint',
                     $this->getRouteHandler('routeTestEndpoint')
                 );
+            }
+        );
+        $route_collector->addGroup(
+            '/oauth2',
+            function (FastRoute\RouteCollector $r): void {
+                $r->get(
+                    '/authorize',
+                    $this->getRouteHandler('routeAuthorizationEndpointGet')
+                );
                 $r->post(
-                    '/access_token',
+                    '/token',
                     $this->getRouteHandler('routeAccessTokenCreation')
                 );
             }
-        );
-        $routes->getRouteCollector()->get(
-            '/oauth2_server/authorize',
-            $this->getRouteHandler('routeAuthorizationEndpointGet')
         );
     }
 
