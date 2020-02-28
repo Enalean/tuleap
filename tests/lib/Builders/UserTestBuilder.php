@@ -47,6 +47,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withRealName(string $string): self
+    {
+        $this->params['realname'] = $string;
+        return $this;
+    }
+
     public function withId(int $id): self
     {
         $this->params['user_id'] = $id;

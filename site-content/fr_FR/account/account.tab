@@ -55,13 +55,6 @@ account_change_pw	old_password	Ancien mot de passe
 account_change_pw	new_password	Mot de passe
 account_change_pw	new_password2	Répétez le mot de passe
 account_change_pw	error_no_rights_to_change_password	Vous ne pouvez pas modifier le mot de passe d'un autre utilisateur.
-#
-#-----------------------------------------------
-# Script: SF/www/account/change_realname.php
-#
-account_change_realname	error	Vous devez fournir un nom complet.
-account_change_realname	title	Changement de nom complet
-account_change_realname	new_name	Nouveau nom complet
 
 account_change_avatar	success	Avatar changé !
 account_change_avatar	error	Une erreur est survenue lors de la sauvegarde de l'avatar.

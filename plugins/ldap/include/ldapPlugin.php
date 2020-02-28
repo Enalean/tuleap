@@ -44,6 +44,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\SystemEvent\RootDailyStartEvent;
+use Tuleap\User\Account\AccountInformationPreUpdateEvent;
 use Tuleap\User\Account\PasswordPreUpdateEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\Project\UserRemover;
@@ -106,13 +107,11 @@ class LdapPlugin extends Plugin
         $this->addHook('before_change_email-complete', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_change_email-confirm', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_change_email', 'cancelChangeAndUserLdap', false);
-        $this->addHook('before_change_realname', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_lostpw-confirm', 'cancelChange', false);
         $this->addHook('before_lostpw', 'cancelChange', false);
         $this->addHook('display_change_email', 'forbidIfLdapAuthAndUserLdap', false);
-        // Comment if want to allow real name change in LDAP mode
-        $this->addHook('display_change_realname', 'forbidIfLdapAuthAndUserLdap', false);
         $this->addHook(PasswordPreUpdateEvent::NAME);
+        $this->addHook(AccountInformationPreUpdateEvent::NAME);
 
         // User group
         $this->addHook('project_admin_ugroup_deletion');
@@ -733,6 +732,13 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType() && $event->getUser()->getLdapId() !== '' && ! $this->hasLDAPWrite()) {
             $event->forbidUserToChangePassword();
+        }
+    }
+
+    public function accountInformationPreUpdateEvent(AccountInformationPreUpdateEvent $event)
+    {
+        if ($this->isLdapAuthType() && $event->getUser()->getLdapId() !== '' && ! $this->hasLDAPWrite()) {
+            $event->disableChangeRealName();
         }
     }
 

@@ -47,19 +47,31 @@ final class DisplayAccountInformationControllerTest extends TestCase
      * @var \PFUser
      */
     private $user;
+    private $event_manager;
 
     protected function setUp(): void
     {
+        $this->event_manager = new class implements EventDispatcherInterface {
+            private $disableRealNameChange;
 
-        $event_manager = new class implements EventDispatcherInterface {
             public function dispatch(object $event)
             {
+                if ($event instanceof AccountInformationPreUpdateEvent) {
+                    if ($this->disableRealNameChange) {
+                        $event->disableChangeRealName();
+                    }
+                }
                 return $event;
+            }
+
+            public function disableRealNameChange()
+            {
+                $this->disableRealNameChange = true;
             }
         };
 
         $this->controller = new DisplayAccountInformationController(
-            $event_manager,
+            $this->event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             M::mock(CSRFSynchronizerToken::class)
         );
@@ -67,6 +79,7 @@ final class DisplayAccountInformationControllerTest extends TestCase
         $this->user = UserTestBuilder::aUser()
             ->withId(110)
             ->withUserName('alice')
+            ->withRealName('Alice FooBar')
             ->withAddDate((new \DateTimeImmutable())->getTimestamp())
             ->withLanguage(M::spy(\BaseLanguage::class))
             ->build();
@@ -93,5 +106,32 @@ final class DisplayAccountInformationControllerTest extends TestCase
         );
         $output = ob_get_clean();
         $this->assertStringContainsString('Account information', $output);
+    }
+
+    public function testItRendersThePageWithRealnameEditable(): void
+    {
+        ob_start();
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->build(),
+            LayoutBuilder::build(),
+            []
+        );
+        $output = ob_get_clean();
+        $this->assertStringContainsString('name="realname" value="Alice FooBar"', $output);
+    }
+
+    public function testItRendersThePageWithRealnameReadOnly(): void
+    {
+        $this->event_manager->disableRealNameChange();
+
+        ob_start();
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->build(),
+            LayoutBuilder::build(),
+            []
+        );
+        $output = ob_get_clean();
+        $this->assertStringContainsString('<p>Alice FooBar</p>', $output);
+        $this->assertStringNotContainsString('name="realname" value="Alice FooBar"', $output);
     }
 }

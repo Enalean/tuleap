@@ -20,6 +20,18 @@
                             <label class="tlp-label">{{# gettext }}User name{{/ gettext }}</label>
                             <p>@{{ user_name }}</p>
                         </div>
+                        {{# can_change_real_name }}
+                            <div class="tlp-form-element">
+                                <label class="tlp-label" for="username">{{# gettext }}Real name{{/ gettext }} <i class="fa fa-asterisk"></i></label>
+                                <input type="text" class="tlp-input" id="realname" name="realname" value="{{ real_name }}" placeholder="Fox Mulder"  maxlength="32" required>
+                            </div>
+                        {{/ can_change_real_name }}
+                        {{^ can_change_real_name }}
+                            <div class="tlp-property">
+                                <label class="tlp-label">{{# gettext }}Real name{{/ gettext }}</label>
+                                <p>{{ real_name }}</p>
+                            </div>
+                        {{/ can_change_real_name }}
                         <div class="tlp-property">
                             <label class="tlp-label">{{# gettext }}Member since{{/ gettext }}</label>
                             <p>{{ member_since }}</p>
@@ -29,7 +41,7 @@
                         {{# csrf_token }}
                             {{> csrf_token_input }}
                         {{/ csrf_token }}
-                        <button type="submit" class="tlp-button-primary" disabled>
+                        <button type="submit" class="tlp-button-primary">
                             <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
                         </button>
                     </section>

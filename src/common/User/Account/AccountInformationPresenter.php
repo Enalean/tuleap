@@ -28,7 +28,7 @@ use PFUser;
 
 final class AccountInformationPresenter
 {
-    public $update_preferences_url = DisplayAccountInformationController::URL;
+    public $update_preferences_url = UpdateAccountInformationController::URL;
     /**
      * @var AccountTabPresenterCollection
      * @psalm-readonly
@@ -54,13 +54,25 @@ final class AccountInformationPresenter
      * @psalm-readonly
      */
     public $user_name;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $real_name;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $can_change_real_name;
 
-    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, PFUser $user)
+    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, PFUser $user, AccountInformationPreUpdateEvent $account_information_pre_update)
     {
         $this->tabs = $tabs;
         $this->csrf_token = $csrf_token;
         $this->user_id = (int) $user->getId();
         $this->user_name = $user->getUserName();
-        $this->member_since = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user->getAddDate());
+        $this->member_since = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user->getAddDate(), true);
+        $this->real_name = $user->getRealName();
+        $this->can_change_real_name = $account_information_pre_update->isUserAllowedToCanChangeRealName();
     }
 }

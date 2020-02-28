@@ -29,16 +29,8 @@ $um = UserManager::instance();
 
 $user = $um->getCurrentUser();
 
-$can_change_realname = true;
 $can_change_email    = true;
 $extra_user_info     = array();
-
-$em->processEvent(
-    'display_change_realname',
-    array(
-        'allow' => &$can_change_realname
-    )
-);
 
 $em->processEvent(
     'display_change_email',
@@ -63,7 +55,6 @@ assert($tabs instanceof AccountTabPresenterCollection);
 $presenter = new
 User_PreferencesPresenter(
     $user,
-    $can_change_realname,
     $can_change_email,
     $extra_user_info,
     $csrf,

@@ -82,6 +82,9 @@ final class DisplayAccountInformationController implements DispatchableWithReque
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
+        $account_information_pre_update = $this->dispatcher->dispatch(new AccountInformationPreUpdateEvent($user));
+        assert($account_information_pre_update instanceof AccountInformationPreUpdateEvent);
+
         (new UserPreferencesHeader())->display(_('Account'), $layout);
         $this->renderer->renderToPage(
             'account-information',
@@ -89,12 +92,13 @@ final class DisplayAccountInformationController implements DispatchableWithReque
                 $tabs,
                 $this->csrf_token,
                 $user,
+                $account_information_pre_update,
             )
         );
         $layout->footer([]);
     }
 
-    private static function getCSRFToken(): CSRFSynchronizerToken
+    public static function getCSRFToken(): CSRFSynchronizerToken
     {
         return new CSRFSynchronizerToken(self::URL);
     }
