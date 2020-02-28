@@ -397,7 +397,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         if ($include_tracker_css_file ||
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], "/tracker/new-information") !== 0
+            strpos($_SERVER['REQUEST_URI'], "/new-information") !== 0
         ) {
             $theme_include_assets    = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/tracker/themes',
@@ -1919,12 +1919,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $r->get('/attachments/{preview:preview}/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
 
             $r->addRoute(['GET', 'POST'], GlobalAdminController::URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdmin'));
-        });
 
-        $event->getRouteCollector()->addGroup('/{project_name:[A-z0-9-]+}/tracker', function (FastRoute\RouteCollector $r) {
-            $r->get('/new', $this->getRouteHandler('routeCreateNewTracker'));
-            $r->get('/new-information', $this->getRouteHandler('routeCreateNewTracker'));
-            $r->post('/new-information', $this->getRouteHandler('routeProcessNewTrackerCreation'));
+            $r->get('/{project_name:[A-z0-9-]+}/new', $this->getRouteHandler('routeCreateNewTracker'));
+            $r->get('/{project_name:[A-z0-9-]+}/new-information', $this->getRouteHandler('routeCreateNewTracker'));
+            $r->post('/{project_name:[A-z0-9-]+}/new-information', $this->getRouteHandler('routeProcessNewTrackerCreation'));
         });
 
         $event->getRouteCollector()->addRoute(

@@ -107,7 +107,7 @@ class TrackerCreationBreadCrumbsBuilderTest extends \PHPUnit\Framework\TestCase
         return new BreadCrumb(
             new BreadCrumbLink(
                 'New tracker',
-                '/my-project/tracker/new'
+                '/plugins/tracker/my-project/new'
             )
         );
     }

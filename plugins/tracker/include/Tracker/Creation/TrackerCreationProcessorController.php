@@ -75,7 +75,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $user    = $this->user_manager->getCurrentUser();
 
         $csrf = new \CSRFSynchronizerToken(
-            $this->getRouteToSelf($project)
+            self::getRouteToSubmissionController($project)
         );
 
         $csrf->check();
@@ -147,7 +147,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
     private function redirectToTrackerCreation(Project $project, string $reason): void
     {
         $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $reason);
-        $GLOBALS['Response']->redirect('/' . urlencode($project->getUnixNameLowerCase()) . '/tracker/new');
+        $GLOBALS['Response']->redirect('/plugins/tracker/' . urlencode($project->getUnixNameLowerCase()) . '/new');
     }
 
     private function redirectToTrackerAdmin(\Tracker $tracker): void
@@ -155,8 +155,8 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $GLOBALS['Response']->redirect($tracker->getAdministrationUrl());
     }
 
-    private function getRouteToSelf(Project $project) : string
+    public static function getRouteToSubmissionController(Project $project) : string
     {
-        return '/' . urlencode($project->getUnixNameLowerCase()) . '/tracker/new-information';
+        return '/plugins/tracker/' . urlencode($project->getUnixNameLowerCase()) . '/new-information';
     }
 }

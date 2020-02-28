@@ -54,19 +54,12 @@ class TrackerCreationBreadCrumbsBuilder
             new BreadCrumb(
                 new BreadCrumbLink(
                     dgettext('tuleap-tracker', 'New tracker'),
-                    $this->getRouteToTrackerCreationController($project)
+                    TrackerCreationController::getRouteToTrackerCreationController($project)
                 )
             )
         );
 
         return $bread_crumb_collection;
-    }
-
-    private function getRouteToTrackerCreationController(Project $project): string
-    {
-        return '/'
-               . urlencode($project->getUnixNameLowerCase())
-               . '/tracker/new';
     }
 
     private function addADropdownWithLinkToGlobalAdministration(Project $project, BreadCrumb $breadcrumb) : void

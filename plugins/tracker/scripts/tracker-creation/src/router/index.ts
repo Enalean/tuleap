@@ -26,7 +26,7 @@ Vue.use(VueRouter);
 export function createRouter(project_unix_name: string): VueRouter {
     const STEP_1_NAME = "step-1";
     const STEP_2_NAME = "step-2";
-    const base = `/${project_unix_name}/tracker`;
+    const base = `/plugins/tracker/${project_unix_name}`;
 
     const router = new VueRouter({
         base,
