@@ -55,6 +55,13 @@ export function initTrackerNameWithTheSelectedTemplateName(state: State): void {
     };
 }
 
+export function reinitTrackerNameAndShortname(state: State): void {
+    state.tracker_to_be_created = {
+        name: "",
+        shortname: ""
+    };
+}
+
 export async function setTrackerToBeCreatedFromXml(state: State): Promise<void> {
     state.is_parsing_a_xml_file = true;
     state.has_xml_file_error = false;

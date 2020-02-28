@@ -19,13 +19,19 @@
 
 <template>
     <field-shortname-slugified v-if="can_display_slugify_mode" />
-    <div class="tlp-form-element" v-else>
+    <div
+        class="tlp-form-element"
+        v-bind:class="{
+            'tlp-form-element-error': !is_shortname_valid
+        }"
+        v-else
+    >
         <label class="tlp-label" for="tracker-shortname">
             <translate>Shortname</translate>
             <i class="fa fa-asterisk"></i>
         </label>
         <input
-            pattern="^[a-zA-Z0-9_]+$"
+            v-bind:pattern="validation_pattern"
             type="text"
             maxlength="25"
             class="tlp-input tlp-input-large"
@@ -36,9 +42,20 @@
             v-bind:value="tracker_to_be_created.shortname"
             required
         />
-        <p class="tlp-text-info">
+        <p class="tlp-text-info tracker-shortname-input-helper">
             <i class="fa fa-life-saver"></i>
             <translate>Avoid spaces and ponctuation</translate>
+        </p>
+        <p
+            class="tlp-text-danger tracker-shortname-input-helper"
+            data-test="shortname-error"
+            v-if="!is_shortname_valid"
+        >
+            <i class="fa fa-exclamation-circle"></i>
+            <translate>
+                The tracker shortname must have a length between 1 and 25 characters. It can only
+                contain alphanumerical characters and underscores.
+            </translate>
         </p>
     </div>
 </template>
@@ -48,6 +65,7 @@ import { State, Mutation, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 import FieldShortnameSlugified from "./FieldShortnameSlugified.vue";
+import { TRACKER_SHORTNAME_FORMAT } from "../../../../constants";
 
 @Component({
     components: {
@@ -63,5 +81,12 @@ export default class FieldShortname extends Vue {
 
     @Mutation
     readonly setTrackerShortName!: (name: string) => void;
+
+    @Getter
+    readonly is_shortname_valid!: boolean;
+
+    get validation_pattern(): string {
+        return TRACKER_SHORTNAME_FORMAT.toString();
+    }
 }
 </script>
