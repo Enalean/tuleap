@@ -56,4 +56,77 @@ describe("mutations", () => {
             );
         });
     });
+
+    describe("initTrackerNameWithTheSelectedTemplateName", () => {
+        it("does nothing if no tracker template is selected", () => {
+            const state: State = {
+                selected_tracker_template: null,
+                tracker_to_be_created: {
+                    name: "",
+                    shortname: ""
+                }
+            } as State;
+
+            mutations.initTrackerNameWithTheSelectedTemplateName(state);
+
+            expect(state.tracker_to_be_created).toEqual({
+                name: "",
+                shortname: ""
+            });
+        });
+
+        it("Sets the tracker name and the tracker shortname (slugified)", () => {
+            const state: State = {
+                selected_tracker_template: {
+                    name: "Bug tracker"
+                },
+                tracker_to_be_created: {
+                    name: "",
+                    shortname: ""
+                }
+            } as State;
+
+            mutations.initTrackerNameWithTheSelectedTemplateName(state);
+
+            expect(state.tracker_to_be_created).toEqual({
+                name: "Bug tracker",
+                shortname: "bug_tracker"
+            });
+        });
+    });
+
+    describe("setTrackerName", () => {
+        it("Sets the tracker name", () => {
+            const state: State = {
+                tracker_to_be_created: {
+                    name: "",
+                    shortname: ""
+                }
+            } as State;
+
+            mutations.setTrackerName(state, "Kanban in the trees");
+
+            expect(state.tracker_to_be_created).toEqual({
+                name: "Kanban in the trees",
+                shortname: ""
+            });
+        });
+
+        it("When the slugify mode is active, it also sets the tracker shortname", () => {
+            const state: State = {
+                tracker_to_be_created: {
+                    name: "",
+                    shortname: ""
+                },
+                is_in_slugify_mode: true
+            } as State;
+
+            mutations.setTrackerName(state, "Kanban in the trees");
+
+            expect(state.tracker_to_be_created).toEqual({
+                name: "Kanban in the trees",
+                shortname: "kanban_in_the_trees"
+            });
+        });
+    });
 });

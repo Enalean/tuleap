@@ -25,6 +25,7 @@
     "pretty-kibibytes": "^4.0.4",
     "pump": "^3.0.0",
     "readable-stream": "^2.3.6",
+    "slugify": "^1.3.6",
     "sprintf-js": "^1.1.1",
     "vue": "^2.6.10",
     "vue-dompurify-html": "^2.1.1",

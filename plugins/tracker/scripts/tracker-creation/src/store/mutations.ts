@@ -19,6 +19,7 @@
 
 import { CreationOptions, State, Tracker, TrackerToBeCreatedMandatoryData } from "./type";
 import { extractNameAndShortnameFromXmlFile } from "../helpers/xml-data-extractor";
+import { getSlugifiedShortname } from "../helpers/shortname-slugifier";
 
 export function setActiveOption(state: State, option: CreationOptions): void {
     state.active_option = option;
@@ -41,12 +42,17 @@ export function setSelectedTrackerTemplate(state: State, tracker_id: string): vo
 }
 
 export function initTrackerNameWithTheSelectedTemplateName(state: State): void {
-    if (state.selected_tracker_template) {
-        state.tracker_to_be_created = {
-            name: state.selected_tracker_template.name,
-            shortname: ""
-        };
+    if (!state.selected_tracker_template) {
+        return;
     }
+
+    const name = state.selected_tracker_template.name;
+    const shortname = getSlugifiedShortname(name);
+
+    state.tracker_to_be_created = {
+        name,
+        shortname
+    };
 }
 
 export async function setTrackerToBeCreatedFromXml(state: State): Promise<void> {
@@ -77,6 +83,10 @@ export async function setTrackerToBeCreatedFromXml(state: State): Promise<void> 
 
 export function setTrackerName(state: State, name: string): void {
     state.tracker_to_be_created.name = name;
+
+    if (state.is_in_slugify_mode) {
+        setTrackerShortName(state, getSlugifiedShortname(name));
+    }
 }
 
 export function setTrackerShortName(state: State, shortname: string): void {
@@ -93,4 +103,8 @@ export function setSelectedTrackerXmlFileInput(state: State, input: HTMLInputEle
 
 export function setIsXmlAFileSelected(state: State): void {
     state.is_a_xml_file_selected = true;
+}
+
+export function setSlugifyShortnameMode(state: State, is_active: boolean): void {
+    state.is_in_slugify_mode = is_active;
 }

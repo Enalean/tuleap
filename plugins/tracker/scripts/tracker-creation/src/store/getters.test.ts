@@ -135,4 +135,33 @@ describe("getters", () => {
             expect(getters.is_ready_to_submit(state)).toBe(true);
         });
     });
+
+    describe("can_display_slugify_mode", () => {
+        it("can't be displayed when the user has toggled the shortname input", () => {
+            const state = {
+                is_in_slugify_mode: false,
+                active_option: CreationOptions.TRACKER_TEMPLATE
+            } as State;
+
+            expect(getters.can_display_slugify_mode(state)).toBe(false);
+        });
+
+        it("can't be displayed when the user has selected the XML import option (shortname extracted from XML)", () => {
+            const state = {
+                is_in_slugify_mode: true,
+                active_option: CreationOptions.TRACKER_XML_FILE
+            } as State;
+
+            expect(getters.can_display_slugify_mode(state)).toBe(false);
+        });
+
+        it("can be displayed otherwise", () => {
+            const state = {
+                is_in_slugify_mode: true,
+                active_option: CreationOptions.TRACKER_TEMPLATE
+            } as State;
+
+            expect(getters.can_display_slugify_mode(state)).toBe(true);
+        });
+    });
 });

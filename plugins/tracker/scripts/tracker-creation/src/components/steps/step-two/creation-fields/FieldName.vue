@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
+    <div
+        class="tlp-form-element"
+        v-bind:class="{
+            'tracker-name-above-slugified-shortname': can_display_slugify_mode
+        }"
+    >
         <label class="tlp-label" for="tracker-name">
             <translate>Name</translate>
             <i class="fa fa-asterisk"></i>
@@ -28,6 +33,7 @@
             class="tlp-input tlp-input-large"
             id="tracker-name"
             name="tracker-name"
+            data-test="tracker-name-input"
             v-bind:value="tracker_to_be_created.name"
             v-on:keyup="setTrackerName($event.target.value)"
             required
@@ -36,7 +42,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { State, Mutation } from "vuex-class";
+import { State, Mutation, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 
@@ -47,5 +53,8 @@ export default class StepTwo extends Vue {
 
     @Mutation
     readonly setTrackerName!: (name: string) => void;
+
+    @Getter
+    readonly can_display_slugify_mode!: boolean;
 }
 </script>

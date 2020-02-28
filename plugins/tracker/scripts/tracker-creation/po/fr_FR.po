@@ -91,3 +91,6 @@ msgstr ""
 
 msgid "Tracker XML file"
 msgstr "Fichier XML"
+
+msgid "Tracker shortname:"
+msgstr "Nom court de l'outil de suivi :"
