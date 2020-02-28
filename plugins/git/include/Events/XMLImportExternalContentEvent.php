@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Events;
 
 use Project;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Event\Dispatchable;
 
@@ -41,10 +42,16 @@ class XMLImportExternalContentEvent implements Dispatchable
      */
     private $xml_git;
 
-    public function __construct(Project $project, SimpleXMLElement $xml_git)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(Project $project, SimpleXMLElement $xml_git, LoggerInterface $logger)
     {
         $this->project = $project;
         $this->xml_git = $xml_git;
+        $this->logger  = $logger;
     }
 
     public function getProject(): Project
@@ -55,5 +62,10 @@ class XMLImportExternalContentEvent implements Dispatchable
     public function getXMLGit(): SimpleXMLElement
     {
         return $this->xml_git;
+    }
+
+    public function getLogger(): LoggerInterface
+    {
+        return $this->logger;
     }
 }

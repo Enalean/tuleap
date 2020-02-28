@@ -339,7 +339,8 @@ class hudson_gitPlugin extends Plugin
             new JenkinsServerAdder(
                 new JenkinsServerDao(),
                 new Valid_HTTPURI()
-            )
+            ),
+            $event->getLogger()
         );
 
         $xml_importer->import(
@@ -356,7 +357,8 @@ class hudson_gitPlugin extends Plugin
         }
 
         $xml_importer = new XMLExporter(
-            self::getJenkinsServerFactory()
+            self::getJenkinsServerFactory(),
+            $event->getLogger()
         );
 
         $xml_importer->export(

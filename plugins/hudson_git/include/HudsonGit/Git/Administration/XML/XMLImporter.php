@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration\XML;
 
 use Project;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerAdder;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerAlreadyDefinedException;
@@ -35,9 +36,15 @@ class XMLImporter
      */
     private $jenkins_server_adder;
 
-    public function __construct(JenkinsServerAdder $jenkins_server_adder)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(JenkinsServerAdder $jenkins_server_adder, LoggerInterface $logger)
     {
         $this->jenkins_server_adder = $jenkins_server_adder;
+        $this->logger               = $logger;
     }
 
     public function import(Project $project, SimpleXMLElement $xml_git): void
@@ -46,14 +53,19 @@ class XMLImporter
             return;
         }
 
+        $this->logger->info("Importing project jenkins servers.");
         foreach ($xml_git->{"jenkins-servers-admin"}->{"jenkins-server"} as $xml_jenkins_server) {
+            $jenkins_server_url = (string) $xml_jenkins_server['url'];
             try {
+                $this->logger->info("Importing project jenkins server: " . $jenkins_server_url);
                 $this->jenkins_server_adder->addServerInProject(
                     $project,
-                    (string) $xml_jenkins_server['url']
+                    $jenkins_server_url
                 );
-            } catch (JenkinsServerAlreadyDefinedException | JenkinsServerURLNotValidException $exception) {
-                //Do nothing but log
+            } catch (JenkinsServerAlreadyDefinedException $exception) {
+                $this->logger->error("Jenkins server " . $jenkins_server_url . " already exists in project.");
+            } catch (JenkinsServerURLNotValidException $exception) {
+                $this->logger->error("Jenkins server URL " . $jenkins_server_url . " is not an URL.");
             }
         }
     }

@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerAdder;
 
@@ -43,14 +44,21 @@ class XMLImporterTest extends TestCase
      */
     private $jenkins_server_adder;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->jenkins_server_adder = Mockery::mock(JenkinsServerAdder::class);
+        $this->logger               = Mockery::mock(LoggerInterface::class);
 
         $this->importer = new XMLImporter(
-            $this->jenkins_server_adder
+            $this->jenkins_server_adder,
+            $this->logger
         );
 
         $this->project = Mockery::mock(Project::class);
@@ -68,6 +76,8 @@ class XMLImporterTest extends TestCase
         ');
 
         $this->jenkins_server_adder->shouldReceive('addServerInProject')->times(2);
+
+        $this->logger->shouldReceive('info');
 
         $this->importer->import(
             $this->project,
