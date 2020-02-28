@@ -69,6 +69,11 @@ class GitXMLExporterTest extends TestCase
 
     private $export_folder;
 
+    /**
+     * @var \EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $event_manager;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -115,9 +120,9 @@ class GitXMLExporterTest extends TestCase
 
         $repository_factory->shouldReceive('getAllRepositories')->andReturns(array($repository, $forked_repository, $empty_repository));
 
-        $this->user_manager = \Mockery::spy(\UserManager::class);
-
-        $this->git_log_dao = \Mockery::spy(Git_LogDao::class);
+        $this->user_manager  = \Mockery::spy(\UserManager::class);
+        $this->event_manager = \Mockery::spy(\EventManager::class);
+        $this->git_log_dao   = \Mockery::spy(Git_LogDao::class);
 
         $this->xml_exporter = new GitXmlExporter(
             \Mockery::spy(\Project::class),
@@ -131,8 +136,11 @@ class GitXMLExporterTest extends TestCase
             new \UserXMLExporter(
                 $this->user_manager,
                 new \UserXMLExportedCollection(new \XML_RNGValidator(), new \XML_SimpleXMLCDATAFactory())
-            )
+            ),
+            $this->event_manager
         );
+
+        $this->event_manager->shouldReceive('processEvent')->once();
 
         $data           = '<?xml version="1.0" encoding="UTF-8"?>
                  <projects />';

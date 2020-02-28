@@ -341,7 +341,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    private function getGitExporter(Project $project)
+    private function getGitExporter(Project $project): GitXmlExporter
     {
         $user_manager = UserManager::instance();
         return new GitXmlExporter(
@@ -356,7 +356,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             new UserXMLExporter(
                 $user_manager,
                 new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
-            )
+            ),
+            EventManager::instance()
         );
     }
 
