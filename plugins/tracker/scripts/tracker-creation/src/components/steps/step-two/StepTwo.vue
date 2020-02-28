@@ -80,16 +80,22 @@ export default class StepTwo extends Vue {
     @Mutation
     readonly initTrackerNameWithTheSelectedTemplateName!: () => void;
 
+    @Mutation
+    readonly cancelCreationFormSubmition!: () => void;
+
     @State
     readonly selected_xml_file_input!: HTMLInputElement;
 
     @Ref("tracker_creation_form")
     readonly creation_form!: HTMLFormElement;
 
-    @Watch("has_form_been_submitted", { deep: true, immediate: true })
+    @Watch("has_form_been_submitted", { deep: true })
     submitTheForm(current_value: boolean): void {
-        if (current_value === true) {
+        if (current_value === true && this.creation_form.checkValidity()) {
             this.creation_form.submit();
+        } else {
+            this.cancelCreationFormSubmition();
+            this.creation_form.reportValidity();
         }
     }
 
