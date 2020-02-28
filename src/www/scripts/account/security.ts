@@ -23,8 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function handleSessionSwitch(): void {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const button = document.getElementById("account-remember-me") as HTMLInputElement;
+    const button = document.getElementById("account-remember-me");
+
+    if (!(button instanceof HTMLInputElement)) {
+        throw Error("#account-remember-me not found or is not an input");
+    }
 
     button.addEventListener("click", () => {
         const form = button.form;

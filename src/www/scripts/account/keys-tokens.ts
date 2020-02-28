@@ -30,16 +30,17 @@ function handleSSHKeys(): void {
 
     toggleButtonAccordingToCheckBoxesStateWithIds("remove-ssh-keys-button", "ssh_key_selected[]");
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const ssh_key = document.getElementById("ssh-key") as HTMLTextAreaElement;
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const button = document.getElementById("submit-new-ssh-key-button") as HTMLButtonElement;
+    const ssh_key = document.getElementById("ssh-key");
+    if (!(ssh_key instanceof HTMLTextAreaElement)) {
+        throw new Error("#ssh-key not found or is not a textarea");
+    }
+    const button = document.getElementById("submit-new-ssh-key-button");
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error("#submit-new-ssh-key-button not found or is not a button");
+    }
     changeButtonStatusDependingTextareaStatus(button, ssh_key);
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const ssh_keys_list = document.querySelectorAll("[data-ssh_key_value]") as NodeListOf<
-        HTMLTableRowElement
-    >;
+    const ssh_keys_list = document.querySelectorAll<HTMLElement>("[data-ssh_key_value]");
     ssh_keys_list.forEach(row => {
         row.addEventListener("click", () => {
             const full_ssh_key = row.getAttribute("data-ssh_key_value");
@@ -53,8 +54,11 @@ function handleSSHKeys(): void {
 }
 
 function addSSHKeyButton(): void {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const button = document.getElementById("add-ssh-key-button") as HTMLButtonElement;
+    const button = document.getElementById("add-ssh-key-button");
+
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error("#add-ssh-key-button not found or is not a button");
+    }
 
     popupModal(button);
 }
@@ -74,8 +78,11 @@ function handleAccessKeys(): void {
 }
 
 function addAccessKeyButton(): void {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const button = document.getElementById("generate-access-key-button") as HTMLButtonElement;
+    const button = document.getElementById("generate-access-key-button");
+
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error("#generate-access-key-button not found or is not a button");
+    }
 
     popupModal(button);
 }
@@ -100,8 +107,11 @@ function handleSVNTokens(): void {
 }
 
 function addSVNTokenButton(): void {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const button = document.getElementById("generate-svn-token-button") as HTMLButtonElement;
+    const button = document.getElementById("generate-svn-token-button");
+
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error("#generate-svn-token-button not found or is not a button");
+    }
 
     popupModal(button);
 }
@@ -130,13 +140,13 @@ function toggleButtonAccordingToCheckBoxesStateWithIds(
     button_id: string,
     checkbox_name: string
 ): void {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const button = document.getElementById(button_id) as HTMLButtonElement;
+    const button = document.getElementById(button_id);
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const checkboxes = document.getElementsByName(checkbox_name) as NodeListOf<HTMLInputElement>;
+    const checkboxes = [...document.getElementsByName(checkbox_name)].filter(
+        (element): element is HTMLInputElement => element instanceof HTMLInputElement
+    );
 
-    if (!button) {
+    if (!(button instanceof HTMLButtonElement)) {
         return;
     }
 
@@ -145,7 +155,7 @@ function toggleButtonAccordingToCheckBoxesStateWithIds(
 
 function toggleButtonAccordingToCheckBoxesState(
     button: HTMLButtonElement,
-    checkboxes: NodeListOf<HTMLInputElement>
+    checkboxes: HTMLInputElement[]
 ): void {
     changeButtonStatusDependingCheckboxesStatus(button, checkboxes);
 
@@ -158,16 +168,9 @@ function toggleButtonAccordingToCheckBoxesState(
 
 function changeButtonStatusDependingCheckboxesStatus(
     button: HTMLButtonElement,
-    checkboxes: NodeListOf<HTMLInputElement>
+    checkboxes: HTMLInputElement[]
 ): void {
-    let at_least_one_checkbox_is_checked = false;
-
-    checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            at_least_one_checkbox_is_checked = true;
-            return;
-        }
-    });
+    const at_least_one_checkbox_is_checked = checkboxes.some(checkbox => checkbox.checked);
 
     if (at_least_one_checkbox_is_checked) {
         button.disabled = false;

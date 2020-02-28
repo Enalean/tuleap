@@ -26,11 +26,8 @@ initThemeColorSelector();
 initAccessibilitySelector();
 
 function initThemeColorSelector(): void {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const selector = document.getElementById(
-        "user-preferences-color-selector"
-    ) as HTMLSelectElement;
-    if (selector === null || !selector.dataset.colors) {
+    const selector = document.getElementById("user-preferences-color-selector");
+    if (!(selector instanceof HTMLSelectElement) || !selector.dataset.colors) {
         return;
     }
 
@@ -64,7 +61,7 @@ function initThemeColorSelector(): void {
 
     function changePreviewColor(): void {
         const preview = document.getElementById("user-preferences-section-appearance-preview");
-        if (preview === null) {
+        if (preview === null || selector === null || !(selector instanceof HTMLSelectElement)) {
             return;
         }
 
@@ -75,11 +72,8 @@ function initThemeColorSelector(): void {
 }
 
 function initAccessibilitySelector(): void {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const selector = document.getElementById(
-        "user-preferences-accessibility-selector"
-    ) as HTMLInputElement;
-    if (!selector) {
+    const selector = document.getElementById("user-preferences-accessibility-selector");
+    if (selector === null) {
         return;
     }
 
@@ -88,7 +82,7 @@ function initAccessibilitySelector(): void {
 
     function changePreviewAccessibility(): void {
         const preview = document.getElementById("user-preferences-section-appearance-preview");
-        if (preview === null) {
+        if (preview === null || !(selector instanceof HTMLInputElement)) {
             return;
         }
 
