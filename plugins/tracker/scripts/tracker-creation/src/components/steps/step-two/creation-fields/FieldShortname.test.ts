@@ -26,13 +26,17 @@ import FieldShortname from "./FieldShortname.vue";
 describe("FieldShortname", () => {
     let state: State;
 
-    async function getWrapper(can_display_slugify_mode: boolean): Promise<Wrapper<FieldShortname>> {
+    async function getWrapper(
+        can_display_slugify_mode: boolean,
+        is_shortname_valid = true
+    ): Promise<Wrapper<FieldShortname>> {
         return shallowMount(FieldShortname, {
             mocks: {
                 $store: createStoreMock({
                     state,
                     getters: {
-                        can_display_slugify_mode
+                        can_display_slugify_mode,
+                        is_shortname_valid
                     }
                 })
             },
@@ -78,9 +82,16 @@ describe("FieldShortname", () => {
         );
     });
 
-    it("If the slugify mode is active, then it dispkays the slugified mode", async () => {
+    it("If the slugify mode is active, then it displays the slugified mode", async () => {
         const wrapper = await getWrapper(true);
 
         expect(wrapper.contains("field-shortname-slugified-stub")).toBe(true);
+    });
+
+    it("Enters the error mode when the shortname does not respect the expected format", async () => {
+        const wrapper = await getWrapper(false, false);
+
+        expect(wrapper.find("[data-test=shortname-error]").exists()).toBe(true);
+        expect(wrapper.classes("tlp-form-element-error")).toBe(true);
     });
 });

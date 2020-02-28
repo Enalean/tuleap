@@ -18,6 +18,7 @@
  */
 
 import { CreationOptions, State } from "./type";
+import { TRACKER_SHORTNAME_FORMAT } from "../constants";
 
 export const is_ready_for_step_2 = (state: State): boolean => {
     if (state.active_option === CreationOptions.NONE_YET) {
@@ -68,4 +69,8 @@ export const is_a_xml_import = (state: State): boolean => {
 
 export const can_display_slugify_mode = (state: State): boolean => {
     return state.is_in_slugify_mode && state.active_option !== CreationOptions.TRACKER_XML_FILE;
+};
+
+export const is_shortname_valid = (state: State): boolean => {
+    return TRACKER_SHORTNAME_FORMAT.test(state.tracker_to_be_created.shortname);
 };

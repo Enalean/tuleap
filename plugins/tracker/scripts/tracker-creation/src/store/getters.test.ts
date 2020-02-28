@@ -164,4 +164,41 @@ describe("getters", () => {
             expect(getters.can_display_slugify_mode(state)).toBe(true);
         });
     });
+
+    describe("is_shortname_valid", () => {
+        function getStateWithShortname(shortname: string): State {
+            return {
+                tracker_to_be_created: {
+                    shortname
+                }
+            } as State;
+        }
+
+        it("returns false when the shortname contains forbidden characters", () => {
+            expect(getters.is_shortname_valid(getStateWithShortname(" "))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("+"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("."))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("~"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("("))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname(")"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("!"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname(":"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("@"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname('"'))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("'"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("*"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("©"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("®"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("-"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname("<"))).toBe(false);
+            expect(getters.is_shortname_valid(getStateWithShortname(">"))).toBe(false);
+        });
+
+        it("returns true when the shortname is well formatted", () => {
+            expect(getters.is_shortname_valid(getStateWithShortname("yo_lo"))).toBe(true);
+            expect(getters.is_shortname_valid(getStateWithShortname("122_yo_lo"))).toBe(true);
+            expect(getters.is_shortname_valid(getStateWithShortname("_yo_lo_"))).toBe(true);
+            expect(getters.is_shortname_valid(getStateWithShortname("tracker123"))).toBe(true);
+        });
+    });
 });

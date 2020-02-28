@@ -83,6 +83,9 @@ export default class StepTwo extends Vue {
     @Mutation
     readonly cancelCreationFormSubmition!: () => void;
 
+    @Mutation
+    readonly reinitTrackerNameAndShortname!: () => void;
+
     @State
     readonly selected_xml_file_input!: HTMLInputElement;
 
@@ -102,6 +105,8 @@ export default class StepTwo extends Vue {
     mounted(): void {
         if (this.is_a_duplication) {
             this.initTrackerNameWithTheSelectedTemplateName();
+        } else if (this.is_created_from_empty) {
+            this.reinitTrackerNameAndShortname();
         } else if (this.is_a_xml_import) {
             const form = this.$refs.tracker_creation_form;
 
