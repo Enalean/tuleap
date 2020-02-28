@@ -45,7 +45,10 @@ final class PrefixedSplitTokenSerializer implements SplitTokenFormatter, SplitTo
 
     public function getSplitToken(ConcealedString $identifier): SplitToken
     {
-        if (preg_match($this->buildPattern(), $identifier->getString(), $matches) !== 1) {
+        $raw_identifier = $identifier->getString();
+        $match_result   = preg_match($this->buildPattern(), $raw_identifier, $matches);
+        \sodium_memzero($raw_identifier);
+        if ($match_result !== 1) {
             throw new InvalidIdentifierFormatException();
         }
 

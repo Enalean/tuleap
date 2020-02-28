@@ -36,7 +36,9 @@ class SplitTokenVerificationString
      */
     public function __construct(ConcealedString $verification_string)
     {
-        $verification_string_size = strlen($verification_string->getString());
+        $raw_verification_string  = $verification_string->getString();
+        $verification_string_size = \mb_strlen($raw_verification_string, '8bit');
+        \sodium_memzero($raw_verification_string);
         if ($verification_string_size !== self::VERIFICATION_STRING_LENGTH) {
             throw new IncorrectSizeVerificationStringException(
                 self::VERIFICATION_STRING_LENGTH,

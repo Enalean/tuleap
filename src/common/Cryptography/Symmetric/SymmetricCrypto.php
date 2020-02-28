@@ -37,7 +37,15 @@ final class SymmetricCrypto
     {
         $nonce = \random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
 
-        return $nonce . \sodium_crypto_secretbox($plaintext->getString(), $nonce, $secret_key->getRawKeyMaterial());
+        $raw_plaintext    = $plaintext->getString();
+        $raw_key_material = $secret_key->getRawKeyMaterial();
+
+        $encrypted_data = $nonce . \sodium_crypto_secretbox($raw_plaintext, $nonce, $raw_key_material);
+
+        \sodium_memzero($raw_plaintext);
+        \sodium_memzero($raw_key_material);
+
+        return $encrypted_data;
     }
 
     /**
@@ -52,10 +60,15 @@ final class SymmetricCrypto
         }
         $encrypted = \mb_substr($ciphertext, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, $ciphertext_length, '8bit');
 
-        $plaintext = \sodium_crypto_secretbox_open($encrypted, $nonce, $secret_key->getRawKeyMaterial());
-        if ($plaintext === false) {
+        $raw_plaintext = \sodium_crypto_secretbox_open($encrypted, $nonce, $secret_key->getRawKeyMaterial());
+        if ($raw_plaintext === false) {
             throw new InvalidCiphertextException();
         }
-        return new ConcealedString($plaintext);
+
+        $plaintext = new ConcealedString($raw_plaintext);
+
+        \sodium_memzero($raw_plaintext);
+
+        return $plaintext;
     }
 }
