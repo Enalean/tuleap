@@ -30,8 +30,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -79,22 +77,10 @@ final class DisplayNotificationsController implements DispatchableWithRequest, D
             throw new ForbiddenException();
         }
 
-        $layout->addCssAsset(new AccountCssAsset());
-
-        $layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts',
-                ),
-                'preferences-nav.js'
-            )
-        );
-
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
-        $layout->header(['title' => _('Notifications'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]);
+        (new UserPreferencesHeader())->display(_('Notifications'), $layout);
         $this->renderer->renderToPage(
             'notifications',
             new NotificationsPresenter(

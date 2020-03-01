@@ -72,13 +72,11 @@ final class DisplayEditionController implements DispatchableWithRequest, Dispatc
             throw new ForbiddenException();
         }
 
-        $layout->addCssAsset(new AccountCssAsset());
-
         $layout->addJavascriptAsset(
             new JavascriptAsset(
                 new IncludeAssets(
                     __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts',
+                    '/assets/account/scripts'
                 ),
                 'preferences-nav.js'
             )
@@ -87,9 +85,7 @@ final class DisplayEditionController implements DispatchableWithRequest, Dispatc
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
-        $layout->header(
-            ['title' => _('Edition & CSV'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]
-        );
+        (new UserPreferencesHeader())->display(_('Edition & CSV'), $layout);
         $this->renderer->renderToPage('edition', new EditionPresenter($this->csrf_token, $tabs, $user));
         $layout->footer([]);
     }

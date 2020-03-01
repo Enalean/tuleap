@@ -31,9 +31,8 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\User\Account\AccountCssAsset;
 use Tuleap\User\Account\AccountTabPresenterCollection;
-use Tuleap\User\Account\DisplayKeysTokensController;
+use Tuleap\User\Account\UserPreferencesHeader;
 
 final class AccountGerritController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -73,12 +72,10 @@ final class AccountGerritController implements DispatchableWithRequest, Dispatch
             throw new ForbiddenException();
         }
 
-        $layout->addCssAsset(new AccountCssAsset());
-
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
-        $layout->header(['title' => dgettext('tuleap-git', 'Gerrit'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]);
+        (new UserPreferencesHeader())->display(dgettext('tuleap-git', 'Gerrit'), $layout);
         $this->renderer->renderToPage(
             'gerrit',
             new GerritPresenter(

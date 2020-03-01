@@ -72,13 +72,11 @@ final class DisplayExperimentalController implements DispatchableWithRequest, Di
             throw new ForbiddenException();
         }
 
-        $layout->addCssAsset(new AccountCssAsset());
-
         $layout->addJavascriptAsset(
             new JavascriptAsset(
                 new IncludeAssets(
                     __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts',
+                    '/assets/account/scripts'
                 ),
                 'preferences-nav.js'
             )
@@ -87,7 +85,7 @@ final class DisplayExperimentalController implements DispatchableWithRequest, Di
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
-        $layout->header(['title' => _('Experimental'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]);
+        (new UserPreferencesHeader())->display(_('Experimental'), $layout);
         $this->renderer->renderToPage(
             'experimental',
             new ExperimentalPresenter(

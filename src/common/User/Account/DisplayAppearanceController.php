@@ -79,24 +79,14 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
             throw new ForbiddenException();
         }
 
-        $layout->addCssAsset(new AccountCssAsset());
-        $layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts',
-                ),
-                'appearance.js'
-            )
-        );
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
                 new IncludeAssets(
                     __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts',
+                    '/assets/account/scripts'
                 ),
-                'preferences-nav.js'
+                'appearance.js'
             )
         );
 
@@ -109,9 +99,7 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
             $user
         );
 
-        $layout->header(
-            ['title' => _('Appearance & language'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]
-        );
+        (new UserPreferencesHeader())->display(_('Appearance & language'), $layout);
         $this->renderer->renderToPage('appearance', $presenter);
         $layout->footer([]);
     }

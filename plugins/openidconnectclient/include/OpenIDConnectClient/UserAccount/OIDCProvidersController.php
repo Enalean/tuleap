@@ -34,9 +34,8 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\User\Account\AccountCssAsset;
 use Tuleap\User\Account\AccountTabPresenterCollection;
-use Tuleap\User\Account\DisplayKeysTokensController;
+use Tuleap\User\Account\UserPreferencesHeader;
 
 final class OIDCProvidersController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -95,8 +94,6 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
 
         $user_mappings_usage = $this->user_mapping_manager->getUsageByUser($user);
 
-        $layout->addCssAsset(new AccountCssAsset());
-
         $layout->addCssAsset(
             new CssAssetWithoutVariantDeclinaisons(
                 $this->oidc_assets,
@@ -107,7 +104,7 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
-        $layout->header(['title' => dgettext('tuleap-openidconnectclient', 'OpenID Connect providers'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]);
+        (new UserPreferencesHeader())->display(dgettext('tuleap-openidconnectclient', 'OpenID Connect providers'), $layout);
         $this->renderer->renderToPage(
             'oidc-providers',
             new OIDCProvidersPresenter(
