@@ -349,11 +349,7 @@ class RouteCollector
 
     public static function getAccountSecurity(): DispatchableWithRequest
     {
-        return new DisplaySecurityController(
-            EventManager::instance(),
-            TemplateRendererFactory::build(),
-            DisplaySecurityController::getCSRFToken(),
-        );
+        return DisplaySecurityController::buildSelf();
     }
 
     public function postAccountSecuritySession(): DispatchableWithRequest

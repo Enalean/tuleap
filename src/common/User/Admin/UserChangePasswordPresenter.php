@@ -58,8 +58,5 @@ class UserChangePasswordPresenter
         $this->modal_cancel                 = $GLOBALS['Language']->getText('admin_user_changepw', 'cancel');
         $this->password_field_label         = $GLOBALS['Language']->getText('admin_user_changepw', 'password_field_label');
         $this->confirm_password_field_label = $GLOBALS['Language']->getText('admin_user_changepw', 'confirm_password_field_label');
-        $this->robustness_label             = $GLOBALS['Language']->getText('account_check_pw', 'password_robustness');
-        $this->good_label                   = $GLOBALS['Language']->getText('account_check_pw', 'good');
-        $this->bad_label                    = $GLOBALS['Language']->getText('account_check_pw', 'bad');
     }
 }

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #, php-format
 msgid ""
@@ -328,6 +328,9 @@ msgstr "Disponible ?"
 
 msgid "Back"
 msgstr "Retour"
+
+msgid "Bad"
+msgstr "Mauvaise"
 
 msgid "Banner"
 msgstr "Bannière"
@@ -789,6 +792,9 @@ msgstr "Aller à ma page personnelle"
 msgid "Go up"
 msgstr "Niveau supérieur"
 
+msgid "Good"
+msgstr "Bonne"
+
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
@@ -1194,6 +1200,9 @@ msgstr "Projet parent"
 
 msgid "Password policy"
 msgstr "Politique des mots de passe"
+
+msgid "Password robustness"
+msgstr "Robustesse du mot de passe"
 
 msgid "Password successfully updated"
 msgstr "Le mot de passe a été mis à jour avec succès"

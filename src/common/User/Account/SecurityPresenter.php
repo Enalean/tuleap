@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
+use Tuleap\User\Password\PasswordValidatorPresenter;
 
 /**
  * @psalm-immutable
@@ -57,8 +58,15 @@ final class SecurityPresenter
      * @var bool
      */
     public $user_can_change_password;
+    /**
+     * @var PasswordValidatorPresenter[]
+     */
+    public $passwords_validators;
 
-    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, \PFUser $user, PasswordPreUpdateEvent $password_pre_update_event)
+    /**
+     * @param PasswordValidatorPresenter[]  $password_validator_presenter
+     */
+    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, \PFUser $user, PasswordPreUpdateEvent $password_pre_update_event, array $password_validator_presenter)
     {
         $this->tabs = $tabs;
         $this->csrf_token = $csrf_token;
@@ -66,5 +74,6 @@ final class SecurityPresenter
         $this->username = $user->getUserName();
         $this->old_password_is_required = $password_pre_update_event->isOldPasswordRequiredToUpdatePassword();
         $this->user_can_change_password = $password_pre_update_event->areUsersAllowedToChangePassword();
+        $this->passwords_validators = $password_validator_presenter;
     }
 }
