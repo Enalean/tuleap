@@ -87,7 +87,7 @@ class AddController implements DispatchableWithRequest
 
         $provided_url = $request->get('url');
         if ($provided_url === false) {
-            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected jenkins server URL not found"));
+            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected Jenkins server URL not found"));
         }
 
         try {

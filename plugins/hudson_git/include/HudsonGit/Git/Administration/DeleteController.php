@@ -70,7 +70,7 @@ class DeleteController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->exist('jenkins_server_id')) {
-            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected jenkins server ID not found"));
+            throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected Jenkins server ID not found"));
         }
 
         $jenkins_server_id = (int) $request->get("jenkins_server_id");

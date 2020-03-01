@@ -69,7 +69,7 @@ class GitWebhooksSettingsEnhancer
         $this->jenkins_server_factory = $jenkins_server_factory;
     }
 
-    public function pimp(array $params)
+    public function pimp(array $params): void
     {
         $repository = $params['repository'];
         assert($repository instanceof GitRepository);
@@ -82,8 +82,8 @@ class GitWebhooksSettingsEnhancer
         if ($nb_project_jenkins_server > 0) {
             $params['additional_description'] = dngettext(
                 'tuleap-hudson_git',
-                'A jenkins server has been defined globally for the project and will be triggered after git pushes.',
-                'Some jenkins servers have been defined globally for the project and will be triggered after git pushes.',
+                'A Jenkins server has been defined globally for the project and will be triggered after git pushes.',
+                'Some Jenkins servers have been defined globally for the project and will be triggered after git pushes.',
                 $nb_project_jenkins_server
             );
 
