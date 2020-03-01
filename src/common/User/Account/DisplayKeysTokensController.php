@@ -101,6 +101,16 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
             )
         );
 
+        $layout->addJavascriptAsset(
+            new JavascriptAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../../../www/assets/account/scripts',
+                    '/assets/account/scripts',
+                ),
+                'preferences-nav.js'
+            )
+        );
+
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
