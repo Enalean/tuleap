@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\ProjectAdmin;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ProjectRetriever;
 
@@ -75,8 +76,9 @@ final class DeleteAppController implements DispatchableWithRequest
         return sprintf('/plugins/oauth2_server/project/%d/admin/delete-app', $project->getID());
     }
 
-    public function process(\HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
 

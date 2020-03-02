@@ -30,6 +30,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
+use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
 use Tuleap\OAuth2Server\App\AppDao;
@@ -60,6 +61,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class oauth2_serverPlugin extends Plugin
 {
+    public const SERVICE_NAME_INSTRUMENTATION = 'oauth2_server';
+
     public function __construct($id)
     {
         parent::__construct($id);
@@ -180,6 +183,7 @@ final class oauth2_serverPlugin extends Plugin
                 new AuthenticationScopeBuilderFromClassNames(DemoOAuth2Scope::class, OAuth2ProjectReadScope::class)
             ),
             new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
             new DisableCacheMiddleware()
         );
@@ -195,6 +199,7 @@ final class oauth2_serverPlugin extends Plugin
             $stream_factory,
             UserManager::instance(),
             new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
             new \Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware(
                 $response_factory,
@@ -243,6 +248,7 @@ final class oauth2_serverPlugin extends Plugin
             ),
             UserManager::instance(),
             new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
             new DisableCacheMiddleware(),
             new OAuth2ClientAuthenticationMiddleware(
