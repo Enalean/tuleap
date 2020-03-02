@@ -28,42 +28,58 @@
 }
 
 .account-security-password-robustness {
+    display: flex;
+    flex-direction: column;
     width: calc(50% - #{$tlp-spacing});
 
-    > .robustness {
-        margin: $tlp-spacing 0;
-        font-size: 30px;
-        font-weight: 600;
-        text-align: center;
+    > .tlp-label {
+        flex: 0 0 auto;
+    }
 
-        > .password-strategy-good {
+    > .robustness {
+        flex: 1 1 auto;
+        border-radius: 4px;
+
+        &.good {
+            background: transparentize($tlp-ui-success, .93);
             color: $tlp-ui-success;
         }
 
-        > .password-strategy-bad {
+        &.bad {
+            background: transparentize($tlp-ui-danger, .93);
             color: $tlp-ui-danger;
+        }
+
+        > .password-strategy-good,
+        > .password-strategy-bad {
+            margin: $tlp-spacing 0 $tlp-spacing + $tlp-half-spacing;
+            font-size: 30px;
+            font-weight: 600;
+            text-align: center;
         }
     }
 }
 
 .account-security-password-passwords-validator {
+    position: relative;
     margin: 0 0 5px;
+    padding: 0 0 0 20px;
     font-size: 14px;
     line-height: 20px;
 
-    > .fa-times::before {
-        content: '\f00d'; // fa-remove
-        margin: 0 3px 0 0;
-        color: $tlp-ui-danger;
+    > .fa {
+        position: absolute;
+        top: 3px;
+        left: 0;
         font-family: 'FontAwesome';
         font-style: normal;
     }
 
+    > .fa-times::before {
+        content: '\f00d'; // fa-remove
+    }
+
     > .fa-check::before {
         content: '\f00c'; // fa-check
-        margin: 0 3px 0 0;
-        color: $tlp-ui-success;
-        font-family: 'FontAwesome';
-        font-style: normal;
     }
 }
