@@ -955,6 +955,12 @@ msgstr "Labels"
 msgid "Language"
 msgstr "Langue"
 
+msgid "Last login failure"
+msgstr "Dernier échec de connexion"
+
+msgid "Last successful login"
+msgstr "Dernière connexion"
+
 msgid "Last used by"
 msgstr "Utilisée pour la dernière fois par"
 
@@ -1150,6 +1156,9 @@ msgstr "Rien n'a changé"
 msgid "Notifications"
 msgstr "Notifications"
 
+msgid "Number of login failure"
+msgstr "Nombre de connexions échouées"
+
 msgid "Only project members can access its content."
 msgstr "Seuls les membres du projet peuvent accéder à son contenu."
 
@@ -1299,6 +1308,9 @@ msgstr "Veuillez utiliser un lien http:// ou https://"
 
 msgid "Preferences"
 msgstr "Préférences"
+
+msgid "Previous successful login"
+msgstr "Connexion précédente"
 
 msgid "Private"
 msgstr "Privé"

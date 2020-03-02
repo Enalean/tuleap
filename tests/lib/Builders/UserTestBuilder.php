@@ -26,6 +26,10 @@ namespace Tuleap\Test\Builders;
 class UserTestBuilder
 {
     private $params = ['language_id' => 'en_US'];
+    /**
+     * @var \BaseLanguage
+     */
+    private $language;
 
     public static function aUser() : self
     {
@@ -37,32 +41,42 @@ class UserTestBuilder
         return (new self())->withId(0);
     }
 
-    public function withUserName(string $name)
+    public function withUserName(string $name): self
     {
         $this->params['user_name'] = $name;
         return $this;
     }
 
-    public function withId(int $id)
+    public function withId(int $id): self
     {
         $this->params['user_id'] = $id;
         return $this;
     }
 
-    public function withLdapId(string $id)
+    public function withLdapId(string $id): self
     {
         $this->params['ldap_id'] = $id;
         return $this;
     }
 
-    public function withLastPwdUpdate(string $timestamp)
+    public function withLastPwdUpdate(string $timestamp): self
     {
         $this->params['last_pwd_update'] = $timestamp;
         return $this;
     }
 
+    public function withLanguage(\BaseLanguage $language): self
+    {
+        $this->language = $language;
+        return $this;
+    }
+
     public function build(): \PFUser
     {
-        return new \PFUser($this->params);
+        $user = new \PFUser($this->params);
+        if ($this->language) {
+            $user->setLanguage($this->language);
+        }
+        return $user;
     }
 }

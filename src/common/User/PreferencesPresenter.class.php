@@ -53,7 +53,6 @@ class User_PreferencesPresenter
         $can_change_real_name,
         $can_change_email,
         array $extra_user_info,
-        array $user_access,
         CSRFSynchronizerToken $csrf_token,
         AccountTabPresenterCollection $tabs
     ) {
@@ -61,7 +60,6 @@ class User_PreferencesPresenter
         $this->can_change_real_name    = $can_change_real_name;
         $this->can_change_email        = $can_change_email;
         $this->extra_user_info         = $extra_user_info;
-        $this->user_access             = $user_access;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
 
@@ -179,51 +177,6 @@ class User_PreferencesPresenter
     public function extra_user_info()
     {
         return $this->extra_user_info;
-    }
-
-    public function authentication_attempts_title()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'auth_attempt_title');
-    }
-
-    public function last_successful_login_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'auth_attempt_last_success');
-    }
-
-    public function last_successful_login_value()
-    {
-        return format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->user_access['last_auth_success']);
-    }
-
-    public function last_login_failure_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'auth_attempt_last_failure');
-    }
-
-    public function last_login_failure_value()
-    {
-        return format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->user_access['last_auth_failure']);
-    }
-
-    public function number_login_failure_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'auth_attempt_nb_failure');
-    }
-
-    public function number_login_failure_value()
-    {
-        return $this->user_access['nb_auth_failure'];
-    }
-
-    public function previous_successful_login_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'auth_attempt_prev_success');
-    }
-
-    public function previous_successful_login_value()
-    {
-        return format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->user_access['prev_auth_success']);
     }
 
     /* MODAL */
