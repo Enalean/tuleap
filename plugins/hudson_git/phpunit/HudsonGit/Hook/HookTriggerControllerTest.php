@@ -103,8 +103,8 @@ class HookTriggerControllerTest extends TestCase
         $this->repository->shouldReceive('getId')->andReturn(1);
 
         $this->repository->shouldReceive('getAccessURL')->andReturn([
+            'http' => 'https://example.com/repo01',
             'ssh'  => 'example.com/repo01',
-            'http' => 'https://example.com/repo01'
         ]);
     }
 
@@ -139,6 +139,47 @@ class HookTriggerControllerTest extends TestCase
         );
     }
 
+    public function testItTriggersEachTransportsInRepositoryHooks(): void
+    {
+        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([
+            ['jenkins_server_url' => 'https://example.com/jenkins']
+        ]);
+
+        $polling_response = Mockery::mock(PollingResponse::class);
+        $polling_response->shouldReceive('getJobPaths')->andReturn([
+            'https://example.com/jenkins/job01'
+        ]);
+        $polling_response->shouldReceive('getBody')->andReturn('Response body');
+
+        $this->jenkins_client->shouldReceive('pushGitNotifications')
+            ->once()
+            ->with(Mockery::any(), "https://example.com/repo01", Mockery::any())
+            ->andThrow(UnableToLaunchBuildException::class);
+
+        $this->jenkins_client->shouldReceive('pushGitNotifications')
+            ->once()
+            ->with(Mockery::any(), "example.com/repo01", Mockery::any())
+            ->andReturn($polling_response);
+
+        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once();
+
+        $this->job_manager->shouldReceive('create')->times(1);
+        $this->job_manager->shouldReceive('createJobLogForProject')->never();
+
+        $this->logger->shouldReceive('debug');
+        $this->logger->shouldReceive('error')->once();
+
+        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([]);
+
+        $date_time = new DateTimeImmutable();
+
+        $this->controller->trigger(
+            $this->repository,
+            'a',
+            $date_time
+        );
+    }
+
     public function testItTriggersProjectHooks(): void
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([]);
@@ -161,6 +202,48 @@ class HookTriggerControllerTest extends TestCase
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('error')->never();
+
+        $date_time = new DateTimeImmutable();
+
+        $this->controller->trigger(
+            $this->repository,
+            'a',
+            $date_time
+        );
+    }
+
+    public function testItTriggersEachTransportsInProjectHooks(): void
+    {
+        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([]);
+
+        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
+        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
+            $jenkins_server
+        ]);
+
+        $polling_response = Mockery::mock(PollingResponse::class);
+        $polling_response->shouldReceive('getJobPaths')->andReturn([
+            'https://example.com/jenkins/job01'
+        ]);
+        $polling_response->shouldReceive('getBody')->andReturn('Response body');
+
+        $this->jenkins_client->shouldReceive('pushGitNotifications')
+            ->once()
+            ->with(Mockery::any(), "https://example.com/repo01", Mockery::any())
+            ->andThrow(UnableToLaunchBuildException::class);
+
+        $this->jenkins_client->shouldReceive('pushGitNotifications')
+            ->once()
+            ->with(Mockery::any(), "example.com/repo01", Mockery::any())
+            ->andReturn($polling_response);
+
+        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once();
+
+        $this->job_manager->shouldReceive('create')->never();
+        $this->job_manager->shouldReceive('createJobLogForProject')->times(1);
+
+        $this->logger->shouldReceive('debug');
+        $this->logger->shouldReceive('error')->once();
 
         $date_time = new DateTimeImmutable();
 
