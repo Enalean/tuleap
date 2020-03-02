@@ -39,7 +39,9 @@ use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AuthCodeGrantController;
 use Tuleap\OAuth2Server\Grant\AuthorizationCodeGrantResponseBuilder;
+use Tuleap\OAuth2Server\Grant\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
+use Tuleap\OAuth2Server\Grant\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
@@ -241,7 +243,11 @@ final class oauth2_serverPlugin extends Plugin
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 )
             ),
-            UserManager::instance(),
+            new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
+            new OAuth2AuthorizationCodeVerifier(
+                new SplitTokenVerificationStringHasher(),
+                UserManager::instance()
+            ),
             new SapiEmitter(),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
             new DisableCacheMiddleware(),
