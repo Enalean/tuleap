@@ -26,10 +26,10 @@ export function initProjectWidgetsConfigurationFormSubmission(mount_point: Docum
             if (!switch_button.dataset.formId) {
                 return;
             }
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-            const form = mount_point.getElementById(
-                switch_button.dataset.formId
-            ) as HTMLFormElement;
+            const form = mount_point.getElementById(switch_button.dataset.formId);
+            if (!(form instanceof HTMLFormElement)) {
+                throw new Error("Retrieved element is not a form");
+            }
             form.submit();
         });
     });

@@ -61,8 +61,10 @@ export default class LabelEditor extends Vue {
     mirror!: HTMLTextAreaElement;
 
     mounted(): void {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        const textarea = this.$refs.textarea as HTMLTextAreaElement;
+        const textarea = this.$refs.textarea;
+        if (!(textarea instanceof HTMLTextAreaElement)) {
+            throw new Error("Did not get the expected textarea element, is the ref valid?");
+        }
 
         setTimeout(this.computeRows, 10);
 
@@ -80,8 +82,10 @@ export default class LabelEditor extends Vue {
     }
 
     computeRows(): void {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        const mirror = this.$refs.mirror as HTMLTextAreaElement;
+        const mirror = this.$refs.mirror;
+        if (!(mirror instanceof HTMLElement)) {
+            throw new Error("The mirror refs is not an HTMLElement");
+        }
         this.rows = Math.ceil(
             (mirror.scrollHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX
         );
