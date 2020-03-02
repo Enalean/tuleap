@@ -60,7 +60,7 @@
                 1 < f.length ? ((q = f.pop()), r(a, f.join(h))) : (f = null);
                 m &&
                     ((a.nodeValue = a.nodeValue.replace(b.truncationChar, "")),
-                    (c.innerHTML = a.nodeValue + " " + m.innerHTML + b.truncationChar));
+                    (c.innerHTML = a.nodeValue + " " + m.innerHTML + b.truncationChar)); // eslint-disable-line no-unsanitized/property
                 if (f) {
                     if (c.clientHeight <= d) {
                         if (0 <= k.length && "" != h) {
@@ -109,7 +109,7 @@
             v = g.indexOf && (-1 < g.indexOf("px") || -1 < g.indexOf("em")),
             m;
         b.truncationHTML &&
-            ((m = document.createElement("span")), (m.innerHTML = b.truncationHTML));
+            ((m = document.createElement("span")), (m.innerHTML = b.truncationHTML)); // eslint-disable-line no-unsanitized/property
         var k = b.splitOnChars.slice(0),
             h = k[0],
             f,

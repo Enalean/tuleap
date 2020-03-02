@@ -30,6 +30,7 @@
     "eslint-plugin-cypress": "^2.6.1",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jest": "^23.1.1",
+    "eslint-plugin-no-unsanitized": "^3.0.2",
     "eslint-plugin-vue": "^5.2.3",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.6.0",
     "file-loader": "^5.0.2",

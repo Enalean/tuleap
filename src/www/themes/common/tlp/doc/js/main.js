@@ -81,7 +81,7 @@
             color = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
             color = "#" + hex(color[1]) + hex(color[2]) + hex(color[3]);
         }
-        document.querySelector(".doc-color-" + name + "-hexacode").innerHTML = color;
+        document.querySelector(".doc-color-" + name + "-hexacode").innerText = color;
     }
 
     function hex(x) {

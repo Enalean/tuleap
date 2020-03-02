@@ -90,7 +90,7 @@
             var additional_row = document.createElement("tr");
 
             additional_row.dataset.childOf = row_id;
-            /* eslint-disable no-multi-str */
+            /* eslint-disable no-multi-str,no-unsanitized/property */
             additional_row.innerHTML =
                 ' \
                     <td class="artifacts-folders-rollup" style="padding-left: ' +
@@ -125,7 +125,7 @@
                     <td>" +
                 child.assignees.map(formatUser).join(", ") +
                 "</td>";
-            /* eslint-enable no-multi-str */
+            /* eslint-enable no-multi-str,no-unsanitized/property */
 
             if (next_row) {
                 tbody.insertBefore(additional_row, next_row);

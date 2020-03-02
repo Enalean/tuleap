@@ -5,7 +5,8 @@ module.exports = {
         "vue",
         "jest",
         "@typescript-eslint",
-        "import"
+        "import",
+        "no-unsanitized"
     ],
     extends: [
         "eslint:recommended",
@@ -107,7 +108,23 @@ module.exports = {
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-use-before-define": ["error", { functions: false, typedefs: false }],
         // import
-        "import/no-extraneous-dependencies": "error"
+        "import/no-extraneous-dependencies": "error",
+        "no-unsanitized/property": [
+            "error",
+            {
+                escape: {
+                    methods: ["sanitize", "render"]
+                }
+            }
+        ],
+        "no-unsanitized/method": [
+            "error",
+            {
+                escape: {
+                    methods: ["sanitize", "render"]
+                }
+            }
+        ]
     },
     overrides: [
         {

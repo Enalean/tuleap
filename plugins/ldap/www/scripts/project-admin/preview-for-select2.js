@@ -73,18 +73,20 @@ function initLdapBindingPreview(options, callback) {
 
         preview.classList.remove("loading");
 
-        const rendered_preview = render(
-            preview_template,
-            getPresenter(
-                users_to_add,
-                users_to_remove,
-                display_name,
-                chosen_ldap_group,
-                nb_not_impacted,
-                group_not_found
+        preview.insertAdjacentHTML(
+            "beforeEnd",
+            render(
+                preview_template,
+                getPresenter(
+                    users_to_add,
+                    users_to_remove,
+                    display_name,
+                    chosen_ldap_group,
+                    nb_not_impacted,
+                    group_not_found
+                )
             )
         );
-        preview.insertAdjacentHTML("beforeEnd", rendered_preview);
 
         button.disabled = group_not_found;
     }

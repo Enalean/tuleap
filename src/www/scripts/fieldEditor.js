@@ -97,7 +97,7 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
         } else {
             Element.hide(this.preview);
             Element.show(this.element);
-            this.edit_cancel.innerHTML = "[" + this.options.preview + "]";
+            this.edit_cancel.innerText = "[" + this.options.preview + "]";
             this.is_in_edit_mode = true;
         }
         Event.stop(evt);
@@ -111,7 +111,7 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
             onComplete: function() {
                 Element.show(this.preview);
                 Element.hide(this.element);
-                this.edit_cancel.innerHTML = "[" + this.options.edit + "]";
+                this.edit_cancel.innerText = "[" + this.options.edit + "]";
                 this.is_in_edit_mode = false;
                 if (display_warning && !this.warning_displayed) {
                     new Insertion.After(this.edit_cancel, " <em>" + this.options.warning + "</em>");

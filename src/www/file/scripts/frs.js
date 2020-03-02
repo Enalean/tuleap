@@ -214,6 +214,7 @@ function add_new_link(event) {
     var cell_name = row.insertCell(0);
     var cell_link = row.insertCell(1);
 
+    // eslint-disable-next-line no-unsanitized/property
     cell_name.innerHTML =
         '<input type="text"' +
         ' name="uploaded-link-name[' +
@@ -224,6 +225,7 @@ function add_new_link(event) {
         ']" ' +
         "/>";
 
+    // eslint-disable-next-line no-unsanitized/property
     cell_link.innerHTML =
         '<input type="text" ' +
         'name="uploaded-link[' +
@@ -531,7 +533,7 @@ document.observe("dom:loaded", function() {
     var create_release_btn = $("create_release");
 
     function updateFeedbackBox(html_msg) {
-        $("feedback").innerHTML = html_msg;
+        $("feedback").innerHTML = html_msg; // eslint-disable-line no-unsanitized/property
         Element.scrollTo("feedback");
     }
 
