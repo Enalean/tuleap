@@ -22,6 +22,10 @@
         </ignoreFiles>
     </projectFiles>
 
+    <plugins>
+        <plugin filename="tests/lib/Psalm/Plugin/ConcealedString/PreventConcealedStringMisuses.php" />
+    </plugins>
+
     <issueHandlers>
         <LessSpecificReturnType errorLevel="info" />
 
