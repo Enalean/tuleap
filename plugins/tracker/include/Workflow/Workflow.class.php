@@ -301,10 +301,11 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
-           $root->addChild('field_id')->addAttribute('REF', array_search($this->field_id, $xmlMapping));
-           $root->addChild('is_used', $this->is_used);
-           $child = $root->addChild('transitions');
-           $transitions = $this->getTransitions($this->workflow_id);
+        $root->addChild('field_id')->addAttribute('REF', array_search($this->field_id, $xmlMapping));
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insert($root, 'is_used', $this->is_used);
+        $child = $root->addChild('transitions');
+        $transitions = $this->getTransitions($this->workflow_id);
         foreach ($transitions as $transition) {
             $transition->exportToXml($child, $xmlMapping);
         }

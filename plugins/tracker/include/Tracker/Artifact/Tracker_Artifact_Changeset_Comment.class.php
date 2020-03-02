@@ -328,10 +328,14 @@ class Tracker_Artifact_Changeset_Comment
 
         $user_xml_exporter->exportUserByUserId($this->submitted_by, $comment_node, 'submitted_by');
 
-        $submitted_on_node = $comment_node->addChild('submitted_on', date('c', $this->submitted_on));
-        $submitted_on_node->addAttribute('format', 'ISO8601');
-
         $cdata_factory   = new XML_SimpleXMLCDATAFactory();
+        $cdata_factory->insertWithAttributes(
+            $comment_node,
+            'submitted_on',
+            date('c', $this->submitted_on),
+            ['format' => 'ISO8601']
+        );
+
         $comment_escaped = $this->getCommentBodyWithEscapedCrossReferences();
         $cdata_factory->insert($comment_node, 'body', $comment_escaped);
 

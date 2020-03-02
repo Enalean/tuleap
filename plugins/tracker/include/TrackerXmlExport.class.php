@@ -126,7 +126,8 @@ class TrackerXmlExport
 
     private function addTypeChild(SimpleXMLElement $natures, NaturePresenter $type, $project_id)
     {
-        $type_child = $natures->addChild('nature', $type->shortname);
+        $cdata = new XML_SimpleXMLCDATAFactory();
+        $type_child = $cdata->insert($natures, 'nature', $type->shortname);
         if ($this->artifact_links_usage_dao->isTypeDisabledInProject($project_id, $type->shortname)) {
             $type_child->addAttribute('is_used', 0);
         }

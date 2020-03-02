@@ -303,9 +303,10 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
             $root->addAttribute('id', $this->id);
             $root->addAttribute('report', $this->report->id);
         }
-        $root->addChild('name', $this->name);
+        $cdata = new XML_SimpleXMLCDATAFactory();
+        $cdata->insert($root, 'name', $this->name);
         if ($this->description) {
-            $root->addChild('description', $this->description);
+            $cdata->insert($root, 'description', $this->description);
         }
     }
 

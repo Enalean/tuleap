@@ -37,6 +37,7 @@ use Tuleap\Project\XML\Export\ArchiveInterface;
 use UGroupManager;
 use UserManager;
 use UserXMLExporter;
+use XML_SimpleXMLCDATAFactory;
 
 class GitXmlExporter
 {
@@ -128,7 +129,8 @@ class GitXmlExporter
         $admin_ugroups = $this->permission_manager->getCurrentGitAdminUgroups($this->project->getId());
 
         foreach ($admin_ugroups as $ugroup) {
-            $root_node->addChild("ugroup", $this->getLabelForUgroup($ugroup));
+            $cdata = new XML_SimpleXMLCDATAFactory();
+            $cdata->insert($root_node, "ugroup", $this->getLabelForUgroup($ugroup));
         }
     }
 
@@ -240,8 +242,9 @@ class GitXmlExporter
 
     private function exportPermission(SimpleXMLElement $xml_content, $permissions)
     {
+        $cdata = new XML_SimpleXMLCDATAFactory();
         foreach ($permissions as $permission) {
-            $xml_content->addChild("ugroup", $this->getLabelForUgroup($permission));
+            $cdata->insert($xml_content, "ugroup", $this->getLabelForUgroup($permission));
         }
     }
 }

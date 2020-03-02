@@ -37,6 +37,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter exten
             $changeset_xml
         );
 
-        $field_change->addChild('value', $changeset_value->getValue());
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insert($field_change, 'value', $changeset_value->getValue());
     }
 }

@@ -440,11 +440,14 @@ class MoveChangesetXMLUpdater
     ) {
         $last_changeset = $artifact_xml->addChild('changeset');
 
-        $submitted_on =$last_changeset->addChild('submitted_on', date('c', $moved_time));
-        $submitted_on->addAttribute('format', "ISO8601");
-
-        $submitted_by = $last_changeset->addChild('submitted_by', $current_user->getId());
-        $submitted_by->addAttribute('format', 'id');
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insertWithAttributes($last_changeset, 'submitted_by', $current_user->getId(), ['format' => 'id']);
+        $cdata->insertWithAttributes(
+            $last_changeset,
+            'submitted_on',
+            date('c', $moved_time),
+            ['format' => 'ISO8601']
+        );
 
         $this->addLastChangesetCommentContent($current_user, $last_changeset, $source_tracker, $moved_time);
     }
@@ -458,20 +461,23 @@ class MoveChangesetXMLUpdater
         $comments_tag = $last_changeset->addChild('comments');
         $comment_tag  = $comments_tag->addChild('comment');
 
-        $comment_submitted_on = $comment_tag->addChild('submitted_on', date('c', $moved_time));
-        $comment_submitted_on->addAttribute('format', "ISO8601");
-
-        $comment_submitted_by = $comment_tag->addChild('submitted_by', $current_user->getId());
-        $comment_submitted_by->addAttribute('format', 'id');
-
-        $comment_body = $comment_tag->addChild(
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insertWithAttributes($comment_tag, 'submitted_by', $current_user->getId(), ['format' => 'id']);
+        $cdata->insertWithAttributes(
+            $comment_tag,
+            'submitted_on',
+            date('c', $moved_time),
+            ['format' => 'ISO8601']
+        );
+        $cdata->insertWithAttributes(
+            $comment_tag,
             'body',
             sprintf(
                 dgettext('tuleap-tracker', "Artifact was moved from '%s' tracker in '%s' project."),
                 $source_tracker->getName(),
                 $source_tracker->getProject()->getPublicName()
-            )
+            ),
+            ['format' => 'text']
         );
-        $comment_body->addAttribute('format', 'text');
     }
 }
