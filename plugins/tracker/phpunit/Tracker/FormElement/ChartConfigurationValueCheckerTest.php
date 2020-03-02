@@ -28,7 +28,7 @@ use Tracker_FormElement_Chart_Field_Exception;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class ChartConfigurationValueCheckerTest extends TestCase
+final class ChartConfigurationValueCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -107,7 +107,6 @@ class ChartConfigurationValueCheckerTest extends TestCase
 
     protected function setUp() : void
     {
-        parent::setUp();
         $this->configuration_field_retriever     = \Mockery::mock(\Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever::class);
         $this->configuration_value_retriever     = Mockery::mock(ChartConfigurationValueRetriever::class);
         $this->chart_configuration_value_checker = new ChartConfigurationValueChecker(
@@ -132,7 +131,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
     }
 
-    public function testItReturnsFalseWhenChartDontHaveAStartDateField()
+    public function testItReturnsFalseWhenChartDontHaveAStartDateField(): void
     {
         $this->configuration_field_retriever->shouldReceive('getStartDateField')
             ->with($this->tracker, $this->user)
@@ -143,7 +142,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsFalseWhenStartDateFieldIsNeverDefined()
+    public function testItReturnsFalseWhenStartDateFieldIsNeverDefined(): void
     {
         $this->configuration_field_retriever->shouldReceive('getStartDateField')
             ->with($this->tracker, $this->user)
@@ -156,7 +155,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsFalseWhenStartDateFieldIsEmpty()
+    public function testItReturnsFalseWhenStartDateFieldIsEmpty(): void
     {
         $this->configuration_field_retriever->shouldReceive('getStartDateField')
             ->with($this->tracker, $this->user)
@@ -173,7 +172,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsTrueWhenChartHasAStartDateAndStartDateIsFiled()
+    public function testItReturnsTrueWhenChartHasAStartDateAndStartDateIsFiled(): void
     {
         $this->configuration_field_retriever->shouldReceive('getStartDateField')
             ->with($this->tracker, $this->user)
@@ -190,7 +189,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsConfigurationIsNotCorrectlySetWhenStartDateIsMissing()
+    public function testItReturnsConfigurationIsNotCorrectlySetWhenStartDateIsMissing(): void
     {
         $this->configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($this->artifact, $this->user)
@@ -201,7 +200,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsConfigurationIsNotCorrectlySetWhenDurationIsMissing()
+    public function testItReturnsConfigurationIsNotCorrectlySetWhenDurationIsMissing(): void
     {
         $this->configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($this->artifact, $this->user)
@@ -212,7 +211,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsConfigurationIsNotCorrectlySetWhenExceptionIsThrownAtTimePeriodCreation()
+    public function testItReturnsConfigurationIsNotCorrectlySetWhenExceptionIsThrownAtTimePeriodCreation(): void
     {
         $this->configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($this->artifact, $this->user)
@@ -223,18 +222,32 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsConfigurationIsCorrectlySetWhenBurndownHasAStartDateAndADuration()
+    public function testItReturnsConfigurationIsCorrectlySetWhenBurndownHasAStartDateAndADuration(): void
     {
         $this->configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($this->artifact, $this->user)
-            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date_timestamp, $this->duration_value));
+            ->andReturn(
+                TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date_timestamp, $this->duration_value)
+            );
 
         $this->assertTrue(
             $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
         );
     }
 
-    public function testItReturnsFalseWhenStartDateAndDurationDontHaveChanged()
+    public function testItReturnsFalseWhenDurationIsNotSet(): void
+    {
+        $this->start_date_changeset->shouldReceive('getTimestamp')->andReturn($this->start_date_timestamp);
+
+        $this->configuration_value_retriever->shouldReceive('getTimePeriod')
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(12345678, null));
+
+        $this->assertFalse(
+            $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
+        );
+    }
+
+    public function testItReturnsFalseWhenStartDateAndDurationDontHaveChanged(): void
     {
         $this->configuration_field_retriever->shouldReceive('getDurationField')
             ->with($this->tracker, $this->user)
@@ -247,6 +260,9 @@ class ChartConfigurationValueCheckerTest extends TestCase
         $this->configuration_field_retriever->shouldReceive('doesEndDateFieldExist')
             ->with($this->tracker, $this->user)
             ->andReturns(false);
+
+        $this->configuration_value_retriever->shouldReceive('getTimePeriod')
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
 
         $this->new_changeset->shouldReceive('getValue')
             ->with($this->start_date_field)
@@ -268,7 +284,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsTrueWhenStartDateHaveChanged()
+    public function testItReturnsTrueWhenStartDateHaveChanged(): void
     {
         $this->configuration_field_retriever->shouldReceive('getDurationField')
             ->with($this->tracker, $this->user)
@@ -290,6 +306,9 @@ class ChartConfigurationValueCheckerTest extends TestCase
             ->with($this->duration_field)
             ->andReturn($this->duration_changeset);
 
+        $this->configuration_value_retriever->shouldReceive('getTimePeriod')
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
+
         $this->start_date_changeset->shouldReceive('hasChanged')->andReturnTrue();
         $this->duration_changeset->shouldReceive('hasChanged')->andReturnFalse();
 
@@ -302,15 +321,18 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsTrueWhenDurationHaveChanged()
+    public function testItReturnsTrueWhenDurationHaveChanged(): void
     {
         $this->configuration_field_retriever->shouldReceive('getDurationField')
-                                            ->with($this->tracker, $this->user)
-                                            ->andReturn($this->duration_field);
+            ->with($this->tracker, $this->user)
+            ->andReturn($this->duration_field);
 
         $this->configuration_field_retriever->shouldReceive('getStartDateField')
-                                            ->with($this->tracker, $this->user)
-                                            ->andReturn($this->start_date_field);
+            ->with($this->tracker, $this->user)
+            ->andReturn($this->start_date_field);
+
+        $this->configuration_value_retriever->shouldReceive('getTimePeriod')
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
 
         $this->configuration_field_retriever->shouldReceive('doesEndDateFieldExist')
                                             ->with($this->tracker, $this->user)
@@ -336,15 +358,18 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsTrueWhenEndDateHasChanged()
+    public function testItReturnsTrueWhenEndDateHasChanged(): void
     {
         $this->configuration_field_retriever->shouldReceive('getStartDateField')
-                                            ->with($this->tracker, $this->user)
-                                            ->andReturn($this->start_date_field);
+            ->with($this->tracker, $this->user)
+            ->andReturn($this->start_date_field);
 
         $this->configuration_field_retriever->shouldReceive('doesEndDateFieldExist')
-                                            ->with($this->tracker, $this->user)
-                                            ->andReturn(true);
+            ->with($this->tracker, $this->user)
+            ->andReturn(true);
+
+        $this->configuration_value_retriever->shouldReceive('getTimePeriod')
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
 
         $this->configuration_field_retriever->shouldReceive('getEndDateField')
                                             ->with($this->tracker, $this->user)
