@@ -84,24 +84,9 @@ class User_PreferencesPresenter
         return $this->user->getRealName();
     }
 
-    public function user_username()
-    {
-        return $this->user->getUnixName();
-    }
-
     public function welcome_user()
     {
         return $GLOBALS['Language']->getText('account_options', 'welcome') . ' ' . $this->user->getRealName();
-    }
-
-    public function user_id_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'user_id');
-    }
-
-    public function user_id_value()
-    {
-        return $this->user->getId();
     }
 
     public function user_email_label()
@@ -147,16 +132,6 @@ class User_PreferencesPresenter
     public function btn_save_avatar_label()
     {
         return $GLOBALS['Language']->getText('account_options', 'btn_save_avatar_label');
-    }
-
-    public function member_since_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'member_since');
-    }
-
-    public function member_since_value()
-    {
-        return format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->user->getAddDate());
     }
 
     public function timezone_label()

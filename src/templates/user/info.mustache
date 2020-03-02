@@ -15,22 +15,13 @@
                     </a>
                 {{/ can_change_real_name }}
             </h1>
-            <span class="user-username">@{{ user_username }}</span>
         </div>
     </div>
 
     <table class="user-info-table">
         <tr>
-            <td class="user-info-label table-label">{{ user_id_label }}</td>
-            <td>{{ user_id_value }}</td>
-        </tr>
-        <tr>
             <td class="user-info-label table-label">{{ user_email_label }}</td>
             <td>{{ user_email_value }} {{# can_change_email }}<a href="change_email.php" class="btn btn-small">{{ change_email }}</a>{{/ can_change_email }}</td>
-        </tr>
-        <tr>
-            <td class="user-info-label table-label">{{ member_since_label }}</td>
-            <td>{{member_since_value }}</td>
         </tr>
         <tr>
             <td class="user-info-label table-label">{{ timezone_label }}</td>

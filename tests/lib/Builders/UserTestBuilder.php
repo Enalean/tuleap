@@ -71,6 +71,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withAddDate(int $timestamp): self
+    {
+        $this->params['add_date'] = (string) $timestamp;
+        return $this;
+    }
+
     public function build(): \PFUser
     {
         $user = new \PFUser($this->params);
