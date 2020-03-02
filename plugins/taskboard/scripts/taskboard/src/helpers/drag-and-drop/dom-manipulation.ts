@@ -20,8 +20,11 @@
 import { DrekkenovInitOptions } from "./types";
 
 export function cloneHTMLElement(element: HTMLElement): HTMLElement {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    return element.cloneNode(true) as HTMLElement;
+    const cloned_node = element.cloneNode(true);
+    if (!(cloned_node instanceof HTMLElement)) {
+        throw new Error("Cloned element is not a HTMLElement");
+    }
+    return cloned_node;
 }
 
 export function findClosestDraggable(

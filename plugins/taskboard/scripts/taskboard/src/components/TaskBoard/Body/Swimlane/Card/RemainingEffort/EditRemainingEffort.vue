@@ -75,8 +75,10 @@ export default class EditRemainingEffort extends Vue {
     mounted(): void {
         this.initValue();
 
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        const input = this.$el as HTMLInputElement;
+        const input = this.$el;
+        if (!(input instanceof HTMLInputElement)) {
+            throw new Error("The component is not a HTML input");
+        }
         autoFocusAutoSelect(input);
 
         EventBus.$on(TaskboardEvent.CANCEL_CARD_EDITION, this.cancelButtonCallback);
@@ -111,8 +113,10 @@ export default class EditRemainingEffort extends Vue {
     }
 
     save(): void {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        const input = this.$el as HTMLInputElement;
+        const input = this.$el;
+        if (!(input instanceof HTMLInputElement)) {
+            throw new Error("The component is not a HTML input");
+        }
         if (!input.checkValidity()) {
             // force :invalid pseudo-class
             input.blur();

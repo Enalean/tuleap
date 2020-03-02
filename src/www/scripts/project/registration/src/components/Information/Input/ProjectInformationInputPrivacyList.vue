@@ -119,8 +119,12 @@ export default class ProjectInformationInputPrivacyList extends Vue {
         };
 
         setTimeout(() => {
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-            const select = this.$refs.visibility_selector as Element;
+            const select = this.$refs.visibility_selector;
+            if (!(select instanceof Element)) {
+                throw new Error(
+                    "Ref visibility_selector is not a valid element, is it present in the DOM"
+                );
+            }
             this.select2_visibility_select = select2(select, configuration);
         }, 10);
     }
