@@ -44,7 +44,8 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\SystemEvent\RootDailyStartEvent;
-use Tuleap\User\Account\AccountInformationPreUpdateEvent;
+use Tuleap\User\Account\AccountInformationCollection;
+use Tuleap\User\Account\AccountInformationPresenter;
 use Tuleap\User\Account\PasswordPreUpdateEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\Project\UserRemover;
@@ -103,7 +104,6 @@ class LdapPlugin extends Plugin
         $this->addHook('user_home_pi_entry', 'personalInformationEntry', false);
 
         // User account
-        $this->addHook('account_pi_entry', 'accountPiEntry', false);
         $this->addHook('before_change_email-complete', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_change_email-confirm', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_change_email', 'cancelChangeAndUserLdap', false);
@@ -111,7 +111,7 @@ class LdapPlugin extends Plugin
         $this->addHook('before_lostpw', 'cancelChange', false);
         $this->addHook('display_change_email', 'forbidIfLdapAuthAndUserLdap', false);
         $this->addHook(PasswordPreUpdateEvent::NAME);
-        $this->addHook(AccountInformationPreUpdateEvent::NAME);
+        $this->addHook(AccountInformationCollection::NAME);
 
         // User group
         $this->addHook('project_admin_ugroup_deletion');
@@ -571,33 +571,6 @@ class LdapPlugin extends Plugin
 
     /**
      * Hook
-     * Params:
-     *  IN  $params['user_id']
-     *  OUT $params['entry_label']
-     *  OUT $params['entry_value']
-     *  OUT $params['entry_change']
-     */
-    public function accountPiEntry($params)
-    {
-        if ($this->isLdapAuthType()) {
-            $ldapUm = $this->getLdapUserManager();
-            $lr = $ldapUm->getLdapFromUserId($params['user']->getId());
-            if ($lr) {
-                $params['user_info'][] = new User_ImmutableInfoPresenter(
-                    $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login'),
-                    $lr->getLogin()
-                );
-            } else {
-                $params['user_info'][] = new User_ImmutableInfoPresenter(
-                    $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login'),
-                    $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found')
-                );
-            }
-        }
-    }
-
-    /**
-     * Hook
      */
     public function buildLinkToDirectory(LDAPResult $lr, $value = '')
     {
@@ -735,10 +708,28 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function accountInformationPreUpdateEvent(AccountInformationPreUpdateEvent $event)
+    public function accountInformationCollection(AccountInformationCollection $account_information)
     {
-        if ($this->isLdapAuthType() && $event->getUser()->getLdapId() !== '' && ! $this->hasLDAPWrite()) {
-            $event->disableChangeRealName();
+        if ($this->isLdapAuthType()) {
+            if ($account_information->getUser()->getLdapId() !== '' && ! $this->hasLDAPWrite()) {
+                $account_information->disableChangeRealName();
+            }
+            $ldap_result = $this->getLdapUserManager()->getLdapFromUserId($account_information->getUser()->getId());
+            if ($ldap_result) {
+                $account_information->addInformation(
+                    new AccountInformationPresenter(
+                        $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login'),
+                        $ldap_result->getLogin(),
+                    )
+                );
+            } else {
+                $account_information->addInformation(
+                    new AccountInformationPresenter(
+                        $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login'),
+                        $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found'),
+                    )
+                );
+            }
         }
     }
 

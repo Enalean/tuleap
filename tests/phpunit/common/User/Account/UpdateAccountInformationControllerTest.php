@@ -32,7 +32,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\User\Account\AccountInformationPreUpdateEvent;
+use Tuleap\User\Account\AccountInformationCollection;
 use Tuleap\User\Account\DisplayAccountInformationController;
 use Tuleap\User\Account\UpdateAccountInformationController;
 use PHPUnit\Framework\TestCase;
@@ -78,7 +78,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
 
             public function dispatch(object $event)
             {
-                if ($event instanceof AccountInformationPreUpdateEvent) {
+                if ($event instanceof AccountInformationCollection) {
                     if ($this->disable_real_name_change) {
                         $event->disableChangeRealName();
                     }
@@ -104,6 +104,8 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->user = UserTestBuilder::aUser()
             ->withId(110)
             ->withRealName('Alice FooBar')
+            ->withLanguage(M::spy(\BaseLanguage::class))
+            ->withAddDate(940000000)
             ->build();
     }
 

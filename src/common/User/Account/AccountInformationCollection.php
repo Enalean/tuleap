@@ -26,9 +26,9 @@ namespace Tuleap\User\Account;
 use PFUser;
 use Tuleap\Event\Dispatchable;
 
-class AccountInformationPreUpdateEvent implements Dispatchable
+class AccountInformationCollection implements Dispatchable
 {
-    public const NAME = 'accountInformationPreUpdateEvent';
+    public const NAME = 'accountInformationCollection';
     /**
      * @var PFUser
      */
@@ -37,10 +37,20 @@ class AccountInformationPreUpdateEvent implements Dispatchable
      * @var bool
      */
     private $is_user_allowed_to_change_real_name = true;
+    /**
+     * @var AccountInformationPresenter[]
+     */
+    private $extra_information;
 
     public function __construct(PFUser $user)
     {
         $this->user = $user;
+        $this->extra_information = [
+            new AccountInformationPresenter(
+                _('Member since'),
+                \DateHelper::formatForLanguage($user->getLanguage(), (int) $user->getAddDate(), true),
+            )
+        ];
     }
 
     public function getUser(): PFUser
@@ -56,5 +66,18 @@ class AccountInformationPreUpdateEvent implements Dispatchable
     public function isUserAllowedToCanChangeRealName(): bool
     {
         return $this->is_user_allowed_to_change_real_name;
+    }
+
+    public function addInformation(AccountInformationPresenter $extra_information): void
+    {
+        $this->extra_information[] = $extra_information;
+    }
+
+    /**
+     * @return AccountInformationPresenter[]
+     */
+    public function getExtraInformation(): array
+    {
+        return $this->extra_information;
     }
 }

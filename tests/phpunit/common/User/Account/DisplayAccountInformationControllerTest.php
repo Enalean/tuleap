@@ -52,21 +52,20 @@ final class DisplayAccountInformationControllerTest extends TestCase
     protected function setUp(): void
     {
         $this->event_manager = new class implements EventDispatcherInterface {
-            private $disableRealNameChange;
+            public $disable_real_name_change = false;
+            public $add_ldap_extra_info = false;
 
             public function dispatch(object $event)
             {
-                if ($event instanceof AccountInformationPreUpdateEvent) {
-                    if ($this->disableRealNameChange) {
+                if ($event instanceof AccountInformationCollection) {
+                    if ($this->disable_real_name_change) {
                         $event->disableChangeRealName();
+                    }
+                    if ($this->add_ldap_extra_info) {
+                        $event->addInformation(new AccountInformationPresenter('Ldap Stuff', 'some value'));
                     }
                 }
                 return $event;
-            }
-
-            public function disableRealNameChange()
-            {
-                $this->disableRealNameChange = true;
             }
         };
 
@@ -106,6 +105,8 @@ final class DisplayAccountInformationControllerTest extends TestCase
         );
         $output = ob_get_clean();
         $this->assertStringContainsString('Account information', $output);
+        $this->assertStringContainsString('Member since', $output);
+        $this->assertStringNotContainsString('Ldap Stuff', $output);
     }
 
     public function testItRendersThePageWithRealnameEditable(): void
@@ -122,7 +123,7 @@ final class DisplayAccountInformationControllerTest extends TestCase
 
     public function testItRendersThePageWithRealnameReadOnly(): void
     {
-        $this->event_manager->disableRealNameChange();
+        $this->event_manager->disable_real_name_change = true;
 
         ob_start();
         $this->controller->process(
@@ -133,5 +134,19 @@ final class DisplayAccountInformationControllerTest extends TestCase
         $output = ob_get_clean();
         $this->assertStringContainsString('<p>Alice FooBar</p>', $output);
         $this->assertStringNotContainsString('name="realname" value="Alice FooBar"', $output);
+    }
+
+    public function testItRendersThePageWithExtraInfoFromPlugin(): void
+    {
+        $this->event_manager->add_ldap_extra_info = true;
+
+        ob_start();
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->build(),
+            LayoutBuilder::build(),
+            []
+        );
+        $output = ob_get_clean();
+        $this->assertStringContainsString('Ldap Stuff', $output);
     }
 }

@@ -22,12 +22,6 @@
             <td class="user-info-label table-label">{{ timezone_label }}</td>
             <td>{{ timezone_value }} <a href="change_timezone.php" class="btn btn-small">{{ change_timezone }}</a></td>
         </tr>
-        {{# extra_user_info }}
-        <tr>
-            <td class="user-info-label table-label">{{ label }}</td>
-            <td>{{{ value }}} {{# can_change }}{{{ change }}}{{/ can_change }}</td>
-        </tr>
-        {{/ extra_user_info }}
     </table>
 </div>
 
