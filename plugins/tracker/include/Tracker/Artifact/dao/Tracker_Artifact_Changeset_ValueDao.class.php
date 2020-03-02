@@ -40,7 +40,7 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id = $this->da->escapeInt($field_id);
         $sql = "SELECT * FROM $this->table_name
-                WHERE changeset_id = $changeset_id 
+                WHERE changeset_id = $changeset_id
                     AND field_id = $field_id";
         return $this->retrieve($sql);
     }
@@ -64,7 +64,7 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id = $this->da->escapeInt($field_id);
         $has_changed = $has_changed ? 1 : 0;
-        $sql = "INSERT INTO $this->table_name(changeset_id, field_id, has_changed) 
+        $sql = "INSERT INTO $this->table_name(changeset_id, field_id, has_changed)
                 VALUES ($changeset_id, $field_id, $has_changed)";
         return $this->updateAndGetLastId($sql);
     }
@@ -81,11 +81,11 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
                  FROM tracker_changeset AS C
                    INNER JOIN tracker_artifact AS A ON A.id = C.artifact_id
                    INNER JOIN ( SELECT artifact_id, MAX(id) as max_id
-                                FROM tracker_changeset 
+                                FROM tracker_changeset
                                 GROUP BY artifact_id ) AS C1 ON C.id = C1.max_id
                  WHERE A.tracker_id = $tracker_id ";
         $this->update($sql);
-        $sql = " SELECT GROUP_CONCAT(CV.id) as cv
+        $sql = " SELECT CV.id as cv
                  FROM tracker_changeset AS C
                    INNER JOIN tracker_artifact AS A ON A.id = C.artifact_id
                    INNER JOIN ( SELECT artifact_id, MAX(id) as max_id
@@ -94,12 +94,17 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
                    INNER JOIN tracker_changeset_value AS CV ON C.id = CV.changeset_id
                  WHERE A.tracker_id = $tracker_id AND CV.field_id = $field_id AND has_changed = 1";
 
-        $rs   = $this->retrieve($sql);
-        $data = $rs->getRow();
-        $changesetValueIds = false;
-        if (! empty($data['cv'])) {
-            $changesetValueIds = explode(',', $data['cv']);
+        $result = $this->retrieve($sql);
+
+        if (! $result) {
+            return false;
         }
+
+        $changesetValueIds = [];
+        foreach ($result as $row) {
+            $changesetValueIds[] = $row['cv'];
+        }
+
         return $changesetValueIds;
     }
 
