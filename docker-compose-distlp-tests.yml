@@ -58,7 +58,7 @@ services:
       - tuleap
 
   backend-svn:
-    image: enalean/tuleap-dev:1.11
+    image: enalean/tuleap-dev:1.12
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap
