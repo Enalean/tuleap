@@ -122,7 +122,7 @@ class HookTriggerControllerTest extends TestCase
 
         $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);
         $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once();
-        $this->job_manager->shouldReceive('create')->times(2);
+        $this->job_manager->shouldReceive('create')->once();
         $this->job_manager->shouldReceive('createJobLogForProject')->never();
 
         $this->logger->shouldReceive('debug');
@@ -198,7 +198,7 @@ class HookTriggerControllerTest extends TestCase
         $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);
         $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once();
         $this->job_manager->shouldReceive('create')->never();
-        $this->job_manager->shouldReceive('createJobLogForProject')->times(2);
+        $this->job_manager->shouldReceive('createJobLogForProject')->once();
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('error')->never();
