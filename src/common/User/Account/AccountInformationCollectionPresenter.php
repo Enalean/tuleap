@@ -78,6 +78,16 @@ final class AccountInformationCollectionPresenter
      * @psalm-readonly
      */
     public $avatar_url;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $email;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $can_change_email;
 
     public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, PFUser $user, AccountInformationCollection $account_information_collection)
     {
@@ -86,9 +96,11 @@ final class AccountInformationCollectionPresenter
         $this->user_id = (int) $user->getId();
         $this->user_name = $user->getUserName();
         $this->real_name = $user->getRealName();
+        $this->email     = $user->getEmail();
         $this->has_avatar = (bool) $user->hasAvatar();
         $this->avatar_url = $user->getAvatarUrl();
         $this->can_change_real_name = $account_information_collection->isUserAllowedToCanChangeRealName();
+        $this->can_change_email     = $account_information_collection->isUserAllowedToChangeEmail();
         $this->extra_information = $account_information_collection->getExtraInformation();
     }
 }

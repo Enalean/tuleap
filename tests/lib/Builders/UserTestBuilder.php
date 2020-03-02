@@ -83,6 +83,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withEmail(string $email): self
+    {
+        $this->params['email'] = (string) $email;
+        return $this;
+    }
+
     public function build(): \PFUser
     {
         $user = new \PFUser($this->params);

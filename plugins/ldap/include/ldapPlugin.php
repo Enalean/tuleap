@@ -105,11 +105,8 @@ class LdapPlugin extends Plugin
 
         // User account
         $this->addHook('before_change_email-complete', 'cancelChangeAndUserLdap', false);
-        $this->addHook('before_change_email-confirm', 'cancelChangeAndUserLdap', false);
-        $this->addHook('before_change_email', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_lostpw-confirm', 'cancelChange', false);
         $this->addHook('before_lostpw', 'cancelChange', false);
-        $this->addHook('display_change_email', 'forbidIfLdapAuthAndUserLdap', false);
         $this->addHook(PasswordPreUpdateEvent::NAME);
         $this->addHook(AccountInformationCollection::NAME);
 
@@ -713,6 +710,7 @@ class LdapPlugin extends Plugin
         if ($this->isLdapAuthType()) {
             if ($account_information->getUser()->getLdapId() !== '' && ! $this->hasLDAPWrite()) {
                 $account_information->disableChangeRealName();
+                $account_information->disableChangeEmail();
             }
             $ldap_result = $this->getLdapUserManager()->getLdapFromUserId($account_information->getUser()->getId());
             if ($ldap_result) {

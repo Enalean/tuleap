@@ -29,15 +29,7 @@ $um = UserManager::instance();
 
 $user = $um->getCurrentUser();
 
-$can_change_email    = true;
 $extra_user_info     = array();
-
-$em->processEvent(
-    'display_change_email',
-    array(
-        'allow' => &$can_change_email
-    )
-);
 
 $csrf = new CSRFSynchronizerToken('/account/index.php');
 
@@ -47,7 +39,6 @@ assert($tabs instanceof AccountTabPresenterCollection);
 $presenter = new
 User_PreferencesPresenter(
     $user,
-    $can_change_email,
     $csrf,
     $tabs
 );

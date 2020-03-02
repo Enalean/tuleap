@@ -38,6 +38,10 @@ class AccountInformationCollection implements Dispatchable
      */
     private $is_user_allowed_to_change_real_name = true;
     /**
+     * @var bool
+     */
+    private $is_user_allowed_to_change_email = true;
+    /**
      * @var AccountInformationPresenter[]
      */
     private $extra_information;
@@ -66,6 +70,16 @@ class AccountInformationCollection implements Dispatchable
     public function isUserAllowedToCanChangeRealName(): bool
     {
         return $this->is_user_allowed_to_change_real_name;
+    }
+
+    public function disableChangeEmail(): void
+    {
+        $this->is_user_allowed_to_change_email = false;
+    }
+
+    public function isUserAllowedToChangeEmail(): bool
+    {
+        return $this->is_user_allowed_to_change_email;
     }
 
     public function addInformation(AccountInformationPresenter $extra_information): void

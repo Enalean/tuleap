@@ -257,14 +257,6 @@ msgstr "Permet d'écrire des informations en markdown sur les dashboards"
 msgid "Already used"
 msgstr "Déjà utilisé"
 
-msgid ""
-"An email has been sent to the new address. Follow the instructions in the "
-"email to complete the email change."
-msgstr ""
-"Un courrier électronique vient d'être envoyé à votre nouvelle adresse e-"
-"mail. Suivez les instructions fournies dans ce message pour confirmer "
-"définitivement le changement."
-
 msgid "An error occurred during the SVN token deletion"
 msgstr "Une erreur est survenue lors de la suppression des jetons SVN"
 
@@ -459,14 +451,6 @@ msgstr "Changer l'avatar"
 
 msgid "Change email address"
 msgstr "Changer l'adresse e-mail"
-
-msgid ""
-"Changing your email address will require confirmation from your new email "
-"address, so that we can ensure we have a good email address on file."
-msgstr ""
-"Le changement d'adresse e-mail nécessite une confirmation depuis votre "
-"nouvelle adresse e-mail de façon à s'assurer que nous disposons d'une "
-"adresse valide."
 
 msgid "Child projects"
 msgstr "Projets enfants"
@@ -698,14 +682,11 @@ msgstr "E-mail"
 msgid "Email change complete"
 msgstr "Changement d'e-mail confirmé"
 
-msgid "Email change confirmation"
-msgstr "Confirmation de changement d'adresse e-mail"
-
-msgid "Email format invalid"
-msgstr "Le formal de l'e-mail n'est pas valide"
-
 msgid "Email format preference successfully updated"
 msgstr "La préférence de format de courriel a été mise à jour"
+
+msgid "Email successfully updated"
+msgstr "L'adresse de courriel a été mise à jour avec succès"
 
 msgid "Emergency"
 msgstr "Urgent"
@@ -1116,9 +1097,6 @@ msgstr "Jamais"
 
 msgid "New avatar"
 msgstr "Nouvel avatar"
-
-msgid "New email address:"
-msgstr "Nouvelle adresse e-mail"
 
 msgid "New password"
 msgstr "Nouveau mot de passe"
@@ -1664,9 +1642,6 @@ msgstr "Point virgule"
 msgid "Send an email when the project visibility changes"
 msgstr "Envoyer un email lorsque la visibilité d'un projet change"
 
-msgid "Send confirmation to new address"
-msgstr "Envoyer la confirmation"
-
 msgid "Service is not allowed in project."
 msgstr "Le service n'est pas autorisé dans le projet."
 
@@ -1761,14 +1736,6 @@ msgstr "Le formal de texte n'est pas valide"
 
 msgid "Submitted username display is not valid."
 msgstr "Le formal d'affichage des noms n'est pas valide"
-
-msgid ""
-"Submitting the form below will mail a confirmation URL to the new email "
-"address. Visiting this link will complete the email change."
-msgstr ""
-"La soumission de ce formulaire déclenchera l'envoi d'un e-mail à votre "
-"nouvelle adresse incluant un lien à visiter pour confirmer définitivement le "
-"changement."
 
 msgid "Successfully updated."
 msgstr "Mis à jour avec succès."

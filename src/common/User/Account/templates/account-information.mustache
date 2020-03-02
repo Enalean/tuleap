@@ -33,10 +33,12 @@
                                     <label class="tlp-label">{{# gettext }}Id{{/ gettext }}</label>
                                     <p>{{ user_id }}</p>
                                 </div>
+
                                 <div class="tlp-property">
                                     <label class="tlp-label">{{# gettext }}User name{{/ gettext }}</label>
                                     <p>@{{ user_name }}</p>
                                 </div>
+
                                 {{# can_change_real_name }}
                                     <div class="tlp-form-element">
                                         <label class="tlp-label" for="username">{{# gettext }}Real name{{/ gettext }} <i class="fa fa-asterisk"></i></label>
@@ -49,6 +51,20 @@
                                         <p>{{ real_name }}</p>
                                     </div>
                                 {{/ can_change_real_name }}
+
+                                {{# can_change_email }}
+                                    <div class="tlp-form-element">
+                                        <label class="tlp-label" for="email">{{# gettext }}Email{{/ gettext }} <i class="fa fa-asterisk"></i></label>
+                                        <input type="email" class="tlp-input" id="email" name="email" value="{{ email }}" placeholder="fox@example.com" autocomplete="email" required>
+                                    </div>
+                                {{/ can_change_email }}
+                                {{^ can_change_email }}
+                                    <div class="tlp-property">
+                                        <label class="tlp-label">{{# gettext }}Email{{/ gettext }}</label>
+                                        <p>{{ email }}</p>
+                                    </div>
+                                {{/ can_change_email }}
+
                                 {{# extra_information }}
                                     <div class="tlp-property">
                                         <label class="tlp-label">{{ label }}</label>

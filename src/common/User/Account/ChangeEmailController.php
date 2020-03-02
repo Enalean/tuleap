@@ -25,8 +25,6 @@ use Tuleap\Layout\BaseLayout;
 
 class ChangeEmailController
 {
-    public const URL = '/account/change_email.php';
-
     /**
      * @var \UserManager
      */
@@ -40,81 +38,6 @@ class ChangeEmailController
     {
         $this->user_manager  = $user_manager;
         $this->event_manager = $event_manager;
-    }
-
-    public function change(\HTTPRequest $request, BaseLayout $response)
-    {
-        $this->event_manager->processEvent('before_change_email', array());
-
-        $current_user = $request->getCurrentUser();
-        if ($current_user->isAnonymous()) {
-            $response->addFeedback(\Feedback::ERROR, _('Unauthorized action for anonymous'));
-            $response->redirect('/');
-        }
-
-        $response->header(['title' =>_('Change email address')]);
-
-        $presenter = new ChangeEmailPresenter(
-            new \CSRFSynchronizerToken(self::URL),
-            $current_user->getId()
-        );
-
-        $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__.'/../../../templates/user');
-        $renderer->renderToPage('change-email', $presenter);
-
-        $response->footer(array());
-    }
-
-    public function confirm(\HTTPRequest $request, BaseLayout $response)
-    {
-        $this->event_manager->processEvent('before_change_email-confirm', []);
-
-        $token = new \CSRFSynchronizerToken(self::URL);
-        $token->check();
-
-        $current_user = $request->getCurrentUser();
-        if ($current_user->isAnonymous()) {
-            $response->addFeedback(\Feedback::ERROR, _('Unauthorized action for anonymous'));
-            $response->redirect('/');
-        }
-
-        $new_mail = $request->getValidated('form_newemail', new \Valid_Email(), '');
-        if ($new_mail === '') {
-            $response->addFeedback(\Feedback::ERROR, _('Email format invalid'));
-            $response->redirect('/change_email.php');
-        }
-
-        $confirmation_hash = (new \RandomNumberGenerator())->getNumber();
-        $this->user_manager->setEmailChangeConfirm($current_user->getId(), $confirmation_hash, $new_mail);
-
-        $subject = sprintf(
-            _('[%s] Email change confirmation'),
-            \ForgeConfig::get('sys_name')
-        );
-        $message = sprintf(
-            _("You have requested a change of email address on %s.\nPlease visit the following URL to complete the email change:\n\n%s\n\n-- The %s Team"),
-            \ForgeConfig::get('sys_name'),
-            $request->getServerUrl().$this->getChangeCompleteUrl($confirmation_hash),
-            \ForgeConfig::get('sys_name')
-        );
-
-        $mail = new \Codendi_Mail();
-        $mail->setTo($new_mail, true);
-        $mail->setSubject($subject);
-        $mail->setBodyText($message);
-        $mail->setFrom(\ForgeConfig::get('sys_noreply'));
-        if (! $mail->send()) {
-            $error_message = sprintf(_('The mail was not accepted for the delivery. Please contact the administrator at %s.'), \ForgeConfig::get('sys_email_admin'));
-            $response->addFeedback(\Feedback::ERROR, $error_message);
-            $response->redirect('/change_email.php');
-        }
-
-        $response->header(['title' => _('Email change confirmation')]);
-
-        $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__.'/../../../templates/user');
-        $renderer->renderToPage('change-email-confirm', []);
-
-        $response->footer([]);
     }
 
     public function complete(\HTTPRequest $request, BaseLayout $response)

@@ -53,6 +53,7 @@ final class DisplayAccountInformationControllerTest extends TestCase
     {
         $this->event_manager = new class implements EventDispatcherInterface {
             public $disable_real_name_change = false;
+            public $disable_email_change = false;
             public $add_ldap_extra_info = false;
 
             public function dispatch(object $event)
@@ -60,6 +61,9 @@ final class DisplayAccountInformationControllerTest extends TestCase
                 if ($event instanceof AccountInformationCollection) {
                     if ($this->disable_real_name_change) {
                         $event->disableChangeRealName();
+                    }
+                    if ($this->disable_email_change) {
+                        $event->disableChangeEmail();
                     }
                     if ($this->add_ldap_extra_info) {
                         $event->addInformation(new AccountInformationPresenter('Ldap Stuff', 'some value'));
@@ -79,6 +83,7 @@ final class DisplayAccountInformationControllerTest extends TestCase
             ->withId(110)
             ->withUserName('alice')
             ->withRealName('Alice FooBar')
+            ->withEmail('alice@example.com')
             ->withAddDate((new \DateTimeImmutable())->getTimestamp())
             ->withLanguage(M::spy(\BaseLanguage::class))
             ->build();
@@ -148,5 +153,31 @@ final class DisplayAccountInformationControllerTest extends TestCase
         );
         $output = ob_get_clean();
         $this->assertStringContainsString('Ldap Stuff', $output);
+    }
+
+    public function testItRendersThePageWithEmailEditable(): void
+    {
+        ob_start();
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->build(),
+            LayoutBuilder::build(),
+            []
+        );
+        $output = ob_get_clean();
+        $this->assertStringContainsString('name="email" value="alice@example.com"', $output);
+    }
+
+    public function testItRendersThePageWithEmailReadOnly(): void
+    {
+        $this->event_manager->disable_email_change = true;
+        ob_start();
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->build(),
+            LayoutBuilder::build(),
+            []
+        );
+        $output = ob_get_clean();
+        $this->assertStringContainsString('<p>alice@example.com</p>', $output);
+        $this->assertStringNotContainsString('name="email" value="alice@example.com"', $output);
     }
 }
