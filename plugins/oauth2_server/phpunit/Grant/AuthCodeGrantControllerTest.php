@@ -85,9 +85,14 @@ final class AuthCodeGrantControllerTest extends TestCase
         );
 
         $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
+        $app     = $this->buildOAuth2App();
+        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($app);
         $request->shouldReceive('getParsedBody')->andReturn(
-            ['grant_type' => 'authorization_code', 'code' => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161']
+            [
+                'grant_type'   => 'authorization_code',
+                'code'         => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
+                'redirect_uri' => $app->getRedirectEndpoint()
+            ]
         );
 
         $response = $this->controller->handle($request);
@@ -166,6 +171,53 @@ final class AuthCodeGrantControllerTest extends TestCase
         $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
         $request->shouldReceive('getParsedBody')->andReturn(
             ['grant_type' => 'authorization_code', 'code' => 'not_valid_auth_code']
+        );
+
+        $this->response_builder->shouldNotReceive('buildResponse');
+        $response = $this->controller->handle($request);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
+        $this->assertJsonStringEqualsJsonString('{"error":"invalid_grant"}', $response->getBody()->getContents());
+    }
+
+    public function testRejectsRequestWithoutARedirectURI(): void
+    {
+        $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
+        $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
+            OAuth2AuthorizationCode::approveForDemoScope(new \PFUser(['language_id' => 'en']))
+        );
+
+        $request = \Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
+        $request->shouldReceive('getParsedBody')->andReturn(
+            [
+                'grant_type' => 'authorization_code',
+                'code'       => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161'
+            ]
+        );
+
+        $this->response_builder->shouldNotReceive('buildResponse');
+        $response = $this->controller->handle($request);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
+        $this->assertJsonStringEqualsJsonString('{"error":"invalid_request"}', $response->getBody()->getContents());
+    }
+
+    public function testRejectsRequestThatDoesNotTheExpectedRedirectURI(): void
+    {
+        $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
+        $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
+            OAuth2AuthorizationCode::approveForDemoScope(new \PFUser(['language_id' => 'en']))
+        );
+
+        $request = \Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
+        $request->shouldReceive('getParsedBody')->andReturn(
+            [
+                'grant_type'   => 'authorization_code',
+                'code'         => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
+                'redirect_uri' => 'https://evil.example.com'
+            ]
         );
 
         $this->response_builder->shouldNotReceive('buildResponse');

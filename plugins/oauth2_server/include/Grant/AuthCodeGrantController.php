@@ -40,9 +40,10 @@ final class AuthCodeGrantController extends DispatchablePSR15Compatible implemen
 {
     private const CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
 
-    private const GRANT_TYPE_PARAMETER = 'grant_type';
-    private const AUTH_CODE_PARAMETER  = 'code';
-    private const ALLOWED_GRANT_TYPES  = ['authorization_code'];
+    private const GRANT_TYPE_PARAMETER    = 'grant_type';
+    private const AUTH_CODE_PARAMETER     = 'code';
+    private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
+    private const ALLOWED_GRANT_TYPES     = ['authorization_code'];
 
     private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     private const ERROR_CODE_INVALID_GRANT   = 'invalid_grant';
@@ -115,6 +116,13 @@ final class AuthCodeGrantController extends DispatchablePSR15Compatible implemen
             return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
         } finally {
             \sodium_memzero($body_params[self::AUTH_CODE_PARAMETER]);
+        }
+
+        if (! isset($body_params[self::REDIRECT_URI_PARAMETER])) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST);
+        }
+        if (! \hash_equals($app->getRedirectEndpoint(), $body_params[self::REDIRECT_URI_PARAMETER])) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
         }
 
         $representation = $this->response_builder->buildResponse(
