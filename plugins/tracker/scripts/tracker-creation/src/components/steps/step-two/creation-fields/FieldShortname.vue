@@ -86,7 +86,8 @@ export default class FieldShortname extends Vue {
     readonly is_shortname_valid!: boolean;
 
     get validation_pattern(): string {
-        return TRACKER_SHORTNAME_FORMAT.toString();
+        let string_format = TRACKER_SHORTNAME_FORMAT.toString();
+        return string_format.substring(1, string_format.length - 1);
     }
 }
 </script>
