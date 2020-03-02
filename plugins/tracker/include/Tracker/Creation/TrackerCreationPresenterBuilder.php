@@ -23,6 +23,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Tracker\Creation;
 
+use Project;
 use ProjectManager;
 use TrackerDao;
 
@@ -63,6 +64,28 @@ class TrackerCreationPresenterBuilder
             );
         }
 
-        return new TrackerCreationPresenter($project_templates, $current_project, $csrf);
+        $existing_trackers = $this->getExistingTrackersNamesAndShortnamesInProject($current_project);
+
+        return new TrackerCreationPresenter($project_templates, $existing_trackers, $current_project, $csrf);
+    }
+
+    public function getExistingTrackersNamesAndShortnamesInProject(Project $project): array
+    {
+        $trackers = $this->tracker_dao->searchByGroupId($project->getID());
+        $existing_trackers = [
+            'names'      => [],
+            'shortnames' => []
+        ];
+
+        if ($trackers === false) {
+            return $existing_trackers;
+        }
+
+        foreach ($trackers as $tracker) {
+            $existing_trackers['names'][] = $tracker['name'];
+            $existing_trackers['shortnames'][] = $tracker['item_name'];
+        }
+
+        return $existing_trackers;
     }
 }

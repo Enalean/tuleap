@@ -28,7 +28,8 @@ describe("FieldShortname", () => {
 
     async function getWrapper(
         can_display_slugify_mode: boolean,
-        is_shortname_valid = true
+        is_shortname_valid = true,
+        is_shortname_already_used = true
     ): Promise<Wrapper<FieldShortname>> {
         return shallowMount(FieldShortname, {
             mocks: {
@@ -36,7 +37,8 @@ describe("FieldShortname", () => {
                     state,
                     getters: {
                         can_display_slugify_mode,
-                        is_shortname_valid
+                        is_shortname_valid,
+                        is_shortname_already_used
                     }
                 })
             },
@@ -83,7 +85,7 @@ describe("FieldShortname", () => {
     });
 
     it("If the slugify mode is active, then it displays the slugified mode", async () => {
-        const wrapper = await getWrapper(true);
+        const wrapper = await getWrapper(true, true, false);
 
         expect(wrapper.contains("field-shortname-slugified-stub")).toBe(true);
     });
@@ -93,5 +95,12 @@ describe("FieldShortname", () => {
 
         expect(wrapper.find("[data-test=shortname-error]").exists()).toBe(true);
         expect(wrapper.classes("tlp-form-element-error")).toBe(true);
+    });
+
+    it("Enters the error mode when the chosen name already exist", async () => {
+        const wrapper = await getWrapper(false, false, true);
+
+        expect(wrapper.classes()).toContain("tlp-form-element-error");
+        expect(wrapper.find("[data-test=shortname-taken-error]").exists()).toBe(true);
     });
 });

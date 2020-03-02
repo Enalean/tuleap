@@ -21,7 +21,8 @@
     <div
         class="tlp-form-element"
         v-bind:class="{
-            'tracker-name-above-slugified-shortname': can_display_slugify_mode
+            'tracker-name-above-slugified-shortname': can_display_slugify_mode,
+            'tlp-form-element-error': is_name_already_used
         }"
     >
         <label class="tlp-label" for="tracker-name">
@@ -38,6 +39,12 @@
             v-on:keyup="setTrackerName($event.target.value)"
             required
         />
+        <p class="tlp-text-danger" data-test="name-error" v-if="is_name_already_used">
+            <i class="fa fa-exclamation-circle"></i>
+            <translate>
+                The chosen name already exist in this project, please choose another one.
+            </translate>
+        </p>
     </div>
 </template>
 <script lang="ts">
@@ -56,5 +63,8 @@ export default class StepTwo extends Vue {
 
     @Getter
     readonly can_display_slugify_mode!: boolean;
+
+    @Getter
+    readonly is_name_already_used!: boolean;
 }
 </script>

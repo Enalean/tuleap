@@ -78,6 +78,17 @@ msgstr "Nom court"
 msgid "Template"
 msgstr "Modèle"
 
+msgid ""
+"The chosen name already exist in this project, please choose another one."
+msgstr ""
+"Le nom choisi existe déjà dans ce projet, veuillez en choisir un autre."
+
+msgid ""
+"The chosen shortname already exist in this project, please choose another "
+"one."
+msgstr ""
+"Le nom court choisi existe déjà dans ce projet, veuillez en choisir un autre."
+
 msgid "The provided file is not a valid XML file"
 msgstr "Le fichier fourni n'est pas un fichier XML valide"
 

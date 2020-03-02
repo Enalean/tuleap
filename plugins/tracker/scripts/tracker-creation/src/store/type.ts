@@ -29,6 +29,7 @@ export interface State {
     is_parsing_a_xml_file: boolean;
     has_xml_file_error: boolean;
     is_in_slugify_mode: boolean;
+    existing_trackers: ExistingTrackersList;
 }
 
 export interface CSRFToken {
@@ -49,6 +50,11 @@ export interface Tracker {
 export interface TrackerToBeCreatedMandatoryData {
     name: string;
     shortname: string;
+}
+
+export interface ExistingTrackersList {
+    names: string[];
+    shortnames: string[];
 }
 
 export enum CreationOptions {

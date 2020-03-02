@@ -22,7 +22,13 @@ import Vuex from "vuex";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { createStore } from "./src/store/index";
-import { CreationOptions, CSRFToken, ProjectTemplate, State } from "./src/store/type";
+import {
+    CreationOptions,
+    CSRFToken,
+    ExistingTrackersList,
+    ProjectTemplate,
+    State
+} from "./src/store/type";
 import { createRouter } from "./src/router";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -52,6 +58,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? JSON.parse(vue_mount_point.dataset.projectTemplates)
             : [];
 
+    const existing_trackers: ExistingTrackersList =
+        typeof vue_mount_point.dataset.existingTrackers !== "undefined"
+            ? JSON.parse(vue_mount_point.dataset.existingTrackers)
+            : { names: [], shortnames: [] };
+
     const project_unix_name = vue_mount_point.dataset.projectUnixName;
 
     if (!project_unix_name) {
@@ -61,6 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const initial_state: State = {
         csrf_token,
         project_templates,
+        existing_trackers,
         active_option: CreationOptions.NONE_YET,
         selected_tracker_template: null,
         selected_xml_file_input: null,

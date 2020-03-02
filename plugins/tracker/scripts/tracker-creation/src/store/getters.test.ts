@@ -18,7 +18,7 @@
  */
 
 import * as getters from "./getters";
-import { CreationOptions, State, Tracker } from "./type";
+import { CreationOptions, State, Tracker, TrackerToBeCreatedMandatoryData } from "./type";
 
 describe("getters", () => {
     describe("is_ready_for_step_2", () => {
@@ -124,11 +124,60 @@ describe("getters", () => {
             expect(getters.is_ready_to_submit(state)).toBe(false);
         });
 
-        it("Is ready otherwise", () => {
+        it("Is not ready if the tracker name is already used", () => {
             const state: State = {
                 tracker_to_be_created: {
                     name: "Bugz",
-                    shortname: "bugz"
+                    shortname: ""
+                },
+                existing_trackers: {
+                    names: ["Bugz"],
+                    shortnames: ["bugz"]
+                }
+            } as State;
+
+            expect(getters.is_ready_to_submit(state)).toBe(false);
+        });
+
+        it("Is not ready if the tracker shortname is already used", () => {
+            const state: State = {
+                tracker_to_be_created: {
+                    name: "EPICS",
+                    shortname: "epico"
+                },
+                existing_trackers: {
+                    names: ["Bugz"],
+                    shortnames: ["epico"]
+                }
+            } as State;
+
+            expect(getters.is_ready_to_submit(state)).toBe(false);
+        });
+
+        it("Is not ready if the tracker shortname does not respect the expected format", () => {
+            const state: State = {
+                tracker_to_be_created: {
+                    name: "EPICS",
+                    shortname: "I dont care the expected format"
+                },
+                existing_trackers: {
+                    names: ["Bugz"],
+                    shortnames: ["epico"]
+                }
+            } as State;
+
+            expect(getters.is_ready_to_submit(state)).toBe(false);
+        });
+
+        it("Is ready otherwise", () => {
+            const state: State = {
+                tracker_to_be_created: {
+                    name: "EPICS",
+                    shortname: "epico"
+                },
+                existing_trackers: {
+                    names: ["Bugz"],
+                    shortnames: ["bugz"]
                 }
             } as State;
 
@@ -199,6 +248,38 @@ describe("getters", () => {
             expect(getters.is_shortname_valid(getStateWithShortname("122_yo_lo"))).toBe(true);
             expect(getters.is_shortname_valid(getStateWithShortname("_yo_lo_"))).toBe(true);
             expect(getters.is_shortname_valid(getStateWithShortname("tracker123"))).toBe(true);
+        });
+    });
+
+    describe("is_[shortname][name]_already_used", () => {
+        function getState(tracker_to_be_created: TrackerToBeCreatedMandatoryData): State {
+            return {
+                existing_trackers: {
+                    names: ["Bugs", "User stories", "Releases", "Epics", "Activities"],
+                    shortnames: ["bug", "story", "release", "epic", "activity"]
+                },
+                tracker_to_be_created
+            } as State;
+        }
+
+        it("Returns true they already exist", () => {
+            const state = getState({
+                name: "Epics",
+                shortname: "epic"
+            });
+
+            expect(getters.is_name_already_used(state)).toBe(true);
+            expect(getters.is_shortname_already_used(state)).toBe(true);
+        });
+
+        it("Returns false otherwise", () => {
+            const state = getState({
+                name: "Requirements",
+                shortname: "requirement"
+            });
+
+            expect(getters.is_name_already_used(state)).toBe(false);
+            expect(getters.is_shortname_already_used(state)).toBe(false);
         });
     });
 });

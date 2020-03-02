@@ -18,11 +18,11 @@
   -->
 
 <template>
-    <field-shortname-slugified v-if="can_display_slugify_mode" />
+    <field-shortname-slugified v-if="can_display_slugify_mode && !is_shortname_already_used" />
     <div
         class="tlp-form-element"
         v-bind:class="{
-            'tlp-form-element-error': !is_shortname_valid
+            'tlp-form-element-error': !is_shortname_valid || is_shortname_already_used
         }"
         v-else
     >
@@ -57,6 +57,16 @@
                 contain alphanumerical characters and underscores.
             </translate>
         </p>
+        <p
+            class="tlp-text-danger"
+            data-test="shortname-taken-error"
+            v-if="is_shortname_already_used"
+        >
+            <i class="fa fa-exclamation-circle"></i>
+            <translate>
+                The chosen shortname already exist in this project, please choose another one.
+            </translate>
+        </p>
     </div>
 </template>
 <script lang="ts">
@@ -84,6 +94,9 @@ export default class FieldShortname extends Vue {
 
     @Getter
     readonly is_shortname_valid!: boolean;
+
+    @Getter
+    readonly is_shortname_already_used!: boolean;
 
     get validation_pattern(): string {
         return TRACKER_SHORTNAME_FORMAT.toString();
