@@ -428,7 +428,11 @@ class RouteCollector
     public static function postAccountAvatar()
     {
         $user_manager = \UserManager::instance();
-        return new ChangeAvatarController($user_manager, new UserAvatarSaver($user_manager));
+        return new ChangeAvatarController(
+            DisplayAccountInformationController::getCSRFToken(),
+            $user_manager,
+            new UserAvatarSaver($user_manager)
+        );
     }
 
     public static function postLogoutAccount() : LogoutController

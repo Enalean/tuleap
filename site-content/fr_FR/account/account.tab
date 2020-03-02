@@ -21,11 +21,6 @@ account_options	timezone	Fuseau horaire :
 account_options	change_timezone	Changer le fuseau horaire
 account_options	email_address		Adresse e-mail :
 account_options	change_email_address	Changer l'adresse e-mail
-account_options	change_avatar	Changer l'avatar
-account_options	change_avatar_desc	Merci de sélectionner une image pour votre avatar. L'image sera ensuite réduite à 100×100 pixels.
-account_options	use_default_avatar	Utiliser l'avatar par défaut
-account_options	select_avatar	Sélectionner
-account_options	btn_save_avatar_label	Sauvegarder l'avatar
 account_options	preferences	Préférences
 account_options	tuleap_login	Login
 account_options	realname	Nom complet

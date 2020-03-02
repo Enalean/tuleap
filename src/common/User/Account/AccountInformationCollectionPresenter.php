@@ -26,40 +26,58 @@ namespace Tuleap\User\Account;
 use CSRFSynchronizerToken;
 use PFUser;
 
-/**
- * @psalm-immutable
- */
 final class AccountInformationCollectionPresenter
 {
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $update_preferences_url = UpdateAccountInformationController::URL;
     /**
      * @var AccountTabPresenterCollection
+     * @psalm-readonly
      */
     public $tabs;
     /**
      * @var CSRFSynchronizerToken
+     * @psalm-readonly
      */
     public $csrf_token;
     /**
      * @var int
+     * @psalm-readonly
      */
     public $user_id;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $user_name;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $real_name;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $can_change_real_name;
     /**
      * @var AccountInformationPresenter[]
+     * @psalm-readonly
      */
     public $extra_information;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_avatar;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $avatar_url;
 
     public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, PFUser $user, AccountInformationCollection $account_information_collection)
     {
@@ -68,6 +86,8 @@ final class AccountInformationCollectionPresenter
         $this->user_id = (int) $user->getId();
         $this->user_name = $user->getUserName();
         $this->real_name = $user->getRealName();
+        $this->has_avatar = (bool) $user->hasAvatar();
+        $this->avatar_url = $user->getAvatarUrl();
         $this->can_change_real_name = $account_information_collection->isUserAllowedToCanChangeRealName();
         $this->extra_information = $account_information_collection->getExtraInformation();
     }

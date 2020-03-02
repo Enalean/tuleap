@@ -29,6 +29,8 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -84,6 +86,16 @@ final class DisplayAccountInformationController implements DispatchableWithReque
 
         $account_information_collection = $this->dispatcher->dispatch(new AccountInformationCollection($user));
         assert($account_information_collection instanceof AccountInformationCollection);
+
+        $layout->addJavascriptAsset(
+            new JavascriptAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../../../www/assets/account/scripts',
+                    '/assets/account/scripts'
+                ),
+                'avatar.js'
+            )
+        );
 
         (new UserPreferencesHeader())->display(_('Account'), $layout);
         $this->renderer->renderToPage(

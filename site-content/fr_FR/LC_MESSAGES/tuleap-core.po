@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -450,6 +450,9 @@ msgid ""
 msgstr ""
 "Catégoriser votre projet permettra aux développeurs et utilisateurs de plus "
 "facilement le trouver et y participer."
+
+msgid "Change avatar"
+msgstr "Changer l'avatar"
 
 msgid "Change email address"
 msgstr "Changer l'adresse e-mail"
@@ -1108,6 +1111,9 @@ msgstr "Nb membres"
 msgid "Never"
 msgstr "Jamais"
 
+msgid "New avatar"
+msgstr "Nouvel avatar"
+
 msgid "New email address:"
 msgstr "Nouvelle adresse e-mail"
 
@@ -1305,6 +1311,9 @@ msgstr ""
 
 msgid "Please select a file to upload"
 msgstr "Veuillez sélectionner un fichier à téléverser"
+
+msgid "Please select a picture for your avatar."
+msgstr "Veuillez sélectionner une image pour votre avatar."
 
 msgid "Please update your password first"
 msgstr "Merci de mettre à jour votre mot de passe d'abord"
@@ -1618,6 +1627,9 @@ msgstr "Sauvegarder les permissions déléguées"
 msgid "Save information"
 msgstr "Enregistrer les informations"
 
+msgid "Save new avatar"
+msgstr "Sauvegarder le nouvel avatar"
+
 msgid "Save settings"
 msgstr "Enregister"
 
@@ -1638,6 +1650,9 @@ msgstr "Sécurité"
 
 msgid "See permissions"
 msgstr "Voir les permissions"
+
+msgid "Select"
+msgstr "Sélectionner"
 
 msgid "Semicolon"
 msgstr "Point virgule"
@@ -2222,6 +2237,9 @@ msgstr "Téléverser un fichier texte"
 msgid "Use as project flag"
 msgstr "Utilisée en tant que marqueur de projet"
 
+msgid "Use default avatar"
+msgstr "Utiliser l'avatar par défaut"
+
 #, php-format
 msgid "User '%s' does not exist"
 msgstr "L'utilisateur '%s' n’existe pas"
@@ -2650,6 +2668,9 @@ msgstr "La variable <code>$sys_project_approval</code> est toujours présente"
 #, php-format
 msgid "Your account has been created on %s"
 msgstr "Votre compte a été créé sur %s"
+
+msgid "Your avatar"
+msgstr "Votre avatar"
 
 msgid ""
 "Your email change is complete. Your new email address is <strong>%s</strong>."
