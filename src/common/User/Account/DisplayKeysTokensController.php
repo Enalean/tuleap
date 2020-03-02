@@ -40,8 +40,6 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
 {
     public const URL = '/account/keys-tokens';
 
-    public const MAIN_CLASSES = [ 'tlp-framed', 'user-preferences-frame' ];
-
     /**
      * @var TemplateRenderer
      */
@@ -89,32 +87,20 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
         }
         assert($_SESSION !== null);
 
-        $layout->addCssAsset(new AccountCssAsset());
-
         $layout->addJavascriptAsset(
             new JavascriptAsset(
                 new IncludeAssets(
                     __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts',
+                    '/assets/account/scripts'
                 ),
                 'keys-tokens.js'
-            )
-        );
-
-        $layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts',
-                ),
-                'preferences-nav.js'
             )
         );
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
-        $layout->header(['title' => _('Keys & Tokens'), 'main_classes' => self::MAIN_CLASSES]);
+        (new UserPreferencesHeader())->display(_('Keys & Tokens'), $layout);
         $this->renderer->renderToPage(
             'keys-tokens',
             new KeysTokensPresenter(

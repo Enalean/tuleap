@@ -173,6 +173,10 @@ class BurningParrotTheme extends BaseLayout
 
         $color = \ThemeVariantColor::buildFromVariant((new \ThemeVariant())->getVariantForUser($this->user));
         $body_classes[] = 'theme-'. $color->getName();
+        $is_condensed = $this->user->getPreference(\PFUser::PREFERENCE_DISPLAY_DENSITY) === \PFUser::DISPLAY_DENSITY_CONDENSED;
+        if ($is_condensed) {
+            $body_classes[] = 'theme-condensed';
+        }
 
         if ($current_project_navbar_info_presenter !== null && $current_project_navbar_info_presenter->project_banner_is_visible) {
             $body_classes[] = 'has-visible-project-banner';

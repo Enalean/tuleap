@@ -18,29 +18,36 @@
  *
  */
 
-document.addEventListener("DOMContentLoaded", () => {
-    let ticking = false;
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const nav = document.querySelector(".user-preferences-nav") as Element;
+const nav = document.querySelector(".user-preferences-nav");
+if (nav === null) {
+    throw Error("Navigation element for preferences is not found");
+}
 
-    flipPreferencesNav();
+const tlp_spacing = 20;
+const tlp_spacing_condensed = 15;
 
-    window.addEventListener("resize", () => {
-        if (!ticking) {
-            requestAnimationFrame(() => {
-                flipPreferencesNav();
-                ticking = false;
-            });
+const width =
+    1000 +
+    2 * (document.body.classList.contains("theme-condensed") ? tlp_spacing_condensed : tlp_spacing);
 
-            ticking = true;
-        }
-    });
+flipPreferencesNav(nav);
 
-    function flipPreferencesNav(): void {
-        if (window.innerWidth < 1000) {
-            nav.classList.remove("tlp-tabs-vertical");
-        } else {
-            nav.classList.add("tlp-tabs-vertical");
-        }
+let ticking = false;
+window.addEventListener("resize", () => {
+    if (!ticking) {
+        requestAnimationFrame(() => {
+            flipPreferencesNav(nav);
+            ticking = false;
+        });
+
+        ticking = true;
     }
 });
+
+function flipPreferencesNav(nav: Element): void {
+    if (window.innerWidth <= width) {
+        nav.classList.remove("tlp-tabs-vertical");
+    } else {
+        nav.classList.add("tlp-tabs-vertical");
+    }
+}

@@ -90,28 +90,16 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
             throw new ForbiddenException();
         }
 
-        $layout->addCssAsset(new AccountCssAsset());
-
         $layout->addJavascriptAsset(
             new JavascriptAsset(
                 new IncludeAssets(
                     __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts',
+                    '/assets/account/scripts'
                 ),
                 'security.js'
             )
         );
         $layout->includeFooterJavascriptFile('/scripts/check_pw.js');
-
-        $layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts',
-                ),
-                'preferences-nav.js'
-            )
-        );
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
@@ -129,7 +117,7 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
             );
         }
 
-        $layout->header(['title' => _('Security'), 'main_classes' => DisplayKeysTokensController::MAIN_CLASSES]);
+        (new UserPreferencesHeader())->display(_('Security'), $layout);
         $this->renderer->renderToPage(
             'security',
             new SecurityPresenter(
