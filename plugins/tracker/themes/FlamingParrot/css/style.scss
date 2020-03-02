@@ -18,6 +18,7 @@
  */
 
 @import '../../default/css/style';
+@import './tracker-creation';
 
 @mixin definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info) {
     /* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */

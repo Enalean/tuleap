@@ -1341,6 +1341,9 @@ msgstr "Règles de Transitions"
 msgid "Triggers"
 msgstr "Déclenchements"
 
+msgid "Try new tracker creation flow"
+msgstr "Essayer le nouveau flux de création d'outil de suivi"
+
 #, php-format
 msgid ""
 "Type '%s' does not exist. This field is ignored. (Name : '%s', ID: '%s')."

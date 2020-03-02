@@ -40,6 +40,10 @@ class TrackerCreationPresenter
      * @var string
      */
     public $csrf_token;
+    /**
+     * @var int
+     */
+    public $project_id;
 
     /**
      * @var string
@@ -55,6 +59,7 @@ class TrackerCreationPresenter
         $this->project_templates = json_encode($project_templates, JSON_THROW_ON_ERROR);
         $this->existing_trackers = json_encode($existing_trackers, JSON_THROW_ON_ERROR);
         $this->project_unix_name = $current_project->getUnixNameLowerCase();
+        $this->project_id        = $current_project->getID();
         $this->csrf_token        = json_encode([
             'name' => $csrf->getTokenName(),
             'value' => $csrf->getToken()

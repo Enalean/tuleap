@@ -130,6 +130,18 @@
     }
 }
 
+.tracker-creation-navigation {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tracker-creation-navigation-back-to-legacy {
+    color: $tlp-ui-dimmed;
+}
+
+.tracker-footer-external-link-icon {
+    margin: 0 4px 0 0;
+}
 
 .tracker-creation-navigation-buttons {
     display: flex;
