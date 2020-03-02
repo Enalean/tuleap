@@ -107,7 +107,7 @@ class AddController implements DispatchableWithRequest
             );
         } catch (JenkinsServerURLNotValidException $exception) {
             $layout->addFeedback(
-                Feedback::WARN,
+                Feedback::ERROR,
                 dgettext("tuleap-hudson_git", "The Jenkins server URL provided is not well formed.")
             );
         } finally {

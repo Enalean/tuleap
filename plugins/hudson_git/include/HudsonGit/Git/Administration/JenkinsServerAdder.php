@@ -49,6 +49,8 @@ class JenkinsServerAdder
      */
     public function addServerInProject(Project $project, string $jenkins_server_url): void
     {
+        $jenkins_server_url = trim($jenkins_server_url);
+
         if (! $this->valid_HTTPURI->validate($jenkins_server_url)) {
             throw new JenkinsServerURLNotValidException();
         }
