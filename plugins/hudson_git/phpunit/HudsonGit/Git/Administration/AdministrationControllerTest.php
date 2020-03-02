@@ -245,7 +245,7 @@ class AdministrationControllerTest extends TestCase
 
         $repository = Mockery::mock(GitRepository::class);
         $repository->shouldReceive('getName')->andReturn('repo01');
-        $job = new Job($repository, 1582622782, 'job_url');
+        $job = new Job($repository, 1582622782, 'job_url', null);
         $this->job_manager->shouldReceive('getLastJobLogsByProjectServer')
             ->with($jenkins_server)
             ->andReturn([$job]);

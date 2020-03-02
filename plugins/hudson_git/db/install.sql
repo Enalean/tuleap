@@ -16,6 +16,11 @@ CREATE TABLE plugin_hudson_git_job_polling_url (
    job_url text NOT NULL
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_hudson_git_job_branch_source (
+   job_id  int(11) UNSIGNED NOT NULL PRIMARY KEY,
+   status_code INT(4) UNSIGNED NOT NULL
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS plugin_hudson_git_project_server(
    id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
    project_id int(11) NOT NULL,
@@ -32,4 +37,9 @@ CREATE TABLE plugin_hudson_git_project_server_job (
 CREATE TABLE plugin_hudson_git_project_server_job_polling_url (
    job_id int(11) UNSIGNED NOT NULL PRIMARY KEY,
    job_url text NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE plugin_hudson_git_project_server_job_branch_source (
+    job_id  int(11) UNSIGNED NOT NULL PRIMARY KEY,
+    status_code INT(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB;

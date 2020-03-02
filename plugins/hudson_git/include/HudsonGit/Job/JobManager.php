@@ -68,16 +68,24 @@ class JobManager
      */
     public function create(Job $job)
     {
+        $this->checkJobCanBeCreated($job);
+
         $this->transaction_executor->execute(function () use ($job) {
             $id = $this->job_dao->create($job);
-            if (! $id) {
+            if (!$id) {
                 throw new CannotCreateJobException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
             }
+            if (count($job->getJobUrlList()) > 0) {
+                $this->job_dao->logTriggeredJobs(
+                    $id,
+                    $job->getJobUrl()
+                );
+            }
 
-            $this->job_dao->logTriggeredJobs(
-                $id,
-                $job->getJobUrl()
-            );
+            $status_code = $job->getStatusCode();
+            if ($status_code !== null) {
+                $this->job_dao->logBranchSource($id, $status_code);
+            }
         });
     }
 
@@ -86,11 +94,12 @@ class JobManager
      */
     public function createJobLogForProject(JenkinsServer $jenkins_server, Job $job)
     {
-        if ((int) $jenkins_server->getProject()->getID() !== (int) $job->getRepository()->getProject()->getID()) {
+        if ((int)$jenkins_server->getProject()->getID() !== (int)$job->getRepository()->getProject()->getID()) {
             throw new CannotCreateJobException(
                 dgettext("tuleap-hudson_git", "Provided job does not belong to the Jenkins server's project.")
             );
         }
+        $this->checkJobCanBeCreated($job);
 
         $this->transaction_executor->execute(function () use ($jenkins_server, $job) {
             $job_id = $this->project_job_dao->create(
@@ -98,11 +107,17 @@ class JobManager
                 $job->getRepository()->getId(),
                 $job->getPushDate()
             );
+            if (count($job->getJobUrlList()) > 0) {
+                $this->project_job_dao->logTriggeredJobs(
+                    $job_id,
+                    $job->getJobUrl()
+                );
+            }
 
-            $this->project_job_dao->logTriggeredJobs(
-                $job_id,
-                $job->getJobUrl()
-            );
+            $status_code = $job->getStatusCode();
+            if ($status_code !== null) {
+                $this->project_job_dao->logBranchSource($job_id, $status_code);
+            }
         });
     }
 
@@ -120,7 +135,7 @@ class JobManager
     {
         $jobs = [];
         foreach ($this->project_job_dao->searchJobsByJenkinsServer($jenkins_server->getId()) as $row) {
-            $repository = $this->git_repository_factory->getRepositoryById((int) $row['repository_id']);
+            $repository = $this->git_repository_factory->getRepositoryById((int)$row['repository_id']);
             if ($repository === null) {
                 continue;
             }
@@ -136,7 +151,20 @@ class JobManager
         return new Job(
             $repository,
             $row['push_date'],
-            $row['job_url']
+            $row['job_url'],
+            null
         );
+    }
+
+    /**
+     * @throws CannotCreateJobException
+     */
+    private function checkJobCanBeCreated(Job $job): void
+    {
+        if ($job->getStatusCode() === null && count($job->getJobUrlList()) === 0) {
+            throw new CannotCreateJobException(
+                dgettext("tuleap-hudson_git", "Nothing has been triggered for this push.")
+            );
+        }
     }
 }

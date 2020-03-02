@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016-2018. All rights reserved.
+ * Copyright Enalean (c) 2016-Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -33,11 +33,17 @@ class Job
     private $job_url;
     private $push_date;
 
-    public function __construct(GitRepository $repository, $push_date, $job_url)
+    /**
+     * @var int|null
+     */
+    private $status_code;
+
+    public function __construct(GitRepository $repository, int $push_date, string $job_url, ?int $status_code)
     {
-        $this->repository = $repository;
-        $this->push_date  = $push_date;
-        $this->job_url    = $job_url;
+        $this->repository  = $repository;
+        $this->push_date   = $push_date;
+        $this->job_url     = $job_url;
+        $this->status_code = $status_code;
     }
 
     public function getPushDate()
@@ -50,13 +56,17 @@ class Job
         return format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->push_date);
     }
 
-    public function getJobUrl()
+    public function getJobUrl(): string
     {
         return (string) $this->job_url;
     }
 
-    public function getJobUrlList()
+    public function getJobUrlList(): array
     {
+        if ((string) $this->job_url === '') {
+            return [];
+        }
+
         return explode(',', $this->job_url);
     }
 
@@ -68,5 +78,10 @@ class Job
     public function getSha1()
     {
         return $this->id;
+    }
+
+    public function getStatusCode(): ?int
+    {
+        return $this->status_code;
     }
 }

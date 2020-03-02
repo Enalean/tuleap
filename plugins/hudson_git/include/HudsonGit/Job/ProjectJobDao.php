@@ -49,6 +49,17 @@ class ProjectJobDao extends DataAccessObject
         );
     }
 
+    public function logBranchSource(int $job_id, int $status_code): void
+    {
+        $this->getDB()->insert(
+            'plugin_hudson_git_project_server_job_branch_source',
+            [
+                'job_id'  => $job_id,
+                'status_code' => $status_code,
+            ]
+        );
+    }
+
     public function deleteLogsOfServer(int $jenkins_server_id): void
     {
         $sql = "DELETE plugin_hudson_git_project_server_job.*, plugin_hudson_git_project_server_job_polling_url.*
