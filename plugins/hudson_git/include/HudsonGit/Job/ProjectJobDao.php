@@ -26,35 +26,49 @@ use Tuleap\DB\DataAccessObject;
 
 class ProjectJobDao extends DataAccessObject
 {
-    public function create(int $jenkins_server_id, int $repository_id, int $push_date, string $job_url): void
+    public function create(int $jenkins_server_id, int $repository_id, int $push_date): int
     {
-        $this->getDB()->insert(
+        return (int) $this->getDB()->insertReturnId(
             'plugin_hudson_git_project_server_job',
             [
                 'project_server_id' => $jenkins_server_id,
                 'repository_id'     => $repository_id,
                 'push_date'         => $push_date,
-                'job_url'           => $job_url
+            ]
+        );
+    }
+
+    public function logTriggeredJobs(int $job_id, string $job_urls): void
+    {
+        $this->getDB()->insert(
+            'plugin_hudson_git_project_server_job_polling_url',
+            [
+                'job_id'  => $job_id,
+                'job_url' => $job_urls,
             ]
         );
     }
 
     public function deleteLogsOfServer(int $jenkins_server_id): void
     {
-        $this->getDB()->delete(
-            'plugin_hudson_git_project_server_job',
-            [
-                'project_server_id' => $jenkins_server_id
-            ]
-        );
+        $sql = "DELETE plugin_hudson_git_project_server_job.*, plugin_hudson_git_project_server_job_polling_url.*
+                FROM plugin_hudson_git_project_server_job
+                    INNER JOIN plugin_hudson_git_project_server_job_polling_url
+                    ON plugin_hudson_git_project_server_job.id = plugin_hudson_git_project_server_job_polling_url.job_id
+                WHERE plugin_hudson_git_project_server_job.project_server_id=?
+                ";
+
+        $this->getDB()->run($sql, $jenkins_server_id);
     }
 
     public function searchJobsByJenkinsServer(int $jenkins_server_id): array
     {
         $sql = "SELECT *
                 FROM plugin_hudson_git_project_server_job
-                WHERE project_server_id=?
-                ORDER BY push_date
+                    JOIN plugin_hudson_git_project_server_job_polling_url
+                    ON plugin_hudson_git_project_server_job.id = plugin_hudson_git_project_server_job_polling_url.job_id
+                WHERE plugin_hudson_git_project_server_job.project_server_id=?
+                ORDER BY plugin_hudson_git_project_server_job.push_date
                 DESC
                 LIMIT 30";
 

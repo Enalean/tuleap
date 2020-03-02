@@ -5,12 +5,16 @@ CREATE TABLE IF NOT EXISTS plugin_hudson_git_server(
 );
 
 CREATE TABLE plugin_hudson_git_job (
-    id  int(11) unsigned NOT NULL auto_increment,
+    id int(11) unsigned NOT NULL auto_increment,
     repository_id int(10) NOT NULL,
     push_date int(11) NOT NULL,
-    job_url text NOT NULL,
     PRIMARY KEY  (`id`)
 );
+
+CREATE TABLE plugin_hudson_git_job_polling_url (
+   job_id  int(11) UNSIGNED NOT NULL PRIMARY KEY,
+   job_url text NOT NULL
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS plugin_hudson_git_project_server(
    id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -22,6 +26,10 @@ CREATE TABLE plugin_hudson_git_project_server_job (
    id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
    project_server_id int(11) UNSIGNED NOT NULL,
    repository_id int(10) UNSIGNED NOT NULL,
-   push_date int(11) UNSIGNED NOT NULL,
+   push_date int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE plugin_hudson_git_project_server_job_polling_url (
+   job_id int(11) UNSIGNED NOT NULL PRIMARY KEY,
    job_url text NOT NULL
 ) ENGINE=InnoDB;

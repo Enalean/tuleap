@@ -142,6 +142,9 @@ class hudson_gitPlugin extends Plugin
                     new GitRepositoryFactory(
                         new GitDao(),
                         ProjectManager::instance()
+                    ),
+                    new DBTransactionExecutorWithConnection(
+                        DBFactory::getMainTuleapDBConnection()
                     )
                 ),
                 $this->getCSRF(),
@@ -214,6 +217,9 @@ class hudson_gitPlugin extends Plugin
                 new GitRepositoryFactory(
                     new GitDao(),
                     ProjectManager::instance()
+                ),
+                new DBTransactionExecutorWithConnection(
+                    DBFactory::getMainTuleapDBConnection()
                 )
             ),
             $git_plugin->getHeaderRenderer(),
@@ -276,6 +282,9 @@ class hudson_gitPlugin extends Plugin
                     new GitRepositoryFactory(
                         new GitDao(),
                         ProjectManager::instance()
+                    ),
+                    new DBTransactionExecutorWithConnection(
+                        DBFactory::getMainTuleapDBConnection()
                     )
                 ),
                 self::getJenkinsServerFactory()
