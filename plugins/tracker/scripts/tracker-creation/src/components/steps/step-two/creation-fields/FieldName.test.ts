@@ -26,13 +26,17 @@ import FieldName from "./FieldName.vue";
 describe("FieldName", () => {
     let state: State;
 
-    async function getWrapper(can_display_slugify_mode: boolean): Promise<Wrapper<FieldName>> {
+    async function getWrapper(
+        can_display_slugify_mode: boolean,
+        is_name_already_used = false
+    ): Promise<Wrapper<FieldName>> {
         return shallowMount(FieldName, {
             mocks: {
                 $store: createStoreMock({
                     state,
                     getters: {
-                        can_display_slugify_mode
+                        can_display_slugify_mode,
+                        is_name_already_used
                     }
                 })
             },
@@ -75,5 +79,12 @@ describe("FieldName", () => {
             "setTrackerName",
             input_element.value
         );
+    });
+
+    it("Enters the error mode when the chosen name already exist", async () => {
+        const wrapper = await getWrapper(true, true);
+
+        expect(wrapper.classes()).toContain("tlp-form-element-error");
+        expect(wrapper.find("[data-test=name-error]").exists()).toBe(true);
     });
 });
