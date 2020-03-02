@@ -183,6 +183,17 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertEquals($float_field->getCriteriaFrom($criteria), '');
     }
 
+    public function testItDoesntSearchOnNullCriteria() : void
+    {
+        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
+        $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
+
+        $float_field->shouldReceive('isUsed')->andReturn(true);
+        $float_field->shouldReceive('getCriteriaValue')->andReturn(null);
+
+        $this->assertEquals('', $float_field->getCriteriaFrom($criteria));
+    }
+
     public function testItFetchCriteriaAndSetValueZero() : void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();

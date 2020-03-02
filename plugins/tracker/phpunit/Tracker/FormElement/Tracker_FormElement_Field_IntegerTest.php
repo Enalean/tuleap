@@ -156,6 +156,17 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
         $this->assertEquals('', $field->getCriteriaFrom($criteria));
     }
 
+    public function testItDoesntSearchOnNullCriteria(): void
+    {
+        $field    = $this->getIntegerField();
+        $criteria = $this->getCriteria();
+
+        $field->shouldReceive('isUsed')->andReturn(true);
+        $field->shouldReceive('getCriteriaValue')->andReturn(null);
+
+        $this->assertEquals('', $field->getCriteriaFrom($criteria));
+    }
+
     public function testItFetchCriteriaAndSetValueZero(): void
     {
         $field    = $this->getIntegerField();
