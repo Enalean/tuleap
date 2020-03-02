@@ -87,7 +87,11 @@ class ChartConfigurationValueChecker
         Tracker_Artifact $artifact,
         PFUser $user,
         Tracker_Artifact_Changeset $new_changeset
-    ) {
+    ): bool {
+        if (! $this->areBurndownFieldsCorrectlySet($artifact, $user)) {
+            return false;
+        }
+
         $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact->getTracker(), $user);
         if ($this->hasFieldChanged($new_changeset, $start_date_field)) {
             return true;
