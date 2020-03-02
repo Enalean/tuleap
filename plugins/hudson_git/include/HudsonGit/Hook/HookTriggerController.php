@@ -82,9 +82,9 @@ class HookTriggerController
         $dar = $this->dao->searchById($repository->getId());
         foreach ($dar as $row) {
             $this->logger->debug('Trigger repository jenkins server: ' . $row['jenkins_server_url']);
-            try {
-                $transports = $repository->getAccessURL();
-                foreach ($transports as $protocol => $url) {
+            $transports = $repository->getAccessURL();
+            foreach ($transports as $protocol => $url) {
+                try {
                     $response = $this->jenkins_client->pushGitNotifications($row['jenkins_server_url'], $url, $commit_reference);
 
                     $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
@@ -92,11 +92,16 @@ class HookTriggerController
                         $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
                         $this->addHudsonGitJob($repository, implode(',', $response->getJobPaths()), $date_job);
                     }
+                } catch (Exception $exception) {
+                    $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
                 }
-            } catch (Exception $exception) {
+            }
+
+            try {
+                $this->jenkins_client->pushJenkinsTuleapPluginNotification($row['jenkins_server_url']);
+            } catch (UnableToLaunchBuildException $exception) {
                 $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
             }
-            $this->jenkins_client->pushJenkinsTuleapPluginNotification($row['jenkins_server_url']);
         }
     }
 
@@ -116,9 +121,9 @@ class HookTriggerController
         $project  = $repository->getProject();
         foreach ($this->jenkins_server_factory->getJenkinsServerOfProject($project) as $jenkins_server) {
             $this->logger->debug('Trigger project jenkins server:' . $jenkins_server->getServerURL());
-            try {
-                $transports = $repository->getAccessURL();
-                foreach ($transports as $protocol => $url) {
+            $transports = $repository->getAccessURL();
+            foreach ($transports as $protocol => $url) {
+                try {
                     $response = $this->jenkins_client->pushGitNotifications($jenkins_server->getServerURL(), $url, $commit_reference);
 
                     $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
@@ -131,11 +136,16 @@ class HookTriggerController
                             $date_job
                         );
                     }
+                } catch (Exception $exception) {
+                    $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
                 }
-            } catch (Exception $exception) {
+            }
+
+            try {
+                $this->jenkins_client->pushJenkinsTuleapPluginNotification($jenkins_server->getServerURL());
+            } catch (UnableToLaunchBuildException $exception) {
                 $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
             }
-            $this->jenkins_client->pushJenkinsTuleapPluginNotification($jenkins_server->getServerURL());
         }
     }
 
