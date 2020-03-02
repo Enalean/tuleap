@@ -28,7 +28,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Authentication\SplitToken\SplitTokenException;
+use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2Server\OAuth2ServerException;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
@@ -37,6 +41,7 @@ final class AuthCodeGrantController extends DispatchablePSR15Compatible implemen
     private const CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
 
     private const GRANT_TYPE_PARAMETER = 'grant_type';
+    private const AUTH_CODE_PARAMETER  = 'code';
     private const ALLOWED_GRANT_TYPES  = ['authorization_code'];
 
     private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
@@ -56,23 +61,29 @@ final class AuthCodeGrantController extends DispatchablePSR15Compatible implemen
      */
     private $response_builder;
     /**
-     * @var \UserManager
+     * @var SplitTokenIdentifierTranslator
      */
-    private $user_manager;
+    private $access_token_identifier_unserializer;
+    /**
+     * @var OAuth2AuthorizationCodeVerifier
+     */
+    private $authorization_code_verifier;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
         StreamFactoryInterface $stream_factory,
         AuthorizationCodeGrantResponseBuilder $response_builder,
-        \UserManager $user_manager,
+        SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
+        OAuth2AuthorizationCodeVerifier $authorization_code_verifier,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->response_factory = $response_factory;
-        $this->stream_factory   = $stream_factory;
-        $this->response_builder = $response_builder;
-        $this->user_manager     = $user_manager;
+        $this->response_factory                     = $response_factory;
+        $this->stream_factory                       = $stream_factory;
+        $this->response_builder                     = $response_builder;
+        $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
+        $this->authorization_code_verifier          = $authorization_code_verifier;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -92,9 +103,23 @@ final class AuthCodeGrantController extends DispatchablePSR15Compatible implemen
             return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
         }
 
+        if (! isset($body_params[self::AUTH_CODE_PARAMETER])) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST);
+        }
+
+        try {
+            $authorization_code = $this->authorization_code_verifier->getAuthorizationCode(
+                $this->access_token_identifier_unserializer->getSplitToken(new ConcealedString($body_params[self::AUTH_CODE_PARAMETER]))
+            );
+        } catch (OAuth2ServerException|SplitTokenException $exception) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
+        } finally {
+            \sodium_memzero($body_params[self::AUTH_CODE_PARAMETER]);
+        }
+
         $representation = $this->response_builder->buildResponse(
             new \DateTimeImmutable(),
-            OAuth2AuthorizationCode::approveForDemoScope($this->user_manager->getUserByUserName('admin'))
+            $authorization_code
         );
 
         return $this->response_factory->createResponse()
