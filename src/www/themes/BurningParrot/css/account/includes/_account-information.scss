@@ -46,10 +46,6 @@ $avatar-size: 100px;
 
 .account-information-submit {
     padding: $tlp-spacing $tlp-spacing $tlp-spacing ($tlp-double-spacing * 2 + $avatar-size);
-
-    > .account-information-submit-button {
-        margin: 0;
-    }
 }
 
 .account-information-avatar-modal-body {
