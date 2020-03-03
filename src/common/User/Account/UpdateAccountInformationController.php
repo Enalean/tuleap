@@ -140,7 +140,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
             if ($this->user_manager->updateDb($user)) {
                 $this->email_updater->sendEmailChangeConfirm($request->getServerUrl(), $user);
 
-                $layout->addFeedback(\Feedback::INFO, _('Email successfully updated'));
+                $layout->addFeedback(\Feedback::INFO, _('New email was successfully saved. To complete the change, <strong>please click on the confirmation link</strong> you will receive by email (new address).'), CODENDI_PURIFIER_LIGHT);
                 return true;
             } else {
                 $layout->addFeedback(\Feedback::ERROR, _('Email was not updated'));

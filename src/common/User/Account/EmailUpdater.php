@@ -36,9 +36,10 @@ class EmailUpdater
             \ForgeConfig::get('sys_name')
         );
         $message = sprintf(
-            _("You have requested a change of email address on %s.\nPlease visit the following URL to complete the email change:\n\n%s\n\n-- The %s Team"),
+            _("You have requested a change of email address on %s.\nPlease visit the following URL to complete the email change:\n\n%s%s\n\n-- The %s Team"),
             \ForgeConfig::get('sys_name'),
-            $server_url.$this->getChangeCompleteUrl($current_user->getConfirmHash()),
+            $server_url,
+            ConfirmNewEmailController::getUrlToSelf($current_user->getConfirmHash()),
             \ForgeConfig::get('sys_name')
         );
 
@@ -50,10 +51,5 @@ class EmailUpdater
         if (! $mail->send()) {
             throw new EmailNotSentException();
         }
-    }
-
-    public function getChangeCompleteUrl($confirmation_hash)
-    {
-        return '/account/change_email-complete.php?confirm_hash='.$confirmation_hash;
     }
 }

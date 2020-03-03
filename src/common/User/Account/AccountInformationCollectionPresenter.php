@@ -94,6 +94,12 @@ final class AccountInformationCollectionPresenter
      * @psalm-readonly
      */
     public $timezone;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $change_email_pending;
+
     public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, PFUser $user, AccountInformationCollection $account_information_collection)
     {
         $this->tabs = $tabs;
@@ -108,5 +114,6 @@ final class AccountInformationCollectionPresenter
         $this->can_change_email     = $account_information_collection->isUserAllowedToChangeEmail();
         $this->extra_information = $account_information_collection->getExtraInformation();
         $this->timezone = new Account_TimezoneSelectorPresenter($user->getTimezone());
+        $this->change_email_pending = $user->getConfirmHash() != '';
     }
 }
