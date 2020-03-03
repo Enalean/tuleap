@@ -29,6 +29,7 @@ use AgileDashboard_KanbanManager;
 use AgileDashboard_XMLFullStructureExporter;
 use Codendi_Request;
 use EventManager;
+use Exception;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -36,6 +37,7 @@ use PHPUnit\Framework\TestCase;
 use Planning_Controller;
 use Planning_MilestoneFactory;
 use PlanningFactory;
+use PlanningParameters;
 use PlanningPermissionsManager;
 use Project;
 use ProjectManager;
@@ -52,6 +54,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 class PlanningControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration, GlobalLanguageMock;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
      */
@@ -60,6 +63,10 @@ class PlanningControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
      */
     public $explicit_backlog_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningUpdater
      */
@@ -111,7 +118,8 @@ class PlanningControllerTest extends TestCase
         $this->planning_updater           = Mockery::mock(PlanningUpdater::class);
         $this->tracker_removal_checker    = Mockery::mock(PlanningBacklogTrackerRemovalChecker::class);
 
-        $this->planning_controller        = new Planning_Controller(
+        $this->scrum_mono_milestone_checker = Mockery::mock(ScrumForMonoMilestoneChecker::class);
+        $this->planning_controller          = new Planning_Controller(
             $this->request,
             $this->planning_factory,
             Mockery::mock(Planning_MilestoneFactory::class),
@@ -122,7 +130,7 @@ class PlanningControllerTest extends TestCase
             Mockery::mock(AgileDashboard_ConfigurationManager::class),
             Mockery::mock(AgileDashboard_KanbanFactory::class),
             Mockery::mock(PlanningPermissionsManager::class),
-            Mockery::mock(ScrumForMonoMilestoneChecker::class),
+            $this->scrum_mono_milestone_checker,
             Mockery::mock(ScrumPlanningFilter::class),
             Mockery::mock(Tracker_FormElementFactory::class),
             Mockery::mock(AgileDashboardCrumbBuilder::class),
@@ -280,5 +288,92 @@ class PlanningControllerTest extends TestCase
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         $this->planning_controller->update();
+    }
+
+    public function testItShowsAnErrorMessageAndRedirectsBackToTheCreationForm(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+
+        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getId')->andReturn(101);
+        $this->request->shouldReceive('getProject')->andReturn($project);
+
+        $this->planning_request_validator->shouldReceive('isValid')->andReturnFalse();
+
+        $this->scrum_mono_milestone_checker->shouldReceive(
+            'doesScrumMonoMilestoneConfigurationAllowsPlanningCreation'
+        )->andReturnTrue();
+
+        $this->planning_factory->shouldReceive('createPlanning')->never();
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->with('/plugins/agiledashboard/?group_id=101&action=new')->once(
+        );
+
+        $this->planning_controller->create();
+    }
+
+    public function testItCreatesThePlanningAndRedirectsToTheIndex(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+
+        $planning_parameters = [
+            PlanningParameters::NAME                         => 'Release Planning',
+            PlanningParameters::PLANNING_TRACKER_ID          => '3',
+            PlanningParameters::BACKLOG_TITLE                => 'Release Backlog',
+            PlanningParameters::PLANNING_TITLE               => 'Sprint Plan',
+            PlanningParameters::BACKLOG_TRACKER_IDS          => [
+                '2'
+            ],
+            PlanningPermissionsManager::PERM_PRIORITY_CHANGE => [
+                '2',
+                '3'
+            ]
+        ];
+
+        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->request->shouldReceive('get')->with('planning')->andReturn($planning_parameters);
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getId')->andReturn(101);
+        $this->request->shouldReceive('getProject')->andReturn($project);
+
+        $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
+
+        $this->scrum_mono_milestone_checker->shouldReceive(
+            'doesScrumMonoMilestoneConfigurationAllowsPlanningCreation'
+        )->andReturnTrue();
+
+        $this->planning_factory->shouldReceive('createPlanning')->once();
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->with(
+            '/plugins/agiledashboard/?group_id=101&action=admin'
+        )->once();
+
+        $this->planning_controller->create();
+    }
+
+    public function testItDoesntCreateAnythingIfTheUserIsNotAdmin(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->once()->andReturnFalse();
+        $user->shouldReceive('isSuperUser')->once()->andReturnFalse();
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getId')->andReturn(101);
+
+        $this->request->shouldReceive('getProject')->andReturn($project);
+        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+
+        $this->planning_factory->shouldReceive('createPlanning')->never();
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->with('/plugins/agiledashboard/?group_id=101')->once();
+
+        $this->expectException(Exception::class);
+
+        $this->planning_controller->create();
     }
 }
