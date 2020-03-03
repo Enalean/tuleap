@@ -118,5 +118,10 @@
                 .removeClass("fa-times fa-check")
                 .addClass("fa-circle-o-notch fa-spin");
         });
+        $("#form_pw").on("focus", function() {
+            $(".account-security-password-robustness").removeClass(
+                "account-security-password-robustness-hidden"
+            );
+        });
     });
 })(jQuery);
