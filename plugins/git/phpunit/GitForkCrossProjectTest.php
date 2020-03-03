@@ -18,12 +18,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'bootstrap.php';
+declare(strict_types=1);
 
-class Git_ForkCrossProject_Test extends TuleapTestCase
+namespace Tuleap\Git;
+
+use Codendi_Request;
+use GitPermissionsManager;
+use GitRepository;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
+use ProjectManager;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+
+final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
 {
+    use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
 
-    public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView()
+    protected function setUp(): void
+    {
+        $GLOBALS['HTML'] = $GLOBALS['Response'];
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['HTML'], $_SESSION);
+    }
+
+    public function testExecutesForkCrossProjectActionWithForkRepositoriesView() : void
     {
         $groupId = 101;
         $project = Mockery::mock(Project::class);
@@ -67,15 +90,14 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
         $git->setFactory($repositoryFactory);
         $git->setPermissionsManager($permissions_manager);
 
-        $git->shouldReceive('addAction')->times(2);
-        $git->shouldReceive('addAction')->with('fork', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['HTML'], '/plugins/git/toproject/', $forkPermissions))->ordered();
-        $git->shouldReceive('addAction')->with('getProjectRepositoryList', array($groupId))->ordered();
+        $git->shouldReceive('addAction')->with('fork', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['Response'], '/plugins/git/toproject/', $forkPermissions))->once();
+        $git->shouldReceive('addAction')->with('getProjectRepositoryList', array($groupId))->once();
         $git->shouldReceive('addView')->with('forkRepositories')->once();
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
     }
 
-    public function testAddsErrorWhenRepositoriesAreMissing()
+    public function testAddsErrorWhenRepositoriesAreMissing() : void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns(11);
@@ -92,7 +114,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
         $git->_doDispatchForkCrossProject($request, null);
     }
 
-    public function testAddsErrorWhenDestinationProjectIsMissing()
+    public function testAddsErrorWhenDestinationProjectIsMissing() : void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns(11);
@@ -111,15 +133,16 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
         $git->_doDispatchForkCrossProject($request, null);
     }
 
-    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks()
+    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() : void
     {
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $git->shouldReceive('checkSynchronizerToken')->andThrows(new Exception());
-        $this->expectException();
+        $exception = new \Exception();
+        $git->shouldReceive('checkSynchronizerToken')->andThrows($exception);
+        $this->expectExceptionObject($exception);
         $git->_doDispatchForkCrossProject(null, null);
     }
 
-    public function testUserMustBeAdminOfTheDestinationProject()
+    public function testUserMustBeAdminOfTheDestinationProject() : void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns(123);
