@@ -44,7 +44,7 @@
         />
         <p class="tlp-text-info tracker-shortname-input-helper">
             <i class="fa fa-life-saver"></i>
-            <translate>Avoid spaces and ponctuation</translate>
+            <translate>Avoid spaces and punctuation</translate>
         </p>
         <p
             class="tlp-text-danger tracker-shortname-input-helper"

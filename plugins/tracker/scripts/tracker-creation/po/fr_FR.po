@@ -18,7 +18,7 @@ msgstr "1"
 msgid "2"
 msgstr "2"
 
-msgid "Avoid spaces and ponctuation"
+msgid "Avoid spaces and punctuation"
 msgstr "Évitez les espaces et la ponctuation"
 
 msgid "Back"
