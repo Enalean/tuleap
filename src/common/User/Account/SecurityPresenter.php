@@ -77,11 +77,6 @@ final class SecurityPresenter
      */
     public $last_login_failure;
     /**
-     * @var int
-     * @psalm-readonly
-     */
-    public $number_of_login_failure;
-    /**
      * @var string
      * @psalm-readonly
      */
@@ -101,8 +96,13 @@ final class SecurityPresenter
         $this->user_can_change_password = $password_pre_update_event->areUsersAllowedToChangePassword();
         $this->passwords_validators = $password_validator_presenter;
         $this->last_successful_login = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user_access['last_auth_success']);
-        $this->last_login_failure    = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user_access['last_auth_failure']);
-        $this->number_of_login_failure = (int) $user_access['nb_auth_failure'];
+        $this->last_login_failure = '-';
+        if ($user_access['last_auth_failure']) {
+            $this->last_login_failure = \DateHelper::formatForLanguage(
+                $user->getLanguage(),
+                (int) $user_access['last_auth_failure']
+            );
+        }
         $this->previous_successful_login = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user_access['prev_auth_success']);
     }
 }

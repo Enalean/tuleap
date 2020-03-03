@@ -2,7 +2,7 @@
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">
-                {{# gettext }}Access{{/ gettext }}
+                {{# gettext }}Access history{{/ gettext }}
             </h1>
         </div>
         <section class="tlp-pane-section">
@@ -11,16 +11,12 @@
                 <p>{{ last_successful_login }}</p>
             </div>
             <div class="tlp-property">
-                <label class="tlp-label">{{# gettext }}Last login failure{{/ gettext }}</label>
-                <p>{{ last_login_failure }}</p>
-            </div>
-            <div class="tlp-property">
-                <label class="tlp-label">{{# gettext }}Number of login failure{{/ gettext }}</label>
-                <p>{{ number_of_login_failure }}</p>
-            </div>
-            <div class="tlp-property">
                 <label class="tlp-label">{{# gettext }}Previous successful login{{/ gettext }}</label>
                 <p>{{ previous_successful_login }}</p>
+            </div>
+            <div class="tlp-property">
+                <label class="tlp-label">{{# gettext }}Last login failure{{/ gettext }}</label>
+                <p>{{ last_login_failure }}</p>
             </div>
         </section>
     </div>
