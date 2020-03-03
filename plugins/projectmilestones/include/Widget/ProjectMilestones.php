@@ -34,6 +34,13 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Widget;
+use Codendi_Request;
+use Tuleap\ProjectMilestones\Milestones\ProjectMilestonesDao;
+use Tuleap\Request\ProjectRetriever;
+use ProjectManager;
+use Tuleap\Request\NotFoundException;
+use Project;
+use CSRFSynchronizerToken;
 
 class ProjectMilestones extends Widget
 {
@@ -51,6 +58,34 @@ class ProjectMilestones extends Widget
      * @var bool
      */
     private $is_ie_11;
+    /**
+     * @var ProjectMilestonesDao
+     */
+    private $project_milestones_dao;
+    /**
+     * @var ProjectRetriever
+     */
+    private $project_retriever;
+    /**
+     * @var int|false
+     */
+    private $project_id;
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var HTTPRequest
+     */
+    private $http;
+    /**
+     * @var bool
+     */
+    private $is_multiple_widgets;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
     public function __construct()
     {
@@ -60,13 +95,15 @@ class ProjectMilestones extends Widget
             new PlanningPermissionsManager()
         );
 
-        $http           = HTTPRequest::instance();
-        $this->is_ie_11 = $http->getBrowser()->isIE11();
-        $project_id     = $http->getProject()->getID();
-
-        $this->root_planning = $planning_factory->getRootPlanning($http->getCurrentUser(), $project_id);
-
-        if (! $this->root_planning) {
+        $this->project_milestones_dao = new ProjectMilestonesDao();
+        $this->project_retriever      = new ProjectRetriever(ProjectManager::instance());
+        $this->is_multiple_widgets    = \ForgeConfig::get('plugin_projectmilestone_multiple');
+        $this->http                   = HTTPRequest::instance();
+        $this->is_ie_11               = $this->http->getBrowser()->isIE11();
+        $this->project_id             = $this->http->getProject()->getID();
+        $this->root_planning          = $planning_factory->getRootPlanning($this->http->getCurrentUser(), $this->project_id);
+        $this->csrf_token             = new CSRFSynchronizerToken('/project/');
+        if (!$this->root_planning) {
             return;
         }
 
@@ -75,12 +112,12 @@ class ProjectMilestones extends Widget
         parent::__construct(self::NAME);
     }
 
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return dgettext('tuleap-projectmilestones', 'Project Milestones');
     }
 
-    public function getDescription() : string
+    public function getDescription(): string
     {
         if ($this->label_tracker_backlog) {
             return sprintf(dgettext('tuleap-projectmilestones', 'A widget for %s monitoring.'), $this->label_tracker_backlog);
@@ -94,7 +131,7 @@ class ProjectMilestones extends Widget
         return "fa-map-signs";
     }
 
-    public function getContent() : string
+    public function getContent(): string
     {
         if ($this->is_ie_11) {
             $message_error = '<p class="tlp-alert-danger">';
@@ -104,7 +141,7 @@ class ProjectMilestones extends Widget
             return $message_error;
         }
 
-        if (! $this->root_planning) {
+        if (!$this->root_planning) {
             $message_error = '<p class="tlp-alert-danger">';
             $message_error .= dgettext('tuleap-projectmilestones', 'No root planning is defined.');
             $message_error .= '</p>';
@@ -114,7 +151,7 @@ class ProjectMilestones extends Widget
 
         $builder = ProjectMilestonesPresenterBuilder::build($this->root_planning);
 
-        $renderer = $this->getRenderer(__DIR__ . '/../../templates');
+        $renderer = $this->getRenderer();
 
         try {
             return $renderer->renderToString(
@@ -130,9 +167,9 @@ class ProjectMilestones extends Widget
         }
     }
 
-    private function getRenderer(string $template_path) : TemplateRenderer
+    private function getRenderer(): TemplateRenderer
     {
-        return TemplateRendererFactory::build()->getRenderer($template_path);
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
     }
 
     public function getJavascriptDependencies()
@@ -159,5 +196,91 @@ class ProjectMilestones extends Widget
     public function getCategory()
     {
         return dgettext('tuleap-projectmilestones', 'Agile dashboard');
+    }
+
+    public function loadContent($id)
+    {
+        $this->project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
+
+        if (!$this->project_id) {
+            return;
+        }
+
+        try {
+            $this->project = $this->project_retriever->getProjectFromId((string) $this->project_id);
+        } catch (NotFoundException $e) {
+            return;
+        }
+    }
+
+    public function isUnique()
+    {
+        return !$this->is_multiple_widgets;
+    }
+
+    public function hasPreferences($widget_id)
+    {
+        return $this->is_multiple_widgets;
+    }
+
+    public function getPreferences($widget_id)
+    {
+        if (!$this->is_multiple_widgets) {
+            return;
+        }
+
+        if (!$this->project) {
+            $this->project = $this->http->getProject();
+        }
+
+        return $this->getRenderer()->renderToString(
+            'projectmilestones-preferences',
+            new ProjectMilestonesPreferencesPresenter((int) $widget_id, $this->project, $this->csrf_token)
+        );
+    }
+
+    public function getInstallPreferences()
+    {
+        if (!$this->is_multiple_widgets) {
+            return;
+        }
+
+        return $this->getRenderer()->renderToString(
+            'projectmilestones-preferences',
+            new ProjectMilestonesPreferencesPresenter(0, $this->http->getProject(), $this->csrf_token)
+        );
+    }
+
+    public function updatePreferences(Codendi_Request $request)
+    {
+        if (!$this->is_multiple_widgets) {
+            return;
+        }
+
+        $widget_id = (int) $request->getValidated('content_id', 'uint', 0);
+
+        $project_id = $request->getValidated("projectmilestones-widget-projectid", 'uint');
+
+        $project = $this->project_retriever->getProjectFromId((string) $project_id);
+
+        $this->project_milestones_dao->updateProjectMilestoneId($widget_id, (int) $project->getID());
+    }
+
+    /**
+     * @return false|int|void|null
+     * @throws NotFoundException
+     */
+    public function create(Codendi_Request $request)
+    {
+        $project_id = $request->getValidated("projectmilestones-widget-projectid", 'uint');
+
+        $project = $this->project_retriever->getProjectFromId((string) $project_id);
+
+        return (int) $this->project_milestones_dao->create((int) $project->getID());
+    }
+
+    public function destroy($widget_id)
+    {
+        $this->project_milestones_dao->delete((int) $widget_id);
     }
 }
