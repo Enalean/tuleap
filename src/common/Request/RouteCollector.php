@@ -117,6 +117,7 @@ use Tuleap\User\Account\DisplayAccountInformationController;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
+use Tuleap\User\Account\UpdateAccountInformationController;
 use Tuleap\User\Account\UpdateAppearancePreferences;
 use Tuleap\User\Account\UpdateEditionController;
 use Tuleap\User\Account\UpdateExperimentalPreferences;
@@ -399,6 +400,11 @@ class RouteCollector
     public static function getAccountPreferences(): DispatchableWithRequest
     {
         return DisplayAccountInformationController::buildSelf();
+    }
+
+    public static function postAccountInformation(): DispatchableWithRequest
+    {
+        return UpdateAccountInformationController::buildSelf();
     }
 
     public static function getAccountNotifications(): DispatchableWithRequest
@@ -689,6 +695,7 @@ class RouteCollector
 
         $r->addGroup('/account', static function (FastRoute\RouteCollector $r) {
             $r->get('/prefs', [self::class, 'getAccountPreferences']);
+            $r->post('/information', [self::class, 'postAccountInformation']);
 
             $r->get('/notifications', [self::class, 'getAccountNotifications']);
             $r->post('/notifications', [self::class, 'postAccountNotifications']);

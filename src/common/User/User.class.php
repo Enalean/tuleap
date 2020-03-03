@@ -116,6 +116,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public const PREFERENCE_EDITION_TEXT = 'text';
     public const PREFERENCE_EDITION_HTML = 'html';
 
+    public const REALNAME_MAX_LENGTH = 32;
 
     /**
      * the id of the user

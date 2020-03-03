@@ -1516,6 +1516,12 @@ msgstr "Nom Complet"
 msgid "Real Name (login)"
 msgstr "Nom Complet (login)"
 
+msgid "Real name"
+msgstr "Nom complet"
+
+msgid "Real name successfully updated"
+msgstr "Le nom complet a été mis à jour avec succès"
+
 msgid "Receive additional community mailing"
 msgstr ""
 "Recevoir du courrier électronique supplémentaire au sujet de la communauté"
@@ -1727,6 +1733,9 @@ msgstr "Le format de date CSV n'est pas valide"
 
 msgid "Submitted CSV separator is not valid"
 msgstr "Le séparateur CSV n'est pas valide"
+
+msgid "Submitted real name is too long, it must be less than 32 characters"
+msgstr "Le nom complet doit contenir au maximum 32 caractères"
 
 msgid "Submitted text format is not valid"
 msgstr "Le formal de texte n'est pas valide"

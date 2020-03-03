@@ -26,7 +26,6 @@ class User_PreferencesPresenter
 {
     /** @var PFUser */
     private $user;
-    public $can_change_real_name;
     private $can_change_email;
 
     private $extra_user_info;
@@ -50,14 +49,12 @@ class User_PreferencesPresenter
 
     public function __construct(
         PFUser $user,
-        $can_change_real_name,
         $can_change_email,
         array $extra_user_info,
         CSRFSynchronizerToken $csrf_token,
         AccountTabPresenterCollection $tabs
     ) {
         $this->user                    = $user;
-        $this->can_change_real_name    = $can_change_real_name;
         $this->can_change_email        = $can_change_email;
         $this->extra_user_info         = $extra_user_info;
         $this->csrf_token              = $csrf_token;
@@ -72,11 +69,6 @@ class User_PreferencesPresenter
     public function avatar()
     {
         return $this->user->fetchHtmlAvatar();
-    }
-
-    public function change_real_name()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'change_real_name');
     }
 
     public function real_name()
