@@ -28,7 +28,7 @@
                                     {{/ has_avatar }}
                                 </div>
                             </div>
-                            <div>
+                            <div class="account-information-fields">
                                 <div class="tlp-property">
                                     <label class="tlp-label">{{# gettext }}Id{{/ gettext }}</label>
                                     <p>{{ user_id }}</p>
@@ -40,7 +40,16 @@
                                 {{# can_change_real_name }}
                                     <div class="tlp-form-element">
                                         <label class="tlp-label" for="username">{{# gettext }}Real name{{/ gettext }} <i class="fa fa-asterisk"></i></label>
-                                        <input type="text" class="tlp-input" id="realname" name="realname" value="{{ real_name }}" placeholder="Fox Mulder"  maxlength="32" required>
+                                        <input type="text"
+                                               class="tlp-input"
+                                               id="realname"
+                                               name="realname"
+                                               value="{{ real_name }}"
+                                               placeholder="Fox Mulder"
+                                               maxlength="32"
+                                               size="32"
+                                               required
+                                        >
                                     </div>
                                 {{/ can_change_real_name }}
                                 {{^ can_change_real_name }}

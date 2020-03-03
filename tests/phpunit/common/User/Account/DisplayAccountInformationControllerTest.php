@@ -118,7 +118,7 @@ final class DisplayAccountInformationControllerTest extends TestCase
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('name="realname" value="Alice FooBar"', $output);
+        $this->assertStringContainsString('value="Alice FooBar"', $output);
     }
 
     public function testItRendersThePageWithRealnameReadOnly(): void
@@ -133,7 +133,7 @@ final class DisplayAccountInformationControllerTest extends TestCase
         );
         $output = ob_get_clean();
         $this->assertStringContainsString('<p>Alice FooBar</p>', $output);
-        $this->assertStringNotContainsString('name="realname" value="Alice FooBar"', $output);
+        $this->assertStringNotContainsString('value="Alice FooBar"', $output);
     }
 
     public function testItRendersThePageWithExtraInfoFromPlugin(): void
