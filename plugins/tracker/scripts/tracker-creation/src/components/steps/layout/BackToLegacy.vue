@@ -21,7 +21,7 @@
 <template>
     <a v-bind:href="url" class="tracker-creation-navigation-back-to-legacy">
         <i class="fa fa-random tracker-footer-external-link-icon"></i>
-        <translate>Back to legacy UI</translate>
+        <translate>Switch to legacy UI</translate>
     </a>
 </template>
 <script lang="ts">
