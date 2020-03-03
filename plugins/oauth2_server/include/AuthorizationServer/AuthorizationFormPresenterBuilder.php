@@ -22,21 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
-use Psr\Http\Message\UriInterface;
-use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\OAuth2Server\App\OAuth2App;
-
 class AuthorizationFormPresenterBuilder
 {
-    public function build(
-        OAuth2App $app,
-        UriInterface $deny_authorization_uri,
-        AuthenticationScope ...$scopes
-    ): AuthorizationFormPresenter {
+    /**
+     * @var RedirectURIBuilder
+     */
+    private $client_uri_redirect_builder;
+
+    public function __construct(RedirectURIBuilder $client_uri_redirect_builder)
+    {
+        $this->client_uri_redirect_builder = $client_uri_redirect_builder;
+    }
+
+    public function build(AuthorizationFormData $form_data): AuthorizationFormPresenter
+    {
         $scope_presenters = [];
-        foreach ($scopes as $scope) {
+        foreach ($form_data->getScopes() as $scope) {
             $scope_presenters[] = new OAuth2ScopeDefinitionPresenter($scope->getDefinition());
         }
-        return new AuthorizationFormPresenter($app, $deny_authorization_uri, ...$scope_presenters);
+        $deny_authorization_uri = $this->client_uri_redirect_builder->buildErrorURI(
+            $form_data->getRedirectUri(),
+            $form_data->getState(),
+            AuthorizationEndpointGetController::ERROR_CODE_ACCESS_DENIED
+        );
+        return new AuthorizationFormPresenter($form_data, $deny_authorization_uri, ...$scope_presenters);
     }
 }

@@ -58,11 +58,8 @@ final class AuthorizationFormRendererTest extends TestCase
 
     public function testRenderForm(): void
     {
-        $project           = new \Project(['group_id' => 101, 'group_name' => 'Test Project']);
-        $app               = new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project);
-        $redirect_uri      = new Uri('https://example.com?error=access_denied');
-        $foobar_scope      = M::mock(AuthenticationScope::class);
-        $foobar_definition = new class implements AuthenticationScopeDefinition {
+        $foobar_scope         = M::mock(AuthenticationScope::class);
+        $foobar_definition    = new class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
                 return 'foo:bar';
@@ -85,24 +82,32 @@ final class AuthorizationFormRendererTest extends TestCase
                 return 'Other test scope';
             }
         };
+        $redirect_uri         = 'https://example.com/redirect';
+        $form_data            = new AuthorizationFormData(
+            new OAuth2App(
+                1,
+                'Jenkins',
+                $redirect_uri,
+                new \Project(['group_id' => 101, 'group_name' => 'Test Project'])
+            ),
+            M::mock(\CSRFSynchronizerToken::class),
+            $redirect_uri,
+            'xyz',
+            $foobar_scope,
+            $typevalue_scope
+        );
         $this->presenter_builder->shouldReceive('build')
             ->once()
             ->andReturn(
                 new AuthorizationFormPresenter(
-                    $app,
-                    $redirect_uri,
+                    $form_data,
+                    new Uri($redirect_uri),
                     new OAuth2ScopeDefinitionPresenter($foobar_definition),
                     new OAuth2ScopeDefinitionPresenter($typevalue_definition)
                 )
             );
 
-        $response             = $this->form_renderer->renderForm(
-            $app,
-            $redirect_uri,
-            LayoutBuilder::build(),
-            $foobar_scope,
-            $typevalue_scope
-        );
+        $response = $this->form_renderer->renderForm($form_data, LayoutBuilder::build());
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('Authorize application', $response->getBody()->getContents());
     }

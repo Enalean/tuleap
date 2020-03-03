@@ -37,12 +37,13 @@ use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
+use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
-use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
+use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
@@ -143,6 +144,10 @@ final class oauth2_serverPlugin extends Plugin
                     $this->getRouteHandler('routeAuthorizationEndpointGet')
                 );
                 $r->post(
+                    '/authorize',
+                    $this->getRouteHandler('routeAuthorizationEndpointPost')
+                );
+                $r->post(
                     '/token',
                     $this->getRouteHandler('routeAccessTokenCreation')
                 );
@@ -167,26 +172,42 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeAuthorizationEndpointGet(): DispatchableWithRequest
     {
-        $response_factory = HTTPFactoryBuilder::responseFactory();
-        $stream_factory   = HTTPFactoryBuilder::streamFactory();
-        return new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController(
+        $response_factory     = HTTPFactoryBuilder::responseFactory();
+        $stream_factory       = HTTPFactoryBuilder::streamFactory();
+        $redirect_uri_builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
+        return new AuthorizationEndpointGetController(
             $response_factory,
             new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormRenderer(
                 $response_factory,
                 $stream_factory,
                 TemplateRendererFactory::build(),
-                new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormPresenterBuilder()
+                new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormPresenterBuilder($redirect_uri_builder)
             ),
             \UserManager::instance(),
             new AppFactory(new AppDao(), \ProjectManager::instance()),
             new \URLRedirect(\EventManager::instance()),
-            new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
+            $redirect_uri_builder,
             new \Tuleap\OAuth2Server\AuthorizationServer\ScopeExtractor(
                 new AuthenticationScopeBuilderFromClassNames(DemoOAuth2Scope::class, OAuth2ProjectReadScope::class)
             ),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
+            new DisableCacheMiddleware()
+        );
+    }
+
+    public function routeAuthorizationEndpointPost(): DispatchableWithRequest
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        return new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointPostController(
+            $response_factory,
+            \UserManager::instance(),
+            new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
+            new \CSRFSynchronizerToken(AuthorizationEndpointGetController::CSRF_TOKEN),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new RejectNonHTTPSRequestMiddleware($response_factory, HTTPFactoryBuilder::streamFactory()),
             new DisableCacheMiddleware()
         );
     }
