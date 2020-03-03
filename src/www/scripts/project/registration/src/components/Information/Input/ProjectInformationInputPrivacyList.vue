@@ -119,6 +119,9 @@ export default class ProjectInformationInputPrivacyList extends Vue {
         };
 
         setTimeout(() => {
+            if (!this.can_user_choose_project_visibility) {
+                return;
+            }
             const select = this.$refs.visibility_selector;
             if (!(select instanceof Element)) {
                 throw new Error(
