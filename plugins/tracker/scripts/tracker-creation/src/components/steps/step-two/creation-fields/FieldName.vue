@@ -40,7 +40,7 @@
             required
         />
         <p class="tlp-text-danger" data-test="name-error" v-if="is_name_already_used">
-            <i class="fa fa-exclamation-circle"></i>
+            <i class="fa fa-fw fa-exclamation-circle"></i>
             <translate>
                 The chosen name already exist in this project, please choose another one.
             </translate>

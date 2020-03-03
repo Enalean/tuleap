@@ -18,19 +18,19 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-on:click="toggleManualMode()">
-        <label
-            class="tlp-label"
+    <div class="tlp-form-element" v-if="!isTrackerNameEmpty()" v-on:click="toggleManualMode()">
+        <div
             data-test="tracker-shortname-slugified-mode"
             id="tracker-shortname-slugified-mode-label"
             for="tracker-shortname-slugified"
         >
+            ↳&nbsp;
             <translate>Tracker shortname:</translate>
             <span data-test="tracker-shortname-slugified" class="tracker-shortname-slugified">
                 {{ tracker_to_be_created.shortname }}
             </span>
             <i class="fa fa-pencil"></i>
-        </label>
+        </div>
         <input
             type="hidden"
             id="tracker-shortname-slugified"
@@ -59,6 +59,10 @@ export default class FieldShortnameSlugified extends Vue {
 
     toggleManualMode(): void {
         this.setSlugifyShortnameMode(false);
+    }
+
+    isTrackerNameEmpty(): boolean {
+        return this.tracker_to_be_created.name.length === 0;
     }
 }
 </script>

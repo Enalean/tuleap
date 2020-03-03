@@ -24,9 +24,6 @@ msgstr "Évitez les espaces et la ponctuation"
 msgid "Back"
 msgstr "Retour"
 
-msgid "Back to legacy UI"
-msgstr "Basculer sur l'ancienne interface utilisateur"
-
 msgid "Choose a starting point"
 msgstr "Choisissez un point de départ"
 
@@ -77,6 +74,9 @@ msgstr "Suivant"
 
 msgid "Shortname"
 msgstr "Nom court"
+
+msgid "Switch to legacy UI"
+msgstr "Basculer sur l'ancienne interface utilisateur"
 
 msgid "Template"
 msgstr "Modèle"

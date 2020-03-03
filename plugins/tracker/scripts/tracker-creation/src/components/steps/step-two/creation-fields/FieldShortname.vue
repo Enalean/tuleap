@@ -43,7 +43,7 @@
             required
         />
         <p class="tlp-text-info tracker-shortname-input-helper">
-            <i class="fa fa-life-saver"></i>
+            <i class="fa fa-fw fa-life-saver"></i>
             <translate>Avoid spaces and punctuation</translate>
         </p>
         <p
@@ -51,7 +51,7 @@
             data-test="shortname-error"
             v-if="!is_shortname_valid"
         >
-            <i class="fa fa-exclamation-circle"></i>
+            <i class="fa fa-fw fa-exclamation-circle"></i>
             <translate>
                 The tracker shortname must have a length between 1 and 25 characters. It can only
                 contain alphanumerical characters and underscores.
@@ -62,7 +62,7 @@
             data-test="shortname-taken-error"
             v-if="is_shortname_already_used"
         >
-            <i class="fa fa-exclamation-circle"></i>
+            <i class="fa fa-fw fa-exclamation-circle"></i>
             <translate>
                 The chosen shortname already exist in this project, please choose another one.
             </translate>

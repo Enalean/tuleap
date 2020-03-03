@@ -113,25 +113,28 @@
     width: 350px;
 }
 
-.tracker-name-above-slugified-shortname {
-    margin: 0 0 8px;
-}
-
 #tracker-shortname-slugified-mode-label {
-    margin: 0 0 $tlp-spacing 0;
+    display: flex;
+    margin: -$tlp-half-spacing 0 $tlp-half-spacing;
+    padding-left: 4px;
+    color: $tlp-ui-dimmed;
+    font-size: 13px;
+    white-space: nowrap;
+    cursor: pointer;
 
     > .tracker-shortname-slugified {
+        margin: 0 0 0 5px;
         font-weight: bold;
     }
 
-    > .fa.fa-pencil {
-        margin: 0 0 0 4px;
-        cursor: pointer;
+    > .fa-pencil {
+        margin: 0 0 0 5px;
     }
 }
 
 .tracker-creation-navigation {
     display: flex;
+    align-items: center;
     justify-content: space-between;
 }
 
