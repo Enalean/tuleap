@@ -26,6 +26,7 @@ namespace Tuleap\HudsonGit\Job;
 
 use GitRepository;
 use GitRepositoryFactory;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 
 class JobManager
@@ -45,11 +46,21 @@ class JobManager
      */
     private $git_repository_factory;
 
-    public function __construct(JobDao $job_dao, ProjectJobDao $project_job_dao, GitRepositoryFactory $git_repository_factory)
-    {
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
+
+    public function __construct(
+        JobDao $job_dao,
+        ProjectJobDao $project_job_dao,
+        GitRepositoryFactory $git_repository_factory,
+        DBTransactionExecutor $transaction_executor
+    ) {
         $this->job_dao                = $job_dao;
         $this->project_job_dao        = $project_job_dao;
         $this->git_repository_factory = $git_repository_factory;
+        $this->transaction_executor   = $transaction_executor;
     }
 
     /**
@@ -57,10 +68,17 @@ class JobManager
      */
     public function create(Job $job)
     {
-        $id = $this->job_dao->create($job);
-        if (! $id) {
-            throw new CannotCreateJobException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
-        }
+        $this->transaction_executor->execute(function () use ($job) {
+            $id = $this->job_dao->create($job);
+            if (! $id) {
+                throw new CannotCreateJobException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
+            }
+
+            $this->job_dao->logTriggeredJobs(
+                $id,
+                $job->getJobUrl()
+            );
+        });
     }
 
     /**
@@ -74,12 +92,18 @@ class JobManager
             );
         }
 
-        $this->project_job_dao->create(
-            $jenkins_server->getId(),
-            $job->getRepository()->getId(),
-            $job->getPushDate(),
-            $job->getJobUrl()
-        );
+        $this->transaction_executor->execute(function () use ($jenkins_server, $job) {
+            $job_id = $this->project_job_dao->create(
+                $jenkins_server->getId(),
+                $job->getRepository()->getId(),
+                $job->getPushDate()
+            );
+
+            $this->project_job_dao->logTriggeredJobs(
+                $job_id,
+                $job->getJobUrl()
+            );
+        });
     }
 
     public function getJobByRepository(GitRepository $repository)
