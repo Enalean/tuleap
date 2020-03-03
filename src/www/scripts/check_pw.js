@@ -40,16 +40,26 @@
     function toggleErrorMessages(data) {
         var has_errors = false;
         window.password_validators.forEach(function(key) {
-            $(".password_validator_msg_" + key + " > i").each(function() {
+            $(".password_validator_msg_" + key).each(function() {
                 if (data.indexOf(key) >= 0) {
                     has_errors = true;
                     $(this)
+                        .addClass("tlp-text-danger")
+                        .removeClass("tlp-text-success");
+
+                    $(this)
+                        .find("> i")
                         .addClass("fa-times")
                         .addClass("password-strategy-bad")
                         .removeClass("fa-check")
                         .removeClass("password-strategy-good");
                 } else {
                     $(this)
+                        .addClass("tlp-text-success")
+                        .removeClass("tlp-text-danger");
+
+                    $(this)
+                        .find("> i")
                         .addClass("fa-check")
                         .addClass("password-strategy-good")
                         .removeClass("fa-times")
@@ -62,15 +72,21 @@
     }
 
     function setRobustnessToGood() {
-        $(".robustness .password-strategy-bad").hide();
-        $(".robustness .password-strategy-good").show();
-        $(".robustness .password_validators_loading").hide();
+        $(".robustness").removeClass("bad");
+        $(".robustness").addClass("good");
+
+        $(".robustness > .password-strategy-bad").hide();
+        $(".robustness > .password-strategy-good").show();
+        $(".robustness .fa-circle-o-notch").removeClass("fa-circle-o-notch fa-spin");
     }
 
     function setRobustnessToBad() {
-        $(".robustness .password-strategy-bad").show();
-        $(".robustness .password-strategy-good").hide();
-        $(".robustness .password_validators_loading").hide();
+        $(".robustness").removeClass("good");
+        $(".robustness").addClass("bad");
+
+        $(".robustness > .password-strategy-bad").show();
+        $(".robustness > .password-strategy-good").hide();
+        $(".robustness .fa-circle-o-notch").removeClass("fa-circle-o-notch fa-spin");
     }
 
     /**
@@ -98,7 +114,9 @@
 
         $("#form_pw").on("paste keyup", debouncedCheckPassword);
         $("#form_pw").on("paste keyup", function() {
-            $(".robustness .password_validators_loading").show();
+            $(".robustness .fa-times, .robustness .fa-check")
+                .removeClass("fa-times fa-check")
+                .addClass("fa-circle-o-notch fa-spin");
         });
     });
 })(jQuery);
