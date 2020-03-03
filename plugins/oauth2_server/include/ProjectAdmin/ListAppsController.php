@@ -28,6 +28,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
+use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -79,6 +80,7 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('project-administration.js'));
         $callback = function (\Project $project, \PFUser $user) {
             $this->renderer->renderToPage(

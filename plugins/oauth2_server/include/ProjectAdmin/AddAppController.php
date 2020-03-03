@@ -33,6 +33,7 @@ use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ProjectRetriever;
 
@@ -95,6 +96,7 @@ final class AddAppController implements DispatchableWithRequest
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
 
