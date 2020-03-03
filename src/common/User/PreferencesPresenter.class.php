@@ -26,7 +26,6 @@ class User_PreferencesPresenter
 {
     /** @var PFUser */
     private $user;
-    private $can_change_email;
 
     /**
      * @var CSRFSynchronizerToken
@@ -44,12 +43,10 @@ class User_PreferencesPresenter
 
     public function __construct(
         PFUser $user,
-        $can_change_email,
         CSRFSynchronizerToken $csrf_token,
         AccountTabPresenterCollection $tabs
     ) {
         $this->user                    = $user;
-        $this->can_change_email        = $can_change_email;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
 
@@ -62,26 +59,6 @@ class User_PreferencesPresenter
     public function real_name()
     {
         return $this->user->getRealName();
-    }
-
-    public function user_email_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'email_address');
-    }
-
-    public function user_email_value()
-    {
-        return $this->user->getEmail();
-    }
-
-    public function can_change_email()
-    {
-        return $this->can_change_email;
-    }
-
-    public function change_email()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'change_email_address');
     }
 
     public function timezone_label()

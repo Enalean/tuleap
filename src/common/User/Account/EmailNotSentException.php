@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All rights reserved
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,14 +11,22 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once __DIR__ . '/../include/pre.php';
+declare(strict_types=1);
 
-$controller = new \Tuleap\User\Account\ChangeEmailController(UserManager::instance(), EventManager::instance());
-$controller->change(HTTPRequest::instance(), $GLOBALS['Response']);
+namespace Tuleap\User\Account;
+
+final class EmailNotSentException extends \Exception
+{
+    public function __construct()
+    {
+        parent::__construct(sprintf(_('The mail was not accepted for the delivery. Please contact the administrator at %s.'), \ForgeConfig::get('sys_email_admin')));
+    }
+}

@@ -34,6 +34,8 @@ use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\AccountInformationCollection;
 use Tuleap\User\Account\DisplayAccountInformationController;
+use Tuleap\User\Account\EmailNotSentException;
+use Tuleap\User\Account\EmailUpdater;
 use Tuleap\User\Account\UpdateAccountInformationController;
 use PHPUnit\Framework\TestCase;
 use UserManager;
@@ -70,17 +72,25 @@ final class UpdateAccountInformationControllerTest extends TestCase
      * @var Layout\BaseLayout
      */
     private $layout;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|EmailUpdater
+     */
+    private $email_updater;
 
     protected function setUp(): void
     {
         $this->event_manager = new class implements EventDispatcherInterface {
             public $disable_real_name_change = false;
+            public $disable_email_change = false;
 
             public function dispatch(object $event)
             {
                 if ($event instanceof AccountInformationCollection) {
                     if ($this->disable_real_name_change) {
                         $event->disableChangeRealName();
+                    }
+                    if ($this->disable_email_change) {
+                        $event->disableChangeEmail();
                     }
                 }
                 return $event;
@@ -91,10 +101,12 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->csrf_token->shouldReceive('check')->byDefault();
 
         $this->user_manager = M::mock(UserManager::class);
+        $this->email_updater = M::mock(EmailUpdater::class);
         $this->controller = new UpdateAccountInformationController(
             $this->event_manager,
             $this->csrf_token,
             $this->user_manager,
+            $this->email_updater,
         );
 
         $this->layout_inspector = new LayoutInspector();
@@ -104,6 +116,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->user = UserTestBuilder::aUser()
             ->withId(110)
             ->withRealName('Alice FooBar')
+            ->withEmail('alice@example.com')
             ->withLanguage(M::spy(\BaseLanguage::class))
             ->withAddDate(940000000)
             ->build();
@@ -189,8 +202,109 @@ final class UpdateAccountInformationControllerTest extends TestCase
         );
 
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
+        $this->assertCount(2, $feedback);
         $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
         $this->assertStringContainsStringIgnoringCase('too long', $feedback[0]['message']);
+    }
+
+    public function testItCannotUpdateEmailWhenEventSaySo(): void
+    {
+        $this->event_manager->disable_email_change = true;
+
+        $this->email_updater->shouldNotReceive('setEmailChangeConfirm');
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
+            LayoutBuilder::build(),
+            []
+        );
+    }
+
+    public function testItUpdatesEmail(): void
+    {
+        $this->email_updater->shouldReceive('setEmailChangeConfirm')->with(M::any(), $this->user, 'bob@example.com')->once();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(1, $feedback);
+        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[0]['message']);
+    }
+
+    public function testItUpdatesEmailWithoutUpdatingRealname(): void
+    {
+        $this->email_updater->shouldReceive('setEmailChangeConfirm')->with(M::any(), $this->user, 'bob@example.com')->once();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->withParam('realname', 'Alice FooBar')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(1, $feedback);
+        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[0]['message']);
+        $this->assertStringNotContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
+    }
+
+    public function testItUpdatesEmailAndRealname(): void
+    {
+        $this->email_updater->shouldReceive('setEmailChangeConfirm')->with(M::any(), $this->user, 'bob@example.com')->once();
+
+        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+            return $user->getRealName() === 'Franck Zappa';
+        })->once();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->withParam('realname', 'Franck Zappa')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(2, $feedback);
+        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
+        $this->assertEquals(\Feedback::INFO, $feedback[1]['level']);
+        $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[1]['message']);
+        $this->assertStringNotContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
+    }
+
+    public function testItDoesntUpdatesEmailWhenNoChanges(): void
+    {
+        $this->email_updater->shouldNotReceive('setEmailChangeConfirm');
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'alice@example.com')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(1, $feedback);
+        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
+    }
+
+    public function testItReportsAnErrorWhenMailCannotBeSent(): void
+    {
+        $this->email_updater->shouldReceive('setEmailChangeConfirm')->andThrow(new EmailNotSentException());
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(1, $feedback);
+        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('mail was not accepted for the delivery', $feedback[0]['message']);
     }
 }

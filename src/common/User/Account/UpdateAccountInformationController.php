@@ -48,12 +48,17 @@ final class UpdateAccountInformationController implements DispatchableWithReques
      * @var EventDispatcherInterface
      */
     private $event_dispatcher;
+    /**
+     * @var EmailUpdater
+     */
+    private $email_updater;
 
-    public function __construct(EventDispatcherInterface $event_dispatcher, CSRFSynchronizerToken $csrf_token, UserManager $user_manager)
+    public function __construct(EventDispatcherInterface $event_dispatcher, CSRFSynchronizerToken $csrf_token, UserManager $user_manager, EmailUpdater $email_updater)
     {
         $this->event_dispatcher = $event_dispatcher;
         $this->csrf_token = $csrf_token;
         $this->user_manager = $user_manager;
+        $this->email_updater = $email_updater;
     }
 
     public static function buildSelf(): self
@@ -62,6 +67,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
             EventManager::instance(),
             DisplayAccountInformationController::getCSRFToken(),
             UserManager::instance(),
+            new EmailUpdater(UserManager::instance()),
         );
     }
 
@@ -77,28 +83,55 @@ final class UpdateAccountInformationController implements DispatchableWithReques
         $account_information_collection = $this->event_dispatcher->dispatch(new AccountInformationCollection($user));
         assert($account_information_collection instanceof AccountInformationCollection);
 
+        $something_changed = false;
+
         $wanted_realname = $request->get('realname');
         if ($wanted_realname && $account_information_collection->isUserAllowedToCanChangeRealName()) {
-            $this->updateRealName($layout, $user, (string) $wanted_realname);
+            $something_changed = $this->updateRealName($layout, $user, (string) $wanted_realname) || $something_changed;
+        }
+
+        $wanted_email = $request->getValidated('email', new \Valid_Email(), false);
+        if ($wanted_email && $account_information_collection->isUserAllowedToChangeEmail()) {
+            $something_changed = $this->updateEmail($request, $layout, $user, (string) $wanted_email) || $something_changed;
+        }
+
+        if (! $something_changed) {
+            $layout->addFeedback(\Feedback::INFO, _('Nothing changed'));
         }
 
         $layout->redirect(DisplayAccountInformationController::URL);
     }
 
-    private function updateRealName(BaseLayout $layout, \PFUser $user, string $wanted_realname): void
+    private function updateRealName(BaseLayout $layout, \PFUser $user, string $wanted_realname): bool
     {
         if (strlen($wanted_realname) > \PFUser::REALNAME_MAX_LENGTH) {
             $layout->addFeedback(\Feedback::ERROR, _('Submitted real name is too long, it must be less than 32 characters'));
-            return;
+            return false;
         }
         if ($wanted_realname === $user->getRealName()) {
-            $layout->addFeedback(\Feedback::INFO, _('Nothing changed'));
-            return;
+            return false;
         }
 
         $user->setRealName($wanted_realname);
         $this->user_manager->updateDb($user);
 
         $layout->addFeedback(\Feedback::INFO, _('Real name successfully updated'));
+        return true;
+    }
+
+    private function updateEmail(HTTPRequest $request, BaseLayout $layout, \PFUser $user, string $wanted_email): bool
+    {
+        try {
+            if ($user->getEmail() === $wanted_email) {
+                return false;
+            }
+
+            $this->email_updater->setEmailChangeConfirm($request->getServerUrl(), $user, $wanted_email);
+
+            $layout->addFeedback(\Feedback::INFO, _('Email successfully updated'));
+        } catch (EmailNotSentException $exception) {
+            $layout->addFeedback(\Feedback::ERROR, $exception->getMessage());
+        }
+        return true;
     }
 }
