@@ -38,11 +38,11 @@ use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
-use Tuleap\OAuth2Server\Grant\AuthCodeGrantController;
-use Tuleap\OAuth2Server\Grant\AuthorizationCodeGrantResponseBuilder;
-use Tuleap\OAuth2Server\Grant\OAuth2AuthorizationCodeVerifier;
+use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
-use Tuleap\OAuth2Server\Grant\PrefixOAuth2AuthCode;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
@@ -230,12 +230,12 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
-    public function routeAccessTokenCreation(): AuthCodeGrantController
+    public function routeAccessTokenCreation(): AccessTokenGrantController
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
         $app_dao          = new AppDao();
-        return new AuthCodeGrantController(
+        return new AccessTokenGrantController(
             $response_factory,
             $stream_factory,
             new AuthorizationCodeGrantResponseBuilder(

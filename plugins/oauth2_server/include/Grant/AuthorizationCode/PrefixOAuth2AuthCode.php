@@ -20,14 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant;
+namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\Authentication\SplitToken\PrefixSplitTokenForSerialization;
 
-final class OAuth2AuthCodeNotFoundException extends \RuntimeException implements OAuth2ServerException
+final class PrefixOAuth2AuthCode implements PrefixSplitTokenForSerialization
 {
-    public function __construct(int $auth_code_id)
+    /**
+     * @psalm-pure
+     */
+    public function getString() : string
     {
-        parent::__construct("OAuth2 auth code #$auth_code_id does not exist");
+        return 'tlp-oauth2-ac1-';
     }
 }

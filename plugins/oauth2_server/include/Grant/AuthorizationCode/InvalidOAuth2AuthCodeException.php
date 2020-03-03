@@ -20,21 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant;
+namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
-use PHPUnit\Framework\TestCase;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
+use Tuleap\OAuth2Server\OAuth2ServerException;
 
-final class OAuth2AuthorizationCodeTest extends TestCase
+final class InvalidOAuth2AuthCodeException extends \RuntimeException implements OAuth2ServerException
 {
-    public function testBuildValidAuthorizationCodeWithDemoScope(): void
+    public function __construct()
     {
-        $user      = new \PFUser(['language_id' => 'en']);
-        $auth_code = OAuth2AuthorizationCode::approveForDemoScope($user);
-
-        $this->assertSame($user, $auth_code->getUser());
-        $scopes = $auth_code->getScopes();
-        $this->assertCount(1, $scopes);
-        $this->assertEquals(DemoOAuth2Scope::fromItself(), $scopes[0]);
+        parent::__construct('The OAuth2 auth code is not valid');
     }
 }
