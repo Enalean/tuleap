@@ -20,16 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant;
+namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
-final class PrefixOAuth2AuthCodeTest extends TestCase
+final class OAuth2AuthorizationCodeTest extends TestCase
 {
-    public function testHasSpecificPrefix(): void
+    public function testBuildValidAuthorizationCodeWithDemoScope(): void
     {
-        $prefix = new PrefixOAuth2AuthCode();
-        $this->assertStringContainsString('oauth2', $prefix->getString());
-        $this->assertStringContainsString('ac1', $prefix->getString());
+        $user      = new \PFUser(['language_id' => 'en']);
+        $auth_code = OAuth2AuthorizationCode::approveForDemoScope($user);
+
+        $this->assertSame($user, $auth_code->getUser());
+        $scopes = $auth_code->getScopes();
+        $this->assertCount(1, $scopes);
+        $this->assertEquals(DemoOAuth2Scope::fromItself(), $scopes[0]);
     }
 }

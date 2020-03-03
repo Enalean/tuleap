@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant;
+namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;

@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant;
+namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use Tuleap\OAuth2Server\OAuth2ServerException;
 
-final class InvalidOAuth2AuthCodeException extends \RuntimeException implements OAuth2ServerException
+final class OAuth2AuthCodeNotFoundException extends \RuntimeException implements OAuth2ServerException
 {
-    public function __construct()
+    public function __construct(int $auth_code_id)
     {
-        parent::__construct('The OAuth2 auth code is not valid');
+        parent::__construct("OAuth2 auth code #$auth_code_id does not exist");
     }
 }

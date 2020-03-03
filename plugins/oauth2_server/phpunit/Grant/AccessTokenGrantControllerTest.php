@@ -32,9 +32,13 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
 use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AccessTokenSuccessfulRequestRepresentation;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 
-final class AuthCodeGrantControllerTest extends TestCase
+final class AccessTokenGrantControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -51,7 +55,7 @@ final class AuthCodeGrantControllerTest extends TestCase
      */
     private $auth_code_verifier;
     /**
-     * @var AuthCodeGrantController
+     * @var AccessTokenGrantController
      */
     private $controller;
 
@@ -61,7 +65,7 @@ final class AuthCodeGrantControllerTest extends TestCase
         $this->auth_code_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
         $this->auth_code_verifier     = \Mockery::mock(OAuth2AuthorizationCodeVerifier::class);
 
-        $this->controller = new AuthCodeGrantController(
+        $this->controller = new AccessTokenGrantController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             $this->response_builder,

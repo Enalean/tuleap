@@ -32,11 +32,13 @@ use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
-final class AuthCodeGrantController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
+final class AccessTokenGrantController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
     private const CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
 
