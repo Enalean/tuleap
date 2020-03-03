@@ -48,6 +48,10 @@
 
 .user-preferences-section-submit {
     justify-content: flex-start;
+
+    > .tlp-button-primary {
+        margin: 0;
+    }
 }
 
 @media screen and (max-width: (1000px + $tlp-double-spacing)) {
