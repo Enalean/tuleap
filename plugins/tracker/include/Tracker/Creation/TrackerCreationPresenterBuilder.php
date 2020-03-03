@@ -69,7 +69,7 @@ class TrackerCreationPresenterBuilder
         return new TrackerCreationPresenter($project_templates, $existing_trackers, $current_project, $csrf);
     }
 
-    public function getExistingTrackersNamesAndShortnamesInProject(Project $project): array
+    private function getExistingTrackersNamesAndShortnamesInProject(Project $project): array
     {
         $trackers = $this->tracker_dao->searchByGroupId($project->getID());
         $existing_trackers = [
@@ -82,8 +82,8 @@ class TrackerCreationPresenterBuilder
         }
 
         foreach ($trackers as $tracker) {
-            $existing_trackers['names'][] = $tracker['name'];
-            $existing_trackers['shortnames'][] = $tracker['item_name'];
+            $existing_trackers['names'][] = strtolower($tracker['name']);
+            $existing_trackers['shortnames'][] = strtolower($tracker['item_name']);
         }
 
         return $existing_trackers;
