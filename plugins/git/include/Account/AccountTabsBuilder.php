@@ -42,21 +42,19 @@ final class AccountTabsBuilder
 
     public function addTabs(AccountTabPresenterCollection $collection): void
     {
-        if ($this->noServerForUser($collection->getUser()) && $this->noRemoteAvailable()) {
-            return;
+        if ($this->hasRemoteAvailable() || $this->hasServerForUser($collection->getUser())) {
+            $collection->add(
+                new AccountTabPresenter(dgettext('tuleap-git', 'Gerrit'), AccountGerritController::URL, 'fa-snowflake-o', $collection->getCurrentHref())
+            );
         }
-
-        $collection->add(
-            new AccountTabPresenter(dgettext('tuleap-git', 'Gerrit'), AccountGerritController::URL, 'fa-snowflake-o', $collection->getCurrentHref())
-        );
     }
 
-    private function noServerForUser(PFUser $user): bool
+    private function hasServerForUser(PFUser $user): bool
     {
-        return count($this->gerrit_server_factory->getRemoteServersForUser($user)) === 0;
+        return count($this->gerrit_server_factory->getRemoteServersForUser($user)) > 0;
     }
 
-    private function noRemoteAvailable(): bool
+    private function hasRemoteAvailable(): bool
     {
         return $this->gerrit_server_factory->hasRemotesSetUp();
     }

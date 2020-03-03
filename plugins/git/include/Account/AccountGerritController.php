@@ -68,7 +68,7 @@ final class AccountGerritController implements DispatchableWithRequest, Dispatch
             throw new ForbiddenException();
         }
 
-        if (count($this->gerrit_server_factory->getRemoteServersForUser($user)) === 0) {
+        if (! $this->gerrit_server_factory->hasRemotesSetUp() && count($this->gerrit_server_factory->getRemoteServersForUser($user)) === 0) {
             throw new ForbiddenException();
         }
 
