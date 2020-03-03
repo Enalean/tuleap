@@ -31,6 +31,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookResponse;
 use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\HudsonGit\PollingResponse;
 
@@ -119,9 +120,15 @@ class HookTriggerControllerTest extends TestCase
             'https://example.com/jenkins/job01'
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
-
         $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once();
+
+        $hook_response = new JenkinsTuleapPluginHookResponse(
+            200,
+            ''
+        );
+        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
+
+
         $this->job_manager->shouldReceive('create')->once();
         $this->job_manager->shouldReceive('createJobLogForProject')->never();
 
@@ -161,7 +168,11 @@ class HookTriggerControllerTest extends TestCase
             ->with(Mockery::any(), "example.com/repo01", Mockery::any())
             ->andReturn($polling_response);
 
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once();
+        $hook_response = new JenkinsTuleapPluginHookResponse(
+            200,
+            ''
+        );
+        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
 
         $this->job_manager->shouldReceive('create')->times(1);
         $this->job_manager->shouldReceive('createJobLogForProject')->never();
@@ -194,9 +205,14 @@ class HookTriggerControllerTest extends TestCase
             'https://example.com/jenkins/job01'
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
-
         $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once();
+
+        $hook_response = new JenkinsTuleapPluginHookResponse(
+            200,
+            ''
+        );
+        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
+
         $this->job_manager->shouldReceive('create')->never();
         $this->job_manager->shouldReceive('createJobLogForProject')->once();
 
@@ -237,7 +253,11 @@ class HookTriggerControllerTest extends TestCase
             ->with(Mockery::any(), "example.com/repo01", Mockery::any())
             ->andReturn($polling_response);
 
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once();
+        $hook_response = new JenkinsTuleapPluginHookResponse(
+            200,
+            ''
+        );
+        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
 
         $this->job_manager->shouldReceive('create')->never();
         $this->job_manager->shouldReceive('createJobLogForProject')->times(1);

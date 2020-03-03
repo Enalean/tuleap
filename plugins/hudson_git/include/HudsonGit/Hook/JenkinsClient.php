@@ -28,6 +28,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookResponse;
 use Tuleap\HudsonGit\PollingResponse;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
@@ -104,7 +105,7 @@ class JenkinsClient
     /**
      * @throws UnableToLaunchBuildException
      */
-    public function pushJenkinsTuleapPluginNotification(string $jenkins_server_url): void
+    public function pushJenkinsTuleapPluginNotification(string $jenkins_server_url): JenkinsTuleapPluginHookResponse
     {
         $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($jenkins_server_url);
 
@@ -123,7 +124,13 @@ class JenkinsClient
                 json_encode($this->jenkins_tuleap_plugin_payload->getPayload())
             )
         );
-        $this->sendRequestToJenkinsServer($request, $jenkins_tuleap_plugin_hook, self::TULEAP_HOOK_TYPE);
+
+        $response = $this->sendRequestToJenkinsServer($request, $jenkins_tuleap_plugin_hook, self::TULEAP_HOOK_TYPE);
+
+        return new JenkinsTuleapPluginHookResponse(
+            $response->getStatusCode(),
+            $response->getBody()->getContents()
+        );
     }
 
     private function addCrumbHeader(RequestInterface $request, string $csrf_crumb_header): RequestInterface

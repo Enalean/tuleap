@@ -67,6 +67,9 @@ msgstr "Pas encore d'historique"
 msgid "No triggered jobs"
 msgstr "Aucun job déclenché"
 
+msgid "Nothing has been triggered for this push."
+msgstr "Rien n'a été déclenché pour ce push."
+
 msgid "Provided job does not belong to the Jenkins server's project."
 msgstr "Le job et le serveur Jenkins ne sont pas dans le même projet."
 

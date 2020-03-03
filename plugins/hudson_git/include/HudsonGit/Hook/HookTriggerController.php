@@ -98,23 +98,27 @@ class HookTriggerController
                 }
             }
 
-            $this->addHudsonGitJob(
-                $repository,
-                implode(',', $polling_urls),
-                $date_job
-            );
-
+            $status_code = null;
             try {
-                $this->jenkins_client->pushJenkinsTuleapPluginNotification($row['jenkins_server_url']);
+                $response = $this->jenkins_client->pushJenkinsTuleapPluginNotification($row['jenkins_server_url']);
+                $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
+                $status_code = $response->getStatusCode();
             } catch (UnableToLaunchBuildException $exception) {
                 $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
             }
+
+            $this->addHudsonGitJob(
+                $repository,
+                implode(',', $polling_urls),
+                $status_code,
+                $date_job
+            );
         }
     }
 
-    private function addHudsonGitJob(GitRepository $repository, $job_name, $date_job)
+    private function addHudsonGitJob(GitRepository $repository, string $job_name, ?int $status_code, int $date_job): void
     {
-        $job = new Job($repository, $date_job, $job_name);
+        $job = new Job($repository, $date_job, $job_name, $status_code);
         try {
             $this->job_manager->create($job);
         } catch (CannotCreateJobException $exception) {
@@ -144,28 +148,33 @@ class HookTriggerController
                 }
             }
 
+            $status_code = null;
+            try {
+                $response = $this->jenkins_client->pushJenkinsTuleapPluginNotification($jenkins_server->getServerURL());
+                $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
+                $status_code = $response->getStatusCode();
+            } catch (UnableToLaunchBuildException $exception) {
+                $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
+            }
+
             $this->addProjectJenkinsJobLog(
                 $jenkins_server,
                 $repository,
                 implode(',', $polling_urls),
+                $status_code,
                 $date_job
             );
-
-            try {
-                $this->jenkins_client->pushJenkinsTuleapPluginNotification($jenkins_server->getServerURL());
-            } catch (UnableToLaunchBuildException $exception) {
-                $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
-            }
         }
     }
 
     private function addProjectJenkinsJobLog(
         JenkinsServer $jenkins_server,
         GitRepository $repository,
-        $job_name,
+        string $job_name,
+        ?int $status_code,
         $date_job
     ): void {
-        $job = new Job($repository, $date_job, $job_name);
+        $job = new Job($repository, $date_job, $job_name, $status_code);
         try {
             $this->job_manager->createJobLogForProject($jenkins_server, $job);
         } catch (CannotCreateJobException $exception) {
