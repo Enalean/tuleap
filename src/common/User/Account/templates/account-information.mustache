@@ -12,38 +12,57 @@
                         <h1 class="tlp-pane-title">{{# gettext }}Account information{{/ gettext }}</h1>
                     </div>
                     <section class="tlp-pane-section">
-                        <div class="tlp-property">
-                            <label class="tlp-label">{{# gettext }}Id{{/ gettext }}</label>
-                            <p>{{ user_id }}</p>
+                        <div class="account-information-container">
+                            <div class="account-information-avatar">
+                                <div class="tlp-avatar-jumbo">
+                                    <button type="button"
+                                            class="tlp-button-secondary tlp-button-mini account-information-avatar-button"
+                                            title="{{# gettext }}Change avatar{{/ gettext }}"
+                                            id="account-information-avatar-button"
+                                            data-target-modal-id="account-information-avatar-modal"
+                                    >
+                                        <i class="tlp-button-icon fa fa-fw fa-pencil account-information-avatar-button-icon"></i>
+                                    </button>
+                                    {{# has_avatar }}
+                                        <img src="{{ avatar_url }}" alt="{{# gettext }}Your avatar{{/ gettext }}">
+                                    {{/ has_avatar }}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="tlp-property">
+                                    <label class="tlp-label">{{# gettext }}Id{{/ gettext }}</label>
+                                    <p>{{ user_id }}</p>
+                                </div>
+                                <div class="tlp-property">
+                                    <label class="tlp-label">{{# gettext }}User name{{/ gettext }}</label>
+                                    <p>@{{ user_name }}</p>
+                                </div>
+                                {{# can_change_real_name }}
+                                    <div class="tlp-form-element">
+                                        <label class="tlp-label" for="username">{{# gettext }}Real name{{/ gettext }} <i class="fa fa-asterisk"></i></label>
+                                        <input type="text" class="tlp-input" id="realname" name="realname" value="{{ real_name }}" placeholder="Fox Mulder"  maxlength="32" required>
+                                    </div>
+                                {{/ can_change_real_name }}
+                                {{^ can_change_real_name }}
+                                    <div class="tlp-property">
+                                        <label class="tlp-label">{{# gettext }}Real name{{/ gettext }}</label>
+                                        <p>{{ real_name }}</p>
+                                    </div>
+                                {{/ can_change_real_name }}
+                                {{# extra_information }}
+                                    <div class="tlp-property">
+                                        <label class="tlp-label">{{ label }}</label>
+                                        <p>{{ value }}</p>
+                                    </div>
+                                {{/ extra_information }}
+                            </div>
                         </div>
-                        <div class="tlp-property">
-                            <label class="tlp-label">{{# gettext }}User name{{/ gettext }}</label>
-                            <p>@{{ user_name }}</p>
-                        </div>
-                        {{# can_change_real_name }}
-                            <div class="tlp-form-element">
-                                <label class="tlp-label" for="username">{{# gettext }}Real name{{/ gettext }} <i class="fa fa-asterisk"></i></label>
-                                <input type="text" class="tlp-input" id="realname" name="realname" value="{{ real_name }}" placeholder="Fox Mulder"  maxlength="32" required>
-                            </div>
-                        {{/ can_change_real_name }}
-                        {{^ can_change_real_name }}
-                            <div class="tlp-property">
-                                <label class="tlp-label">{{# gettext }}Real name{{/ gettext }}</label>
-                                <p>{{ real_name }}</p>
-                            </div>
-                        {{/ can_change_real_name }}
-                        {{# extra_information }}
-                            <div class="tlp-property">
-                                <label class="tlp-label">{{ label }}</label>
-                                <p>{{ value }}</p>
-                            </div>
-                        {{/ extra_information }}
                     </section>
-                    <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit">
+                    <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit account-information-submit">
                         {{# csrf_token }}
                             {{> csrf_token_input }}
                         {{/ csrf_token }}
-                        <button type="submit" class="tlp-button-primary">
+                        <button type="submit" class="tlp-button-primary account-information-submit-button">
                             <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
                         </button>
                     </section>
@@ -52,4 +71,72 @@
 
         </div>
     </div>
+</div>
+
+<div id="account-information-avatar-modal"
+     class="tlp-modal"
+     role="dialog"
+     aria-labelledby="account-information-avatar-modal-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-user-circle-o tlp-modal-title-icon"></i>
+            <span id="account-information-avatar-modal-title">
+                {{# gettext }}New avatar{{/ gettext }}
+            </span>
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+
+    <form action="/account/avatar" method="post" enctype="multipart/form-data">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <div class="tlp-modal-body">
+            <p>
+                {{# gettext }}Please select a picture for your avatar.{{/ gettext }}
+            </p>
+
+            <div class="account-information-avatar-modal-body">
+                <div class="tlp-avatar-jumbo" id="account-information-avatar-modal-preview">
+                    {{# has_avatar }}
+                        <img src="{{ avatar_url }}" alt="{{# gettext }}Your avatar{{/ gettext }}">
+                    {{/ has_avatar }}
+                </div>
+                <div class="account-information-avatar-modal-buttons">
+                    <span class="tlp-button-secondary account-information-avatar-modal-select-button">
+                        <i class="fa fa-upload tlp-button-icon"></i>
+                        {{# gettext }}Select{{/gettext}}
+                        <input type="file"
+                               name="avatar"
+                               id="account-information-avatar-modal-select-file"
+                               class="account-information-avatar-modal-select-file"
+                               accept="image/*">
+                    </span>
+                    <button type="button"
+                            class="tlp-button-secondary"
+                            id="account-information-avatar-modal-use-default-button"
+                    >
+                        <i class="fa fa-trash-o tlp-button-icon"></i>
+                        {{# gettext }}Use default avatar{{/gettext}}
+                    </button>
+                    <input type="hidden"
+                           name="use-default-avatar"
+                           value="0"
+                           id="account-information-avatar-modal-use-default"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/ gettext }}</button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-floppy-o tlp-button-icon"></i>
+                {{# gettext }}Save new avatar{{/ gettext }}
+            </button>
+        </div>
+    </form>
 </div>

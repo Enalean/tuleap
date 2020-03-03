@@ -29,11 +29,6 @@ account_options	timezone	Timezone:
 account_options	change_timezone	Change Timezone
 account_options	email_address		Email Addr:
 account_options	change_email_address	Change Email Addr
-account_options	change_avatar	Change avatar
-account_options	change_avatar_desc	Please select a picture for your avatar. The uploaded image will be shrunk to 100×100 pixels.
-account_options	use_default_avatar	Use default avatar
-account_options	select_avatar	Select
-account_options	btn_save_avatar_label	Save avatar
 account_options	preferences	Preferences
 account_options	tuleap_login	Login
 account_options	realname	Real name

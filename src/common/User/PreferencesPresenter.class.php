@@ -28,9 +28,6 @@ class User_PreferencesPresenter
     private $user;
     private $can_change_email;
 
-    /** @var array */
-    private $user_access;
-
     /**
      * @var CSRFSynchronizerToken
      */
@@ -62,19 +59,9 @@ class User_PreferencesPresenter
         $this->tabs = $tabs;
     }
 
-    public function avatar()
-    {
-        return $this->user->fetchHtmlAvatar();
-    }
-
     public function real_name()
     {
         return $this->user->getRealName();
-    }
-
-    public function welcome_user()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'welcome') . ' ' . $this->user->getRealName();
     }
 
     public function user_email_label()
@@ -97,31 +84,6 @@ class User_PreferencesPresenter
         return $GLOBALS['Language']->getText('account_options', 'change_email_address');
     }
 
-    public function change_avatar()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'change_avatar');
-    }
-
-    public function select_avatar()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'select_avatar');
-    }
-
-    public function use_default_avatar()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'use_default_avatar');
-    }
-
-    public function change_avatar_desc()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'change_avatar_desc');
-    }
-
-    public function btn_save_avatar_label()
-    {
-        return $GLOBALS['Language']->getText('account_options', 'btn_save_avatar_label');
-    }
-
     public function timezone_label()
     {
         return $GLOBALS['Language']->getText('account_options', 'timezone');
@@ -135,12 +97,5 @@ class User_PreferencesPresenter
     public function change_timezone()
     {
         return $GLOBALS['Language']->getText('account_options', 'change_timezone');
-    }
-
-    /* MODAL */
-
-    public function btn_close_label()
-    {
-        return $GLOBALS['Language']->getText('global', 'btn_close');
     }
 }

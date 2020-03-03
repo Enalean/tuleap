@@ -235,7 +235,8 @@ const webpack_config_for_account = {
         "preferences-nav": "./account/preferences-nav.ts",
         "keys-tokens": "./account/keys-tokens.ts",
         appearance: "./account/appearance.ts",
-        security: "./account/security.ts"
+        security: "./account/security.ts",
+        avatar: "./account/avatar.ts"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path + "/account/scripts/"),
@@ -316,7 +317,6 @@ const fat_combined_files = [
         "./tuleap/tuleap-standard-homepage.js",
         "./tuleap/datetimepicker.js",
         "./tuleap/svn.js",
-        "./tuleap/account-maintenance.js",
         "./tuleap/search.js",
         "./tuleap/tuleap-mention.js",
         "./tuleap/project-privacy-tooltip.js",
