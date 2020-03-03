@@ -118,27 +118,40 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $project->shouldReceive('getID')->andReturn(101);
         $project->shouldReceive('getPublicName')->andReturn("My project name");
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
-        $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn(
+        $this->tracker_dao->shouldReceive('searchByGroupId')->with(101)->andReturn(
             [
                 [
                     'id'        => '1',
-                    'name'      => 'bugs',
-                    'item_name' => 'bugz'
+                    'name'      => 'request'
                 ],
                 [
                     'id'        => '2',
-                    'name'      => 'epics',
-                    'item_name' => 'epico'
+                    'name'      => 'stories'
                 ]
             ]
         );
 
-        $tracker_bugs = new TrackerTemplatesRepresentation("1", "bugs");
-        $tracker_epics = new TrackerTemplatesRepresentation("2", "epics");
+        $tracker_bugs = new TrackerTemplatesRepresentation("1", "request");
+        $tracker_epics = new TrackerTemplatesRepresentation("2", "stories");
 
         $project_template[] = new ProjectTemplatesRepresentation(
             $project,
             [$tracker_bugs, $tracker_epics]
+        );
+
+        $this->tracker_dao->shouldReceive('searchByGroupId')->with(104)->andReturn(
+            [
+                [
+                    'id'        => '1',
+                    'name'      => 'Bugs',
+                    'item_name' => 'bugz'
+                ],
+                [
+                    'id'        => '2',
+                    'name'      => 'Epics',
+                    'item_name' => 'epico'
+                ]
+            ]
         );
 
         $expected_list_of_existing_trackers = [

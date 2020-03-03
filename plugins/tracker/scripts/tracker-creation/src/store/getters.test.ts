@@ -255,7 +255,7 @@ describe("getters", () => {
         function getState(tracker_to_be_created: TrackerToBeCreatedMandatoryData): State {
             return {
                 existing_trackers: {
-                    names: ["Bugs", "User stories", "Releases", "Epics", "Activities"],
+                    names: ["bugs", "user stories", "releases", "epics", "activities"],
                     shortnames: ["bug", "story", "release", "epic", "activity"]
                 },
                 tracker_to_be_created

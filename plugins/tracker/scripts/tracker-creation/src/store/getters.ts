@@ -68,11 +68,17 @@ export const is_shortname_valid = (state: State): boolean => {
 };
 
 export const is_name_already_used = (state: State): boolean => {
-    return state.existing_trackers.names.includes(state.tracker_to_be_created.name);
+    return (
+        state.existing_trackers.names.indexOf(state.tracker_to_be_created.name.toLowerCase()) !== -1
+    );
 };
 
 export const is_shortname_already_used = (state: State): boolean => {
-    return state.existing_trackers.shortnames.includes(state.tracker_to_be_created.shortname);
+    return (
+        state.existing_trackers.shortnames.indexOf(
+            state.tracker_to_be_created.shortname.toLowerCase()
+        ) !== -1
+    );
 };
 
 export const is_ready_to_submit = (state: State): boolean => {
