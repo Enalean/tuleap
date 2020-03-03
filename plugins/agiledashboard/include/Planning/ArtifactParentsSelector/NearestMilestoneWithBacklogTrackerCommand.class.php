@@ -28,7 +28,6 @@
  */
 class Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand extends Planning_ArtifactParentsSelector_Command
 {
-
     /**
      * @see Planning_ArtifactParentsSelector_Command
      *
@@ -50,13 +49,13 @@ class Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand
     private function findNearestMilestoneWithBacklogTracker(Tracker $expected_backlog_tracker, Tracker_Artifact $source_artifact, PFUser $user)
     {
         $planning = $this->planning_factory->getPlanningByPlanningTracker($source_artifact->getTracker());
-        if ($planning && in_array($expected_backlog_tracker, $planning->getBacklogTrackers())) {
+        if ($planning && in_array($expected_backlog_tracker->getId(), $planning->getBacklogTrackersIds())) {
             return $this->milestone_factory->getMilestoneFromArtifactWithPlannedArtifacts($source_artifact, $user);
-        } else {
-            $parent = $source_artifact->getParent($user);
-            if ($parent) {
-                return $this->findNearestMilestoneWithBacklogTracker($expected_backlog_tracker, $parent, $user);
-            }
+        }
+
+        $parent = $source_artifact->getParent($user);
+        if ($parent) {
+            return $this->findNearestMilestoneWithBacklogTracker($expected_backlog_tracker, $parent, $user);
         }
     }
 }
