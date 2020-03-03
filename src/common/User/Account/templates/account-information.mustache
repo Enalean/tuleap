@@ -16,12 +16,12 @@
                             <div class="account-information-avatar">
                                 <div class="tlp-avatar-jumbo">
                                     <button type="button"
-                                            class="tlp-button-secondary tlp-button-mini account-information-avatar-button"
+                                            class="tlp-button-primary tlp-button-outline tlp-button-small account-information-avatar-button"
                                             title="{{# gettext }}Change avatar{{/ gettext }}"
                                             id="account-information-avatar-button"
                                             data-target-modal-id="account-information-avatar-modal"
                                     >
-                                        <i class="tlp-button-icon fa fa-fw fa-pencil account-information-avatar-button-icon"></i>
+                                        <i class="tlp-button-icon fa fa-pencil account-information-avatar-button-icon"></i>
                                     </button>
                                     {{# has_avatar }}
                                         <img src="{{ avatar_url }}" alt="{{# gettext }}Your avatar{{/ gettext }}">
@@ -64,7 +64,7 @@
                                 {{# can_change_email }}
                                     <div class="tlp-form-element">
                                         <label class="tlp-label" for="email">{{# gettext }}Email{{/ gettext }} <i class="fa fa-asterisk"></i></label>
-                                        <input type="email" class="tlp-input" id="email" name="email" value="{{ email }}" placeholder="fox@example.com" autocomplete="email" required>
+                                        <input type="email" class="tlp-input" id="email" name="email" value="{{ email }}" size="50" placeholder="fox@example.com" autocomplete="email" required>
                                     </div>
                                 {{/ can_change_email }}
                                 {{^ can_change_email }}
