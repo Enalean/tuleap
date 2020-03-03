@@ -151,8 +151,8 @@ class JobManager
         return new Job(
             $repository,
             $row['push_date'],
-            $row['job_url'],
-            null
+            $row['job_url'] !== null ? $row['job_url'] : '',
+            $row['status_code'],
         );
     }
 

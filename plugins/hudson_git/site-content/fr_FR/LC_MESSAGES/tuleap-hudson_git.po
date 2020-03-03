@@ -20,6 +20,9 @@ msgstr "Actions"
 msgid "Add a Jenkins server"
 msgstr "Ajouter un serveur Jenkins"
 
+msgid "Branch source plugin:"
+msgstr "Plugin Branch source :"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -41,6 +44,9 @@ msgstr "L'ID attendu du serveur Jenkins n'a pas été trouvée"
 
 msgid "Expected Jenkins server URL not found"
 msgstr "L'adresse attendue du serveur Jenkins n'a pas été trouvée"
+
+msgid "Git plugin triggered jobs:"
+msgstr "Jobs déclenchés par le plugin Git :"
 
 msgid "Jenkins URL"
 msgstr "URL Jenkins"
@@ -96,9 +102,6 @@ msgstr "Le serveur Jenkins a été ajouté."
 
 msgid "The Jenkins server is already defined in project."
 msgstr "Le serveur Jenkins est déjà défini pour ce projet."
-
-msgid "Triggered jobs"
-msgstr "Jobs déclenchés"
 
 msgid "User is not Git administrator."
 msgstr "L'utilisateur n'est pas administrateur Git."

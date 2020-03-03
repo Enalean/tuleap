@@ -41,11 +41,21 @@ class JenkinsServerLogsPresenter
      */
     public $triggered_jobs;
 
-    public function __construct(string $repository_name, string $formatted_push_date, array $triggered_jobs)
-    {
+    /**
+     * @var int|null
+     */
+    public $status_code;
+
+    public function __construct(
+        string $repository_name,
+        string $formatted_push_date,
+        array $triggered_jobs,
+        ?int $status_code
+    ) {
         $this->repository_name = $repository_name;
         $this->push_date       = $formatted_push_date;
         $this->triggered_jobs  = $triggered_jobs;
+        $this->status_code     = $status_code;
     }
 
     public static function buildFromJob(Job $job): self
@@ -53,7 +63,8 @@ class JenkinsServerLogsPresenter
         return new self(
             (string) $job->getRepository()->getName(),
             (string) $job->getFormattedPushDate(),
-            $job->getJobUrlList()
+            $job->getJobUrlList(),
+            $job->getStatusCode()
         );
     }
 }

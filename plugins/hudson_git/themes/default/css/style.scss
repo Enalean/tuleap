@@ -59,3 +59,14 @@
         }
     }
 }
+
+.jenkins-server-jobs-list {
+    h4 {
+        margin: 0;
+        font-size: 12px;
+    }
+
+    .jenkins-server-branch-source-status {
+        margin: 10px 0 0;
+    }
+}

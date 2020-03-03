@@ -74,13 +74,17 @@ class ProjectJobDao extends DataAccessObject
 
     public function searchJobsByJenkinsServer(int $jenkins_server_id): array
     {
-        $sql = "SELECT *
+        $sql = "SELECT plugin_hudson_git_project_server_job.*,
+                       plugin_hudson_git_project_server_job_polling_url.job_url,
+                       plugin_hudson_git_project_server_job_branch_source.status_code
                 FROM plugin_hudson_git_project_server_job
-                    JOIN plugin_hudson_git_project_server_job_polling_url
-                    ON plugin_hudson_git_project_server_job.id = plugin_hudson_git_project_server_job_polling_url.job_id
+                         LEFT JOIN plugin_hudson_git_project_server_job_polling_url
+                              ON plugin_hudson_git_project_server_job.id = plugin_hudson_git_project_server_job_polling_url.job_id
+                         LEFT JOIN plugin_hudson_git_project_server_job_branch_source
+                              ON plugin_hudson_git_project_server_job_branch_source.job_id = plugin_hudson_git_project_server_job.id
                 WHERE plugin_hudson_git_project_server_job.project_server_id=?
                 ORDER BY plugin_hudson_git_project_server_job.push_date
-                DESC
+                    DESC
                 LIMIT 30";
 
         return $this->getDB()->run($sql, $jenkins_server_id);
