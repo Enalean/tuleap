@@ -32,10 +32,12 @@
                                 <p>{{ real_name }}</p>
                             </div>
                         {{/ can_change_real_name }}
-                        <div class="tlp-property">
-                            <label class="tlp-label">{{# gettext }}Member since{{/ gettext }}</label>
-                            <p>{{ member_since }}</p>
-                        </div>
+                        {{# extra_information }}
+                            <div class="tlp-property">
+                                <label class="tlp-label">{{ label }}</label>
+                                <p>{{ value }}</p>
+                            </div>
+                        {{/ extra_information }}
                     </section>
                     <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit">
                         {{# csrf_token }}

@@ -28,8 +28,6 @@ class User_PreferencesPresenter
     private $user;
     private $can_change_email;
 
-    private $extra_user_info;
-
     /** @var array */
     private $user_access;
 
@@ -50,13 +48,11 @@ class User_PreferencesPresenter
     public function __construct(
         PFUser $user,
         $can_change_email,
-        array $extra_user_info,
         CSRFSynchronizerToken $csrf_token,
         AccountTabPresenterCollection $tabs
     ) {
         $this->user                    = $user;
         $this->can_change_email        = $can_change_email;
-        $this->extra_user_info         = $extra_user_info;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
 
@@ -139,11 +135,6 @@ class User_PreferencesPresenter
     public function change_timezone()
     {
         return $GLOBALS['Language']->getText('account_options', 'change_timezone');
-    }
-
-    public function extra_user_info()
-    {
-        return $this->extra_user_info;
     }
 
     /* MODAL */

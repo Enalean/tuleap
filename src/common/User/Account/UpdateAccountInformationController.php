@@ -74,11 +74,11 @@ final class UpdateAccountInformationController implements DispatchableWithReques
 
         $this->csrf_token->check(DisplayAccountInformationController::URL);
 
-        $account_information_pre_update = $this->event_dispatcher->dispatch(new AccountInformationPreUpdateEvent($user));
-        assert($account_information_pre_update instanceof AccountInformationPreUpdateEvent);
+        $account_information_collection = $this->event_dispatcher->dispatch(new AccountInformationCollection($user));
+        assert($account_information_collection instanceof AccountInformationCollection);
 
         $wanted_realname = $request->get('realname');
-        if ($wanted_realname && $account_information_pre_update->isUserAllowedToCanChangeRealName()) {
+        if ($wanted_realname && $account_information_collection->isUserAllowedToCanChangeRealName()) {
             $this->updateRealName($layout, $user, (string) $wanted_realname);
         }
 

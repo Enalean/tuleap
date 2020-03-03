@@ -23,56 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use CSRFSynchronizerToken;
-use PFUser;
-
+/**
+ * @psalm-immutable
+ */
 final class AccountInformationPresenter
 {
-    public $update_preferences_url = UpdateAccountInformationController::URL;
-    /**
-     * @var AccountTabPresenterCollection
-     * @psalm-readonly
-     */
-    public $tabs;
-    /**
-     * @var CSRFSynchronizerToken
-     * @psalm-readonly
-     */
-    public $csrf_token;
-    /**
-     * @var int
-     * @psalm-readonly
-     */
-    public $user_id;
     /**
      * @var string
-     * @psalm-readonly
      */
-    public $member_since;
+    public $label;
     /**
      * @var string
-     * @psalm-readonly
      */
-    public $user_name;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $real_name;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $can_change_real_name;
+    public $value;
 
-    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, PFUser $user, AccountInformationPreUpdateEvent $account_information_pre_update)
+    public function __construct(string $label, string $value)
     {
-        $this->tabs = $tabs;
-        $this->csrf_token = $csrf_token;
-        $this->user_id = (int) $user->getId();
-        $this->user_name = $user->getUserName();
-        $this->member_since = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user->getAddDate(), true);
-        $this->real_name = $user->getRealName();
-        $this->can_change_real_name = $account_information_pre_update->isUserAllowedToCanChangeRealName();
+        $this->label = $label;
+        $this->value = $value;
     }
 }

@@ -82,17 +82,17 @@ final class DisplayAccountInformationController implements DispatchableWithReque
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
 
-        $account_information_pre_update = $this->dispatcher->dispatch(new AccountInformationPreUpdateEvent($user));
-        assert($account_information_pre_update instanceof AccountInformationPreUpdateEvent);
+        $account_information_collection = $this->dispatcher->dispatch(new AccountInformationCollection($user));
+        assert($account_information_collection instanceof AccountInformationCollection);
 
         (new UserPreferencesHeader())->display(_('Account'), $layout);
         $this->renderer->renderToPage(
             'account-information',
-            new AccountInformationPresenter(
+            new AccountInformationCollectionPresenter(
                 $tabs,
                 $this->csrf_token,
                 $user,
-                $account_information_pre_update,
+                $account_information_collection,
             )
         );
         $layout->footer([]);

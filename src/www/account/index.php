@@ -39,14 +39,6 @@ $em->processEvent(
     )
 );
 
-$em->processEvent(
-    'account_pi_entry',
-    array(
-        'user'      => $user,
-        'user_info' => &$extra_user_info,
-    )
-);
-
 $csrf = new CSRFSynchronizerToken('/account/index.php');
 
 $tabs = $em->dispatch(new AccountTabPresenterCollection($user, '/account'));
@@ -56,7 +48,6 @@ $presenter = new
 User_PreferencesPresenter(
     $user,
     $can_change_email,
-    $extra_user_info,
     $csrf,
     $tabs
 );
