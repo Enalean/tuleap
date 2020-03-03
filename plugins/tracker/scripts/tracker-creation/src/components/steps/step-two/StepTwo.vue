@@ -118,6 +118,14 @@ export default class StepTwo extends Vue {
         }
 
         window.addEventListener("beforeunload", this.beforeUnload);
+
+        const previous_error = document.getElementById("feedback");
+        if (previous_error instanceof HTMLElement) {
+            const parent = previous_error.parentNode;
+            if (parent instanceof HTMLElement) {
+                parent.removeChild(previous_error);
+            }
+        }
     }
 
     beforeDestroy(): void {

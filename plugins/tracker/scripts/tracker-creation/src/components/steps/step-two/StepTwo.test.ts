@@ -136,4 +136,16 @@ describe("StepTwo", () => {
             );
         });
     });
+
+    describe("Remove error", () => {
+        beforeEach(() => {
+            const error = document.implementation.createHTMLDocument().createElement("div");
+            error.setAttribute("id", "feedback");
+        });
+
+        it("Global HTML no longer have a feedback error", async () => {
+            await getWrapper({} as State, true);
+            expect(document.getElementById("feedback")).toBe(null);
+        });
+    });
 });
