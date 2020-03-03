@@ -20,7 +20,7 @@
 const { series } = require("gulp");
 const readPkg = require("read-pkg");
 const path = require("path");
-const { exec, spawn } = require("child_process");
+const { spawn } = require("child_process");
 
 function verifyPackageJsonFile(component_path) {
     const package_json_path = path.join(component_path, "package.json");
@@ -40,15 +40,6 @@ function verifyPackageJsonFile(component_path) {
     };
 }
 
-function getNpmInstallTask(component) {
-    const task = () =>
-        exec("npm install", {
-            cwd: component.path
-        });
-    task.displayName = "install-" + component.name;
-    return task;
-}
-
 function getNpmBuildTask(component) {
     const task = () =>
         spawn("npm", ["run", "build"], {
@@ -61,7 +52,7 @@ function getNpmBuildTask(component) {
 
 function readPackageJsonAndBuildTasks(component_path) {
     const component = verifyPackageJsonFile(component_path);
-    const task = series(getNpmInstallTask(component), getNpmBuildTask(component));
+    const task = series(getNpmBuildTask(component));
     task.displayName = "component";
     return task;
 }
