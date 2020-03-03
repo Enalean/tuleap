@@ -83,6 +83,7 @@ class HookTriggerController
         foreach ($dar as $row) {
             $this->logger->debug('Trigger repository jenkins server: ' . $row['jenkins_server_url']);
             $transports = $repository->getAccessURL();
+            $polling_urls = [];
             foreach ($transports as $protocol => $url) {
                 try {
                     $response = $this->jenkins_client->pushGitNotifications($row['jenkins_server_url'], $url, $commit_reference);
@@ -90,12 +91,18 @@ class HookTriggerController
                     $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
                     if (count($response->getJobPaths()) > 0) {
                         $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
-                        $this->addHudsonGitJob($repository, implode(',', $response->getJobPaths()), $date_job);
+                        $polling_urls = array_merge($polling_urls, $response->getJobPaths());
                     }
                 } catch (Exception $exception) {
                     $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
                 }
             }
+
+            $this->addHudsonGitJob(
+                $repository,
+                implode(',', $polling_urls),
+                $date_job
+            );
 
             try {
                 $this->jenkins_client->pushJenkinsTuleapPluginNotification($row['jenkins_server_url']);
@@ -122,6 +129,7 @@ class HookTriggerController
         foreach ($this->jenkins_server_factory->getJenkinsServerOfProject($project) as $jenkins_server) {
             $this->logger->debug('Trigger project jenkins server:' . $jenkins_server->getServerURL());
             $transports = $repository->getAccessURL();
+            $polling_urls = [];
             foreach ($transports as $protocol => $url) {
                 try {
                     $response = $this->jenkins_client->pushGitNotifications($jenkins_server->getServerURL(), $url, $commit_reference);
@@ -129,17 +137,19 @@ class HookTriggerController
                     $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
                     if (count($response->getJobPaths()) > 0) {
                         $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
-                        $this->addProjectJenkinsJobLog(
-                            $jenkins_server,
-                            $repository,
-                            implode(',', $response->getJobPaths()),
-                            $date_job
-                        );
+                        $polling_urls = array_merge($polling_urls, $response->getJobPaths());
                     }
                 } catch (Exception $exception) {
                     $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
                 }
             }
+
+            $this->addProjectJenkinsJobLog(
+                $jenkins_server,
+                $repository,
+                implode(',', $polling_urls),
+                $date_job
+            );
 
             try {
                 $this->jenkins_client->pushJenkinsTuleapPluginNotification($jenkins_server->getServerURL());
