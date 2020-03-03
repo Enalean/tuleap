@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,26 @@
 
 class Account_TimezoneSelectorPresenter
 {
+    /**
+     * @var bool
+     */
+    public $has_one_selected;
+    /**
+     * @var string
+     */
+    public $placeholder;
+    /**
+     * @var array
+     */
+    public $list_of_timezones;
 
     /**
      * @param string $current_timezone falsy if no current timezone
      */
     public function __construct($current_timezone)
     {
-        $this->has_one_selected = $current_timezone != false;
-        $this->placeholder      = $GLOBALS['Language']->getText('account_options', 'timezone');
+        $this->has_one_selected = $current_timezone !== false;
+        $this->placeholder      = _('Timezone');
 
         $collection = new Account_TimezonesCollection();
 

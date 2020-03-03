@@ -24,28 +24,13 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use UserManager;
-
 class EmailUpdater
 {
     /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    public function __construct(UserManager $user_manager)
-    {
-        $this->user_manager = $user_manager;
-    }
-
-    /**
      * @throws EmailNotSentException
      */
-    public function setEmailChangeConfirm(string $server_url, \PFUser $current_user, string $new_mail): void
+    public function sendEmailChangeConfirm(string $server_url, \PFUser $current_user): void
     {
-        $confirmation_hash = (new \RandomNumberGenerator())->getNumber();
-        $this->user_manager->setEmailChangeConfirm($current_user->getId(), $confirmation_hash, $new_mail);
-
         $subject = sprintf(
             _('[%s] Email change confirmation'),
             \ForgeConfig::get('sys_name')
@@ -53,12 +38,12 @@ class EmailUpdater
         $message = sprintf(
             _("You have requested a change of email address on %s.\nPlease visit the following URL to complete the email change:\n\n%s\n\n-- The %s Team"),
             \ForgeConfig::get('sys_name'),
-            $server_url.$this->getChangeCompleteUrl($confirmation_hash),
+            $server_url.$this->getChangeCompleteUrl($current_user->getConfirmHash()),
             \ForgeConfig::get('sys_name')
         );
 
         $mail = new \Codendi_Mail();
-        $mail->setTo($new_mail, true);
+        $mail->setTo($current_user->getEmailNew(), true);
         $mail->setSubject($subject);
         $mail->setBodyText($message);
         $mail->setFrom(\ForgeConfig::get('sys_noreply'));

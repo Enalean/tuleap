@@ -1043,9 +1043,4 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $dao = $this->getDao();
         $dao->removeConfirmHash($confirm_hash);
     }
-
-    public function setEmailChangeConfirm($user_id, $confirm_hash, $email_new)
-    {
-        return $this->getDao()->setEmailChangeConfirm($user_id, $confirm_hash, $email_new);
-    }
 }

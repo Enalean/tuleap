@@ -89,6 +89,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withTimezone(string $timezone): self
+    {
+        $this->params['timezone'] = $timezone;
+        return $this;
+    }
+
     public function build(): \PFUser
     {
         $user = new \PFUser($this->params);

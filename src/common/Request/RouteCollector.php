@@ -696,9 +696,8 @@ class RouteCollector
             $r->get('/site-content-customisations', [self::class, 'getAdminSiteContentCustomisation']);
         });
 
-
         $r->addGroup('/account', static function (FastRoute\RouteCollector $r) {
-            $r->get('/prefs', [self::class, 'getAccountPreferences']);
+            $r->get('/information', [self::class, 'getAccountPreferences']);
             $r->post('/information', [self::class, 'postAccountInformation']);
 
             $r->get('/notifications', [self::class, 'getAccountNotifications']);

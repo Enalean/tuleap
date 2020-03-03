@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
@@ -19,4 +18,13 @@
  *
  */
 
-header("Location: /account/information", true, 301);
+import { select2 } from "tlp";
+
+const select = document.querySelector("#timezone");
+if (!(select instanceof HTMLSelectElement)) {
+    throw new Error("#timezone not found or is not select");
+}
+
+select2(select, {
+    placeholder: "Choose a timezone"
+});

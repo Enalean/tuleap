@@ -236,7 +236,8 @@ const webpack_config_for_account = {
         "keys-tokens": "./account/keys-tokens.ts",
         appearance: "./account/appearance.ts",
         security: "./account/security.ts",
-        avatar: "./account/avatar.ts"
+        avatar: "./account/avatar.ts",
+        timezone: "./account/timezone.ts"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path + "/account/scripts/"),

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
+use Account_TimezoneSelectorPresenter;
 use CSRFSynchronizerToken;
 use PFUser;
 
@@ -88,7 +89,11 @@ final class AccountInformationCollectionPresenter
      * @psalm-readonly
      */
     public $can_change_email;
-
+    /**
+     * @var Account_TimezoneSelectorPresenter
+     * @psalm-readonly
+     */
+    public $timezone;
     public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, PFUser $user, AccountInformationCollection $account_information_collection)
     {
         $this->tabs = $tabs;
@@ -102,5 +107,6 @@ final class AccountInformationCollectionPresenter
         $this->can_change_real_name = $account_information_collection->isUserAllowedToCanChangeRealName();
         $this->can_change_email     = $account_information_collection->isUserAllowedToChangeEmail();
         $this->extra_information = $account_information_collection->getExtraInformation();
+        $this->timezone = new Account_TimezoneSelectorPresenter($user->getTimezone());
     }
 }
