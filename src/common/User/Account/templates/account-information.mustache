@@ -71,6 +71,20 @@
                                         <p>{{ value }}</p>
                                     </div>
                                 {{/ extra_information }}
+
+                                {{# timezone }}
+                                    <div class="tlp-form-element">
+                                        <label class="tlp-label" for="timezone">{{# gettext }}Timezone{{/ gettext }}</label>
+                                        <select class="tlp-select tlp-select-adjusted" id="timezone" name="timezone" data-placeholder="{{ placeholder }}">
+                                            {{^ has_one_selected }}
+                                                <option></option>
+                                            {{/ has_one_selected }}
+                                            {{# list_of_timezones }}
+                                                <option value="{{ value }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                                            {{/ list_of_timezones }}
+                                        </select>
+                                    </div>
+                                {{/ timezone }}
                             </div>
                         </div>
                     </section>

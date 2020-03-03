@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #, php-format
 msgid ""
@@ -687,6 +687,9 @@ msgstr "La préférence de format de courriel a été mise à jour"
 
 msgid "Email successfully updated"
 msgstr "L'adresse de courriel a été mise à jour avec succès"
+
+msgid "Email was not updated"
+msgstr "L'adresse de courriel n'a pas été mise à jour"
 
 msgid "Emergency"
 msgstr "Urgent"
@@ -1513,6 +1516,9 @@ msgstr "Nom complet"
 msgid "Real name successfully updated"
 msgstr "Le nom complet a été mis à jour avec succès"
 
+msgid "Real name was not updated"
+msgstr "Le nom complet n'a pas été mis à jour"
+
 msgid "Receive additional community mailing"
 msgstr ""
 "Recevoir du courrier électronique supplémentaire au sujet de la communauté"
@@ -2077,6 +2083,15 @@ msgstr[1] ""
 msgid "This will remove this service from all projects."
 msgstr "Ceci supprimera ce service de tous les projets."
 
+msgid "Timezone"
+msgstr "Fuseau horaire"
+
+msgid "Timezone successfully updated"
+msgstr "Le fuseau horaire a été mis à jour avec succès"
+
+msgid "Timezone was not updated"
+msgstr "Le fuseau horaire n'a pas été mis à jour"
+
 msgid "Title"
 msgstr "Titre"
 
@@ -2246,9 +2261,6 @@ msgstr "L'utilisateur est déjà membre du projet"
 
 msgid "User name"
 msgstr "Nom d'utilisateur"
-
-msgid "User preferences"
-msgstr "Préférences utilisateur"
 
 msgid "User preferences successfully updated"
 msgstr "Les préférences utilisateur ont été mises à jour"

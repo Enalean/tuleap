@@ -67,7 +67,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
             EventManager::instance(),
             DisplayAccountInformationController::getCSRFToken(),
             UserManager::instance(),
-            new EmailUpdater(UserManager::instance()),
+            new EmailUpdater(),
         );
     }
 
@@ -95,6 +95,11 @@ final class UpdateAccountInformationController implements DispatchableWithReques
             $something_changed = $this->updateEmail($request, $layout, $user, (string) $wanted_email) || $something_changed;
         }
 
+        $wanted_timezone = $request->get('timezone');
+        if ($wanted_timezone) {
+            $something_changed = $this->updateTimezone($layout, $user, (string) $wanted_timezone) || $something_changed;
+        }
+
         if (! $something_changed) {
             $layout->addFeedback(\Feedback::INFO, _('Nothing changed'));
         }
@@ -113,10 +118,13 @@ final class UpdateAccountInformationController implements DispatchableWithReques
         }
 
         $user->setRealName($wanted_realname);
-        $this->user_manager->updateDb($user);
+        if ($this->user_manager->updateDb($user)) {
+            $layout->addFeedback(\Feedback::INFO, _('Real name successfully updated'));
+            return true;
+        }
 
-        $layout->addFeedback(\Feedback::INFO, _('Real name successfully updated'));
-        return true;
+        $layout->addFeedback(\Feedback::ERROR, _('Real name was not updated'));
+        return false;
     }
 
     private function updateEmail(HTTPRequest $request, BaseLayout $layout, \PFUser $user, string $wanted_email): bool
@@ -126,12 +134,41 @@ final class UpdateAccountInformationController implements DispatchableWithReques
                 return false;
             }
 
-            $this->email_updater->setEmailChangeConfirm($request->getServerUrl(), $user, $wanted_email);
+            $user->setEmailNew($wanted_email);
+            $user->setConfirmHash((new \RandomNumberGenerator())->getNumber());
 
-            $layout->addFeedback(\Feedback::INFO, _('Email successfully updated'));
+            if ($this->user_manager->updateDb($user)) {
+                $this->email_updater->sendEmailChangeConfirm($request->getServerUrl(), $user);
+
+                $layout->addFeedback(\Feedback::INFO, _('Email successfully updated'));
+                return true;
+            } else {
+                $layout->addFeedback(\Feedback::ERROR, _('Email was not updated'));
+            }
         } catch (EmailNotSentException $exception) {
             $layout->addFeedback(\Feedback::ERROR, $exception->getMessage());
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    private function updateTimezone(BaseLayout $layout, \PFUser $user, string $wanted_timezone): bool
+    {
+        if (! (new \Account_TimezonesCollection())->isValidTimezone($wanted_timezone)) {
+            $layout->addFeedback(\Feedback::ERROR, 'Invalid timezone');
+            return false;
+        }
+
+        if ($user->getTimezone() === $wanted_timezone) {
+            return false;
+        }
+
+        $user->setTimezone($wanted_timezone);
+        if ($this->user_manager->updateDb($user)) {
+            $layout->addFeedback(\Feedback::INFO, _('Timezone successfully updated'));
+            return true;
+        }
+        $layout->addFeedback(\Feedback::ERROR, _('Timezone was not updated'));
+        return false;
     }
 }

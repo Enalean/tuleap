@@ -37,10 +37,7 @@ use Tuleap\Request\ForbiddenException;
 
 final class DisplayAccountInformationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * This is a temporary URL, the final one will be /account
-     */
-    public const URL = '/account/prefs';
+    public const URL = '/account/information';
 
     /**
      * @var EventDispatcherInterface
@@ -87,15 +84,13 @@ final class DisplayAccountInformationController implements DispatchableWithReque
         $account_information_collection = $this->dispatcher->dispatch(new AccountInformationCollection($user));
         assert($account_information_collection instanceof AccountInformationCollection);
 
-        $layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts'
-                ),
-                'avatar.js'
-            )
+        $account_asset = new IncludeAssets(
+            __DIR__ . '/../../../www/assets/account/scripts',
+            '/assets/account/scripts'
         );
+
+        $layout->addJavascriptAsset(new JavascriptAsset($account_asset, 'avatar.js'));
+        $layout->addJavascriptAsset(new JavascriptAsset($account_asset, 'timezone.js'));
 
         (new UserPreferencesHeader())->display(_('Account'), $layout);
         $this->renderer->renderToPage(

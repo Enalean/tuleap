@@ -119,6 +119,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
             ->withEmail('alice@example.com')
             ->withLanguage(M::spy(\BaseLanguage::class))
             ->withAddDate(940000000)
+            ->withTimezone('GMT')
             ->build();
     }
 
@@ -161,7 +162,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
     {
         $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
             return $user->getRealName() === 'Franck Zappa';
-        })->once();
+        })->once()->andReturnTrue();
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Franck Zappa')->build(),
@@ -207,6 +208,22 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->assertStringContainsStringIgnoringCase('too long', $feedback[0]['message']);
     }
 
+    public function testItDoesntUpdateRealNameWhenDBUpdateFails(): void
+    {
+        $this->user_manager->shouldReceive('updateDb')->andReturnFalse();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Foo Bar')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(2, $feedback);
+        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('real name was not updated', $feedback[0]['message']);
+    }
+
     public function testItCannotUpdateEmailWhenEventSaySo(): void
     {
         $this->event_manager->disable_email_change = true;
@@ -222,7 +239,10 @@ final class UpdateAccountInformationControllerTest extends TestCase
 
     public function testItUpdatesEmail(): void
     {
-        $this->email_updater->shouldReceive('setEmailChangeConfirm')->with(M::any(), $this->user, 'bob@example.com')->once();
+        $this->email_updater->shouldReceive('sendEmailChangeConfirm')->with(M::any(), $this->user)->once();
+        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+            return $user->getEmailNew() === 'bob@example.com' && $user->getConfirmHash() != '';
+        })->once()->andReturnTrue();
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
@@ -236,9 +256,29 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[0]['message']);
     }
 
+    public function testItUpdatesEmailButDbUpdateFails(): void
+    {
+        $this->email_updater->shouldNotReceive('sendEmailChangeConfirm');
+        $this->user_manager->shouldReceive('updateDb')->andReturnFalse();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(2, $feedback);
+        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('email was not updated', $feedback[0]['message']);
+    }
+
     public function testItUpdatesEmailWithoutUpdatingRealname(): void
     {
-        $this->email_updater->shouldReceive('setEmailChangeConfirm')->with(M::any(), $this->user, 'bob@example.com')->once();
+        $this->email_updater->shouldReceive('sendEmailChangeConfirm')->with(M::any(), $this->user)->once();
+        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+            return $user->getEmailNew() === 'bob@example.com';
+        })->once()->andReturnTrue();
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->withParam('realname', 'Alice FooBar')->build(),
@@ -250,29 +290,6 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
         $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[0]['message']);
-        $this->assertStringNotContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
-    }
-
-    public function testItUpdatesEmailAndRealname(): void
-    {
-        $this->email_updater->shouldReceive('setEmailChangeConfirm')->with(M::any(), $this->user, 'bob@example.com')->once();
-
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
-            return $user->getRealName() === 'Franck Zappa';
-        })->once();
-
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->withParam('realname', 'Franck Zappa')->build(),
-            $this->layout,
-            []
-        );
-
-        $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(2, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
-        $this->assertEquals(\Feedback::INFO, $feedback[1]['level']);
-        $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[1]['message']);
         $this->assertStringNotContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
     }
 
@@ -294,7 +311,10 @@ final class UpdateAccountInformationControllerTest extends TestCase
 
     public function testItReportsAnErrorWhenMailCannotBeSent(): void
     {
-        $this->email_updater->shouldReceive('setEmailChangeConfirm')->andThrow(new EmailNotSentException());
+        $this->email_updater->shouldReceive('sendEmailChangeConfirm')->andThrow(new EmailNotSentException());
+        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+            return $user->getEmailNew() === 'bob@example.com';
+        })->once()->andReturnTrue();
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
@@ -306,5 +326,106 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
         $this->assertStringContainsStringIgnoringCase('mail was not accepted for the delivery', $feedback[0]['message']);
+    }
+
+    public function testItDoesntUpdateWithInvalidTimezone(): void
+    {
+        $this->user_manager->shouldNotReceive('updateDb');
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'Frank Zappa')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(2, $feedback);
+        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('invalid timezone', $feedback[0]['message']);
+    }
+
+    public function testItDoesntUpdateWithNoTimezoneChange(): void
+    {
+        $this->user_manager->shouldNotReceive('updateDb');
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'GMT')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(1, $feedback);
+        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
+    }
+
+    public function testItUpdatesTimezone(): void
+    {
+        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+            return $user->getTimezone() === 'Europe/Berlin';
+        })->once()->andReturnTrue();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'Europe/Berlin')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(1, $feedback);
+        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('timezone successfully updated', $feedback[0]['message']);
+    }
+
+    public function testItDoesntUpdateTimezoneWhenDBUpdateFails(): void
+    {
+        $this->user_manager->shouldReceive('updateDb')->andReturnFalse();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'Europe/Berlin')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(2, $feedback);
+        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('timezone was not updated', $feedback[0]['message']);
+    }
+
+    public function testItUpdatesEverythingAtOnce(): void
+    {
+        $this->email_updater->shouldReceive('sendEmailChangeConfirm')->with(M::any(), $this->user)->once();
+
+        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+            return $user->getRealName() === 'Franck Zappa';
+        })->once()->andReturnTrue();
+        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+            return $user->getTimezone() === 'Europe/Berlin';
+        })->once()->andReturnTrue();
+        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+            return $user->getEmailNew() === 'bob@example.com';
+        })->once()->andReturnTrue();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()
+                ->withUser($this->user)
+                ->withParam('email', 'bob@example.com')
+                ->withParam('realname', 'Franck Zappa')
+                ->withParam('timezone', 'Europe/Berlin')
+                ->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(3, $feedback);
+        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
+        $this->assertEquals(\Feedback::INFO, $feedback[1]['level']);
+        $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[1]['message']);
+        $this->assertEquals(\Feedback::INFO, $feedback[2]['level']);
+        $this->assertStringContainsStringIgnoringCase('timezone successfully updated', $feedback[2]['message']);
     }
 }
