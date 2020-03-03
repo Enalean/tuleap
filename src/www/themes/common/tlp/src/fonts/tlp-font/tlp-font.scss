@@ -53,7 +53,8 @@ $tlp-fontawesome-icons: (
     esc-key: '\f022',
     enter-key: '\f023',
     hierarchy-plus: '\f024',
-    user-pencil: '\f025'
+    user-pencil: '\f025',
+    gerrit: '\f026'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
