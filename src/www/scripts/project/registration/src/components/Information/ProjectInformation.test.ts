@@ -35,18 +35,7 @@ import { ProjectProperties, TemplateData } from "../../type";
 
 describe("ProjectInformation -", () => {
     let factory: Wrapper<ProjectInformation>, router: VueRouter, store: Store;
-    beforeEach(async () => {
-        const state: State = {
-            selected_tuleap_template: {
-                title: "string",
-                description: "string",
-                id: "scrum",
-                glyph: "string",
-                is_built_in: true
-            },
-            are_restricted_users_allowed: false
-        } as State;
-
+    beforeEach(() => {
         router = new VueRouter({
             routes: [
                 {
@@ -63,251 +52,467 @@ describe("ProjectInformation -", () => {
                 }
             ]
         });
-
-        const getters = {
-            has_error: false,
-            is_template_selected: true
-        };
-
-        const store_options = {
-            state,
-            getters
-        };
-
-        store = createStoreMock(store_options);
-
-        factory = shallowMount(ProjectInformation, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-            router
-        });
     });
-    it("Spawns the ProjectInformation component", () => {
-        const wrapper = factory;
+    describe("User can choose visibility and restricted users are allowed -", () => {
+        beforeEach(async () => {
+            const state: State = {
+                selected_tuleap_template: {
+                    title: "string",
+                    description: "string",
+                    id: "scrum",
+                    glyph: "string",
+                    is_built_in: true
+                },
+                are_restricted_users_allowed: true,
+                can_user_choose_project_visibility: true
+            } as State;
 
-        wrapper.vm.$store.getters.has_error = false;
+            const getters = {
+                has_error: false,
+                is_template_selected: true
+            };
 
-        expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
-        expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
-        expect(wrapper.contains(ProjectName)).toBe(true);
+            const store_options = {
+                state,
+                getters
+            };
 
-        expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(false);
-    });
+            store = createStoreMock(store_options);
 
-    it("Displays error message", () => {
-        const wrapper = factory;
-
-        wrapper.vm.$store.getters.has_error = true;
-
-        expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
-        expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
-        expect(wrapper.contains(ProjectInformationInputPrivacyList)).toBe(true);
-        expect(wrapper.contains(ProjectName)).toBe(true);
-
-        expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(true);
-    });
-
-    it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
-        const getters = {
-            has_error: false,
-            is_template_selected: false
-        };
-
-        store = createStoreMock({ getters });
-        const wrapper = shallowMount(ProjectInformation, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-            router
+            factory = shallowMount(ProjectInformation, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store },
+                router
+            });
         });
 
-        expect(wrapper.vm.$route.name).toBe("template");
-    });
-
-    describe("TroveCatProperties update -", () => {
-        it("build the trovecat object", () => {
+        it("Spawns the ProjectInformation component", () => {
             const wrapper = factory;
-            expect(wrapper.vm.$data.trove_cats).toStrictEqual([]);
 
-            EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 10 });
-            expect(wrapper.vm.$data.trove_cats).toStrictEqual([{ category_id: 1, value_id: 10 }]);
+            wrapper.vm.$store.getters.has_error = false;
 
-            EventBus.$emit("choose-trove-cat", { category_id: 2, value_id: 20 });
-            expect(wrapper.vm.$data.trove_cats).toStrictEqual([
-                { category_id: 1, value_id: 10 },
-                { category_id: 2, value_id: 20 }
-            ]);
+            expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
+            expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
+            expect(wrapper.contains(ProjectName)).toBe(true);
 
-            EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 100 });
-            expect(wrapper.vm.$data.trove_cats).toStrictEqual([
-                { category_id: 1, value_id: 100 },
-                { category_id: 2, value_id: 20 }
-            ]);
+            expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(false);
+        });
+
+        it("Displays error message", () => {
+            const wrapper = factory;
+
+            wrapper.vm.$store.getters.has_error = true;
+
+            expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
+            expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
+            expect(wrapper.contains(ProjectInformationInputPrivacyList)).toBe(true);
+            expect(wrapper.contains(ProjectName)).toBe(true);
+
+            expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(true);
+        });
+
+        it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
+            const getters = {
+                has_error: false,
+                is_template_selected: false
+            };
+
+            store = createStoreMock({ getters });
+            const wrapper = shallowMount(ProjectInformation, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store },
+                router
+            });
+
+            expect(wrapper.vm.$route.name).toBe("template");
+        });
+
+        describe("TroveCatProperties update -", () => {
+            it("build the trovecat object", () => {
+                const wrapper = factory;
+                expect(wrapper.vm.$data.trove_cats).toStrictEqual([]);
+
+                EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 10 });
+                expect(wrapper.vm.$data.trove_cats).toStrictEqual([
+                    { category_id: 1, value_id: 10 }
+                ]);
+
+                EventBus.$emit("choose-trove-cat", { category_id: 2, value_id: 20 });
+                expect(wrapper.vm.$data.trove_cats).toStrictEqual([
+                    { category_id: 1, value_id: 10 },
+                    { category_id: 2, value_id: 20 }
+                ]);
+
+                EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 100 });
+                expect(wrapper.vm.$data.trove_cats).toStrictEqual([
+                    { category_id: 1, value_id: 100 },
+                    { category_id: 2, value_id: 20 }
+                ]);
+            });
+        });
+
+        it(`creates the new project and redirect user on his own personal dashboard`, async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
+
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: true,
+                description: "",
+                categories: [],
+                xml_template_name: "scrum",
+                fields: [],
+                allow_restricted: false
+            };
+
+            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$data.selected_visibility = "public";
+
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
+
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
+
+            await factory.vm.$nextTick();
+
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
+        });
+        it(`create the new private project`, async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
+
+            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$data.selected_visibility = "private";
+
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
+
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: false,
+                description: "",
+                allow_restricted: true,
+                categories: [],
+                xml_template_name: "scrum",
+                fields: []
+            };
+
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
+
+            await factory.vm.$nextTick();
+
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
+        });
+
+        it(`creates the new private without restricted project`, async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
+
+            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$data.selected_visibility = "private-wo-restr";
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
+
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: false,
+                description: "",
+                allow_restricted: false,
+                categories: [],
+                xml_template_name: "scrum",
+                fields: []
+            };
+
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
+
+            await factory.vm.$nextTick();
+
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
+        });
+
+        it(`creates the new public restricted project`, async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
+
+            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$data.selected_visibility = "public";
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
+
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: true,
+                allow_restricted: false,
+                description: "",
+                categories: [],
+                xml_template_name: "scrum",
+                fields: []
+            };
+
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
+
+            await factory.vm.$nextTick();
+
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
+        });
+
+        it(`creates the new public including restricted restricted project`, async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
+
+            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$data.selected_visibility = "unrestricted";
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
+
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: true,
+                allow_restricted: true,
+                description: "",
+                categories: [],
+                xml_template_name: "scrum",
+                fields: []
+            };
+
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
+
+            await factory.vm.$nextTick();
+
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
+        });
+
+        it(`Redirects user on waiting for validation when project needs a site administrator approval`, async () => {
+            factory.vm.$store.state.is_project_approval_required = true;
+            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$data.selected_visibility = "private";
+
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+
+            await factory.vm.$nextTick();
+
+            expect(factory.vm.$route.name).toBe("approval");
         });
     });
 
-    it(`creates the new project and redirect user on his own personal dashboard`, async () => {
-        const redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
+    describe("User can choose visibility and restricted users are NOT allowed -", () => {
+        beforeEach(async () => {
+            const state: State = {
+                selected_tuleap_template: {
+                    title: "string",
+                    description: "string",
+                    id: "scrum",
+                    glyph: "string",
+                    is_built_in: true
+                },
+                are_restricted_users_allowed: false,
+                can_user_choose_project_visibility: true
+            } as State;
 
-        const expected_project_properties = {
-            shortname: "this-is-a-test",
-            label: "this is a test",
-            is_public: true,
-            description: "",
-            categories: [],
-            xml_template_name: "scrum",
-            fields: []
-        };
+            const getters = {
+                has_error: false,
+                is_template_selected: true
+            };
 
-        factory.vm.$data.name_properties = {
-            slugified_name: "this-is-a-test",
-            name: "this is a test"
-        };
+            const store_options = {
+                state,
+                getters
+            };
 
-        factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
-        expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
+            store = createStoreMock(store_options);
 
-        await factory.vm.$nextTick();
+            factory = shallowMount(ProjectInformation, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store },
+                router
+            });
+        });
 
-        expect(redirect_to_url).toHaveBeenCalledWith(
-            "/projects/this-is-a-test/?should-display-created-project-modal=true"
-        );
-    });
-    it(`create the new private project`, async () => {
-        const redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
+        it(`creates the new private without restricted project`, async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
 
-        factory.vm.$store.state.are_restricted_users_allowed = true;
-        factory.vm.$data.selected_visibility = "private";
+            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$data.selected_visibility = "private-wo-restr";
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
 
-        factory.vm.$data.name_properties = {
-            slugified_name: "this-is-a-test",
-            name: "this is a test"
-        };
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: false,
+                description: "",
+                allow_restricted: false,
+                categories: [],
+                xml_template_name: "scrum",
+                fields: []
+            };
 
-        const expected_project_properties = {
-            shortname: "this-is-a-test",
-            label: "this is a test",
-            is_public: false,
-            description: "",
-            allow_restricted: true,
-            categories: [],
-            xml_template_name: "scrum",
-            fields: []
-        };
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
 
-        factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
-        expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
+            await factory.vm.$nextTick();
 
-        await factory.vm.$nextTick();
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
+        });
 
-        expect(redirect_to_url).toHaveBeenCalledWith(
-            "/projects/this-is-a-test/?should-display-created-project-modal=true"
-        );
-    });
+        it(`creates the new public restricted project`, async () => {
+            const redirect_to_url = jest
+                .spyOn(location_helper, "redirectToUrl")
+                .mockImplementation();
 
-    it(`creates the new private without restricted project`, async () => {
-        const redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
+            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$data.selected_visibility = "public";
+            factory.vm.$data.name_properties = {
+                slugified_name: "this-is-a-test",
+                name: "this is a test"
+            };
 
-        factory.vm.$store.state.are_restricted_users_allowed = true;
-        factory.vm.$data.selected_visibility = "private-wo-restr";
-        factory.vm.$data.name_properties = {
-            slugified_name: "this-is-a-test",
-            name: "this is a test"
-        };
+            const expected_project_properties = {
+                shortname: "this-is-a-test",
+                label: "this is a test",
+                is_public: true,
+                allow_restricted: false,
+                description: "",
+                categories: [],
+                xml_template_name: "scrum",
+                fields: []
+            };
 
-        const expected_project_properties = {
-            shortname: "this-is-a-test",
-            label: "this is a test",
-            is_public: false,
-            description: "",
-            allow_restricted: false,
-            categories: [],
-            xml_template_name: "scrum",
-            fields: []
-        };
+            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "createProject",
+                expected_project_properties
+            );
 
-        factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
-        expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
+            await factory.vm.$nextTick();
 
-        await factory.vm.$nextTick();
-
-        expect(redirect_to_url).toHaveBeenCalledWith(
-            "/projects/this-is-a-test/?should-display-created-project-modal=true"
-        );
-    });
-
-    it(`creates the new public restricted project`, async () => {
-        const redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
-
-        factory.vm.$store.state.are_restricted_users_allowed = true;
-        factory.vm.$data.selected_visibility = "public";
-        factory.vm.$data.name_properties = {
-            slugified_name: "this-is-a-test",
-            name: "this is a test"
-        };
-
-        const expected_project_properties = {
-            shortname: "this-is-a-test",
-            label: "this is a test",
-            is_public: true,
-            allow_restricted: false,
-            description: "",
-            categories: [],
-            xml_template_name: "scrum",
-            fields: []
-        };
-
-        factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
-        expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
-
-        await factory.vm.$nextTick();
-
-        expect(redirect_to_url).toHaveBeenCalledWith(
-            "/projects/this-is-a-test/?should-display-created-project-modal=true"
-        );
+            expect(redirect_to_url).toHaveBeenCalledWith(
+                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+            );
+        });
     });
 
-    it(`creates the new public including restricted restricted project`, async () => {
-        const redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
+    describe("User can Not choose visibility -", () => {
+        beforeEach(async () => {
+            const state: State = {
+                selected_tuleap_template: {
+                    title: "string",
+                    description: "string",
+                    id: "scrum",
+                    glyph: "string",
+                    is_built_in: true
+                },
+                are_restricted_users_allowed: false,
+                can_user_choose_project_visibility: false
+            } as State;
 
-        factory.vm.$store.state.are_restricted_users_allowed = true;
-        factory.vm.$data.selected_visibility = "unrestricted";
-        factory.vm.$data.name_properties = {
-            slugified_name: "this-is-a-test",
-            name: "this is a test"
-        };
+            const getters = {
+                has_error: false,
+                is_template_selected: true
+            };
 
-        const expected_project_properties = {
-            shortname: "this-is-a-test",
-            label: "this is a test",
-            is_public: true,
-            allow_restricted: true,
-            description: "",
-            categories: [],
-            xml_template_name: "scrum",
-            fields: []
-        };
+            const store_options = {
+                state,
+                getters
+            };
 
-        factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
-        expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
+            store = createStoreMock(store_options);
 
-        await factory.vm.$nextTick();
+            factory = shallowMount(ProjectInformation, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store },
+                router
+            });
+        });
 
-        expect(redirect_to_url).toHaveBeenCalledWith(
-            "/projects/this-is-a-test/?should-display-created-project-modal=true"
-        );
-    });
-
-    it(`Redirects user on waiting for validation when project needs a site administrator approval`, async () => {
-        factory.vm.$store.state.is_project_approval_required = true;
-
-        factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
-
-        await factory.vm.$nextTick();
-
-        expect(factory.vm.$route.name).toBe("approval");
+        it("Does not display privacy list", () => {
+            expect(factory.contains("[data-test=project-information-input-privacy-list]")).toBe(
+                false
+            );
+        });
     });
 
     describe("Field list update -", () => {
+        let factory: Wrapper<ProjectInformation>, store: Store;
+        beforeEach(async () => {
+            const state: State = {} as State;
+
+            const getters = {
+                has_error: false,
+                is_template_selected: true
+            };
+
+            const store_options = {
+                state,
+                getters
+            };
+
+            store = createStoreMock(store_options);
+
+            factory = shallowMount(ProjectInformation, {
+                localVue: await createProjectRegistrationLocalVue(),
+                mocks: { $store: store }
+            });
+        });
         it("build the field list object", () => {
             const wrapper = factory;
             expect(wrapper.vm.$data.field_list).toStrictEqual([]);
@@ -377,7 +582,8 @@ describe("ProjectInformation -", () => {
                 description: "",
                 categories: [],
                 xml_template_name: "scrum",
-                fields: []
+                fields: [],
+                allow_restricted: true
             } as ProjectProperties;
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -438,7 +644,8 @@ describe("ProjectInformation -", () => {
                 description: "",
                 categories: [],
                 template_id: 150,
-                fields: []
+                fields: [],
+                allow_restricted: true
             } as ProjectProperties;
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -498,7 +705,8 @@ describe("ProjectInformation -", () => {
                 description: "",
                 categories: [],
                 template_id: 100,
-                fields: []
+                fields: [],
+                allow_restricted: true
             } as ProjectProperties;
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");

@@ -42,6 +42,10 @@ export interface TroveCatProperties {
     value_id: number;
 }
 
+export interface ProjectVisibilityProperties {
+    new_visibility: string;
+}
+
 export interface TemplateData {
     title: string;
     description: string;

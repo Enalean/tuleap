@@ -41,10 +41,20 @@
                             data-test="register-new-project-information-form"
                         ></div>
                         <project-name v-model="name_properties" />
-                        <project-information-input-privacy-list
-                            v-model="selected_visibility"
-                            data-test="register-new-project-information-list"
-                        />
+
+                        <div class="tlp-form-element" v-if="can_user_choose_project_visibility">
+                            <label
+                                class="tlp-label"
+                                for="project-information-input-privacy-list-label"
+                            >
+                                <span v-translate>Visibility</span>
+                                <i class="fa fa-asterisk"></i>
+                            </label>
+                            <project-information-input-privacy-list
+                                data-test="register-new-project-information-list"
+                            />
+                        </div>
+
                         <field-description v-model="field_description" />
                         <trove-category-list
                             v-model="trove_cats"
@@ -78,6 +88,7 @@ import {
     FieldProperties,
     ProjectNameProperties,
     ProjectProperties,
+    ProjectVisibilityProperties,
     TemplateData,
     TroveCatData,
     TroveCatProperties
@@ -141,6 +152,9 @@ export default class ProjectInformation extends Vue {
     @State
     selected_company_template!: TemplateData;
 
+    @State
+    can_user_choose_project_visibility!: boolean;
+
     selected_visibility = "";
 
     name_properties: ProjectNameProperties = {
@@ -166,12 +180,14 @@ export default class ProjectInformation extends Vue {
         EventBus.$on("update-project-name", this.updateProjectName);
         EventBus.$on("choose-trove-cat", this.updateTroveCat);
         EventBus.$on("update-field-list", this.updateFieldList);
+        EventBus.$on("update-project-visibility", this.updateProjectVisibility);
     }
 
     beforeDestroy(): void {
         EventBus.$off("update-project-name", this.updateProjectName);
         EventBus.$off("choose-trove-cat", this.updateTroveCat);
         EventBus.$off("update-field-list", this.updateFieldList);
+        EventBus.$off("update-project-visibility", this.updateProjectVisibility);
     }
 
     updateProjectName(event: ProjectNameProperties): void {
@@ -194,6 +210,10 @@ export default class ProjectInformation extends Vue {
         } else {
             this.field_list[index] = event;
         }
+    }
+
+    updateProjectVisibility(event: ProjectVisibilityProperties): void {
+        this.selected_visibility = event.new_visibility;
     }
 
     async createProject(): Promise<void> {
@@ -235,9 +255,6 @@ export default class ProjectInformation extends Vue {
         }
         if (this.selected_company_template) {
             project_properties.template_id = parseInt(this.selected_company_template.id, 10);
-        }
-        if (!this.are_restricted_users_allowed) {
-            return project_properties;
         }
 
         let is_public_project = null;
