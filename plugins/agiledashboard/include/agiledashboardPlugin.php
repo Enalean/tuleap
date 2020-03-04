@@ -814,12 +814,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
     {
-        $include_assets = new IncludeAssets(
-            AGILEDASHBOARD_BASE_DIR . '/../www/assets',
-            $this->getPluginPath() . '/assets'
-        );
-
-        $event->addJavascript($include_assets->getFileURL('permission-per-group.js'));
+        $script = $this->getScriptAssetByName('permission-per-group.js');
+        $event->addJavascript($script->getFileURL());
     }
 
     /**
@@ -2064,8 +2060,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            AGILEDASHBOARD_BASE_DIR . '/../www/assets',
-            $this->getPluginPath() . '/assets'
+            __DIR__ . '/../../../src/www/assets/agiledashboard/js',
+            '/assets/agiledashboard/js'
         );
     }
 
@@ -2307,13 +2303,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     private function getScriptAssetByName(string $name): ScriptAsset
     {
-        return new ScriptAsset(
-            new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/agiledashboard/js',
-                '/assets/agiledashboard/js/'
-            ),
-            $name
-        );
+        return new ScriptAsset($this->getIncludeAssets(), $name);
     }
 
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void

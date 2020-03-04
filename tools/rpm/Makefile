@@ -98,8 +98,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 				-name "node_modules" -o\
 				-path "*/.DS_Store" -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp -o\
-				-path $(PKG_NAME)-$(version)/plugins/pullrequest/www/scripts -o\
-				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/scripts \)\
+				-path $(PKG_NAME)-$(version)/plugins/pullrequest/www/scripts \)\
 				-prune -o -print \
 			&& \
 			find $(PKG_NAME)-$(version)/src/www/themes/common/tlp/dist; \

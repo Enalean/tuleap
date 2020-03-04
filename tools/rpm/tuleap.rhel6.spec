@@ -607,6 +607,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/package.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/webpack.*.js
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/agiledashboard/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/agiledashboard/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/api_explorer/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/api_explorer/script/
