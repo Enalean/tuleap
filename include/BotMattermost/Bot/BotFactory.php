@@ -116,7 +116,7 @@ class BotFactory
     public function getBotById($bot_id)
     {
         $row = $this->dao->searchBotById($bot_id);
-        if ($row === null) {
+        if ($row === null || $row === false) {
             throw new BotNotFoundException();
         }
 
