@@ -21,11 +21,12 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalSVNPollution;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalSVNPollution;
 
     private $system_event;
     private $project;
@@ -91,6 +92,20 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
                 )
             )
             ->once();
+
+        $this->system_event->process();
+    }
+
+    public function testSVNCoreAccessFilesAreUpdated(): void
+    {
+        $this->project->shouldReceive('usesSVN')->andReturnTrue();
+
+        $backend_svn = Mockery::mock(\BackendCVS::class);
+        $this->system_event->shouldReceive('getBackend')->with('SVN')->andReturn($backend_svn);
+
+        $this->event_manager->shouldReceive('processEvent');
+
+        $backend_svn->shouldReceive('updateSVNAccess')->once();
 
         $this->system_event->process();
     }
