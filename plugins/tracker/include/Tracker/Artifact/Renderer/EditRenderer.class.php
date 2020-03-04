@@ -119,7 +119,12 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     protected function displayHeader()
     {
         $hp          = Codendi_HTMLPurifier::instance();
-        $title       = $hp->purify($this->tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->artifact->getId();
+        $title = sprintf(
+            '%s - %s #%d',
+            substr($hp->purify($this->artifact->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), 0, 64),
+            $hp->purify($this->tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML),
+            $this->artifact->getId(),
+        );
         $breadcrumbs = array(
             array('title' => $title,
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId())
