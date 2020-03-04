@@ -19,55 +19,43 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="can_user_choose_project_visibility">
-        <label class="tlp-label" for="project-information-input-privacy-list-label">
-            <span v-translate>Visibility</span>
-            <i class="fa fa-asterisk"></i>
-        </label>
-        <select
-            id="project-information-input-privacy-list-label"
-            class="tlp-select tlp-select-large"
-            name="privacy"
-            data-test="project-information-input-privacy-list"
-            v-model="selected_visibility"
-            ref="visibility_selector"
+    <select
+        id="project-information-input-privacy-list-label"
+        class="tlp-select tlp-select-large"
+        name="privacy"
+        data-test="project-information-input-privacy-list"
+        v-model="selected_visibility"
+    >
+        <option
+            v-if="are_restricted_users_allowed"
+            value="unrestricted"
+            v-bind:selected="is_public_included_restricted_selected"
+            v-translate
+            data-test="unrestricted"
         >
-            <option
-                v-if="are_restricted_users_allowed"
-                value="unrestricted"
-                v-bind:selected="is_public_included_restricted_selected"
-                v-translate
-                data-test="unrestricted"
-            >
-                Public incl. restricted
-            </option>
-            <option
-                value="public"
-                v-bind:selected="is_public_selected"
-                data-test="public"
-                v-translate
-            >
-                Public
-            </option>
-            <option
-                v-if="are_restricted_users_allowed"
-                value="private"
-                v-bind:selected="is_private_selected"
-                data-test="private"
-                v-translate
-            >
-                Private incl. restricted
-            </option>
-            <option
-                value="private-wo-restr"
-                v-bind:selected="is_private_without_restricted_selected"
-                data-test="private-wo-restr"
-                v-translate
-            >
-                Private
-            </option>
-        </select>
-    </div>
+            Public incl. restricted
+        </option>
+        <option value="public" v-bind:selected="is_public_selected" data-test="public" v-translate>
+            Public
+        </option>
+        <option
+            v-if="are_restricted_users_allowed"
+            value="private"
+            v-bind:selected="is_private_selected"
+            data-test="private"
+            v-translate
+        >
+            Private incl. restricted
+        </option>
+        <option
+            value="private-wo-restr"
+            v-bind:selected="is_private_without_restricted_selected"
+            data-test="private-wo-restr"
+            v-translate
+        >
+            Private
+        </option>
+    </select>
 </template>
 
 <script lang="ts">
@@ -85,6 +73,7 @@ import { VisibilityForVisibilitySelector } from "./type";
 import { sanitize } from "dompurify";
 import { render } from "mustache";
 import { Component } from "vue-property-decorator";
+import EventBus from "../../../helpers/event-bus";
 import $ from "jquery";
 import {
     ACCESS_PRIVATE,
@@ -122,19 +111,20 @@ export default class ProjectInformationInputPrivacyList extends Vue {
             if (!this.can_user_choose_project_visibility) {
                 return;
             }
-            const select = this.$refs.visibility_selector;
-            if (!(select instanceof Element)) {
-                throw new Error(
-                    "Ref visibility_selector is not a valid element, is it present in the DOM"
-                );
-            }
-            this.select2_visibility_select = select2(select, configuration);
+
+            this.select2_visibility_select = select2(this.$el, configuration);
+
+            $(this.$el).on("change", () => {
+                this.updateProjectVisibility();
+            });
         }, 10);
     }
 
     destroyed(): void {
         if (this.select2_visibility_select !== null) {
-            $(this.$refs.visibility_selector).select2("destroy");
+            $(this.$el)
+                .off()
+                .select2("destroy");
         }
     }
 
@@ -206,6 +196,11 @@ export default class ProjectInformationInputPrivacyList extends Vue {
             default:
                 throw new Error("Unable to retrieve the selected visibility type");
         }
+    }
+
+    updateProjectVisibility(): void {
+        const visibility: string | number | string[] | undefined = $(this.$el).val();
+        EventBus.$emit("update-project-visibility", { new_visibility: visibility });
     }
 }
 </script>

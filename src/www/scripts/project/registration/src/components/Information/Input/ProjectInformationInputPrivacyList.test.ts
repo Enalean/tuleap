@@ -153,26 +153,5 @@ describe("ProjectInformationInputPrivacyList", () => {
             expect(wrapper.contains("[data-test=unrestricted]")).toBe(true);
             expect(wrapper.contains("[data-test=public]")).toBe(true);
         });
-
-        it("Displays nothing when user can not choose the privacy", async () => {
-            const state = {
-                project_default_visibility: "private",
-                are_restricted_users_allowed: true,
-                can_user_choose_project_visibility: false
-            } as State;
-
-            const store_options = { state };
-
-            const store = createStoreMock(store_options);
-
-            const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
-                localVue: await createProjectRegistrationLocalVue(),
-                mocks: { $store: store }
-            });
-
-            expect(wrapper.contains("[data-test=project-information-input-privacy-list]")).toBe(
-                false
-            );
-        });
     });
 });
