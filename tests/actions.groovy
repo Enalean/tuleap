@@ -30,7 +30,7 @@ def runJestTests(String name, String path) {
     export JEST_JUNIT_OUTPUT_DIR="\$WORKSPACE/results/jest/"
     export JEST_JUNIT_OUTPUT_NAME="test-${name}-results.xml"
     export JEST_SUITE_NAME="Jest ${name} test suite"
-    npm --prefix "sources/" test -- '${path}' --ci --maxWorkers=2 --reporters=default --reporters=jest-junit --coverage --coverageDirectory="\$WORKSPACE/results/jest/coverage/"
+    npm --prefix "sources/" test -- '${path}' --ci --maxWorkers=2 --reporters=default --reporters=jest-junit --coverage --coverageReporters=text-summary --coverageReporters=cobertura --coverageDirectory="\$WORKSPACE/results/jest/coverage/"
     """
 }
 

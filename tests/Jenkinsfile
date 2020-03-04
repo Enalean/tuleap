@@ -50,11 +50,6 @@ pipeline {
                     stages {
                         stage('UT PHPUnit PHP 7.3') {
                             steps { script { actions.runPHPUnitTests('73') } }
-                            post {
-                                always {
-                                    step([$class: 'CloverPublisher', cloverReportDir: 'results/ut-phpunit/php-73/coverage/', cloverReportFileName: 'clover.xml'])
-                                }
-                            }
                         }
                     }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
@@ -71,7 +66,7 @@ pipeline {
                     post {
                         always {
                             junit 'results/jest/test-*-results.xml'
-                            step([$class: 'CloverPublisher', cloverReportDir: 'results/jest/coverage/', cloverReportFileName: 'clover.xml'])
+                            publishCoverage adapters: [istanbulCoberturaAdapter('results/jest/coverage/cobertura-coverage.xml')], tag: 'Javascript'
                         }
                     }
                 }

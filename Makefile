@@ -142,7 +142,6 @@ phpunit-ci-run:
 		-c tests/phpunit/phpunit.xml \
 		--log-junit /tmp/results/phpunit_tests_results.xml \
 		--coverage-html=/tmp/results/coverage/ \
-		--coverage-clover=/tmp/results/coverage/clover.xml \
 		--random-order \
 		--do-not-cache-result
 
