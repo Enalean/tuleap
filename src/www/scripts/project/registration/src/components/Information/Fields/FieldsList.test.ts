@@ -66,14 +66,14 @@ describe("FieldsList -", () => {
         expect(wrapper.contains("[data-test=text-info]")).toBe(false);
     });
 
-    it("Does not display an asterisk if field is not required", async () => {
+    it("Does not display the field if it is not required", async () => {
         const wrapper = await getWrapper({
             group_desc_id: "1",
             desc_type: "line",
             desc_required: "0"
         } as FieldData);
 
-        expect(wrapper.contains("[data-test=asterisk]")).toBe(false);
+        expect(wrapper.isEmpty()).toBe(true);
     });
 
     it("Send an event when user chooses a new value for the field", async () => {
@@ -81,7 +81,8 @@ describe("FieldsList -", () => {
 
         const wrapper = await getWrapper({
             group_desc_id: "1",
-            desc_type: "text"
+            desc_type: "text",
+            desc_required: "1"
         } as FieldData);
 
         wrapper.find("[data-test=project-field-text]").setValue("my new value");
