@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -87,8 +87,9 @@
 
 <script>
 import { getAgiledashboardPermissions } from "./rest-querier.js";
-import AgileDashboardPermissionsBadge from "permission-badge/PermissionsPerGroupBadge.vue";
+import AgileDashboardPermissionsBadge from "../../../../../src/www/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 export default {
     name: "AgileDashboardPermissions",
     components: { AgileDashboardPermissionsBadge },

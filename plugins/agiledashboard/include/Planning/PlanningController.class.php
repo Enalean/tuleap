@@ -587,20 +587,19 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $planning
         );
 
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../www/assets',
-            AGILEDASHBOARD_BASE_URL . '/assets'
-        );
 
         $include_assets_css = new IncludeAssets(
             __DIR__ . '/../../../../src/www/assets/agiledashboard/themes',
             '/assets/agiledashboard/themes'
         );
-
         $GLOBALS['HTML']->addStylesheet(
             $include_assets_css->getFileURL('planning-admin-colorpicker.css')
         );
 
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/agiledashboard/js',
+            '/assets/agiledashboard/js'
+        );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('planning-admin.js'));
 
         return new Planning_FormPresenter(

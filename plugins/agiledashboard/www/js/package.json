@@ -12,15 +12,7 @@
     "d3-scale": "^1.0.7",
     "d3-selection": "^1.2.0",
     "d3-shape": "^1.2.0",
-    "escape-string-regexp": "^2.0.0",
-    "he": "^1.2.0",
-    "lodash": "^4.17.15",
-    "moment": "^2.19.4",
-    "node-gettext": "^2.0.0",
-    "sprintf-js": "^1.1.1",
-    "striptags": "^2.2.1",
-    "vue": "^2.6.10",
-    "vue-gettext": "^2.1.6"
+    "moment": "^2.19.4"
   },
   "devDependencies": {},
   "config": {
@@ -28,7 +20,6 @@
   },
   "scripts": {
     "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development",
-    "test": "BABEL_ENV=test $npm_package_config_bin/jest --config=jest.projects.config.js"
+    "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development"
   }
 }
