@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,9 +21,9 @@
 
 namespace Tuleap\Templating\Mustache;
 
+use Codendi_HTMLPurifier;
 use PFUser;
 use Tuleap\Language\CustomizableContentLoader;
-use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Templating\TemplateCache;
 
 /**
@@ -62,7 +62,7 @@ class SiteContentRenderer
      */
     public function renderMarkdown(PFUser $user, $template_name, $presenter)
     {
-        $markdown_renderer = new ContentInterpretor();
+        $markdown_renderer = \Tuleap\Markdown\CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
         return $markdown_renderer->getInterpretedContent(
             $this->render(
                 $user,
