@@ -78,10 +78,23 @@ clean-rng:
 	find . -type f -name "*.rng" | xargs rm -f
 
 #
+# Templates generation
+#
+
+generate-templates-docker: ## Generate XML templates
+	@$(DOCKER) run --rm -u "`id -u`":"`id -g`" -v "$(CURDIR):/wrk" enalean/xsltproc make generate-templates
+
+generate-templates:
+	xsltproc tools/utils/setup_templates/generate-templates/generate-scrum_dashboard.xml \
+		-o plugins/agiledashboard/www/resources/scrum_dashboard_template.xml
+	xsltproc tools/utils/setup_templates/generate-templates/generate-agile_alm.xml \
+		-o tools/utils/setup_templates/agile_alm/agile_alm_template.xml
+
+#
 # Tests and all
 #
 
-post-checkout: composer generate-mo dev-clear-cache dev-forgeupgrade npm-build restart-services ## Clear caches, run forgeupgrade, build assets and generate language files
+post-checkout: composer generate-mo dev-clear-cache dev-forgeupgrade generate-templates-docker npm-build restart-services ## Clear caches, run forgeupgrade, build assets and generate language files
 
 npm-build:
 	npm install

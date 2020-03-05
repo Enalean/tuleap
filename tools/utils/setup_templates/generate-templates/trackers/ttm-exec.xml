@@ -1,0 +1,218 @@
+<tracker id="T418" parent_id="0" instantiate_for_new_projects="1" notifications_level="1">
+  <name><![CDATA[Test Execution]]></name>
+  <item_name>test_exec</item_name>
+  <description><![CDATA[Execution of a test case in a campaign]]></description>
+  <color>inca-silver</color>
+  <cannedResponses/>
+  <formElements>
+    <formElement type="fieldset" ID="F12764" rank="1527" required="1">
+      <name>fieldset_1</name>
+      <label><![CDATA[Description]]></label>
+      <description><![CDATA[fieldset_default_tasks_desc_key]]></description>
+      <formElements>
+        <formElement type="column" ID="F12765" rank="0">
+          <name>descc1</name>
+          <label><![CDATA[Desc::C1]]></label>
+          <formElements>
+            <formElement type="ttmstepexec" ID="F12766" rank="0">
+              <name>steps_results</name>
+              <label><![CDATA[Steps results]]></label>
+              <description><![CDATA[Result of the steps' executions.]]></description>
+            </formElement>
+            <formElement type="text" ID="F12767" rank="1">
+              <name>results</name>
+              <label><![CDATA[Results]]></label>
+              <properties rows="10" cols="50"/>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F12768" rank="2">
+          <name>descc2</name>
+          <label><![CDATA[Desc::C2]]></label>
+          <formElements>
+            <formElement type="sb" ID="F12769" rank="5">
+              <name>status</name>
+              <label><![CDATA[Status]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V12811" label="notrun" is_hidden="0"/>
+                  <item ID="V12812" label="passed" is_hidden="0"/>
+                  <item ID="V12813" label="failed" is_hidden="0"/>
+                  <item ID="V12814" label="blocked" is_hidden="0"/>
+                </items>
+                <default_values>
+                  <value REF="V12811"/>
+                </default_values>
+              </bind>
+            </formElement>
+            <formElement type="int" ID="F12770" rank="7">
+              <name>time</name>
+              <label><![CDATA[Time]]></label>
+              <properties size="5"/>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+    </formElement>
+    <formElement type="fieldset" ID="F12771" rank="1559">
+      <name>links_1</name>
+      <label><![CDATA[Links]]></label>
+      <formElements>
+        <formElement type="art_link" ID="F12772" rank="0">
+          <name>artifact_links</name>
+          <label><![CDATA[Artifact Links]]></label>
+        </formElement>
+        <formElement type="cross" ID="F12773" rank="1">
+          <name>cross</name>
+          <label><![CDATA[Cross]]></label>
+        </formElement>
+      </formElements>
+    </formElement>
+    <formElement type="fieldset" ID="F12774" rank="1560">
+      <name>creation_details</name>
+      <label><![CDATA[Creation Details]]></label>
+      <formElements>
+        <formElement type="column" ID="F12775" rank="0">
+          <name>col1</name>
+          <label><![CDATA[col1]]></label>
+          <formElements>
+            <formElement type="aid" ID="F12776" rank="0">
+              <name>artifact_id</name>
+              <label><![CDATA[Artifact ID]]></label>
+              <description><![CDATA[Unique artifact identifier]]></description>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F12777" rank="1">
+          <name>col2</name>
+          <label><![CDATA[col2]]></label>
+          <formElements>
+            <formElement type="subby" ID="F12778" rank="0">
+              <name>submitted_by</name>
+              <label><![CDATA[Created By]]></label>
+              <description><![CDATA[User who originally created the test]]></description>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F12779" rank="2">
+          <name>col3</name>
+          <label><![CDATA[col3]]></label>
+          <formElements>
+            <formElement type="subon" ID="F12780" rank="0">
+              <name>open_date</name>
+              <label><![CDATA[Date Created]]></label>
+              <description><![CDATA[Date and time for the test was created]]></description>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F12781" rank="3">
+          <name>col4</name>
+          <label><![CDATA[col4]]></label>
+          <formElements>
+            <formElement type="lud" ID="F12782" rank="0">
+              <name>last_update_date</name>
+              <label><![CDATA[Last Execution Time]]></label>
+              <description><![CDATA[Date and time of the latest modification in an artifact]]></description>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+    </formElement>
+  </formElements>
+  <semantics>
+    <semantic type="title">
+      <shortname>title</shortname>
+      <label>Title</label>
+      <description>Define the title of an artifact</description>
+      <field REF="F12767"/>
+    </semantic>
+    <semantic type="status">
+      <shortname>status</shortname>
+      <label>Status</label>
+      <description>Define the status of an artifact</description>
+      <field REF="F12769"/>
+      <open_values>
+        <open_value REF="V12811"/>
+        <open_value REF="V12814"/>
+      </open_values>
+    </semantic>
+    <semantic type="done">
+      <shortname>done</shortname>
+      <label>Done</label>
+      <description>Define the closed status that are considered Done</description>
+      <closed_values/>
+    </semantic>
+    <semantic type="tooltip">
+      <field REF="F12776"/>
+      <field REF="F12769"/>
+      <field REF="F12767"/>
+    </semantic>
+    <semantic type="plugin_cardwall_card_fields"/>
+  </semantics>
+  <rules>
+    <date_rules/>
+    <list_rules/>
+  </rules>
+  <reports>
+    <report>
+      <name>All Tests Execution</name>
+      <description>Tasks Report</description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="F12782"/>
+        </criteria>
+        <criteria rank="1">
+          <field REF="F12769"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer ID="R1686" type="table" rank="0" chunksz="15">
+          <name>All Tests Execution</name>
+          <columns>
+            <field REF="F12776"/>
+            <field REF="F12782"/>
+            <field REF="F12769"/>
+            <field REF="F12772"/>
+            <field REF="F12778"/>
+            <field REF="F12770"/>
+          </columns>
+          <sort>
+            <field REF="F12782"/>
+          </sort>
+        </renderer>
+        <renderer ID="R1687" type="plugin_graphontrackersv5" rank="1">
+          <name>Test Execution Charts</name>
+          <charts>
+            <chart type="pie" width="600" height="400" rank="0" base="F12769">
+              <title>Test execution by status</title>
+            </chart>
+          </charts>
+        </renderer>
+      </renderers>
+    </report>
+  </reports>
+  <permissions>
+    <permission scope="tracker" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="field" REF="F12766" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12766" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F12766" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F12767" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12767" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F12767" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F12769" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12769" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F12769" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F12770" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12770" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F12770" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F12772" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12772" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F12772" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F12773" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12776" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12778" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12780" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12782" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+  </permissions>
+  <artifacts/>
+</tracker>

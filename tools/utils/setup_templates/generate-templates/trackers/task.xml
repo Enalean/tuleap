@@ -1,0 +1,356 @@
+<tracker id="T482" parent_id="T485" instantiate_for_new_projects="1" notifications_level="1">
+  <name><![CDATA[Tasks]]></name>
+  <item_name>task</item_name>
+  <description><![CDATA[tasks]]></description>
+  <color>daphne-blue</color>
+  <cannedResponses/>
+  <formElements>
+    <formElement type="fieldset" ID="F14391" rank="2">
+      <name>access_information</name>
+      <label><![CDATA[Access Information]]></label>
+      <formElements>
+        <formElement type="column" ID="F14392" rank="0">
+          <name>column1</name>
+          <label><![CDATA[Access information left column]]></label>
+          <formElements>
+            <formElement type="aid" ID="F14393" rank="0">
+              <name>artifact_id</name>
+              <label><![CDATA[Artifact ID]]></label>
+              <description><![CDATA[Unique artifact identifier]]></description>
+            </formElement>
+            <formElement type="subon" ID="F14394" rank="2">
+              <name>submitted_on</name>
+              <label><![CDATA[Submitted on]]></label>
+              <description><![CDATA[Date and time for the initial artifact submission]]></description>
+            </formElement>
+            <formElement type="subby" ID="F14395" rank="5">
+              <name>submitted_by</name>
+              <label><![CDATA[Submitted by]]></label>
+              <description><![CDATA[User who originally submitted the artifact]]></description>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F14396" rank="1">
+          <name>column2</name>
+          <label><![CDATA[Access information right column]]></label>
+          <formElements>
+            <formElement type="lud" ID="F14397" rank="0">
+              <name>last_update_on</name>
+              <label><![CDATA[Last Update On]]></label>
+              <description><![CDATA[Date and time of the latest modification in an artifact]]></description>
+            </formElement>
+            <formElement type="luby" ID="F14398" rank="3">
+              <name>last_update_by</name>
+              <label><![CDATA[Last Update By]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+    </formElement>
+    <formElement type="fieldset" ID="F14399" rank="30" required="1">
+      <name>description</name>
+      <label><![CDATA[Description]]></label>
+      <formElements>
+        <formElement type="string" ID="F14401" rank="0" required="1">
+          <name>title</name>
+          <label><![CDATA[Task title]]></label>
+          <description><![CDATA[Task title]]></description>
+          <properties size="80"/>
+        </formElement>
+        <formElement type="text" ID="F14402" rank="1">
+          <name>details</name>
+          <label><![CDATA[Details]]></label>
+          <properties rows="4" cols="103"/>
+        </formElement>
+        <formElement type="column" ID="F14403" rank="2">
+          <name>c1</name>
+          <label><![CDATA[C1]]></label>
+          <formElements>
+            <formElement type="sb" ID="F14404" rank="0">
+              <name>assigned_to</name>
+              <label><![CDATA[Assigned to]]></label>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F14405" rank="7">
+          <name>c2</name>
+          <label><![CDATA[C2]]></label>
+          <formElements>
+            <formElement type="sb" ID="F14406" rank="0">
+              <name>status</name>
+              <label><![CDATA[Status]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V13842" label="Todo" is_hidden="0"/>
+                  <item ID="V13843" label="On going" is_hidden="0"/>
+                  <item ID="V13844" label="Review" is_hidden="0"/>
+                  <item ID="V13845" label="Done" is_hidden="0"/>
+                  <item ID="V13846" label="Canceled" is_hidden="0"/>
+                </items>
+                <decorators>
+                  <decorator REF="V13842" tlp_color_name="firemist-silver"/>
+                  <decorator REF="V13843" tlp_color_name="acid-green"/>
+                  <decorator REF="V13844" tlp_color_name="neon-green"/>
+                  <decorator REF="V13845" tlp_color_name="army-green"/>
+                  <decorator REF="V13846" tlp_color_name="inca-silver"/>
+                </decorators>
+                <default_values>
+                  <value REF="V13842"/>
+                </default_values>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+    </formElement>
+    <formElement type="fieldset" ID="F14407" rank="2705">
+      <name>fieldset1_1</name>
+      <label><![CDATA[Links]]></label>
+      <formElements>
+        <formElement type="art_link" ID="F14408" rank="0">
+          <name>links</name>
+          <label><![CDATA[Links]]></label>
+        </formElement>
+        <formElement type="cross" ID="F14409" rank="1">
+          <name>references</name>
+          <label><![CDATA[References]]></label>
+        </formElement>
+      </formElements>
+    </formElement>
+  </formElements>
+  <semantics>
+    <semantic type="title">
+      <shortname>title</shortname>
+      <label>Title</label>
+      <description>Define the title of an artifact</description>
+      <field REF="F14401"/>
+    </semantic>
+    <semantic type="description">
+      <shortname>description</shortname>
+      <label>Description</label>
+      <description>Define the description of an artifact</description>
+      <field REF="F14402"/>
+    </semantic>
+    <semantic type="status">
+      <shortname>status</shortname>
+      <label>Status</label>
+      <description>Define the status of an artifact</description>
+      <field REF="F14406"/>
+      <open_values>
+        <open_value REF="V13842"/>
+        <open_value REF="V13843"/>
+        <open_value REF="V13844"/>
+      </open_values>
+    </semantic>
+    <semantic type="done">
+      <shortname>done</shortname>
+      <label>Done</label>
+      <description>Define the closed status that are considered Done</description>
+      <closed_values/>
+    </semantic>
+    <semantic type="contributor">
+      <shortname>contributor</shortname>
+      <label>Contributor/assignee</label>
+      <description>Define the contributor/assignee of an artifact</description>
+      <field REF="F14404"/>
+    </semantic>
+    <semantic type="tooltip">
+      <field REF="F14401"/>
+      <field REF="F14406"/>
+    </semantic>
+    <semantic type="plugin_cardwall_card_fields">
+      <field REF="F14404"/>
+    </semantic>
+  </semantics>
+  <rules>
+    <date_rules/>
+    <list_rules/>
+  </rules>
+  <reports>
+    <report is_default="0">
+      <name>All Tasks</name>
+      <description>Tasks Report</description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="F14401"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer ID="R1746" type="table" rank="0" chunksz="15">
+          <name>Results</name>
+          <columns/>
+        </renderer>
+        <renderer ID="R1747" type="plugin_cardwall" rank="1">
+          <name>Taskboard</name>
+        </renderer>
+        <renderer ID="R1748" type="plugin_graphontrackersv5" rank="2">
+          <name>Tasks by priority</name>
+          <charts>
+            <chart type="pie" width="400" height="200" rank="0">
+              <title>Tasks by priority</title>
+            </chart>
+          </charts>
+        </renderer>
+      </renderers>
+    </report>
+    <report is_default="0" is_in_expert_mode="1" expert_query="assigned_to = MYSELF() and status != &quot;Done&quot;">
+      <name>My Tasks</name>
+      <description>Tasks Report</description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="F14401"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer ID="R1749" type="table" rank="0" chunksz="15">
+          <name>My Tasks</name>
+          <columns/>
+        </renderer>
+        <renderer ID="R1750" type="plugin_graphontrackersv5" rank="1">
+          <name>Tasks by priority</name>
+          <charts>
+            <chart type="pie" width="400" height="200" rank="0">
+              <title>Tasks by priority</title>
+            </chart>
+          </charts>
+        </renderer>
+      </renderers>
+    </report>
+    <report is_default="0">
+      <name>Open Tasks</name>
+      <description>Tasks Report</description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="F14401"/>
+        </criteria>
+        <criteria rank="1" is_advanced="1">
+          <field REF="F14406"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer ID="R1751" type="table" rank="0" chunksz="15">
+          <name>Open Tasks</name>
+          <columns/>
+        </renderer>
+        <renderer ID="R1752" type="plugin_cardwall" rank="1">
+          <name>Taskboard</name>
+        </renderer>
+        <renderer ID="R1753" type="plugin_graphontrackersv5" rank="2">
+          <name>Tasks by priority</name>
+          <charts>
+            <chart type="pie" width="400" height="200" rank="0">
+              <title>Tasks by priority</title>
+            </chart>
+          </charts>
+        </renderer>
+      </renderers>
+    </report>
+  </reports>
+  <permissions>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="field" REF="F14393" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14394" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14395" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14397" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14398" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14401" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14401" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F14401" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F14402" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14402" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F14402" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F14404" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14404" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F14404" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F14406" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14406" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F14406" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F14408" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14408" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F14408" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F14409" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+  </permissions>
+  <artifacts/>
+</tracker>
