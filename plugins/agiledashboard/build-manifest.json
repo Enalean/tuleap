@@ -1,16 +1,7 @@
 {
     "name": "agiledashboard",
     "dependencies": ["tracker"],
-    "javascript": [
-        "www/js/display-angular-feedback.js"
-    ],
-    "components": [
-        "www/js",
-        "scripts/kanban",
-        "scripts/planning-v2",
-        "scripts",
-        "themes"
-    ],
+    "components": ["."],
     "gettext-js": {
         "burnup-chart": {
             "src": "scripts/burnup-chart/src",

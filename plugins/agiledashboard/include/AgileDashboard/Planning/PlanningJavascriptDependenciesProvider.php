@@ -20,24 +20,27 @@
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use ForgeConfig;
 use Tuleap\AgileDashboard\JavascriptDependenciesProvider;
 use Tuleap\Layout\IncludeAssets;
 
-class PlanningJavascriptDependenciesProvider implements JavascriptDependenciesProvider
+final class PlanningJavascriptDependenciesProvider implements JavascriptDependenciesProvider
 {
-    public function getDependencies()
-    {
-        $planning_v2_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/agiledashboard/planning-v2',
-            '/assets/agiledashboard/planning-v2'
-        );
-        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-        $include_assets = new IncludeAssets($assets_path, '/assets');
+    /**
+     * @var IncludeAssets
+     */
+    private $agiledashboard_include_assets;
 
-        return array(
-            array('file' => $include_assets->getFileURL('ckeditor.js')),
-            array('file' => $planning_v2_include_assets->getFileURL('planning-v2.js')),
-        );
+    public function __construct(IncludeAssets $agiledashboard_include_assets)
+    {
+        $this->agiledashboard_include_assets = $agiledashboard_include_assets;
+    }
+
+    public function getDependencies(): array
+    {
+        $core_include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets', '/assets');
+        return [
+            ['file' => $core_include_assets->getFileURL('ckeditor.js')],
+            ['file' => $this->agiledashboard_include_assets->getFileURL('planning-v2.js')],
+        ];
     }
 }

@@ -161,20 +161,15 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             $warning = $e->getMessage();
         }
 
-        $burnup_chart_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/agiledashboard/js',
-            '/assets/agiledashboard/js'
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/agiledashboard',
+            '/assets/agiledashboard'
         );
-        $GLOBALS['HTML']->includeFooterJavascriptFile($burnup_chart_include_assets->getFileURL('burnup-chart.js'));
-
-        $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/agiledashboard/themes',
-            '/assets/agiledashboard/themes'
-        );
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('burnup-chart.js'));
 
         $capacity                  = $this->getConfigurationValueRetriever()->getCapacity($artifact, $user);
         $burnup_representation     = new BurnupRepresentation($capacity, $burnup_data);
-        $css_file_url              = $theme_include_assets->getFileURL('burnup-chart.css');
+        $css_file_url              = $include_assets->getFileURL('burnup-chart.css');
 
         return new BurnupFieldPresenter(
             $this->getCountElementsModeChecker(),

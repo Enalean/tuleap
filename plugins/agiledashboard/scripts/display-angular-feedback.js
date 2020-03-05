@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+import codendi from "codendi";
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+document.addEventListener("DOMContentLoaded", () => {
+    const key = "tuleap_feedback";
+    if (sessionStorage[key]) {
+        codendi.feedback.log("info", sessionStorage[key]);
+        delete sessionStorage[key];
+    }
+});

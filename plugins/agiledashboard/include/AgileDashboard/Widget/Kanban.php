@@ -247,20 +247,20 @@ abstract class Kanban extends Widget
         return dgettext('tuleap-agiledashboard', 'Add Kanban to dashboard');
     }
 
-    public function getJavascriptDependencies()
+    private function getIncludeAssets(): IncludeAssets
     {
-        $provider = new KanbanJavascriptDependenciesProvider();
+        return new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/agiledashboard', '/assets/agiledashboard');
+    }
 
+    public function getJavascriptDependencies(): array
+    {
+        $provider = new KanbanJavascriptDependenciesProvider($this->getIncludeAssets());
         return $provider->getDependencies();
     }
 
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies(): CssAssetCollection
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/agiledashboard/themes',
-            '/assets/agiledashboard/themes'
-        );
-        return new CssAssetCollection([new CssAsset($include_assets, 'kanban')]);
+        return new CssAssetCollection([new CssAsset($this->getIncludeAssets(), 'kanban')]);
     }
 
     public function hasPreferences($widget_id)
