@@ -95,11 +95,7 @@ $width-bar-left-sprints: 17px;
 }
 
 .open-badges-sprints:hover .project-release-open-sprint-badge-icon-toggle {
-    display: none;
-}
-
-.open-badges-sprints:hover .project-release-open-sprint-badges {
-    margin: 0 #{$tlp-double-spacing - $width-bar-left-sprints} 0 0;
+    background: transparent;
 }
 
 .on-open-sprints-details .project-release-info-badge-open-sprint::after {
@@ -136,7 +132,11 @@ $width-bar-left-sprints: 17px;
 
 .project-release-open-sprint-badges {
     display: inline-flex;
-    margin: 0 0 0 -#{$width-bar-left-sprints};
+    margin: 0 0 0 #{- $width-bar-left-sprints};
+}
+
+.project-release-badges-open-closed.open-badges-sprints .project-release-open-sprint-badges {
+    margin: 0 $tlp-double-spacing 0 #{- $width-bar-left-sprints};
 }
 
 .milestone-badges-sprints-separator {
@@ -241,9 +241,7 @@ $width-bar-left-sprints: 17px;
 }
 
 .on-open-sprints-details .project-release-open-sprint-badges {
-    min-width: 50%;
     max-width: 50%;
-    margin: 0 $tlp-double-spacing 0 -#{$width-bar-left-sprints};
 }
 
 .project-release-badge-open-sprint-buttons {

@@ -53,6 +53,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-description-link-icon {
+    margin: 0 5px 0 0;
+    color: $tlp-theme-color;
     font-size: 12px;
 }
 
@@ -64,6 +66,14 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-planning-link {
     margin: 0 0 0 $tlp-spacing;
+}
+
+.release-planning-link-item:hover {
+    text-decoration: none;
+}
+
+.release-planning-link-item-text:hover {
+    text-decoration: underline;
 }
 
 .release-description-row {

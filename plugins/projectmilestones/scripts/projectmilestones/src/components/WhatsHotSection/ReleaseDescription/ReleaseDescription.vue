@@ -37,16 +37,18 @@
                     v-if="get_planning_link"
                     v-bind:href="get_planning_link"
                     data-test="planning-link"
-                    class="release-planning-link"
+                    class="release-planning-link release-planning-link-item"
                 >
-                    <i class="release-description-link-icon fa fa-sign-in" />
-                    <translate
-                        v-bind:translate-params="{
-                            label_submilestone: tracker_submilestone_label
-                        }"
-                    >
-                        %{label_submilestone} Planning
-                    </translate>
+                    <i class="release-description-link-icon fa fa-sign-in"></i>
+                    <span class="release-planning-link-item-text">
+                        <translate
+                            v-bind:translate-params="{
+                                label_submilestone: tracker_submilestone_label
+                            }"
+                        >
+                            %{label_submilestone} Planning
+                        </translate>
+                    </span>
                 </a>
             </release-buttons-description>
         </div>
