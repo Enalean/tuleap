@@ -107,6 +107,7 @@ use Tuleap\User\Account\Appearance\AppareancePresenterBuilder;
 use Tuleap\User\Account\Appearance\LanguagePresenterBuilder;
 use Tuleap\User\Account\Appearance\ThemeColorPresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
+use Tuleap\User\Account\ConfirmNewEmailController;
 use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
 use Tuleap\User\Account\DisplayAppearanceController;
 use Tuleap\User\Account\DisplayEditionController;
@@ -407,6 +408,11 @@ class RouteCollector
         return UpdateAccountInformationController::buildSelf();
     }
 
+    public static function getEmailConfirm(): DispatchableWithRequest
+    {
+        return ConfirmNewEmailController::buildSelf();
+    }
+
     public static function getAccountNotifications(): DispatchableWithRequest
     {
         return new DisplayNotificationsController(
@@ -699,6 +705,8 @@ class RouteCollector
         $r->addGroup('/account', static function (FastRoute\RouteCollector $r) {
             $r->get('/information', [self::class, 'getAccountPreferences']);
             $r->post('/information', [self::class, 'postAccountInformation']);
+
+            $r->get('/confirm-new-email', [self::class, 'getEmailConfirm']);
 
             $r->get('/notifications', [self::class, 'getAccountNotifications']);
             $r->post('/notifications', [self::class, 'postAccountNotifications']);

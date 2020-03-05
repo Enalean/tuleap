@@ -253,7 +253,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[0]['message']);
+        $this->assertStringContainsStringIgnoringCase('email was successfully saved', $feedback[0]['message']);
     }
 
     public function testItUpdatesEmailButDbUpdateFails(): void
@@ -289,7 +289,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[0]['message']);
+        $this->assertStringContainsStringIgnoringCase('email was successfully saved', $feedback[0]['message']);
         $this->assertStringNotContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
     }
 
@@ -424,7 +424,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
         $this->assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
         $this->assertEquals(\Feedback::INFO, $feedback[1]['level']);
-        $this->assertStringContainsStringIgnoringCase('email successfully updated', $feedback[1]['message']);
+        $this->assertStringContainsStringIgnoringCase('email was successfully saved', $feedback[1]['message']);
         $this->assertEquals(\Feedback::INFO, $feedback[2]['level']);
         $this->assertStringContainsStringIgnoringCase('timezone successfully updated', $feedback[2]['message']);
     }

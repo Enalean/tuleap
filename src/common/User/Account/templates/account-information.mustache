@@ -65,6 +65,9 @@
                                     <div class="tlp-form-element">
                                         <label class="tlp-label" for="email">{{# gettext }}Email{{/ gettext }} <i class="fa fa-asterisk"></i></label>
                                         <input type="email" class="tlp-input" id="email" name="email" value="{{ email }}" size="50" placeholder="fox@example.com" autocomplete="email" required>
+                                        {{# change_email_pending }}
+                                        <p class="tlp-text-warning">{{# gettext }}An email change was requested, please check your inbox to complete the change.{{/ gettext }}</p>
+                                        {{/ change_email_pending }}
                                     </div>
                                 {{/ can_change_email }}
                                 {{^ can_change_email }}

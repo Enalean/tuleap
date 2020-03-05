@@ -104,7 +104,6 @@ class LdapPlugin extends Plugin
         $this->addHook('user_home_pi_entry', 'personalInformationEntry', false);
 
         // User account
-        $this->addHook('before_change_email-complete', 'cancelChangeAndUserLdap', false);
         $this->addHook('before_lostpw-confirm', 'cancelChange', false);
         $this->addHook('before_lostpw', 'cancelChange', false);
         $this->addHook(PasswordPreUpdateEvent::NAME);
@@ -593,21 +592,6 @@ class LdapPlugin extends Plugin
             exit_permission_denied();
         }
     }
-
-    /**
-     * Hook
-     */
-    public function cancelChangeAndUserLdap($params)
-    {
-        $um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        if ($this->isLdapAuthType() && $user->getLdapId() != '') {
-            if (! $this->hasLDAPWrite()) {
-                exit_permission_denied();
-            }
-        }
-    }
-
 
     public function before_register($params)
     {
