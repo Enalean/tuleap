@@ -40,6 +40,13 @@
                             class="register-new-project-information-form-container"
                             data-test="register-new-project-information-form"
                         ></div>
+                        <div class="tlp-property">
+                            <label class="tlp-label" v-translate>Chosen template</label>
+                            <p class="project-information-selected-template">
+                                {{ selected_template_name }}
+                            </p>
+                        </div>
+
                         <project-name v-model="name_properties" />
 
                         <div class="tlp-form-element" v-if="can_user_choose_project_visibility">
@@ -168,12 +175,20 @@ export default class ProjectInformation extends Vue {
 
     is_private = false;
 
+    selected_template_name = "";
+
     field_list: Array<FieldProperties> = [];
 
     mounted(): void {
         if (!this.is_template_selected) {
             this.$router.push("new");
             return;
+        }
+
+        if (this.selected_tuleap_template) {
+            this.selected_template_name = this.selected_tuleap_template.title;
+        } else if (this.selected_company_template) {
+            this.selected_template_name = this.selected_company_template.title;
         }
 
         this.selected_visibility = this.project_default_visibility;
