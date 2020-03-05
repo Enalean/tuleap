@@ -572,6 +572,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_encryption/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_encryption/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/userlog/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/userlog/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity/themes/
 

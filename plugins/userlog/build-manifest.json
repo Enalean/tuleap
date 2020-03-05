@@ -1,7 +1,4 @@
 {
     "name": "userlog",
-    "javascript": [
-        "www/scripts/user-logging-date-picker.js"
-    ],
-    "components": ["themes"]
+    "components": ["./"]
 }
