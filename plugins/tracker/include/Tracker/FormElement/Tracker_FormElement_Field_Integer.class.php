@@ -31,7 +31,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
             //Only filter query if criteria is valuated
             $criteria_value = $this->getCriteriaValue($criteria);
 
-            if ($criteria_value !== '') {
+            if ($criteria_value !== '' && $criteria_value !== null) {
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
                 return " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
