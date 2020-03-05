@@ -22,6 +22,12 @@ $homepage-small-screen-width: 850px;
 /* stylelint-disable */
 body.homepage > #main-container {
     background: $tlp-theme-sidebar-background-color;
+
+    > main > #feedback {
+        margin: 0;
+        padding: $tlp-spacing $tlp-spacing 0;
+        background: $tlp-theme-background-color;
+    }
 }
 /* stylelint-enable */
 
