@@ -36,7 +36,6 @@ pipeline {
                             post {
                                 always {
                                     junit 'results/ut-phpunit/*/phpunit_tests_results.xml'
-                                    step([$class: 'CloverPublisher', cloverReportDir: 'results/ut-phpunit/php-74/coverage/', cloverReportFileName: 'clover.xml'])
                                 }
                             }
                         }
