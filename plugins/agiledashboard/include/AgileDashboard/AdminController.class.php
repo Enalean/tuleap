@@ -167,8 +167,8 @@ class AdminController extends BaseController
     public function adminScrum(): string
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/agiledashboard/js',
-            '/assets/agiledashboard/js'
+            __DIR__ . '/../../../../src/www/assets/agiledashboard',
+            '/assets/agiledashboard'
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('administration.js'));

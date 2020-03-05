@@ -19,5 +19,5 @@
  */
 
 module.exports = {
-    projects: ["<rootDir>/**/jest.config.js"]
+    projects: ["<rootDir>/scripts/*/jest.config.js"]
 };

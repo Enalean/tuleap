@@ -751,11 +751,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function cssfile($params)
     {
         if ($this->isAnAgiledashboardRequest()) {
-            $theme_include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/agiledashboard/themes',
-                '/assets/agiledashboard/themes'
-            );
-            $css_file_url = $theme_include_assets->getFileURL('style-fp.css');
+            $css_file_url = $this->getIncludeAssets()->getFileURL('style-fp.css');
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
     }
@@ -763,38 +759,25 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function javascript_file() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isAnAgiledashboardRequest()) {
-            echo $this->getMinifiedAssetHTML()."\n";
-
-            $include_assets = new IncludeAssets(
-                $this->getFilesystemPath() . '/www/assets',
-                $this->getPluginPath() . '/assets'
-            );
-
-            echo $include_assets->getHTMLSnippet("home-burndowns.js");
+            echo $this->getIncludeAssets()->getHTMLSnippet('home-burndowns.js');
         }
     }
 
     /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
     public function burning_parrot_get_stylesheets(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/agiledashboard/themes',
-            '/assets/agiledashboard/themes'
-        );
-
         $variant = $params['variant'];
         if ($this->isInOverviewTab() || $this->isPlanningV2URL()) {
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('scrum-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('scrum-' . $variant->getName() . '.css');
         } elseif ($this->isScrumAdminURL()) {
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('administration-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('administration-' . $variant->getName() . '.css');
         }
     }
 
     public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isInOverviewTab()) {
-            $assets = $this->getIncludeAssets();
-            $params['javascript_files'][] = $assets->getFileURL('scrum-header.js');
+            $params['javascript_files'][] = $this->getIncludeAssets()->getFileURL('scrum-header.js');
             return;
         }
 
@@ -824,9 +807,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     private function getJavascriptDependenciesProvider()
     {
         if (KanbanURL::isKanbanURL(HTTPRequest::instance())) {
-            return new KanbanJavascriptDependenciesProvider();
+            return new KanbanJavascriptDependenciesProvider($this->getIncludeAssets());
         } elseif ($this->isPlanningV2URL()) {
-            return new PlanningJavascriptDependenciesProvider();
+            return new PlanningJavascriptDependenciesProvider($this->getIncludeAssets());
         }
 
         return null;
@@ -2060,8 +2043,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/agiledashboard/js',
-            '/assets/agiledashboard/js'
+            __DIR__ . '/../../../src/www/assets/agiledashboard',
+            '/assets/agiledashboard'
         );
     }
 

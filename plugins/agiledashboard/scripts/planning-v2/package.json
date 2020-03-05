@@ -1,8 +1,7 @@
 {
   "author": "Enalean Team",
-  "name": "planning-v2",
-  "version": "0.0.1",
-  "homepage": "https://www.enalean.com",
+  "name": "@tuleap/plugin-agiledashboard-planning-v2",
+  "homepage": "https://www.tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
@@ -13,24 +12,13 @@
     "angular-sanitize": "^1.7.4",
     "animate.css": "3.5.2",
     "dragular": "4.2.0",
-    "escape-string-regexp": "^1.0.5",
-    "he": "^1.1.1",
-    "lodash": "2.4.0",
+    "lodash": "^2.4.0",
     "moment": "^2.18.1",
     "restangular": "1.4.0",
-    "sprintf-js": "^1.1.1",
-    "striptags": "^2.2.1"
+    "sprintf-js": "^1.1.1"
   },
   "devDependencies": {
     "angular-mocks": "^1.7.4",
     "jquery": "^3.2.1"
-  },
-  "config": {
-    "bin": "../../../../node_modules/.bin/"
-  },
-  "scripts": {
-    "build": "rm -rf ../../../../src/www/assets/agiledashboard/planning-v2/** && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
-    "test": "BABEL_ENV=test $npm_package_config_bin/jest",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'"
   }
 }

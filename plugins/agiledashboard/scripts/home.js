@@ -20,6 +20,7 @@
 import * as d3 from "d3";
 import tuleap from "tuleap";
 import jQuery from "jquery";
+import "./display-angular-feedback.js";
 
 /*
  * Requires jQuery and d3.js
