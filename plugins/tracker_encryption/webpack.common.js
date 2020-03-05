@@ -18,24 +18,31 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 module.exports = [
     {
         entry: {
-            style: "./default/css/style.scss"
+            null: "null_entry",
+            style: "./themes/default/css/style.scss"
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/tracker_encryption/themes")
+            path.resolve(__dirname, "../../src/www/assets/tracker_encryption")
         ),
         module: {
             rules: [webpack_configurator.rule_scss_loader]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
-            webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
+            ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
+                "tracker_encryption.js": [
+                    "./scripts/update_tracker_key_modal.js",
+                    "./scripts/encrypted_field.js"
+                ]
+            }),
+            webpack_configurator.getManifestPlugin()
         ]
     }
 ];
