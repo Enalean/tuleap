@@ -44,6 +44,7 @@ describe("StepTwo", () => {
             },
             localVue: await createTrackerCreationLocalVue(),
             stubs: {
+                "field-chosen-template": true,
                 "field-csrf-token": true,
                 "field-name": true,
                 "field-shortname": true,
@@ -86,13 +87,15 @@ describe("StepTwo", () => {
             const file_input = document.implementation.createHTMLDocument().createElement("input");
             file_input.setAttribute("data-test", "injected-file-input");
 
-            wrapper = await getWrapper(
-                {
-                    selected_xml_file_input: file_input
-                } as State,
-                false,
-                true
-            );
+            const state = {
+                tracker_to_be_created: {
+                    name: "Kanban in the trees",
+                    shortname: "kanban_in_the_trees"
+                },
+                selected_xml_file_input: file_input
+            } as State;
+
+            wrapper = await getWrapper(state, false, true);
         });
 
         it("appends the file input filled during step 1 to the form", () => {
@@ -116,6 +119,10 @@ describe("StepTwo", () => {
 
             wrapper = await getWrapper(
                 {
+                    tracker_to_be_created: {
+                        name: "Kanban in the trees",
+                        shortname: "kanban_in_the_trees"
+                    },
                     selected_xml_file_input: file_input
                 } as State,
                 false,

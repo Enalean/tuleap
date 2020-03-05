@@ -35,6 +35,9 @@ msgstr ""
 "Choisissez un modèle d'outil de suivi parmi ceux disponibles sur votre plate-"
 "forme"
 
+msgid "Chosen template"
+msgstr "Modèle choisi"
+
 msgid "Create a new tracker"
 msgstr "Créer un nouvel outil de suivi"
 
