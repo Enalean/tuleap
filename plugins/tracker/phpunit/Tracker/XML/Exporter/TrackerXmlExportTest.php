@@ -162,6 +162,8 @@ class TrackerXmlExportTest extends TestCase
         $this->tracker1->shouldReceive('exportToXMLInProjectExportContext')->once();
         $this->tracker_artifact_XMLexport->shouldReceive('export')->once();
 
+        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromFormElements")->once();
+
         $archive = Mockery::mock(ArchiveInterface::class);
 
         $this->xml_export->exportSingleTrackerToXml($xml_content, $tracker_id, $user, $archive);

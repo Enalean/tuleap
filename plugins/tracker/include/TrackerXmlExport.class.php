@@ -238,7 +238,13 @@ class TrackerXmlExport
 
     private function validateExport(SimpleXMLElement $xml_trackers)
     {
-        $this->rng_validator->validate($xml_trackers, dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng');
+        $partial_element = new SimpleXMLElement((string)$xml_trackers->asXML());
+
+        foreach ($partial_element->tracker as $xml_tracker) {
+            $this->external_field_extractor->extractExternalFieldsFromFormElements($xml_tracker->formElements);
+        }
+
+        $this->rng_validator->validate($partial_element, dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng');
     }
 
     private function exportMapping(SimpleXMLElement $tracker_xml, Tracker $tracker)
