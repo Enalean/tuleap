@@ -1,5 +1,7 @@
-/**
- * Copyright (c) Enalean - 2017. All rights reserved
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import jQuery from "jquery";
+
 !(function($) {
     $(document).ready(function() {
         $('#tracker-artifact-link-type-usages input[type="checkbox"]').on("change", function() {
             $("#" + $(this).attr("data-form-id")).submit();
         });
     });
-})(window.jQuery);
+})(jQuery);

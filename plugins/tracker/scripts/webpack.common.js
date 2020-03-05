@@ -54,6 +54,8 @@ const path_to_badge = path.resolve(
 
 const webpack_config_for_vue = {
     entry: {
+        "admin-nature": "./admin-nature.js",
+        "global-admin": "./global-admin.js",
         "tracker-report-expert-mode": "./report/index.js",
         "tracker-permissions-per-group": "./permissions-per-group/src/index.js",
         "tracker-workflow-transitions": "./workflow-transitions/src/index.js",

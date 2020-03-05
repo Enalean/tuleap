@@ -29,6 +29,8 @@ use TemplateRendererFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -124,7 +126,12 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
         $params      = [];
         $breadcrumbs = [];
 
-        $response->includeFooterJavascriptFile(TRACKER_BASE_URL . '/scripts/global-admin.js');
+        $response->addJavascriptAsset(
+            new JavascriptAsset(
+                new IncludeAssets(__DIR__ . '/../../../www/assets', TRACKER_BASE_URL . '/assets'),
+                'global-admin.js'
+            )
+        );
         $this->tracker_manager->displayHeader(
             $project,
             $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
