@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Psr\Http\Message\UriInterface;
-use Tuleap\OAuth2Server\App\OAuth2App;
 
 /**
  * @psalm-immutable
@@ -43,17 +42,32 @@ final class AuthorizationFormPresenter
      */
     public $deny_authorization_uri;
     /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
+    /**
+     * @var string | null
+     */
+    public $state;
+    /**
+     * @var string
+     */
+    public $redirect_uri;
+    /**
      * @var OAuth2ScopeDefinitionPresenter[]
      */
     public $scope_presenters;
 
     public function __construct(
-        OAuth2App $app,
+        AuthorizationFormData $data,
         UriInterface $deny_authorization_uri,
         OAuth2ScopeDefinitionPresenter ...$scope_presenters
     ) {
-        $this->app_name               = $app->getName();
-        $this->project_name           = $app->getProject()->getPublicName();
+        $this->app_name               = $data->getApp()->getName();
+        $this->project_name           = $data->getApp()->getProject()->getPublicName();
+        $this->csrf_token             = $data->getCSRFToken();
+        $this->state                  = $data->getState();
+        $this->redirect_uri           = $data->getRedirectUri();
         $this->deny_authorization_uri = $deny_authorization_uri;
         $this->scope_presenters       = $scope_presenters;
     }

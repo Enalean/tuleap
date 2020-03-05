@@ -25,13 +25,10 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\UriInterface;
 use TemplateRendererFactory;
-use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\OAuth2Server\App\OAuth2App;
 
 class AuthorizationFormRenderer
 {
@@ -65,12 +62,10 @@ class AuthorizationFormRenderer
     }
 
     public function renderForm(
-        OAuth2App $client_app,
-        UriInterface $deny_authorization_uri,
-        BaseLayout $layout,
-        AuthenticationScope ...$scopes
+        AuthorizationFormData $data,
+        BaseLayout $layout
     ): ResponseInterface {
-        $presenter = $this->presenter_builder->build($client_app, $deny_authorization_uri, ...$scopes);
+        $presenter = $this->presenter_builder->build($data);
         $layout->addCssAsset(
             new CssAsset(
                 new IncludeAssets(__DIR__ . '/../../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),

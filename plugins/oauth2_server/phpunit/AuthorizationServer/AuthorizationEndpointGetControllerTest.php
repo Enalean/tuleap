@@ -84,6 +84,13 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         );
     }
 
+    protected function tearDown(): void
+    {
+        if (isset($GLOBALS['_SESSION'])) {
+            unset($GLOBALS['_SESSION']);
+        }
+    }
+
     public function testHandleRedirectsAnonymousToLogin(): void
     {
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn(

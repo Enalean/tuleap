@@ -23,21 +23,31 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 final class RedirectURIBuilderTest extends TestCase
 {
     /**
-     * @dataProvider dataProviderValidURIs
+     * @var RedirectURIBuilder
      */
-    public function testBuildRedirectURI(array $parameters, string $expected_result_uri): void
+    private $builder;
+
+    protected function setUp(): void
     {
-        $builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
-        $result = $builder->buildRedirectURI(...$parameters);
+        $this->builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
+    }
+
+    /**
+     * @dataProvider dataProviderValidErrorURIs
+     */
+    public function testBuildErrorURI(array $parameters, string $expected_result_uri): void
+    {
+        $result = $this->builder->buildErrorURI(...$parameters);
         $this->assertSame((string) $result, $expected_result_uri);
     }
 
-    public function dataProviderValidURIs(): array
+    public function dataProviderValidErrorURIs(): array
     {
         return [
             'Base redirect URI has no query'     => [
@@ -52,13 +62,48 @@ final class RedirectURIBuilderTest extends TestCase
                 ['https://example.com?key=value', null, 'error_type'],
                 'https://example.com?key=value&error=error_type',
             ],
-            'Base redirect URI has a port'      => [
+            'Base redirect URI has a port'       => [
                 ['https://example.com:8080/redirect?key=value', null, 'error_type'],
                 'https://example.com:8080/redirect?key=value&error=error_type',
             ],
             'State parameter is kept unmodified' => [
                 ['https://example.com/redirect?key=value', 'state_value', 'error_type'],
                 'https://example.com/redirect?key=value&state=state_value&error=error_type',
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderValidSuccessURIs
+     */
+    public function testBuildSuccessURI(array $parameters, string $expected_result_uri): void
+    {
+        $result = $this->builder->buildSuccessURI(...$parameters);
+        $this->assertSame((string) $result, $expected_result_uri);
+    }
+
+    public function dataProviderValidSuccessURIs(): array
+    {
+        return [
+            'Base redirect URI has no query' => [
+                ['https://example.com/redirect', null, new ConcealedString('auth_code')],
+                'https://example.com/redirect?code=auth_code'
+            ],
+            'Base redirect URI has a query' => [
+                ['https://example.com/redirect?key=value', null, new ConcealedString('auth_code')],
+                'https://example.com/redirect?key=value&code=auth_code'
+            ],
+            'Base redirect URI has no path' => [
+                ['https://example.com?key=value', null, new ConcealedString('auth_code')],
+                'https://example.com?key=value&code=auth_code'
+            ],
+            'Base redirect URI has a port' => [
+                ['https://example.com:8080/redirect?key=value', null, new ConcealedString('auth_code')],
+                'https://example.com:8080/redirect?key=value&code=auth_code'
+            ],
+            'State parameter is kept unmodified' => [
+                ['https://example.com/redirect?key=value', 'state_value', new ConcealedString('auth_code')],
+                'https://example.com/redirect?key=value&state=state_value&code=auth_code'
             ]
         ];
     }

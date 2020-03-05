@@ -43,13 +43,15 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
     private const CLIENT_ID_PARAMETER     = 'client_id';
     private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
     public const  SCOPE_PARAMETER         = 'scope';
-    private const ALLOWED_RESPONSE_TYPE   = 'code';
+    public const  CODE_PARAMETER          = 'code';
     public const  STATE_PARAMETER         = 'state';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
     public const  ERROR_PARAMETER            = 'error';
     private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     private const ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
-    private const ERROR_CODE_ACCESS_DENIED   = 'access_denied';
+    public const  ERROR_CODE_ACCESS_DENIED   = 'access_denied';
+
+    public const CSRF_TOKEN = 'oauth2_server_authorization_endpoint';
     /**
      * @var ResponseFactoryInterface
      */
@@ -126,8 +128,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         }
 
         $state_value = $query_params[self::STATE_PARAMETER] ?? null;
-
-        if (! isset($query_params[self::RESPONSE_TYPE_PARAMETER]) || $query_params[self::RESPONSE_TYPE_PARAMETER] !== self::ALLOWED_RESPONSE_TYPE) {
+        if (! isset($query_params[self::RESPONSE_TYPE_PARAMETER]) || $query_params[self::RESPONSE_TYPE_PARAMETER] !== self::CODE_PARAMETER) {
             return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST, $redirect_uri, $state_value);
         }
 
@@ -139,12 +140,9 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
 
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
-        $deny_authorization_uri = $this->client_uri_redirect_builder->buildRedirectURI(
-            $redirect_uri,
-            $state_value,
-            self::ERROR_CODE_ACCESS_DENIED
-        );
-        return $this->form_renderer->renderForm($client_app, $deny_authorization_uri, $layout, ...$scopes);
+        $csrf_token = new \CSRFSynchronizerToken(self::CSRF_TOKEN);
+        $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, ...$scopes);
+        return $this->form_renderer->renderForm($data, $layout);
     }
 
     /**
@@ -155,7 +153,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         string $redirect_uri,
         ?string $state_value
     ): ResponseInterface {
-        $error_uri = $this->client_uri_redirect_builder->buildRedirectURI($redirect_uri, $state_value, $error_code);
+        $error_uri = $this->client_uri_redirect_builder->buildErrorURI($redirect_uri, $state_value, $error_code);
         return $this->response_factory->createResponse(302)
             ->withHeader('Location', (string) $error_uri);
     }

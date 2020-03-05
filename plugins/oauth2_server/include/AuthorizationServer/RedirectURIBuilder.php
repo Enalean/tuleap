@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
+use Tuleap\Cryptography\ConcealedString;
 
 class RedirectURIBuilder
 {
@@ -37,13 +38,12 @@ class RedirectURIBuilder
         $this->uri_factory = $uri_factory;
     }
 
-    public function buildRedirectURI(
+    public function buildErrorURI(
         string $base_redirect_uri,
         ?string $state_value,
         string $error_code
     ): UriInterface {
         $uri = $this->uri_factory->createUri($base_redirect_uri);
-
         parse_str($uri->getQuery(), $query);
 
         if ($state_value !== null) {
@@ -52,5 +52,23 @@ class RedirectURIBuilder
         $query[AuthorizationEndpointGetController::ERROR_PARAMETER] = $error_code;
 
         return $uri->withQuery(http_build_query($query));
+    }
+
+    public function buildSuccessURI(
+        string $base_redirect_uri,
+        ?string $state_value,
+        ConcealedString $authorization_code
+    ): UriInterface {
+        $uri = $this->uri_factory->createUri($base_redirect_uri);
+        parse_str($uri->getQuery(), $query);
+
+        if ($state_value !== null) {
+            $query[AuthorizationEndpointGetController::STATE_PARAMETER] = $state_value;
+        }
+        $query[AuthorizationEndpointGetController::CODE_PARAMETER] = $authorization_code->getString();
+        $uri_with_query = $uri->withQuery(http_build_query($query));
+        \sodium_memzero($query[AuthorizationEndpointGetController::CODE_PARAMETER]);
+
+        return $uri_with_query;
     }
 }
