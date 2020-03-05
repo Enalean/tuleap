@@ -176,9 +176,6 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function docmanLinkProvider(DocmanLinkProvider $link_provider)
     {
         $project = $link_provider->getProject();
-        $retriever = new DocumentUsageRetriever();
-        if ($retriever->canProjectUseNewUI($project)) {
-            $link_provider->replaceProvider(new DocumentLinkProvider(HTTPRequest::instance()->getServerUrl(), $project));
-        }
+        $link_provider->replaceProvider(new DocumentLinkProvider(HTTPRequest::instance()->getServerUrl(), $project));
     }
 }

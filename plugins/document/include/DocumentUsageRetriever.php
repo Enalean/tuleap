@@ -22,7 +22,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\Document;
 
-use ForgeConfig;
 use PFUser;
 use Project;
 
@@ -41,19 +40,6 @@ class DocumentUsageRetriever
 
         if ($user_new_ui_preference === '0') {
             return false;
-        }
-
-        return $this->canProjectUseNewUI($project);
-    }
-
-    public function canProjectUseNewUI(Project $project): bool
-    {
-        $blacklist_projects_string = ForgeConfig::get('sys_project_blacklist_which_uses_legacy_ui_by_default');
-        if ($blacklist_projects_string) {
-            $blacklist_projects = array_map('trim', explode(',', $blacklist_projects_string));
-            if ($blacklist_projects && in_array($project->getID(), $blacklist_projects)) {
-                return false;
-            }
         }
 
         return true;
