@@ -205,8 +205,8 @@ class Docman_Widget_MyDocman extends Widget
     public function getStylesheetDependencies() : CssAssetCollection
     {
         $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/docman/themes/',
-            '/assets/docman/themes'
+            __DIR__ . '/../../../src/www/assets/docman/',
+            '/assets/docman'
         );
         return new CssAssetCollection([new CssAsset($theme_include_assets, 'burningparrot-style')]);
     }

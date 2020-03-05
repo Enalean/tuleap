@@ -18,18 +18,19 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 let entry_points = {
-    "default-style": "./default/css/style.scss"
+    null: "null_entry",
+    "default-style": "./themes/default/css/style.scss"
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
-    entry_points[`burningparrot-style-${color}`] = `./BurningParrot/css/style-${color}.scss`;
+    entry_points[`burningparrot-style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
     entry_points[
         `burningparrot-style-${color}-condensed`
-    ] = `./BurningParrot/css/style-${color}-condensed.scss`;
+    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
 }
 
 module.exports = [
@@ -37,15 +38,23 @@ module.exports = [
         entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/docman/themes/")
+            path.resolve(__dirname, "../../src/www/assets/docman/")
         ),
         module: {
             rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
-            webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
+            ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
+                "docman.js": [
+                    "./scripts/docman.js",
+                    "./scripts/embedded_file.js",
+                    "./scripts/ApprovalTableReminder.js",
+                    "./scripts/notifications.js"
+                ]
+            }),
+            webpack_configurator.getManifestPlugin()
         ]
     }
 ];

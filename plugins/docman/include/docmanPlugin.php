@@ -341,28 +341,32 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         return $this->pluginInfo;
     }
 
-    public function cssFile($params)
+    public function cssFile($params): void
     {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->currentRequestIsForPlugin() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            $asset = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/docman/themes/',
-                '/assets/docman/themes'
-            );
-            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('default-style.css') .'" />'."\n";
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getAssets()->getFileURL('default-style.css') .'" />'."\n";
         }
     }
 
-    public function javascript_file($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function javascript_file($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->currentRequestIsForPlugin()) {
-            echo $this->getMinifiedAssetHTML()."\n";
+            echo $this->getAssets()->getHTMLSnippet('docman.js');
         }
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/docman/',
+            '/assets/docman'
+        );
     }
 
     public function logsDaily($params)
