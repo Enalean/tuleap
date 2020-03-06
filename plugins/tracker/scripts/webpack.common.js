@@ -20,16 +20,19 @@
 const path = require("path");
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, "../www/assets");
-const assets_public_path = "assets/";
 const manifest_plugin = webpack_configurator.getManifestPlugin();
+const context = path.resolve(__dirname);
+const output = webpack_configurator.configureOutput(
+    path.resolve(__dirname, "../www/assets"),
+    "/plugins/tracker/assets/"
+);
 
 const webpack_config_for_burndown_chart = {
     entry: {
         "burndown-chart": "./burndown-chart/src/burndown-chart.js"
     },
-    context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
+    context,
+    output,
     resolve: {
         alias: {
             "charts-builders": path.resolve(__dirname, "../../../src/www/scripts/charts-builders/"),
@@ -63,8 +66,8 @@ const webpack_config_for_vue = {
         TrackerAdminFields: "./TrackerAdminFields.js",
         "tracker-semantic-timeframe-option-selector": "./semantic-timeframe-option-selector"
     },
-    context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
+    context,
+    output,
     externals: {
         codendi: "codendi",
         jquery: "jQuery",
@@ -92,8 +95,8 @@ const webpack_for_vue_plus_typescript = {
     entry: {
         "tracker-creation": "./tracker-creation/index.ts"
     },
-    context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path, "/plugins/tracker/assets/"),
+    context,
+    output,
     resolve: {
         extensions: [".js", ".ts", ".vue"],
         alias: webpack_configurator.extendAliases(webpack_configurator.vue_components_alias)
@@ -121,8 +124,57 @@ const webpack_for_vue_plus_typescript = {
     }
 };
 
+const config_for_legacy_scripts = {
+    entry: {
+        null: "null_entry"
+    },
+    context,
+    output,
+    externals: {
+        tuleap: "tuleap"
+    },
+    plugins: [
+        ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
+            "tracker.js": [
+                "./legacy/TrackerReports.js",
+                "./legacy/TrackerEmailCopyPaste.js",
+                "./legacy/TrackerReportsSaveAsModal.js",
+                "./legacy/TrackerBinds.js",
+                "./legacy/ReorderColumns.js",
+                "./legacy/TrackerTextboxLists.js",
+                "./legacy/TrackerAdminFieldWorkflow.js",
+                "./legacy/TrackerArtifact.js",
+                "./legacy/TrackerArtifactEmailActions.js",
+                "./legacy/TrackerArtifactLink.js",
+                "./legacy/LoadTrackerArtifactLink.js",
+                "./legacy/TrackerCreate.js",
+                "./legacy/TrackerFormElementFieldPermissions.js",
+                "./legacy/TrackerDateReminderForms.js",
+                "./legacy/TrackerTriggers.js",
+                "./legacy/SubmissionKeeper.js",
+                "./legacy/TrackerFieldDependencies.js",
+                "./legacy/TrackerRichTextEditor.js",
+                "./legacy/artifactChildren.js",
+                "./legacy/load-artifactChildren.js",
+                "./legacy/modal-in-place.js",
+                "./legacy/TrackerArtifactEditionSwitcher.js",
+                "./legacy/FixAggregatesHeaderHeight.js",
+                "./legacy/TrackerSettings.js",
+                "./legacy/TrackerCollapseFieldset.js",
+                "./legacy/CopyArtifact.js",
+                "./legacy/tracker-report-nature-column.js",
+                "./legacy/tracker-admin-notifications.js",
+                "./legacy/tracker-admin-notifications-popover.js",
+                "./legacy/tracker-webhooks.js"
+            ]
+        }),
+        manifest_plugin
+    ]
+};
+
 module.exports = [
     webpack_config_for_burndown_chart,
     webpack_config_for_vue,
-    webpack_for_vue_plus_typescript
+    webpack_for_vue_plus_typescript,
+    config_for_legacy_scripts
 ];
