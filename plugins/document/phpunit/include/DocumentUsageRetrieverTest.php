@@ -70,42 +70,6 @@ class DocumentUsageRetrieverTest extends TestCase
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
 
-    public function testItShouldUseLegacyUIWhenProjectIsInBlackListForDefaultPreferences(): void
-    {
-        $user    = \Mockery::mock(\PFUser::class);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
-
-        ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', '100,102');
-
-        $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
-    }
-
-    public function testItShouldUseLegacyUIWhenProjectIsInBlackListForDefaultPreferencesWithSpaces(): void
-    {
-        $user    = \Mockery::mock(\PFUser::class);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
-
-        ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', ' 100 , 102 ');
-
-        $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
-    }
-
-    public function testItShouldUseLegacyUIWhenProjectIsTheOnlyOneInBlackListForDefaultPreferences(): void
-    {
-        $user    = \Mockery::mock(\PFUser::class);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
-
-        ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', '102');
-
-        $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
-    }
-
     public function testItShouldUseNewUIWhenUserDoesNotHavePreferences(): void
     {
         $user    = \Mockery::mock(\PFUser::class);
