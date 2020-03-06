@@ -411,7 +411,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function javascript_file($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>'.PHP_EOL;
+            echo $this->getIncludeAssets()->getHTMLSnippet('admin-nature.js');
         }
         if ($this->currentRequestIsForPlugin()) {
             echo $this->getMinifiedAssetHTML().PHP_EOL;
@@ -421,19 +421,14 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function burning_parrot_get_javascript_files(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
-            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admin-nature.js';
+            $params['javascript_files'][] = $this->getIncludeAssets()->getFileURL('admin-nature.js');
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
         }
     }
 
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
     {
-        $include_assets = new IncludeAssets(
-            TRACKER_BASE_DIR . '/../www/assets',
-            $this->getPluginPath() . '/assets'
-        );
-
-        $event->addJavascript($include_assets->getFileURL('tracker-permissions-per-group.js'));
+        $event->addJavascript($this->getIncludeAssets()->getFileURL('tracker-permissions-per-group.js'));
     }
 
     /**
@@ -2140,5 +2135,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     private function getTrackerChecker(): TrackerCreationDataChecker
     {
         return TrackerCreationDataChecker::build();
+    }
+
+    private function getIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(__DIR__ . '/../www/assets/', $this->getPluginPath() . '/assets');
     }
 }
