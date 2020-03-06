@@ -1,6 +1,5 @@
 {
     "name": "frs",
-    "components": ["www/js/angular", "themes/"],
     "gettext-angularjs": {
         "frs": {
             "src": "www/js/angular/src/app",

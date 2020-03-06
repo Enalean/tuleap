@@ -1,9 +1,5 @@
 {
     "name": "label",
-    "components": [
-        "www/scripts/",
-        "themes/"
-    ],
     "gettext-vue": {
         "labeled-items": {
             "src": "www/scripts/project-labeled-items/src",

@@ -1,6 +1,5 @@
 {
     "name": "taskboard",
-    "components": ["./"],
     "gettext-vue": {
         "taskboard": {
             "src": "scripts/taskboard",

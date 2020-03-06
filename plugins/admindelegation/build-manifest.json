@@ -1,7 +1,0 @@
-{
-    "name": "admindelegation",
-    "components": [
-        "themes/",
-        "www/scripts"
-    ]
-}

@@ -1,9 +1,5 @@
 {
     "name": "graphontrackersv5",
-    "components": [
-        "www/scripts",
-        "themes/"
-    ],
     "gettext-js": {
         "graphontrackersv5": {
             "src": "www/scripts/src",

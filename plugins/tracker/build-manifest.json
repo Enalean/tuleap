@@ -1,6 +1,5 @@
 {
     "name": "tracker",
-    "components": ["grammar/", "scripts/", "themes"],
     "gettext-js": {
         "burndown-chart": {
             "src": "scripts/burndown-chart/src",

@@ -1,7 +1,5 @@
 {
     "name": "crosstracker",
-    "dependencies": ["tracker"],
-    "components": ["scripts/", "themes/"],
     "gettext-vue": {
         "cross-tracker": {
             "src": "scripts/cross-tracker/src",
