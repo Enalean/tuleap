@@ -18,14 +18,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\PathJoinUtil;
+declare(strict_types=1);
 
-require_once 'bootstrap.php';
+namespace Tuleap\Git;
 
-class Git_ForkRepositories_Test extends TuleapTestCase
+use Codendi_Request;
+use GitRepository;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use Project;
+use ProjectManager;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+
+final class GitForkRepositoriesTest extends \PHPUnit\Framework\TestCase
 {
+    use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
 
-    public function testRenders_ForkRepositories_View()
+    protected function setUp(): void
+    {
+        $GLOBALS['HTML'] = $GLOBALS['Response'];
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['HTML'], $_SESSION);
+    }
+
+    public function testRendersForkRepositoriesView() : void
     {
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
 
@@ -48,7 +69,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
     }
 
-    public function testExecutes_ForkRepositories_ActionWithAListOfRepos()
+    public function testExecutesForkRepositoriesActionWithAListOfRepos() : void
     {
         $groupId = 101;
         $repo = new GitRepository();
@@ -82,11 +103,12 @@ class Git_ForkRepositories_Test extends TuleapTestCase
         $git->_doDispatchForkRepositories($request, $user);
     }
 
-    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks()
+    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() : void
     {
-        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $git->shouldReceive('checkSynchronizerToken')->andThrow(new Exception());
-        $this->expectException();
+        $git       = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $exception = new \Exception();
+        $git->shouldReceive('checkSynchronizerToken')->andThrow($exception);
+        $this->expectExceptionObject($exception);
         $git->_doDispatchForkRepositories(null, null);
     }
 }
