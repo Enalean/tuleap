@@ -18,14 +18,11 @@
  */
 
 describe("Docman", function() {
-    before(() => {
+    before(function() {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
 
-        //document is available on new instance, so we must switch back to old UI
-        //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
-        cy.visit("/plugins/docman/?group_id=102");
-        cy.get("[data-test=document-switch-to-old-ui]").click();
+        cy.getProjectId("docman-project").as("docman_project_id");
     });
 
     beforeEach(() => {
@@ -33,7 +30,12 @@ describe("Docman", function() {
     });
 
     context("document properties", function() {
-        before(() => {
+        it("switch back on legacy ui", function() {
+            //document is available on new instance, so we must switch back to old UI
+            //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
+            cy.visit(`/plugins/docman/?group_id=${this.docman_project_id}`);
+            cy.get("[data-test=document-switch-to-old-ui]").click();
+
             cy.get(".toolbar")
                 .contains("Admin")
                 .click();
