@@ -26,6 +26,9 @@ msgstr "Précédent"
 msgid "Between %{ min } and %{ max } characters length"
 msgstr "Entre %{ min } et %{ max } caractères"
 
+msgid "Chosen template"
+msgstr "Modèle choisi"
+
 msgid "Close"
 msgstr "Fermer"
 
