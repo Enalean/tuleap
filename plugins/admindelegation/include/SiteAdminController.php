@@ -29,6 +29,10 @@ use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -37,7 +41,7 @@ use Valid_String;
 use Valid_UInt;
 use Valid_WhiteList;
 
-class SiteAdminController implements DispatchableWithRequest
+class SiteAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var AdminDelegation_UserServiceManager
@@ -135,6 +139,12 @@ class SiteAdminController implements DispatchableWithRequest
             $layout->redirect('/plugins/admindelegation/');
         }
 
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/admindelegation',
+            '/assets/admindelegation'
+        );
+        $layout->addCssAsset(new CssAsset($assets, 'style'));
+        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'admin-delegation.js'));
         $delegation_builder = new AdminDelegationBuilder($this->user_delegation_manager, $this->user_manager);
         $users              = $delegation_builder->buildUsers();
         $services           = $delegation_builder->buildServices();
