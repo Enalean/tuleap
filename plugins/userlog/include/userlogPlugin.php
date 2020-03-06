@@ -24,10 +24,11 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Event\Events\HitEvent;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\DispatchableWithBurningParrot;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Userlog\UserlogAccess;
 use Tuleap\Userlog\UserlogAccessStorage;
 use Tuleap\Userlog\UserLogBuilder;
@@ -37,7 +38,7 @@ use Tuleap\Userlog\UserLogRouter;
 require_once 'constants.php';
 require_once __DIR__. '/../vendor/autoload.php';
 
-class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRequest //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class userlogPlugin extends Plugin implements DispatchableWithRequest, DispatchableWithBurningParrot //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public function __construct($id)
@@ -45,32 +46,9 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         parent::__construct($id);
         $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->addHook(HitEvent::NAME);
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
         $this->addHook(ProjectProviderEvent::NAME);
-    }
-
-    public function burning_parrot_get_stylesheets($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
-            $variant = $params['variant'];
-            $css_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/userlog/themes',
-                '/assets/userlog/themes'
-            );
-            $params['stylesheets'][] = $css_assets->getFileURL('style-bp-' . $variant->getName() . '.css');
-        }
-    }
-
-    public function burning_parrot_get_javascript_files($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
-            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/user-logging-date-picker.js';
-        }
     }
 
     public function &getPluginInfo()
@@ -88,13 +66,6 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
             'label' => $GLOBALS['Language']->getText('plugin_userlog', 'descriptor_name'),
             'href'  => $this->getPluginPath() . '/'
         );
-    }
-
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $event->setIsInBurningParrotCompatiblePage();
-        }
     }
 
     public function hitEvent(HitEvent $event)
@@ -144,6 +115,12 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
 
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
     {
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/userlog/',
+            '/assets/userlog/'
+        );
+        $layout->addCssAsset(new \Tuleap\Layout\CssAsset($assets, 'style-bp'));
+        $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'user-logging-date-picker.js'));
         $router = new UserLogRouter(
             new UserLogExporter(new UserLogBuilder(new UserLogDao(), UserManager::instance())),
             new UserLogManager(new AdminPageRenderer(), UserManager::instance())

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/* global tlp:readonly */
+import { datePicker } from "tlp";
 
-(function() {
-    "use strict";
-
-    var user_logging_date_picker_element = document.getElementById("user-logging-date-picker");
-    tlp.datePicker(user_logging_date_picker_element);
-})();
+document.addEventListener("DOMContentLoaded", () => {
+    const user_logging_date_picker_element = document.getElementById("user-logging-date-picker");
+    if (user_logging_date_picker_element === null) {
+        throw new Error("Cannot find #user-logging-date-picker in the DOM");
+    }
+    datePicker(user_logging_date_picker_element);
+});
