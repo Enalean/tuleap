@@ -76,7 +76,8 @@ class Tracker_CannedResponse
             $root->addAttribute('id', $this->id);
             $root->addAttribute('tracker', $this->tracker->id);
         }
-        $root->addChild('title', $this->title);
-        $root->addChild('body', $this->body);
+        $cdata = new XML_SimpleXMLCDATAFactory();
+        $cdata->insert($root, 'title', $this->title);
+        $cdata->insert($root, 'body', $this->body);
     }
 }

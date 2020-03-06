@@ -533,9 +533,10 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         $root->addAttribute('width', $this->width);
         $root->addAttribute('height', $this->height);
         $root->addAttribute('rank', $this->rank);
-        $root->addChild('title', $this->title);
+        $cdata = new XML_SimpleXMLCDATAFactory();
+        $cdata->insert($root, 'title', $this->title);
         if ($this->description != '') {
-            $root->addChild('description', $this->description);
+            $cdata->insert($root, 'description', $this->description);
         }
     }
     public function delete()

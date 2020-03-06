@@ -1710,10 +1710,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         if ($this->expert_query) {
             $root->addAttribute('expert_query', $this->expert_query);
         }
-        $root->addChild('name', $this->name);
+
+        $cdata = new XML_SimpleXMLCDATAFactory();
+        $cdata->insert($root, 'name', $this->name);
         // only add if not empty
         if ($this->description) {
-            $root->addChild('description', $this->description);
+            $cdata->insert($root, 'description', $this->description);
         }
         $child = $root->addChild('criterias');
         foreach ($this->getCriteria() as $criteria) {

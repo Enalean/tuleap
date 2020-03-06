@@ -36,8 +36,12 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter extends 
             $changeset_value,
             $changeset_xml
         );
-
-        $node = $field_change->addChild('value', date('c', $changeset_value->getTimestamp()));
-        $node->addAttribute('format', 'ISO8601');
+        $cdata_factory = new XML_SimpleXMLCDATAFactory();
+        $cdata_factory->insertWithAttributes(
+            $field_change,
+            'value',
+            date('c', $changeset_value->getTimestamp()),
+            ['format' => 'ISO8601']
+        );
     }
 }

@@ -58,7 +58,9 @@ class SimpleWorkflowXMLExporter
     public function exportToXML(Workflow $workflow, SimpleXMLElement $xml_simple_workflow, array $xml_mapping)
     {
         $xml_simple_workflow->addChild('field_id')->addAttribute('REF', array_search($workflow->getFieldId(), $xml_mapping));
-        $xml_simple_workflow->addChild('is_used', (string) $workflow->isUsed());
+
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insert($xml_simple_workflow, 'is_used', (string) $workflow->isUsed());
 
         $this->exportStatesToXML($workflow, $xml_simple_workflow, $xml_mapping);
     }

@@ -195,9 +195,10 @@ class SemanticVelocity extends Tracker_Semantic
         if (in_array($status_field->getId(), $xmlMapping) && $this->getFieldId() > 0) {
             $child = $root->addChild('semantic');
             $child->addAttribute('type', $this->getShortName());
-            $child->addChild('shortname', $this->getShortName());
-            $child->addChild('label', $this->getLabel());
-            $child->addChild('description', $this->getDescription());
+            $cdata = new \XML_SimpleXMLCDATAFactory();
+            $cdata->insert($child, 'shortname', $this->getShortName());
+            $cdata->insert($child, 'label', $this->getLabel());
+            $cdata->insert($child, 'description', $this->getDescription());
             $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
         }
     }

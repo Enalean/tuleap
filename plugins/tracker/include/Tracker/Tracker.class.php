@@ -2291,9 +2291,10 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         // these will not be used at the import
         $cdata_section_factory->insert($xmlElem, 'name', $this->getName());
-        $xmlElem->addChild('item_name', $this->getItemName());
+        $cdata = new XML_SimpleXMLCDATAFactory();
+        $cdata->insert($xmlElem, 'item_name', $this->getItemName());
         $cdata_section_factory->insert($xmlElem, 'description', $this->getDescription());
-        $xmlElem->addChild('color', $this->getColor()->getName());
+        $cdata->insert($xmlElem, 'color', $this->getColor()->getName());
 
         // add only if not empty
         if ($this->submit_instructions) {

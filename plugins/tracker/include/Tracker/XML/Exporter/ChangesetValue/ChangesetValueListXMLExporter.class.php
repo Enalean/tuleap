@@ -74,7 +74,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter extends 
         $index,
         SimpleXMLElement $field_xml
     ) {
-        $value_xml = $field_xml->addChild('value', $value);
-        $value_xml->addAttribute('format', 'id');
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insertWithAttributes($field_xml, 'value', $value, ['format' => 'id']);
     }
 }

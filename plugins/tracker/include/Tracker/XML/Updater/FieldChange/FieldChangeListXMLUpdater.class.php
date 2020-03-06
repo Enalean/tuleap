@@ -44,8 +44,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater implements Track
         $index,
         SimpleXMLElement $field_xml
     ) {
-        $value_xml = $field_xml->addChild('value', $value);
-        $value_xml->addAttribute('format', 'id');
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insertWithAttributes($field_xml, 'value', $value, ['format' => 'id']);
     }
 
     protected function removeExistingValuesNodes($field_change_xml)

@@ -61,8 +61,8 @@ class UserXMLExportedCollection
             }
 
             $user_node = $xml_element->addChild('user');
-            $user_node->addChild('id', (int)$user->getId());
-            $user_node->addChild('username', $user->getUserName());
+            $this->cdata_factory->insert($user_node, 'id', (int)$user->getId());
+            $this->cdata_factory->insert($user_node, 'username', $user->getUserName());
             $this->cdata_factory->insert($user_node, 'realname', $user->getRealName());
             $this->cdata_factory->insert($user_node, 'email', $user->getEmail());
             $this->cdata_factory->insert($user_node, 'ldapid', $user->getLdapId());

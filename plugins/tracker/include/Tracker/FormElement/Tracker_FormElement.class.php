@@ -862,7 +862,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $root->addAttribute('notifications', $this->notifications);
         }
 
-        $root->addChild('name', $this->name);
+        $cdata = new XML_SimpleXMLCDATAFactory();
+        $cdata->insert($root, 'name', $this->name);
         $cdata_section_factory->insert($root, 'label', $this->label);
         // only add if not empty
         if ($this->description) {

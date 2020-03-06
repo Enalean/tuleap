@@ -43,11 +43,14 @@ class Tracker_XML_Exporter_ChangesetXMLExporter
     ) {
         $changeset_xml = $artifact_xml->addChild('changeset');
 
-        $submitted_by = $changeset_xml->addChild('submitted_by', $changeset->getSubmittedBy());
-        $submitted_by->addAttribute('format', 'id');
-
-        $submitted_on = $changeset_xml->addChild('submitted_on', date('c', $changeset->getSubmittedOn()));
-        $submitted_on->addAttribute('format', 'ISO8601');
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insertWithAttributes($changeset_xml, 'submitted_by', $changeset->getSubmittedBy(), ['format' => 'id']);
+        $cdata->insertWithAttributes(
+            $changeset_xml,
+            'submitted_on',
+            date('c', $changeset->getSubmittedOn()),
+            ['format' => 'ISO8601']
+        );
 
         $this->values_exporter->exportSnapshot($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset->getValues());
     }

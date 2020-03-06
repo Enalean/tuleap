@@ -94,14 +94,14 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter exte
 
     private function appendValueToFieldChangeNode($value, SimpleXMLElement $field_xml)
     {
-        $value_xml = $field_xml->addChild('value', $value);
-        $value_xml->addAttribute('format', 'id');
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insertWithAttributes($field_xml, 'value', $value, ['format' => 'id']);
     }
 
     private function appendOpenValueLabelToFieldChangeNode($value, SimpleXMLElement $field_xml)
     {
-        $value_xml = $field_xml->addChild('value', $value);
-        $value_xml->addAttribute('format', 'label');
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insertWithAttributes($field_xml, 'value', $value, ['format' => 'label']);
     }
 
     private function isValueAnOpenValue($value)

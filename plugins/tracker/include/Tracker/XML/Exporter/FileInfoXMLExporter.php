@@ -75,9 +75,9 @@ class FileInfoXMLExporter
         $node = $artifact_xml->addChild('file');
         $node->addAttribute('id', $this->getFileInfoIdForXML($file_info));
         $cdata_factory->insert($node, 'filename', $file_info->getFilename());
-        $node->addChild('path', $this->path_exporter->getPath($file_info));
-        $node->addChild('filesize', $file_info->getFilesize());
-        $node->addChild('filetype', $file_info->getFiletype());
+        $cdata_factory->insert($node, 'path', $this->path_exporter->getPath($file_info));
+        $cdata_factory->insert($node, 'filesize', $file_info->getFilesize());
+        $cdata_factory->insert($node, 'filetype', $file_info->getFiletype());
         $cdata_factory->insert($node, 'description', $file_info->getDescription());
     }
 

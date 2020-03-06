@@ -79,11 +79,15 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
     ) {
         $field_xml         = $userdata['field_xml'];
         $artifact          = $userdata['artifact'];
-        $children_trackers = $userdata['children_trackers'];
 
         if ($this->canExportLinkedArtifact($artifact_link_info)) {
-            $value_xml = $field_xml->addChild('value', $artifact_link_info->getArtifactId());
-            $value_xml->addAttribute('nature', $artifact_link_info->getNature());
+            $cdata_factory = new XML_SimpleXMLCDATAFactory();
+            $cdata_factory->insertWithAttributes(
+                $field_xml,
+                'value',
+                (string) $artifact_link_info->getArtifactId(),
+                ['nature' => $artifact_link_info->getNature()]
+            );
             $this->children_collector->addChild($artifact_link_info->getArtifactId(), $artifact->getId());
         }
     }
