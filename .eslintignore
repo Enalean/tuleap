@@ -30,5 +30,3 @@ src/www/themes/common/tlp/doc/codemirror/
 src/www/themes/common/tlp/src/vendor-i18n/
 tests/simpletest/common/include/_fixtures
 plugins/mediawiki/www/
-plugins/tracker/www/scripts/LoadTrackerArtifactLink.js
-plugins/tracker/www/scripts/TrackerArtifactEditionSwitcher.js

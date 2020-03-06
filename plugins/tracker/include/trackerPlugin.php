@@ -414,7 +414,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             echo $this->getIncludeAssets()->getHTMLSnippet('admin-nature.js');
         }
         if ($this->currentRequestIsForPlugin()) {
-            echo $this->getMinifiedAssetHTML().PHP_EOL;
+            echo $this->getIncludeAssets()->getHTMLSnippet('tracker.js');
         }
     }
 
