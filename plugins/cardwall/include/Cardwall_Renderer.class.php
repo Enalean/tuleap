@@ -330,8 +330,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             '/assets/tracker/themes'
         );
         $cardwall_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/cardwall/themes',
-            '/assets/cardwall/themes'
+            __DIR__ . '/../../../src/www/assets/cardwall/',
+            '/assets/cardwall/'
         );
         return new CssAssetCollection([
             new CssAssetWithoutVariantDeclinaisons($tracker_assets, 'style-fp'),

@@ -259,11 +259,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function getCSSURL()
     {
-        $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/cardwall/themes',
-            '/assets/cardwall/themes'
-        );
-        return $theme_include_assets->getFileURL('flamingparrot-theme.css');
+        return $this->getAssets()->getFileURL('flamingparrot-theme.css');
     }
 
     private function canIncludeStylesheets()
@@ -282,8 +278,16 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
                 echo $tracker_plugin->getMinifiedAssetHTML()."\n";
             }
-            echo $this->getMinifiedAssetHTML()."\n";
+            echo $this->getAssets()->getHTMLSnippet('cardwall.js');
         }
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/cardwall/',
+            '/assets/cardwall/'
+        );
     }
 
     /**

@@ -616,6 +616,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/captcha/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/cardwall/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/cardwall/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/themes/
