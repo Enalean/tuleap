@@ -107,20 +107,9 @@ seed_data() {
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php crosstracker" -l codendiadm
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
 
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/dashboard_user
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/permission_project
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/docman_project
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/document_project
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/git_project
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/frs_project
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/project_administration
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/mediawiki_public_project
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/platform_allows_anonymous
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/platform_allows_restricted
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/kanban_project
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/tracker_project
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/taskboard_project
-    load_project /usr/share/tuleap/tests/e2e/_fixtures/agile_dashboard
+    for project in $(find /usr/share/tuleap/tests/e2e/_fixtures/ -maxdepth 1 -mindepth 1 -type d) ; do
+        load_project "$project"
+    done
 
     chown -R codendiadm:codendiadm /var/log/tuleap
 }
