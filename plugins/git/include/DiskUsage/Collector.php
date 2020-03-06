@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -59,7 +59,8 @@ class Collector
         $yesterday_timestamp = $yesterday->getTimestamp();
         $project_id          = $project->getID();
 
-        if ($this->git_log_dao->hasRepositoriesUpdatedAfterGivenDate($project_id, $yesterday_timestamp)) {
+        if ($this->git_log_dao->hasRepositoriesUpdatedAfterGivenDate($project_id, $yesterday_timestamp) ||
+            ! $this->git_log_dao->hasRepositories($project->getID())) {
             return $this->extractInFileSystem($project);
         }
 
