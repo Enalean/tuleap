@@ -802,48 +802,36 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                     <name>details</name>
                     <label><![CDATA[Details]]></label>
                     <formElements>
-                        <formElement type="column" ID="F12618" rank="0">
-                            <name>c1</name>
-                            <label><![CDATA[C1]]></label>
-                            <formElements>
-                                <formElement type="string" ID="F12620" rank="0" required="1">
-                                    <name>epic</name>
-                                    <label><![CDATA[Epic]]></label>
-                                    <properties size="70"/>
-                                </formElement>
-                                <formElement type="text" ID="F12621" rank="1">
-                                    <name>description</name>
-                                    <label><![CDATA[Description]]></label>
-                                    <properties rows="10" cols="50"/>
-                                </formElement>
-                            </formElements>
+                        <formElement type="string" ID="F12620" rank="0" required="1">
+                            <name>epic</name>
+                            <label><![CDATA[Epic]]></label>
+                            <properties size="70"/>
                         </formElement>
-                        <formElement type="column" ID="F12619" rank="1">
-                            <name>c2</name>
-                            <label><![CDATA[C2]]></label>
-                            <formElements>
-                                <formElement type="sb" ID="F12622" rank="0">
-                                    <name>status</name>
-                                    <label><![CDATA[Status]]></label>
-                                    <bind type="static" is_rank_alpha="0">
-                                        <items>
-                                            <item ID="V12779" label="Open" is_hidden="0"/>
-                                            <item ID="V12780" label="Closed" is_hidden="0"/>
-                                        </items>
-                                        <default_values>
-                                            <value REF="V12779"/>
-                                        </default_values>
-                                    </bind>
-                                </formElement>
-                                <formElement type="computed" ID="F12623" rank="1">
-                                    <name>initial_effort</name>
-                                    <label><![CDATA[Total Initial Effort]]></label>
-                                </formElement>
-                                <formElement type="computed" ID="F12624" rank="2">
-                                    <name>remaining_effort</name>
-                                    <label><![CDATA[Total Remaining Effort]]></label>
-                                </formElement>
-                            </formElements>
+                        <formElement type="text" ID="F12621" rank="1">
+                            <name>description</name>
+                            <label><![CDATA[Description]]></label>
+                            <properties rows="10" cols="100"/>
+                        </formElement>
+                        <formElement type="sb" ID="F12622" rank="2">
+                            <name>status</name>
+                            <label><![CDATA[Status]]></label>
+                            <bind type="static" is_rank_alpha="0">
+                                <items>
+                                    <item ID="V12779" label="Open" is_hidden="0"/>
+                                    <item ID="V12780" label="Closed" is_hidden="0"/>
+                                </items>
+                                <default_values>
+                                    <value REF="V12779"/>
+                                </default_values>
+                            </bind>
+                        </formElement>
+                        <formElement type="computed" ID="F12623" rank="3">
+                            <name>initial_effort</name>
+                            <label><![CDATA[Total Initial Effort]]></label>
+                        </formElement>
+                        <formElement type="computed" ID="F12624" rank="4">
+                            <name>remaining_effort</name>
+                            <label><![CDATA[Total Remaining Effort]]></label>
                         </formElement>
                     </formElements>
                 </formElement>
@@ -1519,24 +1507,18 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                     <name>description</name>
                     <label><![CDATA[Description]]></label>
                     <formElements>
-                        <formElement type="column" ID="F12684" rank="0">
-                            <name>dc1</name>
-                            <label><![CDATA[D:C1]]></label>
-                            <formElements>
-                                <formElement type="string" ID="F12689" rank="0" required="1">
-                                    <name>title</name>
-                                    <label><![CDATA[Task title]]></label>
-                                    <description><![CDATA[Task title]]></description>
-                                    <properties maxchars="150" size="80"/>
-                                </formElement>
-                            </formElements>
+                        <formElement type="string" ID="F12689" rank="0" required="1">
+                            <name>title</name>
+                            <label><![CDATA[Task title]]></label>
+                            <description><![CDATA[Task title]]></description>
+                            <properties size="80"/>
                         </formElement>
-                        <formElement type="text" ID="F12686" rank="5">
+                        <formElement type="text" ID="F12686" rank="1">
                             <name>details</name>
                             <label><![CDATA[Details]]></label>
                             <properties rows="4" cols="103"/>
                         </formElement>
-                        <formElement type="column" ID="F12687" rank="6">
+                        <formElement type="column" ID="F12687" rank="2">
                             <name>c1</name>
                             <label><![CDATA[C1]]></label>
                             <formElements>
@@ -2358,53 +2340,41 @@ Need professional support to help you adapt your workspace? Get in touch with ou
                     <name>description</name>
                     <label><![CDATA[Description]]></label>
                     <formElements>
-                        <formElement type="column" ID="F12706" rank="0">
-                            <name>description_left_column</name>
-                            <label><![CDATA[description left column]]></label>
-                            <formElements>
-                                <formElement type="sb" ID="F12708" rank="0">
-                                    <name>as_a</name>
-                                    <label><![CDATA[As a]]></label>
-                                    <bind type="static" is_rank_alpha="0">
-                                        <items>
-                                            <item ID="V12796" label="New User" is_hidden="0"/>
-                                            <item ID="V12797" label="Regular User" is_hidden="0"/>
-                                            <item ID="V12798" label="Advanced User" is_hidden="0"/>
-                                        </items>
-                                        <decorators>
-                                            <decorator REF="V12796" tlp_color_name="deep-blue"/>
-                                            <decorator REF="V12797" tlp_color_name="acid-green"/>
-                                            <decorator REF="V12798" tlp_color_name="peggy-pink"/>
-                                        </decorators>
-                                    </bind>
-                                </formElement>
-                                <formElement type="string" ID="F12709" rank="3" required="1">
-                                    <name>i_want_to</name>
-                                    <label><![CDATA[I want to]]></label>
-                                    <description><![CDATA[One line description of the artifact]]></description>
-                                    <properties size="50"/>
-                                </formElement>
-                                <formElement type="text" ID="F12710" rank="4">
-                                    <name>in_order_to</name>
-                                    <label><![CDATA[In order to]]></label>
-                                    <properties rows="4" cols="50"/>
-                                </formElement>
-                            </formElements>
+                        <formElement type="sb" ID="F12708" rank="0">
+                            <name>as_a</name>
+                            <label><![CDATA[As a]]></label>
+                            <bind type="static" is_rank_alpha="0">
+                                <items>
+                                    <item ID="V12796" label="New User" is_hidden="0"/>
+                                    <item ID="V12797" label="Regular User" is_hidden="0"/>
+                                    <item ID="V12798" label="Advanced User" is_hidden="0"/>
+                                </items>
+                                <decorators>
+                                    <decorator REF="V12796" tlp_color_name="deep-blue"/>
+                                    <decorator REF="V12797" tlp_color_name="acid-green"/>
+                                    <decorator REF="V12798" tlp_color_name="peggy-pink"/>
+                                </decorators>
+                            </bind>
                         </formElement>
-                        <formElement type="column" ID="F12707" rank="1">
-                            <name>description_right_column</name>
-                            <label><![CDATA[description right column]]></label>
-                            <formElements>
-                                <formElement type="text" ID="F12711" rank="0">
-                                    <name>acceptance_criteria</name>
-                                    <label><![CDATA[Acceptance Criteria]]></label>
-                                    <properties rows="5" cols="70"/>
-                                </formElement>
-                                <formElement type="file" ID="F12712" rank="1">
-                                    <name>attachment</name>
-                                    <label><![CDATA[Attachments]]></label>
-                                </formElement>
-                            </formElements>
+                        <formElement type="string" ID="F12709" rank="1" required="1">
+                            <name>i_want_to</name>
+                            <label><![CDATA[I want to]]></label>
+                            <description><![CDATA[One line description of the artifact]]></description>
+                            <properties size="70"/>
+                        </formElement>
+                        <formElement type="text" ID="F12710" rank="2">
+                            <name>in_order_to</name>
+                            <label><![CDATA[In order to]]></label>
+                            <properties rows="5" cols="100"/>
+                        </formElement>
+                        <formElement type="text" ID="F12711" rank="3">
+                            <name>acceptance_criteria</name>
+                            <label><![CDATA[Acceptance Criteria]]></label>
+                            <properties rows="10" cols="100"/>
+                        </formElement>
+                        <formElement type="file" ID="F12712" rank="4">
+                            <name>attachment</name>
+                            <label><![CDATA[Attachments]]></label>
                         </formElement>
                     </formElements>
                 </formElement>
