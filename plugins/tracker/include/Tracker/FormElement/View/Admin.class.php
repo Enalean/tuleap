@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -160,7 +160,7 @@ class Tracker_FormElement_View_Admin
         return '';
     }
 
-    public function fetchCustomHelpForShared()
+    public function fetchCustomHelpForShared(): string
     {
         $hp = Codendi_HTMLPurifier::instance();
         $originalTrackerName = $this->formElement->getOriginalTracker()->getName();
@@ -169,14 +169,14 @@ class Tracker_FormElement_View_Admin
 
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText(
-            'plugin_tracker_include_type',
-            'field_copied_from',
-            [
-                $originalTrackerName,
-                $hp->purify($originalProjectName),
-                $originalEditUrl
-            ]
+        $html .= sprintf(
+            dgettext(
+                'tuleap-tracker',
+                'This field is shared from tracker <a href="%s">%s</a> from project %s'
+            ),
+            $originalEditUrl,
+            $originalTrackerName,
+            $hp->purify($originalProjectName)
         );
         $html .= '</span>';
         return $html;
