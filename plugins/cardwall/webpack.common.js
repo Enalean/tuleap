@@ -18,24 +18,35 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 module.exports = [
     {
         entry: {
-            "flamingparrot-theme": "./FlamingParrot/css/style.scss"
+            "flamingparrot-theme": "./themes/FlamingParrot/css/style.scss",
+            null: "null_entry"
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/cardwall/themes/")
+            path.resolve(__dirname, "../../src/www/assets/cardwall/")
         ),
         module: {
             rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
-            webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
+            ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
+                "cardwall.js": [
+                    "./scripts/ajaxInPlaceEditorExtensions.js",
+                    "./scripts/cardwall.js",
+                    "./scripts/script.js",
+                    "./scripts/custom-mapping.js",
+                    "./scripts/CardsEditInPlace.js",
+                    "./scripts/fullscreen.js"
+                ]
+            }),
+            webpack_configurator.getManifestPlugin()
         ]
     }
 ];
