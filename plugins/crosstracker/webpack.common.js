@@ -18,30 +18,47 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-let entry_points = {};
+let entry_points = {
+    "cross-tracker": "./scripts/cross-tracker/src/index.js"
+};
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
-    entry_points[`style-${color}`] = `./BurningParrot/css/style-${color}.scss`;
-    entry_points[`style-${color}-condensed`] = `./BurningParrot/css/style-${color}-condensed.scss`;
+    entry_points[`style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
+    entry_points[
+        `style-${color}-condensed`
+    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
 }
 
 module.exports = [
     {
         entry: entry_points,
-        context: path.resolve(__dirname),
+        context: __dirname,
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/crosstracker/BurningParrot/")
+            path.resolve(__dirname, "../../src/www/assets/crosstracker/")
         ),
+        externals: {
+            tlp: "tlp"
+        },
         module: {
-            rules: [webpack_configurator.rule_scss_loader]
+            rules: [
+                webpack_configurator.rule_scss_loader,
+                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+                webpack_configurator.rule_easygettext_loader,
+                webpack_configurator.rule_vue_loader
+            ]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            webpack_configurator.getVueLoaderPlugin(),
+            webpack_configurator.getMomentLocalePlugin(),
             ...webpack_configurator.getCSSExtractionPlugins()
-        ]
+        ],
+        resolveLoader: {
+            alias: webpack_configurator.easygettext_loader_alias
+        }
     }
 ];

@@ -18,6 +18,6 @@
  */
 
 module.exports = {
-    ...require("../../../tests/jest/jest.base.config.js"),
+    ...require("../../tests/jest/jest.base.config.js"),
     displayName: "crosstracker"
 };
