@@ -16,7 +16,7 @@
         <li {{# commit_rule_active }}class="active"{{/ commit_rule_active }}>
             <a href="{{ hooks_config_url }}"><i class="fa fa-check-square"></i> {{ hooks_config }}</a>
         </li>
-        <li {{# repository_delete_active }}class="active"{{/ repository_delete_active }}>
+        <li {{# repository_delete_active }}class="active"{{/ repository_delete_active }} data-test="svn-repository-settings-delete">
             <a href="{{ repository_delete_url }}"><i class="fa fa-trash-o"></i> {{ repository_delete }}</a>
         </li>
     </ul>

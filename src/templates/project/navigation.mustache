@@ -11,7 +11,7 @@
                             <span class="tlp-tab-menu-title">{{ title }}</span>
                         {{/ isMenuTitle}}
                         {{^ isMenuTitle }}
-                            <a href="{{ html_url }}" class="tlp-tab-menu-item">{{ label }}</a>
+                            <a href="{{ html_url }}" class="tlp-tab-menu-item" data-test="{{ identifier }}">{{ label }}</a>
                         {{/ isMenuTitle}}
                     {{/ menu_items }}
                 </nav>

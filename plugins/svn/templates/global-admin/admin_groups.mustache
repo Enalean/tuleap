@@ -8,8 +8,8 @@
             <p>{{ admin_groups_description }}</p>
 
             <div class="control-group">
-                <label>{{ admin_groups_label }}</label>
-                <select name="admin_groups[]" multiple="multiple">
+                <label for="admin_groups">{{ admin_groups_label }}</label>
+                <select id="admin_groups" name="admin_groups[]" multiple="multiple" data-test="svn-admin-group-select">
                     {{# ugroups }}
                     <option value="{{ id }}" {{{ selected }}} >{{ name }}</option>
                     {{/ ugroups }}
@@ -18,7 +18,9 @@
 
             {{{ csrf_input }}}
             <input type="hidden" name="group_id" value="{{ project_id }}">
-            <button type="submit" name="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{ submit }}</button>
+            <button type="submit" name="submit" class="btn btn-primary" data-test="svn-admin-save">
+                <i class="fa fa-floppy-o"></i> {{ submit }}
+            </button>
         </form>
     </div>
 </div>

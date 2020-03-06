@@ -167,7 +167,8 @@ class NavigationPresenterBuilder
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Project History'),
-                    '/project/admin/history.php?' . http_build_query(array('group_id' => $project_id))
+                    '/project/admin/history.php?' . http_build_query(array('group_id' => $project_id)),
+                    'project-history'
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Access Logs'),

@@ -17,20 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function getFromTuleapAPI(url) {
-    return cy.request({
-        url,
-        headers: {
-            accept: "application/json",
-            referer: Cypress.config("baseUrl")
-        }
-    });
-}
-
 function getReleaseIdFromREST() {
     return cy
         .getProjectId("taskboard-project")
-        .then(project_id => getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`))
+        .then(project_id =>
+            cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`)
+        )
         .then(response => response.body[0].id);
 }
 
@@ -55,10 +47,10 @@ describe(`Taskboard`, function() {
 
     context(`Cell functionalities`, function() {
         before(function() {
-            getFromTuleapAPI(`/api/taskboard/${this.release_id}/columns`)
+            cy.getFromTuleapAPI(`/api/taskboard/${this.release_id}/columns`)
                 .then(response => response.body)
                 .as("taskboard_columns");
-            getFromTuleapAPI(`/api/taskboard/${this.release_id}/cards?limit=100`)
+            cy.getFromTuleapAPI(`/api/taskboard/${this.release_id}/cards?limit=100`)
                 .then(response => response.body)
                 .as("taskboard_swimlanes");
         });
