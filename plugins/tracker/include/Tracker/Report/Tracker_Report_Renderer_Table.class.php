@@ -2528,13 +2528,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return [];
     }
 
-    /** @return CssAssetCollection */
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies(): CssAssetCollection
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/tracker/themes',
-            '/assets/tracker/themes'
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/trackers',
+            '/assets/trackers'
         );
-        return new CssAssetCollection([new CssAsset($include_assets, 'tracker-bp')]);
+        return new CssAssetCollection([new CssAsset($assets, 'tracker-bp')]);
     }
 }

@@ -27,7 +27,7 @@ const javascript_with_translated_strings_glob = "src/**/*.js";
 function extractGettext() {
     return gulp
         .src([templates_with_translated_strings_glob, javascript_with_translated_strings_glob], {
-            cwd: path.resolve("./angular-artifact-modal"),
+            cwd: path.resolve("./scripts/angular-artifact-modal"),
             cwdbase: true
         })
         .pipe(
@@ -35,13 +35,13 @@ function extractGettext() {
                 lineNumbers: false
             })
         )
-        .pipe(gulp.dest("angular-artifact-modal/po/"));
+        .pipe(gulp.dest("scripts/angular-artifact-modal/po/"));
 }
 
 function watchTask() {
     gulp.watch(
         [templates_with_translated_strings_glob, javascript_with_translated_strings_glob],
-        { cwd: path.resolve("./angular-artifact-modal") },
+        { cwd: path.resolve("./scripts/angular-artifact-modal") },
         extractGettext
     );
 }

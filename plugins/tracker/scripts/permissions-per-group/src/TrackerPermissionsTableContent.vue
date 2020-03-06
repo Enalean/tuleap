@@ -54,7 +54,7 @@
     </tbody>
 </template>
 <script>
-import TrackerPermissionsUgroupBadge from "permission-badge/PermissionsPerGroupBadge.vue";
+import TrackerPermissionsUgroupBadge from "../../../../../src/www/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 import EmptyState from "./TrackerPermissionTableEmptyState.vue";
 
 export default {

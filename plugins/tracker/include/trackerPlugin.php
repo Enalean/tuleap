@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
@@ -161,7 +162,6 @@ use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetPublicAreas;
-use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -377,16 +377,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            $include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/tracker/themes',
-                '/assets/tracker/themes'
-            );
+            $style_css_url = $this->getAssets()->getFileURL('style-fp.css');
+            $print_css_url = $this->getAssets()->getFileURL('print.css');
 
-            $style_css_url = $include_assets->getFileURL('style-fp.css');
-            $print_css_url = $include_assets->getFileURL('print.css');
-
-            echo '<link rel="stylesheet" type="text/css" href="'.$style_css_url.'" />';
-            echo '<link rel="stylesheet" type="text/css" href="'.$print_css_url.'" media="print" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $print_css_url . '" media="print" />';
         }
     }
 
@@ -395,40 +390,35 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $include_tracker_css_file = false;
         EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
 
-        if ($include_tracker_css_file ||
-            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], "/new-information") !== 0
-        ) {
-            $theme_include_assets    = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/tracker/themes',
-                '/assets/tracker/themes'
-            );
+        if ($include_tracker_css_file || strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $variant                 = $params['variant'];
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('tracker-bp-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL(
+                'tracker-bp-' . $variant->getName() . '.css'
+            );
         }
     }
 
     public function javascript_file($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
-            echo $this->getIncludeAssets()->getHTMLSnippet('admin-nature.js');
+            echo $this->getAssets()->getHTMLSnippet('admin-nature.js');
         }
         if ($this->currentRequestIsForPlugin()) {
-            echo $this->getIncludeAssets()->getHTMLSnippet('tracker.js');
+            echo $this->getAssets()->getHTMLSnippet('tracker.js');
         }
     }
 
     public function burning_parrot_get_javascript_files(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
-            $params['javascript_files'][] = $this->getIncludeAssets()->getFileURL('admin-nature.js');
+            $params['javascript_files'][] = $this->getAssets()->getFileURL('admin-nature.js');
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
         }
     }
 
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
     {
-        $event->addJavascript($this->getIncludeAssets()->getFileURL('tracker-permissions-per-group.js'));
+        $event->addJavascript($this->getAssets()->getFileURL('tracker-permissions-per-group.js'));
     }
 
     /**
@@ -2137,8 +2127,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return TrackerCreationDataChecker::build();
     }
 
-    private function getIncludeAssets(): IncludeAssets
+    private function getAssets(): IncludeAssets
     {
-        return new IncludeAssets(__DIR__ . '/../www/assets/', $this->getPluginPath() . '/assets');
+        return new IncludeAssets(__DIR__ . '/../../../src/www/assets/trackers', '/assets/trackers');
     }
 }

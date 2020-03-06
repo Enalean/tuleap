@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@tuleap/plugin-tracker-scripts": "file:../../tracker/scripts",
+    "@tuleap/plugin-tracker": "file:../../tracker",
     "extendable-error": "^0.1.5",
     "moment": "^2.18.1",
     "phptomoment": "0.0.2",

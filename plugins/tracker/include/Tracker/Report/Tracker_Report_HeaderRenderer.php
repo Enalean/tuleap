@@ -94,7 +94,7 @@ class Tracker_Report_HeaderRenderer
         $is_admin = $report->getTracker()->userIsAdmin($current_user);
         $warnings = $this->getMissingPublicReportWarning($reports, $is_admin);
 
-        $assets = new IncludeAssets(TRACKER_BASE_DIR . '/../www/assets', TRACKER_BASE_URL . '/assets');
+        $assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/trackers', '/assets/trackers');
         $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('tracker-report-expert-mode.js'));
         $this->renderer->renderToPage(
             'header_in_report',

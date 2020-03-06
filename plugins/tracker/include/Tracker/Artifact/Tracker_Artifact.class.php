@@ -47,6 +47,8 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\FormElement\BurndownLogger;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -60,8 +62,6 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -484,8 +484,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this, $action_buttons_fetcher);
 
         $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../www/assets',
-            TRACKER_BASE_URL . '/assets'
+            __DIR__ . '/../../../../../src/www/assets/trackers',
+            '/assets/trackers'
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('MoveArtifactModal.js'));

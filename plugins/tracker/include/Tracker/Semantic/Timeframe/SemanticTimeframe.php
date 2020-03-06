@@ -133,13 +133,10 @@ class SemanticTimeframe extends Tracker_Semantic
 
         $renderer->renderToPage('timeframe-semantic-admin', $presenter);
 
-        $js_assets = new IncludeAssets(
-            __DIR__ . '/../../../../www/assets',
-            TRACKER_BASE_URL . '/assets'
-        );
+        $assets = new IncludeAssets(__DIR__ . '/../../../../../../src/www/assets/trackers', '/assets/trackers');
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $js_assets->getFileURL("tracker-semantic-timeframe-option-selector.js")
+            $assets->getFileURL("tracker-semantic-timeframe-option-selector.js")
         );
 
         $sm->displaySemanticFooter($this, $tracker_manager);

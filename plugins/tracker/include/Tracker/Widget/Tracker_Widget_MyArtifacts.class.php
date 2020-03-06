@@ -230,11 +230,11 @@ class Tracker_Widget_MyArtifacts extends Widget
         return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'description');
     }
 
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies(): CssAssetCollection
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/tracker/themes',
-            '/assets/tracker/themes'
+            __DIR__ . '/../../../../../src/www/assets/trackers',
+            '/assets/trackers'
         );
         return new CssAssetCollection([new CssAsset($include_assets, 'tracker-bp')]);
     }
