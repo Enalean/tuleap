@@ -53,11 +53,6 @@ class ProjectMilestones extends Widget
      * @var false|\Planning
      */
     private $root_planning;
-
-    /**
-     * @var bool
-     */
-    private $is_ie_11;
     /**
      * @var ProjectMilestonesDao
      */
@@ -86,10 +81,14 @@ class ProjectMilestones extends Widget
      * @var CSRFSynchronizerToken
      */
     private $csrf_token;
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
 
     public function __construct()
     {
-        $planning_factory = new PlanningFactory(
+        $this->planning_factory = new PlanningFactory(
             new PlanningDao(),
             TrackerFactory::instance(),
             new PlanningPermissionsManager()
@@ -99,15 +98,8 @@ class ProjectMilestones extends Widget
         $this->project_retriever      = new ProjectRetriever(ProjectManager::instance());
         $this->is_multiple_widgets    = \ForgeConfig::get('plugin_projectmilestone_multiple');
         $this->http                   = HTTPRequest::instance();
-        $this->is_ie_11               = $this->http->getBrowser()->isIE11();
         $this->project_id             = $this->http->getProject()->getID();
-        $this->root_planning          = $planning_factory->getRootPlanning($this->http->getCurrentUser(), $this->project_id);
         $this->csrf_token             = new CSRFSynchronizerToken('/project/');
-        if (!$this->root_planning) {
-            return;
-        }
-
-        $this->label_tracker_backlog = $this->root_planning->getPlanningTracker()->getName();
 
         parent::__construct(self::NAME);
     }
@@ -133,34 +125,24 @@ class ProjectMilestones extends Widget
 
     public function getContent(): string
     {
-        if ($this->is_ie_11) {
-            $message_error = '<p class="tlp-alert-danger">';
-            $message_error .= dgettext('tuleap-projectmilestones', 'The plugin is not supported under IE11. Please use a more recent browser.');
-            $message_error .= '</p>';
-
-            return $message_error;
-        }
-
-        if (!$this->root_planning) {
-            $message_error = '<p class="tlp-alert-danger">';
-            $message_error .= dgettext('tuleap-projectmilestones', 'No root planning is defined.');
-            $message_error .= '</p>';
-
-            return $message_error;
-        }
-
-        $builder = ProjectMilestonesPresenterBuilder::build($this->root_planning);
-
-        $renderer = $this->getRenderer();
-
         try {
+            $builder = ProjectMilestonesPresenterBuilder::build();
+
+            $renderer = $this->getRenderer();
+
             return $renderer->renderToString(
                 'projectmilestones',
-                $builder->getProjectMilestonePresenter()
+                $builder->getProjectMilestonePresenter($this->project, $this->root_planning)
             );
         } catch (TimeframeBrokenConfigurationException $e) {
             $message_error = '<p class="tlp-alert-danger">';
             $message_error .= dgettext('tuleap-projectmilestones', 'Invalid Timeframe Semantic configuration.');
+            $message_error .= '</p>';
+
+            return $message_error;
+        } catch (ProjectMilestonesException $e) {
+            $message_error = '<p class="tlp-alert-danger">';
+            $message_error .= $e->getTranslatedMessage();
             $message_error .= '</p>';
 
             return $message_error;
@@ -200,17 +182,29 @@ class ProjectMilestones extends Widget
 
     public function loadContent($id)
     {
-        $this->project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
+        if (!$this->is_multiple_widgets) {
+            $this->project = $this->http->getProject();
+        } else {
+            $this->project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
 
-        if (!$this->project_id) {
+            if (!$this->project_id) {
+                return;
+            }
+
+            try {
+                $this->project = $this->project_retriever->getProjectFromId((string) $this->project_id);
+            } catch (NotFoundException $e) {
+                return;
+            }
+        }
+
+        $this->root_planning = $this->planning_factory->getRootPlanning($this->http->getCurrentUser(), $this->project->getID());
+
+        if (!$this->root_planning) {
             return;
         }
 
-        try {
-            $this->project = $this->project_retriever->getProjectFromId((string) $this->project_id);
-        } catch (NotFoundException $e) {
-            return;
-        }
+        $this->label_tracker_backlog = $this->root_planning->getPlanningTracker()->getName();
     }
 
     public function isUnique()
