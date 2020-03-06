@@ -63,7 +63,7 @@ class PwnedPasswordRangeRetriever
 
         $url = self::ENDPOINT . urlencode($sha1_password_prefix);
 
-        $request = $this->request_factory->createRequest('GET', $url);
+        $request = $this->request_factory->createRequest('GET', $url)->withHeader('Add-Padding', 'true');
 
         try {
             $response = $this->http_client->sendRequest($request);
