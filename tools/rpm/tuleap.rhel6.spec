@@ -550,19 +550,9 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
+/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/scripts" -type d -execdir %{__rm} -rf "{}" \;
+/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/themes" -type d -execdir %{__rm} -rf "{}" \;
 %if %{with enterprise}
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/project_ownership/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/taskboard/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/taskboard/themes/
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
@@ -585,7 +575,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 %endif
 %if %{with experimental}
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server/scripts/
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
@@ -607,47 +596,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/package.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/webpack.*.js
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/agiledashboard/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/agiledashboard/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/api_explorer/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/api_explorer/script/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/captcha/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/cardwall/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/cardwall/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/frs/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/git/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/git/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphontrackersv5/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_svn/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_git/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ldap/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pluginsadministration/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pluginsadministration/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/proftpd/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectlinks/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pullrequest/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/statistics/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/statistics/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_encryption/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_encryption/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/userlog/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/userlog/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
