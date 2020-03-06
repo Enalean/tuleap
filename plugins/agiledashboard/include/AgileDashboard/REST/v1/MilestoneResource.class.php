@@ -718,7 +718,7 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @param int $id Id of the milestone
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
-     * @param array $add Ids to add/move to milestone content  {@from body} {@type \Tuleap\REST\v1\BacklogAddRepresentation}
+     * @param array $add Ids to add/move to milestone content  {@from body} {@type BacklogAddRepresentation}
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -923,7 +923,7 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @param int                                                $id    Id of the milestone Item
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
-     * @param array                                              $add    Ids to add/move to milestone backlog {@from body} {@type \Tuleap\REST\v1\BacklogAddRepresentation}
+     * @param array                                              $add    Ids to add/move to milestone backlog {@from body} {@type BacklogAddRepresentation}
      *
      * @throws RestException 400
      * @throws RestException 403

@@ -31,9 +31,9 @@ use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
+use Tuleap\AgileDashboard\REST\v1\BacklogAddRepresentation;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\REST\v1\BacklogAddRepresentation;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class MilestoneElementAdderTest extends TestCase

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\REST\v1\Rank;
 
 use Luracast\Restler\RestException;
-use Tuleap\REST\v1\OrderRepresentationBase;
+use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 
 class ArtifactsRankOrderer
@@ -56,10 +56,10 @@ class ArtifactsRankOrderer
     /**
      * @throws RestException
      */
-    public function reorder(OrderRepresentationBase $order, string $context_id, \Project $project): void
+    public function reorder(OrderRepresentation $order, string $context_id, \Project $project): void
     {
         try {
-            if ($order->direction === OrderRepresentationBase::BEFORE) {
+            if ($order->direction === OrderRepresentation::BEFORE) {
                 $this->priority_manager->moveListOfArtifactsBefore(
                     $order->ids,
                     $order->compared_to,

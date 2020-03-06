@@ -29,9 +29,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\REST\v1\BacklogRemoveRepresentation;
-
-require_once __DIR__ . '/../../../bootstrap.php';
+use Tuleap\AgileDashboard\REST\v1\BacklogRemoveRepresentation;
 
 final class MilestoneElementRemoverTests extends TestCase
 {

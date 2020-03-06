@@ -206,18 +206,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(TRACKER_EVENT_GENERAL_SETTINGS);
             $this->addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->addHook(Event::REST_RESOURCES);
-            $this->addHook(Event::REST_RESOURCES_V2);
             $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
-            $this->addHook(Event::REST_PROJECT_AGILE_ENDPOINTS);
-            $this->addHook(Event::REST_GET_PROJECT_PLANNINGS);
-            $this->addHook(Event::REST_OPTIONS_PROJECT_PLANNINGS);
             $this->addHook(Event::REST_PROJECT_RESOURCES);
-            $this->addHook(Event::REST_GET_PROJECT_MILESTONES);
-            $this->addHook(Event::REST_OPTIONS_PROJECT_MILESTONES);
-            $this->addHook(Event::REST_GET_PROJECT_BACKLOG);
-            $this->addHook(Event::REST_PUT_PROJECT_BACKLOG);
-            $this->addHook(Event::REST_PATCH_PROJECT_BACKLOG);
-            $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
             $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
             $this->addHook(ITEM_PRIORITY_CHANGE);
@@ -1042,164 +1032,12 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     }
 
     /**
-     * @see REST_RESOURCES_V2
-     */
-    public function rest_resources_v2($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $injector = new AgileDashboard_REST_v2_ResourcesInjector();
-        $injector->populate($params['restler']);
-    }
-
-    /**
-     * @see REST_GET_PROJECT_PLANNINGS
-     */
-    public function rest_get_project_plannings($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user              = $this->getCurrentUser();
-        $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
-
-        $params['result'] = $planning_resource->get(
-            $user,
-            $params['project'],
-            $params['limit'],
-            $params['offset']
-        );
-    }
-
-    /**
-     * @see REST_OPTIONS_PROJECT_PLANNINGS
-     */
-    public function rest_options_project_plannings($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user              = $this->getCurrentUser();
-        $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
-
-        $params['result'] = $planning_resource->options(
-            $user,
-            $params['project'],
-            $params['limit'],
-            $params['offset']
-        );
-    }
-
-    private function buildRightVersionOfProjectPlanningsResource($version)
-    {
-        $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectPlanningsResource';
-        return new $class_with_right_namespace;
-    }
-
-    /**
      * @see Event::REST_PROJECT_RESOURCES
      */
     public function rest_project_resources(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $injector = new AgileDashboard_REST_ResourcesInjector();
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
-    }
-
-    /**
-     * @see REST_GET_PROJECT_MILESTONES
-     */
-    public function rest_get_project_milestones($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user               = $this->getCurrentUser();
-        $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
-
-        $params['result'] = $milestone_resource->get(
-            $user,
-            $params['project'],
-            $params['representation_type'],
-            $params['query'],
-            $params['limit'],
-            $params['offset'],
-            $params['order']
-        );
-    }
-
-    /**
-     * @see REST_OPTIONS_PROJECT_MILESTONES
-     */
-    public function rest_options_project_milestones($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user               = $this->getCurrentUser();
-        $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
-
-        $params['result'] = $milestone_resource->options(
-            $user,
-            $params['project'],
-            $params['limit'],
-            $params['offset']
-        );
-    }
-
-    private function buildRightVersionOfProjectMilestonesResource($version)
-    {
-        $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectMilestonesResource';
-        return new $class_with_right_namespace;
-    }
-
-    /**
-     * @see REST_GET_PROJECT_BACKLOG
-     */
-    public function rest_get_project_backlog($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user                     = $this->getCurrentUser();
-        $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
-
-        $params['result'] = $project_backlog_resource->get(
-            $user,
-            $params['project'],
-            $params['limit'],
-            $params['offset']
-        );
-    }
-
-    /**
-     * @see REST_OPTIONS_PROJECT_BACKLOG
-     */
-    public function rest_options_project_backlog($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user                     = $this->getCurrentUser();
-        $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
-
-        $params['result'] = $project_backlog_resource->options(
-            $user,
-            $params['project'],
-            $params['limit'],
-            $params['offset']
-        );
-    }
-
-    /**
-     * @see REST_PUT_PROJECT_BACKLOG
-     */
-    public function rest_put_project_backlog($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user                     = $this->getCurrentUser();
-        $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
-
-        $params['result'] = $project_backlog_resource->put(
-            $user,
-            $params['project'],
-            $params['ids']
-        );
-    }
-
-    /**
-     * @see REST_PATCH_PROJECT_BACKLOG
-     */
-    public function rest_patch_project_backlog($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user                     = UserManager::instance()->getCurrentUser();
-        $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
-
-        $params['result'] = $project_backlog_resource->patch(
-            $user,
-            $params['project'],
-            $params['order'],
-            $params['add'],
-            $params['remove'],
-        );
     }
 
     /**
@@ -1232,12 +1070,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $milestone   = $this->getMilestoneFactory()->getMilestoneFromArtifact($artifact);
 
         return $milestone->getPlanningId();
-    }
-
-    private function buildRightVersionOfProjectBacklogResource($version)
-    {
-        $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectBacklogResource';
-        return new $class_with_right_namespace;
     }
 
     /** @see Event::GET_PROJECTID_FROM_URL */
@@ -1300,12 +1132,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane')) || KanbanURL::isKanbanURL($request)) {
             $params['use_standard'] = false;
         }
-    }
-
-
-    public function rest_project_agile_endpoints($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $params['available'] = true;
     }
 
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */

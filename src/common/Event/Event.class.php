@@ -640,15 +640,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const REST_RESOURCES = 'rest_resources';
 
     /**
-     * Register REST resources for v2
-     *
-     * Parameters:
-     *  'restler' => \Luracast\Restler\Restler
-     */
-    public const REST_RESOURCES_V2 = 'rest_resources_v2';
-
-
-    /**
      * Register REST Additional informations for project
      *
      * Parameters:
@@ -722,30 +713,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const AFTER_USER_REGISTRATION = 'after_user_registration';
 
     /**
-     * Event raised to get plannings from a project with REST
-     *
-     * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'result'  => array
-     */
-    public const REST_GET_PROJECT_PLANNINGS = 'rest_get_project_plannings';
-
-    /**
-     * Event raised to get plannings options from a project with REST
-     *
-     * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'result'  => array
-     */
-    public const REST_OPTIONS_PROJECT_PLANNINGS = 'rest_options_project_plannings';
-
-    /**
      * Event raised to get the list of resources associated with a project
      *
      * Parameters:
@@ -754,21 +721,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *     'resources' => array
      */
     public const REST_PROJECT_RESOURCES = 'rest_project_resources';
-
-    /**
-     * Event raised to get top milestones from a project with REST
-     *
-     * Parameters:
-     *     'version'             => String
-     *     'query'               => String
-     *     'representation_type' => String
-     *     'project'             => Project
-     *     'limit'               => int
-     *     'offset'              => int
-     *     'order'               => string
-     *     'result'              => array
-     */
-    public const REST_GET_PROJECT_MILESTONES = 'rest_get_project_milestones';
 
     /**
      * Event raised to get trackers from a project with REST
@@ -784,30 +736,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const REST_GET_PROJECT_TRACKERS = 'rest_get_project_trackers';
 
     /**
-     * Event raised to get top backlog items from a project with REST
-     *
-     * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'result'  => array
-     */
-    public const REST_GET_PROJECT_BACKLOG = 'rest_get_project_backlog';
-
-    /**
-     * Event raised to get top milestones options from a project with REST
-     *
-     * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'result'  => array
-     */
-    public const REST_OPTIONS_PROJECT_MILESTONES = 'rest_options_project_milestones';
-
-    /**
      * Event raised to get trackers options from a project with REST
      *
      * Parameters:
@@ -818,41 +746,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *     'result'  => array
      */
     public const REST_OPTIONS_PROJECT_TRACKERS = 'rest_options_project_trackers';
-
-    /**
-     * Event raised to get top backlog items options from a project with REST
-     *
-     * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'result'  => array
-     */
-    public const REST_OPTIONS_PROJECT_BACKLOG = 'rest_options_project_backlog';
-
-    /**
-     * Event raised to order top backlog items from a project with REST
-     *
-     * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'result'  => array
-     */
-    public const REST_PUT_PROJECT_BACKLOG = 'rest_put_project_backlog';
-
-    /**
-     * Event raised to order top backlog items from a project with REST
-     *
-     * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'order'   => OrderRepresentation
-     *     'result'  => array
-     */
-    public const REST_PATCH_PROJECT_BACKLOG = 'rest_patch_project_backlog';
 
     /**
      * Detect the project id in a url
@@ -951,14 +844,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *     'activated' => boolean
      */
     public const REST_PROJECT_OPTIONS_GIT = 'rest_project_options_git';
-
-    /**
-     * Event raised to know if agiledashboard plugin is activated for REST
-     *
-     * Parameters:
-     *     'available' => boolean
-     */
-    public const REST_PROJECT_AGILE_ENDPOINTS = 'rest_project_agile_endpoints';
 
     /**
      * Throw an event to allow a plugin to refdefine the type of search
