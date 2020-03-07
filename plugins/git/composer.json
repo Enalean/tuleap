@@ -10,6 +10,11 @@
     "smarty/smarty": "^2.6",
     "smarty-gettext/smarty-gettext": "^1.5"
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\Git\\": ["tests/integration/"]
+    }
+  },
   "config": {
     "platform": {
       "ext-gettext": "0"
