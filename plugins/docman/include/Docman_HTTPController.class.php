@@ -124,9 +124,9 @@ class Docman_HTTPController extends Docman_Controller
             $directUrl = $baseUrl .'&action=show';
             $detailUrl = $baseUrl .'&action=details';
 
-            $subj = $this->txt('obso_warn_email_subject', array($GLOBALS['sys_name'],
+            $subj = $GLOBALS['Language']->getText('plugin_docman', 'obso_warn_email_subject', array($GLOBALS['sys_name'],
                                                                 $item->getTitle()));
-            $body = $this->txt('obso_warn_email_body', array($item->getTitle(),
+            $body = $GLOBALS['Language']->getText('plugin_docman', 'obso_warn_email_body', array($item->getTitle(),
                                                              $hp->purify($group->getPublicName()),
                                                              $obsoDate,
                                                              $directUrl,

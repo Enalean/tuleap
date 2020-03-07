@@ -134,9 +134,10 @@ class Docman_FilterFactory
 
         $row = array();
         $values = array();
+        $item_factory = Docman_ItemFactory::instance($this->groupId);
         foreach (array('file', 'wiki', 'embeddedfile', 'empty', 'link', 'folder') as $type) {
             $row['value_id'] = constant('PLUGIN_DOCMAN_ITEM_TYPE_'.strtoupper($type));
-            $row['name'] = $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type_'.$type);
+            $row['name'] = $item_factory->getItemTypeAsText($type);
             $row['status'] = 'A';
             $love = new Docman_MetadataListOfValuesElement();
             $love->initFromRow($row);

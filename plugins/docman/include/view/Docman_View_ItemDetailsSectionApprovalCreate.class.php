@@ -144,13 +144,13 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_status').'</td>';
         $vals = array(0 => PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED,
                       1 => PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED);
-        $txts = array(0 => $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED),
-                      1 => $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED));
+        $txts = array(0 => $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_2'),
+                      1 => $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_3'));
         if ($this->table->isCustomizable()) {
             $vals[2] = PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED;
             $vals[3] = PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED;
-            $txts[2] = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
-            $txts[3] = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+            $txts[2] = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_0');
+            $txts[3] = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_1');
         }
         $html .= '<td>';
         $html .= html_build_select_box_from_arrays($vals, $txts, 'status', $this->table->getStatus(), false);
@@ -186,14 +186,24 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $vals = array(PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED,
                       PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE,
                       PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL);
-        $txts = array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED),
-                      $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED),
-                      $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED));
+        $txts = array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_0'),
+                      $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_1'),
+                      $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_2'));
         $html .= '<td>';
         if (!$this->table->isClosed()) {
             $html .= html_build_select_box_from_arrays($vals, $txts, 'notification', $this->table->getNotification(), false);
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.$this->table->getNotification());
+            switch ($this->table->getNotification()) {
+                case PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED:
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_0');
+                    break;
+                case PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED:
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_1');
+                    break;
+                case PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED:
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_2');
+                    break;
+            }
         }
         $html .= '</td>';
         $html .= '</tr>';
