@@ -36,6 +36,10 @@ if (defined('NUSOAP')) {
         )
     );
 
+    if (! isset($uri)) {
+        $uri = '';
+    }
+
 // Functions definition
     $server->register(
         'login', // method name

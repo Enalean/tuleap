@@ -11,6 +11,7 @@
   */
 
 // Printer version ?
+$ro = false;
 if (!$request->exist('pv')) {
     $pv = false;
     $ro = false;

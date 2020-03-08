@@ -427,13 +427,13 @@ class Tag extends Ref
         switch ($this->type) {
             case 'commit':
                 try {
-                    $this->object = $this->GetProject()->GetCommit($objectHash);
+                    $this->object = $this->GetProject()->GetCommit($objectHash ?? '');
                     $this->commit = $this->object;
                 } catch (\Exception $e) {
                 }
                 break;
             case 'tag':
-                $objectData = $this->GetProject()->GetObject($objectHash);
+                $objectData = $this->GetProject()->GetObject($objectHash ?? '');
                 $lines = explode("\n", $objectData);
                 foreach ($lines as $i => $line) {
                     if (preg_match('/^tag (.+)$/', $line, $regs)) {
@@ -446,7 +446,7 @@ class Tag extends Ref
                 }
                 break;
             case 'blob':
-                $this->object = $this->GetProject()->GetBlob($objectHash);
+                $this->object = $this->GetProject()->GetBlob($objectHash ?? '');
                 break;
         }
     }

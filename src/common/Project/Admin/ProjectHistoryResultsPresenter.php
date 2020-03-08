@@ -47,6 +47,7 @@ class ProjectHistoryResultsPresenter
             // If msg_key cannot be found in the localized message
             // catalog then display the msg has is because this is very
             // likely a legacy message (pre-localization version)
+            $arr_args = '';
             if (strpos($field, " %% ") !== false) {
                 list($msg_key, $args) = explode(" %% ", $field);
                 if ($args) {

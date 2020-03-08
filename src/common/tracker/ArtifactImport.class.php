@@ -183,7 +183,7 @@ class ArtifactImport
   /** parse the first line of the csv file containing all the labels of the fields that are
    * used in the following of the file
    * @param $data (IN): array containing the field labels
-   * @return true if parse ok, false if errors occurred
+   * @return bool true if parse ok, false if errors occurred
    */
     public function parseFieldNames($data)
     {
@@ -485,7 +485,7 @@ class ArtifactImport
    * @param $is_tmp (IN): true if cvs_file is only temporary file and we want to unlink it
    *                      after parsing
    * @param $artifacts (OUT): the artifacts with their field values parsed from the csv file
-   * @return true if parse ok, false if errors occurred
+   * @return bool true if parse ok, false if errors occurred
    */
     public function parse(
         $csv_filename,
@@ -513,6 +513,8 @@ class ArtifactImport
 
         $csv_file = fopen($csv_filename, "r");
         $row = 0;
+
+        require_once __DIR__ . '/../../www/project/export/project_export_utils.php';
 
         while ($data = fgetcsv($csv_file, $length, get_csv_separator())) {
             // do the real parsing here
@@ -1268,7 +1270,7 @@ class ArtifactImport
    * @param artifacts_data: all artifacts in an array. artifacts are in the form array(field_label => value)
    * @param $errors (OUT): string containing explanation what error occurred
    * @param $notify (IN): If true users notfication will be throw
-   * @return true if parse ok, false if errors occurred
+   * @return bool true if parse ok, false if errors occurred
    */
     public function updateDB($parsed_labels, $artifacts_data, $aid_column, &$errors, $notify = false)
     {

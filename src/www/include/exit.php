@@ -2,6 +2,9 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
+/**
+ * @psalm-return never-return
+ */
 function exit_error($title, $text = '')
 {
     global $HTML,$Language;
@@ -55,6 +58,9 @@ function exit_not_logged_in()
     //exit_error($Language->getText('include_exit','not_logged_in'),$Language->getText('include_exit','need_to_login'));
 }
 
+/**
+ * @psalm-return never-return
+ */
 function exit_no_group()
 {
     global $feedback,$Language;

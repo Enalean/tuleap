@@ -196,6 +196,7 @@ $prefs = $all_prefs;
   ================================================== */
 //echo "<br>DBG \$morder at top: [$morder ]";
 //   if morder not defined then reuse the one in preferences
+$morder = '';
 if (user_isloggedin()) {
     if (!$request->exist('morder')) {
         $morder = user_get_preference('artifact_browse_order' . $atid);

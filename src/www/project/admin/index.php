@@ -25,13 +25,17 @@ require_once __DIR__ . '/../../include/pre.php';
 
 $membership_delegation_dao = new \Tuleap\Project\Admin\MembershipDelegationDao();
 
+$request  = HTTPRequest::instance();
+$group_id = $request->getProject()->getID();
+
 $url  = '/project/admin/editgroupinfo.php?' .
     http_build_query(
         array(
-            'group_id' => $request->getProject()->getid()
+            'group_id' => $group_id
         )
     );
-$user = HTTPRequest::instance()->getCurrentUser();
+
+$user = $request->getCurrentUser();
 if (! $user->isAdmin($group_id) && $membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $group_id)) {
     $url  = '/project/' . $request->getProject()->getid() . '/admin/members';
 }

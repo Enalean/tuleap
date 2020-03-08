@@ -41,7 +41,7 @@ class BackendMailingList extends Backend
     /**
      * Update mailman configuration for the given list
      * Write configuration in temporary file, and load it with mailman config_list tool
-     * @return true on success, false otherwise
+     * @return bool true on success, false otherwise
      */
     protected function updateListConfig($list)
     {
@@ -85,7 +85,7 @@ class BackendMailingList extends Backend
     /**
      * Create new mailing list with mailman 'newlist' tool
      * then update the list configuration according to list settings
-     * @return true on success, false otherwise
+     * @return bool true on success, false otherwise
      */
     public function createList($group_list_id)
     {
@@ -115,7 +115,7 @@ class BackendMailingList extends Backend
      * Delete mailing list
      * - list and archives are deleted
      * - backup first in temp directory
-     * @return true on success, false otherwise
+     * @return bool true on success, false otherwise
      */
     public function deleteList($group_list_id)
     {
@@ -141,7 +141,7 @@ class BackendMailingList extends Backend
 
     /**
      * Check if the list exists on the file system
-     * @return true if list exists, false otherwise
+     * @return bool true if list exists, false otherwise
      */
     public function listExists($list)
     {

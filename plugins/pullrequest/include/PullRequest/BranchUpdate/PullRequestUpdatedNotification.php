@@ -33,31 +33,33 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use UserHelper;
 
-/**
- * @psalm-immutable
- */
 final class PullRequestUpdatedNotification implements NotificationToProcess
 {
     /**
      * @var PullRequest
+     * @psalm-readonly
      */
     private $pull_request;
     /**
      * @var string
+     * @psalm-readonly
      */
     private $change_user_display_name;
     /**
      * @var array
+     * @psalm-readonly
      */
     private $owners;
     /**
      * @var NotificationEnhancedContent
+     * @psalm-readonly
      */
     private $enhanced_content;
     /**
      * @var CommitPresenter[]
      *
      * @psalm-var non-empty-array<CommitPresenter> $new_commits
+     * @psalm-readonly
      */
     private $new_commits;
 
@@ -152,16 +154,25 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
         return $presenters;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getRecipients(): array
     {
         return $this->owners;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function asPlaintext(): string
     {
         $nb_new_commits = count($this->new_commits);
@@ -185,6 +196,9 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
         return trim($plaintext);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

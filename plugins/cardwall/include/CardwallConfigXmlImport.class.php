@@ -297,13 +297,13 @@ class CardwallConfigXmlImport
     private function getTLPColorNameFromXml(SimpleXMLElement $xml_column, $xml_column_id)
     {
         $color_label = CardwallConfigXml::ATTRIBUTE_COLUMN_TLP_COLOR_NAME;
-        $color_name  = $xml_column[$color_label];
 
-        if (! $color_name) {
+        if (! isset($xml_column[$color_label])) {
             return null;
         }
+        $color_name  = $xml_column[$color_label];
 
-        if (strlen($color_name) === 0) {
+        if ((string) $color_name === '') {
             $this->addColorImportErrorFeedback($color_label, $xml_column_id);
             return null;
         }

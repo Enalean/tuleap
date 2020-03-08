@@ -39,11 +39,19 @@ final class SSHKeysPresenter
      */
     public $has_ssh_keys;
 
-    public function __construct(PFUser $user)
+    /**
+     * @psalm-param array<int,string> $ssh_keys
+     */
+    private function __construct(array $ssh_keys)
     {
-        foreach ($user->getAuthorizedKeysArray() as $ssh_key_number => $ssh_key_value) {
+        foreach ($ssh_keys as $ssh_key_number => $ssh_key_value) {
             $this->ssh_keys_list[] = new SSHKeyPresenter($ssh_key_number, $ssh_key_value);
         }
         $this->has_ssh_keys = count($this->ssh_keys_list) > 0;
+    }
+
+    public static function fromUser(PFUser $user): self
+    {
+        return new self($user->getAuthorizedKeysArray());
     }
 }

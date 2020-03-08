@@ -24,21 +24,21 @@ namespace Tuleap\OAuth2Server\User;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
-/**
- * @psalm-immutable
- */
 final class NewAuthorization
 {
     /**
      * @var \PFUser
+     * @psalm-readonly
      */
     private $user;
     /**
      * @var int
+     * @psalm-readonly
      */
     private $app_id;
     /**
      * @var AuthenticationScopeIdentifier[]
+     * @psalm-readonly
      */
     private $scope_identifiers;
 
@@ -49,11 +49,17 @@ final class NewAuthorization
         $this->scope_identifiers = $scope_identifiers;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getUser(): \PFUser
     {
         return $this->user;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getAppId(): int
     {
         return $this->app_id;
@@ -61,6 +67,7 @@ final class NewAuthorization
 
     /**
      * @return AuthenticationScopeIdentifier[]
+     * @psalm-mutation-free
      */
     public function getScopeIdentifiers(): array
     {

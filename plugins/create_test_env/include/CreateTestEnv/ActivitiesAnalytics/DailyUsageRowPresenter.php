@@ -23,17 +23,42 @@ declare(strict_types=1);
 
 namespace Tuleap\CreateTestEnv\ActivitiesAnalytics;
 
-/**
- * @psalm-immutable
- */
 final class DailyUsageRowPresenter
 {
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $real_name;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $login;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $email;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
     public $actions;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
     public $connexions;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $last_seen;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $elapsed_time;
 
     public function __construct(string $real_name, string $login, string $email, int $actions, int $connexions, \DateTimeImmutable $last_seen, \DateInterval $elapsed_time)

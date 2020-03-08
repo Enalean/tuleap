@@ -35,7 +35,10 @@ $usage_options .= 'u:'; // give me a user
 $usage_options .= 'i:'; // give me the archive path to import
 $usage_options .= 'o:'; // give me the output path of the csv file
 
-function usage()
+/**
+ * @psalm-return never-return
+ */
+function usage(): void
 {
     global $argv;
 
@@ -63,6 +66,7 @@ if (! isset($arguments['u'])) {
     usage();
 } else {
     $username = $arguments['u'];
+    assert(is_string($username));
 }
 
 if (! isset($arguments['o'])) {

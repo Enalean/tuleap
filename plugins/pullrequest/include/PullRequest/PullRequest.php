@@ -22,6 +22,9 @@ namespace Tuleap\PullRequest;
 
 use Tuleap\Label\Labelable;
 
+/**
+ * @psalm-immutable
+ */
 class PullRequest implements Labelable
 {
 
@@ -76,6 +79,22 @@ class PullRequest implements Labelable
         $this->sha1_dest     = $sha1_dest;
         $this->status        = $status;
         $this->merge_status  = $merge_status;
+    }
+
+    public function createWithNewID(int $new_pull_request_id): self
+    {
+        $new_pull_request = clone $this;
+        $new_pull_request->id = $new_pull_request_id;
+
+        return $new_pull_request;
+    }
+
+    public function updateMergeStatus(int $new_merge_status): self
+    {
+        $updated_pull_request = clone $this;
+        $updated_pull_request->merge_status = $new_merge_status;
+
+        return $updated_pull_request;
     }
 
     public function getId()
@@ -133,11 +152,6 @@ class PullRequest implements Labelable
         return $this->merge_status;
     }
 
-    public function setMergeStatus($merge_status)
-    {
-        return $this->merge_status = $merge_status;
-    }
-
     public function getUserId()
     {
         return $this->user_id;
@@ -146,10 +160,5 @@ class PullRequest implements Labelable
     public function getCreationDate()
     {
         return $this->creation_date;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 }

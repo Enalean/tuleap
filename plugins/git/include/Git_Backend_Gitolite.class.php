@@ -296,7 +296,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param Project $project The project to rename
      * @param string  $newName The new name of the project
      *
-     * @return true if success, false otherwise
+     * @return bool true if success, false otherwise
      */
     public function renameProject(Project $project, $newName)
     {

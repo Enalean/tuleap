@@ -32,29 +32,31 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use UserHelper;
 
-/**
- * @psalm-immutable
- */
 final class PullRequestNewCommentNotification implements NotificationToProcess
 {
     /**
      * @var PullRequest
+     * @psalm-readonly
      */
     private $pull_request;
     /**
      * @var string
+     * @psalm-readonly
      */
     private $change_user_display_name;
     /**
      * @var array
+     * @psalm-readonly
      */
     private $owners;
     /**
      * @var string
+     * @psalm-readonly
      */
     private $comment;
     /**
      * @var NotificationEnhancedContent
+     * @psalm-readonly
      */
     private $enhanced_content;
 
@@ -110,19 +112,25 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
     }
 
     /**
-     * @inheritDoc
+     * @psalm-mutation-free
      */
     public function getRecipients(): array
     {
         return $this->owners;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function asPlaintext(): string
     {
         return sprintf(
@@ -133,6 +141,9 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
         ) . "\n\n" . $this->comment;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

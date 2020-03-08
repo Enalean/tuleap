@@ -492,7 +492,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     /**
      * Verifies the consistency of the imported Tracker
      *
-     * @return true if Tracler is ok
+     * @return bool true if Tracler is ok
      */
     public function testImport()
     {

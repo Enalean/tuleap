@@ -26,25 +26,26 @@ use DateTimeImmutable;
 use PFUser;
 use Tuleap\PullRequest\Timeline\TimelineEvent;
 
-/**
- * @psalm-immutable
- */
 final class ReviewerChange implements TimelineEvent
 {
     /**
      * @var DateTimeImmutable
+     * @psalm-readonly
      */
     private $date_of_the_change;
     /**
      * @var PFUser
+     * @psalm-readonly
      */
     private $user_doing_the_change;
     /**
      * @var array|PFUser[]
+     * @psalm-readonly
      */
     private $added_reviewers;
     /**
      * @var array|PFUser[]
+     * @psalm-readonly
      */
     private $removed_reviewers;
 
@@ -64,16 +65,25 @@ final class ReviewerChange implements TimelineEvent
         $this->removed_reviewers     = $removed_reviewers;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function changedAt(): DateTimeImmutable
     {
         return $this->date_of_the_change;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getPostDate(): int
     {
         return $this->date_of_the_change->getTimestamp();
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function changedBy(): PFUser
     {
         return $this->user_doing_the_change;
@@ -81,6 +91,7 @@ final class ReviewerChange implements TimelineEvent
 
     /**
      * @return PFUser[]
+     * @psalm-mutation-free
      */
     public function getAddedReviewers(): array
     {
@@ -89,6 +100,7 @@ final class ReviewerChange implements TimelineEvent
 
     /**
      * @return PFUser[]
+     * @psalm-mutation-free
      */
     public function getRemovedReviewers(): array
     {

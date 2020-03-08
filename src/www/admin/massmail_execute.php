@@ -36,6 +36,7 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
     $validFormat = new Valid_WhiteList('comment_format', array('html', 'text'));
     $bodyFormat  = $request->getValidated('comment_format', $validFormat, 'text');
 
+    $mailMessage  = '';
     $validMessage = new Valid_Text('mail_message');
     if ($request->valid($validMessage)) {
         $mailMessage = $request->get('mail_message');

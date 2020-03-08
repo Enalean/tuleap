@@ -136,7 +136,7 @@ class PullRequestCreator
             $pull_request->getSha1Src(),
             $pull_request->getSha1Dest()
         );
-        $pull_request->setMergeStatus($merge_status);
+        $pull_request = $pull_request->updateMergeStatus($merge_status);
         $this->pull_request_factory->updateMergeStatus($pull_request, $merge_status);
 
         $event = new GetCreatePullRequest($pull_request, $creator, $repository_dest->getProject());

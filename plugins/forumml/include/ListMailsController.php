@@ -113,6 +113,7 @@ class ListMailsController implements DispatchableWithRequest
                 $GLOBALS["Language"]->getText('global', 'error'),
                 $GLOBALS["Language"]->getText('plugin_forumml', 'specify_list')
             );
+            exit();
         } else {
             $list_id = $request->get('list');
             $project = ProjectManager::instance()->getProject($group_id);

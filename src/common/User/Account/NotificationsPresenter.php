@@ -26,33 +26,36 @@ namespace Tuleap\User\Account;
 use Codendi_Mail_Interface;
 use CSRFSynchronizerToken;
 
-/**
- * @psalm-immutable
- */
 final class NotificationsPresenter
 {
     /**
      * @var CSRFSynchronizerToken
+     * @psalm-readonly
      */
     public $csrf_token;
     /**
      * @var AccountTabPresenterCollection
+     * @psalm-readonly
      */
     public $tabs;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $site_email_updates_checked = false;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $site_email_community_checked = false;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $email_format_html;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $email_format_text;
 

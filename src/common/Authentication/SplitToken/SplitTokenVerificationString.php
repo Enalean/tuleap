@@ -22,6 +22,9 @@ namespace Tuleap\Authentication\SplitToken;
 
 use Tuleap\Cryptography\ConcealedString;
 
+/**
+ * @psalm-immutable
+ */
 class SplitTokenVerificationString
 {
     public const VERIFICATION_STRING_LENGTH = 32;
@@ -36,9 +39,7 @@ class SplitTokenVerificationString
      */
     public function __construct(ConcealedString $verification_string)
     {
-        $raw_verification_string  = $verification_string->getString();
-        $verification_string_size = \mb_strlen($raw_verification_string, '8bit');
-        \sodium_memzero($raw_verification_string);
+        $verification_string_size = \mb_strlen($verification_string->getString(), '8bit');
         if ($verification_string_size !== self::VERIFICATION_STRING_LENGTH) {
             throw new IncorrectSizeVerificationStringException(
                 self::VERIFICATION_STRING_LENGTH,

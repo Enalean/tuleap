@@ -27,6 +27,9 @@ require_once __DIR__ . '/../include/pre.php';
 if (! user_isloggedin()) {
     exit_not_logged_in();
 }
+if (! isset($group_id)) {
+    $group_id = 0;
+}
 $vFilemodule_id = new Valid_UInt('filemodule_id');
 $vFilemodule_id->required();
 if ($request->valid($vFilemodule_id)) {

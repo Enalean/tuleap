@@ -57,7 +57,7 @@ class Tracker_SemanticFactory
         $attributes = $xml->attributes();
         $type = $attributes['type'];
 
-        $builder = $this->getSemanticFromXMLBuilder($type);
+        $builder = $this->getSemanticFromXMLBuilder((string) $type);
         if ($builder === null) {
             return $this->getSemanticFromAnotherPlugin($xml, $full_semantic_xml, $xml_mapping, $tracker, $type);
         }

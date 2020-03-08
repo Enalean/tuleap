@@ -26,15 +26,13 @@ use PFUser;
 use Tracker_Artifact;
 use Tuleap\Event\Dispatchable;
 
-/**
- * @psalm-immutable
- */
 class ArtifactUpdated implements Dispatchable
 {
     public const NAME = 'trackerArtifactUpdated';
 
     /**
      * @var Tracker_Artifact
+     * @psalm-readonly
      */
     private $artifact;
 
@@ -49,11 +47,17 @@ class ArtifactUpdated implements Dispatchable
         $this->user     = $user;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getArtifact(): Tracker_Artifact
     {
         return $this->artifact;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getUser(): PFUser
     {
         return $this->user;

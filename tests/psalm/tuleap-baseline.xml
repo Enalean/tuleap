@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.8.3@389af1bfc739bfdff3f9e3dc7bd6499aee51a831">
+<files psalm-version="3.9.5@0cfe565d0afbcd31eadcc281b9017b5692911661">
   <file src="plugins/admindelegation/include/AdminDelegationBuilder.php">
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
@@ -74,7 +74,7 @@
     </NullArgument>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
-    <InvalidReturnType occurrences="19">
+    <InvalidReturnType occurrences="17">
       <code>fetchArtifactValue</code>
       <code>fetchCSVChangesetValue</code>
       <code>fetchChangesetValue</code>
@@ -89,8 +89,6 @@
       <code>getCriteriaFrom</code>
       <code>getCriteriaWhere</code>
       <code>getDao</code>
-      <code>getFactoryDescription</code>
-      <code>getFactoryLabel</code>
       <code>getQueryFrom</code>
       <code>getQuerySelect</code>
       <code>keepValue</code>
@@ -202,12 +200,6 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneReportCriterionOptionsProvider.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>array_map(array($this, 'extractTrackerId'), $parents)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Tracker[]</code>
-    </InvalidReturnType>
     <PossiblyNullReference occurrences="1">
       <code>userCanView</code>
     </PossiblyNullReference>
@@ -326,7 +318,6 @@
     </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Kanban/KanbanItemsResource.php">
-    <InvalidPropertyAssignmentValue occurrences="1"/>
     <InvalidReturnStatement occurrences="1">
       <code>$item_representation</code>
     </InvalidReturnStatement>
@@ -339,8 +330,7 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$artifact</code>
     </TypeDoesNotContainType>
-    <UndefinedDocblockClass occurrences="2">
-      <code>AgileDashboard_KankanColumnFactory</code>
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation</code>
     </UndefinedDocblockClass>
   </file>
@@ -365,15 +355,8 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$kanban_column_factory</code>
     </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement occurrences="1">
-      <code>$kanban_representation</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="2">
+    <UndefinedDocblockClass occurrences="1">
       <code>AgileDashboard_KankanColumnFactory</code>
-      <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation</code>
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Kanban/KanbanResource.php">
@@ -381,28 +364,21 @@
       <code>$tracker</code>
     </InvalidArgument>
     <InvalidPropertyAssignmentValue occurrences="1"/>
-    <InvalidReturnStatement occurrences="2">
-      <code>$diagram_representation</code>
+    <InvalidReturnStatement occurrences="1">
       <code>$tracker</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation</code>
+    <InvalidReturnType occurrences="1">
       <code>Tracker</code>
     </InvalidReturnType>
     <PossiblyNullReference occurrences="1">
       <code>userCanView</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="11">
+    <UndefinedDocblockClass occurrences="6">
       <code>AgileDashboard_KankanColumnFactory</code>
-      <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation</code>
-      <code>Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation</code>
       <code>$tracker</code>
       <code>$tracker</code>
-      <code>Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation</code>
-      <code>Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation</code>
       <code>$this-&gt;kanban_column_factory</code>
-      <code>Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation</code>
       <code>Tracker</code>
     </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -432,9 +408,6 @@
     <InvalidReturnType occurrences="1">
       <code>\Tuleap\Tracker\REST\Artifact\BurndownRepresentation</code>
     </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/MilestoneResourceValidator.class.php">
     <PossiblyNullArgument occurrences="4">
@@ -518,14 +491,6 @@
     <PropertyTypeCoercion occurrences="1">
       <code>$field</code>
     </PropertyTypeCoercion>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/SequenceIdManager.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;backlog_item_collection_factory</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;backlog_item_collection_factory</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Widget/Kanban.php">
     <PossiblyNullReference occurrences="1">
@@ -615,14 +580,6 @@
       <code>$planned_artifacts</code>
       <code>$planned_artifacts</code>
     </ArgumentTypeCoercion>
-    <InvalidArgument occurrences="2">
-      <code>array($this-&gt;artifact_factory, 'getInstanceFromRow')</code>
-      <code>$sub_milestone_artifact</code>
-    </InvalidArgument>
-    <InvalidMethodCall occurrences="2">
-      <code>userCanView</code>
-      <code>getTracker</code>
-    </InvalidMethodCall>
     <InvalidNullableReturnType occurrences="1">
       <code>Planning_ArtifactMilestone</code>
     </InvalidNullableReturnType>
@@ -857,18 +814,6 @@
       <code>getField</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/cardwall/include/Cardwall_RendererDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="5">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/cardwall/include/Form.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;please_choose_dashed</code>
@@ -989,21 +934,12 @@
     </TypeDoesNotContainType>
   </file>
   <file src="plugins/cardwall/include/REST/v1/MilestonesCardwallResource.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$board_representation</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>\Tuleap\Cardwall\REST\v1\MilestonesCardwallRepresentation</code>
-    </InvalidReturnType>
     <PossiblyNullArgument occurrences="1">
       <code>$config</code>
     </PossiblyNullArgument>
     <PossiblyNullReference occurrences="1">
       <code>getDashboardColumns</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="1">
-      <code>\Tuleap\Cardwall\REST\v1\MilestonesCardwallRepresentation</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/cardwall/include/RendererBoardBuilder.class.php">
     <PossiblyNullArgument occurrences="1">
@@ -1046,9 +982,6 @@
     <LessSpecificImplementedReturnType occurrences="1">
       <code>mixed</code>
     </LessSpecificImplementedReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/cardwall/include/Semantic/SemanticCardPresenter.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -1268,9 +1201,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>1</code>
     </InvalidScalarArgument>
-    <PossiblyNullOperand occurrences="1">
-      <code>var_export($this-&gt;parameters, 1)</code>
-    </PossiblyNullOperand>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/Query/ParametrizedFromWhere.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -1292,11 +1222,6 @@
       <code>$this-&gt;candidates_sorted_by_identifier_and_tracker_id[$identifier_string]</code>
       <code>$this-&gt;candidates_sorted_by_identifier_and_tracker_id[$identifier_string]</code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/SimilarFieldIdentifier.php">
-    <PossiblyNullOperand occurrences="1">
-      <code>$this-&gt;bind_name</code>
-    </PossiblyNullOperand>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/SimilarFieldsFilter.php">
     <PossiblyNullArgument occurrences="1">
@@ -1345,15 +1270,7 @@
       <code>$um-&gt;getUserById($table-&gt;owner)</code>
     </NullableReturnStatement>
   </file>
-  <file src="plugins/docman/include/ApprovalTable/Reviewer/ReviewerDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="plugins/docman/include/ApprovalTable/Reviewer/ReviewerFactory.class.php">
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
     <InvalidStaticInvocation occurrences="1">
       <code>Docman_ApprovalTable::computeApprovalState($row)</code>
     </InvalidStaticInvocation>
@@ -1985,11 +1902,6 @@
       <code>$this-&gt;is_folder</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionActions.class.php">
-    <UndefinedConstant occurrences="1">
-      <code>CODEX_PURIFIER_CONVERT_HTML</code>
-    </UndefinedConstant>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionApproval.class.php">
     <InvalidStaticInvocation occurrences="1">
       <code>Docman_ItemFactory::getItemTypeForItem($this-&gt;item)</code>
@@ -2120,11 +2032,6 @@
       <code>$params</code>
       <code>$list_id</code>
     </PossiblyUndefinedGlobalVariable>
-  </file>
-  <file src="plugins/forumml/include/forummlPlugin.php">
-    <PossiblyNullOperand occurrences="1">
-      <code>$params['time_to_collect']['plugin_forumml']</code>
-    </PossiblyNullOperand>
   </file>
   <file src="plugins/forumml/include/forumml_utils.php">
     <PossiblyUndefinedVariable occurrences="5">
@@ -2615,12 +2522,6 @@
       <code>$this-&gt;desc</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/git/include/Git/Webhook/WebhookPresenter.php">
-    <UndefinedThisPropertyAssignment occurrences="2">
-      <code>$this-&gt;purified_last_push_info</code>
-      <code>$this-&gt;purified_last_push_info</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="plugins/git/include/Git/Webhook/WebhookSettingsPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;has_sections</code>
@@ -2639,9 +2540,8 @@
     </UndefinedClass>
   </file>
   <file src="plugins/git/include/GitBackend.class.php">
-    <InvalidReturnType occurrences="2">
+    <InvalidReturnType occurrences="1">
       <code>save</code>
-      <code>renameProject</code>
     </InvalidReturnType>
     <PossiblyUndefinedVariable occurrences="13">
       <code>$gitShellIndex</code>
@@ -2799,9 +2699,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$this-&gt;pgp_signature</code>
     </PossiblyNullArgument>
-    <PossiblyNullOperand occurrences="1">
-      <code>$this-&gt;pgp_signature</code>
-    </PossiblyNullOperand>
   </file>
   <file src="plugins/git/include/GitPHP/git/DiffExe.php">
     <ForbiddenCode occurrences="1">
@@ -3115,9 +3012,6 @@
     <InvalidClass occurrences="1">
       <code>gitPlugin</code>
     </InvalidClass>
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
   </file>
   <file src="plugins/git/include/Git_GitoliteDriver.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -3197,11 +3091,6 @@
     <InvalidReturnStatement occurrences="1">
       <code>(new DateTime($repository-&gt;getCreationDate()))-&gt;getTimestamp()</code>
     </InvalidReturnStatement>
-  </file>
-  <file src="plugins/git/include/REST/v1/RepositoryResource.class.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>Tuleap\PullRequest\REST\v1\RepositoryPullRequestRepresentation</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP.class.php">
     <UndefinedDocblockClass occurrences="1"/>
@@ -3431,14 +3320,6 @@
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_ChartDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_ChartFactory.class.php">
     <NullArgument occurrences="2">
       <code>$report</code>
@@ -3467,34 +3348,12 @@
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_BarDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_Burndown.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;report_session</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_BurndownDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_CumulativeFlow.class.php">
@@ -3505,34 +3364,12 @@
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_CumulativeFlowDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_Gantt.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;report_session</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_GanttDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_Pie.class.php">
@@ -3542,17 +3379,6 @@
     <UndefinedThisPropertyFetch occurrences="2">
       <code>$this-&gt;report_session</code>
       <code>$this-&gt;graphic_report</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_PieDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/data-transformation/ChartDataBuilderV5.class.php">
@@ -3612,14 +3438,6 @@
       <code>SIDE_DOWN</code>
       <code>FS_NORMAL</code>
     </UndefinedConstant>
-    <UndefinedThisPropertyAssignment occurrences="3">
-      <code>$this-&gt;keys</code>
-      <code>$this-&gt;keys</code>
-      <code>$this-&gt;keys</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;keys</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine_Burndown.class.php">
     <UndefinedThisPropertyFetch occurrences="5">
@@ -3773,16 +3591,6 @@
       <code>$repository</code>
     </NullableReturnStatement>
   </file>
-  <file src="plugins/hudson_git/include/HudsonGit/JenkinsWebhookPresenter.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;purified_last_push_info</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/hudson_git/include/HudsonGit/Job/JobManager.php">
-    <TooManyArguments occurrences="1">
-      <code>new CannotCreateJobException($GLOBALS['Language']-&gt;getText('plugin_hudson_git', 'job_error'))</code>
-    </TooManyArguments>
-  </file>
   <file src="plugins/hudson_svn/include/Job/Manager.php">
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$repository_manager</code>
@@ -3903,20 +3711,14 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/ldap/include/LDAP_UserDao.class.php">
-    <FalsableReturnStatement occurrences="2">
+    <FalsableReturnStatement occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="2">
+    <InvalidFalsableReturnType occurrences="1">
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;retrieve($sql)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>int</code>
-    </InvalidReturnType>
     <PossiblyFalseReference occurrences="2">
       <code>rowCount</code>
       <code>rowCount</code>
@@ -3949,9 +3751,6 @@
     </NullableReturnStatement>
   </file>
   <file src="plugins/ldap/include/LDAP_UserManager.class.php">
-    <InvalidMethodCall occurrences="1">
-      <code>getRow</code>
-    </InvalidMethodCall>
     <InvalidScalarArgument occurrences="1">
       <code>$ldapUid</code>
     </InvalidScalarArgument>
@@ -3975,13 +3774,11 @@
   </file>
   <file src="plugins/ldap/include/ldapPlugin.php">
     <InvalidArgument occurrences="1"/>
-    <InvalidReturnStatement occurrences="2">
+    <InvalidReturnStatement occurrences="1">
       <code>true</code>
-      <code>$this-&gt;getLdap()-&gt;getLDAPParam('grp_sync_admin_notifications_enabled')</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
+    <InvalidReturnType occurrences="1">
       <code>void</code>
-      <code>bool</code>
     </InvalidReturnType>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$result</code>
@@ -4154,9 +3951,6 @@
       <code>$plugin</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="plugins/pluginsadministration/include/PluginsAdministrationViews.class.php">
-    <InvalidPropertyAssignmentValue occurrences="1"/>
-  </file>
   <file src="plugins/proftpd/include/ProFTPd/Admin/AdminController.class.php">
     <TooManyArguments occurrences="1">
       <code>userIsAdmin</code>
@@ -4202,11 +3996,6 @@
       <code>createEvent</code>
       <code>createEvent</code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/project_ownership/include/ProjectAdmin/IndexController.php">
-    <InvalidArgument occurrences="1">
-      <code>$e</code>
-    </InvalidArgument>
   </file>
   <file src="plugins/project_ownership/include/ProjectAdmin/ProjectOwnerPresenter.php">
     <PossiblyNullReference occurrences="1">
@@ -4259,11 +4048,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>$is_merge_commit_allowed</code>
     </InvalidScalarArgument>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/GitExec.php">
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Label/LabeledItemCollector.php">
     <PossiblyNullArgument occurrences="1">
@@ -4586,7 +4370,7 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/statistics/include/Frequencies/GraphDataBuilders/SampleGraph.php">
-    <PossiblyUndefinedVariable occurrences="4">
+    <PossiblyUndefinedVariable occurrences="3">
       <code>$databarx</code>
       <code>$databarx</code>
       <code>$databarx</code>
@@ -4916,11 +4700,6 @@
       <code>getDiskUsageForProject</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/svn/include/SVN/DiskUsage/DiskUsageDao.php">
-    <PossiblyFalseReference occurrences="1">
-      <code>count</code>
-    </PossiblyFalseReference>
-  </file>
   <file src="plugins/svn/include/SVN/DiskUsage/DiskUsageRetriever.php">
     <InvalidOperand occurrences="1">
       <code>$size</code>
@@ -5005,15 +4784,6 @@
       <code>EVENT</code>
       <code>EVENT</code>
     </InvalidClass>
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>new SvnPermissionManager($this-&gt;getForgeUserGroupFactory(), PermissionsManager::instance())</code>
-    </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;permissions_manager</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>SvnPermissionManager</code>
-    </InvalidReturnType>
     <LessSpecificReturnStatement occurrences="1">
       <code>Backend::instance(Backend::SVN)</code>
     </LessSpecificReturnStatement>
@@ -5272,13 +5042,6 @@
     <InvalidParamDefault occurrences="1">
       <code>string</code>
     </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="2">
-      <code>$artifact_link_representation</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation</code>
-      <code>Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation</code>
-    </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>$id</code>
     </InvalidScalarArgument>
@@ -5288,11 +5051,6 @@
     <TooManyArguments occurrences="1">
       <code>sendAllowHeadersForChangesets</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="3">
-      <code>Tuleap\Tracker\REST\Artifact\ArtifactRepresentation</code>
-      <code>Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation</code>
-      <code>Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/MilestonesBurndownResource.class.php">
     <PossiblyNullArgument occurrences="1">
@@ -5648,9 +5406,6 @@
     <LessSpecificReturnStatement occurrences="1">
       <code>TemplateRendererFactory::build()-&gt;getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')</code>
     </LessSpecificReturnStatement>
-    <LoopInvalidation occurrences="1">
-      <code>$artifact_links</code>
-    </LoopInvalidation>
     <MissingDocblockType occurrences="1">
       <code>$field</code>
     </MissingDocblockType>
@@ -5683,11 +5438,6 @@
       <code>showAttachment</code>
       <code>previewAttachment</code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactCreator.class.php">
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php">
     <InvalidArgument occurrences="1">
@@ -5956,11 +5706,6 @@
       <code>`mktemp -d -p $tmp_dir $template`</code>
     </ForbiddenCode>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/dao/ComputedDao.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/dao/PriorityDao.class.php">
     <PossiblyFalseIterator occurrences="1">
       <code>$res</code>
@@ -6003,16 +5748,6 @@
       <code>$row['per_tracker_artifact_id']</code>
       <code>$res['per_tracker_artifact_id']</code>
     </PossiblyInvalidArrayAccess>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="5">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/dao/Tracker_Artifact_ChangesetDao.class.php">
     <FalsableReturnStatement occurrences="2">
@@ -6023,46 +5758,16 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/dao/Tracker_Artifact_Changeset_CommentDao.class.php">
     <PossiblyFalseIterator occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseIterator>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/dao/Tracker_Artifact_Changeset_ValueDao.class.php">
     <PossiblyFalseIterator occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseIterator>
-    <PossiblyFalseReference occurrences="1">
-      <code>getRow</code>
-    </PossiblyFalseReference>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="5">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/CannedResponse/Tracker_CannedResponseFactory.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -6089,18 +5794,6 @@
       <code>Tracker_CannedResponseFactory::instance()</code>
       <code>Tracker_CannedResponseFactory::instance()</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/tracker/include/Tracker/CannedResponse/dao/Tracker_CannedResponseDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="5">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/CardFields.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -6299,12 +5992,12 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ChartMessageFetcher.php">
-    <InvalidNullableReturnType occurrences="3">
+    <InvalidNullableReturnType occurrences="2">
       <code>string</code>
       <code>String</code>
       <code>String</code>
     </InvalidNullableReturnType>
-    <NullableReturnStatement occurrences="3">
+    <NullableReturnStatement occurrences="2">
       <code>null</code>
       <code>null</code>
       <code>null</code>
@@ -6431,14 +6124,6 @@
       <code>$sum</code>
     </NullOperand>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/IProvideFactoryButtonInformation.class.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/SystemEvent/SystemEvent_BURNDOWN_DAILY.php">
     <PossiblyFalseIterator occurrences="1">
       <code>$this-&gt;burndown_dao-&gt;getArtifactsWithBurndown()</code>
@@ -6546,37 +6231,14 @@
       <code>$this-&gt;formElements_by_formElementcomponent</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Fieldset.class.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>preg_match($pattern, $this-&gt;label)</code>
+    </InvalidReturnStatement>
     <InvalidReturnType occurrences="1">
       <code>true</code>
-    </InvalidReturnType>
-    <PossiblyNullArgument occurrences="1">
-      <code>$this-&gt;getTracker()</code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Column.class.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Fieldset.class.php">
-    <InvalidReturnStatement occurrences="2">
-      <code>preg_match($pattern, $this-&gt;label)</code>
-      <code>preg_match($pattern, $this-&gt;description)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>true</code>
       <code>true</code>
     </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -6602,33 +6264,18 @@
       <code>getValue</code>
       <code>getValue</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="6">
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
+    <UndefinedDocblockClass occurrences="2">
       <code>Tracker_FormElement_FieldSet</code>
       <code>Criteria</code>
       <code>Criteria</code>
-      <code>Tracker_</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactId.class.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php">
     <ImplementedParamTypeMismatch occurrences="1">
       <code>$fields_data</code>
     </ImplementedParamTypeMismatch>
-    <InvalidArgument occurrences="3">
+    <InvalidArgument occurrences="2">
       <code>''</code>
-      <code>$artifact_links</code>
       <code>$value</code>
     </InvalidArgument>
     <InvalidReturnType occurrences="2">
@@ -6668,15 +6315,7 @@
       <code>new CSVOutputStrategy(Codendi_HTMLPurifier::instance())</code>
       <code>searchById</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="9">
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
     </UndefinedDocblockClass>
     <UndefinedMethod occurrences="3">
@@ -6707,20 +6346,6 @@
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$value</code>
     </MoreSpecificImplementedParamType>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Checkbox.class.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Computed.class.php">
     <InvalidReturnStatement occurrences="2">
@@ -6747,12 +6372,6 @@
     <TooManyArguments occurrences="1">
       <code>getComputedValue</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="9">
       <code>isManualValue</code>
       <code>isManualValue</code>
@@ -6784,14 +6403,6 @@
       <code>getGroupId</code>
       <code>getGroupId</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="6">
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -6824,12 +6435,7 @@
     <PossiblyNullReference occurrences="1">
       <code>getValue</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="8">
-      <code>Tracker_</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
+    <UndefinedDocblockClass occurrences="3">
       <code>type</code>
       <code>Date</code>
       <code>date</code>
@@ -6840,8 +6446,7 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_File.class.php">
-    <ImplementedParamTypeMismatch occurrences="3">
-      <code>$artifact</code>
+    <ImplementedParamTypeMismatch occurrences="2">
       <code>$value</code>
       <code>$csv_value</code>
     </ImplementedParamTypeMismatch>
@@ -6857,11 +6462,7 @@
     <PossiblyNullReference occurrences="1">
       <code>getFiles</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="6">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
+    <UndefinedDocblockClass occurrences="2">
       <code>Tracker_ChangesetValue_File</code>
       <code>type</code>
     </UndefinedDocblockClass>
@@ -6881,12 +6482,6 @@
     <NullableReturnStatement occurrences="1">
       <code>$changeset_value</code>
     </NullableReturnStatement>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Integer.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -6898,12 +6493,6 @@
     <NullableReturnStatement occurrences="1">
       <code>$changeset_value</code>
     </NullableReturnStatement>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_LastModifiedBy.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -6946,11 +6535,7 @@
     <PossiblyNullReference occurrences="1">
       <code>getSubmittedOn</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="6">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
+    <UndefinedDocblockClass occurrences="2">
       <code>date</code>
       <code>date</code>
     </UndefinedDocblockClass>
@@ -6962,9 +6547,6 @@
     <InvalidArgument occurrences="1">
       <code>$this</code>
     </InvalidArgument>
-    <InvalidArrayOffset occurrences="1">
-      <code>$available_field_values[$value_to_match]</code>
-    </InvalidArrayOffset>
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$value</code>
     </MoreSpecificImplementedParamType>
@@ -6986,13 +6568,6 @@
     <TooManyArguments occurrences="1">
       <code>searchById</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="4">
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="6">
       <code>getListValues</code>
       <code>getListValues</code>
@@ -7126,9 +6701,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Users.class.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$value</code>
-    </ArgumentTypeCoercion>
     <ForbiddenCode occurrences="2">
       <code>var_dump($this, 'Properties must be "rows" and "cols"')</code>
       <code>var_dump($this, 'Properties must be "maxchars" and "size"')</code>
@@ -7139,9 +6711,8 @@
     <InvalidReturnStatement occurrences="1">
       <code>parent::process($params, $no_redirect)</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
+    <InvalidReturnType occurrences="1">
       <code>void</code>
-      <code>true</code>
     </InvalidReturnType>
     <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
@@ -7154,22 +6725,7 @@
       <code>getUser</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Value.class.php">
-    <InvalidReturnStatement occurrences="1"/>
-    <InvalidReturnType occurrences="1">
-      <code>type</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>type</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_MultiSelectbox.class.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>delete</code>
     </UndefinedMethod>
@@ -7178,15 +6734,9 @@
     <ForbiddenCode occurrences="1">
       <code>var_dump($this, 'Properties must be "maxchars" and "size"')</code>
     </ForbiddenCode>
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>$value</code>
     </InvalidScalarArgument>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Tracker_</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="3">
       <code>getNumeric</code>
       <code>getNumeric</code>
@@ -7207,30 +6757,12 @@
     <TypeDoesNotContainType occurrences="1">
       <code>array()</code>
     </TypeDoesNotContainType>
-    <UndefinedDocblockClass occurrences="7">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="4">
       <code>getListValues</code>
       <code>getListValues</code>
       <code>getListValues</code>
       <code>isvalid</code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_PerTrackerArtifactIdclass.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_PermissionsOnArtifact.class.php">
     <InvalidReturnType occurrences="1">
@@ -7250,15 +6782,6 @@
     <TooManyArguments occurrences="1">
       <code>searchById</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="6">
-      <code>Tracker_</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>$v</code>
     </UndefinedMethod>
@@ -7276,34 +6799,11 @@
       <code>getId</code>
       <code>getValue</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
-    <UndefinedInterfaceMethod occurrences="1">
-      <code>visitPriority</code>
-    </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Radiobutton.class.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php">
     <PossiblyUndefinedVariable occurrences="1">
       <code>$submitted_values_array</code>
     </PossiblyUndefinedVariable>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -7315,12 +6815,6 @@
     <NullableReturnStatement occurrences="1">
       <code>$changeset_value</code>
     </NullableReturnStatement>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="2">
       <code>getText</code>
       <code>getText</code>
@@ -7337,12 +6831,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$display_preferences</code>
     </PossiblyNullArgument>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedOn.class.php">
     <InvalidNullableReturnType occurrences="2">
@@ -7358,11 +6846,7 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedDocblockClass occurrences="6">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
+    <UndefinedDocblockClass occurrences="2">
       <code>date</code>
       <code>date</code>
     </UndefinedDocblockClass>
@@ -7375,9 +6859,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_Artifact_ChangesetValue</code>
     </InvalidNullableReturnType>
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$value</code>
     </MoreSpecificImplementedParamType>
@@ -7392,13 +6873,6 @@
       <code>getGroupID</code>
       <code>getItemName</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="5">
-      <code>Tracker_</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="6">
       <code>delete</code>
       <code>getFormat</code>
@@ -7409,20 +6883,6 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Shared.class.php">
-    <InvalidReturnStatement occurrences="2">
-      <code>'Shared field'</code>
-      <code>'Use a field defined in another tracker'</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>the</code>
-      <code>the</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="11">
       <code>$this-&gt;id</code>
       <code>$this-&gt;tracker_id</code>
@@ -7443,41 +6903,11 @@
       <code>fetchAddColumn</code>
       <code>fetchAddTooltip</code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement occurrences="2">
-      <code>preg_match($pattern, $this-&gt;label)</code>
-      <code>preg_match($pattern, $this-&gt;description)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>true</code>
-      <code>true</code>
-    </InvalidReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_LineBreak.class.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_RichText.class.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>searchByFieldId</code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_Separator.class.php">
-    <UndefinedDocblockClass occurrences="4">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php">
     <DuplicateArrayKey occurrences="1">
@@ -7502,16 +6932,6 @@
       <code>getListValues</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin.class.php">
-    <InvalidOperand occurrences="6">
-      <code>$this-&gt;formElement-&gt;getFactoryIconUseIt()</code>
-      <code>$this-&gt;formElement-&gt;getFactoryLabel()</code>
-      <code>$this-&gt;formElement-&gt;getFactoryDescription()</code>
-      <code>$this-&gt;formElement-&gt;getFactoryIconUseIt()</code>
-      <code>$this-&gt;formElement-&gt;getFactoryLabel()</code>
-      <code>$this-&gt;formElement-&gt;getFactoryDescription()</code>
-    </InvalidOperand>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/CreateVisitor.class.php">
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
@@ -7531,10 +6951,6 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$this-&gt;formElement</code>
     </ArgumentTypeCoercion>
-    <InvalidOperand occurrences="2">
-      <code>$this-&gt;formElement-&gt;getFactoryIconUseIt()</code>
-      <code>$this-&gt;formElement-&gt;getFactoryLabel()</code>
-    </InvalidOperand>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Shared.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -7568,54 +6984,6 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="21">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_FieldSetDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="6">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_BurndownDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ComputedDao.class.php">
     <FalsableReturnStatement occurrences="2">
@@ -7626,241 +6994,12 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_DateDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_FloatDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_IntegerDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ListDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_BindDecoratorDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="7">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_DefaultvalueDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_StaticDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php">
     <PossiblyFalseIterator occurrences="2">
       <code>$this-&gt;retrieve($sql)</code>
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseIterator>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="14">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="5">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_UsersDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_OpenValueDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="6">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_MultiSelectboxDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_OpenListDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_StringDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_TextDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ValueDao.class.php">
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_DateDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_FileDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_FloatDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_IntegerDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ListDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_NumericDao.class.php">
     <FalsableReturnStatement occurrences="2">
@@ -7871,57 +7010,6 @@
       <code>Array</code>
       <code>Array</code>
     </InvalidFalsableReturnType>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_OpenListDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_PermissionsOnArtifactDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_TextDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_SpecificPropertiesDao.class.php">
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_StaticField_RichTextDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchicalTrackerFactory.class.php">
     <UndefinedThisPropertyAssignment occurrences="2">
@@ -7983,14 +7071,6 @@
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;custom_sender_description</code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Notifications/NotificationsForProjectMemberCleaner.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;emails_to_notify_manager</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;emails_to_notify_manager</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/NotificationsForceUsageUpdater.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -8210,9 +7290,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>$old_regex_encoding</code>
     </InvalidScalarArgument>
-    <PossiblyNullOperand occurrences="1">
-      <code>$stringEscape($found)</code>
-    </PossiblyNullOperand>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidFields/BetweenComparisonVisitor.php">
     <InvalidArgument occurrences="1">
@@ -8605,157 +7682,6 @@
     <InvalidReturnType occurrences="1">
       <code>DataAccessResult</code>
     </InvalidReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="9">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_CriteriaDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="7">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_Alphanum_ValueDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_Date_ValueDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_File_ValueDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_Float_ValueDao.class.php">
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_Int_ValueDao.class.php">
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_List_ValueDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_OpenList_ValueDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Criteria_ValueDao.class.php">
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_RendererDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="10">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Renderer_TableDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="5">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Renderer_Table_FunctionsAggregatesDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="6">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_Renderer_Table_SortDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="7">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/Date.class.php">
     <InvalidScalarArgument occurrences="11">
@@ -8781,9 +7707,6 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/Date/Factory.class.php">
     <InvalidNullableReturnType occurrences="2">
@@ -8832,9 +7755,6 @@
     <InvalidReturnType occurrences="1">
       <code>true</code>
     </InvalidReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/List/Factory.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -8918,13 +7838,6 @@
     <InvalidReturnType occurrences="1">
       <code>true</code>
     </InvalidReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/CollectionOfFieldsDuplicator.class.php">
     <UndefinedInterfaceMethod occurrences="1">
@@ -8999,14 +7912,6 @@
     <PossiblyInvalidArrayAccess occurrences="1">
       <code>$row['nb']</code>
     </PossiblyInvalidArrayAccess>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/dao/Tracker_Semantic_DescriptionDao.class.php">
     <PossiblyInvalidArrayAccess occurrences="1">
@@ -9017,26 +7922,11 @@
     <PossiblyInvalidArrayAccess occurrences="1">
       <code>$row['nb']</code>
     </PossiblyInvalidArrayAccess>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/dao/Tracker_Semantic_TitleDao.class.php">
     <PossiblyInvalidArrayAccess occurrences="1">
       <code>$row['nb']</code>
     </PossiblyInvalidArrayAccess>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Tooltip/Tracker_Tooltip.class.php">
     <InvalidReturnType occurrences="1">
@@ -9050,14 +7940,6 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>searchByTrackerId</code>
     </InvalidFalsableReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Tracker.class.php">
     <ArgumentTypeCoercion occurrences="8">
@@ -9074,10 +7956,6 @@
       <code>false</code>
       <code>false</code>
     </FalsableReturnStatement>
-    <InvalidArgument occurrences="2">
-      <code>$this-&gt;item_name</code>
-      <code>$error_nature</code>
-    </InvalidArgument>
     <InvalidFalsableReturnType occurrences="1">
       <code>process</code>
     </InvalidFalsableReturnType>
@@ -9097,12 +7975,11 @@
       <code>is_array($this-&gt;cache_permissions)</code>
       <code>true</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="5">
+    <InvalidReturnType occurrences="4">
       <code>int</code>
       <code>Tracker_CannedResponseFactory</code>
       <code>void</code>
       <code>String</code>
-      <code>true</code>
     </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>$report_id</code>
@@ -9142,25 +8019,15 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/TrackerFactory.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$project_id</code>
-    </InvalidArgument>
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker</code>
     </InvalidNullableReturnType>
-    <InvalidParamDefault occurrences="1">
-      <code>Array</code>
-    </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="4">
+    <InvalidReturnStatement occurrences="2">
       <code>$trackers</code>
-      <code>Tracker_CannedResponseFactory::instance()</code>
-      <code>$invalid_trackers_name</code>
       <code>$this-&gt;getHierarchyFactory()-&gt;getHierarchy($tracker_ids)</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="5">
+    <InvalidReturnType occurrences="3">
       <code>Children</code>
-      <code>Tracker_CannedResponseFactory</code>
-      <code>string</code>
       <code>bool</code>
       <code>Hierarchy</code>
     </InvalidReturnType>
@@ -9178,35 +8045,10 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/TrackerManager.class.php">
-    <InvalidArgument occurrences="4">
-      <code>$name</code>
-      <code>$description</code>
-      <code>$itemname</code>
-      <code>$project-&gt;getId()</code>
-    </InvalidArgument>
-    <InvalidOperand occurrences="4">
-      <code>$number</code>
-      <code>$number</code>
-      <code>$number</code>
-      <code>$number</code>
-    </InvalidOperand>
     <InvalidParamDefault occurrences="1">
       <code>PFUser</code>
     </InvalidParamDefault>
-    <InvalidStaticInvocation occurrences="1">
-      <code>DOMDocument::load($filename)</code>
-    </InvalidStaticInvocation>
-    <PossiblyInvalidMethodCall occurrences="3">
-      <code>createProcessingInstruction</code>
-      <code>insertBefore</code>
-      <code>saveXML</code>
-    </PossiblyInvalidMethodCall>
-    <PossiblyInvalidPropertyFetch occurrences="1">
-      <code>$xml-&gt;firstChild</code>
-    </PossiblyInvalidPropertyFetch>
-    <PossiblyUndefinedVariable occurrences="3">
-      <code>$error</code>
-      <code>$error</code>
+    <PossiblyUndefinedVariable occurrences="1">
       <code>$trackers</code>
     </PossiblyUndefinedVariable>
     <UndefinedMethod occurrences="1">
@@ -9378,32 +8220,9 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>count($this-&gt;retrieve($sql))</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseArgument>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="12">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/dao/Tracker_FileInfoDao.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -9412,14 +8231,6 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/dao/Tracker_GlobalNotificationDao.class.php">
     <FalsableReturnStatement occurrences="6">
@@ -9444,40 +8255,6 @@
     <InvalidReturnType occurrences="1">
       <code>true</code>
     </InvalidReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="10">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/dao/Tracker_NotificationDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/dao/Tracker_WatcherDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/TrackerPluginDefaultController.php">
     <InvalidScalarArgument occurrences="1">
@@ -9495,10 +8272,9 @@
     </InvalidScalarArgument>
   </file>
   <file src="plugins/tracker/include/TrackerXmlImport.class.php">
-    <InvalidArgument occurrences="5">
+    <InvalidArgument occurrences="4">
       <code>Tracker_CannedResponseFactory::instance()</code>
       <code>'id'</code>
-      <code>$trackers_name_error</code>
       <code>'parent_id'</code>
       <code>'id'</code>
     </InvalidArgument>
@@ -9508,7 +8284,7 @@
     <InvalidReturnType occurrences="1">
       <code>Tracker[]|void</code>
     </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="6">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
       <code>type</code>
@@ -9592,9 +8368,6 @@
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;getFieldId(), $xmlMapping)</code>
     </PossiblyFalseArgument>
-    <UndefinedMethod occurrences="1">
-      <code>validateValue</code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Field/Transition_PostAction_Field_Int.class.php">
     <InvalidScalarArgument occurrences="1">
@@ -9603,9 +8376,6 @@
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;getFieldId(), $xmlMapping)</code>
     </PossiblyFalseArgument>
-    <UndefinedMethod occurrences="1">
-      <code>validateValue</code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Field/Transition_PostAction_Field_Numeric.class.php">
     <InvalidArgument occurrences="1">
@@ -9633,32 +8403,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>$post_action_id</code>
     </InvalidScalarArgument>
-    <UndefinedThisPropertyFetch occurrences="9">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Field/dao/Transition_PostAction_Field_DateDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Field/dao/Transition_PostAction_Field_FloatDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Field/dao/Transition_PostAction_Field_IntDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/FrozenFields/FrozenFieldsFactory.php">
     <InvalidReturnStatement occurrences="1"/>
@@ -9730,9 +8474,6 @@
     </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/Condition/FieldNotEmpty.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$this-&gt;fields</code>
-    </InvalidArgument>
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>array()</code>
     </InvalidPropertyAssignmentValue>
@@ -9745,9 +8486,6 @@
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;formElementFactory</code>
     </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;formElementFactory</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/Condition/FieldNotEmpty/Dao.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -9759,19 +8497,6 @@
     <PossiblyFalseArgument occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseArgument>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Workflow/Transition/ConditionsCollection.class.php">
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Workflow/TransitionFactory.class.php">
     <AssignmentToVoid occurrences="1">
@@ -9906,17 +8631,6 @@
       <code>getId</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Workflow/Workflow_Dao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/tracker/include/trackerPlugin.php">
     <InvalidArgument occurrences="1">
       <code>$project_with_tracker_administration</code>
@@ -9988,20 +8702,6 @@
       <code>!isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) &amp;&amp; $_REQUEST['notified_groups'] == null)</code>
     </InvalidScalarArgument>
   </file>
-  <file src="plugins/tracker_encryption/include/Tracker_FormElement_Field_Encrypted.class.php">
-    <ImplementedParamTypeMismatch occurrences="1">
-      <code>$artifact</code>
-    </ImplementedParamTypeMismatch>
-    <UndefinedDocblockClass occurrences="7">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-      <code>Tracker_ReportCriteria</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/tracker_encryption/include/Tracker_Key.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>($rsa-&gt;getSize() / 8) - (2 * Encryption_Manager::HLEN) - 2</code>
@@ -10012,21 +8712,6 @@
     <PossiblyFalseArgument occurrences="1">
       <code>false</code>
     </PossiblyFalseArgument>
-  </file>
-  <file src="plugins/tracker_encryption/include/dao/Tracker_Public_KeyDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker_encryption/include/dao/ValueDao.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/tuleap_synchro/include/Tuleap_Synchro/Endpoint/EndpointChecker.php">
     <UndefinedClass occurrences="1">
@@ -10173,23 +8858,16 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVDocmanDocument.class.php">
-    <ImplementedReturnTypeMismatch occurrences="2">
-      <code>date</code>
-      <code>string</code>
-    </ImplementedReturnTypeMismatch>
     <PossiblyUndefinedVariable occurrences="2">
       <code>$params</code>
       <code>$params</code>
     </PossiblyUndefinedVariable>
-    <UndefinedDocblockClass occurrences="1">
-      <code>date</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVDocmanFile.class.php">
     <ImplementedParamTypeMismatch occurrences="1">
       <code>$version</code>
     </ImplementedParamTypeMismatch>
-    <ImplementedReturnTypeMismatch occurrences="2">
+    <ImplementedReturnTypeMismatch occurrences="1">
       <code>String</code>
       <code>String</code>
     </ImplementedReturnTypeMismatch>
@@ -10208,13 +8886,6 @@
     <ImplementedParamTypeMismatch occurrences="1">
       <code>$data</code>
     </ImplementedParamTypeMismatch>
-    <ImplementedReturnTypeMismatch occurrences="2">
-      <code>Docman_Item</code>
-      <code>date</code>
-    </ImplementedReturnTypeMismatch>
-    <LessSpecificImplementedReturnType occurrences="1">
-      <code>Array</code>
-    </LessSpecificImplementedReturnType>
     <PossiblyNullReference occurrences="1">
       <code>getCurrentVersion</code>
     </PossiblyNullReference>
@@ -10223,8 +8894,7 @@
       <code>$params</code>
       <code>$params</code>
     </PossiblyUndefinedVariable>
-    <UndefinedDocblockClass occurrences="2">
-      <code>date</code>
+    <UndefinedDocblockClass occurrences="1">
       <code>Binary</code>
     </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
@@ -10232,15 +8902,9 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVFRS.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>NULL</code>
-    </ImplementedReturnTypeMismatch>
     <InvalidNullableReturnType occurrences="1">
       <code>FRSPackage</code>
     </InvalidNullableReturnType>
-    <InvalidReturnType occurrences="1">
-      <code>NULL</code>
-    </InvalidReturnType>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>array</code>
     </LessSpecificImplementedReturnType>
@@ -10252,7 +8916,7 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVFRSFile.class.php">
-    <ImplementedReturnTypeMismatch occurrences="3">
+    <ImplementedReturnTypeMismatch occurrences="2">
       <code>String</code>
       <code>String</code>
       <code>date</code>
@@ -10265,18 +8929,9 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVFRSPackage.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>NULL</code>
-    </ImplementedReturnTypeMismatch>
     <InvalidClass occurrences="1">
       <code>FRSrelease</code>
     </InvalidClass>
-    <InvalidReturnType occurrences="1">
-      <code>NULL</code>
-    </InvalidReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
-      <code>Array</code>
-    </LessSpecificImplementedReturnType>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$releaseData</code>
     </PossiblyUndefinedVariable>
@@ -10313,51 +8968,14 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVProject.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>NULL</code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidReturnType occurrences="1">
-      <code>NULL</code>
-    </InvalidReturnType>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>array</code>
-    </LessSpecificImplementedReturnType>
-  </file>
-  <file src="plugins/webdav/include/FS/WebDAVRoot.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>NULL</code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidReturnType occurrences="1">
-      <code>NULL</code>
-    </InvalidReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
-      <code>Array</code>
     </LessSpecificImplementedReturnType>
   </file>
   <file src="plugins/webdav/include/WebDAVAuthentication.class.php">
     <InvalidNullableReturnType occurrences="1">
       <code>PFUser</code>
     </InvalidNullableReturnType>
-  </file>
-  <file src="plugins/webdav/include/WebDAVTree.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>void</code>
-    </ImplementedReturnTypeMismatch>
-  </file>
-  <file src="plugins/webdav/include/webdavPlugin.php">
-    <InvalidMethodCall occurrences="5">
-      <code>getPropertyValueForName</code>
-      <code>getPropertyValueForName</code>
-      <code>getPropertyValueForName</code>
-      <code>getPropertyValueForName</code>
-      <code>getPropertyValueForName</code>
-    </InvalidMethodCall>
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;pluginInfo</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>String</code>
-    </InvalidReturnType>
   </file>
   <file src="src/common/Authentication/SplitToken/SplitTokenVerificationStringHasher.php">
     <ImplicitToStringCast occurrences="1">
@@ -10458,11 +9076,6 @@
       <code>$db_connection</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="src/common/Dashboard/Project/ProjectDashboardDuplicator.php">
-    <PossiblyNullReference occurrences="1">
-      <code>setOwner</code>
-    </PossiblyNullReference>
-  </file>
   <file src="src/common/Dashboard/Project/ProjectDashboardSaver.php">
     <PossiblyFalseReference occurrences="2">
       <code>count</code>
@@ -10516,16 +9129,6 @@
     <PossiblyNullReference occurrences="1">
       <code>loadContent</code>
     </PossiblyNullReference>
-  </file>
-  <file src="src/common/Error/Error_PermissionDenied.class.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getID</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="src/common/Error/PermissionDeniedMailSender.php">
-    <InvalidReturnType occurrences="1">
-      <code>returnBuildInterfaceParam</code>
-    </InvalidReturnType>
   </file>
   <file src="src/common/Error/PermissionDeniedPrivateProjectController.php">
     <PossiblyNullArgument occurrences="1">
@@ -11041,11 +9644,6 @@
       <code>getParentProject</code>
     </UndefinedMethod>
   </file>
-  <file src="src/common/Project/Home.php">
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$service</code>
-    </PossiblyUndefinedVariable>
-  </file>
   <file src="src/common/Project/Label/IndexPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;placeholder</code>
@@ -11089,13 +9687,11 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="src/common/Project/ProjectCreationData.class.php">
-    <PossiblyNullArrayAccess occurrences="6">
+    <PossiblyNullArrayAccess occurrences="4">
       <code>$attrs['unix-name']</code>
       <code>$attrs['full-name']</code>
       <code>$attrs['description']</code>
       <code>$attrs['access']</code>
-      <code>$attrs['shortname']</code>
-      <code>$attrs['enabled']</code>
     </PossiblyNullArrayAccess>
   </file>
   <file src="src/common/Project/ProjectCreator.class.php">
@@ -11132,10 +9728,6 @@
     <MissingDocblockType occurrences="1">
       <code>private $project_manager;</code>
     </MissingDocblockType>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$params['error']</code>
-      <code>$params['error']</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/common/Project/Project_SOAPServer.class.php">
     <InvalidReturnStatement occurrences="4">
@@ -11172,11 +9764,6 @@
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="src/common/Project/REST/UserGroupRetriever.php">
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
-  </file>
   <file src="src/common/Project/REST/v1/ProjectResource.class.php">
     <InvalidArgument occurrences="3">
       <code>$project</code>
@@ -11203,11 +9790,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$query</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="src/common/Project/Service/ServicePOSTDataBuilder.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$project-&gt;getID()</code>
-    </InvalidScalarArgument>
   </file>
   <file src="src/common/Project/Service/ServiceUsageDao.class.php">
     <FalsableReturnStatement occurrences="2">
@@ -11261,13 +9843,12 @@
     <InvalidArgument occurrences="1">
       <code>$user-&gt;getId()</code>
     </InvalidArgument>
-    <InvalidClass occurrences="6">
+    <InvalidClass occurrences="5">
       <code>ProjectUgroup</code>
       <code>ProjectUgroup</code>
       <code>ProjectUgroup</code>
       <code>ProjectUgroup</code>
       <code>PFUSer</code>
-      <code>$user</code>
     </InvalidClass>
     <InvalidReturnStatement occurrences="2">
       <code>new ProjectUGroup($dar-&gt;getRow())</code>
@@ -11321,22 +9902,6 @@
       <code>Tuleap\Project\REST\UserGroupRepresentation</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/common/REST/v1/MilestoneRepresentationBase.class.php">
-    <PossiblyNullPropertyAssignmentValue occurrences="2">
-      <code>null</code>
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="src/common/REST/v2/BacklogRepresentationBase.class.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>BacklogItemRepresentation[]</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="src/common/RSS/FeedHTTPClient.php">
-    <LessSpecificImplementedReturnType occurrences="1">
-      <code>ResponseInterface</code>
-    </LessSpecificImplementedReturnType>
-  </file>
   <file src="src/common/Request/RouteCollector.php">
     <InvalidArgument occurrences="1">
       <code>$collect_routes</code>
@@ -11376,14 +9941,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$last_access_key_identifier_store-&gt;getLastGeneratedAccessKeyIdentifier()</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="src/common/User/Account/ChangePasswordPresenter.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$csrf_token</code>
-    </InvalidPropertyAssignmentValue>
-    <UndefinedDocblockClass occurrences="1">
-      <code>CSRFSynchronizerToken</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/Account/UserAvatarSaver.php">
     <InvalidScalarArgument occurrences="1">
@@ -11426,13 +9983,6 @@
       <code>$this-&gt;activate_all_label</code>
       <code>$this-&gt;label_project_visibility</code>
       <code>$this-&gt;has_project</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/User/Admin/UserChangePasswordPresenter.php">
-    <UndefinedThisPropertyAssignment occurrences="3">
-      <code>$this-&gt;robustness_label</code>
-      <code>$this-&gt;good_label</code>
-      <code>$this-&gt;bad_label</code>
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/User/Admin/UserDetailsAccessPresenter.php">
@@ -11606,16 +10156,6 @@
     <InvalidParamDefault occurrences="1">
       <code>bool</code>
     </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="2">
-      <code>array_filter(explode(self::SSH_KEY_SEPARATOR, $this-&gt;authorized_keys))</code>
-      <code>$this-&gt;getPreference(self::PREF_NAME_LAB_FEATURE)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$toggle ? 1 : 0</code>
-    </InvalidScalarArgument>
     <UndefinedDocblockClass occurrences="1">
       <code>hash</code>
     </UndefinedDocblockClass>
@@ -11642,13 +10182,10 @@
       <code>type</code>
       <code>PFUser</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="6">
+    <InvalidScalarArgument occurrences="3">
       <code>$this-&gt;getDao()-&gt;foundRows()</code>
       <code>$this-&gt;getDao()-&gt;foundRows()</code>
       <code>$newUid</code>
-      <code>$date_list[1]</code>
-      <code>$date_list[2]</code>
-      <code>$date_list[0]</code>
     </InvalidScalarArgument>
     <NullableReturnStatement occurrences="4">
       <code>null</code>
@@ -11681,14 +10218,10 @@
     </InvalidReturnType>
   </file>
   <file src="src/common/User/XML/Import/Mapping.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>PFUser</code>
-    </ImplementedReturnTypeMismatch>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$user</code>
     </PossiblyUndefinedVariable>
-    <UndefinedDocblockClass occurrences="4">
-      <code>PFUser</code>
+    <UndefinedDocblockClass occurrences="3">
       <code>$imported_user</code>
       <code>$imported_user</code>
       <code>$imported_user</code>
@@ -11757,11 +10290,6 @@
     <InvalidReturnType occurrences="1">
       <code>getRealUser</code>
     </InvalidReturnType>
-  </file>
-  <file src="src/common/User/XML/UserXMLExportedCollection.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>(int)$user-&gt;getId()</code>
-    </InvalidScalarArgument>
   </file>
   <file src="src/common/User/XML/UserXMLExporter.class.php">
     <PossiblyNullArgument occurrences="1">
@@ -11838,21 +10366,13 @@
       <code>unknown_type</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/common/account/TimezoneSelectorPresenter.class.php">
-    <UndefinedThisPropertyAssignment occurrences="3">
-      <code>$this-&gt;has_one_selected</code>
-      <code>$this-&gt;placeholder</code>
-      <code>$this-&gt;list_of_timezones</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="src/common/admin/AdminSidebarPresenter.php">
-    <UndefinedThisPropertyAssignment occurrences="6">
+    <UndefinedThisPropertyAssignment occurrences="5">
       <code>$this-&gt;pending_news_count</code>
       <code>$this-&gt;users_nav_validated_users</code>
       <code>$this-&gt;configuration_nav_predefined_references</code>
       <code>$this-&gt;configuration_nav_tracker_restore</code>
       <code>$this-&gt;configuration_nav_svn</code>
-      <code>$this-&gt;collapse_sidebar_label</code>
     </UndefinedThisPropertyAssignment>
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;pending_news_count</code>
@@ -12031,9 +10551,7 @@
     <InvalidReturnStatement occurrences="1">
       <code>!$this-&gt;fileExists($path)</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="3">
-      <code>true</code>
-      <code>true</code>
+    <InvalidReturnType occurrences="1">
       <code>false</code>
     </InvalidReturnType>
     <PossiblyNullArgument occurrences="1">
@@ -12049,15 +10567,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/common/backend/BackendMailingList.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;_getMailingListDao()-&gt;deleteListDefinitively($group_list_id)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="4">
-      <code>true</code>
-      <code>true</code>
-      <code>true</code>
-      <code>true</code>
-    </InvalidReturnType>
     <PossiblyNullReference occurrences="1">
       <code>getEmail</code>
     </PossiblyNullReference>
@@ -12095,7 +10604,7 @@
       <code>system("/usr/sbin/nscd --invalidate=group") !== false</code>
       <code>true</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="7">
+    <InvalidReturnType occurrences="3">
       <code>true</code>
       <code>true</code>
       <code>null</code>
@@ -12172,14 +10681,13 @@
     </UndefinedConstant>
   </file>
   <file src="src/common/collection/Collection.class.php">
-    <InvalidReturnStatement occurrences="5">
+    <InvalidReturnStatement occurrences="4">
       <code>in_array($wanted, $this-&gt;elements)</code>
       <code>$found</code>
-      <code>$is_identical</code>
       <code>count($this-&gt;elements)</code>
       <code>$this-&gt;size() === 0</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="5">
+    <InvalidReturnType occurrences="3">
       <code>true</code>
       <code>true</code>
       <code>the</code>
@@ -12191,12 +10699,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/common/collection/LinkedList.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$is_identical</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$temp</code>
     </PossiblyUndefinedVariable>
@@ -12240,13 +10742,6 @@
     <PossiblyFalseArgument occurrences="1">
       <code>$dar</code>
     </PossiblyFalseArgument>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/dao/ArtifactFieldDao.class.php">
     <FalsableReturnStatement occurrences="2">
@@ -12276,26 +10771,6 @@
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
   </file>
-  <file src="src/common/dao/ArtifactGroupListDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="src/common/dao/ArtifactReportFieldDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="src/common/dao/ArtifactRuleDao.class.php">
     <FalsableReturnStatement occurrences="9">
       <code>$this-&gt;retrieve($sql)</code>
@@ -12322,21 +10797,6 @@
     <PossiblyFalseReference occurrences="1">
       <code>getRow</code>
     </PossiblyFalseReference>
-  </file>
-  <file src="src/common/dao/CrossReferenceDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="8">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/dao/DBTablesDao.class.php">
     <FalsableReturnStatement occurrences="2">
@@ -12396,9 +10856,6 @@
       <code>$sql_where</code>
       <code>$package_id</code>
     </PossiblyUndefinedVariable>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/dao/FRSProcessorDao.class.php">
     <NullableReturnStatement occurrences="1">
@@ -12457,12 +10914,6 @@
       <code>searchExactMatch</code>
       <code>searchExactMatch</code>
     </TooManyArguments>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/dao/MailingListDao.class.php">
     <FalsableReturnStatement occurrences="3">
@@ -12475,14 +10926,6 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-  </file>
-  <file src="src/common/dao/NewsBytesDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/dao/PermissionsDao.class.php">
     <FalsableReturnStatement occurrences="5">
@@ -12537,17 +10980,6 @@
     <PossiblyFalseReference occurrences="1">
       <code>getRow</code>
     </PossiblyFalseReference>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="6">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/dao/ProjectHierarchyDao.class.php">
     <FalsableReturnStatement occurrences="2">
@@ -12567,13 +10999,6 @@
     <InvalidReturnType occurrences="1">
       <code>DataAccessResult</code>
     </InvalidReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/dao/ReferenceDao.class.php">
     <FalsableReturnStatement occurrences="12">
@@ -12640,14 +11065,6 @@
       <code>getRow</code>
     </PossiblyFalseReference>
   </file>
-  <file src="src/common/dao/SvnCommitsDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="src/common/dao/SvnNotificationDao.class.php">
     <FalsableReturnStatement occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
@@ -12685,18 +11102,6 @@
     <PossiblyFalseArgument occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseArgument>
-  </file>
-  <file src="src/common/dao/SystemEventsFollowersDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="5">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/dao/UGroupDao.class.php">
     <FalsableReturnStatement occurrences="6">
@@ -12839,12 +11244,6 @@
       <code>getRow</code>
       <code>count</code>
     </PossiblyFalseReference>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/date/DateHelper.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -12910,18 +11309,10 @@
       <code>is_array($block)</code>
       <code>is_array($block)</code>
     </TypeDoesNotContainType>
-    <UndefinedThisPropertyAssignment occurrences="25">
-      <code>$this-&gt;ychanged</code>
-      <code>$this-&gt;xchanged</code>
+    <UndefinedThisPropertyAssignment occurrences="17">
       <code>$this-&gt;yind</code>
       <code>$this-&gt;xind</code>
-      <code>$this-&gt;ychanged</code>
-      <code>$this-&gt;xchanged</code>
-      <code>$this-&gt;ychanged</code>
-      <code>$this-&gt;xchanged</code>
-      <code>$this-&gt;ychanged</code>
       <code>$this-&gt;yind</code>
-      <code>$this-&gt;xchanged</code>
       <code>$this-&gt;xind</code>
       <code>$this-&gt;lcs</code>
       <code>$this-&gt;in_seq</code>
@@ -12937,7 +11328,7 @@
       <code>$this-&gt;_tag</code>
       <code>$this-&gt;_line</code>
     </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="29">
+    <UndefinedThisPropertyFetch occurrences="27">
       <code>$this-&gt;seq</code>
       <code>$this-&gt;in_seq</code>
       <code>$this-&gt;lcs</code>
@@ -12949,9 +11340,7 @@
       <code>$this-&gt;seq</code>
       <code>$this-&gt;in_seq</code>
       <code>$this-&gt;seq</code>
-      <code>$this-&gt;ychanged</code>
       <code>$this-&gt;yind</code>
-      <code>$this-&gt;xchanged</code>
       <code>$this-&gt;xind</code>
       <code>$this-&gt;_html</code>
       <code>$this-&gt;_html</code>
@@ -13104,10 +11493,6 @@
     <InvalidClass occurrences="1">
       <code>Url</code>
     </InvalidClass>
-    <InvalidNullableReturnType occurrences="2">
-      <code>bool</code>
-      <code>bool</code>
-    </InvalidNullableReturnType>
     <InvalidReturnStatement occurrences="2">
       <code>preg_match('`^(?:/plugins/[^/]+)?/(?:soap|api)/`', $server['SCRIPT_NAME'])</code>
       <code>true</code>
@@ -13197,12 +11582,6 @@
       <code>null</code>
       <code>null</code>
     </NullArgument>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;feeds</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;feeds</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/layout/ProjectSidebarBuilder.php">
     <InvalidScalarArgument occurrences="1">
@@ -13210,24 +11589,15 @@
     </InvalidScalarArgument>
   </file>
   <file src="src/common/layout/ScriptAsset.php">
-    <InvalidClass occurrences="3">
+    <InvalidClass occurrences="2">
       <code>IncludeAssets</code>
       <code>IncludeAssets</code>
-      <code>$this-&gt;include_assets</code>
     </InvalidClass>
   </file>
   <file src="src/common/layout/ThemeManager.class.php">
     <UndefinedConstant occurrences="1">
       <code>IS_SCRIPT</code>
     </UndefinedConstant>
-  </file>
-  <file src="src/common/log/TruncateLevelLogger.class.php">
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;should_log</code>
-      <code>$this-&gt;should_log</code>
-      <code>$this-&gt;should_log</code>
-      <code>$this-&gt;should_log</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/mail/Codendi_Mail.class.php">
     <InvalidArrayOffset occurrences="6">
@@ -13238,9 +11608,6 @@
       <code>$row['email']</code>
       <code>$row['real_name']</code>
     </InvalidArrayOffset>
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>new MailLogger()</code>
-    </InvalidPropertyAssignmentValue>
     <PossiblyInvalidMethodCall occurrences="2">
       <code>getAddressList</code>
       <code>getAddressList</code>
@@ -13299,11 +11666,6 @@
       <code>type</code>
       <code>type</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="src/common/plugin/PluginDescriptor.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;icon_name</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/plugin/PluginFactory.class.php">
     <InvalidArgument occurrences="1">
@@ -13366,9 +11728,6 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Stirng</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>$system_reference_nature_row</code>
     </UndefinedMethod>
@@ -13508,9 +11867,6 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>Backend::instance('SVN')</code>
     </ArgumentTypeCoercion>
-    <TooManyArguments occurrences="1">
-      <code>info</code>
-    </TooManyArguments>
   </file>
   <file src="src/common/svn/admin/Router.php">
     <InvalidNullableReturnType occurrences="1">
@@ -13664,16 +12020,14 @@
     </UndefinedMethod>
   </file>
   <file src="src/common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.php">
-    <UndefinedMethod occurrences="3">
+    <UndefinedMethod occurrences="2">
       <code>updateCVSwriters</code>
-      <code>updateSVNAccess</code>
       <code>setNeedRefreshGroupCache</code>
     </UndefinedMethod>
   </file>
   <file src="src/common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.php">
-    <UndefinedMethod occurrences="3">
+    <UndefinedMethod occurrences="2">
       <code>updateCVSwriters</code>
-      <code>updateSVNAccess</code>
       <code>setNeedRefreshGroupCache</code>
     </UndefinedMethod>
   </file>
@@ -13784,11 +12138,6 @@
       <code>setSVNApacheConfNeedUpdate</code>
     </UndefinedMethod>
   </file>
-  <file src="src/common/system_event/include/SystemEvent_UGROUP_MODIFY.class.php">
-    <UndefinedMethod occurrences="1">
-      <code>updateSVNAccess</code>
-    </UndefinedMethod>
-  </file>
   <file src="src/common/system_event/include/SystemEvent_UPDATE_ALIASES.class.php">
     <UndefinedMethod occurrences="1">
       <code>setNeedUpdateMailAliases</code>
@@ -13815,9 +12164,8 @@
     </UndefinedMethod>
   </file>
   <file src="src/common/tour/CustomToursFactory.class.php">
-    <InvalidClass occurrences="2">
+    <InvalidClass occurrences="1">
       <code>Url</code>
-      <code>$this-&gt;url_processor</code>
     </InvalidClass>
   </file>
   <file src="src/common/tour/TourUsage.class.php">
@@ -13880,11 +12228,6 @@
     <UndefinedVariable occurrences="1">
       <code>$Artifact</code>
     </UndefinedVariable>
-  </file>
-  <file src="src/common/tracker/ArtifactCommentXMLExporter.class.php">
-    <PossiblyNullReference occurrences="1">
-      <code>appendChild</code>
-    </PossiblyNullReference>
   </file>
   <file src="src/common/tracker/ArtifactFactory.class.php">
     <TypeDoesNotContainType occurrences="1">
@@ -13982,11 +12325,6 @@
     </TooManyArguments>
   </file>
   <file src="src/common/tracker/ArtifactImport.class.php">
-    <InvalidReturnType occurrences="3">
-      <code>true</code>
-      <code>true</code>
-      <code>true</code>
-    </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>9</code>
     </InvalidScalarArgument>
@@ -14024,9 +12362,6 @@
       <code>is_object($ah)</code>
       <code>is_object($ah)</code>
     </TypeDoesNotContainType>
-    <UndefinedFunction occurrences="1">
-      <code>get_csv_separator()</code>
-    </UndefinedFunction>
   </file>
   <file src="src/common/tracker/ArtifactPendingDeletionPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="13">
@@ -14044,11 +12379,6 @@
       <code>$this-&gt;has_trackers</code>
       <code>$this-&gt;trackers</code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/tracker/ArtifactPermissionsXMLExporter.php">
-    <PossiblyNullReference occurrences="1">
-      <code>appendChild</code>
-    </PossiblyNullReference>
   </file>
   <file src="src/common/tracker/ArtifactReport.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -14362,9 +12692,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/common/wiki/lib/WikiAttachment.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;filesystemName</code>
-    </InvalidReturnStatement>
     <InvalidScalarArgument occurrences="1">
       <code>$uriExp[3]</code>
     </InvalidScalarArgument>
@@ -14565,11 +12892,6 @@
       <code>$this-&gt;close_label</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="src/www/api/index.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$initial_exception</code>
-    </ArgumentTypeCoercion>
-  </file>
   <file src="src/www/cvs/commit_utils.php">
     <InvalidOperand occurrences="1">
       <code>$prev[$lastIndex]</code>
@@ -14653,12 +12975,6 @@
       <code>forum_id</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/www/help/browse_tracker_query_field.php">
-    <TypeDoesNotContainType occurrences="2">
-      <code>is_object($at)</code>
-      <code>is_object($aff)</code>
-    </TypeDoesNotContainType>
-  </file>
   <file src="src/www/include/account.php">
     <UndefinedMethod occurrences="1">
       <code>accountCreateMyPage</code>
@@ -14689,11 +13005,8 @@
       <code>$attrs</code>
       <code>$parser-&gt;getDebug()</code>
     </InvalidArgument>
-    <InvalidClass occurrences="4">
+    <InvalidClass occurrences="1">
       <code>xmlschema</code>
-      <code>$this-&gt;currentSchema</code>
-      <code>$this-&gt;currentSchema</code>
-      <code>$this-&gt;currentSchema</code>
     </InvalidClass>
     <InvalidIterator occurrences="2">
       <code>$attrs</code>
@@ -14852,9 +13165,6 @@
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>substr($v, 6)</code>
     </PossiblyInvalidPropertyAssignmentValue>
-    <PossiblyNullOperand occurrences="1">
-      <code>$contents</code>
-    </PossiblyNullOperand>
     <PossiblyUndefinedVariable occurrences="35">
       <code>$pXml</code>
       <code>$array_types</code>
@@ -15025,10 +13335,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$event</code>
     </PossiblyNullArgument>
-    <PossiblyNullOperand occurrences="2">
-      <code>$event</code>
-      <code>$event</code>
-    </PossiblyNullOperand>
   </file>
   <file src="src/www/project/admin/ugroup_utils.php">
     <InvalidReturnStatement occurrences="1">
@@ -15159,10 +13465,6 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/soap/common/users.php">
-    <LoopInvalidation occurrences="2">
-      <code>$users</code>
-      <code>$users</code>
-    </LoopInvalidation>
     <UndefinedGlobalVariable occurrences="1">
       <code>$server</code>
     </UndefinedGlobalVariable>

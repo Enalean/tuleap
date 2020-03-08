@@ -429,6 +429,7 @@ class SampleGraph
                         $maxd = $this->maxday;
                     }
 
+                    $databarx = [];
                     for ($d = $mind; $d <= $maxd; $d++) {
                         if ($d == 1) {
                             $databarx[] = $d . '/' . date('F', mktime(0, 0, 0, $m, $d, $y));

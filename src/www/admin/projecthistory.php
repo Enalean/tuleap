@@ -39,7 +39,7 @@ $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-project-history.js')
 );
 
-$project = ProjectManager::instance()->getProject($group_id);
+$project = ProjectManager::instance()->getProject($group_id ?? 0);
 
 if (! $project || $project->isError()) {
     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_groupedit', 'error_group'));

@@ -153,7 +153,7 @@ class Factory
             throw new PullRequestNotCreatedException();
         }
 
-        $pull_request->setId($new_pull_request_id);
+        $pull_request = $pull_request->createWithNewID($new_pull_request_id);
 
         $this->reference_manager->extractCrossRef(
             $pull_request->getTitle(),

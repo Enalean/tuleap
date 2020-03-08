@@ -25,25 +25,25 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Event\Dispatchable;
 
-/**
- * @psalm-immutable
- */
 class XMLImportExternalContentEvent implements Dispatchable
 {
     public const NAME = 'xmlImportExternalContentEvent';
 
     /**
      * @var Project
+     * @psalm-readonly
      */
     private $project;
 
     /**
      * @var SimpleXMLElement
+     * @psalm-readonly
      */
     private $xml_git;
 
     /**
      * @var LoggerInterface
+     * @psalm-readonly
      */
     private $logger;
 
@@ -54,16 +54,25 @@ class XMLImportExternalContentEvent implements Dispatchable
         $this->logger  = $logger;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getProject(): Project
     {
         return $this->project;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getXMLGit(): SimpleXMLElement
     {
         return $this->xml_git;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getLogger(): LoggerInterface
     {
         return $this->logger;

@@ -28,13 +28,11 @@ use Project_OneStepCreation_OneStepCreationRequest;
 use ProjectManager;
 use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 
-/**
- * @psalm-immutable
- */
 class TemplateFromProjectForCreation
 {
     /**
      * @var Project
+     * @psalm-readonly
      */
     private $project;
 

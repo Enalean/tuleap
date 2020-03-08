@@ -19,6 +19,7 @@ if (!$ath->isValid()) {
 $art_field_fact = new ArtifactFieldFactory($ath);
 
 // Printer version ?
+$ro = false;
 if (!$request->exist('pv')) {
     $pv = false;
     $ro = false;

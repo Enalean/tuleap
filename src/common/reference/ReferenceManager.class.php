@@ -732,6 +732,7 @@ class ReferenceManager
             $ref = $ref_instance->getReference();
 
             // Replace description key with real description if needed
+            $desc = '';
             if (strpos($ref->getDescription(), "_desc_key") !== false) {
                 if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
                     if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {

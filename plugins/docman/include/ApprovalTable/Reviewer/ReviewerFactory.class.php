@@ -255,7 +255,7 @@ class Docman_ApprovalTableReviewerFactory
     /**
      * Add members of the given ugroup to the reviewer list.
      *
-     * @return true if at least one user was added to the list.
+     * @return bool true if at least one user was added to the list.
      */
     public function addUgroup($ugroupId)
     {

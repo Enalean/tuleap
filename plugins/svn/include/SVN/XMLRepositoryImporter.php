@@ -111,7 +111,7 @@ class XMLRepositoryImporter
         XMLUserChecker $xml_user_checker
     ) {
         $attrs      = $xml_repo->attributes();
-        $this->name = $attrs['name'];
+        $this->name = (string) $attrs['name'];
         if (isset($attrs['dump-file'])) {
             $this->dump_file_path = $extraction_path . '/' . $attrs['dump-file'];
         }

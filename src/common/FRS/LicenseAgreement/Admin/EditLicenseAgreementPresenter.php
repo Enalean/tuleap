@@ -26,49 +26,56 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 
-/**
- * @psalm-immutable
- */
 class EditLicenseAgreementPresenter
 {
     /**
      * @var int
+     * @psalm-readonly
      */
     public $id;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $save_url;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $list_url;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $title;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $content;
     /**
      * @var \CSRFSynchronizerToken
+     * @psalm-readonly
      */
     public $csrf_token;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $is_update = true;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $can_be_deleted;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $is_used_by;
     /**
      * @var UsedByPresenter[]
+     * @psalm-readonly
      */
     public $used_by;
 

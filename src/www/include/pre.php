@@ -212,8 +212,9 @@ if (! defined('FRONT_ROUTER')) {
 if (!IS_SCRIPT) {
     if (! defined('FRONT_ROUTER')) {
         $urlVerifFactory = new URLVerificationFactory($event_manager);
-        $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
-        $urlVerif->assertValidUrl($_SERVER, $request);
+        $global_server   = $_SERVER ?? [];
+        $urlVerif = $urlVerifFactory->getURLVerification($global_server);
+        $urlVerif->assertValidUrl($global_server, $request);
 
         (new RequestInstrumentation(Prometheus::instance()))->incrementLegacy();
     }

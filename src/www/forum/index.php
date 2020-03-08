@@ -9,6 +9,7 @@ $request = HTTPRequest::instance();
 
 if (!$request->valid(new Valid_GroupId())) {
     exit_no_group();
+    exit();
 } else {
     $group_id = $request->get('group_id');
 }

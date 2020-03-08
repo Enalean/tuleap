@@ -22,25 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
-/**
- * @psalm-immutable
- */
 final class OAuth2App
 {
     /**
      * @var int
+     * @psalm-readonly
      */
     private $id;
     /**
      * @var string
+     * @psalm-readonly
      */
     private $name;
     /**
      * @var string
+     * @psalm-readonly
      */
     private $redirect_endpoint;
     /**
      * @var \Project
+     * @psalm-readonly
      */
     private $project;
 
@@ -52,21 +53,33 @@ final class OAuth2App
         $this->redirect_endpoint = $redirect_endpoint;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId(): int
     {
         return $this->id;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getRedirectEndpoint(): string
     {
         return $this->redirect_endpoint;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getProject(): \Project
     {
         return $this->project;

@@ -26,69 +26,81 @@ namespace Tuleap\User\Account\Appearance;
 use CSRFSynchronizerToken;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
-/**
- * @psalm-immutable
- */
 final class AppearancePresenter
 {
     /**
      * @var CSRFSynchronizerToken
+     * @psalm-readonly
      */
     public $csrf_token;
     /**
      * @var AccountTabPresenterCollection
+     * @psalm-readonly
      */
     public $tabs;
     /**
      * @var LanguagePresenter[]
+     * @psalm-readonly
      */
     public $languages;
     /**
      * @var false|string
+     * @psalm-readonly
      */
     public $json_encoded_colors;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $is_condensed;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $current_color;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $is_accessibility_enabled;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $is_realname_login;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $is_login_realname;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $is_login;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $is_realname;
     /**
      * @var int
+     * @psalm-readonly
      */
     public $username_display_value_realname_login;
     /**
      * @var int
+     * @psalm-readonly
      */
     public $username_display_value_login_realname;
     /**
      * @var int
+     * @psalm-readonly
      */
     public $username_display_value_login;
     /**
      * @var int
+     * @psalm-readonly
      */
     public $username_display_value_realname;
 

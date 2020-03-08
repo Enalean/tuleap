@@ -719,6 +719,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     {
         $project = $field->getTracker()->getProject();
 
+        $identifier = null;
+
         if (isset($rest_data['id'])) {
             $value = UserGroupRepresentation::getProjectAndUserGroupFromRESTId($rest_data['id']);
             $id    = $value['user_group_id'];
@@ -749,9 +751,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             throw new Tracker_FormElement_InvalidFieldValueException('OpenList static fields values should be passed as an object with at least one of the properties "id" or "short_name"');
         }
 
-        $row = $this->getOpenValueDao()->searchByExactLabel($field->getId(), $identifier)->getRow();
-        if ($row) {
-            return Tracker_FormElement_Field_OpenList::OPEN_PREFIX . $row['id'];
+        if ($identifier !== null) {
+            $row = $this->getOpenValueDao()->searchByExactLabel($field->getId(), $identifier)->getRow();
+            if ($row) {
+                return Tracker_FormElement_Field_OpenList::OPEN_PREFIX . $row['id'];
+            }
         }
 
         return Tracker_FormElement_Field_OpenList::NEW_VALUE_PREFIX . $identifier;

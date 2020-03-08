@@ -387,7 +387,7 @@ $HTML->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
 $HTML->header(array('title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class));
 
 
-if (!$confirmation_register) {
+if (!$confirmation_register || ! isset($presenter, $template)) {
     $reg_err = isset($GLOBALS['register_error']) ? $GLOBALS['register_error'] : '';
     display_account_form($reg_err, $errors);
 } else {

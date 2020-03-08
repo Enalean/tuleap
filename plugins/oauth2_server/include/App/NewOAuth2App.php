@@ -25,29 +25,31 @@ namespace Tuleap\OAuth2Server\App;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
-/**
- * @psalm-immutable
- */
 final class NewOAuth2App
 {
     /**
      * @var string
+     * @psalm-readonly
      */
     private $name;
     /**
      * @var string
+     * @psalm-readonly
      */
     private $redirect_endpoint;
     /**
      * @var SplitTokenVerificationString
+     * @psalm-readonly
      */
     private $secret;
     /**
      * @var string
+     * @psalm-readonly
      */
     private $hashed_secret;
     /**
      * @var \Project
+     * @psalm-readonly
      */
     private $project;
 
@@ -103,26 +105,41 @@ final class NewOAuth2App
         return $string_validator->validate($name) && $redirect_endpoint_validator->validate($redirect_endpoint);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getRedirectEndpoint(): string
     {
         return $this->redirect_endpoint;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getProject(): \Project
     {
         return $this->project;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getSecret(): SplitTokenVerificationString
     {
         return $this->secret;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getHashedSecret(): string
     {
         return $this->hashed_secret;

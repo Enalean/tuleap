@@ -953,7 +953,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Verifies the consistency of the imported Tracker
      *
-     * @return true if Tracler is ok
+     * @return bool true if Tracler is ok
      */
     public function testImport()
     {

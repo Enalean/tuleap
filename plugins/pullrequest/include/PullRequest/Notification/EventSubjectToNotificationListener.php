@@ -24,17 +24,16 @@ namespace Tuleap\PullRequest\Notification;
 
 use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
 
-/**
- * @psalm-immutable
- */
 final class EventSubjectToNotificationListener
 {
     /**
      * @var PullRequestNotificationStrategy
+     * @psalm-readonly
      */
     private $strategy;
     /**
      * @var NotificationToProcessBuilder
+     * @psalm-readonly
      */
     private $builder;
 
@@ -44,11 +43,17 @@ final class EventSubjectToNotificationListener
         $this->builder  = $builder;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getNotificationStrategy(): PullRequestNotificationStrategy
     {
         return $this->strategy;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getNotificationToProcessBuilder(): NotificationToProcessBuilder
     {
         return $this->builder;

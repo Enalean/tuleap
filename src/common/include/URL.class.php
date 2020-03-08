@@ -79,6 +79,7 @@ class URL
         $req_uri = '/' . trim($url, "/");
         // /projects/ and /viewvc/
         if ((strpos($req_uri, '/projects/') === 0) || (strpos($req_uri, '/viewvc.php/') !== false)) {
+            $this_proj_name = '';
             if (strpos($req_uri, '/viewvc.php/') !== false) {
                 $this_proj_name = $this->getGroupNameFromSVNUrl($req_uri);
             } elseif (strpos($req_uri, '/projects/') !== false) {
