@@ -200,12 +200,32 @@ abstract class Docman_ApprovalTableFactory
 
     public function getReviewStateName($state)
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.$state);
+        switch ($state) {
+            case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
+                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_0');
+            case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
+                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_1');
+            case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
+                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_2');
+            case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
+                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_3');
+            case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
+                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_4');
+        }
+        return '';
     }
 
     public function getNotificationTypeName($type)
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.$type);
+        switch ($type) {
+            case PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED:
+                return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_0');
+            case PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED:
+                return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_1');
+            case PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED:
+                return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_2');
+        }
+        return '';
     }
 
     // Class accessor

@@ -396,11 +396,40 @@ class Docman_ApprovalTableReviewerFactory
             if ($row['status'] == PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED) {
                 $approvalState = Docman_ApprovalTable::computeApprovalState($row);
                 if ($approvalState !== null) {
-                    $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.$approvalState);
+                    switch ($approvalState) {
+                        case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
+                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_0');
+                            break;
+                        case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
+                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_1');
+                            break;
+                        case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
+                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_2');
+                            break;
+                        case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
+                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_3');
+                            break;
+                        case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
+                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_4');
+                            break;
+                    }
                 }
             }
             if ($status == '') {
-                $status = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.$row['status']);
+                switch ($row['status']) {
+                    case PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED:
+                        $status = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_0');
+                        break;
+                    case PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED:
+                        $status = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_1');
+                        break;
+                    case PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED:
+                        $status = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_2');
+                        break;
+                    case PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED:
+                        $status = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_3');
+                        break;
+                }
             }
 
             $reviewsArray[] = array('group' => $row['group_name'],

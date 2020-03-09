@@ -111,15 +111,6 @@ class Docman_Controller extends Controler
         $notification_event_adder->addNotificationManagement();
     }
 
-    /**
-     * Wrapper to i18n string call for docman.
-     * static
-     */
-    public function txt($key, $vars = array())
-    {
-        return $GLOBALS['Language']->getText('plugin_docman', $key, $vars);
-    }
-
     // Franlky, this is not at all the best place to do this.
     public function installDocman($ugroupsMapping, $group_id = false)
     {
@@ -537,7 +528,7 @@ class Docman_Controller extends Controler
                                 $this->view = $item->accept($get_show_view, $this->request->get('report'));
                             } else {
                                 if ($item->isObsolete()) {
-                                    $this->feedback->log('warning', $this->txt('warning_obsolete'));
+                                    $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_obsolete'));
                                 }
                                 $this->_dispatch($view, $item, $root, $get_show_view);
                             }
@@ -1054,7 +1045,7 @@ class Docman_Controller extends Controler
 
             case 'approval_create':
                 if (!$this->userCanWrite($item->getId())) {
-                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                     $this->view = 'Details';
                 } else {
                     $this->view = 'ApprovalCreate';
@@ -1063,7 +1054,7 @@ class Docman_Controller extends Controler
 
             case 'approval_delete':
                 if (!$this->userCanWrite($item->getId())) {
-                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                     $this->view = 'Details';
                 } else {
                     if ($this->request->exist('confirm')) {
@@ -1089,7 +1080,7 @@ class Docman_Controller extends Controler
 
             case 'approval_update':
                 if (!$this->userCanWrite($item->getId())) {
-                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                     $this->view = 'Details';
                 } else {
                     $this->_actionParams['item']   = $item;
@@ -1165,7 +1156,7 @@ class Docman_Controller extends Controler
 
             case 'approval_upd_user':
                 if (!$this->userCanWrite($item->getId())) {
-                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                     $this->view = 'Details';
                 } else {
                     $this->_actionParams['item'] = $item;
@@ -1181,7 +1172,7 @@ class Docman_Controller extends Controler
 
             case 'approval_del_user':
                 if (!$this->userCanWrite($item->getId())) {
-                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                     $this->view = 'Details';
                 } else {
                     $this->_actionParams['item'] = $item;
@@ -1201,7 +1192,7 @@ class Docman_Controller extends Controler
                 if (!$this->userCanRead($item->getId())
                 || !$atrf->isReviewer($user->getId())
                 || !$table->isEnabled()) {
-                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                     $this->view = 'Details';
                 } else {
                     $this->_actionParams['item'] = $item;
@@ -1245,7 +1236,7 @@ class Docman_Controller extends Controler
 
             case 'approval_notif_resend':
                 if (!$this->userCanWrite($item->getId())) {
-                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                     $this->view = 'Details';
                 } else {
                     $this->action = $view;

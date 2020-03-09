@@ -266,7 +266,17 @@ class Docman_Actions extends Actions
                             'version'  => $newVersion,
                             'user'     => &$user);
             $this->event_manager->processEvent('plugin_docman_event_new_version', $eArray);
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_'.$_action_type));
+            if ($_action_type === 'newversion') {
+                $this->_controler->feedback->log(
+                    'info',
+                    $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion')
+                );
+            } else {
+                $this->_controler->feedback->log(
+                    'info',
+                    $GLOBALS['Language']->getText('plugin_docman', 'info_create_initversion')
+                );
+            }
 
             // Approval table
             if ($number > 0) {
@@ -1237,7 +1247,7 @@ class Docman_Actions extends Actions
     public function admin_set_permissions()
     {
         /** @psalm-suppress DeprecatedFunction */
-        list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
+        [$return_code, $feedback] = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
         if (!$return_code) {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_updated', $feedback));
         } else {

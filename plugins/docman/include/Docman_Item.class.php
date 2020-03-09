@@ -75,8 +75,8 @@ class Docman_Item
 
     public function setTitle($title)
     {
-        if (strpos($title, '_lbl_key') !== false) {
-            $this->title = $GLOBALS['Language']->getText('plugin_docman', $title);
+        if ('roottitle_lbl_key' === $title) {
+            $this->title = $GLOBALS['Language']->getText('plugin_docman', 'roottitle_lbl_key');
             $this->titlekey = $title;
         } else {
             $this->title = $title;

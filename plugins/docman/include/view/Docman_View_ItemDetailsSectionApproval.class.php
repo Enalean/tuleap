@@ -146,7 +146,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
                 $html .= '<tr>';
                 $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_status').'</td>';
                 $html .= '<td>';
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED);
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_2');
                 $html .= '</td>';
                 $html .= '</tr>';
             }
@@ -363,11 +363,11 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
                       PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED,
                       PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED,
                       PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED);
-        $txts = array($GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET),
-                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED),
-                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED),
-                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED),
-                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED));
+        $txts = array($GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_0'),
+                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_1'),
+                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_2'),
+                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_3'),
+                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_4'));
         $html .= '<td>';
         $html .= html_build_select_box_from_arrays($vals, $txts, 'state', $reviewer->getState(), false);
         $html .= '</td>';
@@ -457,9 +457,28 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
                 } else {
                     $href = $table->getVersionNumber();
                 }
+                $approval_state = '';
+                switch ($table->getApprovalState()) {
+                    case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
+                        $approval_state = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_0');
+                        break;
+                    case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
+                        $approval_state = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_1');
+                        break;
+                    case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
+                        $approval_state = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_2');
+                        break;
+                    case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
+                        $approval_state = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_3');
+                        break;
+                    case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
+                        $approval_state = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_4');
+                        break;
+                }
+
                 $html .= '<td>'.$href.'</td>';
                 $html .= '<td>'.$this->hp->purify($uh->getDisplayNameFromUserId($table->getOwner())).'</td>';
-                $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.$table->getApprovalState()).'</td>';
+                $html .= '<td>'.$approval_state.'</td>';
                 $html .= '<td>'.DateHelper::formatForLanguage($GLOBALS['Language'], $table->getDate()) .'</td>';
                 $html .= '</tr>';
             }

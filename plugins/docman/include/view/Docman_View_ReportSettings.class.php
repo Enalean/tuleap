@@ -64,8 +64,16 @@ class Docman_View_ReportSettings extends Docman_View_Extra
             $html .= '<td align="left">'.$rName.'</td>';
 
             // Scope
-            $scopeName = $GLOBALS['Language']->getText('plugin_docman', 'report_scope_'.$r->getScope());
-            $html .= '<td align="center">'.$scopeName.'</td>';
+            $html .= '<td align="center">';
+            switch ($r->getScope()) {
+                case 'I':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'report_scope_I');
+                    break;
+                case 'P':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'report_scope_P');
+                    break;
+            }
+            $html .= '</td>';
 
             // Delete
             $trashLink = $this->defaultUrl.'&action=report_del&report_id='.$r->getId();
