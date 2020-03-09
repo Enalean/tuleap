@@ -70,17 +70,17 @@ final class SecurityPresenter
      * @var string
      * @psalm-readonly
      */
-    public $last_successful_login;
+    public $last_successful_login = '-';
     /**
      * @var string
      * @psalm-readonly
      */
-    public $last_login_failure;
+    public $last_login_failure = '-';
     /**
      * @var string
      * @psalm-readonly
      */
-    public $previous_successful_login;
+    public $previous_successful_login = '-';
 
     /**
      * @param PasswordValidatorPresenter[]  $password_validator_presenter
@@ -95,14 +95,23 @@ final class SecurityPresenter
         $this->old_password_is_required = $password_pre_update_event->isOldPasswordRequiredToUpdatePassword();
         $this->user_can_change_password = $password_pre_update_event->areUsersAllowedToChangePassword();
         $this->passwords_validators = $password_validator_presenter;
-        $this->last_successful_login = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user_access['last_auth_success']);
-        $this->last_login_failure = '-';
+        if ($user_access['last_auth_success']) {
+            $this->last_successful_login = \DateHelper::formatForLanguage(
+                $user->getLanguage(),
+                (int) $user_access['last_auth_success']
+            );
+        }
         if ($user_access['last_auth_failure']) {
             $this->last_login_failure = \DateHelper::formatForLanguage(
                 $user->getLanguage(),
                 (int) $user_access['last_auth_failure']
             );
         }
-        $this->previous_successful_login = \DateHelper::formatForLanguage($user->getLanguage(), (int) $user_access['prev_auth_success']);
+        if ($user_access['prev_auth_success']) {
+            $this->previous_successful_login = \DateHelper::formatForLanguage(
+                $user->getLanguage(),
+                (int) $user_access['prev_auth_success']
+            );
+        }
     }
 }
