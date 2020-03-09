@@ -212,6 +212,7 @@ final class oauth2_serverPlugin extends Plugin
                 new OAuth2AuthorizationCodeDAO(),
                 new DateInterval('PT1M')
             ),
+            new \Tuleap\OAuth2Server\User\AuthorizationManager(new \Tuleap\OAuth2Server\User\AuthorizationDao()),
             new \CSRFSynchronizerToken(AuthorizationEndpointGetController::CSRF_TOKEN),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),

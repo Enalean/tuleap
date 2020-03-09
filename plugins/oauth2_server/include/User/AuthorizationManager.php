@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,8 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_oauth2_server_app;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_code;
-DROP TABLE IF EXISTS plugin_oauth2_authorization;
-DELETE FROM oauth2_access_token;
-DELETE FROM oauth2_access_token_scope;
+declare(strict_types=1);
+
+namespace Tuleap\OAuth2Server\User;
+
+class AuthorizationManager
+{
+    /**
+     * @var AuthorizationDao
+     */
+    private $dao;
+
+    public function __construct(AuthorizationDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
+    public function saveAuthorization(\PFUser $user, int $app_id): void
+    {
+        if (! $this->dao->doesAuthorizationExist($user, $app_id)) {
+            $this->dao->create($user, $app_id);
+        }
+    }
+}

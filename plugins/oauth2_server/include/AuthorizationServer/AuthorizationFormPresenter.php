@@ -30,6 +30,10 @@ use Psr\Http\Message\UriInterface;
 final class AuthorizationFormPresenter
 {
     /**
+     * @var int
+     */
+    public $app_id;
+    /**
      * @var string
      */
     public $app_name;
@@ -63,8 +67,10 @@ final class AuthorizationFormPresenter
         UriInterface $deny_authorization_uri,
         OAuth2ScopeDefinitionPresenter ...$scope_presenters
     ) {
-        $this->app_name               = $data->getApp()->getName();
-        $this->project_name           = $data->getApp()->getProject()->getPublicName();
+        $app                          = $data->getApp();
+        $this->app_id                 = $app->getId();
+        $this->app_name               = $app->getName();
+        $this->project_name           = $app->getProject()->getPublicName();
         $this->csrf_token             = $data->getCSRFToken();
         $this->state                  = $data->getState();
         $this->redirect_uri           = $data->getRedirectUri();
