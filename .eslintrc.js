@@ -11,10 +11,14 @@ module.exports = {
     extends: [
         "eslint:recommended",
         "plugin:you-dont-need-lodash-underscore/all",
-        "plugin:vue/essential", // We do not use "recommended" because it conflicts with Prettier formatting
+        "plugin:vue/recommended", // We do not use "recommended" because it conflicts with Prettier formatting
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:import/typescript",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "prettier",
+        "prettier/@typescript-eslint",
+        "prettier/vue",
+        "plugin:prettier/recommended"
     ],
     parser: "vue-eslint-parser",
     parserOptions: {
@@ -72,7 +76,6 @@ module.exports = {
         "require-await": "error",
         // Vue
         // Priority B: Strongly Recommended (Improving Readability)
-        "vue/attribute-hyphenation": "error",
         "vue/html-self-closing": [
             "error",
             {
@@ -85,16 +88,10 @@ module.exports = {
                 math: "any"
             }
         ],
-        "vue/name-property-casing": "error",
-        "vue/no-template-shadow": "error",
-        "vue/prop-name-casing": "off", // This would be interesting, but the --fix does not rename all instances, which will silently break your code
-        "vue/require-prop-types": "error",
         "vue/v-bind-style": ["error", "longform"],
         "vue/v-on-style": ["error", "longform"],
-        // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
-        "vue/no-v-html": "error",
-        "vue/order-in-components": "error",
-        "vue/this-in-template": "error",
+        "vue/attributes-order": "off",
+        "vue/prop-name-casing": "off", // This would be interesting, but the --fix does not rename all instances, which will silently break your code
         // Uncategorized
         "vue/component-name-in-template-casing": ["error", "kebab-case"],
         "vue/match-component-file-name": "error",

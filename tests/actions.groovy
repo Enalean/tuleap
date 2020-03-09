@@ -70,12 +70,6 @@ def runBuildAndRun(String os) {
     }
 }
 
-def runJavascriptCodingStandards() {
-    dir ('sources') {
-        sh 'npm run prettier -- --list-different "**/*.{js,ts,vue}"'
-    }
-}
-
 def runESLint() {
     dir ('sources') {
         sh 'npm run eslint -- --quiet --format=checkstyle --output-file=../results/eslint/checkstyle.xml .'
