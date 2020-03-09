@@ -4,7 +4,7 @@
   <long-description></long-description>
   <services>
     <service shortname="summary" enabled="1"/>
-    <service shortname="plugin_tracker" enabled="0"/>
+    <service shortname="plugin_tracker" enabled="1"/>
     <service shortname="plugin_agiledashboard" enabled="1"/>
     <service shortname="plugin_git" enabled="0" />
     <service shortname="plugin_svn" enabled="0" />
