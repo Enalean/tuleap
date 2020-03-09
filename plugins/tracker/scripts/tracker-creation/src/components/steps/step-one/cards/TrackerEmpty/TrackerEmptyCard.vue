@@ -19,7 +19,7 @@
 
 <template>
     <tracker-base-card v-bind:option-name="option_name">
-        <template v-slot:content="{ isOptionActive }">
+        <template v-slot:content>
             <div class="card-glyph"><svg-tracker-empty /></div>
             <tracker-empty-card-description />
         </template>
