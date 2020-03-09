@@ -3,7 +3,7 @@
     <feedback-message></feedback-message>
 </div>
 <div class="kanban-header">
-    <h1 class="kanban-header-title">{{ kanban.kanban.label }}</h1>
+    <h1 class="kanban-header-title" data-test="kanban-header-title">{{ kanban.kanban.label }}</h1>
     <div class="kanban-header-config">
         <go-to-kanban></go-to-kanban>
 
@@ -11,6 +11,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-edit-button"
                 ng-click="kanban.editKanban()"
                 ng-show="kanban.showEditbutton()"
+                data-test="kanban-header-edit-button"
         >
             <i class="fa fa-pencil tlp-button-icon"
                 ng-class="{ 'fa-spinner fa-spin': kanban.is_edit_loading }"
@@ -134,9 +135,9 @@
          ng-click="kanban.expandColumn(column)"
          ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
          data-column-id="{{ column.id }}"
-         data-test="kanban-column"
+         data-test="kanban-column-{{kanban.slugifyLabel(column.label)}}"
     >
-        <div class="kanban-column-header">
+        <div class="kanban-column-header" data-test="kanban-column-header">
             <span class="kanban-column-header-toggle"
                   title="{{ 'Toggle this column' | translate }}"
                   ng-click="kanban.toggleColumn(column); $event.stopPropagation();"

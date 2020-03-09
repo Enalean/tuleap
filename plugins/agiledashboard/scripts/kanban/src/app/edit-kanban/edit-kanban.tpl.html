@@ -11,20 +11,22 @@
     </div>
     <div class="tlp-modal-body">
         <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-cogs"></i> <span translate>General configuration</span></h2>
-        <form class="edit-kanban-label-form" ng-submit="edit_modal.saveModifications()">
+        <form class="edit-kanban-label-form" ng-submit="edit_modal.saveModifications()" data-test="edit-kanban-label-form">
             <label class="tlp-label" for="input-kanban-label" translate>Kanban label:</label>
             <div class="tlp-form-element tlp-form-element-append">
                 <input type="text"
-                    id="input-kanban-label"
-                    class="tlp-input"
-                    ng-model="edit_modal.kanban.label"
-                    ng-change="edit_modal.updateWidgetTitle(edit_modal.kanban.label)"
-                    required
-                    autofocus
+                       id="input-kanban-label"
+                       class="tlp-input"
+                       ng-model="edit_modal.kanban.label"
+                       ng-change="edit_modal.updateWidgetTitle(edit_modal.kanban.label)"
+                       required
+                       data-test="input-kanban-label"
+                       autofocus
                 />
                 <button class="tlp-append tlp-button-primary"
                     type="submit"
                     ng-disabled="edit_modal.processing()"
+                        data-test="input-kanban-label-submit"
                 >
                     <i class="fa tlp-button-icon" ng-class="{'fa-spinner fa-spin': edit_modal.saving, 'fa-save': ! edit_modal.saving}"></i>
                     <span translate>Save</span>
@@ -55,12 +57,14 @@
                         data-nodrag="{{ ! edit_modal.kanban.user_can_reorder_columns }}"
                         class="edit-kanban-column"
                         ng-class="{ draggable: edit_modal.kanban.user_can_reorder_columns, editing: column.editing }"
+                        data-test="edit-kanban-column-{{edit_modal.slugifyLabel(column.label)}}"
                     >
                         <div class="edit-kanban-column-label" ng-if="! column.editing">{{ column.label }}</div>
                         <form class="edit-kanban-edit-column-container"
                             data-nodrag="true"
                             ng-submit="edit_modal.editColumn(column)"
                             ng-if="column.editing"
+                              data-test="edit-kanban-edit-column-container-form"
                         >
                             <div class="tlp-form-element tlp-form-element-append">
                                 <input type="text"
@@ -70,6 +74,7 @@
                                     required
                                     pattern=".*\S.*"
                                     auto-focus-input
+                                       data-test="edit-kanban-edit-column-container-form-input"
                                 >
                                 <button
                                     class="tlp-append tlp-button-primary tlp-button-small"
@@ -89,13 +94,14 @@
                             </div>
                         </form>
 
-                        <div class="edit-kanban-column-settings">
+                        <div class="edit-kanban-column-settings" data-test="edit-kanban-column">
                             <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
                                 <button
                                         class="tlp-button-primary tlp-button-outline tlp-button-small edit-kanban-column-button"
                                         ng-if="column.user_can_edit_label"
                                         ng-click="edit_modal.turnColumnToEditMode(column)"
                                         ng-disabled="edit_modal.processing()"
+                                        data-test="edit-kanban-column-button-{{edit_modal.slugifyLabel(column.label)}}"
                                 >
                                     <i class="fa fa-pencil tlp-button-icon"></i>
                                     <span translate>Edit</span>
@@ -107,7 +113,7 @@
                                         ng-if="column.user_can_remove_column"
                                         ng-click="edit_modal.removeColumn(column)"
                                         ng-disabled="edit_modal.processing()"
-                                        data-test="edit-modal-remove-column-button"
+                                        data-test="edit-modal-remove-column-button-{{edit_modal.slugifyLabel(column.label)}}"
                                 >
                                     <i class="fa fa-trash-o tlp-button-icon"></i>
                                     <span translate>Remove</span>
@@ -126,6 +132,7 @@
                                         ng-if="column.user_can_remove_column"
                                         ng-click="edit_modal.removeColumn(column)"
                                         ng-disabled="edit_modal.processing()"
+                                        data-test="edit-kanban-column-button-confirm-deletion-{{edit_modal.slugifyLabel(column.label)}}"
                                 >
                                     <i class="fa fa-spinner fa-spin tlp-button-icon" ng-show="edit_modal.deleting_column"></i>
                                     <span translate>Confirm deletion</span>
@@ -142,6 +149,7 @@
                     <form class="edit-kanban-add-column-form"
                         ng-submit="edit_modal.addColumn()"
                         ng-if="edit_modal.adding_column"
+                          data-test="edit-kanban-add-column-form"
                     >
                         <div class="tlp-form-element tlp-form-element-append">
                             <input type="text"
@@ -151,11 +159,13 @@
                                 required
                                 pattern=".*\S.*"
                                 auto-focus-input
+                                   data-test="edit-kanban-add-column-form-input"
                             >
                             <button
                                 class="tlp-append tlp-button-primary"
                                 type="submit"
                                 ng-disabled="edit_modal.processing()"
+                                data-test="edit-kanban-add-column-form-submit"
                             >
                                 <i class="fa tlp-button-icon" ng-class="{'fa-spinner fa-spin': edit_modal.saving_new_column, 'fa-plus': ! edit_modal.adding_column}"></i>
                                 <span translate>Add</span>
@@ -174,6 +184,7 @@
                         ng-disabled="edit_modal.processing()"
                         ng-click="edit_modal.addColumn()"
                         ng-hide="edit_modal.adding_column"
+                        data-test="edit-modal-add-column-button"
                     >
                         <i class="fa fa-plus tlp-button-icon"></i> <span translate>Add a column</span>
                     </button>

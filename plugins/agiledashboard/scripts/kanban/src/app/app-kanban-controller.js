@@ -97,6 +97,7 @@ function KanbanCtrl(
         openReportModal,
         addKanbanToMyDashboard,
         reflowKustomScrollBars,
+        slugifyLabel,
         displayCardsAndWIPNotUpdated: FilterTrackerReportService.areNotCardsAndWIPUpdated,
         displayWIPNotUpdated: FilterTrackerReportService.isNotWIPUpdated,
         filter: KanbanFilterValue,
@@ -589,5 +590,10 @@ function KanbanCtrl(
 
     function addKanbanToMyDashboard() {
         KanbanService.addKanbanToMyDashboard();
+    }
+
+    // For testing purpose
+    function slugifyLabel(label) {
+        return label.replace(/\s/g, "_").toLowerCase();
     }
 }
