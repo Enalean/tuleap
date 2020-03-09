@@ -110,16 +110,6 @@ pipeline {
                                 actions.runFilesStatusChangesDetection('.', 'translation files', '"*.po\$"')
                             } }
                         }
-                        stage('Javascript coding standards') {
-                            agent {
-                                docker {
-                                    image 'node:13.3-alpine'
-                                    reuseNode true
-                                    args '--network none'
-                                }
-                            }
-                            steps { script { actions.runJavascriptCodingStandards() } }
-                        }
                         stage('ESLint static analysis') {
                             agent {
                                 docker {
