@@ -11,12 +11,12 @@
     </div>
 
     <div class="modal-body">
-        <table class="table hooks-jobs-list">
+        <table class="table jenkins-server-jobs-list">
             <thead>
                 <tr>
                     <th>{{# dgettext }} tuleap-hudson_git | Repository {{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-hudson_git | Push date {{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-hudson_git | Triggered jobs {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-hudson_git | Logs {{/ dgettext }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,12 +29,21 @@
                             {{ push_date }}
                         </td>
                         <td>
-                            {{# triggered_jobs }}
-                                <a href="{{ . }}">{{ . }}</a><br/>
-                            {{/ triggered_jobs }}
-                            {{^ triggered_jobs }}
-                                {{# dgettext }} tuleap-hudson_git | No triggered jobs {{/ dgettext }}
-                            {{/ triggered_jobs }}
+                            <div class="jenkins-server-triggered-jobs-list">
+                                <h4>{{# dgettext }} tuleap-hudson_git | Git plugin triggered jobs: {{/ dgettext }}</h4>
+                                {{# triggered_jobs }}
+                                    <a href="{{ . }}">{{ . }}</a><br/>
+                                {{/ triggered_jobs }}
+                                {{^ triggered_jobs }}
+                                    {{# dgettext }} tuleap-hudson_git | No triggered jobs {{/ dgettext }}
+                                {{/ triggered_jobs }}
+                            </div>
+                            {{# status_code }}
+                                <div class="jenkins-server-branch-source-status">
+                                    <h4>{{# dgettext }} tuleap-hudson_git | Branch source plugin: {{/ dgettext }}</h4>
+                                    {{ . }}
+                                </div>
+                            {{/ status_code }}
                         </td>
                     </tr>
                 {{/ logs_presenters }}

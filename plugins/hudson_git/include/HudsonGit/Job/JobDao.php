@@ -61,16 +61,18 @@ class JobDao extends DataAccessObject
         $this->update($sql);
     }
 
-
-
     public function searchJobsByRepositoryId($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
 
-        $sql = "SELECT *
+        $sql = "SELECT plugin_hudson_git_job.*,
+                       plugin_hudson_git_job_polling_url.job_url,
+                       plugin_hudson_git_job_branch_source.status_code
                 FROM plugin_hudson_git_job
-                JOIN plugin_hudson_git_job_polling_url
+                LEFT JOIN plugin_hudson_git_job_polling_url
                     ON(plugin_hudson_git_job.id = plugin_hudson_git_job_polling_url.job_id)
+                LEFT JOIN plugin_hudson_git_job_branch_source
+                    ON plugin_hudson_git_job.id = plugin_hudson_git_job_branch_source.job_id
                 WHERE plugin_hudson_git_job.repository_id=$repository_id
                 ORDER BY plugin_hudson_git_job.push_date
                 DESC
