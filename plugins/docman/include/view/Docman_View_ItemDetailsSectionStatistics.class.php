@@ -72,7 +72,28 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
                 $html .= '<table class="docman_item_details_properties">';
                 arsort($stats['types']);
                 foreach ($stats['types'] as $type => $stat) {
-                    $html .= $this->_getPropertyRow($GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_'.strtolower($type)), $stat);
+                    $label = '';
+                    switch (strtolower($type)) {
+                        case 'file':
+                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_file');
+                            break;
+                        case 'wiki':
+                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_wiki');
+                            break;
+                        case 'embeddedfile':
+                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_embeddedfile');
+                            break;
+                        case 'empty':
+                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_empty');
+                            break;
+                        case 'link':
+                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_link');
+                            break;
+                        case 'folder':
+                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_folder');
+                            break;
+                    }
+                    $html  .= $this->_getPropertyRow($label, $stat);
                 }
                 $html .= '</table>';
             }

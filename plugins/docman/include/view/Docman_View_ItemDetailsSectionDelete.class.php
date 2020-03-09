@@ -49,8 +49,12 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $content .= '<div class="docman_confirm_delete">';
         if ($version !== false) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_version', array($this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $version));
+        } elseif (is_a($this->item, 'Docman_Folder')) {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_folder', $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
+        } elseif (is_a($this->item, 'Docman_File')) {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_file', $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
         } else {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document, $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_document', $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
         }
         if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
             $content .= $this->getWikiDeleteInfo();

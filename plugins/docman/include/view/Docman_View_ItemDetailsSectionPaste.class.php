@@ -90,14 +90,18 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
 
         // First Check metadata differences
         $mdDiffers = false;
-        if ($this->mode == 'copy') {
+        if ($this->mode === 'copy') {
             $content = $this->checkMdDifferences($mdDiffers);
         }
 
         $content .= '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste') .'</h2>';
 
         $content .= '<p>';
-        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_from_'.$this->mode);
+        if ($this->mode === 'copy') {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_from_copy');
+        } else {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_from_cut');
+        }
         $content .= '</p>';
 
         $content .= '<form name="select_paste_location" method="POST" action="?">';

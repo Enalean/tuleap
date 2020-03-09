@@ -58,15 +58,24 @@ class Docman_MetadataComparator
             $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_desc');
         }
         if (!$dstMd->sameIsEmptyAllowed($srcMd)) {
-            $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_allowempty', array($GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_'.$srcMd->getIsEmptyAllowed())));
+            $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_allowempty', $this->getEnabledDisabledText($srcMd->getIsEmptyAllowed()));
         }
         if (!$dstMd->sameIsMultipleValuesAllowed($srcMd)) {
-            $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_allowmultiplevalue', array($GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_'.$srcMd->getIsMultipleValuesAllowed())));
+            $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_allowmultiplevalue', $this->getEnabledDisabledText($srcMd->getIsMultipleValuesAllowed()));
         }
         if (!$dstMd->sameUseIt($srcMd)) {
-            $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_useit', array($GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_'.$srcMd->getUseIt())));
+            $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_useit', $this->getEnabledDisabledText($srcMd->getUseIt()));
         }
         return $diffArray;
+    }
+
+    private function getEnabledDisabledText(bool $is_enabled): string
+    {
+        if ($is_enabled) {
+            return $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_1');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_0');
     }
 
     /**
@@ -131,7 +140,7 @@ class Docman_MetadataComparator
             $html .= "<td class=\"docman_md_".$rowStyle."\">";
             switch ($rowStyle) {
                 case 'missing':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_'.$rowStyle);
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_missing');
             }
             $html .= "</td>\n";
 
@@ -278,9 +287,13 @@ class Docman_MetadataComparator
             $html .= "<td class=\"docman_md_".$dstMdStatus."\">";
             switch ($dstMdStatus) {
                 case 'equivalent':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_equivalent');
+                    break;
                 case 'missing':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_missing');
+                    break;
                 case 'conflict':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_'.$dstMdStatus);
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_conflict');
                     break;
             }
             $html .= "</td>";

@@ -194,15 +194,21 @@ class Docman_ReportHtml
         $html .= '</select>';
 
         // Advanced search
+        $html .= '&nbsp;';
         if ($this->report->advancedSearch) {
             $html .= '<input type="hidden" name="advsearch" value="1" />';
-            $advSearchToggle = 0;
+            $html .= $GLOBALS['Language']->getText(
+                'plugin_docman',
+                'filters_advsearch_0',
+                $this->view->_buildSearchUrl($params, ['advsearch' => 0])
+            );
         } else {
-            $advSearchToggle = 1;
+            $html .= $GLOBALS['Language']->getText(
+                'plugin_docman',
+                'filters_advsearch_1',
+                $this->view->_buildSearchUrl($params, ['advsearch' => 1])
+            );
         }
-        $advSearchUrl = $this->view->_buildSearchUrl($params, array('advsearch' => $advSearchToggle));
-        $html .= '&nbsp;';
-        $html .= $GLOBALS['Language']->getText('plugin_docman', 'filters_advsearch_'.$advSearchToggle, array($advSearchUrl));
 
         $html .= '</div><!-- docman_report_options-->';
 

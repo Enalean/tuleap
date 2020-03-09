@@ -170,7 +170,32 @@ class Docman_MetadataHtml
         $html = '';
         $html .= '<span title="'. $this->hp->purify($desc) .'">';
         if ($this->md->isSpecial()) {
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_'.$this->md->getLabel());
+            switch ($this->md->getLabel()) {
+                case 'description':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_description');
+                    break;
+                case 'rank':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_rank');
+                    break;
+                case 'title':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_title');
+                    break;
+                case 'owner':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_owner');
+                    break;
+                case 'status':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_status');
+                    break;
+                case 'obsolescence_date':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_obsolescence_date');
+                    break;
+                case 'create_date':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_create_date');
+                    break;
+                case 'update_date':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_update_date');
+                    break;
+            }
         } else {
             $html .= $this->hp->purify($this->md->getName()) .":";
         }
