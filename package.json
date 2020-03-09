@@ -46,7 +46,7 @@
     "mini-css-extract-plugin": "^0.8.0",
     "minimist": "^1.2.0",
     "ng-cache-loader": "0.0.26",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "po-gettext-loader": "^0.1.1",
     "pofile": "^1.1.0",
