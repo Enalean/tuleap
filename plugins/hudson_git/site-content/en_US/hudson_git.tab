@@ -12,7 +12,6 @@ plugin_hudson_git	delete_success	Jenkins webhook successfully removed
 plugin_hudson_git	job_error	Error while saving Job data
 
 plugin_hudson_git	label_push_date	Push date
-plugin_hudson_git	label_triggered	Triggered jobs
 plugin_hudson_git	empty_jobs	No triggered jobs
 plugin_hudson_git	jenkins_hook	Jenkins hook
 plugin_hudson_git	add_jenkins_hook	Add Jenkins hook
