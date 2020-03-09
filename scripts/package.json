@@ -7,6 +7,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/plugin-tracker": "file:../../tracker",
     "angular": "^1.7.4",
     "angular-breadcrumb": "~0.3.0",
     "angular-cookies": "^1.7.4",
@@ -43,6 +44,7 @@
   "scripts": {
     "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "test": "BABEL_ENV=test $npm_package_config_bin/jest",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'"
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'",
+    "postshrinkwrap": "php ../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

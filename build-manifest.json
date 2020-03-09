@@ -1,10 +1,5 @@
 {
     "name": "testmanagement",
-    "dependencies": ["tracker"],
-    "components": [
-        "./scripts",
-        "./"
-    ],
     "gettext-angularjs": {
         "testmanagement": {
             "src": "scripts/angular/src/app",
