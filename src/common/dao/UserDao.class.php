@@ -24,6 +24,8 @@
  */
 class UserDao extends DataAccessObject
 {
+    private const NOT_VALID_UNIX_PASSWORD_HASH = 'no_password';
+
     /** @var PasswordHandler */
     private $password_handler;
 
@@ -215,6 +217,9 @@ class UserDao extends DataAccessObject
             if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
                 $columns[] = 'unix_pw';
                 $values[]  = $this->password_handler->computeUnixPassword($user_pw);
+            } else {
+                $columns[] = 'unix_pw';
+                $values[]  = self::NOT_VALID_UNIX_PASSWORD_HASH;
             }
         }
         if ($realname !== null) {
@@ -321,6 +326,8 @@ class UserDao extends DataAccessObject
             $stmt[] = 'user_pw=""';
             if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
                 $stmt[] = 'unix_pw='.$this->da->quoteSmart($this->password_handler->computeUnixPassword($user['clear_password']));
+            } else {
+                $stmt[] = 'unix_pw=' . $this->da->quoteSmart(self::NOT_VALID_UNIX_PASSWORD_HASH);
             }
             $stmt[] = 'last_pwd_update='.$_SERVER['REQUEST_TIME'];
             unset($user['clear_password']);

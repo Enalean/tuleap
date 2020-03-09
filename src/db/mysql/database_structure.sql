@@ -883,7 +883,7 @@ CREATE TABLE user (
   register_purpose text,
   status char(1) NOT NULL default 'A',
   shell varchar(50) NOT NULL default '/sbin/nologin',
-  unix_pw varchar(255) NOT NULL default '',
+  unix_pw varchar(255) NOT NULL default 'no_passwd',
   unix_status char(1) NOT NULL default 'N',
   unix_uid int(11) NOT NULL default '0',
   unix_box varchar(10) NOT NULL default 'shell1',
