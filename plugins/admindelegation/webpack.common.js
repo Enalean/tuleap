@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,35 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-let entry_points = {};
+const assets_dir_path = path.resolve(__dirname, "../../src/www/assets/admindelegation");
+
+let entry_points = {
+    "admin-delegation": "./scripts/admindelegation.js"
+};
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
-    entry_points[`style-${color}`] = `./style-${color}.scss`;
-    entry_points[`style-${color}-condensed`] = `./style-${color}-condensed.scss`;
+    entry_points[`style-${color}`] = `./themes/BurningParrot/style-${color}.scss`;
+    entry_points[
+        `style-${color}-condensed`
+    ] = `./themes/BurningParrot/style-${color}-condensed.scss`;
 }
 
 module.exports = [
     {
         entry: entry_points,
-        context: path.resolve(__dirname, "./BurningParrot"),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/admindelegation/themes/BurningParrot/")
-        ),
+        context: __dirname,
+        output: webpack_configurator.configureOutput(assets_dir_path),
+        externals: {
+            tlp: "tlp"
+        },
         module: {
-            rules: [webpack_configurator.rule_scss_loader]
+            rules: [
+                webpack_configurator.rule_scss_loader,
+                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
+            ]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),

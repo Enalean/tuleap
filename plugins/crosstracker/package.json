@@ -1,0 +1,26 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-crosstracker",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/plugin-tracker": "file:../tracker",
+    "extendable-error": "^0.1.5",
+    "moment": "^2.18.1",
+    "phptomoment": "0.0.2",
+    "vue": "^2.6.10",
+    "vue-gettext": "^2.1.6",
+    "vuex": "^3.1.2"
+  },
+  "devDependencies": {},
+  "config": {
+    "bin": "../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "test": "$npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+  }
+}

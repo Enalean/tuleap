@@ -1,5 +1,7 @@
-/**
- * Copyright (c) Enalean SAS - 2016 - 2018. All rights reserved
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +18,7 @@
  */
 
 import { modal } from "tlp";
-import { autocomplete_users_for_select2 } from "tuleap/autocomplete-for-select2.js";
+import { autocomplete_users_for_select2 } from "../../../src/www/scripts/tuleap/autocomplete-for-select2.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_to_grant_element = document.getElementById("permission-delegation-add-user");

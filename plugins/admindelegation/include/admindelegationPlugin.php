@@ -40,25 +40,19 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class AdminDelegationPlugin extends Plugin
 {
-
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->addHook('cssfile', 'cssFile', false);
         $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(CollectRoutesEvent::NAME);
         bindtextdomain('tuleap-admindelegation', __DIR__ . '/../site-content');
     }
@@ -70,31 +64,6 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
             $this->pluginInfo = new AdminDelegationPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    public function burningParrotGetJavascriptFiles($params)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/admindelegation') === 0) {
-            $include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/admindelegation/scripts',
-                '/assets/admindelegation/scripts'
-            );
-
-            $params['javascript_files'][] = $include_assets->getFileURL("admin-delegation.js");
-        }
-    }
-
-
-    public function burningParrotGetStylesheets($params)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/admindelegation') === 0) {
-            $variant = $params['variant'];
-            $css_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/admindelegation/themes/BurningParrot/',
-                '/assets/admindelegation/themes/BurningParrot'
-            );
-            $params['stylesheets'][] = $css_assets->getFileURL('style-' . $variant->getName() . '.css');
-        }
     }
 
     /**
@@ -122,17 +91,6 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
         return false;
     }
 
-    public function cssFile($params)
-    {
-        // Only show the stylesheet if we're actually in the Docman pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
-        ) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
-        }
-    }
-
     /**
      * Hook: admin link to plugin
      *
@@ -144,13 +102,6 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
             'label' => 'Admin delegation',
             'href'  => $this->getPluginPath() . '/'
         );
-    }
-
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $event->setIsInBurningParrotCompatiblePage();
-        }
     }
 
     /**
@@ -204,9 +155,12 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
 
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
-            $r->addRoute(['GET', 'POST'], '/', $this->getRouteHandler('routeAdmin'));
-            $r->addRoute(['GET', 'POST'], '/permissions.php', $this->getRouteHandler('routeAdmin'));
-        });
+        $event->getRouteCollector()->addGroup(
+            $this->getPluginPath(),
+            function (RouteCollector $r) {
+                $r->addRoute(['GET', 'POST'], '/', $this->getRouteHandler('routeAdmin'));
+                $r->addRoute(['GET', 'POST'], '/permissions.php', $this->getRouteHandler('routeAdmin'));
+            }
+        );
     }
 }

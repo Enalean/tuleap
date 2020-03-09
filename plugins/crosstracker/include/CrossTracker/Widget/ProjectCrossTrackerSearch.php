@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -156,25 +156,24 @@ class ProjectCrossTrackerSearch extends Widget
         return \TrackerFactory::instance();
     }
 
-    public function getJavascriptDependencies()
+    public function getJavascriptDependencies(): array
     {
-        $cross_tracker_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/crosstracker/scripts',
-            '/assets/crosstracker/scripts'
-        );
-
-        return array(
-            array('file' => $cross_tracker_include_assets->getFileURL('cross-tracker.js'))
-        );
+        return [
+            ['file' => $this->getAssets()->getFileURL('cross-tracker.js')]
+        ];
     }
 
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies(): CssAssetCollection
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/crosstracker/BurningParrot',
-            '/assets/crosstracker/BurningParrot'
+        return new CssAssetCollection([new CssAsset($this->getAssets(), 'style')]);
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/crosstracker',
+            '/assets/crosstracker'
         );
-        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
     }
 
     /**
