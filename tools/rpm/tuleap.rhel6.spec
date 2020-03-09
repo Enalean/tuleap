@@ -1351,7 +1351,7 @@ fi
 %files plugin-tracker
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/tracker
-%{APP_DIR}/src/www/assets/tracker
+%{APP_DIR}/src/www/assets/trackers
 %dir %{APP_DATA_DIR}/tracker
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_tracker
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_tracker

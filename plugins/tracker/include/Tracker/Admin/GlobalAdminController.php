@@ -128,7 +128,7 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
 
         $response->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../www/assets', TRACKER_BASE_URL . '/assets'),
+                new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/trackers', '/assets/trackers'),
                 'global-admin.js'
             )
         );

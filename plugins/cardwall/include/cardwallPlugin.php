@@ -275,8 +275,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         if ($this->isAgileDashboardOrTrackerUrl() && $this->canUseStandardJavsacript()) {
             $agiledashboard_plugin = PluginManager::instance()->getAvailablePluginByName('agiledashboard');
             if ($agiledashboard_plugin && $agiledashboard_plugin->currentRequestIsForPlugin()) {
-                $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
-                echo $tracker_plugin->getMinifiedAssetHTML()."\n";
+                $assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/trackers', '/assets/trackers');
+                echo $assets->getHTMLSnippet('tracker.js');
             }
             echo $this->getAssets()->getHTMLSnippet('cardwall.js');
         }

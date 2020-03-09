@@ -1541,21 +1541,13 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../www/assets',
-            TRACKER_BASE_URL . '/assets'
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/trackers',
+            '/assets/trackers'
         );
 
-        $include_assets_css = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/tracker/themes',
-            '/assets/tracker/themes'
-        );
-
-        $GLOBALS['HTML']->addStylesheet(
-            $include_assets_css->getFileURL('colorpicker.css')
-        );
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('TrackerAdminFields.js'));
+        $GLOBALS['HTML']->addStylesheet($assets->getFileURL('colorpicker.css'));
+        $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('TrackerAdminFields.js'));
 
         $this->displayAdminHeader($layout, 'editformElements', $title);
     }

@@ -29,6 +29,7 @@ use trackerPlugin;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -99,17 +100,19 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
             $this->breadcrumbs_builder->build($project, $user)
         );
 
-        $css_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/tracker/themes/',
-            '/assets/tracker/themes'
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/trackers',
+            '/assets/trackers'
         );
-        $layout->addCssAsset(new CssAsset($css_assets, 'tracker-creation'));
+        $layout->addCssAsset(new CssAsset($assets, 'tracker-creation'));
 
-        $layout->header([
-            'title' => dgettext('tuleap-tracker', 'New tracker'),
-            'group' => $project->getID(),
-            'toptab' => trackerPlugin::SERVICE_SHORTNAME
-        ]);
+        $layout->header(
+            [
+                'title'  => dgettext('tuleap-tracker', 'New tracker'),
+                'group'  => $project->getID(),
+                'toptab' => trackerPlugin::SERVICE_SHORTNAME
+            ]
+        );
 
         $templates_dir = __DIR__ . '/../../../templates/tracker-creation';
 
@@ -122,13 +125,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
                 )
             );
 
-        $js_assets = new IncludeAssets(
-            __DIR__ . '/../../../www/assets',
-            TRACKER_BASE_URL . '/assets'
-        );
-
-
-        $layout->includeFooterJavascriptFile($js_assets->getFileURL('tracker-creation.js'));
+        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'tracker-creation.js'));
         $layout->footer([]);
     }
 

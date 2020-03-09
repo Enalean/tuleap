@@ -28,6 +28,7 @@ use TrackerManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -75,20 +76,15 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
             $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string)$tracker->getId()));
         }
 
-        $javascriptAssets = new IncludeAssets(
-            __DIR__ . '/../../../www/assets',
-            TRACKER_BASE_URL . '/assets'
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/trackers',
+            '/assets/trackers'
         );
-        $layout->includeFooterJavascriptFile($javascriptAssets->getFileURL('tracker-workflow-transitions.js'));
+        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'tracker-workflow-transitions.js'));
+        $layout->addCssAsset(new CssAsset($assets, 'workflow'));
 
         $event = new GetExternalPostActionPluginsEvent($tracker);
-
         $this->event_manager->processEvent($event);
-        $cssAssets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/tracker/themes',
-            '/assets/tracker/themes'
-        );
-        $layout->addCssAsset(new CssAsset($cssAssets, 'workflow'));
 
         $tracker->displayAdminItemHeaderBurningParrot(
             $this->tracker_manager,

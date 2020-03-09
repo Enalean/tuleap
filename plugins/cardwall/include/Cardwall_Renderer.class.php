@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Cardwall_Renderer extends Tracker_Report_Renderer
 {
     /** @var Plugin  */
@@ -322,12 +323,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         return [];
     }
 
-    /** @return CssAssetCollection */
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies(): CssAssetCollection
     {
         $tracker_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/tracker/themes',
-            '/assets/tracker/themes'
+            __DIR__ . '/../../../src/www/assets/trackers',
+            '/assets/trackers'
         );
         $cardwall_assets = new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/cardwall/',

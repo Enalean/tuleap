@@ -181,21 +181,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $warning                 = $error->getMessage();
         }
 
-        $burndown_chart_include_assets = new IncludeAssets(
-            TRACKER_BASE_DIR . '/../www/assets',
-            TRACKER_BASE_URL . '/assets'
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/trackers',
+            '/assets/trackers'
         );
 
-        $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/tracker/themes',
-            '/assets/tracker/themes/'
-        );
-
-        $css_file_url = $theme_include_assets->getFileURL('burndown-chart.css');
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $burndown_chart_include_assets->getFileURL('burndown-chart.js')
-        );
+        $css_file_url = $assets->getFileURL('burndown-chart.css');
+        $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('burndown-chart.js'));
 
         return new BurndownFieldPresenter(
             $user,

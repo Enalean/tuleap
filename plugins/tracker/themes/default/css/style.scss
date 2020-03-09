@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../scripts/node_modules/codemirror/lib/codemirror';
-@import '../../../scripts/node_modules/codemirror/addon/hint/show-hint';
+@import '../../../node_modules/codemirror/lib/codemirror';
+@import '../../../node_modules/codemirror/addon/hint/show-hint';
 @import 'includes/cards';
 @import 'includes/field-bound-colors';
 @import 'includes/columns-colors';
