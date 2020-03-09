@@ -1,9 +1,5 @@
 {
     "name": "timetracking",
-    "components": [
-        "www/scripts",
-        "themes"
-    ],
     "gettext-vue": {
         "timetracking": {
             "src": "www/scripts",

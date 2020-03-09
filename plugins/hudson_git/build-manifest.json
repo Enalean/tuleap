@@ -1,6 +1,5 @@
 {
     "name": "hudson_git",
-    "components": ["./"],
     "gettext-ts": {
         "git-administration": {
             "src": "scripts/src",

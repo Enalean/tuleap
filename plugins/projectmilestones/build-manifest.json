@@ -6,9 +6,5 @@
 
             "po": "scripts/projectmilestones/po"
         }
-    },
-    "components": [
-        "themes/",
-        "scripts/"
-    ]
+    }
 }

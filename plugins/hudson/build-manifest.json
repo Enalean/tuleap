@@ -1,7 +1,0 @@
-{
-    "name": "hudson",
-    "components": [
-        "www/js",
-        "themes"
-    ]
-}

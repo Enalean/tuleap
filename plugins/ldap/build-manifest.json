@@ -1,9 +1,5 @@
 {
     "name": "ldap",
-    "components": [
-        "www/scripts/",
-        "themes/"
-    ],
     "gettext-js": {
         "ldap-bindings": {
             "src": "www/scripts/project-admin",

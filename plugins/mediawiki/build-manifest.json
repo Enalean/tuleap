@@ -1,6 +1,0 @@
-{
-    "name": "mediawiki",
-    "components": [
-        "themes/"
-    ]
-}

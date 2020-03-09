@@ -5,6 +5,5 @@
             "src": "www/scripts/velocity-chart/src",
             "po": "www/scripts/velocity-chart/po"
         }
-    },
-    "components": ["www/scripts", "themes"]
+    }
 }

@@ -1,6 +1,5 @@
 {
     "name": "git",
-    "components": ["./"],
     "gettext-js": {
         "repository": {
             "src": "scripts/repository/src",

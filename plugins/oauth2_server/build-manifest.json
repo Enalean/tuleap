@@ -1,6 +1,5 @@
 {
     "name": "oauth2_server",
-    "components": ["./"],
     "gettext-ts": {
         "project-administration": {
             "src": "scripts/src",

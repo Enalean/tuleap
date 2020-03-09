@@ -11,6 +11,5 @@
             "src": "www/scripts/src/app",
             "po": "www/scripts/po"
         }
-    },
-    "components": ["www/scripts", "themes"]
+    }
 }

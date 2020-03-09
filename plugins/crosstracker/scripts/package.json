@@ -6,6 +6,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@tuleap/plugin-tracker-scripts": "file:../../tracker/scripts",
     "extendable-error": "^0.1.5",
     "moment": "^2.18.1",
     "phptomoment": "0.0.2",
@@ -21,6 +22,7 @@
   "scripts": {
     "build": "rm -rf $npm_package_config_assets/* && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "test": "$npm_package_config_bin/jest",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'"
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'",
+    "postshrinkwrap": "php ../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }
