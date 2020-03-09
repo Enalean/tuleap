@@ -30,6 +30,7 @@
                 v-bind:enctype="form_enctype"
             >
                 <field-csrf-token />
+                <field-chosen-template />
                 <field-name />
                 <field-shortname />
                 <field-description />
@@ -45,6 +46,7 @@ import { Mutation, State, Getter } from "vuex-class";
 import { Component, Watch, Ref } from "vue-property-decorator";
 import StepLayout from "../layout/StepLayout.vue";
 import StepTwoInfo from "./StepTwoInfo.vue";
+import FieldChosenTemplate from "./creation-fields/FieldChosenTemplate.vue";
 import FieldName from "./creation-fields/FieldName.vue";
 import FieldShortname from "./creation-fields/FieldShortname.vue";
 import FieldDescription from "./creation-fields/FieldDescription.vue";
@@ -61,7 +63,8 @@ import FieldTrackerEmpty from "./creation-fields/FieldTrackerEmpty.vue";
         FieldShortname,
         FieldDescription,
         FieldTrackerTemplateId,
-        FieldCsrfToken
+        FieldCsrfToken,
+        FieldChosenTemplate
     }
 })
 export default class StepTwo extends Vue {
