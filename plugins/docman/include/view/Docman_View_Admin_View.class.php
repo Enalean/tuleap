@@ -28,10 +28,17 @@ class Docman_View_Admin_View extends Docman_View_Extra
         $sBo = Docman_SettingsBo::instance($params['group_id']);
         $actual = $sBo->getView();
 
-        $views  = Docman_View_Browse::getDefaultViews();
-        foreach ($views as $view) {
-            $html .= '<option value="'. $view .'" '. ($actual == $view ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('plugin_docman', 'view_'.$view) .'</option>';
-        }
+        $html .= '<option value="Tree" '. ($actual === 'Tree' ? 'selected="selected"' : '') .'>';
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'view_Tree');
+        $html .= '</option>';
+        $html .= '<option value="Icons" '. ($actual === 'Icons' ? 'selected="selected"' : '') .'>';
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'view_Icons');
+        $html .= '</option>';
+        $html .= '<option value="Table" '. ($actual === 'Table' ? 'selected="selected"' : '') .'>';
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'view_Table');
+        $html .= '</option>';
+
+
         $html .= '</select>';
         $html .= '<input type="hidden" name="action" value="admin_change_view" />';
         $html .= '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';

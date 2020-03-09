@@ -79,17 +79,24 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
         $html .= '<span id="docman_browse_viewas">';
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .' ';
-        $actual = Docman_View_Browse::getViewForCurrentUser($params['group_id']);
-        $views  = Docman_View_Browse::getDefaultViews();
-        foreach ($views as $val => $view) {
-            $html .= '<input type="image"
-            				 name="selected_view['. $val .']"
-            				 src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-'. $view .'.png"
-            				 title="'. $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .' '. $GLOBALS['Language']->getText('plugin_docman', 'view_'. $view) .'"
-            				 alt="'. $GLOBALS['Language']->getText('plugin_docman', 'view_'. $view) .'"
-            				 /> ';
-            //($actual == $val ? '&gt;&nbsp;' : '&nbsp;&nbsp;');
-        }
+        $html .= '<input type="image"
+                         name="selected_view[Tree]"
+                         src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-Tree.png"
+                         title="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Tree') .'"
+                         alt="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Tree') .'"
+                         /> ';
+        $html .= '<input type="image"
+                         name="selected_view[Icons]"
+                         src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-Icons.png"
+                         title="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Icons') .'"
+                         alt="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Icons') .'"
+                         /> ';
+        $html .= '<input type="image"
+                         name="selected_view[Table]"
+                         src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-Table.png"
+                         title="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Table') .'"
+                         alt="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Table') .'"
+                         /> ';
         $html .= '</span>';
         $html .= '<input type="hidden" name="action" value="change_view" />';
         $html .= '<input type="hidden" name="id" value="'. $params['item']->getId() .'" />';

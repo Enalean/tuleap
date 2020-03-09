@@ -133,7 +133,7 @@ plugin_docman	admin_md_import_tbl_status_equivalent	Les paramètres diffèrent
 plugin_docman	admin_md_import_tbl_status_exists	Présent
 plugin_docman	admin_md_import_tbl_status_missing	N'existe pas
 plugin_docman	admin_md_import_tbl_status_onlydst	Présent
-plugin_docman	admin_md_import_tbl_status_conflit	Conflit de nommage
+plugin_docman	admin_md_import_tbl_status_conflict	Conflit de nommage
 plugin_docman	admin_md_import_param_desc	Description : <strong><em>nouveau texte</em></strong>
 plugin_docman	admin_md_import_param_allowempty	Autoriser la valeur vide : <strong>$1</strong>
 plugin_docman	admin_md_import_param_allowmultiplevalue	Autoriser la sélection multiple : <strong>$1</strong>
