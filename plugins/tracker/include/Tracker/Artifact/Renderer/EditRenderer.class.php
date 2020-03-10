@@ -121,12 +121,12 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $hp          = Codendi_HTMLPurifier::instance();
         $title = sprintf(
             '%s - %s #%d',
-            substr($hp->purify($this->artifact->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), 0, 64),
-            $hp->purify($this->tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML),
-            $this->artifact->getId(),
+            substr($this->artifact->getTitle(), 0, 64),
+            $this->tracker->getItemName(),
+            $this->artifact->getId()
         );
         $breadcrumbs = array(
-            array('title' => $title,
+            array('title' => $this->artifact->getXRef(),
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId())
         );
         $toolbar = $this->tracker->getDefaultToolbar();
