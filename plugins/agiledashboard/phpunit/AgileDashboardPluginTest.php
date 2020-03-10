@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,29 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/bootstrap.php';
+declare(strict_types = 1);
 
-class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends \PHPUnit\Framework\TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     private $parameters;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+        $xml = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
 <semantic type="initial_effort">
  <shortname>effort</shortname>
  <label>Effort</label>
  <description>Define the effort of an artifact</description>
  <field REF="F13"/>
-</semantic>');
+</semantic>'
+        );
 
-        $xml_mapping    = array('F13' => mock('Tracker_FormElement_Field_Float'));
-        $tracker        = mock('Tracker');
-        $semantic       = null;
-        $type           = AgileDashBoard_Semantic_InitialEffort::NAME;
+        $xml_mapping = ['F13' => Mockery::spy(Tracker_FormElement_Field_Float::class)];
+        $tracker     = Mockery::spy(Tracker::class);
+        $semantic    = null;
+        $type        = AgileDashBoard_Semantic_InitialEffort::NAME;
 
         $this->parameters = array(
             'xml'               => $xml,
@@ -55,16 +58,16 @@ class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends TuleapTest
     /**
      * Not exactly a unit test but, then again, we are testing a plugin!
      */
-    public function itCreatesSemantic()
+    public function testItCreatesSemantic(): void
     {
         $effort_factory = AgileDashboard_Semantic_InitialEffortFactory::instance();
 
-        $plugin = partial_mock('AgileDashboardPlugin', array('getSemanticInitialEffortFactory'));
-        stub($plugin)->getSemanticInitialEffortFactory()->returns($effort_factory);
+        $plugin = Mockery::mock(AgileDashboardPlugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $plugin->shouldReceive('getSemanticInitialEffortFactory')->andReturns($effort_factory);
 
         $plugin->tracker_event_semantic_from_xml($this->parameters);
 
         $this->assertNotNull($this->parameters['semantic']);
-        $this->assertIsA($this->parameters['semantic'], 'AgileDashBoard_Semantic_InitialEffort');
+        $this->assertInstanceOf(AgileDashBoard_Semantic_InitialEffort::class, $this->parameters['semantic']);
     }
 }

@@ -28,7 +28,7 @@ class Planning_ArtifactParentsSelector_SameTrackerCommand extends Planning_Artif
      */
     public function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, PFUser $user)
     {
-        if ($source_artifact->getTracker() == $parent_tracker) {
+        if ((int)$source_artifact->getTracker()->getId() === (int)$parent_tracker->getId()) {
             return array($source_artifact);
         }
     }

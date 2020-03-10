@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,15 @@
 
 class AgileDashboard_SequenceIdManager
 {
+    /**
+     * @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
+     */
+    private $backlog_item_collection_factory;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
     private $backlog_factory;
 
-    /** @var Array */
+    /** @var array */
     private $backlog_item_ids;
 
     public function __construct(

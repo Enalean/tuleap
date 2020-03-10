@@ -52,7 +52,7 @@ class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand exte
         }
         if ($children) {
             foreach ($children as $child) {
-                if ($child->getTracker() == $expected_tracker) {
+                if ((int)$child->getTracker()->getId() === (int)$expected_tracker->getId()) {
                     $artifacts[] = $child;
                 } else {
                     $artifacts = array_merge($artifacts, $this->recursivelyFindChildrenBelongingToTracker($child, $expected_tracker, $user, $hierarchy));
@@ -65,11 +65,11 @@ class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand exte
     private function getParentTrackersAndStopAtGivenTracker(Tracker $tracker, Tracker $stop)
     {
         $hierarchy = array();
-        while (($parent = $this->hierarchy_factory->getParent($tracker)) && $parent != $stop) {
+        while (($parent = $this->hierarchy_factory->getParent($tracker)) && (int)$parent->getId() !== (int)$stop->getId()) {
             $hierarchy[$parent->getId()] = $tracker;
             $tracker = $parent;
         }
-        if ($parent == $stop) {
+        if ((int)$parent->getId() === (int)$stop->getId()) {
             $hierarchy[$stop->getId()] = $tracker;
             return $hierarchy;
         }
