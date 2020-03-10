@@ -5,32 +5,74 @@
 #-----------------------------------------------
 # Script: SF/www/account/index.php
 #
+account_options	title		Maintenance du compte
+account_options	welcome		Bienvenue
+account_options	welcome_intro	Vous pouvez voir et changer toutes les caractéristiques de votre compte depuis cette page. Vous pouvez aussi consulter votre profil.
+account_options	member_since	Membre depuis :
+account_options	user_id	Id utilisateur :
+account_options	login_name	Nom $1
+account_options	ldap_name	Login LDAP
+account_options	password_label	Mot de passe :
+account_options	change_password	Changer le mot de passe
+account_options	real_name	Nom complet
+account_options	change_real_name	Changer le nom complet
+account_options	language	Langue :
+account_options	timezone	Fuseau horaire :
+account_options	change_timezone	Changer le fuseau horaire
+account_options	email_address		Adresse e-mail :
+account_options	change_email_address	Changer l'adresse e-mail
 account_options	preferences	Préférences
 account_options	tuleap_login	Login
 account_options	realname	Nom complet
+account_options	auth_attempt_title	Détails d'authentification
 account_options	auth_attempt_last_success	Dernière connexion :
 account_options	auth_attempt_prev_success	Connexion précédente :
 account_options	auth_attempt_last_failure	Dernier echec de connexion :
 account_options	auth_attempt_nb_failure	Nombre de connexions échouées :
+account_options	auth_attempt_sessions	Sessions ouvertes :
+
 #
 #-----------------------------------------------
 #
+account_preferences	appearance	Apparence
+account_preferences	import_export	Import/export
+account_preferences	save_preferences	Sauvegarder les préférences
+account_preferences	html_format	HTML
+account_preferences	text_format	Texte
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_pw.php
 #
+account_change_pw	title_success	Mot de passe modifié avec succès
+account_change_pw	message	Félicitations ! Vous venez de changer votre mot de passe.
+account_change_pw	title	Changement du mot de passe
+account_change_pw	old_password	Ancien mot de passe
 account_change_pw	new_password	Mot de passe
 account_change_pw	new_password2	Répétez le mot de passe
+account_change_pw	error_no_rights_to_change_password	Vous ne pouvez pas modifier le mot de passe d'un autre utilisateur.
+
 account_change_avatar	success	Avatar changé !
 account_change_avatar	error	Une erreur est survenue lors de la sauvegarde de l'avatar.
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_timezone.php
 #
+account_change_timezone	title	Changement de fuseau horaire
+account_change_timezone	title2	Changement de fuseau horaire
+account_change_timezone	message	Désormais, où que vous habitiez, vous pourrez voir toutes les dates et heures affichées par $1 comme si tout se passait dans votre voisinage.
+account_change_timezone	no_update	Aucune mise à jour effectuée
+account_change_timezone	choose_tz	Prière de choisir un fuseau horaire
 #
 #-----------------------------------------------
 # Script: SF/www/scripts/check_pw.js
 #
+account_change_pw	user_not_found	Erreur interne : Impossible de trouver l'utilisateur dans la base de donnée.
+account_change_pw	incorrect_old_password	L'ancien mot de passe est incorrect.
+account_change_pw	account_inactive	Le compte doit être actif pour pouvoir modifier le mot de passe.
+account_change_pw	password_needed	Vous devez fournir un nouveau mot de passe.
+account_change_pw	password_not_match	Les mots de passe ne correspondent pas.
+account_change_pw	identical_password	L'ancien et le nouveau mot de passe sont identiques.
+account_change_pw	internal_error_update	Erreur interne : ne peut pas mettre à jour le mot de passe.
 #
 #-----------------------------------------------
 # Script: SF/www/account/deleted.php
@@ -41,19 +83,31 @@ account_deleted	message	Votre compte utilisateur a été détruit. Si vous avez 
 #-----------------------------------------------
 # Script: SF/www/account/editsshkeys.php
 #
+account_editsshkeys	add_keys_title	Ajouter des clés SSH partagées
+account_editsshkeys	keys	Clés partagées&nbsp;:<BR><I>Important&nbsp;: Assurez vous qu'il n'y ait aucun saut de ligne dans une clé mais uniquement entre chaque clé. Après avoir soumis vos clés vérifiez que le nombre de clés est bien celui que vous attendiez.</I>
 account_editsshkeys	invalid_key	Clé invalide ignorée : $1
 account_editsshkeys	key_already_added	La clé $1 est déja présente pour l'utilisateur
 account_editsshkeys	update_filesystem	Le(s) clé(s) SSH ont été mise à jour dans la base de donnée. Elle seront propagées sur le système de fichiers dans quelques minutes.
+account_editsshkeys	btn_save_keys	Sauvegarder les clés
+
 #
 #-----------------------------------------------
 # Script: SF/www/account/login.php
 #
 account_login	page_title	Connexion à $1
+account_login	secure	sécurisé
+account_login	error_can_t_update_passwd	Erreur interne&nbsp;: mise à jour des mots de passe impossible.
+account_login	pending_title	Compte en attente
+account_login	pending_msg	Votre compte est actuellement en attente de confirmation. En visitant le lien inclus dans le message que vous avez reçu après la phase d'enregistrement, vous activerez votre compte utilisateur. <P>Si vous souhaitez recevoir à nouveau cet e-mail, cliquez sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail indiquée lors de votre enregistrement.
+account_login	validation_msg	Votre compte a été validé par un administrateur, il est actuellement en attente de confirmation. En visitant le lien inclus dans le message que vous avez reçu après la validation de votre compte par un administrateur, vous activerez votre compte utilisateur. <P>Si vous souhaitez recevoir à nouveau cet e-mail, cliquez sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail indiquée lors de votre enregistrement.
+account_login	need_approval	Votre compte est actuellement en attente d'aprobation par un administrateur. Vous serez notifié par email lorsque le compte sera validé.
+account_login	resend_btn	Renvoyer le message de confirmation
 account_login	name	Nom d'utilisateur
 account_login	password	Mot de passe
 account_login	need_help	Problème de connexion ? Envoyer un email aux administrateurs
 account_login	login_btn	Se connecter
 account_login	lost_pw	Oups, j'ai perdu mon mot de passe
+account_login	create_acct	<b><A HREF="register.php">[Créer un nouveau compte]</A></b><BR> Si vous visitez le site <b>$1</b> pour la première fois vous pouvez créer votre compte dès maintenant ! La création d'un <a href="register.php">nouveau compte</a> ne prend que quelques secondes et vous pourrez ensuite tirer parti de tous les avantages offerts par le site $1.
 account_login	login_with_tuleap	Connexion
 account_login	help_subject	Impossible de se connecter sur $1
 account_login	not_a_member	Pas encore membre ?
@@ -64,6 +118,7 @@ account_login	create_account_label	Créer un compte
 #
 account_lostlogin	title	Mot de passe perdu
 account_lostlogin	message	Bienvenue, $1. Vous pouvez changer votre mot de passe perdu maintenant.
+account_lostlogin	duplicate_hash	Cette clé de confirmation est présente plus d'une fois dans la base.
 account_lostlogin	invalid_hash	Clé de confirmation invalide.
 account_lostlogin	expired_token	La clé de confirmation a expirée, veuillez si nécessaire faire une nouvelle demande de récupération de mot de passe
 account_lostlogin	newpasswd	Nouveau mot de passe
@@ -75,6 +130,7 @@ account_lostlogin	newpasswd2	Nouveau mot de passe (confirmez)
 account_lostpw-confirm	token_generation_failed	Une erreur a été rencontrée, merci de réessayer
 account_lostpw-confirm	title	Confirmation de la perte du mot de passe
 account_lostpw-confirm	mail_subject	Vérification du mot de passe de $1
+account_lostpw-confirm	mail_body	Quelqu'un (nous supposons qu'il s'agit de vous) sur le site $1 a demandé le\nchangement de mot de passe avec vérification par e-mail. Si vous n'avez\npas fait cette demande, ignorez tout simplement ce message.\n\nSi vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-dessous\npour changer votre mot de passe :\n\n$2\n\n -- L'équipe $1\n
 account_lostpw-confirm	msg_confirm	<B>Demande de confirmation envoyée</B><P>Un message électronique vient d'être envoyé à l'adresse e-mail de votre compte utilisateur. Suivez les instructions incluses dans ce message pour changer votre mot de passe.
 #
 #-----------------------------------------------
@@ -87,43 +143,67 @@ account_lostpw	send_hash	Envoyer la clé pour le mot de passe perdu
 #-----------------------------------------------
 # Script: SF/www/account/myprojectlist.php
 #
+account_myprojectlist	title	Ma liste de projets
+account_myprojectlist	grp_list	Liste de projets pour <B>$1</B>
 #
 #-----------------------------------------------
 # Script: SF/www/account/pending.php
 #
+account_pending	title	Compte utilisateur en attente
+account_pending	message	<B>Compte utilisateur en attente</B><P>Votre compte est actuellement en attente de confirmation. Visitez le lien inclus dans le message qui vous a été envoyé pour activer votre compte utilisateur. <P>Si vous voulez que ce message soit envoyé à nouveau, merci de cliquer sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail de votre compte.
+account_pending	btn_resend	Envoyer à nouveau le message de confirmation
 #
 #-----------------------------------------------
 # Script: SF/www/account/register.php
 #
 account_register	err_realname	Le nom complet contient des caractères non autorisés.
+account_register	err_nouser	Vous devez donner un nom d'utilisateur.
 account_register	err_nopasswd	Vous devez donner un mot de passe.
 account_register	err_passwd	Les mots de passe ne sont pas identiques.
 account_register	err_notz	Vous devez indiquer un fuseau horaire.
 account_register	err_nopurpose	Vous devez indiquer la raison pour laquelle vous souhaitez créer un compte.
 account_register	err_email	Adresse e-mail invalide
+account_register	err_name	Le nom de login est invalide
+account_register	err_invpasswd	Le mot de passe est invalide
+account_register	err_no_ldap	Le login LDAP est manquant
 account_register	title_confirm	Votre compte est créé, </br> il ne reste plus qu'à l'activer.
 account_register	title_confirm_admin	Le compte utilisateur a été créé.
 account_register	title	Nouveau compte
 account_register	title_admin	Créer un nouvel utilisateur
 account_register	login	Nom de login
+account_register	ldap_login	Nom de login LDAP
+account_register	ldap_unix_login	Nom $1 <strong>(minuscules uniquement, pas d'espace)</strong>
+account_register	ldap_email_help	<em><strong>Remarque&nbsp;:</strong> Cette adresse e-mail provient de l'annuaire LDAP. Merci de ne pas la modifier.</em>
+account_register	codendi_login_help	Ce nom de login a été généré à partir de votre adresse e-mail. Vous pouvez le changer si vous le souhaitez.
+account_register	login_directions	<strong>(minuscules uniquement !)</strong>
+account_register	passwd	Mot de passe
+account_register	passwd_directions	(6 caractères minimum)
+account_register	passwd2	Mot de passe (confirmez)
+account_register	passwd2_directions	&nbsp;
 account_register	realname	Nom Complet
+account_register	realname_directions	&nbsp;
 account_register	email	Email
+account_register	email_directions	<em><strong>Remarque&nbsp;:</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>
 account_register	email_tooltip	Nous allons envoyer un email à cette adresse afin de confirmer votre compte.
 account_register	expiry_date	Date d'expiration
 account_register	expiry_date_directions	<em><strong>Remarque&nbsp;:</strong> Une fois cette date passée, le compte sera suspendu.</em>
 account_register	data_not_parsed		Désolé, le format de la date du d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
+account_register	tz	Fuseau Horaire
 account_register	mandatory	Tous les champs marqués sont obligatoires.
 account_register	siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <span class="label-help">Faible trafic, informations relatives à la sécurité. Fortement recommandé.</span>
+account_register	communitymail	Recevoir du courrier électronique supplémentaire au sujet de la communauté. <span style="color:#666">(Faible trafic)</span>
 account_register	purpose	Motif
 account_register	purpose_directions	Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte sur ce site<br>
 account_register	purpose_directions_admin	Vous pouvez ajouter un commentaire sur la création de ce compte utilisateur<br>
 account_register	btn_register	Créer le compte
 account_register	btn_activate	Activer le compte
+account_register	btn_next	Etape suivante
 account_register	send_email	Envoyer un mail de bienvenue à l'utilisateur
 account_register	msg_redirect	Aller sur la page d'accueil
 account_register	msg_redirect_admin	Aller sur la page d'administration
 account_register	msg_thanks	Nous vous remercions d'utiliser Tuleap
 account_register	msg_confirm	Pour cela cliquez sur le bouton de confirmation présent dans le mail.<i class="fa fa-envelope-o"></i>
+account_register	msg_confirm_admin	Veuillez noter son login <span class="confirmation-user">$3</span> et son mot de passe <span class="confirmation-user">$4</span>
 account_register	title_approval	Votre compte a été crée, </br>il doit être approuvé par un administrateur.
 account_register	msg_approval	Une fois approuvé cliquez sur le bouton de confirmation présent dans l'email.<i class="fa fa-envelope-o"></i>
 account_register	mail_approval_subject	Création du nouveau compte : $1
@@ -146,5 +226,9 @@ account_suspended	message	Votre compte utilisateur a été suspendu. Si vous ave
 #-----------------------------------------------
 # Script: SF/www/account/login.php
 #
+account_verify	title	Vérification d'un compte utilisateur
+account_verify	message	Pour confirmer votre création de compte, connectez-vous dès maintenant. Votre compte sera alors définitivement activé.
+account_verify	err_user	Nom d'utilisateur invalide
 account_verify	err_hash	Clé de confirmation invalide.
+account_verify	err_status	Statut invalide. L'administrateur n'a pas encore validé le compte.
 account_verify	account_confirm	Votre compte a été confirmé avec succès.
