@@ -36,11 +36,9 @@ use GitPlugin;
 use Mockery;
 use Project;
 use ProjectManager;
-use Tuleap\ForgeConfigSandbox;
 
 final class GitoliteDriverTest extends GitoliteTestCase
 {
-    use ForgeConfigSandbox;
 
     /** @var Git_Gitolite_GitoliteRCReader */
     private $gitoliterc_reader;
@@ -66,10 +64,13 @@ final class GitoliteDriverTest extends GitoliteTestCase
     /** @var ProjectManager */
     private $project_manager;
 
+    private $backup_codendi_cache_dir;
+
     protected function setUp() : void
     {
         parent::setUp();
 
+        $this->backup_codendi_cache_dir = \ForgeConfig::get('codendi_cache_dir');
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir() . '/cache');
 
         $this->project_manager   = \Mockery::spy(\ProjectManager::class);
@@ -143,6 +144,8 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
     protected function tearDown() : void
     {
+        \ForgeConfig::set('codendi_cache_dir', $this->backup_codendi_cache_dir);
+
         parent::tearDown();
 
         unset($GLOBALS['sys_data_dir']);
