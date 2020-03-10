@@ -25,6 +25,7 @@ use Tuleap\Git\Webhook\WebhookLogPresenter;
 use Codendi_HTMLPurifier;
 use GitRepository;
 use CSRFSynchronizerToken;
+use Tuleap\HudsonGit\Job\Job;
 
 class JenkinsWebhookPresenter extends GenericWebhookPresenter
 {
@@ -37,7 +38,7 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
 
         $this->remove_webhook_desc   = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_desc');
         $this->modal_logs_time_label = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
-        $this->modal_logs_info_label = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_triggered');
+        $this->modal_logs_info_label = dgettext('tuleap-hudson_git', 'Logs');
         $this->empty_logs            = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
 
         $this->purified_last_push_info = '<span class="text-info">'. $GLOBALS['Language']->getText(
@@ -49,20 +50,40 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
         $this->generateHooklogs($hooklogs);
     }
 
-    private function generateHooklogs(array $hooklogs)
+    /**
+     * @param Job[] $hooklogs
+     */
+    private function generateHooklogs(array $hooklogs): void
     {
         $hp = Codendi_HTMLPurifier::instance();
         foreach ($hooklogs as $log) {
             $purified_information = '';
-            foreach ($log->getJobUrlList() as $triggered_job_url) {
-                $purfied_job_url = $hp->purify($triggered_job_url);
-                $purified_information .= '<a href="'. $purfied_job_url .'">'. $purfied_job_url .'</a><br>';
+            $job_list = $log->getJobUrlList();
+            if (count($job_list) > 0) {
+                $purified_information .= '<div class="hooks-jobs-triggered-jobs-list">';
+                $purified_information .= '<h4>'.dgettext("tuleap-hudson_git", "Git plugin triggered jobs:").'</h4>';
+                foreach ($job_list as $triggered_job_url) {
+                    $purfied_job_url = $hp->purify($triggered_job_url);
+                    $purified_information .= '<a href="'. $purfied_job_url .'">'. $purfied_job_url .'</a><br>';
+                }
+                $purified_information .= '</div>';
             }
+
+            if ($log->getStatusCode() !== null) {
+                $purified_information .= '<div class="hooks-jobs-branch-source-status">';
+                $purified_information .= '<h4>'.dgettext("tuleap-hudson_git", "Branch source plugin:").'</h4>';
+                $purified_information .= $log->getStatusCode();
+                $purified_information .= '</div>';
+            }
+
             $this->hooklogs[] = new WebhookLogPresenter($log->getFormattedPushDate(), $purified_information);
         }
     }
 
-    public function countNbJobsTriggeredOnLastPush($hooklogs)
+    /**
+     * @param Job[] $hooklogs
+     */
+    private function countNbJobsTriggeredOnLastPush(array $hooklogs): int
     {
         if (count($hooklogs) > 0) {
             return count($hooklogs[0]->getJobUrlList());

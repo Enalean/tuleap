@@ -467,21 +467,32 @@ h1, h2, h3 {
 }
 
 .hooks-jobs-list {
-  > tbody {
-    font-size: 12px;
+    > tbody {
+        font-size: 12px;
 
     > tr:first-child > td {
-      white-space: nowrap;
+        white-space: nowrap;
     }
 
     > tr > td:last-child {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      max-width: 383px;
-      width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 383px;
+        width: 100%;
+        }
     }
-  }
+
+    .hooks-jobs-triggered-jobs-list {
+        > h4 {
+            margin: 0;
+            font-size: 12px;
+        }
+    }
+
+    .jenkins-server-branch-source-status {
+        margin: 10px 0 0;
+    }
 }
 
 .modal-webhook {
