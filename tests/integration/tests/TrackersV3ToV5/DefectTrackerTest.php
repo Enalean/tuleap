@@ -48,6 +48,8 @@ class DefectTrackerTest extends TestCase
 {
     use GlobalLanguageMock;
 
+    private static $backup_codendi_log;
+
     /**
      * @var TrackerFactory
      */
@@ -78,6 +80,7 @@ class DefectTrackerTest extends TestCase
      */
     public static function convertBugTracker(): void
     {
+        self::$backup_codendi_log = \ForgeConfig::get('backup_codendi_log');
         \ForgeConfig::set('codendi_log', '/tmp');
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -98,6 +101,14 @@ class DefectTrackerTest extends TestCase
         $defect_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
         self::$defect_tracker_id = $defect_tracker->getId();
         unset($GLOBALS['Language']);
+    }
+
+    /**
+     * @afterClass
+     */
+    public static function resetForgeConfig()
+    {
+        \ForgeConfig::set('codendi_log', self::$backup_codendi_log);
     }
 
     protected function setUp(): void

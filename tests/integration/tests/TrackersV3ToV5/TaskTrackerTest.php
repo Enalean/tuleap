@@ -52,6 +52,8 @@ class TaskTrackerTest extends TestCase
 {
     use GlobalLanguageMock;
 
+    private static $backup_codendi_log;
+
     /**
      * @var Tracker_FormElementFactory
      */
@@ -82,6 +84,7 @@ class TaskTrackerTest extends TestCase
      */
     public static function convertTaskTracker()
     {
+        self::$backup_codendi_log = \ForgeConfig::get('backup_codendi_log');
         \ForgeConfig::set('codendi_log', '/tmp');
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -102,6 +105,14 @@ class TaskTrackerTest extends TestCase
         $task_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
         self::$task_tracker_id = $task_tracker->getId();
         unset($GLOBALS['Language']);
+    }
+
+    /**
+     * @afterClass
+     */
+    public static function resetForgeConfig()
+    {
+        \ForgeConfig::set('codendi_log', self::$backup_codendi_log);
     }
 
     protected function setUp(): void
