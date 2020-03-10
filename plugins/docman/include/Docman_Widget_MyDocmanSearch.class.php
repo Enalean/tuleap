@@ -35,7 +35,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
 
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'my_docman_search');
+        return dgettext('tuleap-docman', 'Document Id Search');
     }
 
     public function getContent()
@@ -69,11 +69,11 @@ class Docman_Widget_MyDocmanSearch extends Widget
         $html .= '<input type="hidden" name="docman_func" value="show_docman" />';
         $html .= '<div class="tlp-form-element">
                     <label class="tlp-label" for="docman_id">' .
-            $GLOBALS['Language']->getText('plugin_docman', 'widget_my_docman_search_label') .
+            dgettext('tuleap-docman', 'Search document id') .
             '</label>
                     <input type="text" name="docman_id" value="' . $docman_id . '" id="docman_id" class="tlp-input" placeholder="123"/>
                   </div>';
-        $html .= '<input type="submit" class="tlp-button-primary" value="'.$GLOBALS['Language']->getText('plugin_docman', 'widget_my_docman_search_btn').'"/>';
+        $html .= '<input type="submit" class="tlp-button-primary" value="'.dgettext('tuleap-docman', 'Search').'"/>';
         $html .= '</form>';
 
         if (($func == 'show_docman') && $docman_id) {
@@ -88,7 +88,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
                     return $html;
                 }
             }
-            $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'perm_denied').'</p>';
+            $html .= '<p>'.dgettext('tuleap-docman', 'You do not have the permission to access the document').'</p>';
         }
 
         return $html;
@@ -145,6 +145,6 @@ class Docman_Widget_MyDocmanSearch extends Widget
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'widget_description_my_docman_search');
+        return dgettext('tuleap-docman', 'Redirect to document with given id.');
     }
 }

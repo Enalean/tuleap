@@ -38,7 +38,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $this->formName = '';
         $this->inheritableMetadataArray = null;
         $id = 'properties';
-        $title = $GLOBALS['Language']->getText('plugin_docman', 'details_properties');
+        $title = dgettext('tuleap-docman', 'Properties');
         parent::__construct($item, $url, $id, $title);
     }
 
@@ -92,10 +92,10 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
                     ['default_url' => $this->url],
                     ['action' => 'show', 'id' => $this->item->getId()]
                 );
-                $href = '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_view_doc_val').'</a>';
+                $href = '<a href="'.$url.'">'.dgettext('tuleap-docman', 'Click to open the document').'</a>';
             }
             $html = $this->_getPropertyRow(
-                $GLOBALS['Language']->getText('plugin_docman', 'details_properties_view_doc_lbl'),
+                dgettext('tuleap-docman', 'Direct link:'),
                 $href
             );
         }
@@ -140,7 +140,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         }
 
         if ($defaultValuesToManage) {
-            $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_folder').'</h3>';
+            $html .= '<h3>'.dgettext('tuleap-docman', 'Folder Properties').'</h3>';
         }
         $html .= $this->_getPropertiesFields($params);
         if ($defaultValuesToManage) {
@@ -166,7 +166,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html = '';
 
         if ($this->user_can_write) {
-            $html .= '<p><a href="'. $this->url .'&amp;action=edit&amp;id='. $this->item->getid() .'">'. $GLOBALS['Language']->getText('plugin_docman', 'details_properties_edit') .'</a></p>';
+            $html .= '<p><a href="'. $this->url .'&amp;action=edit&amp;id='. $this->item->getid() .'">'. dgettext('tuleap-docman', 'Edit properties') .'</a></p>';
         }
         return $html;
     }
@@ -206,8 +206,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     public function _getDefaultValuesFields()
     {
         $html = '';
-        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv').'</h3>';
-        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_desc').'</p>';
+        $html .= '<h3>'.dgettext('tuleap-docman', 'Default Values').'</h3>';
+        $html .= '<p>'.dgettext('tuleap-docman', 'Define the default properties values for the item that will be created within this folder.').'</p>';
         $html .= $this->_getDefaultValues();
         return $html;
     }
@@ -221,9 +221,9 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
             $locker = UserHelper::instance()->getLinkOnUserFromUserId($lockInfos['user_id']);
             $lockDate = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $lockInfos['lock_date']);
             $html .= '<p>';
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_properties_lock_who', array($locker, $lockDate));
+            $html .= sprintf(dgettext('tuleap-docman', '%1$s <strong>locked</strong> this document on %2$s.'), $locker, $lockDate);
             if (!$this->user_can_write) {
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_properties_lock_info');
+                $html .= dgettext('tuleap-docman', 'You cannot modify it until the lock owner or a document manager release the lock.');
             }
             $html .= '</p>';
         }

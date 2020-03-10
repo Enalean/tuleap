@@ -30,18 +30,15 @@ class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
     public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_paste_inprogress_title', array(
-            $hp->purify($params['itemToPaste']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ,
-            $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)
-        ));
+        return sprintf(dgettext('tuleap-docman', 'Paste in progress \'%1$s\' in \'%2$s\''), $hp->purify($params['itemToPaste']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
     public function _content($params)
     {
         //spinner
-        echo '<p id="paste_'.$params['itemToPaste']->getId().'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_paste_inprogress_info');
+        echo '<p id="paste_'.$params['itemToPaste']->getId().'">'.dgettext('tuleap-docman', 'Paste in progress...');
         $docmanIcons = $this->_getDocmanIcons(null);
-        echo $GLOBALS['Language']->getText('plugin_docman', 'details_paste_inprogress_wait', array($docmanIcons->getIcon('spinner-greenie.gif')));
+        echo sprintf(dgettext('tuleap-docman', 'Please wait for the paste to complete. This may take a while depending on size of data to be copied <img src="%1$s" />'), $docmanIcons->getIcon('spinner-greenie.gif'));
         echo '</p>';
 
         // Flush the output buffer right now to display the spinner before the
@@ -59,10 +56,10 @@ class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
         echo '<script type="text/javascript">$("paste_'.$params['itemToPaste']->getId().'").hide();</script>';
 
         //Display paste sucessfully complete.
-        echo $GLOBALS['Language']->getText('plugin_docman', 'details_paste_successful');
+        echo dgettext('tuleap-docman', '<p>Paste operation successfully completed.</p>');
 
         $url = $this->_controller->getDefaultUrl().'action=show&id='.$params['item']->getId();
-        echo $GLOBALS['Language']->getText('plugin_docman', 'details_paste_complete_redirect', array($url, $url, 5));
+        echo sprintf(dgettext('tuleap-docman', '<p>You will be redirected to <a href="%1$s"> %2$s </a> in %3$s seconds</p>'), $url, $url, 5);
         echo '<script type="text/javascript">setTimeout(function () {location.href="'.$url.'";}, 5000);</script>';
     }
 

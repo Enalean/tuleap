@@ -84,7 +84,7 @@ class Docman_ValidateMetadataIsNotEmpty extends Docman_Validator
 {
     public function __construct(&$md)
     {
-        $msg = $GLOBALS['Language']->getText('plugin_docman', 'md_error_empty_gen', array($md->getName()));
+        $msg = sprintf(dgettext('tuleap-docman', '"%1$s" is required, please fill the field.'), $md->getName());
         if ($md !== null) {
             $val = $md->getValue();
             if ($val === null || $val == '') {
@@ -100,7 +100,7 @@ class Docman_ValidateMetadataListIsNotEmpty extends Docman_Validator
 {
     public function __construct(&$metadata)
     {
-        $msg = $GLOBALS['Language']->getText('plugin_docman', 'md_error_empty_gen', array($metadata->getName()));
+        $msg = sprintf(dgettext('tuleap-docman', '"%1$s" is required, please fill the field.'), $metadata->getName());
 
         if ($metadata !== null) {
             $selected_elements = array();
@@ -172,28 +172,28 @@ class Docman_MetadataHtml
         if ($this->md->isSpecial()) {
             switch ($this->md->getLabel()) {
                 case 'description':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_description');
+                    $html .= dgettext('tuleap-docman', 'Description:');
                     break;
                 case 'rank':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_rank');
+                    $html .= dgettext('tuleap-docman', 'Rank:');
                     break;
                 case 'title':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_title');
+                    $html .= dgettext('tuleap-docman', 'Title:');
                     break;
                 case 'owner':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_owner');
+                    $html .= dgettext('tuleap-docman', 'Owner:');
                     break;
                 case 'status':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_status');
+                    $html .= dgettext('tuleap-docman', 'Status:');
                     break;
                 case 'obsolescence_date':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_obsolescence_date');
+                    $html .= dgettext('tuleap-docman', 'Validity:');
                     break;
                 case 'create_date':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_create_date');
+                    $html .= dgettext('tuleap-docman', 'Creation date:');
                     break;
                 case 'update_date':
-                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_update_date');
+                    $html .= dgettext('tuleap-docman', 'Last update date:');
                     break;
             }
         } else {
@@ -374,7 +374,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml
         switch ($e->getId()) {
             case 100:
                 if (!$hideNone) {
-                    $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
+                    $name = dgettext('tuleap-docman', 'None');
                 }
                 break;
             default:
@@ -388,7 +388,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml
         $name = '';
         switch ($e->getId()) {
             case 100:
-                $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_desc_key');
+                $name = dgettext('tuleap-docman', 'None');
                 break;
             default:
                 $hp = Codendi_HTMLPurifier::instance();
@@ -494,7 +494,7 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml
         $v = $this->md->getValue();
         switch ($v) {
             case PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT:
-                return $GLOBALS['Language']->getText('plugin_docman', 'md_html_validity_permanent');
+                return dgettext('tuleap-docman', 'Permanent');
             break;
             default:
                 return DateHelper::formatForLanguage($GLOBALS['Language'], $v, true);
@@ -503,12 +503,12 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml
 
     public function _getField()
     {
-        $labels = array(PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => $GLOBALS['Language']->getText('plugin_docman', 'md_html_validity_permanent'),
-                        3 => $GLOBALS['Language']->getText('plugin_docman', 'md_html_validity_3_months'),
-                        6 => $GLOBALS['Language']->getText('plugin_docman', 'md_html_validity_6_months'),
-                        12 => $GLOBALS['Language']->getText('plugin_docman', 'md_html_validity_12_months'),
-                        100 => $GLOBALS['Language']->getText('plugin_docman', 'md_html_validity_fixed_date'),
-                        200 => $GLOBALS['Language']->getText('plugin_docman', 'md_html_validity_today'));
+        $labels = array(PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => dgettext('tuleap-docman', 'Permanent'),
+                        3 => dgettext('tuleap-docman', '3 Months from today'),
+                        6 => dgettext('tuleap-docman', '6 Months from today'),
+                        12 => dgettext('tuleap-docman', '12 Months from today'),
+                        100 => dgettext('tuleap-docman', 'Fixed date'),
+                        200 => dgettext('tuleap-docman', 'Obsolete today'));
 
         $selected = $this->md->getValue();
         $selectedInput = '';
@@ -535,7 +535,7 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml
         }
         $field .= '</select>'."\n";
 
-        $field .= '&nbsp;<em>'.$GLOBALS['Language']->getText('plugin_docman', 'md_html_validity_corresp_date').'</em>';
+        $field .= '&nbsp;<em>'.dgettext('tuleap-docman', 'Corresponding date:').'</em>';
 
         $field .= html_field_date(
             $inputname,

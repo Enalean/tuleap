@@ -33,8 +33,8 @@ class Docman_MetaMetadataHtml
         $this->md = $md;
         $this->hp = Codendi_HTMLPurifier::instance();
 
-        $this->str_yes = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_yes');
-        $this->str_no  = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_no');
+        $this->str_yes = dgettext('tuleap-docman', 'Yes');
+        $this->str_no  = dgettext('tuleap-docman', 'No');
     }
 
     public function getName(&$sthCanChange)
@@ -42,7 +42,7 @@ class Docman_MetaMetadataHtml
         $mdContent = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>';
-        $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_name');
+        $mdContent .= dgettext('tuleap-docman', 'Name:');
         if ($this->md->canChangeName()) {
             $mdContent .= '&nbsp;<span class="highlight">*</span>';
         }
@@ -64,7 +64,7 @@ class Docman_MetaMetadataHtml
     {
         $mdContent = '';
         $mdContent .= '<tr>';
-        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_desc').'</td>';
+        $mdContent .= '<td>'.dgettext('tuleap-docman', 'Description:').'</td>';
         $mdContent .= '<td>';
         if ($this->md->canChangeDescription()) {
             $sthCanChange = true;
@@ -82,7 +82,7 @@ class Docman_MetaMetadataHtml
     {
         $mdContent = '';
         $mdContent .= '<tr>';
-        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowempty').'</td>';
+        $mdContent .= '<td>'.dgettext('tuleap-docman', 'Allow empty value:').'</td>';
         $mdContent .= '<td>';
         if ($this->md->canChangeIsEmptyAllowed()) {
             $sthCanChange = true;
@@ -108,7 +108,7 @@ class Docman_MetaMetadataHtml
     {
         $mdContent = '';
         $mdContent .= '<tr>';
-        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowmultiplevalue').'</td>';
+        $mdContent .= '<td>'.dgettext('tuleap-docman', 'Allow multiple selection:').'</td>';
         $mdContent .= '<td>';
         if ($this->md->canChangeIsMultipleValuesAllowed()) {
             $sthCanChange = true;
@@ -135,7 +135,7 @@ class Docman_MetaMetadataHtml
         $mdContent = '';
         $mdContent .= '<tr>';
 
-        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_useit').'</td>';
+        $mdContent .= '<td>'.dgettext('tuleap-docman', 'Use this property:').'</td>';
         $mdContent .= '<td>';
         if (!$this->md->isRequired()) {
             $sthCanChange = true;
@@ -161,7 +161,7 @@ class Docman_MetaMetadataHtml
     {
         $mdContent = '';
         $mdContent .= '<tr>';
-        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_keephistory').'</td>';
+        $mdContent .= '<td>'.dgettext('tuleap-docman', 'Keep history:').'</td>';
         $mdContent .= '<td>';
         if ($this->md->getKeepHistory()) {
             $mdContent .= $this->str_yes;
@@ -179,7 +179,7 @@ class Docman_MetaMetadataHtml
         $mdContent = '';
         $mdContent .= '<tr>';
 
-        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type').'</td>';
+        $mdContent .= '<td>'.dgettext('tuleap-docman', 'Type:').'</td>';
         $mdContent .= '<td>';
         if ($this->md->canChangeType()) {
             $sthCanChange = true;
@@ -189,25 +189,25 @@ class Docman_MetaMetadataHtml
                           PLUGIN_DOCMAN_METADATA_TYPE_DATE,
                           PLUGIN_DOCMAN_METADATA_TYPE_LIST);
 
-            $texts = array($GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_text'),
-                           $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_string'),
-                           $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_date'),
-                           $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_list'));
+            $texts = array(dgettext('tuleap-docman', 'Text'),
+                           dgettext('tuleap-docman', 'String'),
+                           dgettext('tuleap-docman', 'Date'),
+                           dgettext('tuleap-docman', 'List of values'));
 
             $mdContent .= html_build_select_box_from_arrays($vals, $texts, 'type', '', false, '');
         } else {
             switch ($this->md->getType()) {
                 case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-                    $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_text');
+                    $mdContent .= dgettext('tuleap-docman', 'Text');
                     break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-                    $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_string');
+                    $mdContent .= dgettext('tuleap-docman', 'String');
                     break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                    $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_date');
+                    $mdContent .= dgettext('tuleap-docman', 'Date');
                     break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                    $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_list');
+                    $mdContent .= dgettext('tuleap-docman', 'List of values');
                     break;
             }
         }

@@ -25,6 +25,6 @@ class DocmanPluginDescriptor extends PluginDescriptor
 
     public function __construct()
     {
-        parent::__construct($GLOBALS['Language']->getText('plugin_docman', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_docman', 'descriptor_description'));
+        parent::__construct(dgettext('tuleap-docman', 'Document Manager'), false, dgettext('tuleap-docman', 'Document Manager'));
     }
 }

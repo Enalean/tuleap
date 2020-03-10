@@ -34,7 +34,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         $this->_controller = $controller;
 
         $id = 'statistics';
-        $title = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics');
+        $title = dgettext('tuleap-docman', 'Statistics');
         parent::__construct($item, $url, $id, $title);
     }
 
@@ -59,38 +59,38 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
             $size =  $this->convertBytesToHumanReadable($stats['size']);
 
             // Summary
-            $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_statistics_summary').'</h3>';
+            $html .= '<h3>'.dgettext('tuleap-docman', 'Summary').'</h3>';
             $html .= '<table class="docman_item_details_properties">';
-            $html .= $this->_getPropertyRow($GLOBALS['Language']->getText('plugin_docman', 'details_statistics_size'), $size);
-            $html .= $this->_getPropertyRow($GLOBALS['Language']->getText('plugin_docman', 'details_statistics_children_count'), $stats['count']);
+            $html .= $this->_getPropertyRow(dgettext('tuleap-docman', 'Size:'), $size);
+            $html .= $this->_getPropertyRow(dgettext('tuleap-docman', 'Number of items in this folder:'), $stats['count']);
             $html .= '</table>';
 
             // Details
             if ($stats['count'] > 0) {
-                $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_statistics_details').'</h3>';
-                $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_statistics_details_description').'</p>';
+                $html .= '<h3>'.dgettext('tuleap-docman', 'Details').'</h3>';
+                $html .= '<p>'.dgettext('tuleap-docman', 'This table shows the number of elements of each type.').'</p>';
                 $html .= '<table class="docman_item_details_properties">';
                 arsort($stats['types']);
                 foreach ($stats['types'] as $type => $stat) {
                     $label = '';
                     switch (strtolower($type)) {
                         case 'file':
-                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_file');
+                            $label = dgettext('tuleap-docman', 'Files:');
                             break;
                         case 'wiki':
-                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_wiki');
+                            $label = dgettext('tuleap-docman', 'Wiki pages:');
                             break;
                         case 'embeddedfile':
-                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_embeddedfile');
+                            $label = dgettext('tuleap-docman', 'Embedded files:');
                             break;
                         case 'empty':
-                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_empty');
+                            $label = dgettext('tuleap-docman', 'Empty documents:');
                             break;
                         case 'link':
-                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_link');
+                            $label = dgettext('tuleap-docman', 'Links:');
                             break;
                         case 'folder':
-                            $label = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_item_type_folder');
+                            $label = dgettext('tuleap-docman', 'Folders:');
                             break;
                     }
                     $html  .= $this->_getPropertyRow($label, $stat);
@@ -104,15 +104,13 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
 
     public function getContent($params = array())
     {
-        $html = '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_statistics_help').'</div>';
+        $html = '<div class="docman_help">'.dgettext('tuleap-docman', '<ul><li>The whole folder sub-tree is taken in account for these statistics.</li><li>To compute the size, only the last versions of "file" and "embedded file" documents are taken in account.</li></ul>').'</div>';
         $html .= $this->_getStatisticsFields($params);
         return $html;
     }
 
     private function convertBytesToHumanReadable($bytes)
     {
-        $byteSymbol = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_byte_symbol');
-
         $s = array('', 'k', 'M', 'G', 'T', 'P');
 
         if ($bytes > 0) {
@@ -123,6 +121,6 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
             $displayedSize = 0;
         }
 
-        return $displayedSize.' '.$s[$e].$byteSymbol;
+        return $displayedSize.' '.$s[$e].'B';
     }
 }

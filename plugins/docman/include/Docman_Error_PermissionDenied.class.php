@@ -46,24 +46,6 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
         return 'plugin_docman';
     }
 
-
-    /**
-     * Returns the parameters needed to build interface
-     * according to the classe which makes the call
-     *
-     * @return Array
-     */
-    public function returnBuildInterfaceParam()
-    {
-        $param = array();
-        $param['name']   = 'msg_docman_access';
-        $param['func']   = 'docman_access_request';
-        $param['action'] = '/plugins/docman/sendmessage.php';
-        $param['index']  = 'docman_no_perm';
-        return $param;
-    }
-
-
     /**
      * It redirects the show action pointed with the document url  to its details section
      *
@@ -119,7 +101,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
         $params = array();
         $query  = explode('&', parse_url($url, PHP_URL_QUERY));
         foreach ($query as $tok) {
-            list($var, $val) = explode('=', $tok);
+            [$var, $val] = explode('=', $tok);
             $params[$var] = urldecode($val);
         }
         return $params;

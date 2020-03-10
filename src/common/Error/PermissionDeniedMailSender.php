@@ -62,8 +62,4 @@ abstract class PermissionDeniedMailSender extends Error_PermissionDenied impleme
 
         $this->processMail($request->get('msg_private_project'));
     }
-
-    public function returnBuildInterfaceParam()
-    {
-    }
 }

@@ -173,22 +173,22 @@ class Docman_ItemFactory
     {
         switch ($itemTypeId) {
             case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
-                return $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type_folder');
+                return dgettext('tuleap-docman', 'Folder');
             break;
             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-                return $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type_file');
+                return dgettext('tuleap-docman', 'File');
             break;
             case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
-                return $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type_link');
+                return dgettext('tuleap-docman', 'Link');
             break;
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
-                return $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type_embeddedfile');
+                return dgettext('tuleap-docman', 'Embedded file');
             break;
             case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
-                return $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type_wiki');
+                return dgettext('tuleap-docman', 'Wiki page');
             break;
             case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
-                return $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type_empty');
+                return dgettext('tuleap-docman', 'Empty document');
             break;
             default:
                 return $GLOBALS['Language']->getText('include_html', 'unknown_value');
@@ -1509,7 +1509,7 @@ class Docman_ItemFactory
                     $deletor = new Docman_ActionsDeleteVisitor();
                     if ($itemSubTree->accept($deletor, array('user'  => $user, 'cascadeWikiPageDeletion' => $cascadeWiki))) {
                         if ($cascadeWiki) {
-                            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_success'));
+                            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-docman', 'Wiki page successfully deleted from wiki service.'));
                         }
                         return true;
                     }

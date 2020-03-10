@@ -45,7 +45,7 @@ class Docman_Wiki extends Docman_Document
 
     public function getType()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_wiki');
+        return dgettext('tuleap-docman', 'Wiki');
     }
 
     public function initFromRow($row)

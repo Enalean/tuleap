@@ -30,7 +30,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
 
     public function __construct($item, $url, $display_access_logs, $logger)
     {
-        parent::__construct($item, $url, 'history', $GLOBALS['Language']->getText('plugin_docman', 'details_history'));
+        parent::__construct($item, $url, 'history', dgettext('tuleap-docman', 'History'));
         $this->logger = $logger;
         $this->display_access_logs = $display_access_logs;
     }
@@ -55,7 +55,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
     private function getFileVersions()
     {
         $uh      = UserHelper::instance();
-        $content = '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions') .'</h3>';
+        $content = '<h3>'. dgettext('tuleap-docman', 'Versions') .'</h3>';
         $version_factory = new Docman_VersionFactory();
         $approvalFactory = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
         $versions        = $version_factory->getAllVersionForItem($this->item);
@@ -63,13 +63,13 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
         if ($versions) {
             if (count($versions)) {
                 $titles = array();
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_version');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_date');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_author');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_label');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_changelog');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_approval');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_delete_version');
+                $titles[] = dgettext('tuleap-docman', 'Version');
+                $titles[] = dgettext('tuleap-docman', 'Date');
+                $titles[] = dgettext('tuleap-docman', 'Author');
+                $titles[] = dgettext('tuleap-docman', 'Label');
+                $titles[] = dgettext('tuleap-docman', 'Change Log');
+                $titles[] = dgettext('tuleap-docman', 'Approval');
+                $titles[] = dgettext('tuleap-docman', 'Delete');
                 $content .= html_build_list_table_top($titles, false, false, false);
                 $odd_even = array('boxitem', 'boxitemalt');
                 $i = 0;
@@ -84,7 +84,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         ['default_url' => $this->url],
                         ['action' => 'confirmDelete', 'id' => $this->item->getId(), 'version' => $versions[$key]->getNumber()]
                     );
-                    $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman', 'details_history_anonymous');
+                    $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                     $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                     $content .= '<td align="center"><a href="'. $download .'">'. $versions[$key]->getNumber() .'</a></td>';
                     $content .= '<td>'. html_time_ago($versions[$key]->getDate()) .'</td>';
@@ -104,7 +104,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                                 'version' => $versions[$key]->getNumber(),
                             ]
                         );
-                        $content .= '<td align="center"><a href="'.$appTable.'">'.$titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_approval_show').'</a></td>';
+                        $content .= '<td align="center"><a href="'.$appTable.'">'.$titles[] = dgettext('tuleap-docman', 'Show').'</a></td>';
                     } else {
                         $content .= '<td></td>';
                     }
@@ -113,10 +113,10 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 }
                 $content .= '</table>';
             } else {
-                $content .= '<div>'. $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_no') .'</div>';
+                $content .= '<div>'. dgettext('tuleap-docman', 'There is no version yet') .'</div>';
             }
         } else {
-            $content .= '<div>'. $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_error') .'</div>';
+            $content .= '<div>'. dgettext('tuleap-docman', 'Error while searching for old versions') .'</div>';
         }
 
         return $content;
@@ -125,18 +125,18 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
     private function getLinkVersions()
     {
         $uh      = UserHelper::instance();
-        $content = '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions') .'</h3>';
+        $content = '<h3>'. dgettext('tuleap-docman', 'Versions') .'</h3>';
 
         $version_factory = new Docman_LinkVersionFactory();
         $versions        = $version_factory->getAllVersionForItem($this->item);
 
         if ($versions) {
             $titles = array(
-                $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_version'),
-                $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_date'),
-                $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_author'),
-                $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_label'),
-                $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_changelog'),
+                dgettext('tuleap-docman', 'Version'),
+                dgettext('tuleap-docman', 'Date'),
+                dgettext('tuleap-docman', 'Author'),
+                dgettext('tuleap-docman', 'Label'),
+                dgettext('tuleap-docman', 'Change Log'),
             );
             $content .= html_build_list_table_top($titles, false, false, false);
 
@@ -149,7 +149,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     ['default_url' => $this->url],
                     ['action' => 'show', 'id' => $this->item->getId(), 'version_number' => $versions[$key]->getNumber()]
                 );
-                $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman', 'details_history_anonymous');
+                $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                 $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                 $content .= '<td align="center"><a href="'. $download .'">'. $versions[$key]->getNumber().'</a></td>';
                 $content .= '<td>'. html_time_ago($versions[$key]->getDate()) .'</td>';
@@ -160,7 +160,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
             }
             $content .= '</table>';
         } else {
-            $content .= '<div>'. $GLOBALS['Language']->getText('plugin_docman', 'details_history_versions_error') .'</div>';
+            $content .= '<div>'. dgettext('tuleap-docman', 'Error while searching for old versions') .'</div>';
         }
 
         return $content;

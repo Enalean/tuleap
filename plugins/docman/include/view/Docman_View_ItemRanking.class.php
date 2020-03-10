@@ -52,8 +52,8 @@ class Docman_View_ItemRanking
         $brotherIter = $itemFactory->getChildrenFromParent($parentItem);
 
         $vals = array('beginning', 'end', '--');
-        $texts = array($GLOBALS['Language']->getText('plugin_docman', 'view_itemrank_beg'),
-                       $GLOBALS['Language']->getText('plugin_docman', 'view_itemrank_end'),
+        $texts = array(dgettext('tuleap-docman', 'At the beginning'),
+                       dgettext('tuleap-docman', 'At the end'),
                        '----');
         $i = 3;
 
@@ -67,7 +67,7 @@ class Docman_View_ItemRanking
             $item = $brotherIter->current();
             if ($pm->userCanWrite($user, $item->getId())) {
                 $vals[$i]  = $item->getRank()+1;
-                $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'view_itemrank_after').' '. $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ;
+                $texts[$i] = dgettext('tuleap-docman', 'After').' '. $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ;
                 $i++;
             }
             $brotherIter->next();
@@ -77,7 +77,7 @@ class Docman_View_ItemRanking
         // In this case because of cast string values are converted to 0 on cmp. So if
         // there is a rank == 0 ... so bad :/
         $html = '';
-        $html = $GLOBALS['Language']->getText('plugin_docman', 'view_itemrank_position').' ';
+        $html = dgettext('tuleap-docman', 'Position:').' ';
 
         $html .= '<select name="'.$this->dropDownName.'">'."\n";
         $maxOpts = count($vals);

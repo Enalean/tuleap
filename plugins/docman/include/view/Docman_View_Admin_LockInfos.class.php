@@ -29,7 +29,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_lock_infos_title') .'</h2>';
+        echo '<h2>'. $this->_getTitle($params) .' - '. dgettext('tuleap-docman', 'Locked Documents') .'</h2>';
     }
 
     public function _content($params)
@@ -38,7 +38,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
 
         // Display help message
         $html .= '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_lock_infos_help');
+        $html .= dgettext('tuleap-docman', 'This is the list of all locked documents in project.');
         $html .= '</p>';
 
         $html .= $this->getTable($params);
@@ -51,10 +51,10 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
         $this->defaultUrl = $params['default_url'];
         $content = '';
 
-        $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_title'),
-                                                    $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_location'),
-                                                    $GLOBALS['Language']->getText('plugin_docman', 'admin_lock_infos_who'),
-                                                    $GLOBALS['Language']->getText('plugin_docman', 'admin_lock_infos_when')
+        $content .= html_build_list_table_top(array(dgettext('tuleap-docman', 'Title'),
+                                                    dgettext('tuleap-docman', 'Location'),
+                                                    dgettext('tuleap-docman', 'Who'),
+                                                    dgettext('tuleap-docman', 'When')
                                             ));
 
         // Get list of all locked documents in the project.

@@ -202,7 +202,7 @@
 
         $html = '';
         $html .= '<span class="docman_item_options">';
-        $html .= '<a data-test="document_item" title="' . $GLOBALS['Language']->getText('plugin_docman', 'tooltip_show_actions') . '"
+        $html .= '<a data-test="document_item" title="' . dgettext('tuleap-docman', 'Show actions') . '"
             href="' . $params['default_url'] . '&amp;action=details&amp;id=' . $item->getId() . '"
             id="docman_item_show_menu_' . $item->getId() . '"
             data-test-document-id="' . $item->getId() . '"

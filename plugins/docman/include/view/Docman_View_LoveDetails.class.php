@@ -39,7 +39,7 @@ class Docman_View_LoveDetails
         $html = '';
 
         $html .=  '<tr>';
-        $html .=  '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_name').'</td>';
+        $html .=  '<td>'.dgettext('tuleap-docman', 'Name:').'</td>';
         $html .=  '<td>';
         $html .=  '<input name="name" type="text" value="'.$this->hp->purify($value).'" class="text_field" />';
         $html .=  '</td>';
@@ -53,7 +53,7 @@ class Docman_View_LoveDetails
         $html = '';
 
         $html .=  '<tr>';
-        $html .=  '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_desc').'</td>';
+        $html .=  '<td>'.dgettext('tuleap-docman', 'Description:').'</td>';
         $html .=  '<td>';
         $html .=  '<textarea name="descr">'.$this->hp->purify($value).'</textarea>';
         $html .=  '</td>';
@@ -67,11 +67,11 @@ class Docman_View_LoveDetails
         $html = '';
 
         $html .=  '<tr>';
-        $html .=  '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_rank').'</td>';
+        $html .=  '<td>'.dgettext('tuleap-docman', 'Rank:').'</td>';
 
         $vals = array('beg', 'end', '--');
-        $texts = array($GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_rank_beg'),
-                       $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_rank_end'),
+        $texts = array(dgettext('tuleap-docman', 'At the beginning'),
+                       dgettext('tuleap-docman', 'At the end'),
                        '----');
         $i = 3;
 
@@ -83,7 +83,7 @@ class Docman_View_LoveDetails
             if ($e->getStatus() == 'A'
                || $e->getStatus() == 'P') {
                 $vals[$i]  = $e->getRank()+1;
-                $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_rank_after').' '.Docman_MetadataHtmlList::_getElementName($e);
+                $texts[$i] = dgettext('tuleap-docman', 'After').' '.Docman_MetadataHtmlList::_getElementName($e);
                 $i++;
             }
 

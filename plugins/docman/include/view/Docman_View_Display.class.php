@@ -84,7 +84,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         $html .= '<table border="0" width="100%">';
         $html .= '<tr>';
         $html .= '<td align="left">';
-        $html .= '<div id="docman_item_title_link_'. $id .'">'. $GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') .' ';
+        $html .= '<div id="docman_item_title_link_'. $id .'">'. dgettext('tuleap-docman', 'Location:') .' ';
         $parents = array_reverse($parents);
         foreach ($parents as $parent) {
             $urlParams['id'] = $parent['id'];

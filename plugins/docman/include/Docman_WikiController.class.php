@@ -159,7 +159,7 @@ class Docman_WikiController extends Docman_Controller
 
     public function getPermsLabelForWiki()
     {
-        $this->request->params['label'] = $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_perms_label');
+        $this->request->params['label'] = dgettext('tuleap-docman', 'Permissions controlled by documents manager');
     }
 
     /**
@@ -189,7 +189,7 @@ class Docman_WikiController extends Docman_Controller
                             if ($lockInfos) {
                                 $uH = UserHelper::instance();
                                 $locker = $uH->getDisplayNameFromUserId($lockInfos['user_id']);
-                                $message = $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_page_locked', array($locker));
+                                $message = sprintf(dgettext('tuleap-docman', '%1$s locked this page. You cannot modify it until the lock owner or a document manager release the lock.'), $locker);
                             }
                             break;
                         }
@@ -211,7 +211,7 @@ class Docman_WikiController extends Docman_Controller
             if (isset($lockInfos) && $lockInfos) { // User can NOT edit the page because there is a lock on the page and user is not page locker
                 $this->feedback->log('warning', $message);
             } else { // User can NOT edit the page because he don't have write permission on it.
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
             }
         }
     }
@@ -250,10 +250,10 @@ class Docman_WikiController extends Docman_Controller
                 var img_element = $(\'img_\' + id);
                 if (img_element.src.indexOf(\'' . util_get_image_theme("ic/toggle_plus.png") . '\') != -1) {
                     img_element.src = \'' . util_get_image_theme("ic/toggle_minus.png") . '\';
-                    img_element.title = \'' . $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_hide_referencers') . '\';
+                    img_element.title = \'' . dgettext('tuleap-docman', 'Hide related documents') . '\';
                 } else {
                     img_element.src = \'' . util_get_image_theme("ic/toggle_plus.png") . '\';
-                    img_element.title = \'' . $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_open_referencers') . '\';
+                    img_element.title = \'' . dgettext('tuleap-docman', 'Open to see related documents') . '\';
                 }
             }
                 ';
@@ -271,19 +271,19 @@ class Docman_WikiController extends Docman_Controller
                 $dpm     = Docman_PermissionsManager::instance($group_id);
                 // Wiki page could have many references in docman.
                 if (is_array($docman_item_id)) {
-                    $icon = HTML::img(array('id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_open_referencers')));
+                    $icon = HTML::img(array('id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => dgettext('tuleap-docman', 'Open to see related documents')));
                     $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"), $icon);
 
                     // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
                     if (count($docman_item_id) > 1) {
                         $title = "";
                         if (isset($referrer_id) && $referrer_id) {
-                            $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " ");
+                            $title = HTML::strong(dgettext('tuleap-docman', 'Location:') . " ");
                         } else {
-                            $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_breadcrumbs_locations') . " ");
+                            $title = HTML::strong(dgettext('tuleap-docman', 'Locations:') . " ");
                         }
                     } elseif (count($docman_item_id) == 1) {
-                        $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " ");
+                        $title = HTML::strong(dgettext('tuleap-docman', 'Location:') . " ");
                     } else {
                         $title = "";
                     }
@@ -300,9 +300,9 @@ class Docman_WikiController extends Docman_Controller
                     // create section body.
                     if (isset($referrer_id) && $referrer_id) {
                         if (count($docman_item_id) > 2) {
-                            $details->pushContent(HTML::H3($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_other_locations') . " "));
+                            $details->pushContent(HTML::H3(dgettext('tuleap-docman', 'Other locations:') . " "));
                         } elseif (count($docman_item_id) == 2) {
-                            $details->pushContent(HTML::H3($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_other_location') . " "));
+                            $details->pushContent(HTML::H3(dgettext('tuleap-docman', 'Other location:') . " "));
                         }
                     }
                     // create Referencing documents linked paths.
@@ -313,7 +313,7 @@ class Docman_WikiController extends Docman_Controller
 
                     if (count($docman_item_id) == 1) {
                         $id = array_pop($docman_item_id);
-                        $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " "));
+                        $docman_references->pushContent(HTML::strong(dgettext('tuleap-docman', 'Location:') . " "));
                         $docman_references->pushContent(HTML($this->getDocumentPath($id, $group_id)));
                         $docman_references->pushContent(HTML::br());
                     } else {
@@ -322,7 +322,7 @@ class Docman_WikiController extends Docman_Controller
                     }
                 } else {
                     if ($dpm->userCanAccess($user, $docman_item_id)) {
-                        $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " "));
+                        $docman_references->pushContent(HTML::strong(dgettext('tuleap-docman', 'Location:') . " "));
                         $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id, $group_id)));
                         //$docman_references->pushContent(HTML::br());
                     }

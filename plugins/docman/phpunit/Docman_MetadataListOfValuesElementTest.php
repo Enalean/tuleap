@@ -67,8 +67,6 @@ class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandard
         $this->metadata_list_values->setId(100);
         $this->metadata_list_values->setName("Value Not Expected");
 
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('None')->once();
-
         $metadata_list_value = $this->metadata_list_values->getMetadataValue();
 
         $this->assertEquals("None", $metadata_list_value);

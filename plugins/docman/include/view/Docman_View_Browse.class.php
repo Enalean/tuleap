@@ -78,24 +78,24 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         $html .= '<td align="right">';
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
         $html .= '<span id="docman_browse_viewas">';
-        $html .= $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .' ';
+        $html .= dgettext('tuleap-docman', 'View as:') .' ';
         $html .= '<input type="image"
                          name="selected_view[Tree]"
                          src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-Tree.png"
-                         title="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Tree') .'"
-                         alt="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Tree') .'"
+                         title="'. dgettext('tuleap-docman', 'Tree') .'"
+                         alt="'. dgettext('tuleap-docman', 'Tree') .'"
                          /> ';
         $html .= '<input type="image"
                          name="selected_view[Icons]"
                          src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-Icons.png"
-                         title="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Icons') .'"
-                         alt="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Icons') .'"
+                         title="'. dgettext('tuleap-docman', 'Icons') .'"
+                         alt="'. dgettext('tuleap-docman', 'Icons') .'"
                          /> ';
         $html .= '<input type="image"
                          name="selected_view[Table]"
                          src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-Table.png"
-                         title="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Table') .'"
-                         alt="'. $GLOBALS['Language']->getText('plugin_docman', 'view_Table') .'"
+                         title="'. dgettext('tuleap-docman', 'Table') .'"
+                         alt="'. dgettext('tuleap-docman', 'Table') .'"
                          /> ';
         $html .= '</span>';
         $html .= '<input type="hidden" name="action" value="change_view" />';

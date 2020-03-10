@@ -36,14 +36,14 @@ class Docman_View_Empty extends Docman_View_Display
 
         $html  = '';
 
-        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'view_empty_emptydoc').'</h3>';
-        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'view_empty_docisempty').'</p>';
+        $html .= '<h3>'.dgettext('tuleap-docman', 'Empty document').'</h3>';
+        $html .= '<p>'.dgettext('tuleap-docman', 'There is no data attached to this item.').'</p>';
         if ($dPm->userCanWrite($params['user'], $item->getId())) {
             $upurl = $params['default_url'].'&amp;action=action_update&amp;id='.$item->getId();
-            $html .= '<p><a href="'.$upurl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_empty_update').'</a></p>';
+            $html .= '<p><a href="'.$upurl.'">'.dgettext('tuleap-docman', 'Update this document').'</a></p>';
         }
 
-        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'view_empty_docmd').'</h3>';
+        $html .= '<h3>'.dgettext('tuleap-docman', 'Document properties').'</h3>';
         $html .= '<table>';
         $html .= '<tr><td class="label">';
         $get_fields = new Docman_View_GetFieldsVisitor();
@@ -59,7 +59,7 @@ class Docman_View_Empty extends Docman_View_Display
 
         if ($dPm->userCanWrite($params['user'], $item->getId())) {
             $editurl = $params['default_url'].'&amp;action=edit&amp;id='.$item->getId();
-            $html .= '<p><a href="'.$editurl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_edit').'</a></p>';
+            $html .= '<p><a href="'.$editurl.'">'.dgettext('tuleap-docman', 'Edit properties').'</a></p>';
         }
 
         print $html;

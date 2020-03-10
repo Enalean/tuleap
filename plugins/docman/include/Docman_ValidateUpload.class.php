@@ -34,37 +34,33 @@ class Docman_ValidateUpload extends Docman_Validator
                         break;
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
-                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_size', $_FILES['file']['error']));
+                        $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). The uploaded file exceeds the maximum allowed file size.'), $_FILES['file']['error']));
                         break;
                     case UPLOAD_ERR_PARTIAL:
-                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_partial', $_FILES['file']['error']));
+                        $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). The uploaded file was only partially uploaded.'), $_FILES['file']['error']));
                         break;
                     case UPLOAD_ERR_NO_FILE:
-                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_nofile', $_FILES['file']['error']));
+                        $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). No file was uploaded.'), $_FILES['file']['error']));
                         break;
                     case UPLOAD_ERR_NO_TMP_DIR:
-                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_notmp', $_FILES['file']['error']));
+                        $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). Missing a temporary folder.'), $_FILES['file']['error']));
                         break;
                     case UPLOAD_ERR_CANT_WRITE:
-                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_cantwrite', $_FILES['file']['error']));
+                        $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). Failed to write file to disk.'), $_FILES['file']['error']));
                         break;
                     case UPLOAD_ERR_EXTENSION:
-                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_extension', $_FILES['file']['error']));
+                        $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). File upload stopped by extension.'), $_FILES['file']['error']));
                         break;
                     default:
-                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_unknown', $_FILES['file']['error']));
+                        $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). Unknown error code.'), $_FILES['file']['error']));
                 }
             }
             if ($ok && isset($_FILES['file']['size']) && (int) $_FILES['file']['size'] >= (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
                 $ok = false;
-                $this->addError($GLOBALS['Language']->getText(
-                    'plugin_docman',
-                    'error_upload_size',
-                    $_FILES['file']['name'] ?? ''
-                ));
+                $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). The uploaded file exceeds the maximum allowed file size.'), $_FILES['file']['name'] ?? ''));
             }
             if (!isset($_FILES['file']) || ($ok && $_FILES['file']['name'] == '')) {
-                $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload'));
+                $this->addError(dgettext('tuleap-docman', 'File upload error. Please try again.'));
             }
         }
     }

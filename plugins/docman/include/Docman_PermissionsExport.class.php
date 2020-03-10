@@ -104,14 +104,14 @@ class Docman_PermissionsExport
         header('Content-Disposition: filename='.$filename);
         header('Content-Type: text/csv');
         // Context
-        echo $GLOBALS['Language']->getText('plugin_docman', 'format_export_project').$sep.tocsv($this->group->getPublicName(), $sep).$sep.tocsv($this->group->getUnixName(), $sep).$sep.$this->group->getId().PHP_EOL;
-        echo $GLOBALS['Language']->getText('plugin_docman', 'format_export_date').$sep.format_date(util_get_user_preferences_export_datefmt(), $_SERVER['REQUEST_TIME']).PHP_EOL;
+        echo dgettext('tuleap-docman', 'Project').$sep.tocsv($this->group->getPublicName(), $sep).$sep.tocsv($this->group->getUnixName(), $sep).$sep.$this->group->getId().PHP_EOL;
+        echo dgettext('tuleap-docman', 'Export date').$sep.format_date(util_get_user_preferences_export_datefmt(), $_SERVER['REQUEST_TIME']).PHP_EOL;
         echo PHP_EOL;
 
         // Datas
-        echo $GLOBALS['Language']->getText('plugin_docman', 'format_id').$sep;
-        echo $GLOBALS['Language']->getText('plugin_docman', 'format_path').$sep;
-        echo $GLOBALS['Language']->getText('plugin_docman', 'format_type').$sep;
+        echo dgettext('tuleap-docman', 'Id').$sep;
+        echo dgettext('tuleap-docman', 'Path').$sep;
+        echo dgettext('tuleap-docman', 'Type').$sep;
         foreach ($this->getUgroups() as $id => $name) {
             echo $name.$sep;
         }
@@ -175,42 +175,42 @@ class Docman_PermissionsExport
     public function renderDefinitionFormat()
     {
         project_admin_header(
-            array('title'=>$GLOBALS['Language']->getText('plugin_docman', 'export_format')),
+            array('title'=>dgettext('tuleap-docman', 'Project data export')),
             'data'
         );
 
-        echo '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'perm_exp_format').'</h3>';
-        echo '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'perm_exp_format_msg').'</p>';
+        echo '<h3>'.dgettext('tuleap-docman', 'Docman permission export format').'</h3>';
+        echo '<p>'.dgettext('tuleap-docman', 'Docman permission export format').'</p>';
         $title_arr = array(
-            $GLOBALS['Language']->getText('plugin_docman', 'format_label'),
-            $GLOBALS['Language']->getText('plugin_docman', 'format_sample'),
-            $GLOBALS['Language']->getText('plugin_docman', 'format_description')
+            dgettext('tuleap-docman', 'Label'),
+            dgettext('tuleap-docman', 'Sample value'),
+            dgettext('tuleap-docman', 'Description')
         );
         echo  html_build_list_table_top($title_arr);
         $i = 0;
 
         echo "<tr class='". util_get_alt_row_color($i++) ."'>";
-        echo "<td><b>".$GLOBALS['Language']->getText('plugin_docman', 'format_id')."</b></td>";
+        echo "<td><b>".dgettext('tuleap-docman', 'Id')."</b></td>";
         echo "<td>53</td>";
-        echo "<td>".$GLOBALS['Language']->getText('plugin_docman', 'format_id_desc')."</td>";
+        echo "<td>".dgettext('tuleap-docman', 'Document id')."</td>";
         echo "</tr>";
 
         echo "<tr class='". util_get_alt_row_color($i++) ."'>";
-        echo "<td><b>".$GLOBALS['Language']->getText('plugin_docman', 'format_path')."</b></td>";
+        echo "<td><b>".dgettext('tuleap-docman', 'Path')."</b></td>";
         echo "<td>/My Folder/My Document</td>";
-        echo "<td>".$GLOBALS['Language']->getText('plugin_docman', 'format_path_desc')."</td>";
+        echo "<td>".dgettext('tuleap-docman', 'The Item path in docman tree')."</td>";
         echo "</tr>";
 
         echo "<tr class='". util_get_alt_row_color($i++) ."'>";
-        echo "<td><b>".$GLOBALS['Language']->getText('plugin_docman', 'format_type')."</b></td>";
+        echo "<td><b>".dgettext('tuleap-docman', 'Type')."</b></td>";
         echo "<td>File</td>";
-        echo "<td>".$GLOBALS['Language']->getText('plugin_docman', 'format_type_desc')."</td>";
+        echo "<td>".dgettext('tuleap-docman', 'Kind of item (file, link, wiki,...)')."</td>";
         echo "</tr>";
 
         echo "<tr class='". util_get_alt_row_color($i++) ."'>";
-        echo "<td><b>".$GLOBALS['Language']->getText('plugin_docman', 'format_user_group')."</b></td>";
+        echo "<td><b>".dgettext('tuleap-docman', 'User Groups...')."</b></td>";
         echo "<td>Developper Group</td>";
-        echo "<td>".$GLOBALS['Language']->getText('plugin_docman', 'format_user_group_desc')."</td>";
+        echo "<td>".dgettext('tuleap-docman', 'One user group per column. Each one can have either READ, WRITE or MANAGE permission. An empty row means no access.')."</td>";
         echo "</tr>";
 
         echo "</table>";

@@ -45,6 +45,6 @@ class Docman_Empty extends Docman_Document
 
     public function getType()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_empty');
+        return dgettext('tuleap-docman', 'Empty');
     }
 }

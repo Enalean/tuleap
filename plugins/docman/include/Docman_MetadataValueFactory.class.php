@@ -85,10 +85,7 @@ class Docman_MetadataValueFactory
             return true;
         } catch (MetadataDoesNotExistException $e) {
             $this->setError(
-                $GLOBALS['Language']->getText(
-                    'plugin_docman',
-                    'mdv_bo_errbadtype'
-                )
+                dgettext('tuleap-docman', 'Bad property type')
             );
         }
 
@@ -110,20 +107,13 @@ class Docman_MetadataValueFactory
                     $this->getMetadataCreator()->createMetadataObject($md, $id, $md_v);
                 } else {
                     $this->setError(
-                        $GLOBALS['Language']->getText(
-                            'plugin_docman',
-                            'mdv_bo_createunknown',
-                            [$md_name]
-                        )
+                        dgettext('tuleap-docman', 'Try to create an unknown property')
                     );
                 }
             }
         } catch (MetadataDoesNotExistException $e) {
             $this->setError(
-                $GLOBALS['Language']->getText(
-                    'plugin_docman',
-                    'mdv_bo_errbadtype'
-                )
+                dgettext('tuleap-docman', 'Bad property type')
             );
         }
     }
@@ -144,20 +134,13 @@ class Docman_MetadataValueFactory
                     $updator->updateMetadata($md, $id, $md_v);
                 } else {
                     $this->setError(
-                        $GLOBALS['Language']->getText(
-                            'plugin_docman',
-                            'mdv_bo_updateunknown',
-                            array($md_name)
-                        )
+                        sprintf(dgettext('tuleap-docman', 'Try to update an unknown property \'%1$s\''), $md_name)
                     );
                 }
             }
         } catch (MetadataDoesNotExistException $e) {
             $this->setError(
-                $GLOBALS['Language']->getText(
-                    'plugin_docman',
-                    'mdv_bo_errbadtype'
-                )
+                dgettext('tuleap-docman', 'Bad property type')
             );
         }
     }

@@ -29,7 +29,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_obsolete_title') .'</h2>';
+        echo '<h2>'. $this->_getTitle($params) .' - '. dgettext('tuleap-docman', 'Manage Obsolete Documents') .'</h2>';
     }
 
     public function getTable($params)
@@ -109,7 +109,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
         $html = '';
 
         $html .= '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_obsolete_help');
+        $html .= dgettext('tuleap-docman', 'This is the list of all documents obsolete today. If you click on document title you will be redirected to the document properties and you will be able to make it available again.');
         $html .= '</p>';
 
         $html .= $this->getTable($params);

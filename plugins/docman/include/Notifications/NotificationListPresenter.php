@@ -50,11 +50,11 @@ class NotificationListPresenter
         $this->placeholder     = dgettext('tuleap-docman', 'User, group');
         $this->notified_people = dgettext('tuleap-docman', 'Notified people');
         $this->validate_button = dgettext('tuleap-docman', 'Validate');
-        $this->monitored_doc   = $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc');
-        $this->empty_state     = $GLOBALS['Language']->getText('plugin_docman', 'empty_state');
+        $this->monitored_doc   = dgettext('tuleap-docman', 'Monitored document');
+        $this->empty_state     = dgettext('tuleap-docman', 'No notifications set');
 
-        $this->enable_sub_hierarchy = $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_cascade');
-        $this->cannot_delete_title  = $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help');
+        $this->enable_sub_hierarchy = dgettext('tuleap-docman', 'Enable monitoring for the whole sub-hierarchy');
+        $this->cannot_delete_title  = dgettext('tuleap-docman', 'You cannot delete because a parent folder is monitored with its sub-hierarchy. You can delete that monitoring only from the parent itself.');
     }
 
     private function buildNotificationsFromUsers(array $users, Docman_Item $item)

@@ -243,25 +243,14 @@ class Docman_ApprovalTableNotificationCycle
         $project         = $project_manager->getProject($this->item->getGroupId());
         $reviewUrl       = $this->getReviewUrl();
 
-        $subject = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_reject_mail_subject',
-            array(
-                $GLOBALS['sys_name'],
-                $this->item->getTitle()
-            )
-        );
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was rejected by a reviewer'), $GLOBALS['sys_name'], $this->item->getTitle());
 
-        $body = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_reject_mail_body',
-            array(
-                $this->item->getTitle(),
-                $reviewUrl,
-                $reviewer->getRealName(),
-                $reviewer->getEmail()
-            )
-        );
+        $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was  rejected by %3$s <%4$s>.
+Direct access to the approval table:
+<%2$s>
+
+--
+This is an automatic email sent by a robot. Please do not reply to this email.'), $this->item->getTitle(), $reviewUrl, $reviewer->getRealName(), $reviewer->getEmail());
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
@@ -284,30 +273,19 @@ class Docman_ApprovalTableNotificationCycle
         $project         = $project_manager->getProject($this->item->getGroupId());
 
         $reviewUrl = $this->getReviewUrl();
-        $body      = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_approve_user_mail_body',
-            array($this->item->getTitle(),
-                $reviewUrl,
-                $reviewer->getRealName(),
-                $reviewer->getEmail()
-            )
-        );
+        $body      = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was approved by %3$s <%4$s>.
+You can access to the table with the following link:
+<%2$s>
+
+--
+This is an automatic email sent by a robot. Please do not reply to this email.'), $this->item->getTitle(), $reviewUrl, $reviewer->getRealName(), $reviewer->getEmail());
 
         $comment = '';
         if ($withComments) {
-            $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_approve_user_mail_com');
+            $comment = dgettext('tuleap-docman', 'with comments');
         }
 
-        $subject = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_approve_user_mail_subject',
-            array(
-                $GLOBALS['sys_name'],
-                $this->item->getTitle(),
-                $comment
-            )
-        );
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by a reviewer %3$s'), $GLOBALS['sys_name'], $this->item->getTitle(), $comment);
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
@@ -332,32 +310,23 @@ class Docman_ApprovalTableNotificationCycle
         $reviewUrl = $this->getReviewUrl();
         $baseUrl   = HTTPRequest::instance()->getServerUrl().'/plugins/docman/?group_id='.$this->item->getGroupId();
         $propUrl   = $baseUrl .'&action=edit&id='.$this->item->getId();
-        $body      = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_approve_mail_body',
-            array(
-                $this->item->getTitle(),
-                $reviewUrl,
-                $reviewer->getRealName(),
-                $reviewer->getEmail(),
-                $propUrl
-            )
-        );
+        $body      = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was approved by last reviewer: %3$s <%4$s>.
+You can access to the table with the following link:
+<%2$s>
+
+Please note that the document status was not automaticaly changed. You can
+change the document properties:
+<%5$s>
+
+--
+This is an automatic email sent by a robot. Please do not reply to this email.'), $this->item->getTitle(), $reviewUrl, $reviewer->getRealName(), $reviewer->getEmail(), $propUrl);
 
         $comment = '';
         if ($withComments) {
-            $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_approve_user_mail_com');
+            $comment = dgettext('tuleap-docman', 'with comments');
         }
 
-        $subject = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_approve_mail_subject',
-            array(
-                $GLOBALS['sys_name'],
-                $this->item->getTitle(),
-                $comment
-            )
-        );
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by last reviewer %3$s'), $GLOBALS['sys_name'], $this->item->getTitle(), $comment);
 
         return $this->mail_notification_builder->buildAndSendEmail(
             $project,
@@ -380,25 +349,15 @@ class Docman_ApprovalTableNotificationCycle
         $project         = $project_manager->getProject($this->item->getGroupId());
         $reviewUrl       = $this->getReviewUrl();
 
-        $subject = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_declined_mail_subject',
-            array(
-                $GLOBALS['sys_name'],
-                $this->item->getTitle()
-            )
-        );
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer will not review \'%2$s\''), $GLOBALS['sys_name'], $this->item->getTitle());
 
-        $body = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_declined_mail_body',
-            array(
-                $this->item->getTitle(),
-                $reviewUrl,
-                $reviewer->getRealName(),
-                $reviewer->getEmail()
-            )
-        );
+        $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' will not be reviewed by %3$s <%4$s>.
+
+You can access to the table with the following link:
+<%2$s>
+
+--
+This is an automatic email sent by a robot. Please do not reply to this email.'), $this->item->getTitle(), $reviewUrl, $reviewer->getRealName(), $reviewer->getEmail());
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
@@ -423,30 +382,20 @@ class Docman_ApprovalTableNotificationCycle
 
         $commentSeq = '';
         if ($this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
-            $commentSeq = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_comment_mail_seq', $reviewer->getRealName());
+            $commentSeq = sprintf(dgettext('tuleap-docman', 'Important note: this approval table is configured in \'Sequential\' mode.
+The notification sequence is on hold until %1$s approves or rejects the document.'), $reviewer->getRealName());
             $commentSeq .= "\n";
         }
 
-        $subject = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_comment_mail_subject',
-            array(
-                $GLOBALS['sys_name'],
-                $this->item->getTitle()
-            )
-        );
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer commented \'%2$s\''), $GLOBALS['sys_name'], $this->item->getTitle());
 
-        $body = $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_comment_mail_body',
-            array(
-                $this->item->getTitle(),
-                $reviewer->getRealName(),
-                $reviewer->getEmail(),
-                $reviewUrl,
-                $commentSeq
-            )
-        );
+        $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was commented (but neither approved nor rejected) by \'%2$s\' <%3$s>.
+%5$s
+You can access to the table with the following link:
+<%4$s>
+
+--
+This is an automatic email sent by a robot. Please do not reply to this email.'), $this->item->getTitle(), $reviewer->getRealName(), $reviewer->getEmail(), $reviewUrl, $commentSeq);
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
@@ -581,7 +530,7 @@ class Docman_ApprovalTableNotificationCycle
 
     public function getNotificationSubject()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_subject', array($GLOBALS['sys_name'], $this->item->getTitle()));
+        return sprintf(dgettext('tuleap-docman', '[%1$s] Please review \'%2$s\''), $GLOBALS['sys_name'], $this->item->getTitle());
     }
 
     public function getNotificationBodyText()
@@ -594,7 +543,10 @@ class Docman_ApprovalTableNotificationCycle
         $userComment     = $this->table->getDescription();
 
         if ($userComment != '') {
-            $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_owner_comment', array($userComment));
+            $comment = sprintf(dgettext('tuleap-docman', 'Message:
+------------
+%1$s
+------------'), $userComment);
             $comment .= "\n\n";
         }
 
@@ -604,26 +556,30 @@ class Docman_ApprovalTableNotificationCycle
         $notifStyle = '';
         switch ($this->table->getNotification()) {
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-                $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
+                $notifStyle = sprintf(dgettext('tuleap-docman', 'Sequence.
+%1$s notifies reviewers one after another.
+People *will not be notified* to review the document *until you approved it*.'), $GLOBALS['sys_name']);
                 break;
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-                $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_all');
+                $notifStyle = dgettext('tuleap-docman', 'All at once');
                 break;
         }
 
-        return $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'approval_notif_mail_body',
-            array(
-                $this->item->getTitle(),
-                $project->getPublicName(),
-                $this->owner->getRealName(),
-                $itemUrl,
-                $comment,
-                $notifStyle,
-                $reviewUrl,
-                $this->owner->getEmail()
-            )
-        );
+        return sprintf(dgettext('tuleap-docman', 'You are requested to review the following document:
+
+Project: %2$s
+Title: %1$s
+Document: <%4$s>
+
+Requester: %3$s <%8$s>
+Your review: <%7$s>
+
+%5$sNotification type: %6$s
+
+Click on the following link to approve or reject the document:
+<%7$s>
+
+--
+This is an automatic message. Please do not reply to this email.'), $this->item->getTitle(), $project->getPublicName(), $this->owner->getRealName(), $itemUrl, $comment, $notifStyle, $reviewUrl, $this->owner->getEmail());
     }
 }

@@ -96,7 +96,7 @@ restart-services: redeploy-nginx ## Restart nginx, apache and fpm
 	@$(DOCKER_COMPOSE) exec web service httpd restart
 
 generate-po: ## Generate translatable strings
-	@tools/utils/generate-po.php `pwd`
+	@tools/utils/generate-po.php `pwd` "$(PLUGIN)"
 
 generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`

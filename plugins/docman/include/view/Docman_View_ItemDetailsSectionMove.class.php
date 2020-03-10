@@ -37,7 +37,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
     public function getContent($params = [])
     {
         $content = '';
-        $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move') .'</dt><dd>';
+        $content .= '<dl><dt>'. dgettext('tuleap-docman', 'Move') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
 
         $parents_tree = new Docman_View_ParentsTree($this->_controller);

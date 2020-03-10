@@ -63,7 +63,7 @@ final class LegacySendMessageController implements DispatchableWithRequest
             if ($request->valid($vMessage) && (trim($request->get('msg_docman_access')) != $defaultMsg)) {
                 $messageToAdmin = $request->get('msg_docman_access');
             } else {
-                exit_error($GLOBALS['Language']->getText('plugin_docman', 'error'), $GLOBALS['Language']->getText('plugin_docman', 'invalid_msg'));
+                exit_error(dgettext('tuleap-docman', 'Error'), dgettext('tuleap-docman', 'Your message is not valid, you can not send the default message or an empty one.'));
                 return;
             }
             $sendMail->processMail($messageToAdmin);

@@ -75,8 +75,8 @@ class Docman_Log
     {
         $params['logs'][] = array(
             'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
-            'field' => $GLOBALS['Language']->getText('plugin_docman', 'logsdaily_field'),
-            'title' => $GLOBALS['Language']->getText('plugin_docman', 'logsdaily_title')
+            'field' => dgettext('tuleap-docman', 'Documents'),
+            'title' => dgettext('tuleap-docman', 'Document Access')
         );
     }
 
@@ -101,16 +101,16 @@ class Docman_Log
         $html = '';
         $uh   = UserHelper::instance();
         $hp   = Codendi_HTMLPurifier::instance();
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'details_history_logs') .'</h3>';
+        $html .= '<h3>'. dgettext('tuleap-docman', 'Document History') .'</h3>';
         $dar = $this->dao->searchByItemIdOrderByTimestamp($item_id);
         if ($dar && !$dar->isError()) {
             if ($dar->valid()) {
                 $titles = array();
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_logs_when');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_logs_who');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_logs_what');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_logs_old_value');
-                $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_history_logs_new_value');
+                $titles[] = dgettext('tuleap-docman', 'When');
+                $titles[] = dgettext('tuleap-docman', 'Who');
+                $titles[] = dgettext('tuleap-docman', 'What');
+                $titles[] = dgettext('tuleap-docman', 'Old Value');
+                $titles[] = dgettext('tuleap-docman', 'New Value');
                 $html .= html_build_list_table_top($titles, false, false, false);
 
                 $odd_even = array('boxitem', 'boxitemalt');
@@ -120,7 +120,7 @@ class Docman_Log
                 while ($dar->valid()) {
                     $row = $dar->current();
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
-                        $user = $row['user_id'] ? $hp->purify($uh->getDisplayNameFromUserId($row['user_id'])) : $GLOBALS['Language']->getText('plugin_docman', 'details_history_anonymous');
+                        $user = $row['user_id'] ? $hp->purify($uh->getDisplayNameFromUserId($row['user_id'])) : dgettext('tuleap-docman', 'Anonymous');
                         $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                         $html .= '<td>'. html_time_ago($row['time']) .'</td>';
                         $html .= '<td>'. $user                             .'</td>';
@@ -144,7 +144,7 @@ class Docman_Log
                                 $_old_v = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_old_v);
                                 $_new_v = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_new_v);
                             }
-                            $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_history_logs_change_field', array($md->getName())).'</td>';
+                            $html .= '<td>'.sprintf(dgettext('tuleap-docman', 'Change <em>%1$s</em>'), $md->getName()).'</td>';
                             $html .= '<td>'.$_old_v.'</td>';
                             $html .= '<td>'.$_new_v.'</td>';
                         } elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE) {
@@ -187,10 +187,10 @@ class Docman_Log
                 }
                 $html .= '</table>';
             } else {
-                $html .= '<div>'. $GLOBALS['Language']->getText('plugin_docman', 'details_history_logs_no') .'</div>';
+                $html .= '<div>'. dgettext('tuleap-docman', 'There is no history yet') .'</div>';
             }
         } else {
-            $html .= '<div>'. $GLOBALS['Language']->getText('plugin_docman', 'details_history_logs_error') .'</div>';
+            $html .= '<div>'. dgettext('tuleap-docman', 'Error while searching document history!') .'</div>';
             $html .= $dar->isError();
         }
         return $html;
@@ -201,49 +201,49 @@ class Docman_Log
         $txt = '';
         switch ($type) {
             case PLUGIN_DOCMAN_EVENT_ADD:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_add');
+                $txt = dgettext('tuleap-docman', 'Create');
                 break;
             case PLUGIN_DOCMAN_EVENT_EDIT:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_edit');
+                $txt = dgettext('tuleap-docman', 'Edit');
                 break;
             case PLUGIN_DOCMAN_EVENT_MOVE:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_move');
+                $txt = dgettext('tuleap-docman', 'Move');
                 break;
             case PLUGIN_DOCMAN_EVENT_DEL:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_del');
+                $txt = dgettext('tuleap-docman', 'Delete');
                 break;
             case PLUGIN_DOCMAN_EVENT_DEL_VERSION:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_del_version');
+                $txt = dgettext('tuleap-docman', 'Delete version');
                 break;
             case PLUGIN_DOCMAN_EVENT_ACCESS:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_access');
+                $txt = dgettext('tuleap-docman', 'Access');
                 break;
             case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_newversion');
+                $txt = dgettext('tuleap-docman', 'New version');
                 break;
             case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_metadataupdate');
+                $txt = dgettext('tuleap-docman', 'Property change');
                 break;
             case PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_wiki_page_updated');
+                $txt = dgettext('tuleap-docman', 'Wiki page content change');
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_author');
+                $txt = dgettext('tuleap-docman', 'Version author');
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_date');
+                $txt = dgettext('tuleap-docman', 'Version date');
                 break;
             case PLUGIN_DOCMAN_EVENT_RESTORE:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_restore');
+                $txt = dgettext('tuleap-docman', 'Restore');
                 break;
             case PLUGIN_DOCMAN_EVENT_RESTORE_VERSION:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_restore_version');
+                $txt = dgettext('tuleap-docman', 'Restore version');
                 break;
             case PLUGIN_DOCMAN_EVENT_LOCK_ADD:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_lock_add');
+                $txt = dgettext('tuleap-docman', 'Locked document');
                 break;
             case PLUGIN_DOCMAN_EVENT_LOCK_DEL:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_lock_del');
+                $txt = dgettext('tuleap-docman', 'Released lock');
                 break;
             default:
                 break;

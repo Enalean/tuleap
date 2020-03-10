@@ -43,7 +43,7 @@ class Docman_SOAPActions extends Docman_Actions
                 $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The file cannot be found.'));
             }
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_append_filechunk'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Error while appending file chunk.'));
         }
     }
 
@@ -93,7 +93,7 @@ class Docman_SOAPActions extends Docman_Actions
                         ksort($md5sum);
 
                         if (empty($md5sum)) {
-                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+                            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Error while getting file checksum.'));
                         }
                     } else {
                         // if the version number is specified we compute the md5sum of this version else the last one
@@ -105,13 +105,13 @@ class Docman_SOAPActions extends Docman_Actions
                             $md5sum = $fs->getFileMD5sum($item->getCurrentVersion()->getPath());
                         }
                         if (!$md5sum) {
-                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+                            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Error while getting file checksum.'));
                         }
                     }
 
                     $this->_controler->_viewParams['action_result'] = $md5sum;
                 } else {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
+                    $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The specified item is not a file.'));
                 }
             } else {
                 $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The file cannot be found.'));
@@ -238,13 +238,13 @@ class Docman_SOAPActions extends Docman_Actions
                         }
                     }
                 } else {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
+                    $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The specified item is not a file.'));
                 }
             } else {
                 $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The file cannot be found.'));
             }
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_id_missing'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Error: item ID is missing.'));
         }
     }
 
@@ -286,13 +286,13 @@ class Docman_SOAPActions extends Docman_Actions
                         );
                     }
                 } else {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
+                    $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The specified item is not a file.'));
                 }
             } else {
                 $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The file cannot be found.'));
             }
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_id_missing'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Error: item ID is missing.'));
         }
     }
 }

@@ -29,7 +29,7 @@ class Docman_View_Edit extends Docman_View_Details
     /* protected */ public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_edit_title', $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
+        return sprintf(dgettext('tuleap-docman', 'Edit properties of %1$s'), $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
     /* protected */ public function _content($params, $view = null, $section = null)

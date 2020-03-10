@@ -398,19 +398,19 @@ class Docman_ApprovalTableReviewerFactory
                 if ($approvalState !== null) {
                     switch ($approvalState) {
                         case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
-                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_0');
+                            $status = dgettext('tuleap-docman', 'Not Yet');
                             break;
                         case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
-                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_1');
+                            $status = dgettext('tuleap-docman', 'Approved');
                             break;
                         case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
-                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_2');
+                            $status = dgettext('tuleap-docman', 'Rejected');
                             break;
                         case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
-                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_3');
+                            $status = dgettext('tuleap-docman', 'Comment only');
                             break;
                         case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
-                            $status = $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_4');
+                            $status = dgettext('tuleap-docman', 'Will not review');
                             break;
                     }
                 }
@@ -418,16 +418,16 @@ class Docman_ApprovalTableReviewerFactory
             if ($status == '') {
                 switch ($row['status']) {
                     case PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED:
-                        $status = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_0');
+                        $status = dgettext('tuleap-docman', 'Disabled');
                         break;
                     case PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED:
-                        $status = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_1');
+                        $status = dgettext('tuleap-docman', 'Available');
                         break;
                     case PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED:
-                        $status = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_2');
+                        $status = dgettext('tuleap-docman', 'Closed');
                         break;
                     case PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED:
-                        $status = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_3');
+                        $status = dgettext('tuleap-docman', 'Deleted');
                         break;
                 }
             }

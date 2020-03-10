@@ -55,14 +55,6 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         return 'include_exit';
     }
 
-
-     /**
-     * Returns the build interface parameters
-     *
-     * @return Array
-     */
-    abstract function returnBuildInterfaceParam();  // phpcs:ignore Squiz.Scope.MethodScope.Missing
-
     /**
      * Returns the url link after modification if needed else returns the same string
      *
@@ -72,21 +64,6 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
     function getRedirectLink($link, $language)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
         return $link;
-    }
-
-    /**
-     * Build the user interface to ask for membership
-     *
-     */
-    function buildInterface(PFUser $user, ?Project $project = null)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
-    {
-        if ($user->isAnonymous()) {
-            $event_manager = EventManager::instance();
-            $redirect = new URLRedirect($event_manager);
-            $redirect->redirectToLogin();
-        } else {
-            $this->buildPermissionDeniedInterface($project);
-        }
     }
 
 
@@ -249,46 +226,6 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
     protected function getUGroup()
     {
         return new ProjectUGroup();
-    }
-
-    /**
-     * Build the Permission Denied error interface
-     */
-    private function buildPermissionDeniedInterface(?Project $project = null)
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $param    = $this->returnBuildInterfaceParam();
-
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
-
-        echo "<b>" . $purifier->purify($GLOBALS['Language']->getText($this->getTextBase(), 'perm_denied')) . "</b>";
-        echo '<br></br>';
-        echo "<br>" . $purifier->purify($GLOBALS['Language']->getText($this->getTextBase(), $param['index']), CODENDI_PURIFIER_FULL);
-
-        //In case of restricted user, we only show the zone text area to ask for membership
-        //just when the requested page belongs to a project
-        if (!(($param['func'] == 'restricted_user_request') && ($project === null))) {
-            $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
-            $pm = ProjectManager::instance();
-            $dar = $pm->getMessageToRequesterForAccessProject($project->getID());
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-                $row = $dar->current();
-                if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
-                    $message = $row['msg_to_requester'];
-                }
-            }
-            echo $GLOBALS['Language']->getText($this->getTextBase(), 'request_to_admin');
-            echo '<br></br>';
-            echo '<form action="' . $purifier->purify($param['action']) . '" method="post" name="display_form">
-                  <textarea wrap="virtual" rows="5" cols="70" name="' . $purifier->purify($param['name']) . '">' . $purifier->purify($message) . ' </textarea></p>
-                  <input type="hidden" id="func" name="func" value="' . $purifier->purify($param['func']) . '">
-                  <input type="hidden" id="groupId" name="groupId" value="' . $purifier->purify($project->getID()) . '">
-                  <input type="hidden" id="data" name="url_data" value="' . $purifier->purify($_SERVER['REQUEST_URI']) . '">
-                  <br><input name="Submit" type="submit" value="' . $purifier->purify($GLOBALS['Language']->getText('include_exit', 'send_mail')) . '"/></br>
-              </form>';
-        }
-
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
     }
 
     protected function getPermissionDeniedMailBody(

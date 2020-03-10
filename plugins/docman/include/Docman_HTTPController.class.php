@@ -85,7 +85,7 @@ class Docman_HTTPController extends Docman_Controller
     }
     /* protected */ public function _set_doesnot_belong_to_project_error($item, $group)
     {
-        $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), $group->getPublicName())));
+        $this->feedback->log('warning', sprintf(dgettext('tuleap-docman', 'The item %1$s doesn\'t exist or doesn\'t belong to project %2$s.'), $item->getId(), $group->getPublicName()));
         $this->_viewParams['redirect_to'] = str_replace('group_id='. $this->request->get('group_id'), 'group_id='. $item->getGroupId(), $_SERVER['REQUEST_URI']);
         $this->view = 'Redirect';
     }
@@ -124,13 +124,23 @@ class Docman_HTTPController extends Docman_Controller
             $directUrl = $baseUrl .'&action=show';
             $detailUrl = $baseUrl .'&action=details';
 
-            $subj = $GLOBALS['Language']->getText('plugin_docman', 'obso_warn_email_subject', array($GLOBALS['sys_name'],
-                                                                $item->getTitle()));
-            $body = $GLOBALS['Language']->getText('plugin_docman', 'obso_warn_email_body', array($item->getTitle(),
-                                                             $hp->purify($group->getPublicName()),
-                                                             $obsoDate,
-                                                             $directUrl,
-                                                             $detailUrl));
+            $subj = sprintf(dgettext('tuleap-docman', '[%1$s] Document \'%2$s\' will be obsolete in one month'), $GLOBALS['sys_name'], $item->getTitle());
+            $body = sprintf(dgettext('tuleap-docman', 'As document owner, you are notified of the obsolescence in one month of the
+document:
+Title: %1$s
+Project: %2$s
+Obsolescence date: %3$s
+Direct Link: <%4$s>
+
+This document will disappear from your document manager in one month if you
+do nothing. The document will remain accessible through the administration
+interface though.
+You can change the obsolescence date of your document or make it permanent with
+the following link:
+<%5$s>
+
+--
+This is an automatic message sent by a robot. Please do not reply to this email.'), $item->getTitle(), $hp->purify($group->getPublicName()), $obsoDate, $directUrl, $detailUrl);
 
             $mail_notification_builder = new MailNotificationBuilder(
                 new MailBuilder(

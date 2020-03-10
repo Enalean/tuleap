@@ -40,7 +40,7 @@ class Docman_Widget_MyDocman extends Widget
 
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'my_reviews');
+        return dgettext('tuleap-docman', 'Documents under review');
     }
 
     public function getContent()
@@ -79,9 +79,9 @@ class Docman_Widget_MyDocman extends Widget
         $html           .= '<div style="font-weight:bold;" class="my-document-under-review">';
 
         if ($reviewer) {
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_reviews_reviewer');
+            $html .= dgettext('tuleap-docman', 'Reviewer');
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_reviews_requester');
+            $html .= dgettext('tuleap-docman', 'Requester');
         }
         $html .= '</div>';
         $html .= '<div id="'. $content_html_id .'">';
@@ -160,9 +160,9 @@ class Docman_Widget_MyDocman extends Widget
             $html .= '</table>';
         } else {
             if ($reviewer) {
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_no_review');
+                $html .= dgettext('tuleap-docman', 'No document under review.');
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_no_request');
+                $html .= dgettext('tuleap-docman', 'No review requested.');
             }
         }
         $html .= '</div>';
@@ -188,7 +188,7 @@ class Docman_Widget_MyDocman extends Widget
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'widget_description_my_docman');
+        return dgettext('tuleap-docman', 'List the documents under review.');
     }
 
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)

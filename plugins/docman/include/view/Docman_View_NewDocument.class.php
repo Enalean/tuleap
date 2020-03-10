@@ -25,7 +25,7 @@ class Docman_View_NewDocument extends Docman_View_New
 
     public function _getTitle($params)
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'new_document');
+        return dgettext('tuleap-docman', 'New document');
     }
     public function _getEnctype()
     {
@@ -37,7 +37,7 @@ class Docman_View_NewDocument extends Docman_View_New
     }
     public function _getActionText()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'new_document_action');
+        return dgettext('tuleap-docman', 'Create document');
     }
 
     public function _getSpecificProperties($params)
@@ -50,13 +50,13 @@ class Docman_View_NewDocument extends Docman_View_New
         $specifics = array(
             array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
-                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_empty'),
+                'label'   => dgettext('tuleap-docman', 'Empty document'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY)? $params['force_item'] : new Docman_Empty(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY)
             ),
             array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_LINK,
-                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_link'),
+                'label'   => dgettext('tuleap-docman', 'Link'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)? $params['force_item'] : new Docman_Link(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)
                 ));
@@ -69,7 +69,7 @@ class Docman_View_NewDocument extends Docman_View_New
         if ($wikiAvailable) {
             $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
-                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_wiki'),
+                'label'   => dgettext('tuleap-docman', 'Wiki Page'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI)? $params['force_item'] : new Docman_Wiki(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI)
                 );
@@ -77,7 +77,7 @@ class Docman_View_NewDocument extends Docman_View_New
 
         $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_FILE,
-                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_file'),
+                'label'   => dgettext('tuleap-docman', 'File'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) ? $params['force_item'] : new Docman_File(),
                 'checked' => ($currentItemType !== null) ? ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) : true
                 );
@@ -85,7 +85,7 @@ class Docman_View_NewDocument extends Docman_View_New
         if ($this->_controller->getProperty('embedded_are_allowed')) {
             $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
-                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_embedded'),
+                'label'   => dgettext('tuleap-docman', 'Embedded File'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) ? $params['force_item'] : new Docman_EmbeddedFile(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE)
             );

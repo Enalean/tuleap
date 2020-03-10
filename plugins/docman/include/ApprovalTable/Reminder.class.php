@@ -169,7 +169,7 @@ class Docman_ApprovalTableReminder
             return false;
         }
 
-        $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
+        $subject     = sprintf(dgettext('tuleap-docman', '[%1$s] [Reminder] Please review \'%2$s\''), $GLOBALS['sys_name'], $docmanItem->getTitle());
 
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
@@ -235,52 +235,42 @@ class Docman_ApprovalTableReminder
         return $itemUrl;
     }
 
-    /**
-     * Retrieve notification mail type formmatted as a message within the reminder
-     *
-     * @param Docman_ApprovalTable $table The approval The approval table that its reminder notification will be sent
-     *
-     * @return PFUser
-     */
-    private function getNotificationStyle(Docman_ApprovalTable $table)
+    private function getNotificationStyle(Docman_ApprovalTable $table): string
     {
         $notifStyle = '';
         switch ($table->getNotification()) {
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-                $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
+                $notifStyle = sprintf(dgettext('tuleap-docman', 'Sequence.
+%1$s notifies reviewers one after another.
+People *will not be notified* to review the document *until you approved it*.'), $GLOBALS['sys_name']);
                 break;
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-                $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_all');
+                $notifStyle = dgettext('tuleap-docman', 'All at once');
                 break;
         }
         return $notifStyle;
     }
 
-    /**
-     * Retrieve approval table descritpion formatted as a message within the reminder
-     *
-     * @param Docman_ApprovalTable $table  The approval table that its reminder notification will be sent
-     * @param String               $format Message format
-     *
-     * @return PFUser
-     */
-    private function getTableDescriptionAsMessage(Docman_ApprovalTable $table, $format)
+    private function getTableDescriptionAsMessage(Docman_ApprovalTable $table, string $format): string
     {
         $comment     = '';
         $userComment = $table->getDescription();
         if ($userComment != '') {
             switch ($format) {
                 case Codendi_Mail_Interface::FORMAT_HTML:
-                    $comment  = '<b>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment').'</b><br>';
+                    $comment  = '<b>'.dgettext('tuleap-docman', 'Message:').'</b><br>';
                     $comment .= '<hr align="center" width="50%" color="midnightblue" size="3"><br>'.$userComment.'<br><hr align="center" width="50%" color="midnightblue" size="3"><br><br>';
                     $comment .= '<br>';
                     break;
                 case Codendi_Mail_Interface::FORMAT_TEXT:
-                    $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_owner_comment', array($userComment));
+                    $comment = sprintf(dgettext('tuleap-docman', 'Message:
+------------
+%1$s
+------------'), $userComment);
                     $comment .= "\n\n";
                     break;
                 default:
-                    $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment', array($userComment));
+                    $comment = dgettext('tuleap-docman', 'Message:');
                     break;
             }
         }
@@ -326,14 +316,22 @@ class Docman_ApprovalTableReminder
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
 
-        $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_body', array($docmanItem->getTitle(),
-                                                              $group->getPublicName(),
-                                                              $owner->getRealName(),
-                                                              $this->getItemUrl($docmanItem),
-                                                              $this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_TEXT),
-                                                              $this->getNotificationStyle($table),
-                                                              $this->getReviewUrl($docmanItem),
-                                                              $owner->getEmail()));
+        $body = sprintf(dgettext('tuleap-docman', 'You are requested to review the following document:
+
+Project: %2$s
+Title: %1$s
+Document: <%4$s>
+
+Requester: %3$s <%8$s>
+Your review: <%7$s>
+
+%5$sNotification type: %6$s
+
+Click on the following link to approve or reject the document:
+<%7$s>
+
+--
+This is an automatic message. Please do not reply to this email.'), $docmanItem->getTitle(), $group->getPublicName(), $owner->getRealName(), $this->getItemUrl($docmanItem), $this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_TEXT), $this->getNotificationStyle($table), $this->getReviewUrl($docmanItem), $owner->getEmail());
 
         return $body;
     }
@@ -351,15 +349,15 @@ class Docman_ApprovalTableReminder
         $purifier = Codendi_HTMLPurifier::instance();
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
-        $body  = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_header').'<br><br><b>';
-        $body .= $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_title').'</b> '.$docmanItem->getTitle().'<br><b>';
-        $body .= $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_group_name').'</b> '.$purifier->purify($group->getPublicName()).'<br><b>';
-        $body .= $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_owner_name').'</b><a href="'.$owner->getEmail().'">'.$owner->getRealName().'</a><br>';
-        $body .= '<a href="'.$this->getItemUrl($docmanItem).'">'.$GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_direct_link').' </a><br>';
+        $body  = dgettext('tuleap-docman', 'You are requested to review the following document:').'<br><br><b>';
+        $body .= dgettext('tuleap-docman', 'Title:').'</b> '.$docmanItem->getTitle().'<br><b>';
+        $body .= dgettext('tuleap-docman', 'Project:').'</b> '.$purifier->purify($group->getPublicName()).'<br><b>';
+        $body .= dgettext('tuleap-docman', 'Requester:').'</b><a href="'.$owner->getEmail().'">'.$owner->getRealName().'</a><br>';
+        $body .= '<a href="'.$this->getItemUrl($docmanItem).'">'.dgettext('tuleap-docman', 'Direct link to the document').' </a><br>';
         $body .= '<br>'.$this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_HTML).'<br><br>';
-        $body .= $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_notif_type').' '.$this->getNotificationStyle($table).' <br><br>';
-        $body .= '<a href="'.$this->getReviewUrl($docmanItem).'"><b>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_review_url').'<b></a><br>';
-        $body .= '<br>--<br><i>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_footer').'</i><br>';
+        $body .= dgettext('tuleap-docman', 'Notification type:').' '.$this->getNotificationStyle($table).' <br><br>';
+        $body .= '<a href="'.$this->getReviewUrl($docmanItem).'"><b>'.dgettext('tuleap-docman', 'Click on the following link to approve or reject the document').'<b></a><br>';
+        $body .= '<br>--<br><i>'.dgettext('tuleap-docman', 'This is an automatic message. Please do not reply to this email').'</i><br>';
         return $body;
     }
 

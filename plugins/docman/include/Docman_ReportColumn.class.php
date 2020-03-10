@@ -83,7 +83,7 @@ class Docman_ReportColumn
         }
 
         $url = $view->_buildSearchUrl($viewParams, array($sortParam => $toggleValue));
-        $title = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_toggletitle');
+        $title = dgettext('tuleap-docman', 'Click on title to toggle table sort');
 
         $purifier = Codendi_HTMLPurifier::instance();
         $link = $purifier->purify($this->md->getName());
@@ -149,7 +149,7 @@ class Docman_ReportColumnLocation extends Docman_ReportColumn
 
     public function getTitle($defaultUrl, $viewParams = '')
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_location');
+        return dgettext('tuleap-docman', 'Location');
     }
 
     public function initFromRequest($request)

@@ -27,7 +27,7 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
 {
     public function __construct($item, $url)
     {
-        parent::__construct($item, $url, 'permissions', $GLOBALS['Language']->getText('plugin_docman', 'details_permissions'));
+        parent::__construct($item, $url, 'permissions', dgettext('tuleap-docman', 'Permissions'));
     }
     public function getContent($params = [])
     {
@@ -58,8 +58,8 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
         //{{{ Permissions
         $content .= '<div>';
         $titles = array();
-        $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_permissions_ugroups');
-        $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_permissions_perms');
+        $titles[] = dgettext('tuleap-docman', 'User groups');
+        $titles[] = dgettext('tuleap-docman', 'Access Permissions');
         $content .= html_build_list_table_top($titles, false, false, false);
         $odd_even = array('boxitem', 'boxitemalt');
         $i = 0;
@@ -82,7 +82,7 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
 
         if (is_a($this->item, 'Docman_Folder')) {
             $content .= '<div>';
-            $content .= '<input type="checkbox" name="recursive" id="docman_recusrsive_permissions" value="1" /><label for="docman_recusrsive_permissions">'. $GLOBALS['Language']->getText('plugin_docman', 'details_permissions_recursive') .'</label>';
+            $content .= '<input type="checkbox" name="recursive" id="docman_recusrsive_permissions" value="1" /><label for="docman_recusrsive_permissions">'. dgettext('tuleap-docman', 'recursive (apply same permissions to all sub-items of this folder)') .'</label>';
             $content .= '</div>';
         }
         $content .= '<div>';

@@ -16,7 +16,7 @@ class Docman_View_NewFolder extends Docman_View_New
 
     public function _getTitle($params)
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'new_folder');
+        return dgettext('tuleap-docman', 'New folder');
     }
 
     public function _getAction()
@@ -26,7 +26,7 @@ class Docman_View_NewFolder extends Docman_View_New
 
     public function _getActionText()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'new_folder_action');
+        return dgettext('tuleap-docman', 'Create folder');
     }
 
     public function _getNewItem()
@@ -59,8 +59,8 @@ class Docman_View_NewFolder extends Docman_View_New
         $html = '';
 
         $html .= '<div class="properties">'."\n";
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_dfltvalues') .'</h3>';
-        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_desc').'</p>';
+        $html .= '<h3>'. dgettext('tuleap-docman', 'Default Values') .'</h3>';
+        $html .= '<p>'.dgettext('tuleap-docman', 'Define the default properties values for the item that will be created within this folder.').'</p>';
         $fields = $this->_getDefaultValuesFields($params);
         $html .= $this->_getPropertiesFieldsDisplay($fields);
         $html .= '</div>';
