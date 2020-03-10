@@ -23,6 +23,7 @@
             <input
                 type="text"
                 class="tlp-input tlp-input-date"
+                data-test="timetracking-date"
                 v-model="date"
                 ref="date_field"
                 size="11"
@@ -49,6 +50,7 @@
                     class="tlp-input"
                     size="11"
                     v-model="time"
+                    data-test="timetracking-time"
                     v-on:keyup.enter="validateNewTime()"
                     placeholder="hh:mm"
                     required
@@ -57,6 +59,7 @@
             <button
                 class="tlp-button-primary"
                 type="submit"
+                data-test="timetracking-submit-time"
                 v-bind:class="{
                     'tlp-tooltip tlp-tooltip-bottom timetracking-tooltip': error_message
                 }"

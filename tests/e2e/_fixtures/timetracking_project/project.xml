@@ -1,0 +1,127 @@
+<!--
+  ~ Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+  ~
+  ~  This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<project unix-name="timetracking" full-name="timetracking" description="timetracking" access="public">
+    <long-description></long-description>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+                <member format="username">ProjectMember</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+            </members>
+        </ugroup>
+    </ugroups>
+
+    <services>
+        <service shortname="summary" enabled="1"/>
+        <service shortname="plugin_tracker" enabled="1"/>
+    </services>
+
+    <trackers use-natures="true">
+        <tracker id="T448" parent_id="0" instantiate_for_new_projects="1">
+            <name><![CDATA[Issues]]></name>
+            <item_name>issue</item_name>
+            <description><![CDATA[requests, bugs, tasks, activities]]></description>
+            <color>lake-placid-blue</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="fieldset" ID="F13603" rank="28" required="1">
+                    <name>description</name>
+                    <label><![CDATA[Description]]></label>
+                    <formElements>
+                        <formElement type="column" ID="F14166" rank="1">
+                            <name>description_col2</name>
+                            <label><![CDATA[description_col2]]></label>
+                            <formElements>
+                                <formElement type="sb" ID="F14167" rank="0">
+                                    <name>type</name>
+                                    <label><![CDATA[Type]]></label>
+                                    <bind type="static" is_rank_alpha="0">
+                                        <items>
+                                            <item ID="V13787" label="Request" is_hidden="0"/>
+                                            <item ID="V13788" label="Bug" is_hidden="0"/>
+                                            <item ID="V13789" label="Task" is_hidden="0"/>
+                                            <item ID="V13790" label="Activity" is_hidden="0"/>
+                                        </items>
+                                        <decorators>
+                                            <decorator REF="V13787" tlp_color_name="clockwork-orange"/>
+                                            <decorator REF="V13788" tlp_color_name="fiesta-red"/>
+                                            <decorator REF="V13789" tlp_color_name="acid-green"/>
+                                            <decorator REF="V13790" tlp_color_name="daphne-blue"/>
+                                        </decorators>
+                                    </bind>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="string" ID="F13608" rank="5">
+                            <name>details</name>
+                            <label><![CDATA[Description]]></label>
+                            <description><![CDATA[A full description of the artifact]]></description>
+                            <properties rows="7" cols="60"/>
+                        </formElement>
+                    </formElements>
+                </formElement>
+            </formElements>
+            <semantics />
+            <rules>
+                <date_rules/>
+                <list_rules/>
+            </rules>
+            <reports>
+                <report is_default="0">
+                    <name>All issues</name>
+                    <description>Bugs Report</description>
+                    <criterias>
+                        <criteria rank="0">
+                            <field REF="F14167"/>
+                        </criteria>
+                    </criterias>
+                    <renderers>
+                        <renderer ID="R1681" type="table" rank="0" chunksz="15">
+                            <name>All Issues</name>
+                            <columns>
+                                <field REF="F14167"/>
+                            </columns>
+                        </renderer>
+                    </renderers>
+                </report>
+            </reports>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F14167" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F14167" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F14167" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F13608" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F13608" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F13608" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+            <artifacts/>
+        </tracker>
+        <triggers/>
+    </trackers>
+    <natures>
+        <nature>_is_child</nature>
+    </natures>
+</project>

@@ -29,6 +29,7 @@
         ref="select"
         v-bind:disabled="is_tracker_select_disabled"
         v-on:input="setSelected($event)"
+        data-test="overview-tracker-selector"
     >
         <option v-bind:value="null" v-translate>Please choose...</option>
         <option

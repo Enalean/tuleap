@@ -18,7 +18,11 @@
   -->
 
 <template>
-    <div class="timetracking-reading-mode" v-on:click="toggleReadingMode()">
+    <div
+        class="timetracking-reading-mode"
+        v-on:click="toggleReadingMode()"
+        data-test="timetracking-switch-reading-mode"
+    >
         <div class="timetracking-reading-mode-dates">
             <div class="tlp-property timetracking-reading-date">
                 <label class="tlp-label" v-translate>From</label>

@@ -126,6 +126,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             'short_title' => dgettext('tuleap-timetracking', 'Time tracking'),
             'title'       => dgettext('tuleap-timetracking', 'Time tracking'),
             'description' => dgettext('tuleap-timetracking', 'Time tracking for Tuleap artifacts'),
+            'data-test'   => 'timetracking'
         );
     }
 

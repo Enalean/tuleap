@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -69,7 +69,9 @@ class Tracker_Artifact_View_ViewCollection
             if ($view == $current_view) {
                 $class = 'active';
             }
-            $html .= '<li class="'. $class .'"><a href="'. $view->getURL() .'">'. $view->getTitle() .'</a></li>';
+            $html .= '<li class="'. $class .'">
+                <a href="'. $view->getURL() .'" data-test="'.$view->getIdentifier().'">'. $view->getTitle() .'</a>
+            </li>';
         }
         $html .= '</ul>';
         return $html;
