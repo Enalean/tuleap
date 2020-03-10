@@ -38,8 +38,8 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th>{{# gettext }}Generated on{{/ gettext }}</th>
-                        <th>
+                        <th class="access-keys-header">{{# gettext }}Generated on{{/ gettext }}</th>
+                        <th class="access-keys-header">
                             {{# gettext }}Last used on{{/ gettext }}
                             <span
                                     class="access-keys-accesses-warning"
@@ -48,19 +48,19 @@
                         <i class="fa fa-question-circle" aria-hidden="true"></i>
                     </span>
                         </th>
-                        <th>{{# gettext }}Last used by{{/ gettext }}</th>
-                        <th>{{# gettext }}Description{{/ gettext }}</th>
-                        <th>{{# gettext }}Expire on{{/ gettext }}</th>
-                        <th>{{# gettext }}Scopes{{/ gettext }}</th>
+                        <th class="access-keys-header">{{# gettext }}Last used by{{/ gettext }}</th>
+                        <th class="access-keys-header">{{# gettext }}Expire on{{/ gettext }}</th>
+                        <th class="access-keys-header">{{# gettext }}Scopes{{/ gettext }}</th>
+                        <th class="access-keys-header">{{# gettext }}Description{{/ gettext }}</th>
                     </tr>
                     </thead>
                     {{# has_access_keys }}
                         <tbody>
                         {{# access_keys }}
                             <tr>
-                                <td><input type="checkbox" name="access-keys-selected[]" value="{{ id }}"/></td>
-                                <td>{{ creation_date }}</td>
-                                <td>
+                                <td class="access-key-checkbox-cell"><input type="checkbox" name="access-keys-selected[]" value="{{ id }}"/></td>
+                                <td class="access-key-date">{{ creation_date }}</td>
+                                <td class="access-key-date">
                                     {{# last_used_on }}{{ last_used_on }}{{/ last_used_on }}
                                     {{^ last_used_on }}{{# gettext }}Never{{/ gettext }}{{/ last_used_on }}
                                 </td>
@@ -68,14 +68,14 @@
                                     {{# last_used_by }}{{ last_used_by }}{{/ last_used_by }}
                                     {{^ last_used_by }}-{{/ last_used_by }}
                                 </td>
-                                <td>{{ description }}</td>
-                                <td>
+                                <td class="access-key-date">
                                     {{# expiration_date }}{{ expiration_date }}{{/ expiration_date }}
-                                    {{^ expiration_date }}-{{/ expiration_date }}
+                                    {{^ expiration_date }}{{# gettext }}Never{{/ gettext }}{{/ expiration_date }}
                                 </td>
                                 <td>
-                                    {{# scopes }}<span title="{{ description }}">{{ name }}</span> {{/scopes}}
+                                    {{# scopes }}<span class="tlp-badge-secondary access-key-scope" title="{{ description }}">{{ name }}</span> {{/scopes}}
                                 </td>
+                                <td>{{ description }}</td>
                             </tr>
                         {{/ access_keys }}
                         </tbody>

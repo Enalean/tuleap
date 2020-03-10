@@ -45,6 +45,6 @@ final class SSHKeyPresenter
     {
         $this->ssh_key_number         = $ssh_key_number;
         $this->ssh_key_value          = $ssh_key_value;
-        $this->ssh_key_ellipsis_value = substr($ssh_key_value, 0, 40).'...'.substr($ssh_key_value, -40);
+        $this->ssh_key_ellipsis_value = substr($ssh_key_value, 0, 50).'…'.substr($ssh_key_value, -50);
     }
 }

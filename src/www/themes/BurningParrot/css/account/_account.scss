@@ -27,6 +27,10 @@
     margin: 0 auto;
 }
 
+.user-preferences-frame.user-preferences-frame-wide {
+    max-width: 1400px;
+}
+
 .user-preferences-container {
     display: flex;
     align-items: flex-start;

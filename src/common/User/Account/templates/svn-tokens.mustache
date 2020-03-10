@@ -38,19 +38,19 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th>{{# gettext }}Generated on{{/ gettext }}</th>
-                        <th>{{# gettext }}Last used on{{/ gettext }}</th>
-                        <th>{{# gettext }}Last used by{{/ gettext }}</th>
-                        <th>{{# gettext }}Comment{{/ gettext }}</th>
+                        <th class="svn-tokens-header">{{# gettext }}Generated on{{/ gettext }}</th>
+                        <th class="svn-tokens-header">{{# gettext }}Last used on{{/ gettext }}</th>
+                        <th class="svn-tokens-header">{{# gettext }}Last used by{{/ gettext }}</th>
+                        <th class="svn-tokens-header">{{# gettext }}Comment{{/ gettext }}</th>
                     </tr>
                     </thead>
                     {{# has_svn_tokens }}
                         <tbody>
                         {{# svn_tokens }}
                             <tr>
-                                <td><input type="checkbox" name="svn-tokens-selected[]" value="{{ id }}"/></td>
-                                <td>{{ generated_date }}</td>
-                                <td>{{ last_used_on }}</td>
+                                <td class="svn-token-checkbox-cell"><input type="checkbox" name="svn-tokens-selected[]" value="{{ id }}"/></td>
+                                <td class="svn-token-date">{{ generated_date }}</td>
+                                <td class="svn-token-date">{{ last_used_on }}</td>
                                 <td>{{ last_used_by }}</td>
                                 <td>{{ comment }}</td>
                             </tr>
