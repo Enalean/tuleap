@@ -26,8 +26,10 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -44,18 +46,24 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
      */
     private $user_manager;
     /**
+     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AuthorizationCodeCreator
+     */
+    private $authorization_code_creator;
+    /**
      * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
      */
     private $csrf_token;
 
     protected function setUp(): void
     {
-        $this->user_manager = M::mock(\UserManager::class);
-        $this->csrf_token   = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller   = new AuthorizationEndpointPostController(
+        $this->user_manager               = M::mock(\UserManager::class);
+        $this->authorization_code_creator = \Mockery::mock(OAuth2AuthorizationCodeCreator::class);
+        $this->csrf_token                 = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller                 = new AuthorizationEndpointPostController(
             HTTPFactoryBuilder::responseFactory(),
             $this->user_manager,
             new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
+            $this->authorization_code_creator,
             $this->csrf_token,
             M::mock(EmitterInterface::class)
         );
@@ -99,12 +107,16 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
             ['redirect_uri' => 'https://example.com']
         );
         $this->csrf_token->shouldReceive('check')->once();
+        $auth_code = 'auth_code_identifier';
+        $this->authorization_code_creator->shouldReceive('createAuthorizationCodeIdentifier')->once()->andReturn(
+            new ConcealedString($auth_code)
+        );
 
         $response = $this->controller->handle($request);
         $this->assertSame(302, $response->getStatusCode());
         $location = $response->getHeaderLine('Location');
         $this->assertStringContainsString('https://example.com', $location);
-        $this->assertStringContainsString('code=', $location);
+        $this->assertStringContainsString('code=' . $auth_code, $location);
     }
 
     public function testHandlePassesStateParameterWhenPresent(): void
@@ -115,12 +127,16 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
             ['redirect_uri' => 'https://example.com', 'state' => 'xyz']
         );
         $this->csrf_token->shouldReceive('check')->once();
+        $auth_code = 'auth_code_identifier';
+        $this->authorization_code_creator->shouldReceive('createAuthorizationCodeIdentifier')->once()->andReturn(
+            new ConcealedString($auth_code)
+        );
 
         $response = $this->controller->handle($request);
         $this->assertSame(302, $response->getStatusCode());
         $location = $response->getHeaderLine('Location');
         $this->assertStringContainsString('https://example.com', $location);
         $this->assertStringContainsString('state=xyz', $location);
-        $this->assertStringContainsString('code=', $location);
+        $this->assertStringContainsString('code=' . $auth_code, $location);
     }
 }

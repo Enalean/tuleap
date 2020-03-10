@@ -41,6 +41,8 @@ use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
@@ -204,6 +206,12 @@ final class oauth2_serverPlugin extends Plugin
             $response_factory,
             \UserManager::instance(),
             new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
+            new OAuth2AuthorizationCodeCreator(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
+                new SplitTokenVerificationStringHasher(),
+                new OAuth2AuthorizationCodeDAO(),
+                new DateInterval('PT1M')
+            ),
             new \CSRFSynchronizerToken(AuthorizationEndpointGetController::CSRF_TOKEN),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
@@ -272,7 +280,9 @@ final class oauth2_serverPlugin extends Plugin
             new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
             new OAuth2AuthorizationCodeVerifier(
                 new SplitTokenVerificationStringHasher(),
-                UserManager::instance()
+                UserManager::instance(),
+                new OAuth2AuthorizationCodeDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),

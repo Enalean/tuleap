@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
+use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class OAuth2AuthorizationCodeVerifierTest extends TestCase
@@ -35,9 +37,17 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenVerificationStringHasher
+     */
+    private $hasher;
+    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
      */
     private $user_manager;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AuthorizationCodeDAO
+     */
+    private $dao;
     /**
      * @var OAuth2AuthorizationCodeVerifier
      */
@@ -45,22 +55,35 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->hasher       = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $this->user_manager = \Mockery::mock(\UserManager::class);
+        $this->dao          = \Mockery::mock(OAuth2AuthorizationCodeDAO::class);
         $this->verifier     = new OAuth2AuthorizationCodeVerifier(
-            new SplitTokenVerificationStringHasher(),
-            $this->user_manager
+            $this->hasher,
+            $this->user_manager,
+            $this->dao,
+            new DBTransactionExecutorPassthrough()
         );
     }
 
-    public function testGivingTheCorrectTestAuthCodeRetrievesAValidAuthCodeForTheDemoScope(): void
+    public function testGivingACorrectTokenTheCorrespondingUserIsRetrieved(): void
     {
-        $expected_user = new \PFUser(['language_id' => 'en']);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturn($expected_user);
+        $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
+        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
 
         $auth_code = new SplitToken(
             1,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
+        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+            [
+                'user_id'         => $expected_user->getId(),
+                'verifier'        => 'expected_hashed_verification_string',
+                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+            ]
+        );
+        $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
+        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
 
         $verified_authorization = $this->verifier->getAuthorizationCode($auth_code);
 
@@ -74,6 +97,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
             404,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
+        $this->dao->shouldReceive('searchAuthorizationCode')->andReturn(null);
 
         $this->expectException(OAuth2AuthCodeNotFoundException::class);
         $this->verifier->getAuthorizationCode($auth_code);
@@ -81,12 +105,65 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
 
     public function testVerificationFailsWhenVerificationStringDoesNotMatch(): void
     {
+        $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
+        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
         $auth_code = new SplitToken(
-            1,
+            2,
             new SplitTokenVerificationString(new ConcealedString('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'))
         );
+        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+            [
+                'user_id'         => $expected_user->getId(),
+                'verifier'        => 'wrong_hashed_verification_string',
+                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+            ]
+        );
+        $this->hasher->shouldReceive('verifyHash')->andReturn(false);
 
         $this->expectException(InvalidOAuth2AuthCodeException::class);
+        $this->verifier->getAuthorizationCode($auth_code);
+    }
+
+    public function testVerificationFailsWhenTheAuthCodeHasExpired(): void
+    {
+        $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
+        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
+        $auth_code = new SplitToken(
+            3,
+            new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+        );
+        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+            [
+                'user_id'         => $expected_user->getId(),
+                'verifier'        => 'wrong_hashed_verification_string',
+                'expiration_date' => (new DateTimeImmutable('yesterday'))->getTimestamp()
+            ]
+        );
+        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+
+        $this->expectException(OAuth2AuthCodeExpiredException::class);
+        $this->verifier->getAuthorizationCode($auth_code);
+    }
+
+    public function testVerificationFailsWhenTheUserAssociatedWithTheAuthCodeCannotBeFound(): void
+    {
+        $this->user_manager->shouldReceive('getUserById')->andReturn(null);
+
+        $auth_code = new SplitToken(
+            4,
+            new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+        );
+        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+            [
+                'user_id'         => 404,
+                'verifier'        => 'expected_hashed_verification_string',
+                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+            ]
+        );
+        $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
+        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+
+        $this->expectException(OAuth2AuthCodeMatchingUnknownUserException::class);
         $this->verifier->getAuthorizationCode($auth_code);
     }
 }
