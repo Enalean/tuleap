@@ -22,16 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
+use DateTimeImmutable;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\DB\DBTransactionExecutor;
 use UserManager;
 
 class OAuth2AuthorizationCodeVerifier
 {
-    private const TEST_AUTH_CODE_ID = 1;
-    // Not hashed: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    private const TEST_AUTH_CODE_VERIFIER_HASHED_VALUE = '3ba3f5f43b92602683c19aee62a20342b084dd5971ddd33808d81a328879a547';
-
     /**
      * @var SplitTokenVerificationStringHasher
      */
@@ -40,11 +38,25 @@ class OAuth2AuthorizationCodeVerifier
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var OAuth2AuthorizationCodeDAO
+     */
+    private $authorization_code_dao;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $db_transaction_executor;
 
-    public function __construct(SplitTokenVerificationStringHasher $hasher, UserManager $user_manager)
-    {
-        $this->hasher       = $hasher;
-        $this->user_manager = $user_manager;
+    public function __construct(
+        SplitTokenVerificationStringHasher $hasher,
+        UserManager $user_manager,
+        OAuth2AuthorizationCodeDAO $authorization_code_dao,
+        DBTransactionExecutor $db_transaction_executor
+    ) {
+        $this->hasher                  = $hasher;
+        $this->user_manager            = $user_manager;
+        $this->authorization_code_dao  = $authorization_code_dao;
+        $this->db_transaction_executor = $db_transaction_executor;
     }
 
     /**
@@ -53,15 +65,37 @@ class OAuth2AuthorizationCodeVerifier
      */
     public function getAuthorizationCode(SplitToken $auth_code): OAuth2AuthorizationCode
     {
-        if ($auth_code->getID() !== self::TEST_AUTH_CODE_ID) {
-            throw new OAuth2AuthCodeNotFoundException($auth_code->getID());
-        }
+        return $this->db_transaction_executor->execute(
+            function () use ($auth_code): OAuth2AuthorizationCode {
+                $row = $this->authorization_code_dao->searchAuthorizationCode($auth_code->getID());
+                if ($row === null) {
+                    throw new OAuth2AuthCodeNotFoundException($auth_code->getID());
+                }
 
-        $is_valid_auth_code = $this->hasher->verifyHash($auth_code->getVerificationString(), self::TEST_AUTH_CODE_VERIFIER_HASHED_VALUE);
-        if (! $is_valid_auth_code) {
-            throw new InvalidOAuth2AuthCodeException();
-        }
+                $is_valid_auth_code = $this->hasher->verifyHash($auth_code->getVerificationString(), $row['verifier']);
+                if (! $is_valid_auth_code) {
+                    throw new InvalidOAuth2AuthCodeException();
+                }
 
-        return OAuth2AuthorizationCode::approveForDemoScope($this->user_manager->getUserByUserName('admin'));
+                if ($this->isAuthorizationCodeExpired($row['expiration_date'])) {
+                    throw new OAuth2AuthCodeExpiredException($auth_code);
+                }
+
+                $this->authorization_code_dao->markAuthorizationCodeAsUsed($auth_code->getID());
+
+                $user = $this->user_manager->getUserById($row['user_id']);
+                if ($user === null) {
+                    throw new OAuth2AuthCodeMatchingUnknownUserException($row['user_id']);
+                }
+                return OAuth2AuthorizationCode::approveForDemoScope($user);
+            }
+        );
+    }
+
+    private function isAuthorizationCodeExpired(int $expiration_timestamp): bool
+    {
+        $current_time = new DateTimeImmutable();
+
+        return $expiration_timestamp <= $current_time->getTimestamp();
     }
 }

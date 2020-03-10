@@ -27,7 +27,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
 
@@ -49,6 +49,10 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
      */
     private $client_uri_redirect_builder;
     /**
+     * @var OAuth2AuthorizationCodeCreator
+     */
+    private $authorization_code_creator;
+    /**
      * @var \CSRFSynchronizerToken
      */
     private $csrf_token;
@@ -57,6 +61,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
         ResponseFactoryInterface $response_factory,
         \UserManager $user_manager,
         RedirectURIBuilder $client_uri_redirect_builder,
+        OAuth2AuthorizationCodeCreator $authorization_code_creator,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
@@ -65,6 +70,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
         $this->response_factory            = $response_factory;
         $this->user_manager                = $user_manager;
         $this->client_uri_redirect_builder = $client_uri_redirect_builder;
+        $this->authorization_code_creator  = $authorization_code_creator;
         $this->csrf_token                  = $csrf_token;
     }
 
@@ -83,10 +89,11 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
         }
         $this->csrf_token->check();
 
-        $redirect_uri = $body_params[self::REDIRECT_URI];
-        $state_value  = isset($body_params[self::STATE]) ? $body_params[self::STATE] : null;
-        $authorization_code = new ConcealedString(
-            'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161'
+        $redirect_uri       = $body_params[self::REDIRECT_URI];
+        $state_value        = $body_params[self::STATE] ?? null;
+        $authorization_code = $this->authorization_code_creator->createAuthorizationCodeIdentifier(
+            new \DateTimeImmutable(),
+            $user
         );
 
         $success_redirect_uri = $this->client_uri_redirect_builder->buildSuccessURI(

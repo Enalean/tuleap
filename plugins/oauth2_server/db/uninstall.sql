@@ -18,5 +18,6 @@
  */
 
 DROP TABLE IF EXISTS plugin_oauth2_server_app;
+DROP TABLE IF EXISTS plugin_oauth2_authorization_code;
 DELETE FROM oauth2_access_token;
 DELETE FROM oauth2_access_token_scope;
