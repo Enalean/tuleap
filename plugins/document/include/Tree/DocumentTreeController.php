@@ -23,7 +23,6 @@ declare(strict_types = 1);
 namespace Tuleap\Document\Tree;
 
 use CSRFSynchronizerToken;
-use ForgeConfig;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
@@ -101,22 +100,22 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         return $docman_setting_bo->getMetadataUsage($label) === "1";
     }
 
-    private function includeJavascriptFiles(BaseLayout $layout) : void
+    private function getAssets(): IncludeAssets
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/document/scripts',
-            '/assets/document/scripts'
+        return new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/document',
+            '/assets/document'
         );
-
-        $assets_path     = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-        $ckeditor_assets = new IncludeAssets($assets_path, '/assets');
-        $layout->includeFooterJavascriptFile($ckeditor_assets->getFileURL('ckeditor.js'));
-        $layout->includeFooterJavascriptFile($include_assets->getFileURL('document.js'));
     }
 
-    /**
-     * @param            $project
-     */
+    private function includeJavascriptFiles(BaseLayout $layout) : void
+    {
+        $assets_path     = __DIR__ . '/../../../../src/www/assets';
+        $ckeditor_assets = new IncludeAssets($assets_path, '/assets');
+        $layout->includeFooterJavascriptFile($ckeditor_assets->getFileURL('ckeditor.js'));
+        $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('document.js'));
+    }
+
     private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project)
     {
         $layout->header(
@@ -133,10 +132,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     {
         $layout->addCssAsset(
             new CssAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../../src/www/assets/document/themes',
-                    '/assets/document/themes'
-                ),
+                $this->getAssets(),
                 'style'
             )
         );

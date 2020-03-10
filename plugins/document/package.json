@@ -1,6 +1,6 @@
 {
   "author": "Enalean Team",
-  "name": "tuleap-document",
+  "name": "@tuleap/plugin-document",
   "version": "1.0.0",
   "homepage": "https://www.enalean.com",
   "license": "GPL-2.0+",
@@ -26,11 +26,11 @@
     "moment-timezone-data-webpack-plugin": "^1.0.1"
   },
   "config": {
-    "bin": "../../../node_modules/.bin/"
+    "bin": "../../node_modules/.bin/"
   },
   "scripts": {
-    "build": "rm -rf ../../../src/www/assets/document/scripts && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'",
+    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --config webpack.dev.js --watch' 'CI=true npm test -- --watch'",
     "test": "$npm_package_config_bin/jest"
   }
 }
