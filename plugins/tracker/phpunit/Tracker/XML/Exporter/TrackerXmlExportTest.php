@@ -112,7 +112,7 @@ class TrackerXmlExportTest extends TestCase
         $this->tracker1->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
         $this->tracker2->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
 
-        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromFormElements")->twice();
+        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->twice();
 
         $type = new NaturePresenter('fixed_in', '', '', true);
 
@@ -137,7 +137,7 @@ class TrackerXmlExportTest extends TestCase
         $this->tracker1->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
         $this->tracker2->shouldReceive('exportToXML')->never();
 
-        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromFormElements")->once();
+        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->once();
 
         $type = new NaturePresenter('fixed_in', '', '', true);
 
@@ -162,7 +162,7 @@ class TrackerXmlExportTest extends TestCase
         $this->tracker1->shouldReceive('exportToXMLInProjectExportContext')->once();
         $this->tracker_artifact_XMLexport->shouldReceive('export')->once();
 
-        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromFormElements")->once();
+        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->once();
 
         $archive = Mockery::mock(ArchiveInterface::class);
 

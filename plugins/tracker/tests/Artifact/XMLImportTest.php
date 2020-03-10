@@ -19,6 +19,7 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 require_once __DIR__.'/../bootstrap.php';
@@ -70,6 +71,10 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase
      * @var \Mockery\MockInterface|CreatedFileURLMapping
      */
     protected $url_mapping;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
+     */
+    protected $external_field_extractor;
 
     public function setUp()
     {
@@ -117,6 +122,9 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase
 
         $this->url_mapping = \Mockery::mock(CreatedFileURLMapping::class);
 
+        $this->external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact');
+
         $this->importer = new Tracker_Artifact_XMLImport(
             $this->rng_validator,
             $this->artifact_creator,
@@ -130,7 +138,8 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase
             \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
             Mockery::spy(XMLArtifactSourcePlatformExtractor::class),
             Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
-            Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class)
+            Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
+            $this->external_field_extractor
         );
     }
 }
@@ -160,7 +169,8 @@ class Tracker_Artifact_XMLImport_ZipArchiveTest extends Tracker_Artifact_XMLImpo
                 \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
                 Mockery::spy(XMLArtifactSourcePlatformExtractor::class),
                 Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
-                Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class)
+                Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
+                $this->external_field_extractor
             ]
         )
             ->makePartial()
@@ -568,7 +578,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
             Mockery::spy(XMLArtifactSourcePlatformExtractor::class),
             Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
-            Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class)
+            Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
+            $this->external_field_extractor
         );
 
         $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();

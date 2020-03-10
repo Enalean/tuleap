@@ -738,7 +738,7 @@ class TrackerXmlImport
         $partial_element = new SimpleXMLElement((string)$xml_element->asXML());
         $this->creation_data_checker->checkAtProjectCreation((int)$project->getId(), $name, $itemname);
 
-        $this->external_fields_extractor->extractExternalFieldsFromFormElements($partial_element->formElements);
+        $this->external_fields_extractor->extractExternalFieldsFromTracker($partial_element);
 
         $this->rng_validator->validate(
             $partial_element,

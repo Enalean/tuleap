@@ -19,6 +19,7 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
@@ -80,6 +81,11 @@ class Tracker_Artifact_XMLImport
      */
     private $tracker_artifact_source_id_dao;
 
+    /**
+     * @var ExternalFieldsExtractor
+     */
+    private $external_fields_extractor;
+
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactCreator $artifact_creator,
@@ -93,7 +99,8 @@ class Tracker_Artifact_XMLImport
         NatureDao $nature_dao,
         XMLArtifactSourcePlatformExtractor $artifact_source_platform_extractor,
         ExistingArtifactSourceIdFromTrackerExtractor $existing_artifact_source_id_extractor,
-        TrackerArtifactSourceIdDao $artifact_source_id_dao
+        TrackerArtifactSourceIdDao $artifact_source_id_dao,
+        ExternalFieldsExtractor $external_fields_extractor
     ) {
         $this->rng_validator                          = $rng_validator;
         $this->artifact_creator                       = $artifact_creator;
@@ -108,6 +115,7 @@ class Tracker_Artifact_XMLImport
         $this->xml_artifact_source_platform_extractor = $artifact_source_platform_extractor;
         $this->existing_artifact_source_id_extractor  = $existing_artifact_source_id_extractor;
         $this->tracker_artifact_source_id_dao         = $artifact_source_id_dao;
+        $this->external_fields_extractor              = $external_fields_extractor;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive)
@@ -163,6 +171,9 @@ class Tracker_Artifact_XMLImport
     ) {
         $artifacts_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         try {
+            $partial_element = new SimpleXMLElement((string)$xml_element->asXML());
+            $this->external_fields_extractor->extractExternalFieldsFromArtifact($partial_element);
+
             $this->rng_validator->validate($xml_element, realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/artifacts.rng'));
             $artifacts = $this->importBareArtifactsFromXML(
                 $tracker,
