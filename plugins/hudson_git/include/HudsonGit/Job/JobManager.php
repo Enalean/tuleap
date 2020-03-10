@@ -28,6 +28,7 @@ use GitRepository;
 use GitRepositoryFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
+use Tuleap\HudsonGit\Log\Log;
 
 class JobManager
 {
@@ -66,23 +67,23 @@ class JobManager
     /**
      * @throws CannotCreateJobException
      */
-    public function create(Job $job)
+    public function create(Log $log)
     {
-        $this->checkJobCanBeCreated($job);
+        $this->checkJobCanBeCreated($log);
 
-        $this->transaction_executor->execute(function () use ($job) {
-            $id = $this->job_dao->create($job);
+        $this->transaction_executor->execute(function () use ($log) {
+            $id = $this->job_dao->create($log);
             if (!$id) {
                 throw new CannotCreateJobException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
             }
-            if (count($job->getJobUrlList()) > 0) {
+            if (count($log->getJobUrlList()) > 0) {
                 $this->job_dao->logTriggeredJobs(
                     $id,
-                    $job->getJobUrl()
+                    $log->getJobUrl()
                 );
             }
 
-            $status_code = $job->getStatusCode();
+            $status_code = $log->getStatusCode();
             if ($status_code !== null) {
                 $this->job_dao->logBranchSource($id, $status_code);
             }
@@ -92,29 +93,29 @@ class JobManager
     /**
      * @throws CannotCreateJobException
      */
-    public function createJobLogForProject(JenkinsServer $jenkins_server, Job $job)
+    public function createJobLogForProject(JenkinsServer $jenkins_server, Log $log)
     {
-        if ((int)$jenkins_server->getProject()->getID() !== (int)$job->getRepository()->getProject()->getID()) {
+        if ((int)$jenkins_server->getProject()->getID() !== (int)$log->getRepository()->getProject()->getID()) {
             throw new CannotCreateJobException(
                 dgettext("tuleap-hudson_git", "Provided job does not belong to the Jenkins server's project.")
             );
         }
-        $this->checkJobCanBeCreated($job);
+        $this->checkJobCanBeCreated($log);
 
-        $this->transaction_executor->execute(function () use ($jenkins_server, $job) {
+        $this->transaction_executor->execute(function () use ($jenkins_server, $log) {
             $job_id = $this->project_job_dao->create(
                 $jenkins_server->getId(),
-                $job->getRepository()->getId(),
-                $job->getPushDate()
+                $log->getRepository()->getId(),
+                $log->getPushDate()
             );
-            if (count($job->getJobUrlList()) > 0) {
+            if (count($log->getJobUrlList()) > 0) {
                 $this->project_job_dao->logTriggeredJobs(
                     $job_id,
-                    $job->getJobUrl()
+                    $log->getJobUrl()
                 );
             }
 
-            $status_code = $job->getStatusCode();
+            $status_code = $log->getStatusCode();
             if ($status_code !== null) {
                 $this->project_job_dao->logBranchSource($job_id, $status_code);
             }
@@ -146,9 +147,9 @@ class JobManager
         return $jobs;
     }
 
-    private function instantiateFromRow(array $row, GitRepository $repository): Job
+    private function instantiateFromRow(array $row, GitRepository $repository): Log
     {
-        return new Job(
+        return new Log(
             $repository,
             $row['push_date'],
             $row['job_url'] !== null ? $row['job_url'] : '',
@@ -159,7 +160,7 @@ class JobManager
     /**
      * @throws CannotCreateJobException
      */
-    private function checkJobCanBeCreated(Job $job): void
+    private function checkJobCanBeCreated(Log $job): void
     {
         if ($job->getStatusCode() === null && count($job->getJobUrlList()) === 0) {
             throw new CannotCreateJobException(

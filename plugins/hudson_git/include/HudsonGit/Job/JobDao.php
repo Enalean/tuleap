@@ -25,10 +25,11 @@
 namespace Tuleap\HudsonGit\Job;
 
 use DataAccessObject;
+use Tuleap\HudsonGit\Log\Log;
 
 class JobDao extends DataAccessObject
 {
-    public function create(Job $job): int
+    public function create(Log $job): int
     {
         $repository_id = $this->da->escapeInt($job->getRepository()->getId());
         $push_date     = $this->da->escapeInt($job->getPushDate());
