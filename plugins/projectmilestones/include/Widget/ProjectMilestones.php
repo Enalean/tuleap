@@ -266,7 +266,11 @@ class ProjectMilestones extends Widget
      */
     public function create(Codendi_Request $request)
     {
-        $project_id = $request->getValidated("projectmilestones-widget-projectid", 'uint');
+        if ($this->is_multiple_widgets) {
+            $project_id = $request->getValidated("projectmilestones-widget-projectid", 'uint');
+        } else {
+            $project_id = $this->http->getProject()->getID();
+        }
 
         $project = $this->project_retriever->getProjectFromId((string) $project_id);
 
