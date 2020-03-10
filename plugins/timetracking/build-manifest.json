@@ -2,8 +2,8 @@
     "name": "timetracking",
     "gettext-vue": {
         "timetracking": {
-            "src": "www/scripts",
-            "po": "www/scripts/site-content/po"
+            "src": "scripts",
+            "po": "scripts/po"
         }
     }
 }
