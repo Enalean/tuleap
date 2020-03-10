@@ -117,7 +117,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                 );
             }
 
-            $this->redirectToTrackerAdmin($tracker);
+            $this->redirectToModal($tracker);
         } catch (TrackerCreationHasFailedException $exception) {
             $this->redirectToTrackerCreation(
                 $project,
@@ -150,9 +150,12 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $GLOBALS['Response']->redirect('/plugins/tracker/' . urlencode($project->getUnixNameLowerCase()) . '/new');
     }
 
-    private function redirectToTrackerAdmin(\Tracker $tracker): void
+    private function redirectToModal(\Tracker $tracker): void
     {
-        $GLOBALS['Response']->redirect($tracker->getAdministrationUrl());
+        $GLOBALS['Response']->redirect(
+            "/plugins/tracker/?tracker=" . urlencode((string)$tracker->getId()) .
+            "&should-display-created-tracker-modal=true"
+        );
     }
 
     public static function getRouteToSubmissionController(Project $project) : string

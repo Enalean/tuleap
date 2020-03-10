@@ -1,0 +1,33 @@
+<div class="modal fade"
+     id="tracker-creation-success-modal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="tracker-created"
+     aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h2 class="tlp-text-success" id="tracker-created">
+                    {{# dgettext }} tuleap-tracker | Congratulations!{{/ dgettext }}
+                </h2>
+                <p class="tracker-creation-success-modal-text">
+                    {{#dgettext}}
+                        tuleap-tracker | The %s tracker has been successfully created. | {{tracker_name }}
+                    {{/dgettext}}
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    {{# dgettext }}tuleap-tracker | Start using my tracker {{/ dgettext }}
+                </button>
+                <a class="btn btn-primary" href="{{ tracker_admin_url }}">
+                    {{# dgettext }} tuleap-tracker | Continue configuration {{/ dgettext }}
+                    <i class="fa fa-long-arrow-right tracker-creation-success-modal-icon"
+                       aria-hidden="true">
+                    </i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

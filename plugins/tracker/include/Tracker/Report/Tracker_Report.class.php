@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -49,6 +50,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\TrackerCreationSuccess\SuccessPresenter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 
@@ -957,6 +959,25 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 $html .= '</div>';
             }
             $html .= '</div>';
+
+            if ($request->get("should-display-created-tracker-modal")) {
+                $javascript_assets = new IncludeAssets(
+                    __DIR__ . '/../../../../../src/www/assets/trackers',
+                    '/assets/trackers'
+                );
+
+                $GLOBALS['Response']->includeFooterJavascriptFile($javascript_assets->getFileURL('tracker-creation-success.js'));
+
+                $renderer = TemplateRendererFactory::build()->getRenderer(
+                    TRACKER_TEMPLATE_DIR  . '/tracker-creation/'
+                );
+
+                $html .= $renderer->renderToString(
+                    'tracker-creation-success',
+                    new SuccessPresenter($this->getTracker())
+                );
+            }
+
             echo $html;
 
             if ($report_can_be_modified) {

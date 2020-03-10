@@ -86,7 +86,8 @@ const webpack_config_for_vue = {
 
 const webpack_for_vue_plus_typescript = {
     entry: {
-        "tracker-creation": "./scripts/tracker-creation/index.ts"
+        "tracker-creation": "./scripts/tracker-creation/index.ts",
+        "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts"
     },
     context,
     output,
@@ -94,7 +95,8 @@ const webpack_for_vue_plus_typescript = {
         extensions: [".js", ".ts", ".vue"]
     },
     externals: {
-        tlp: "tlp"
+        tlp: "tlp",
+        jquery: "jQuery"
     },
     module: {
         rules: [
