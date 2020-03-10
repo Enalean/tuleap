@@ -34,9 +34,7 @@ export default {
                 case ERROR_TYPE_NO_GIT:
                     return this.$gettext("Git plugin is not activated");
                 case ERROR_TYPE_UNKNOWN_ERROR:
-                    return this.$gettext(
-                        "Something went wrong, please check your network connection"
-                    );
+                    return this.$gettext("An error occurred during your last action.");
                 default:
                     return "";
             }
