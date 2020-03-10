@@ -147,9 +147,7 @@ export default {
                 } else if (error_code === 404) {
                     this.error = this.$gettext("Project not found");
                 } else {
-                    this.error = this.$gettext(
-                        "Something went wrong, please check your network connection"
-                    );
+                    this.error = this.$gettext("An error occurred while creating the repository.");
                 }
                 this.is_loading = false;
             }

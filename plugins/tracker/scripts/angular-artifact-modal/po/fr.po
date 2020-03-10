@@ -26,19 +26,16 @@ msgstr "Ajouter un autre fichier"
 
 #: src/tuleap-artifact-modal-controller.js
 msgid ""
-"An error occured while saving the artifact. Please check your network "
-"connection."
+"An error occurred while saving the artifact."
 msgstr ""
-"Une erreur s'est produite pendant la sauvegarde de cet artéfact. Vérifiez "
-"votre connexion au réseau."
+"Une erreur s'est produite pendant la sauvegarde de cet artéfact."
 
 #: src/tuleap-artifact-modal-controller.js
 msgid ""
-"An error occured while uploading this file: {{ file_name }}. Please check "
-"your network connection."
+"An error occured while uploading this file: {{ file_name }}."
 msgstr ""
 "Une erreur s'est produite pendant le téléversement de ce fichier : "
-"{{ file_name }}. Vérifiez votre connexion au réseau."
+"{{ file_name }}."
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Auto-compute"

@@ -187,11 +187,7 @@ function ArtifactModalController(
                 if (hasError()) {
                     return;
                 }
-                setError(
-                    gettextCatalog.getString(
-                        "An error occured while saving the artifact. Please check your network connection."
-                    )
-                );
+                setError(gettextCatalog.getString("An error occurred while saving the artifact."));
             })
             .finally(function() {
                 TuleapArtifactModalLoading.loading = false;
@@ -226,7 +222,7 @@ function ArtifactModalController(
                 const { file_name } = error;
                 setError(
                     gettextCatalog.getString(
-                        "An error occured while uploading this file: {{ file_name }}. Please check your network connection.",
+                        "An error occurred while uploading this file: {{ file_name }}.",
                         { file_name }
                     )
                 );
