@@ -13,28 +13,70 @@
 #-----------------------------------------------
 # Script: SF/www/account/index.php
 #
+account_options	title		Account Maintenance
+account_options	welcome		Welcome
+account_options	welcome_intro	You can view or change all of your account features from here. You may also wish to view your profile.
+account_options	member_since	Member since:
+account_options	user_id	User Id:
+account_options	login_name	$1 Name
+account_options	ldap_name	LDAP Login
+account_options	password_label	Password:
+account_options	change_password	Change Password
+account_options	real_name	Real Name
+account_options	change_real_name	Change Real Name
+account_options	language	Language:
+account_options	timezone	Timezone:
+account_options	change_timezone	Change Timezone
+account_options	email_address		Email Addr:
+account_options	change_email_address	Change Email Addr
 account_options	preferences	Preferences
 account_options	tuleap_login	Login
 account_options	realname	Real name
+account_options	auth_attempt_title	Authentication details
 account_options	auth_attempt_last_success	Last successful login:
 account_options	auth_attempt_prev_success	Previous successful login:
 account_options	auth_attempt_last_failure	Last login failure:
 account_options	auth_attempt_nb_failure	Number of login failure:
+account_options	auth_attempt_sessions	Open sessions:
+
 #
 #-----------------------------------------------
 #
+account_preferences	appearance	Appearance
+account_preferences	import_export	Import/export
+account_preferences	save_preferences	Save preferences
+account_preferences	html_format	HTML
+account_preferences	text_format	Text
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_pw.php
 #
+account_change_pw	title_success	Successfully Changed Password
+account_change_pw	message	Congratulations. You have changed your $1 password.
+account_change_pw	title	Password Change
+account_change_pw	old_password	Old Password
 account_change_pw	new_password	Password
 account_change_pw	new_password2	Repeat password
+account_change_pw	user_not_found	Internal error: Cannot locate user in database.
+account_change_pw	incorrect_old_password	Old password is incorrect.
+account_change_pw	account_inactive	Account must be active to change password.
+account_change_pw	password_needed	You must supply a password.
+account_change_pw	password_not_match	Passwords do not match.
+account_change_pw	identical_password	Old and new passwords are identical.
+account_change_pw	internal_error_update	Internal error: Could not update password.
+account_change_pw	error_no_rights_to_change_password	You can not change the password of another user.
+
 account_change_avatar	success	Avatar changed!
 account_change_avatar	error	An error occured while saving the avatar.
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_timezone.php
 #
+account_change_timezone	title	Change Timezone
+account_change_timezone	title2	Timezone Change
+account_change_timezone	message	Now, no matter where you live, you can see all dates and times throughout $1 as if it were in your neighborhood.
+account_change_timezone	no_update	Nothing Updated
+account_change_timezone	choose_tz	Please choose a timezone
 #
 #-----------------------------------------------
 # Script: SF/www/account/deleted.php
@@ -45,18 +87,29 @@ account_deleted	message	Your account has been deleted. If you have questions reg
 #-----------------------------------------------
 # Script: SF/www/account/editsshkeys.php
 #
+account_editsshkeys	add_keys_title	Add Authorized SSH Keys
+account_editsshkeys	keys	Authorized keys:<BR><I>Important: Make sure there are no line breaks except between keys. After submitting, verify that the number of keys in your file is what you expected.</I>
 account_editsshkeys	invalid_key	Skip invalid key $1
 account_editsshkeys	key_already_added	Key $1 already existing for user
 account_editsshkeys	update_filesystem	SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient.
+account_editsshkeys	btn_save_keys	Save keys
 #
 #-----------------------------------------------
 # Script: SF/www/account/login.php
 #
+account_login	secure	Secure
+account_login	error_can_t_update_passwd	Internal error: Could not update passwords.
+account_login	pending_title	Pending Account
+account_login	pending_msg	Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
+account_login	validation_msg	Your account has been validated by an administrator, is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
+account_login	need_approval	Your account is currently pending an approval from an administrator. You will be notified by email when your account is validated.
+account_login	resend_btn	Resend Confirmation Email
 account_login	name	Username
 account_login	password	Password
 account_login	need_help	Can't log in? Send an email to administrators
 account_login	login_btn	Login
 account_login	lost_pw	Ooops, I forgot my password
+account_login	create_acct	<b><A HREF="register.php">[Create a new Account]</A></b><BR> If it's your first time on the <b>$1</b> site you can become a member right now ! The creation of a <a href="register.php">new account</a> takes a few seconds and you can take advantage of the services offered by the $1 site.
 account_login	login_with_tuleap	Login
 account_login	page_title	$1 login
 account_login	help_subject	Unable to login under $1
@@ -68,6 +121,7 @@ account_login	create_account_label	Create an account
 #
 account_lostlogin	title	Lost Password
 account_lostlogin	message	Welcome, $1. You may now change your lost password.
+account_lostlogin	duplicate_hash	This hash key exists more than once.
 account_lostlogin	invalid_hash	Invalid confirmation hash.
 account_lostlogin	expired_token	The confirmation key is expired, please renew if needed your request for the retrieval of your lost password
 account_lostlogin	newpasswd	New Password
@@ -79,6 +133,7 @@ account_lostlogin	newpasswd2	New Password (repeat)
 account_lostpw-confirm	token_generation_failed	An issue has been encountered, please retry
 account_lostpw-confirm	title	Lost Password Confirmation
 account_lostpw-confirm	mail_subject	$1 Password Verification
+account_lostpw-confirm	mail_body	Someone (presumably you) on the $1 site requested a\npassword change through email verification. If this was\nnot you,ignore this message and nothing will happen.\n\nIf you requested this verification, visit the following URL\nto change your password:\n\n$2\n\n -- The $1 Team\n
 account_lostpw-confirm	msg_confirm	<B>Confirmation mailed</B><P>An email has been sent to the address you have on file. Follow the instructions in the email to change your account password.
 #
 #-----------------------------------------------
@@ -91,43 +146,67 @@ account_lostpw	send_hash	Send Lost Password Hash
 #-----------------------------------------------
 # Script: SF/www/account/myprojectlist.php
 #
+account_myprojectlist	title	My Project Listing
+account_myprojectlist	grp_list	Group List for <B>$1</B>
 #
 #-----------------------------------------------
 # Script: SF/www/account/pending.php
 #
+account_pending	title	Pending Account
+account_pending	message	<B>Pending Account</B><P>Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account. <P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
+account_pending	btn_resend	Resend Confirmation Email
 #
 #-----------------------------------------------
 # Script: SF/www/account/register.php
 #
 account_register	err_realname	Real name contains illegal characters.
+account_register	err_nouser	You must supply a username.
 account_register	err_nopasswd	You must supply a password.
 account_register	err_passwd	Passwords do not match.
 account_register	err_notz	You must supply a timezone.
 account_register	err_nopurpose	You must explain the purpose of your registration.
 account_register	err_email	Invalid Email Address
+account_register	err_name	The login name is invalid
+account_register	err_invpasswd	The password is invalid
+account_register	err_no_ldap	The LDAP login is missing
 account_register	title_confirm	Your account is created, </br>it now needs to be activated.
 account_register	title_confirm_admin	The user account was created.
 account_register	title	Register
 account_register	title_admin	Create a new user
 account_register	login	Login Name
+account_register	ldap_login	LDAP Login Name
+account_register	ldap_unix_login	$1 Name <strong>(Lower case only, no spaces)</strong>
+account_register	ldap_email_help	<em><strong>Remark:</strong> This email address was retrieved from the directory. Please do not change it.</em>
+account_register	codendi_login_help	This login was generated from your email address. You may change it if needed.
+account_register	login_directions	<strong>(Lower case only!)</strong>
+account_register	passwd	Password
+account_register	passwd_directions	(minimum 6 chars)
+account_register	passwd2	Password (repeat)
+account_register	passwd2_directions	&nbsp;
 account_register	realname	Full name
+account_register	realname_directions	&nbsp;
 account_register	email	Email
+account_register	email_directions	<em><strong>Remark:</strong> This email address will be verified before account activation. Please use approved email address only.</em>
 account_register	email_tooltip	We will send an email at this address to confirm your account.
 account_register	expiry_date	Expiration date
 account_register	expiry_date_directions	<em><strong>Remark:</strong> The account will be suspended when the date is reached. Leave blank if you don't want an expiration date.</em>
 account_register	data_not_parsed	       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.
+account_register	tz	Timezone
 account_register	mandatory	All fields are mandatory.
 account_register	siteupdate	Receive Email about Site Updates <span class="label-help">Very low traffic, includes security notices. Highly Recommended.</span>
+account_register	communitymail	Receive additional community mailings. <span style="color:#666">(Low traffic.)</span>
 account_register	purpose	Purpose
 account_register	purpose_directions	Please explain why you are applying for registration on this site<br>
 account_register	purpose_directions_admin	You can add a comment on this user registration<br>
 account_register	btn_register	Register
 account_register	btn_activate	Activate
+account_register	btn_next	Next Step
 account_register	send_email	Send a welcome email to the user
 account_register	msg_redirect	Go to the home page
 account_register	msg_redirect_admin	Go to the admin page
 account_register	msg_thanks	Thank you for using Tuleap
 account_register	msg_confirm	To do this click the confirm button in the email. <i class="fa fa-envelope-o"></i>
+account_register	msg_confirm_admin	Please note the login <span class="confirmation-user">$3</span> and password <span class="confirmation-user">$4</span>
 account_register	title_approval	Your account has been created,</br> it must be approved by an administrator.
 account_register	msg_approval	Once approved click the confirm button in this email.<i class="fa fa-envelope-o"></i>
 account_register	mail_approval_subject	New User Registered: $1
@@ -150,5 +229,9 @@ account_suspended	message	Your account has been suspended. If you have questions
 #-----------------------------------------------
 # Script: SF/www/account/login.php
 #
+account_verify	title	Account Verification
+account_verify	message	In order to complete your registration, login now. Your account will then be activated for normal logins.
+account_verify	err_user	Invalid username.
 account_verify	err_hash	Invalid confirmation hash.
+account_verify	err_status	Invalid status. Site Administrators didn't validate your account.
 account_verify	account_confirm	Your account has been successfully confirmed.
