@@ -25,7 +25,6 @@ namespace Tuleap\Baseline\Domain;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use DateTimeInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
@@ -77,14 +76,10 @@ class BaselineServiceTest extends TestCase
     /** @var Project|MockInterface */
     private $a_project;
 
-    /** @var DateTimeInterface */
-    private $a_date;
-
     /** @before */
     public function createEntities()
     {
         $this->a_project = ProjectFactory::one();
-        $this->a_date    = DateTimeFactory::one();
     }
 
     public function testCreatWithoutSnapshotDateAddsGivenBaselineWithNowAsSnapshoDate()

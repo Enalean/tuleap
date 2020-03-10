@@ -70,7 +70,6 @@ class BaselineArtifactController
     }
 
     /**
-     * @return BaselineArtifactCollectionRepresentation
      * @throws ForbiddenRestException
      * @throws NotFoundRestException
      * @throws RestException 520

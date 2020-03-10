@@ -100,7 +100,6 @@ class BaselinesResource extends AuthenticatedResource
      * @status 200
      * @access protected
      *
-     * @param int $id
      * @throws \Rest_Exception_InvalidTokenException
      * @throws NotFoundRestException 404
      * @throws ForbiddenRestException 403

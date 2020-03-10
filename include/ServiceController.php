@@ -62,32 +62,30 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
 
     private function includeJavascriptFiles(BaseLayout $layout)
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/baseline/scripts',
-            '/assets/baseline/scripts'
-        );
-
-        $layout->includeFooterJavascriptFile($include_assets->getFileURL('baseline.js'));
+        $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('baseline.js'));
     }
 
     private function includeCssFiles(BaseLayout $layout)
     {
         $layout->addCssAsset(
             new CssAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../src/www/assets/baseline/BurningParrot',
-                    '/assets/baseline/BurningParrot'
-                ),
+                $this->getAssets(),
                 'baseline'
             )
+        );
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/baseline',
+            '/assets/baseline'
         );
     }
 
     /**
      * Is able to process a request routed by FrontRouter
      *
-     * @param HTTPRequest $request
-     * @param BaseLayout  $layout
      * @param array       $variables
      * @throws NotFoundException
      * @throws ForbiddenException
@@ -139,8 +137,6 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
     }
 
     /**
-     * @param string $name
-     * @return Project
      * @throws NotFoundException
      */
     private function getProjectByName(string $name): Project

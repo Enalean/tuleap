@@ -74,16 +74,16 @@ pipeline {
                 stage ('Jest') {
                     agent {
                         docker {
-                            image 'node:12.6-alpine'
+                            image 'node:13.10-alpine'
                             reuseNode true
                             args '--network none'
                         }
                     }
-                    steps { script { actions.runJestTests('Baseline', 'plugins/baseline/scripts/') } }
+                    steps { script { actions.runJestTests('Baseline', 'plugins/baseline/') } }
                     post {
                         always {
                             junit 'results/jest/test-*-results.xml'
-                            step([$class: 'CloverPublisher', cloverReportDir: 'results/jest/coverage/', cloverReportFileName: 'clover.xml'])
+                            publishCoverage adapters: [istanbulCoberturaAdapter('results/jest/coverage/cobertura-coverage.xml')], tag: 'Javascript'
                         }
                     }
                 }

@@ -1,17 +1,37 @@
 {
     "author": "Enalean Team",
-    "name": "tuleap",
+    "name": "@tuleap/plugin-baseline",
     "homepage": "https://tuleap.org",
     "license": "GPL-2.0",
     "private": true,
+    "dependencies": {
+        "moment": "^2.24.0",
+        "moment-timezone": "^0.5.23",
+        "node-htmldiff": "^0.9.3",
+        "phptomoment": "0.0.2",
+        "sprintf-js": "^1.1.2",
+        "vue": "^2.5.17",
+        "vue-dompurify-html": "^2.1.0",
+        "vue-gettext": "^2.1.5",
+        "vue-router": "^3.0.2",
+        "vuex": "^3.1.0"
+    },
     "devDependencies": {
         "eslint": "^5.11.1",
         "prettier": "^1.14.3",
         "stylelint": "^9.9.0",
         "stylelint-config-property-sort-order-smacss": "^4.0.2",
-        "stylelint-config-sass-guidelines": "^5.3.0"
+        "stylelint-config-sass-guidelines": "^5.3.0",
+        "@vue/test-utils": "^1.0.0-beta.27",
+        "vuex-mock-store": "0.0.7"
+    },
+    "config": {
+        "bin": "../../node_modules/.bin/"
     },
     "scripts": {
+        "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+        "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --config webpack.dev.js --watch' 'CI=true npm test -- --watch'",
+        "test": "$npm_package_config_bin/jest",
         "eslint": "eslint --config ../../.eslintrc.js --no-eslintrc --report-unused-disable-directives",
         "prettier": "prettier --config ../../.prettierrc --ignore-path ../../.eslintignore",
         "stylelint": "stylelint --config ../../.stylelintrc.js --syntax scss --ignore-path ../../.stylelintignore"
