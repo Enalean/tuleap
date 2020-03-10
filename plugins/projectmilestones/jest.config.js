@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../tests/jest/jest.base.config.js");
+const base_config = require("../../tests/jest/jest.base.config.js");
 
 module.exports = {
     ...base_config,

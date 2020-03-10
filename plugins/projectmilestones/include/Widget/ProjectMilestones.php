@@ -22,25 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
+use Codendi_Request;
+use CSRFSynchronizerToken;
 use HTTPRequest;
 use PlanningDao;
 use PlanningFactory;
 use PlanningPermissionsManager;
+use Project;
+use ProjectManager;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use TrackerFactory;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\ProjectMilestones\Milestones\ProjectMilestonesDao;
+use Tuleap\Request\NotFoundException;
+use Tuleap\Request\ProjectRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Widget;
-use Codendi_Request;
-use Tuleap\ProjectMilestones\Milestones\ProjectMilestonesDao;
-use Tuleap\Request\ProjectRetriever;
-use ProjectManager;
-use Tuleap\Request\NotFoundException;
-use Project;
-use CSRFSynchronizerToken;
 
 class ProjectMilestones extends Widget
 {
@@ -154,25 +154,24 @@ class ProjectMilestones extends Widget
         return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
     }
 
-    public function getJavascriptDependencies()
+    public function getJavascriptDependencies(): array
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/projectmilestones/scripts',
-            '/assets/projectmilestones/scripts'
-        );
         return [
-            ['file' => $include_assets->getFileURL('projectmilestones.js')]
+            ['file' => $this->getAssets()->getFileURL('projectmilestones.js')]
         ];
     }
 
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies(): CssAssetCollection
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/projectmilestones/themes/BurningParrot',
-            '/assets/projectmilestones/themes/BurningParrot'
-        );
+        return new CssAssetCollection([new CssAsset($this->getAssets(), 'style')]);
+    }
 
-        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/projectmilestones',
+            '/assets/projectmilestones'
+        );
     }
 
     public function getCategory()
@@ -182,7 +181,7 @@ class ProjectMilestones extends Widget
 
     public function loadContent($id)
     {
-        if (!$this->is_multiple_widgets) {
+        if (! $this->is_multiple_widgets) {
             $this->project = $this->http->getProject();
         } else {
             $this->project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
