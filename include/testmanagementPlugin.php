@@ -20,6 +20,7 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
@@ -88,7 +89,7 @@ class testmanagementPlugin extends Plugin
         $this->addHook(ImportValidateExternalFields::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(ImportExternalElement::NAME);
-
+        $this->addHook(ImportValidateChangesetExternalField::NAME);
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
@@ -484,7 +485,7 @@ class testmanagementPlugin extends Plugin
     public function importValidateExternalFields(ImportValidateExternalFields $validate_external_fields)
     {
         $xml = $validate_external_fields->getXml();
-        if ((string)$xml->attributes()['type'] === 'ttmstepdef') {
+        if ((string)$xml->attributes()['type'] === StepDefinition::TYPE) {
             $validator = $this->getImportXmlFromTracker();
             $validator->validateXMLImport($xml);
         }
@@ -493,11 +494,19 @@ class testmanagementPlugin extends Plugin
     public function importExternalElement(ImportExternalElement $event): void
     {
         $xml = $event->getXml();
-        if ((string)$xml->attributes()['type'] === 'ttmstepdef') {
+        if ((string)$xml->attributes()['type'] === StepDefinition::TYPE) {
             $validator = $this->getImportXmlFromTracker();
             $event->setFormElement(
                 $validator->getInstanceFromXML($xml, $event->getProject(), $event->getFeedbackCollector())
             );
+        }
+    }
+    public function importValidateChangesetExternalField(ImportValidateChangesetExternalField $validate_external_fields): void
+    {
+        $xml = $validate_external_fields->getXml();
+        if ((string)$xml->attributes()['type'] === StepDefinition::TYPE) {
+            $validator = $this->getImportXmlFromTracker();
+            $validator->validateChangesetXMLImport($xml);
         }
     }
 

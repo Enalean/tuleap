@@ -57,6 +57,14 @@ class ImportXMLFromTracker
         );
     }
 
+    public function validateChangesetXMLImport(SimpleXMLElement $xml): void
+    {
+        $this->rng_validator->validate(
+            $xml,
+            realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement_external_changeset.rng')
+        );
+    }
+
     public function getInstanceFromXML(SimpleXMLElement $testmanagement, $project, $feedback_collector): StepDefinition
     {
         $att = $testmanagement->attributes();

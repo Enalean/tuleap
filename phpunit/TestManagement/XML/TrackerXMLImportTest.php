@@ -83,6 +83,41 @@ final class TrackerXMLImportTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testValidateChangesetXMLImportThrowExceptionIfNotValidXML(): void
+    {
+        $xml_input = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+                  <external_field_change field_name="steps" type="ttmstepdef">
+                      <description><![CDATA[Yep]]></description>
+                      <expected_results_format><![CDATA[text]]></expected_results_format>
+                      <expected_results><![CDATA[Non]]></expected_results>
+                  </external_field_change>'
+        );
+
+        $this->expectException('XML_ParseException');
+        $this->xml_validator->validateChangesetXMLImport($xml_input);
+    }
+
+    public function testValidateChangesetXMLImportWithMutlipleStepNotThrowException(): void
+    {
+        $xml_input = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+                  <external_field_change field_name="steps" type="ttmstepdef">
+                    <step>
+                      <description format="html"><![CDATA[Yep]]></description>
+                      <expected_results format="html"><![CDATA[Non]]></expected_results>
+                    </step>
+                    <step>
+                      <description format="text"><![CDATA[Yep]]></description>
+                      <expected_results format="text"><![CDATA[Non]]></expected_results>
+                    </step>
+                  </external_field_change>'
+        );
+
+        $this->xml_validator->validateChangesetXMLImport($xml_input);
+        $this->addToAssertionCount(1);
+    }
+
     public function testGetInstanceFromXML()
     {
         $xml_input = new SimpleXMLElement(
