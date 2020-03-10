@@ -1,0 +1,57 @@
+SVN-fs-dump-format-version: 2
+
+UUID: 382f269e-83fe-4aec-a9df-ba7be2efbf36
+
+Revision-number: 0
+Prop-content-length: 56
+Content-length: 56
+
+K 8
+svn:date
+V 27
+2017-03-17T13:36:20.977137Z
+PROPS-END
+
+Revision-number: 1
+Prop-content-length: 116
+Content-length: 116
+
+K 10
+svn:author
+V 6
+manuel
+K 8
+svn:date
+V 27
+2017-03-17T13:37:02.889832Z
+K 7
+svn:log
+V 15
+Base repository
+PROPS-END
+
+Node-path: branches
+Node-kind: dir
+Node-action: add
+Prop-content-length: 10
+Content-length: 10
+
+PROPS-END
+
+
+Node-path: tags
+Node-kind: dir
+Node-action: add
+Prop-content-length: 10
+Content-length: 10
+
+PROPS-END
+
+
+Node-path: trunk
+Node-kind: dir
+Node-action: add
+Prop-content-length: 10
+Content-length: 10
+
+PROPS-END

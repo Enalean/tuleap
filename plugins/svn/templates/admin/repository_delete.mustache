@@ -6,7 +6,13 @@
         <p>{{ comment }} <b>{{ repository_name }}</b>. {{ comment_undone }}</p>
 
         {{^ is_created }}<p class="alert alert-warning">{{ cannot_delete }}</p>{{/ is_created }}
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-repository-delete" {{^ is_created }}disabled{{/ is_created }}>
+        <button type="button"
+                class="btn btn-danger"
+                data-toggle="modal"
+                data-target="#modal-repository-delete"
+                data-test="svn-delete-repository"
+                {{^ is_created }}disabled{{/ is_created }}
+        >
             <i class="fa fa-trash-o"></i> {{ button }}
         </button>
     </div>

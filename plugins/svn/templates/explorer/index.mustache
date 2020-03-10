@@ -10,6 +10,7 @@
         <div class="input-append">
             <input type="text"
                 id="create-repository-field-name"
+                data-test="create-repository-field-name"
                 name="repo_name"
                 value="{{ repository_name }}"
                 placeholder="{{ label_repository_name }}"
@@ -17,9 +18,10 @@
                 required
             />
             <input type="submit"
-                name="repo_add"
-                value="{{ create_repository }}"
-                class="btn btn-primary"
+                   name="repo_add"
+                   value="{{ create_repository }}"
+                   data-test="create-repository"
+                   class="btn btn-primary"
             />
         </div>
         <span class="help">{{ help_repository_name }}</span>
@@ -42,11 +44,11 @@
         {{# repository_list }}
             {{# repository }}
                 <tr>
-                    <td><a href="?roottype=svn&amp;root={{ getFullName }}">{{ getName }}</a></td>
+                    <td><a href="?roottype=svn&amp;root={{ getFullName }}" data-test="svn-repository-access">{{ getName }}</a></td>
                     <td>{{ getPurifiedHumanReadableCommitDate }}</td>
                     {{# is_admin }}
                         <td>
-                            <a href="{{ getSettingUrl }}" class="btn">
+                            <a href="{{ getSettingUrl }}" class="btn" data-test="svn-admin-repository-access">
                                 <i class="fa fa-cog"></i> {{ settings_button }}
                             </a>
                         </td>

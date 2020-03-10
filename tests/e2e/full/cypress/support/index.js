@@ -18,3 +18,4 @@
  */
 
 import "./commands.js";
+import "./api-helper.js";

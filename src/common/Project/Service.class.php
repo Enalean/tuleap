@@ -179,7 +179,8 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         foreach ($toolbar as $t) {
             $class = isset($t['class']) ? 'class="'. $t['class'] .'"' : '';
             $item_title = isset($t['short_title']) ? $t['short_title'] :$t['title'];
-            $GLOBALS['HTML']->addToolbarItem('<a href="'. $t['url'] .'" '. $class .'>'. $item_title .'</a>');
+            $data_test = isset($t['data-test']) ? 'data-test="' .$t['data-test'] .'"' : '';
+            $GLOBALS['HTML']->addToolbarItem('<a href="'. $t['url'] .'" '. $class . ' ' . $data_test .'>'. $item_title .'</a>');
         }
         $params['title']  = $title;
         $params['group']  = $this->project->group_id;

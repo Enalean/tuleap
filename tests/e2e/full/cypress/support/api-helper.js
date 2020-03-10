@@ -1,8 +1,7 @@
-<?php
-/**
- * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +15,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-declare(strict_types = 1);
+Cypress.Commands.add("getFromTuleapAPI", url => {
+    return cy.request({
+        url,
+        headers: {
+            accept: "application/json",
+            referer: Cypress.config("baseUrl")
+        }
+    });
+});
 
-namespace Tuleap\Project\Admin\Navigation;
-
-class NavigationDropdownItemPresenter implements NavigationDropdownItemInterface
-{
-    public $label;
-    public $html_url;
-    public $identifier;
-
-    public function __construct($label, $html_url, $identifier = null)
-    {
-        $this->label      = $label;
-        $this->html_url   = $html_url;
-        $this->identifier = ($identifier)?: 'dropdown-default-identifier';
-    }
-
-    public function isMenuTitle()
-    {
-        return false;
-    }
-}
+Cypress.Commands.add("postFromTuleapApi", (url, payload) => {
+    cy.request({
+        method: "POST",
+        url: url,
+        body: payload,
+        headers: {
+            accept: "application/json",
+            referer: Cypress.config("baseUrl")
+        }
+    });
+});
