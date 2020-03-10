@@ -380,17 +380,17 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     private function generic_header($params)
     {
         if (!$this->is_rendered_through_service && isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
-            $pm = ProjectManager::instance();
-            $project = $pm->getProject($GLOBALS['group_id']);
             if (isset($params['toptab'])) {
                 $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
             }
         }
+        $hp = Codendi_HTMLPurifier::instance();
+        $title = ($params['title'] ? $params['title'] . ' - ' : '') . $GLOBALS['sys_name'];
         echo '<!DOCTYPE html>'."\n";
-        echo '<html lang="'. $GLOBALS['Language']->getText('conf', 'language_code') .'">
+        echo '<html lang="' . $GLOBALS['Language']->getText('conf', 'language_code') . '">
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                    <title>'. ($params['title'] ? $params['title'] . ' - ' : '') . $GLOBALS['sys_name'] .'</title>
+                    <title>' . $hp->purify($title) .'</title>
                     <link rel="SHORTCUT ICON" href="'. $this->imgroot . 'favicon.ico' .'">';
         echo $this->displayJavascriptElements($params);
         echo $this->displayStylesheetElements($params);
@@ -727,7 +727,12 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
 ';
         if (isset($params['pv']) && $params['pv'] < 2) {
             if (isset($params['title']) && $params['title']) {
-                echo '<h2>'.$params['title'].' - '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), time()).'</h2>
+                $hp = Codendi_HTMLPurifier::instance();
+                $title = $params['title'] . ' - ' . format_date(
+                    $GLOBALS['Language']->getText('system', 'datefmt'),
+                    time()
+                );
+                echo '<h2>' . $hp->purify($title) .'</h2>
                 <hr />';
             }
         }
