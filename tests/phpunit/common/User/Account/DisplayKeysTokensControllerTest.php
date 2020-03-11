@@ -118,7 +118,7 @@ final class DisplayKeysTokensControllerTest extends TestCase
         $output = ob_get_clean();
 
         $this->assertStringContainsString('SSH keys', $output);
-        $this->assertStringContainsString('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZX...wQjaL4YMUZ3sx6eloxF3 someone@example.com', $output);
+        $this->assertStringContainsString('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZXBYZ8xW1Rst…71v2/g5QWjwQjaL4YMUZ3sx6eloxF3 someone@example.com', $output);
     }
 
     public function testItRendersThePageWithSVNToken(): void

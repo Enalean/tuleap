@@ -34,3 +34,22 @@
 .ssh-key-value-reset-cursor {
     cursor: auto;
 }
+
+.access-keys-header,
+.access-key-date,
+.svn-tokens-header,
+.svn-token-date {
+    white-space: nowrap;
+}
+
+
+.access-key-checkbox-cell,
+.svn-token-checkbox-cell,
+.access-key-date,
+.svn-token-date {
+    width: 10px;
+}
+
+.tlp-badge-secondary.access-key-scope:not(:only-child) {
+    margin: 1px 0;
+}
