@@ -100,15 +100,18 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0
         ) {
-            $include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/timetracking/themes',
-                '/assets/timetracking/themes'
-            );
-
-            $style_css_url = $include_assets->getFileURL('style-fp.css');
+            $style_css_url = $this->getAssets()->getFileURL('style-fp.css');
 
             echo '<link rel="stylesheet" type="text/css" href="'.$style_css_url.'" />';
         }
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/timetracking',
+            '/assets/timetracking'
+        );
     }
 
     /**
