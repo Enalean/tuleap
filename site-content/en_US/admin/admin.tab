@@ -36,7 +36,6 @@ admin_sidebar	utils_nav_news	News approval
 admin_sidebar	utils_nav_mass_mail	Mass emailing
 admin_sidebar	links_nav_plugins	Plugins
 admin_sidebar	links_nav_doc	Doc
-admin_sidebar	collapse_sidebar_label	Collapse sidebar
 
 #-----------------------------------------------
 # Script: SF/www/admin/index.php

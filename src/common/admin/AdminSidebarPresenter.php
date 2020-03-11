@@ -112,7 +112,6 @@ class AdminSidebarPresenter
         $this->utils_nav_mass_mail                     = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_mass_mail');
 
         $this->links_nav_doc                           = $GLOBALS['Language']->getText('admin_sidebar', 'links_nav_doc');
-        $this->collapse_sidebar_label                  = $GLOBALS['Language']->getText('admin_sidebar', 'collapse_sidebar_label');
 
         $this->plugins_section_title = $GLOBALS['Language']->getText('admin_main', 'header_plugins');
         $this->plugins_manage_all    = $GLOBALS['Language']->getText('admin_main', 'manage_all_plugins');
