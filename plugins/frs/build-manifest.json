@@ -2,8 +2,8 @@
     "name": "frs",
     "gettext-angularjs": {
         "frs": {
-            "src": "www/js/angular/src/app",
-            "po": "www/js/angular/po"
+            "src": "scripts/release-notes/src",
+            "po": "scripts/release-notes/po"
         }
     }
 }

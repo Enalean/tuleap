@@ -25,7 +25,7 @@ import angular_tlp_module from "angular-tlp";
 import "angular-gettext";
 import "angular-filter";
 import "ng-showdown";
-import translations from "../../po/fr.po";
+import translations from "../po/fr.po";
 
 import AppController from "./app-controller.js";
 import RestErrorService from "./rest-error-service.js";

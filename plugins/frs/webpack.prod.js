@@ -17,13 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../../../tests/jest/jest.base.config.js");
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-module.exports = {
-    ...require("../../../../../tests/jest/jest.base.config.js"),
-    displayName: "frs",
-    moduleNameMapper: {
-        ...base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy"
-    }
-};
+module.exports = webpack_configurator.extendProdConfiguration(common);

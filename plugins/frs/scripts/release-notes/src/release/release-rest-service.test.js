@@ -19,7 +19,7 @@
 
 import angular from "angular";
 import tuleap_frs_module from "../app.js";
-import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
 import "angular-mocks";
 

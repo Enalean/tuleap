@@ -62,9 +62,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
     /** @var TemplateRenderer */
     private $renderer;
     /** @var IncludeAssets */
-    private $script_assets;
-    /** @var IncludeAssets */
-    private $theme_assets;
+    private $assets;
 
     public function __construct(
         FRSReleaseFactory $release_factory,
@@ -74,8 +72,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         UploadedLinksRetriever $uploaded_links_retriever,
         FRSPermissionManager $permission_manager,
         TemplateRenderer $renderer,
-        IncludeAssets $script_assets,
-        IncludeAssets $theme_assets
+        IncludeAssets $assets
     ) {
         $this->release_factory                = $release_factory;
         $this->license_agreement_factory      = $license_agreement_factory;
@@ -84,8 +81,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         $this->uploaded_links_retriever       = $uploaded_links_retriever;
         $this->permission_manager             = $permission_manager;
         $this->renderer                       = $renderer;
-        $this->script_assets                  = $script_assets;
-        $this->theme_assets                   = $theme_assets;
+        $this->assets                         = $assets;
     }
 
     public static function buildSelf(): self
@@ -102,10 +98,9 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
             new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance()),
             FRSPermissionManager::build(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates'),
-            new IncludeAssets(__DIR__ . '/../../www/assets', '/plugins/frs/assets'),
             new IncludeAssets(
-                __DIR__ . '/../../../../src/www/assets/frs/themes',
-                '/assets/frs/themes'
+                __DIR__ . '/../../../../src/www/assets/frs',
+                '/assets/frs'
             )
         );
     }
@@ -137,8 +132,8 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
             $license_agreement
         );
 
-        $layout->includeFooterJavascriptFile($this->script_assets->getFileURL('tuleap-frs.js'));
-        $layout->addCssAsset(new CssAsset($this->theme_assets, 'frs'));
+        $layout->includeFooterJavascriptFile($this->assets->getFileURL('tuleap-frs.js'));
+        $layout->addCssAsset(new CssAsset($this->assets, 'frs'));
 
         $translated_title = sprintf(dgettext('tuleap-frs', 'Release %s - Release Notes'), $release->getName());
         $project          = $release->getProject();
