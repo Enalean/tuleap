@@ -29,7 +29,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { CreationOptions } from "../../../../../store/type";
-import SvgTrackerEmpty from "../../svg/SvgTrackerEmpty.vue";
+import SvgTrackerEmpty from "./SvgTrackerEmpty.vue";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import TrackerEmptyCardDescription from "./TrackerEmptyCardDescription.vue";
 
