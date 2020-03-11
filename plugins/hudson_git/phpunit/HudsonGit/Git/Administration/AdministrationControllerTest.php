@@ -36,8 +36,8 @@ use ProjectManager;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\HudsonGit\Log\Log;
+use Tuleap\HudsonGit\Log\LogFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
@@ -103,9 +103,9 @@ class AdministrationControllerTest extends TestCase
     private $include_assets;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JobManager
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LogFactory
      */
-    private $job_manager;
+    private $log_factory;
 
     protected function setUp(): void
     {
@@ -118,14 +118,14 @@ class AdministrationControllerTest extends TestCase
         $this->mirror_data_mapper      = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
         $this->jenkins_server_factory  = Mockery::mock(JenkinsServerFactory::class);
         $this->include_assets          = Mockery::mock(IncludeAssets::class);
-        $this->job_manager             = Mockery::mock(JobManager::class);
+        $this->log_factory             = Mockery::mock(LogFactory::class);
 
         $this->controller = new AdministrationController(
             $this->project_manager,
             $this->git_permissions_manager,
             $this->mirror_data_mapper,
             $this->jenkins_server_factory,
-            $this->job_manager,
+            $this->log_factory,
             $this->header_renderer,
             $this->renderer,
             $this->include_assets
@@ -246,7 +246,7 @@ class AdministrationControllerTest extends TestCase
         $repository = Mockery::mock(GitRepository::class);
         $repository->shouldReceive('getName')->andReturn('repo01');
         $log = new Log($repository, 1582622782, 'job_url', null);
-        $this->job_manager->shouldReceive('getLastJobLogsByProjectServer')
+        $this->log_factory->shouldReceive('getLastJobLogsByProjectServer')
             ->with($jenkins_server)
             ->andReturn([$log]);
 

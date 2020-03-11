@@ -26,9 +26,9 @@ use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Hook\HookDao;
 use Tuleap\HudsonGit\Hook\ModalsPresenter;
 use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
-use Tuleap\HudsonGit\Job\JobManager;
 use CSRFSynchronizerToken;
 use TemplateRendererFactory;
+use Tuleap\HudsonGit\Log\LogFactory;
 
 /**
  * I am responsible of adding the possibility to repo admin to define jenkins hook for a git repository and
@@ -38,9 +38,9 @@ class GitWebhooksSettingsEnhancer
 {
 
     /**
-     * @var JobManager
+     * @var LogFactory
      */
-    private $job_manager;
+    private $log_factory;
 
     /**
      * @var HookDao
@@ -59,13 +59,13 @@ class GitWebhooksSettingsEnhancer
 
     public function __construct(
         HookDao $dao,
-        JobManager $job_manager,
+        LogFactory $log_factory,
         CSRFSynchronizerToken $csrf,
         JenkinsServerFactory $jenkins_server_factory
     ) {
         $this->dao                    = $dao;
         $this->csrf                   = $csrf;
-        $this->job_manager            = $job_manager;
+        $this->log_factory            = $log_factory;
         $this->jenkins_server_factory = $jenkins_server_factory;
     }
 
@@ -108,7 +108,7 @@ class GitWebhooksSettingsEnhancer
             $row = $dar->getRow();
             $url = $row['jenkins_server_url'];
 
-            $triggered_jobs = $this->job_manager->getJobByRepository($repository);
+            $triggered_jobs = $this->log_factory->getJobByRepository($repository);
 
             $params['sections'][] = new SectionOfWebhooksPresenter(
                 $GLOBALS['Language']->getText('plugin_hudson_git', 'jenkins_hook'),

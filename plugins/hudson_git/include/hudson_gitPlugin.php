@@ -55,6 +55,7 @@ use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
+use Tuleap\HudsonGit\Log\LogFactory;
 use Tuleap\HudsonGit\Logger;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
@@ -136,15 +137,12 @@ class hudson_gitPlugin extends Plugin
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $xzibit = new GitWebhooksSettingsEnhancer(
                 new Hook\HookDao(),
-                new JobManager(
+                new LogFactory(
                     new JobDao(),
                     new ProjectJobDao(),
                     new GitRepositoryFactory(
                         new GitDao(),
                         ProjectManager::instance()
-                    ),
-                    new DBTransactionExecutorWithConnection(
-                        DBFactory::getMainTuleapDBConnection()
                     )
                 ),
                 $this->getCSRF(),
@@ -211,15 +209,12 @@ class hudson_gitPlugin extends Plugin
             self::getGitPermissionsManager(),
             $git_plugin->getMirrorDataMapper(),
             self::getJenkinsServerFactory(),
-            new JobManager(
+            new LogFactory(
                 new JobDao(),
                 new ProjectJobDao(),
                 new GitRepositoryFactory(
                     new GitDao(),
                     ProjectManager::instance()
-                ),
-                new DBTransactionExecutorWithConnection(
-                    DBFactory::getMainTuleapDBConnection()
                 )
             ),
             $git_plugin->getHeaderRenderer(),
@@ -279,10 +274,6 @@ class hudson_gitPlugin extends Plugin
                 new JobManager(
                     new JobDao(),
                     new ProjectJobDao(),
-                    new GitRepositoryFactory(
-                        new GitDao(),
-                        ProjectManager::instance()
-                    ),
                     new DBTransactionExecutorWithConnection(
                         DBFactory::getMainTuleapDBConnection()
                     )
