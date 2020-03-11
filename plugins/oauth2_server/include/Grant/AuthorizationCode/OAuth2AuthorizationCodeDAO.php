@@ -31,23 +31,30 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         return (int) $this->getDB()->insertReturnId(
             'plugin_oauth2_authorization_code',
             [
-                'user_id'         => $user_id,
-                'verifier'        => $hashed_verification_string,
-                'expiration_date' => $expiration_date_timestamp
+                'user_id'               => $user_id,
+                'verifier'              => $hashed_verification_string,
+                'expiration_date'       => $expiration_date_timestamp,
+                'has_already_been_used' => false
             ]
         );
     }
 
     /**
-     * @psalm-return null|array{verifier:string,user_id:int,expiration_date:int}
+     * @psalm-return null|array{verifier:string,user_id:int,expiration_date:int,has_already_been_used:0|1}
      */
     public function searchAuthorizationCode(int $authorization_code_id): ?array
     {
-        return $this->getDB()->row('SELECT verifier, user_id, expiration_date FROM plugin_oauth2_authorization_code WHERE id = ?', $authorization_code_id);
+        return $this->getDB()->row(
+            'SELECT verifier, user_id, expiration_date, has_already_been_used FROM plugin_oauth2_authorization_code WHERE id = ?',
+            $authorization_code_id
+        );
     }
 
     public function markAuthorizationCodeAsUsed(int $authorization_code_id): void
     {
-        $this->getDB()->delete('plugin_oauth2_authorization_code', ['id' => $authorization_code_id]);
+        $this->getDB()->run(
+            'UPDATE plugin_oauth2_authorization_code SET has_already_been_used=TRUE WHERE id=?',
+            $authorization_code_id
+        );
     }
 }

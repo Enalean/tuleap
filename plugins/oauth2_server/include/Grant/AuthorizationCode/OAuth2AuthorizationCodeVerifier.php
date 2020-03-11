@@ -77,6 +77,10 @@ class OAuth2AuthorizationCodeVerifier
                     throw new InvalidOAuth2AuthCodeException();
                 }
 
+                if ($row['has_already_been_used']) {
+                    throw new OAuth2AuthCodeReusedException($auth_code);
+                }
+
                 if ($this->isAuthorizationCodeExpired($row['expiration_date'])) {
                     throw new OAuth2AuthCodeExpiredException($auth_code);
                 }

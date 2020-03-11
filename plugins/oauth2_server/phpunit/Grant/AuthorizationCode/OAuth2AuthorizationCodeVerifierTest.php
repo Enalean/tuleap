@@ -77,9 +77,10 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
         );
         $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
             [
-                'user_id'         => $expected_user->getId(),
-                'verifier'        => 'expected_hashed_verification_string',
-                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+                'user_id'               => $expected_user->getId(),
+                'verifier'              => 'expected_hashed_verification_string',
+                'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
+                'has_already_been_used' => 0
             ]
         );
         $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
@@ -113,9 +114,10 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
         );
         $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
             [
-                'user_id'         => $expected_user->getId(),
-                'verifier'        => 'wrong_hashed_verification_string',
-                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+                'user_id'               => $expected_user->getId(),
+                'verifier'              => 'wrong_hashed_verification_string',
+                'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
+                'has_already_been_used' => 0
             ]
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(false);
@@ -134,9 +136,10 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
         );
         $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
             [
-                'user_id'         => $expected_user->getId(),
-                'verifier'        => 'wrong_hashed_verification_string',
-                'expiration_date' => (new DateTimeImmutable('yesterday'))->getTimestamp()
+                'user_id'               => $expected_user->getId(),
+                'verifier'              => 'wrong_hashed_verification_string',
+                'expiration_date'       => (new DateTimeImmutable('yesterday'))->getTimestamp(),
+                'has_already_been_used' => 0
             ]
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
@@ -155,15 +158,36 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
         );
         $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
             [
-                'user_id'         => 404,
-                'verifier'        => 'expected_hashed_verification_string',
-                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+                'user_id'               => 404,
+                'verifier'              => 'expected_hashed_verification_string',
+                'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
+                'has_already_been_used' => 0
             ]
         );
         $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
 
         $this->expectException(OAuth2AuthCodeMatchingUnknownUserException::class);
+        $this->verifier->getAuthorizationCode($auth_code);
+    }
+
+    public function testVerificationFailsWhenAuthCodeHasAlreadyBeenUsed(): void
+    {
+        $auth_code = new SplitToken(
+            5,
+            new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+        );
+        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+            [
+                'user_id'               => 102,
+                'verifier'              => 'expected_hashed_verification_string',
+                'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
+                'has_already_been_used' => 1
+            ]
+        );
+        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+
+        $this->expectException(OAuth2AuthCodeReusedException::class);
         $this->verifier->getAuthorizationCode($auth_code);
     }
 }
