@@ -21,24 +21,18 @@
 namespace Tuleap\Admin;
 
 use ForgeConfig;
+use TemplateRendererFactory;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\JavascriptAsset;
-use UserManager;
-use TemplateRendererFactory;
 use Tuleap\Layout\SidebarPresenter;
 
 class AdminPageRenderer
 {
     public function header($title, $is_framed = true)
     {
-        $current_user = UserManager::instance()->getCurrentUser();
-        $body_class   = array();
-
-        if ($current_user->getPreference('admin_sidebar_state')) {
-            $body_class[] = $current_user->getPreference('admin_sidebar_state');
-        }
+        $body_class = [];
 
         $GLOBALS['HTML']->header(
             array(

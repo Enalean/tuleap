@@ -53,31 +53,7 @@
     }
 }
 
-.sidebar-fully-collapsed {
-    padding: $navbar-height 0 0 $sidebar-fully-collapsed-width;
-
-    .sidebar {
-        width: $sidebar-fully-collapsed-width;
-
-        .admin-sidebar-section,
-        .scrollbar-track {
-            opacity: 0;
-            pointer-events: none;
-        }
-    }
-
-    .sidebar-collapser-bar {
-        cursor: e-resize;
-    }
-
-    .sidebar-about,
-    .sidebar-copyright {
-        display: none;
-    }
-}
-
-.sidebar-collapsed,
-.sidebar-fully-collapsed {
+.sidebar-collapsed {
     #logo {
         width: $sidebar-collapsed-width;
         background: $tlp-theme-color url('../images/organization_logo_small.png') no-repeat center center;
