@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-property">
         <label class="tlp-label" v-translate>Chosen template</label>
-        <p class="tracker-information-selected-template">
+        <p class="tracker-information-selected-template" data-test="chosen-template">
             {{ selected_template_name }}
         </p>
     </div>
