@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017- 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017- present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,30 @@
 
 namespace Tuleap\SVN\DiskUsage;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class DiskUsageDao extends DataAccessObject
 {
-    public function hasRepositoriesUpdatedAfterGivenDate($project_id, $date)
+    public function hasRepositoriesUpdatedAfterGivenDate(int $project_id, int $date)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $date       = $this->da->escapeInt($date);
-
-        $sql = "SELECT NULL
+        $sql = "SELECT COUNT(*)
                 FROM plugin_svn_repositories
                 LEFT JOIN plugin_svn_last_access
                   ON plugin_svn_repositories.id = plugin_svn_last_access.repository_id
-                WHERE project_id = $project_id
+                WHERE project_id = ?
                 AND repository_deletion_date IS NULL
-                AND plugin_svn_last_access.commit_date  > $date";
+                AND plugin_svn_last_access.commit_date  > ?";
 
-        return $this->retrieve($sql)->count() > 0;
+        return $this->getDB()->single($sql, [$project_id, $date]) > 0;
+    }
+
+    public function hasRepositories(int $project_id)
+    {
+        $sql = "SELECT COUNT(*)
+                FROM plugin_svn_repositories
+                WHERE project_id = ?
+                AND repository_deletion_date IS NULL";
+
+        return $this->getDB()->single($sql, [$project_id]) > 0;
     }
 }
