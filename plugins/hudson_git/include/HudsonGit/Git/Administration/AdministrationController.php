@@ -31,7 +31,7 @@ use Project;
 use ProjectManager;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\HudsonGit\Job\JobManager;
+use Tuleap\HudsonGit\Log\LogFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithProject;
@@ -77,16 +77,16 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
     private $include_assets;
 
     /**
-     * @var JobManager
+     * @var LogFactory
      */
-    private $job_manager;
+    private $log_factory;
 
     public function __construct(
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         JenkinsServerFactory $jenkins_server_factory,
-        JobManager $job_manager,
+        LogFactory $log_factory,
         HeaderRenderer $header_renderer,
         TemplateRenderer $renderer,
         IncludeAssets $include_assets
@@ -98,7 +98,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
         $this->mirror_data_mapper      = $mirror_data_mapper;
         $this->jenkins_server_factory  = $jenkins_server_factory;
         $this->include_assets          = $include_assets;
-        $this->job_manager             = $job_manager;
+        $this->log_factory             = $log_factory;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -171,7 +171,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
     private function buildServerLogsPresenters(JenkinsServer $jenkins_server): array
     {
         $presenters = [];
-        foreach ($this->job_manager->getLastJobLogsByProjectServer($jenkins_server) as $log) {
+        foreach ($this->log_factory->getLastJobLogsByProjectServer($jenkins_server) as $log) {
             $presenters[] = JenkinsServerLogsPresenter::buildFromLog($log);
         }
 

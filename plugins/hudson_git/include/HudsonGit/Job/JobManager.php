@@ -24,8 +24,6 @@
 
 namespace Tuleap\HudsonGit\Job;
 
-use GitRepository;
-use GitRepositoryFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Log\Log;
@@ -43,11 +41,6 @@ class JobManager
     private $project_job_dao;
 
     /**
-     * @var GitRepositoryFactory
-     */
-    private $git_repository_factory;
-
-    /**
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
@@ -55,12 +48,10 @@ class JobManager
     public function __construct(
         JobDao $job_dao,
         ProjectJobDao $project_job_dao,
-        GitRepositoryFactory $git_repository_factory,
         DBTransactionExecutor $transaction_executor
     ) {
         $this->job_dao                = $job_dao;
         $this->project_job_dao        = $project_job_dao;
-        $this->git_repository_factory = $git_repository_factory;
         $this->transaction_executor   = $transaction_executor;
     }
 
@@ -120,41 +111,6 @@ class JobManager
                 $this->project_job_dao->logBranchSource($job_id, $status_code);
             }
         });
-    }
-
-    public function getJobByRepository(GitRepository $repository)
-    {
-        $jobs = array();
-        foreach ($this->job_dao->searchJobsByRepositoryId($repository->getId()) as $row) {
-            $jobs[] = $this->instantiateFromRow($row, $repository);
-        }
-
-        return $jobs;
-    }
-
-    public function getLastJobLogsByProjectServer(JenkinsServer $jenkins_server): array
-    {
-        $jobs = [];
-        foreach ($this->project_job_dao->searchJobsByJenkinsServer($jenkins_server->getId()) as $row) {
-            $repository = $this->git_repository_factory->getRepositoryById((int)$row['repository_id']);
-            if ($repository === null) {
-                continue;
-            }
-
-            $jobs[] = $this->instantiateFromRow($row, $repository);
-        }
-
-        return $jobs;
-    }
-
-    private function instantiateFromRow(array $row, GitRepository $repository): Log
-    {
-        return new Log(
-            $repository,
-            $row['push_date'],
-            $row['job_url'] !== null ? $row['job_url'] : '',
-            $row['status_code'],
-        );
     }
 
     /**
