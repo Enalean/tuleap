@@ -110,19 +110,24 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function cssFile($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $asset = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/forumml/themes',
-                '/assets/forumml/themes'
-            );
-            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('style.css') .'" />'."\n";
+            $asset = $this->getAssets()->getFileURL('style.css');
+            echo '<link rel="stylesheet" type="text/css" href="'. $asset .'" />'."\n";
         }
     }
 
     public function jsFile($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/forumml.js"></script>'."\n";
+            echo $this->getAssets()->getHTMLSnippet('forumml.js');
         }
+    }
+
+    private function getAssets():IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/forumml',
+            '/assets/forumml'
+        );
     }
 
     /**
