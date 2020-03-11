@@ -36,6 +36,7 @@
         {{/ csrf_token }}
         <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
         {{# state }}<input type="hidden" name="state" value="{{ state }}">{{/ state }}
+        <input type="hidden" name="app_id" value="{{ app_id }}">
         <a
             class="tlp-button-outline tlp-button-primary tlp-button-large"
             href="{{ deny_authorization_uri }}"

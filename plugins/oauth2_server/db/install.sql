@@ -32,3 +32,10 @@ CREATE TABLE plugin_oauth2_authorization_code(
     expiration_date INT(11) UNSIGNED NOT NULL,
     INDEX idx_expiration_date (expiration_date)
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_oauth2_authorization(
+    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    app_id INT(11) NOT NULL,
+    UNIQUE (user_id, app_id)
+) ENGINE=InnoDB;

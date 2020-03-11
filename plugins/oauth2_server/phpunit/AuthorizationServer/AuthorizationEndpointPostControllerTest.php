@@ -30,6 +30,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
+use Tuleap\OAuth2Server\User\AuthorizationManager;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -50,6 +51,10 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
      */
     private $authorization_code_creator;
     /**
+     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationManager
+     */
+    private $authorization_manager;
+    /**
      * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
      */
     private $csrf_token;
@@ -58,12 +63,14 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
     {
         $this->user_manager               = M::mock(\UserManager::class);
         $this->authorization_code_creator = \Mockery::mock(OAuth2AuthorizationCodeCreator::class);
+        $this->authorization_manager      = M::mock(AuthorizationManager::class);
         $this->csrf_token                 = M::mock(\CSRFSynchronizerToken::class);
         $this->controller                 = new AuthorizationEndpointPostController(
             HTTPFactoryBuilder::responseFactory(),
             $this->user_manager,
             new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
             $this->authorization_code_creator,
+            $this->authorization_manager,
             $this->csrf_token,
             M::mock(EmitterInterface::class)
         );
@@ -89,11 +96,24 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
-    public function testHandleThrowsForbiddenWhenNoRedirectURI(): void
+    public function dataProviderInvalidBodyParams(): array
+    {
+        return [
+            'No redirect URI'              => [['state' => 'xyz']],
+            'Redirect URI is not a string' => [['redirect_uri' => false]],
+            'No App ID'                    => [['redirect_uri' => 'https://example.com']],
+            'App ID cannot be cast to int' => [['redirect_uri' => 'https://example.com', 'app_id' => 'invalid']]
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderInvalidBodyParams
+     */
+    public function testHandleThrowsForbiddenWhenInvalidBodyParams(array $body_params): void
     {
         $this->user_manager->shouldReceive('getCurrentUser')
             ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
-        $request = (new NullServerRequest())->withParsedBody(['state' => 'xyz']);
+        $request = (new NullServerRequest())->withParsedBody($body_params);
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
@@ -101,16 +121,20 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
 
     public function testHandleRedirectsToRedirectURIWithAuthorizationCode(): void
     {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
+            ->andReturn($user);
         $request = (new NullServerRequest())->withParsedBody(
-            ['redirect_uri' => 'https://example.com']
+            ['redirect_uri' => 'https://example.com', 'app_id' => '77']
         );
         $this->csrf_token->shouldReceive('check')->once();
         $auth_code = 'auth_code_identifier';
         $this->authorization_code_creator->shouldReceive('createAuthorizationCodeIdentifier')->once()->andReturn(
             new ConcealedString($auth_code)
         );
+        $this->authorization_manager->shouldReceive('saveAuthorization')
+            ->once()
+            ->with($user, 77);
 
         $response = $this->controller->handle($request);
         $this->assertSame(302, $response->getStatusCode());
@@ -121,16 +145,20 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
 
     public function testHandlePassesStateParameterWhenPresent(): void
     {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
+            ->andReturn($user);
         $request = (new NullServerRequest())->withParsedBody(
-            ['redirect_uri' => 'https://example.com', 'state' => 'xyz']
+            ['redirect_uri' => 'https://example.com', 'state' => 'xyz', 'app_id' => '77']
         );
         $this->csrf_token->shouldReceive('check')->once();
         $auth_code = 'auth_code_identifier';
         $this->authorization_code_creator->shouldReceive('createAuthorizationCodeIdentifier')->once()->andReturn(
             new ConcealedString($auth_code)
         );
+        $this->authorization_manager->shouldReceive('saveAuthorization')
+            ->once()
+            ->with($user, 77);
 
         $response = $this->controller->handle($request);
         $this->assertSame(302, $response->getStatusCode());
