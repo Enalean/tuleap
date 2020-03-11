@@ -22,13 +22,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\HudsonGit\Job;
+namespace Tuleap\HudsonGit\Log;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
-use Tuleap\HudsonGit\Log\Log;
+use Tuleap\HudsonGit\Job\JobDao;
+use Tuleap\HudsonGit\Job\ProjectJobDao;
 
-class JobManager
+class LogCreator
 {
     /**
      * @var JobDao
@@ -56,16 +57,16 @@ class JobManager
     }
 
     /**
-     * @throws CannotCreateJobException
+     * @throws CannotCreateLogException
      */
-    public function create(Log $log)
+    public function createForRepository(Log $log)
     {
-        $this->checkJobCanBeCreated($log);
+        $this->checkLogCanBeCreated($log);
 
         $this->transaction_executor->execute(function () use ($log) {
             $id = $this->job_dao->create($log);
             if (!$id) {
-                throw new CannotCreateJobException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
+                throw new CannotCreateLogException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
             }
             if (count($log->getJobUrlList()) > 0) {
                 $this->job_dao->logTriggeredJobs(
@@ -82,44 +83,44 @@ class JobManager
     }
 
     /**
-     * @throws CannotCreateJobException
+     * @throws CannotCreateLogException
      */
-    public function createJobLogForProject(JenkinsServer $jenkins_server, Log $log)
+    public function createForProject(JenkinsServer $jenkins_server, Log $log)
     {
         if ((int)$jenkins_server->getProject()->getID() !== (int)$log->getRepository()->getProject()->getID()) {
-            throw new CannotCreateJobException(
+            throw new CannotCreateLogException(
                 dgettext("tuleap-hudson_git", "Provided job does not belong to the Jenkins server's project.")
             );
         }
-        $this->checkJobCanBeCreated($log);
+        $this->checkLogCanBeCreated($log);
 
         $this->transaction_executor->execute(function () use ($jenkins_server, $log) {
-            $job_id = $this->project_job_dao->create(
+            $log_id = $this->project_job_dao->create(
                 $jenkins_server->getId(),
                 $log->getRepository()->getId(),
                 $log->getPushDate()
             );
             if (count($log->getJobUrlList()) > 0) {
                 $this->project_job_dao->logTriggeredJobs(
-                    $job_id,
+                    $log_id,
                     $log->getJobUrl()
                 );
             }
 
             $status_code = $log->getStatusCode();
             if ($status_code !== null) {
-                $this->project_job_dao->logBranchSource($job_id, $status_code);
+                $this->project_job_dao->logBranchSource($log_id, $status_code);
             }
         });
     }
 
     /**
-     * @throws CannotCreateJobException
+     * @throws CannotCreateLogException
      */
-    private function checkJobCanBeCreated(Log $job): void
+    private function checkLogCanBeCreated(Log $log): void
     {
-        if ($job->getStatusCode() === null && count($job->getJobUrlList()) === 0) {
-            throw new CannotCreateJobException(
+        if ($log->getStatusCode() === null && count($log->getJobUrlList()) === 0) {
+            throw new CannotCreateLogException(
                 dgettext("tuleap-hudson_git", "Nothing has been triggered for this push.")
             );
         }

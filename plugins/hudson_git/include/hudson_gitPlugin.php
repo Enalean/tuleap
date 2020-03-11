@@ -53,8 +53,8 @@ use Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Job\JobDao;
-use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
+use Tuleap\HudsonGit\Log\LogCreator;
 use Tuleap\HudsonGit\Log\LogFactory;
 use Tuleap\HudsonGit\Logger;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
@@ -271,7 +271,7 @@ class hudson_gitPlugin extends Plugin
                     $stream_factory
                 ),
                 $this->getLogger(),
-                new JobManager(
+                new LogCreator(
                     new JobDao(),
                     new ProjectJobDao(),
                     new DBTransactionExecutorWithConnection(

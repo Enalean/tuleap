@@ -32,7 +32,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookResponse;
-use Tuleap\HudsonGit\Job\JobManager;
+use Tuleap\HudsonGit\Log\LogCreator;
 use Tuleap\HudsonGit\PollingResponse;
 
 class HookTriggerControllerTest extends TestCase
@@ -60,9 +60,9 @@ class HookTriggerControllerTest extends TestCase
     private $logger;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JobManager
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LogCreator
      */
-    private $job_manager;
+    private $log_creator;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerFactory
@@ -86,14 +86,14 @@ class HookTriggerControllerTest extends TestCase
         $this->dao                    = Mockery::mock(HookDao::class);
         $this->jenkins_client         = Mockery::mock(JenkinsClient::class);
         $this->logger                 = Mockery::mock(LoggerInterface::class);
-        $this->job_manager            = Mockery::mock(JobManager::class);
+        $this->log_creator            = Mockery::mock(LogCreator::class);
         $this->jenkins_server_factory = Mockery::mock(JenkinsServerFactory::class);
 
         $this->controller = new HookTriggerController(
             $this->dao,
             $this->jenkins_client,
             $this->logger,
-            $this->job_manager,
+            $this->log_creator,
             $this->jenkins_server_factory
         );
 
@@ -129,8 +129,8 @@ class HookTriggerControllerTest extends TestCase
         $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
 
 
-        $this->job_manager->shouldReceive('create')->once();
-        $this->job_manager->shouldReceive('createJobLogForProject')->never();
+        $this->log_creator->shouldReceive('createForRepository')->once();
+        $this->log_creator->shouldReceive('createForProject')->never();
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('error')->never();
@@ -174,8 +174,8 @@ class HookTriggerControllerTest extends TestCase
         );
         $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
 
-        $this->job_manager->shouldReceive('create')->times(1);
-        $this->job_manager->shouldReceive('createJobLogForProject')->never();
+        $this->log_creator->shouldReceive('createForRepository')->times(1);
+        $this->log_creator->shouldReceive('createForProject')->never();
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('error')->once();
@@ -213,8 +213,8 @@ class HookTriggerControllerTest extends TestCase
         );
         $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
 
-        $this->job_manager->shouldReceive('create')->never();
-        $this->job_manager->shouldReceive('createJobLogForProject')->once();
+        $this->log_creator->shouldReceive('createForRepository')->never();
+        $this->log_creator->shouldReceive('createForProject')->once();
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('error')->never();
@@ -259,8 +259,8 @@ class HookTriggerControllerTest extends TestCase
         );
         $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
 
-        $this->job_manager->shouldReceive('create')->never();
-        $this->job_manager->shouldReceive('createJobLogForProject')->times(1);
+        $this->log_creator->shouldReceive('createForRepository')->never();
+        $this->log_creator->shouldReceive('createForProject')->times(1);
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('error')->once();

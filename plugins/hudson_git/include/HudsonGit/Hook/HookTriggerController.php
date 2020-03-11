@@ -26,9 +26,9 @@ use GitRepository;
 use Psr\Log\LoggerInterface;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
-use Tuleap\HudsonGit\Job\CannotCreateJobException;
-use Tuleap\HudsonGit\Job\JobManager;
+use Tuleap\HudsonGit\Log\CannotCreateLogException;
 use Tuleap\HudsonGit\Log\Log;
+use Tuleap\HudsonGit\Log\LogCreator;
 
 class HookTriggerController
 {
@@ -41,10 +41,11 @@ class HookTriggerController
      * @var JenkinsClient
      */
     private $jenkins_client;
+
     /**
-    * @var JobManager
+    * @var LogCreator
     */
-    private $job_manager;
+    private $log_creator;
 
     /**
      * @var LoggerInterface
@@ -60,13 +61,13 @@ class HookTriggerController
         HookDao $dao,
         JenkinsClient $jenkins_client,
         LoggerInterface $logger,
-        JobManager $job_manager,
+        LogCreator $log_creator,
         JenkinsServerFactory $jenkins_server_factory
     ) {
         $this->dao                    = $dao;
         $this->jenkins_client         = $jenkins_client;
         $this->logger                 = $logger;
-        $this->job_manager            = $job_manager;
+        $this->log_creator            = $log_creator;
         $this->jenkins_server_factory = $jenkins_server_factory;
     }
 
@@ -120,8 +121,8 @@ class HookTriggerController
     {
         $log = new Log($repository, $date_job, $job_name, $status_code);
         try {
-            $this->job_manager->create($log);
-        } catch (CannotCreateJobException $exception) {
+            $this->log_creator->createForRepository($log);
+        } catch (CannotCreateLogException $exception) {
             $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
         }
     }
@@ -176,8 +177,8 @@ class HookTriggerController
     ): void {
         $log = new Log($repository, $date_job, $job_name, $status_code);
         try {
-            $this->job_manager->createJobLogForProject($jenkins_server, $log);
-        } catch (CannotCreateJobException $exception) {
+            $this->log_creator->createForProject($jenkins_server, $log);
+        } catch (CannotCreateLogException $exception) {
             $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
         }
     }
