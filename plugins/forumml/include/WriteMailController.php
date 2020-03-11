@@ -99,8 +99,9 @@ class WriteMailController implements DispatchableWithRequest
 	<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">[' . $GLOBALS["Language"]->getText('plugin_forumml', 'browse_arch') . ']</a><br><br>
 	<H3><b>' . $GLOBALS['Language']->getText('plugin_forumml', 'new_thread') . '</b></H3>';
 
+        $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml');
         // New thread form
-        echo '<script type="text/javascript" src="scripts/cc_attach.js"></script>';
+        echo $assets->getHTMLSnippet('forumml.js');
         echo "<form name='form' method='post' enctype='multipart/form-data'>
 	<table>
     <tr>
