@@ -33,6 +33,7 @@ use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationFormRendererTest extends TestCase
 {
@@ -62,7 +63,7 @@ final class AuthorizationFormRendererTest extends TestCase
         $foobar_definition    = new class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
-                return 'foo:bar';
+                return 'Foo Bar';
             }
 
             public function getDescription(): string
@@ -74,7 +75,7 @@ final class AuthorizationFormRendererTest extends TestCase
         $typevalue_definition = new class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
-                return 'type:value';
+                return 'Type Value';
             }
 
             public function getDescription(): string
@@ -102,8 +103,14 @@ final class AuthorizationFormRendererTest extends TestCase
                 new AuthorizationFormPresenter(
                     $form_data,
                     new Uri($redirect_uri),
-                    new OAuth2ScopeDefinitionPresenter($foobar_definition),
-                    new OAuth2ScopeDefinitionPresenter($typevalue_definition)
+                    [
+                        new OAuth2ScopeDefinitionPresenter($foobar_definition),
+                        new OAuth2ScopeDefinitionPresenter($typevalue_definition)
+                    ],
+                    [
+                        new OAuth2ScopeIdentifierPresenter(OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar')),
+                        new OAuth2ScopeIdentifierPresenter(OAuth2ScopeIdentifier::fromIdentifierKey('type:value'))
+                    ]
                 )
             );
 

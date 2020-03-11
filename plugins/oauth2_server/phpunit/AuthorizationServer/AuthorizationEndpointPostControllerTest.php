@@ -31,6 +31,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\OAuth2Server\User\AuthorizationManager;
+use Tuleap\OAuth2Server\User\NewAuthorization;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -99,10 +100,12 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
     public function dataProviderInvalidBodyParams(): array
     {
         return [
-            'No redirect URI'              => [['state' => 'xyz']],
-            'Redirect URI is not a string' => [['redirect_uri' => false]],
-            'No App ID'                    => [['redirect_uri' => 'https://example.com']],
-            'App ID cannot be cast to int' => [['redirect_uri' => 'https://example.com', 'app_id' => 'invalid']]
+            'No redirect URI'                 => [['state' => 'xyz']],
+            'Redirect URI is not a string'    => [['redirect_uri' => false]],
+            'No App ID'                       => [['redirect_uri' => 'https://example.com']],
+            'App ID cannot be cast to int'    => [['redirect_uri' => 'https://example.com', 'app_id' => 'invalid']],
+            'No scopes'                       => [['redirect_uri' => 'https://example.com', 'app_id' => '13']],
+            'Scopes are not array of strings' => [['redirect_uri' => 'https://example.com', 'app_id' => '13', 'scope' => [false]]]
         ];
     }
 
@@ -125,7 +128,7 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $this->user_manager->shouldReceive('getCurrentUser')
             ->andReturn($user);
         $request = (new NullServerRequest())->withParsedBody(
-            ['redirect_uri' => 'https://example.com', 'app_id' => '77']
+            ['redirect_uri' => 'https://example.com', 'app_id' => '77', 'scope' => ['foo:bar', 'type:value']]
         );
         $this->csrf_token->shouldReceive('check')->once();
         $auth_code = 'auth_code_identifier';
@@ -134,7 +137,17 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         );
         $this->authorization_manager->shouldReceive('saveAuthorization')
             ->once()
-            ->with($user, 77);
+            ->with(
+                M::on(
+                    function (NewAuthorization $new_authorization) use ($user) {
+                        $identifiers = $new_authorization->getScopeIdentifiers();
+                        return $new_authorization->getAppId() === 77
+                            && $new_authorization->getUser() === $user
+                            && $identifiers[0]->toString() === 'foo:bar'
+                            && $identifiers[1]->toString() === 'type:value';
+                    }
+                )
+            );
 
         $response = $this->controller->handle($request);
         $this->assertSame(302, $response->getStatusCode());
@@ -149,7 +162,7 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $this->user_manager->shouldReceive('getCurrentUser')
             ->andReturn($user);
         $request = (new NullServerRequest())->withParsedBody(
-            ['redirect_uri' => 'https://example.com', 'state' => 'xyz', 'app_id' => '77']
+            ['redirect_uri' => 'https://example.com', 'state' => 'xyz', 'app_id' => '77', 'scope' => ['foo:bar', 'type:value']]
         );
         $this->csrf_token->shouldReceive('check')->once();
         $auth_code = 'auth_code_identifier';
@@ -158,7 +171,17 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         );
         $this->authorization_manager->shouldReceive('saveAuthorization')
             ->once()
-            ->with($user, 77);
+            ->with(
+                M::on(
+                    function (NewAuthorization $new_authorization) use ($user) {
+                        $identifiers = $new_authorization->getScopeIdentifiers();
+                        return $new_authorization->getAppId() === 77
+                            && $new_authorization->getUser() === $user
+                            && $identifiers[0]->toString() === 'foo:bar'
+                            && $identifiers[1]->toString() === 'type:value';
+                    }
+                )
+            );
 
         $response = $this->controller->handle($request);
         $this->assertSame(302, $response->getStatusCode());

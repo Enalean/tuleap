@@ -36,15 +36,22 @@ class AuthorizationFormPresenterBuilder
 
     public function build(AuthorizationFormData $form_data): AuthorizationFormPresenter
     {
-        $scope_presenters = [];
+        $scope_definition_presenters = [];
+        $scope_identifier_presenters = [];
         foreach ($form_data->getScopes() as $scope) {
-            $scope_presenters[] = new OAuth2ScopeDefinitionPresenter($scope->getDefinition());
+            $scope_definition_presenters[] = new OAuth2ScopeDefinitionPresenter($scope->getDefinition());
+            $scope_identifier_presenters[] = new OAuth2ScopeIdentifierPresenter($scope->getIdentifier());
         }
         $deny_authorization_uri = $this->client_uri_redirect_builder->buildErrorURI(
             $form_data->getRedirectUri(),
             $form_data->getState(),
             AuthorizationEndpointGetController::ERROR_CODE_ACCESS_DENIED
         );
-        return new AuthorizationFormPresenter($form_data, $deny_authorization_uri, ...$scope_presenters);
+        return new AuthorizationFormPresenter(
+            $form_data,
+            $deny_authorization_uri,
+            $scope_definition_presenters,
+            $scope_identifier_presenters
+        );
     }
 }

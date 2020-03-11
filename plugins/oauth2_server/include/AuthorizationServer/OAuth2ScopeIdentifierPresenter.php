@@ -20,24 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\User;
+namespace Tuleap\OAuth2Server\AuthorizationServer;
 
-use Tuleap\DB\DataAccessObject;
+use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
-class AuthorizationDao extends DataAccessObject
+final class OAuth2ScopeIdentifierPresenter
 {
-    public function create(\PFUser $user, int $app_id): int
-    {
-        return (int) $this->getDB()->insertReturnId(
-            'plugin_oauth2_authorization',
-            ['user_id' => $user->getID(), 'app_id' => $app_id]
-        );
-    }
+    /**
+     * @var string
+     */
+    public $scope_key;
 
-    public function searchAuthorization(\PFUser $user, int $app_id): ?int
+    public function __construct(AuthenticationScopeIdentifier $scope_identifier)
     {
-        $sql = 'SELECT id FROM plugin_oauth2_authorization
-                WHERE user_id = ? AND app_id = ?';
-        return $this->getDB()->cell($sql, $user->getId(), $app_id);
+        $this->scope_key = $scope_identifier->toString();
     }
 }
