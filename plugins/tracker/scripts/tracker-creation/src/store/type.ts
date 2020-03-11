@@ -22,6 +22,8 @@ export interface State {
     project_templates: ProjectTemplate[];
     active_option: CreationOptions;
     selected_tracker_template: Tracker | null;
+    selected_project_tracker_template: Tracker | null;
+    selected_project: ProjectWithTrackers | null;
     selected_xml_file_input: HTMLInputElement | null;
     tracker_to_be_created: TrackerToBeCreatedMandatoryData;
     has_form_been_submitted: boolean;
@@ -30,6 +32,7 @@ export interface State {
     has_xml_file_error: boolean;
     is_in_slugify_mode: boolean;
     existing_trackers: ExistingTrackersList;
+    trackers_from_other_projects: ProjectWithTrackers[];
     project_id: number;
 }
 
@@ -48,6 +51,12 @@ export interface Tracker {
     readonly name: string;
 }
 
+export interface ProjectWithTrackers {
+    readonly id: string;
+    readonly name: string;
+    readonly trackers: Tracker[];
+}
+
 export interface TrackerToBeCreatedMandatoryData {
     name: string;
     shortname: string;
@@ -62,5 +71,6 @@ export enum CreationOptions {
     NONE_YET = "none_yet",
     TRACKER_TEMPLATE = "tracker_template",
     TRACKER_XML_FILE = "tracker_xml_file",
-    TRACKER_EMPTY = "tracker_empty"
+    TRACKER_EMPTY = "tracker_empty",
+    TRACKER_ANOTHER_PROJECT = "tracker_another_project"
 }

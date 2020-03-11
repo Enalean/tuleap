@@ -34,7 +34,9 @@
                 <field-name />
                 <field-shortname />
                 <field-description />
-                <field-tracker-template-id v-if="is_a_duplication" />
+                <field-tracker-template-id
+                    v-if="is_a_duplication || is_a_duplication_of_a_tracker_from_another_project"
+                />
                 <field-tracker-empty v-if="is_created_from_empty" />
             </form>
         </template>
@@ -80,8 +82,14 @@ export default class StepTwo extends Vue {
     @Getter
     readonly is_a_xml_import!: boolean;
 
+    @Getter
+    readonly is_a_duplication_of_a_tracker_from_another_project!: boolean;
+
     @Mutation
     readonly initTrackerNameWithTheSelectedTemplateName!: () => void;
+
+    @Mutation
+    readonly initTrackerNameWithTheSelectedProjectTrackerTemplateName!: () => void;
 
     @Mutation
     readonly cancelCreationFormSubmition!: () => void;
@@ -118,6 +126,8 @@ export default class StepTwo extends Vue {
             }
 
             form.appendChild(this.selected_xml_file_input);
+        } else if (this.is_a_duplication_of_a_tracker_from_another_project) {
+            this.initTrackerNameWithTheSelectedProjectTrackerTemplateName();
         }
 
         window.addEventListener("beforeunload", this.beforeUnload);

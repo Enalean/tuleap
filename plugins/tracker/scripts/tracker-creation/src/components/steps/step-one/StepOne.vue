@@ -26,6 +26,7 @@
             <div class="tracker-creation-starting-point-options">
                 <tracker-template-card />
                 <tracker-xml-file-card />
+                <tracker-from-another-project-card />
                 <tracker-empty-card />
             </div>
         </template>
@@ -40,6 +41,7 @@ import TrackerXmlFileCard from "./cards/TrackerXmlFile/TrackerXmlFileCard.vue";
 import StepLayout from "../layout/StepLayout.vue";
 import StepOneInfo from "./StepOneInfo.vue";
 import TrackerEmptyCard from "./cards/TrackerEmpty/TrackerEmptyCard.vue";
+import TrackerFromAnotherProjectCard from "./cards/TrackerFromAnotherProject/TrackerFromAnotherProjectCard.vue";
 
 @Component({
     components: {
@@ -47,6 +49,7 @@ import TrackerEmptyCard from "./cards/TrackerEmpty/TrackerEmptyCard.vue";
         StepLayout,
         TrackerTemplateCard,
         TrackerXmlFileCard,
+        TrackerFromAnotherProjectCard,
         StepOneInfo
     }
 })

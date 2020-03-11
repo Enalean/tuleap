@@ -17,7 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CreationOptions, State, Tracker, TrackerToBeCreatedMandatoryData } from "./type";
+import {
+    CreationOptions,
+    ProjectWithTrackers,
+    State,
+    Tracker,
+    TrackerToBeCreatedMandatoryData
+} from "./type";
 import { extractNameAndShortnameFromXmlFile } from "../helpers/xml-data-extractor";
 import { getSlugifiedShortname } from "../helpers/shortname-slugifier";
 
@@ -41,12 +47,28 @@ export function setSelectedTrackerTemplate(state: State, tracker_id: string): vo
     state.selected_tracker_template = tracker;
 }
 
+export function setSelectedProjectTrackerTemplate(state: State, tracker: Tracker | null): void {
+    state.selected_project_tracker_template = tracker;
+}
+
 export function initTrackerNameWithTheSelectedTemplateName(state: State): void {
     if (!state.selected_tracker_template) {
         return;
     }
 
-    const name = state.selected_tracker_template.name;
+    initTrackerToBeCreatedWithSelectedTracker(state, state.selected_tracker_template);
+}
+
+export function initTrackerNameWithTheSelectedProjectTrackerTemplateName(state: State): void {
+    if (!state.selected_project_tracker_template) {
+        return;
+    }
+
+    initTrackerToBeCreatedWithSelectedTracker(state, state.selected_project_tracker_template);
+}
+
+function initTrackerToBeCreatedWithSelectedTracker(state: State, selected_tracker: Tracker): void {
+    const name = selected_tracker.name;
     const shortname = getSlugifiedShortname(name);
 
     state.tracker_to_be_created = {
@@ -110,6 +132,10 @@ export function cancelCreationFormSubmition(state: State): void {
 
 export function setSelectedTrackerXmlFileInput(state: State, input: HTMLInputElement): void {
     state.selected_xml_file_input = input;
+}
+
+export function setSelectedProject(state: State, project: ProjectWithTrackers): void {
+    state.selected_project = project;
 }
 
 export function setIsXmlAFileSelected(state: State): void {

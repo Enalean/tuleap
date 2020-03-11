@@ -121,7 +121,8 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
                 'tracker-creation-app',
                 $this->presenter_builder->build(
                     $project,
-                    $this->getCSRFTokenForSubmission($project)
+                    $this->getCSRFTokenForSubmission($project),
+                    $user
                 )
             );
 

@@ -40,6 +40,9 @@ export default class FieldChosenTemplate extends Vue {
     @State
     readonly selected_tracker_template!: Tracker;
 
+    @State
+    readonly selected_project_tracker_template!: Tracker;
+
     @Getter
     readonly is_created_from_empty!: boolean;
 
@@ -48,6 +51,9 @@ export default class FieldChosenTemplate extends Vue {
 
     @Getter
     readonly is_a_xml_import!: boolean;
+
+    @Getter
+    readonly is_a_duplication_of_a_tracker_from_another_project!: boolean;
 
     selected_template_name = "";
 
@@ -58,6 +64,8 @@ export default class FieldChosenTemplate extends Vue {
             this.selected_template_name = this.$gettext("Empty");
         } else if (this.is_a_xml_import) {
             this.selected_template_name = this.tracker_to_be_created.name;
+        } else if (this.is_a_duplication_of_a_tracker_from_another_project) {
+            this.selected_template_name = this.selected_project_tracker_template.name;
         }
     }
 }

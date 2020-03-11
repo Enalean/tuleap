@@ -2012,7 +2012,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             TemplateRendererFactory::build(),
             \UserManager::instance(),
             \ProjectManager::instance(),
-            new TrackerCreationPresenterBuilder($this->getProjectManager(), new TrackerDao()),
+            new TrackerCreationPresenterBuilder(
+                $this->getProjectManager(),
+                new TrackerDao(),
+                \TrackerFactory::instance()
+            ),
             new TrackerCreationPermissionChecker(new TrackerManager())
         );
     }

@@ -50,19 +50,28 @@ class TrackerCreationPresenter
      */
     public $existing_trackers;
 
+    /**
+     * @var string
+     */
+    public $trackers_from_other_projects;
+
     public function __construct(
         array $project_templates,
         array $existing_trackers,
+        array $trackers_from_other_projects,
         Project $current_project,
         \CSRFSynchronizerToken $csrf
     ) {
-        $this->project_templates = json_encode($project_templates, JSON_THROW_ON_ERROR);
-        $this->existing_trackers = json_encode($existing_trackers, JSON_THROW_ON_ERROR);
-        $this->project_unix_name = $current_project->getUnixNameLowerCase();
-        $this->project_id        = $current_project->getID();
-        $this->csrf_token        = json_encode([
+        $this->project_templates            = json_encode($project_templates, JSON_THROW_ON_ERROR);
+        $this->existing_trackers            = json_encode($existing_trackers, JSON_THROW_ON_ERROR);
+        $this->trackers_from_other_projects = json_encode($trackers_from_other_projects, JSON_THROW_ON_ERROR);
+        $this->project_unix_name            = $current_project->getUnixNameLowerCase();
+        $this->project_id                   = $current_project->getID();
+        $this->csrf_token                   = json_encode(
+            [
             'name' => $csrf->getTokenName(),
             'value' => $csrf->getToken()
-        ]);
+            ]
+        );
     }
 }

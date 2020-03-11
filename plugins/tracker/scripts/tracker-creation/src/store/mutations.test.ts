@@ -95,6 +95,44 @@ describe("mutations", () => {
         });
     });
 
+    describe("initTrackerNameWithTheSelectedProjectTrackerTemplateName", () => {
+        it("does nothing if no tracker template is selected", () => {
+            const state: State = {
+                selected_project_tracker_template: null,
+                tracker_to_be_created: {
+                    name: "",
+                    shortname: ""
+                }
+            } as State;
+
+            mutations.initTrackerNameWithTheSelectedProjectTrackerTemplateName(state);
+
+            expect(state.tracker_to_be_created).toEqual({
+                name: "",
+                shortname: ""
+            });
+        });
+
+        it("Sets the tracker name and the tracker shortname (slugified)", () => {
+            const state: State = {
+                selected_project_tracker_template: {
+                    name: "Bug tracker"
+                },
+                tracker_to_be_created: {
+                    name: "",
+                    shortname: ""
+                }
+            } as State;
+
+            mutations.initTrackerNameWithTheSelectedProjectTrackerTemplateName(state);
+
+            expect(state.tracker_to_be_created).toEqual({
+                name: "Bug tracker",
+                shortname: "bug_tracker"
+            });
+        });
+    });
+
     describe("setTrackerName", () => {
         it("Sets the tracker name", () => {
             const state: State = {

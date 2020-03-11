@@ -26,6 +26,7 @@ import {
     CreationOptions,
     CSRFToken,
     ExistingTrackersList,
+    ProjectWithTrackers,
     ProjectTemplate,
     State
 } from "./src/store/type";
@@ -74,12 +75,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Project id not provided.");
     }
 
+    const trackers_from_other_projects: ProjectWithTrackers[] =
+        typeof vue_mount_point.dataset.trackersFromOtherProjects !== "undefined"
+            ? JSON.parse(vue_mount_point.dataset.trackersFromOtherProjects)
+            : [];
+
     const initial_state: State = {
         csrf_token,
         project_templates,
         existing_trackers,
+        trackers_from_other_projects,
         active_option: CreationOptions.NONE_YET,
         selected_tracker_template: null,
+        selected_project_tracker_template: null,
+        selected_project: null,
         selected_xml_file_input: null,
         tracker_to_be_created: {
             name: "",

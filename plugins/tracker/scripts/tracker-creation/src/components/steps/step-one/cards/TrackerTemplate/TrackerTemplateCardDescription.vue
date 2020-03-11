@@ -22,7 +22,7 @@
         <h4 class="card-title" v-translate>Template</h4>
         <div class="card-description">
             <span class="card-description-content" v-translate>
-                Choose one tracker template among ones available in your platform
+                Choose one tracker template among ones available in your platform.
             </span>
         </div>
     </div>

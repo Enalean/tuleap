@@ -24,16 +24,19 @@ msgstr "Évitez les espaces et la ponctuation"
 msgid "Back"
 msgstr "Retour"
 
+msgid "Choose a project..."
+msgstr "Choisissez un projet ..."
+
 msgid "Choose a starting point"
 msgstr "Choisissez un point de départ"
 
 msgid "Choose a tracker..."
 msgstr "Choisissez un outil de suivi ..."
 
-msgid "Choose one tracker template among ones available in your platform"
+msgid "Choose one tracker template among ones available in your platform."
 msgstr ""
 "Choisissez un modèle d'outil de suivi parmi ceux disponibles sur votre plate-"
-"forme"
+"forme."
 
 msgid "Chosen template"
 msgstr "Modèle choisi"
@@ -46,6 +49,12 @@ msgstr "Créer mon outil de suivi"
 
 msgid "Create your new tracker based on a tracker template XML file."
 msgstr "Créez votre nouvel outil de suivi basé sur un fichier au format XML."
+
+msgid ""
+"Create your new tracker by replicating the configuration of an existing one."
+msgstr ""
+"Créez votre nouvel outil de suivi en répliquant la configuration d'un autre "
+"déjà existant."
 
 msgid "Create your new tracker without any configuration."
 msgstr "Créez votre nouvel outil de suivi sans aucune configuration."
@@ -74,6 +83,9 @@ msgstr "Nom"
 
 msgid "Next"
 msgstr "Suivant"
+
+msgid "Project"
+msgstr "Projet"
 
 msgid "Shortname"
 msgstr "Nom court"
@@ -118,6 +130,9 @@ msgstr ""
 
 msgid "Tracker XML file"
 msgstr "Fichier XML"
+
+msgid "Tracker from another project"
+msgstr "Outil de suivi d'un autre project"
 
 msgid "Tracker shortname:"
 msgstr "Nom court de l'outil de suivi :"

@@ -99,6 +99,32 @@ describe("getters", () => {
 
             expect(getters.is_ready_for_step_2(state)).toBe(true);
         });
+
+        it("Is not ready if TRACKER_ANOTHER_PROJECT option is selected with no tracker template", () => {
+            const state: State = {
+                active_option: CreationOptions.TRACKER_ANOTHER_PROJECT,
+                selected_tracker_template: null,
+                is_a_xml_file_selected: true,
+                has_xml_file_error: false,
+                is_parsing_a_xml_file: false,
+                selected_project_tracker_template: null
+            } as State;
+
+            expect(getters.is_ready_for_step_2(state)).toBe(false);
+        });
+
+        it("Is ready if TRACKER_ANOTHER_PROJECT option is selected along with a tracker template", () => {
+            const state: State = {
+                active_option: CreationOptions.TRACKER_ANOTHER_PROJECT,
+                selected_tracker_template: null,
+                is_a_xml_file_selected: true,
+                has_xml_file_error: false,
+                is_parsing_a_xml_file: false,
+                selected_project_tracker_template: {} as Tracker
+            } as State;
+
+            expect(getters.is_ready_for_step_2(state)).toBe(true);
+        });
     });
 
     describe("is_ready_to_submit", () => {
