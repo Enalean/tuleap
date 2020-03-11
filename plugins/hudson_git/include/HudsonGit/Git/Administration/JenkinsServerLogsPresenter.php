@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
-use Tuleap\HudsonGit\Job\Job;
+use Tuleap\HudsonGit\Log\Log;
 
 class JenkinsServerLogsPresenter
 {
@@ -58,13 +58,13 @@ class JenkinsServerLogsPresenter
         $this->status_code     = $status_code;
     }
 
-    public static function buildFromJob(Job $job): self
+    public static function buildFromLog(Log $log): self
     {
         return new self(
-            (string) $job->getRepository()->getName(),
-            (string) $job->getFormattedPushDate(),
-            $job->getJobUrlList(),
-            $job->getStatusCode()
+            (string) $log->getRepository()->getName(),
+            (string) $log->getFormattedPushDate(),
+            $log->getJobUrlList(),
+            $log->getStatusCode()
         );
     }
 }

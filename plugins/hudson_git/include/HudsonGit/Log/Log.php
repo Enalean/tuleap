@@ -22,11 +22,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\HudsonGit\Job;
+namespace Tuleap\HudsonGit\Log;
 
 use GitRepository;
 
-class Job
+class Log
 {
     private $id;
     private $repository;

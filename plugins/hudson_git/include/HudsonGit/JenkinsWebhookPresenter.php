@@ -25,7 +25,7 @@ use Tuleap\Git\Webhook\WebhookLogPresenter;
 use Codendi_HTMLPurifier;
 use GitRepository;
 use CSRFSynchronizerToken;
-use Tuleap\HudsonGit\Job\Job;
+use Tuleap\HudsonGit\Log\Log;
 
 class JenkinsWebhookPresenter extends GenericWebhookPresenter
 {
@@ -44,14 +44,14 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
         $this->purified_last_push_info = '<span class="text-info">'. $GLOBALS['Language']->getText(
             'plugin_hudson_git',
             'n_jobs_triggered',
-            $this->countNbJobsTriggeredOnLastPush($hooklogs)
+            $this->countNumberOfPollingJobsTriggeredOnLastPush($hooklogs)
         ) .'</span>';
 
         $this->generateHooklogs($hooklogs);
     }
 
     /**
-     * @param Job[] $hooklogs
+     * @param Log[] $hooklogs
      */
     private function generateHooklogs(array $hooklogs): void
     {
@@ -81,9 +81,9 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
     }
 
     /**
-     * @param Job[] $hooklogs
+     * @param Log[] $hooklogs
      */
-    private function countNbJobsTriggeredOnLastPush(array $hooklogs): int
+    private function countNumberOfPollingJobsTriggeredOnLastPush(array $hooklogs): int
     {
         if (count($hooklogs) > 0) {
             return count($hooklogs[0]->getJobUrlList());

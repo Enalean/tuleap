@@ -36,8 +36,8 @@ use ProjectManager;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\HudsonGit\Job\Job;
 use Tuleap\HudsonGit\Job\JobManager;
+use Tuleap\HudsonGit\Log\Log;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
@@ -245,10 +245,10 @@ class AdministrationControllerTest extends TestCase
 
         $repository = Mockery::mock(GitRepository::class);
         $repository->shouldReceive('getName')->andReturn('repo01');
-        $job = new Job($repository, 1582622782, 'job_url', null);
+        $log = new Log($repository, 1582622782, 'job_url', null);
         $this->job_manager->shouldReceive('getLastJobLogsByProjectServer')
             ->with($jenkins_server)
-            ->andReturn([$job]);
+            ->andReturn([$log]);
 
         $this->header_renderer->shouldReceive('renderServiceAdministrationHeader')->once();
         $this->renderer->shouldReceive('renderToPage')->once();

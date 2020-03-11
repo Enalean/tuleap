@@ -27,8 +27,8 @@ use Psr\Log\LoggerInterface;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Job\CannotCreateJobException;
-use Tuleap\HudsonGit\Job\Job;
 use Tuleap\HudsonGit\Job\JobManager;
+use Tuleap\HudsonGit\Log\Log;
 
 class HookTriggerController
 {
@@ -107,7 +107,7 @@ class HookTriggerController
                 $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
             }
 
-            $this->addHudsonGitJob(
+            $this->addHudsonGitLog(
                 $repository,
                 implode(',', $polling_urls),
                 $status_code,
@@ -116,11 +116,11 @@ class HookTriggerController
         }
     }
 
-    private function addHudsonGitJob(GitRepository $repository, string $job_name, ?int $status_code, int $date_job): void
+    private function addHudsonGitLog(GitRepository $repository, string $job_name, ?int $status_code, int $date_job): void
     {
-        $job = new Job($repository, $date_job, $job_name, $status_code);
+        $log = new Log($repository, $date_job, $job_name, $status_code);
         try {
-            $this->job_manager->create($job);
+            $this->job_manager->create($log);
         } catch (CannotCreateJobException $exception) {
             $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
         }
@@ -174,9 +174,9 @@ class HookTriggerController
         ?int $status_code,
         $date_job
     ): void {
-        $job = new Job($repository, $date_job, $job_name, $status_code);
+        $log = new Log($repository, $date_job, $job_name, $status_code);
         try {
-            $this->job_manager->createJobLogForProject($jenkins_server, $job);
+            $this->job_manager->createJobLogForProject($jenkins_server, $log);
         } catch (CannotCreateJobException $exception) {
             $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
         }

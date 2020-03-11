@@ -171,8 +171,8 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
     private function buildServerLogsPresenters(JenkinsServer $jenkins_server): array
     {
         $presenters = [];
-        foreach ($this->job_manager->getLastJobLogsByProjectServer($jenkins_server) as $job) {
-            $presenters[] = JenkinsServerLogsPresenter::buildFromJob($job);
+        foreach ($this->job_manager->getLastJobLogsByProjectServer($jenkins_server) as $log) {
+            $presenters[] = JenkinsServerLogsPresenter::buildFromLog($log);
         }
 
         return $presenters;
