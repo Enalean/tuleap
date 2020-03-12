@@ -125,7 +125,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
      *
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      *
      * @return string
      */
@@ -135,6 +135,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($this->isUsed()) {
             return $this->getBind()->getCriteriaFrom($this->getCriteriaValue($criteria));
         }
+
+        return '';
     }
 
     /**
@@ -142,7 +144,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @see getCriteriaFrom
      *
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      *
      * @return string
      */
@@ -486,7 +488,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     /**
      * Display the field value as a criteria
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return string
      * @see fetchCriteria
      */
@@ -1087,7 +1089,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     /**
      * Fetch the changes that has been made to this field in a followup
-     * @param Tracker_ $artifact
+     * @param Tracker_Artifact $artifact
      * @param array $from the value(s) *before*
      * @param array $to   the value(s) *after*
      */
@@ -1095,6 +1097,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         $html = '';
         $values = array();
+        $from_value=false;
         if ($from && isset($from['changeset_id'])) {
             foreach ($this->getBind()->getChangesetValues($from['changeset_id']) as $v) {
                 if ($v['id'] != Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
@@ -1111,7 +1114,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
 
         $values = array();
-        foreach ($this->getBind()->getfChangesetValues($to['changeset_id']) as $v) {
+        foreach ($this->getBind()->getChangesetValues($to['changeset_id']) as $v) {
             $values[] = $this->getBind()->formatChangesetValue($v);
         }
         $html .= implode(', ', $values);

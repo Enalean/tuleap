@@ -359,12 +359,14 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
 
     /**
      * Fetch the changes that has been made to this field in a followup
-     * @param Tracker_ $artifact
+     * @param Tracker_Artifact $artifact
      * @param array $from the value(s) *before*
      * @param array $to   the value(s) *after*
      */
     public function fetchFollowUp($artifact, $from, $to)
     {
+        assert($from instanceof Tracker_Artifact_ChangesetValue_Numeric);
+        assert($to instanceof Tracker_Artifact_ChangesetValue_Numeric);
         $html = '';
         if (!$from || !($from_value = $from->getNumeric())) {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' ';

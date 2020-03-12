@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean 2020-present. All rights reserved
  * Copyright (c) STMicroelectronics 2016. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -61,33 +62,21 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return $this->fetchSubmitValue(array());
     }
 
-    /**
-     * @return the label of the field (mainly used in admin part)
-     */
     public static function getFactoryLabel()
     {
         return $GLOBALS['Language']->getText('plugin_tracker_encryption', 'field_label');
     }
 
-    /**
-     * @return the description of the field (mainly used in admin part)
-     */
     public static function getFactoryDescription()
     {
           return $GLOBALS['Language']->getText('plugin_tracker_encryption', 'field_label');
     }
 
-    /**
-     * @return the path to the icon
-     */
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/lock.png');
     }
 
-    /**
-     * @return the path to the icon
-     */
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/lock.png');
@@ -159,7 +148,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     }
 
     /**
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      *
      * @return string
      * @see fetchCriteria
@@ -180,7 +169,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     }
 
     /**
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      *
      * @return string
      */
@@ -207,7 +196,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     }
 
     /**
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      *
      * @return string
      * @see getCriteriaFrom

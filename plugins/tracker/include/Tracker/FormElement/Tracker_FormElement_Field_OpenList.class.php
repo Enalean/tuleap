@@ -286,17 +286,11 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return new Tracker_FormElement_Field_OpenListDao();
     }
 
-    /**
-     * @return the label of the field (mainly used in admin part)
-     */
     public static function getFactoryLabel()
     {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'open_list');
     }
 
-    /**
-     * @return the description of the field (mainly used in admin part)
-     */
     public static function getFactoryDescription()
     {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'open_list_description');
@@ -304,17 +298,11 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return 'Provide a textbox containing an list of values, with autocompletion';
     }
 
-    /**
-     * @return the path to the icon
-     */
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-scroll-pane-list.png');
     }
 
-    /**
-     * @return the path to the icon
-     */
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-scroll-pane-list--plus.png');
@@ -604,7 +592,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
      *
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      *
      * @return string
      */
@@ -684,7 +672,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @see getCriteriaFrom
      *
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      *
      * @return string
      */
@@ -733,7 +721,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     /**
      * Display the field value as a criteria
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return string
      * @see fetchCriteria
      */
