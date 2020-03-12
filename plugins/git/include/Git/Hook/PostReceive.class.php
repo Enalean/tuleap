@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013-2018. All rights reserved.
+ * Copyright Enalean (c) 2013-2020. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Hook\PostReceiveExecuteEvent;
 use Tuleap\Git\Hook\PostReceiveMailSender;
 use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Webhook\WebhookRequestSender;
@@ -109,14 +110,16 @@ class Git_Hook_PostReceive
                 $this->executeForRepositoryAndUser($repository, $user, $oldrev, $newrev, $refname);
             }
             $this->processGitWebhooks($repository, $user, $oldrev, $newrev, $refname);
-            $this->event_manager->processEvent(GIT_HOOK_POSTRECEIVE_REF_UPDATE, array(
-                'repository'                    => $repository,
-                'oldrev'                        => $oldrev,
-                'newrev'                        => $newrev,
-                'refname'                       => $refname,
-                'user'                          => $user,
-                'is_technical_reference_update' => $technical_reference_event->isATechnicalReference()
-            ));
+
+            $event = new PostReceiveExecuteEvent(
+                $repository,
+                $user,
+                $oldrev,
+                $newrev,
+                $refname,
+                $technical_reference_event->isATechnicalReference()
+            );
+            $this->event_manager->processEvent($event);
         }
     }
 
