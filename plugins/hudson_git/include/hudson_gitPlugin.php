@@ -33,6 +33,7 @@ use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\Events\XMLExportExternalContentEvent;
 use Tuleap\Git\Events\XMLImportExternalContentEvent;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
+use Tuleap\Git\Hook\PostReceiveExecuteEvent;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Http\HttpClientFactory;
@@ -79,7 +80,7 @@ class hudson_gitPlugin extends Plugin
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(Hooks::ADDITIONAL_WEBHOOKS);
-            $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE);
+            $this->addHook(PostReceiveExecuteEvent::NAME);
             $this->addHook(self::DISPLAY_HUDSON_ADDITION_INFO);
             $this->addHook(GitAdminGetExternalPanePresenters::NAME);
             $this->addHook(CollectGitRoutesEvent::NAME);
@@ -255,9 +256,10 @@ class hudson_gitPlugin extends Plugin
         );
     }
 
-    public function git_hook_post_receive_ref_update($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function postReceiveExecuteEvent(PostReceiveExecuteEvent $event): void
     {
-        if ($this->isAllowed($params['repository']->getProjectId())) {
+        $repository = $event->getRepository();
+        if ($this->isAllowed($repository->getProjectId())) {
             $http_client     = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
             $request_factory = HTTPFactoryBuilder::requestFactory();
             $stream_factory  = HTTPFactoryBuilder::streamFactory();
@@ -267,7 +269,7 @@ class hudson_gitPlugin extends Plugin
                     $http_client,
                     $request_factory,
                     new JenkinsCSRFCrumbRetriever($http_client, $request_factory),
-                    new JenkinsTuleapPluginHookPayload($params['repository'], $params['refname']),
+                    new JenkinsTuleapPluginHookPayload($repository, $event->getRefname()),
                     $stream_factory
                 ),
                 $this->getLogger(),
@@ -282,8 +284,8 @@ class hudson_gitPlugin extends Plugin
             );
 
             $controller->trigger(
-                $params['repository'],
-                $params['newrev'],
+                $repository,
+                $event->getNewrev(),
                 new DateTimeImmutable()
             );
         }

@@ -28,6 +28,7 @@ use Tuleap\Git\Events\AfterRepositoryForked;
 use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Git\GitViews\RepoManagement\Pane\PanesCollection;
+use Tuleap\Git\Hook\PostReceiveExecuteEvent;
 use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -135,7 +136,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
             $this->addHook(GIT_ADDITIONAL_BODY_CLASSES);
             $this->addHook(GIT_ADDITIONAL_PERMITTED_ACTIONS);
-            $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE, 'gitHookPostReceive');
+            $this->addHook(PostReceiveExecuteEvent::NAME);
             $this->addHook(GitRepositoryDeletionEvent::NAME);
             $this->addHook(GitAdditionalActionEvent::NAME);
             $this->addHook(AdditionalInformationRepresentationRetriever::NAME);
@@ -263,15 +264,15 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         }
     }
 
-    public function gitHookPostReceive($params)
+    public function postReceiveExecuteEvent(PostReceiveExecuteEvent $event)
     {
-        $refname     = $params['refname'];
+        $refname     = $event->getRefname();
         $branch_name = $this->getBranchNameFromRef($refname);
 
         if ($branch_name != null) {
-            $new_rev    = $params['newrev'];
-            $repository = $params['repository'];
-            $user       = $params['user'];
+            $new_rev    = $event->getNewrev();
+            $repository = $event->getRepository();
+            $user       = $event->getUser();
 
             if ($new_rev == '0000000000000000000000000000000000000000') {
                 $this->abandonFromSourceBranch($user, $repository, $branch_name);
