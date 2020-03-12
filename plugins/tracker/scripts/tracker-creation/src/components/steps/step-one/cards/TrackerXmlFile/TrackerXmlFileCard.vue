@@ -30,7 +30,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { CreationOptions } from "../../../../../store/type";
-import SvgTrackerXmlFile from "../../svg/SvgTrackerXmlFile.vue";
+import SvgTrackerXmlFile from "./SvgTrackerXmlFile.vue";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import TrackerXmlFileCardDescription from "./TrackerXmlFileCardDescription.vue";
 import TrackerXmlFileSelector from "./TrackerXmlFileSelector.vue";
