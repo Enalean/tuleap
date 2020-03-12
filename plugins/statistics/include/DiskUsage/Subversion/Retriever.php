@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CVS\DiskUsage;
+namespace Tuleap\Statistics\DiskUsage\Subversion;
 
 use Statistics_DiskUsageDao;
 use Project;
@@ -38,7 +38,7 @@ class Retriever
 
     public function getLastSizeForProject(Project $project)
     {
-        $row = $this->dao->getLastSizeForService($project->getID(), Statistics_DiskUsageManager::CVS);
+        $row = $this->dao->getLastSizeForService($project->getID(), Statistics_DiskUsageManager::SVN);
 
         return (int) $row['size'];
     }

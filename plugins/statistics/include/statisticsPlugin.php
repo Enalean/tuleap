@@ -23,9 +23,7 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
-use Tuleap\CVS\DiskUsage\FullHistoryDao;
-use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
@@ -36,8 +34,10 @@ use Tuleap\Project\Quota\ProjectQuotaInformation;
 use Tuleap\Project\Quota\ProjectQuotaRequester;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\SOAP\SOAPRequestValidatorImplementation;
-use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
-use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Retriever as CVSRetriever;
+use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
+use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
 use Tuleap\SystemEvent\RootDailyStartEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';

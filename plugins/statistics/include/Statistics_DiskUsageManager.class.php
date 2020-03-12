@@ -21,8 +21,8 @@
 
 use Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult;
 use Tuleap\Statistics\Events\StatisticsRefreshDiskUsage;
-use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
-use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
+use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Statistics_DiskUsageManager
