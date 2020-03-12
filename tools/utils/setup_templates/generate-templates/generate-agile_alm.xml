@@ -1,0 +1,203 @@
+<?xml-stylesheet type="text/xsl" href="style.xsl"?>
+<project>
+  <dashboards>
+    <dashboard name="0 - Project Dashboard">
+      <line>
+        <column>
+          <widget name="projectnote">
+            <preference name="note">
+              <value name="title">Note from the editor</value>
+              <value name="content"><![CDATA[
+  You've created a new project based upon a template.
+
+  Feel free to change tools customization to your needs.
+
+  Add user groups and set permissions.
+
+  Customize workflow options.
+
+  Need professional support to help you adapt your workspace? Get in touch with our sales team: <sales@enalean.com>
+  ]]></value>
+            </preference>
+          </widget>
+          <widget name="projectheartbeat"/>
+        </column>
+        <column>
+          <widget name="projectmembers"/>
+        </column>
+      </line>
+    </dashboard>
+    <dashboard name="1 - Product Owner">
+      <line>
+        <column>
+          <widget name="plugin_tracker_projectrenderer">
+            <preference name="renderer">
+              <reference name="id" REF="R1744"></reference>
+              <value name="title">Releases</value>
+            </preference>
+          </widget>
+        </column>
+      </line>
+    </dashboard>
+    <dashboard name="2 - Developers">
+      <line>
+        <column>
+          <widget name="plugin_tracker_projectrenderer">
+            <preference name="renderer">
+              <reference name="id" REF="R1740"></reference>
+              <value name="title">New Submitted Bugs</value>
+            </preference>
+          </widget>
+        </column>
+      </line>
+    </dashboard>
+    <dashboard name="3 - QA">
+      <line>
+        <column>
+          <widget name="plugin_tracker_projectrenderer">
+            <preference name="renderer">
+              <reference name="id" REF="R1685"></reference>
+              <value name="title">Test Cases Charts</value>
+            </preference>
+          </widget>
+        </column>
+        <column>
+          <widget name="plugin_tracker_projectrenderer">
+            <preference name="renderer">
+              <reference name="id" REF="R1686"></reference>
+              <value name="title">All tests execution status</value>
+            </preference>
+          </widget>
+        </column>
+      </line>
+    </dashboard>
+  </dashboards>
+  <trackers use-natures="true">
+    <include-template-tracker path="trackers/bug.xml"/>
+    <include-template-tracker path="trackers/epic.xml"/>
+    <include-template-tracker path="trackers/rel.xml"/>
+    <include-template-tracker path="trackers/sprint.xml"/>
+    <include-template-tracker path="trackers/task.xml"/>
+    <include-template-tracker path="trackers/story.xml"/>
+    <include-template-tracker path="trackers/ttm-def.xml"/>
+    <include-template-tracker path="trackers/ttm-exec.xml"/>
+    <include-template-tracker path="trackers/ttm-campaign.xml"/>
+    <triggers>
+      <trigger_rule>
+        <triggers>
+          <trigger>
+            <field_id REF="F14406"/>
+            <field_value_id REF="V13843"/>
+          </trigger>
+        </triggers>
+        <condition>at_least_one</condition>
+        <target>
+          <field_id REF="F14463"/>
+          <field_value_id REF="V13861"/>
+        </target>
+      </trigger_rule>
+      <trigger_rule>
+        <triggers>
+          <trigger>
+            <field_id REF="F14406"/>
+            <field_value_id REF="V13845"/>
+          </trigger>
+        </triggers>
+        <condition>all_of</condition>
+        <target>
+          <field_id REF="F14463"/>
+          <field_value_id REF="V13863"/>
+        </target>
+      </trigger_rule>
+    </triggers>
+  </trackers>
+  <natures>
+    <nature>_is_child</nature>
+  </natures>
+  <agiledashboard>
+    <plannings>
+      <planning name="Release Planning" plan_title="Release Plan" planning_tracker_id="T480"
+                backlog_title="Product Backlog">
+        <backlogs>
+          <backlog>T478</backlog>
+          <backlog>T485</backlog>
+        </backlogs>
+      </planning>
+      <planning name="Sprint Planning" plan_title="Sprint Plan" planning_tracker_id="T481" backlog_title="Epic Backlog">
+        <backlogs>
+          <backlog>T478</backlog>
+          <backlog>T485</backlog>
+        </backlogs>
+      </planning>
+    </plannings>
+  </agiledashboard>
+  <cardwall>
+    <trackers>
+      <tracker id="T479"/>
+      <tracker id="T480">
+        <columns>
+          <column label="Todo" id="C282" tlp_color_name="daphne-blue"/>
+          <column label="On Going" id="C283" tlp_color_name="lake-placid-blue"/>
+          <column label="Review" id="C284" tlp_color_name="deep-blue"/>
+          <column label="Done" id="C285" tlp_color_name="neon-green"/>
+        </columns>
+        <mappings>
+          <mapping tracker_id="T478" field_id="F14317">
+            <values>
+              <value value_id="V13823" column_id="C282"/>
+              <value value_id="V13824" column_id="C283"/>
+              <value value_id="V13825" column_id="C285"/>
+              <value value_id="V13826" column_id="C285"/>
+              <value value_id="V13827" column_id="C285"/>
+              <value value_id="V13828" column_id="C285"/>
+              <value value_id="V13829" column_id="C285"/>
+            </values>
+          </mapping>
+          <mapping tracker_id="T482" field_id="F14406">
+            <values>
+              <value value_id="V13842" column_id="C282"/>
+              <value value_id="V13843" column_id="C283"/>
+              <value value_id="V13844" column_id="C284"/>
+              <value value_id="V13845" column_id="C285"/>
+            </values>
+          </mapping>
+        </mappings>
+      </tracker>
+      <tracker id="T481">
+        <columns>
+          <column label="Todo" id="C286" tlp_color_name="daphne-blue"/>
+          <column label="On Going" id="C287" tlp_color_name="lake-placid-blue"/>
+          <column label="Review" id="C288" tlp_color_name="deep-blue"/>
+          <column label="Done" id="C289" tlp_color_name="neon-green"/>
+        </columns>
+        <mappings>
+          <mapping tracker_id="T478" field_id="F14317">
+            <values>
+              <value value_id="V13823" column_id="C286"/>
+              <value value_id="V13824" column_id="C287"/>
+              <value value_id="V13825" column_id="C289"/>
+              <value value_id="V13826" column_id="C289"/>
+              <value value_id="V13827" column_id="C289"/>
+              <value value_id="V13828" column_id="C289"/>
+              <value value_id="V13829" column_id="C289"/>
+            </values>
+          </mapping>
+          <mapping tracker_id="T482" field_id="F14406">
+            <values>
+              <value value_id="V13842" column_id="C286"/>
+              <value value_id="V13843" column_id="C287"/>
+              <value value_id="V13844" column_id="C288"/>
+              <value value_id="V13845" column_id="C289"/>
+            </values>
+          </mapping>
+        </mappings>
+      </tracker>
+      <tracker id="T485"/>
+    </trackers>
+  </cardwall>
+  <git>
+    <ugroups-admin>
+      <ugroup>Project administrators</ugroup>
+    </ugroups-admin>
+  </git>
+</project>
