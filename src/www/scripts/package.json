@@ -39,24 +39,22 @@
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
-    "@types/dompurify": "^2.0.1",
-    "@types/mustache": "^3.2.0",
     "@types/ckeditor": "^4.9.8",
     "@types/d3-scale": "^2.1.1",
     "@types/d3-selection": "^1.4.1",
+    "@types/dompurify": "^2.0.1",
+    "@types/jquery": "^3.3.31",
+    "@types/mustache": "^3.2.0",
     "@types/node-gettext": "^2.0.1",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.0.0-beta.29",
-    "@types/jquery": "^3.3.31",
-    "jquery": "^3.4.1",
     "imports-loader": "^0.7.1",
+    "jquery": "^3.4.1",
     "load-json-file": "^5.1.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
     "vue-property-decorator": "^8.2.2",
     "vue-template-compiler": "^2.6.10",
     "vuex-class": "^0.3.2",
-    "vuex-mock-store": "0.0.7",
-    "webpack-assets-manifest": "^3.1.1"
+    "vuex-mock-store": "0.0.7"
   },
   "config": {
     "bin": "../../../node_modules/.bin"
