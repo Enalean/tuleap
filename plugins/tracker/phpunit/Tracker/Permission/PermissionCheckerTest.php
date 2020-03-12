@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,49 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 use Tuleap\Project\ProjectAccessChecker;
 
-require_once __DIR__.'/../../bootstrap.php';
-
-class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
+final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     */
+    private $restricted;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
+     */
     private $user_manager;
-
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     */
     private $user;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     */
     private $assignee;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     */
     private $u_ass;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     */
     private $submitter;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     */
     private $u_sub;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     */
     private $other;
-
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
+     */
     private $tracker;
     /**
      * @var \Mockery\MockInterface|ProjectAccessChecker
@@ -95,15 +121,12 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
      */
     private $project_private;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $this->project = \Mockery::spy(\Project::class);
-        stub($this->project)->getID()->returns(120);
-        stub($this->project)->isPublic()->returns(true);
-        stub($this->project)->isActive()->returns(true);
+        $this->project->shouldReceive('getID')->andReturns(120);
+        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $this->project->shouldReceive('isActive')->andReturns(true);
 
         $this->project_private = \Mockery::spy(\Project::class);
         $this->project_private->shouldReceive('getID')->andReturns(102);
@@ -299,7 +322,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->all_trackers_forge_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
     }
 
-    public function testTrackerAccessForUserNotAllowedToAccessToProject()
+    public function testTrackerAccessForUserNotAllowedToAccessToProject() : void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(Mockery::mock(Project_AccessException::class));
 
@@ -308,7 +331,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanViewTracker($this->restricted, $this->tracker));
     }
 
-    public function testAccessPermsAnonymousFullAccess()
+    public function testAccessPermsAnonymousFullAccess() : void
     {
         /** @var Tracker $t_access_anonymous */
         $t_access_anonymous = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -336,7 +359,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_anonymous));
     }
 
-    public function testAccessPermsRegisteredFullAccess()
+    public function testAccessPermsRegisteredFullAccess() : void
     {
         $t_access_registered = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_registered->shouldReceive('getId')->andReturns(2);
@@ -363,7 +386,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_registered));
     }
 
-    public function testAccessPermsMemberFullAccess()
+    public function testAccessPermsMemberFullAccess() : void
     {
         $t_access_members = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_members->shouldReceive('getId')->andReturns(3);
@@ -390,7 +413,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_members));
     }
 
-    public function testAccessPermsTrackerAdminAllProjects()
+    public function testAccessPermsTrackerAdminAllProjects() : void
     {
         $t_access_members = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_members->shouldReceive('getId')->andReturns(3);
@@ -408,12 +431,12 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
 
-        stub($tracker_manager)->userCanAdminAllProjectTrackers($this->all_trackers_forge_admin_user)->returns(true);
+        $tracker_manager->shouldReceive('userCanAdminAllProjectTrackers')->with($this->all_trackers_forge_admin_user)->andReturns(true);
 
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->all_trackers_forge_admin_user, $t_access_members));
     }
 
-    public function testAccessPermsAdminFullAccess()
+    public function testAccessPermsAdminFullAccess() : void
     {
         $t_access_admin = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_admin->shouldReceive('getId')->andReturns(4);
@@ -440,7 +463,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_admin));
     }
 
-    public function testAccessPermsSubmitterFullAccess()
+    public function testAccessPermsSubmitterFullAccess() : void
     {
         $t_access_submitter = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_submitter->shouldReceive('getId')->andReturns(5);
@@ -468,7 +491,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_submitter));
     }
 
-    public function testAccessPermsAssigneeFullAccess()
+    public function testAccessPermsAssigneeFullAccess() : void
     {
         $t_access_assignee = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_assignee->shouldReceive('getId')->andReturns(6);
@@ -496,7 +519,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_assignee));
     }
 
-    public function testAccessPermsSubmitterAssigneeFullAccess()
+    public function testAccessPermsSubmitterAssigneeFullAccess() : void
     {
         $t_access_submitterassignee  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_submitterassignee->shouldReceive('getId')->andReturns(7);
@@ -526,7 +549,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_submitterassignee));
     }
 
-    public function testAccessPermsPrivateProject()
+    public function testAccessPermsPrivateProject() : void
     {
         $t_access_registered  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_registered->shouldReceive('getId')->andReturns(7);
@@ -564,7 +587,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->super_admin, $t_access_registered));
     }
 
-    public function testTrackerInNotActiveProjectIsOnlyReadableBySuperAdmin()
+    public function testTrackerInNotActiveProjectIsOnlyReadableBySuperAdmin() : void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('isActive')->andReturns(false);
@@ -583,7 +606,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanViewTracker($this->project_member, $tracker));
     }
 
-    public function testArtifactAccessForUserNotAllowedToAccessToProject()
+    public function testArtifactAccessForUserNotAllowedToAccessToProject() : void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(Mockery::mock(Project_AccessException::class));
 
@@ -595,9 +618,8 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanView($this->restricted, $artifact));
     }
 
-    public function testUserCanViewTrackerAccessSubmitter()
+    public function testUserCanViewTrackerAccessSubmitter() : void
     {
-        $ugroup_ass = 101;
         $ugroup_sub = 102;
 
         // $artifact_submitter has been submitted by $submitter and assigned to $u
@@ -622,10 +644,9 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanView($this->u_ass, $artifact));
     }
 
-    public function testUserCanViewTrackerAccessAssignee()
+    public function testUserCanViewTrackerAccessAssignee() : void
     {
         $ugroup_ass = 101;
-        $ugroup_sub = 102;
 
         // $artifact_assignee has been submitted by $u and assigned to $assignee
         // $assignee and $u_ass should have the right to see it.
@@ -633,7 +654,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $permissions = array("PLUGIN_TRACKER_ACCESS_ASSIGNEE" => array(0 => $ugroup_ass));
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
-        $contributor_field = aMockField()->build();
+        $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
         $this->tracker->shouldReceive('getContributorField')->andReturns($contributor_field);
         $artifact_assignee = \Mockery::spy(\Tracker_Artifact::class);
         $artifact_assignee->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -654,7 +675,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanView($this->user, $artifact_assignee));
     }
 
-    public function testUserCanViewTrackerAccessSubmitterOrAssignee()
+    public function testUserCanViewTrackerAccessSubmitterOrAssignee() : void
     {
         $ugroup_ass = 101;
         $ugroup_sub = 102;
@@ -667,7 +688,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
                             );
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
-        $contributor_field = aMockField()->build();
+        $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
         $this->tracker->shouldReceive('getContributorField')->andReturns($contributor_field);
         $artifact_subass = \Mockery::spy(\Tracker_Artifact::class);
         $artifact_subass->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -688,10 +709,8 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($this->permission_checker->userCanView($this->user, $artifact_subass));
     }
 
-    public function testUserCanViewTrackerAccessFull()
+    public function testUserCanViewTrackerAccessFull() : void
     {
-        $ugroup_ass = 101;
-        $ugroup_sub = 102;
         $ugroup_ful = 103;
 
         // $assignee is in (UgroupAss - ugroup_id=101)
@@ -736,7 +755,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $permissions = array("PLUGIN_TRACKER_ACCESS_FULL" => array(0 => $ugroup_ful));
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
-        $contributor_field = aMockField()->build();
+        $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
         $this->tracker->shouldReceive('getContributorField')->andReturns($contributor_field);
         $artifact_subass = \Mockery::spy(\Tracker_Artifact::class);
         $artifact_subass->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -752,209 +771,5 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
         $this->assertFalse($permission_checker->userCanView($assignee, $artifact_subass));
         $this->assertFalse($permission_checker->userCanView($other, $artifact_subass));
         $this->assertTrue($permission_checker->userCanView($u, $artifact_subass));
-    }
-}
-
-abstract class Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest extends TuleapTestCase
-{
-    protected $user_manager;
-
-    protected $tracker;
-
-    protected $user;
-    protected $submitter;
-    protected $ugroup_id_submitter_only;
-    protected $artifact;
-    /**
-     * @var \Mockery\MockInterface|ProjectAccessChecker
-     */
-    protected $project_access_checker;
-    /**
-     * @var Tracker_Permission_PermissionChecker
-     */
-    protected $permission_checker;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
-        $project = \Mockery::spy(\Project::class);
-        stub($project)->getID()->returns(120);
-        stub($project)->isPublic()->returns(true);
-
-        $this->user_manager           = \Mockery::spy(\UserManager::class);
-        $this->project_access_checker = \Mockery::mock(ProjectAccessChecker::class);
-        $this->permission_checker     = new Tracker_Permission_PermissionChecker($this->user_manager, $this->project_access_checker);
-
-        $this->tracker = \Mockery::spy(\Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturns(666);
-        $this->tracker->shouldReceive('getGroupId')->andReturns(222);
-        $this->tracker->shouldReceive('getProject')->andReturns($project);
-
-        $this->ugroup_id_submitter_only = 112;
-
-        $this->user = \Mockery::spy(\PFUser::class);
-        stub($this->user)->getId()->returns(120);
-        $this->user->shouldReceive('isMember')->with(12)->andReturns(true);
-
-        $this->submitter = \Mockery::spy(\PFUser::class);
-        stub($this->submitter)->getId()->returns(250);
-        stub($this->submitter)->isMemberOfUGroup($this->ugroup_id_submitter_only, 222)->returns(true);
-        $this->submitter->shouldReceive('isMember')->with(12)->andReturns(true);
-
-        stub($this->user_manager)->getUserById(120)->returns($this->user);
-        stub($this->user_manager)->getUserById(250)->returns($this->submitter);
-
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
-        stub($this->artifact)->getTracker()->returns($this->tracker);
-    }
-}
-
-class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest
-{
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
-        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
-            array(
-                Tracker::PERMISSION_SUBMITTER_ONLY => array(
-                    0 => $this->ugroup_id_submitter_only
-                )
-            )
-        );
-
-        stub($this->artifact)->getSubmittedBy()->returns(250);
-    }
-
-    public function itDoesntSeeArtifactSubmittedByOthers()
-    {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-        $this->assertFalse($this->permission_checker->userCanView($this->user, $this->artifact));
-    }
-
-    public function itSeesArtifactSubmittedByThemselves()
-    {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-        $this->assertTrue($this->permission_checker->userCanView($this->submitter, $this->artifact));
-    }
-}
-
-class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest
-{
-    protected $ugroup_id_maintainers  = 111;
-    protected $ugroup_id_admin        = 4;
-    protected $ugroup_private_project = 114;
-
-    protected $maintainer;
-    protected $tracker_admin;
-    protected $project_admin;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
-        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
-            array(
-                Tracker::PERMISSION_SUBMITTER_ONLY => array(
-                    $this->ugroup_id_submitter_only
-                ),
-                Tracker::PERMISSION_FULL => array(
-                    $this->ugroup_id_maintainers
-                ),
-                Tracker::PERMISSION_ADMIN => array(
-                    $this->ugroup_id_admin
-                )
-            )
-        );
-
-        $this->restricted_user = \Mockery::spy(\PFUser::class);
-        $this->restricted_user->shouldReceive('getId')->andReturns(249);
-        $this->restricted_user->shouldReceive('isMemberOfUGroup')->with(114, 223)->andReturns(true);
-        $this->restricted_user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->restricted_user->shouldReceive('isMember')->with(223)->andReturns(true);
-        $this->restricted_user->shouldReceive('isMember')->with(222)->andReturns(false);
-        $this->restricted_user->shouldReceive('isRestricted')->andReturns(true);
-
-        $this->not_member = \Mockery::spy(\PFUser::class);
-        $this->not_member->shouldReceive('getId')->andReturns(250);
-        $this->not_member->shouldReceive('isMemberOfUGroup')->andReturns(false);
-        $this->not_member->shouldReceive('isSuperUser')->andReturns(false);
-        $this->not_member->shouldReceive('isMember')->andReturns(false);
-        $this->not_member->shouldReceive('isRestricted')->andReturns(false);
-
-        $this->maintainer = \Mockery::spy(\PFUser::class);
-        stub($this->maintainer)->getId()->returns(251);
-        stub($this->maintainer)->isMemberOfUGroup($this->ugroup_id_maintainers, 222)->returns(true);
-
-        $this->tracker_admin = \Mockery::spy(\PFUser::class);
-        stub($this->tracker)->userIsAdmin($this->tracker_admin)->returns(true);
-
-        $this->project_admin = \Mockery::spy(\PFUser::class);
-        stub($this->project_admin)->getId()->returns(253);
-        stub($this->project_admin)->isAdmin(120)->returns(true);
-
-        stub($this->artifact)->getSubmittedBy()->returns(250);
-
-        $private_project            = mockery_stub(\Project::class)->isPublic()->returns(false);
-        $tracker_in_private_project = mockery_stub(\Tracker::class)->getProject()->returns($private_project);
-
-        stub($private_project)->getID()->returns(223);
-        stub($tracker_in_private_project)->getGroupId()->returns(223);
-        stub($tracker_in_private_project)->getAuthorizedUgroupsByPermissionType()->returns(
-            array(
-                Tracker::PERMISSION_FULL => array(
-                    $this->ugroup_private_project
-                )
-            )
-        );
-
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-
-        $this->artifact2 = mockery_stub(\Tracker_Artifact::class)->getTracker()->returns($tracker_in_private_project);
-    }
-
-    public function itDoesntSeeArtifactSubmittedByOthers()
-    {
-        $this->assertFalse($this->permission_checker->userCanView($this->user, $this->artifact));
-    }
-
-    public function itSeesArtifactSubmittedByThemselves()
-    {
-        $this->assertTrue($this->permission_checker->userCanView($this->submitter, $this->artifact));
-    }
-
-    public function itSeesArtifactBecauseHeIsGrantedFullAccess()
-    {
-        $this->assertTrue($this->permission_checker->userCanView($this->maintainer, $this->artifact));
-    }
-
-    public function itSeesArtifactBecauseHeIsTrackerAdmin()
-    {
-        $this->assertTrue($this->permission_checker->userCanView($this->tracker_admin, $this->artifact));
-    }
-
-    public function itSeesArtifactBecauseHeIsProjectAdmin()
-    {
-        $this->assertTrue($this->permission_checker->userCanView($this->project_admin, $this->artifact));
-    }
-
-    public function itDoesNotSeeArtifactBecauseHeIsRestricted()
-    {
-        $this->assertFalse($this->permission_checker->userCanView($this->restricted_user, $this->artifact));
-    }
-
-    public function itSeesTheArtifactBecauseHeIsRestrictedAndProjectMember()
-    {
-        $this->assertTrue($this->permission_checker->userCanView($this->restricted_user, $this->artifact2));
-    }
-
-    public function itDoesNotSeeArtifactBecauseHeIsNotProjectMemberOfAPrivateProject()
-    {
-        $this->assertFalse($this->permission_checker->userCanView($this->not_member, $this->artifact2));
     }
 }
