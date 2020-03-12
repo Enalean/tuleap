@@ -24,7 +24,7 @@ namespace Tuleap\OAuth2Server\User;
 
 use Tuleap\DB\DBTransactionExecutor;
 
-class AuthorizationManager
+class AuthorizationCreator
 {
     /**
      * @var DBTransactionExecutor

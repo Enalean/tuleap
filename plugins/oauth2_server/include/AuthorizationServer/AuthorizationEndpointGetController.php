@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -32,6 +31,7 @@ use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
+use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\ForbiddenException;
@@ -47,15 +47,11 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
     public const  STATE_PARAMETER         = 'state';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
     public const  ERROR_PARAMETER            = 'error';
-    private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
+    public const  ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     private const ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
     public const  ERROR_CODE_ACCESS_DENIED   = 'access_denied';
 
     public const CSRF_TOKEN = 'oauth2_server_authorization_endpoint';
-    /**
-     * @var ResponseFactoryInterface
-     */
-    private $response_factory;
     /**
      * @var AuthorizationFormRenderer
      */
@@ -69,37 +65,35 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
      */
     private $app_factory;
     /**
-     * @var \URLRedirect
-     */
-    private $login_redirect;
-    /**
-     * @var RedirectURIBuilder
-     */
-    private $client_uri_redirect_builder;
-    /**
      * @var ScopeExtractor
      */
     private $scope_extractor;
+    /**
+     * @var AuthorizationCodeResponseFactory
+     */
+    private $response_factory;
+    /**
+     * @var AuthorizationComparator
+     */
+    private $authorization_comparator;
 
     public function __construct(
-        ResponseFactoryInterface $response_factory,
         AuthorizationFormRenderer $form_renderer,
         \UserManager $user_manager,
         AppFactory $app_factory,
-        \URLRedirect $login_redirect,
-        RedirectURIBuilder $client_uri_redirect_builder,
         ScopeExtractor $scope_extractor,
+        AuthorizationCodeResponseFactory $response_factory,
+        AuthorizationComparator $authorization_comparator,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->response_factory            = $response_factory;
-        $this->form_renderer               = $form_renderer;
-        $this->user_manager                = $user_manager;
-        $this->app_factory                 = $app_factory;
-        $this->login_redirect              = $login_redirect;
-        $this->client_uri_redirect_builder = $client_uri_redirect_builder;
-        $this->scope_extractor             = $scope_extractor;
+        $this->form_renderer            = $form_renderer;
+        $this->user_manager             = $user_manager;
+        $this->app_factory              = $app_factory;
+        $this->scope_extractor          = $scope_extractor;
+        $this->response_factory         = $response_factory;
+        $this->authorization_comparator = $authorization_comparator;
     }
 
     /**
@@ -109,8 +103,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
     {
         $user = $this->user_manager->getCurrentUser();
         if ($user->isAnonymous()) {
-            return $this->response_factory->createResponse(302)
-                ->withHeader('Location', $this->login_redirect->buildReturnToLogin($request->getServerParams()));
+            return $this->response_factory->createRedirectToLoginResponse($request);
         }
 
         $query_params = $request->getQueryParams();
@@ -129,13 +122,29 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
 
         $state_value = $query_params[self::STATE_PARAMETER] ?? null;
         if (! isset($query_params[self::RESPONSE_TYPE_PARAMETER]) || $query_params[self::RESPONSE_TYPE_PARAMETER] !== self::CODE_PARAMETER) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST, $redirect_uri, $state_value);
+            return $this->response_factory->createErrorResponse(
+                self::ERROR_CODE_INVALID_REQUEST,
+                $redirect_uri,
+                $state_value
+            );
         }
 
         try {
             $scopes = $this->scope_extractor->extractScopes($query_params);
         } catch (InvalidOAuth2ScopeException $e) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_SCOPE, $redirect_uri, $state_value);
+            return $this->response_factory->createErrorResponse(
+                self::ERROR_CODE_INVALID_SCOPE,
+                $redirect_uri,
+                $state_value
+            );
+        }
+
+        if ($this->authorization_comparator->areRequestedScopesAlreadyGranted(
+            $user,
+            $client_app->getId(),
+            ...$scopes
+        )) {
+            return $this->response_factory->createSuccessfulResponse($user, $redirect_uri, $state_value);
         }
 
         $layout = $request->getAttribute(BaseLayout::class);
@@ -143,18 +152,5 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         $csrf_token = new \CSRFSynchronizerToken(self::CSRF_TOKEN);
         $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, ...$scopes);
         return $this->form_renderer->renderForm($data, $layout);
-    }
-
-    /**
-     * @psalm-param self::ERROR_CODE_* $error_code See https://tools.ietf.org/html/rfc6749#section-4.1.2.1
-     */
-    private function buildErrorResponse(
-        string $error_code,
-        string $redirect_uri,
-        ?string $state_value
-    ): ResponseInterface {
-        $error_uri = $this->client_uri_redirect_builder->buildErrorURI($redirect_uri, $state_value, $error_code);
-        return $this->response_factory->createResponse(302)
-            ->withHeader('Location', (string) $error_uri);
     }
 }
