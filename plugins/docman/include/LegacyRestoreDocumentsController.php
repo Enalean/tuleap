@@ -69,10 +69,10 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
                     $item = $itemFactory->getItemFromDb($id, array('ignore_deleted' => true));
                     if ($item !== null && $itemFactory->restore($item)) {
                         $url = $this->plugin->getPluginPath().'/?group_id='.$groupId.'&action=details&id='.$id.'&section=properties';
-                        $layout->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'item_restored', array($url)), CODENDI_PURIFIER_DISABLED);
+                        $layout->addFeedback('info', sprintf(dgettext('tuleap-docman', 'The <a href="%1$s">selected item</a> has been successfully restored.'), $url), CODENDI_PURIFIER_DISABLED);
                         $layout->redirect('/admin/show_pending_documents.php?group_id='.$groupId.'&focus=item');
                     } else {
-                        exit_error($GLOBALS['Language']->getText('plugin_docman', 'error'), $GLOBALS['Language']->getText('plugin_docman', 'item_not_restored'));
+                        exit_error(dgettext('tuleap-docman', 'Error'), dgettext('tuleap-docman', 'The selected item has not been restored.'));
                     }
                     break;
                 case 'confirm_restore_version':
@@ -80,10 +80,10 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
                     $version = $versionFactory->getSpecificVersionById($id);
                     if ($version !== null && $versionFactory->restore($version)) {
                         $url = $this->plugin->getPluginPath().'/?group_id='.$groupId.'&action=details&id='.$version->getItemId().'&section=history';
-                        $layout->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'version_restored', array($url)), CODENDI_PURIFIER_DISABLED);
+                        $layout->addFeedback('info', sprintf(dgettext('tuleap-docman', 'The <a href="%1$s">selected version</a> has been successfully restored.'), $url), CODENDI_PURIFIER_DISABLED);
                         $layout->redirect('/admin/show_pending_documents.php?group_id='.$groupId.'&focus=version');
                     } else {
-                        exit_error($GLOBALS['Language']->getText('plugin_docman', 'error'), $GLOBALS['Language']->getText('plugin_docman', 'version_not_restored'));
+                        exit_error(dgettext('tuleap-docman', 'Error'), dgettext('tuleap-docman', 'The selected version has not been restored.'));
                     }
                     break;
                 default:

@@ -65,7 +65,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
             if ($this->recurseOnDocs) {
                 $nbDocs = $this->nbDocsImpacted;
             }
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_update_recursion_warning', array($nbDocs, $this->nbFoldersImpacted));
+            $html .= sprintf(dgettext('tuleap-docman', '<h3>Confirm recursive application of default values.</h3><p>You are about to apply the values selected in <strong>Default Values</strong> field set below on <strong>%1$s documents and %2$s folders</strong>.</p>'), $nbDocs, $this->nbFoldersImpacted);
             $html .= '</div>';
         }
         $html .= parent::getContent($params);
@@ -128,9 +128,9 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $html = '';
         if ($this->_subItemsAreWritable()) {
             $html .= '<tr>';
-            $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_rec').'</th>';
-            $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_md').'</td>';
-            $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_val').'</th>';
+            $html .= '<th>'.dgettext('tuleap-docman', 'Apply<br>recursively').'</th>';
+            $html .= '<th>'.dgettext('tuleap-docman', 'Property').'</td>';
+            $html .= '<th>'.dgettext('tuleap-docman', 'Value').'</th>';
             $html .= '</tr>';
         }
         return $html;
@@ -156,12 +156,12 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
             $fldChecked = '';
         }
 
-        $html .= '<h4>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_title').'</h4>';
-        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_docs_desc').'</p>';
+        $html .= '<h4>'.dgettext('tuleap-docman', 'Recursion options').'</h4>';
+        $html .= '<p>'.dgettext('tuleap-docman', 'By default the update only affect folders, if you want to update the documents too with the select box below.').'</p>';
         $html .= '<p>';
         $html .= '<select name="recurse_on_doc">';
-        $html .= '<option value="0"'.$fldChecked.'>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_fold').'</option>';
-        $html .= '<option value="1"'.$docChecked.'>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_docs').'</option>';
+        $html .= '<option value="0"'.$fldChecked.'>'.dgettext('tuleap-docman', 'Apply on folders only').'</option>';
+        $html .= '<option value="1"'.$docChecked.'>'.dgettext('tuleap-docman', 'Apply on documents & folders').'</option>';
         $html .= '</select>';
         $html .= '</p>';
 

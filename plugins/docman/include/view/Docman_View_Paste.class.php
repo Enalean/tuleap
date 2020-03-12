@@ -30,10 +30,7 @@ class Docman_View_Paste extends Docman_View_Details
     public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_paste_title', array(
-            $hp->purify($params['itemToPaste']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ,
-            $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)
-        ));
+        return sprintf(dgettext('tuleap-docman', 'Paste \'%1$s\' in \'%2$s\''), $hp->purify($params['itemToPaste']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
     public function _content($params, $view = null, $section = null)

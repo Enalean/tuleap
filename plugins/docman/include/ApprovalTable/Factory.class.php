@@ -202,15 +202,15 @@ abstract class Docman_ApprovalTableFactory
     {
         switch ($state) {
             case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
-                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_0');
+                return dgettext('tuleap-docman', 'Not Yet');
             case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
-                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_1');
+                return dgettext('tuleap-docman', 'Approved');
             case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
-                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_2');
+                return dgettext('tuleap-docman', 'Rejected');
             case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
-                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_3');
+                return dgettext('tuleap-docman', 'Comment only');
             case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
-                return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_4');
+                return dgettext('tuleap-docman', 'Will not review');
         }
         return '';
     }
@@ -219,11 +219,11 @@ abstract class Docman_ApprovalTableFactory
     {
         switch ($type) {
             case PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED:
-                return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_0');
+                return dgettext('tuleap-docman', 'Disabled');
             case PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED:
-                return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_1');
+                return dgettext('tuleap-docman', 'All at once');
             case PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED:
-                return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_2');
+                return dgettext('tuleap-docman', 'Sequential');
         }
         return '';
     }

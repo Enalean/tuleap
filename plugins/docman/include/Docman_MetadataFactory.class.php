@@ -391,7 +391,7 @@ class Docman_MetadataFactory
         try {
             return $this->getMetadataFromLabel($label);
         } catch (CustomMetadataException $exception) {
-            trigger_error($GLOBALS['Language']->getText('plugin_docman', 'md_bo_badlabel', [$label]), E_USER_ERROR);
+            trigger_error(sprintf(dgettext('tuleap-docman', 'Unknown property label \'%1$s\'.'), $label), E_USER_ERROR);
         }
     }
 
@@ -530,9 +530,9 @@ class Docman_MetadataFactory
         switch ($label) {
             case 'title':
                 $md = new Docman_Metadata();
-                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_title_name'));
+                $md->setName(dgettext('tuleap-docman', 'Title'));
                 $md->setLabel('title');
-                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_title_desc'));
+                $md->setDescription(dgettext('tuleap-docman', 'Title of the document.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
                 $md->setIsRequired(true);
                 $md->setIsEmptyAllowed(false);
@@ -543,9 +543,9 @@ class Docman_MetadataFactory
 
             case 'description':
                 $md = new Docman_Metadata();
-                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_desc_name'));
+                $md->setName(dgettext('tuleap-docman', 'Description'));
                 $md->setLabel('description');
-                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_desc_desc'));
+                $md->setDescription(dgettext('tuleap-docman', 'Description of the document.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
                 $md->setIsRequired(true);
                 $md->setIsEmptyAllowed(true);
@@ -556,9 +556,9 @@ class Docman_MetadataFactory
 
             case self::HARDCODED_METADATA_OWNER_LABEL:
                 $md = new Docman_Metadata();
-                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_owner_name'));
+                $md->setName(dgettext('tuleap-docman', 'Owner'));
                 $md->setLabel('owner');
-                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_owner_desc'));
+                $md->setDescription(dgettext('tuleap-docman', 'Default value: submitter. Correspond to official owner of the document.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
                 $md->setIsRequired(true);
                 $md->setIsEmptyAllowed(true);
@@ -569,9 +569,9 @@ class Docman_MetadataFactory
 
             case 'create_date':
                 $md = new Docman_Metadata();
-                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_cdate_name'));
+                $md->setName(dgettext('tuleap-docman', 'Create Date'));
                 $md->setLabel('create_date');
-                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_cdate_desc'));
+                $md->setDescription(dgettext('tuleap-docman', 'When the document was added into the document manager.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
                 $md->setIsRequired(true);
                 $md->setIsEmptyAllowed(false);
@@ -582,9 +582,9 @@ class Docman_MetadataFactory
 
             case 'update_date':
                 $md = new Docman_Metadata();
-                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_udate_name'));
+                $md->setName(dgettext('tuleap-docman', 'Update Date'));
                 $md->setLabel('update_date');
-                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_udate_desc'));
+                $md->setDescription(dgettext('tuleap-docman', 'Last update of the document content or properties.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
                 $md->setIsRequired(true);
                 $md->setIsEmptyAllowed(false);
@@ -595,9 +595,9 @@ class Docman_MetadataFactory
 
             case 'status':
                 $md = new Docman_ListMetadata();
-                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_status_name'));
+                $md->setName(dgettext('tuleap-docman', 'Status'));
                 $md->setLabel('status');
-                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_status_desc'));
+                $md->setDescription(dgettext('tuleap-docman', 'Document status.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
                 $md->setIsRequired(false);
                 $md->setIsEmptyAllowed(true);
@@ -608,9 +608,9 @@ class Docman_MetadataFactory
 
             case 'obsolescence_date':
                 $md = new Docman_Metadata();
-                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_odate_name'));
+                $md->setName(dgettext('tuleap-docman', 'Obsolescence Date'));
                 $md->setLabel('obsolescence_date');
-                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_odate_desc'));
+                $md->setDescription(dgettext('tuleap-docman', 'Define a period of validity for your document. It will automatically be archived at the end of the period.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
                 $md->setIsRequired(false);
                 $md->setIsEmptyAllowed(true);

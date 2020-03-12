@@ -114,7 +114,7 @@ class Docman_FilterFactory
         // Special case for a fake metadata: generic text search
         $md = new Docman_Metadata();
         $md->setGroupId($this->groupId);
-        $md->setName($GLOBALS['Language']->getText('plugin_docman', 'filters_global_txt'));
+        $md->setName(dgettext('tuleap-docman', 'Global text search'));
         $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
         $md->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
         $md->setLabel('global_txt');
@@ -126,7 +126,7 @@ class Docman_FilterFactory
         // Special case for a fake metadata: item type search
         $md = new Docman_ListMetadata();
         $md->setGroupId($this->groupId);
-        $md->setName($GLOBALS['Language']->getText('plugin_docman', 'filters_item_type'));
+        $md->setName(dgettext('tuleap-docman', 'Item type'));
         $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $md->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
         $md->setLabel('item_type');

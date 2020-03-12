@@ -32,7 +32,7 @@ class Docman_View_Docman extends Docman_View_ProjectHeader
 
         if ($this->_controller->userCanAdmin()) {
             $tools[] = array(
-                'title' => $GLOBALS['Language']->getText('plugin_docman', 'toolbar_admin'),
+                'title' => dgettext('tuleap-docman', 'Admin'),
                 'url'   => $params['default_url'] .'&amp;action=admin'
             );
         }
@@ -60,7 +60,7 @@ class Docman_View_Docman extends Docman_View_ProjectHeader
                 $url_params['id'] = $params['item']->accept(new Docman_View_ToolbarNewDocumentVisitor());
             }
             $tools[] = array(
-                'title' => $GLOBALS['Language']->getText('plugin_docman', 'new_document'),
+                'title' => dgettext('tuleap-docman', 'New document'),
                 'url'   => DocmanViewURLBuilder::buildUrl($params['default_url'], $url_params)
             );
         }

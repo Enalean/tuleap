@@ -76,7 +76,7 @@ class Docman_Item
     public function setTitle($title)
     {
         if ('roottitle_lbl_key' === $title) {
-            $this->title = $GLOBALS['Language']->getText('plugin_docman', 'roottitle_lbl_key');
+            $this->title = dgettext('tuleap-docman', 'Project Documentation');
             $this->titlekey = $title;
         } else {
             $this->title = $title;
@@ -211,7 +211,7 @@ class Docman_Item
 
     public function getType()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_item');
+        return dgettext('tuleap-docman', 'Docman item');
     }
 
     public function initFromRow($row)

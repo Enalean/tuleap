@@ -143,13 +143,13 @@ class PermissionItemUpdater
                 } else {
                     $this->response_feedback_wrapper->log(
                         Feedback::WARN,
-                        $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title'])
+                        sprintf(dgettext('tuleap-docman', 'you cannot change permissions for sub-item %1$s since you do not have sufficient permissions.'), $data['title'])
                     );
                 }
             },
             []
         );
-        $this->response_feedback_wrapper->log(Feedback::INFO, $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
+        $this->response_feedback_wrapper->log(Feedback::INFO, dgettext('tuleap-docman', 'Permissions for sub-items successfully updated.'));
     }
 
     /**
@@ -190,7 +190,7 @@ class PermissionItemUpdater
             }
         }
 
-        $this->response_feedback_wrapper->log(Feedback::INFO, $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
+        $this->response_feedback_wrapper->log(Feedback::INFO, dgettext('tuleap-docman', 'Permissions successfully updated.'));
     }
 
     /**
@@ -254,15 +254,7 @@ class PermissionItemUpdater
                     //warn the user that there was a conflict
                     $this->response_feedback_wrapper->log(
                         Feedback::WARN,
-                        $GLOBALS['Language']->getText(
-                            'plugin_docman',
-                            'warning_perms',
-                            array(
-                                $old_permissions[$ugroup_id]['ugroup']['name'],
-                                $old_permissions[$parent]['ugroup']['name'],
-                                permission_get_name(self::PERMISSIONS_DEFINITIONS[$done_permissions[$parent]]['type'])
-                            )
-                        )
+                        sprintf(dgettext('tuleap-docman', 'Permissions for %1$s has been ignored because %2$s is %3$s.'), $old_permissions[$ugroup_id]['ugroup']['name'], $old_permissions[$parent]['ugroup']['name'], permission_get_name(self::PERMISSIONS_DEFINITIONS[$done_permissions[$parent]]['type']))
                     );
 
                     //remove permissions which was set for the ugroup

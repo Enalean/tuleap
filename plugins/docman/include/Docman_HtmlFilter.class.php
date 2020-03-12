@@ -83,8 +83,8 @@ class Docman_HtmlFilter
         $trashLink = '';
         if ($trashLinkBase) {
             $trashLink = $trashLinkBase.$this->filter->md->getLabel();
-            $trashWarn = $this->hp->purify($GLOBALS['Language']->getText('plugin_docman', 'report_remove_filter_warn'));
-            $trashAlt  = $this->hp->purify($GLOBALS['Language']->getText('plugin_docman', 'report_remove_filter_alt'));
+            $trashWarn = $this->hp->purify(dgettext('tuleap-docman', 'Are you sure you want to remove this filter from the list?'));
+            $trashAlt  = $this->hp->purify(dgettext('tuleap-docman', 'Remove the filter'));
             $trashLink = html_trash_link($trashLink, $trashWarn, $trashAlt);
         }
 
@@ -141,7 +141,7 @@ class Docman_HtmlFilterDateAdvanced extends Docman_HtmlFilterDate
     {
         $html = '';
 
-        $html .= $GLOBALS['Language']->getText('plugin_docman', 'filters_html_date_start');
+        $html .= dgettext('tuleap-docman', 'Start:');
         $html .= '&nbsp;';
         $html .= html_field_date(
             $this->filter->getFieldStartValueName(),
@@ -153,7 +153,7 @@ class Docman_HtmlFilterDateAdvanced extends Docman_HtmlFilterDate
             false
         );
         $html .= '&nbsp;';
-        $html .= $GLOBALS['Language']->getText('plugin_docman', 'filters_html_date_end');
+        $html .= dgettext('tuleap-docman', 'End:');
         $html .= '&nbsp;';
         $html .= html_field_date(
             $this->filter->getFieldEndValueName(),

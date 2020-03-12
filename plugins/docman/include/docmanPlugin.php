@@ -253,16 +253,16 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if (!$params['name']) {
             switch ($params['permission_type']) {
                 case 'PLUGIN_DOCMAN_READ':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_docman', 'permission_read');
+                    $params['name'] = dgettext('tuleap-docman', 'Document Reader');
                     break;
                 case 'PLUGIN_DOCMAN_WRITE':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_docman', 'permission_write');
+                    $params['name'] = dgettext('tuleap-docman', 'Document Writer');
                     break;
                 case 'PLUGIN_DOCMAN_MANAGE':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_docman', 'permission_manage');
+                    $params['name'] = dgettext('tuleap-docman', 'Document Manager');
                     break;
                 case 'PLUGIN_DOCMAN_ADMIN':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_docman', 'permission_admin');
+                    $params['name'] = dgettext('tuleap-docman', 'Document Administrator');
                     break;
                 default:
                     break;
@@ -386,8 +386,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             $event->addArea(
                 '<a href="/plugins/docman/?group_id='. urlencode((string) $project->getId()) .'">' .
                 '<i class="dashboard-widget-content-projectpublicareas '.Codendi_HTMLPurifier::instance()->purify($service->getIcon()).'"></i>' .
-                $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .': '.
-                $GLOBALS['Language']->getText('plugin_docman', 'title') .
+                dgettext('tuleap-docman', 'Document Manager') .': '.
+                dgettext('tuleap-docman', 'Project Documentation') .
                 '</a>'
             );
         }
@@ -574,7 +574,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         // Docman perms
         $url  = '?group_id='.$params['group_id'].'&export=plugin_docman_perms';
-        $params['labels']['plugin_eac_docman']                           = $GLOBALS['Language']->getText('plugin_docman', 'Project_access_permission');
+        $params['labels']['plugin_eac_docman']                           = dgettext('tuleap-docman', 'Document Manager Permissions');
         $params['data_export_links']['plugin_eac_docman']                = $url.'&show=csv';
         $params['data_export_format_links']['plugin_eac_docman']         = $url.'&show=format';
         $params['history_export_links']['plugin_eac_docman']             = null;
@@ -632,7 +632,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         if (Backend::fileExists($path)) {
             $params['result']= false;
-            $params['error'] = $GLOBALS['Language']->getText('plugin_docman', 'name_validity');
+            $params['error'] = dgettext('tuleap-docman', 'A directory already exists with this name under docman');
         }
     }
 
@@ -724,29 +724,29 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $html .= '<section class="tlp-pane">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title">'. $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .'</h1>
+                    <h1 class="tlp-pane-title">'. dgettext('tuleap-docman', 'Document Manager') .'</h1>
                 </div>
                 <section class="tlp-pane-section">
-                    <h2 class="tlp-pane-subtitle">'. $GLOBALS['Language']->getText('plugin_docman', 'deleted_version') .'</h2>';
+                    <h2 class="tlp-pane-subtitle">'. dgettext('tuleap-docman', 'Deleted versions') .'</h2>';
         if (isset($res) && $res) {
             $html .= $this->showPendingVersions($params['csrf_token'], $res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
         } else {
             $html .= '<table class="tlp-table">
                 <thead>
                     <tr>
-                        <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'item_id') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'doc_title') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'label') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'number') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'delete_date') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'purge_date') .'</th>
+                        <th class="tlp-table-cell-numeric">'. dgettext('tuleap-docman', 'Item Id') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Document title') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Version label') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Version number') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Delete date') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Forcast purge date') .'</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="tlp-table-cell-empty" colspan="8">
-                            '. $GLOBALS['Language']->getText('plugin_docman', 'no_pending_versions') .'
+                            '. dgettext('tuleap-docman', 'There are no pending versions.') .'
                         </td>
                     </tr>
                 </tbody>
@@ -765,20 +765,20 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $res = $item->listPendingItems($params['group_id'], $offsetItem, $limit);
         $html = '';
         $html .= '<section class="tlp-pane-section">
-                <h2 class="tlp-pane-subtitle">'. $GLOBALS['Language']->getText('plugin_docman', 'deleted_item') .'</h2>';
+                <h2 class="tlp-pane-subtitle">'. dgettext('tuleap-docman', 'Deleted items') .'</h2>';
         if (isset($res) && $res) {
             $html .= $this->showPendingItems($params['csrf_token'], $res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
         } else {
             $html .= '<table class="tlp-table">
                 <thead>
                     <tr>
-                        <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'item_id') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'doc_title') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'location') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'owner') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'delete_date') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'purge_date') .'</th>
+                        <th class="tlp-table-cell-numeric">'. dgettext('tuleap-docman', 'Item Id') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Item type') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Document title') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Location') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Owner') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Delete date') .'</th>
+                        <th>'. dgettext('tuleap-docman', 'Forcast purge date') .'</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -805,12 +805,12 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $html .= '<table class="tlp-table">
             <thead>
                 <tr>
-                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'item_id') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'doc_title') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'label') .'</th>
-                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'number') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'delete_date') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'purge_date') .'</th>
+                    <th class="tlp-table-cell-numeric">'. dgettext('tuleap-docman', 'Item Id') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Document title') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Version label') .'</th>
+                    <th class="tlp-table-cell-numeric">'. dgettext('tuleap-docman', 'Version number') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Delete date') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Forcast purge date') .'</th>
                     <th></th>
                 </tr>
             </thead>
@@ -866,7 +866,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         } else {
             $html .= '<tr>
                         <td class="tlp-table-cell-empty" colspan="8">
-                            '. $GLOBALS['Language']->getText('plugin_docman', 'no_pending_versions') .'
+                            '. dgettext('tuleap-docman', 'There are no pending versions.') .'
                         </td>
                     </tr>
                 </tbody>
@@ -887,13 +887,13 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $html .= '<table class="tlp-table">
             <thead>
                 <tr>
-                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'item_id') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'doc_title') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'location') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'owner') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'delete_date') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'purge_date') .'</th>
+                    <th class="tlp-table-cell-numeric">'. dgettext('tuleap-docman', 'Item Id') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Item type') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Document title') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Location') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Owner') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Delete date') .'</th>
+                    <th>'. dgettext('tuleap-docman', 'Forcast purge date') .'</th>
                     <th></th>
                 </tr>
             </thead>
@@ -948,7 +948,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         } else {
             $html .= '<tr>
                         <td class="tlp-table-cell-empty" colspan="8">
-                            '. $GLOBALS['Language']->getText('plugin_docman', 'no_pending_items') .'
+                            '. dgettext('tuleap-docman', 'There are no pending items.') .'
                         </td>
                     </tr>
                 </tbody>
@@ -1024,7 +1024,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
      */
     public function permissionRequestInformation($params)
     {
-        $params['notices'][] = $GLOBALS['Language']->getText('plugin_docman', 'permission_requests_information');
+        $params['notices'][] = dgettext('tuleap-docman', 'The selected group will not affect people notified for permission requests on documents service.<br> Only the <b>document managers</b> will be notified in that case.');
     }
 
     /**
@@ -1088,7 +1088,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         $project = $params['project'];
         if ($project->usesService('docman')) {
-            $params['services'][] = $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key');
+            $params['services'][] = dgettext('tuleap-docman', 'Documents');
         }
     }
 

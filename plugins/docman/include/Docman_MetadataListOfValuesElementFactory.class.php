@@ -313,7 +313,7 @@ class Docman_MetadataListOfValuesElementFactory
 
         $e = new Docman_MetadataListOfValuesElement();
         $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
-        $e->setName($GLOBALS['Language']->getText('plugin_docman', 'md_love_status_none_name'));
+        $e->setName(dgettext('tuleap-docman', 'None'));
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
         $e->setStatus('P');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_NONE] = $e;
@@ -321,7 +321,7 @@ class Docman_MetadataListOfValuesElementFactory
 
         $e = new Docman_MetadataListOfValuesElement();
         $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_DRAFT);
-        $e->setName($GLOBALS['Language']->getText('plugin_docman', 'md_love_status_draft_name'));
+        $e->setName(dgettext('tuleap-docman', 'Draft'));
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_DRAFT);
         $e->setStatus('P');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_DRAFT] = $e;
@@ -329,7 +329,7 @@ class Docman_MetadataListOfValuesElementFactory
 
         $e = new Docman_MetadataListOfValuesElement();
         $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $e->setName($GLOBALS['Language']->getText('plugin_docman', 'md_love_status_approved_name'));
+        $e->setName(dgettext('tuleap-docman', 'Approved'));
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
         $e->setStatus('P');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_APPROVED] = $e;
@@ -337,7 +337,7 @@ class Docman_MetadataListOfValuesElementFactory
 
         $e = new Docman_MetadataListOfValuesElement();
         $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
-        $e->setName($GLOBALS['Language']->getText('plugin_docman', 'md_love_status_rejected_name'));
+        $e->setName(dgettext('tuleap-docman', 'Rejected'));
         //$e->setDescription('md_love_status_rejected_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
         $e->setStatus('P');

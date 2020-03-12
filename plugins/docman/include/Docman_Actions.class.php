@@ -269,12 +269,12 @@ class Docman_Actions extends Actions
             if ($_action_type === 'newversion') {
                 $this->_controler->feedback->log(
                     'info',
-                    $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion')
+                    dgettext('tuleap-docman', 'New version successfully created.')
                 );
             } else {
                 $this->_controler->feedback->log(
                     'info',
-                    $GLOBALS['Language']->getText('plugin_docman', 'info_create_initversion')
+                    dgettext('tuleap-docman', 'Initial version successfully created.')
                 );
             }
 
@@ -436,10 +436,6 @@ class Docman_Actions extends Actions
                         $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['update_date'], 'update_date');
                     }
 
-                    $info_item_created = 'info_document_created';
-                    if ($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-                        $info_item_created = 'info_folder_created';
-                    }
                     $this->_controler->feedback->log(
                         'info',
                         dgettext('tuleap-docman', 'Document successfully created.')
@@ -455,8 +451,8 @@ class Docman_Actions extends Actions
                         $link_version_factory = new Docman_LinkVersionFactory();
                         $link_version_factory->create(
                             $new_item,
-                            $GLOBALS['Language']->getText('plugin_docman', 'initversion'),
-                            $GLOBALS['Language']->getText('plugin_docman', 'initversion'),
+                            dgettext('tuleap-docman', 'Initial version'),
+                            dgettext('tuleap-docman', 'Initial version'),
                             $_SERVER['REQUEST_TIME']
                         );
                     }
@@ -477,10 +473,10 @@ class Docman_Actions extends Actions
                             $news = $request->get('news');
                             if (isset($news['summary']) && trim($news['summary']) && isset($news['details']) && trim($news['details']) && isset($news['is_private'])) {
                                 news_submit($request->get('group_id'), $news['summary'], $news['details'], $news['is_private'], false);
-                                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_news_created'));
+                                $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'News successfully created.'));
                             }
                         } else {
-                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news'));
+                            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Error while creating news. Check that you have right permissions.'));
                         }
                     }
 
@@ -715,7 +711,7 @@ class Docman_Actions extends Actions
                                 );
                             }
                         } catch (\Tuleap\Docman\Metadata\NoItemToRecurseException $e) {
-                            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_no_item_recurse'));
+                            $this->_controler->feedback->log('warning', dgettext('tuleap-docman', 'Impossible to apply recursively properties values: No item found.'));
                         }
                     }
                 }
@@ -767,7 +763,7 @@ class Docman_Actions extends Actions
             $this->newVersionApprovalTable($request, $item, $user);
         }
 
-        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
+        $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'New version successfully created.'));
 
         $event_data = array(
             'item'     => $item,
@@ -857,19 +853,13 @@ class Docman_Actions extends Actions
                 $hp = Codendi_HTMLPurifier::instance();
                 $this->_controler->feedback->log(
                     'info',
-                    $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
-                            $itemToMove->getGroupId(),
-                            $old_parent->getId(),
-                            $hp->purify($old_parent->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ,
-                            $newParentItem->getId(),
-                            $hp->purify($newParentItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)
-                            )),
+                    sprintf(dgettext('tuleap-docman', 'Item successfully moved form <a href="?group_id=%1$s&amp;action=show&amp;id=%2$s">%3$s</a> to <a href="?group_id=%1$s&amp;action=show&amp;id=%4$s">%5$s</a>.'), $itemToMove->getGroupId(), $old_parent->getId(), $hp->purify($old_parent->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $newParentItem->getId(), $hp->purify($newParentItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)),
                     CODENDI_PURIFIER_DISABLED
                 );
                     $item_factory->delCopyPreference();
                     $item_factory->delCutPreference();
             } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
+                $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Can\'t move item.'));
             }
         }
     }
@@ -972,7 +962,7 @@ class Docman_Actions extends Actions
         $itemFactory->setCutPreference($item);
 
         // Message
-        $this->_controler->feedback->log('info', $hp->purify($item->getTitle()).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_cut_notify_cut'));
+        $this->_controler->feedback->log('info', $hp->purify($item->getTitle()).' '.dgettext('tuleap-docman', 'cut. You can now paste it wherever you want with \'Paste\' action in popup menu.'));
     }
 
     public function action_copy($params)
@@ -990,7 +980,7 @@ class Docman_Actions extends Actions
         $itemFactory->setCopyPreference($item);
 
         // Message
-        $msg = $hp->purify($item->getTitle()).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp');
+        $msg = $hp->purify($item->getTitle()).' '.dgettext('tuleap-docman', 'copied. you can now paste it wherever you want (even across projects) with \'Paste\' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while cut does. <br />Note that only the link of the <strong>wiki pages</strong> is copied, not the <strong>content</strong>.');
         $this->_controler->feedback->log('info', $msg, CODENDI_PURIFIER_DISABLED);
     }
 
@@ -1125,7 +1115,7 @@ class Docman_Actions extends Actions
         $parentItem = $itemFactory->getItemFromDb($_sId);
         try {
             if ($itemFactory->deleteSubTree($parentItem, $user, $cascade)) {
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
+                $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Item successfully deleted.'));
             }
         } catch (DeleteFailedException $e) {
             $this->_controler->feedback->log(Feedback::ERROR, $e->getI18NExceptionMessage());
@@ -1229,9 +1219,9 @@ class Docman_Actions extends Actions
             require_once('Docman_SettingsBo.class.php');
             $sBo = Docman_SettingsBo::instance($group_id);
             if ($sBo->updateView($request->get('selected_view'))) {
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_settings_updated'));
+                $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Settings have been updated.'));
             } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_settings_updated'));
+                $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Settings cannot be updated.'));
             }
         }
     }
@@ -1249,9 +1239,9 @@ class Docman_Actions extends Actions
         /** @psalm-suppress DeprecatedFunction */
         [$return_code, $feedback] = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
         if (!$return_code) {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_updated', $feedback));
+            $this->_controler->feedback->log('error', $feedback);
         } else {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Permissions successfully updated.'));
         }
     }
 
@@ -1311,17 +1301,17 @@ class Docman_Actions extends Actions
 
                 $updated = $mdFactory->update($md);
                 if ($updated) {
-                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_update'));
+                    $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Metadata successfully updated.'));
                 } else {
-                    $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_not_update'));
+                    $this->_controler->feedback->log('warning', dgettext('tuleap-docman', 'Metadata not updated.'));
                 }
             } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_id_mismatched'));
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_not_update'));
+                $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Given project id and metadata project id mismatch.'));
+                $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Metadata not updated.'));
             }
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_bad_label'));
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_not_update'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Bad metadata label.'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Metadata not updated.'));
         }
     }
 
@@ -1362,9 +1352,9 @@ class Docman_Actions extends Actions
 
         $mdId = $mdFactory->create($md);
         if ($mdId !== false) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_create'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Property successfully created.'));
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_error_creation'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'An error occured on property creation'));
         }
     }
 
@@ -1379,17 +1369,9 @@ class Docman_Actions extends Actions
 
         $deleted = $mdFactory->delete($md);
         if ($deleted) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText(
-                'plugin_docman',
-                'md_del_success',
-                array($name)
-            ));
+            $this->_controler->feedback->log('info', sprintf(dgettext('tuleap-docman', '"%1$s" successfully deleted'), $name));
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText(
-                'plugin_docman',
-                'md_del_failure',
-                array($name)
-            ));
+            $this->_controler->feedback->log('error', sprintf(dgettext('tuleap-docman', 'An error occurred on "%1$s" deletion'), $name));
         }
         $this->_controler->view = 'RedirectAfterCrud';
         $this->_controler->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
@@ -1443,10 +1425,10 @@ class Docman_Actions extends Actions
             $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
             $deleted = $loveFactory->delete($love);
             if ($deleted) {
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_delete_element'));
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_reset_delete_element'));
+                $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Element successfully deleted.'));
+                $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Documents labeled with the deleted element were reset to the "None" value.'));
             } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_error_delete_element'));
+                $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'An error occured on element suppression.'));
             }
         } else {
             // Sth really strange is happening... user try to delete a value
@@ -1465,13 +1447,13 @@ class Docman_Actions extends Actions
         $updated = $loveFactory->update($love);
 
         if ($updated) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_element_update'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Element successfully updated.'));
 
             $this->_controler->view = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params']  = array('action' => 'admin_md_details',
                                                                           'md'     => $md->getLabel());
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_element_not_update'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Unable to update element.'));
 
             $this->_controler->view = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params']  = array('action' => 'admin_display_love',
@@ -1493,9 +1475,9 @@ class Docman_Actions extends Actions
             $mdFactory = new Docman_MetadataFactory($srcGo->getGroupId());
             $mdFactory->exportMetadata($groupId);
 
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_success', array($srcGo->getPublicName())));
+            $this->_controler->feedback->log('info', sprintf(dgettext('tuleap-docman', 'Properties successfully imported from \'%1$s\''), $srcGo->getPublicName()));
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_generic'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Your are not allowed to access this data.'));
         }
     }
 
@@ -1536,12 +1518,12 @@ class Docman_Actions extends Actions
             if ($something_happen) {
                 if ($this->_controler->notificationsManager->userExists($user->getId(), $params['item']->getId())) {
                     if ($this->_controler->notificationsManager->userExists($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_on', array($params['item']->getTitle())));
+                        $this->_controler->feedback->log('info', sprintf(dgettext('tuleap-docman', 'You\'re monitoring \'%1$s\' and its sub-hierarchy.'), $params['item']->getTitle()));
                     } else {
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_on', array($params['item']->getTitle())));
+                        $this->_controler->feedback->log('info', sprintf(dgettext('tuleap-docman', 'You\'re monitoring \'%1$s\'.'), $params['item']->getTitle()));
                     }
                 } else {
-                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_off', array($params['item']->getTitle())));
+                    $this->_controler->feedback->log('info', sprintf(dgettext('tuleap-docman', 'Your monitoring on \'%1$s\' has been removed.'), $params['item']->getTitle()));
                 }
             }
         }
@@ -1632,7 +1614,7 @@ class Docman_Actions extends Actions
         // Update settings
         $updated = $atf->updateTable($sStatus, $notification, $notificationOccurence, $description, $newOwner);
         if ($updated) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableupd_success'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Table settings updated.'));
         }
     }
 
@@ -1678,29 +1660,29 @@ class Docman_Actions extends Actions
             $ua  = array_unique($atrf->err['db']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_err_db', $uas));
+            $this->_controler->feedback->log('error', sprintf(dgettext('tuleap-docman', 'Cannot add  following user(s). Internal error: %1$s.'), $uas));
         }
         if (count($atrf->err['perm']) > 0) {
             $ua  = array_unique($atrf->err['perm']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_err_perm', $uas));
+            $this->_controler->feedback->log('error', sprintf(dgettext('tuleap-docman', 'Cannot add following user(s). No access to document: %1$s.'), $uas));
         }
         if (count($atrf->err['notreg']) > 0) {
             $ua  = array_unique($atrf->err['notreg']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_err_notreg', $uas));
+            $this->_controler->feedback->log('error', sprintf(dgettext('tuleap-docman', 'Cannot add following user(s). Not registered users. %1$s.'), $uas));
         }
         if (count($atrf->warn['double']) > 0) {
             $ua  = array_unique($atrf->warn['double']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
-            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_warn_double', $uas));
+            $this->_controler->feedback->log('warning', sprintf(dgettext('tuleap-docman', 'Already in this approval table: %1$s.'), $uas));
         }
 
         if ($userAdded && $noError) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_success'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'User successfully added to the approval table.'));
         }
     }
 
@@ -1717,9 +1699,9 @@ class Docman_Actions extends Actions
         }
 
         if (count($selectedUsers) == $deletedUsers) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_userdel_success'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'All selected users were successfully removed from the approval table.'));
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_userdel_failure'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Cannot remove from the approval table.'));
         }
     }
 
@@ -1745,7 +1727,7 @@ class Docman_Actions extends Actions
             $ri->next();
         }
         if (count($selectedUsers) == $notifiedUsers) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_force_notify_success'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Reviewers were notified.'));
         }
     }
 
@@ -1756,9 +1738,9 @@ class Docman_Actions extends Actions
     {
         $res = $atrf->notifyReviewers();
         if ($res) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_notification_success'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Email sent to reviewer.'));
         } else {
-            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'approval_notification_failure'));
+            $this->_controler->feedback->log('warning', dgettext('tuleap-docman', 'No email sent to reviewers.'));
         }
     }
 
@@ -1798,7 +1780,7 @@ class Docman_Actions extends Actions
         if ($oldTable === null || ($import !== false && $import !== 'keep')) {
             $created = $atf->createTable($user->getId(), $import);
             if (!$created) {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableins_failure'));
+                $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'An error occurred on approval table creation for this item.'));
             }
         }
 
@@ -1843,9 +1825,9 @@ class Docman_Actions extends Actions
         $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($item, $version);
         $deleted = $atf->deleteTable();
         if ($deleted) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tabledel_success'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Table successfully deleted.'));
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_tabledel_failure'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'An error occurred: the approval table was not deleted.'));
         }
     }
 
@@ -1895,9 +1877,9 @@ class Docman_Actions extends Actions
                     'review'     => $review,
                 )
             );
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_review_success'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Your review was successfully recorded.'));
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_review_failure'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'An error occurred on review recording.'));
         }
 
         $this->monitor($this->_controler->_actionParams);
@@ -1912,18 +1894,18 @@ class Docman_Actions extends Actions
         $reportFactory = new Docman_ReportFactory($groupId);
         $r = $reportFactory->getReportById($reportId);
         if ($r == null) {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_del_notfound'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Report not found. Cancel deletion.'));
         } else {
             if ($r->getScope() == 'I' && $r->getUserId() != $user->getId()) {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_del_notowner'));
+                $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'You can not delete report you do not own. Cancel deletion.'));
             } else {
                 if ($r->getScope() == 'P' && !$this->_controler->userCanAdmin()) {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_del_notadmin'));
+                    $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Only admin can delete Project wide reports.'));
                 } else {
                     if ($reportFactory->deleteReport($r)) {
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_del_success'));
+                        $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Report successfully deleted'));
                     } else {
-                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'report_del_failure'));
+                        $this->_controler->feedback->log('warning', dgettext('tuleap-docman', 'An error occurred on report deletion'));
                     }
                 }
             }
@@ -1942,10 +1924,10 @@ class Docman_Actions extends Actions
         $reportFactory = new Docman_ReportFactory($groupId);
         $r = $reportFactory->getReportById($reportId);
         if ($r == null) {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_upd_notfound'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Report not found. Cancel update.'));
         } else {
             if ($r->getGroupId() != $groupId) {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_upd_groupmismatch'));
+                $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Project ids mismatch. Cancel update.'));
             } else {
                 if ($this->_controler->userCanAdmin()) {
                     $r->setScope($scope);
@@ -2011,20 +1993,20 @@ class Docman_Actions extends Actions
                        ($report->getScope() == 'I' && $report->getUserId() == $user->getId())) {
                         $srcReportFactory->cloneReport($report, $groupId, $mdMap, $user, $forceScope, $itemMapping);
 
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_clone_success'));
+                        $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Report successfully cloned.'));
                     } else {
-                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_err_clone_iorp'));
+                        $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'You can only clone \'Project\' wide reports or your \'Personal\' reports.'));
                     }
                 } else {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_err_notfound', array($importReportId)));
+                    $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The report you want to clone doesn\'t exist.'));
                 }
             } else {
                 // Import all personal and project reports from the given project.
                 $srcReportFactory->copy($groupId, $mdMap, $user, $forceScope, $itemMapping);
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_clone_success'));
+                $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Report successfully cloned.'));
             }
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_generic'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Your are not allowed to access this data.'));
         }
     }
 
@@ -2126,10 +2108,10 @@ class Docman_Actions extends Actions
                     && $this->_controler->notificationsManager->removeUgroup($ugroup->getId(), $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
                     $ugroups[] = $ugroup;
                 } else {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed_ugroup', array($ugroup->getTranslatedName())));
+                    $this->_controler->feedback->log('error', sprintf(dgettext('tuleap-docman', 'Unable to remove monitoring for group \'%1$s\''), $ugroup->getTranslatedName()));
                 }
             } else {
-                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_present_ugroup', array($ugroup->getTranslatedName())));
+                $this->_controler->feedback->log('warning', sprintf(dgettext('tuleap-docman', 'Monitoring was not active for group \'%1$s\''), $ugroup->getTranslatedName()));
             }
         }
 
@@ -2138,7 +2120,7 @@ class Docman_Actions extends Actions
             foreach ($ugroups as $ugroup) {
                 $removed_ugroups[] = $ugroup->getTranslatedName();
             }
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_ugroup', array(implode(',', $removed_ugroups))));
+            $this->_controler->feedback->log('info', sprintf(dgettext('tuleap-docman', 'Removed monitoring for group(s) \'%1$s\''), implode(',', $removed_ugroups)));
             $this->raiseMonitoringUgroups($item, $ugroups, 'plugin_docman_remove_monitoring');
         }
     }
@@ -2180,11 +2162,7 @@ class Docman_Actions extends Actions
             ) {
                 $this->_controler->feedback->log(
                     'error',
-                    $GLOBALS['Language']->getText(
-                        'plugin_docman',
-                        'notifications_cascade_not_added_user',
-                        array($user->getName())
-                    )
+                    sprintf(dgettext('tuleap-docman', 'Monitoring for the whole sub-hierarchy for user(s) \'%1$s\' has not been added'), $user->getName())
                 );
             }
             $users[] = $user->getName();
@@ -2215,22 +2193,14 @@ class Docman_Actions extends Actions
             if ($controller->notificationsManager->ugroupExists($ugroup->getId(), $item->getId())) {
                 $controller->feedback->log(
                     Feedback::WARN,
-                    $GLOBALS['Language']->getText(
-                        'plugin_docman',
-                        'notifications_already_exists_ugroup',
-                        array($ugroup->getTranslatedName())
-                    )
+                    sprintf(dgettext('tuleap-docman', 'Monitoring for group(s) \'%1$s\' already exists'), $ugroup->getTranslatedName())
                 );
                 continue;
             }
             if (! $controller->notificationsManager->addUgroup($ugroup->getId(), $item->getId())) {
                 $controller->feedback->log(
                     Feedback::ERROR,
-                    $GLOBALS['Language']->getText(
-                        'plugin_docman',
-                        'notifications_not_added_ugroup',
-                        array($ugroup->getTranslatedName())
-                    )
+                    sprintf(dgettext('tuleap-docman', 'Monitoring for group(s) \'%1$s\' has not been added'), $ugroup->getTranslatedName())
                 );
                 continue;
             }
@@ -2242,11 +2212,7 @@ class Docman_Actions extends Actions
             ) {
                 $controller->feedback->log(
                     Feedback::ERROR,
-                    $GLOBALS['Language']->getText(
-                        'plugin_docman',
-                        'notifications_cascade_not_added_ugroup',
-                        array($ugroup->getTranslatedName())
-                    )
+                    sprintf(dgettext('tuleap-docman', 'Monitoring for the whole sub-hierarchy for group(s) \'%1$s\' has not been added'), $ugroup->getTranslatedName())
                 );
             }
             $ugroups[]      = $ugroup;
@@ -2256,7 +2222,7 @@ class Docman_Actions extends Actions
         if (! empty($ugroups)) {
             $controller->feedback->log(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_ugroup', array(implode(',', $ugroups_name)))
+                sprintf(dgettext('tuleap-docman', 'Monitoring for group(s) \'%1$s\' has been added'), implode(',', $ugroups_name))
             );
             $this->raiseMonitoringUgroups($item, $ugroups, 'plugin_docman_add_monitoring');
         }

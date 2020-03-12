@@ -47,8 +47,8 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $html .= '<div id="docman_new_item_location_position_panel" style="border-top:1px solid #e7e7e7">Position : ';
         $html .= '<span id="docman_new_item_location_position">';
         $html .= '<select id="docman_item_ordering" name="ordering">';
-        $html .= '<option value="beginning">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_beginning') .'</option>';
-        $html .= '<option value="end">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_end') .'</option>';
+        $html .= '<option value="beginning">'. dgettext('tuleap-docman', 'At the beginning') .'</option>';
+        $html .= '<option value="end">'. dgettext('tuleap-docman', 'At the end') .'</option>';
         $html .= '</select>';
         $html .= '</span>';
         $html .= '</div>';

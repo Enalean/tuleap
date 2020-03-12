@@ -133,9 +133,9 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     {
         $html = '';
         $html .= '<div class="properties">'."\n";
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') .'</h3>';
+        $html .= '<h3>'. dgettext('tuleap-docman', 'Properties') .'</h3>';
         $html .= $this->_getGeneralProperties($params);
-        $html .= '<p><span class="highlight">'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</span></p>';
+        $html .= '<p><span class="highlight">'.dgettext('tuleap-docman', '* Mandatory field').'</span></p>';
         $html .= '<input type="hidden" name="action" value="'. $this->_getAction() .'" />';
         $html .= '</div>';
         return $html;
@@ -149,7 +149,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     public function _getSpecificPropertiesFieldset($params)
     {
         $html = '';
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') .'</h3>';
+        $html .= '<h3>'. dgettext('tuleap-docman', 'Document type') .'</h3>';
         $html .= $this->_getSpecificProperties($params);
         return $html;
     }
@@ -157,7 +157,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     public function _getLocationFieldset($params)
     {
         $html = '';
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') .'</h3>';
+        $html .= '<h3>'. dgettext('tuleap-docman', 'Location') .'</h3>';
         $itemRanking = new Docman_View_ItemRanking();
 
         if (isset($params['ordering'])) {
@@ -202,7 +202,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
             $html .= '<h3>News</h3>';
             $html .= '<div id="docman_new_news_panel">';
 
-            $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'new_news_letblank') .'</p>';
+            $html .= '<p>'. dgettext('tuleap-docman', 'Let fields blank if you do not want news.') .'</p>';
 
             $html .= '<div>';
             $html .= '<b><label for="news_summary">'. $GLOBALS['Language']->getText('news_admin_index', 'subject') .':</label></b><br />';

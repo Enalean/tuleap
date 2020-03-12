@@ -47,7 +47,7 @@ class Docman_Link extends Docman_Document
 
     public function getType()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_link');
+        return dgettext('tuleap-docman', 'Link');
     }
 
     public function initFromRow($row)

@@ -32,7 +32,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml
 
     public function getLabel($show_mandatory_information = true)
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_pagename');
+        return dgettext('tuleap-docman', 'Page Name:');
     }
 
     public function getField()
@@ -43,7 +43,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml
 
     public function &getValidator()
     {
-        $msg = $GLOBALS['Language']->getText('plugin_docman', 'error_field_wiki_required');
+        $msg = dgettext('tuleap-docman', 'The page name is required.');
         $validator = new Docman_ValidateValueNotEmpty($this->pagename, $msg);
         return $validator;
     }
@@ -60,7 +60,7 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml
 
     public function getLabel($show_mandatory_information = true)
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_url');
+        return dgettext('tuleap-docman', 'Url:');
     }
 
     public function getField()
@@ -71,7 +71,7 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml
 
     public function &getValidator()
     {
-        $msg = $GLOBALS['Language']->getText('plugin_docman', 'error_field_link_required');
+        $msg = dgettext('tuleap-docman', 'The URL is required.');
         $validator = new Docman_ValidateValueNotEmpty($this->link_url, $msg);
         return $validator;
     }
@@ -86,17 +86,13 @@ class Docman_MetadataHtmlFile extends Docman_MetadataHtml
 
     public function getLabel($show_mandatory_information = true)
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent');
+        return dgettext('tuleap-docman', 'Content:');
     }
 
     public function getField()
     {
         $html = '<input type="file" name="file" />';
-        $html .= '<br /><em>'. $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'max_size_msg',
-            [formatByteToMb((int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING))]
-        ) .'</em>';
+        $html .= '<br /><em>'. sprintf(dgettext('tuleap-docman', '(The maximum upload file size is %1$s MByte)'), formatByteToMb((int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING))) .'</em>';
 
         return $html;
     }
@@ -121,7 +117,7 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml
 
     public function getLabel($show_mandatory_information = true)
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent');
+        return dgettext('tuleap-docman', 'Content:');
     }
 
     public function getField()
@@ -148,7 +144,7 @@ class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml
 
     public function getLabel($show_mandatory_information = true)
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_empty');
+        return dgettext('tuleap-docman', 'An empty document has no type. You will be able to choose document\'s type later. It\'s useful to create an entry in a hierarchy without the actual document.');
     }
 
     public function getField()

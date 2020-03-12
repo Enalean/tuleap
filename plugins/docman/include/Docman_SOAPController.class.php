@@ -67,7 +67,7 @@ class Docman_SOAPController extends Docman_Controller
     }
     /* protected */ public function _set_doesnot_belong_to_project_error($item, $group)
     {
-        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), $group->getPublicName())));
+        $this->feedback->log('error', sprintf(dgettext('tuleap-docman', 'The item %1$s doesn\'t exist or doesn\'t belong to project %2$s.'), $item->getId(), $group->getPublicName()));
         $this->_setView('SOAP');
     }
 
@@ -77,7 +77,7 @@ class Docman_SOAPController extends Docman_Controller
         switch ($view) {
             case 'permissions':
                 if (!$this->userCanManage($item->getId())) {
-                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_perms'));
+                    $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to set permissions for this item.'));
                 } else {
                     $this->action = $view;
                     $this->_setView('');
@@ -87,7 +87,7 @@ class Docman_SOAPController extends Docman_Controller
             case 'new_version':
             case 'update':
                 if (!$this->userCanWrite($item->getId())) {
-                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                    $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                 } else {
                     $this->action = $view;
                     $this->_setView('');
@@ -100,7 +100,7 @@ class Docman_SOAPController extends Docman_Controller
             case 'getFileContents':
             case 'getFileChunk':
                 if (!$this->userCanRead($item->getId())) {
-                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
+                    $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to view this item.'));
                 } else {
                     $this->action = $view;
                     $this->_setView('');

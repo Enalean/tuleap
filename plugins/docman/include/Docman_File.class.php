@@ -48,7 +48,7 @@ class Docman_File extends Docman_Document
     public function getType()
     {
         $version      = $this->getCurrentVersion();
-        $default_type = $GLOBALS['Language']->getText('plugin_docman', 'doc_type_file');
+        $default_type = dgettext('tuleap-docman', 'File');
         $type         = $version ? $version->getFiletype() : $default_type;
         return $type;
     }

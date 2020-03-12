@@ -47,6 +47,6 @@ class Docman_EmbeddedFile extends Docman_File
 
     public function getType()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_embedded');
+        return dgettext('tuleap-docman', 'Embedded File');
     }
 }

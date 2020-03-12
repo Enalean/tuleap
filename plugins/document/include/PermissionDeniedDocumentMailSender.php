@@ -46,27 +46,23 @@ class PermissionDeniedDocumentMailSender extends PermissionDeniedMailSender
         string $message_to_admin,
         string $link
     ) {
-        return $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'mail_content_docman_permission_denied',
-            [
-                $user->getRealName(),
-                $user->getName(),
-                $link,
-                $project->getPublicName(),
-                $href_approval,
-                $message_to_admin,
-                $user->getEmail()
-            ]
-        );
+        return sprintf(dgettext('tuleap-docman', 'Dear document manager,
+
+%1$s (login: %2$s) requests access to the following document in project "%4$s":
+<%3$s>
+
+%1$s wrote a message for you:
+%6$s
+
+Someone set permissions on this item, preventing users of having access to this resource.
+If you decide to accept the request, please take the appropriate actions to grant him permission and communicate that information to the requester.
+Otherwise, please inform the requester (%7$s) that he will not get access to the requested data.
+--
+%1$s.'), $user->getRealName(), $user->getName(), $link, $project->getPublicName(), $href_approval, $message_to_admin, $user->getEmail());
     }
 
     protected function getPermissionDeniedMailSubject(Project $project, PFUser $user)
     {
-        return $GLOBALS['Language']->getText(
-            'plugin_docman',
-            'mail_subject_docman_permission_denied',
-            [$project->getPublicName(), $user->getRealName()]
-        );
+        return sprintf(dgettext('tuleap-docman', '%2$s requests access to a document in "%1$s"'), $project->getPublicName(), $user->getRealName());
     }
 }

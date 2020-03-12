@@ -67,7 +67,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
     public function getTitle()
     {
         return $this->plugin_docman_widget_embedded_title ?:
-               $GLOBALS['Language']->getText('plugin_docman', 'widget_title_embedded');
+               dgettext('tuleap-docman', 'Docman Viewer');
     }
 
     /**
@@ -370,6 +370,6 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'widget_description_embedded');
+        return dgettext('tuleap-docman', 'Display a docman item directly in the dashboard. <br /><em>For now, only embedded files are supported</em>.');
     }
 }

@@ -210,7 +210,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
 
                 if ($dpm->getLockFactory()->itemIsLocked($item)) {
                     $lockIconSrc = $this->params['docman_icons']->getIcon('lock_delete.png');
-                    $lockIcon    = '<i id="docman_item_icon_locked_'.$item->getId().'"  title="'.$GLOBALS['Language']->getText('plugin_docman', 'event_lock_add').'" class="fa fa-lock"></i>';
+                    $lockIcon    = '<i id="docman_item_icon_locked_'.$item->getId().'"  title="'.dgettext('tuleap-docman', 'Locked document').'" class="fa fa-lock"></i>';
                     $this->html .=  $lockIcon;
                 }
                 $this->html .= $this->view->getItemMenu($item, $this->params);

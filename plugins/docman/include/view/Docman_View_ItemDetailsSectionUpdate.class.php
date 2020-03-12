@@ -40,7 +40,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     public function _updateHeader($enctype = '')
     {
         $content = '';
-        $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
+        $content .= '<dl><dt>'. dgettext('tuleap-docman', 'Update') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" '.$enctype.'>';
         return $content;
     }

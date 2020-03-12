@@ -51,7 +51,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             $item,
             $url,
             'notifications',
-            $GLOBALS['Language']->getText('plugin_docman', 'details_notifications')
+            dgettext('tuleap-docman', 'Notifications')
         );
         $this->notificationsManager           = $notificationsManager;
         $this->token                          = $token;
@@ -59,7 +59,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     }
     public function getContent($params = [])
     {
-        $content = '<dl><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
+        $content = '<dl><fieldset><legend>'. dgettext('tuleap-docman', 'Notifications') .'</legend>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
         $content .= '<p>';
@@ -74,7 +74,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $disabled = $user->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="monitor" value="0" />';
         $content .= '<label class="checkbox" for="plugin_docman_monitor_item">';
-        $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" '. $checked .' '. $disabled .' />'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_sendemail');
+        $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" '. $checked .' '. $disabled .' />'. dgettext('tuleap-docman', 'Send me an email whenever this item is updated.');
         $content .= '</label></p>';
         $content .= $this->item->accept($this, array('user' => &$user));
         $content .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
@@ -101,7 +101,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             $users   = $this->notificationsManager->getListeningUsers($this->item);
             $ugroups = $this->ugroups_to_be_notified_builder->getCollectionOfUgroupMonitoredItems($this->item);
 
-            $content .= '<fieldset><legend>'. $purifier->purify($GLOBALS['Language']->getText('plugin_docman', 'details_listeners')) .'</legend>';
+            $content .= '<fieldset><legend>'. $purifier->purify(dgettext('tuleap-docman', 'Subscribers')) .'</legend>';
 
             $renderer = TemplateRendererFactory::build()->getRenderer(
                 dirname(PLUGIN_DOCMAN_BASE_DIR) . '/templates'
@@ -149,7 +149,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= '<input type="hidden" name="cascade" value="0" />';
         $content .= '<label for="plugin_docman_monitor_cascade_item" class="checkbox">';
         $content .= '<input type="checkbox" name="cascade" value="1" id="plugin_docman_monitor_cascade_item" '. $checked .' '. $disabled .' />';
-        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_cascade_sendemail') .'</label>';
+        $content .= dgettext('tuleap-docman', '...and for the whole sub-hierarchy.') .'</label>';
         $content .= '</blockquote>';
         return $content;
     }

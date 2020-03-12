@@ -36,7 +36,7 @@ class Docman_Folder extends Docman_Item
 
     public function getType()
     {
-        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_folder');
+        return dgettext('tuleap-docman', 'Folder');
     }
 
     public function toRow()

@@ -81,7 +81,7 @@ class Docman_ValidateFilterDate extends Docman_ValidateFilter
                 $this->isValid = true;
             } else {
                 $today = date("Y-n-j");
-                $this->message = $GLOBALS['Language']->getText('plugin_docman', 'filters_date_message', array($this->filter->md->getName(), $today));
+                $this->message = sprintf(dgettext('tuleap-docman', 'The date entered in field "%1$s" is not valid. Valid date format is YYYY-M-D (e.g. \'%2$s\' for today) or let the field blank.'), $this->filter->md->getName(), $today);
             }
         }
         return $this->isValid;

@@ -73,7 +73,7 @@
         if ($project) {
             $title .= Codendi_HTMLPurifier::instance()->purify($project->getPublicName()).' - ';
         }
-        $title .= $GLOBALS['Language']->getText('plugin_docman', 'title');
+        $title .= dgettext('tuleap-docman', 'Project Documentation');
 
         return $title;
     }
@@ -85,7 +85,7 @@
         if ($project) {
             $title .= $project->getPublicName() . ' - ';
         }
-        $title .= $GLOBALS['Language']->getText('plugin_docman', 'title');
+        $title .= dgettext('tuleap-docman', 'Project Documentation');
 
         return $title;
     }

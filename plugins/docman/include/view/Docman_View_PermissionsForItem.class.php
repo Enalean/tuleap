@@ -22,8 +22,8 @@ class Docman_View_PermissionsForItem extends Docman_View_View  /* implements Vis
         $html = '';
         if ($params['user_can_manage']) {
             $titles = array();
-            $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_permissions_ugroups');
-            $titles[] = $GLOBALS['Language']->getText('plugin_docman', 'details_permissions_perms');
+            $titles[] = dgettext('tuleap-docman', 'User groups');
+            $titles[] = dgettext('tuleap-docman', 'Access Permissions');
             $html .= html_build_list_table_top($titles, false, false, false);
             $odd_even = array('boxitem', 'boxitemalt');
             $i = 0;
@@ -49,8 +49,8 @@ class Docman_View_PermissionsForItem extends Docman_View_View  /* implements Vis
             }
             $html .= '</table>';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'new_same_perms_as_parent'); // Will be created with the same permissions than its parent.
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'new_need_to_be_manager'); // <br />You need Manage permission to define permissions.
+            $html .= dgettext('tuleap-docman', 'Will be created with the same permissions than its parent.'); // Will be created with the same permissions than its parent.
+            $html .= dgettext('tuleap-docman', '<br />You need Manage permission to define permissions.'); // <br />You need Manage permission to define permissions.
         }
         return $html;
     }

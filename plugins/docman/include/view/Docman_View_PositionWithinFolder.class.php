@@ -15,8 +15,8 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
     /* protected */ public function _content($params)
     {
         echo '<select name="ordering">';
-        echo '<option value="beginning" '. ($params['force_ordering'] === 'beginning' ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_beginning') .'</option>';
-        echo '<option value="end"'. ($params['force_ordering'] === 'end' ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_end') .'</option>';
+        echo '<option value="beginning" '. ($params['force_ordering'] === 'beginning' ? 'selected="selected"' : '') .'>'. dgettext('tuleap-docman', 'At the beginning') .'</option>';
+        echo '<option value="end"'. ($params['force_ordering'] === 'end' ? 'selected="selected"' : '') .'>'. dgettext('tuleap-docman', 'At the end') .'</option>';
         $params['hierarchy']->accept($this, array(
             'parent_id'      => $params['item']->getId(),
             'force_ordering' => $params['force_ordering'],

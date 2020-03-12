@@ -97,14 +97,14 @@ class Docman_LogDao extends DataAccessObject
     public function getSqlStatementForLogsDaily($group_id, $logs_cond)
     {
         return 'SELECT log.time AS time, '
-               .'CASE WHEN log.type = 1 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_add')).
-               ' WHEN log.type = 2 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_edit')).
-               ' WHEN log.type = 3 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_move')).
-               ' WHEN log.type = 4 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_delete')).
-               ' WHEN log.type = 5 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_access')).
-               ' WHEN log.type = 11 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_delete_version')).
-               ' WHEN log.type = 12 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'event_restore')).
-               ' WHEN log.type = 13 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'event_restore_version')).
+               .'CASE WHEN log.type = 1 THEN '.$this->da->quoteSmart(dgettext('tuleap-docman', 'Add')).
+               ' WHEN log.type = 2 THEN '.$this->da->quoteSmart(dgettext('tuleap-docman', 'Edit')).
+               ' WHEN log.type = 3 THEN '.$this->da->quoteSmart(dgettext('tuleap-docman', 'Move')).
+               ' WHEN log.type = 4 THEN '.$this->da->quoteSmart(dgettext('tuleap-docman', 'Delete')).
+               ' WHEN log.type = 5 THEN '.$this->da->quoteSmart(dgettext('tuleap-docman', 'Access')).
+               ' WHEN log.type = 11 THEN '.$this->da->quoteSmart(dgettext('tuleap-docman', 'Delete version')).
+               ' WHEN log.type = 12 THEN '.$this->da->quoteSmart(dgettext('tuleap-docman', 'Restore')).
+               ' WHEN log.type = 13 THEN '.$this->da->quoteSmart(dgettext('tuleap-docman', 'Restore version')).
                ' END as type, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(item.item_id," - ",item.title) AS title '
                .' FROM plugin_docman_log AS log, user, plugin_docman_item AS item '
                .' WHERE '. $logs_cond

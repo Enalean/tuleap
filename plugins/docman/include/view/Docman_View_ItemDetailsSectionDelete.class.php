@@ -44,17 +44,17 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             $version = false;
         }
         $content = '';
-        $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete') .'</dt><dd>';
+        $content .= '<dl><dt>'. dgettext('tuleap-docman', 'Delete') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
         $content .= '<div class="docman_confirm_delete">';
         if ($version !== false) {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_version', array($this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $version));
+            $content .= sprintf(dgettext('tuleap-docman', '<h3>Confirm deletion of version %2$s of document %1$s</h3><p>You are going to delete a version of file. </p><p>Are you sure that you want to delete this version?</p>'), $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $version);
         } elseif (is_a($this->item, 'Docman_Folder')) {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_folder', $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
+            $content .= sprintf(dgettext('tuleap-docman', '<h3>Confirm deletion of folder %1$s</h3><p>You are going to delete a folder. Please note that all sub-items and their versions will be deleted.</p><p>Are you sure that you want to delete this folder?</p>'), $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
         } elseif (is_a($this->item, 'Docman_File')) {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_file', $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
+            $content .= sprintf(dgettext('tuleap-docman', '<h3>Confirm deletion of document %1$s</h3><p>You are going to delete a file. Please note that all versions will be deleted.</p><p>Are you sure that you want to delete this file?</p>'), $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
         } else {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_document', $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
+            $content .= sprintf(dgettext('tuleap-docman', '<h3>Confirm deletion of document %1$s</h3><p>You are going to delete a document. </p><p>Are you sure that you want to delete this document?</p>'), $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
         }
         if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
             $content .= $this->getWikiDeleteInfo();
@@ -72,8 +72,8 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             $content .= '     <input type="hidden" name="action" value="delete" />';
         }
         $content .= '     <input type="hidden" name="id" value="'. $this->item->getId() .'" />';
-        $content .= '     <input type="submit" tabindex="2" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm') .'" />';
-        $content .= '     <input type="submit" tabindex="1" name="cancel" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel') .'" />';
+        $content .= '     <input type="submit" tabindex="2" name="confirm" value="'. dgettext('tuleap-docman', 'Yes, I am sure!') .'" />';
+        $content .= '     <input type="submit" tabindex="1" name="cancel" value="'. dgettext('tuleap-docman', 'No, I do not want to delete it') .'" />';
         $content .= '</div>';
         $content .= '</div>';
         $content .= '</form>';
@@ -84,13 +84,13 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
     public function getWikiDeleteInfo()
     {
         $output = '';
-        $output .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_wiki');
+        $output .= dgettext('tuleap-docman', '<p><em>Please Note that if you check the \'Cascade deletion to wiki\' option, the referenced wiki page will no longer exist in wiki service too.</em></p>');
 
         // List of other possible referencers.
         $pagename = $this->item->getPagename();
         $referencers = $this->_controller->getItemFactory()->getWikiPageReferencers($pagename, $this->item->getGroupId());
         if (is_array($referencers) && count($referencers) > 1) {
-            $output .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_wiki_impact_on_documents');
+            $output .= dgettext('tuleap-docman', '<p><em>You should also be aware that the following documents will no longer be valid if you choose to cascade deletion to wiki service:</em></p>');
             $output .= '<div id="other_referencers">';
             foreach ($referencers as $key => $doc) {
                 if ($this->item->getId() != $doc->getId()) {
@@ -102,7 +102,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
 
         $output .= '<p><input type="checkbox" id="cascadeWikiPageDeletion" name="cascadeWikiPageDeletion"/>';
         $output .= '<label for="cascadeWikiPageDeletion">';
-        $output .= $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_cascade');
+        $output .= dgettext('tuleap-docman', 'Cascade deletion to wiki service');
         $output .= '</label></p>';
 
         return $output;

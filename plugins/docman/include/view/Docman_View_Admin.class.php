@@ -26,28 +26,28 @@ class Docman_View_Admin extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key') .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_title') .'</h2>';
+        echo '<h2>'. dgettext('tuleap-docman', 'Documents') .' - '. dgettext('tuleap-docman', 'Administration') .'</h2>';
     }
     public function _content($params)
     {
         $html = '';
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_permissions')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_permissions_title') .'</a></h3>';
-        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_permissions_descr') .'</p>';
+        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_permissions')) .'">'. dgettext('tuleap-docman', 'Manage Permissions') .'</a></h3>';
+        $html .= '<p>'. dgettext('tuleap-docman', 'Define who can administrate the document manager.') .'</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_view')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_view_title') .'</a></h3>';
-        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_view_descr') .'</p>';
+        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_view')) .'">'. dgettext('tuleap-docman', 'Manage Display Preferences') .'</a></h3>';
+        $html .= '<p>'. dgettext('tuleap-docman', 'Define the default view for the document manager.') .'</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_metadata')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_title') .'</a></h3>';
-        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_descr') .'</p>';
+        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_metadata')) .'">'. dgettext('tuleap-docman', 'Manage Properties') .'</a></h3>';
+        $html .= '<p>'. dgettext('tuleap-docman', 'Define the properties of your documents.') .'</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'report_settings')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_report_title') .'</a></h3>';
-        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_report_descr') .'</p>';
+        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'report_settings')) .'">'. dgettext('tuleap-docman', 'Manage Search Report') .'</a></h3>';
+        $html .= '<p>'. dgettext('tuleap-docman', 'Modify the scope of the reports.') .'</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_obsolete')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_obsolete_title') .'</a></h3>';
-        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_obsolete_descr') .'</p>';
+        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_obsolete')) .'">'. dgettext('tuleap-docman', 'Manage Obsolete Documents') .'</a></h3>';
+        $html .= '<p>'. dgettext('tuleap-docman', 'View and update obsolete documents.') .'</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_lock_infos')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_lock_infos_title'). '</a></h3>';
-        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_lock_infos_descr') .'</p>';
+        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_lock_infos')) .'">'. dgettext('tuleap-docman', 'Locked Documents'). '</a></h3>';
+        $html .= '<p>'. dgettext('tuleap-docman', 'List of locked documents.') .'</p>';
 
         echo $html;
     }

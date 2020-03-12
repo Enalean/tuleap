@@ -63,7 +63,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         );
         $cmpTable = $mdCmp->getMetadataCompareTable($sthToImport);
         if ($sthToImport) {
-            $html .= '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'details_paste_mddiff_title') .'</h2>';
+            $html .= '<h2>'. dgettext('tuleap-docman', 'Document properties') .'</h2>';
             $dPm = Docman_PermissionsManager::instance($this->dstGo->getGroupId());
             $current_user = UserManager::instance()->getCurrentUser();
             if ($dPm->userCanAdmin($current_user)) {
@@ -72,7 +72,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
             } else {
                 $mdDiffers = 'user';
                 $docmanIcons = $this->_getDocmanIcons();
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_mddiff_noadmin', array($purifier->purify($this->srcGo->getPublicName()), $purifier->purify($this->dstGo->getPublicName()), $docmanIcons->getThemeIcon('warning.png')));
+                $html .= sprintf(dgettext('tuleap-docman', '<p><img src="%3$s" /> There are differences in properties definitions between %1$s and %2$s. You <strong>may loose</strong> some <strong>properties informations</strong>.</p><p>You may either:<ul><li>Paste anyway, so only properties that exists in both %1$s and %2$s will be copied.</li><li>Ask to a document manager admin to import %2$s properties definitions</li></ul></p><p><strong>Note:</strong> This <strong>doesn\'t impact documents</strong> themselves. This only refers to properties.</p>'), $purifier->purify($this->srcGo->getPublicName()), $purifier->purify($this->dstGo->getPublicName()), $docmanIcons->getThemeIcon('warning.png'));
             }
         }
 
@@ -94,13 +94,13 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
             $content = $this->checkMdDifferences($mdDiffers);
         }
 
-        $content .= '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste') .'</h2>';
+        $content .= '<h2>'. dgettext('tuleap-docman', 'Paste') .'</h2>';
 
         $content .= '<p>';
         if ($this->mode === 'copy') {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_from_copy');
+            $content .= dgettext('tuleap-docman', 'You are about to <strong>paste</strong> an item you <strong>copied</strong>. It will clone the whole hierarchy but <strong>only keeps the latest version of files, doesn\'t keep approval tables nor notifications and inherit permissions from new parent</strong>.');
         } else {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_from_cut');
+            $content .= dgettext('tuleap-docman', 'You are about to <strong>paste</strong> an item you <strong>cut</strong>. It will preserve the whole hierarchy, notifications, approval table, permissions, etc. Actually, only the parent of the item will change.');
         }
         $content .= '</p>';
 
@@ -117,15 +117,15 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         $purifier = Codendi_HTMLPurifier::instance();
         if ($this->mode == 'copy' && $mdDiffers == 'admin') {
             $content .= '<p>';
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_importmd', array($purifier->purify($this->srcGo->getPublicName())));
+            $content .= sprintf(dgettext('tuleap-docman', 'Import properties from %1$s:'), $purifier->purify($this->srcGo->getPublicName()));
             $content .= ' ';
             $content .= '<input type="checkbox" checked="checked" name="import_md" value="1" />';
             $content .= '</p>';
         }
 
-        $buttonTxt = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_button_paste');
+        $buttonTxt = dgettext('tuleap-docman', 'Paste');
         if ($this->mode == 'copy' && $mdDiffers == 'user') {
-            $buttonTxt = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_button_pasteanyway');
+            $buttonTxt = dgettext('tuleap-docman', 'Paste Anyway');
         }
         $content .= '<input type="submit" name="submit" value="'.$buttonTxt.'" />';
         $content .= ' ';
