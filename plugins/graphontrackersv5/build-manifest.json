@@ -2,8 +2,8 @@
     "name": "graphontrackersv5",
     "gettext-js": {
         "graphontrackersv5": {
-            "src": "www/scripts/src",
-            "po" : "www/scripts/po"
+            "src": "scripts/src",
+            "po" : "scripts/po"
         }
     }
 }

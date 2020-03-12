@@ -268,14 +268,10 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         return $this->allowedForProject[$group_id];
     }
 
-    public function cssFile()
+    public function cssFile(): void
     {
         if ($this->canIncludeStylesheets()) {
-            $include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/graphontrackersv5/themes',
-                '/assets/graphontrackersv5/themes'
-            );
-            echo '<link rel="stylesheet" type="text/css" href="' . $include_assets->getFileURL('style.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('style.css') . '" />';
         }
     }
 
@@ -332,22 +328,16 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     {
         $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
         if ($tracker_plugin->currentRequestIsForPlugin()) {
-            $include_assets = $this->getMinifiedAssets();
-
-            echo $include_assets->getHTMLSnippet($this->getName().'.js');
+            echo $this->getAssets()->getHTMLSnippet('graphontrackersv5.js');
         }
     }
 
-    /**
-     * @return IncludeAssets
-     */
-    private function getMinifiedAssets()
+    private function getAssets(): IncludeAssets
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/graphontrackersv5/scripts',
-            '/assets/graphontrackersv5/scripts'
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/graphontrackersv5',
+            '/assets/graphontrackersv5'
         );
-        return $include_assets;
     }
 
     public function routeGetChart(): ChartDataController
