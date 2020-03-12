@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const path = require("path");
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
@@ -46,13 +45,9 @@ module.exports = {
         }
     },
     optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                // Prototype doesn't like minimization due to the fact
-                // that it checks for the presence of "$super" argument
-                // during class initialization.
-                exclude: /.*/
-            })
-        ]
+        // Prototype doesn't like minimization due to the fact
+        // that it checks for the presence of "$super" argument
+        // during class initialization.
+        minimize: false
     }
 };

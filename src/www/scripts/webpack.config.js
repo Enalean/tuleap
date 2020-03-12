@@ -18,6 +18,7 @@
  */
 
 const loadJsonFile = require("load-json-file");
+// eslint-disable-next-line import/no-extraneous-dependencies
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const merge = require("webpack-merge");
