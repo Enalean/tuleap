@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CreationOptions, State } from "./type";
+import { CreationOptions, ProjectTemplate, State, Tracker } from "./type";
 import { TRACKER_SHORTNAME_FORMAT } from "../constants";
 
 export const is_ready_for_step_2 = (state: State): boolean => {
@@ -104,5 +104,20 @@ export const is_ready_to_submit = (state: State): boolean => {
         !is_name_already_used(state) &&
         !is_shortname_already_used(state) &&
         is_shortname_valid(state)
+    );
+};
+
+export const project_of_selected_tracker_template = (state: State): ProjectTemplate | null => {
+    const target_tracker = state.selected_tracker_template;
+    if (target_tracker === null) {
+        return null;
+    }
+
+    return (
+        state.project_templates.find((project: ProjectTemplate) => {
+            return Boolean(
+                project.tracker_list.find((tracker: Tracker) => tracker.id === target_tracker.id)
+            );
+        }) || null
     );
 };

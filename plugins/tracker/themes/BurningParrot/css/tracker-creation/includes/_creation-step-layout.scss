@@ -96,7 +96,19 @@
 }
 
 .tracker-information-selected-template {
-    font-size: 18px;
+    display: flex;
+
+    .tlp-property {
+        margin: 0 0 $tlp-spacing $tlp-double-spacing;
+
+        &:first-child {
+            margin: 0 0 $tlp-spacing 0;
+        }
+    }
+
+    .tracker-information-selected-template-info {
+        font-size: 18px;
+    }
 }
 
 #tracker-creation-form {

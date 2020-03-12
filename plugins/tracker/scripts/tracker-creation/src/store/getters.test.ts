@@ -18,7 +18,13 @@
  */
 
 import * as getters from "./getters";
-import { CreationOptions, State, Tracker, TrackerToBeCreatedMandatoryData } from "./type";
+import {
+    CreationOptions,
+    ProjectTemplate,
+    State,
+    Tracker,
+    TrackerToBeCreatedMandatoryData
+} from "./type";
 
 describe("getters", () => {
     describe("is_ready_for_step_2", () => {
@@ -306,6 +312,52 @@ describe("getters", () => {
 
             expect(getters.is_name_already_used(state)).toBe(false);
             expect(getters.is_shortname_already_used(state)).toBe(false);
+        });
+    });
+
+    describe("project_of_selected_tracker_template", () => {
+        it("returns null when no tracker template is selected", () => {
+            const state: State = {
+                selected_tracker_template: null
+            } as State;
+
+            expect(getters.project_of_selected_tracker_template(state)).toBeNull();
+        });
+
+        it("returns null when the project has not been found", () => {
+            const state: State = {
+                selected_tracker_template: {
+                    id: "5",
+                    name: "Bugs"
+                },
+                project_templates: [] as ProjectTemplate[]
+            } as State;
+
+            expect(getters.project_of_selected_tracker_template(state)).toBeNull();
+        });
+
+        it("returns the project owning the selected template", () => {
+            const state: State = {
+                selected_tracker_template: {
+                    id: "5",
+                    name: "Bugs"
+                },
+                project_templates: [
+                    {
+                        project_name: "Project 1",
+                        tracker_list: [{ id: "1" } as Tracker]
+                    },
+                    {
+                        project_name: "Project X",
+                        tracker_list: [{ id: "5" } as Tracker]
+                    }
+                ] as ProjectTemplate[]
+            } as State;
+
+            expect(getters.project_of_selected_tracker_template(state)).toEqual({
+                project_name: "Project X",
+                tracker_list: [{ id: "5" }]
+            });
         });
     });
 });

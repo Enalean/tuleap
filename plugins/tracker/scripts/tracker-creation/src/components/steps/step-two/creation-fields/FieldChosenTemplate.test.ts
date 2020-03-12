@@ -21,7 +21,7 @@ import FieldChosenTemplate from "./FieldChosenTemplate.vue";
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { createTrackerCreationLocalVue } from "../../../../helpers/local-vue-for-tests";
-import { State } from "../../../../store/type";
+import { ProjectTemplate, State } from "../../../../store/type";
 
 describe("FieldChosenTemplate", () => {
     let state: State;
@@ -31,7 +31,8 @@ describe("FieldChosenTemplate", () => {
         is_a_duplication = false,
         is_a_xml_import = false,
         is_created_from_empty = false,
-        is_a_duplication_of_a_tracker_from_another_project = false
+        is_a_duplication_of_a_tracker_from_another_project = false,
+        project_of_selected_tracker_template: ProjectTemplate | null = null
     ): Promise<Wrapper<FieldChosenTemplate>> {
         return shallowMount(FieldChosenTemplate, {
             mocks: {
@@ -41,7 +42,8 @@ describe("FieldChosenTemplate", () => {
                         is_created_from_empty,
                         is_a_duplication,
                         is_a_xml_import,
-                        is_a_duplication_of_a_tracker_from_another_project
+                        is_a_duplication_of_a_tracker_from_another_project,
+                        project_of_selected_tracker_template
                     }
                 })
             },
@@ -59,6 +61,10 @@ describe("FieldChosenTemplate", () => {
                 id: "1",
                 name: "Tracker from a template project"
             },
+            selected_project: {
+                id: "150",
+                name: "Another project"
+            },
             selected_project_tracker_template: {
                 id: "2",
                 name: "Tracker from another project"
@@ -68,7 +74,14 @@ describe("FieldChosenTemplate", () => {
 
     describe("It displays the right template name when", () => {
         it("is a tracker duplication", async () => {
-            const wrapper = await getWrapper(state, true);
+            const wrapper = await getWrapper(state, true, false, false, false, {
+                project_name: "Default Site Template",
+                tracker_list: []
+            });
+
+            expect(wrapper.find("[data-test=project-of-chosen-template]").text()).toEqual(
+                "Default Site Template"
+            );
 
             expect(wrapper.find("[data-test=chosen-template]").text()).toEqual(
                 "Tracker from a template project"
@@ -78,6 +91,7 @@ describe("FieldChosenTemplate", () => {
         it("is a xml export", async () => {
             const wrapper = await getWrapper(state, false, true);
 
+            expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
             expect(wrapper.find("[data-test=chosen-template]").text()).toEqual(
                 "Tracker XML structure"
             );
@@ -86,12 +100,16 @@ describe("FieldChosenTemplate", () => {
         it("is created from empty", async () => {
             const wrapper = await getWrapper(state, false, false, true);
 
+            expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
             expect(wrapper.find("[data-test=chosen-template]").text()).toEqual("Empty");
         });
 
         it("is a duplication of a tracker from another project", async () => {
             const wrapper = await getWrapper(state, false, false, false, true);
 
+            expect(wrapper.find("[data-test=project-of-chosen-template]").text()).toEqual(
+                "Another project"
+            );
             expect(wrapper.find("[data-test=chosen-template]").text()).toEqual(
                 "Tracker from another project"
             );
