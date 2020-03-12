@@ -22,22 +22,22 @@ interface Tracker_FormElement_IProvideFactoryButtonInformation
 {
 
     /**
-     * @return the label of the formElement (mainly used in admin part)
+     * @return string the label of the formElement (mainly used in admin part)
      */
     public static function getFactoryLabel();
 
     /**
-     * @return the description of the formElement (mainly used in admin part)
+     * @return string the description of the formElement (mainly used in admin part)
      */
     public static function getFactoryDescription();
 
     /**
-     * @return the path to the icon to use an element
+     * @return string the path to the icon to use an element
      */
     public static function getFactoryIconUseIt();
 
     /**
-     * @return the path to the icon to create an element
+     * @return string the path to the icon to create an element
      */
     public static function getFactoryIconCreate();
 

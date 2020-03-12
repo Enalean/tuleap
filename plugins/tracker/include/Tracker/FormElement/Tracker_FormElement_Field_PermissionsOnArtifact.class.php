@@ -325,7 +325,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
 
     /**
      * Fetch the changes that has been made to this field in a followup
-     * @param Tracker_ $artifact
+     * @param Tracker_Artifact $artifact
      * @param array $from the value(s) *before*
      * @param array $to   the value(s) *after*
      */
@@ -355,33 +355,21 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $html;
     }
 
-    /**
-     * @return the label of the field (mainly used in admin part)
-     */
     public static function getFactoryLabel()
     {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions');
     }
 
-    /**
-     * @return the description of the field (mainly used in admin part)
-     */
     public static function getFactoryDescription()
     {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions_description');
     }
 
-    /**
-     * @return the path to the icon
-     */
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/lock.png');
     }
 
-    /**
-     * @return the path to the icon
-     */
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/lock--plus.png');
@@ -433,7 +421,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     * You can join on 'c' which is a pseudo table used to retrieve
     * the last changeset of all artifacts.
     *
-    * @param Tracker_ReportCriteria $criteria
+    * @param Tracker_Report_Criteria $criteria
     *
     * @return string
     */

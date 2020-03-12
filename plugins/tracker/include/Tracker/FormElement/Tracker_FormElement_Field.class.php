@@ -83,14 +83,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return string
      */
     abstract public function getCriteriaFrom($criteria);
 
     /**
      * Get the "where" statement to allow search with this field
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return string
      * @see getCriteriaFrom
      */
@@ -788,7 +788,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Fetch the value to display changes in followups
-     * @param Tracker_ $artifact
+     * @param Tracker_Artifact $artifact
      * @param array $from the value(s) *before*
      * @param array $to   the value(s) *after*
      * @return string
@@ -797,7 +797,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Fetch the value to display changes in artifact history
-     * @param Tracker_ $artifact
+     * @param Tracker_Artifact $artifact
      * @param array $from the value(s) *before*
      * @param array $to   the value(s) *after*
      * @return string

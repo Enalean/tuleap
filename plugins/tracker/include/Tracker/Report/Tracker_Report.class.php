@@ -55,7 +55,6 @@ use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 
 /**
- * Tracker_ report.
  * Set of criteria + set of Renderer to search and display artifacts
  */
 class Tracker_Report implements Tracker_Dispatchable_Interface

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,33 +26,21 @@ class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryB
      */
     private $tracker;
 
-    /**
-     * @return the label of the formElement (mainly used in admin part)
-     */
     public static function getFactoryLabel()
     {
         return 'Shared field';
     }
 
-    /**
-     * @return the description of the formElement (mainly used in admin part)
-     */
     public static function getFactoryDescription()
     {
         return 'Use a field defined in another tracker';
     }
 
-    /**
-     * @return the path to the icon to use an element
-     */
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/-shared-field.png');
     }
 
-    /**
-     * @return the path to the icon to create an element
-     */
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-shared-field.png');
