@@ -25,7 +25,12 @@ export const is_ready_for_step_2 = (state: State): boolean => {
         return false;
     }
 
-    return isDuplicationReady(state) || isXmlImportReady(state) || isEmptyReady(state);
+    return (
+        isDuplicationReady(state) ||
+        isXmlImportReady(state) ||
+        isEmptyReady(state) ||
+        isDuplicationFromAnotherProjectReady(state)
+    );
 };
 
 function isEmptyReady(state: State): boolean {
@@ -36,6 +41,13 @@ function isDuplicationReady(state: State): boolean {
     return (
         state.active_option === CreationOptions.TRACKER_TEMPLATE &&
         state.selected_tracker_template !== null
+    );
+}
+
+function isDuplicationFromAnotherProjectReady(state: State): boolean {
+    return (
+        state.active_option === CreationOptions.TRACKER_ANOTHER_PROJECT &&
+        state.selected_project_tracker_template !== null
     );
 }
 
@@ -53,6 +65,10 @@ export const is_created_from_empty = (state: State): boolean => {
 
 export const is_a_duplication = (state: State): boolean => {
     return state.active_option === CreationOptions.TRACKER_TEMPLATE;
+};
+
+export const is_a_duplication_of_a_tracker_from_another_project = (state: State): boolean => {
+    return state.active_option === CreationOptions.TRACKER_ANOTHER_PROJECT;
 };
 
 export const is_a_xml_import = (state: State): boolean => {

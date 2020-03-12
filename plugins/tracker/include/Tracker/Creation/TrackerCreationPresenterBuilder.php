@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation;
 use Project;
 use ProjectManager;
 use TrackerDao;
+use TrackerFactory;
 
 class TrackerCreationPresenterBuilder
 {
@@ -38,13 +39,22 @@ class TrackerCreationPresenterBuilder
      */
     private $project_manager;
 
-    public function __construct(ProjectManager $project_manager, TrackerDao $tracker_dao)
-    {
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
+    public function __construct(
+        ProjectManager $project_manager,
+        TrackerDao $tracker_dao,
+        TrackerFactory $tracker_factory
+    ) {
         $this->project_manager = $project_manager;
         $this->tracker_dao     = $tracker_dao;
+        $this->tracker_factory = $tracker_factory;
     }
 
-    public function build(\Project $current_project, \CSRFSynchronizerToken $csrf): TrackerCreationPresenter
+    public function build(\Project $current_project, \CSRFSynchronizerToken $csrf, \PFUser $user): TrackerCreationPresenter
     {
         $project_templates = [];
         foreach ($this->project_manager->getSiteTemplates() as $project) {
@@ -65,8 +75,15 @@ class TrackerCreationPresenterBuilder
         }
 
         $existing_trackers = $this->getExistingTrackersNamesAndShortnamesInProject($current_project);
+        $trackers_from_other_projects = $this->getTrackersUserIsAdmin($user);
 
-        return new TrackerCreationPresenter($project_templates, $existing_trackers, $current_project, $csrf);
+        return new TrackerCreationPresenter(
+            $project_templates,
+            $existing_trackers,
+            $trackers_from_other_projects,
+            $current_project,
+            $csrf
+        );
     }
 
     private function getExistingTrackersNamesAndShortnamesInProject(Project $project): array
@@ -87,5 +104,45 @@ class TrackerCreationPresenterBuilder
         }
 
         return $existing_trackers;
+    }
+
+    private function getTrackersUserIsAdmin(\PFUser $user): array
+    {
+        $projects_ids = $user->getProjects();
+        $trackers = [];
+
+        if (count($projects_ids) === 0) {
+            return $trackers;
+        }
+
+        foreach ($projects_ids as $id) {
+            $trackers_user_can_view = $this->tracker_factory->getTrackersByGroupIdUserCanView($id, $user);
+            $trackers_base_info = [];
+
+            foreach ($trackers_user_can_view as $tracker) {
+                if (! $tracker->userIsAdmin($user)) {
+                    continue;
+                }
+
+                $trackers_base_info[] = [
+                    'id' => $tracker->getId(),
+                    'name' => $tracker->getName()
+                ];
+            }
+
+            if (count($trackers_base_info) === 0) {
+                continue;
+            }
+
+            $project = $this->project_manager->getProject($id);
+
+            $trackers[] = [
+                'id' => $id,
+                'name' => $project->getPublicName(),
+                'trackers' => $trackers_base_info
+            ];
+        }
+
+        return $trackers;
     }
 }

@@ -28,7 +28,8 @@ describe("StepTwo", () => {
         state: State = {} as State,
         is_a_duplication = false,
         is_a_xml_import = false,
-        is_created_from_empty = false
+        is_created_from_empty = false,
+        is_a_duplication_of_a_tracker_from_another_project = false
     ): Promise<Wrapper<StepTwo>> {
         return mount(StepTwo, {
             mocks: {
@@ -38,6 +39,7 @@ describe("StepTwo", () => {
                         is_a_duplication,
                         is_a_xml_import,
                         is_created_from_empty,
+                        is_a_duplication_of_a_tracker_from_another_project,
                         is_ready_to_submit: true
                     }
                 })
@@ -66,6 +68,30 @@ describe("StepTwo", () => {
         it("auto-fills the tracker name with the name of the selected tracker", () => {
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "initTrackerNameWithTheSelectedTemplateName"
+            );
+        });
+
+        it("renders a field-tracker-template-id", () => {
+            expect(wrapper.find("field-tracker-template-id-stub").exists()).toBe(true);
+        });
+
+        it("Sets the right encoding type for the form", () => {
+            expect(wrapper.find("#tracker-creation-form").attributes("enctype")).toEqual(
+                "application/x-www-form-urlencoded"
+            );
+        });
+    });
+
+    describe("Tracker from another project duplication", () => {
+        let wrapper: Wrapper<StepTwo>;
+
+        beforeEach(async () => {
+            wrapper = await getWrapper({} as State, false, false, false, true);
+        });
+
+        it("auto-fills the tracker name with the name of the selected tracker", () => {
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                "initTrackerNameWithTheSelectedProjectTrackerTemplateName"
             );
         });
 

@@ -18,11 +18,11 @@
   -->
 
 <template>
-    <input type="hidden" name="tracker-template-id" v-bind:value="selected_tracker_template.id" />
+    <input type="hidden" name="tracker-template-id" v-bind:value="tracker_id" />
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { State } from "vuex-class";
+import { State, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { Tracker } from "../../../../store/type";
 
@@ -30,5 +30,19 @@ import { Tracker } from "../../../../store/type";
 export default class FieldTrackerTemplateId extends Vue {
     @State
     readonly selected_tracker_template!: Tracker;
+
+    @State
+    readonly selected_project_tracker_template!: Tracker;
+
+    @Getter
+    readonly is_a_duplication!: boolean;
+
+    get tracker_id(): string {
+        if (this.is_a_duplication) {
+            return this.selected_tracker_template.id;
+        }
+
+        return this.selected_project_tracker_template.id;
+    }
 }
 </script>
