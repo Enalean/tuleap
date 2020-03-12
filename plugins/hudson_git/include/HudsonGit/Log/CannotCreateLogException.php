@@ -22,11 +22,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\HudsonGit\Job;
+namespace Tuleap\HudsonGit\Log;
 
 use Exception;
 
-class CannotCreateJobException extends Exception
+class CannotCreateLogException extends Exception
 {
     public function __construct(string $message)
     {
