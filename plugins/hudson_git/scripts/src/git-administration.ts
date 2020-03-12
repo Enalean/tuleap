@@ -63,6 +63,28 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
         });
     }
 
+    function testJenkinsServer(url: string): void {
+        $.ajax({
+            url: "/plugins/hudson_git/test_jenkins_server?jenkins_url_to_test=" + encodeURI(url),
+            type: "POST",
+            dataType: "json"
+        }).done(function(data) {
+            const test_feedback_element = $("#jenkins-server-test-feedback");
+
+            test_feedback_element.children("span").remove();
+
+            let css_class = "";
+            if (data.type === "success") {
+                css_class = "text-success";
+            } else {
+                css_class = "text-error";
+            }
+            test_feedback_element.append(
+                "<span class='" + css_class + "'>" + data.message + "</span>"
+            );
+        });
+    }
+
     $(function(): void {
         confirmDeletionPopover();
 
@@ -79,6 +101,13 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
                 $(event.target).parents('[data-toggle="popover"]').length === 0
             ) {
                 dismissPopover();
+            }
+        });
+
+        $("#jenkins-server-test").on("click", function() {
+            const url_val = $("#jenkins-server-url").val();
+            if (url_val) {
+                testJenkinsServer(url_val.toString());
             }
         });
     });

@@ -12,7 +12,7 @@
         <p>{{ jenkins_notification_desc }} <a href="https://github.com/jenkinsci/git-plugin/blob/git-4.2.0/README.adoc#push-notification-from-repository">{{ jenkins_documentation_link_label }}</a>.</p>
         <p>
             <label for="repo_jenkins">{{ jenkins_notification_label }}</label>
-            <input type="url" id="repo_jenkins" name="url" value="{{ jenkins_server_url }}" class="input-xxlarge" placeholder="https://example.com/jenkins" required pattern="https?://.+" />
+            <input type="url" id="repo_jenkins" class="create-hook-url" name="url" value="{{ jenkins_server_url }}" class="input-xxlarge" placeholder="https://example.com/jenkins" required pattern="https?://.+" />
         </p>
     </div>
 

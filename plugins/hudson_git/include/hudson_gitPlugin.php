@@ -41,6 +41,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\Git\Administration\AddController;
 use Tuleap\HudsonGit\Git\Administration\AdministrationController;
 use Tuleap\HudsonGit\Git\Administration\AdministrationPaneBuilder;
+use Tuleap\HudsonGit\Git\Administration\AjaxController;
 use Tuleap\HudsonGit\Git\Administration\DeleteController;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerAdder;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerDao;
@@ -97,7 +98,7 @@ class hudson_gitPlugin extends Plugin
         }
 
         if (strpos($_SERVER['REQUEST_URI'], '/administration/jenkins') !== false
-            && $git_plugin->getPluginPath() === 0
+            && strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getIncludeAssets()->getFileURL('style.css') . '" />';
             echo '<link rel="stylesheet" type="text/css" href="' . $git_plugin->getIncludeAssets()->getFileURL('default.css') . '" />';
@@ -175,7 +176,17 @@ class hudson_gitPlugin extends Plugin
 
             $r->post('/jenkins_server', $this->getRouteHandler('getPostGitAdministrationJenkinsServer'));
             $r->post('/jenkins_server/delete', $this->getRouteHandler('getDeleteGitAdministrationJenkinsServer'));
+            $r->post('/test_jenkins_server', $this->getRouteHandler('getAjaxAdministrationTestJenkinsServer'));
         });
+    }
+
+    public static function getAjaxAdministrationTestJenkinsServer(): AjaxController
+    {
+        return new AjaxController(
+            HttpClientFactory::createClient(new CookiePlugin(new CookieJar())),
+            HTTPFactoryBuilder::requestFactory(),
+            new WrapperLogger(new Logger(), 'hudson_git')
+        );
     }
 
     public static function getDeleteGitAdministrationJenkinsServer(): DeleteController

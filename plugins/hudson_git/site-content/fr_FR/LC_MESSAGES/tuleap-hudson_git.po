@@ -51,6 +51,12 @@ msgstr "Jobs déclenchés par le plugin Git :"
 msgid "Jenkins URL"
 msgstr "URL Jenkins"
 
+msgid "Jenkins server is not reachable."
+msgstr "Le serveur Jenkins n'est pas joignable."
+
+msgid "Jenkins server is reachable."
+msgstr "Le serveur Jenkins est joignable."
+
 msgid ""
 "Jenkins server will be notified about git activity on any repository in the "
 "project."
@@ -63,6 +69,9 @@ msgstr "Historique"
 
 msgid "Logs for %s"
 msgstr "Historique pour %s"
+
+msgid "No Jenkins server URL provided."
+msgstr "L'URL du serveur Jenkins n'a pas été trouvée."
 
 msgid "No Jenkins server configured yet."
 msgstr "Aucun serveur Jenkins n'a été configuré."
@@ -90,6 +99,9 @@ msgstr "Dépôt"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Test the server"
+msgstr "Tester le serveur"
 
 msgid "The Jenkins server URL provided is not well formed."
 msgstr "L'URL du serveur Jenkins n'est pas au bon format."

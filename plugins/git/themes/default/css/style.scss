@@ -532,6 +532,10 @@ table.hook-logs > tbody > tr {
   }
 }
 
+.create-hook-url {
+  width: calc(100% - 20px);
+}
+
 .remove-hook-popover {
   display: none;
 }
