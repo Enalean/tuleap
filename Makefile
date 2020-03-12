@@ -39,7 +39,7 @@ help:
 .PHONY: composer
 composer:  ## Install PHP dependencies with Composer
 	@find . plugins/ src/www/themes/ tools/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' -print0 | \
-	    xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -L1 -i bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && $(COMPOSER_INSTALL)'
+	    xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -L1 -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && $(COMPOSER_INSTALL)'
 
 ## RNG generation
 
