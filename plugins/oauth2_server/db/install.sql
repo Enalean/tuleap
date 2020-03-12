@@ -34,6 +34,13 @@ CREATE TABLE plugin_oauth2_authorization_code(
     INDEX idx_expiration_date (expiration_date)
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_oauth2_authorization_code_access_token (
+    authorization_code_id INT(11) NOT NULL,
+    access_token_id INT(11) NOT NULL,
+    PRIMARY KEY (authorization_code_id, access_token_id),
+    UNIQUE (access_token_id)
+) ENGINE=InnoDB;
+
 CREATE TABLE plugin_oauth2_authorization(
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT(11) NOT NULL,

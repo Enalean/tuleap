@@ -91,7 +91,7 @@ class OAuth2AuthorizationCodeVerifier
                 if ($user === null) {
                     throw new OAuth2AuthCodeMatchingUnknownUserException($row['user_id']);
                 }
-                return OAuth2AuthorizationCode::approveForDemoScope($user);
+                return OAuth2AuthorizationCode::approveForDemoScope($auth_code, $user);
             }
         );
     }

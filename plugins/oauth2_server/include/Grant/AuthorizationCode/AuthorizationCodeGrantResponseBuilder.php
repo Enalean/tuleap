@@ -42,6 +42,7 @@ class AuthorizationCodeGrantResponseBuilder
     ): OAuth2AccessTokenSuccessfulRequestRepresentation {
         $access_token = $this->access_token_creator->issueAccessToken(
             $current_time,
+            $authorization_code->getID(),
             $authorization_code->getUser(),
             $authorization_code->getScopes()
         );

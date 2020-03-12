@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class OAuth2AuthorizationCodeTest extends TestCase
@@ -30,8 +32,12 @@ final class OAuth2AuthorizationCodeTest extends TestCase
     public function testBuildValidAuthorizationCodeWithDemoScope(): void
     {
         $user      = new \PFUser(['language_id' => 'en']);
-        $auth_code = OAuth2AuthorizationCode::approveForDemoScope($user);
+        $auth_code = OAuth2AuthorizationCode::approveForDemoScope(
+            new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
+            $user
+        );
 
+        $this->assertSame(12, $auth_code->getID());
         $this->assertSame($user, $auth_code->getUser());
         $scopes = $auth_code->getScopes();
         $this->assertCount(1, $scopes);

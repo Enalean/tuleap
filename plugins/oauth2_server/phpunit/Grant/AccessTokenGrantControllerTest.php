@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
@@ -79,7 +80,7 @@ final class AccessTokenGrantControllerTest extends TestCase
     {
         $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
         $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
-            OAuth2AuthorizationCode::approveForDemoScope(new \PFUser(['language_id' => 'en']))
+            $this->buildAuthorizationCodeGrant()
         );
         $this->response_builder->shouldReceive('buildResponse')->andReturn(
             OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessToken(
@@ -147,7 +148,7 @@ final class AccessTokenGrantControllerTest extends TestCase
     {
         $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
         $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
-            OAuth2AuthorizationCode::approveForDemoScope(new \PFUser(['language_id' => 'en']))
+            $this->buildAuthorizationCodeGrant()
         );
 
         $request = \Mockery::mock(ServerRequestInterface::class);
@@ -188,7 +189,7 @@ final class AccessTokenGrantControllerTest extends TestCase
     {
         $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
         $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
-            OAuth2AuthorizationCode::approveForDemoScope(new \PFUser(['language_id' => 'en']))
+            $this->buildAuthorizationCodeGrant()
         );
 
         $request = \Mockery::mock(ServerRequestInterface::class);
@@ -211,7 +212,7 @@ final class AccessTokenGrantControllerTest extends TestCase
     {
         $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
         $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
-            OAuth2AuthorizationCode::approveForDemoScope(new \PFUser(['language_id' => 'en']))
+            $this->buildAuthorizationCodeGrant()
         );
 
         $request = \Mockery::mock(ServerRequestInterface::class);
@@ -234,5 +235,13 @@ final class AccessTokenGrantControllerTest extends TestCase
     private function buildOAuth2App(): OAuth2App
     {
         return new OAuth2App(1, 'name', 'https://example.com', \Mockery::mock(\Project::class));
+    }
+
+    private function buildAuthorizationCodeGrant(): OAuth2AuthorizationCode
+    {
+        return OAuth2AuthorizationCode::approveForDemoScope(
+            new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
+            new \PFUser(['language_id' => 'en'])
+        );
     }
 }

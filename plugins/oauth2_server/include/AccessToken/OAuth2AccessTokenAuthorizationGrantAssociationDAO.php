@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,10 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_oauth2_server_app;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_code;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_code_access_token;
-DROP TABLE IF EXISTS plugin_oauth2_authorization;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_scope;
-DELETE FROM oauth2_access_token;
-DELETE FROM oauth2_access_token_scope;
+declare(strict_types=1);
+
+namespace Tuleap\OAuth2Server\AccessToken;
+
+use Tuleap\DB\DataAccessObject;
+
+class OAuth2AccessTokenAuthorizationGrantAssociationDAO extends DataAccessObject
+{
+    public function createAssociationBetweenAuthorizationGrantAndAccessToken(
+        int $authorization_grant_id,
+        int $access_token_id
+    ): void {
+        $this->getDB()->insert(
+            'plugin_oauth2_authorization_code_access_token',
+            [
+                'authorization_code_id' => $authorization_grant_id,
+                'access_token_id'       => $access_token_id
+            ]
+        );
+    }
+}

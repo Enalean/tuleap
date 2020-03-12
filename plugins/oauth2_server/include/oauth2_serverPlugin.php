@@ -31,6 +31,7 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
+use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenAuthorizationGrantAssociationDAO;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
 use Tuleap\OAuth2Server\App\AppDao;
@@ -278,6 +279,7 @@ final class oauth2_serverPlugin extends Plugin
                     new SplitTokenVerificationStringHasher(),
                     new OAuth2AccessTokenDAO(),
                     new OAuth2AccessTokenScopeSaver(new OAuth2AccessTokenScopeDAO()),
+                    new OAuth2AccessTokenAuthorizationGrantAssociationDAO(),
                     new DateInterval('PT1H'),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 )
