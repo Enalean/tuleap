@@ -635,7 +635,6 @@ plugin_tracker_include_type	info_gn_default_not_added	Default global notificatio
 plugin_tracker_include_type	info_gn_deleted	Global notification has been deleted
 plugin_tracker_include_type	error_uniq_name	Unable to change the name of the element, it is already in use by another one
 
-plugin_tracker_include_type	field_copied_from	This field is shared from tracker <a href="$3">$1</a> from project $2
 plugin_tracker_include_type	field_copied_to	This field is used by the following trackers:
 
 plugin_tracker_include_type	migrate_from_tv3	Migrate a Tracker v3 content

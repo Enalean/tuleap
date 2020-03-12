@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,16 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
-use TuleapTestCase;
 
-require_once __DIR__.'/../../bootstrap.php';
-
-class ChartCachedDaysComparatorTest extends TuleapTestCase
+final class ChartCachedDaysComparatorTest extends TestCase
 {
-    public function itVerifiesCacheIsCompleteForChartWhenCacheDaysAreTheSameThanTimePeriodDays()
+    use MockeryPHPUnitIntegration;
+
+    public function testItVerifiesCacheIsCompleteForChartWhenCacheDaysAreTheSameThanTimePeriodDays(): void
     {
         $number_of_cached_days = 6;
         $start_date            = mktime(0, 0, 0, 20, 12, 2016);
@@ -36,11 +37,11 @@ class ChartCachedDaysComparatorTest extends TuleapTestCase
 
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $cache_days_comparator = new ChartCachedDaysComparator(mock(LoggerInterface::class));
+        $cache_days_comparator = new ChartCachedDaysComparator(\Mockery::spy(LoggerInterface::class));
         $this->assertTrue($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
     }
 
-    public function itVerifiesCacheIsCompleteForChartWhenCacheDaysAreNotTheSameThanTimePeriodDays()
+    public function testItVerifiesCacheIsCompleteForChartWhenCacheDaysAreNotTheSameThanTimePeriodDays(): void
     {
         $number_of_cached_days = 6;
         $start_date            = mktime(0, 0, 0, 20, 12, 2016);
@@ -48,7 +49,7 @@ class ChartCachedDaysComparatorTest extends TuleapTestCase
 
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $cache_days_comparator = new ChartCachedDaysComparator(mock(LoggerInterface::class));
+        $cache_days_comparator = new ChartCachedDaysComparator(\Mockery::spy(LoggerInterface::class));
         $this->assertFalse($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
     }
 }

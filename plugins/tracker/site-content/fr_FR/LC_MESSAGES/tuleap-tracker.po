@@ -1262,6 +1262,10 @@ msgstr ""
 "Cet artefact ne respecte pas les règles de l'outil de suivi. Il ne sera pas "
 "importé: ligne %s du fichier CSV."
 
+#, php-format
+msgid "This field is shared from tracker <a href=\"%s\">%s</a> from project %s"
+msgstr "Ce champ est partagé depuis l'outil de suivi <a href=\"%s\">%s</a> du projet %s"
+
 msgid "This semantic is not defined yet."
 msgstr "Cette sémantique n'est pas encore définie."
 

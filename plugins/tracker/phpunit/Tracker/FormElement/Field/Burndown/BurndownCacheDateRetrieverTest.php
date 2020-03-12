@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,23 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-require_once __DIR__.'/../../bootstrap.php';
-
 use DateTime;
+use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
-use TuleapTestCase;
 
-class BurndownCacheDateRetrieverTest extends TuleapTestCase
+class BurndownCacheDateRetrieverTest extends TestCase
 {
     /**
      * @var BurndownCacheDateRetriever
      */
     private $burndown_cache_retriever;
 
-    public function setUp()
+    protected function setUp() : void
     {
-        parent::setUp();
-
         $this->burndown_cache_retriever = new BurndownCacheDateRetriever();
     }
 
-    public function itAssertThatNumberOfDaysAreCorrectWhenBurndownIsComputedInPast()
+    public function testItAssertThatNumberOfDaysAreCorrectWhenBurndownIsComputedInPast(): void
     {
         $start_date           = mktime(23, 59, 59, 10, 1, 2016);
         $octobre_month_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 20);
@@ -75,11 +71,11 @@ class BurndownCacheDateRetrieverTest extends TuleapTestCase
             mktime(23, 59, 59, 10, 31, 2016),
         );
 
-        $this->assertCount($period, 21);
-        $this->assertEqual($expected_period, $period);
+        $this->assertCount(21, $period);
+        $this->assertEquals($expected_period, $period);
     }
 
-    public function itAssertThatNumberOfDaysAreCorrectWhenBurndownIsCurrent()
+    public function testItAssertThatNumberOfDaysAreCorrectWhenBurndownIsCurrent(): void
     {
         $start_date           = mktime(23, 59, 59, 10, 1, 2016);
         $octobre_month_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 21);
@@ -103,8 +99,8 @@ class BurndownCacheDateRetrieverTest extends TuleapTestCase
             mktime(23, 59, 59, 10, 14, 2016)
         );
 
-        $this->assertCount($period, 10);
+        $this->assertCount(10, $period);
 
-        $this->assertEqual($expected_period, $period);
+        $this->assertEquals($expected_period, $period);
     }
 }
