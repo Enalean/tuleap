@@ -70,6 +70,10 @@ $(RPM_TMP):
 
 tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
+generate-templates:
+	cd $(BASE_DIR) &&\
+		$(MAKE) generate-templates
+
 mo:
 	cd $(BASE_DIR) &&\
 		tools/utils/generate-mo.sh $(BASE_DIR)
@@ -82,7 +86,7 @@ node:
 composer:
 	$(MAKE) -C $(BASE_DIR) composer MODE=Prod
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo generate-templates
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
 		{ \
