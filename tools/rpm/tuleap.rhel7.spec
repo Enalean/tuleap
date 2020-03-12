@@ -807,6 +807,15 @@ fi
 # Clean old tuleap cache file
 %{__rm} -f %{APP_CACHE_DIR}/tuleap_hooks_cache
 
+%post core-cvs
+if [ ! -f %{_sysconfdir}/shells ] ; then
+    echo "%{APP_LIBBIN_DIR}/cvssh" > %{_sysconfdir}/shells
+    echo "%{APP_LIBBIN_DIR}/cvssh-restricted" > %{_sysconfdir}/shells
+else
+    grep -q "^%{APP_LIBBIN_DIR}/cvssh$" %{_sysconfdir}/shells || echo "%{APP_LIBBIN_DIR}/cvssh" >> %{_sysconfdir}/shells
+    grep -q "^%{APP_LIBBIN_DIR}/cvssh-restricted$" %{_sysconfdir}/shells || echo "%{APP_LIBBIN_DIR}/cvssh-restricted" >> %{_sysconfdir}/shells
+fi
+
 %post core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
@@ -836,6 +845,12 @@ fi
 %postun
 /usr/bin/systemctl unmask php73-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
+
+%postun core-cvs
+if [ "$1" = 0 ] && [ -f %{_sysconfdir}/shells ] ; then
+    sed -i '\!^%{APP_LIBBIN_DIR}/cvssh$!d' %{_sysconfdir}/shells
+    sed -i '\!^%{APP_LIBBIN_DIR}/cvssh-restricted$!d' %{_sysconfdir}/shells
+fi
 
 %postun core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
