@@ -24,6 +24,7 @@ namespace Tuleap\Project\XML\Import;
 
 use EventManager;
 use SimpleXMLElement;
+use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 
 class ExternalFieldsExtractor
@@ -38,14 +39,14 @@ class ExternalFieldsExtractor
         $this->event_manager = $event_manager;
     }
 
-    public function extractExternalFieldsFromFormElements(SimpleXMLElement $xml_element): void
+    private function extractExternalFieldsFromFormElements(SimpleXMLElement $xml_form_element): void
     {
-        foreach ($xml_element as $index => $form_element) {
+        foreach ($xml_form_element as $index => $form_element) {
             if ($form_element->externalField) {
                 $external_field_id        = (string)$form_element->externalField['ID'];
                 $validate_external_fields = new ImportValidateExternalFields($form_element->externalField);
                 $this->event_manager->processEvent($validate_external_fields);
-                $this->removeReferencesToExternalField($xml_element, $external_field_id);
+                $this->removeReferencesToExternalField($xml_form_element, $external_field_id);
                 unset($form_element->externalField);
             }
             $this->extractExternalFieldsFromFormElements($form_element);
@@ -56,7 +57,7 @@ class ExternalFieldsExtractor
     {
         if ($xml_element->trackers->tracker) {
             foreach ($xml_element->trackers->tracker as $xml_tracker) {
-                $this->extractExternalFieldsFromFormElements($xml_tracker->formElements);
+                $this->extractExternalFieldsFromTracker($xml_tracker);
             }
         }
     }
@@ -65,6 +66,28 @@ class ExternalFieldsExtractor
     {
         foreach ($xml_element->xpath("//*[@REF='$external_field_id']") as $unused) {
             unset($xml_element->xpath("//*[@REF='$external_field_id']")[0][0]);
+        }
+    }
+
+    public function extractExternalFieldsFromArtifact(SimpleXMLElement $xml_artifact): void
+    {
+        foreach ($xml_artifact->changeset as $field_change) {
+            if ($field_change->external_field_change) {
+                $validate_external_field_changeset = new ImportValidateChangesetExternalField($field_change->external_field_change);
+                $this->event_manager->processEvent($validate_external_field_changeset);
+                unset($field_change->external_field_change);
+            }
+        }
+    }
+
+    public function extractExternalFieldsFromTracker(SimpleXMLElement $xml_tracker): void
+    {
+        $this->extractExternalFieldsFromFormElements($xml_tracker->formElements);
+
+        if ($xml_tracker->artifacts->artifact) {
+            foreach ($xml_tracker->artifacts->artifact as $index => $field_change) {
+                $this->extractExternalFieldsFromArtifact($field_change);
+            }
         }
     }
 }

@@ -46,6 +46,7 @@ use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping_FromAnotherPlatform;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -160,6 +161,10 @@ class XmlImportTest extends TestCase
      * @var Mockery\MockInterface|CreatedFileURLMapping
      */
     private $url_mapping;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExternalFieldsExtractor
+     */
+    private $external_field_extractor;
 
     public function setUp() : void
     {
@@ -208,6 +213,8 @@ class XmlImportTest extends TestCase
         $this->rng_validator =  Mockery::mock(XML_RNGValidator::class);
         $this->rng_validator->shouldReceive('validate');
 
+        $this->external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
+
         $this->importer = new Tracker_Artifact_XMLImport(
             $this->rng_validator,
             $this->artifact_creator,
@@ -221,7 +228,8 @@ class XmlImportTest extends TestCase
             Mockery::mock(NatureDao::class),
             $this->xml_artifact_source_platform_extractor,
             $this->existing_artifact_source_id_extractor,
-            $this->artifact_source_id_dao
+            $this->artifact_source_id_dao,
+            $this->external_field_extractor
         );
     }
 
@@ -305,6 +313,8 @@ class XmlImportTest extends TestCase
         $this->existing_artifact_source_id_extractor->shouldReceive('getSourceArtifactIds')->andReturn();
 
         $this->artifact_source_id_dao->shouldReceive('save')->withArgs([101, 4918, "https://web/"])->once();
+
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -395,6 +405,9 @@ class XmlImportTest extends TestCase
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->withArgs([$this->tracker_id, 'summary'])->andReturn($this->tracker_formelement_field_string);
 
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
+
+
         $this->importer->importFromXML(
             $this->tracker,
             $xml_input,
@@ -483,6 +496,8 @@ class XmlImportTest extends TestCase
             ->once();
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->withArgs([$this->tracker_id, 'summary'])->andReturn($this->tracker_formelement_field_string);
+
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -575,6 +590,8 @@ class XmlImportTest extends TestCase
 
         $this->logger->shouldReceive('warn')->with("[XML import] No correspondence between artifact_id and source_artifact_id. New artifact created.", null);
 
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
+
         $this->importer->importFromXML(
             $this->tracker,
             $xml_input,
@@ -666,6 +683,8 @@ class XmlImportTest extends TestCase
             )
             ->andReturn($changeset_3)
             ->once();
+
+        $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
 
         $this->importer->importFromXML(
             $this->tracker,
