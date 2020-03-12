@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -140,6 +140,16 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
                   AND l.push_date > ?";
 
         return $this->getDB()->single($sql, [$project_id, $date]) > 0;
+    }
+
+    public function hasRepositories(int $project_id) : bool
+    {
+        $sql = "SELECT COUNT(*)
+                FROM plugin_git
+                WHERE project_id = ?
+                  AND repository_deletion_date  = '0000-00-00 00:00:00'";
+
+        return $this->getDB()->single($sql, [$project_id]) > 0;
     }
 
     /**
