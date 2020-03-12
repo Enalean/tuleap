@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,10 +57,9 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
      * @param string                          $format          The format of the diff (html, text, ...)
-     * @param PFUser                          $user            The user or null
      * @param bool $ignore_perms
      *
-     * @return string The difference between another $changeset_value, false if no differences
+     * @return string|false
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
@@ -90,6 +89,8 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
                 return 'changed';
             }
         }
+
+        return false;
     }
 
     public function nodiff($format = 'html')
@@ -99,24 +100,14 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
         }
     }
 
-    /**
-     * Return the REST value of this changeset value
-     *
-     *
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
-     */
     public function getRESTValue(PFUser $user)
     {
+        return null;
     }
 
-    /**
-     * Return the full REST value of this changeset value
-     *
-     *
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
-     */
     public function getFullRESTValue(PFUser $user)
     {
+        return null;
     }
 
     /**
@@ -130,7 +121,7 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
     /**
      * Returns the value of this changeset value
      *
-     * @return string|array The value of this artifact changeset value
+     * @return array The value of this artifact changeset value
      */
     public function getValue()
     {

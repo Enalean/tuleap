@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
@@ -58,9 +59,13 @@ class TestStatusAccordingToStepsStatusChangesBuilder
 
     private function getValuesIdsIndexedByLabel(Tracker_FormElement_Field_List $status_field)
     {
+        $bind = $status_field->getBind();
+        if (! $bind) {
+            return [];
+        }
         return array_reduce(
-            $status_field->getBind()->getAllValues(),
-            function (array $carry, Tracker_FormElement_Field_List_Bind_StaticValue $value) {
+            $bind->getAllValues(),
+            function (array $carry, Tracker_FormElement_Field_List_BindValue $value) {
                 $carry[$value->getLabel()] = $value->getId();
 
                 return $carry;

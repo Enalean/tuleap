@@ -125,6 +125,25 @@ pipeline {
                                 }
                             }
                         }
+                        stage('Psalm static analysis') {
+                            agent {
+                                dockerfile {
+                                    dir 'sources/tests/psalm/'
+                                    reuseNode true
+                                    args '--network none'
+                                }
+                            }
+                            steps {
+                                script {
+                                    actions.runPsalm('plugins/testmanagement/tests/psalm/psalm.xml', '.', 'plugins/testmanagement/')
+                                }
+                            }
+                            post {
+                                always {
+                                    recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(id: 'checkstyle_psalm', pattern: 'results/psalm/checkstyle.xml')]
+                                }
+                            }
+                        }
                     }
                 }
             }

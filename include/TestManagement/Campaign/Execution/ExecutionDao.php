@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,8 +27,6 @@ class ExecutionDao extends DataAccessObject
 {
     /**
      * @param int[] $executions_ids
-     *
-     * @return array
      */
     public function searchDefinitionsChangesetIdsForExecution(array $executions_ids)
     {

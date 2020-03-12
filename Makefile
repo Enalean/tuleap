@@ -14,6 +14,8 @@ RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)"
 
 NAME_VERSION=$(PKG_NAME)-$(VERSION)
 
+PHP=php
+
 all:
 	$(MAKE) rpm
 
@@ -76,3 +78,9 @@ docker-run:
 	cp -Rf /plugin/ /build/src/plugins/testmanagement && chown -R build /build/src
 	su --login --command "make -C /build/src/plugins/testmanagement all RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
+
+psalm: ## Run Psalm (PHP static analysis tool). Use FILES variables to execute on a given set of files or directories.
+	$(PHP) ../../src/vendor/bin/psalm --show-info=false -c=tests/psalm/psalm.xml $(FILES)
+
+psalm-with-info: ## Run Psalm (PHP static analysis tool) with INFO findings. Use FILES variables to execute on a given set of files or directories.
+	$(PHP) ../../src/vendor/bin/psalm --show-info=true -c=tests/psalm/psalm.xml $(FILES)

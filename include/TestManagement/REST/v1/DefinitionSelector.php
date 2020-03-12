@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -102,9 +102,12 @@ class DefinitionSelector
         return [];
     }
 
-    public function selectAllDefinitions(PFUser $user, Project $project)
+    public function selectAllDefinitions(PFUser $user, Project $project): array
     {
         $tracker_id = $this->config->getTestDefinitionTrackerId($project);
+        if(!$tracker_id) {
+            return [];
+        }
 
         return $this->tracker_artifact_factory->getArtifactsByTrackerIdUserCanView(
             $user,

@@ -87,8 +87,10 @@ class FirstConfigCreator
         foreach ($template_tracker_ids as $tracker_itemname => $tracker_id) {
             if (! isset($tracker_mapping[$tracker_id])) {
                 $tracker = $this->getTracker($project, $tracker_itemname);
-                $project_tracker_ids[$tracker_itemname] = $tracker->getId();
-            } else {
+                if ($tracker) {
+                    $project_tracker_ids[$tracker_itemname] = $tracker->getId();
+                }
+            } else if ($tracker_id) {
                 $project_tracker_ids[$tracker_itemname] = $tracker_mapping[$tracker_id];
             }
         }
@@ -118,6 +120,9 @@ class FirstConfigCreator
 
         foreach ($tracker_itemnames as $tracker_itemname) {
             $tracker = $this->getTracker($project, $tracker_itemname);
+            if(! $tracker) {
+                continue;
+            }
             $tracker_ids[$tracker_itemname] = $tracker->getId();
         }
 

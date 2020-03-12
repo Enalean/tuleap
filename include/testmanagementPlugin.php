@@ -248,7 +248,7 @@ class testmanagementPlugin extends Plugin
         $url = $this->getPluginPath() . '/?'
             . http_build_query(['group_id' =>$tracker->getGroupId()])
             . '#!/graph/'
-            .urlencode($event->getArtifact()->getId());
+            .urlencode((string)$event->getArtifact()->getId());
 
         $icon = 'fa-tlp-dependencies-graph';
 
@@ -485,7 +485,8 @@ class testmanagementPlugin extends Plugin
     public function importValidateExternalFields(ImportValidateExternalFields $validate_external_fields)
     {
         $xml = $validate_external_fields->getXml();
-        if ((string)$xml->attributes()['type'] === StepDefinition::TYPE) {
+        $attributes = $xml->attributes();
+        if ($attributes && isset($attributes['type']) && (string)$attributes['type'] === 'ttmstepdef') {
             $validator = $this->getImportXmlFromTracker();
             $validator->validateXMLImport($xml);
         }
@@ -494,7 +495,8 @@ class testmanagementPlugin extends Plugin
     public function importExternalElement(ImportExternalElement $event): void
     {
         $xml = $event->getXml();
-        if ((string)$xml->attributes()['type'] === StepDefinition::TYPE) {
+        $attributes = $xml->attributes();
+        if ($attributes && isset($attributes['type']) && (string) $attributes['type'] === 'ttmstepdef') {
             $validator = $this->getImportXmlFromTracker();
             $event->setFormElement(
                 $validator->getInstanceFromXML($xml, $event->getProject(), $event->getFeedbackCollector())
@@ -504,7 +506,8 @@ class testmanagementPlugin extends Plugin
     public function importValidateChangesetExternalField(ImportValidateChangesetExternalField $validate_external_fields): void
     {
         $xml = $validate_external_fields->getXml();
-        if ((string)$xml->attributes()['type'] === StepDefinition::TYPE) {
+        $attributes = $xml->attributes();
+        if ($attributes && isset($attributes['type']) && (string) $attributes['type'] === StepDefinition::TYPE) {
             $validator = $this->getImportXmlFromTracker();
             $validator->validateChangesetXMLImport($xml);
         }

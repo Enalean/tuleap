@@ -339,7 +339,9 @@ class ExecutionRepresentationBuilder
 
         $submitted_by = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
         $user_representation = new UserRepresentation();
-        $user_representation->build($submitted_by);
+        if ($submitted_by) {
+            $user_representation->build($submitted_by);
+        }
 
         $has_been_run_at_least_once = ! $execution->isFirstChangeset($last_changeset);
 

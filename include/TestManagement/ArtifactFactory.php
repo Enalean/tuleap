@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -128,12 +128,12 @@ class ArtifactFactory
     }
 
     /**
-     * @param PFUser  $user           The user for which we're retrieving the campaign
-     * @param int     $tracker_id     The id of the tracker
-     * @param int     $milestone_id   The id of the milestone that should be linked by the campaigns
-     * @param int     $limit          The maximum number of artifacts returned
-     * @param int     $offset
-     * @param bool    $reverse_order  Should the order of the returned campaigns be reversed?
+     * @param PFUser    $user           The user for which we're retrieving the campaign
+     * @param int       $tracker_id     The id of the tracker
+     * @param int|null  $milestone_id   The id of the milestone that should be linked by the campaigns
+     * @param int       $limit          The maximum number of artifacts returned
+     * @param int       $offset
+     * @param bool      $reverse_order  Should the order of the returned campaigns be reversed?
      *
      * @return Tracker_Artifact_PaginatedArtifacts
      */
@@ -152,10 +152,7 @@ class ArtifactFactory
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
 
-    /**
-     * @return Tracker_Artifact
-     */
-    public function getCampaignForExecution(Tracker_Artifact $execution)
+    public function getCampaignForExecution(Tracker_Artifact $execution): ?Tracker_Artifact
     {
         $campaign_tracker_id    = $this->config->getCampaignTrackerId($execution->getTracker()->getProject());
         $campaign_artifact_data = $this->dao->searchCampaignArtifactForExecution(

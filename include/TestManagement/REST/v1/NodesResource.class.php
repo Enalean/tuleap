@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
+use PFUser;
 use Tracker_Exception;
 use Tracker_ResourceDoesntExistException;
 use Tuleap\REST\Header;
@@ -55,17 +56,17 @@ class NodeResource
      * @url GET {id}
      *
      * @param string $id Id of the node
-     * @throws 404
-     * @throws 500
+     * @throws RestException 404
+     * @throws RestException 500
      * @return NodeRepresentation
      */
     protected function getId($id)
     {
         try {
             $factory = new NodeBuilderFactory();
-            $user = UserManager::instance()->getCurrentUser();
+            $user = $this->getCurrentUser();
 
-            $artifact = $factory->getArtifactById($user, $id);
+            $artifact = $factory->getArtifactById($user, (int)$id);
 
             ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
                 $user,
@@ -83,7 +84,6 @@ class NodeResource
         } catch (Tracker_ResourceDoesntExistException $exception) {
             throw new RestException(404, 'Node not found');
         }
-        Header::allowOptionsGet();
     }
 
 
@@ -92,5 +92,18 @@ class NodeResource
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsGet();
         Header::lastModified($date);
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getCurrentUser(): PFUser
+    {
+        $user =UserManager::instance()->getCurrentUser();
+        if (! $user) {
+            throw new RestException(404, "User not found");
+        }
+
+        return $user;
     }
 }

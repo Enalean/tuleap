@@ -53,7 +53,7 @@ class Router
     private $service;
 
     /**
-     * @var ProjectManager
+     * @var UserManager
      */
     private $user_manager;
 
@@ -301,7 +301,7 @@ class Router
 
     private function userIsAdmin(Codendi_Request $request)
     {
-        return $request->getProject()->userIsAdmin($request->getCurrentUser());
+        return $request->getProject()->userIsAdmin();
     }
 
     /**

@@ -63,9 +63,6 @@ class ProjectResource
     /** @var ArtifactFactory */
     private $testmanagement_artifact_factory;
 
-    /** @var Tracker_FormElementFactory */
-    private $tracker_form_element_factory;
-
     /** @var DefinitionRepresentationBuilder */
     private $definition_representation_builder;
 
@@ -89,14 +86,13 @@ class ProjectResource
             $artifact_factory,
             $artifact_dao
         );
-        $this->tracker_form_element_factory      = Tracker_FormElementFactory::instance();
-        $this->user_manager                      = UserManager::instance();
-        $this->user                              = UserManager::instance()->getCurrentUser();
+        $tracker_form_element_factory          = Tracker_FormElementFactory::instance();
+        $this->user                            = UserManager::instance()->getCurrentUser();
 
         $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $this->config);
 
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
-            $this->tracker_form_element_factory,
+            $tracker_form_element_factory,
             $conformance_validator,
             $retriever,
             \Codendi_HTMLPurifier::instance()
@@ -105,7 +101,7 @@ class ProjectResource
         $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new KeyFactory());
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
-            $this->tracker_form_element_factory,
+            $tracker_form_element_factory,
             $this->testmanagement_artifact_factory,
             $campaign_retriever
         );
@@ -128,15 +124,16 @@ class ProjectResource
      *
      * @url GET {id}/testmanagement_campaigns
      *
-     * @param int $id Id of the project
+     * @param int    $id Id of the project
      * @param string $query JSON object of search criteria properties {@from path}
-     * @param int $limit Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
+     * @param int    $limit Number of elements displayed per page {@from path}
+     * @param int    $offset Position of the first element to display {@from path}
+     *
      * @return array
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function getCampaigns($id, $query = null, $limit = 10, $offset = 0)
     {
@@ -220,6 +217,9 @@ class ProjectResource
         );
 
         $tracker_id = $this->config->getTestDefinitionTrackerId($project);
+        if (! $tracker_id) {
+            throw new RestException(400, 'The test definition tracker id is not well configured');
+        }
         $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $tracker) {
             throw new RestException(400, 'The test definition tracker id is not well configured');
@@ -228,11 +228,6 @@ class ProjectResource
         if (! $tracker->userCanView($this->user)) {
             throw new RestException(403, 'Access denied to the test definition tracker');
         }
-
-        $result = array(
-            'definitions' => array(),
-            'total'       => 0
-        );
 
         if (isset($report_id)) {
             $result = $this->getDefinitionsSliceFromReport($report_id, $limit, $offset);
@@ -274,6 +269,8 @@ class ProjectResource
     {
         $report = $this->getReportById($this->user, $report_id);
         $matching_ids = $report->getMatchingIds();
+        $artifacts = [];
+        $artifacts_count = 0;
 
         if (isset($matching_ids['id']) && ! empty($matching_ids['id'])) {
             $matching_artifact_ids = explode(',', $matching_ids['id']);

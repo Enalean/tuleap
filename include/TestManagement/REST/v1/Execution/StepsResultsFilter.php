@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,15 +34,17 @@ class StepsResultsFilter
         StepDefinitionChangesetValue $definition_changeset_value,
         StepExecutionChangesetValue $execution_changeset_value
     ) {
+        $definition_value               = $definition_changeset_value->getValue();
         $step_definition_ids = array_map(
             function (Step $step_definition) {
                 return $step_definition->getId();
             },
-            $definition_changeset_value->getValue()
+            $definition_value
         );
 
+        $execution_value = $execution_changeset_value->getValue();
         return array_filter(
-            $execution_changeset_value->getValue(),
+            $execution_value,
             function (StepResult $step_result) use ($step_definition_ids) {
                 return in_array($step_result->getStep()->getId(), $step_definition_ids);
             }

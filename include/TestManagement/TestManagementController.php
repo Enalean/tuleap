@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use MVC2_PluginController;
 use Codendi_Request;
 use Planning_Milestone;
 use EventManager;
+use Project;
 use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
 
 abstract class TestManagementController extends MVC2_PluginController

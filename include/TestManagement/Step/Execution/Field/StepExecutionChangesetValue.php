@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\Step\Execution\Field;
 
 use PFUser;
 use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValueVisitor;
 use Tuleap;
 use Tuleap\TestManagement\Step\Execution\StepResult;
@@ -52,40 +51,19 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
         $this->steps = $step_results;
     }
 
-    /**
-     * Returns a diff between current changeset value and changeset value in param
-     *
-     * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
-     * @param string $format                                   The format of the diff (html, text, ...)
-     * @param PFUser $user                                     The user or null
-     * @param bool $ignore_perms
-     *
-     * @return string The difference between another $changeset_value, false if no differences
-     */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
+        return '';
     }
 
     public function nodiff($format = 'html')
     {
     }
 
-    /**
-     * Return the REST value of this changeset value
-     *
-     *
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
-     */
     public function getRESTValue(PFUser $user)
     {
     }
 
-    /**
-     * Return the full REST value of this changeset value
-     *
-     *
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
-     */
     public function getFullRESTValue(PFUser $user)
     {
     }
@@ -101,7 +79,7 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
     /**
      * Returns the value of this changeset value
      *
-     * @return string|array The value of this artifact changeset value
+     * @return array The value of this artifact changeset value
      */
     public function getValue()
     {

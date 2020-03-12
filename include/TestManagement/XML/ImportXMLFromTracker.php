@@ -92,9 +92,9 @@ class ImportXMLFromTracker
             $row['name'],
             $row['label'],
             $row['description'],
-            $row['use_it'],
+            (bool)$row['use_it'],
             $row['scope'],
-            $row['required'],
+            (bool)$row['required'],
             $row['notifications'],
             $row['rank'],
             $original_field

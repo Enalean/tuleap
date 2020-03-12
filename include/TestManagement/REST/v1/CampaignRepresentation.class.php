@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +38,10 @@ class CampaignRepresentation
     public const STATUS_PASSED  = "passed";
     public const STATUS_FAILED  = "failed";
     public const STATUS_BLOCKED = "blocked";
+    /**
+     * @var int
+     */
+    public $total;
 
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
