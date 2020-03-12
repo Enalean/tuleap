@@ -14,14 +14,14 @@
     <section class="tlp-pane">
         <div class="tlp-pane-container">
             <section class="tlp-pane-section-for-cards">
-                {{# scope_presenters }}
+                {{# scope_definition_presenters }}
                     <div class="tlp-card">
                         <p>
                             <strong>{{ name }}</strong>
                             <small class="oauth2-server-scope-description">{{ description }}</small>
                         </p>
                     </div>
-                {{/ scope_presenters }}
+                {{/ scope_definition_presenters }}
             </section>
         </div>
     </section>
@@ -37,6 +37,9 @@
         <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
         {{# state }}<input type="hidden" name="state" value="{{ state }}">{{/ state }}
         <input type="hidden" name="app_id" value="{{ app_id }}">
+        {{# scope_identifier_presenters }}
+            <input type="hidden" name="scope[]" value="{{ scope_key }}">
+        {{/ scope_identifier_presenters }}
         <a
             class="tlp-button-outline tlp-button-primary tlp-button-large"
             href="{{ deny_authorization_uri }}"

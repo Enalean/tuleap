@@ -26,6 +26,8 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationManagerTest extends TestCase
 {
@@ -36,39 +38,67 @@ final class AuthorizationManagerTest extends TestCase
     /**
      * @var M\LegacyMockInterface|M\MockInterface|AuthorizationDao
      */
-    private $dao;
+    private $authorization_dao;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationScopeDao
+     */
+    private $scope_dao;
 
     protected function setUp(): void
     {
-        $this->dao     = M::mock(AuthorizationDao::class);
-        $this->manager = new AuthorizationManager($this->dao);
+        $this->authorization_dao = M::mock(AuthorizationDao::class);
+        $this->scope_dao         = M::mock(AuthorizationScopeDao::class);
+        $this->manager           = new AuthorizationManager(
+            new DBTransactionExecutorPassthrough(),
+            $this->authorization_dao,
+            $this->scope_dao
+        );
     }
 
     public function testSaveAuthorization(): void
     {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $app_id = 65;
-        $this->dao->shouldReceive('doesAuthorizationExist')
+        $user            = UserTestBuilder::aUser()->withId(102)->build();
+        $app_id          = 65;
+        $foobar_scope    = OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar');
+        $typevalue_scope = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
+
+        $this->authorization_dao->shouldReceive('searchAuthorization')
             ->once()
             ->with($user, $app_id)
-            ->andReturnFalse();
-        $this->dao->shouldReceive('create')
+            ->andReturnNull();
+        $this->authorization_dao->shouldReceive('create')
             ->once()
-            ->with($user, $app_id);
+            ->with($user, $app_id)
+            ->andReturn(17);
+        $this->scope_dao->shouldReceive('deleteForAuthorization')
+            ->once()
+            ->with(17);
+        $this->scope_dao->shouldReceive('createMany')
+            ->once()
+            ->with(17, $foobar_scope, $typevalue_scope);
 
-        $this->manager->saveAuthorization($user, $app_id);
+        $this->manager->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));
     }
 
     public function testSaveAuthorizationDoesNotSaveDuplicate(): void
     {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $app_id = 65;
-        $this->dao->shouldReceive('doesAuthorizationExist')
+        $user            = UserTestBuilder::aUser()->withId(102)->build();
+        $app_id          = 65;
+        $foobar_scope    = OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar');
+        $typevalue_scope = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
+
+        $this->authorization_dao->shouldReceive('searchAuthorization')
             ->once()
             ->with($user, $app_id)
-            ->andReturnTrue();
-        $this->dao->shouldNotReceive('create');
+            ->andReturn(17);
+        $this->authorization_dao->shouldNotReceive('create');
+        $this->scope_dao->shouldReceive('deleteForAuthorization')
+            ->once()
+            ->with(17);
+        $this->scope_dao->shouldReceive('createMany')
+            ->once()
+            ->with(17, $foobar_scope, $typevalue_scope);
 
-        $this->manager->saveAuthorization($user, $app_id);
+        $this->manager->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));
     }
 }

@@ -22,22 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
+use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\DB\DataAccessObject;
 
-class AuthorizationDao extends DataAccessObject
+class AuthorizationScopeDao extends DataAccessObject
 {
-    public function create(\PFUser $user, int $app_id): int
+    public function createMany(int $authorization_id, AuthenticationScopeIdentifier ...$scopes): void
     {
-        return (int) $this->getDB()->insertReturnId(
-            'plugin_oauth2_authorization',
-            ['user_id' => $user->getID(), 'app_id' => $app_id]
+        $inserts = array_map(
+            function (AuthenticationScopeIdentifier $scope) use ($authorization_id) {
+                return ['authorization_id' => $authorization_id, 'scope_key' => $scope->toString()];
+            },
+            $scopes
         );
+        $this->getDB()->insertMany('plugin_oauth2_authorization_scope', $inserts);
     }
 
-    public function searchAuthorization(\PFUser $user, int $app_id): ?int
+    public function deleteForAuthorization(int $authorization_id): void
     {
-        $sql = 'SELECT id FROM plugin_oauth2_authorization
-                WHERE user_id = ? AND app_id = ?';
-        return $this->getDB()->cell($sql, $user->getId(), $app_id);
+        $this->getDB()->delete('plugin_oauth2_authorization_scope', ['authorization_id' => $authorization_id]);
     }
 }

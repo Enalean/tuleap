@@ -29,8 +29,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\OAuth2Server\User\AuthorizationManager;
+use Tuleap\OAuth2Server\User\NewAuthorization;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationEndpointPostController extends DispatchablePSR15Compatible
 {
@@ -38,6 +40,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
     private const REDIRECT_URI = 'redirect_uri';
     private const STATE        = 'state';
     private const APP_ID       = 'app_id';
+    private const SCOPE        = 'scope';
     /**
      * @var ResponseFactoryInterface
      */
@@ -98,10 +101,16 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
             new \DateTimeImmutable(),
             $user
         );
-        $this->authorization_manager->saveAuthorization($user, (int) $body_params[self::APP_ID]);
 
-        $redirect_uri       = $body_params[self::REDIRECT_URI];
-        $state_value        = $body_params[self::STATE] ?? null;
+        $scope_identifiers = [];
+        foreach ($body_params[self::SCOPE] as $scope_key) {
+            $scope_identifiers[] = OAuth2ScopeIdentifier::fromIdentifierKey($scope_key);
+        }
+        $new_authorization = new NewAuthorization($user, (int) $body_params[self::APP_ID], ...$scope_identifiers);
+        $this->authorization_manager->saveAuthorization($new_authorization);
+
+        $redirect_uri         = $body_params[self::REDIRECT_URI];
+        $state_value          = $body_params[self::STATE] ?? null;
         $success_redirect_uri = $this->client_uri_redirect_builder->buildSuccessURI(
             $redirect_uri,
             $state_value,
@@ -112,7 +121,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
     }
 
     /**
-     * @psalm-return array{redirect_uri:string, app_id:mixed}
+     * @psalm-return array{redirect_uri:string, app_id:mixed, scope:string[]}
      * @throws ForbiddenException
      */
     private function getValidBodyParameters(ServerRequestInterface $request): array
@@ -123,9 +132,24 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
             || ! is_string($body_params[self::REDIRECT_URI])
             || ! isset($body_params[self::APP_ID])
             || filter_var($body_params[self::APP_ID], FILTER_VALIDATE_INT) === false
+            || ! isset($body_params[self::SCOPE])
         ) {
             throw new ForbiddenException();
         }
+        $this->validateStringArray($body_params[self::SCOPE]);
         return $body_params;
+    }
+
+    /**
+     * @psalm-assert string[] $scope_keys
+     * @throws ForbiddenException
+     */
+    public function validateStringArray(array $scope_keys)
+    {
+        foreach ($scope_keys as $scope_key) {
+            if (! is_string($scope_key)) {
+                throw new ForbiddenException();
+            }
+        }
     }
 }

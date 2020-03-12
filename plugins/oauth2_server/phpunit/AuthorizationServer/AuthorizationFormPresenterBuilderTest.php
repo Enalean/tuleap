@@ -29,6 +29,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationFormPresenterBuilderTest extends TestCase
 {
@@ -48,10 +49,11 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
 
     public function testBuild(): void
     {
-        $foobar_definition    = new class implements AuthenticationScopeDefinition {
+        $foobar_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar');
+        $foobar_definition = new class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
-                return 'foo:bar';
+                return 'Foo Bar';
             }
 
             public function getDescription(): string
@@ -59,14 +61,14 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
                 return 'Test scope';
             }
         };
-        $foobar_scope         = M::mock(AuthenticationScope::class)->shouldReceive('getDefinition')
-            ->once()
-            ->andReturn($foobar_definition)
-            ->getMock();
+        $foobar_scope      = M::mock(AuthenticationScope::class);
+        $foobar_scope->shouldReceive('getDefinition')->once()->andReturn($foobar_definition);
+        $foobar_scope->shouldReceive('getIdentifier')->once()->andReturn($foobar_identifier);
+        $typevalue_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
         $typevalue_definition = new class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
-                return 'type:value';
+                return 'Type Value';
             }
 
             public function getDescription(): string
@@ -74,12 +76,11 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
                 return 'Other test scope';
             }
         };
-        $typevalue_scope      = M::mock(AuthenticationScope::class)->shouldReceive('getDefinition')
-            ->once()
-            ->andReturn($typevalue_definition)
-            ->getMock();
-        $redirect_uri         = 'https://example.com';
-        $state_value          = 'xyz';
+        $typevalue_scope      = M::mock(AuthenticationScope::class);
+        $typevalue_scope->shouldReceive('getDefinition')->once()->andReturn($typevalue_definition);
+        $typevalue_scope->shouldReceive('getIdentifier')->once()->andReturn($typevalue_identifier);
+        $redirect_uri = 'https://example.com';
+        $state_value  = 'xyz';
 
         $form_data = new AuthorizationFormData(
             new OAuth2App(
@@ -97,11 +98,19 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
         $presenter = $this->builder->build($form_data);
         $this->assertContainsEquals(
             new OAuth2ScopeDefinitionPresenter($foobar_definition),
-            $presenter->scope_presenters
+            $presenter->scope_definition_presenters
         );
         $this->assertContainsEquals(
             new OAuth2ScopeDefinitionPresenter($typevalue_definition),
-            $presenter->scope_presenters
+            $presenter->scope_definition_presenters
+        );
+        $this->assertContainsEquals(
+            new OAuth2ScopeIdentifierPresenter($foobar_identifier),
+            $presenter->scope_identifier_presenters
+        );
+        $this->assertContainsEquals(
+            new OAuth2ScopeIdentifierPresenter($typevalue_identifier),
+            $presenter->scope_identifier_presenters
         );
         $this->assertSame('Jenkins', $presenter->app_name);
         $this->assertSame('Test Project', $presenter->project_name);

@@ -22,22 +22,46 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
+use Tuleap\DB\DBTransactionExecutor;
+
 class AuthorizationManager
 {
     /**
+     * @var DBTransactionExecutor
+     */
+    private $executor;
+    /**
      * @var AuthorizationDao
      */
-    private $dao;
+    private $authorization_dao;
+    /**
+     * @var AuthorizationScopeDao
+     */
+    private $scope_dao;
 
-    public function __construct(AuthorizationDao $dao)
-    {
-        $this->dao = $dao;
+    public function __construct(
+        DBTransactionExecutor $executor,
+        AuthorizationDao $authorization_dao,
+        AuthorizationScopeDao $scope_dao
+    ) {
+        $this->executor = $executor;
+        $this->authorization_dao = $authorization_dao;
+        $this->scope_dao = $scope_dao;
     }
 
-    public function saveAuthorization(\PFUser $user, int $app_id): void
+    public function saveAuthorization(NewAuthorization $new_authorization): void
     {
-        if (! $this->dao->doesAuthorizationExist($user, $app_id)) {
-            $this->dao->create($user, $app_id);
-        }
+        $this->executor->execute(
+            function () use ($new_authorization) {
+                $user             = $new_authorization->getUser();
+                $app_id           = $new_authorization->getAppId();
+                $authorization_id = $this->authorization_dao->searchAuthorization($user, $app_id);
+                if ($authorization_id === null) {
+                    $authorization_id = $this->authorization_dao->create($user, $app_id);
+                }
+                $this->scope_dao->deleteForAuthorization($authorization_id);
+                $this->scope_dao->createMany($authorization_id, ...$new_authorization->getScopeIdentifiers());
+            }
+        );
     }
 }

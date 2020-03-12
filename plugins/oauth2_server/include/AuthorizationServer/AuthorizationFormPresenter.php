@@ -60,21 +60,32 @@ final class AuthorizationFormPresenter
     /**
      * @var OAuth2ScopeDefinitionPresenter[]
      */
-    public $scope_presenters;
+    public $scope_definition_presenters;
+    /**
+     * @var OAuth2ScopeIdentifierPresenter[]
+     */
+    public $scope_identifier_presenters;
 
+    /**
+     * @psalm-param list<OAuth2ScopeDefinitionPresenter> $scope_definition_presenters
+     * @psalm-param list<OAuth2ScopeIdentifierPresenter> $scope_identifier_presenters
+     */
     public function __construct(
         AuthorizationFormData $data,
         UriInterface $deny_authorization_uri,
-        OAuth2ScopeDefinitionPresenter ...$scope_presenters
+        array $scope_definition_presenters,
+        array $scope_identifier_presenters
     ) {
-        $app                          = $data->getApp();
-        $this->app_id                 = $app->getId();
-        $this->app_name               = $app->getName();
-        $this->project_name           = $app->getProject()->getPublicName();
-        $this->csrf_token             = $data->getCSRFToken();
-        $this->state                  = $data->getState();
-        $this->redirect_uri           = $data->getRedirectUri();
-        $this->deny_authorization_uri = $deny_authorization_uri;
-        $this->scope_presenters       = $scope_presenters;
+        $app = $data->getApp();
+
+        $this->app_id                      = $app->getId();
+        $this->app_name                    = $app->getName();
+        $this->project_name                = $app->getProject()->getPublicName();
+        $this->csrf_token                  = $data->getCSRFToken();
+        $this->state                       = $data->getState();
+        $this->redirect_uri                = $data->getRedirectUri();
+        $this->deny_authorization_uri      = $deny_authorization_uri;
+        $this->scope_definition_presenters = $scope_definition_presenters;
+        $this->scope_identifier_presenters = $scope_identifier_presenters;
     }
 }
