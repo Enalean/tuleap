@@ -69,13 +69,14 @@ class PluginHudsonJobDao extends DataAccessObject
     * Searches PluginHudsonJob by job name
     * @return DataAccessResult
     */
-    public function searchByJobName($job_name)
+    public function searchByJobName($job_name, $group_id)
     {
         $sql = sprintf(
             "SELECT *
                         FROM plugin_hudson_job
-                        WHERE name = %s",
-            $this->da->quoteSmart($job_name)
+                        WHERE name = %s AND group_id = %s",
+            $this->da->quoteSmart($job_name),
+            $this->da->quoteSmart($group_id)
         );
         return $this->retrieve($sql);
     }
