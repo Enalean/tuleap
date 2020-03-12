@@ -90,6 +90,9 @@ msgstr "Projet"
 msgid "Shortname"
 msgstr "Nom court"
 
+msgid "Source project"
+msgstr "Projet source"
+
 msgid "Switch to legacy UI"
 msgstr "Basculer sur l'ancienne interface utilisateur"
 
