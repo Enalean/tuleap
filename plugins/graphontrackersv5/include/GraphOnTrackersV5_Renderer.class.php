@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
@@ -26,6 +27,7 @@ use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
 require_once(TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php');
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 {
 
@@ -91,7 +93,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         $readonly = !$report_can_be_modified || $user->isAnonymous();
 
         if (!$readonly && $this->chart_to_edit) {
-            $html .= '<script type="text/javascript" src="/plugins/graphontrackersv5/dependencies.js"></script>';
+            $html .= $this->getAssets()->getHTMLSnippet('dependencies.js');
 
             $url = '?'. http_build_query(array(
                                                'report'   => $this->report->id,
@@ -417,24 +419,23 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         return 'fa fa-bar-chart-o';
     }
 
-    public function getJavascriptDependencies()
+    public function getJavascriptDependencies(): array
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/graphontrackersv5/scripts',
-            '/assets/graphontrackersv5/scripts'
-        );
         return [
-            ['file' => $include_assets->getFileURL('graphontrackersv5.js')]
+            ['file' => $this->getAssets()->getFileURL('graphontrackersv5.js')]
         ];
     }
 
-    /** @return \Tuleap\Layout\CssAssetCollection */
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies(): CssAssetCollection
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/graphontrackersv5/themes',
-            '/assets/graphontrackersv5/themes'
+        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style')]);
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/graphontrackersv5',
+            '/assets/graphontrackersv5'
         );
-        return new \Tuleap\Layout\CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($include_assets, 'style')]);
     }
 }

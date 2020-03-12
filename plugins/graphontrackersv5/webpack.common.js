@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,36 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+
+const context = __dirname;
+const output = webpack_configurator.configureOutput(
+    path.resolve(__dirname, "../../src/www/assets/graphontrackersv5")
+);
 
 module.exports = [
     {
         entry: {
-            style: "./default/css/style.scss"
+            graphontrackersv5: "./scripts/src/loadGraphs.js",
+            dependencies: "./scripts/dependencies.js",
+            style: "./themes/default/css/style.scss"
         },
-        context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/graphontrackersv5/themes/")
-        ),
+        context,
+        output,
+        resolve: {
+            alias: webpack_configurator.tlp_fetch_alias
+        },
         module: {
-            rules: [webpack_configurator.rule_scss_loader]
+            rules: [
+                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+                webpack_configurator.rule_po_files,
+                webpack_configurator.rule_scss_loader
+            ]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            webpack_configurator.getMomentLocalePlugin(),
             ...webpack_configurator.getCSSExtractionPlugins()
         ]
     }
