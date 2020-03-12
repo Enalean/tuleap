@@ -22,11 +22,11 @@ namespace Tuleap\BotMattermostGit\SenderServices;
 
 use GitRepository;
 use Git_GitRepositoryUrlManager;
+use PFUser;
 use Psr\Log\LoggerInterface;
 
 class GitNotificationBuilder
 {
-
     private $git_repository_url_manager;
     private $logger;
 
@@ -36,18 +36,17 @@ class GitNotificationBuilder
         $this->logger                     = $logger;
     }
 
-    public function buildNotificationText(array $params)
+    public function buildNotificationText(GitRepository $repository, PFUser $user, string $newrev, string $refname): string
     {
-        $repository = $params['repository'];
         $this->logger->debug('git repository: #'.$repository->getId().' '.$repository->getName());
-        $link       = $this->makeLinkReview($repository, $params['newrev']);
+        $link       = $this->makeLinkReview($repository, $newrev);
 
-        return $params['user']->getName()." ".
+        return $user->getName()." ".
         $GLOBALS['Language']->getText('plugin_botmattermost_git', 'push_notification_text').
-        " : $link ".$params['refname'];
+        " : $link ".$refname;
     }
 
-    private function makeLinkReview(GitRepository $repository, $review)
+    private function makeLinkReview(GitRepository $repository, $review): string
     {
         $url_review = $repository->getDiffLink($this->git_repository_url_manager, $review);
 

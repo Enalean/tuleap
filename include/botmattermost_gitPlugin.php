@@ -34,6 +34,7 @@ use Tuleap\BotMattermostGit\SenderServices\GitNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\GitNotificationSender;
 use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationSender;
+use Tuleap\Git\Hook\PostReceiveExecuteEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\PullRequest\GetCreatePullRequest;
@@ -67,7 +68,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(GIT_ADDITIONAL_NOTIFICATIONS);
-            $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE);
+            $this->addHook(PostReceiveExecuteEvent::NAME);
             $this->listenToCollectRouteEventWithDefaultController();
         }
         if (defined('PULLREQUEST_BASE_DIR')) {
@@ -102,11 +103,11 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function git_hook_post_receive_ref_update(array $params)
+    public function postReceiveExecuteEvent(PostReceiveExecuteEvent $event): void
     {
-        $repository = $params['repository'];
+        $repository = $event->getRepository();
         $logger = $this->getLogger();
-        if ($this->isAllowed($repository->getProjectId())) {
+        if ($this->isAllowed($repository->getProjectId()) && ! $event->isATechnicalReference()) {
             $git_notification_sender = new GitNotificationSender(
                 $this->getSender($logger),
                 $this->getFactory(),
@@ -117,7 +118,12 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
                 )
             );
 
-            $git_notification_sender->process($params);
+            $git_notification_sender->process(
+                $repository,
+                $event->getUser(),
+                $event->getNewrev(),
+                $event->getRefname()
+            );
         }
     }
 

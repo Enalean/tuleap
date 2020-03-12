@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\BotMattermostGit\SenderServices;
 
 use GitRepository;
+use PFUser;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\SenderServices\Message;
 use Tuleap\BotMattermost\SenderServices\Sender;
@@ -28,7 +29,6 @@ use Tuleap\BotMattermostGit\BotMattermostGitNotification\Factory;
 
 class GitNotificationSender
 {
-
     private $sender;
     private $bot_git_factory;
     private $repository;
@@ -46,16 +46,16 @@ class GitNotificationSender
         $this->notification_builder = $notification_builder;
     }
 
-    public function process(array $params)
+    public function process(GitRepository $repository, PFUser $user, string $newrev, string $refname): void
     {
-        if ($params['is_technical_reference_update']) {
-            return;
-        }
-
         try {
             $message = new Message();
-
-            $message->setText($this->notification_builder->buildNotificationText($params));
+            $message->setText($this->notification_builder->buildNotificationText(
+                $repository,
+                $user,
+                $newrev,
+                $refname
+            ));
             if ($bot_assignment = $this->bot_git_factory->getBotNotification($this->repository->getId())) {
                 $this->sender->pushNotification($bot_assignment->getBot(), $message, $bot_assignment->getChannels());
             }
