@@ -23,3 +23,8 @@ import jQuery from "jquery";
 (function($): void {
     $("#tracker-creation-success-modal").modal();
 })(jQuery);
+
+const url = new URL(window.location.href);
+url.searchParams.delete("should-display-created-tracker-modal");
+
+history.replaceState("", "", url.pathname + url.search + location.hash);
