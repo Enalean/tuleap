@@ -89,6 +89,12 @@ generate-templates:
 		-o plugins/agiledashboard/www/resources/scrum_dashboard_template.xml
 	xsltproc tools/utils/setup_templates/generate-templates/generate-agile_alm.xml \
 		-o tools/utils/setup_templates/agile_alm/agile_alm_template.xml
+	cp -f tools/utils/setup_templates/generate-templates/trackers/bug.xml \
+		plugins/tracker/www/resources/templates/Tracker_Bugs.xml
+	cp -f tools/utils/setup_templates/generate-templates/trackers/task.xml \
+		plugins/tracker/www/resources/templates/Tracker_Tasks.xml
+	cp -f tools/utils/setup_templates/generate-templates/trackers/story.xml \
+		plugins/tracker/www/resources/templates/Tracker_UserStories.xml
 
 #
 # Tests and all
