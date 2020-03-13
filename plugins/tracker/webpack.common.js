@@ -129,6 +129,8 @@ const config_for_legacy_scripts = {
     plugins: [
         ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
             "tracker.js": [
+                "./scripts/legacy/TrackerTemplateSelector.js",
+                "./scripts/legacy/TrackerCheckUgroupConsistency.js",
                 "./scripts/legacy/TrackerReports.js",
                 "./scripts/legacy/TrackerEmailCopyPaste.js",
                 "./scripts/legacy/TrackerReportsSaveAsModal.js",
