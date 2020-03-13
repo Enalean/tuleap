@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,5 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('LABEL_BASE_DIR', realpath(__DIR__.'/..'));
-define('LABEL_BASE_URL', '/plugins/label');
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+
+module.exports = webpack_configurator.extendDevConfiguration(common);
