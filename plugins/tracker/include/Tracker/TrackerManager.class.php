@@ -504,9 +504,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     {
         $hp = Codendi_HTMLPurifier::instance();
 
-        $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerTemplateSelector.js');
-        $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerCheckUgroupConsistency.js');
-
         $js = '';
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId(100);
         foreach ($trackers as $tracker) {
