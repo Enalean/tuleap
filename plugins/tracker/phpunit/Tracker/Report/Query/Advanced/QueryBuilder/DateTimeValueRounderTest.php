@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,83 +19,80 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../../../bootstrap.php';
-
-class DateTimeValueRounderTest extends TuleapTestCase
+final class DateTimeValueRounderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     private $previous_timezone;
     /** @var DateTimeValueRounder */
     private $date_time_value_rounder;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
         $this->previous_timezone = date_default_timezone_get();
         date_default_timezone_set('UTC');
         $this->date_time_value_rounder = new DateTimeValueRounder();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         date_default_timezone_set($this->previous_timezone);
-
-        parent::tearDown();
     }
 
-    public function itReturnsAFlooredTimestampFromADateString()
+    public function testItReturnsAFlooredTimestampFromADateString(): void
     {
         $timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDate('2017-01-24');
 
         $timestamp_at_midnight = 1485216000;
 
-        $this->assertEqual($timestamp, $timestamp_at_midnight);
+        $this->assertEquals($timestamp_at_midnight, $timestamp);
     }
 
-    public function itReturnsAFlooredTimestampFromADateTimeString()
+    public function testItReturnsAFlooredTimestampFromADateTimeString(): void
     {
         $timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime('2017-01-12 01:15');
 
         $timestamp_at_one_fifteen = 1484183700;
 
-        $this->assertEqual($timestamp, $timestamp_at_one_fifteen);
+        $this->assertEquals($timestamp_at_one_fifteen, $timestamp);
     }
 
-    public function itReturnsATimestampFlooredToTheDayFromADateString()
+    public function testItReturnsATimestampFlooredToTheDayFromADateString(): void
     {
         $timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime('2013-06-19');
 
         $timestamp_at_midnight = 1371600000;
 
-        $this->assertEqual($timestamp, $timestamp_at_midnight);
+        $this->assertEquals($timestamp_at_midnight, $timestamp);
     }
 
-    public function itReturnsACeiledTimestampFromADateString()
+    public function testItReturnsACeiledTimestampFromADateString(): void
     {
         $timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDate('2017-03-13');
 
         $timestamp_at_twenty_three_fifty_nine_fifty_nine = 1489449599;
 
-        $this->assertEqual($timestamp, $timestamp_at_twenty_three_fifty_nine_fifty_nine);
+        $this->assertEquals($timestamp_at_twenty_three_fifty_nine_fifty_nine, $timestamp);
     }
 
-    public function itReturnsACeiledTimestampFromADatetimeString()
+    public function testItReturnsACeiledTimestampFromADatetimeString(): void
     {
         $timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime('2016-12-23 21:39');
 
         $timestamp_at_twenty_one_thirty_nine_fifty_nine = 1482529199;
 
-        $this->assertEqual($timestamp, $timestamp_at_twenty_one_thirty_nine_fifty_nine);
+        $this->assertEquals($timestamp_at_twenty_one_thirty_nine_fifty_nine, $timestamp);
     }
 
-    public function itReturnsATimestampCeiledToTheDayFromADateString()
+    public function testItReturnsATimestampCeiledToTheDayFromADateString(): void
     {
         $timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime('2010-09-23');
 
         $timestamp_at_twenty_three_fifty_nine_fifty_nine = 1285286399;
 
-        $this->assertEqual($timestamp, $timestamp_at_twenty_three_fifty_nine_fifty_nine);
+        $this->assertEquals($timestamp_at_twenty_three_fifty_nine_fifty_nine, $timestamp);
     }
 }

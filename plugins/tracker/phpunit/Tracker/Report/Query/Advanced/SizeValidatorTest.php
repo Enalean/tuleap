@@ -19,42 +19,45 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
-use TuleapTestCase;
 
-require_once __DIR__ . '/../../../../bootstrap.php';
-
-class SizeValidatorTest extends TuleapTestCase
+final class SizeValidatorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+    /**
+     * @var SizeValidatorVisitor
+     */
     private $validator;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
         $this->validator = new SizeValidatorVisitor(2);
     }
 
-    public function itDoesNotThrowAnExceptionIfDeptDoesNotExceedLimit()
+    public function testItDoesNotThrowAnExceptionIfDeptDoesNotExceedLimit(): void
     {
-        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
-        $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
+        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
+        $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
         $expression    = new AndExpression($subexpression, $tail);
 
         $expression->accept($this->validator, new SizeValidatorParameters(0));
+
+        $this->addToAssertionCount(1);
     }
 
-    public function itThrowsAnExceptionIfDepthExceedLimit()
+    public function testItThrowsAnExceptionIfDepthExceedLimit(): void
     {
         $comparison    = new EqualComparison(new Field("field"), new SimpleValueWrapper('value'));
         $subexpression = new AndExpression($comparison, null);
         $expression    = new OrExpression($subexpression, null);
 
-        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException');
+        $this->expectException(\Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException::class);
         $expression->accept($this->validator, new SizeValidatorParameters(0));
     }
 }

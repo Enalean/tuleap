@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,22 +19,22 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../../../bootstrap.php';
-
-class ParserTest extends TuleapTestCase
+final class ParserTest extends TestCase
 {
-    public function itThrowsASyntaxErrorIfQueryIsEmpty()
+    use MockeryPHPUnitIntegration;
+    public function testItThrowsASyntaxErrorIfQueryIsEmpty(): void
     {
-        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError');
+        $this->expectException(\Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError::class);
 
         $parser = new Parser();
 
         $parser->parse("");
     }
 
-    public function itParsesASimpleQuery()
+    public function testItParsesASimpleQuery(): void
     {
         $parser = new Parser();
 
@@ -48,13 +48,15 @@ class ParserTest extends TuleapTestCase
             null
         );
 
-        $this->assertEqual($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 
-    public function itDoesNotFailIfFieldNameContainsDigits()
+    public function testItDoesNotFailIfFieldNameContainsDigits(): void
     {
         $parser = new Parser();
 
         $parser->parse('field_1 = "value"');
+
+        $this->addToAssertionCount(1);
     }
 }

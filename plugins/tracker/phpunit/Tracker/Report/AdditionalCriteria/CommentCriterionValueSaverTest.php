@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,44 +19,51 @@
 
 namespace Tuleap\Tracker\Report\AdditionalCriteria;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tracker_Report_AdditionalCriterion;
-use TuleapTestCase;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-class CommentCriterionValueSaverTest extends TuleapTestCase
+final class CommentCriterionValueSaverTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|null
+     */
+    private $report;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CommentDao
+     */
+    private $dao;
     /**
      * @var CommentCriterionValueSaver;
      */
     private $saver;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->dao   = \Mockery::mock('Tuleap\Tracker\Report\AdditionalCriteria\CommentDao');
+        $this->dao   = \Mockery::mock(CommentDao::class);
         $this->saver = new CommentCriterionValueSaver($this->dao);
 
-        $this->report = stub('Tracker_Report')->getId()->returns(1);
+        $this->report = \Mockery::spy(\Tracker_Report::class)->shouldReceive('getId')->andReturns(1)->getMock();
     }
 
-    public function itSavesNewValue()
+    public function testItSavesNewValue(): void
     {
         $criterion = new Tracker_Report_AdditionalCriterion('comment', 'my text');
 
-        expect($this->dao)->save(1, 'my text')->once();
-        expect($this->dao)->delete()->never();
+        $this->dao->shouldReceive('save')->with(1, 'my text')->once();
+        $this->dao->shouldReceive('delete')->never();
 
         $this->saver->saveValueForReport($this->report, $criterion);
     }
 
-    public function itDeletesValueIfTextIsEmpty()
+    public function testItDeletesValueIfTextIsEmpty(): void
     {
         $criterion = new Tracker_Report_AdditionalCriterion('comment', '');
 
-        expect($this->dao)->save()->never();
-        expect($this->dao)->delete(1)->once();
+        $this->dao->shouldReceive('save')->never();
+        $this->dao->shouldReceive('delete')->with(1)->once();
 
         $this->saver->saveValueForReport($this->report, $criterion);
     }
