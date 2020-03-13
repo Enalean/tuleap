@@ -1,0 +1,33 @@
+version: "2.1"
+
+services:
+  tests:
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-test-soap:5
+    environment:
+      - DB_HOST=${DB_HOST}
+    volumes:
+      - ${BASEDIR}:/usr/share/tuleap:ro,cached
+    networks:
+      default:
+        aliases:
+          - mail
+
+  mysql57:
+    image: ${DOCKER_REGISTRY:-docker.io}/mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=welcome0
+    volumes:
+      - ../etc/DBConfig/mysql-server.cnf:/etc/mysql/mysql.conf.d/mysql-server.cnf:ro,cached
+    tmpfs: /tmp
+
+  mariadb-10.3:
+    image: ${DOCKER_REGISTRY:-docker.io}/mariadb:10.3
+    environment:
+    - MYSQL_ROOT_PASSWORD=welcome0
+    volumes:
+      - ../etc/DBConfig/mysql-server.cnf:/etc/mysql/mariadb.conf.d/mysql-server.cnf:ro,cached
+    tmpfs: /tmp
+
+networks:
+  default:
+    internal: true

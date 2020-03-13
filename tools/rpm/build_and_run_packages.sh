@@ -69,5 +69,5 @@ if [ "$OS" == "centos7" ]; then
     docker logs -f rpm-installer | tee >( grep -q 'Started Install and run Tuleap.' ) || true
     docker exec -ti rpm-installer bash
 else
-    docker run --rm -ti --name rpm-installer --volumes-from rpm-builder enalean/tuleap-installrpms:centos6
+    docker run --rm -ti --name rpm-installer -e DB=mysql57 --volumes-from rpm-builder enalean/tuleap-installrpms:centos6
 fi

@@ -296,7 +296,7 @@ CREATE TABLE tracker_changeset_comment_fulltext(
     comment_id INT(11) NOT NULL PRIMARY KEY,
     stripped_body TEXT DEFAULT NULL,
     FULLTEXT stripped_body_idx(stripped_body)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_changeset_incomingmail;
 CREATE TABLE tracker_changeset_incomingmail(

@@ -14,4 +14,4 @@ CREATE TABLE plugin_userlog_request (
   KEY idx_time (time),
   KEY idx_group_id (group_id),
   KEY idx_user_id(user_id)
-) ENGINE=MyISAM;
+);

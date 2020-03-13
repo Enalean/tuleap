@@ -88,9 +88,9 @@ pipeline {
                 }
                 stage('SOAP') {
                     stages {
-                        stage('SOAP PHP 7.3') { steps { script { actions.runSOAPTests('php-73', '5') } } }
+                        stage('SOAP PHP 7.3') { steps { script { actions.runSOAPTests('mysql57', '73') } } }
                     }
-                    post { always { junit "results/api-soap/*/soap_tests.xml" } }
+                    post { always { junit "results/soap/*/soap_tests.xml" } }
                 }
                 stage('Build and run CentOS 6') { steps { script { actions.runBuildAndRun('centos6') } } }
                 stage('Build and run CentOS 7') { steps { script { actions.runBuildAndRun('centos7') } } }

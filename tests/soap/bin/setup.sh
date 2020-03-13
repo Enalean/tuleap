@@ -20,10 +20,11 @@ setup_tuleap() {
 
     cat /usr/share/tuleap/src/etc/database.inc.dist | \
         sed \
+         -e "s/localhost/$DB_HOST/" \
 	     -e "s/%sys_dbname%/tuleap/" \
 	     -e "s/%sys_dbuser%/tuleapadm/" \
 	     -e "s/%sys_dbpasswd%/welcome0/" > /etc/tuleap/conf/database.inc
-    chgrp runner /etc/tuleap/conf/database.inc
+     chgrp runner /etc/tuleap/conf/database.inc
 
     cat /usr/share/tuleap/src/etc/local.inc.dist | \
 	sed \
@@ -61,23 +62,17 @@ setup_tuleap() {
 }
 
 setup_database() {
-    MYSQL_HOST=localhost
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
-    MYSQL="mysql -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
-    echo "Setup database $MYSQL_DAEMON"
-    service $MYSQL_DAEMON start
-    mysql -e "GRANT ALL PRIVILEGES on *.* to '$MYSQL_USER'@'$MYSQL_HOST' identified by '$MYSQL_PASSWORD'"
-    $MYSQL -e "DROP DATABASE IF EXISTS $MYSQL_DBNAME"
-    $MYSQL -e "CREATE DATABASE $MYSQL_DBNAME CHARACTER SET utf8"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_structure.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_initvalues.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3structure.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3values.sql"
+    MYSQLROOT="mysql -h$DB_HOST -uroot -pwelcome0"
 
-    mysql -e "FLUSH PRIVILEGES;"
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init --host="$DB_HOST" --user=root --password=welcome0 "$MYSQL_PASSWORD" "$MYSQL_DBNAME" "$MYSQL_USER@%"
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql --host="$DB_HOST" --user="$MYSQL_USER" --dbname="$MYSQL_DBNAME" --password="$MYSQL_PASSWORD" welcome0 localhost
+
+    $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3structure.sql"
+    $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3values.sql"
 }
 
 load_project() {
