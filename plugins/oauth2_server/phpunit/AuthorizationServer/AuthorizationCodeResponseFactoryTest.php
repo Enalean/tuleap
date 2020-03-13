@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -66,6 +67,7 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
         );
 
         $response = $this->authorization_code_response_factory->createSuccessfulResponse(
+            $this->buildOAuth2App(),
             UserTestBuilder::aUser()->withId(102)->build(),
             'https://example.com',
             null
@@ -84,6 +86,7 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
         );
 
         $response = $this->authorization_code_response_factory->createSuccessfulResponse(
+            $this->buildOAuth2App(),
             UserTestBuilder::aUser()->withId(102)->build(),
             'https://example.com',
             '6k9Sfw'
@@ -129,5 +132,10 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
         $response = $this->authorization_code_response_factory->createRedirectToLoginResponse($request);
         $this->assertSame(302, $response->getStatusCode());
         $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    private function buildOAuth2App(): OAuth2App
+    {
+        return new OAuth2App(1, 'Name', 'https://example.com/redirect', new \Project(['group_id' => 102]));
     }
 }

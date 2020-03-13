@@ -26,6 +26,10 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\OAuth2Server\App\AppFactory;
+use Tuleap\OAuth2Server\App\ClientIdentifier;
+use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
+use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\User\AuthorizationCreator;
 use Tuleap\OAuth2Server\User\NewAuthorization;
 use Tuleap\Request\DispatchablePSR15Compatible;
@@ -35,15 +39,19 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 final class AuthorizationEndpointPostController extends DispatchablePSR15Compatible
 {
     // We can name those however we want, they are not constrained by the spec.
-    private const REDIRECT_URI = 'redirect_uri';
-    private const STATE        = 'state';
-    private const APP_ID       = 'app_id';
-    private const SCOPE        = 'scope';
+    private const REDIRECT_URI   = 'redirect_uri';
+    private const STATE          = 'state';
+    private const APP_IDENTIFIER = 'app_identifier';
+    private const SCOPE          = 'scope';
 
     /**
      * @var \UserManager
      */
     private $user_manager;
+    /**
+     * @var AppFactory
+     */
+    private $app_factory;
     /**
      * @var AuthorizationCreator
      */
@@ -59,6 +67,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
 
     public function __construct(
         \UserManager $user_manager,
+        AppFactory $app_factory,
         AuthorizationCreator $authorization_creator,
         AuthorizationCodeResponseFactory $response_creator,
         \CSRFSynchronizerToken $csrf_token,
@@ -67,6 +76,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->user_manager          = $user_manager;
+        $this->app_factory           = $app_factory;
         $this->authorization_creator = $authorization_creator;
         $this->response_creator      = $response_creator;
         $this->csrf_token            = $csrf_token;
@@ -84,20 +94,29 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
         $body_params = $this->getValidBodyParameters($request);
         $this->csrf_token->check();
 
+        $client_id = (string) $body_params[self::APP_IDENTIFIER];
+
+        try {
+            $client_identifier = ClientIdentifier::fromClientId($client_id);
+            $client_app        = $this->app_factory->getAppMatchingClientId($client_identifier);
+        } catch (InvalidClientIdentifierKey | OAuth2AppNotFoundException $exception) {
+            throw new ForbiddenException();
+        }
+
         $scope_identifiers = [];
         foreach ($body_params[self::SCOPE] as $scope_key) {
             $scope_identifiers[] = OAuth2ScopeIdentifier::fromIdentifierKey($scope_key);
         }
-        $new_authorization = new NewAuthorization($user, (int) $body_params[self::APP_ID], ...$scope_identifiers);
+        $new_authorization = new NewAuthorization($user, $client_app->getId(), ...$scope_identifiers);
         $this->authorization_creator->saveAuthorization($new_authorization);
 
         $redirect_uri = $body_params[self::REDIRECT_URI];
         $state_value  = $body_params[self::STATE] ?? null;
-        return $this->response_creator->createSuccessfulResponse($user, $redirect_uri, $state_value);
+        return $this->response_creator->createSuccessfulResponse($client_app, $user, $redirect_uri, $state_value);
     }
 
     /**
-     * @psalm-return array{redirect_uri:string, app_id:mixed, scope:string[]}
+     * @psalm-return array{redirect_uri:string, app_identifier:mixed, scope:string[]}
      * @throws ForbiddenException
      */
     private function getValidBodyParameters(ServerRequestInterface $request): array
@@ -106,8 +125,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
         if (! is_array($body_params)
             || ! isset($body_params[self::REDIRECT_URI])
             || ! is_string($body_params[self::REDIRECT_URI])
-            || ! isset($body_params[self::APP_ID])
-            || filter_var($body_params[self::APP_ID], FILTER_VALIDATE_INT) === false
+            || ! isset($body_params[self::APP_IDENTIFIER])
             || ! isset($body_params[self::SCOPE])
         ) {
             throw new ForbiddenException();

@@ -28,6 +28,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OAuth2Server\App\OAuth2App;
 
 class OAuth2AuthorizationCodeCreator
 {
@@ -61,12 +62,13 @@ class OAuth2AuthorizationCodeCreator
         $this->access_token_expiration_delay = $access_token_expiration_delay;
     }
 
-    public function createAuthorizationCodeIdentifier(\DateTimeImmutable $current_time, \PFUser $user): ConcealedString
+    public function createAuthorizationCodeIdentifier(\DateTimeImmutable $current_time, OAuth2App $app, \PFUser $user): ConcealedString
     {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $expiration_date     = $current_time->add($this->access_token_expiration_delay);
 
         $authorization_code_id = $this->authorization_code_dao->create(
+            $app->getId(),
             (int) $user->getId(),
             $this->hasher->computeHash($verification_string),
             $expiration_date->getTimestamp()

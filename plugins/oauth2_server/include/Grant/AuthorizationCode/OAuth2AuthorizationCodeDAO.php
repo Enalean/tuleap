@@ -26,11 +26,12 @@ use Tuleap\DB\DataAccessObject;
 
 class OAuth2AuthorizationCodeDAO extends DataAccessObject
 {
-    public function create(int $user_id, string $hashed_verification_string, int $expiration_date_timestamp): int
+    public function create(int $app_id, int $user_id, string $hashed_verification_string, int $expiration_date_timestamp): int
     {
         return (int) $this->getDB()->insertReturnId(
             'plugin_oauth2_authorization_code',
             [
+                'app_id'                => $app_id,
                 'user_id'               => $user_id,
                 'verifier'              => $hashed_verification_string,
                 'expiration_date'       => $expiration_date_timestamp,
@@ -45,7 +46,11 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     public function searchAuthorizationCode(int $authorization_code_id): ?array
     {
         return $this->getDB()->row(
-            'SELECT verifier, user_id, expiration_date, has_already_been_used FROM plugin_oauth2_authorization_code WHERE id = ?',
+            'SELECT plugin_oauth2_authorization_code.verifier, user_id, expiration_date, has_already_been_used
+                       FROM plugin_oauth2_authorization_code
+                       JOIN plugin_oauth2_server_app ON plugin_oauth2_authorization_code.app_id = plugin_oauth2_server_app.id
+                       JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
+                       WHERE plugin_oauth2_authorization_code.id = ? AND `groups`.status = "A"',
             $authorization_code_id
         );
     }

@@ -23,17 +23,67 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use PHPUnit\Framework\TestCase;
+use Project;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenAuthorizationGrantAssociationDAO;
+use Tuleap\OAuth2Server\App\AppDao;
+use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 
 final class OAuth2AuthorizationCodeDAOTest extends TestCase
 {
     /**
+     * @var int
+     */
+    private static $active_project_id;
+    /**
+     * @var int
+     */
+    private static $deleted_project_id;
+    /**
+     * @var int
+     */
+    private static $active_project_app_id;
+    /**
+     * @var int
+     */
+    private static $deleted_project_app_id;
+    /**
      * @var OAuth2AuthorizationCodeDAO
      */
     private $dao;
+
+    public static function setUpBeforeClass(): void
+    {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        self::$active_project_id = (int) $db->insertReturnId(
+            'groups',
+            ['group_name' => 'auth_code_dao_active_test', 'status' => Project::STATUS_ACTIVE]
+        );
+        self::$deleted_project_id = (int) $db->insertReturnId(
+            'groups',
+            ['group_name' => 'auth_code_dao_deleted_test', 'status' => Project::STATUS_DELETED]
+        );
+        $app_dao = new AppDao();
+        self::$active_project_app_id = $app_dao->create(
+            NewOAuth2App::fromAppData(
+                'Name',
+                'https://example.com',
+                new \Project(['group_id' => self::$active_project_id]),
+                new SplitTokenVerificationStringHasher()
+            )
+        );
+        self::$deleted_project_app_id = $app_dao->create(
+            NewOAuth2App::fromAppData(
+                'Name',
+                'https://example.com',
+                new \Project(['group_id' => self::$deleted_project_id]),
+                new SplitTokenVerificationStringHasher()
+            )
+        );
+    }
 
     protected function setUp(): void
     {
@@ -49,6 +99,16 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
         $db->delete('oauth2_access_token_scope', []);
     }
 
+    public static function tearDownAfterClass() : void
+    {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->delete('groups', ['group_id' => self::$active_project_id]);
+        $db->delete('groups', ['group_id' => self::$deleted_project_id]);
+        $app_dao = new AppDao();
+        $app_dao->delete(self::$active_project_app_id);
+        $app_dao->delete(self::$deleted_project_app_id);
+    }
+
     public function testAnAuthorizationCodeCanBeCreatedAndRemoved(): void
     {
         $user_id              = 102;
@@ -56,6 +116,7 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
         $expiration_timestamp = 20;
 
         $auth_code_id = $this->dao->create(
+            self::$active_project_app_id,
             $user_id,
             $verification_string,
             $expiration_timestamp
@@ -74,7 +135,7 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
 
     public function testDeletingAnAuthorizationCodeDeletesTheAssociatedTokens(): void
     {
-        $auth_code_id = $this->dao->create(102, 'hashed_verification_string_auth', 20);
+        $auth_code_id = $this->dao->create(self::$active_project_app_id, 102, 'hashed_verification_string_auth', 20);
 
         $access_token_dao  = new OAuth2AccessTokenDAO();
         $access_token_id_1 = $access_token_dao->create(102, 'hashed_verification_string_access', 30);
@@ -101,5 +162,21 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
         $this->assertNull($access_token_dao->searchAccessToken($access_token_id_1));
         $this->assertNull($access_token_dao->searchAccessToken($access_token_id_2));
         $this->assertEmpty($access_token_scope_dao->searchScopeIdentifiersByAccessTokenID($access_token_id_1));
+    }
+
+    public function testAnAuthorizationCodeOfDeletedProjectCannotBeFound(): void
+    {
+        $user_id              = 102;
+        $verification_string  = 'hashed_verification_string';
+        $expiration_timestamp = 20;
+
+        $auth_code_id = $this->dao->create(
+            self::$deleted_project_app_id,
+            $user_id,
+            $verification_string,
+            $expiration_timestamp
+        );
+
+        $this->assertNull($this->dao->searchAuthorizationCode($auth_code_id));
     }
 }

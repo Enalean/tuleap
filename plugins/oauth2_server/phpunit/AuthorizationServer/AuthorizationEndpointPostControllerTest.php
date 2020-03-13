@@ -28,6 +28,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\OAuth2Server\App\AppFactory;
+use Tuleap\OAuth2Server\App\ClientIdentifier;
+use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\User\AuthorizationCreator;
 use Tuleap\OAuth2Server\User\NewAuthorization;
 use Tuleap\Request\ForbiddenException;
@@ -46,6 +50,10 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
      */
     private $user_manager;
     /**
+     * @var M\LegacyMockInterface|M\MockInterface|AppFactory
+     */
+    private $app_factory;
+    /**
      * @var M\LegacyMockInterface|M\MockInterface|AuthorizationCreator
      */
     private $authorization_creator;
@@ -61,11 +69,13 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
     protected function setUp(): void
     {
         $this->user_manager          = M::mock(\UserManager::class);
+        $this->app_factory           = M::mock(AppFactory::class);
         $this->authorization_creator = M::mock(AuthorizationCreator::class);
         $this->response_factory      = M::mock(AuthorizationCodeResponseFactory::class);
         $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
         $this->controller            = new AuthorizationEndpointPostController(
             $this->user_manager,
+            $this->app_factory,
             $this->authorization_creator,
             $this->response_factory,
             $this->csrf_token,
@@ -93,15 +103,42 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
+    public function testHandleThrowsForbiddenWhenTheClientIdentifierCannotBeParsed(): void
+    {
+        $this->user_manager->shouldReceive('getCurrentUser')
+            ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
+        $request = (new NullServerRequest())->withParsedBody(
+            ['redirect_uri' => 'https://example.com', 'app_identifier' => 'invalid_app_identifier', 'scope' => ['foo:bar', 'type:value']]
+        );
+        $this->csrf_token->shouldReceive('check');
+
+        $this->expectException(ForbiddenException::class);
+        $this->controller->handle($request);
+    }
+
+    public function testHandleThrowsForbiddenWhenTheClientIdentifierIsUnknown(): void
+    {
+        $this->user_manager->shouldReceive('getCurrentUser')
+            ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
+        $client_identifier = ClientIdentifier::fromClientId('tlp-client-id-404');
+        $request = (new NullServerRequest())->withParsedBody(
+            ['redirect_uri' => 'https://example.com', 'app_identifier' => $client_identifier->toString(), 'scope' => ['foo:bar', 'type:value']]
+        );
+        $this->csrf_token->shouldReceive('check');
+        $this->app_factory->shouldReceive('getAppMatchingClientId')->andThrow(new OAuth2AppNotFoundException($client_identifier));
+
+        $this->expectException(ForbiddenException::class);
+        $this->controller->handle($request);
+    }
+
     public function dataProviderInvalidBodyParams(): array
     {
         return [
             'No redirect URI'                 => [['state' => 'xyz']],
             'Redirect URI is not a string'    => [['redirect_uri' => false]],
-            'No App ID'                       => [['redirect_uri' => 'https://example.com']],
-            'App ID cannot be cast to int'    => [['redirect_uri' => 'https://example.com', 'app_id' => 'invalid']],
-            'No scopes'                       => [['redirect_uri' => 'https://example.com', 'app_id' => '13']],
-            'Scopes are not array of strings' => [['redirect_uri' => 'https://example.com', 'app_id' => '13', 'scope' => [false]]]
+            'No App identifier'               => [['redirect_uri' => 'https://example.com']],
+            'No scopes'                       => [['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-13']],
+            'Scopes are not array of strings' => [['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-13', 'scope' => [false]]]
         ];
     }
 
@@ -112,6 +149,7 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
     {
         $this->user_manager->shouldReceive('getCurrentUser')
             ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
+        $this->app_factory->shouldReceive('getAppMatchingClientId')->andReturn($this->buildOAuth2App(13));
         $request = (new NullServerRequest())->withParsedBody($body_params);
 
         $this->expectException(ForbiddenException::class);
@@ -123,8 +161,9 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')
             ->andReturn($user);
+        $this->app_factory->shouldReceive('getAppMatchingClientId')->andReturn($this->buildOAuth2App(77));
         $request = (new NullServerRequest())->withParsedBody(
-            ['redirect_uri' => 'https://example.com', 'app_id' => '77', 'scope' => ['foo:bar', 'type:value']]
+            ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-77', 'scope' => ['foo:bar', 'type:value']]
         );
         $this->csrf_token->shouldReceive('check')->once();
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
@@ -144,5 +183,10 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
             );
 
         $this->assertSame($response, $this->controller->handle($request));
+    }
+
+    private function buildOAuth2App(int $id): OAuth2App
+    {
+        return new OAuth2App($id, 'Name', 'https://example.com/redirect', new \Project(['group_id' => 102]));
     }
 }

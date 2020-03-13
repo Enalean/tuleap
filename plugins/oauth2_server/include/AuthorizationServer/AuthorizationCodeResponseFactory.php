@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 
 class AuthorizationCodeResponseFactory
@@ -58,10 +59,11 @@ class AuthorizationCodeResponseFactory
         $this->login_redirect              = $login_redirect;
     }
 
-    public function createSuccessfulResponse(\PFUser $user, string $redirect_uri, ?string $state): ResponseInterface
+    public function createSuccessfulResponse(OAuth2App $app, \PFUser $user, string $redirect_uri, ?string $state): ResponseInterface
     {
         $authorization_code = $this->authorization_code_creator->createAuthorizationCodeIdentifier(
             new \DateTimeImmutable(),
+            $app,
             $user
         );
 
