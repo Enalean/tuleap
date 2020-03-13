@@ -185,6 +185,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
                 'has_already_been_used' => 1
             ]
         );
+        $this->dao->shouldReceive('deleteAuthorizationCodeByID')->with($auth_code->getID())->once();
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
 
         $this->expectException(OAuth2AuthCodeReusedException::class);

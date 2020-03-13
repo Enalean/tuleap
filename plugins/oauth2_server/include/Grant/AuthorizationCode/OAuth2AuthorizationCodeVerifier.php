@@ -62,8 +62,28 @@ class OAuth2AuthorizationCodeVerifier
     /**
      * @throws OAuth2AuthCodeNotFoundException
      * @throws InvalidOAuth2AuthCodeException
+     * @throws OAuth2AuthCodeReusedException
+     * @throws OAuth2AuthCodeExpiredException
+     * @throws OAuth2AuthCodeMatchingUnknownUserException
      */
     public function getAuthorizationCode(SplitToken $auth_code): OAuth2AuthorizationCode
+    {
+        try {
+            return $this->verifyAuthCode($auth_code);
+        } catch (OAuth2AuthCodeReusedException $exception) {
+            $this->authorization_code_dao->deleteAuthorizationCodeByID($auth_code->getID());
+            throw $exception;
+        }
+    }
+
+    /**
+     * @throws OAuth2AuthCodeNotFoundException
+     * @throws InvalidOAuth2AuthCodeException
+     * @throws OAuth2AuthCodeReusedException
+     * @throws OAuth2AuthCodeExpiredException
+     * @throws OAuth2AuthCodeMatchingUnknownUserException
+     */
+    private function verifyAuthCode(SplitToken $auth_code): OAuth2AuthorizationCode
     {
         return $this->db_transaction_executor->execute(
             function () use ($auth_code): OAuth2AuthorizationCode {
