@@ -29,11 +29,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\GlobalLanguageMock;
 
 final class DocmanValidateUploadTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
     protected function tearDown() : void
     {
