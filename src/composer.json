@@ -55,6 +55,7 @@
     "laminas/laminas-mail": "^2.10",
     "league/commonmark": "^1.3",
     "luracast/restler": "dev-master-tuleap#20190410",
+    "monolog/monolog": "^2.0",
     "mustache/mustache": "dev-master-tuleap#master-tuleap-20191219",
     "nikic/fast-route": "^1.2",
     "paragonie/easydb": "^2",
