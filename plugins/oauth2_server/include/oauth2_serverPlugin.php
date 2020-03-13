@@ -175,11 +175,14 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeAuthorizationEndpointGet(): DispatchableWithRequest
     {
-        $response_factory     = HTTPFactoryBuilder::responseFactory();
-        $stream_factory       = HTTPFactoryBuilder::streamFactory();
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory = HTTPFactoryBuilder::streamFactory();
         $redirect_uri_builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
+        $scope_builder = new AuthenticationScopeBuilderFromClassNames(
+            DemoOAuth2Scope::class,
+            OAuth2ProjectReadScope::class
+        );
         return new AuthorizationEndpointGetController(
-            $response_factory,
             new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormRenderer(
                 $response_factory,
                 $stream_factory,
@@ -188,10 +191,22 @@ final class oauth2_serverPlugin extends Plugin
             ),
             \UserManager::instance(),
             new AppFactory(new AppDao(), \ProjectManager::instance()),
-            new \URLRedirect(\EventManager::instance()),
-            $redirect_uri_builder,
-            new \Tuleap\OAuth2Server\AuthorizationServer\ScopeExtractor(
-                new AuthenticationScopeBuilderFromClassNames(DemoOAuth2Scope::class, OAuth2ProjectReadScope::class)
+            new \Tuleap\OAuth2Server\AuthorizationServer\ScopeExtractor($scope_builder),
+            new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationCodeResponseFactory(
+                $response_factory,
+                new OAuth2AuthorizationCodeCreator(
+                    new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
+                    new SplitTokenVerificationStringHasher(),
+                    new OAuth2AuthorizationCodeDAO(),
+                    $this->getAuthorizationCodeValidityInterval()
+                ),
+                $redirect_uri_builder,
+                new \URLRedirect(\EventManager::instance())
+            ),
+            new \Tuleap\OAuth2Server\User\AuthorizationComparator(
+                new \Tuleap\OAuth2Server\User\AuthorizationDao(),
+                new \Tuleap\OAuth2Server\User\AuthorizationScopeDao(),
+                $scope_builder
             ),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
@@ -204,19 +219,22 @@ final class oauth2_serverPlugin extends Plugin
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
         return new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointPostController(
-            $response_factory,
             \UserManager::instance(),
-            new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
-            new OAuth2AuthorizationCodeCreator(
-                new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
-                new SplitTokenVerificationStringHasher(),
-                new OAuth2AuthorizationCodeDAO(),
-                new DateInterval('PT1M')
-            ),
-            new \Tuleap\OAuth2Server\User\AuthorizationManager(
+            new \Tuleap\OAuth2Server\User\AuthorizationCreator(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 new \Tuleap\OAuth2Server\User\AuthorizationDao(),
                 new \Tuleap\OAuth2Server\User\AuthorizationScopeDao()
+            ),
+            new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationCodeResponseFactory(
+                $response_factory,
+                new OAuth2AuthorizationCodeCreator(
+                    new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
+                    new SplitTokenVerificationStringHasher(),
+                    new OAuth2AuthorizationCodeDAO(),
+                    $this->getAuthorizationCodeValidityInterval()
+                ),
+                new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
+                new \URLRedirect(\EventManager::instance())
             ),
             new \CSRFSynchronizerToken(AuthorizationEndpointGetController::CSRF_TOKEN),
             new SapiEmitter(),
@@ -224,6 +242,11 @@ final class oauth2_serverPlugin extends Plugin
             new RejectNonHTTPSRequestMiddleware($response_factory, HTTPFactoryBuilder::streamFactory()),
             new DisableCacheMiddleware()
         );
+    }
+
+    private function getAuthorizationCodeValidityInterval(): DateInterval
+    {
+        return new DateInterval('PT1M');
     }
 
     public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController

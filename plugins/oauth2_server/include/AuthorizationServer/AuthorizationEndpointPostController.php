@@ -23,12 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
-use Tuleap\OAuth2Server\User\AuthorizationManager;
+use Tuleap\OAuth2Server\User\AuthorizationCreator;
 use Tuleap\OAuth2Server\User\NewAuthorization;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
@@ -41,48 +39,37 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
     private const STATE        = 'state';
     private const APP_ID       = 'app_id';
     private const SCOPE        = 'scope';
-    /**
-     * @var ResponseFactoryInterface
-     */
-    private $response_factory;
+
     /**
      * @var \UserManager
      */
     private $user_manager;
     /**
-     * @var RedirectURIBuilder
+     * @var AuthorizationCreator
      */
-    private $client_uri_redirect_builder;
+    private $authorization_creator;
     /**
-     * @var OAuth2AuthorizationCodeCreator
+     * @var AuthorizationCodeResponseFactory
      */
-    private $authorization_code_creator;
-    /**
-     * @var AuthorizationManager
-     */
-    private $authorization_manager;
+    private $response_creator;
     /**
      * @var \CSRFSynchronizerToken
      */
     private $csrf_token;
 
     public function __construct(
-        ResponseFactoryInterface $response_factory,
         \UserManager $user_manager,
-        RedirectURIBuilder $client_uri_redirect_builder,
-        OAuth2AuthorizationCodeCreator $authorization_code_creator,
-        AuthorizationManager $authorization_manager,
+        AuthorizationCreator $authorization_creator,
+        AuthorizationCodeResponseFactory $response_creator,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->response_factory            = $response_factory;
-        $this->user_manager                = $user_manager;
-        $this->client_uri_redirect_builder = $client_uri_redirect_builder;
-        $this->authorization_code_creator  = $authorization_code_creator;
-        $this->authorization_manager       = $authorization_manager;
-        $this->csrf_token                  = $csrf_token;
+        $this->user_manager          = $user_manager;
+        $this->authorization_creator = $authorization_creator;
+        $this->response_creator      = $response_creator;
+        $this->csrf_token            = $csrf_token;
     }
 
     /**
@@ -97,27 +84,16 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
         $body_params = $this->getValidBodyParameters($request);
         $this->csrf_token->check();
 
-        $authorization_code = $this->authorization_code_creator->createAuthorizationCodeIdentifier(
-            new \DateTimeImmutable(),
-            $user
-        );
-
         $scope_identifiers = [];
         foreach ($body_params[self::SCOPE] as $scope_key) {
             $scope_identifiers[] = OAuth2ScopeIdentifier::fromIdentifierKey($scope_key);
         }
         $new_authorization = new NewAuthorization($user, (int) $body_params[self::APP_ID], ...$scope_identifiers);
-        $this->authorization_manager->saveAuthorization($new_authorization);
+        $this->authorization_creator->saveAuthorization($new_authorization);
 
-        $redirect_uri         = $body_params[self::REDIRECT_URI];
-        $state_value          = $body_params[self::STATE] ?? null;
-        $success_redirect_uri = $this->client_uri_redirect_builder->buildSuccessURI(
-            $redirect_uri,
-            $state_value,
-            $authorization_code
-        );
-        return $this->response_factory->createResponse(302)
-            ->withHeader('Location', (string) $success_redirect_uri);
+        $redirect_uri = $body_params[self::REDIRECT_URI];
+        $state_value  = $body_params[self::STATE] ?? null;
+        return $this->response_creator->createSuccessfulResponse($user, $redirect_uri, $state_value);
     }
 
     /**

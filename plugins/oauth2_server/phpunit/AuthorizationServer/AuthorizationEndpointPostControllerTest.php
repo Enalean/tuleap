@@ -26,11 +26,9 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
-use Tuleap\OAuth2Server\User\AuthorizationManager;
+use Tuleap\OAuth2Server\User\AuthorizationCreator;
 use Tuleap\OAuth2Server\User\NewAuthorization;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -48,13 +46,13 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
      */
     private $user_manager;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AuthorizationCodeCreator
+     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationCreator
      */
-    private $authorization_code_creator;
+    private $authorization_creator;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationManager
+     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationCodeResponseFactory
      */
-    private $authorization_manager;
+    private $response_factory;
     /**
      * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
      */
@@ -62,16 +60,14 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user_manager               = M::mock(\UserManager::class);
-        $this->authorization_code_creator = \Mockery::mock(OAuth2AuthorizationCodeCreator::class);
-        $this->authorization_manager      = M::mock(AuthorizationManager::class);
-        $this->csrf_token                 = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller                 = new AuthorizationEndpointPostController(
-            HTTPFactoryBuilder::responseFactory(),
+        $this->user_manager          = M::mock(\UserManager::class);
+        $this->authorization_creator = M::mock(AuthorizationCreator::class);
+        $this->response_factory      = M::mock(AuthorizationCodeResponseFactory::class);
+        $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller            = new AuthorizationEndpointPostController(
             $this->user_manager,
-            new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
-            $this->authorization_code_creator,
-            $this->authorization_manager,
+            $this->authorization_creator,
+            $this->response_factory,
             $this->csrf_token,
             M::mock(EmitterInterface::class)
         );
@@ -122,7 +118,7 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
-    public function testHandleRedirectsToRedirectURIWithAuthorizationCode(): void
+    public function testHandleRedirects(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')
@@ -131,11 +127,9 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
             ['redirect_uri' => 'https://example.com', 'app_id' => '77', 'scope' => ['foo:bar', 'type:value']]
         );
         $this->csrf_token->shouldReceive('check')->once();
-        $auth_code = 'auth_code_identifier';
-        $this->authorization_code_creator->shouldReceive('createAuthorizationCodeIdentifier')->once()->andReturn(
-            new ConcealedString($auth_code)
-        );
-        $this->authorization_manager->shouldReceive('saveAuthorization')
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->response_factory->shouldReceive('createSuccessfulResponse')->once()->andReturn($response);
+        $this->authorization_creator->shouldReceive('saveAuthorization')
             ->once()
             ->with(
                 M::on(
@@ -149,45 +143,6 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
                 )
             );
 
-        $response = $this->controller->handle($request);
-        $this->assertSame(302, $response->getStatusCode());
-        $location = $response->getHeaderLine('Location');
-        $this->assertStringContainsString('https://example.com', $location);
-        $this->assertStringContainsString('code=' . $auth_code, $location);
-    }
-
-    public function testHandlePassesStateParameterWhenPresent(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn($user);
-        $request = (new NullServerRequest())->withParsedBody(
-            ['redirect_uri' => 'https://example.com', 'state' => 'xyz', 'app_id' => '77', 'scope' => ['foo:bar', 'type:value']]
-        );
-        $this->csrf_token->shouldReceive('check')->once();
-        $auth_code = 'auth_code_identifier';
-        $this->authorization_code_creator->shouldReceive('createAuthorizationCodeIdentifier')->once()->andReturn(
-            new ConcealedString($auth_code)
-        );
-        $this->authorization_manager->shouldReceive('saveAuthorization')
-            ->once()
-            ->with(
-                M::on(
-                    function (NewAuthorization $new_authorization) use ($user) {
-                        $identifiers = $new_authorization->getScopeIdentifiers();
-                        return $new_authorization->getAppId() === 77
-                            && $new_authorization->getUser() === $user
-                            && $identifiers[0]->toString() === 'foo:bar'
-                            && $identifiers[1]->toString() === 'type:value';
-                    }
-                )
-            );
-
-        $response = $this->controller->handle($request);
-        $this->assertSame(302, $response->getStatusCode());
-        $location = $response->getHeaderLine('Location');
-        $this->assertStringContainsString('https://example.com', $location);
-        $this->assertStringContainsString('state=xyz', $location);
-        $this->assertStringContainsString('code=' . $auth_code, $location);
+        $this->assertSame($response, $this->controller->handle($request));
     }
 }

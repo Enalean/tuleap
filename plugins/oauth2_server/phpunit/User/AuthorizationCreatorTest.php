@@ -29,12 +29,12 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-final class AuthorizationManagerTest extends TestCase
+final class AuthorizationCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var AuthorizationManager */
-    private $manager;
+    /** @var AuthorizationCreator */
+    private $creator;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|AuthorizationDao
      */
@@ -48,7 +48,7 @@ final class AuthorizationManagerTest extends TestCase
     {
         $this->authorization_dao = M::mock(AuthorizationDao::class);
         $this->scope_dao         = M::mock(AuthorizationScopeDao::class);
-        $this->manager           = new AuthorizationManager(
+        $this->creator           = new AuthorizationCreator(
             new DBTransactionExecutorPassthrough(),
             $this->authorization_dao,
             $this->scope_dao
@@ -77,7 +77,7 @@ final class AuthorizationManagerTest extends TestCase
             ->once()
             ->with(17, $foobar_scope, $typevalue_scope);
 
-        $this->manager->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));
+        $this->creator->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));
     }
 
     public function testSaveAuthorizationDoesNotSaveDuplicate(): void
@@ -99,6 +99,6 @@ final class AuthorizationManagerTest extends TestCase
             ->once()
             ->with(17, $foobar_scope, $typevalue_scope);
 
-        $this->manager->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));
+        $this->creator->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));
     }
 }

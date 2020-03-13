@@ -34,6 +34,7 @@ use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
+use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -57,29 +58,33 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
      */
     private $user_manager;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\URLRedirect
-     */
-    private $redirect;
-    /**
      * @var M\LegacyMockInterface|M\MockInterface|ScopeExtractor
      */
     private $scope_extractor;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationCodeResponseFactory
+     */
+    private $response_factory;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationComparator
+     */
+    private $comparator;
 
     protected function setUp(): void
     {
-        $this->form_renderer   = M::mock(AuthorizationFormRenderer::class);
-        $this->app_factory     = M::mock(AppFactory::class);
-        $this->redirect        = M::mock(\URLRedirect::class);
-        $this->user_manager    = M::mock(\UserManager::class);
-        $this->scope_extractor = M::mock(ScopeExtractor::class);
-        $this->controller      = new AuthorizationEndpointGetController(
-            HTTPFactoryBuilder::responseFactory(),
+        $this->form_renderer    = M::mock(AuthorizationFormRenderer::class);
+        $this->app_factory      = M::mock(AppFactory::class);
+        $this->user_manager     = M::mock(\UserManager::class);
+        $this->scope_extractor  = M::mock(ScopeExtractor::class);
+        $this->response_factory = M::mock(AuthorizationCodeResponseFactory::class);
+        $this->comparator       = M::mock(AuthorizationComparator::class);
+        $this->controller       = new AuthorizationEndpointGetController(
             $this->form_renderer,
             $this->user_manager,
             $this->app_factory,
-            $this->redirect,
-            new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
             $this->scope_extractor,
+            $this->response_factory,
+            $this->comparator,
             \Mockery::mock(EmitterInterface::class)
         );
     }
@@ -96,12 +101,10 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
             UserTestBuilder::anAnonymousUser()->build()
         );
-        $this->redirect->shouldReceive('buildReturnToLogin')->andReturn('/login');
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->response_factory->shouldReceive('createRedirectToLoginResponse')->andReturn($response);
 
-        $response = $this->controller->handle(new NullServerRequest());
-
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+        $this->assertSame($response, $this->controller->handle(new NullServerRequest()));
     }
 
     /**
@@ -164,9 +167,10 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->scope_extractor->shouldReceive('extractScopes')
             ->andThrow(new InvalidOAuth2ScopeException());
 
-        $response = $this->controller->handle($request);
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertSame($expected_redirection_url, $response->getHeaderLine('Location'));
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->response_factory->shouldReceive('createErrorResponse')->andReturn($response);
+
+        $this->assertSame($response, $this->controller->handle($request));
     }
 
     public function dataProviderInvalidQueryParameters(): array
@@ -191,6 +195,39 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         ];
     }
 
+    public function testHandleRedirectsWithAuthorizationCodeWhenAPreviousAuthorizationHasBeenGranted(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'     => 'tlp-client-id-1',
+                'redirect_uri'  => 'https://example.com/redirect',
+                'response_type' => 'code',
+                'state'         => 'xyz'
+            ]
+        );
+
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+        $this->scope_extractor->shouldReceive('extractScopes')
+            ->once()
+            ->andReturn([M::mock(AuthenticationScope::class)]);
+        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
+            ->once()
+            ->andReturnTrue();
+        $this->form_renderer->shouldNotReceive('renderForm');
+
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->response_factory->shouldReceive('createSuccessfulResponse')->andReturn($response);
+
+        $this->assertSame($response, $this->controller->handle($request));
+    }
+
     public function testHandleRendersAuthorizationForm(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
@@ -202,7 +239,8 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
             [
                 'client_id'     => 'tlp-client-id-1',
                 'redirect_uri'  => 'https://example.com/redirect',
-                'response_type' => 'code'
+                'response_type' => 'code',
+                'state'         => 'xyz'
             ]
         );
         $this->app_factory->shouldReceive('getAppMatchingClientId')
@@ -211,6 +249,9 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->scope_extractor->shouldReceive('extractScopes')
             ->once()
             ->andReturn([M::mock(AuthenticationScope::class)]);
+        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
+            ->once()
+            ->andReturnFalse();
         $this->form_renderer->shouldReceive('renderForm')->once();
 
         $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
