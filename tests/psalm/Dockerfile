@@ -12,4 +12,5 @@ RUN yum install -y epel-release https://rpms.remirepo.net/enterprise/remi-releas
         php73-php-intl \
         php73-php-pecl-redis \
         php73-php-pecl-zip \
-        php73-php-pecl-igbinary
+        php73-php-pecl-igbinary \
+        php73-php-mysqlnd
