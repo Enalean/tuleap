@@ -38,11 +38,11 @@ describe("TrackerFromAnotherProject", () => {
     }
 
     it("fills the tracker select options with the trackers of the selected project", async () => {
-        const bugs_tracker: Tracker = { id: "104", name: "Bugs" };
+        const bugs_tracker: Tracker = { id: "104", name: "Bugs", tlp_color: "peggy-pink" };
         const helpdesk_project: ProjectWithTrackers = {
             id: "101",
             name: "Helpdesk",
-            trackers: [{ id: "103", name: "SLA" }, bugs_tracker]
+            trackers: [{ id: "103", name: "SLA", tlp_color: "peggy-pink" }, bugs_tracker]
         };
 
         const wrapper = await getWrapper({
@@ -54,8 +54,8 @@ describe("TrackerFromAnotherProject", () => {
                     id: "102",
                     name: "Scrum",
                     trackers: [
-                        { id: "105", name: "Sprints" },
-                        { id: "106", name: "User stories" }
+                        { id: "105", name: "Sprints", tlp_color: "peggy-pink" },
+                        { id: "106", name: "User stories", tlp_color: "peggy-pink" }
                     ]
                 }
             ]
@@ -88,8 +88,8 @@ describe("TrackerFromAnotherProject", () => {
     });
 
     it("Sets the selected tracker in store when a new one is selected", async () => {
-        const bugs_tracker: Tracker = { id: "104", name: "Bugs" };
-        const sla_tracker = { id: "103", name: "SLA" };
+        const bugs_tracker: Tracker = { id: "104", name: "Bugs", tlp_color: "peggy-pink" };
+        const sla_tracker = { id: "103", name: "SLA", tlp_color: "peggy-pink" };
         const helpdesk_project: ProjectWithTrackers = {
             id: "101",
             name: "Helpdesk",
@@ -105,8 +105,8 @@ describe("TrackerFromAnotherProject", () => {
                     id: "102",
                     name: "Scrum",
                     trackers: [
-                        { id: "105", name: "Sprints" },
-                        { id: "106", name: "User stories" }
+                        { id: "105", name: "Sprints", tlp_color: "peggy-pink" },
+                        { id: "106", name: "User stories", tlp_color: "peggy-pink" }
                     ]
                 }
             ]

@@ -118,6 +118,19 @@
         display: none;
     }
 
+    > .tracker-creation-form-element-group {
+        display: flex;
+        margin: 0 0 $tlp-spacing 0;
+
+        > .tlp-form-element {
+            margin: 0 0 0 $tlp-double-spacing;
+
+            &:first-child {
+                margin: 0;
+            }
+        }
+    }
+
     @media screen and (max-width: $creation-tiny-screen-width) {
         width: 100%;
     }

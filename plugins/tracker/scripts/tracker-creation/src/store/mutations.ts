@@ -69,18 +69,21 @@ export function initTrackerNameWithTheSelectedProjectTrackerTemplateName(state: 
 
 function initTrackerToBeCreatedWithSelectedTracker(state: State, selected_tracker: Tracker): void {
     const name = selected_tracker.name;
+    const color = selected_tracker.tlp_color;
     const shortname = getSlugifiedShortname(name);
 
     state.tracker_to_be_created = {
         name,
-        shortname
+        shortname,
+        color
     };
 }
 
-export function reinitTrackerNameAndShortname(state: State): void {
+export function reinitTrackerToBeCreatedData(state: State): void {
     state.tracker_to_be_created = {
         name: "",
-        shortname: ""
+        shortname: "",
+        color: state.default_tracker_color
     };
 }
 

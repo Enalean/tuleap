@@ -17,7 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'includes/creation-screen-breakpoints';
-@import 'includes/creation-step-layout';
-@import 'includes/creation-options-cards';
-@import 'includes/creation-color-selector';
+
+%color-area {
+    display: block;
+    height: 25px;
+    border-radius: 3px;
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.#{$color-name} {
+            border-color: map-get($colors, 'primary');
+            background: map-get($colors, 'primary');
+
+            &:hover:not(:disabled):not(.disabled):not(:active) {
+                border-color: darken(map-get($colors, 'primary'), 5%);
+                background: darken(map-get($colors, 'primary'), 5%);
+            }
+        }
+    }
+}
+
+.tracker-color-results,
+.tracker-color-container {
+    span {
+        @extend %color-area;
+    }
+}
+
+.tracker-color-results {
+    height: 250px;
+}
+
+.tracker-color-selector {
+    width: 80px;
+}

@@ -31,7 +31,10 @@
             >
                 <field-csrf-token />
                 <field-chosen-template />
-                <field-name />
+                <div class="tracker-creation-form-element-group">
+                    <field-name />
+                    <field-tracker-color />
+                </div>
                 <field-shortname />
                 <field-description />
                 <field-tracker-template-id
@@ -55,6 +58,7 @@ import FieldDescription from "./creation-fields/FieldDescription.vue";
 import FieldTrackerTemplateId from "./creation-fields/FieldTrackerTemplateId.vue";
 import FieldCsrfToken from "./creation-fields/FieldCSRFToken.vue";
 import FieldTrackerEmpty from "./creation-fields/FieldTrackerEmpty.vue";
+import FieldTrackerColor from "./creation-fields/FieldTrackerColor.vue";
 
 @Component({
     components: {
@@ -66,7 +70,8 @@ import FieldTrackerEmpty from "./creation-fields/FieldTrackerEmpty.vue";
         FieldDescription,
         FieldTrackerTemplateId,
         FieldCsrfToken,
-        FieldChosenTemplate
+        FieldChosenTemplate,
+        FieldTrackerColor
     }
 })
 export default class StepTwo extends Vue {
@@ -95,7 +100,7 @@ export default class StepTwo extends Vue {
     readonly cancelCreationFormSubmition!: () => void;
 
     @Mutation
-    readonly reinitTrackerNameAndShortname!: () => void;
+    readonly reinitTrackerToBeCreatedData!: () => void;
 
     @State
     readonly selected_xml_file_input!: HTMLInputElement;
@@ -117,7 +122,7 @@ export default class StepTwo extends Vue {
         if (this.is_a_duplication) {
             this.initTrackerNameWithTheSelectedTemplateName();
         } else if (this.is_created_from_empty) {
-            this.reinitTrackerNameAndShortname();
+            this.reinitTrackerToBeCreatedData();
         } else if (this.is_a_xml_import) {
             const form = this.$refs.tracker_creation_form;
 
