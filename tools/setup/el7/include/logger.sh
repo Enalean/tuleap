@@ -13,6 +13,6 @@ _logCatcher() {
 
 _logMessages() {
     local datelog=$(${date} --rfc-3339=seconds)
-    ${printf} "[${datelog}] ${@}\n" >> ${tuleap_log}
+    echo "[${datelog}] ${@}\n" >> ${tuleap_log}
 }
 

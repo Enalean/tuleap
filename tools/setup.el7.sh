@@ -91,7 +91,7 @@ if [ ${tuleap_installed:-false} = "false" ] || \
         mysql_app_user_grant="${sys_db_user}@${web_server_ip}"
     fi
     ${tuleapcfg} setup:mysql-init --host="${mysql_server}" --user="${mysql_user}" --password="${mysql_password}" ${sys_db_password} "${sys_db_name}" "${mysql_app_user_grant}"
-    ${tuleapcfg} setup:mysql --host="${mysql_server}" --user="${sys_db_user}" --password="${sys_db_password}" "${admin_password}" "${server_name}"
+    ${tuleapcfg} setup:mysql --host="${mysql_server}" --user="${sys_db_user}" --dbname="${sys_db_name}" --password="${sys_db_password}" "${admin_password}" "${server_name}"
 
     for directory in ${tuleap_conf} ${tuleap_plugins} ${pluginsadministration}; do
         if [ ! -d ${directory} ]; then
