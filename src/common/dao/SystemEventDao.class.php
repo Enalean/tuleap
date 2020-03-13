@@ -89,7 +89,7 @@ class SystemEventDao extends DataAccessObject
 
         // Get Id of next event to process
         $sql = "SELECT id FROM system_event
-                WHERE status='".SystemEvent::STATUS_NEW."'
+                WHERE status='" . SystemEvent::STATUS_NEW . "'
                     AND owner = $owner
                     AND type IN ($types)
                     ORDER BY priority, create_date LIMIT 1";
@@ -98,7 +98,7 @@ class SystemEventDao extends DataAccessObject
             // Mark event as 'RUNNING'
             if ($row = $dar->getRow()) {
                 $id = $row['id'];
-                $upd_sql = "UPDATE system_event SET status='".SystemEvent::STATUS_RUNNING."', process_date=FROM_UNIXTIME(".time().") WHERE id=$id";
+                $upd_sql = "UPDATE system_event SET status='" . SystemEvent::STATUS_RUNNING . "', process_date=FROM_UNIXTIME(" . time() . ") WHERE id=$id";
                 $this->update($upd_sql);
                 // Retrieve all event parameters
                 $event_sql = "SELECT * FROM system_event WHERE id=$id";
@@ -169,22 +169,22 @@ class SystemEventDao extends DataAccessObject
     public function searchWithParam($position, $val, $type, $status, $separator = SystemEvent::PARAMETER_SEPARATOR)
     {
         if ($position === 'head') {
-            $stm = $this->da->quoteLikeValueSuffix($val.$separator);
+            $stm = $this->da->quoteLikeValueSuffix($val . $separator);
         } elseif ($position === 'tail') {
-            $stm = $this->da->quoteLikeValuePrefix($separator.$val);
+            $stm = $this->da->quoteLikeValuePrefix($separator . $val);
         } elseif ($position === 'all') {
              $stm = $this->da->quoteSmart($this->da->escapeLikeValue($val));
         } else {
-            $stm = $this->da->quoteLikeValueSurround($separator.$val.$separator);
+            $stm = $this->da->quoteLikeValueSurround($separator . $val . $separator);
         }
 
         $type   = $this->da->quoteSmartImplode(", ", $type);
         $status = $this->da->quoteSmartImplode(", ", $status);
 
         $sql = 'SELECT  * FROM system_event
-                WHERE type   IN ('.$type.')
-                AND status IN ('.$status.')
-                AND parameters LIKE '.$stm;
+                WHERE type   IN (' . $type . ')
+                AND status IN (' . $status . ')
+                AND parameters LIKE ' . $stm;
 
         return $this->retrieve($sql);
     }
@@ -198,8 +198,8 @@ class SystemEventDao extends DataAccessObject
         $status = $this->da->quoteSmartImplode(", ", $status);
 
         $sql = 'SELECT  * FROM system_event
-                WHERE type   IN ('.$type.')
-                AND status IN ('.$status.')';
+                WHERE type   IN (' . $type . ')
+                AND status IN (' . $status . ')';
 
         return $this->retrieve($sql);
     }

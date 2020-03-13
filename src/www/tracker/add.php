@@ -22,8 +22,8 @@ if (!$ath->userCanSubmit()) {
 }
 
 // Display the menus
-$ath->header(array('title'=>$Language->getText('tracker_add', 'add_a')." ".$ath->getCapsItemName(),'titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
-    'atid'=>$ath->getID(),'help' => 'ArtifactSubmission.html'));
+$ath->header(array('title' => $Language->getText('tracker_add', 'add_a') . " " . $ath->getCapsItemName(),'titlevals' => array($ath->getName()),'pagename' => 'tracker_browse',
+    'atid' => $ath->getID(),'help' => 'ArtifactSubmission.html'));
 echo '<div id="tracker_toolbar_clear"></div>';
 
 // Display the artifact items according to all the parameters
@@ -33,7 +33,7 @@ echo "<script type=\"text/javascript\">\n";
 $armh = new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
 echo "new UserAutoCompleter('tracker_cc',
-                          '".util_get_dir_image_theme()."',
+                          '" . util_get_dir_image_theme() . "',
                           true);\n";
 echo "</script>";
 

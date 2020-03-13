@@ -51,7 +51,7 @@ class Tracker_Permission_PermissionUgroupPresenter
 
     public function permission_name()
     {
-        return Tracker_Permission_Command::PERMISSION_PREFIX.$this->id;
+        return Tracker_Permission_Command::PERMISSION_PREFIX . $this->id;
     }
 
     public function permissions_list()

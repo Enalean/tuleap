@@ -40,7 +40,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
         $artlink_nature        = is_null($artlink_nature) ? 'NULL' : $this->da->quoteSmart($artlink_nature);
         $artlink_nature_format = is_null($artlink_nature_format) ? 'NULL' : $this->da->quoteSmart($artlink_nature_format);
         if (!isset($rank)) {
-            $rank = (int)$this->prepareRanking('tracker_report_renderer_table_columns', 0, $renderer_id, 'end', 'field_id', 'renderer_id');
+            $rank = (int) $this->prepareRanking('tracker_report_renderer_table_columns', 0, $renderer_id, 'end', 'field_id', 'renderer_id');
         } else {
             $rank = $this->da->escapeInt($rank);
         }
@@ -63,7 +63,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
 
     public function delete($renderer_id)
     {
-        $sql = "DELETE FROM tracker_report_renderer_table_columns WHERE renderer_id = ". $this->da->escapeInt($renderer_id);
+        $sql = "DELETE FROM tracker_report_renderer_table_columns WHERE renderer_id = " . $this->da->escapeInt($renderer_id);
         return $this->update($sql);
     }
 
@@ -71,7 +71,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
     {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
-        $rank        = (int)$this->prepareRanking('tracker_report_renderer_table_columns', $field_id, $renderer_id, $new_rank, 'field_id', 'renderer_id');
+        $rank        = (int) $this->prepareRanking('tracker_report_renderer_table_columns', $field_id, $renderer_id, $new_rank, 'field_id', 'renderer_id');
 
         $sql = "UPDATE tracker_report_renderer_table_columns
                 SET rank = $rank

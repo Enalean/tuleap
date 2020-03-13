@@ -29,7 +29,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. $this->_getTitle($params) .' - '. sprintf(dgettext('tuleap-docman', 'Update value "%2$s" in "%1$s" property'), $params['md']->getName(), Docman_MetadataHtmlList::_getElementName($params['love'])) .'</h2>';
+        echo '<h2>' . $this->_getTitle($params) . ' - ' . sprintf(dgettext('tuleap-docman', 'Update value "%2$s" in "%1$s" property'), $params['md']->getName(), Docman_MetadataHtmlList::_getElementName($params['love'])) . '</h2>';
     }
 
     public function _content($params)
@@ -42,7 +42,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
 
         $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_update_love'));
 
-        $html .= '<form name="md_update_love" method="POST" action="'.$act_url.'" class="docman_form">';
+        $html .= '<form name="md_update_love" method="POST" action="' . $act_url . '" class="docman_form">';
         $html .= $loveDetailsHtml->getHiddenFields($love->getId());
 
         $html .= '<table>';
@@ -51,7 +51,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
         $html .= $loveDetailsHtml->getRankField('--');
         $html .= '</table>';
 
-        $html .= '<input type="submit" name="submit" value="'.dgettext('tuleap-docman', 'Update').'" />';
+        $html .= '<input type="submit" name="submit" value="' . dgettext('tuleap-docman', 'Update') . '" />';
 
         $html .= '</form>';
 
@@ -60,7 +60,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
             array('action' => 'admin_md_details',
             'md' => $md->getLabel())
         );
-        $html .= '<p><a href="'.$backUrl.'">'.dgettext('tuleap-docman', 'Back to property details').'</a></p>';
+        $html .= '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to property details') . '</a></p>';
 
         echo $html;
     }

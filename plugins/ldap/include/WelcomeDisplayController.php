@@ -89,7 +89,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
         if ($pv === 2) {
             $layout->pv_header(array());
         } else {
-            $layout->header(array('title'=>$GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', array($lr->getCommonName())),
+            $layout->header(array('title' => $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', array($lr->getCommonName())),
                                 'registeration_process' => true));
         }
 
@@ -101,11 +101,11 @@ class WelcomeDisplayController implements DispatchableWithRequest
         print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_first_login', array($GLOBALS['sys_name']));
         print '</h3>';
 
-        print '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_fill_form', array($GLOBALS['sys_name'])).'</p>';
+        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_fill_form', array($GLOBALS['sys_name'])) . '</p>';
 
         print '<fieldset>';
 
-        print '<legend>'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_preferences').'</legend>';
+        print '<legend>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_preferences') . '</legend>';
 
         $return_to = '';
         $vReturnTo = new Valid_String('return_to');
@@ -115,42 +115,42 @@ class WelcomeDisplayController implements DispatchableWithRequest
         }
 
         print '
-<form name="welcome" action="'.$this->base_url.'/welcome" method="post">
-<input type="hidden" name="return_to" value="'. $this->html_purifier->purify($return_to, CODENDI_PURIFIER_CONVERT_HTML) .'">
+<form name="welcome" action="' . $this->base_url . '/welcome" method="post">
+<input type="hidden" name="return_to" value="' . $this->html_purifier->purify($return_to, CODENDI_PURIFIER_CONVERT_HTML) . '">
 <input type="hidden" name="action" value="update_reg">
-<input type="hidden" name="pv" value="'.$pv.'">
+<input type="hidden" name="pv" value="' . $pv . '">
 
-<p>'.$star.' '.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_tz').':';
+<p>' . $star . ' ' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_tz') . ':';
 
         echo html_get_timezone_popup($timezone);
 
         print '</p>
-<p><input type="checkbox" name="form_mail_site" value="1" checked />'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_siteupdate');
+<p><input type="checkbox" name="form_mail_site" value="1" checked />' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_siteupdate');
 
         print '</p>
-<p><input type="checkbox" name="form_mail_va" value="1" />'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_communitymail').'</p>';
+<p><input type="checkbox" name="form_mail_va" value="1" />' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_communitymail') . '</p>';
 
-        print '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_mandatory', array($star)).'</p>';
+        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_mandatory', array($star)) . '</p>';
 
-        print '<p><input type="submit" name="update_reg" value="'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_btn_update').'"></p>';
+        print '<p><input type="submit" name="update_reg" value="' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_btn_update') . '"></p>';
         print '</fieldset>';
 
         print '<fieldset>';
-        print '<legend>'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_your_data', array($GLOBALS['sys_org_name'])).'</legend>';
+        print '<legend>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_your_data', array($GLOBALS['sys_org_name'])) . '</legend>';
 
         print '<table>
 <tr>
-<td>'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_ldap_login').'</td>
-<td><strong>'.$ldap_name.'</strong></td>
+<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_ldap_login') . '</td>
+<td><strong>' . $ldap_name . '</strong></td>
 </tr>
 <tr>
-<td>'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_email').'</td>
-<td><strong>'.$currentUser->getEmail().'</strong></td>
+<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_email') . '</td>
+<td><strong>' . $currentUser->getEmail() . '</strong></td>
 </tr>
 <tr>
-<td>'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login', array($GLOBALS['sys_name'])).'</td>
-<td>'.$currentUser->getUserName().'<br>
-'.$GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login_j', array($GLOBALS['sys_name'])).'
+<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login', array($GLOBALS['sys_name'])) . '</td>
+<td>' . $currentUser->getUserName() . '<br>
+' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login_j', array($GLOBALS['sys_name'])) . '
 </td>
 </tr>
 </table>';

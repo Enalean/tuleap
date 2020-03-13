@@ -40,8 +40,8 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     public function _updateHeader($enctype = '')
     {
         $content = '';
-        $content .= '<dl><dt>'. dgettext('tuleap-docman', 'Update') .'</dt><dd>';
-        $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" '.$enctype.'>';
+        $content .= '<dl><dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
+        $content .= '<form action="' . $this->url . '&amp;id=' . $this->item->getId() . '" method="post" ' . $enctype . '>';
         return $content;
     }
 
@@ -49,12 +49,12 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     {
         $content = '';
         if ($this->token) {
-            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+            $content .= '<input type="hidden" name="token" value="' . $this->token . '" />';
         }
-        $content .= '<input type="hidden" name="item[id]" value="'. $this->item->getId() .'" />';
+        $content .= '<input type="hidden" name="item[id]" value="' . $this->item->getId() . '" />';
         $content .= '<input type="hidden" name="action" value="update_wl" />';
-        $content .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $content .= '<input type="submit" name="cancel"  value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
+        $content .= '<input type="submit" name="confirm" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        $content .= '<input type="submit" name="cancel"  value="' . $GLOBALS['Language']->getText('global', 'btn_cancel') . '" />';
 
         $content .= '</form>';
 
@@ -75,7 +75,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => $this->_controller->request));
         $content .= '<table>';
         foreach ($fields as $field) {
-            $content .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
+            $content .= '<tr style="vertical-align:top;"><td><label>' . $field->getLabel() . '</label></td><td>' . $field->getField() . '</td></tr>';
         }
         $content .= '</table>';
 

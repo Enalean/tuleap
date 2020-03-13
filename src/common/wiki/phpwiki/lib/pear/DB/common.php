@@ -185,7 +185,7 @@ class DB_common extends PEAR
      */
     public function quote($string = null)
     {
-        return ($string === null) ? 'NULL' : "'".str_replace("'", "''", $string)."'";
+        return ($string === null) ? 'NULL' : "'" . str_replace("'", "''", $string) . "'";
     }
 
     // }}}

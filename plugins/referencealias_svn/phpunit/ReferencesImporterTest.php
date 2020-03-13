@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Project\XML\Import\ImportConfig;
 
-include __DIR__.'/bootstrap.php';
+include __DIR__ . '/bootstrap.php';
 
 final class ReferencesImporterTest extends TestCase
 {

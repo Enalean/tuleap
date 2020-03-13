@@ -26,7 +26,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class TimeCheckerTest extends TestCase
 {

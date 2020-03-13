@@ -175,7 +175,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
             $pathtree[] = $pathtreepiece;
 
             $path = dirname($path);
-        };
+        }
         $this->tpl->assign('pathtree', array_reverse($pathtree));
 
         $blob->SetCommit($commit);

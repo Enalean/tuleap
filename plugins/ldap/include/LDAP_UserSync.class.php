@@ -109,6 +109,5 @@ class LDAP_UserSync
     public function getCommonName(LDAPResult $lr)
     {
         return $lr->getCommonName();
-        ;
     }
 }

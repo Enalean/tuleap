@@ -35,17 +35,17 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
 
     $file_importer->import($argv[1]);
 
-    echo "{$file_importer->getNbImportedLines()} lines imported".PHP_EOL;
+    echo "{$file_importer->getNbImportedLines()} lines imported" . PHP_EOL;
     $errors    = $file_importer->getErrors();
     $nb_errors = count($errors);
     if ($nb_errors) {
         $logger = new BackendLogger();
-        echo "$nb_errors errors".PHP_EOL;
+        echo "$nb_errors errors" . PHP_EOL;
         foreach ($errors as $error) {
-            $logger->error('[Proftpd][xferlog parse] '.$error);
-            echo "*** ERROR: ".$error.PHP_EOL;
+            $logger->error('[Proftpd][xferlog parse] ' . $error);
+            echo "*** ERROR: " . $error . PHP_EOL;
         }
     }
 } else {
-    echo "*** ERROR: proftpd plugin not available".PHP_EOL;
+    echo "*** ERROR: proftpd plugin not available" . PHP_EOL;
 }

@@ -184,7 +184,7 @@ class XmlContent
         }
         return htmlspecialchars($string);
     }
-};
+}
 
 /**
  * An XML element.
@@ -373,7 +373,7 @@ class XmlElement extends XmlContent
                 }
                 $val = $attr;
             }
-            $qval = str_replace("\"", '&quot;', $this->_quote((string)$val));
+            $qval = str_replace("\"", '&quot;', $this->_quote((string) $val));
             $start .= " $attr=\"$qval\"";
         }
         $start .= ">";
@@ -457,7 +457,7 @@ class XmlElement extends XmlContent
     {
         return false;
     }
-};
+}
 
 class RawXml
 {
@@ -532,7 +532,7 @@ class FormattedText
     public function asXML()
     {
         // Not all PHP's have vsprintf, so...
-        $args[] = XmlElement::_quote((string)$this->_fs);
+        $args[] = XmlElement::_quote((string) $this->_fs);
         foreach ($this->_args as $arg) {
             $args[] = AsXML($arg);
         }
@@ -542,7 +542,7 @@ class FormattedText
     public function printXML()
     {
         // Not all PHP's have vsprintf, so...
-        $args[] = XmlElement::_quote((string)$this->_fs);
+        $args[] = XmlElement::_quote((string) $this->_fs);
         foreach ($this->_args as $arg) {
             $args[] = AsXML($arg);
         }
@@ -601,7 +601,7 @@ function PrintXML($val /* , ... */)
             PrintXML($x);
         }
     } else {
-        echo (string)XmlContent_quote((string)$val);
+        echo (string) XmlContent_quote((string) $val);
     }
 }
 
@@ -640,7 +640,7 @@ function AsXML($val /* , ... */)
         }
         return $xml;
     } else {
-        return XmlContent_quote((string)$val);
+        return XmlContent_quote((string) $val);
     }
 }
 

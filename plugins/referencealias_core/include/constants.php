@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('REFERENCEALIASCORE_BASE_DIR', realpath(__DIR__.'/..'));
+define('REFERENCEALIASCORE_BASE_DIR', realpath(__DIR__ . '/..'));

@@ -333,6 +333,6 @@ class LicenseAgreementFactoryTest extends TestCase
         $this->dao->shouldReceive('saveLicenseAgreementForPackage')->with($packages[1001], 12)->once();
         $this->dao->shouldReceive('resetLicenseAgreementForPackage')->with($packages[1002])->once();
 
-        $this->factory->duplicate($frs_package_factory, $this->project, $template_project, [ 350 => 1001, 470 => 1002]);
+        $this->factory->duplicate($frs_package_factory, $this->project, $template_project, [350 => 1001, 470 => 1002]);
     }
 }

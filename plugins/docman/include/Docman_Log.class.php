@@ -101,7 +101,7 @@ class Docman_Log
         $html = '';
         $uh   = UserHelper::instance();
         $hp   = Codendi_HTMLPurifier::instance();
-        $html .= '<h3>'. dgettext('tuleap-docman', 'Document History') .'</h3>';
+        $html .= '<h3>' . dgettext('tuleap-docman', 'Document History') . '</h3>';
         $dar = $this->dao->searchByItemIdOrderByTimestamp($item_id);
         if ($dar && !$dar->isError()) {
             if ($dar->valid()) {
@@ -121,9 +121,9 @@ class Docman_Log
                     $row = $dar->current();
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
                         $user = $row['user_id'] ? $hp->purify($uh->getDisplayNameFromUserId($row['user_id'])) : dgettext('tuleap-docman', 'Anonymous');
-                        $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
-                        $html .= '<td>'. html_time_ago($row['time']) .'</td>';
-                        $html .= '<td>'. $user                             .'</td>';
+                        $html .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
+                        $html .= '<td>' . html_time_ago($row['time']) . '</td>';
+                        $html .= '<td>' . $user                             . '</td>';
                         if ($row['type'] == PLUGIN_DOCMAN_EVENT_METADATA_UPDATE) {
                             $_old_v = $row['old_value'];
                             $_new_v = $row['new_value'];
@@ -144,39 +144,39 @@ class Docman_Log
                                 $_old_v = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_old_v);
                                 $_new_v = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_new_v);
                             }
-                            $html .= '<td>'.sprintf(dgettext('tuleap-docman', 'Change <em>%1$s</em>'), $md->getName()).'</td>';
-                            $html .= '<td>'.$_old_v.'</td>';
-                            $html .= '<td>'.$_new_v.'</td>';
+                            $html .= '<td>' . sprintf(dgettext('tuleap-docman', 'Change <em>%1$s</em>'), $md->getName()) . '</td>';
+                            $html .= '<td>' . $_old_v . '</td>';
+                            $html .= '<td>' . $_new_v . '</td>';
                         } elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE) {
                             $old_version = $row['old_value'];
                             $new_version = $row['new_value'];
                             $dIF = $this->_getItemFactory($row['group_id']);
                             $pagename = $dIF->getItemFromDb($item_id)->getPageName();
                             $difflink =  '/wiki/index.php?group_id=' . $row['group_id'];
-                            $difflink .= '&pagename='.urlencode($pagename).'&action=diff';
+                            $difflink .= '&pagename=' . urlencode($pagename) . '&action=diff';
                             $difflink .= '&versions%5b%5d=' . $old_version . '&versions%5b%5d=' . $new_version;
                             $html .= '<td colspan>' . $this->getText($row['type']) . '</td>';
                             $html .= '<td colspan="2" align="center"><a href=' . $difflink . '>diffs</a>';
                         } elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR) {
                             $newUser = $row['new_value'];
-                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
+                            $html .= '<td>' . $this->getText($row['type']) . '</td>';
                             $html .= "<td>&nbsp;</td>";
                             $html .= "<td>$newUser</td>";
                         } elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE) {
                             $newDate = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['new_value']);
-                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
+                            $html .= '<td>' . $this->getText($row['type']) . '</td>';
                             $html .= "<td>&nbsp;</td>";
                             $html .= "<td>$newDate</td>";
                         } elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_DEL_VERSION) {
                             $old_version = $row['old_value'];
-                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
-                            $html .= '<td colspan="2" align="center">'.$old_version.'</td>';
+                            $html .= '<td>' . $this->getText($row['type']) . '</td>';
+                            $html .= '<td colspan="2" align="center">' . $old_version . '</td>';
                         } elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_RESTORE_VERSION) {
                             $versionNumber = $row['old_value'];
-                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
-                            $html .= '<td colspan="2" align="center">'.$versionNumber.'</td>';
+                            $html .= '<td>' . $this->getText($row['type']) . '</td>';
+                            $html .= '<td colspan="2" align="center">' . $versionNumber . '</td>';
                         } else {
-                            $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
+                            $html .= '<td colspan>' . $this->getText($row['type']) . '</td><td colspan="2">&nbsp;</td>';
                         }
                         $html .= '</tr>';
 
@@ -187,10 +187,10 @@ class Docman_Log
                 }
                 $html .= '</table>';
             } else {
-                $html .= '<div>'. dgettext('tuleap-docman', 'There is no history yet') .'</div>';
+                $html .= '<div>' . dgettext('tuleap-docman', 'There is no history yet') . '</div>';
             }
         } else {
-            $html .= '<div>'. dgettext('tuleap-docman', 'Error while searching document history!') .'</div>';
+            $html .= '<div>' . dgettext('tuleap-docman', 'Error while searching document history!') . '</div>';
             $html .= $dar->isError();
         }
         return $html;

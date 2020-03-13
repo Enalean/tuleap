@@ -335,7 +335,7 @@ class FRSRelease
     public function &getFiles()
     {
         if (!is_array($this->release_files) || count($this->release_files) < 1) {
-            $this->release_files=array();
+            $this->release_files = array();
             $frsff = new FRSFileFactory();
             $this->release_files = $frsff->getFRSFilesFromDb($this->getReleaseID());
         }
@@ -363,15 +363,15 @@ class FRSRelease
         $tooltip .= '<table>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'release_name') . ':</strong></td>';
-        $tooltip .= '  <td>'.$html_purifier->purify($this->getName()).'</td>';
+        $tooltip .= '  <td>' . $html_purifier->purify($this->getName()) . '</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name') . ':</strong></td>';
-        $tooltip .= '  <td>'.$html_purifier->purify($package->getName()).'</td>';
+        $tooltip .= '  <td>' . $html_purifier->purify($package->getName()) . '</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
-        $tooltip .= '  <td>'.$html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->getReleaseDate())).'</td>';
+        $tooltip .= '  <td>' . $html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->getReleaseDate())) . '</td>';
         $tooltip .= ' </tr>';
         $tooltip .= '</table>';
         return $tooltip;

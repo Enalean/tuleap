@@ -92,7 +92,7 @@ class WikiPlugin_CategoryPage extends WikiPlugin
             'SINGULAR' => $args['singular'])
         );
     }
-};
+}
 
 // Local Variables:
 // mode: php

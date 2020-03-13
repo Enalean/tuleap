@@ -37,7 +37,7 @@ final class Cardwall_CardControllerTest extends TestCase
     protected function setUp() : void
     {
         parent::setUp();
-        ForgeConfig::set('codendi_dir', __DIR__ .'/../../..');
+        ForgeConfig::set('codendi_dir', __DIR__ . '/../../..');
     }
 
     public function testItReturnsJson() : void

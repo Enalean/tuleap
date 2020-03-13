@@ -160,9 +160,9 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
         $this->ugroup_representation_builder->method('build')->withConsecutive(
-            [$this->equalTo($this->project),  (int)ProjectUGroup::PROJECT_ADMIN],
-            [$this->equalTo($this->project),  (int)ProjectUGroup::PROJECT_ADMIN],
-            [$this->equalTo($this->project),  (int)ProjectUGroup::PROJECT_MEMBERS]
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS]
         )->willReturnOnConsecutiveCalls(
             $this->project_admin_representation,
             $this->project_admin_representation,
@@ -227,8 +227,8 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
         $this->ugroup_representation_builder->method('build')->withConsecutive(
-            [$this->equalTo($this->project),  (int)ProjectUGroup::PROJECT_ADMIN],
-            [$this->equalTo($this->project),  (int)ProjectUGroup::PROJECT_ADMIN]
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN]
         )->willReturnOnConsecutiveCalls(
             $this->project_admin_representation,
             $this->project_admin_representation
@@ -288,8 +288,8 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
         $this->ugroup_representation_builder->method('build')->withConsecutive(
-            [$this->equalTo($this->project),  (int)ProjectUGroup::PROJECT_MEMBERS],
-            [$this->equalTo($this->project),  (int)ProjectUGroup::PROJECT_ADMIN]
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN]
         )->willReturnOnConsecutiveCalls(
             $this->project_member_representation,
             $this->project_admin_representation
@@ -352,8 +352,8 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
         $this->ugroup_representation_builder->method('build')->withConsecutive(
-            [$this->equalTo($this->project),  (int)ProjectUGroup::PROJECT_MEMBERS],
-            [$this->equalTo($this->project),  (int)ProjectUGroup::PROJECT_ADMIN]
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN]
         )->willReturnOnConsecutiveCalls(
             $this->project_member_representation,
             $this->project_admin_representation

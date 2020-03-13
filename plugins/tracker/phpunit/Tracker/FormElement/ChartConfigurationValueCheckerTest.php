@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
 use Tracker_FormElement_Chart_Field_Exception;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 final class ChartConfigurationValueCheckerTest extends TestCase
 {

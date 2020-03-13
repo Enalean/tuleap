@@ -107,39 +107,39 @@ class HudsonJob
         switch ($this->getColor()) {
             case "blue":
                 // The last build was successful.
-                return hudsonPlugin::ICONS_PATH."status_blue.png";
+                return hudsonPlugin::ICONS_PATH . "status_blue.png";
                 break;
             case "blue_anime":
                 // The last build was successful. A new build is in progress.
-                return hudsonPlugin::ICONS_PATH."status_blue.png";
+                return hudsonPlugin::ICONS_PATH . "status_blue.png";
                 break;
             case "yellow":
                 // The last build was successful but unstable. This is primarily used to represent test failures.
-                return hudsonPlugin::ICONS_PATH."status_yellow.png";
+                return hudsonPlugin::ICONS_PATH . "status_yellow.png";
                 break;
             case "yellow_anime":
                 // The last build was successful but unstable. A new build is in progress.
-                return hudsonPlugin::ICONS_PATH."status_yellow.png";
+                return hudsonPlugin::ICONS_PATH . "status_yellow.png";
                 break;
             case "red":
                 // The last build fatally failed.
-                return hudsonPlugin::ICONS_PATH."status_red.png";
+                return hudsonPlugin::ICONS_PATH . "status_red.png";
                 break;
             case "red_anime":
                 // The last build fatally failed. A new build is in progress.
-                return hudsonPlugin::ICONS_PATH."status_red.png";
+                return hudsonPlugin::ICONS_PATH . "status_red.png";
                 break;
             case "grey":
                 // The project has never been built before, or the project is disabled.
-                return hudsonPlugin::ICONS_PATH."status_grey.png";
+                return hudsonPlugin::ICONS_PATH . "status_grey.png";
                 break;
             case "grey_anime":
                 // The first build of the project is in progress.
-                return hudsonPlugin::ICONS_PATH."status_grey.png";
+                return hudsonPlugin::ICONS_PATH . "status_grey.png";
                 break;
             default:
                 // Can we have anime icons here?
-                return hudsonPlugin::ICONS_PATH."status_unknown.png";
+                return hudsonPlugin::ICONS_PATH . "status_unknown.png";
                 break;
         }
     }
@@ -209,22 +209,22 @@ class HudsonJob
         if (count($health_scores) <= 0) {
             return 0;
         }
-        return floor(array_sum($health_scores)/count($health_scores));
+        return floor(array_sum($health_scores) / count($health_scores));
     }
 
     public function getWeatherReportIcon()
     {
         $score = $this->getHealthAverageScore();
         if ($score >= 80) {
-            return hudsonPlugin::ICONS_PATH."health_80_plus.gif";
+            return hudsonPlugin::ICONS_PATH . "health_80_plus.gif";
         } elseif ($score >= 60) {
-            return hudsonPlugin::ICONS_PATH."health_60_to_79.gif";
+            return hudsonPlugin::ICONS_PATH . "health_60_to_79.gif";
         } elseif ($score >= 40) {
-            return hudsonPlugin::ICONS_PATH."health_40_to_59.gif";
+            return hudsonPlugin::ICONS_PATH . "health_40_to_59.gif";
         } elseif ($score >= 20) {
-            return hudsonPlugin::ICONS_PATH."health_20_to_39.gif";
+            return hudsonPlugin::ICONS_PATH . "health_20_to_39.gif";
         } else {
-            return hudsonPlugin::ICONS_PATH."health_00_to_19.gif";
+            return hudsonPlugin::ICONS_PATH . "health_00_to_19.gif";
         }
     }
 }

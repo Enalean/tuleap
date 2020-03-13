@@ -26,6 +26,6 @@ class ArtifactCannotBeInBacklogOfException extends Exception
 
     public function __construct($milestone_id, $id, $type, $allowed)
     {
-        parent::__construct('Artifact '. $id .' (type: [' .$type. ']) cannot be in Milestone '. $milestone_id .' backlog (allowed tracker type ids: [' .implode(',', $allowed). '])');
+        parent::__construct('Artifact ' . $id . ' (type: [' . $type . ']) cannot be in Milestone ' . $milestone_id . ' backlog (allowed tracker type ids: [' . implode(',', $allowed) . '])');
     }
 }

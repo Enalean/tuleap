@@ -60,7 +60,7 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
 
     public function git_admins_form_action()
     {
-        return '/plugins/git/?group_id='. $this->project_id .'&action=admin-git-admins';
+        return '/plugins/git/?group_id=' . $this->project_id . '&action=admin-git-admins';
     }
 
     public function git_admins_selectbox_name()

@@ -25,7 +25,7 @@
    mediawiki plugin.
   */
 
-require_once __DIR__.'/../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $echo_links = $argc >= 1;
 
@@ -81,7 +81,7 @@ if (!($dh = opendir($src_path))) {
 }
 
 // link LocalSettings.php from forge_get_config('source_path')/plugins/mediawiki/etc/plugins/mediawiki/LocalSettings.php
-$from = forge_get_config('source_path')."/plugins/mediawiki/www/LocalSettings.php";
+$from = forge_get_config('source_path') . "/plugins/mediawiki/www/LocalSettings.php";
 $to = "$master_path/LocalSettings.php";
 mysymlink($from, $to);
 
@@ -92,7 +92,7 @@ if (!is_dir($todir)) {
 }
 
 // link FusionForge skin file
-$fromdir = forge_get_config('source_path')."/plugins/mediawiki/mediawiki-skin";
+$fromdir = forge_get_config('source_path') . "/plugins/mediawiki/mediawiki-skin";
 $from = "$fromdir/FusionForge.php";
 $to = "$todir/FusionForge.php";
 mysymlink($from, $to);

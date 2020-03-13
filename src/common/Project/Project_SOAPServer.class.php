@@ -188,7 +188,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
             return TemplateFromProjectForCreation::fromSOAPServer($project_id, $requester, $this->projectManager);
         } catch (ProjectTemplateIDInvalidException $exception) {
             throw new SoapFault('3100', 'Invalid template id ' . $project_id);
-        } catch (ProjectTemplateNotActiveException|InsufficientPermissionToUseProjectAsTemplateException $ex) {
+        } catch (ProjectTemplateNotActiveException | InsufficientPermissionToUseProjectAsTemplateException $ex) {
             throw new SoapFault('3104', 'Project is not a template');
         }
     }
@@ -452,7 +452,6 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      */
     public function getPlateformProjectDescriptionFields($sessionKey)
     {
-
         $this->continueSession($sessionKey);
         $project_desc_fields = $this->description_factory->getCustomDescriptions();
         $soap_return = array();

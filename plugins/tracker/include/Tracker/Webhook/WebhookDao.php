@@ -58,8 +58,8 @@ class WebhookDao extends DataAccessObject
     {
         return $this->getDB()->update(
             'plugin_tracker_webhook_url',
-            [ 'url' => $webhook_url ],
-            [ 'id' => $webhook_id ]
+            ['url' => $webhook_url],
+            ['id' => $webhook_id]
         );
     }
 

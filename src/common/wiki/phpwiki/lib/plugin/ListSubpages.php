@@ -126,7 +126,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
         $content->pushContent($pagelist);
         return $content;
     }
-};
+}
 
 // how many backlinks for this subpage
 class _PageList_Column_ListSubpages_count extends _PageList_Column

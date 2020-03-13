@@ -16,7 +16,7 @@
 //===================================================
 class ErrorPlot extends Plot
 {
-    private $errwidth=2;
+    private $errwidth = 2;
 
     //---------------
     // CONSTRUCTOR
@@ -32,12 +32,12 @@ class ErrorPlot extends Plot
     public function PreStrokeAdjust($graph)
     {
         if ($this->center) {
-            $a=0.5;
-            $b=0.5;
+            $a = 0.5;
+            $b = 0.5;
             ++$this->numpoints;
         } else {
-            $a=0;
-            $b=0;
+            $a = 0;
+            $b = 0;
         }
         $graph->xaxis->scale->ticks->SetXLabelOffset($a);
         $graph->SetTextScaleOff($b);
@@ -47,12 +47,12 @@ class ErrorPlot extends Plot
     // Method description
     public function Stroke($img, $xscale, $yscale)
     {
-        $numpoints=count($this->coords[0])/2;
+        $numpoints = count($this->coords[0]) / 2;
         $img->SetColor($this->color);
         $img->SetLineWeight($this->weight);
 
         if (isset($this->coords[1])) {
-            if (count($this->coords[1])!=$numpoints) {
+            if (count($this->coords[1]) != $numpoints) {
                 JpGraphError::RaiseL(2003, count($this->coords[1]), $numpoints);
             } else { //("Number of X and Y points are not equal. Number of X-points:".count($this->coords[1])." Number of Y-points:$numpoints");
                 $exist_x = true;
@@ -61,24 +61,24 @@ class ErrorPlot extends Plot
             $exist_x = false;
         }
 
-        for ($i=0; $i<$numpoints; ++$i) {
+        for ($i = 0; $i < $numpoints; ++$i) {
             if ($exist_x) {
-                $x=$this->coords[1][$i];
+                $x = $this->coords[1][$i];
             } else {
-                $x=$i;
+                $x = $i;
             }
 
             if (!is_numeric($x) ||
-            !is_numeric($this->coords[0][$i*2]) || !is_numeric($this->coords[0][$i*2+1])) {
+            !is_numeric($this->coords[0][$i * 2]) || !is_numeric($this->coords[0][$i * 2 + 1])) {
                 continue;
             }
 
             $xt = $xscale->Translate($x);
-            $yt1 = $yscale->Translate($this->coords[0][$i*2]);
-            $yt2 = $yscale->Translate($this->coords[0][$i*2+1]);
+            $yt1 = $yscale->Translate($this->coords[0][$i * 2]);
+            $yt2 = $yscale->Translate($this->coords[0][$i * 2 + 1]);
             $img->Line($xt, $yt1, $xt, $yt2);
-            $img->Line($xt-$this->errwidth, $yt1, $xt+$this->errwidth, $yt1);
-            $img->Line($xt-$this->errwidth, $yt2, $xt+$this->errwidth, $yt2);
+            $img->Line($xt - $this->errwidth, $yt1, $xt + $this->errwidth, $yt1);
+            $img->Line($xt - $this->errwidth, $yt2, $xt + $this->errwidth, $yt2);
         }
         return true;
     }
@@ -93,7 +93,7 @@ class ErrorPlot extends Plot
 //===================================================
 class ErrorLinePlot extends ErrorPlot
 {
-    public $line=null;
+    public $line = null;
     //---------------
     // CONSTRUCTOR
     public function __construct($datay, $datax = false)
@@ -101,10 +101,10 @@ class ErrorLinePlot extends ErrorPlot
         parent::__construct($datay, $datax);
         // Calculate line coordinates as the average of the error limits
         $n = count($datay);
-        for ($i=0; $i < $n; $i+=2) {
-            $ly[]=($datay[$i]+$datay[$i+1])/2;
+        for ($i = 0; $i < $n; $i += 2) {
+            $ly[] = ($datay[$i] + $datay[$i + 1]) / 2;
         }
-        $this->line=new LinePlot($ly, $datax);
+        $this->line = new LinePlot($ly, $datax);
     }
 
     //---------------
@@ -131,26 +131,26 @@ class ErrorLinePlot extends ErrorPlot
 //===================================================
 class LineErrorPlot extends ErrorPlot
 {
-    public $line=null;
+    public $line = null;
     //---------------
     // CONSTRUCTOR
     // Data is (val, errdeltamin, errdeltamax)
     public function __construct($datay, $datax = false)
     {
-        $ly=array();
-        $ey=array();
+        $ly = array();
+        $ey = array();
         $n = count($datay);
         if ($n % 3 != 0) {
             JpGraphError::RaiseL(4002);
             //('Error in input data to LineErrorPlot. Number of data points must be a multiple of 3');
         }
-        for ($i=0; $i < $n; $i+=3) {
-            $ly[]=$datay[$i];
-            $ey[]=$datay[$i]+$datay[$i+1];
-            $ey[]=$datay[$i]+$datay[$i+2];
+        for ($i = 0; $i < $n; $i += 3) {
+            $ly[] = $datay[$i];
+            $ey[] = $datay[$i] + $datay[$i + 1];
+            $ey[] = $datay[$i] + $datay[$i + 2];
         }
         parent::__construct($ey, $datax);
-        $this->line=new LinePlot($ly, $datax);
+        $this->line = new LinePlot($ly, $datax);
     }
 
     //---------------

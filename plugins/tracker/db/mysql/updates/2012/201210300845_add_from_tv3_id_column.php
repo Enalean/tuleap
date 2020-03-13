@@ -36,7 +36,7 @@ class b201210300845_add_from_tv3_id_column extends ForgeUpgrade_Bucket
         $sql = "ALTER TABLE tracker ADD COLUMN from_tv3_id INT(11) NULL";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column from_tv3_id to tracker table: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column from_tv3_id to tracker table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

@@ -52,10 +52,10 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent
         } else {
             list($group_id, $ugroup_id) = $this->getParametersAsArray();
         }
-        $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', ugroup: #'. $ugroup_id;
+        $txt .= 'project: ' . $this->verbalizeProjectId($group_id, $with_link) . ', ugroup: #' . $ugroup_id;
 
         if ($ugroup_name) {
-            $txt .= ', rename: '. $ugroup_old_name .' => '. $ugroup_name;
+            $txt .= ', rename: ' . $ugroup_old_name . ' => ' . $ugroup_name;
         }
 
         return $txt;

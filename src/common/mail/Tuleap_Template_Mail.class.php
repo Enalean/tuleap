@@ -37,8 +37,8 @@ class Tuleap_Template_Mail extends Tuleap_Template
         $this->set('txt_display_not_correct', $GLOBALS['Language']->getText('mail_html_template', 'display_not_correct'));
         $this->set('txt_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'update_prefs'));
         $this->set('txt_can_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'can_update_prefs'));
-        $this->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
-        $this->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
+        $this->set('http_url', 'http://' . $GLOBALS['sys_default_domain']);
+        $this->set('img_path', 'http://' . $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
         $this->set('title', '');
     }
 }

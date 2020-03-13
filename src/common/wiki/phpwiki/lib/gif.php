@@ -977,13 +977,13 @@ class CGIF
     public function dword($val)
     {
         $val = intval($val);
-        return chr($val & 0xFF).chr(($val & 0xFF00) >> 8).chr(($val & 0xFF0000) >> 16).chr(($val & 0xFF000000) >> 24);
+        return chr($val & 0xFF) . chr(($val & 0xFF00) >> 8) . chr(($val & 0xFF0000) >> 16) . chr(($val & 0xFF000000) >> 24);
     }
 
     public function ndword($val)
     {
         $val = intval($val);
-        return chr(($val & 0xFF000000) >> 24).chr(($val & 0xFF0000) >> 16).chr(($val & 0xFF00) >> 8).chr($val & 0xFF);
+        return chr(($val & 0xFF000000) >> 24) . chr(($val & 0xFF0000) >> 16) . chr(($val & 0xFF00) >> 8) . chr($val & 0xFF);
     }
 
     public function width()

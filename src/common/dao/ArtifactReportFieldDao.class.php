@@ -38,19 +38,19 @@ class ArtifactReportFieldDao extends DataAccessObject
     public function searchByReportIdAndFieldName($report_id, $field_name)
     {
         $sql = "SELECT *
-                FROM ". $this->table_name ."
-                WHERE field_name = ". $this->da->quoteSmart($field_name) ."
-                  AND report_id  = ". $this->da->escapeInt($report_id);
+                FROM " . $this->table_name . "
+                WHERE field_name = " . $this->da->quoteSmart($field_name) . "
+                  AND report_id  = " . $this->da->escapeInt($report_id);
         return $this->retrieve($sql);
     }
 
     public function updateResultRanking($field_name, $report_id, $rank)
     {
         $rank = $this->prepareResultRanking($field_name, $report_id, $rank);
-        $sql = "UPDATE ". $this->table_name ."
-                SET place_result = ". $this->da->escapeInt($rank) ."
-                WHERE field_name = ". $this->da->quoteSmart($field_name) ."
-                  AND report_id  = ". $this->da->escapeInt($report_id);
+        $sql = "UPDATE " . $this->table_name . "
+                SET place_result = " . $this->da->escapeInt($rank) . "
+                WHERE field_name = " . $this->da->quoteSmart($field_name) . "
+                  AND report_id  = " . $this->da->escapeInt($report_id);
         echo $sql . PHP_EOL;
         return $this->update($sql);
     }
@@ -68,22 +68,22 @@ class ArtifactReportFieldDao extends DataAccessObject
                 } else {
                     $sql .= ", ";
                 }
-                $sql .= $this->table_name ." AS R_$i ";
+                $sql .= $this->table_name . " AS R_$i ";
 
                 if (!$set) {
                     $set .= " SET ";
                 } else {
                     $set .= ", ";
                 }
-                $set .= " R_$i.col_width = ". $this->da->escapeInt($col_width);
+                $set .= " R_$i.col_width = " . $this->da->escapeInt($col_width);
 
                 if (!$where) {
                     $where .= " WHERE ";
                 } else {
                     $where .= " AND ";
                 }
-                $where .= " R_$i.field_name = ". $this->da->quoteSmart($field_name);
-                $where .= " AND R_$i.report_id  = ". $this->da->escapeInt($report_id);
+                $where .= " R_$i.field_name = " . $this->da->quoteSmart($field_name);
+                $where .= " AND R_$i.report_id  = " . $this->da->escapeInt($report_id);
                 $i++;
             }
             $sql .= $set . $where;

@@ -114,7 +114,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
             // link count always seems to be 1 for a single page so
             // omit count column
             foreach ($this->pagelist as $key => $val) {
-                $row = HTML::li(WikiLink((string)$key, 'unknown'));
+                $row = HTML::li(WikiLink((string) $key, 'unknown'));
                 $this->_rows->pushContent($row);
             }
             if (!$noheader) {
@@ -184,7 +184,6 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
 
     public function _generateTable($caption)
     {
-
         if (count($this->pagelist) > 0) {
             $table = HTML::table(array('cellpadding' => 0,
                                        'cellspacing' => 1,
@@ -192,7 +191,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                                        'class'       => 'pagelist'));
             if ($caption) {
                 $table->pushContent(HTML::caption(
-                    array('align'=>'top'),
+                    array('align' => 'top'),
                     $caption
                 ));
             }
@@ -257,7 +256,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
             }
         }
     }
-};
+}
 
 // $Log: WantedPagesOld.php,v $
 // Revision 1.1  2004/11/20 11:28:49  rurban

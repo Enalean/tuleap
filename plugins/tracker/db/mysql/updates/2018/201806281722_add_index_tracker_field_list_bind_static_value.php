@@ -44,7 +44,7 @@ class b201806281722_add_index_tracker_field_list_bind_static_value extends Forge
 
     private function indexNameExists($table_name, $index)
     {
-        $sql = 'SHOW INDEX FROM '.$table_name.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
+        $sql = 'SHOW INDEX FROM ' . $table_name . ' WHERE Key_name LIKE ' . $this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {
             return true;

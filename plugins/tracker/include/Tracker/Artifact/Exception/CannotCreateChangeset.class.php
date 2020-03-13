@@ -24,6 +24,6 @@ abstract class Tracker_Artifact_Exception_CannotCreateChangeset extends Tracker_
     {
         $feedback = $GLOBALS['Response']->getRawFeedback();
         $GLOBALS['Response']->clearFeedback();
-        parent::__construct($message.': '.$feedback);
+        parent::__construct($message . ': ' . $feedback);
     }
 }

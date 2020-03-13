@@ -27,7 +27,7 @@ final class BaseLanguageFactoryTest extends \PHPUnit\Framework\TestCase
     protected function setUp() : void
     {
         parent::setUp();
-        ForgeConfig::loadFromFile(__DIR__ .'/_fixtures/local.inc');
+        ForgeConfig::loadFromFile(__DIR__ . '/_fixtures/local.inc');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
         $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
         $this->oldLocale = setlocale(LC_ALL, "0");

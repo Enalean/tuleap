@@ -49,21 +49,21 @@ class TrackerFormElementExportPermissionsToXmlTest extends TestCase
         );
         $field_01->shouldReceive('isUsed')->andReturn(true);
 
-        $xmlMapping['F'. $field_01->getId()] = $field_01->getId();
+        $xmlMapping['F' . $field_01->getId()] = $field_01->getId();
         $xml     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><permissions/>');
         $field_01->exportPermissionsToXML($xml, $ugroups, $xmlMapping);
 
         $this->assertTrue(isset($xml->permission[0]));
         $this->assertTrue(isset($xml->permission[1]));
 
-        $this->assertEquals('field', (string)$xml->permission[0]['scope']);
-        $this->assertEquals('UGROUP_2', (string)$xml->permission[0]['ugroup']);
-        $this->assertEquals('FIELDPERM_1', (string)$xml->permission[0]['type']);
-        $this->assertEquals('F10', (string)$xml->permission[0]['REF']);
+        $this->assertEquals('field', (string) $xml->permission[0]['scope']);
+        $this->assertEquals('UGROUP_2', (string) $xml->permission[0]['ugroup']);
+        $this->assertEquals('FIELDPERM_1', (string) $xml->permission[0]['type']);
+        $this->assertEquals('F10', (string) $xml->permission[0]['REF']);
 
-        $this->assertEquals('field', (string)$xml->permission[1]['scope']);
-        $this->assertEquals('UGROUP_4', (string)$xml->permission[1]['ugroup']);
-        $this->assertEquals('FIELDPERM_2', (string)$xml->permission[1]['type']);
-        $this->assertEquals('F10', (string)$xml->permission[1]['REF']);
+        $this->assertEquals('field', (string) $xml->permission[1]['scope']);
+        $this->assertEquals('UGROUP_4', (string) $xml->permission[1]['ugroup']);
+        $this->assertEquals('FIELDPERM_2', (string) $xml->permission[1]['type']);
+        $this->assertEquals('F10', (string) $xml->permission[1]['REF']);
     }
 }

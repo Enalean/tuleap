@@ -103,7 +103,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
             $asset = $this->getIncludeAssets();
-            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('style.css') .'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style.css') . '" />';
         }
     }
 

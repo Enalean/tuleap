@@ -50,7 +50,7 @@ class PasswordPolicyDisplayController implements DispatchableWithRequest
     ) {
         $this->admin_page_renderer              = $admin_page_renderer;
         $this->template_renderer                = $template_renderer_factory->getRenderer(
-            __DIR__.'/../../../templates/admin/password/'
+            __DIR__ . '/../../../templates/admin/password/'
         );
         $this->password_configuration_retriever = $password_configuration_retriever;
     }

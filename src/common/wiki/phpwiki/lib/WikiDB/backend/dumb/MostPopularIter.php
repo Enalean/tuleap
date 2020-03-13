@@ -58,10 +58,10 @@ function WikiDB_backend_dumb_MostPopularIter_sortf($a, $b)
 {
     $ahits = $bhits = 0;
     if (isset($a['pagedata']['hits'])) {
-        $ahits = (int)$a['pagedata']['hits'];
+        $ahits = (int) $a['pagedata']['hits'];
     }
     if (isset($b['pagedata']['hits'])) {
-        $bhits = (int)$b['pagedata']['hits'];
+        $bhits = (int) $b['pagedata']['hits'];
     }
     return $bhits - $ahits;
 }
@@ -70,10 +70,10 @@ function WikiDB_backend_dumb_MostPopularIter_sortf_rev($a, $b)
 {
     $ahits = $bhits = 0;
     if (isset($a['pagedata']['hits'])) {
-        $ahits = (int)$a['pagedata']['hits'];
+        $ahits = (int) $a['pagedata']['hits'];
     }
     if (isset($b['pagedata']['hits'])) {
-        $bhits = (int)$b['pagedata']['hits'];
+        $bhits = (int) $b['pagedata']['hits'];
     }
     return $ahits - $bhits;
 }

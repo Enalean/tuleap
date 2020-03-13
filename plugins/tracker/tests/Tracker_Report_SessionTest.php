@@ -65,18 +65,18 @@ class Tracker_Report_SessionTest extends TuleapTestCase
     public function test_storeCriterion_noOpts()
     {
         $session = &$this->tracker_report_session->getSessionNamespace();
-        $this->tracker_report_session->storeCriterion('4', array('tintin'=>'lachipo', 'kiki'=>'labrouette'));
+        $this->tracker_report_session->storeCriterion('4', array('tintin' => 'lachipo', 'kiki' => 'labrouette'));
         $this->assertTrue(isset($session['criteria']['4']['value']));
-        $this->assertEqual($session['criteria']['4']['value'], array('tintin'=>'lachipo', 'kiki'=>'labrouette'));
+        $this->assertEqual($session['criteria']['4']['value'], array('tintin' => 'lachipo', 'kiki' => 'labrouette'));
         $this->assertEqual($session['criteria']['4']['is_removed'], 0);
     }
 
     public function test_storeCriterion_withOpts()
     {
         $session = &$this->tracker_report_session->getSessionNamespace();
-        $this->tracker_report_session->storeCriterion('4', array('tintin'=>'lachipo', 'kiki'=>'labrouette'), $opts = array('is_advanced'=>1));
+        $this->tracker_report_session->storeCriterion('4', array('tintin' => 'lachipo', 'kiki' => 'labrouette'), $opts = array('is_advanced' => 1));
         $this->assertTrue(isset($session['criteria']['4']['value']));
-        $this->assertEqual($session['criteria']['4']['value'], array('tintin'=>'lachipo', 'kiki'=>'labrouette'));
+        $this->assertEqual($session['criteria']['4']['value'], array('tintin' => 'lachipo', 'kiki' => 'labrouette'));
         $this->assertTrue(isset($session['criteria']['4']['is_advanced']));
         $this->assertEqual($session['criteria']['4']['is_advanced'], 1);
         $this->assertEqual($session['criteria']['4']['is_removed'], 0);
@@ -85,7 +85,7 @@ class Tracker_Report_SessionTest extends TuleapTestCase
     public function itStoresAdditionalCriterion()
     {
         $session = &$this->tracker_report_session->getSessionNamespace();
-        $additional_criterion = new Tracker_Report_AdditionalCriterion('agiledashboard_milestone', array('tintin'=>'lachipo', 'kiki'=>'labrouette'));
+        $additional_criterion = new Tracker_Report_AdditionalCriterion('agiledashboard_milestone', array('tintin' => 'lachipo', 'kiki' => 'labrouette'));
         $this->tracker_report_session->storeAdditionalCriterion($additional_criterion);
         $this->assertEqual(
             $session['additional_criteria']['agiledashboard_milestone']['value'],
@@ -129,7 +129,7 @@ class Tracker_Report_SessionTest extends TuleapTestCase
          $new_session = $this->tracker_report_session->getSessionNamespace();
          $this->tracker_report_session->changeSessionNamespace('.Tracker_Report_SessionTest');
          $new_session = $this->tracker_report_session->getSessionNamespace();
-         $this->assertEqual($new_session, array('fifi'=>array('riri'=>array())));
+         $this->assertEqual($new_session, array('fifi' => array('riri' => array())));
     }
 
     public function test_updateCriterion_withValue_withOpts()
@@ -146,9 +146,9 @@ class Tracker_Report_SessionTest extends TuleapTestCase
     {
         $this->tracker_report_session->changeSessionNamespace('.');
         $session   = &$this->tracker_report_session->getSessionNamespace();
-        $charts    = array('1'=>array('titi','toto','tata'), '2'=>array('titi','toto','tata') );
-        $renderers = array('0'=>array('id'=>0, 'charts'=>$charts), '1'=>array('id'=>1, 'charts'=>$charts), '-3'=>array('id'=>-3, 'charts'=>$charts));
-        $session   = array('trackers'=>array('reports'=>array('1'=>array('renderers'=> $renderers ))));
+        $charts    = array('1' => array('titi','toto','tata'), '2' => array('titi','toto','tata') );
+        $renderers = array('0' => array('id' => 0, 'charts' => $charts), '1' => array('id' => 1, 'charts' => $charts), '-3' => array('id' => -3, 'charts' => $charts));
+        $session   = array('trackers' => array('reports' => array('1' => array('renderers' => $renderers ))));
         $this->tracker_report_session->copy(1, 2);
 
         $this->assertEqual(count($_SESSION['trackers']['reports']['1']['renderers']), count($_SESSION['trackers']['reports']['2']['renderers']));
@@ -167,9 +167,9 @@ class Tracker_Report_SessionTest extends TuleapTestCase
     {
         $this->tracker_report_session->changeSessionNamespace('.');
         $session   = &$this->tracker_report_session->getSessionNamespace();
-        $charts    = array('2'=>array('titi','toto','tata'), '-1'=>array('titi','toto','tata') );
-        $renderers = array('4'=>array('id'=>4, 'charts'=>$charts), '5'=>array('id'=>5, 'charts'=>$charts), '3'=>array('id'=>3, 'charts'=>$charts));
-        $session   = array('trackers'=>array('reports'=>array('1'=>array('renderers'=> $renderers ))));
+        $charts    = array('2' => array('titi','toto','tata'), '-1' => array('titi','toto','tata') );
+        $renderers = array('4' => array('id' => 4, 'charts' => $charts), '5' => array('id' => 5, 'charts' => $charts), '3' => array('id' => 3, 'charts' => $charts));
+        $session   = array('trackers' => array('reports' => array('1' => array('renderers' => $renderers ))));
         $this->tracker_report_session->copy(1, 2);
         $this->assertEqual(count($_SESSION['trackers']['reports']['1']['renderers']), count($_SESSION['trackers']['reports']['2']['renderers']));
         $this->assertTrue(isset($_SESSION['trackers']['reports']['2']['renderers'][-1]));

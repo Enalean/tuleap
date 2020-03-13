@@ -14,7 +14,7 @@ rcs_id('$Id: JabberPresence.php,v 1.3 2004/11/21 11:59:26 rurban Exp $');
  */
 
 if (!defined('MY_JABBER_ID')) {
-    define('MY_JABBER_ID', $GLOBALS['request']->_user->UserName()."@jabber.com"); // or "@netflint.net"
+    define('MY_JABBER_ID', $GLOBALS['request']->_user->UserName() . "@jabber.com"); // or "@netflint.net"
 }
 
 class WikiPlugin_JabberPresence extends WikiPlugin
@@ -56,14 +56,14 @@ class WikiPlugin_JabberPresence extends WikiPlugin
         if (empty($jid)) {
             $html = HTML();
         } else {
-            $html = HTML::img(array('src' => urlencode($scripturl).
-            '&jid='.urlencode($jid).
-            '&type='.urlencode($type).
-            '&iconset='.($iconset)));
+            $html = HTML::img(array('src' => urlencode($scripturl) .
+            '&jid=' . urlencode($jid) .
+            '&type=' . urlencode($type) .
+            '&iconset=' . ($iconset)));
         }
         return $html;
     }
-};
+}
 
 // For emacs users
 // Local Variables:

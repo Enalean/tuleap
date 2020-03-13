@@ -69,7 +69,7 @@ class ArtifactLinksToRender
         \PFUser $current_user,
         \Tracker_FormElement_Field_ArtifactLink $field,
         NaturePresenterFactory $nature_presenter_factory,
-        Tracker_ArtifactLinkInfo...$link_infos
+        Tracker_ArtifactLinkInfo ...$link_infos
     ) {
         $tracker = $field->getTracker();
         if ($tracker === null) {
@@ -92,7 +92,7 @@ class ArtifactLinksToRender
                 }
                 $artifact_id = $artifact_link->getArtifactId();
                 $ids[$artifact_link_tracker_id]['id'] .= "$artifact_id,";
-                $ids[$artifact_link_tracker_id]['last_changeset_id'] .= $artifact_link->getLastChangesetId() .',';
+                $ids[$artifact_link_tracker_id]['last_changeset_id'] .= $artifact_link->getLastChangesetId() . ',';
                 if ($project_allowed_to_use_nature) {
                     $nature_presenter = $this->getNaturePresenterFromShortnameWithCache(
                         $nature_presenter_factory,

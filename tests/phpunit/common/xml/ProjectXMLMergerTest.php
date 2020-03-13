@@ -34,7 +34,7 @@ class ProjectXMLMergerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->fixtures = __DIR__ .'/_fixtures';
+        $this->fixtures = __DIR__ . '/_fixtures';
         $this->destination   = tempnam($this->getTmpDir(), 'XML');
     }
 

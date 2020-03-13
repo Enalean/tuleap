@@ -242,13 +242,13 @@ class ReferenceDao extends DataAccessObject
         // This may happen for old tracker created before Reference management.
         // Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf(
-            "SELECT * FROM reference r,reference_group rg WHERE ".
-               "service_short_name != 'plugin_tracker' AND ".
-               "r.keyword = %s AND ".
-               "r.id=rg.reference_id AND ".
-               "rg.group_id=%s AND ".
-               "r.description = %s AND ".
-               "r.link = %s AND ".
+            "SELECT * FROM reference r,reference_group rg WHERE " .
+               "service_short_name != 'plugin_tracker' AND " .
+               "r.keyword = %s AND " .
+               "r.id=rg.reference_id AND " .
+               "rg.group_id=%s AND " .
+               "r.description = %s AND " .
+               "r.link = %s AND " .
                "r.scope = %s",
             $this->da->quoteSmart($keyword),
             $this->da->quoteSmart($group_id),
@@ -322,7 +322,6 @@ class ReferenceDao extends DataAccessObject
 
     public function updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name)
     {
-
         $group_id       = $this->da->escapeInt($group_id);
         $old_short_name = $this->da->quoteSmart($old_short_name);
         $new_short_name = $this->da->quoteSmart($new_short_name);

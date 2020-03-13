@@ -143,7 +143,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $upload_id = $file_information->getID();
 
         $uploaded_document_path   = $this->document_upload_path_allocator->getPathForItemBeingUploaded($file_information);
-        $current_value_user_abort = (bool)ignore_user_abort(true);
+        $current_value_user_abort = (bool) ignore_user_abort(true);
         try {
             $this->createVersion($uploaded_document_path, $upload_id);
         } finally {
@@ -173,7 +173,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                 }
 
                 $next_version_id = (int) $this->version_factory->getNextVersionNumber($item);
-                $item_id         = (int)$item->getId();
+                $item_id         = (int) $item->getId();
 
                 /*
                  * Some tables of the docman plugin relies on the MyISAM engine so the DB transaction
@@ -213,7 +213,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     throw new \RuntimeException('Can not find user ID #' . $upload_row['user_id']);
                 }
 
-                if ((bool)$upload_row['is_file_locked']) {
+                if ((bool) $upload_row['is_file_locked']) {
                     $this->lock_factory->lock($item, $current_user);
                 } else {
                     $this->lock_factory->unlock($item, $current_user);

@@ -44,7 +44,7 @@ class TimetrackingDatesExtractor
     {
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
 
-        if (empty($query) || (! isset($json_query[ "start_date" ]) && ! isset($json_query[ "end_date" ]))) {
+        if (empty($query) || (! isset($json_query["start_date"]) && ! isset($json_query["end_date"]))) {
             $date       = new DateTime();
             $end_date   = $date->format('Y-m-d');
             $start_date = $date->modify("-1 month")->format('Y-m-d');
@@ -55,7 +55,7 @@ class TimetrackingDatesExtractor
 
         $checker = new TimetrackingQueryChecker();
         $checker->checkQuery($json_query);
-        $dates = new DateTrackingTimesPeriod($json_query[ "start_date" ], $json_query[ "end_date" ]);
+        $dates = new DateTrackingTimesPeriod($json_query["start_date"], $json_query["end_date"]);
 
         return $dates;
     }

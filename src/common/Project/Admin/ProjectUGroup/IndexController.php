@@ -48,7 +48,6 @@ class IndexController
         IncludeAssets $include_assets,
         HeaderNavigationDisplayer $navigation_displayer
     ) {
-
         $this->include_assets       = $include_assets;
         $this->navigation_displayer = $navigation_displayer;
         $this->presenter_builder    = $presenter_builder;

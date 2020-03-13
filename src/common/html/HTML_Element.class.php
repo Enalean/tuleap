@@ -39,7 +39,7 @@ abstract class HTML_Element
         $this->name   = $name;
         $this->value  = $value;
         $this->label  = $label;
-        $this->id     = 'customfield_'. self::$last_id++;
+        $this->id     = 'customfield_' . self::$last_id++;
         $this->desc  = $desc;
         $this->params = array();
     }
@@ -50,24 +50,23 @@ abstract class HTML_Element
     protected function renderLabel()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return '<label for="'. $this->id .'">'.  $hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML)  .'</label>';
+        return '<label for="' . $this->id . '">' .  $hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
     }
     public function render()
     {
         $html  = '';
         $html .= $this->renderLabel();
         $html .= '<br />';
-        if (trim($this->desc)!='') {
-            $html .=$this->desc.'<br/>';
+        if (trim($this->desc) != '') {
+            $html .= $this->desc . '<br/>';
         }
         $html .= $this->renderValue();
-        ;
         return $html;
     }
     protected function renderValue()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return  $hp->purify($this->getValue(), CODENDI_PURIFIER_CONVERT_HTML) ;
+        return  $hp->purify($this->getValue(), CODENDI_PURIFIER_CONVERT_HTML);
     }
     public function getId()
     {

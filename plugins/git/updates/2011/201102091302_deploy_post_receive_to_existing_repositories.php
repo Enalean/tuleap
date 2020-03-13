@@ -44,10 +44,10 @@ EOT;
             if (!$project->isDot() && $project->isDir()) {
                 $prjIter = new DirectoryIterator($project->getPathname());
                 foreach ($prjIter as $repo) {
-                    $hooksDir = $repo->getPathname().DIRECTORY_SEPARATOR.'hooks';
+                    $hooksDir = $repo->getPathname() . DIRECTORY_SEPARATOR . 'hooks';
                     if (!$repo->isDot() && is_dir($hooksDir)) {
                         $groupName = basename($project->getPathname());
-                        $hook = $hooksDir.DIRECTORY_SEPARATOR.'post-receive';
+                        $hook = $hooksDir . DIRECTORY_SEPARATOR . 'post-receive';
 
                         $this->log->info("Deploy $hook");
                         unlink($hook);

@@ -130,6 +130,6 @@ class HudsonBuild
         } elseif ($this->getResult() == 'UNSTABLE') {
             $color = 'yellow';
         }
-        return hudsonPlugin::ICONS_PATH .'status_'. $color .'.png';
+        return hudsonPlugin::ICONS_PATH . 'status_' . $color . '.png';
     }
 }

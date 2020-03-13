@@ -44,7 +44,7 @@ class BaseGlobalAdminPresenter
         $this->project_id = $project->getId();
 
         $this->admin_groups_active = false;
-        $this->admin_groups_url    = "?group_id=". urlencode($project->getId()) . "&action=admin-groups";
+        $this->admin_groups_url    = "?group_id=" . urlencode($project->getId()) . "&action=admin-groups";
         $this->admin_groups        = dgettext('tuleap-svn', 'Admin Groups');
 
         $this->csrf_input          = $token->fetchHTMLInput();

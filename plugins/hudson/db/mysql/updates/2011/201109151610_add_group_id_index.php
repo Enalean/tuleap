@@ -35,7 +35,7 @@ EOT;
 
     public function up()
     {
-        $sql = 'ALTER TABLE plugin_hudson_job'.
+        $sql = 'ALTER TABLE plugin_hudson_job' .
                ' ADD INDEX idx_group_id (group_id)';
         $this->db->addIndex('plugin_hudson_job', 'idx_group_id', $sql);
     }

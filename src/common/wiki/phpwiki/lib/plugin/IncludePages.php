@@ -83,12 +83,12 @@ class WikiPlugin_IncludePages extends WikiPlugin_IncludePage
 
         foreach ($args['pages'] as $page) {
             if (empty($args['exclude']) or !in_array($page, $args['exclude'])) {
-                $html = HTML($html, $include->run($dbi, "page='$page' ".$argstr, $request, $basepage));
+                $html = HTML($html, $include->run($dbi, "page='$page' " . $argstr, $request, $basepage));
             }
         }
         return $html;
     }
-};
+}
 
 // $Log: IncludePages.php,v $
 // Revision 1.2  2005/09/30 18:41:39  uckelman

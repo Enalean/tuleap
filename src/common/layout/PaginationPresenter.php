@@ -62,10 +62,10 @@ class PaginationPresenter
         $this->next_is_disabled     = false;
         $this->last_is_disabled     = false;
 
-        $this->first_url    = $base_url .'?'. http_build_query(array('offset' => 0) + $default_params);
-        $this->previous_url = $base_url .'?'. http_build_query(array('offset' => $offset - $limit) + $default_params);
-        $this->next_url     = $base_url .'?'. http_build_query(array('offset' => $offset + $limit) + $default_params);
-        $this->last_url     = $base_url .'?'. http_build_query(array('offset' => $limit * floor($nb_total / $limit) - 1) + $default_params);
+        $this->first_url    = $base_url . '?' . http_build_query(array('offset' => 0) + $default_params);
+        $this->previous_url = $base_url . '?' . http_build_query(array('offset' => $offset - $limit) + $default_params);
+        $this->next_url     = $base_url . '?' . http_build_query(array('offset' => $offset + $limit) + $default_params);
+        $this->last_url     = $base_url . '?' . http_build_query(array('offset' => $limit * floor($nb_total / $limit) - 1) + $default_params);
 
         $this->first_label    = $GLOBALS['Language']->getText('global', 'begin');
         $this->previous_label = $GLOBALS['Language']->getText('global', 'prev');

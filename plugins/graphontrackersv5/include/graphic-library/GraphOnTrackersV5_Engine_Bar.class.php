@@ -41,9 +41,9 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
     {
         if ($this->width == 0) {
             if (!is_null($this->xaxis)) {
-                $this->width = (count($this->data)*count($this->data[0])*25)+(2*150);
+                $this->width = (count($this->data) * count($this->data[0]) * 25) + (2 * 150);
             } else {
-                $this->width = (count($this->data)*100)+(2*150);
+                $this->width = (count($this->data) * 100) + (2 * 150);
             }
         }
 
@@ -72,7 +72,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
         $colors = $this->getColors();
 
         if (is_null($this->xaxis)) {
-            if ((is_array($this->data)) && (array_sum($this->data)>0)) {
+            if ((is_array($this->data)) && (array_sum($this->data) > 0)) {
                 $this->graph->add($this->getBarPlot($this->data, $colors));
             }
         } else {
@@ -133,7 +133,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
         if (is_array($color)) {
             $b->SetColor('#FFFFFF:0.7');
         } else {
-            $b->SetColor($color.':0.7');
+            $b->SetColor($color . ':0.7');
         }
         $b->SetFillColor($color);
         // end hard coded parameter
@@ -209,7 +209,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
     {
         $colors = array();
         foreach ($this->legend as $index => $name) {
-            $colors[]= array(
+            $colors[] = array(
                 'label' => $name,
                 'color' => $this->getColorOrNull($this->colors[$index]),
             );

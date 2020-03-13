@@ -60,7 +60,7 @@ class WikiPlugin__PreferencesInfo extends WikiPlugin
         // $user = &$request->getUser();
         return Template('userprefs', $args);
     }
-};
+}
 
 // $Log: _PreferencesInfo.php,v $
 // Revision 1.3  2004/02/17 12:11:36  rurban

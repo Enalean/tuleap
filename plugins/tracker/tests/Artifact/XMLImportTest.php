@@ -22,7 +22,7 @@ use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase
 {
@@ -1177,7 +1177,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
                 </artifact>
             </artifacts>
         ');
-        touch($this->extraction_path.'/34_File33.png');
+        touch($this->extraction_path . '/34_File33.png');
 
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::spy(Tracker::class));
@@ -1344,8 +1344,8 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
                 </artifact>
             </artifacts>
         ');
-        touch($this->extraction_path.'/34_File33.png');
-        touch($this->extraction_path.'/34_File34.pdf');
+        touch($this->extraction_path . '/34_File33.png');
+        touch($this->extraction_path . '/34_File34.pdf');
 
         $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
@@ -1436,8 +1436,8 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
                 </artifact>
             </artifacts>
         ');
-        touch($this->extraction_path.'/34_File33.png');
-        touch($this->extraction_path.'/34_File34.pdf');
+        touch($this->extraction_path . '/34_File33.png');
+        touch($this->extraction_path . '/34_File34.pdf');
 
         $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
@@ -1560,7 +1560,7 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
                 Mockery::any(),
                 Mockery::any(),
                 Mockery::on(function ($data) {
-                    return $data[ $this->cc_field_id] === '!112,!113';
+                    return $data[$this->cc_field_id] === '!112,!113';
                 }),
                 Mockery::any(),
                 Mockery::any(),

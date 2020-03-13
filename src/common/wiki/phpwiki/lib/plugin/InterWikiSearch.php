@@ -74,7 +74,7 @@ class WikiPlugin_InterWikiSearch extends WikiPlugin
                             $overridePageType = 'PageType_searchableInterWikiMap');
         */
     }
-};
+}
 
 
 /**
@@ -138,7 +138,7 @@ if (defined('DEBUG') && DEBUG) {
 
             return $table;
         }
-    };
+    }
 }
 
 

@@ -40,7 +40,7 @@ class SystemEvent_MAILING_LIST_DELETE extends SystemEvent
     public function verbalizeParameters($with_link)
     {
         $txt = '';
-        $txt .= 'mailing list: #'. $this->getIdFromParam($this->parameters);
+        $txt .= 'mailing list: #' . $this->getIdFromParam($this->parameters);
         return $txt;
     }
 
@@ -50,7 +50,7 @@ class SystemEvent_MAILING_LIST_DELETE extends SystemEvent
     public function process()
     {
         // Check parameters
-        $group_list_id=$this->getIdFromParam($this->parameters);
+        $group_list_id = $this->getIdFromParam($this->parameters);
 
         if ($group_list_id == 0) {
             return $this->setErrorBadParam();

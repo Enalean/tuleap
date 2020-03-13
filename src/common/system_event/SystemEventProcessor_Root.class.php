@@ -59,15 +59,15 @@ class SystemEventProcessor_Root extends SystemEventProcessor
     protected $generator;
 
     public function __construct(
-        SystemEventProcess  $process,
-        SystemEventManager  $system_event_manager,
-        SystemEventDao      $dao,
-        \Psr\Log\LoggerInterface              $logger,
-        BackendAliases      $backend_aliases,
-        BackendCVS          $backend_cvs,
-        BackendSVN          $backend_svn,
-        BackendSystem       $backend_system,
-        SiteCache           $site_cache,
+        SystemEventProcess $process,
+        SystemEventManager $system_event_manager,
+        SystemEventDao $dao,
+        \Psr\Log\LoggerInterface $logger,
+        BackendAliases $backend_aliases,
+        BackendCVS $backend_cvs,
+        BackendSVN $backend_svn,
+        BackendSystem $backend_system,
+        SiteCache $site_cache,
         ApacheConfGenerator $generator
     ) {
         parent::__construct($process, $system_event_manager, $dao, $logger);
@@ -126,12 +126,12 @@ class SystemEventProcessor_Root extends SystemEventProcessor
     {
         $return_val = 0;
         $output = array();
-        $cmd    = 'su -l '.$user.' -c "'.$command.' 2>&1"';
+        $cmd    = 'su -l ' . $user . ' -c "' . $command . ' 2>&1"';
         exec($cmd, $output, $return_val);
         if ($return_val == 0) {
             return true;
         } else {
-            throw new Exception('Unable to run command "'.$command.'" (error code: '.$return_val.'): '.implode("\n", $output));
+            throw new Exception('Unable to run command "' . $command . '" (error code: ' . $return_val . '): ' . implode("\n", $output));
             return false;
         }
     }

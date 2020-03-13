@@ -120,7 +120,7 @@ class WikiPlugin_WikiForm extends WikiPlugin
 
         return $form;
     }
-};
+}
 
 // $Log: WikiForm.php,v $
 // Revision 1.16  2004/07/01 13:14:01  rurban

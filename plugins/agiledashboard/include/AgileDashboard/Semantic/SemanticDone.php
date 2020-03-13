@@ -114,7 +114,7 @@ class SemanticDone extends Tracker_Semantic
      */
     public function display()
     {
-        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR.'/semantic');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR . '/semantic');
 
         $semantic_status_field = $this->semantic_status->getField();
         $selected_values         = array();
@@ -151,7 +151,7 @@ class SemanticDone extends Tracker_Semantic
 
         $csrf = $this->getCSRFSynchronizerToken();
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR.'/semantic');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR . '/semantic');
         $presenter = new SemanticDoneAdminPresenter(
             $csrf,
             $this->tracker,
@@ -179,7 +179,7 @@ class SemanticDone extends Tracker_Semantic
      */
     private function getAdminSemanticUrl()
     {
-        return  TRACKER_BASE_URL. '/?' . http_build_query(array(
+        return  TRACKER_BASE_URL . '/?' . http_build_query(array(
                 'tracker' => $this->tracker->getId(),
                 'func'    => 'admin-semantic'
         ));

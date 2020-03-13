@@ -62,9 +62,9 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
         }
         $values = array();
         foreach ($default_values as $v) {
-            $v = (int)$v;
+            $v = (int) $v;
             if ($v) {
-                $values[] = '('. $field_id .', '. $v .')';
+                $values[] = '(' . $field_id . ', ' . $v . ')';
             }
         }
 
@@ -76,7 +76,7 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
         //fill with new default values
         if (count($values)) {
             $sql = "INSERT INTO $this->table_name (field_id, value_id)
-                    VALUES ". implode(',', $values);
+                    VALUES " . implode(',', $values);
             return $this->update($sql);
         }
         return true;

@@ -50,8 +50,8 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc
             $this->execGitGcAsAppAdm();
         } else {
             $this->logger->warning(
-                'Cannot run git gc on gitolite admin working copy. '.
-                'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh '.
+                'Cannot run git gc on gitolite admin working copy. ' .
+                'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh ' .
                 '/usr/share/tuleap/plugins/git/bin/gl-admin-housekeeping.php'
             );
         }

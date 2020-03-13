@@ -40,7 +40,7 @@
 
 function getParameter(&$parameter_array, $parameter, $require_value = false)
 {
-    for ($i=0; $i < count($parameter_array); $i++) {
+    for ($i = 0; $i < count($parameter_array); $i++) {
         $res = array();
         if (preg_match("/^\\-\\-(.+)/s", $parameter_array[$i], $res)) {    // several-character parameter? (IE, "--username=john")
             $passed_string = $res[1];
@@ -76,7 +76,7 @@ function getParameter(&$parameter_array, $parameter, $require_value = false)
             if (strlen($passed_parameter) == 1) {        // Some flag like "-x" or parameter "-U username"
                 // Check to see if there is a value associated to this parameter, like in "-U username".
                 // To do this, we must see the following string in the parameter array
-                if (($i+1) < count($parameter_array) && !preg_match("/^\\-/", $parameter_array[$i+1])) {
+                if (($i + 1) < count($parameter_array) && !preg_match("/^\\-/", $parameter_array[$i + 1])) {
                     $i++;        // position in value
                     $passed_value = $parameter_array[$i];
                     $has_value = true;

@@ -74,7 +74,7 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
                 $right = null;
                 $nb    = 0;
                 $rank  = 1;
-                $this->trace('Creating columns for '. $parent_id);
+                $this->trace('Creating columns for ' . $parent_id);
             }
 
             if ($data['pos'] == '2') {

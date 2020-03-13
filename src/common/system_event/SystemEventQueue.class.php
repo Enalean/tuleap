@@ -41,7 +41,7 @@ class SystemEventQueue
     public function getLogger()
     {
         return new TruncateLevelLogger(
-            new BackendLogger(ForgeConfig::get('codendi_log') .'/'. $this->getName() .'_syslog'),
+            new BackendLogger(ForgeConfig::get('codendi_log') . '/' . $this->getName() . '_syslog'),
             ForgeConfig::get('sys_logger_level')
         );
     }

@@ -462,7 +462,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
     public function getProjectsCreatedFrom()
     {
-        $sql = 'SELECT * FROM groups WHERE built_from_template = '. $this->getGroupId() ." AND status <> 'D'";
+        $sql = 'SELECT * FROM groups WHERE built_from_template = ' . $this->getGroupId() . " AND status <> 'D'";
         $subprojects = array();
         if ($res = db_query($sql)) {
             while ($data = db_fetch_array($res)) {
@@ -494,25 +494,25 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
         $hp = Codendi_HTMLPurifier::instance();
 
-        for ($i=0; $i<sizeof($descfields); $i++) {
-            $displayfieldname[$i]=$descfields[$i]['desc_name'];
-            $displayfieldvalue[$i]='';
-            for ($j=0; $j<sizeof($descfieldsvalue); $j++) {
-                if ($descfieldsvalue[$j]['group_desc_id']==$descfields[$i]['group_desc_id']) {
-                    $displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
+        for ($i = 0; $i < sizeof($descfields); $i++) {
+            $displayfieldname[$i] = $descfields[$i]['desc_name'];
+            $displayfieldvalue[$i] = '';
+            for ($j = 0; $j < sizeof($descfieldsvalue); $j++) {
+                if ($descfieldsvalue[$j]['group_desc_id'] == $descfields[$i]['group_desc_id']) {
+                    $displayfieldvalue[$i] = $descfieldsvalue[$j]['value'];
                 }
             }
 
-            $descname=$displayfieldname[$i];
+            $descname = $displayfieldname[$i];
             if (preg_match('/(.*):(.*)/', $descname, $matches)) {
                 if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
                     $descname = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                 }
             }
 
-            echo "<h3>".$hp->purify($descname, CODENDI_PURIFIER_LIGHT, $this->getGroupId())."</h3>";
+            echo "<h3>" . $hp->purify($descname, CODENDI_PURIFIER_LIGHT, $this->getGroupId()) . "</h3>";
             echo "<p>";
-            echo ($displayfieldvalue[$i] == '') ? $GLOBALS['Language']->getText('global', 'none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT, $this->getGroupId())  ;
+            echo ($displayfieldvalue[$i] == '') ? $GLOBALS['Language']->getText('global', 'none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT, $this->getGroupId());
             echo "</p>";
         }
     }

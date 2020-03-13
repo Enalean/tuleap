@@ -154,11 +154,11 @@ class LatestHeartbeatsCollector
 
         $tlp_badget_color = $purifier->purify('tlp-badge-' . $artifact->getTracker()->getColor()->getName());
         $title            = '
-            <a class="direct-link-to-artifact" href="'. $artifact->getUri() .'">
-                <span class="tlp-badge-outline '. $tlp_badget_color .'">
-                '. $artifact->getXRef() .'
+            <a class="direct-link-to-artifact" href="' . $artifact->getUri() . '">
+                <span class="tlp-badge-outline ' . $tlp_badget_color . '">
+                ' . $artifact->getXRef() . '
                 </span>
-                '. $purifier->purify($artifact->getTitle()) .'</a>';
+                ' . $purifier->purify($artifact->getTitle()) . '</a>';
 
         return $title;
     }

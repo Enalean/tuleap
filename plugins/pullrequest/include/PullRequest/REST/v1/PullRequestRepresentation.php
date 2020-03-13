@@ -159,22 +159,22 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
 
         $this->resources = array(
             self::COMMENTS_ROUTE => array(
-                'uri' => $this->uri . '/'. self::COMMENTS_ROUTE
+                'uri' => $this->uri . '/' . self::COMMENTS_ROUTE
             ),
             self::INLINE_ROUTE => array(
-                'uri' => $this->uri . '/'. self::INLINE_ROUTE
+                'uri' => $this->uri . '/' . self::INLINE_ROUTE
             ),
             self::LABELS_ROUTE => array(
-                'uri' => $this->uri . '/'. self::LABELS_ROUTE
+                'uri' => $this->uri . '/' . self::LABELS_ROUTE
             ),
             self::FILES_ROUTE => array(
-                'uri' => $this->uri . '/'. self::FILES_ROUTE
+                'uri' => $this->uri . '/' . self::FILES_ROUTE
             ),
             self::DIFF_ROUTE => array(
-                'uri' => $this->uri . '/'. self::DIFF_ROUTE
+                'uri' => $this->uri . '/' . self::DIFF_ROUTE
             ),
             self::TIMELINE_ROUTE => array(
-                'uri' => $this->uri . '/'. self::TIMELINE_ROUTE
+                'uri' => $this->uri . '/' . self::TIMELINE_ROUTE
             ),
         );
     }

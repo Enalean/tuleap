@@ -69,9 +69,9 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
         $validDetails = new Valid_Text('details');
 
         if ($request->valid($validSummary) && $request->valid($validDetails)) {
-            $sql="UPDATE news_bytes SET is_approved=". db_ei($status) .", summary='".db_es($request->get('summary'))."', ".
-                "details='".db_es($request->get('details'))."' WHERE id=". db_ei($id) ." AND group_id=". db_ei($group_id);
-            $result=db_query($sql);
+            $sql = "UPDATE news_bytes SET is_approved=" . db_ei($status) . ", summary='" . db_es($request->get('summary')) . "', " .
+                "details='" . db_es($request->get('details')) . "' WHERE id=" . db_ei($id) . " AND group_id=" . db_ei($group_id);
+            $result = db_query($sql);
 
             if (!$result) {
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index', 'group_update_err'));
@@ -79,9 +79,9 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index', 'project_newsbyte_updated'));
 
                 // update/create  news permissions
-                $qry1="SELECT * FROM news_bytes WHERE id=". db_ei($id);
-                $res1=db_query($qry1);
-                $forum_id=db_result($res1, 0, 'forum_id');
+                $qry1 = "SELECT * FROM news_bytes WHERE id=" . db_ei($id);
+                $res1 = db_query($qry1);
+                $forum_id = db_result($res1, 0, 'forum_id');
                 $res2 = news_read_permissions($forum_id);
                 if (db_numrows($res2) > 0) {
                     //permission on this news is already defined, have to be updated
@@ -101,11 +101,11 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
         }
     }
 
-    news_header(array('title'=>$Language->getText('news_admin_index', 'title'),
-              'help'=>'collaboration.html#news-service'));
+    news_header(array('title' => $Language->getText('news_admin_index', 'title'),
+              'help' => 'collaboration.html#news-service'));
 
-    echo '<H3>'.$Language->getText('news_admin_index', 'news_admin').'</H3>';
-    echo '<a href="/news/admin/choose_items.php?project_id='.$group_id.'">'.$Language->getText('news_admin_index', 'choose_display').'</a>';
+    echo '<H3>' . $Language->getText('news_admin_index', 'news_admin') . '</H3>';
+    echo '<a href="/news/admin/choose_items.php?project_id=' . $group_id . '">' . $Language->getText('news_admin_index', 'choose_display') . '</a>';
 
     $purifier = Codendi_HTMLPurifier::instance();
 
@@ -114,70 +114,70 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
       Show the submit form
      */
 
-        $sql="SELECT * FROM news_bytes WHERE id=". db_ei($id) ." AND group_id=". db_ei($group_id);
-        $result=db_query($sql);
+        $sql = "SELECT * FROM news_bytes WHERE id=" . db_ei($id) . " AND group_id=" . db_ei($group_id);
+        $result = db_query($sql);
         if (db_numrows($result) < 1) {
             exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'not_found_err'));
         }
-        $username=user_getname(db_result($result, 0, 'submitted_by'));
-        $forum_id=db_result($result, 0, 'forum_id');
+        $username = user_getname(db_result($result, 0, 'submitted_by'));
+        $forum_id = db_result($result, 0, 'forum_id');
         $res = news_read_permissions($forum_id);
      // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
      // with ST DB state
         if (db_numrows($res) < 1 || (db_result($res, 0, 'ugroup_id') == $UGROUP_ANONYMOUS)) {
-            $check_private="";
-            $check_public="CHECKED";
+            $check_private = "";
+            $check_public = "CHECKED";
         } else {
-            $check_private="CHECKED";
-            $check_public="";
+            $check_private = "CHECKED";
+            $check_public = "";
         }
 
         echo '
-        <H3>'.$purifier->purify($Language->getText('news_admin_index', 'approve_for', $pm->getProject($group_id)->getPublicName())).'</H3>
+        <H3>' . $purifier->purify($Language->getText('news_admin_index', 'approve_for', $pm->getProject($group_id)->getPublicName())) . '</H3>
 		<P>
 		<FORM ACTION="" METHOD="POST">
-		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$purifier->purify(db_result($result, 0, 'group_id')).'">
-		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.$purifier->purify(db_result($result, 0, 'id')).'">
+		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify(db_result($result, 0, 'group_id')) . '">
+		<INPUT TYPE="HIDDEN" NAME="id" VALUE="' . $purifier->purify(db_result($result, 0, 'id')) . '">
 
-		<B>'.$Language->getText('news_admin_index', 'submitted_by').':</B> <a href="/users/'.$purifier->purify($username).'">'.$purifier->purify($username).'</a><BR>
+		<B>' . $Language->getText('news_admin_index', 'submitted_by') . ':</B> <a href="/users/' . $purifier->purify($username) . '">' . $purifier->purify($username) . '</a><BR>
 		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="1">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
 
- 		<B>'.$Language->getText('global', 'status').':</B><BR>
-                <INPUT TYPE="RADIO" NAME="status" VALUE="0" CHECKED> '.$Language->getText('news_admin_index', 'displayed').'<BR>
-                <INPUT TYPE="RADIO" NAME="status" VALUE="4"> '.$Language->getText('news_admin_index', 'delete').'<BR>
+ 		<B>' . $Language->getText('global', 'status') . ':</B><BR>
+                <INPUT TYPE="RADIO" NAME="status" VALUE="0" CHECKED> ' . $Language->getText('news_admin_index', 'displayed') . '<BR>
+                <INPUT TYPE="RADIO" NAME="status" VALUE="4"> ' . $Language->getText('news_admin_index', 'delete') . '<BR>
 
-		<B>'.$Language->getText('news_submit', 'news_privacy').':</B><BR>
-		<INPUT TYPE="RADIO" NAME="is_private" VALUE="0" '.$check_public.'> '.$Language->getText('news_submit', 'public_news').'<BR>
-		<INPUT TYPE="RADIO" NAME="is_private" VALUE="1" '.$check_private.'> '.$Language->getText('news_submit', 'private_news').'<BR>
+		<B>' . $Language->getText('news_submit', 'news_privacy') . ':</B><BR>
+		<INPUT TYPE="RADIO" NAME="is_private" VALUE="0" ' . $check_public . '> ' . $Language->getText('news_submit', 'public_news') . '<BR>
+		<INPUT TYPE="RADIO" NAME="is_private" VALUE="1" ' . $check_private . '> ' . $Language->getText('news_submit', 'private_news') . '<BR>
 
-		<B>'.$Language->getText('news_admin_index', 'subject').':</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.$purifier->purify(db_result($result, 0, 'summary')).'"><BR>
-		<B>'.$Language->getText('news_admin_index', 'details').':</B><BR>
+		<B>' . $Language->getText('news_admin_index', 'subject') . ':</B><BR>
+		<INPUT TYPE="TEXT" NAME="summary" VALUE="' . $purifier->purify(db_result($result, 0, 'summary')) . '"><BR>
+		<B>' . $Language->getText('news_admin_index', 'details') . ':</B><BR>
 		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">' . $purifier->purify(db_result($result, 0, 'details')) . '</TEXTAREA><P>
-		<B>'.$purifier->purify($Language->getText('news_admin_index', 'if_edit_delete', $GLOBALS['sys_name'])).'</B><BR>
-		<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global', 'btn_submit').'">
+		<B>' . $purifier->purify($Language->getText('news_admin_index', 'if_edit_delete', $GLOBALS['sys_name'])) . '</B><BR>
+		<INPUT TYPE="SUBMIT" VALUE="' . $Language->getText('global', 'btn_submit') . '">
 		</FORM>';
     } else {
      /*
       Show list of waiting news items
      */
 
-        $sql="SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id=". db_ei($group_id) ." ORDER BY date DESC";
-        $result=db_query($sql);
-        $rows=db_numrows($result);
+        $sql = "SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id=" . db_ei($group_id) . " ORDER BY date DESC";
+        $result = db_query($sql);
+        $rows = db_numrows($result);
         if ($rows < 1) {
             echo '
-                <H4>'.$purifier->purify($Language->getText('news_admin_index', 'no_queued_item_found_for', $pm->getProject($group_id)->getPublicName())).'</H1>';
+                <H4>' . $purifier->purify($Language->getText('news_admin_index', 'no_queued_item_found_for', $pm->getProject($group_id)->getPublicName())) . '</H1>';
         } else {
             echo '
-                <H4>'.$purifier->purify($Language->getText('news_admin_index', 'new_items', $pm->getProject($group_id)->getPublicName())).'</H4>
+                <H4>' . $purifier->purify($Language->getText('news_admin_index', 'new_items', $pm->getProject($group_id)->getPublicName())) . '</H4>
 				<P>';
-            for ($i=0; $i<$rows; $i++) {
+            for ($i = 0; $i < $rows; $i++) {
                 echo '
-				<A HREF="/news/admin/?approve=1&id='.$purifier->purify(db_result($result, $i, 'id')).'&group_id='.
-                    $purifier->purify(db_result($result, $i, 'group_id')).'">'.
-                    $purifier->purify(db_result($result, $i, 'summary')).'</A><BR>';
+				<A HREF="/news/admin/?approve=1&id=' . $purifier->purify(db_result($result, $i, 'id')) . '&group_id=' .
+                    $purifier->purify(db_result($result, $i, 'group_id')) . '">' .
+                    $purifier->purify(db_result($result, $i, 'summary')) . '</A><BR>';
             }
         }
     }

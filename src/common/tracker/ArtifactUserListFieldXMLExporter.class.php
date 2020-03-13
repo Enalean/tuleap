@@ -45,7 +45,7 @@ class ArtifactUserListFieldXMLExporter extends ArtifactStaticListFieldXMLExporte
             $row = $dar->getRow();
             return $row['user_name'];
         }
-        throw new Exception_TV3XMLException('Unknown user '.$value);
+        throw new Exception_TV3XMLException('Unknown user ' . $value);
     }
 
     public function getFieldValueIndex()

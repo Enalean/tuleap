@@ -170,9 +170,9 @@ abstract class SystemEvent
      */
     public function verbalizeUserId($user_id, $with_link)
     {
-        $txt = '#'. $user_id;
+        $txt = '#' . $user_id;
         if ($with_link) {
-            $txt = '<a href="/admin/usergroup.php?user_id='. $user_id .'">'. $txt .'</a>';
+            $txt = '<a href="/admin/usergroup.php?user_id=' . $user_id . '">' . $txt . '</a>';
         }
         return $txt;
     }
@@ -187,9 +187,9 @@ abstract class SystemEvent
      */
     public function verbalizeProjectId($group_id, $with_link)
     {
-        $txt = '#'. $group_id;
+        $txt = '#' . $group_id;
         if ($with_link) {
-            $txt = '<a href="/admin/groupedit.php?group_id='. $group_id .'">'. $txt .'</a>';
+            $txt = '<a href="/admin/groupedit.php?group_id=' . $group_id . '">' . $txt . '</a>';
         }
         return $txt;
     }
@@ -219,12 +219,12 @@ abstract class SystemEvent
 
     public function setStatus($status)
     {
-        $this->status=$status;
+        $this->status = $status;
     }
 
     public function setLog($log)
     {
-        $this->log=$log;
+        $this->log = $log;
     }
 
     public function setParameters($params)
@@ -291,7 +291,7 @@ abstract class SystemEvent
      */
     public function int_ok($val)
     {
-        return ((string) $val) === ((string)(int) $val);
+        return ((string) $val) === ((string) (int) $val);
     }
 
     /**
@@ -316,7 +316,7 @@ abstract class SystemEvent
     {
         $param = $this->getParameter($index);
         if ($param === null) {
-            throw new SystemEventMissingParameterException('Missing parameter n°'. (int)$index);
+            throw new SystemEventMissingParameterException('Missing parameter n°' . (int) $index);
         }
         return $param;
     }
@@ -326,7 +326,7 @@ abstract class SystemEvent
      */
     public function setErrorBadParam()
     {
-        $this->error("Bad parameter for event ".$this->getType().": ".$this->getParameters());
+        $this->error("Bad parameter for event " . $this->getType() . ": " . $this->getParameters());
         return 0;
     }
 
@@ -461,7 +461,7 @@ abstract class SystemEvent
             $m = new Codendi_Mail();
             $m->setFrom($GLOBALS['sys_noreply']);
             $m->setTo(implode(',', $listeners));
-            $m->setSubject('['. $this->getstatus() .'] '. $this->getType());
+            $m->setSubject('[' . $this->getstatus() . '] ' . $this->getType());
             $m->setBodyText("
 Event:        #{$this->getId()}
 Type:         {$this->getType()}
@@ -473,7 +473,7 @@ Create Date:  {$this->getCreateDate()}
 Process Date: {$this->getProcessDate()}
 End Date:     {$this->getEndDate()}
 ---------------
-<". HTTPRequest::instance()->getServerUrl() ."/admin/system_events/>
+<" . HTTPRequest::instance()->getServerUrl() . "/admin/system_events/>
 ");
             $m->send();
         }

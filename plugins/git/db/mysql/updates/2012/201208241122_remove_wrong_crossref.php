@@ -53,7 +53,7 @@ EOT;
                   AND source_id LIKE "/%"';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping wrong git cross references: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping wrong git cross references: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

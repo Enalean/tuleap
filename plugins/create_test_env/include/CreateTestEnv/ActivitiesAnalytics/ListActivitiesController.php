@@ -62,7 +62,7 @@ class ListActivitiesController implements DispatchableWithRequest, DispatchableW
             throw new ForbiddenException();
         }
 
-        $users = [ 'users' => [] ];
+        $users = ['users' => []];
         foreach ($this->activity_logger_dao->getLastWeekActiveUsers() as $user_row) {
             $connexion_count = $this->activity_logger_dao->getConnexionCount($user_row['user_id']);
             $actions_count   = $this->activity_logger_dao->getActionsCount($user_row['user_id']);

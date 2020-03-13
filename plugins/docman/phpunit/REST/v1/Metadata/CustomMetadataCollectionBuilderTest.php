@@ -74,10 +74,10 @@ class CustomMetadataCollectionBuilderTest extends TestCase
         $this->metadata_factory->shouldReceive("getRealMetadataList")->andReturn($metadata_list);
 
         $element = new Docman_MetadataListOfValuesElement();
-        $element->initFromRow(['value_id'=> 1, 'name' => "value"]);
+        $element->initFromRow(['value_id' => 1, 'name' => "value"]);
 
         $element_two = new Docman_MetadataListOfValuesElement();
-        $element_two->initFromRow(['value_id'=> 2, 'name' => "an other value"]);
+        $element_two->initFromRow(['value_id' => 2, 'name' => "an other value"]);
 
         $value_representation = new DocmanMetadataListValueRepresentation();
         $value_representation->build($element->getId(), $element->getName());

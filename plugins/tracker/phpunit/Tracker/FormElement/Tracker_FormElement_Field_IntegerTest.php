@@ -119,7 +119,7 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
         $this->assertEquals('field > 12', $method->invokeArgs($field, ['field', '>12']));
         $this->assertEquals('field >= 12', $method->invokeArgs($field, ['field', '>=12']));
         $this->assertEquals('field >= 12 AND field <= 34', $method->invokeArgs($field, ['field', '12-34']));
-        $this->assertEquals(1, $method->invokeArgs($field, ['field',' <12'])); //Invalid syntax, we don't search against this field
+        $this->assertEquals(1, $method->invokeArgs($field, ['field', ' <12'])); //Invalid syntax, we don't search against this field
         $this->assertEquals(1, $method->invokeArgs($field, ['field', '<=toto'])); //Invalid syntax, we don't search against this field
     }
 

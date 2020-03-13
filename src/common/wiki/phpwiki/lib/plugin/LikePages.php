@@ -131,7 +131,7 @@ class WikiPlugin_LikePages extends WikiPlugin
     {
         return "'" . str_replace("'", "''", $str) . "'";
     }
-};
+}
 
 // $Log: LikePages.php,v $
 // Revision 1.22  2004/11/23 15:17:19  rurban

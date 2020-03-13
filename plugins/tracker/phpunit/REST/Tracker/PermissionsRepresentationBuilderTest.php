@@ -62,7 +62,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
     {
         $this->tracker_admin_user = M::mock(\PFUser::class);
 
-        $this->project = M::mock(\Project::class, [ 'getID' => 202]);
+        $this->project = M::mock(\Project::class, ['getID' => 202]);
 
         $this->tracker = M::mock(Tracker::class, ['getID' => 12, 'getProject' => $this->project]);
         $this->tracker->shouldReceive('userIsAdmin')->with($this->tracker_admin_user)->andReturnTrue();
@@ -208,7 +208,6 @@ final class PermissionsRepresentationBuilderTest extends TestCase
 
     public function testItReturnsAMixOfPermissions(): void
     {
-
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
             'name' => ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS],

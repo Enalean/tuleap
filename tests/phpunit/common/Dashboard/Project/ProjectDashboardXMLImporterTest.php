@@ -43,7 +43,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
         );
 
         $expected_exception = new UserCanNotUpdateProjectDashboardException();
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] '.$expected_exception->getMessage(), [])->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] ' . $expected_exception->getMessage(), [])->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -62,7 +62,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
         );
 
         $expected_exception = new NameDashboardDoesNotExistException();
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] '.$expected_exception->getMessage(), [])->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] ' . $expected_exception->getMessage(), [])->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -82,7 +82,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
         );
 
         $expected_exception = new NameDashboardAlreadyExistsException();
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] '.$expected_exception->getMessage(), [])->once();
+        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] ' . $expected_exception->getMessage(), [])->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }

@@ -95,8 +95,8 @@ class AsynchronousArtifactsDeletionActionsRunner
             $queue->pushSinglePersistentMessage(
                 AsynchronousArtifactsDeletionActionsRunner::TOPIC,
                 [
-                    'artifact_id' => (int)$artifact->getId(),
-                    'user_id'     => (int)$user->getId(),
+                    'artifact_id' => (int) $artifact->getId(),
+                    'user_id'     => (int) $user->getId(),
                 ]
             );
         } catch (Exception $exception) {

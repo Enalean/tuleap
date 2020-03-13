@@ -124,7 +124,7 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder
             throw new Tracker_Artifact_MailGateway_ArtifactIdMissingException();
         }
 
-        $artifact_id = (int)$mail_userpart[1];
+        $artifact_id = (int) $mail_userpart[1];
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact === null) {

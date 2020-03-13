@@ -70,14 +70,14 @@ class TemporaryFileManagerPurgeTest extends TestCase
             Mockery::mock(DBTransactionExecutor::class),
         );
 
-        $this->file_to_delete = $this->cache_dir .'/rest_attachement_temp_101_XyKoe';
+        $this->file_to_delete = $this->cache_dir . '/rest_attachement_temp_101_XyKoe';
 
         touch($this->file_to_delete);
     }
 
     public function tearDown(): void
     {
-        exec('rm -rf '. escapeshellarg($this->cache_dir));
+        exec('rm -rf ' . escapeshellarg($this->cache_dir));
         ForgeConfig::restore();
     }
 

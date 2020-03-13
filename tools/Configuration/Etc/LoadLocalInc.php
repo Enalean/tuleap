@@ -58,16 +58,16 @@ class LoadLocalInc
     private function getVariablesOverrideByLocalConf()
     {
         return array_merge(
-            $this->getVariables($this->tuleap_base_dir.'/src/etc/local.inc.dist'),
-            $this->getVariables($this->base_dir.'/conf/local.inc'),
-            $this->getVariables($this->base_dir.'/conf/database.inc')
+            $this->getVariables($this->tuleap_base_dir . '/src/etc/local.inc.dist'),
+            $this->getVariables($this->base_dir . '/conf/local.inc'),
+            $this->getVariables($this->base_dir . '/conf/database.inc')
         );
     }
 
     private function getVariables($file_name)
     {
         if (! is_readable($file_name)) {
-            throw new \Exception('Unable to read '.$file_name);
+            throw new \Exception('Unable to read ' . $file_name);
         }
 
         include $file_name;

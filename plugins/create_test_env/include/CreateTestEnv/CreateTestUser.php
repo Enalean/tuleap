@@ -41,7 +41,7 @@ class CreateTestUser
     {
         $this->email = trim($email);
 
-        $realname = trim($firstname).' '.trim($lastname);
+        $realname = trim($firstname) . ' ' . trim($lastname);
         $valid = new \Valid_RealNameFormat();
         if (! $valid->validate($realname)) {
             throw new Exception\InvalidRealNameException("Invalid realname $realname");

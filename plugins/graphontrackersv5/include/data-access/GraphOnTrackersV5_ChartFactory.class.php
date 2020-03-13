@@ -144,7 +144,7 @@ class GraphOnTrackersV5_ChartFactory
         $chart = null;
         if ($chart_classname = $this->getChartClassname($chart_type)) {
             $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
-            $default_title       = 'Untitled '.$chart_type;
+            $default_title       = 'Untitled ' . $chart_type;
             $default_description = '';
             $default_width       = call_user_func(array($chart_classname, 'getDefaultWidth'));
             $default_height      = call_user_func(array($chart_classname, 'getDefaultHeight'));
@@ -325,12 +325,12 @@ class GraphOnTrackersV5_ChartFactory
         $att = $xml->attributes();
         $row = array(
             'id'          => 0,
-            'chart_type'  => (string)$att->type,
-            'height'      => (int)$att->height,
-            'width'       => (int)$att->width,
+            'chart_type'  => (string) $att->type,
+            'height'      => (int) $att->height,
+            'width'       => (int) $att->width,
             'rank'        => 'end',
-            'title'       => (string)$xml->title,
-            'description' => (string)$xml->description,
+            'title'       => (string) $xml->title,
+            'description' => (string) $xml->description,
         );
 
         $chart = $this->instanciateChart($row, $renderer, $store_in_session);

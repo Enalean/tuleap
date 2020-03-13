@@ -519,7 +519,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->getKanbanFactory(),
             $this->getTrackerFactory()
         );
-        $params['cannot_configure_instantiate_for_new_projects']= $hierarchyChecker->isPartOfScrumOrKanbanHierarchy($params['tracker']);
+        $params['cannot_configure_instantiate_for_new_projects'] = $hierarchyChecker->isPartOfScrumOrKanbanHierarchy($params['tracker']);
     }
 
     public function tracker_event_project_creation_trackers_required($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -721,7 +721,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $params_extractor   = new AgileDashboard_PaneRedirectionExtractor();
         $requested_planning = $params_extractor->extractParametersFromRequest($request);
         if ($requested_planning) {
-            $key   = 'planning['. $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE] .']['. $requested_planning[AgileDashboard_PaneRedirectionExtractor::PLANNING_ID] .']';
+            $key   = 'planning[' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE] . '][' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PLANNING_ID] . ']';
             $value = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
             $redirect->query_parameters[$key] = $value;
         }
@@ -1337,12 +1337,12 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 new Tracker_Artifact_Changeset_ValueDao(),
                 new Tracker_Artifact_Changeset_CommentDao(),
                 new Tracker_Artifact_ChangesetJsonFormatter(
-                    TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates')
+                    TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')
                 ),
                 Tracker_FormElementFactory::instance()
             )
         );
-        $backend_logger                    = new BackendLogger(ForgeConfig::get('codendi_log') .'/realtime_syslog');
+        $backend_logger                    = new BackendLogger(ForgeConfig::get('codendi_log') . '/realtime_syslog');
         $realtime_artifact_message_sender  = new RealTimeArtifactMessageSender($node_js_client, $permissions_serializer);
 
         return new KanbanArtifactMessageSender(
@@ -1623,7 +1623,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
         $ugroup_manager = new UGroupManager();
         $ugroup         = $ugroup_manager->getUGroup($project, $ugroup_id);
-        $ugroup_name    = ($ugroup)? $ugroup->getTranslatedName() : "";
+        $ugroup_name    = ($ugroup) ? $ugroup->getTranslatedName() : "";
 
         $template_factory      = TemplateRendererFactory::build();
         $admin_permission_pane = $template_factory
@@ -1715,7 +1715,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         if ($this->getSemanticInitialEffortFactory()->getByTracker($event->getTracker())->getFieldId() !== 0) {
             $event->hasExternalSemanticDefined();
-        };
+        }
     }
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
@@ -1934,7 +1934,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $builder = new \Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionBuilder(
             new ExplicitBacklogDao(),
             $this->getPlanningFactory(),
-            TemplateRendererFactory::build()->getRenderer(__DIR__.'/../templates/masschange')
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/masschange')
         );
 
         $additional_action = $builder->buildMasschangeAction($event->getTracker(), $event->getUser());
@@ -1973,7 +1973,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function workflowDeletionEvent(WorkflowDeletionEvent $event): void
     {
-        $workflow_id = (int)$event->getWorkflow()->getId();
+        $workflow_id = (int) $event->getWorkflow()->getId();
 
         (new AddToTopBacklogPostActionDao())->deleteWorkflowPostActions($workflow_id);
     }
@@ -1989,7 +1989,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function transitionDeletionEvent(TransitionDeletionEvent $event)
     {
-        $transition_id = (int)$event->getTransition()->getId();
+        $transition_id = (int) $event->getTransition()->getId();
 
         (new AddToTopBacklogPostActionDao())->deleteTransitionPostActions($transition_id);
     }

@@ -32,8 +32,8 @@ use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\Factory;
 
-require_once __DIR__.'/../bootstrap.php';
-require_once __DIR__.'/../../../../src/www/include/utils.php';
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 class LabeledItemCollectorTest extends TestCase
 {

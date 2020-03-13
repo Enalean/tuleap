@@ -39,7 +39,6 @@ EOT;
 
     public function up()
     {
-
         $sql = "CREATE TABLE plugin_agiledashboard_configuration (
                     project_id INT(11) PRIMARY KEY,
                     scrum TINYINT NOT NULL DEFAULT 1,
@@ -58,14 +57,14 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding values in table plugin_agiledashboard_configuration: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding values in table plugin_agiledashboard_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
         $sql = "DROP TABLE plugin_agiledashboard_kanban";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping table plugin_agiledashboard_kanban: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping table plugin_agiledashboard_kanban: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 

@@ -552,10 +552,10 @@ display:inline;
                                                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                                             <tr>
                                                                 <td>
-                                                                    <?php echo !empty($breadcrumbs) ? '<div class="content-header">'. implode(' &raquo; ', $breadcrumbs) .'</div>' : ''; ?>
+                                                                    <?php echo !empty($breadcrumbs) ? '<div class="content-header">' . implode(' &raquo; ', $breadcrumbs) . '</div>' : ''; ?>
                                                                 </td>
                                                                 <td align="right">
-                                                                    <?php echo !empty($unsubscribe_link) ? '<div class="content-header">'. $unsubscribe_link .'</div>' : ''; ?>
+                                                                    <?php echo !empty($unsubscribe_link) ? '<div class="content-header">' . $unsubscribe_link . '</div>' : ''; ?>
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -582,7 +582,7 @@ display:inline;
                                                     <tr>
                                                         <td colspan="2" valign="middle" id="social">
                                                             <div>
-                                                                <?php echo !empty($additional_footer_link) ? '&nbsp;'. $additional_footer_link . '&nbsp; |' : '' ?>
+                                                                <?php echo !empty($additional_footer_link) ? '&nbsp;' . $additional_footer_link . '&nbsp; |' : '' ?>
                                                                 &nbsp;<a href="<?php echo HTTPRequest::instance()->getServerUrl() ?>/account/preferences.php" target="_blank" rel="noreferrer"><?php echo $txt_can_update_prefs ?></a>&nbsp;
                                                             </div>
                                                         </td>

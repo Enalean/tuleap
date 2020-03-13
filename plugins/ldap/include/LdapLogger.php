@@ -29,7 +29,7 @@ class LdapLogger extends TruncateLevelLogger
 
     public function __construct()
     {
-        $file_path = ForgeConfig::get('codendi_log') .'/ldap_syslog';
+        $file_path = ForgeConfig::get('codendi_log') . '/ldap_syslog';
 
         $this->createLogFileForAppUser($file_path);
 

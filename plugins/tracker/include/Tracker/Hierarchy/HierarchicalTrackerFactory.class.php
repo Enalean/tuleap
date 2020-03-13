@@ -110,7 +110,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
 
     private function removeIdsFromTrackerList($tracker_list, $tracker_ids_to_remove)
     {
-        $array_with_keys_to_remove = array_combine($tracker_ids_to_remove, range(0, count($tracker_ids_to_remove)-1));
+        $array_with_keys_to_remove = array_combine($tracker_ids_to_remove, range(0, count($tracker_ids_to_remove) - 1));
         return array_diff_key($tracker_list, $array_with_keys_to_remove);
     }
 
@@ -151,7 +151,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
         foreach ($hierarchy_rows as $relationship) {
             $parent_id = $relationship['parent_id'];
             $child_id  = $relationship['child_id'];
-            $children[]= $child_id;
+            $children[] = $child_id;
 
             if (!isset($hierarchy_map[$child_id])) {
                 $hierarchy_map[$child_id] = array();

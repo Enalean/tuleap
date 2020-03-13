@@ -44,7 +44,7 @@ class Tracker_ReportDao extends DataAccessObject
         $tracker_id = $this->da->escapeInt($tracker_id);
         $user_stm   = " ";
         if ($user_id) {
-            $user_stm = "user_id = ". $this->da->escapeInt($user_id) ." OR ";
+            $user_stm = "user_id = " . $this->da->escapeInt($user_id) . " OR ";
         }
 
         $sql = "SELECT *
@@ -78,7 +78,7 @@ class Tracker_ReportDao extends DataAccessObject
 
     public function searchByUserId($user_id)
     {
-        $user_id = $user_id ? '= '. $this->da->escapeInt($user_id) : 'IS NULL';
+        $user_id = $user_id ? '= ' . $this->da->escapeInt($user_id) : 'IS NULL';
 
         $sql = "SELECT *
                 FROM $this->table_name
@@ -161,7 +161,7 @@ class Tracker_ReportDao extends DataAccessObject
 
     public function delete($id)
     {
-        $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
+        $sql = "DELETE FROM $this->table_name WHERE id = " . $this->da->escapeInt($id);
         return $this->update($sql);
     }
 
@@ -212,14 +212,14 @@ class Tracker_ReportDao extends DataAccessObject
         $where .= $artifact_perms['where'];
 
         if ($this->submitterOnlyApplies($user_is_admin, $permissions, $ugroups)) {
-            $where .= ' AND artifact.submitted_by = '.$user->getId().' ';
+            $where .= ' AND artifact.submitted_by = ' . $user->getId() . ' ';
         }
 
         if (count($additional_from)) {
             $from  .= implode("\n", $additional_from);
         }
         if (count($additional_where)) {
-            $where .= ' AND ( '. implode(' ) AND ( ', $additional_where) .' ) ';
+            $where .= ' AND ( ' . implode(' ) AND ( ', $additional_where) . ' ) ';
         }
 
         // $sqls => SELECT UNION SELECT UNION SELECT ...
@@ -230,7 +230,7 @@ class Tracker_ReportDao extends DataAccessObject
         } else {
             $this->setGroupConcatLimit();
             $sql = " SELECT id, last_changeset_id";
-            $sql .= " FROM (". implode(' UNION ', $sqls) .") AS R GROUP BY id, last_changeset_id";
+            $sql .= " FROM (" . implode(' UNION ', $sqls) . ") AS R GROUP BY id, last_changeset_id";
 
             return $this->retrieve($sql);
         }
@@ -257,7 +257,7 @@ class Tracker_ReportDao extends DataAccessObject
         $sqls = array();
         //Does the user member of at least one group which has ACCESS_FULL or is super user?
         if ($user_is_admin || $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups) || $this->submitterOnlyApplies($user_is_admin, $permissions, $ugroups)) {
-            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id " . $from . " " . $where;
         } else {
             $sqls = $this->getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
         }
@@ -271,7 +271,7 @@ class Tracker_ReportDao extends DataAccessObject
             $ugroups = $this->da->quoteSmartImplode(',', $ugroups);
             $res['from']  = " LEFT JOIN permissions
                               ON (permissions.object_id = CAST(c.artifact_id AS CHAR CHARACTER SET utf8)
-                                  AND permissions.permission_type = '".Tracker_Artifact::PERMISSION_ACCESS."')
+                                  AND permissions.permission_type = '" . Tracker_Artifact::PERMISSION_ACCESS . "')
                             ";
             $res['where'] = " AND (artifact.use_artifact_permissions = 0
                                    OR (permissions.ugroup_id IN ($ugroups)))

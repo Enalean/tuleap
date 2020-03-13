@@ -99,7 +99,6 @@ class DocmanFileVersionCreator
         int $status,
         int $obsolesence_date
     ): CreatedItemFilePropertiesRepresentation {
-
         $is_item_locked = $this->lock_factory->itemIsLocked($item);
         try {
             $document_to_upload = $this->creator->create(

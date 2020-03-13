@@ -33,7 +33,7 @@ class ArtifactFilesTest extends \ArtifactFilesTest
      */
     public function testOptionsArtifactIdWithUser($file_id): void
     {
-        $request  = $this->client->options('artifact_temporary_files/'.$file_id);
+        $request  = $this->client->options('artifact_temporary_files/' . $file_id);
         $response = $this->getResponseForReadOnlyUserAdmin($request);
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -51,7 +51,7 @@ class ArtifactFilesTest extends \ArtifactFilesTest
         $json = $response->json();
         $data = $json['data'];
 
-        $expected = base64_encode(base64_decode($this->first_file['content']).$this->second_chunk);
+        $expected = base64_encode(base64_decode($this->first_file['content']) . $this->second_chunk);
 
         $this->assertEquals($expected, $data);
     }
@@ -62,7 +62,7 @@ class ArtifactFilesTest extends \ArtifactFilesTest
     public function testOptionsArtifactAttachedFilesIdUser($file_id): void
     {
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->options('artifact_files/'.$file_id)
+            $this->client->options('artifact_files/' . $file_id)
         );
 
         $this->assertEquals($response->getStatusCode(), 200);

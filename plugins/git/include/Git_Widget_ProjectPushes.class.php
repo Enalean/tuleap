@@ -65,7 +65,7 @@ class Git_Widget_ProjectPushes extends Widget
             $weeksNumber =  $plugin->getPluginInfo()->getPropVal('weeks_number');
         }
         $content = '<div style="text-align:center"><p>
-                        <img src="'.$this->pluginPath.'/index.php?group_id='.$groupId.'&weeks_number='.$weeksNumber.'&action=view_last_git_pushes" title="'.dgettext('tuleap-git', 'Last Git pushes').'" />
+                        <img src="' . $this->pluginPath . '/index.php?group_id=' . $groupId . '&weeks_number=' . $weeksNumber . '&action=view_last_git_pushes" title="' . dgettext('tuleap-git', 'Last Git pushes') . '" />
                     </div>';
         return $content;
     }

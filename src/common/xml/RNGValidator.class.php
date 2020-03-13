@@ -72,7 +72,7 @@ class XML_RNGValidator
         }
 
         try {
-            $jing   = __DIR__ .'/../../utils/xml/jing.jar';
+            $jing   = __DIR__ . '/../../utils/xml/jing.jar';
             $system_command->exec('java -jar ' . escapeshellarg($jing) . ' ' .  escapeshellarg($rng_path) . ' ' . escapeshellarg($temp));
         } catch (System_Command_CommandException $ex) {
             $errors = [];

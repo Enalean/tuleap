@@ -49,12 +49,12 @@ class ArtifactRuleValueView
      */
     public function fetch()
     {
-        $output  = '#'. $this->rule->id;
-        $output .= '@'. $this->rule->group_artifact_id;
-        $output .= ' '. $this->rule->source_field;
-        $output .= '('. $this->rule->source_value .') =>';
-        $output .= ' '. $this->rule->target_field;
-        $output .= '('. $this->rule->target_value .')';
+        $output  = '#' . $this->rule->id;
+        $output .= '@' . $this->rule->group_artifact_id;
+        $output .= ' ' . $this->rule->source_field;
+        $output .= '(' . $this->rule->source_value . ') =>';
+        $output .= ' ' . $this->rule->target_field;
+        $output .= '(' . $this->rule->target_value . ')';
         return $output;
     }
 }

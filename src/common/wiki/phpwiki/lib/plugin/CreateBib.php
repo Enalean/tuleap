@@ -74,7 +74,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
 
         $start = false;
         $stop = false;
-        for ($i=0; $i<count($content); $i++) {
+        for ($i = 0; $i < count($content); $i++) {
             // $starttag shows when to start
             if (preg_match('/^@/', $content[$i], $match)) {
                 $start = true;
@@ -96,7 +96,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
     public function extractArticles(&$content)
     {
         $articles = array();
-        for ($i=0; $i<count($content); $i++) {
+        for ($i = 0; $i < count($content); $i++) {
             // Should match "* [WikiPageName] whatever"
             //if (preg_match('/^\s*\*\s+(\[.+\])/',$content[$i],$match))
             if (preg_match('/^\s*\*\s+\[(.+)\]/', $content[$i], $match)) {
@@ -151,7 +151,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
 
         $html = HTML::div(array('class' => 'bib','align' => 'left'));
         $html->pushContent($dump_button, ' ');
-        $list = HTML::pre(array('name'=>'biblist','id'=>'biblist',
+        $list = HTML::pre(array('name' => 'biblist','id' => 'biblist',
         'class' => 'bib'));
 
         // Let's find the subpages
@@ -183,7 +183,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
 
         return $html;
     }
-};
+}
 
 // $Log: CreateBib.php,v $
 // Based on CreateTOC

@@ -45,7 +45,6 @@ class WebDAVAuthentication
      */
     public function authenticate()
     {
-
         // test if username field is empty
         if (!$this->issetUsername()) {
             $this->setHeader();
@@ -70,7 +69,6 @@ class WebDAVAuthentication
      */
     public function issetUsername()
     {
-
         return isset($_SERVER['PHP_AUTH_USER']);
     }
 
@@ -90,7 +88,6 @@ class WebDAVAuthentication
      */
     public function getUsername()
     {
-
         return $_SERVER['PHP_AUTH_USER'];
     }
 
@@ -101,7 +98,6 @@ class WebDAVAuthentication
      */
     public function getPassword()
     {
-
         return $_SERVER['PHP_AUTH_PW'];
     }
 
@@ -116,7 +112,6 @@ class WebDAVAuthentication
      */
     public function getUser($username, $password)
     {
-
         return UserManager::instance()->login($username, $password);
     }
 }

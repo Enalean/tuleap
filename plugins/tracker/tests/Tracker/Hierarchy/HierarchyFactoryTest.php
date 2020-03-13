@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class Tracker_HierarchyFactoryTest extends TuleapTestCase
 {

@@ -126,7 +126,6 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
 
     private function canAugmentData($fields_data)
     {
-
         /* When updating or massupdate an artifact, we do not want this method to reset the selected options.
          *
          * This method is in iteself somewhat of a hack. Its aim is to set default values for multiselect fields

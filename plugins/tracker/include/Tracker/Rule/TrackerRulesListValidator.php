@@ -44,7 +44,7 @@ class TrackerRulesListValidator
     {
         $values = [];
         foreach ($value_field_list as $field_id => $value) {
-            $field = $this->form_element_factory->getFormElementListById((int)$field_id);
+            $field = $this->form_element_factory->getFormElementListById((int) $field_id);
             if ($field) {
                 $values[$field->getID()] = ['field' => $field, 'values' => is_array($value) ? $value : [$value]];
             }

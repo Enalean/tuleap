@@ -32,7 +32,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNo
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
-require_once __DIR__.'/../../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../../bootstrap.php';
 
 class ListFieldCheckerWithBindStaticTest extends TestCase
 {

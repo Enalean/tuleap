@@ -99,7 +99,6 @@ class WikiPlugin__BackendInfo extends WikiPlugin
 
         foreach ($data as $key => $val) {
             if (is_integer($key)) {
-                ;
             } elseif ($key == 'passwd' and !$user->isAdmin()) {
                 $data[$key] = $val ? _("<not displayed>") : _("<empty>");
             } elseif ($key and $key == '_cached_html') {
@@ -177,7 +176,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
         }
         return $rows;
     }
-};
+}
 
 // $Log: _BackendInfo.php,v $
 // Revision 1.24  2005/01/29 19:47:43  rurban

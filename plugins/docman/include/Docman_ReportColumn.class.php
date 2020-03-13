@@ -47,7 +47,7 @@ class Docman_ReportColumn
     {
         $sortParam = null;
         if ($this->md !== null) {
-            $sortParam = 'sort_'.$this->md->getLabel();
+            $sortParam = 'sort_' . $this->md->getLabel();
         }
         return $sortParam;
     }
@@ -57,7 +57,7 @@ class Docman_ReportColumn
         $html = '';
         $sort = $this->getSort();
         if ($sort !== null) {
-            $html .= '<input type="hidden" name="'.$this->getSortParameter().'" value="'.$sort.'" />';
+            $html .= '<input type="hidden" name="' . $this->getSortParameter() . '" value="' . $sort . '" />';
             $html .= "\n";
         }
         return $html;
@@ -69,10 +69,10 @@ class Docman_ReportColumn
         $sort = $this->getSort();
         if ($sort == 1) {
             $toggleValue = '0';
-            $toogleIcon = '<img src="'.util_get_image_theme("up_arrow.png").'" border="0" >';
+            $toogleIcon = '<img src="' . util_get_image_theme("up_arrow.png") . '" border="0" >';
         } else {
             $toggleValue = '1';
-            $toogleIcon = '<img src="'.util_get_image_theme("dn_arrow.png").'" border="0" >';
+            $toogleIcon = '<img src="' . util_get_image_theme("dn_arrow.png") . '" border="0" >';
         }
 
         // URL
@@ -89,10 +89,10 @@ class Docman_ReportColumn
         $link = $purifier->purify($this->md->getName());
 
         if ($sort !== null) {
-            $link .= '&nbsp;'.$toogleIcon;
+            $link .= '&nbsp;' . $toogleIcon;
         }
 
-        $href = '<a href="'.$url.'" title="'.$title.'">'.$link.'</a>';
+        $href = '<a href="' . $url . '" title="' . $title . '">' . $link . '</a>';
 
         return $href;
     }
@@ -171,7 +171,7 @@ class Docman_ReportColumnLocation extends Docman_ReportColumn
             $dfltParams['id'] = $id;
             $url              = DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $dfltParams);
 
-            $href = '<a href="'.$url.'">'. $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
+            $href = '<a href="' . $url . '">' . $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
             $pathUrl[] = $href;
         }
         $html = implode(' / ', $pathUrl);
@@ -191,7 +191,7 @@ class Docman_ReportColumnTitle extends Docman_ReportColumn
         $html = '';
         $docmanIcons = $view->_getDocmanIcons($params);
         $icon_src = $docmanIcons->getIconForItem($item, $params);
-        $icon = '<img src="'. $icon_src .'" class="docman_item_icon" />';
+        $icon = '<img src="' . $icon_src . '" class="docman_item_icon" />';
         $html .= '<span style="white-space: nowrap;">';
         $html .= $icon;
         $url   = DocmanViewURLBuilder::buildActionUrl(
@@ -201,7 +201,7 @@ class Docman_ReportColumnTitle extends Docman_ReportColumn
             false,
             true
         );
-        $html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
+        $html .= '<a href="' . $url . '" id="docman_item_title_link_' . $item->getId() . '">';
         $html .=  htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
         $html .=  '</a>';
         $html .= $view->getItemMenu($item, $params);

@@ -24,7 +24,7 @@ use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use RestBase;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 /**
  * @group PullRequest

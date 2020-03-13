@@ -30,7 +30,7 @@ class BackendCommandException extends Exception
         $this->command      = $command;
         $this->output       = $output;
         $this->return_value = $return_value;
-        $message = 'Command execution failure: '.$command.' (return value: '.$return_value."):\n".implode("\n", $output);
+        $message = 'Command execution failure: ' . $command . ' (return value: ' . $return_value . "):\n" . implode("\n", $output);
         parent::__construct($message, $return_value);
     }
 

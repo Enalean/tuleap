@@ -99,21 +99,20 @@ class WikiPlugin_PageGroup extends WikiPlugin
             }
             return $result;
         }
-        return array(sprintf(_("<%s: no such section>"), $page ." ". $section));
+        return array(sprintf(_("<%s: no such section>"), $page . " " . $section));
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-
         $args = $this->getArgs($argstr, $request);
         extract($args);
-        $html="";
+        $html = "";
         if (empty($parent)) {
             // FIXME: WikiPlugin has no way to report when
             // required args are missing?
             $error_text = fmt(
                 "%s: %s",
-                "WikiPlugin_" .$this->getName(),
+                "WikiPlugin_" . $this->getName(),
                 $error_text
             );
             $error_text .= " " . sprintf(_("A required argument '%s' is missing."), 'parent');
@@ -239,7 +238,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
         $links->pushcontent(" ] "); // an experiment
         return $links;
     }
-};
+}
 
 // $Log: PageGroup.php,v $
 // Revision 1.9  2004/09/25 16:35:09  rurban

@@ -49,7 +49,7 @@ class AndFromWhere implements IProvideFromAndWhereSQLFragments
      */
     public function getFromAsString()
     {
-        return $this->left->getFromAsString() .' '. $this->right->getFromAsString();
+        return $this->left->getFromAsString() . ' ' . $this->right->getFromAsString();
     }
 
     /**

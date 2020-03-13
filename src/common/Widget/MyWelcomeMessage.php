@@ -74,7 +74,7 @@ class MyWelcomeMessage extends Widget
     {
         $file_name = 'widget/my_welcome_message';
         if ($user->isSuperUser()) {
-            return $file_name.'_admin';
+            return $file_name . '_admin';
         }
         return $file_name;
     }

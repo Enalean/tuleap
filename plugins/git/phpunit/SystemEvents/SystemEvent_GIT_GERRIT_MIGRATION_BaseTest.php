@@ -20,7 +20,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ .'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
 class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
@@ -69,7 +69,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $factory = \Mockery::spy(\GitRepositoryFactory::class);
         $factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($this->repository);
 
-        $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
+        $id = $type = $parameters = $priority = $status = $create_date = $process_date = $end_date = $log = 0;
         $this->event = \Mockery::mock(\SystemEvent_GIT_GERRIT_MIGRATION::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->event->setParameters("$this->repository_id::$this->remote_server_id::true");
         $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
@@ -120,7 +120,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $e = new Exception("failure detail");
         $this->project_creator->shouldReceive('createGerritProject')->andThrows($e);
         $this->event->shouldReceive('error')->with("failure detail")->once();
-        $this->logger->shouldReceive('error')->with("An error occured while processing event: ".$this->event->verbalizeParameters(null), ['exception' => $e])->once();
+        $this->logger->shouldReceive('error')->with("An error occured while processing event: " . $this->event->verbalizeParameters(null), ['exception' => $e])->once();
         $this->event->process();
     }
 
@@ -136,7 +136,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $e = new Git_Driver_Gerrit_Exception("failure detail");
         $this->project_creator->shouldReceive('createGerritProject')->andThrows($e);
         $this->event->shouldReceive('error')->with("gerrit: failure detail")->once();
-        $this->logger->shouldReceive('error')->with("Gerrit failure: ".$this->event->verbalizeParameters(null), ['exception' => $e])->once();
+        $this->logger->shouldReceive('error')->with("Gerrit failure: " . $this->event->verbalizeParameters(null), ['exception' => $e])->once();
         $this->event->process();
     }
 
@@ -151,7 +151,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $e = new Exception("failure detail");
         $this->server_factory->shouldReceive('getServer')->andThrows($e);
         $this->event->shouldReceive('error')->with("failure detail")->once();
-        $this->logger->shouldReceive('error')->with("An error occured while processing event: ".$this->event->verbalizeParameters(null), ['exception' => $e])->once();
+        $this->logger->shouldReceive('error')->with("An error occured while processing event: " . $this->event->verbalizeParameters(null), ['exception' => $e])->once();
         $this->event->process();
     }
 

@@ -38,7 +38,7 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
     {
         $project_id = $item->getGroupId();
         $pagename   = urlencode($item->getPagename());
-        return '/wiki/?group_id='. $project_id .'&pagename='. $pagename;
+        return '/wiki/?group_id=' . $project_id . '&pagename=' . $pagename;
     }
 
     public function visitLink(&$item, $params = array())

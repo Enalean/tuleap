@@ -55,7 +55,7 @@ class TrackerCrumbInContext implements Dispatchable
         $this->go_to_links[self::TRACKER_CRUMB_IDENTIFIER] = new TrackerCrumbLinkInContext(
             $this->tracker->getName(),
             sprintf(dgettext('tuleap-tracker', '%s tracker'), $this->tracker->getName()),
-            TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId()
+            TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId()
         );
         $this->user = $user;
     }

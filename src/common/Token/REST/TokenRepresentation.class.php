@@ -45,6 +45,6 @@ class TokenRepresentation
     {
         $this->user_id = JsonCast::toInt($token->getUserId());
         $this->token   = $token->getTokenValue();
-        $this->uri     = self::ROUTE.'/'.$this->token;
+        $this->uri     = self::ROUTE . '/' . $this->token;
     }
 }

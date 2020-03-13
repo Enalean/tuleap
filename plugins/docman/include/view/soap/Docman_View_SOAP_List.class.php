@@ -25,7 +25,6 @@ class Docman_View_SOAP_List
 
     public function display($params)
     {
-
         $result = array();
         $itemFactory = new Docman_ItemFactory($params['group_id']);
         $itemTree = $itemFactory->getItemSubTree($params['item'], $params['user']);

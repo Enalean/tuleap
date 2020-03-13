@@ -49,8 +49,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
 
     public function process()
     {
-        $repo_id           = (int)$this->getParameter(0);
-        $remote_server_id  = (int)$this->getParameter(1);
+        $repo_id           = (int) $this->getParameter(0);
+        $remote_server_id  = (int) $this->getParameter(1);
         $this->dao->switchToGerrit($repo_id, $remote_server_id);
 
         $repository = $this->repository_factory->getRepositoryById($repo_id);
@@ -69,7 +69,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
             $repository->setRemoteServerMigrationStatus(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
             $repository->getBackend()->updateRepoConf($repository);
 
-            $this->done("Created project $gerrit_project on ". $server->getBaseUrl());
+            $this->done("Created project $gerrit_project on " . $server->getBaseUrl());
             return true;
         } catch (Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException $e) {
             $this->logError($repository, "gerrit: ", "Gerrit failure: ", $e);
@@ -96,7 +96,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
         if (! $user->isAnonymous()) {
             $factory = new BaseLanguageFactory();
             $language = $factory->getBaseLanguage($user->getLocale());
-            $url = HTTPRequest::instance()->getServerUrl() . GIT_BASE_URL . '/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'&pane=gerrit';
+            $url = HTTPRequest::instance()->getServerUrl() . GIT_BASE_URL . '/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '&pane=gerrit';
 
             $notification = new Notification(
                 array($user->getEmail()),
@@ -117,16 +117,16 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
     {
         $txt = '';
 
-        $repo_id          = (int)$this->getParameter(0);
-        $remote_server_id = (int)$this->getParameter(1);
+        $repo_id          = (int) $this->getParameter(0);
+        $remote_server_id = (int) $this->getParameter(1);
 
-        $txt .= 'repo: '. $this->verbalizeRepoId($repo_id, $with_link) .', remote server: '. $this->verbalizeRemoteServerId($remote_server_id, $with_link).$this->verbalizeAccessRightMigration();
+        $txt .= 'repo: ' . $this->verbalizeRepoId($repo_id, $with_link) . ', remote server: ' . $this->verbalizeRemoteServerId($remote_server_id, $with_link) . $this->verbalizeAccessRightMigration();
         $user = $this->getRequester();
         if (! $user->isAnonymous()) {
             if ($with_link) {
-                $txt .= ' <a href="/admin/usergroup.php?user_id='.$user->getId().'">'.$user->getRealName().'</a>';
+                $txt .= ' <a href="/admin/usergroup.php?user_id=' . $user->getId() . '">' . $user->getRealName() . '</a>';
             } else {
-                $txt .= ' '.$user->getRealName();
+                $txt .= ' ' . $user->getRealName();
             }
         }
 
@@ -135,7 +135,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
 
     private function getRequester()
     {
-        $user_id = (int)$this->getParameter(3);
+        $user_id = (int) $this->getParameter(3);
         return $this->user_manager->getUserById($user_id);
     }
 
@@ -149,7 +149,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
 
     private function verbalizeRepoId($repo_id, $with_link)
     {
-        $txt = '#'. $repo_id;
+        $txt = '#' . $repo_id;
         if ($with_link) {
             $hp = Codendi_HTMLPurifier::instance();
             $repo = $this->repository_factory->getRepositoryById($repo_id);
@@ -162,7 +162,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
 
     private function verbalizeRemoteServerId($remote_server_id, $with_link)
     {
-        $txt = '#'. $remote_server_id;
+        $txt = '#' . $remote_server_id;
         if ($with_link) {
             try {
                 $server = $this->server_factory->getServerById($remote_server_id);
@@ -177,8 +177,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
     public function injectDependencies(
         GitDao $dao,
         GitRepositoryFactory $repository_factory,
-        Git_RemoteServer_GerritServerFactory  $server_factory,
-        \Psr\Log\LoggerInterface  $logger,
+        Git_RemoteServer_GerritServerFactory $server_factory,
+        \Psr\Log\LoggerInterface $logger,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_GitRepositoryUrlManager $url_manager,
         UserManager $user_manager,

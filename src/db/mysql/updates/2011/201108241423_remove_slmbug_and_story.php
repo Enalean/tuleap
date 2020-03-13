@@ -39,7 +39,7 @@ EOT;
         $sql = 'DELETE FROM reference WHERE id IN (20, 21)';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping references slmbug and story: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping references slmbug and story: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

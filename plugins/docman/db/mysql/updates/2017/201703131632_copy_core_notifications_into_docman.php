@@ -64,7 +64,7 @@ class b201703131632_copy_core_notifications_into_docman extends ForgeUpgrade_Buc
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while copying table. '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while copying table. ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

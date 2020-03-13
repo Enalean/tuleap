@@ -178,7 +178,7 @@ class HierarchyController
                 'func'    => 'admin-hierarchy'
             ]
         );
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'.$redirect);
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . $redirect);
     }
 
     private function render($template_name, $presenter)

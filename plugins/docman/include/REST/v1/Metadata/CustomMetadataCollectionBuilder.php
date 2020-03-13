@@ -57,7 +57,7 @@ class CustomMetadataCollectionBuilder
                 $metadata->getLabel(),
                 $metadata->getName(),
                 $metadata->getDescription(),
-                (int)$metadata->getType(),
+                (int) $metadata->getType(),
                 $metadata->isEmptyAllowed(),
                 $metadata->isMultipleValuesAllowed(),
                 $metadata->isUsed(),
@@ -71,11 +71,11 @@ class CustomMetadataCollectionBuilder
 
     private function getListOfPossibleValues(Docman_Metadata $metadata): ?array
     {
-        if ((int)$metadata->getType() !== PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+        if ((int) $metadata->getType() !== PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             return null;
         }
 
-        $list_of_values = $this->list_of_value_builder->build((int)$metadata->getId(), false);
+        $list_of_values = $this->list_of_value_builder->build((int) $metadata->getId(), false);
 
         $possible_values_representation = [];
         /**
@@ -83,7 +83,7 @@ class CustomMetadataCollectionBuilder
          */
         foreach ($list_of_values as $value) {
             $representation = new DocmanMetadataListValueRepresentation();
-            $representation->build((int)$value->getId(), $value->getMetadataValue());
+            $representation->build((int) $value->getId(), $value->getMetadataValue());
 
             $possible_values_representation[] = $representation;
         }

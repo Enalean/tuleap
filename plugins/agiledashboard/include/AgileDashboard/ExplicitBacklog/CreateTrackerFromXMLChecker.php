@@ -80,7 +80,7 @@ class CreateTrackerFromXMLChecker
 
     private function areAddToTopBacklogXMLTagsDefined(SimpleXMLElement $xml): bool
     {
-        $add_to_top_backlog_tags = $xml->xpath('//'.AddToTopBacklog::XML_TAG_NAME);
+        $add_to_top_backlog_tags = $xml->xpath('//' . AddToTopBacklog::XML_TAG_NAME);
         return is_array($add_to_top_backlog_tags) && count($add_to_top_backlog_tags) > 0;
     }
 

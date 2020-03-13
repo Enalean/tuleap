@@ -69,7 +69,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function getQuerySelect()
     {
         //Last update date is stored in the changeset (the date of the changeset)
-        return "c.submitted_on AS `". $this->name ."`";
+        return "c.submitted_on AS `" . $this->name . "`";
     }
 
     public function getQueryFrom()
@@ -299,8 +299,8 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         if ($last_changeset_value === null && $submitted_value === null && $this->isRequired()) {
             $is_valid = false;
             $this->setHasErrors(true);
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
-        } elseif ($submitted_value !== null &&  ! $this->userCanUpdate()) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel() . ' (' . $this->getName() . ')'));
+        } elseif ($submitted_value !== null && ! $this->userCanUpdate()) {
             $is_valid = true;
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
         }
@@ -340,7 +340,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     protected function fetchAdminFormElement()
     {
         $html = '';
-        $html .= '<div>'. $this->formatDateTime(time()) . '</div>';
+        $html .= '<div>' . $this->formatDateTime(time()) . '</div>';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_help');
         $html .= '</span>';

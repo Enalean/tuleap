@@ -35,7 +35,7 @@ final class JSONHeaderTest extends TestCase
     public function testJsonFormat($entry, string $expected) : void
     {
         $this->assertSame(
-            'X-JSON: {"whatever":false,"msg":'.$expected.'}',
+            'X-JSON: {"whatever":false,"msg":' . $expected . '}',
             JSONHeader::getHeaderForPrototypeJS(['whatever' => false, 'msg' => $entry])
         );
     }

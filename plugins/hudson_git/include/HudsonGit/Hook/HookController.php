@@ -114,7 +114,7 @@ class HookController
         $repository    = $this->git_repository_factory->getRepositoryById($repository_id);
         if (! $repository) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_hudson_git', 'error_repository_invalid'));
-            $GLOBALS['Response']->redirect(GIT_BASE_URL."/?group_id=".$this->request->getProject()->getID());
+            $GLOBALS['Response']->redirect(GIT_BASE_URL . "/?group_id=" . $this->request->getProject()->getID());
         }
 
         return $repository;

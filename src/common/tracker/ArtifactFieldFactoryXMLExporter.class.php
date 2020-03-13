@@ -82,7 +82,7 @@ class ArtifactFieldFactoryXMLExporter
             if ($this->isASelectBoxWhoseTypeChangedInThePast($display_type, $data_type, $value_function)) {
                 return ArtifactUserListFieldXMLExporter::TV3_TYPE;
             }
-            return $display_type.'_'.$data_type;
+            return $display_type . '_' . $data_type;
         } elseif (isset($this->fields[$field_name])) {
             return $field_name;
         }

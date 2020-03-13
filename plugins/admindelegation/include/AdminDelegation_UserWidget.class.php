@@ -69,7 +69,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
     {
         $admins = array();
         $um = UserManager::instance();
-        $sql = 'SELECT u.user_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($groupId);
+        $sql = 'SELECT u.user_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = ' . db_ei($groupId);
         $res = db_query($sql);
         while ($row = db_fetch_array($res)) {
             $admins[] = $um->getUserById($row['user_id']);
@@ -97,7 +97,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
             $pm      = ProjectManager::instance();
             $project = $pm->getProjectFromAutocompleter($request->get('plugin_admindelegation_group'));
             if ($project && $project->isActive()) {
-                $groupValue = $project->getPublicName().' ('.$project->getUnixName().')';
+                $groupValue = $project->getPublicName() . ' (' . $project->getUnixName() . ')';
             } else {
                 $groupValue = '';
             }
@@ -108,14 +108,14 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
 
         $html .= '<form method="post" action="">';
         $html .= '<div class="tlp-form-element">';
-        $html .= '<label class="tlp-label" for="plugin_admindelegation_func">'.dgettext('tuleap-admindelegation', 'Show administrators of project:').'</label>';
+        $html .= '<label class="tlp-label" for="plugin_admindelegation_func">' . dgettext('tuleap-admindelegation', 'Show administrators of project:') . '</label>';
         $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_admins" />';
-        $html .= '<input type="text" class="tlp-input" name="plugin_admindelegation_group" value="'.$hp->purify($groupValue).'" size ="40" id="plugin_admindelegation_group" />';
+        $html .= '<input type="text" class="tlp-input" name="plugin_admindelegation_group" value="' . $hp->purify($groupValue) . '" size ="40" id="plugin_admindelegation_group" />';
         $html .= '</div>';
-        $html .= '<input type="submit" class="tlp-button-primary" value="'.dgettext('tuleap-admindelegation', 'Search').'"/>';
+        $html .= '<input type="submit" class="tlp-button-primary" value="' . dgettext('tuleap-admindelegation', 'Search') . '"/>';
         $html .= '</form>';
 
-        $js = "new ProjectAutoCompleter('plugin_admindelegation_group', '".util_get_dir_image_theme()."', false);";
+        $js = "new ProjectAutoCompleter('plugin_admindelegation_group', '" . util_get_dir_image_theme() . "', false);";
         $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
         if ($func == 'show_admins' && $project && $project->isActive()) {
@@ -126,8 +126,8 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
                 $html .= '<table width="100%" class="tlp-table">';
                 $html .= '<thead>';
                 $html .= '<tr>';
-                $html .= '<th>'.dgettext('tuleap-admindelegation', 'Name').'</th>';
-                $html .= '<th>'.dgettext('tuleap-admindelegation', 'Email').'</th>';
+                $html .= '<th>' . dgettext('tuleap-admindelegation', 'Name') . '</th>';
+                $html .= '<th>' . dgettext('tuleap-admindelegation', 'Email') . '</th>';
                 $html .= '</tr>';
                 $html .= '</thead>';
                 $html .= '<tbody>';
@@ -135,17 +135,17 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
                 foreach ($users as $u) {
                     $mailto = $u->getEmail();
                     $allAdmins[] = $mailto;
-                    $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                    $html .= '<td>'.$hp->purify($uh->getDisplayNameFromUser($u)).'</td>';
-                    $html .= '<td><a href="mailto:'.$hp->purify($mailto).'">'.$hp->purify($u->getEmail()).'</a></td>';
+                    $html .= '<tr class="' . util_get_alt_row_color($i++) . '">';
+                    $html .= '<td>' . $hp->purify($uh->getDisplayNameFromUser($u)) . '</td>';
+                    $html .= '<td><a href="mailto:' . $hp->purify($mailto) . '">' . $hp->purify($u->getEmail()) . '</a></td>';
                     $html .= '</tr>';
                 }
                 $html .= '</tbody>';
                 $html .= '</table>';
 
                 // Mail to all admins
-                $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-                $html .= '<a href="mailto:'.$hp->purify(implode(',', $allAdmins)).'?Subject='.$hp->purify(sprintf(dgettext('tuleap-admindelegation', '[%1$s] Project %2$s:'), ForgeConfig::get('sys_name'), $project->getPublicName())).'">'.dgettext('tuleap-admindelegation', 'Mail to all admins').'</a>';
+                $html .= '<div style="text-align:center" class="' . util_get_alt_row_color($i++) . '">';
+                $html .= '<a href="mailto:' . $hp->purify(implode(',', $allAdmins)) . '?Subject=' . $hp->purify(sprintf(dgettext('tuleap-admindelegation', '[%1$s] Project %2$s:'), ForgeConfig::get('sys_name'), $project->getPublicName())) . '">' . dgettext('tuleap-admindelegation', 'Mail to all admins') . '</a>';
                 $html .= '</div>';
             }
         }

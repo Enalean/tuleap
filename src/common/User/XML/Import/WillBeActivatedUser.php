@@ -55,6 +55,6 @@ class WillBeActivatedUser implements ReadyToBeImportedUser
 
     public function process(UserManager $user_manager, LoggerInterface $logger)
     {
-        $logger->info($this->user->getUserName().' is not alive. Nothing to do.');
+        $logger->info($this->user->getUserName() . ' is not alive. Nothing to do.');
     }
 }

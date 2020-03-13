@@ -21,11 +21,11 @@
 
 class FRSException extends Exception
 {
-};
+}
 
 class FRSFileException extends FRSException
 {
-};
+}
 
 class FRSFileMD5SumException extends FRSFileException
 {
@@ -51,7 +51,7 @@ class FRSFileInvalidNameException extends FRSFileException
      */
     public function __construct($file, $code = 0)
     {
-        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid').': '.$file->getFileName(), $code);
+        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ': ' . $file->getFileName(), $code);
     }
 }
 
@@ -65,7 +65,7 @@ class FRSFileExistsException extends FRSFileException
      */
     public function __construct($file, $code = 0)
     {
-        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_exists').': '.$file->getFileName(), $code);
+        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_exists') . ': ' . $file->getFileName(), $code);
     }
 }
 
@@ -79,7 +79,7 @@ class FRSFileToBeRestoredException extends FRSFileException
      */
     public function __construct($file, $code = 0)
     {
-        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_to_be_restored').': '.$file->getFileName(), $code);
+        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_to_be_restored') . ': ' . $file->getFileName(), $code);
     }
 }
 
@@ -121,6 +121,6 @@ class FRSFileIllegalNameException extends FRSFileException
      */
     public function __construct($file, $code = 0)
     {
-        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'illegal_file_name').': '.$file->getFileName(), $code);
+        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'illegal_file_name') . ': ' . $file->getFileName(), $code);
     }
 }

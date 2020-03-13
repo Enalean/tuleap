@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporterTest extends TuleapTestCase
 {
@@ -60,8 +60,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporterTest e
         );
 
         $field_change = $this->changeset_xml->field_change;
-        $this->assertEqual((string)$field_change['type'], 'int');
-        $this->assertEqual((string)$field_change['field_name'], $this->field->getName());
+        $this->assertEqual((string) $field_change['type'], 'int');
+        $this->assertEqual((string) $field_change['field_name'], $this->field->getName());
         $this->assertEqual($field_change->value, 123);
     }
 }

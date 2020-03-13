@@ -130,7 +130,7 @@ class Tracker_Rule_List_Factory
                     $duplicate_source_field_id = $mapping['to'];
 
                     $mapping_values = $mapping['values'];
-                    if ((int)$source_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                    if ((int) $source_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
                         $duplicate_source_value_id = $source_value_id;
                     } else {
                         $duplicate_source_value_id = $mapping_values[$source_value_id];
@@ -140,7 +140,7 @@ class Tracker_Rule_List_Factory
                     $duplicate_target_field_id = $mapping['to'];
 
                     $mapping_values = $mapping['values'];
-                    if ((int)$target_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                    if ((int) $target_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
                         $duplicate_target_value_id = $target_value_id;
                     } else {
                         $duplicate_target_value_id = $mapping_values[$target_value_id];
@@ -167,7 +167,7 @@ class Tracker_Rule_List_Factory
             $target_field = $form_element_factory->getFormElementById($rule->getTargetFieldId());
             $bf = new Tracker_FormElement_Field_List_BindFactory();
             //TODO: handle sb/msb bind to users and remove condition
-            if ($bf->getType($source_field->getBind()) == 'static' &&  $bf->getType($target_field->getBind()) == 'static') {
+            if ($bf->getType($source_field->getBind()) == 'static' && $bf->getType($target_field->getBind()) == 'static') {
                 $child = $list_rules->addChild('rule');
                 $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
                 $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
@@ -207,7 +207,6 @@ class Tracker_Rule_List_Factory
      */
     private function populate(Tracker_Rule_List $list_rule, $tracker_id, $source_field_id, $target_field_id, $source_value, $target_value)
     {
-
         $list_rule->setTrackerId($tracker_id)
                 ->setSourceFieldId($source_field_id)
                 ->setTargetFieldId($target_field_id)

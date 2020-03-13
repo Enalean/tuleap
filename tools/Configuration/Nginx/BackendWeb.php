@@ -47,8 +47,8 @@ class BackendWeb
         $this->common->deployConfigurationChunks();
         $this->common->deployMainNginxConf();
         $this->common->replacePlaceHolderInto(
-            $this->tuleap_base_dir.'/tools/distlp/backend-web/nginx/tuleap.conf',
-            $this->nginx_base_dir.'/conf.d/tuleap.conf',
+            $this->tuleap_base_dir . '/tools/distlp/backend-web/nginx/tuleap.conf',
+            $this->nginx_base_dir . '/conf.d/tuleap.conf',
             array(
                 '%sys_default_domain%'
             ),

@@ -73,7 +73,7 @@ class BurndownRepresentation
         );
         $this->is_under_calculation = JsonCast::toBoolean($data_burndown->isUnderCalcul());
         foreach ($data_burndown->getRemainingEffortsAtDate() as $timestamp => $burndown_effort) {
-            $this->points_with_date [] = new BurndownPointRepresentation($burndown_effort, $timestamp);
+            $this->points_with_date[] = new BurndownPointRepresentation($burndown_effort, $timestamp);
         }
 
         $this->opening_days = array(1, 2, 3, 4, 5);

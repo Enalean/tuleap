@@ -163,7 +163,7 @@ class ProjectDashboardXMLImporter
                 }
                 $widget_rank++;
             } catch (\Exception $exception) {
-                $this->logger->warning("Impossible to create widget: ".$exception->getMessage());
+                $this->logger->warning("Impossible to create widget: " . $exception->getMessage());
             }
         }
     }
@@ -192,18 +192,18 @@ class ProjectDashboardXMLImporter
         $this->logger->info("Import widget $widget_name");
         $widget = $this->widget_factory->getInstanceByWidgetName($widget_name);
         if ($widget === null) {
-            $this->logger->error("Impossible to instantiate widget named '".$widget_name."'.  Widget skipped");
+            $this->logger->error("Impossible to instantiate widget named '" . $widget_name . "'.  Widget skipped");
             return [null, null];
         }
 
         if ($this->disabled_project_widgets_checker->isWidgetDisabled($widget, ProjectDashboardController::DASHBOARD_TYPE)) {
-            $this->logger->error("The widget named '".$widget_name."' is disabled. Widget skipped");
+            $this->logger->error("The widget named '" . $widget_name . "' is disabled. Widget skipped");
             return [null, null];
         }
 
         $widget->setOwner($project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         if ($widget->isUnique() && isset($all_widgets[$widget->getId()])) {
-            $this->logger->warning("Impossible to instantiate twice widget named '".$widget_name."'.  Widget skipped");
+            $this->logger->warning("Impossible to instantiate twice widget named '" . $widget_name . "'.  Widget skipped");
             return [null, null];
         }
         $event = new ConfigureAtXMLImport($widget, $widget_xml, $mapping_registry);
@@ -212,7 +212,7 @@ class ProjectDashboardXMLImporter
             return [$widget, $event->getContentId()];
         }
         if (! in_array($widget->getId(), GetProjectWidgetList::CORE_WIDGETS)) {
-            $this->logger->error("Widget named '".$widget_name."' is not supported at import.  Widget skipped");
+            $this->logger->error("Widget named '" . $widget_name . "' is not supported at import.  Widget skipped");
             return [null, null];
         }
         $content_id = $this->configureWidget($widget, $widget_xml);
@@ -232,10 +232,10 @@ class ProjectDashboardXMLImporter
         $params = [];
         if (isset($widget_xml->preference)) {
             foreach ($widget_xml->preference as $preference) {
-                $preference_name = trim((string)$preference['name']);
+                $preference_name = trim((string) $preference['name']);
                 foreach ($preference->value as $value) {
-                    $key = trim((string)$value['name']);
-                    $val = trim((string)$value);
+                    $key = trim((string) $value['name']);
+                    $val = trim((string) $value);
                     $params[$preference_name][$key] = $val;
                 }
             }

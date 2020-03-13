@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class FileImporterTest extends \PHPUnit\Framework\TestCase
 {
@@ -62,7 +62,7 @@ class FileImporterTest extends \PHPUnit\Framework\TestCase
 
         $this->user_dao->expects($this->once())->method('storeLastAccessDate');
 
-        $this->file_importer->import(__DIR__.'/_fixtures/xferlog');
+        $this->file_importer->import(__DIR__ . '/_fixtures/xferlog');
     }
 
     public function testItIgnoreOldLogs()
@@ -85,6 +85,6 @@ class FileImporterTest extends \PHPUnit\Framework\TestCase
             '/bla'
         );
 
-        $file_importer->import(__DIR__.'/_fixtures/xferlog');
+        $file_importer->import(__DIR__ . '/_fixtures/xferlog');
     }
 }

@@ -54,7 +54,7 @@ class AgileDashboard_FirstScrumCreator
         $this->xml_importer     = $xml_importer;
         $this->planning_factory = $planning_factory;
         $this->tracker_factory  = $tracker_factory;
-        $this->template_path    = AGILEDASHBOARD_RESOURCE_DIR .'/scrum_dashboard_template.xml';
+        $this->template_path    = AGILEDASHBOARD_RESOURCE_DIR . '/scrum_dashboard_template.xml';
     }
 
     public function createFirstScrum()

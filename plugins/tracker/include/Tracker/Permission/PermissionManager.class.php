@@ -58,7 +58,7 @@ class Tracker_Permission_PermissionManager
                     'plugin_tracker_admin_permissions',
                     'no_assignee_semantic',
                     array(
-                        TRACKER_BASE_URL . '/?'.  http_build_query(array('func' => 'admin-semantic', 'tracker' => $tracker->getId())),
+                        TRACKER_BASE_URL . '/?' .  http_build_query(array('func' => 'admin-semantic', 'tracker' => $tracker->getId())),
                         $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_label')
                     )
                 ),

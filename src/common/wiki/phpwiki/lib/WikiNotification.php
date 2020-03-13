@@ -38,7 +38,7 @@ class WikiNotification
         $this->project       = $project_manager->getProject($project_id);
         $this->mail_enhancer = new MailEnhancer();
 
-        $subject            = '[' . $wiki_name . '] '. $subject;
+        $subject            = '[' . $wiki_name . '] ' . $subject;
         $this->notification = new Notification($emails, $subject, '', $body, $goto_link, 'Wiki');
     }
 

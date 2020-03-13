@@ -215,7 +215,7 @@ class RecipientsManager
      */
     private function isTrackerInStatusUpdateOnlyNotificationsMode(Tracker_Artifact_Changeset $changeset)
     {
-        return (int)$changeset->getTracker()->getNotificationsLevel() === \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
+        return (int) $changeset->getTracker()->getNotificationsLevel() === \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
     }
 
     /**
@@ -307,7 +307,7 @@ class RecipientsManager
             foreach ($recipient_list['recipients'] as $recipient) {
                 $user = $this->getUserFromRecipientName($recipient);
                 if ($user) {
-                    $user_ids[] = (int)$user->getId();
+                    $user_ids[] = (int) $user->getId();
                 }
             }
         }

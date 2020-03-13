@@ -161,15 +161,15 @@ class ArtifactRuleDao extends DataAccessObject
     public function searchByGroupArtifactIdWithOrder($groupArtifactId)
     {
         $sql = sprintf(
-            "SELECT ar.id, ar.source_field_id, ar.source_value_id, ar.target_field_id, ar.rule_type, ar.target_value_id ".
-                       " FROM artifact_rule AS ar ".
-                       "   INNER JOIN artifact_field_usage AS afu1 ON (ar.source_field_id = afu1.field_id AND ar.group_artifact_id = afu1.group_artifact_id) ".
-                       "   INNER JOIN artifact_field_usage AS afu2 ON (ar.target_field_id = afu2.field_id AND ar.group_artifact_id = afu2.group_artifact_id) ".
-                       "   LEFT JOIN artifact_field_value_list AS afvls ".
-                       "      ON (ar.source_field_id = afvls.field_id AND ar.group_artifact_id = afvls.group_artifact_id AND ar.source_value_id = afvls.value_id) ".
-                       "   LEFT JOIN artifact_field_value_list AS afvlt ".
-                       "      ON (ar.target_field_id = afvlt.field_id AND ar.group_artifact_id = afvlt.group_artifact_id AND ar.target_value_id = afvlt.value_id) ".
-                       " WHERE ar.group_artifact_id = %s ".
+            "SELECT ar.id, ar.source_field_id, ar.source_value_id, ar.target_field_id, ar.rule_type, ar.target_value_id " .
+                       " FROM artifact_rule AS ar " .
+                       "   INNER JOIN artifact_field_usage AS afu1 ON (ar.source_field_id = afu1.field_id AND ar.group_artifact_id = afu1.group_artifact_id) " .
+                       "   INNER JOIN artifact_field_usage AS afu2 ON (ar.target_field_id = afu2.field_id AND ar.group_artifact_id = afu2.group_artifact_id) " .
+                       "   LEFT JOIN artifact_field_value_list AS afvls " .
+                       "      ON (ar.source_field_id = afvls.field_id AND ar.group_artifact_id = afvls.group_artifact_id AND ar.source_value_id = afvls.value_id) " .
+                       "   LEFT JOIN artifact_field_value_list AS afvlt " .
+                       "      ON (ar.target_field_id = afvlt.field_id AND ar.group_artifact_id = afvlt.group_artifact_id AND ar.target_value_id = afvlt.value_id) " .
+                       " WHERE ar.group_artifact_id = %s " .
                        " ORDER BY afu1.place, afu2.place, afvls.order_id, afvlt.order_id, ar.id",
             $this->da->quoteSmart($groupArtifactId)
         );
@@ -192,11 +192,11 @@ class ArtifactRuleDao extends DataAccessObject
             $quoted_types[] = $this->da->quoteSmart($type);
         }
         $sql = sprintf(
-            'DELETE FROM artifact_rule '.
-                       ' WHERE group_artifact_id = %s '.
-                       '   AND source_field_id   = %s '.
-                       '   AND source_value_id   = %s '.
-                       '   AND target_field_id   = %s '.
+            'DELETE FROM artifact_rule ' .
+                       ' WHERE group_artifact_id = %s ' .
+                       '   AND source_field_id   = %s ' .
+                       '   AND source_value_id   = %s ' .
+                       '   AND target_field_id   = %s ' .
                        '   AND rule_type IN (%s) ',
             $this->da->quoteSmart($group_artifact_id),
             $this->da->quoteSmart($source),
@@ -210,11 +210,11 @@ class ArtifactRuleDao extends DataAccessObject
     public function deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($artifact_type, $source, $source_value, $target, $rule_type)
     {
         $sql = sprintf(
-            'DELETE FROM artifact_rule '.
-                       ' WHERE group_artifact_id = %s '.
-                       '   AND source_field_id   = %s '.
-                       '   AND source_value_id   = %s '.
-                       '   AND target_field_id   = %s '.
+            'DELETE FROM artifact_rule ' .
+                       ' WHERE group_artifact_id = %s ' .
+                       '   AND source_field_id   = %s ' .
+                       '   AND source_value_id   = %s ' .
+                       '   AND target_field_id   = %s ' .
                        '   AND rule_type         = %s ',
             $this->da->quoteSmart($artifact_type),
             $this->da->quoteSmart($source),
@@ -228,11 +228,11 @@ class ArtifactRuleDao extends DataAccessObject
     public function deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($artifact_type, $source, $target, $target_value, $rule_type)
     {
         $sql = sprintf(
-            'DELETE FROM artifact_rule '.
-                       ' WHERE group_artifact_id = %s '.
-                       '   AND source_field_id   = %s '.
-                       '   AND target_field_id   = %s '.
-                       '   AND target_value_id   = %s '.
+            'DELETE FROM artifact_rule ' .
+                       ' WHERE group_artifact_id = %s ' .
+                       '   AND source_field_id   = %s ' .
+                       '   AND target_field_id   = %s ' .
+                       '   AND target_value_id   = %s ' .
                        '   AND rule_type         = %s ',
             $this->da->quoteSmart($artifact_type),
             $this->da->quoteSmart($source),
@@ -246,7 +246,7 @@ class ArtifactRuleDao extends DataAccessObject
     public function deleteRulesByGroupArtifactId($artifact_type)
     {
         $sql = sprintf(
-            'DELETE FROM artifact_rule '.
+            'DELETE FROM artifact_rule ' .
                        ' WHERE group_artifact_id = %s ',
             $this->da->quoteSmart($artifact_type)
         );
@@ -255,9 +255,9 @@ class ArtifactRuleDao extends DataAccessObject
     public function deleteByField($artifact_type, $field_id)
     {
         $sql = sprintf(
-            'DELETE FROM artifact_rule '.
-                       ' WHERE group_artifact_id = %s '.
-                       '   AND (source_field_id  = %s '.
+            'DELETE FROM artifact_rule ' .
+                       ' WHERE group_artifact_id = %s ' .
+                       '   AND (source_field_id  = %s ' .
                        '   OR target_field_id    = %s) ',
             $this->da->quoteSmart($artifact_type),
             $this->da->quoteSmart($field_id),
@@ -268,16 +268,16 @@ class ArtifactRuleDao extends DataAccessObject
     public function deleteByFieldValue($artifact_type, $field_id, $value_id)
     {
         $sql = sprintf(
-            'DELETE FROM artifact_rule '.
-                       ' WHERE group_artifact_id   = %s '.
-                       '   AND ( '.
-                       '     ( source_field_id     = %s '.
-                       '       AND source_value_id = %s '.
-                       '     )  '.
-                       '     OR '.
-                       '     ( target_field_id     = %s '.
-                       '       AND target_value_id = %s '.
-                       '     ) '.
+            'DELETE FROM artifact_rule ' .
+                       ' WHERE group_artifact_id   = %s ' .
+                       '   AND ( ' .
+                       '     ( source_field_id     = %s ' .
+                       '       AND source_value_id = %s ' .
+                       '     )  ' .
+                       '     OR ' .
+                       '     ( target_field_id     = %s ' .
+                       '       AND target_value_id = %s ' .
+                       '     ) ' .
                        '   ) ',
             $this->da->quoteSmart($artifact_type),
             $this->da->quoteSmart($field_id),
@@ -290,9 +290,9 @@ class ArtifactRuleDao extends DataAccessObject
     public function copyRules($from_artifact_type, $to_artifact_type)
     {
         $sql = sprintf(
-            'INSERT INTO artifact_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) '.
-                        ' SELECT %s, source_field_id, source_value_id, target_field_id, rule_type, target_value_id '.
-                        ' FROM artifact_rule '.
+            'INSERT INTO artifact_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) ' .
+                        ' SELECT %s, source_field_id, source_value_id, target_field_id, rule_type, target_value_id ' .
+                        ' FROM artifact_rule ' .
                         ' WHERE group_artifact_id = %s ',
             $this->da->quoteSmart($to_artifact_type),
             $this->da->quoteSmart($from_artifact_type)

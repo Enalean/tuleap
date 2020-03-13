@@ -206,10 +206,10 @@ function WikiURL($pagename, $args = '', $get_abs_url = false)
         }
     }
     global $group_id;
-    $url .= '&group_id='.$group_id;
+    $url .= '&group_id=' . $group_id;
     global $pv;
     if ($pv) {
-        $url .= '&pv='.$pv;
+        $url .= '&pv=' . $pv;
     }
     if ($anchor) {
         $url .= "#" . MangleXmlIdentifier($anchor);
@@ -429,7 +429,7 @@ function LinkImage($url, $alt = false)
         ));
     } else {
         // support new syntax: [image.jpg size=50% border=n]
-        if (!preg_match("/\.(".$force_img.")/i", $url)) {
+        if (!preg_match("/\.(" . $force_img . ")/i", $url)) {
             $ori_url = $url;
         }
         $arr = preg_split('/ /D', $url);
@@ -494,7 +494,7 @@ function LinkImage($url, $alt = false)
      * png|jpg|gif|jpeg|bmp|pl|cgi
      * Note: Allow cgi's (pl,cgi) returning images.
      */
-    if (!preg_match("/\.(".$force_img.")/i", $url)) {
+    if (!preg_match("/\.(" . $force_img . ")/i", $url)) {
         //HTML::img(array('src' => $url, 'alt' => $alt, 'title' => $alt));
         // => HTML::object(array('src' => $url)) ...;
         return ImgObject($link, $ori_url);
@@ -756,7 +756,7 @@ class WikiPageName
         }
 
         $this->name = $this->_check($name);
-        $this->anchor = (string)$anchor;
+        $this->anchor = (string) $anchor;
     }
 
     public function getName()
@@ -920,7 +920,6 @@ class WikiPageName
  */
 function ConvertOldMarkup($text, $markup_type = "block")
 {
-
     static $subs;
     static $block_re;
 
@@ -934,8 +933,8 @@ function ConvertOldMarkup($text, $markup_type = "block")
     if (in_array(php_sapi_name(), array('apache2handler','apache2filter','isapi'))
         and preg_match("/plugin CreateToc/", $text)) {
         trigger_error(_("The CreateTocPlugin is not yet old markup compatible! ")
-                     ._("Please remove the CreateToc line to be able to reformat this page to old markup. ")
-                     ._("Skipped."), E_USER_WARNING);
+                     . _("Please remove the CreateToc line to be able to reformat this page to old markup. ")
+                     . _("Skipped."), E_USER_WARNING);
         $debug_skip = true;
         //if (!DEBUG) return $text;
         return $text;
@@ -1142,7 +1141,6 @@ function expand_tabs($str, $tab_width = 8)
  */
 function SplitPagename($page)
 {
-
     if (preg_match("/\s/", $page)) {
         return $page;           // Already split --- don't split any more.
     }
@@ -1302,14 +1300,14 @@ function ParseRfc1123DateTime($timestr)
     $timestr = trim($timestr);
     if (preg_match(
         '/^ \w{3},\s* (\d{1,2}) \s* (\w{3}) \s* (\d{4}) \s*'
-                   .'(\d\d):(\d\d):(\d\d) \s* GMT $/ix',
+                   . '(\d\d):(\d\d):(\d\d) \s* GMT $/ix',
         $timestr,
         $m
     )) {
         list(, $mday, $mon, $year, $hh, $mm, $ss) = $m;
     } elseif (preg_match(
         '/^ \w+,\s* (\d{1,2})-(\w{3})-(\d{2}|\d{4}) \s*'
-                       .'(\d\d):(\d\d):(\d\d) \s* GMT $/ix',
+                       . '(\d\d):(\d\d):(\d\d) \s* GMT $/ix',
         $timestr,
         $m
     )) {
@@ -1321,7 +1319,7 @@ function ParseRfc1123DateTime($timestr)
         }
     } elseif (preg_match(
         '/^\w+\s* (\w{3}) \s* (\d{1,2}) \s*'
-                       .'(\d\d):(\d\d):(\d\d) \s* (\d{4})$/ix',
+                       . '(\d\d):(\d\d):(\d\d) \s* (\d{4})$/ix',
         $timestr,
         $m
     )) {
@@ -1606,7 +1604,7 @@ class fileSet
         }
         closedir($dir_handle);
     }
-};
+}
 
 // File globbing
 
@@ -1657,7 +1655,7 @@ function glob_to_pcre($glob)
     // first convert some unescaped expressions to pcre style: . => \.
     $special = ".^$";
     $re = preg_replace(
-        '/([^\xff])?(['.preg_quote($special, '/').'])/',
+        '/([^\xff])?([' . preg_quote($special, '/') . '])/',
         "\\1\xff\\2",
         $glob
     );
@@ -1675,7 +1673,7 @@ function glob_to_pcre($glob)
     // .*? handled above, now escape the rest
     //while (strcspn($re, $escape) != strlen($re)) // loop strangely needed
     $re = preg_replace(
-        '/([^\xff])(['.preg_quote($escape, "/").'])/',
+        '/([^\xff])([' . preg_quote($escape, "/") . '])/',
         "\\1\xff\\2",
         $re
     );
@@ -1949,7 +1947,7 @@ function phpwiki_version()
     if (!isset($PHPWIKI_VERSION)) {
         $arr = explode('.', preg_replace('/\D+$/', '', PHPWIKI_VERSION)); // remove the pre
         $arr[2] = preg_replace('/\.+/', '.', preg_replace('/\D/', '.', $arr[2]));
-        $PHPWIKI_VERSION = $arr[0]*1000 + $arr[1]*10 + 0.01*$arr[2];
+        $PHPWIKI_VERSION = $arr[0] * 1000 + $arr[1] * 10 + 0.01 * $arr[2];
         if (strstr(PHPWIKI_VERSION, 'pre') or strstr(PHPWIKI_VERSION, 'rc')) {
             $PHPWIKI_VERSION -= 0.01;
         }
@@ -2167,12 +2165,12 @@ function extractSection($section, $content, $page, $quiet = false, $sectionhead 
         // Strip trailing blanks lines and ---- <hr>s
         $text = preg_replace("/\\s*^-{4,}\\s*$/m", "", $match[2]);
         if ($sectionhead) {
-            $text = $match[1] . $section ."\n". $text;
+            $text = $match[1] . $section . "\n" . $text;
         }
         return explode("\n", $text);
     }
     if ($quiet) {
-        $mesg = $page ." ". $section;
+        $mesg = $page . " " . $section;
     } else {
         $mesg = $section;
     }
@@ -2222,7 +2220,7 @@ function longer_timeout($secs = 30)
     $timeout = @ini_get("max_execution_time") ? ini_get("max_execution_time") : 30;
     $timeleft = $timeout - $GLOBALS['RUNTIMER']->getTime();
     if ($timeleft < $secs) {
-        @set_time_limit(max($timeout, (integer)($secs + $timeleft)));
+        @set_time_limit(max($timeout, (integer) ($secs + $timeleft)));
     }
 }
 

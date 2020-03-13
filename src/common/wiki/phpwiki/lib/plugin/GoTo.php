@@ -42,7 +42,7 @@ class WikiPlugin_GoTo extends WikiPlugin
             if ($dbi->isWikiPage($target)) {
                 $url = WikiURL($target, 0, 1);
             } else {
-                $url = WikiURL($target, array('action'=>'edit'), 1);
+                $url = WikiURL($target, array('action' => 'edit'), 1);
             }
 
             $request->redirect($url);
@@ -51,8 +51,8 @@ class WikiPlugin_GoTo extends WikiPlugin
         }
 
         $action = $request->getURLtoSelf();
-        $form = HTML::form(array('action'=>$action,
-                                 'method'=>'post'
+        $form = HTML::form(array('action' => $action,
+                                 'method' => 'post'
                           ));
 
         $form->pushContent(HiddenInputs($request->getArgs()));
@@ -67,7 +67,7 @@ class WikiPlugin_GoTo extends WikiPlugin
 
         return $form;
     }
-};
+}
 
 // $Log: GoTo.php,v $
 // Revision 1.4  2004/07/08 20:30:07  rurban

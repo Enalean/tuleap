@@ -40,10 +40,10 @@ final class Tracker_Permission_PermissionRequestTest extends \PHPUnit\Framework\
     {
         $request = Mockery::mock(Codendi_Request::class);
         $request->shouldReceive('get')
-            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::ANONYMOUS])
+            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::ANONYMOUS])
             ->andReturn(Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY);
         $request->shouldReceive('get')
-            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::REGISTERED])
+            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::REGISTERED])
             ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);
         $request->shouldReceive('get')
             ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);
@@ -59,10 +59,10 @@ final class Tracker_Permission_PermissionRequestTest extends \PHPUnit\Framework\
     {
         $request = Mockery::mock(Codendi_Request::class);
         $request->shouldReceive('get')
-            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::ANONYMOUS])
+            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::ANONYMOUS])
             ->andReturn(Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY);
         $request->shouldReceive('get')
-            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::REGISTERED])
+            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::REGISTERED])
             ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);
         $request->shouldReceive('get')
             ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);

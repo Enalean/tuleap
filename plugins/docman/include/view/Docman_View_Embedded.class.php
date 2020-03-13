@@ -46,9 +46,9 @@ class Docman_View_Embedded extends Docman_View_Display
                 } else {
                     $balise = 'div';
                 }
-                echo '<'. $balise .' class="docman_embedded_file_content">';
+                echo '<' . $balise . ' class="docman_embedded_file_content">';
                 echo $this->hp->purify(file_get_contents($version->getPath()), CODENDI_PURIFIER_FULL);
-                echo '</'. $balise .'>';
+                echo '</' . $balise . '>';
             } else {
                 $this->_controller->feedback->log('error', dgettext('tuleap-docman', 'The file cannot be found.'));
                 $v = new Docman_View_DocmanError($this->_controller);

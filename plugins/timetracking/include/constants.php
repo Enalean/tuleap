@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('TIMETRACKING_TEMPLATE_DIR', __DIR__.'/../templates');
+define('TIMETRACKING_TEMPLATE_DIR', __DIR__ . '/../templates');
 define('TIMETRACKING_BASE_URL', '/plugins/timetracking');

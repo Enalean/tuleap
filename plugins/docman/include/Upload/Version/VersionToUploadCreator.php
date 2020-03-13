@@ -68,10 +68,10 @@ class VersionToUploadCreator
         ?string $approval_table_action
     ) : VersionToUpload {
         $file_size = $filesize;
-        if ((int)$file_size > (int)\ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
+        if ((int) $file_size > (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
-                (int)$file_size,
-                (int)\ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
+                (int) $file_size,
+                (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
             );
         }
         $this->transaction_executor->execute(
@@ -102,10 +102,10 @@ class VersionToUploadCreator
                 }
                 if (count($rows) === 1) {
                     $row = $rows[0];
-                    if ($row['user_id'] !== (int)$user->getId()) {
+                    if ($row['user_id'] !== (int) $user->getId()) {
                         throw new UploadCreationConflictException();
                     }
-                    if ($row['filename'] !== $filename || (int)$filesize !== $row['filesize']) {
+                    if ($row['filename'] !== $filename || (int) $filesize !== $row['filesize']) {
                         throw new UploadCreationFileMismatchException();
                     }
                     $version_id = $row['id'];
@@ -117,7 +117,7 @@ class VersionToUploadCreator
                     $item->getId(),
                     $version_title,
                     $changelog,
-                    (int)$user->getId(),
+                    (int) $user->getId(),
                     $filename,
                     $filesize,
                     $is_file_locked,

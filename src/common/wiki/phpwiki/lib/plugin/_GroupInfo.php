@@ -71,4 +71,4 @@ class WikiPlugin__GroupInfo extends WikiPlugin
 
         return $output;
     }
-};
+}

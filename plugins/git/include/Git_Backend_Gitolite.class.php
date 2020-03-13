@@ -93,7 +93,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function isInitialized(GitRepository $repository)
     {
-        $init = $this->driver->isInitialized($this->getGitRootPath().'/'.$repository->getPath());
+        $init = $this->driver->isInitialized($this->getGitRootPath() . '/' . $repository->getPath());
         if ($init) {
             $this->getDao()->initialize($repository->getId());
             return true;
@@ -108,7 +108,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function isCreated(GitRepository $repository)
     {
-        return $this->driver->isRepositoryCreated($this->getGitRootPath().'/'.$repository->getPath());
+        return $this->driver->isRepositoryCreated($this->getGitRootPath() . '/' . $repository->getPath());
     }
 
     /**
@@ -137,7 +137,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function getGitRootPath()
     {
-        return $GLOBALS['sys_data_dir'] .'/gitolite/repositories/';
+        return $GLOBALS['sys_data_dir'] . '/gitolite/repositories/';
     }
 
     /**
@@ -165,7 +165,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function isNameAvailable($newName)
     {
-        return ! file_exists($this->getGitRootPath() .'/'. $newName);
+        return ! file_exists($this->getGitRootPath() . '/' . $newName);
     }
 
     /**
@@ -222,7 +222,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function deletePermissions($repository)
     {
-
         $group_id = $repository->getProjectId();
         $object_id = $repository->getId();
         return permission_clear_all($group_id, Git::PERM_READ, $object_id)
@@ -241,7 +240,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function userCanRead($user, $repository)
     {
-
         if ($user->isMember($repository->getProjectId(), 'A')) {
             return true;
         }
@@ -302,11 +300,11 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function renameProject(Project $project, $newName)
     {
-        if (is_dir($this->driver->getRepositoriesPath() .'/'. $project->getUnixName())) {
+        if (is_dir($this->driver->getRepositoriesPath() . '/' . $project->getUnixName())) {
             $backend = $this->getBackend();
             $ok = rename(
-                $this->driver->getRepositoriesPath() .'/'. $project->getUnixName(),
-                $this->driver->getRepositoriesPath() .'/'. $newName
+                $this->driver->getRepositoriesPath() . '/' . $project->getUnixName(),
+                $this->driver->getRepositoriesPath() . '/' . $newName
             );
             if ($ok) {
                 try {
@@ -343,13 +341,13 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     {
         $retVal = 0;
         $output = array();
-        $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-rename-project.php '.escapeshellarg($oldName).' '.escapeshellarg($newName);
-        $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
+        $mvCmd  = $GLOBALS['codendi_dir'] . '/src/utils/php-launcher.sh ' . $GLOBALS['codendi_dir'] . '/plugins/git/bin/gl-rename-project.php ' . escapeshellarg($oldName) . ' ' . escapeshellarg($newName);
+        $cmd    = 'su -l codendiadm -c "' . $mvCmd . ' 2>&1"';
         exec($cmd, $output, $retVal);
         if ($retVal == 0) {
             return true;
         } else {
-            throw new Exception('Rename: Unable to propagate rename to gitolite conf (error code: '.$retVal.'): '.implode('%%%', $output));
+            throw new Exception('Rename: Unable to propagate rename to gitolite conf (error code: ' . $retVal . '): ' . implode('%%%', $output));
             return false;
         }
     }
@@ -367,7 +365,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function delete(GitRepository $repository)
     {
         $this->updateRepoConf($repository);
-        $this->logger->debug('Backuping '. $repository->getPath());
+        $this->logger->debug('Backuping ' . $repository->getPath());
         $backup_dir = $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');
         if ($backup_dir && is_dir($backup_dir)) {
             $this->getDriver()->backup($repository, $backup_dir);
@@ -377,7 +375,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     public function deleteArchivedRepository(GitRepository $repository)
     {
-        $this->logger->debug('Delete backup '. $repository->getBackupPath());
+        $this->logger->debug('Delete backup ' . $repository->getBackupPath());
         $this->getDriver()->deleteBackup(
             $repository,
             $this->getGitPlugin()->getConfigurationParameter('git_backup_dir')
@@ -392,7 +390,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function archiveBeforePurge(GitRepository $repository)
     {
-        $backup= $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');
+        $backup = $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');
 
         if (dirname($backup)) {
             $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($backup . '/' . $repository->getBackupPath() . '.tar.gz', self::PREFIX));
@@ -400,15 +398,15 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             $this->getEventManager()->processEvent($event);
 
             if ($event->isSuccessful()) {
-                $this->logger->info('The repository'.$repository->getName().' has been moved to the archiving area before purge ');
+                $this->logger->info('The repository' . $repository->getName() . ' has been moved to the archiving area before purge ');
                 return true;
             }
 
-            $this->logger->warning('Can not move the repository'.$repository->getName().' to the archiving area before purge');
+            $this->logger->warning('Can not move the repository' . $repository->getName() . ' to the archiving area before purge');
             return false;
         }
 
-        $this->logger->error('An error occured: The backup '.$backup.' is not a directory or does not exist');
+        $this->logger->error('An error occured: The backup ' . $backup . ' is not a directory or does not exist');
         return false;
     }
 
@@ -439,11 +437,10 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     public function forkOnFilesystem(GitRepository $old, GitRepository $new)
     {
-
         $name = $old->getName();
         //TODO use $old->getRootPath() (good luck for Unit Tests!)
-        $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
-        $new_namespace = $new->getProject()->getUnixName() .'/'. $new->getNamespace();
+        $old_namespace = $old->getProject()->getUnixName() . '/' . $old->getNamespace();
+        $new_namespace = $new->getProject()->getUnixName() . '/' . $new->getNamespace();
 
         $this->getDriver()->fork($name, $old_namespace, $new_namespace);
         $this->updateRepoConf($new);
@@ -579,8 +576,8 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function restoreArchivedRepository(GitRepository $repository)
     {
-        $this->logger->info('[Gitolite]Restoring repository : '.$repository->getName());
-        $backup_directory = realpath($this->getGitPlugin()->getConfigurationParameter('git_backup_dir').'/');
+        $this->logger->info('[Gitolite]Restoring repository : ' . $repository->getName());
+        $backup_directory = realpath($this->getGitPlugin()->getConfigurationParameter('git_backup_dir') . '/');
         return $this->getDriver()->restoreRepository(
             $repository,
             $this->getGitRootPath(),

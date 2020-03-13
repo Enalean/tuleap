@@ -201,7 +201,7 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase
                 $field->setReturnValue('isRequired', false);
             }
             // 4 => Is valid?
-            switch ((string)$case[4]) {
+            switch ((string) $case[4]) {
             // no need to check
                 case '-':
                     $field->expectNever('isValid');
@@ -212,7 +212,7 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase
                 case 'R':
                     $field->expectNever('isValid');
                     $field->expectOnce('setHasErrors', array(true));
-                    $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
+                    $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() . ' (' . $field->getName() . ')'));
                     $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
                     $is_valid = false;
                     break;
@@ -263,7 +263,6 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase
 
     public function testIsValid_required()
     {
-
         $artifact = new MockTracker_Artifact();
         $field    = new Tracker_FormElement_FieldTestVersion();
         $field->setReturnValue('getLabel', 'Status');
@@ -273,7 +272,7 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase
         $field->setReturnValue('validate', true);
         $field->expectOnce('validate');
 
-        $this->language->expect('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
+        $this->language->expect('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() . ' (' . $field->getName() . ')'));
         $this->response->expectCallCount('addFeedback', 2);
 
         $this->assertFalse($field->hasErrors());

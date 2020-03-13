@@ -89,7 +89,7 @@ class FrontRouter
                     throw new NotFoundException(_('The page you are looking for does not exist'));
                     break;
                 case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-                    throw new \RuntimeException('This route does not support '.$_SERVER['REQUEST_METHOD'], 405);
+                    throw new \RuntimeException('This route does not support ' . $_SERVER['REQUEST_METHOD'], 405);
                     break;
                 case FastRoute\Dispatcher::FOUND:
                     if (is_callable($route_info[1])) {
@@ -203,7 +203,7 @@ class FrontRouter
     public static function restoreOwnership(LoggerInterface $logger, Backend $backend): void
     {
         if (file_exists(self::getCacheFile())) {
-            $logger->debug('Restore ownership on '.self::getCacheFile());
+            $logger->debug('Restore ownership on ' . self::getCacheFile());
             $backend->changeOwnerGroupMode(
                 self::getCacheFile(),
                 \ForgeConfig::getApplicationUserLogin(),

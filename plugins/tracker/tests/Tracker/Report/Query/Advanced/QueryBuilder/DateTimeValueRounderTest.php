@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use TuleapTestCase;
 
-require_once __DIR__.'/../../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../../bootstrap.php';
 
 class DateTimeValueRounderTest extends TuleapTestCase
 {

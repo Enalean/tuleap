@@ -37,7 +37,7 @@ EOT;
     public function up()
     {
         if (!$this->db->columnNameExists('plugin_git', 'repository_backend_type')) {
-            $sql = "ALTER TABLE plugin_git ".
+            $sql = "ALTER TABLE plugin_git " .
                " ADD `repository_backend_type` varchar(16) DEFAULT 'gitshell'";
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {

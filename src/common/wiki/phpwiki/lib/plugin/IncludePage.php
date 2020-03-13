@@ -180,7 +180,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
         $ct = implode("\n", $c); // one string
         return $ct;
     }
-};
+}
 
 // This is an excerpt from the css file I use:
 //

@@ -106,7 +106,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
             ));
         }
         $table->pushContent($this->_showhash("\$USER_AUTH_ORDER[]", $GLOBALS['USER_AUTH_ORDER']));
-        $table->pushContent($this->_showhash("USER_AUTH_POLICY", array("USER_AUTH_POLICY"=>USER_AUTH_POLICY)));
+        $table->pushContent($this->_showhash("USER_AUTH_POLICY", array("USER_AUTH_POLICY" => USER_AUTH_POLICY)));
         $html->pushContent($table);
         $html->pushContent(HTML(HTML::h3(fmt("Personal Auth Settings for '%s'", $userid))));
         if (!$user) {
@@ -117,13 +117,13 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                                        'cellspacing' => 0));
             //$table->pushContent(HTML::tr(HTML::td(array('colspan' => 2))));
             $userdata = obj2hash($user, array('_dbi','_request', 'password', 'passwd'));
-            $table->pushContent($this->_showhash("User: Object of ".get_class($user), $userdata));
+            $table->pushContent($this->_showhash("User: Object of " . get_class($user), $userdata));
             if (ENABLE_USER_NEW) {
                 $group = $request->getGroup();
                 $groups = $group->getAllGroupsIn();
                 $groupdata = obj2hash($group, array('_dbi','_request', 'password', 'passwd'));
                 unset($groupdata['request']);
-                $table->pushContent($this->_showhash("Group: Object of ".get_class($group), $groupdata));
+                $table->pushContent($this->_showhash("Group: Object of " . get_class($group), $groupdata));
                 $groups = $group->getAllGroupsIn();
                 $groupdata = array('getAllGroupsIn' => $groups);
                 foreach ($groups as $g) {
@@ -165,7 +165,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
             ksort($hash);
             foreach ($hash as $key => $val) {
                 if (is_object($val)) {
-                    $heading = "Object of ".get_class($val);
+                    $heading = "Object of " . get_class($val);
                     if ($depth > 3) {
                         $val = $heading;
                     } elseif ($heading == "Object of wikidb_sql") {
@@ -178,13 +178,13 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                             array('border' => 1,
                                                  'cellpadding' => 2,
                                                  'cellspacing' => 0),
-                            $this->_showhash($heading, obj2hash($val), $depth+1)
+                            $this->_showhash($heading, obj2hash($val), $depth + 1)
                         );
                     } else {
                         $val = $heading;
                     }
                 } elseif (is_array($val)) {
-                    $heading = $key."[]";
+                    $heading = $key . "[]";
                     if ($depth > 3) {
                         $val = $heading;
                     } elseif (!isset($seen[$heading])) {
@@ -193,7 +193,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                             array('border' => 1,
                                                  'cellpadding' => 2,
                                                  'cellspacing' => 0),
-                            $this->_showhash($heading, $val, $depth+1)
+                            $this->_showhash($heading, $val, $depth + 1)
                         );
                     } else {
                         $val = $heading;
@@ -235,7 +235,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         }
         return $hash;
     }
-};
+}
 
 // $Log: _AuthInfo.php,v $
 // Revision 1.19  2005/04/01 14:04:31  rurban

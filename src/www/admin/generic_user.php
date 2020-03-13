@@ -54,19 +54,19 @@ echo '<h1>' . $Language->getText('admin_generic_user', 'title') . '</h1>
       <p>' . $Language->getText('admin_generic_user', 'help_update', array(GenericUserFactory::CONFIG_KEY_SUFFIX)) . '</p>
       <p>
         <label><b>' . $Language->getText('account_register', 'realname') . '</b>:</label><br />
-        '. $fake_generic_user->getRealName() .'
+        ' . $fake_generic_user->getRealName() . '
       </p>
       <p>
-        <label class="' . $name_css . '"><b>'. $Language->getText('account_login', 'name') . '</b>:<br />
-        '. $fake_generic_user->getUnixName() .'
+        <label class="' . $name_css . '"><b>' . $Language->getText('account_login', 'name') . '</b>:<br />
+        ' . $fake_generic_user->getUnixName() . '
         <div class="help">e.g. ' . $sample_generic_user->getUnixName() . '</div>
       </p>
       <p>
-        <label><b>' . $Language->getText('admin_generic_user', 'email') .'</b>:</label><br />
+        <label><b>' . $Language->getText('admin_generic_user', 'email') . '</b>:</label><br />
         <div class="help">' . $Language->getText('admin_generic_user', 'set_by_project') . '</div>
      </p>
      <p>
-        <label><b>' . $Language->getText('admin_generic_user', 'password') .'</b>:</label><br />
+        <label><b>' . $Language->getText('admin_generic_user', 'password') . '</b>:</label><br />
         <div class="help">' . $Language->getText('admin_generic_user', 'set_by_project') . '</div>
      </p>
      <p><a href="/admin">' . $Language->getText('admin_generic_user', 'back') . '</a></p>';

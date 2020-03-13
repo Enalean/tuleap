@@ -68,7 +68,7 @@ class ConfigSetCommand extends Command
         $white_listed_keys = $event->getWhiteListedKeys();
 
         if (! $this->keyIsWhitelisted($white_listed_keys, $key)) {
-            throw new InvalidArgumentException(self::NAME." only supports a subset of keys:\n* ".implode("\n* ", array_keys($white_listed_keys)));
+            throw new InvalidArgumentException(self::NAME . " only supports a subset of keys:\n* " . implode("\n* ", array_keys($white_listed_keys)));
         }
 
         $value = $input->getArgument('value');

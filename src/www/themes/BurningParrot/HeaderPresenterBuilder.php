@@ -154,7 +154,7 @@ class HeaderPresenterBuilder
         $page_title = $GLOBALS['sys_name'];
 
         if (! empty($this->title)) {
-            $page_title = $this->title .' - '. $page_title;
+            $page_title = $this->title . ' - ' . $page_title;
         }
 
         return $page_title;

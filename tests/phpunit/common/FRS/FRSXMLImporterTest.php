@@ -210,7 +210,7 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id'=> $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id' => $user_id)));
 
         $expected_package_array = $this->getDefaultPackage('package');
         $package_id = 1337;
@@ -259,7 +259,7 @@ XML;
         $release    = \Mockery::spy(FRSRelease::class);
 
         $release->shouldReceive('getGroupId')->andReturn(123);
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id'=> $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id' => $user_id)));
         $this->package_dao->shouldReceive('createFromArray')->andReturns($package_id);
         $this->release_dao->shouldReceive('createFromArray')->andReturns(47);
         $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
@@ -301,7 +301,7 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id'=> $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id' => $user_id)));
 
         $package_id = 1337;
         $package_array_with_id = array(
@@ -317,7 +317,7 @@ XML;
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
         $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
 
-        $release_id=8665;
+        $release_id = 8665;
         $expected_release_array = array(
             'release_id' => 0,
             'package_id' => $package_id,
@@ -338,7 +338,7 @@ XML;
         $this->release_dao->shouldReceive('searchById')->andReturns(\TestHelper::arrayToDar($release_array_with_group));
         $this->file_dao->shouldReceive('searchFileByName')->andReturns(\TestHelper::emptyDar());
 
-        $file_id=12569;
+        $file_id = 12569;
         $expected_file_array = array(
             'file_id'       => null,
             'filename'      => "p1337_r8665/lefichier",
@@ -347,7 +347,7 @@ XML;
             'type_id'       => 667,
             'processor_id'  => 69,
             'release_time'  => strtotime('2015-12-03T16:46:00'),
-            'file_location' => $GLOBALS['ftp_frs_dir_prefix']."/test_project/p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
+            'file_location' => $GLOBALS['ftp_frs_dir_prefix'] . "/test_project/p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
             'file_size'     => 14,
             'post_date'     => strtotime('2015-12-03T16:46:42'),
             'status'        => "A",
@@ -399,7 +399,7 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id'=> $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id' => $user_id)));
 
         $package_id = 1337;
         $package_array_with_id = array(
@@ -415,7 +415,7 @@ XML;
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
         $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
 
-        $release_id=8665;
+        $release_id = 8665;
         $expected_release_array = array(
             'release_id' => 0,
             'package_id' => $package_id,

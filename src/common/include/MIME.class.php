@@ -35,7 +35,7 @@ class MIME
      */
     private function __construct()
     {
-        $this->XDG_DATA_DIRS = explode(':', (isset($_ENV['XDG_DATA_DIRS'])?$_ENV['XDG_DATA_DIRS']:'/usr/local/share/:/usr/share/'));
+        $this->XDG_DATA_DIRS = explode(':', (isset($_ENV['XDG_DATA_DIRS']) ? $_ENV['XDG_DATA_DIRS'] : '/usr/local/share/:/usr/share/'));
     }
 
     /**
@@ -275,7 +275,7 @@ class MIME
             // read the file and parse
             while ($data = str_replace("\n", "", fread($fp, 4096))) {
                 if (!xml_parse($xml_parser, $data, feof($fp))) {
-                    error_log("ERROR: Couldn't parse $filename: ".
+                    error_log("ERROR: Couldn't parse $filename: " .
                               xml_error_string(xml_get_error_code($xml_parser)));
                     break;
                 }

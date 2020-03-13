@@ -61,7 +61,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
         $type        = $this->da->quoteSmart($type);
         $name        = $this->da->quoteSmart($name);
         $description = $this->da->quoteSmart($description);
-        $rank        = (int)$this->prepareRanking('tracker_report_renderer', 0, $report_id, $rank, 'id', 'report_id');
+        $rank        = (int) $this->prepareRanking('tracker_report_renderer', 0, $report_id, $rank, 'id', 'report_id');
         $sql = "INSERT INTO $this->table_name
                 (report_id, renderer_type, name, description, rank)
                 VALUES ($report_id, $type, $name, $description, $rank)";
@@ -72,7 +72,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
     {
         $id   = $this->da->escapeInt($id);
         $report_id   = $this->da->escapeInt($report_id);
-        $rank = (int)$this->prepareRanking('tracker_report_renderer', $id, $report_id, $rank, 'id', 'report_id');
+        $rank = (int) $this->prepareRanking('tracker_report_renderer', $id, $report_id, $rank, 'id', 'report_id');
         $sql = "UPDATE $this->table_name SET rank = $rank WHERE id = $id";
         return $this->update($sql);
     }
@@ -93,7 +93,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
 
     public function delete($id)
     {
-        $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
+        $sql = "DELETE FROM $this->table_name WHERE id = " . $this->da->escapeInt($id);
         return $this->update($sql);
     }
 
@@ -131,7 +131,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
             $case[] = "WHEN $id THEN $rank ";
         }
         if (count($case)) {
-            $case = 'CASE id '. implode('', $case) .' ELSE rank END';
+            $case = 'CASE id ' . implode('', $case) . ' ELSE rank END';
             $sql = "UPDATE $this->table_name
                     SET rank = $case
                     WHERE report_id = $report_id";

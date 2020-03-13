@@ -35,7 +35,7 @@ if ($request->isSecure() || ForgeConfig::get('sys_https_host')) {
 
 $default_domain = ForgeConfig::get('sys_default_domain');
 
-$uri = $protocol.'://'.$default_domain;
+$uri = $protocol . '://' . $default_domain;
 
 // Instantiate server object
 $server = new soap_server();

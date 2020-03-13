@@ -33,7 +33,7 @@ use Tuleap\GlobalLanguageMock;
 use WebDAVFRSFile;
 use WebDAVUtils;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVFRSFile

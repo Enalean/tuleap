@@ -150,9 +150,9 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
                 'renderer' => $this->id
             );
             if ($request->existAndNonEmpty('pv')) {
-                $params['pv'] = (int)$request->get('pv');
+                $params['pv'] = (int) $request->get('pv');
             }
-            $GLOBALS['Response']->redirect('?'. http_build_query($params));
+            $GLOBALS['Response']->redirect('?' . http_build_query($params));
         }
     }
 
@@ -166,13 +166,13 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     public function getOptionsMenuItems()
     {
         $items = array(
-            'printer_version' => '<div class="btn-group"><a class="btn btn-mini" href="'. TRACKER_BASE_URL.'/?'.http_build_query(
+            'printer_version' => '<div class="btn-group"><a class="btn btn-mini" href="' . TRACKER_BASE_URL . '/?' . http_build_query(
                 array(
                     'report'   => $this->report->id,
                     'renderer' => $this->id,
                     'pv'       => 1,
                 )
-            ) .'"><i class="fa fa-print"></i> '. $GLOBALS['Language']->getText('global', 'printer_version') .'</a></div>'
+            ) . '"><i class="fa fa-print"></i> ' . $GLOBALS['Language']->getText('global', 'printer_version') . '</a></div>'
         );
         $this->addDashboardButtons($items);
 
@@ -211,7 +211,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
 
     private function getTemplateRenderer()
     {
-        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
+        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/report');
     }
 
     private function canAddToDashboard($user)
@@ -243,7 +243,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      */
     public function fetchWidgetGoToReport()
     {
-        return $this->fetchLinkGoTo('['. $GLOBALS['Language']->getText('plugin_tracker_report_widget', 'go_to_report') .']');
+        return $this->fetchLinkGoTo('[' . $GLOBALS['Language']->getText('plugin_tracker_report_widget', 'go_to_report') . ']');
     }
 
     /**
@@ -273,7 +273,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     protected function fetchLinkGoTo($msg, $params = array())
     {
         $html = '';
-        $html .= '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
+        $html .= '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
             array(
                 'report'   => $this->report->id,
                 'renderer' => $this->id
@@ -281,9 +281,9 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
         );
         $html .= '"';
         foreach ($params as $key => $value) {
-            $html .= ' '. $key .'="'. $value .'"';
+            $html .= ' ' . $key . '="' . $value . '"';
         }
-        $html .= '>'. $msg .'</a>';
+        $html .= '>' . $msg . '</a>';
         return $html;
     }
 
@@ -295,7 +295,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      */
     public function exportToXml(SimpleXMLElement $root, array $xmlMapping)
     {
-        $root->addAttribute('ID', 'R'.$this->id);
+        $root->addAttribute('ID', 'R' . $this->id);
         $root->addAttribute('type', $this->getType());
         $root->addAttribute('rank', $this->rank);
         // if old ids are important, modify code here

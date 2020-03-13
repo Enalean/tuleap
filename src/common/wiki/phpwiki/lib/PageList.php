@@ -201,13 +201,12 @@ class _PageList_Column_base
         }
         $ret = 0;
         if (($colvala === $colvalb) || (!isset($colvala) && !isset($colvalb))) {
-            ;
         } else {
             $ret = (!isset($colvala) || ($colvala < $colvalb)) ? -1 : 1;
         }
         return $ret;
     }
-};
+}
 
 class _PageList_Column extends _PageList_Column_base
 {
@@ -250,7 +249,7 @@ class _PageList_Column extends _PageList_Column_base
             return (string) $val;
         }
     }
-};
+}
 
 /* overcome a call_user_func limitation by not being able to do:
  * call_user_func_array(array(&$class, $class_name), $params);
@@ -325,7 +324,7 @@ class _PageList_Column_bool extends _PageList_Column
         $val = _PageList_Column::_getValue($page_handle, $revision_handle);
         return $val ? $this->_textIfTrue : $this->_textIfFalse;
     }
-};
+}
 
 class _PageList_Column_checkbox extends _PageList_Column
 {
@@ -375,7 +374,7 @@ class _PageList_Column_checkbox extends _PageList_Column
         return HTML::th(array('align' => 'center', 'valign' => 'middle',
                               'class' => 'gridbutton'), $s);
     }
-};
+}
 
 class _PageList_Column_time extends _PageList_Column
 {
@@ -391,7 +390,7 @@ class _PageList_Column_time extends _PageList_Column
         $time = _PageList_Column::_getValue($page_handle, $revision_handle);
         return $this->Theme->formatDateTime($time);
     }
-};
+}
 
 class _PageList_Column_version extends _PageList_Column
 {
@@ -402,7 +401,7 @@ class _PageList_Column_version extends _PageList_Column
         }
         return $revision_handle->getVersion();
     }
-};
+}
 
 // Output is hardcoded to limit of first 50 bytes. Otherwise
 // on very large Wikis this will fail if used with AllPages
@@ -423,7 +422,7 @@ class _PageList_Column_content extends _PageList_Column
                 $search = $_POST['admin_replace']['from'];
                 $this->_heading .= sprintf(
                     _(" ... around %s"),
-                    '»'.$search.'«'
+                    '»' . $search . '«'
                 );
             }
         }
@@ -452,17 +451,17 @@ class _PageList_Column_content extends _PageList_Column
                     HTML::div(
                         array('class' => 'transclusion'),
                         HTML::span(substr($c, $j, ($this->bytes / 2))),
-                        HTML::span(array("style"=>"background:yellow"), $search),
-                        HTML::span(substr($c, $i+$l, ($this->bytes / 2)))
+                        HTML::span(array("style" => "background:yellow"), $search),
+                        HTML::span(substr($c, $i + $l, ($this->bytes / 2)))
                     )
                 );
             } else {
                 $c = sprintf(
                     _("%s not found"),
-                    '»'.$search.'«'
+                    '»' . $search . '«'
                 );
                 return HTML::div(
-                    array('style' => 'font-size:x-small','align'=>'center'),
+                    array('style' => 'font-size:x-small','align' => 'center'),
                     $c
                 );
             }
@@ -488,7 +487,7 @@ class _PageList_Column_content extends _PageList_Column
     {
         return substr(_PageList_Column::_getValue($page_handle, $revision_handle), 0, 50);
     }
-};
+}
 
 class _PageList_Column_author extends _PageList_Column
 {
@@ -507,7 +506,7 @@ class _PageList_Column_author extends _PageList_Column
             return $author;
         }
     }
-};
+}
 
 class _PageList_Column_owner extends _PageList_Column_author
 {
@@ -520,7 +519,7 @@ class _PageList_Column_owner extends _PageList_Column_author
             return $author;
         }
     }
-};
+}
 
 class _PageList_Column_creator extends _PageList_Column_author
 {
@@ -533,7 +532,7 @@ class _PageList_Column_creator extends _PageList_Column_author
             return $author;
         }
     }
-};
+}
 
 class _PageList_Column_pagename extends _PageList_Column_base
 {
@@ -567,7 +566,7 @@ class _PageList_Column_pagename extends _PageList_Column_base
     {
         return strcmp($colvala, $colvalb);
     }
-};
+}
 
 class PageList
 {
@@ -783,7 +782,7 @@ class PageList
             return;
         }
 
-        $group = (int)($i / $this->_group_rows);
+        $group = (int) ($i / $this->_group_rows);
         $class = ($group % 2) ? 'oddrow' : 'evenrow';
         $revision_handle = false;
         $this->_maxlen = max($this->_maxlen, strlen($page_handle->getName()));
@@ -818,7 +817,7 @@ class PageList
             if (is_object($page)) {
                 $page = $page->_pagename;
             }
-            $this->addPage((string)$page);
+            $this->addPage((string) $page);
         }
     }
 
@@ -1208,7 +1207,6 @@ class PageList
      */
     public function _addColumn($column)
     {
-
         if (isset($this->_columns_seen[$column])) {
             return false;       // Already have this one.
         }
@@ -1375,8 +1373,8 @@ class PageList
         $tokens['COUNT'] = $numrows;
         $tokens['OFFSET'] = $offset;
         $tokens['SIZE'] = $pagesize;
-        $tokens['NUMPAGES'] = (int)($numrows / $pagesize)+1;
-        $tokens['ACTPAGE'] = (int) (($offset+1) / $pagesize)+1;
+        $tokens['NUMPAGES'] = (int) ($numrows / $pagesize) + 1;
+        $tokens['ACTPAGE'] = (int) (($offset + 1) / $pagesize) + 1;
         if ($offset > 0) {
             $prev['limit'] = max(0, $offset - $pagesize) . ",$pagesize";
             $prev['count'] = $numrows;
@@ -1419,7 +1417,7 @@ class PageList
                                    'border'      => 0,
                                    'class'       => 'pagelist'));
         if ($caption) {
-            $table->pushContent(HTML::caption(array('align'=>'top'), $caption));
+            $table->pushContent(HTML::caption(array('align' => 'top'), $caption));
         }
 
         //Warning: This is quite fragile. It depends solely on a private variable
@@ -1544,9 +1542,9 @@ function flipAll(formObj) {
         if (!empty($this->_options['cols']) and $this->_options['cols'] > 1) {
             $count = count($this->_pages);
             $length = $count / $this->_options['cols'];
-            $width = sprintf("%d", 100 / $this->_options['cols']).'%';
+            $width = sprintf("%d", 100 / $this->_options['cols']) . '%';
             $cols = HTML::tr(array('valign' => 'top'));
-            for ($i=0; $i < $count; $i += $length) {
+            for ($i = 0; $i < $count; $i += $length) {
                 $this->_saveOptions(array('cols' => 0));
                 $this->_pages = array_slice($this->_pages, $i, $length);
                 $cols->pushContent(HTML::td(/*array('width' => $width),*/
@@ -1571,7 +1569,7 @@ function flipAll(formObj) {
             $out->pushContent(HTML::h3($cur_h));
             // group those pages together with same $h
             $j = 0;
-            for ($i=0; $i < count($this->_pages); $i++) {
+            for ($i = 0; $i < count($this->_pages); $i++) {
                 $page = $this->_pages[$i];
                 $h = substr($page->getName(), 0, 1);
                 if ($h != $cur_h and $i > $j) {
@@ -1627,7 +1625,7 @@ function flipAll(formObj) {
         if (!empty($this->_options['limit'])) {
             list($offset, $pagesize) = $this->limit($this->_options['limit']);
         } else {
-            $pagesize=0;
+            $pagesize = 0;
         }
         foreach ($this->_pages as $pagenum => $page) {
             $pagehtml = $this->_renderPageRow($page);
@@ -1699,7 +1697,7 @@ function flipAll(formObj) {
         }
         return $html;
     }
-};
+}
 
 /* List pages with checkboxes to select from.
  * The [Select] button toggles via _jsFlipAll
@@ -1727,9 +1725,9 @@ class PageList_Selectable extends PageList
     {
         foreach ($array as $pagename => $selected) {
             if ($selected) {
-                $this->addPageSelected((string)$pagename);
+                $this->addPageSelected((string) $pagename);
             }
-            $this->addPage((string)$pagename);
+            $this->addPage((string) $pagename);
         }
     }
 

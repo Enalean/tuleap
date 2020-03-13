@@ -88,7 +88,7 @@ class Tracker_Permission_PermissionPresenterBuilder
 
                 $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
                     Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER,
-                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ASSIGNEE .'_AND_'. Tracker::PERMISSION_SUBMITTER),
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ASSIGNEE . '_AND_' . Tracker::PERMISSION_SUBMITTER),
                     isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && isset($permissions[Tracker::PERMISSION_SUBMITTER])
                 );
 

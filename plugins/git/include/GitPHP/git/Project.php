@@ -1457,7 +1457,7 @@ class Project
 
         $revlist = explode("\n", $exe->Execute(GitExe::REV_LIST, $args));
 
-        if (!$revlist[count($revlist)-1]) {
+        if (!$revlist[count($revlist) - 1]) {
             /* the last newline creates a null entry */
             array_splice($revlist, -1, 1);
         }

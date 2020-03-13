@@ -57,7 +57,7 @@ class TreeNode_InjectPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor
             $class = self::$state_classes[$state_id];
             if ($this->collapsable && $node->hasChildren() && ($state_id == self::STATE_LAST || $state_id == self::STATE_NODE)) {
                 $class .= ' tree-collapsable';
-                $id = 'id="tree-node-'. $node->getId() .'"';
+                $id = 'id="tree-node-' . $node->getId() . '"';
             }
             $html .= sprintf($template, $class, $id);
         }

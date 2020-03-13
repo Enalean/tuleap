@@ -65,7 +65,7 @@ final class MetricsAuthentication implements MiddlewareInterface
         if (! $credential->doesCredentialMatch(self::USERNAME, $this->getSecret())) {
             return $this->response_factory->createResponse(401)->withHeader(
                 'WWW-Authenticate',
-                'Basic realm="' . ForgeConfig::get('sys_name'). ' /metrics authentication"'
+                'Basic realm="' . ForgeConfig::get('sys_name') . ' /metrics authentication"'
             );
         }
 
@@ -84,7 +84,7 @@ final class MetricsAuthentication implements MiddlewareInterface
 
     private function getSecret() : ConcealedString
     {
-        $path = $this->config_dir_root.'/metrics_secret.key';
+        $path = $this->config_dir_root . '/metrics_secret.key';
         if (! file_exists($path)) {
             throw new \RuntimeException('Configuration not complete. Admin should define a metrics_secret.key');
         }

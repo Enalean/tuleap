@@ -163,17 +163,17 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         if ($user !== null) {
             $login = $user->getSSHUserName();
         }
-        return 'ssh://'.$login.'@'.$this->host.':'.$this->ssh_port.'/'.$gerrit_project.'.git';
+        return 'ssh://' . $login . '@' . $this->host . ':' . $this->ssh_port . '/' . $gerrit_project . '.git';
     }
 
     public function getProjectAdminUrl($gerrit_project)
     {
-        return $this->getBaseUrl()."/#/admin/projects/$gerrit_project";
+        return $this->getBaseUrl() . "/#/admin/projects/$gerrit_project";
     }
 
     public function getProjectUrl($gerrit_project)
     {
-        return $this->getBaseUrl()."/#/q/project:$gerrit_project,n,z";
+        return $this->getBaseUrl() . "/#/q/project:$gerrit_project,n,z";
     }
 
     /**
@@ -239,7 +239,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
      */
     public function getHTTPPassword()
     {
-        return (string)$this->http_password;
+        return (string) $this->http_password;
     }
 
     /**
@@ -247,7 +247,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
      */
     public function getReplicationPassword()
     {
-        return (string)$this->replication_password;
+        return (string) $this->replication_password;
     }
 
     /**
@@ -270,6 +270,6 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     public function getGenericUserName()
     {
-        return Rule_UserName::RESERVED_PREFIX.self::GENERIC_USER_PREFIX.$this->getId();
+        return Rule_UserName::RESERVED_PREFIX . self::GENERIC_USER_PREFIX . $this->getId();
     }
 }

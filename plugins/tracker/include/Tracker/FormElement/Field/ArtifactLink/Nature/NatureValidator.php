@@ -42,7 +42,7 @@ class NatureValidator
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'missing_shortname')
             );
         }
-        if (! preg_match('/^'. self::SHORTNAME_PATTERN .'$/', $shortname)) {
+        if (! preg_match('/^' . self::SHORTNAME_PATTERN . '$/', $shortname)) {
             throw new InvalidNatureParameterException(
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname_help')
             );

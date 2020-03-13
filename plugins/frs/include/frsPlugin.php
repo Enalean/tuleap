@@ -185,7 +185,7 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     public function frs_edit_form_additional_info($params) //phpcs:ignore
     {
-        $renderer  = TemplateRendererFactory::build()->getRenderer(FRS_BASE_DIR.'/templates');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(FRS_BASE_DIR . '/templates');
 
         $release_id         = $params['release_id'];
         $linked_artifact_id = $this->getLinkRetriever()->getLinkedArtifactId($release_id);

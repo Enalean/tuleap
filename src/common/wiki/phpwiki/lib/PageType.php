@@ -86,12 +86,12 @@ class PageType
         if (!$name) {
             $name = 'wikitext';
         }
-        $class = "PageType_" . (string)$name;
+        $class = "PageType_" . (string) $name;
         if (class_exists($class)) {
             return new $class;
         }
         trigger_error(
-            sprintf("PageType '%s' unknown", (string)$name),
+            sprintf("PageType '%s' unknown", (string) $name),
             E_USER_WARNING
         );
         return new PageType_wikitext;
@@ -214,7 +214,7 @@ class PageType_interwikimap extends PageType
         // FIXME: this is a somewhat broken heuristic.
         if ($moniker == 'Attach' || $moniker == 'Upload') {
             if (preg_match('/^([0-9]+)\/(.*)$/', $page, $matches)) {
-                $page_enc = $matches[1].'/'.rawurlencode($matches[2]);
+                $page_enc = $matches[1] . '/' . rawurlencode($matches[2]);
             } else {
                 $page_enc = rawurlencode($page);
             }
@@ -281,10 +281,10 @@ class PageType_interwikimap extends PageType
         if (empty($map["Talk"])) {
             $pagename = $GLOBALS['request']->getArg('pagename');
             // against PageName/Discussion/Discussion
-            if (string_ends_with($pagename, SUBPAGE_SEPARATOR._("Discussion"))) {
+            if (string_ends_with($pagename, SUBPAGE_SEPARATOR . _("Discussion"))) {
                 $map["Talk"] = "%s";
             } else {
-                $map["Talk"] = "%s".SUBPAGE_SEPARATOR._("Discussion");
+                $map["Talk"] = "%s" . SUBPAGE_SEPARATOR . _("Discussion");
             }
         }
 
@@ -509,7 +509,7 @@ class PageFormatter_attach extends PageFormatter
         $tokens['rev'] = new FakePageRevision($this->_meta);
 
         $name = new WikiPageName($this->_page->getName());
-        $tokens[$this->prefix."_PARENT"] = $name->getParent();
+        $tokens[$this->prefix . "_PARENT"] = $name->getParent();
 
         $meta = $this->_meta[$this->type];
         foreach (array('ctime', 'creator', 'creator_id') as $key) {

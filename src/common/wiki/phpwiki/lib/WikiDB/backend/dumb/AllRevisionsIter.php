@@ -61,7 +61,7 @@ class WikiDB_backend_dumb_AllRevisionsIter extends WikiDB_backend_iterator
 
         return $rev;
     }
-};
+}
 
 // (c-file-style: "gnu")
 // Local Variables:

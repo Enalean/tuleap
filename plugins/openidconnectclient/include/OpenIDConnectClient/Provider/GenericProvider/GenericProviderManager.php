@@ -158,14 +158,14 @@ class GenericProviderManager
     public function instantiateGenericProviderFromRow(array $row): GenericProvider
     {
         return new GenericProvider(
-            (int)$row['id'],
+            (int) $row['id'],
             $row['name'],
             $row['authorization_endpoint'],
             $row['token_endpoint'],
             $row['user_info_endpoint'],
             $row['client_id'],
             $row['client_secret'],
-            (bool)$row['unique_authentication_endpoint'],
+            (bool) $row['unique_authentication_endpoint'],
             $row['icon'],
             $row['color']
         );

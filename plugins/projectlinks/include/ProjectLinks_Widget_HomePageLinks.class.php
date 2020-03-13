@@ -120,15 +120,15 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
     {
         $html = '';
         if ($dar->rowCount() > 0) {
-            $linkTypeCmdId   = 'plugin_project_links_type_'.$way;
+            $linkTypeCmdId   = 'plugin_project_links_type_' . $way;
 
             $cssClass = Toggler::getClassName($linkTypeCmdId);
             $titleSpan = "<span id=\"" . $this->html_purifier->purify($linkTypeCmdId) .
-                "\" class=\"" . $this->html_purifier->purify($cssClass) . "\">".
+                "\" class=\"" . $this->html_purifier->purify($cssClass) . "\">" .
                 $this->html_purifier->purify($GLOBALS['Language']->getText('plugin_plinks', $way)) .
                 '</span>';
 
-            $html .= "<li>".$titleSpan;
+            $html .= "<li>" . $titleSpan;
             $links = $this->getLinks($way, $dar);
             if ($links != '') {
                 $html .= "\n";
@@ -163,7 +163,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
                     $html .= "  </li>\n";
                     $ulClosed = true;
                 }
-                $spanId  = 'plugin_project_links_name_'.$way.'_'.$row['link_type_id'];
+                $spanId  = 'plugin_project_links_name_' . $way . '_' . $row['link_type_id'];
                 $cssClass = Toggler::getClassName($spanId);
 
                 // Link name title
@@ -200,11 +200,11 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         $url = str_replace('$projname', $row['unix_group_name'], $row['uri_plus']);
         $ic = '';
         if ($row['type'] == 2) {
-            $path = $this->html_purifier->purify($this->themePath."/images/template.png");
+            $path = $this->html_purifier->purify($this->themePath . "/images/template.png");
             $alt  = $this->html_purifier->purify($GLOBALS['Language']->getText('plugin_plinks', 'template_marker'));
-            $ic   = '<img src="'.$path.'" alt="'.$alt.'" title="'.$alt.'" /> ';
+            $ic   = '<img src="' . $path . '" alt="' . $alt . '" title="' . $alt . '" /> ';
         }
-        return '<a href="'.$this->html_purifier->purify($url).'">'.$ic . $this->html_purifier->purify($row['group_name']).'</a>';
+        return '<a href="' . $this->html_purifier->purify($url) . '">' . $ic . $this->html_purifier->purify($row['group_name']) . '</a>';
     }
 
     /**

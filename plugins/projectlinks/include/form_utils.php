@@ -226,7 +226,7 @@ function form_Start($serviceURI = "")
         $gValidationCollection, $gPageDateCodeWritten, $gFormCaptions;
 
     $gFormID += 1;
-    $gFormName = "Form".$gFormID;
+    $gFormName = "Form" . $gFormID;
     $gFormUsedDateBox = false;
     $gFirstFormTextBox = "";
     $gFormHiddenParams = array();
@@ -241,7 +241,7 @@ function form_Start($serviceURI = "")
     if (strlen($serviceURI) <= 0) {
         $serviceURI = "?";
     }
-    print "\n<Form ID='$gFormName' Action='$serviceURI' Method='post' enctype='multipart/form-data' onsubmit='return Validate".$gFormName."()'>\n";
+    print "\n<Form ID='$gFormName' Action='$serviceURI' Method='post' enctype='multipart/form-data' onsubmit='return Validate" . $gFormName . "()'>\n";
     form_TableStart(0);
     $gFormSectionLevel = 0;
     $gFormGroupLevel = 0;
@@ -275,8 +275,8 @@ function form_End(
             form_genSubmit($SubmitLegend);
         }
         if ($HaveResetButton) {
-            print "<td><INPUT TYPE='reset' Value='".
-                $Language->getText('form_utils', 'Cancel_Changes')."'></td>\n";
+            print "<td><INPUT TYPE='reset' Value='" .
+                $Language->getText('form_utils', 'Cancel_Changes') . "'></td>\n";
         }
     }
     while ($gFormGroupLevel > 0) {
@@ -302,18 +302,18 @@ function form_End(
     // Write form validation code
     print "<script type='text/javascript' language='javascript'>\n";
     print "<!--\n";
-    print "function Validate".$gFormName."()\n";
+    print "function Validate" . $gFormName . "()\n";
     print "{\n";
     print "var result = true;\n";
     $EmitEmailCode = false;
     $EmitNumberCode = false;
     foreach ($gValidationCollection as $valItemKey => $valItem) {
         if (! isset($gFormCaptions[$valItem->ParamName])) {
-            trigger_error("Validation item '".
-                $valItem->ParamName."' is not a form item ($valItemKey => $valItem)");
+            trigger_error("Validation item '" .
+                $valItem->ParamName . "' is not a form item ($valItemKey => $valItem)");
         }
-        $jsItemRef = form_JS_ElementRef($valItem->ParamName).".value";
-        $jsItemErrStart = "{result=false;alert('".addslashes($gFormCaptions[$valItem->ParamName]).": ";
+        $jsItemRef = form_JS_ElementRef($valItem->ParamName) . ".value";
+        $jsItemErrStart = "{result=false;alert('" . addslashes($gFormCaptions[$valItem->ParamName]) . ": ";
         $jsItemErrEnd = "');}\n";
         $jsItemPresent = "if ($jsItemRef == '')"
                     . $jsItemErrStart
@@ -337,37 +337,37 @@ function form_End(
                 break;
             case FORM_VAL_IS_NUMBER:
                 $EmitNumberCode = true;
-                print $jsItemPresent." else ".$jsItemNumeric;
+                print $jsItemPresent . " else " . $jsItemNumeric;
                 break;
             case FORM_VAL_IS_LT:
                 $EmitNumberCode = true;
-                print $jsItemPresent." else ".$jsItemNumeric." else if ($jsItemRef>=".$valItem->Param.")"
+                print $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef>=" . $valItem->Param . ")"
                     . $jsItemErrStart
                     . $Language->getText('form_utils_error', 'must_be_less_than', $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_GT:
                 $EmitNumberCode = true;
-                print $jsItemPresent." else ".$jsItemNumeric." else if ($jsItemRef<=".$valItem->Param.")"
+                print $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef<=" . $valItem->Param . ")"
                     . $jsItemErrStart
                     . $Language->getText('form_utils_error', 'must_be_greater_than', $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_EQ:
-                $cmp = is_string($valItem->Param)?"'".$valItem->Param."'":$valItem->Param;
+                $cmp = is_string($valItem->Param) ? "'" . $valItem->Param . "'" : $valItem->Param;
                 print "if ($jsItemRef!=$cmp)"
                     . $jsItemErrStart
                     . $Language->getText('form_utils_error', 'must_be', $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_CHECKED:
-                print "if (!".form_JS_ElementRef($valItem->ParamName).".checked)"
+                print "if (!" . form_JS_ElementRef($valItem->ParamName) . ".checked)"
                     . $jsItemErrStart
                     . $Language->getText('form_utils_error', 'must_be_checked')
                     . $jsItemErrEnd;
                 break;
             default:
-                trigger_error("Can't handle requested validation: ".$valItem->ParamName." (".$valItem->Test.")");
+                trigger_error("Can't handle requested validation: " . $valItem->ParamName . " (" . $valItem->Test . ")");
                 break;
         }
     }
@@ -430,7 +430,7 @@ function form_Validation($ParamName, $Tests, $OptionalParam = null)
                 break;
 
             default:
-                trigger_error("form_Validation: Can't handle requested validation: ".$ParamName." (".$Test.")");
+                trigger_error("form_Validation: Can't handle requested validation: " . $ParamName . " (" . $Test . ")");
                 break;
         }
         $valItem->Test = $Test;
@@ -446,8 +446,8 @@ function form_FocusFirstTextBox()
         trigger_error("form_FocusFirstTextBox() outside of form");
     }
     if (strlen($gFirstFormTextBox) > 0) {
-        print "<script type='text/javascript' language='javascript'>".
-            form_JS_ElementRef($gFirstFormTextBox).".focus();</script>\n";
+        print "<script type='text/javascript' language='javascript'>" .
+            form_JS_ElementRef($gFirstFormTextBox) . ".focus();</script>\n";
     }
 }
 
@@ -486,7 +486,7 @@ function form_Heading($Heading)
     if (! $gInForm) {
         trigger_error("Form item outside form: form_Heading()");
     }
-    print "</tr>\n<tr><th colspan='2'>".nz($Heading, "&nbsp;")."</th></tr>\n<tr>\n";
+    print "</tr>\n<tr><th colspan='2'>" . nz($Heading, "&nbsp;") . "</th></tr>\n<tr>\n";
 }
 
 //=============================================================================
@@ -496,7 +496,7 @@ function form_Text($Text, $SectionSpan = 1)
     if (! $gInForm) {
         trigger_error("Form item outside form: form_Text()");
     }
-    print "<td colspan='".(ceil($SectionSpan)*2)."'>".nz($Text, "&nbsp;").
+    print "<td colspan='" . (ceil($SectionSpan) * 2) . "'>" . nz($Text, "&nbsp;") .
         "</td>\n";
 }
 
@@ -515,11 +515,11 @@ function form_genSubmit($SubmitLegend)
 {
     global $gInForm;
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genSubmit: ".SubmitLegend);
+        trigger_error("Form item outside form: form_genSubmit: " . SubmitLegend);
     }
     print "<td align='center'>
-        <input type=submit name='".SUBMIT_BUTTON_NAME."'
-        value='".addslashes($SubmitLegend)."'></td>\n";
+        <input type=submit name='" . SUBMIT_BUTTON_NAME . "'
+        value='" . addslashes($SubmitLegend) . "'></td>\n";
 }
 
 //=============================================================================
@@ -527,12 +527,12 @@ function form_genSubmitImg($ImageFileHTMLPath)
 {
     global $gInForm;
     if (! $gInForm) {
-        trigger_error("Form item outside form: form_genSubmitImg: ".ImageFileHTMLPath);
+        trigger_error("Form item outside form: form_genSubmitImg: " . ImageFileHTMLPath);
     }
     print "<td align='center'>
-        <input type='image'".FORM_BUTTON_STYLE." src='".$ImageFileHTMLPath."'
-        value='".SUBMIT_BUTTON_NAME."' alt='Submit'
-        name='".SUBMIT_BUTTON_NAME."' /></td>\n";
+        <input type='image'" . FORM_BUTTON_STYLE . " src='" . $ImageFileHTMLPath . "'
+        value='" . SUBMIT_BUTTON_NAME . "' alt='Submit'
+        name='" . SUBMIT_BUTTON_NAME . "' /></td>\n";
 }
 
 //=============================================================================
@@ -545,8 +545,8 @@ function form_SectionStart($Text = null)
     }
     form_TableEnd();
     form_TableStart(1);
-    print "<td>".(is_null($Text)?
-        "":"<span style='font-weight: bold;'>$Text</span>")."\n";
+    print "<td>" . (is_null($Text) ?
+        "" : "<span style='font-weight: bold;'>$Text</span>") . "\n";
     form_TableStart(0);
     $gFormSectionLevel += 1;
     print "\n<!-- form_SectionStart (end) -->\n";
@@ -580,16 +580,16 @@ function form_GroupStart($Caption = "", $GroupHeading = "", $ColSpan = 1)
         trigger_error("Form item outside form: form_GroupStart()");
     }
     if (strlen($Caption) > 0) {
-        print "<td".FORM_CAPTION_STYLE.">$Caption</td>";
+        print "<td" . FORM_CAPTION_STYLE . ">$Caption</td>";
     }
     if ($ColSpan > 2) {
-        print "<td Colspan='".($ColSpan-1)."'>\n";
+        print "<td Colspan='" . ($ColSpan - 1) . "'>\n";
     } else {
         print "<td>\n";
     }
     print "<fieldset>\n";
     if (strlen($GroupHeading) > 0) {
-        print "<legend>".$GroupHeading."</legend>\n";
+        print "<legend>" . $GroupHeading . "</legend>\n";
     }
     form_TableStart(0);
     $gFormGroupLevel += 1;
@@ -620,7 +620,7 @@ function form_GroupEnd()
 function form_SelectAllCheckbox($GroupName = "", $isChecked = false)
 {
     global $gInForm, $gFormName, $Language;
-    static $gFormSelectAllCodeWritten= false;
+    static $gFormSelectAllCodeWritten = false;
 
     if (! $gInForm) {
         trigger_error("Form item outside form: form_SelectAllCheckbox()");
@@ -642,7 +642,7 @@ function form_SelectAllCheckbox($GroupName = "", $isChecked = false)
         print "//-->\n";
         print "</script>\n";
     }
-    print "<INPUT onclick=\"formSelectDeselectAll(this, '$gFormName', '$GroupName');\" type='checkbox'".($isChecked?" CHECKED":"")." Title='".$Language->getText('form_utils', 'Select_All')."'>\n";
+    print "<INPUT onclick=\"formSelectDeselectAll(this, '$gFormName', '$GroupName');\" type='checkbox'" . ($isChecked ? " CHECKED" : "") . " Title='" . $Language->getText('form_utils', 'Select_All') . "'>\n";
 }
 
 //=============================================================================
@@ -655,7 +655,7 @@ function form_HiddenParams($params)
     }
     foreach ($params as $name => $value) {
         if (isset($gFormHiddenParams[$name])) {
-            $gFormHiddenParams[$name] .= ",".$value;
+            $gFormHiddenParams[$name] .= "," . $value;
         } else {
             $gFormHiddenParams[$name] = $value;
         }
@@ -675,7 +675,7 @@ function form_genJSButton($Caption, $JavaScript, $ImageFileHTMLPath = null)
     if ($gInForm) {
         print "<td>";
     }
-    print "<button type='button'".FORM_BUTTON_STYLE." onclick=\"javascript:$JavaScript;\" title='$CaptionReplaced' name='$CaptionReplaced'>";
+    print "<button type='button'" . FORM_BUTTON_STYLE . " onclick=\"javascript:$JavaScript;\" title='$CaptionReplaced' name='$CaptionReplaced'>";
     if (is_null($ImageFileHTMLPath)) {
         print $Caption;
     } else {
@@ -702,9 +702,9 @@ function form_genSelectBox($ParamName, $Caption, $optionsList, $DefaultValue = "
         trigger_error("Form item name is reused: $ParamName");
     }
     $gFormCaptions[$ParamName] = $Caption;
-    print "<td".FORM_CAPTION_STYLE.">$Caption</td><td><select name='$ParamName'".($SubmitOnChange?" onchange='this.form.submit();'":"").">\n";
+    print "<td" . FORM_CAPTION_STYLE . ">$Caption</td><td><select name='$ParamName'" . ($SubmitOnChange ? " onchange='this.form.submit();'" : "") . ">\n";
     foreach ($optionsList as $name => $value) {
-        print "<option value='".addslashes($value)."'" .(($value==$DefaultValue)?" SELECTED":"").">$name</option>\n";
+        print "<option value='" . addslashes($value) . "'" . (($value == $DefaultValue) ? " SELECTED" : "") . ">$name</option>\n";
     }
     print "</select>\n</td>\n";
 }
@@ -724,7 +724,7 @@ function form_genSelectBoxFromSQL($ParamName, $Caption, $SQLstr, $DefaultValue =
         $i = 2;
         $itemname = $row[1];
         while (isset($row[$i])) {
-            $itemname .= " - ".$row[$i++];
+            $itemname .= " - " . $row[$i++];
         }
         $optionsList[$itemname] = $row[0];
     }
@@ -746,23 +746,23 @@ function form_genTextBox($ParamName, $Caption, $DefaultValue = "", $Width = FORM
         trigger_error("Form item name is reused: $ParamName");
     }
     $gFormCaptions[$ParamName] = $Caption;
-    print "<td".FORM_CAPTION_STYLE.">$Caption</td>";
+    print "<td" . FORM_CAPTION_STYLE . ">$Caption</td>";
     if ($Width > FORM_STD_COL_WIDTH) {
-        print "<td colspan=".ceil($Width / FORM_STD_COL_WIDTH).">";
+        print "<td colspan=" . ceil($Width / FORM_STD_COL_WIDTH) . ">";
     } else {
         print "<td>";
     }
     switch (strtoupper(substr($DefaultValue, 0, 4))) {
         case "COF:":    // clear on focus
             $DefaultValue = substr($DefaultValue, 4);
-            $Script = " onfocus=\"JavaScript:if (this.value == '".addslashes($DefaultValue)."') this.value='';\"";
+            $Script = " onfocus=\"JavaScript:if (this.value == '" . addslashes($DefaultValue) . "') this.value='';\"";
             break;
         default:
             $Script = "";
             break;
     }
-    print "<input type='text'".$Script." name='$ParamName'".($Width>0?" size=".$Width:"").($MaxInputLength>0?" maxlength=".$MaxInputLength:"").
-        " value='".addslashes($DefaultValue)."'>";
+    print "<input type='text'" . $Script . " name='$ParamName'" . ($Width > 0 ? " size=" . $Width : "") . ($MaxInputLength > 0 ? " maxlength=" . $MaxInputLength : "") .
+        " value='" . addslashes($DefaultValue) . "'>";
     print "</td>\n";
     if ($gFirstFormTextBox == "") {
         $gFirstFormTextBox = $ParamName;
@@ -779,13 +779,13 @@ function form_genShowBox($Caption, $Value, $UpdateURL = null)
         trigger_error("Form item outside form: form_genShowBox()");
     }
     if (strlen($Caption) > 0) {
-        print "<td".FORM_CAPTION_STYLE.">$Caption</td><td>";
+        print "<td" . FORM_CAPTION_STYLE . ">$Caption</td><td>";
     } else {
         print "<td colspan=2>";
     }
     print nz($Value, "&nbsp;");
     if (! is_null($UpdateURL)) {
-        print "&nbsp;<span style='font-size: 80%;'".mkAH("-&gt;&gt;", $UpdateURL)."</span>";
+        print "&nbsp;<span style='font-size: 80%;'" . mkAH("-&gt;&gt;", $UpdateURL) . "</span>";
     }
     print "</td>\n";
 }
@@ -801,11 +801,11 @@ function form_genFileBox($ParamName, $Caption, $DefaultValue = "", $AcceptableMi
         trigger_error("Form item name is reused: $ParamName");
     }
     $gFormCaptions[$ParamName] = $Caption;
-    print "<td".FORM_CAPTION_STYLE.">$Caption</td><td><input type='file' name='$ParamName'";
+    print "<td" . FORM_CAPTION_STYLE . ">$Caption</td><td><input type='file' name='$ParamName'";
     if (! is_null($AcceptableMimeTypes)) {
         print " accept='$AcceptableMimeTypes'";
     }
-    print " value='".addslashes($DefaultValue)."' size='50%'></td>\n";    //note that most browsers see default here as a security issue and ignore it
+    print " value='" . addslashes($DefaultValue) . "' size='50%'></td>\n";    //note that most browsers see default here as a security issue and ignore it
     if ($gFirstFormTextBox == "") {
         $gFirstFormTextBox = $ParamName;
     }
@@ -825,9 +825,9 @@ function form_genCheckbox($ParamName, $Caption, $ValueIfChecked, $DefaultValue =
         }
     }
     $gFormCaptions[$ParamName] = $Caption;
-    print "<td colspan=2><input type='Checkbox' name='$ParamName'".($SubmitOnChange?" onchange='this.form.submit();'":"");
+    print "<td colspan=2><input type='Checkbox' name='$ParamName'" . ($SubmitOnChange ? " onchange='this.form.submit();'" : "");
     if (strlen($ValueIfChecked) > 0) {
-        print " value='".addslashes($ValueIfChecked)."'";
+        print " value='" . addslashes($ValueIfChecked) . "'";
     }
     if (is_bool($DefaultValue)) {
         if ($DefaultValue) {
@@ -837,7 +837,7 @@ function form_genCheckbox($ParamName, $Caption, $ValueIfChecked, $DefaultValue =
         print " Checked";
     }
     if (strlen($Caption) > 0) {
-        print ">&nbsp;<span".FORM_CAPTION_STYLE.">$Caption</span>\n";
+        print ">&nbsp;<span" . FORM_CAPTION_STYLE . ">$Caption</span>\n";
     } else {
         print ">\n";
     }
@@ -910,13 +910,13 @@ function form_genRadioButton($ParamName, $options, $DefaultValue = "")
     }
     foreach ($options as $Caption => $ValueIfChecked) {
         if (isset($gFormCaptions[$ParamName])) {
-            $gFormCaptions[$ParamName] .= "; ".$Caption;
+            $gFormCaptions[$ParamName] .= "; " . $Caption;
         } else {
             $gFormCaptions[$ParamName] = $Caption;
         }
         print "<td><input type='Radio' name='$ParamName'";
         if (strlen($ValueIfChecked) > 0) {
-            print " value='".addslashes($ValueIfChecked)."'";
+            print " value='" . addslashes($ValueIfChecked) . "'";
         }
         if (is_bool($DefaultValue)) {
             if ($DefaultValue) {
@@ -925,7 +925,7 @@ function form_genRadioButton($ParamName, $options, $DefaultValue = "")
         } elseif ($DefaultValue == $ValueIfChecked) {
             print " Checked";
         }
-        print "><span".FORM_CAPTION_STYLE.">$Caption</span></td>\n";
+        print "><span" . FORM_CAPTION_STYLE . ">$Caption</span></td>\n";
     }
 }
 
@@ -946,21 +946,21 @@ function form_genTextArea($ParamName, $Caption, $DefaultValue = "", $MinRows = F
     }
 
     // calculate number of rows to give best chance of not scrolling
-    $Rows = ceil((strlen($DefaultValue)/$Cols) * 1.6) + 2;
+    $Rows = ceil((strlen($DefaultValue) / $Cols) * 1.6) + 2;
     if ($Rows < $MinRows) {
         $Rows = $MinRows;
     } elseif (($Rows > FORM_MAX_TEXT_AREA_ROWS) && ($MinRows <= FORM_MAX_TEXT_AREA_ROWS)) {
         $Rows = FORM_MAX_TEXT_AREA_ROWS;
     }
-    print "<td".FORM_CAPTION_STYLE.">$Caption</td>";
+    print "<td" . FORM_CAPTION_STYLE . ">$Caption</td>";
     if ($Cols > FORM_STD_COL_WIDTH) {
-        print "<td colspan=".ceil($Cols / FORM_STD_COL_WIDTH).">";
+        print "<td colspan=" . ceil($Cols / FORM_STD_COL_WIDTH) . ">";
     } else {
         print "<td>";
     }
     print "<TextArea name='$ParamName' rows=$Rows cols=$Cols wrap='soft'>"
-        .$DefaultValue
-        ."</textarea></td>\n";
+        . $DefaultValue
+        . "</textarea></td>\n";
     if ($gFirstFormTextBox == "") {
         $gFirstFormTextBox = $ParamName;
     }
@@ -1006,9 +1006,9 @@ function nz($item, $default)
 function mkAH($caption, $URL, $title = "", $params = null)
 {
     // $params = array("param" => "value"); e.g. $params = array("onclick" => "function()") - NOTE: additional parameters must not use double quotes
-    return "<a href='".str_replace("'", "&#039;", $URL)."'".
-        parseAdditionalParams($params).
-        ((strlen($title) <= 0)?"":" title='".str_replace("'", "&#039;", $title)."'").
+    return "<a href='" . str_replace("'", "&#039;", $URL) . "'" .
+        parseAdditionalParams($params) .
+        ((strlen($title) <= 0) ? "" : " title='" . str_replace("'", "&#039;", $title) . "'") .
         ">$caption</a>";
 }
 
@@ -1021,7 +1021,7 @@ function parseAdditionalParams($params = null)
             if (stristr($value, '"')) {
                 trigger_error("additional parameters must not use double quotes");
             }
-            $str .= " ".$item."=\"".$value."\"";
+            $str .= " " . $item . "=\"" . $value . "\"";
         }
     }
     return $str;
@@ -1031,7 +1031,7 @@ function parseAdditionalParams($params = null)
 function graphicForBoolean($bool)
 {
     if ($bool) {
-        return '<img src="'.util_get_image_theme("ic/check.png").'" border=0 alt="Y">';
+        return '<img src="' . util_get_image_theme("ic/check.png") . '" border=0 alt="Y">';
     } else {
         return '<span style="font-weight: bold">X</span>';
     }
@@ -1060,7 +1060,7 @@ function update_database($tableName, $items, $selectCriteria = "")
     if (stristr($selectCriteria, ";")) {
         exit_error(
             "update_database: Select criteria contains illegal character",
-            "$tableName: ".htmlentities(selectCriteria)
+            "$tableName: " . htmlentities(selectCriteria)
         );
     }
     $sql = "";
@@ -1069,15 +1069,15 @@ function update_database($tableName, $items, $selectCriteria = "")
         $SQLitems = "";
         $SQLValues = "";
         foreach ($items as $name => $value) {
-            $SQLitems .= (strlen($SQLitems)?",":"")." $name";
-            $SQLValues .= (strlen($SQLValues)?",":"")." $value";
+            $SQLitems .= (strlen($SQLitems) ? "," : "") . " $name";
+            $SQLValues .= (strlen($SQLValues) ? "," : "") . " $value";
         }
         $sql = "INSERT INTO $tableName ($SQLitems) VALUES ($SQLValues);";
     } else {
         // Update
         $SQLstr = "";
         foreach ($items as $name => $value) {
-            $SQLstr .= (strlen($SQLstr)?", ":"")." $name=$value";
+            $SQLstr .= (strlen($SQLstr) ? ", " : "") . " $name=$value";
         }
         $sql = "UPDATE $tableName SET $SQLstr WHERE ($selectCriteria);";
     }

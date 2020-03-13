@@ -167,7 +167,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             case 'text':
                 $diff      = new Codendi_Diff($previous, $next);
                 $formatter = new Codendi_UnifiedDiffFormatter();
-                $string    = PHP_EOL.$formatter->format($diff);
+                $string    = PHP_EOL . $formatter->format($diff);
                 break;
             default:
                 break;
@@ -181,9 +181,9 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      */
     protected function fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id)
     {
-        $url      = HTTPRequest::instance()->getServerUrl().TRACKER_BASE_URL.'/?aid='.$artifact_id.'#followup_'.$changeset_id;
+        $url      = HTTPRequest::instance()->getServerUrl() . TRACKER_BASE_URL . '/?aid=' . $artifact_id . '#followup_' . $changeset_id;
 
-        return '<a href="'.$url.'">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'goto_diff') . '</a>';
+        return '<a href="' . $url . '">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'goto_diff') . '</a>';
     }
 
     /**
@@ -213,7 +213,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             case 'text':
                 $diff = new Codendi_Diff($previous, $next);
                 $f    = new Codendi_UnifiedDiffFormatter();
-                $string .= PHP_EOL.$f->format($diff);
+                $string .= PHP_EOL . $f->format($diff);
                 break;
             case 'html':
                 $formated_diff = $this->getFormatedDiff($previous, $next);
@@ -224,7 +224,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             case 'modal':
                 $formated_diff = $this->getFormatedDiff($previous, $next);
                 if ($formated_diff) {
-                    $string = '<div class="diff">'. $formated_diff .'</div>';
+                    $string = '<div class="diff">' . $formated_diff . '</div>';
                 }
                 break;
             default:
@@ -240,7 +240,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     {
         $html  = '';
         $html .= '<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>';
-        $html .= '<div class="diff" style="display: none">'. $formated_diff .'</div>';
+        $html .= '<div class="diff" style="display: none">' . $formated_diff . '</div>';
 
         return $html;
     }

@@ -32,7 +32,6 @@ class UserDetailsFormatter
 
     public function __construct(UserStatusBuilder $user_status_builder)
     {
-
         $this->user_status_builder = $user_status_builder;
     }
 

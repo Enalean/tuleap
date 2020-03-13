@@ -78,7 +78,7 @@ class FrozenFieldsValidatorTest extends TestCase
             ->with(101)
             ->andReturn([]);
 
-        $frozen_fields_value = new FrozenFieldsValue([1,2]);
+        $frozen_fields_value = new FrozenFieldsValue([1, 2]);
 
         $tracker  = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -107,7 +107,7 @@ class FrozenFieldsValidatorTest extends TestCase
             ->with(101)
             ->andReturn([]);
 
-        $frozen_fields_value = new FrozenFieldsValue([1,1,2]);
+        $frozen_fields_value = new FrozenFieldsValue([1, 1, 2]);
 
         $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -141,7 +141,7 @@ class FrozenFieldsValidatorTest extends TestCase
             ->with(101)
             ->andReturn([]);
 
-        $frozen_fields_value = new FrozenFieldsValue([1,3]);
+        $frozen_fields_value = new FrozenFieldsValue([1, 3]);
 
         $tracker  = Mockery::mock(\Tracker::class);
         $workflow = Mockery::mock(\Workflow::class);
@@ -179,7 +179,7 @@ class FrozenFieldsValidatorTest extends TestCase
             ->with(101)
             ->andReturn([]);
 
-        $frozen_fields_value = new FrozenFieldsValue([1,2]);
+        $frozen_fields_value = new FrozenFieldsValue([1, 2]);
 
         $this->expectException(InvalidPostActionException::class);
 
@@ -227,7 +227,7 @@ class FrozenFieldsValidatorTest extends TestCase
                 ]
             ]);
 
-        $frozen_fields_value = new FrozenFieldsValue([1,2]);
+        $frozen_fields_value = new FrozenFieldsValue([1, 2]);
 
         $this->expectException(InvalidPostActionException::class);
 

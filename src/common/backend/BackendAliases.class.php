@@ -24,7 +24,7 @@ class BackendAliases extends Backend
 
     public const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
 
-    protected $need_update=false;
+    protected $need_update = false;
     protected $mailinglistdao = null;
 
     /**
@@ -72,8 +72,8 @@ class BackendAliases extends Backend
     public function update()
     {
         $alias_file = $GLOBALS['alias_file'];
-        $alias_file_new = $alias_file.".new";
-        $alias_file_old = $alias_file.".old";
+        $alias_file_new = $alias_file . ".new";
+        $alias_file_old = $alias_file . ".old";
 
         if (!$fp = fopen($alias_file_new, 'w')) {
             $this->log("Can't open file for writing: $alias_file_new", Backend::LOG_ERROR);
@@ -118,9 +118,9 @@ class BackendAliases extends Backend
         fwrite($fp, "codex-contact:           codendi-admin\n");// deprecated user name
         fwrite($fp, "codex-admin:             codendi-admin\n");// deprecated user name
         fwrite($fp, "sourceforge:             codendi-admin\n");// deprecated user name
-        fwrite($fp, $this->getHTTPUser().":               codendi-admin\n");
-        fwrite($fp, "noreply:                 \"|".$GLOBALS['codendi_bin_prefix']."/gotohell\"\n");
-        fwrite($fp, "undisclosed-recipients:  \"|".$GLOBALS['codendi_bin_prefix']."/gotohell\"\n"); // for phpWiki notifications...
+        fwrite($fp, $this->getHTTPUser() . ":               codendi-admin\n");
+        fwrite($fp, "noreply:                 \"|" . $GLOBALS['codendi_bin_prefix'] . "/gotohell\"\n");
+        fwrite($fp, "undisclosed-recipients:  \"|" . $GLOBALS['codendi_bin_prefix'] . "/gotohell\"\n"); // for phpWiki notifications...
         fwrite($fp, "webmaster:               codendi-admin\n");
         return fwrite($fp, "\n\n");
     }

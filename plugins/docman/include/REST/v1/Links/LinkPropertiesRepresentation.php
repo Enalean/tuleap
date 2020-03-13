@@ -31,6 +31,6 @@ class LinkPropertiesRepresentation
 
     public function build(?Docman_LinkVersion $link)
     {
-        $this->link_url = ($link)? $link->getLink(): "";
+        $this->link_url = ($link) ? $link->getLink() : "";
     }
 }

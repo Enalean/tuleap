@@ -29,12 +29,12 @@ class FileModuleMonitorDao extends DataAccessObject
 
         $sql = sprintf(
             "SELECT u.email,u.user_id,p.name "
-              ."FROM user AS u,filemodule_monitor AS fm, frs_package AS p "
-              ."WHERE u.user_id = fm.user_id "
-              ."AND fm.filemodule_id = p.package_id "
-              ."AND fm.filemodule_id = %s "
-              ."AND p.group_id = %s "
-              ."AND ( u.status='A' OR u.status='R' )",
+              . "FROM user AS u,filemodule_monitor AS fm, frs_package AS p "
+              . "WHERE u.user_id = fm.user_id "
+              . "AND fm.filemodule_id = p.package_id "
+              . "AND fm.filemodule_id = %s "
+              . "AND p.group_id = %s "
+              . "AND ( u.status='A' OR u.status='R' )",
             $this->da->quoteSmart($_package_id),
             $this->da->quoteSmart($_group_id)
         );
@@ -56,7 +56,7 @@ class FileModuleMonitorDao extends DataAccessObject
         $sql = "SELECT u.user_id
                 FROM user AS u,filemodule_monitor AS fm
                 WHERE u.user_id = fm.user_id
-                  AND fm.filemodule_id = ".$packageId."
+                  AND fm.filemodule_id = " . $packageId . "
                   AND u.status IN ('A', 'R')
                   AND fm.anonymous = 0";
         return $this->retrieve($sql);
@@ -65,7 +65,7 @@ class FileModuleMonitorDao extends DataAccessObject
     public function searchById($id)
     {
         $_id = (int) $id;
-        return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_id), '', ' ORDER BY filemodule_id DESC');
+        return $this->_search(' fm.filemodule_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY filemodule_id DESC');
     }
 
 
@@ -87,17 +87,17 @@ class FileModuleMonitorDao extends DataAccessObject
         $_package_id = (int) $package_id;
         $_user_id = $user->getID();
 
-        return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_package_id).' AND fm.user_id ='.$this->da->escapeInt($_user_id).' '.$option, '', ' ORDER BY filemodule_id DESC');
+        return $this->_search(' fm.filemodule_id = ' . $this->da->escapeInt($_package_id) . ' AND fm.user_id =' . $this->da->escapeInt($_user_id) . ' ' . $option, '', ' ORDER BY filemodule_id DESC');
     }
 
     public function _search($where, $group = '', $order = '', $from = array())
     {
         $sql = 'SELECT fm.* '
-            .' FROM filemodule_monitor AS fm '
-            .(count($from) > 0 ? ', '.implode(', ', $from) : '')
-            .(trim($where) != '' ? ' WHERE '.$where.' ' : '')
-            .$group
-            .$order;
+            . ' FROM filemodule_monitor AS fm '
+            . (count($from) > 0 ? ', ' . implode(', ', $from) : '')
+            . (trim($where) != '' ? ' WHERE ' . $where . ' ' : '')
+            . $group
+            . $order;
         return $this->retrieve($sql);
     }
 
@@ -112,7 +112,6 @@ class FileModuleMonitorDao extends DataAccessObject
      */
     public function create($filemodule_id, PFUser $user, $anonymous = true)
     {
-
         $arg      = array();
         $values   = array();
 
@@ -126,8 +125,8 @@ class FileModuleMonitorDao extends DataAccessObject
         $values[] = ($this->da->escapeInt($anonymous));
 
         $sql      = "INSERT INTO filemodule_monitor
-                     (".implode(", ", $arg).")
-                     VALUES (".implode(", ", $values).")";
+                     (" . implode(", ", $arg) . ")
+                     VALUES (" . implode(", ", $values) . ")";
         return $this->update($sql);
     }
 
@@ -148,9 +147,9 @@ class FileModuleMonitorDao extends DataAccessObject
             $option = "AND anonymous = 0";
         }
         $sql = "DELETE FROM filemodule_monitor
-                WHERE filemodule_id = ".$this->da->escapeInt($filemodule_id)."
-                  AND user_id = ".$this->da->escapeInt($user->getID())."
-                  ".$option;
+                WHERE filemodule_id = " . $this->da->escapeInt($filemodule_id) . "
+                  AND user_id = " . $this->da->escapeInt($user->getID()) . "
+                  " . $option;
 
         $deleted = $this->update($sql);
         return $deleted;

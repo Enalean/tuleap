@@ -168,7 +168,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      */
     public function getLocalizedStatusLabel(Tracker_Artifact $artifact)
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_'. $this->getNormalizedStatusLabel($artifact));
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_' . $this->getNormalizedStatusLabel($artifact));
     }
 
     /**
@@ -221,7 +221,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
                 $field_values = $this->list_field->getAllValues();
                 foreach ($this->open_values as $v) {
                     if (isset($field_values[$v])) {
-                        echo '<li><strong>'. $purifier->purify($field_values[$v]->getLabel()) .'</strong></li>';
+                        echo '<li><strong>' . $purifier->purify($field_values[$v]->getLabel()) . '</strong></li>';
                     }
                 }
                 echo '</ul>';
@@ -253,9 +253,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         $html = '';
 
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedListFields($this->tracker)) {
-            $html .= '<form method="POST" action="'. $this->getUrl() .'">';
+            $html .= '<form method="POST" action="' . $this->getUrl() . '">';
             $html .= $this->getCSRFToken()->fetchHTMLInput();
-            $html .= '<input type="hidden" name="field_id" value="'. (int) $this->getFieldId() .'">';
+            $html .= '<input type="hidden" name="field_id" value="' . (int) $this->getFieldId() . '">';
 
             // field selectbox
             $field = null;
@@ -265,7 +265,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
             if (! $this->list_field) {
                 $selected = 'selected="selected"';
             }
-            $select .= '<option value="-1" '. $selected .'>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_a_field') . '</option>';
+            $select .= '<option value="-1" ' . $selected . '>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_a_field') . '</option>';
 
             foreach ($list_fields as $list_field) {
                 $selected = '';
@@ -280,9 +280,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic
             // open values selectbox
             $params = '';
             if ($field) {
-                $params = 'name="open_values['. $this->getFieldId() .'][]" multiple="multiple" size="7" style="vertical-align:top;"';
+                $params = 'name="open_values[' . $this->getFieldId() . '][]" multiple="multiple" size="7" style="vertical-align:top;"';
             }
-            $values = '<select '. $params .'>';
+            $values = '<select ' . $params . '>';
             if ($field) {
                 $disabled_values = $this->getDisabledValues();
 
@@ -297,17 +297,17 @@ class Tracker_Semantic_Status extends Tracker_Semantic
                         $disabled = ' disabled="disabled" ';
                     }
 
-                    $values .= '<option value="' . $v->getId() . '" ' . $selected . $disabled .'>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+                    $values .= '<option value="' . $v->getId() . '" ' . $selected . $disabled . '>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
                 }
             }
             $values .= '</select>';
 
             // submit button
-            $submit = '<input type="submit" name="update" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+            $submit = '<input type="submit" name="update" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
 
             if (!$this->getFieldId()) {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_no_field');
-                $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_one_advice') . $select .' '. $submit .'</p>';
+                $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_one_advice') . $select . ' ' . $submit . '</p>';
             } else {
                 $event = new SemanticStatusFieldCanBeUpdated($this->tracker);
 
@@ -318,13 +318,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic
                     $select = $this->getField()->getLabel();
                 }
 
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_long_desc', array($select)) . $values .' '. $submit;
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_long_desc', array($select)) . $values . ' ' . $submit;
             }
             $html .= '</form>';
         } else {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_impossible');
         }
-        $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'go_back_overview') . '</a></p>';
+        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'go_back_overview') . '</a></p>';
 
         $sm->displaySemanticHeader($this, $tracker_manager);
         echo $html;
@@ -495,7 +495,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
 
         foreach ($dao->searchByTrackerId($tracker->getId()) as $row) {
             $field_id      = $row['field_id'];
-            $open_values[] = (int)$row['open_value_id'];
+            $open_values[] = (int) $row['open_value_id'];
         }
 
         if (!$open_values) {

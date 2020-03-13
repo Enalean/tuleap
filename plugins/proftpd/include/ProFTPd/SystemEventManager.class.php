@@ -56,7 +56,7 @@ class SystemEventManager
 
     public function queueDirectoryCreate($project_name)
     {
-        if (! is_dir($this->proftpd_base_directory.DIRECTORY_SEPARATOR.$project_name)) {
+        if (! is_dir($this->proftpd_base_directory . DIRECTORY_SEPARATOR . $project_name)) {
             $this->system_event_manager->createEvent(
                 SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME,
                 $project_name,

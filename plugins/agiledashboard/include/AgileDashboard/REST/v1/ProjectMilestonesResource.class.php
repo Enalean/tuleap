@@ -157,7 +157,6 @@ class ProjectMilestonesResource
      */
     public function get(PFUser $user, $project, $representation_type, $query, $limit, $offset, $order)
     {
-
         if (! $this->limitValueIsAcceptable($limit)) {
             throw new RestException(406, 'Maximum value for limit exceeded');
         }

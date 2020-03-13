@@ -67,8 +67,8 @@ class ImportProjectXMLCommand extends Command
     {
         if ($input->getOption('project') === null && $input->getOption('update')) {
             throw new \InvalidArgumentException(
-                "Can't use option --update\n".
-                "If you want create a new project, retry without --update.\n".
+                "Can't use option --update\n" .
+                "If you want create a new project, retry without --update.\n" .
                 "If you want update an existing project, retry with option --project / -p instead of option --name / -s"
             );
         }
@@ -87,7 +87,7 @@ class ImportProjectXMLCommand extends Command
         $configuration->setUpdate($update);
 
         $project_id = $input->getOption("project");
-        $project_name_override = (string)$input->getOption("name");
+        $project_name_override = (string) $input->getOption("name");
 
         $username = $input->getOption("user-name");
         if ($username === null) {
@@ -104,14 +104,14 @@ class ImportProjectXMLCommand extends Command
             $automap = true;
             $automap_arg = trim($input->getOption("automap"));
             $exception =
-                "Automatically map users without taking email into account\n".
-                "the second argument is the default action for accounts to\n".
-                "create.\n".
-                "Supported strategies:\n".
-                "           no-email    Map with matching ldap id or username.\n".
-                "                       Email is not taken into account\n".
-                "Supported actions:\n".
-                "           create:A    Create account with status Active\n".
+                "Automatically map users without taking email into account\n" .
+                "the second argument is the default action for accounts to\n" .
+                "create.\n" .
+                "Supported strategies:\n" .
+                "           no-email    Map with matching ldap id or username.\n" .
+                "                       Email is not taken into account\n" .
+                "Supported actions:\n" .
+                "           create:A    Create account with status Active\n" .
                 "           create:S    Create account with status Suspended\n\n\n";
             if (strpos($automap_arg, ',') !== false) {
                 [$automap_strategy, $default_action] = explode(',', $automap_arg);
@@ -129,7 +129,7 @@ class ImportProjectXMLCommand extends Command
                 $is_template = true;
             } else {
                 $exception =
-                    "If the project is created, then it can be defined as a template\n".
+                    "If the project is created, then it can be defined as a template\n" .
                     "Unsupported type argument, eg --type template";
                 throw new \InvalidArgumentException($exception);
             }
@@ -213,7 +213,7 @@ class ImportProjectXMLCommand extends Command
         } catch (\XML_ParseException $exception) {
             $broker_log->error($exception->getMessage());
             foreach ($exception->getErrors() as $parse_error) {
-                $broker_log->error('XML: '.$parse_error.' line:'.$exception->getSourceXMLForError($parse_error));
+                $broker_log->error('XML: ' . $parse_error . ' line:' . $exception->getSourceXMLForError($parse_error));
             }
         } catch (ImportNotValidException $exception) {
             if ($exception->getMessage() !== '') {
@@ -222,7 +222,7 @@ class ImportProjectXMLCommand extends Command
                 $broker_log->error("There are some errors in the XML content that prevent the project to be created.");
             }
         } catch (\Exception $exception) {
-            $broker_log->error(get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
+            $broker_log->error(get_class($exception) . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
         } finally {
             if ($archive) {
                 $archive->cleanUp();

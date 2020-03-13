@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once dirname(__FILE__).'/GitDataBuilder.php';
+require_once dirname(__FILE__) . '/GitDataBuilder.php';
 
 $data_builder = new GitDataBuilder();
 $data_builder->setUp();

@@ -138,7 +138,7 @@ class Git_Mirror_MirrorDataMapper
     private function createUserForMirror($mirror_id, $password, $ssh_key)
     {
         $user = new PFUser(array(
-            'user_name'       => self::MIRROR_OWNER_PREFIX.$mirror_id,
+            'user_name'       => self::MIRROR_OWNER_PREFIX . $mirror_id,
             'status'          => 'A',
             'unix_status'     => 'A'
         ));
@@ -423,7 +423,7 @@ class Git_Mirror_MirrorDataMapper
     private function getMirrorOwner($mirror_id)
     {
         return $this->user_manager->getUserByUserName(
-            self::MIRROR_OWNER_PREFIX.$mirror_id
+            self::MIRROR_OWNER_PREFIX . $mirror_id
         );
     }
 

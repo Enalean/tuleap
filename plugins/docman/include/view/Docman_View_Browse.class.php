@@ -76,30 +76,30 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         }
 
         $html .= '<td align="right">';
-        $html .= '<form action="'. $params['default_url'] .'" method="POST">';
+        $html .= '<form action="' . $params['default_url'] . '" method="POST">';
         $html .= '<span id="docman_browse_viewas">';
-        $html .= dgettext('tuleap-docman', 'View as:') .' ';
+        $html .= dgettext('tuleap-docman', 'View as:') . ' ';
         $html .= '<input type="image"
                          name="selected_view[Tree]"
-                         src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-Tree.png"
-                         title="'. dgettext('tuleap-docman', 'Tree') .'"
-                         alt="'. dgettext('tuleap-docman', 'Tree') .'"
+                         src="' . $this->_controller->plugin->getThemePath() . '/images/ic/view-Tree.png"
+                         title="' . dgettext('tuleap-docman', 'Tree') . '"
+                         alt="' . dgettext('tuleap-docman', 'Tree') . '"
                          /> ';
         $html .= '<input type="image"
                          name="selected_view[Icons]"
-                         src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-Icons.png"
-                         title="'. dgettext('tuleap-docman', 'Icons') .'"
-                         alt="'. dgettext('tuleap-docman', 'Icons') .'"
+                         src="' . $this->_controller->plugin->getThemePath() . '/images/ic/view-Icons.png"
+                         title="' . dgettext('tuleap-docman', 'Icons') . '"
+                         alt="' . dgettext('tuleap-docman', 'Icons') . '"
                          /> ';
         $html .= '<input type="image"
                          name="selected_view[Table]"
-                         src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-Table.png"
-                         title="'. dgettext('tuleap-docman', 'Table') .'"
-                         alt="'. dgettext('tuleap-docman', 'Table') .'"
+                         src="' . $this->_controller->plugin->getThemePath() . '/images/ic/view-Table.png"
+                         title="' . dgettext('tuleap-docman', 'Table') . '"
+                         alt="' . dgettext('tuleap-docman', 'Table') . '"
                          /> ';
         $html .= '</span>';
         $html .= '<input type="hidden" name="action" value="change_view" />';
-        $html .= '<input type="hidden" name="id" value="'. $params['item']->getId() .'" />';
+        $html .= '<input type="hidden" name="id" value="' . $params['item']->getId() . '" />';
         $html .= '</form>';
         $html .= '</td>';
 
@@ -179,7 +179,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         if ($report != '') {
             $pref = $report;
         } else {
-            $pref = user_get_preference(PLUGIN_DOCMAN_VIEW_PREF .'_'. $group_id);
+            $pref = user_get_preference(PLUGIN_DOCMAN_VIEW_PREF . '_' . $group_id);
             if (!$pref) {
                 $sBo = Docman_SettingsBo::instance($group_id);
                 $pref = $sBo->getView();

@@ -39,7 +39,7 @@ $vKey = new Valid_String('key');
 $vKey->required();
 $vVal = new Valid_String('val');
 $vVal->required();
-if ((!$request->valid($vKey)) ||(!$request->valid($vVal))) {
+if ((!$request->valid($vKey)) || (!$request->valid($vVal))) {
     $GLOBALS['Response']->sendStatusCode(400);
     exit_error(
         $GLOBALS['Language']->getText('global', 'error'),
@@ -116,9 +116,9 @@ if ($request->isAjax()) {
         case 'tracker':
             $user_id = UserManager::instance()->getCurrentUser()->getId();
             $aid = $request->get('val');
-            $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id= ". db_ei($aid);
+            $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id= " . db_ei($aid);
             $result = db_query($sql);
-            if (db_numrows($result)>0) {
+            if (db_numrows($result) > 0) {
                 $row = db_fetch_array($result);
                 $atid = $row['group_artifact_id'];
 
@@ -146,14 +146,14 @@ if ($request->isAjax()) {
 
                                 $open_date = $art_field_fact->getFieldFromName($field_name);
                                 if ($field->userCanRead($group_id, $atid)) {
-                                    $value .= $html_purifier->purify(', '. DateHelper::timeAgoInWords($ah->getValue('open_date')));
+                                    $value .= $html_purifier->purify(', ' . DateHelper::timeAgoInWords($ah->getValue('open_date')));
                                 }
                             } else {
                                 $value = $field_html->display($at->getID(), $field_value, false, false, true);
                             }
 
                             $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, $user_id, true);
-                            $values[] = '<tr><td>'. $field_html->labelDisplay() .'</td><td>'. $value .'</td></tr>';
+                            $values[] = '<tr><td>' . $field_html->labelDisplay() . '</td><td>' . $value . '</td></tr>';
                         }
                     }
                 }
@@ -166,7 +166,7 @@ if ($request->isAjax()) {
             }
             break;
         case 'svn':
-            require_once __DIR__.'/../www/svn/svn_data.php';
+            require_once __DIR__ . '/../www/svn/svn_data.php';
             $group_id = $request->get('group_id');
             $rev_id = $request->get('val');
             $result = svn_data_get_revision_detail($group_id, 0, $rev_id);
@@ -188,7 +188,7 @@ if ($request->isAjax()) {
             echo '</table>';
             break;
         case 'cvs':
-            require_once __DIR__.'/../www/cvs/commit_utils.php';
+            require_once __DIR__ . '/../www/cvs/commit_utils.php';
             $commit_id = $request->get('val');
             $result =  cvs_get_revision_detail($commit_id);
             if (db_numrows($result) < 1) {
@@ -250,8 +250,8 @@ if ($request->isAjax()) {
             break;
     }
 } else {
-    $feed=isset($feed)?$feed:"";
-    $location = "Location: ".$ref->getLink().$feed;
+    $feed = isset($feed) ? $feed : "";
+    $location = "Location: " . $ref->getLink() . $feed;
     header($location);
     exit;
 }

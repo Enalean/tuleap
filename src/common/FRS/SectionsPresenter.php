@@ -39,11 +39,11 @@ class SectionsPresenter
         $this->permissions = _('Access controls');
         $this->processors  = _('Processors');
 
-        $this->permissions_url = '/file/admin/?'. http_build_query(array(
+        $this->permissions_url = '/file/admin/?' . http_build_query(array(
             'group_id' => $this->project_id,
             'action'   => 'edit-permissions'
         ));
-        $this->processors_url = '/file/admin/manageprocessors.php?'. http_build_query(array(
+        $this->processors_url = '/file/admin/manageprocessors.php?' . http_build_query(array(
             'group_id' => $this->project_id
         ));
         $this->license_agreements_url = ListLicenseAgreementsController::getUrl($project);

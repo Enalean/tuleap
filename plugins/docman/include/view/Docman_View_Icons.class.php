@@ -26,7 +26,6 @@ class Docman_View_Icons extends Docman_View_Browse
 
     /* protected */ public function _content($params)
     {
-
         $html = '';
 
         $itemFactory = new Docman_ItemFactory($params['group_id']);
@@ -72,12 +71,12 @@ class Docman_View_Icons extends Docman_View_Browse
             foreach ($rows as $row) {
                 $html .= '<tr style="vertical-align:top">';
                 foreach ($row as $cell => $nop) {
-                    $html .= '<td width="'. $width .'%">'. $this->_displayItem($row[$cell], $item_parameters) .'</td>';
+                    $html .= '<td width="' . $width . '%">' . $this->_displayItem($row[$cell], $item_parameters) . '</td>';
                 }
-                $html .= '<td width="'. $width .'%">&nbsp;</td>';
+                $html .= '<td width="' . $width . '%">&nbsp;</td>';
                 $html .= '</tr>';
             }
-            $html .= '</table>'."\n";
+            $html .= '</table>' . "\n";
         }
         echo $html;
     }
@@ -114,12 +113,12 @@ class Docman_View_Icons extends Docman_View_Browse
     public function _displayItem(&$item, $params)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $html = '<div id="item_'.$item->getId().'" class="'. Docman_View_Browse::getItemClasses($params) .'" style="position:relative;">';
+        $html = '<div id="item_' . $item->getId() . '" class="' . Docman_View_Browse::getItemClasses($params) . '" style="position:relative;">';
 
         $show_options = isset($params['show_options']) && $params['show_options'] == $item->getId();
 
         $icon_src = $params['docman_icons']->getIconForItem($item, $params);
-        $icon = '<img src="'. $icon_src .'" class="docman_item_icon" style="vertical-align:middle; text-decoration:none;" />';
+        $icon = '<img src="' . $icon_src . '" class="docman_item_icon" style="vertical-align:middle; text-decoration:none;" />';
 
         $icon_url = DocmanViewURLBuilder::buildActionUrl(
             $item,
@@ -134,15 +133,15 @@ class Docman_View_Icons extends Docman_View_Browse
             $params,
             ['action' => 'show', 'id' => $item->getId()]
         );
-        $html .= '<div><a href="'. $icon_url .'">'. $icon .'</a>';
-        $html .= '<span class="docman_item_title"><a href="'. $title_url .'" id="docman_item_title_link_'.$item->getId().'">'.  $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)  .'</a></span>';
+        $html .= '<div><a href="' . $icon_url . '">' . $icon . '</a>';
+        $html .= '<span class="docman_item_title"><a href="' . $title_url . '" id="docman_item_title_link_' . $item->getId() . '">' .  $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)  . '</a></span>';
         $html .= '</a>';
         //Show/hide options {{{
         $html .= $this->getItemMenu($item, $params);
         $this->javascript .= $this->getActionForItem($item);
         //}}}
         if (trim($item->getDescription()) != '') {
-            $html .= '<div class="docman_item_description">'.  $hp->purify($item->getDescription(), CODENDI_PURIFIER_BASIC) .'</div>';
+            $html .= '<div class="docman_item_description">' .  $hp->purify($item->getDescription(), CODENDI_PURIFIER_BASIC) . '</div>';
         }
         $html .= '</div>';
 

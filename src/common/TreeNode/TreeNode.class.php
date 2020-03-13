@@ -113,7 +113,7 @@ class TreeNode /*implements Visitable*/
         if (is_object($node) && is_a($node, 'TreeNode')) {
             $this->parentNode =& $node;
         } else {
-            trigger_error(static::class.'::setParentNode => require: TreeNode given: "'.  get_class($node).'"', E_USER_ERROR);
+            trigger_error(static::class . '::setParentNode => require: TreeNode given: "' .  get_class($node) . '"', E_USER_ERROR);
         }
     }
 
@@ -143,7 +143,7 @@ class TreeNode /*implements Visitable*/
             $c->_setParentNode($this);
             $this->children[] = $c;
         } else {
-            trigger_error(static::class.'::addChild => require: TreeNode given: "'.get_class($c).'"', E_USER_ERROR);
+            trigger_error(static::class . '::addChild => require: TreeNode given: "' . get_class($c) . '"', E_USER_ERROR);
         }
     }
 
@@ -175,7 +175,7 @@ class TreeNode /*implements Visitable*/
             unset($this->children[$key]);
             $this->children = array_values($this->children);
         } else {
-            trigger_error(static::class.'::removeChild => require: "int" given: "'.gettype($key).'"', E_USER_ERROR);
+            trigger_error(static::class . '::removeChild => require: "int" given: "' . gettype($key) . '"', E_USER_ERROR);
         }
     }
 
@@ -191,7 +191,7 @@ class TreeNode /*implements Visitable*/
         if (isset($key) && is_int($key) && is_array($this->children) && array_key_exists($key, $this->children)) {
             return $this->children[$key];
         } else {
-            trigger_error(static::class.'::getChild => require: "int" given: "'.gettype($key).'"', E_USER_ERROR);
+            trigger_error(static::class . '::getChild => require: "int" given: "' . gettype($key) . '"', E_USER_ERROR);
         }
     }
 
@@ -220,7 +220,7 @@ class TreeNode /*implements Visitable*/
                 $this->addChild($child);
             }
         } else {
-            trigger_error(static::class.'::setChildren => require: "array" given: "'.gettype($children).'"', E_USER_ERROR);
+            trigger_error(static::class . '::setChildren => require: "array" given: "' . gettype($children) . '"', E_USER_ERROR);
         }
     }
 
@@ -273,9 +273,9 @@ class TreeNode /*implements Visitable*/
     {
         $children_as_string = '';
         foreach ($this->getChildren() as $child) {
-            $children_as_string .= $child->__toString() .",\n";
+            $children_as_string .= $child->__toString() . ",\n";
         }
-        return 'TreeNode #'. $this->id ." {\n $children_as_string }\n";
+        return 'TreeNode #' . $this->id . " {\n $children_as_string }\n";
     }
 
     /**

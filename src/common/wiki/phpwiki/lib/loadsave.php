@@ -109,9 +109,9 @@ function EndLoadDump(&$request)
         $content = "Loaded the following pages:\n" . join("\n", $pages);
         if (mail(
             join(',', $all_emails),
-            "[".WIKI_NAME."] "._("LoadDump"),
-            _("LoadDump")."\n".
-                 $editedby."\n\n".
+            "[" . WIKI_NAME . "] " . _("LoadDump"),
+            _("LoadDump") . "\n" .
+                 $editedby . "\n\n" .
             $content
         )) {
             trigger_error(sprintf(
@@ -415,7 +415,7 @@ function MakeWikiZipHtml(&$request)
         //if ($WikiTheme->dumped_images) $zip->addRegularFile("images", "", $attrib);
         foreach ($WikiTheme->dumped_images as $img_file) {
             if (($from = $WikiTheme->_findFile($img_file, true)) and basename($from)) {
-                $target = "images/".basename($img_file);
+                $target = "images/" . basename($img_file);
                 $zip->addRegularFile($target, file_get_contents($WikiTheme->_path . $from), $attrib);
             }
         }
@@ -424,7 +424,7 @@ function MakeWikiZipHtml(&$request)
         //if ($WikiTheme->dumped_buttons) $zip->addRegularFile("images/buttons", "", $attrib);
         foreach ($WikiTheme->dumped_buttons as $text => $img_file) {
             if (($from = $WikiTheme->_findFile($img_file, true)) and basename($from)) {
-                $target = "images/buttons/".basename($img_file);
+                $target = "images/buttons/" . basename($img_file);
                 $zip->addRegularFile($target, file_get_contents($WikiTheme->_path . $from), $attrib);
             }
         }
@@ -471,7 +471,7 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
     $pagename = $pageinfo['pagename'];
     $content  = $pageinfo['content'];
 
-    if ($pagename ==_("InterWikiMap")) {
+    if ($pagename == _("InterWikiMap")) {
         $content = _tryinsertInterWikiMap($content);
     }
 
@@ -587,16 +587,16 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
             global $WikiTheme;
             $meb = Button(
                 array('action' => 'loadfile',
-                                'merge'=> true,
-                                'source'=> $f),
+                                'merge' => true,
+                                'source' => $f),
                 _("Merge Edit"),
                 _("PhpWikiAdministration"),
                 'wikiadmin'
             );
             $owb = Button(
                 array('action' => 'loadfile',
-                                'overwrite'=> true,
-                                'source'=> $f),
+                                'overwrite' => true,
+                                'source' => $f),
                 _("Restore Anyway"),
                 _("PhpWikiAdministration"),
                 'wikiunsafe'
@@ -683,12 +683,12 @@ function _tryinsertInterWikiMap($content)
         $goback = true;
     }
     if (!$goback && !defined('INTERWIKI_MAP_FILE')) {
-        $error_html = sprintf(" "._("%s: not defined"), "INTERWIKI_MAP_FILE");
+        $error_html = sprintf(" " . _("%s: not defined"), "INTERWIKI_MAP_FILE");
         $goback = true;
     }
     $mapfile = FindFile(INTERWIKI_MAP_FILE, 1);
     if (!$goback && !file_exists($mapfile)) {
-        $error_html = sprintf(" "._("%s: file not found"), INTERWIKI_MAP_FILE);
+        $error_html = sprintf(" " . _("%s: file not found"), INTERWIKI_MAP_FILE);
         $goback = true;
     }
 

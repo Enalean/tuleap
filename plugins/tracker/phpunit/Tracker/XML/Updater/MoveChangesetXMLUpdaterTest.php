@@ -40,7 +40,7 @@ use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class MoveChangesetXMLUpdaterTest extends TestCase
 {
@@ -161,13 +161,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->collector
         );
 
-        $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
-        $this->assertEquals((string)$artifact_xml->changeset->submitted_on, date('c', $time));
-        $this->assertEquals((int)$artifact_xml->changeset->submitted_by, $this->submitter->getId());
+        $this->assertEquals((int) $artifact_xml['tracker_id'], 201);
+        $this->assertEquals((string) $artifact_xml->changeset->submitted_on, date('c', $time));
+        $this->assertEquals((int) $artifact_xml->changeset->submitted_by, $this->submitter->getId());
 
         $this->assertEquals(count($artifact_xml->changeset->field_change), 1);
         $this->assertEquals($artifact_xml->changeset->field_change[0]['field_name'], 'title2');
-        $this->assertEquals((string)$artifact_xml->changeset->field_change[0]->value, 'Initial summary value');
+        $this->assertEquals((string) $artifact_xml->changeset->field_change[0]->value, 'Initial summary value');
     }
 
     public function testItUpdatesTheDescriptionFieldChangeTags()
@@ -193,7 +193,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             . '      <value>Content of details</value>'
             . '    </field_change>'
             . '  </changeset>'
-            .'  <changeset>'
+            . '  <changeset>'
             . '    <submitted_on>2015</submitted_on>'
             . '    <submitted_by>123</submitted_by>'
             . '    <field_change field_name="summary">'
@@ -260,17 +260,17 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->collector
         );
 
-        $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
-        $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
-        $this->assertEquals((int)$artifact_xml->changeset[0]->submitted_by, 101);
+        $this->assertEquals((int) $artifact_xml['tracker_id'], 201);
+        $this->assertEquals((string) $artifact_xml->changeset[0]->submitted_on, date('c', $time));
+        $this->assertEquals((int) $artifact_xml->changeset[0]->submitted_by, 101);
 
         $this->assertEquals(count($artifact_xml->changeset), 3);
-        $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]['field_name'], 'v2desc');
-        $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]->value, '<p><strong>Description</strong></p>');
-        $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]->value['format'], 'html');
-        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
-        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]->value, '<p><strong>Description v2</strong></p>');
-        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]->value['format'], 'html');
+        $this->assertEquals((string) $artifact_xml->changeset[0]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEquals((string) $artifact_xml->changeset[0]->field_change[0]->value, '<p><strong>Description</strong></p>');
+        $this->assertEquals((string) $artifact_xml->changeset[0]->field_change[0]->value['format'], 'html');
+        $this->assertEquals((string) $artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEquals((string) $artifact_xml->changeset[1]->field_change[0]->value, '<p><strong>Description v2</strong></p>');
+        $this->assertEquals((string) $artifact_xml->changeset[1]->field_change[0]->value['format'], 'html');
     }
 
     public function testItUpdatesTheStatusFieldChange()
@@ -296,7 +296,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             . '      <value format="id">101</value>'
             . '    </field_change>'
             . '  </changeset>'
-            .'  <changeset>'
+            . '  <changeset>'
             . '    <submitted_on>2015</submitted_on>'
             . '    <submitted_by>123</submitted_by>'
             . '    <field_change field_name="summary">'
@@ -372,15 +372,15 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->collector
         );
 
-        $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
-        $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
-        $this->assertEquals((int)$artifact_xml->changeset[0]->submitted_by, 101);
+        $this->assertEquals((int) $artifact_xml['tracker_id'], 201);
+        $this->assertEquals((string) $artifact_xml->changeset[0]->submitted_on, date('c', $time));
+        $this->assertEquals((int) $artifact_xml->changeset[0]->submitted_by, 101);
 
         $this->assertEquals(count($artifact_xml->changeset), 3);
-        $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]['field_name'], 'V2status');
-        $this->assertEquals((int)$artifact_xml->changeset[0]->field_change[0]->value, 201);
-        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]['field_name'], 'V2status');
-        $this->assertEquals((int)$artifact_xml->changeset[1]->field_change[0]->value, 205);
+        $this->assertEquals((string) $artifact_xml->changeset[0]->field_change[0]['field_name'], 'V2status');
+        $this->assertEquals((int) $artifact_xml->changeset[0]->field_change[0]->value, 201);
+        $this->assertEquals((string) $artifact_xml->changeset[1]->field_change[0]['field_name'], 'V2status');
+        $this->assertEquals((int) $artifact_xml->changeset[1]->field_change[0]->value, 205);
     }
 
     public function testItUpdatesTheContributorFieldChange()
@@ -407,7 +407,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             . '      <value format="ldap">102</value>'
             . '    </field_change>'
             . '  </changeset>'
-            .'  <changeset>'
+            . '  <changeset>'
             . '    <submitted_on>2015</submitted_on>'
             . '    <submitted_by>123</submitted_by>'
             . '    <field_change field_name="summary">'
@@ -485,15 +485,15 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->collector
         );
 
-        $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
-        $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
-        $this->assertEquals((int)$artifact_xml->changeset[0]->submitted_by, 101);
+        $this->assertEquals((int) $artifact_xml['tracker_id'], 201);
+        $this->assertEquals((string) $artifact_xml->changeset[0]->submitted_on, date('c', $time));
+        $this->assertEquals((int) $artifact_xml->changeset[0]->submitted_by, 101);
 
         $this->assertEquals(count($artifact_xml->changeset), 3);
-        $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]['field_name'], 'contrib');
-        $this->assertEquals((int)$artifact_xml->changeset[0]->field_change[0]->value, 101);
-        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]['field_name'], 'contrib');
-        $this->assertEquals((int)$artifact_xml->changeset[1]->field_change[0]->value, 105);
+        $this->assertEquals((string) $artifact_xml->changeset[0]->field_change[0]['field_name'], 'contrib');
+        $this->assertEquals((int) $artifact_xml->changeset[0]->field_change[0]->value, 101);
+        $this->assertEquals((string) $artifact_xml->changeset[1]->field_change[0]['field_name'], 'contrib');
+        $this->assertEquals((int) $artifact_xml->changeset[1]->field_change[0]->value, 105);
     }
 
     public function testItDealsWithCommentTagsInMoveAction()
@@ -518,7 +518,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             . '    </field_change>'
             . '    <comments/>'
             . '  </changeset>'
-            .'  <changeset>'
+            . '  <changeset>'
             . '    <submitted_on>2015</submitted_on>'
             . '    <submitted_by>123</submitted_by>'
             . '    <field_change field_name="summary">'
@@ -595,7 +595,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $this->assertEquals(count($artifact_xml->changeset), 3);
         $this->assertNull($artifact_xml->changeset[0]->comments[0]);
-        $this->assertEquals((string)$artifact_xml->changeset[1]->comments->comment[0]->body, 'My comment');
+        $this->assertEquals((string) $artifact_xml->changeset[1]->comments->comment[0]->body, 'My comment');
     }
 
     public function testItDoesNotRemoveFirstChangesetTagInMoveAction()
@@ -626,7 +626,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             . '      <value>Content of details v2</value>'
             . '    </field_change>'
             . '  </changeset>'
-            .'  <changeset>'
+            . '  <changeset>'
             . '    <submitted_on>2015</submitted_on>'
             . '    <submitted_by>123</submitted_by>'
             . '    <field_change field_name="summary">'
@@ -694,18 +694,18 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->collector
         );
 
-        $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
-        $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
-        $this->assertEquals((int)$artifact_xml->changeset[0]->submitted_by, 101);
+        $this->assertEquals((int) $artifact_xml['tracker_id'], 201);
+        $this->assertEquals((string) $artifact_xml->changeset[0]->submitted_on, date('c', $time));
+        $this->assertEquals((int) $artifact_xml->changeset[0]->submitted_by, 101);
 
         $this->assertEquals(count($artifact_xml->changeset), 4);
         $this->assertNull($artifact_xml->changeset[0]->field_change[0]);
-        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
-        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]->value, '<p><strong>Description</strong></p>');
-        $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]->value['format'], 'html');
-        $this->assertEquals((string)$artifact_xml->changeset[2]->field_change[0]['field_name'], 'v2desc');
-        $this->assertEquals((string)$artifact_xml->changeset[2]->field_change[0]->value, '<p><strong>Description v2</strong></p>');
-        $this->assertEquals((string)$artifact_xml->changeset[2]->field_change[0]->value['format'], 'html');
+        $this->assertEquals((string) $artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEquals((string) $artifact_xml->changeset[1]->field_change[0]->value, '<p><strong>Description</strong></p>');
+        $this->assertEquals((string) $artifact_xml->changeset[1]->field_change[0]->value['format'], 'html');
+        $this->assertEquals((string) $artifact_xml->changeset[2]->field_change[0]['field_name'], 'v2desc');
+        $this->assertEquals((string) $artifact_xml->changeset[2]->field_change[0]->value, '<p><strong>Description v2</strong></p>');
+        $this->assertEquals((string) $artifact_xml->changeset[2]->field_change[0]->value['format'], 'html');
     }
 
     public function testItAsksForExternalPluginsIfThereIsAnExternalFieldSemantic()
@@ -862,13 +862,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $this->assertEquals(count($artifact_xml->changeset), 2);
 
-        $this->assertEquals((string)$artifact_xml->changeset[1]->submitted_on, date('c', $moved_time));
-        $this->assertEquals((int)$artifact_xml->changeset[1]->submitted_by, $this->user->getId());
+        $this->assertEquals((string) $artifact_xml->changeset[1]->submitted_on, date('c', $moved_time));
+        $this->assertEquals((int) $artifact_xml->changeset[1]->submitted_by, $this->user->getId());
 
-        $this->assertEquals((string)$artifact_xml->changeset[1]->comments->comment->submitted_on, date('c', $moved_time));
-        $this->assertEquals((string)$artifact_xml->changeset[1]->comments->comment->submitted_by, $this->user->getId());
-        $this->assertEquals((string)$artifact_xml->changeset[1]->comments->comment->body['format'], 'text');
-        $this->assertNotEmpty((string)$artifact_xml->changeset[1]->comments->comment->body);
+        $this->assertEquals((string) $artifact_xml->changeset[1]->comments->comment->submitted_on, date('c', $moved_time));
+        $this->assertEquals((string) $artifact_xml->changeset[1]->comments->comment->submitted_by, $this->user->getId());
+        $this->assertEquals((string) $artifact_xml->changeset[1]->comments->comment->body['format'], 'text');
+        $this->assertNotEmpty((string) $artifact_xml->changeset[1]->comments->comment->body);
 
         $this->assertEquals(count($artifact_xml->changeset[1]->field_change), 0);
     }

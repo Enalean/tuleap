@@ -24,8 +24,8 @@ class GitAuthorizedKeysFileException extends Exception
 
     public function __construct($authorized_keys_file)
     {
-        parent::__construct($authorized_keys_file.' is empty'.
+        parent::__construct($authorized_keys_file . ' is empty' .
             '. In order to retrieve a file with the gitolite admin public key, run the script : '
-            .ForgeConfig::get('codendi_dir').'/plugins/git/bin/recreate_authorized_keys.sh');
+            . ForgeConfig::get('codendi_dir') . '/plugins/git/bin/recreate_authorized_keys.sh');
     }
 }

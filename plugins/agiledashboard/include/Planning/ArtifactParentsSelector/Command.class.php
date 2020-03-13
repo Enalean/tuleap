@@ -56,7 +56,7 @@ abstract class Planning_ArtifactParentsSelector_Command
      */
     protected function keepOnlyArtifactsBelongingToParentTracker(&$artifact, $key, $parent_tracker)
     {
-        if ((int)$artifact->getTracker()->getId() !== (int)$parent_tracker->getId()) {
+        if ((int) $artifact->getTracker()->getId() !== (int) $parent_tracker->getId()) {
             $artifact = null;
         }
     }

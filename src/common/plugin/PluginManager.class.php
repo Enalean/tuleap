@@ -167,18 +167,18 @@ class PluginManager
     }
     public function getPostInstall($name)
     {
-        $path_to_file = '/'.$name.'/POSTINSTALL.txt';
-        return file_exists($GLOBALS['sys_pluginsroot'].$path_to_file) ?
-            file_get_contents($GLOBALS['sys_pluginsroot'].$path_to_file) :
+        $path_to_file = '/' . $name . '/POSTINSTALL.txt';
+        return file_exists($GLOBALS['sys_pluginsroot'] . $path_to_file) ?
+            file_get_contents($GLOBALS['sys_pluginsroot'] . $path_to_file) :
             false;
     }
 
     public function getInstallReadme($name)
     {
         foreach ($this->plugin_factory->getAllPossiblePluginsDir() as $dir) {
-            $path = $dir.'/'.$name;
-            if (file_exists($path.'/README.mkd') || file_exists($path.'/README.md') || file_exists($path.'/README.txt') || file_exists($path.'/README')) {
-                return $path.'/README';
+            $path = $dir . '/' . $name;
+            if (file_exists($path . '/README.mkd') || file_exists($path . '/README.md') || file_exists($path . '/README.txt') || file_exists($path . '/README')) {
+                return $path . '/README';
             }
         }
         return false;
@@ -214,7 +214,7 @@ class PluginManager
 
     private function getEscapedReadme($content)
     {
-        return '<pre>'.Codendi_HTMLPurifier::instance()->purify($content).'</pre>';
+        return '<pre>' . Codendi_HTMLPurifier::instance()->purify($content) . '</pre>';
     }
 
     /**
@@ -228,12 +228,12 @@ class PluginManager
     protected function configureForgeUpgrade($name)
     {
         try {
-            $plugin_path = $GLOBALS['sys_pluginsroot'].$name;
+            $plugin_path = $GLOBALS['sys_pluginsroot'] . $name;
             $this->forgeupgrade_config->loadDefaults();
-            $this->forgeupgrade_config->addPath($GLOBALS['sys_pluginsroot'].$name);
+            $this->forgeupgrade_config->addPath($GLOBALS['sys_pluginsroot'] . $name);
             $this->forgeupgrade_config->recordOnlyPath($plugin_path);
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: ".$e->getMessage());
+            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: " . $e->getMessage());
         }
     }
 
@@ -248,32 +248,32 @@ class PluginManager
     {
         try {
             $this->forgeupgrade_config->loadDefaults();
-            $this->forgeupgrade_config->removePath($GLOBALS['sys_pluginsroot'].$name);
+            $this->forgeupgrade_config->removePath($GLOBALS['sys_pluginsroot'] . $name);
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: ".$e->getMessage());
+            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: " . $e->getMessage());
         }
     }
 
     public function _createEtc($name)
     {
-        if (!is_dir($GLOBALS['sys_custompluginsroot'] .'/'. $name)) {
-            mkdir($GLOBALS['sys_custompluginsroot'] .'/'. $name, 0700);
+        if (!is_dir($GLOBALS['sys_custompluginsroot'] . '/' . $name)) {
+            mkdir($GLOBALS['sys_custompluginsroot'] . '/' . $name, 0700);
         }
-        if (is_dir($GLOBALS['sys_pluginsroot'] .'/'. $name .'/etc')) {
-            if (!is_dir($GLOBALS['sys_custompluginsroot'] .'/'. $name .'/etc')) {
-                mkdir($GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc', 0700);
+        if (is_dir($GLOBALS['sys_pluginsroot'] . '/' . $name . '/etc')) {
+            if (!is_dir($GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc')) {
+                mkdir($GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc', 0700);
             }
-            $etcs = glob($GLOBALS['sys_pluginsroot'] .'/'. $name .'/etc/*');
+            $etcs = glob($GLOBALS['sys_pluginsroot'] . '/' . $name . '/etc/*');
             foreach ($etcs as $etc) {
                 if (is_dir($etc)) {
-                    $this->copyDirectory($etc, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($etc));
+                    $this->copyDirectory($etc, $GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc/' . basename($etc));
                 } else {
-                    copy($etc, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($etc));
+                    copy($etc, $GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc/' . basename($etc));
                 }
             }
-            $incdists = glob($GLOBALS['sys_custompluginsroot'] .'/'. $name .'/etc/*.dist');
+            $incdists = glob($GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc/*.dist');
             foreach ($incdists as $incdist) {
-                rename($incdist, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($incdist, '.dist'));
+                rename($incdist, $GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc/' . basename($incdist, '.dist'));
             }
         }
     }
@@ -281,10 +281,10 @@ class PluginManager
     public function _executeSqlStatements($file, $name)
     {
         $db_corrupted = false;
-        $path_to_file = '/'.$name.'/db/'.$file.'.sql';
+        $path_to_file = '/' . $name . '/db/' . $file . '.sql';
 
         foreach ($this->plugin_factory->getAllPossiblePluginsDir() as $dir) {
-            $sql_filename = $dir.$path_to_file;
+            $sql_filename = $dir . $path_to_file;
             if (file_exists($sql_filename)) {
                 $dbtables = new DBTablesDao();
                 if (!$dbtables->updateFromFile($sql_filename)) {
@@ -428,7 +428,6 @@ class PluginManager
 
     private function copyDirectory($source, $destination)
     {
-
         if (!is_dir($destination)) {
             if (!mkdir($destination)) {
                 return false;

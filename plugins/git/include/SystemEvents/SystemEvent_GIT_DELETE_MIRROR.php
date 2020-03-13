@@ -33,7 +33,6 @@ class SystemEvent_GIT_DELETE_MIRROR extends SystemEvent
 
     public function process()
     {
-
         $deletion_is_done = $this->gitolite_driver->deleteMirror(
             $this->getMirrorOldHostnameFromParameters()
         );
@@ -62,6 +61,6 @@ class SystemEvent_GIT_DELETE_MIRROR extends SystemEvent
 
     public function verbalizeParameters($with_link)
     {
-        return 'Mirror: '.$this->getMirrorIdFromParameters();
+        return 'Mirror: ' . $this->getMirrorIdFromParameters();
     }
 }

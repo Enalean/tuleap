@@ -70,7 +70,7 @@ class ReferenceInstance
     */
     public function getFullGotoLink()
     {
-        return HTTPRequest::instance()->getServerUrl().$this->gotoLink;
+        return HTTPRequest::instance()->getServerUrl() . $this->gotoLink;
     }
 
     /**
@@ -81,10 +81,10 @@ class ReferenceInstance
         // If no group_id from context, the default is "100".
         // Don't use it in the link...
         $group_param = '';
-        if ($group_id!=100) {
-            $group_param="&group_id=$group_id";
+        if ($group_id != 100) {
+            $group_param = "&group_id=$group_id";
         }
 
-        $this->gotoLink="/goto?key=".urlencode($keyword)."&val=".urlencode($value).$group_param;
+        $this->gotoLink = "/goto?key=" . urlencode($keyword) . "&val=" . urlencode($value) . $group_param;
     }
 }

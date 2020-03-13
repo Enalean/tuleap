@@ -91,7 +91,7 @@ class Git_SystemEventManager
     {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME,
-            $repository->getId(). SystemEvent::PARAMETER_SEPARATOR . $repository->getRemoteServerId(),
+            $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $repository->getRemoteServerId(),
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
         );
@@ -101,7 +101,7 @@ class Git_SystemEventManager
     {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME,
-            $repository->getId(). SystemEvent::PARAMETER_SEPARATOR . $repository->getRemoteServerId(),
+            $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $repository->getRemoteServerId(),
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
         );

@@ -86,7 +86,7 @@ final class TrackerCreationDataCheckerTest extends TestCase
     {
         $shortname = "bugs_with_a_very_very_long_shortname";
         $template_id = "25";
-        $user =\Mockery::mock(\PFUser::class);
+        $user = \Mockery::mock(\PFUser::class);
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Tracker shortname length must be inferior to 25 characters.');
@@ -101,7 +101,7 @@ final class TrackerCreationDataCheckerTest extends TestCase
     {
         $shortname = "bugs";
         $template_id = "12";
-        $user =\Mockery::mock(\PFUser::class);
+        $user = \Mockery::mock(\PFUser::class);
 
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
 
@@ -118,7 +118,7 @@ final class TrackerCreationDataCheckerTest extends TestCase
     {
         $shortname = "bugs";
         $template_id = "12";
-        $user =\Mockery::mock(\PFUser::class);
+        $user = \Mockery::mock(\PFUser::class);
 
         $tracker = \Mockery::mock(\Tracker::class);
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
@@ -140,7 +140,7 @@ final class TrackerCreationDataCheckerTest extends TestCase
     {
         $shortname = "bugs";
         $template_id = "12";
-        $user =\Mockery::mock(\PFUser::class);
+        $user = \Mockery::mock(\PFUser::class);
 
         $tracker = \Mockery::mock(\Tracker::class);
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);

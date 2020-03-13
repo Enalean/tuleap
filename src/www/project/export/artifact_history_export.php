@@ -46,27 +46,26 @@ if ($atid) {
 
 function extract_history($atid)
 {
-
     // This is the SQL query to retrieve all the artifact history for this group
     // Note: the text value of the comment_type_id is not fetched by the
     // SQL statement because this field can be NULL and the NULL value is
     // not a valid comment type in the bug_field_value table. So the join
     // doesn't work.
     $sql = sprintf(
-        '(SELECT ah.artifact_id, ah.field_name, ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type, af.label'.
-                    ' FROM artifact_history ah, user, artifact a, artifact_field af'.
-                    ' WHERE ah.artifact_id = a.artifact_id'.
-                    ' AND a.group_artifact_id = %d'.
-                    ' AND af.group_artifact_id = a.group_artifact_id'.
-                    ' AND user.user_id = ah.mod_by'.
-                    ' AND ah.field_name = af.field_name)'.
-                    ' UNION'.
-                    ' (SELECT ah.artifact_id, ah.field_name, ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type, ah.field_name'.
-                    ' FROM artifact_history ah, user, artifact a'.
-                    ' WHERE ah.artifact_id = a.artifact_id'.
-                    ' AND a.group_artifact_id = %d'.
-                    ' AND user.user_id = ah.mod_by'.
-                    ' AND (ah.field_name = "%s" OR ah.field_name = "%s" OR ah.field_name LIKE "%s"))'.
+        '(SELECT ah.artifact_id, ah.field_name, ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type, af.label' .
+                    ' FROM artifact_history ah, user, artifact a, artifact_field af' .
+                    ' WHERE ah.artifact_id = a.artifact_id' .
+                    ' AND a.group_artifact_id = %d' .
+                    ' AND af.group_artifact_id = a.group_artifact_id' .
+                    ' AND user.user_id = ah.mod_by' .
+                    ' AND ah.field_name = af.field_name)' .
+                    ' UNION' .
+                    ' (SELECT ah.artifact_id, ah.field_name, ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type, ah.field_name' .
+                    ' FROM artifact_history ah, user, artifact a' .
+                    ' WHERE ah.artifact_id = a.artifact_id' .
+                    ' AND a.group_artifact_id = %d' .
+                    ' AND user.user_id = ah.mod_by' .
+                    ' AND (ah.field_name = "%s" OR ah.field_name = "%s" OR ah.field_name LIKE "%s"))' .
                     ' ORDER BY artifact_id, date DESC',
         $atid,
         $atid,
@@ -107,30 +106,30 @@ $export = isset($export) ? (string) $export : '';
 if ($export == 'artifact_history') {
     // Send the result in CSV format
     if ($result && $rows > 0) {
-        $tbl_name = str_replace(' ', '_', 'artifact_history_'.$at->getItemName());
+        $tbl_name = str_replace(' ', '_', 'artifact_history_' . $at->getItemName());
         header('Content-Type: text/csv');
-        header('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
-        echo build_csv_header($col_list, $lbl_list).$eol;
+        header('Content-Disposition: filename=' . $tbl_name . '_' . $dbname . '.csv');
+        echo build_csv_header($col_list, $lbl_list) . $eol;
 
         while ($arr = db_fetch_array($result)) {
             prepare_artifact_history_record($at, $art_field_fact, $arr);
-            echo build_csv_record($col_list, $arr).$eol;
+            echo build_csv_record($col_list, $arr) . $eol;
         }
     } else {
-        project_admin_header(array('title'=>$pg_title), 'data');
+        project_admin_header(array('title' => $pg_title), 'data');
 
-        echo '<h3>'.$Language->getText('project_export_artifact_history_export', 'art_hist_export').'</h3>';
+        echo '<h3>' . $Language->getText('project_export_artifact_history_export', 'art_hist_export') . '</h3>';
         if ($result) {
-            echo '<P>'.$Language->getText('project_export_artifact_history_export', 'no_hist_found');
+            echo '<P>' . $Language->getText('project_export_artifact_history_export', 'no_hist_found');
         } else {
-            echo '<P>'.$Language->getText('project_export_artifact_history_export', 'db_access_err', $GLOBALS['sys_name']);
-            echo '<br>'.db_error();
+            echo '<P>' . $Language->getText('project_export_artifact_history_export', 'db_access_err', $GLOBALS['sys_name']);
+            echo '<br>' . db_error();
         }
         site_project_footer(array());
     }
 } elseif ($export == "artifact_history_format") {
-    echo '<h3>'.$Language->getText('project_export_artifact_history_export', 'hist_export_format').'</h3>';
-    echo '<p>'.$Language->getText('project_export_artifact_history_export', 'hist_export_format_msg').'</p>';
+    echo '<h3>' . $Language->getText('project_export_artifact_history_export', 'hist_export_format') . '</h3>';
+    echo '<p>' . $Language->getText('project_export_artifact_history_export', 'hist_export_format_msg') . '</p>';
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_artifact_history_record($at, $art_field_fact, $record);

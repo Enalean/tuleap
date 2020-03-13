@@ -129,7 +129,7 @@ class ArtifactRepresentation
 
         $this->submitted_on       = JsonCast::toDate($artifact->getSubmittedOn());
         $this->html_url           = $artifact->getUri();
-        $this->changesets_uri     = self::ROUTE . '/' .  $this->id . '/'. ChangesetRepresentation::ROUTE;
+        $this->changesets_uri     = self::ROUTE . '/' .  $this->id . '/' . ChangesetRepresentation::ROUTE;
         $this->values             = $values;
         $this->values_by_field    = $values_by_field;
         $this->last_modified_date = JsonCast::toDate($artifact->getLastUpdateDate());

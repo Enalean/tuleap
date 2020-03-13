@@ -39,7 +39,7 @@ final class UserXMLExportedCollectionTest extends \PHPUnit\Framework\TestCase
     protected function setUp() : void
     {
         parent::setUp();
-        ForgeConfig::set('tuleap_dir', __DIR__.'/../../../../../');
+        ForgeConfig::set('tuleap_dir', __DIR__ . '/../../../../../');
 
         $this->a_user = new PFUser(
             [
@@ -78,11 +78,11 @@ final class UserXMLExportedCollectionTest extends \PHPUnit\Framework\TestCase
         $xml_object  = simplexml_load_string($xml_content);
 
         $this->assertNotNull($xml_object->user);
-        $this->assertEquals(101, (int)$xml_object->user[0]->id);
-        $this->assertEquals('kshen', (string)$xml_object->user[0]->username);
-        $this->assertEquals('Kool Shen', (string)$xml_object->user[0]->realname);
-        $this->assertEquals('kshen@hotmail.fr', (string)$xml_object->user[0]->email);
-        $this->assertEquals('cb9867', (string)$xml_object->user[0]->ldapid);
+        $this->assertEquals(101, (int) $xml_object->user[0]->id);
+        $this->assertEquals('kshen', (string) $xml_object->user[0]->username);
+        $this->assertEquals('Kool Shen', (string) $xml_object->user[0]->realname);
+        $this->assertEquals('kshen@hotmail.fr', (string) $xml_object->user[0]->email);
+        $this->assertEquals('cb9867', (string) $xml_object->user[0]->ldapid);
     }
 
     public function testItExportsMoreThanOneUser() : void
@@ -103,7 +103,7 @@ final class UserXMLExportedCollectionTest extends \PHPUnit\Framework\TestCase
         $xml_content = $this->collection->toXML();
         $xml_object  = simplexml_load_string($xml_content);
 
-        $this->assertEquals('', (string)$xml_object->user[0]->ldapid);
+        $this->assertEquals('', (string) $xml_object->user[0]->ldapid);
     }
 
     public function testItDoesNotExportNone() : void

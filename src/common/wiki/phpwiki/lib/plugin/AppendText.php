@@ -62,14 +62,13 @@ class WikiPlugin_AppendText extends WikiPlugin
 
     public function _fallback($addtext, $oldtext, $notfound, &$message)
     {
-        $message->pushContent(sprintf(_("%s not found"), $notfound).". ".
-                              _("Appending at the end.")."\n");
+        $message->pushContent(sprintf(_("%s not found"), $notfound) . ". " .
+                              _("Appending at the end.") . "\n");
         return $oldtext . "\n" . $addtext;
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-
         $args = $this->getArgs($argstr, $request);
         $pagename = $args['page'];
 
@@ -148,7 +147,7 @@ class WikiPlugin_AppendText extends WikiPlugin
 
         return $message;
     }
-};
+}
 
 // $Log: AppendText.php,v $
 // Revision 1.7  2005/04/02 03:05:43  uckelman

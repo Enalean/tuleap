@@ -33,7 +33,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 class LDAPUserDaoTest extends TestCase
 {

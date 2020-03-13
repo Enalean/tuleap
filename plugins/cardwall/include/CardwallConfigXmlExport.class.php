@@ -55,7 +55,7 @@ class CardwallConfigXmlExport
             $this->addTrackerChild($tracker, $trackers_node);
         }
 
-        $rng_path = realpath(CARDWALL_BASE_DIR.'/../www/resources/xml_project_cardwall.rng');
+        $rng_path = realpath(CARDWALL_BASE_DIR . '/../www/resources/xml_project_cardwall.rng');
         $this->xml_validator->validate($cardwall_node, $rng_path);
     }
 
@@ -64,7 +64,7 @@ class CardwallConfigXmlExport
         $on_top_config = $this->config_factory->getOnTopConfig($tracker);
         if ($on_top_config->isEnabled()) {
             $tracker_node = $trackers_node->addChild(CardwallConfigXml::NODE_TRACKER);
-            $tracker_node->addAttribute(CardwallConfigXml::ATTRIBUTE_TRACKER_ID, 'T'.$tracker->getId());
+            $tracker_node->addAttribute(CardwallConfigXml::ATTRIBUTE_TRACKER_ID, 'T' . $tracker->getId());
             if (count($on_top_config->getDashboardColumns()) > 0) {
                 $columns_node = $tracker_node->addChild(CardwallConfigXml::NODE_COLUMNS);
                 foreach ($on_top_config->getDashboardColumns() as $column) {
@@ -101,14 +101,14 @@ class CardwallConfigXmlExport
     ) {
         $value_node = $values_node->addChild(CardwallConfigXml::NODE_VALUE);
         $value_node->addAttribute('value_id', $value_mapping->getXMLValueId());
-        $value_node->addAttribute('column_id', 'C'.$value_mapping->getColumnId());
+        $value_node->addAttribute('column_id', 'C' . $value_mapping->getColumnId());
     }
 
     private function exportColumn(SimpleXMLElement $columns_node, Cardwall_Column $column)
     {
         $column_node = $columns_node->addChild(CardwallConfigXml::NODE_COLUMN);
         $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_LABEL, $column->getLabel());
-        $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_ID, 'C'.$column->getId());
+        $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_ID, 'C' . $column->getId());
 
         $this->exportColumnColors($column_node, $column);
     }

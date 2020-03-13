@@ -107,14 +107,13 @@ class ArtifactRulesManager
      */
     public function validate($artifact_type_id, $value_field_list, $art_field_fact)
     {
-
         // construction of $values array : selected values in the form
         // $values[$field_id]['field'] = artifactfield Object
         // $values[$field_id]['values'][] = selected value
         $values = array();
         foreach ($value_field_list as $field_name => $value) {
             $field = $art_field_fact->getFieldFromName($field_name);
-            $values[$field->getID()] = array('field' => $field, 'values' => is_array($value)?$value:array($value));
+            $values[$field->getID()] = array('field' => $field, 'values' => is_array($value) ? $value : array($value));
         }
 
         // construction of $dependencies array : dependcies defined rules
@@ -195,7 +194,7 @@ class ArtifactRulesManager
                                 if (empty($pb_source_values)) {
                                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_index', 'missing_dependency', $values[$source]['field']->getLabel()));
                                 }
-                                $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
+                                $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel() . '(' . implode(', ', $pb_source_values) . ') -> ' . $values[$target]['field']->getLabel() . '(' . implode(', ', $pb_target_values) . ')');
                             }
                         }
                     }

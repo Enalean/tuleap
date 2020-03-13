@@ -71,7 +71,7 @@ class AgileDashboard_KanbanColumnManagerTest extends TestCase //phpcs:ignore PSR
         $this->column_id  = 456;
         $this->wip_limit  = 12;
 
-        $this->user       =Mockery::mock(PFUser::class);
+        $this->user       = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('getName')->andReturn('user name');
         $this->column     = new AgileDashboard_KanbanColumn($this->column_id, $this->kanban_id, "Todo", true, null, 2, true);
 

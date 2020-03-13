@@ -26,7 +26,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
     protected function fetchReadOnly()
     {
         $html = '';
-        $html .= '<br class="tracker-admin-linebreak" id="tracker-admin-formElements_'. $this->id .'" />';
+        $html .= '<br class="tracker-admin-linebreak" id="tracker-admin-formElements_' . $this->id . '" />';
         return $html;
     }
 
@@ -34,17 +34,17 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
     {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
-        $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
+        $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</span>';
         $html .= '<div class="tracker-admin-field-controls">';
-        $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        $html .= '<a href="?'. http_build_query(array(
+        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
+        $html .= '<a href="?' . http_build_query(array(
                 'tracker'  => $this->tracker_id,
                 'func'     => 'admin-formElement-delete',
                 'formElement' => $this->id,
-            )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
+            )) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) . '</a>';
         $html .= '</div>';
         $html .= $this->fetchAdminFormElement();
         $html .= '</div>';
@@ -58,7 +58,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
      */
     protected function fetchAdminFormElement()
     {
-        $html = '<hr class="tracker-admin-linebreak" id="tracker-admin-formElements_'. $this->id .'" size="1" />';
+        $html = '<hr class="tracker-admin-linebreak" id="tracker-admin-formElements_' . $this->id . '" size="1" />';
         return $html;
     }
 

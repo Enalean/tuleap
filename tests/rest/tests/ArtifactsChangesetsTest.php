@@ -34,7 +34,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
 
         $artifacts  = $this->getArtifactIdsIndexedByTitle('private-member', 'task');
         $artifact_id = $artifacts['A task to do'];
-        $this->artifact_resource['uri'] = 'artifacts/'.$artifact_id;
+        $this->artifact_resource['uri'] = 'artifacts/' . $artifact_id;
     }
 
     /**
@@ -42,7 +42,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
      */
     public function testOptionsArtifactId()
     {
-        $response = $this->getResponse($this->client->options($this->artifact_resource['uri'].'/changesets'));
+        $response = $this->getResponse($this->client->options($this->artifact_resource['uri'] . '/changesets'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
@@ -52,7 +52,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
     public function testOptionsArtifactIdWithUserRESTReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->options($this->artifact_resource['uri'].'/changesets'),
+            $this->client->options($this->artifact_resource['uri'] . '/changesets'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -67,7 +67,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
      */
     public function testGetChangesetsHasPagination()
     {
-        $response = $this->getResponse($this->client->get($this->artifact_resource['uri'].'/changesets?offset=2&limit=10'));
+        $response = $this->getResponse($this->client->get($this->artifact_resource['uri'] . '/changesets?offset=2&limit=10'));
 
         $this->assertChangeset($response);
     }
@@ -78,7 +78,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
     public function testGetChangesetsHasPaginationWithUserRESTReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->get($this->artifact_resource['uri'].'/changesets?offset=2&limit=10'),
+            $this->client->get($this->artifact_resource['uri'] . '/changesets?offset=2&limit=10'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 

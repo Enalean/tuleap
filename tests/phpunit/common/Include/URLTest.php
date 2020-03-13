@@ -178,7 +178,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $exists1->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists1)->ordered();
-        $_REQUEST['forum_id']=1;
+        $_REQUEST['forum_id'] = 1;
         $url->shouldReceive('getForumDao')->andReturns($dao);
         $this->assertEquals(1, $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
         $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'));
@@ -193,7 +193,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $exists->shouldReceive('getRow')->andReturns(array('group_id' => '42'))->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists);
-        $_REQUEST['forum_id']=1;
+        $_REQUEST['forum_id'] = 1;
         $url->shouldReceive('getForumDao')->andReturns($dao);
         $this->assertNotEquals($GLOBALS['sys_news_group'], $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
     }
@@ -207,12 +207,12 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $exists->shouldReceive('getRow')->andReturns(array('group_id' => $GLOBALS['sys_news_group']))->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists)->ordered();
-        $_REQUEST['forum_id']=1;
+        $_REQUEST['forum_id'] = 1;
         $group_id = $url->shouldReceive('getForumDao')->andReturns($dao);
 
         $dao2 = \Mockery::spy(\NewsBytesDao::class);
         $exists2 = \Mockery::spy(\DataAccessResult::class);
-        $exists2->shouldReceive('getRow')->andReturns(array('group_id' =>$GLOBALS['sys_news_group']))->ordered();
+        $exists2->shouldReceive('getRow')->andReturns(array('group_id' => $GLOBALS['sys_news_group']))->ordered();
         $exists2->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao2->shouldReceive('searchByForumId')->andReturns($exists2)->ordered();
         $url->shouldReceive('getNewsBytesDao')->andReturns($dao2);
@@ -245,7 +245,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
         $dao->shouldReceive('searchArtifactId')->andReturns($exists)->ordered();
         $dao->shouldReceive('searchArtifactId')->andReturns($exists1)->ordered();
-        $_REQUEST['artifact_id']=1;
+        $_REQUEST['artifact_id'] = 1;
         $url->shouldReceive('getArtifactDao')->andReturns($dao);
         $this->assertEquals(1, $url->getGroupIdFromURL('/tracker/download.php?artifact_id=exist'));
         $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/tracker/download.php?artifact_id=exist'));

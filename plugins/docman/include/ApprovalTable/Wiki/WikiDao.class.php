@@ -25,10 +25,10 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
 
     public function getTableById($itemId, $wikiVersionId, $fields = '*')
     {
-        $sql = 'SELECT '.$fields.
-            ' FROM plugin_docman_approval'.
-            ' WHERE item_id = '.$this->da->escapeInt($itemId).
-            ' AND wiki_version_id = '.$this->da->escapeInt($wikiVersionId);
+        $sql = 'SELECT ' . $fields .
+            ' FROM plugin_docman_approval' .
+            ' WHERE item_id = ' . $this->da->escapeInt($itemId) .
+            ' AND wiki_version_id = ' . $this->da->escapeInt($wikiVersionId);
         return $this->retrieve($sql);
     }
 
@@ -42,7 +42,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
 
     public function getApprovalTableItemId($itemId, $fields = 'app.*', $limit = '', $tableStatus = false)
     {
-        $where = 'app.item_id = '.$this->da->escapeInt($itemId).
+        $where = 'app.item_id = ' . $this->da->escapeInt($itemId) .
             ' AND app.wiki_version_id IS NOT NULL';
         $join  = '';
         $orderBy = ' ORDER BY app.wiki_version_id DESC ';
@@ -54,11 +54,11 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
      */
     public function getLastTableVersionIdByItemId($itemId)
     {
-        $sql = 'SELECT wiki_version_id '.
-            ' FROM plugin_docman_approval'.
-            ' WHERE item_id = '.$itemId.
-            ' AND wiki_version_id IS NOT NULL'.
-            ' ORDER BY wiki_version_id DESC'.
+        $sql = 'SELECT wiki_version_id ' .
+            ' FROM plugin_docman_approval' .
+            ' WHERE item_id = ' . $itemId .
+            ' AND wiki_version_id IS NOT NULL' .
+            ' ORDER BY wiki_version_id DESC' .
             ' LIMIT 1';
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
@@ -74,14 +74,14 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
      */
     public function getLastWikiVersionIdByItemId($itemId)
     {
-        $sql = 'SELECT MAX(wv.version) version'.
-            ' FROM wiki_version wv'.
-            '   JOIN wiki_page wp'.
-            '     ON (wp.id = wv.id)'.
-            '   JOIN plugin_docman_item i'.
-            '     ON (i.wiki_page = wp.pagename'.
-            '         AND i.group_id = wp.group_id)'.
-            ' WHERE i.item_id = '.$itemId;
+        $sql = 'SELECT MAX(wv.version) version' .
+            ' FROM wiki_version wv' .
+            '   JOIN wiki_page wp' .
+            '     ON (wp.id = wv.id)' .
+            '   JOIN plugin_docman_item i' .
+            '     ON (i.wiki_page = wp.pagename' .
+            '         AND i.group_id = wp.group_id)' .
+            ' WHERE i.item_id = ' . $itemId;
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
@@ -97,16 +97,16 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
 
     public function createTable($itemId, $wikiVersionId, $userId, $description, $date, $status, $notification)
     {
-        $sql = 'INSERT INTO plugin_docman_approval'.
-            '(item_id, wiki_version_id, table_owner, date, description, status, notification)'.
-            ' VALUES ('.
-            $this->da->escapeInt($itemId).', '.
-            $this->da->escapeInt($wikiVersionId).', '.
-            $this->da->escapeInt($userId).', '.
-            $this->da->escapeInt($date).', '.
-            $this->da->quoteSmart($description).', '.
-            $this->da->escapeInt($status).', '.
-            $this->da->escapeInt($notification).')';
+        $sql = 'INSERT INTO plugin_docman_approval' .
+            '(item_id, wiki_version_id, table_owner, date, description, status, notification)' .
+            ' VALUES (' .
+            $this->da->escapeInt($itemId) . ', ' .
+            $this->da->escapeInt($wikiVersionId) . ', ' .
+            $this->da->escapeInt($userId) . ', ' .
+            $this->da->escapeInt($date) . ', ' .
+            $this->da->quoteSmart($description) . ', ' .
+            $this->da->escapeInt($status) . ', ' .
+            $this->da->escapeInt($notification) . ')';
         return $this->_createAndReturnId($sql);
     }
 
@@ -115,20 +115,20 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
      */
     public function userAccessedSince($userId, $pageName, $groupId, $versionId)
     {
-        $sql  = 'SELECT NULL'.
-            ' FROM wiki_log wl'.
-            ' WHERE pagename = '.$this->da->quoteSmart($pageName).
-            ' AND group_id = '.$this->da->escapeInt($groupId).
-            ' AND user_id = '.$this->da->escapeInt($userId).
-            ' AND time > ('.
-            '   SELECT mtime '.
-            '   FROM wiki_version wv'.
-            '     JOIN wiki_page wp'.
-            '       ON (wp.id = wv.id)'.
-            '   WHERE wp.pagename = wl.pagename'.
-            '   AND wp.group_id = wl.group_id'.
-            '   AND wv.version = '.$this->da->escapeInt($versionId).
-            '   )'.
+        $sql  = 'SELECT NULL' .
+            ' FROM wiki_log wl' .
+            ' WHERE pagename = ' . $this->da->quoteSmart($pageName) .
+            ' AND group_id = ' . $this->da->escapeInt($groupId) .
+            ' AND user_id = ' . $this->da->escapeInt($userId) .
+            ' AND time > (' .
+            '   SELECT mtime ' .
+            '   FROM wiki_version wv' .
+            '     JOIN wiki_page wp' .
+            '       ON (wp.id = wv.id)' .
+            '   WHERE wp.pagename = wl.pagename' .
+            '   AND wp.group_id = wl.group_id' .
+            '   AND wv.version = ' . $this->da->escapeInt($versionId) .
+            '   )' .
             ' LIMIT 1';
         $dar = $this->retrieve($sql);
         return ($dar && !$dar->isError() && $dar->rowCount() == 1);

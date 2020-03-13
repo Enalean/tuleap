@@ -28,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValu
 use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
-require_once __DIR__.'/../../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../../bootstrap.php';
 
 class DateFieldCheckerTest extends TuleapTestCase
 {

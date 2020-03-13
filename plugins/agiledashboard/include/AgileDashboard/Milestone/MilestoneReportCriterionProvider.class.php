@@ -76,8 +76,8 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider
         $criterion .= '<label for="tracker_report_crit_agiledashboard_milestone">';
         $criterion .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'report_criteria_label');
         $criterion .= '</label>';
-        $criterion .= '<select name="additional_criteria['.self::FIELD_NAME.']" id="tracker_report_crit_agiledashboard_milestone">';
-        $criterion .= '<option value="" >'. $GLOBALS['Language']->getText('global', 'any') .'</option>';
+        $criterion .= '<select name="additional_criteria[' . self::FIELD_NAME . ']" id="tracker_report_crit_agiledashboard_milestone">';
+        $criterion .= '<option value="" >' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
         $criterion .= $this->unplanned_criterion_options_provider->formatUnplannedAsSelectboxOption(
             $backlog_tracker->getProject(),
             $this->getSelectedOptionId()

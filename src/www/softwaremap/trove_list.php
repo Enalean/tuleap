@@ -70,7 +70,7 @@ $sub_categories = array();
 $sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects
 FROM trove_cat AS t, trove_cat AS t2 LEFT JOIN (SELECT t.trove_cat_id AS trove_cat_id, count(t.group_id) AS nb
 FROM trove_group_link AS t INNER JOIN groups AS g USING(group_id)
-WHERE " .trove_get_visibility_for_user('g.access', $current_user). "
+WHERE " . trove_get_visibility_for_user('g.access', $current_user) . "
   AND g.status = 'A'
   AND g.type = 1
 GROUP BY trove_cat_id) AS t3 USING(trove_cat_id)
@@ -99,16 +99,16 @@ if ($folders_len == 1) {
 FROM groups AS g
 LEFT JOIN trove_group_link AS t
 USING ( group_id )
-WHERE " .trove_get_visibility_for_user('access', $current_user). "
+WHERE " . trove_get_visibility_for_user('access', $current_user) . "
 AND STATUS = 'A'
 AND TYPE =1
-AND trove_cat_root = ". $form_cat;
+AND trove_cat_root = " . $form_cat;
     $res_nb = db_query($sql);
     $row_nb = db_fetch_array($res_nb);
 
-    $res_total = db_query("SELECT count(*) as count FROM groups WHERE " .trove_get_visibility_for_user('access', $current_user). " AND status='A' and type=1");
+    $res_total = db_query("SELECT count(*) as count FROM groups WHERE " . trove_get_visibility_for_user('access', $current_user) . " AND status='A' and type=1");
     $row_total = db_fetch_array($res_total);
-    $nb_not_cat=$row_total['count']-$row_nb['count'];
+    $nb_not_cat = $row_total['count'] - $row_nb['count'];
 
     $sub_categories[] = new Tuleap\Trove\TroveCatCategoryNonePresenter(
         $form_cat,
@@ -120,7 +120,7 @@ AND trove_cat_root = ". $form_cat;
 // here we print list of root level categories, and use open folder for current
 $root_categories = array();
 $res_rootcat = db_query('SELECT trove_cat_id,fullname FROM trove_cat WHERE '
-    .'parent=0 ORDER BY fullname');
+    . 'parent=0 ORDER BY fullname');
 while ($row_rootcat = db_fetch_array($res_rootcat)) {
     $root_categories[] = array(
         'id'       => $row_rootcat['trove_cat_id'],
@@ -131,9 +131,9 @@ while ($row_rootcat = db_fetch_array($res_rootcat)) {
 
 if ($special_cat === 'none') {
     $qry_root_trov = 'SELECT group_id'
-        .' FROM trove_group_link'
-        .' WHERE trove_cat_root='.$form_cat
-        .' GROUP BY group_id';
+        . ' FROM trove_group_link'
+        . ' WHERE trove_cat_root=' . $form_cat
+        . ' GROUP BY group_id';
     $res_root_trov = db_query($qry_root_trov);
 
     $prj_list_categorized = array();
@@ -141,9 +141,9 @@ if ($special_cat === 'none') {
         $prj_list_categorized[] = $row_root_trov['group_id'];
     }
 
-    $sql_list_categorized='';
+    $sql_list_categorized = '';
     if (count($prj_list_categorized) > 0) {
-        $sql_list_categorized=' AND groups.group_id NOT IN ('.implode(',', $prj_list_categorized).') ';
+        $sql_list_categorized = ' AND groups.group_id NOT IN (' . implode(',', $prj_list_categorized) . ') ';
     }
     $query_projlist = "SELECT SQL_CALC_FOUND_ROWS groups.group_id, "
         . "groups.group_name, "
@@ -156,7 +156,7 @@ if ($special_cat === 'none') {
         . "FROM groups "
         . "LEFT JOIN project_metric USING (group_id) "
         . "WHERE "
-        . "(" .trove_get_visibility_for_user('groups.access', $current_user). ") AND "
+        . "(" . trove_get_visibility_for_user('groups.access', $current_user) . ") AND "
     . "(groups.type=1) AND "
         . "(groups.status='A') "
         . $sql_list_categorized
@@ -176,7 +176,7 @@ if ($special_cat === 'none') {
     . "LEFT JOIN project_metric USING (group_id) "
     . ", trove_group_link "
     . "WHERE trove_group_link.group_id=groups.group_id AND "
-    . "(" .trove_get_visibility_for_user('groups.access', $current_user). ") AND "
+    . "(" . trove_get_visibility_for_user('groups.access', $current_user) . ") AND "
         . "(groups.type=1) AND "
     . "(groups.status='A') AND "
     . "trove_group_link.trove_cat_id=$form_cat "
@@ -197,7 +197,7 @@ $collection_retriever = new \Tuleap\Trove\TroveCatCollectionRetriever($trove_cat
 
 $projects = array();
 while ($row = db_fetch_array($res_grp)) {
-    $projects[]= array(
+    $projects[] = array(
         'longname'    => $row['group_name'],
         'shortname'   => strtolower($row['unix_group_name']),
         'description' => $row['short_description'],

@@ -56,7 +56,7 @@ class Tracker_Report_HeaderRenderer
         Tracker_Report $report,
         $report_can_be_modified
     ) {
-        $link_artifact_id = (int)$request->get('link-artifact-id');
+        $link_artifact_id = (int) $request->get('link-artifact-id');
         if ($report_can_be_modified) {
             $title            = '';
             $breadcrumbs      = array();
@@ -191,7 +191,7 @@ class Tracker_Report_HeaderRenderer
                 'tracker_report_updater_scope',
                 $GLOBALS['Language']->getText('plugin_tracker_report', 'public'),
                 $is_public,
-                '?'.http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_SCOPE, 'report_scope_public' => intval(! $is_public))))
+                '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_SCOPE, 'report_scope_public' => intval(! $is_public))))
             );
         }
 
@@ -200,7 +200,7 @@ class Tracker_Report_HeaderRenderer
                 'tracker_report_updater_default',
                 $GLOBALS['Language']->getText('plugin_tracker_report', 'default'),
                 $report->is_default,
-                '?'.http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_DEFAULT, 'report_default' => intval(! $report->is_default))))
+                '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_DEFAULT, 'report_default' => intval(! $report->is_default))))
             );
         }
 
@@ -209,17 +209,17 @@ class Tracker_Report_HeaderRenderer
                 'tracker_report_updater_duplicate',
                 $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as'),
                 false,
-                '?'.http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_SAVEAS))) . '#tracker_report_updater_saveas-modal'
+                '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_SAVEAS))) . '#tracker_report_updater_saveas-modal'
             );
         }
 
         if (count($reports) > 1) {
-            if ($report->user_id || ($report->user_id == null && $report->getTracker()->userIsAdmin($current_user) && $report->nbPublicReport($reports) >1)) {
+            if ($report->user_id || ($report->user_id == null && $report->getTracker()->userIsAdmin($current_user) && $report->nbPublicReport($reports) > 1)) {
                 $actions_list[] = new Templating_Presenter_ButtonDropdownsOption(
                     'tracker_report_updater_delete',
                     $GLOBALS['Language']->getText('global', 'delete'),
                     false,
-                    '?'.http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_DELETE)))
+                    '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_DELETE)))
                 );
             }
         }
@@ -258,7 +258,7 @@ class Tracker_Report_HeaderRenderer
             $params['criteria'] = $request->get('criteria');
         }
 
-        return '?'. http_build_query($params);
+        return '?' . http_build_query($params);
     }
 
     private function getReportSelector(Tracker_Report $report, array $reports)
@@ -269,13 +269,13 @@ class Tracker_Report_HeaderRenderer
             $personal = '';
             $public   = '';
             foreach ($reports as $r) {
-                $prefix = '<option value="'. $r->id .'"';
-                $suffix = '>'. $this->purifier->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
+                $prefix = '<option value="' . $r->id . '"';
+                $suffix = '>' . $this->purifier->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
                 $selected = $r->id == $report->id ? 'selected="selected"' : '';
                 if ($r->isPublic()) {
-                    $public .= $prefix .' '. $selected . $suffix;
+                    $public .= $prefix . ' ' . $selected . $suffix;
                 } else {
-                    $personal .= $prefix .' '. $selected . $suffix;
+                    $personal .= $prefix . ' ' . $selected . $suffix;
                 }
             }
             if ($personal !== '') {
@@ -289,7 +289,7 @@ class Tracker_Report_HeaderRenderer
                 $options .= '</optgroup>';
             }
             $options .= '</select>';
-            $options .= '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';
+            $options .= '<noscript><input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></noscript>';
         } else {
             $options = $this->purifier->purify($report->name, CODENDI_PURIFIER_CONVERT_HTML);
         }

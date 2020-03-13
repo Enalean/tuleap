@@ -103,7 +103,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
 
     public function milestone_edit_url()
     {
-        return '/plugins/tracker/?aid='.$this->milestone->getArtifactId();
+        return '/plugins/tracker/?aid=' . $this->milestone->getArtifactId();
     }
 
     public function go_to_fullscreen()

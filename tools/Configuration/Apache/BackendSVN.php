@@ -65,8 +65,8 @@ class BackendSVN
         );
         $replaces = array(
             'Listen 127.0.0.1:8080',
-            'User '.$this->application_user,
-            'Group '.$this->application_user,
+            'User ' . $this->application_user,
+            'Group ' . $this->application_user,
         );
 
         $conf = str_replace($searches, $replaces, $httpd_conf);
@@ -76,8 +76,8 @@ class BackendSVN
 
     private function backupOriginalFile($file)
     {
-        if (! file_exists($file.'.orig')) {
-            copy($file, $file.'.orig');
+        if (! file_exists($file . '.orig')) {
+            copy($file, $file . '.orig');
         }
     }
 }

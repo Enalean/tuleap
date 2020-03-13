@@ -51,7 +51,6 @@ final class ArtifactRepresentationBuilderTest extends TestCase
 
     public function setUp(): void
     {
-
         $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
         $this->artifact_factory     = Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->nature_dao           = Mockery::mock(NatureDao::class);
@@ -167,7 +166,6 @@ final class ArtifactRepresentationBuilderTest extends TestCase
 
     public function testGetArtifactRepresentationWithFieldValuesReturnsOnlyForFieldsWithValues()
     {
-
         $first_field  = Mockery::mock(\Tracker_FormElement_Field::class)
             ->shouldReceive('userCanRead')
             ->andReturnFalse()

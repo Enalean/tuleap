@@ -41,7 +41,7 @@ class Controler
 
     public function viewsManagement()
     {
-        $className = static::class.'Views';
+        $className = static::class . 'Views';
         if (! class_exists($className)) {
             throw new LogicException(sprintf('View class %s does not exist, nothing can be displayed', $className));
         }
@@ -51,7 +51,7 @@ class Controler
 
     public function actionsManagement()
     {
-        $className = static::class.'Actions';
+        $className = static::class . 'Actions';
         if (! class_exists($className)) {
             throw new LogicException(sprintf('Action class %s does not exist, nothing can be processed', $className));
         }

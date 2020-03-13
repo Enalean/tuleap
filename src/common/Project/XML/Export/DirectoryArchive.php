@@ -41,19 +41,19 @@ class DirectoryArchive implements ArchiveInterface
 
     public function addEmptyDir($dirname)
     {
-        if (! is_dir($this->archive_path.DIRECTORY_SEPARATOR.$dirname)) {
-            return mkdir($this->archive_path.DIRECTORY_SEPARATOR.$dirname, 0700);
+        if (! is_dir($this->archive_path . DIRECTORY_SEPARATOR . $dirname)) {
+            return mkdir($this->archive_path . DIRECTORY_SEPARATOR . $dirname, 0700);
         }
     }
 
     public function addFile($localname, $path_to_filesystem)
     {
-        return copy($path_to_filesystem, $this->archive_path.DIRECTORY_SEPARATOR.$localname);
+        return copy($path_to_filesystem, $this->archive_path . DIRECTORY_SEPARATOR . $localname);
     }
 
     public function addFromString($localname, $contents)
     {
-        file_put_contents($this->archive_path.DIRECTORY_SEPARATOR.$localname, $contents);
+        file_put_contents($this->archive_path . DIRECTORY_SEPARATOR . $localname, $contents);
     }
 
     public function getArchivePath()

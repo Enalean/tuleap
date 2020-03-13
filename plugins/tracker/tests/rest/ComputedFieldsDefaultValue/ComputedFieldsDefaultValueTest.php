@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Tests\REST\ComputedFieldsDefaultValue;
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
-require_once __DIR__ .'/../TrackerBase.php';
+require_once __DIR__ . '/../TrackerBase.php';
 
 class ComputedFieldsDefaultValueTest extends TrackerBase
 {

@@ -32,7 +32,7 @@ class NavigationDropdownItemPresenter implements NavigationDropdownItemInterface
     {
         $this->label      = $label;
         $this->html_url   = $html_url;
-        $this->identifier = ($identifier)?: 'dropdown-default-identifier';
+        $this->identifier = ($identifier) ?: 'dropdown-default-identifier';
     }
 
     public function isMenuTitle()

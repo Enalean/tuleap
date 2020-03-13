@@ -216,8 +216,8 @@ class Docman_ApprovalTableReminder
      */
     private function getReviewUrl(Docman_Item $docmanItem)
     {
-        $baseUrl   = HTTPRequest::instance()->getServerUrl().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
-        $reviewUrl = $baseUrl.'&action=details&section=approval&id='.$docmanItem->getId().'&review=1';
+        $baseUrl   = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $docmanItem->getGroupId();
+        $reviewUrl = $baseUrl . '&action=details&section=approval&id=' . $docmanItem->getId() . '&review=1';
         return $reviewUrl;
     }
 
@@ -230,8 +230,8 @@ class Docman_ApprovalTableReminder
      */
     private function getItemUrl(Docman_Item $docmanItem)
     {
-        $baseUrl   = HTTPRequest::instance()->getServerUrl().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
-        $itemUrl   = $baseUrl.'&action=show&id='.$docmanItem->getId();
+        $baseUrl   = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $docmanItem->getGroupId();
+        $itemUrl   = $baseUrl . '&action=show&id=' . $docmanItem->getId();
         return $itemUrl;
     }
 
@@ -258,8 +258,8 @@ People *will not be notified* to review the document *until you approved it*.'),
         if ($userComment != '') {
             switch ($format) {
                 case Codendi_Mail_Interface::FORMAT_HTML:
-                    $comment  = '<b>'.dgettext('tuleap-docman', 'Message:').'</b><br>';
-                    $comment .= '<hr align="center" width="50%" color="midnightblue" size="3"><br>'.$userComment.'<br><hr align="center" width="50%" color="midnightblue" size="3"><br><br>';
+                    $comment  = '<b>' . dgettext('tuleap-docman', 'Message:') . '</b><br>';
+                    $comment .= '<hr align="center" width="50%" color="midnightblue" size="3"><br>' . $userComment . '<br><hr align="center" width="50%" color="midnightblue" size="3"><br><br>';
                     $comment .= '<br>';
                     break;
                 case Codendi_Mail_Interface::FORMAT_TEXT:
@@ -349,15 +349,15 @@ This is an automatic message. Please do not reply to this email.'), $docmanItem-
         $purifier = Codendi_HTMLPurifier::instance();
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
-        $body  = dgettext('tuleap-docman', 'You are requested to review the following document:').'<br><br><b>';
-        $body .= dgettext('tuleap-docman', 'Title:').'</b> '.$docmanItem->getTitle().'<br><b>';
-        $body .= dgettext('tuleap-docman', 'Project:').'</b> '.$purifier->purify($group->getPublicName()).'<br><b>';
-        $body .= dgettext('tuleap-docman', 'Requester:').'</b><a href="'.$owner->getEmail().'">'.$owner->getRealName().'</a><br>';
-        $body .= '<a href="'.$this->getItemUrl($docmanItem).'">'.dgettext('tuleap-docman', 'Direct link to the document').' </a><br>';
-        $body .= '<br>'.$this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_HTML).'<br><br>';
-        $body .= dgettext('tuleap-docman', 'Notification type:').' '.$this->getNotificationStyle($table).' <br><br>';
-        $body .= '<a href="'.$this->getReviewUrl($docmanItem).'"><b>'.dgettext('tuleap-docman', 'Click on the following link to approve or reject the document').'<b></a><br>';
-        $body .= '<br>--<br><i>'.dgettext('tuleap-docman', 'This is an automatic message. Please do not reply to this email').'</i><br>';
+        $body  = dgettext('tuleap-docman', 'You are requested to review the following document:') . '<br><br><b>';
+        $body .= dgettext('tuleap-docman', 'Title:') . '</b> ' . $docmanItem->getTitle() . '<br><b>';
+        $body .= dgettext('tuleap-docman', 'Project:') . '</b> ' . $purifier->purify($group->getPublicName()) . '<br><b>';
+        $body .= dgettext('tuleap-docman', 'Requester:') . '</b><a href="' . $owner->getEmail() . '">' . $owner->getRealName() . '</a><br>';
+        $body .= '<a href="' . $this->getItemUrl($docmanItem) . '">' . dgettext('tuleap-docman', 'Direct link to the document') . ' </a><br>';
+        $body .= '<br>' . $this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_HTML) . '<br><br>';
+        $body .= dgettext('tuleap-docman', 'Notification type:') . ' ' . $this->getNotificationStyle($table) . ' <br><br>';
+        $body .= '<a href="' . $this->getReviewUrl($docmanItem) . '"><b>' . dgettext('tuleap-docman', 'Click on the following link to approve or reject the document') . '<b></a><br>';
+        $body .= '<br>--<br><i>' . dgettext('tuleap-docman', 'This is an automatic message. Please do not reply to this email') . '</i><br>';
         return $body;
     }
 

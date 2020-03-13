@@ -64,10 +64,10 @@ class NewsPermissionsRepresentationBuilder
 
     private function isUGroupAuthorizedToSeePrivateNews($selected_ugroup_id)
     {
-        return (int)$selected_ugroup_id === ProjectUGroup::PROJECT_ADMIN
-               || (int)$selected_ugroup_id === ProjectUGroup::PROJECT_MEMBERS
-               || (int)$selected_ugroup_id === ProjectUGroup::NEWS_ADMIN
-               || (int)$selected_ugroup_id === ProjectUGroup::NEWS_WRITER;
+        return (int) $selected_ugroup_id === ProjectUGroup::PROJECT_ADMIN
+               || (int) $selected_ugroup_id === ProjectUGroup::PROJECT_MEMBERS
+               || (int) $selected_ugroup_id === ProjectUGroup::NEWS_ADMIN
+               || (int) $selected_ugroup_id === ProjectUGroup::NEWS_WRITER;
     }
 
     private function getNewAdminQuickLink($new)

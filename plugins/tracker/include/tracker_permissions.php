@@ -472,7 +472,7 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
                                                                        'name'       => $field->getLabel() . ($field->isRequired() ? ' *' : ''),
                                                                        'id'         => $field->getID(),
                                                                        'field'      => $field,
-                                                                       'link'       => '/tracker/admin/index.php?group_id='.$group_id.'&atid='.$atid.'&func=display_field_update&field_id='.$field->getID()
+                                                                       'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID()
                                                                        ),
                                                       'ugroups' => $ugroups
         );
@@ -492,38 +492,37 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
 
 function plugin_tracker_permission_fetch_selection_field($permission_type, $object_id, $group_id, $html_name = "ugroups[]", $html_disabled = false, $selected = array())
 {
-
     $html = '';
     // Get ugroups already defined for this permission_type
     if (empty($selected)) {
-        $res_ugroups=permission_db_authorized_ugroups($permission_type, $object_id);
-        $nb_set=db_numrows($res_ugroups);
+        $res_ugroups = permission_db_authorized_ugroups($permission_type, $object_id);
+        $nb_set = db_numrows($res_ugroups);
     } else {
         $res_ugroups = $selected;
         $nb_set = count($res_ugroups);
     }
     // Now retrieve all possible ugroups for this project, as well as the default values
-    $sql="SELECT ugroup_id,is_default FROM permissions_values WHERE permission_type='$permission_type'";
+    $sql = "SELECT ugroup_id,is_default FROM permissions_values WHERE permission_type='$permission_type'";
 
-    $res=db_query($sql);
-    $predefined_ugroups='';
-    $default_values=array();
-    if (db_numrows($res)<1) {
-        $html .= "<p><b>".$GLOBALS['Language']->getText('global', 'error')."</b>: ".$GLOBALS['Language']->getText('project_admin_permissions', 'perm_type_not_def', $permission_type);
+    $res = db_query($sql);
+    $predefined_ugroups = '';
+    $default_values = array();
+    if (db_numrows($res) < 1) {
+        $html .= "<p><b>" . $GLOBALS['Language']->getText('global', 'error') . "</b>: " . $GLOBALS['Language']->getText('project_admin_permissions', 'perm_type_not_def', $permission_type);
         return $html;
     } else {
         while ($row = db_fetch_array($res)) {
             if ($predefined_ugroups) {
-                $predefined_ugroups.= ' ,';
+                $predefined_ugroups .= ' ,';
             }
-            $predefined_ugroups .= $row['ugroup_id'] ;
+            $predefined_ugroups .= $row['ugroup_id'];
             if ($row['is_default']) {
-                $default_values[]=$row['ugroup_id'];
+                $default_values[] = $row['ugroup_id'];
             }
         }
     }
-    $sql="SELECT * FROM ugroup WHERE group_id=".$group_id." OR ugroup_id IN (".$predefined_ugroups.") ORDER BY ugroup_id";
-    $res=db_query($sql);
+    $sql = "SELECT * FROM ugroup WHERE group_id=" . $group_id . " OR ugroup_id IN (" . $predefined_ugroups . ") ORDER BY ugroup_id";
+    $res = db_query($sql);
 
     $array = array();
     while ($row = db_fetch_array($res)) {

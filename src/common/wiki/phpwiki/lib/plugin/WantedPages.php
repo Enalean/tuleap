@@ -57,7 +57,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
             PageList::supportedArgs(),
             array('page'     => '[pagename]', // just for a single page.
                    'noheader' => false,
-                   'exclude_from'  => _("PgsrcTranslation").','._("InterWikiMap"),
+                   'exclude_from'  => _("PgsrcTranslation") . ',' . _("InterWikiMap"),
                    'limit'    => '100',
             'paging'   => 'auto')
         );
@@ -137,7 +137,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
         }
         return $pagelist;
     }
-};
+}
 
 // which links to the missing page
 class _PageList_Column_WantedPages_wanted extends _PageList_Column

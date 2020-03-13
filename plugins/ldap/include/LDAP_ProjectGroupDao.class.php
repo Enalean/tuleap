@@ -51,8 +51,8 @@ class LDAP_ProjectGroupDao extends DataAccessObject
      */
     public function searchByGroupId($groupId)
     {
-        $sql = 'SELECT * FROM plugin_ldap_project_group'.
-            ' WHERE group_id = '.db_ei($groupId);
+        $sql = 'SELECT * FROM plugin_ldap_project_group' .
+            ' WHERE group_id = ' . db_ei($groupId);
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             return $dar->getRow();
@@ -88,8 +88,8 @@ class LDAP_ProjectGroupDao extends DataAccessObject
      */
     public function unlinkGroupLdap($groupId)
     {
-        $sql = 'DELETE FROM plugin_ldap_project_group'.
-            ' WHERE group_id = '.db_ei($groupId);
+        $sql = 'DELETE FROM plugin_ldap_project_group' .
+            ' WHERE group_id = ' . db_ei($groupId);
         return $this->update($sql);
     }
 

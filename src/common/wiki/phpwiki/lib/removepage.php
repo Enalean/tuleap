@@ -78,11 +78,11 @@ function RemovePage(&$request)
         );
     } else {
         // Codendi specific: remove the deleted wiki page from ProjectWantedPages
-        $projectPageName='ProjectWantedPages';
+        $projectPageName = 'ProjectWantedPages';
         $pagename = $page->getName();
 
         $dbi = $request->getDbh();
-        require_once(PHPWIKI_DIR."/lib/loadsave.php");
+        require_once(PHPWIKI_DIR . "/lib/loadsave.php");
         $pagehandle = $dbi->getPage($projectPageName);
         if ($pagehandle->exists()) {// don't replace default contents
             $current = $pagehandle->getCurrentRevision();

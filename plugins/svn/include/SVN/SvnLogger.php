@@ -30,7 +30,7 @@ class SvnLogger extends TruncateLevelLogger
     public function __construct()
     {
         parent::__construct(
-            new BackendLogger(ForgeConfig::get('codendi_log') .'/svn_syslog'),
+            new BackendLogger(ForgeConfig::get('codendi_log') . '/svn_syslog'),
             ForgeConfig::get('sys_logger_level')
         );
     }

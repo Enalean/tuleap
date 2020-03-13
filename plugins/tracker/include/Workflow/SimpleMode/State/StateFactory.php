@@ -71,7 +71,7 @@ class StateFactory
 
     public function getInstanceFromXML(SimpleXMLElement $state_xml, array &$xml_mapping, Project $project) : State
     {
-        $to_value = $xml_mapping[(string)$state_xml->to_id['REF']];
+        $to_value = $xml_mapping[(string) $state_xml->to_id['REF']];
 
         return new State(
             (int) $to_value->getId(),

@@ -37,7 +37,7 @@ DEFINE('LEDC_INVERTGRAY', 15);
 class DigitalLED74
 {
     private $iLED_X = 4;
-    private $iLED_Y=7;
+    private $iLED_Y = 7;
 
         // fg-up, fg-down, bg
     private $iColorSchema = array(
@@ -214,8 +214,8 @@ class DigitalLED74
 
     public function _GetLED($aLedIdx, $aColor = 0)
     {
-        $width=  $this->iLED_X*$this->iRad*2 +  ($this->iLED_X+1)*$this->iMarg + $this->iRad ;
-        $height= $this->iLED_Y*$this->iRad*2 +  ($this->iLED_Y)*$this->iMarg + $this->iRad * 2;
+        $width =  $this->iLED_X * $this->iRad * 2 +  ($this->iLED_X + 1) * $this->iMarg + $this->iRad;
+        $height = $this->iLED_Y * $this->iRad * 2 +  ($this->iLED_Y) * $this->iMarg + $this->iRad * 2;
 
         // Adjust radious for supersampling
         $rad = $this->iRad * $this->iSuperSampling;
@@ -223,12 +223,12 @@ class DigitalLED74
         // Margin in between "Led" dots
         $marg = $this->iMarg * $this->iSuperSampling;
 
-        $swidth = $width*$this->iSuperSampling;
-        $sheight = $height*$this->iSuperSampling;
+        $swidth = $width * $this->iSuperSampling;
+        $sheight = $height * $this->iSuperSampling;
 
         $simg = new RotImage($swidth, $sheight, 0, DEFAULT_GFORMAT, false);
         $simg->SetColor($this->iColorSchema[$aColor][2]);
-        $simg->FilledRectangle(0, 0, $swidth-1, $sheight-1);
+        $simg->FilledRectangle(0, 0, $swidth - 1, $sheight - 1);
 
         if (array_key_exists($aLedIdx, $this->iLEDSpec)) {
             $d = $this->iLEDSpec[$aLedIdx];
@@ -239,14 +239,14 @@ class DigitalLED74
         for ($r = 0; $r < 7; ++$r) {
             $dr = $d[$r];
             for ($c = 0; $c < 4; ++$c) {
-                if (($dr & pow(2, 3-$c)) !== 0) {
+                if (($dr & pow(2, 3 - $c)) !== 0) {
                     $color = $this->iColorSchema[$aColor][0];
                 } else {
                     $color = $this->iColorSchema[$aColor][1];
                 }
 
-                $x = 2*$rad*$c+$rad + ($c+1)*$marg + $rad ;
-                $y = 2*$rad*$r+$rad + ($r+1)*$marg + $rad ;
+                $x = 2 * $rad * $c + $rad + ($c + 1) * $marg + $rad;
+                $y = 2 * $rad * $r + $rad + ($r + 1) * $marg + $rad;
 
                 $simg->SetColor($color);
                 $simg->FilledCircle($x, $y, $rad);
@@ -281,7 +281,7 @@ class DigitalLED74
         for ($i = 0; $i < $n; ++$i) {
             $d = mb_substr($aValStr, $i, 1, 'utf8');
             if (ctype_digit($d)) {
-                $d = (int)$d;
+                $d = (int) $d;
             } else {
                 $d = strtoupper($d);
             }
@@ -291,10 +291,10 @@ class DigitalLED74
         $w = imagesx($digit_img[0]->img);
         $h = imagesy($digit_img[0]->img);
 
-        $number_img = new Image($w*$n, $h, DEFAULT_GFORMAT, false);
+        $number_img = new Image($w * $n, $h, DEFAULT_GFORMAT, false);
 
         for ($i = 0; $i < $n; ++$i) {
-            $number_img->Copy($digit_img[$i]->img, $i*$w, 0, 0, 0, $w, $h, $w, $h);
+            $number_img->Copy($digit_img[$i]->img, $i * $w, 0, 0, 0, $w, $h, $w, $h);
         }
 
         if ($aFileName != '') {

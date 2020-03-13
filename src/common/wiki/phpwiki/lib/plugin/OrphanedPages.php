@@ -98,7 +98,7 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
         if (!$pagesize) {
             $pagelist->addPageList($pages);
         } else {
-            for ($i=$offset; $i < $offset + $pagesize - 1; $i++) {
+            for ($i = $offset; $i < $offset + $pagesize - 1; $i++) {
                 if ($i >= $args['count']) {
                     break;
                 }
@@ -107,7 +107,7 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
         }
         return $pagelist;
     }
-};
+}
 
 // $Log: OrphanedPages.php,v $
 // Revision 1.10  2004/07/09 13:05:34  rurban

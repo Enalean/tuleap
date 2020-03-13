@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
 {

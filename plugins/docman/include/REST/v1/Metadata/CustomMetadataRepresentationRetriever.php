@@ -69,7 +69,7 @@ class CustomMetadataRepresentationRetriever
                 throw CustomMetadataException::metadataNotFound($metadata_representation->short_name);
             }
 
-            if ((int)$metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            if ((int) $metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 if ($metadata->isMultipleValuesAllowed() === true) {
                     $this->checkMultipleMetadataListValues($metadata_representation, $metadata);
                     $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->list_value, "");
@@ -107,7 +107,7 @@ class CustomMetadataRepresentationRetriever
                 throw CustomMetadataException::metadataNotFound($metadata_representation->short_name);
             }
 
-            if ((int)$metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            if ((int) $metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 if ($metadata->isMultipleValuesAllowed() === true) {
                     $this->checkMultipleMetadataListValues($metadata_representation, $metadata);
                     $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation(
@@ -153,7 +153,7 @@ class CustomMetadataRepresentationRetriever
                 throw CustomMetadataException::metadataNotFound($metadata_representation->short_name);
             }
 
-            if ((int)$metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            if ((int) $metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 if ($metadata->isMultipleValuesAllowed() === true) {
                     $this->checkMultipleMetadataListValues($metadata_representation, $metadata);
                     $representations[$metadata->getLabel()] = $metadata_representation->list_value;
@@ -187,24 +187,24 @@ class CustomMetadataRepresentationRetriever
                 throw CustomMetadataException::metadataNotFound($metadata_representation->short_name);
             }
 
-            if ((int)$metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            if ((int) $metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 if ($metadata->isMultipleValuesAllowed() === true) {
                     $this->checkMultipleMetadataListValues($metadata_representation, $metadata);
                     $representations[] = [
-                        'id'    => (int)$metadata->getId(),
+                        'id'    => (int) $metadata->getId(),
                         'value' => $metadata_representation->list_value,
                     ];
                 } else {
                     $this->checkSimpleMetadataListValues($metadata_representation, $metadata);
                     $representations[] = [
-                        'id'    => (int)$metadata->getId(),
+                        'id'    => (int) $metadata->getId(),
                         'value' => $metadata_representation->value
                     ];
                 }
             } else {
                 $this->checkMetadataValue($metadata_representation);
                 $representations[] = [
-                    'id'    => (int)$metadata->getId(),
+                    'id'    => (int) $metadata->getId(),
                     'value' => $metadata_representation->value
                 ];
             }
@@ -225,12 +225,12 @@ class CustomMetadataRepresentationRetriever
             return;
         }
         $error_unknown = [];
-        $possible_values_of_list  = $this->list_values_builder->build((int)$metadata->getId(), true);
+        $possible_values_of_list  = $this->list_values_builder->build((int) $metadata->getId(), true);
 
         foreach ($metadata_representation->list_value as $representation_value) {
             $value_exists = false;
             foreach ($possible_values_of_list as $project_list_value) {
-                if ((int)$project_list_value->getId() === $representation_value) {
+                if ((int) $project_list_value->getId() === $representation_value) {
                     $value_exists = true;
                 }
             }
@@ -256,7 +256,7 @@ class CustomMetadataRepresentationRetriever
             return;
         }
 
-        $possible_values_of_list  = $this->list_values_builder->build((int)$metadata->getId(), true);
+        $possible_values_of_list  = $this->list_values_builder->build((int) $metadata->getId(), true);
         foreach ($possible_values_of_list as $project_list_value) {
             if ($project_list_value->getId() === $metadata_representation->value) {
                 return;

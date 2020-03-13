@@ -272,7 +272,7 @@ class GitRepositoryFactory
     private function getByRepositoryRootMatch($base_dir, $path)
     {
         $matches = array();
-        if (preg_match('%'.$base_dir.'/([^/]+)/(.*)$%', $path, $matches)) {
+        if (preg_match('%' . $base_dir . '/([^/]+)/(.*)$%', $path, $matches)) {
             return $this->getByProjectNameAndPath($matches[1], $matches[2]);
         }
         return null;

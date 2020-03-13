@@ -69,9 +69,8 @@ class WikiPlugin_RdfDefinition extends WikiPlugin
     {
         // just a list of valid predicates
         // comments?
-        ;
     }
-};
+}
 
 // $Log: RdfDefinition.php,v $
 

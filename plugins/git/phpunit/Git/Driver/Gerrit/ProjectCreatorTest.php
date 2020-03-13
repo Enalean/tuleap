@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
@@ -106,9 +106,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
         ForgeConfig::set('sys_default_domain', $this->tuleap_instance);
         ForgeConfig::set('tmp_dir', $this->getTmpDir());
-        $this->fixtures = dirname(__FILE__) .'/_fixtures';
+        $this->fixtures = dirname(__FILE__) . '/_fixtures';
         do {
-            $this->tmpdir   = ForgeConfig::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
+            $this->tmpdir   = ForgeConfig::get('tmp_dir') . '/' . md5(uniqid(rand(), true));
         } while (is_dir($this->tmpdir));
         $zip_archive = new ZipArchive();
         $zip_archive->open("$this->fixtures/firefox.zip");
@@ -148,13 +148,13 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $private_project = \Mockery::spy(\Project::class)->shouldReceive('isPublic')->andReturns(false)->getMock();
 
         $this->repository                      = \Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getFullPath')->andReturns($this->tmpdir.'/'.$this->gitolite_project);
+        $this->repository->shouldReceive('getFullPath')->andReturns($this->tmpdir . '/' . $this->gitolite_project);
         $this->repository_in_a_private_project = \Mockery::spy(\GitRepository::class);
-        $this->repository_in_a_private_project->shouldReceive('getFullPath')->andReturns($this->tmpdir.'/'.$this->gitolite_project);
+        $this->repository_in_a_private_project->shouldReceive('getFullPath')->andReturns($this->tmpdir . '/' . $this->gitolite_project);
         $this->repository_without_registered   = \Mockery::spy(\GitRepository::class);
-        $this->repository_without_registered->shouldReceive('getFullPath')->andReturns($this->tmpdir.'/'.$this->gitolite_project);
+        $this->repository_without_registered->shouldReceive('getFullPath')->andReturns($this->tmpdir . '/' . $this->gitolite_project);
         $this->repository_with_registered   = \Mockery::spy(\GitRepository::class);
-        $this->repository_with_registered->shouldReceive('getFullPath')->andReturns($this->tmpdir.'/'.$this->gitolite_project);
+        $this->repository_with_registered->shouldReceive('getFullPath')->andReturns($this->tmpdir . '/' . $this->gitolite_project);
 
         $this->driver = \Mockery::spy(\Git_Driver_Gerrit::class);
         $this->driver->shouldReceive('createProject')->with($this->server, $this->repository, $this->project_unix_name)->andReturns($this->gerrit_project);
@@ -186,7 +186,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->template_factory   = \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class)->shouldReceive('getTemplate')->with(12)->andReturns($this->template)->getMock();
         $this->template_factory->shouldReceive('getTemplatesAvailableForRepository')->andReturns(array($this->template));
 
-        $this->gerrit_tmpdir = $this->tmpdir.'/gerrit_tbd';
+        $this->gerrit_tmpdir = $this->tmpdir . '/gerrit_tbd';
 
         $this->git_exec = $this->getGitExec($this->gerrit_tmpdir);
 
@@ -495,7 +495,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
     private function assertCommitterIsConfigured(): void
     {
         $this->assertEquals(trim(`cd $this->gerrit_tmpdir; git config --get user.name`), $this->gerrit_admin_instance);
-        $this->assertEquals(trim(`cd $this->gerrit_tmpdir; git config --get user.email`), 'codendiadm@'. $this->tuleap_instance);
+        $this->assertEquals(trim(`cd $this->gerrit_tmpdir; git config --get user.email`), 'codendiadm@' . $this->tuleap_instance);
     }
 
     private function assertTheRemoteOriginIsConfigured(): void

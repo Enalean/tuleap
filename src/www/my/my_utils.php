@@ -28,10 +28,9 @@ Output:
 */
 function my_hide_url($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
 {
-
     global $Language;
 
-    $pref_name = 'my_hide_'.$svc.$db_item_id;
+    $pref_name = 'my_hide_' . $svc . $db_item_id;
     $old_hide = $old_count = $old_pref_value = user_get_preference($pref_name);
     if ($old_pref_value) {
         list($old_hide,$old_count) = explode('|', $old_pref_value);
@@ -70,19 +69,19 @@ function my_hide_url($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
     }
 
     if ($hide) {
-        $hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=0&hide_item_id='.urlencode($db_item_id).'"><i class="fa fa-caret-right" title="'.$Language->getText('my_utils', 'expand').'"></i></a>&nbsp;';
+        $hide_url = '<a href="?dashboard_id=' . urlencode($dashboard_id) . '&hide_' . $svc . '=0&hide_item_id=' . urlencode($db_item_id) . '"><i class="fa fa-caret-right" title="' . $Language->getText('my_utils', 'expand') . '"></i></a>&nbsp;';
         $hide_now = true;
     } else {
-        $hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=1&hide_item_id='.urlencode($db_item_id).'"><i class="fa fa-caret-down" title="'.$Language->getText('my_utils', 'collapse').'"></i></a>&nbsp;';
+        $hide_url = '<a href="?dashboard_id=' . urlencode($dashboard_id) . '&hide_' . $svc . '=1&hide_item_id=' . urlencode($db_item_id) . '"><i class="fa fa-caret-down" title="' . $Language->getText('my_utils', 'collapse') . '"></i></a>&nbsp;';
         $hide_now = false;
     }
 
-    return array($hide_now, $count-$old_count, $hide_url);
+    return array($hide_now, $count - $old_count, $hide_url);
 }
 
 function my_hide($svc, $db_item_id, $item_id, $hide)
 {
-    $pref_name = 'my_hide_'.$svc.$db_item_id;
+    $pref_name = 'my_hide_' . $svc . $db_item_id;
     $old_pref_value = user_get_preference($pref_name);
     list($old_hide,$old_count) = explode('|', $old_pref_value);
 
@@ -114,7 +113,7 @@ function my_format_as_flag2($assignee, $submitter)
     }
 
     if ($AS_flag != '') {
-        $AS_flag = '[<b>'.$AS_flag.'</b>]';
+        $AS_flag = '[<b>' . $AS_flag . '</b>]';
     }
 
     return $AS_flag;
@@ -123,7 +122,7 @@ function my_format_as_flag2($assignee, $submitter)
 function my_item_count($total, $new)
 {
     global $Language;
-    return '['.$total.($new ? ", <b>".$Language->getText('my_utils', 'new_items', array($new))."</b>]" : ']');
+    return '[' . $total . ($new ? ", <b>" . $Language->getText('my_utils', 'new_items', array($new)) . "</b>]" : ']');
 }
 
 function my_check_bookmark_URL($bookmark_url, $redirect_url)

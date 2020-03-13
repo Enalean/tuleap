@@ -130,7 +130,7 @@ class XMLExporter
         if (! $tracker_id) {
             return self::TRACKER_ID_PREFIX;
         }
-        return self::TRACKER_ID_PREFIX . $tracker_id ;
+        return self::TRACKER_ID_PREFIX . $tracker_id;
     }
 
     /**

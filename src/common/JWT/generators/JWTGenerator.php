@@ -57,7 +57,7 @@ class JWTGenerator
 
         $token = array(
             'exp' => $this->getExpireDate(),
-            'data'=> $data
+            'data' => $data
         );
 
         $encoded = JWT::encode($token, $this->private_key, 'HS512');

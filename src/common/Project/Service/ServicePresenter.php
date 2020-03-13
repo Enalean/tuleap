@@ -71,7 +71,7 @@ class ServicePresenter
 
     private function canBeDeleted(Service $service)
     {
-        if ((int)$service->getGroupId() === Project::ADMIN_PROJECT_ID) {
+        if ((int) $service->getGroupId() === Project::ADMIN_PROJECT_ID) {
             return true;
         }
 

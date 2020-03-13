@@ -112,8 +112,8 @@ class WikiEntry
 
     public function _setFromDb()
     {
-        $res = db_query(' SELECT * FROM wiki_group_list'.
-        ' WHERE id='.db_ei($this->id));
+        $res = db_query(' SELECT * FROM wiki_group_list' .
+        ' WHERE id=' . db_ei($this->id));
         $row = db_fetch_array($res);
         $this->setFromRow($row);
     }
@@ -171,8 +171,8 @@ class WikiEntry
 
         //@todo: transfer to a DAO
         $qry = ' SELECT * FROM wiki_group_list'
-            .' WHERE group_id='.db_ei($gid)
-            .' ORDER BY rank';
+            . ' WHERE group_id=' . db_ei($gid)
+            . ' ORDER BY rank';
 
         $res = db_query($qry);
 
@@ -192,13 +192,13 @@ class WikiEntry
    */
     public function add()
     {
-        $res = db_query(' INSERT INTO wiki_group_list SET'.
-        ' group_id='.db_ei($this->gid).','.
-        ' rank='.db_ei($this->rank).','.
-        " language_id='".db_es($this->language_id)."',".
-        ' wiki_name="'.db_es($this->name).'",'.
-        ' wiki_link="'.db_es($this->page).'",'.
-        ' description="'.db_es($this->desc).'"');
+        $res = db_query(' INSERT INTO wiki_group_list SET' .
+        ' group_id=' . db_ei($this->gid) . ',' .
+        ' rank=' . db_ei($this->rank) . ',' .
+        " language_id='" . db_es($this->language_id) . "'," .
+        ' wiki_name="' . db_es($this->name) . '",' .
+        ' wiki_link="' . db_es($this->page) . '",' .
+        ' description="' . db_es($this->desc) . '"');
 
         if ($res === false) {
             trigger_error(
@@ -217,9 +217,9 @@ class WikiEntry
 
     public function del()
     {
-        $res = db_query(' DELETE FROM wiki_group_list'.
-        ' WHERE id='.db_ei($this->id).
-        ' AND group_id='.db_ei($this->gid));
+        $res = db_query(' DELETE FROM wiki_group_list' .
+        ' WHERE id=' . db_ei($this->id) .
+        ' AND group_id=' . db_ei($this->gid));
 
         if ($res === false) {
             trigger_error(
@@ -240,13 +240,13 @@ class WikiEntry
     {
         global $feedback;
         $sql = ' UPDATE wiki_group_list SET'
-          . ' group_id='.db_ei($this->gid).','
-          . ' rank='.db_ei($this->rank).','
-          . " language_id='".db_es($this->language_id)."',"
-          . ' wiki_name="'.db_es($this->name).'",'
-          . ' wiki_link="'.db_es($this->page).'",'
-          . ' description="'.db_es($this->desc).'"'
-          . ' WHERE id='.db_ei($this->id);
+          . ' group_id=' . db_ei($this->gid) . ','
+          . ' rank=' . db_ei($this->rank) . ','
+          . " language_id='" . db_es($this->language_id) . "',"
+          . ' wiki_name="' . db_es($this->name) . '",'
+          . ' wiki_link="' . db_es($this->page) . '",'
+          . ' description="' . db_es($this->desc) . '"'
+          . ' WHERE id=' . db_ei($this->id);
 
         $res = db_query($sql);
         $err = db_error();

@@ -24,8 +24,8 @@ class TrackerDateReminder_ArtifactField
     {
         $sql = sprintf(
             'SELECT * FROM artifact_date_reminder_settings'
-                      .' WHERE group_artifact_id=%d'
-                      .' AND field_id=%d',
+                      . ' WHERE group_artifact_id=%d'
+                      . ' AND field_id=%d',
             $group_artifact_id,
             $field_id
         );
@@ -43,19 +43,18 @@ class TrackerDateReminder_ArtifactField
      */
     public function deleteFieldReminderSettings($field_id, $group_artifact_id)
     {
-
         $del = sprintf(
             'DELETE FROM artifact_date_reminder_settings'
-                .' WHERE field_id=%d'
-                .' AND group_artifact_id=%d',
+                . ' WHERE field_id=%d'
+                . ' AND group_artifact_id=%d',
             $field_id,
             $group_artifact_id
         );
         $result = db_query($del);
         $rem = sprintf(
             'DELETE FROM artifact_date_reminder_processing'
-                .' WHERE field_id=%d'
-                .' AND group_artifact_id=%d',
+                . ' WHERE field_id=%d'
+                . ' AND group_artifact_id=%d',
             $field_id,
             $group_artifact_id
         );
@@ -68,8 +67,8 @@ class TrackerDateReminder_ArtifactField
         //Now populate the 'artifact_date_reminder_processing' table with concerned artifacts
         $art = sprintf(
             'SELECT * FROM artifact'
-            .' WHERE group_artifact_id=%d'
-            .' AND status_id <> 3',
+            . ' WHERE group_artifact_id=%d'
+            . ' AND status_id <> 3',
             db_ei($group_artifact_id)
         );
         $res_art = db_query($art);
@@ -104,10 +103,10 @@ class TrackerDateReminder_ArtifactField
             $notified_users = implode(",", $people_notified);
             if (db_numrows($res) == 0) {
                 // No reminder, create it
-                $insert = 'INSERT INTO artifact_date_reminder_settings'.
-                          '(field_id, group_artifact_id, notification_start, notification_type, frequency, recurse, notified_people)'.
-                          ' VALUES'.
-                          ' ('.db_ei($field->getId()).','.db_ei($group_artifact_id).','.db_ei($start).','.db_ei($notif_type).','.db_ei($frequency).','.db_ei($recurse).',"'.db_es($notified_users).'")';
+                $insert = 'INSERT INTO artifact_date_reminder_settings' .
+                          '(field_id, group_artifact_id, notification_start, notification_type, frequency, recurse, notified_people)' .
+                          ' VALUES' .
+                          ' (' . db_ei($field->getId()) . ',' . db_ei($group_artifact_id) . ',' . db_ei($start) . ',' . db_ei($notif_type) . ',' . db_ei($frequency) . ',' . db_ei($recurse) . ',"' . db_es($notified_users) . '")';
                 $inserted = db_query($insert);
                 if ($inserted) {
                     $this->populateProcessingForField($at, $field->getId(), $group_artifact_id);
@@ -118,13 +117,13 @@ class TrackerDateReminder_ArtifactField
                 //update reminder settings
                 $update = sprintf(
                     'UPDATE artifact_date_reminder_settings'
-                    .' SET notification_start=%d'
-                    .' , notification_type=%d'
-                    .' , frequency=%d'
-                    .' , recurse=%d'
-                    .' , notified_people="%s"'
-                    .' WHERE group_artifact_id=%d'
-                    .' AND field_id=%d',
+                    . ' SET notification_start=%d'
+                    . ' , notification_type=%d'
+                    . ' , frequency=%d'
+                    . ' , recurse=%d'
+                    . ' , notified_people="%s"'
+                    . ' WHERE group_artifact_id=%d'
+                    . ' AND field_id=%d',
                     db_ei($start),
                     db_ei($notif_type),
                     db_ei($frequency),

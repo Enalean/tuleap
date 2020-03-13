@@ -55,7 +55,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
 
-        bindtextdomain('tuleap-timetracking', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-timetracking', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()
@@ -102,7 +102,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         ) {
             $style_css_url = $this->getAssets()->getFileURL('style-fp.css');
 
-            echo '<link rel="stylesheet" type="text/css" href="'.$style_css_url.'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
         }
     }
 
@@ -119,7 +119,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
      */
     public function trackerEventFetchAdminButtons($params)
     {
-        $url = TIMETRACKING_BASE_URL . '/?'. http_build_query(array(
+        $url = TIMETRACKING_BASE_URL . '/?' . http_build_query(array(
                 'tracker' => $params['tracker_id'],
                 'action'  => 'admin-timetracking'
         ));

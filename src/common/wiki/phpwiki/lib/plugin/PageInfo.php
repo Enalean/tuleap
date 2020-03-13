@@ -87,7 +87,7 @@ class WikiPlugin_PageInfo extends WikiPlugin
         );
         return $template;
     }
-};
+}
 
 // $Log: PageInfo.php,v $
 // Revision 1.5  2004/02/17 12:11:36  rurban

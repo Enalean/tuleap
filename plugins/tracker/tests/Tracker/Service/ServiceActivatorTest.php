@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Service;
 use Service;
 use TuleapTestCase;
 
-require_once __DIR__ .'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class ServiceActivatorTest extends TuleapTestCase
 {

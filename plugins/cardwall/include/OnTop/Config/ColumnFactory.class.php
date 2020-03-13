@@ -76,7 +76,7 @@ class Cardwall_OnTop_Config_ColumnFactory
     }
 
     private function fillColumnsFor(
-        Cardwall_OnTop_Config_ColumnCollection&$columns,
+        Cardwall_OnTop_Config_ColumnCollection &$columns,
         Tracker_FormElement_Field_List $field,
         array $filter
     ) {
@@ -125,7 +125,7 @@ class Cardwall_OnTop_Config_ColumnFactory
 
     private function getColumnHeaderColor($value, $decorators)
     {
-        $id           = (int)$value->getId();
+        $id           = (int) $value->getId();
         $header_color = self::DEFAULT_HEADER_COLOR;
 
         if (isset($decorators[$id])) {

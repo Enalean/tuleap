@@ -32,7 +32,7 @@ abstract class PluginController
      * List of PluginViews method name to execute
      * @var Array
      */
-    protected $views = array('header'=> array(), 'footer'=> array());
+    protected $views = array('header' => array(), 'footer' => array());
     /**
      * List of PluginActions method name to execute
      * @var Array
@@ -42,7 +42,7 @@ abstract class PluginController
      * This array allows data storage and sharing between Actions and Views
      * @var Array
      */
-    protected $actionResultData = array('dummy'=>'dummy');
+    protected $actionResultData = array('dummy' => 'dummy');
     /**
      * Logical actions, they allow one to control execution of user stories which usually call several PluginActions at one time
      * @var Array
@@ -215,7 +215,7 @@ abstract class PluginController
             return false;
         }
         $results       = array();
-        $className     = static::class.'Actions';
+        $className     = static::class . 'Actions';
         $wa            = $this->instantiateAction($className);
         foreach ($this->actions as $name => $params) {
             $wa->process($name, $params);

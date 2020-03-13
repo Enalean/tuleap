@@ -24,7 +24,7 @@ function cron_debug($string)
 {
         global $verbose;
     if ($verbose) {
-            echo $string."\n";
+            echo $string . "\n";
     }
 }
 

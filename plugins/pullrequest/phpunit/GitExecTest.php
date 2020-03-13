@@ -24,7 +24,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\TemporaryTestDirectory;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 class GitExecTest extends TestCase
 {
@@ -80,7 +80,7 @@ class GitExecTest extends TestCase
 
         $files = $this->git_exec->getModifiedFilesNameStatus($sha1_src, $sha1_dest);
 
-        $this->assertTrue(count($files) >0);
+        $this->assertTrue(count($files) > 0);
         $this->assertEquals('M	toto', $files[0]);
     }
 

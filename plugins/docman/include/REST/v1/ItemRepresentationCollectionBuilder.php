@@ -62,7 +62,6 @@ class ItemRepresentationCollectionBuilder
      */
     public function buildFolderContent(\Docman_Item $item, \PFUser $user, $limit, $offset)
     {
-
         $dar        = $this->item_dao->searchByParentIdWithPagination($item->getId(), $limit, $offset);
         $row_number = $this->item_dao->foundRows();
         $children = [];

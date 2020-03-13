@@ -72,7 +72,7 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
         $permission_manager = new Tracker_Permission_PermissionManager();
         $permission_manager->save($permission_request, $permission_setter);
 
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId().'&func=admin-perms-tracker');
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&func=admin-perms-tracker');
     }
 
     private function getPermissionSetter()

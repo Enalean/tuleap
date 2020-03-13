@@ -36,7 +36,7 @@ use WebDAVFRSPackage;
 use WebDAVFRSRelease;
 use WebDAVTree;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 final class WebDAVTreeTest extends TestCase
 {

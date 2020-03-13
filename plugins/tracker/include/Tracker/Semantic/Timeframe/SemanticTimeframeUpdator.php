@@ -57,7 +57,7 @@ class SemanticTimeframeUpdator
             }
 
             $result = $this->dao->save(
-                (int)$tracker->getId(),
+                (int) $tracker->getId(),
                 $start_date_field_id,
                 $duration_field_id,
                 $end_date_field_id
@@ -87,7 +87,7 @@ class SemanticTimeframeUpdator
             throw new Exception('Field id is not an integer');
         }
 
-        return (int)$field_id;
+        return (int) $field_id;
     }
 
     private function displayFeedbackSuccess(): void

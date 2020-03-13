@@ -70,7 +70,7 @@ class RedisPersistentQueue implements PersistentQueue
     public function listen($worker_id, $topic, $callback)
     {
         $reconnect = false;
-        $processing_queue = $this->event_queue_name.'-processing-'.$worker_id;
+        $processing_queue = $this->event_queue_name . '-processing-' . $worker_id;
         do {
             try {
                 $this->logger->debug('Connecting to redis server');

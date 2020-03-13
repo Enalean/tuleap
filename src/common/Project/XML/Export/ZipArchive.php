@@ -36,14 +36,14 @@ class ZipArchive implements ArchiveInterface
         $this->archive_path = $archive_path;
 
         if ($this->archive->open($this->archive_path, \ZipArchive::CREATE) !== true) {
-            throw new ArchiveException('Cannot create zip archive: '.$this->archive_path);
+            throw new ArchiveException('Cannot create zip archive: ' . $this->archive_path);
         }
     }
 
     public function close()
     {
         if (! $this->archive->close()) {
-            throw new ArchiveException("Unable to close zip archive: ".$this->archive->getStatusString());
+            throw new ArchiveException("Unable to close zip archive: " . $this->archive->getStatusString());
         }
     }
 
@@ -55,14 +55,14 @@ class ZipArchive implements ArchiveInterface
     public function addFile($localname, $path_to_filesystem)
     {
         if (! $this->archive->addFile($path_to_filesystem, $localname)) {
-            throw new ArchiveException("Unable to add $localname into archive: ".$this->archive->getStatusString());
+            throw new ArchiveException("Unable to add $localname into archive: " . $this->archive->getStatusString());
         }
     }
 
     public function addFromString($localname, $contents)
     {
         if (! $this->archive->addFromString($localname, $contents)) {
-            throw new ArchiveException("Unable to add $localname into archive: ".$this->archive->getStatusString());
+            throw new ArchiveException("Unable to add $localname into archive: " . $this->archive->getStatusString());
         }
     }
 

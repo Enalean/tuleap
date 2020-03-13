@@ -52,7 +52,7 @@ class PHP_BigFile
      */
     public static function stream($file)
     {
-        return self::PROTOCOL .'://'. $file;
+        return self::PROTOCOL . '://' . $file;
     }
 
     /**
@@ -64,7 +64,7 @@ class PHP_BigFile
     public static function register()
     {
         if (!stream_wrapper_register(self::PROTOCOL, self::class)) {
-            throw new RuntimeException('Unable to register '. self::class .' protocol');
+            throw new RuntimeException('Unable to register ' . self::class . ' protocol');
         }
     }
 
@@ -131,7 +131,7 @@ class PHP_BigFile
      */
     public function stream_open($path, $mode, $options, &$opened_path)
     {
-        $this->path   = preg_replace('`^'. preg_quote(self::PROTOCOL .'://') .'`', '', $path);
+        $this->path   = preg_replace('`^' . preg_quote(self::PROTOCOL . '://') . '`', '', $path);
         $this->offset = 0;
         $this->mode   = $mode;
         $fileExists   = self::isFile($this->path) && is_readable($this->path);
@@ -158,7 +158,7 @@ class PHP_BigFile
             case 'wb+':
             case 'w+b':
                 if ($fileExists) {
-                    $cmd = '>'.escapeshellarg($this->path);
+                    $cmd = '>' . escapeshellarg($this->path);
                     `$cmd`;
                     return true;
                 } else {
@@ -220,7 +220,7 @@ class PHP_BigFile
         //$cmd = "ruby -e \"print File.read(". escapeshellarg($this->path) .", $count, $this->offset) || ''\"";
 
         // PERL
-        $cmd = 'perl -e "open FH, '. escapeshellarg($this->path) .'; seek(FH, '. $this->offset .', SEEK_SET); read FH, \\$d, '. $count .'; print \\$d;"';
+        $cmd = 'perl -e "open FH, ' . escapeshellarg($this->path) . '; seek(FH, ' . $this->offset . ', SEEK_SET); read FH, \\$d, ' . $count . '; print \\$d;"';
 
         // System: tail & head
         //tail --bytes=+$this->offset "$this->path" | head --bytes=$count`;
@@ -260,7 +260,7 @@ class PHP_BigFile
      */
     public function bigwrite($data)
     {
-        $cmd = 'perl -e "use MIME::Base64; open FH, '. escapeshellarg('>>'.$this->path) .'; print syswrite(FH, decode_base64(\''.base64_encode($data).'\')); close FH;"';
+        $cmd = 'perl -e "use MIME::Base64; open FH, ' . escapeshellarg('>>' . $this->path) . '; print syswrite(FH, decode_base64(\'' . base64_encode($data) . '\')); close FH;"';
         //echo $cmd.PHP_EOL;
         $c   = `$cmd`;
         return $c;

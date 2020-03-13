@@ -21,9 +21,9 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/../../../bootstrap.php';
-require_once __DIR__.'/../../../../../ldap/include/LDAP_User.class.php';
-require_once __DIR__.'/../../../../../ldap/include/LDAPResult.class.php';
+require_once __DIR__ . '/../../../bootstrap.php';
+require_once __DIR__ . '/../../../../../ldap/include/LDAP_User.class.php';
+require_once __DIR__ . '/../../../../../ldap/include/LDAPResult.class.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class UserAccountManagerGetGerritUserTest extends TestCase

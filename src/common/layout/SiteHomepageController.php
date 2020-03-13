@@ -113,7 +113,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
 
         $most_secure_url = '';
         if (ForgeConfig::get('sys_https_host')) {
-            $most_secure_url = 'https://'. ForgeConfig::get('sys_https_host');
+            $most_secure_url = 'https://' . ForgeConfig::get('sys_https_host');
         }
 
         $login_presenter_builder = new User_LoginPresenterBuilder();

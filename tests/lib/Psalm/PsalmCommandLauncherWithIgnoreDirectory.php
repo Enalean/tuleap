@@ -57,7 +57,7 @@ final class PsalmCommandLauncherWithIgnoreDirectory
         }
         $php_interpreter = '';
         if ($launch_command !== $init_script) {
-            $php_interpreter = $launch_command.' ';
+            $php_interpreter = $launch_command . ' ';
         }
 
         foreach ($argv as $parameter) {

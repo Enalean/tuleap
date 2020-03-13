@@ -93,7 +93,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
 
         $sql = "INSERT INTO tracker_changeset_value_artifactlink
                     (changeset_value_id, nature, artifact_id, keyword, group_id)
-                VALUES". implode(',', $sql_values);
+                VALUES" . implode(',', $sql_values);
 
         return $this->update($sql);
     }
@@ -122,8 +122,8 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
     public function updateItemName($group_id, $oldKeyword, $keyword)
     {
         $group_id = $this->da->quoteSmart($group_id);
-        $keyword= $this->da->quoteSmart($keyword);
-        $oldKeyword= $this->da->quoteSmart($oldKeyword);
+        $keyword = $this->da->quoteSmart($keyword);
+        $oldKeyword = $this->da->quoteSmart($oldKeyword);
         $sql = "UPDATE $this->table_name SET 
 			keyword=$keyword
             WHERE keyword=$oldKeyword AND group_id=$group_id";

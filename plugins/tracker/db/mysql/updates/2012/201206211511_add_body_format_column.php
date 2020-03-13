@@ -38,7 +38,7 @@ EOT;
                     ADD COLUMN body_format varchar(16) NOT NULL default 'text' AFTER body";
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column body_format to tracker_changeset_comment table: '.implode(', ', $this->db->dbh->errorInfo()));
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column body_format to tracker_changeset_comment table: ' . implode(', ', $this->db->dbh->errorInfo()));
             }
         }
     }

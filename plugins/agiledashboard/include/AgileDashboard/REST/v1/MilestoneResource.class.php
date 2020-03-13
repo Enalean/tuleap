@@ -1025,7 +1025,7 @@ class MilestoneResource extends AuthenticatedResource
 
         $allowed_trackers = $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
         if (! $this->milestone_validator->canBacklogItemBeAddedToMilestone($artifact, $allowed_trackers)) {
-            throw new RestException(400, "Item of type '".$artifact->getTracker()->getName(). "' cannot be added.");
+            throw new RestException(400, "Item of type '" . $artifact->getTracker()->getName() . "' cannot be added.");
         }
 
         try {

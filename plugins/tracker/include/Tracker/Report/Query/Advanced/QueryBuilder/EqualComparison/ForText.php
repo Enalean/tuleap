@@ -50,7 +50,7 @@ class ForText implements FieldFromWhereBuilder
         if ($value === '') {
             $matches_value = " = ''";
         } else {
-            $matches_value = " LIKE ". $this->quoteLikeValueSurround($value);
+            $matches_value = " LIKE " . $this->quoteLikeValueSurround($value);
         }
 
         $condition = "$changeset_value_text_alias.value $matches_value";

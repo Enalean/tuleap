@@ -45,7 +45,7 @@ class HTML_Element_Selectbox_Rank extends HTML_Element_Selectbox
                 $this->addOption(
                     new HTML_Element_Option(
                         $GLOBALS['Language']->getText('global', 'after', $item['name']),
-                        $item['rank']+1,
+                        $item['rank'] + 1,
                         (isset($siblings[$i + 1]) && $siblings[$i + 1]['id'] == $id)
                     )
                 );

@@ -63,9 +63,9 @@ class CreateTestProject
     {
         $xml = $this->getXMLBasedOnTemplate();
 
-        if (file_exists($this->archive_base_dir.'/reference_date.txt')) {
+        if (file_exists($this->archive_base_dir . '/reference_date.txt')) {
             $updater = new DateUpdater(
-                new \DateTimeImmutable(trim(file_get_contents($this->archive_base_dir.'/reference_date.txt'))),
+                new \DateTimeImmutable(trim(file_get_contents($this->archive_base_dir . '/reference_date.txt'))),
                 new \DateTimeImmutable()
             );
 
@@ -101,7 +101,7 @@ class CreateTestProject
 
     public function getProjectXMLFilePath()
     {
-        return $this->archive_base_dir.'/project.xml';
+        return $this->archive_base_dir . '/project.xml';
     }
 
     /**
@@ -122,7 +122,7 @@ class CreateTestProject
 
     public function generateProjectFullName()
     {
-        return substr('Test project for '.$this->user_name, 0, 40);
+        return substr('Test project for ' . $this->user_name, 0, 40);
     }
 
     /**
@@ -143,6 +143,6 @@ class CreateTestProject
 
     public function generateProjectUnixName()
     {
-        return 'test-for-'.strtr($this->user_name, '_.', '--');
+        return 'test-for-' . strtr($this->user_name, '_.', '--');
     }
 }

@@ -99,7 +99,7 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $column = new Cardwall_Column(55, null, null);
         $columns  = new Cardwall_OnTop_Config_ColumnCollection();
-        $columns[]= $column;
+        $columns[] = $column;
         $cardincell_presenter = \Mockery::spy(\Cardwall_CardInCellPresenter::class)->shouldReceive('getArtifact')->andReturns($artifact)->getMock();
 
         $this->config->shouldReceive('isInColumn')->with($artifact, \Mockery::any(), $column)->andReturns(false);

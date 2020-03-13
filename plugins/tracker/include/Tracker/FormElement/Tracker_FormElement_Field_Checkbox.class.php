@@ -37,9 +37,9 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         $html    = '';
         $checked = $is_selected ? 'checked="checked"' : '';
 
-        $html .= '<label class="checkbox" for="cb_'. $id .'" ><input type="hidden" '.$name.' value="0"  />';
-        $html .= '<input type="checkbox" '. $name .' value="'. $id .'" id=cb_'. $id .' '. $checked .' valign="middle" />';
-        $html .= $this->getBind()->formatChangesetValueWithoutLink($value) .'</label>';
+        $html .= '<label class="checkbox" for="cb_' . $id . '" ><input type="hidden" ' . $name . ' value="0"  />';
+        $html .= '<input type="checkbox" ' . $name . ' value="' . $id . '" id=cb_' . $id . ' ' . $checked . ' valign="middle" />';
+        $html .= $this->getBind()->formatChangesetValueWithoutLink($value) . '</label>';
 
         return $html;
     }

@@ -51,7 +51,7 @@ function smarty_modifier_highlight($haystack, $needle, $trimlen = null, $escape 
                     if ($leftlen < $remain) {
                         $rightremain += ($remain - $leftlen);
                     }
-                    $regs[3] = substr($regs[3], 0, $rightremain-3) . "…";
+                    $regs[3] = substr($regs[3], 0, $rightremain - 3) . "…";
                 }
             }
         }

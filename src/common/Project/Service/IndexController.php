@@ -60,7 +60,6 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
         \TemplateRenderer $renderer,
         IncludeAssets $include_assets
     ) {
-
         $this->layout_helper     = $layout_helper;
         $this->presenter_builder = $presenter_builder;
         $this->renderer          = $renderer;

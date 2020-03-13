@@ -54,7 +54,7 @@ class FRSReleaseController
         }
 
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_del'));
-        $GLOBALS['Response']->redirect('/file/?group_id='.$project->getGroupId());
+        $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
     }
 
     public function add(Project $project, $package_id)
@@ -65,7 +65,7 @@ class FRSReleaseController
         $release->setReleaseDate(time());
 
         $title = $GLOBALS['Language']->getText('file_admin_editreleases', 'create_new_release');
-        $url   = '?func=create&amp;postExpected=&amp;group_id='. $project->getGroupId() .'&amp;package_id='. $package_id;
+        $url   = '?func=create&amp;postExpected=&amp;group_id=' . $project->getGroupId() . '&amp;package_id=' . $package_id;
         frs_display_release_form($is_update = false, $release, $project->getGroupId(), $title, $url);
     }
 
@@ -73,7 +73,7 @@ class FRSReleaseController
     {
         if ($request->exist('cancel')) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'create_canceled'));
-            $GLOBALS['Response']->redirect('/file/?group_id='.$project->getGroupId());
+            $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
         }
 
         frs_process_release_form(
@@ -81,7 +81,7 @@ class FRSReleaseController
             $request,
             $project->getGroupId(),
             $GLOBALS['Language']->getText('file_admin_editreleases', 'release_new_file_version'),
-            '?func=create&amp;postExpected=&amp;group_id='. $project->getGroupId() .'&amp;package_id='. $package->getPackageID()
+            '?func=create&amp;postExpected=&amp;group_id=' . $project->getGroupId() . '&amp;package_id=' . $package->getPackageID()
         );
     }
 
@@ -92,7 +92,7 @@ class FRSReleaseController
             $release,
             $project->getGroupId(),
             $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release'),
-            '?func=update&amp;postExpected=&amp;group_id='. $project->getGroupId() .'&amp;package_id='. $release->getPackageID() .'&amp;id='. $release->getReleaseID()
+            '?func=update&amp;postExpected=&amp;group_id=' . $project->getGroupId() . '&amp;package_id=' . $release->getPackageID() . '&amp;id=' . $release->getReleaseID()
         );
     }
 
@@ -103,7 +103,7 @@ class FRSReleaseController
             $request,
             $project->getGroupId(),
             $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release'),
-            '?func=update&amp;postExpected=&amp;group_id='. $project->getGroupId() .'&amp;package_id='. $release->getPackageID() .'&amp;id='. $release->getReleaseID()
+            '?func=update&amp;postExpected=&amp;group_id=' . $project->getGroupId() . '&amp;package_id=' . $release->getPackageID() . '&amp;id=' . $release->getReleaseID()
         );
     }
 
@@ -145,7 +145,7 @@ class FRSReleaseController
 
     private function isUgroupHidden(User_UGroup $project_ugroup)
     {
-        return (int)$project_ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
+        return (int) $project_ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
     }
 
     private function getAllUserGroups($permission_type, $release_id)
@@ -167,6 +167,6 @@ class FRSReleaseController
 
     private function getTemplateDir()
     {
-        return ForgeConfig::get('codendi_dir') .'/src/templates/frs';
+        return ForgeConfig::get('codendi_dir') . '/src/templates/frs';
     }
 }

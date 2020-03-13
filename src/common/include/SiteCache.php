@@ -27,7 +27,7 @@ class SiteCache
 
     public function __construct(?\Psr\Log\LoggerInterface $logger = null)
     {
-        $this->logger = $logger ? $logger : new BackendLogger() ;
+        $this->logger = $logger ? $logger : new BackendLogger();
     }
 
     public function invalidatePluginBasedCaches()
@@ -69,7 +69,7 @@ class SiteCache
     private function invalidateWSDL()
     {
         $this->logger->info('Invalidate WSDL');
-        foreach (glob(ForgeConfig::get('codendi_cache_dir').'/php/wsdlcache/wsdl*') as $file) {
+        foreach (glob(ForgeConfig::get('codendi_cache_dir') . '/php/wsdlcache/wsdl*') as $file) {
             unlink($file);
         }
     }

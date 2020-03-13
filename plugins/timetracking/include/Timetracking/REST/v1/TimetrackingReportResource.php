@@ -196,7 +196,7 @@ class TimetrackingReportResource extends AuthenticatedResource
             $trackers     = [];
 
             foreach ($this->getTrackersFromRoute($query, $report) as $tracker) {
-                $trackers[ $tracker->getId() ] = $tracker;
+                $trackers[$tracker->getId()] = $tracker;
             }
 
             $dates = $this->date_extractor->getDatesFromRoute($query);
@@ -295,7 +295,7 @@ class TimetrackingReportResource extends AuthenticatedResource
         $json_query   = $this->json_decoder->decodeAsAnArray('query', $query);
 
         $query = trim($query);
-        if (! isset($json_query[ "trackers_id" ])) {
+        if (! isset($json_query["trackers_id"])) {
             return $report->getTrackers();
         }
 

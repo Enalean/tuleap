@@ -100,7 +100,7 @@ final class ReviewerAutocompleterController extends DispatchablePSR15Compatible 
 
         try {
             $this->pull_request_permission_checker->checkPullRequestIsMergeableByUser($pull_request, $current_user);
-        } catch (GitRepoNotFoundException|UserCannotMergePullRequestException $e) {
+        } catch (GitRepoNotFoundException | UserCannotMergePullRequestException $e) {
             throw new NotFoundException();
         }
 

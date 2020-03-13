@@ -138,7 +138,7 @@ class Planning_FormPresenter extends PlanningPresenter
 
     public function priority_change_permission()
     {
-        return $this->planning_permissions_manager->getPlanningPermissionForm($this->planning_id, $this->group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, 'planning['.PlanningPermissionsManager::PERM_PRIORITY_CHANGE.']');
+        return $this->planning_permissions_manager->getPlanningPermissionForm($this->planning_id, $this->group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, 'planning[' . PlanningPermissionsManager::PERM_PRIORITY_CHANGE . ']');
     }
 
     public function btnSubmit()

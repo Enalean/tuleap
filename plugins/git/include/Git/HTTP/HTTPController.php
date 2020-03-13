@@ -147,7 +147,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
     private function getRepoPathWithFinalDotGit($path)
     {
         if (substr($path, strlen($path) - 4) !== '.git') {
-            return $path.'.git';
+            return $path . '.git';
         }
         return $path;
     }

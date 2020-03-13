@@ -20,7 +20,7 @@
 
 namespace Tuleap\ProFTPd\Directory;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class DirectoryParserTest extends \PHPUnit\Framework\TestCase
 {
@@ -31,47 +31,47 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase
 
         $this->expected_item_01 = new DirectoryItem(
             '.',
-            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/.')),
-            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/.')),
-            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/.'))
+            filetype(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/.')),
+            filesize(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/.')),
+            filemtime(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/.'))
         );
 
         $this->expected_item_02 = new DirectoryItem(
             '..',
-            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/..')),
-            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/..')),
-            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/..'))
+            filetype(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/..')),
+            filesize(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/..')),
+            filemtime(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/..'))
         );
 
         $this->expected_item_03 = new DirectoryItem(
             'file01.txt',
-            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt')),
-            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt')),
-            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt'))
+            filetype(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/file01.txt')),
+            filesize(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/file01.txt')),
+            filemtime(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/file01.txt'))
         );
 
         $this->expected_item_04 = new DirectoryItem(
             'folder01',
-            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder01')),
-            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder01')),
-            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder01'))
+            filetype(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/folder01')),
+            filesize(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/folder01')),
+            filemtime(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/folder01'))
         );
 
         $this->expected_item_05 = new DirectoryItem(
             'folder9',
-            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder9')),
-            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder9')),
-            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder9'))
+            filetype(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/folder9')),
+            filesize(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/folder9')),
+            filemtime(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/folder9'))
         );
 
         $this->expected_item_06 = new DirectoryItem(
             'folder10',
-            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder10')),
-            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder10')),
-            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder10'))
+            filetype(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/folder10')),
+            filesize(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/folder10')),
+            filemtime(realpath(dirname(__FILE__) . '/_fixtures/sftp_directory/folder10'))
         );
 
-        $this->parser = new DirectoryParser(realpath(dirname(__FILE__).'/_fixtures'));
+        $this->parser = new DirectoryParser(realpath(dirname(__FILE__) . '/_fixtures'));
     }
 
     public function testItReturnsContentOfDirectoryInformation()

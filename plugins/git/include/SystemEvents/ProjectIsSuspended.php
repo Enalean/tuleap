@@ -75,6 +75,6 @@ class ProjectIsSuspended extends SystemEvent
     {
         $project_id = $this->getProjectIdFromParameters();
 
-        return 'Project: '.$this->verbalizeProjectId($project_id, $with_link);
+        return 'Project: ' . $this->verbalizeProjectId($project_id, $with_link);
     }
 }

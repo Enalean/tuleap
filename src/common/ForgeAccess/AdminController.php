@@ -124,7 +124,7 @@ class ForgeAccess_AdminController
 
     private function getTemplateDir()
     {
-        return ForgeConfig::get('codendi_dir') .'/src/templates/admin/anonymous/';
+        return ForgeConfig::get('codendi_dir') . '/src/templates/admin/anonymous/';
     }
 
     private function redirectToIndex()
@@ -188,7 +188,6 @@ class ForgeAccess_AdminController
 
     private function updateAnonymousForSiteHomePage()
     {
-
         $new_value = $this->getToggleValue(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE);
         if ($new_value !== -1) {
             return $this->manager->updateAnonymousCanSeeSiteHomePage($new_value);

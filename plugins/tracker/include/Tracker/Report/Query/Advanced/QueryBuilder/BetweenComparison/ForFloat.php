@@ -52,7 +52,7 @@ class ForFloat implements FieldFromWhereBuilder
         $changeset_value_float_alias = "CVFloat_{$field_id}_{$suffix}";
         $changeset_value_alias       = "CV_{$field_id}_{$suffix}";
 
-        $condition = "$changeset_value_float_alias.value BETWEEN ".$this->escapeFloat($min_value)." AND ".$this->escapeFloat($max_value);
+        $condition = "$changeset_value_float_alias.value BETWEEN " . $this->escapeFloat($min_value) . " AND " . $this->escapeFloat($max_value);
 
         return $this->from_where_builder->getFromWhere(
             $field_id,

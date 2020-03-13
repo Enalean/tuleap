@@ -98,8 +98,8 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
 
         $group   = $this->getArtifact($this->group_id, $group_tracker, []);
         $this->corp    = $this->getArtifact($this->corp_id, $corp_tracker, [$group]);
-        $this->product = $this->getArtifact($this->product_id, $product_tracker, [$this->corp,$group]);
-        $this->release = $this->getArtifact($this->release_id, $release_tracker, [$this->product,$group]);
+        $this->product = $this->getArtifact($this->product_id, $product_tracker, [$this->corp, $group]);
+        $this->release = $this->getArtifact($this->release_id, $release_tracker, [$this->product, $group]);
 
         $this->theme   = $this->getArtifact($this->theme_id, $theme_tracker, []);
         // Epic has no parent yet because the whole thing is to manage Theme creation after Epic

@@ -63,7 +63,7 @@ class DiskUsagePieDisplayer
             $quota = $custom_quota;
         }
 
-        $allowed_quota = $quota * (1024*1024*1024);
+        $allowed_quota = $quota * (1024 * 1024 * 1024);
 
         if ($used_proportion > $allowed_quota) {
             $used_proportion = $allowed_quota;

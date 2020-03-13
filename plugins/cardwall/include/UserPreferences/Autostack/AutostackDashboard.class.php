@@ -37,6 +37,6 @@ class Cardwall_UserPreferences_Autostack_AutostackDashboard extends Cardwall_Use
 
     public function getName(Cardwall_Column $column)
     {
-        return 'cardwall_dashboard_'.$this->tracker->getId().'_column_'.$column->getId();
+        return 'cardwall_dashboard_' . $this->tracker->getId() . '_column_' . $column->getId();
     }
 }

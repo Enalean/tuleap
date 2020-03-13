@@ -367,7 +367,6 @@ class _WikiUser
     // constructor
     public function __construct($UserName = '', $prefs = false)
     {
-
         $this->_userid = $UserName;
         $this->_HomePagehandle = false;
         if ($UserName) {
@@ -474,8 +473,8 @@ class _WikiUser
 
     public function AuthMethod($index = false)
     {
-        return $this->_auth_methods[ $index === false
-                                     ? count($this->_auth_methods)-1
+        return $this->_auth_methods[$index === false
+                                     ? count($this->_auth_methods) - 1
                                      : $index];
     }
 
@@ -484,7 +483,7 @@ class _WikiUser
     {
         $method = $this->AuthMethod($this->nextAuthMethodIndex());
         include_once("lib/WikiUser/$method.php");
-        return "_".$method."PassUser";
+        return "_" . $method . "PassUser";
     }
 
     //Fixme: for _HttpAuthPassUser
@@ -504,7 +503,7 @@ class _WikiUser
         $require_level = 0;
         extract($args); // fixme
 
-        $require_level = max(0, min(WIKIAUTH_ADMIN, (int)$require_level));
+        $require_level = max(0, min(WIKIAUTH_ADMIN, (int) $require_level));
 
         $pagename = $request->getArg('pagename');
         $nocache = 1;
@@ -613,7 +612,7 @@ class _WikiUser
             $args[$key] = isset($postargs[$key]) ? $postargs[$key] : false;
         }
         extract($args);
-        $require_level = max(0, min(WIKIAUTH_ADMIN, (int)$require_level));
+        $require_level = max(0, min(WIKIAUTH_ADMIN, (int) $require_level));
 
         if ($logout) { // Log out
             if (method_exists($GLOBALS['request']->_user, "logout")) { //_HttpAuthPassUser
@@ -631,7 +630,7 @@ class _WikiUser
 
         if (!$this->isValidName($userid)) {
             return _("Invalid username.");
-        };
+        }
 
         $authlevel = $this->checkPass($passwd === false ? '' : $passwd);
         if ($authlevel <= 0) { // anon or forbidden
@@ -644,7 +643,7 @@ class _WikiUser
             if (!empty($this->_current_method) and strtolower(static::class) == '_passuser') {
                 // upgrade class
                 $class = "_" . $this->_current_method . "PassUser";
-                include_once("lib/WikiUser/".$this->_current_method.".php");
+                include_once("lib/WikiUser/" . $this->_current_method . ".php");
                 $user = new $class($userid, $this->_prefs);
                 $this->_level = $authlevel;
                 return $user;
@@ -660,7 +659,7 @@ class _WikiUser
             strtolower(static::class) == '_passuser') {
             // upgrade class
             $class = "_" . $this->_current_method . "PassUser";
-            include_once("lib/WikiUser/".$this->_current_method.".php");
+            include_once("lib/WikiUser/" . $this->_current_method . ".php");
             $user = new $class($userid, $this->_prefs);
             $user->_level = $authlevel;
             return $user;
@@ -683,7 +682,6 @@ class _AnonUser extends _WikiUser
      */
     public function getPreferences()
     {
-
         if (empty($this->_prefs)) {
             $this->_prefs = new UserPreferences;
         }
@@ -969,10 +967,10 @@ class _PassUser extends _AnonUser
         // new-style: '"\$userid"' or just "userid"
         $new = str_replace(array("'",'"','\$','$'), '', $var);
         if (!in_array($new, $valid_variables)) {
-            trigger_error("Unknown DBAuthParam statement variable: ". $new, E_USER_ERROR);
+            trigger_error("Unknown DBAuthParam statement variable: " . $new, E_USER_ERROR);
             return false;
         }
-        return !$oldstyle ? "'$".$new."'" : '\$'.$new;
+        return !$oldstyle ? "'$" . $new . "'" : '\$' . $new;
     }
 
     // TODO: use it again for the auth and member tables
@@ -986,7 +984,7 @@ class _PassUser extends _AnonUser
         // old-style strings don't survive pear/Config/IniConfig treatment, that's why we changed it.
         $new = array();
         if (is_array($variables)) {
-            for ($i=0; $i < count($variables); $i++) {
+            for ($i = 0; $i < count($variables); $i++) {
                 $var = $this->_normalize_stmt_var($variables[$i], $oldstyle);
                 if (!$var) {
                     trigger_error(sprintf(
@@ -1026,9 +1024,9 @@ class _PassUser extends _AnonUser
                 $oldstmt = $stmt;
                 $stmt = str_replace(
                     array(" user "," pref "," member "),
-                    array(" ".$prefix."user ",
-                                          " ".$prefix."pref ",
-                    " ".$prefix."member "),
+                    array(" " . $prefix . "user ",
+                                          " " . $prefix . "pref ",
+                    " " . $prefix . "member "),
                     $stmt
                 );
                 //Do it automatically for the lazy admin? Esp. on sf.net it's nice to have
@@ -1335,7 +1333,7 @@ class _UserPreference
 
     public function sanify($value)
     {
-        return (string)$value;
+        return (string) $value;
     }
 
     public function get($name)
@@ -1374,7 +1372,6 @@ class _UserPreference
     // default: no side-effects
     public function update($value)
     {
-        ;
     }
 }
 
@@ -1385,14 +1382,14 @@ class _UserPreference_numeric extends _UserPreference
         $minval = false,
         $maxval = false
     ) {
-        parent::__construct((double)$default);
-        $this->_minval = (double)$minval;
-        $this->_maxval = (double)$maxval;
+        parent::__construct((double) $default);
+        $this->_minval = (double) $minval;
+        $this->_maxval = (double) $maxval;
     }
 
     public function sanify($value)
     {
-        $value = (double)$value;
+        $value = (double) $value;
         if ($this->_minval !== false && $value < $this->_minval) {
             $value = $this->_minval;
         }
@@ -1407,12 +1404,12 @@ class _UserPreference_int extends _UserPreference_numeric
 {
     public function __construct($default, $minval = false, $maxval = false)
     {
-        parent::__construct((int)$default, (int)$minval, (int)$maxval);
+        parent::__construct((int) $default, (int) $minval, (int) $maxval);
     }
 
     public function sanify($value)
     {
-        return (int)parent::sanify((int)$value);
+        return (int) parent::sanify((int) $value);
     }
 }
 
@@ -1420,7 +1417,7 @@ class _UserPreference_bool extends _UserPreference
 {
     public function __construct($default = false)
     {
-        parent::__construct((bool)$default);
+        parent::__construct((bool) $default);
     }
 
     public function sanify($value)
@@ -1611,7 +1608,7 @@ class _UserPreference_email extends _UserPreference
         if ($ok) {
             return $value;
         } else {
-            trigger_error("E-Mail Validation Error: ".$msg, E_USER_WARNING);
+            trigger_error("E-Mail Validation Error: " . $msg, E_USER_WARNING);
             return $this->default_value;
         }
     }
@@ -1634,7 +1631,7 @@ class _UserPreference_email extends _UserPreference
             list($ok,$msg) = ValidateMail($value);
             if ($ok and mail(
                 $value,
-                "[".WIKI_NAME ."] "._("Email Verification"),
+                "[" . WIKI_NAME . "] " . _("Email Verification"),
                 sprintf(
                     _("Welcome to %s!\nYour email account is verified and\nwill be used to send page change notifications.\nSee %s"),
                     WIKI_NAME,
@@ -1713,20 +1710,20 @@ function ValidateMail($email, $noconnect = false)
         if (preg_match("/^220/D", $Out = fgets($Connect, 1024))) {
             fputs($Connect, "HELO $HTTP_HOST\r\n");
             $Out = fgets($Connect, 1024);
-            fputs($Connect, "MAIL FROM: <".$email.">\r\n");
+            fputs($Connect, "MAIL FROM: <" . $email . ">\r\n");
             $From = fgets($Connect, 1024);
-            fputs($Connect, "RCPT TO: <".$email.">\r\n");
+            fputs($Connect, "RCPT TO: <" . $email . ">\r\n");
             $To = fgets($Connect, 1024);
             fputs($Connect, "QUIT\r\n");
             fclose($Connect);
             if (!preg_match("/^250/D", $From)) {
-                $result[0]=false;
-                $result[1]="Server rejected address: ". $From;
+                $result[0] = false;
+                $result[1] = "Server rejected address: " . $From;
                 return $result;
             }
             if (!preg_match("/^250/D", $To)) {
-                $result[0]=false;
-                $result[1]="Server rejected address: ". $To;
+                $result[0] = false;
+                $result[1] = "Server rejected address: " . $To;
                 return $result;
             }
         } else {
@@ -1735,12 +1732,12 @@ function ValidateMail($email, $noconnect = false)
             return $result;
         }
     } else {
-        $result[0]=false;
-        $result[1]="Can not connect E-Mail server.";
+        $result[0] = false;
+        $result[1] = "Can not connect E-Mail server.";
         return $result;
     }
-    $result[0]=true;
-    $result[1]="E-Mail address '$email' appears to be valid.";
+    $result[0] = true;
+    $result[1] = "E-Mail address '$email' appears to be valid.";
     return $result;
 } // end of function
 

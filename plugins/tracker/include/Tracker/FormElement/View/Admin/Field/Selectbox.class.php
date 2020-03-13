@@ -26,24 +26,24 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
     public function fetchTypeForUpdate()
     {
         $html = '';
-        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
-        $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
+        $html .= '<p><label for="formElement_type">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') . ': </label><br />';
+        $html .= '<img width="16" height="16" alt="" src="' . $this->formElement->getFactoryIconUseIt() . '" style="vertical-align:middle"/> ' . $this->formElement->getFactoryLabel();
 
            //do not change from SB to MSB if the field is used to define the workflow
         $wf = WorkflowFactory::instance();
         if (!$wf->isWorkflowField($this->formElement)) {
-            $html .= ' ('.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_to') .' ';
+            $html .= ' (' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_to') . ' ';
 
             $change_links = array();
 
             foreach ($this->getAvailableTypes() as $type) {
-                $change_links[] = '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
+                $change_links[] = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
                         'tracker'            => $this->formElement->tracker_id,
                         'func'               => 'admin-formElement-update',
                         'formElement'        => $this->formElement->id,
                         'change-type'        => $type
-                    )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_type_confirm').'\');">'
-                       .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_'. $type).'</a> ';
+                    )) . '" onclick="return confirm(\'' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_type_confirm') . '\');">'
+                       . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_' . $type) . '</a> ';
             }
             $html .= implode(', ', $change_links);
             $html .= ')';

@@ -31,7 +31,7 @@ class ReferenceAdministration extends Controler
     {
         $request = HTTPRequest::instance();
 
-        session_require(array('group'=>$request->get('group_id'),'admin_flags'=>'A'));
+        session_require(array('group' => $request->get('group_id'),'admin_flags' => 'A'));
 
         if ($request->exist('view')) {
             switch ($request->get('view')) {

@@ -25,7 +25,7 @@ $overwrite       = false;
 $atid            = null;
 $archive_path    = null;
 $debug_option    = getopt('d');
-$overwrite_option= getopt('o');
+$overwrite_option = getopt('o');
 
 if (isset($debug_option['d'])) {
     $debug = true;
@@ -47,12 +47,12 @@ for ($i = 1; $i < $argc; ++$i) {
 }
 
 if ($atid === null || $archive_path === null) {
-    echo 'Usage: '.basename($argv[0]).' [-d] tracker_id /path/to/archive.zip'.PHP_EOL;
+    echo 'Usage: ' . basename($argv[0]) . ' [-d] tracker_id /path/to/archive.zip' . PHP_EOL;
     exit(1);
 }
 
 if (! $overwrite && file_exists($archive_path)) {
-    echo "*** ERROR: File $archive_path already exists.".PHP_EOL;
+    echo "*** ERROR: File $archive_path already exists." . PHP_EOL;
     exit(1);
 }
 
@@ -61,7 +61,7 @@ try {
     $logger   = new Log_ConsoleLogger();
     $archive  = new ZipArchive();
     if ($archive->open($archive_path, ZipArchive::CREATE) !== true) {
-        echo '*** ERROR: Cannot create archive: '.$archive_path;
+        echo '*** ERROR: Cannot create archive: ' . $archive_path;
         exit(1);
     }
 
@@ -81,7 +81,7 @@ try {
     $xml_security->enableExternalLoadOfEntities();
 
     $xsl = new DOMDocument();
-    $xsl->load(dirname(__FILE__).'/xml/indent.xsl');
+    $xsl->load(dirname(__FILE__) . '/xml/indent.xsl');
 
     $proc = new XSLTProcessor();
     $proc->importStyleSheet($xsl);
@@ -92,6 +92,6 @@ try {
     $archive->close();
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $error) {
-        echo $error.PHP_EOL;
+        echo $error . PHP_EOL;
     }
 }

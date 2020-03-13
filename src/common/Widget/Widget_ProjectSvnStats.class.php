@@ -86,7 +86,7 @@ class Widget_ProjectSvnStats extends Widget
             foreach ($stats as $whoid => $stat) {
                 $tmp_stats = array();
                 for ($i = $start_of_period; $i <= $today; $i += $week) {
-                    $w = (int)date('W', $i);
+                    $w = (int) date('W', $i);
                     $tmp_stats[$w] = isset($stat['by_week'][$w]) ? $stat['by_week'][$w] : '0';
                 }
                 $stats[$whoid]['by_week'] = $tmp_stats;
@@ -130,12 +130,12 @@ class Widget_ProjectSvnStats extends Widget
                 }
                 $l = new BarPlot(array_values($stat['by_week']));
                 $color = $colors[$i++ % $nb_colors];
-                $l->SetColor($color.':0.7');
+                $l->SetColor($color . ':0.7');
                 $l->setFillColor($color);
                 if ($user = UserManager::instance()->getUserById($whoid)) {
                     $l->SetLegend(UserHelper::instance()->getDisplayNameFromUser($user));
                 } else {
-                    $l->SetLegend('Unknown user ('. (int)$whoid .')');
+                    $l->SetLegend('Unknown user (' . (int) $whoid . ')');
                 }
                 $bars[] = $l;
             }

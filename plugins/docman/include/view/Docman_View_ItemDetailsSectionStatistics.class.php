@@ -42,8 +42,8 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
     {
         $html = '';
         $html .= '<tr style="vertical-align:top;">';
-        $html .= '<td class="label">'.$label.'</td>';
-        $html .= '<td class="value">'.$value.'</td>';
+        $html .= '<td class="label">' . $label . '</td>';
+        $html .= '<td class="value">' . $value . '</td>';
         $html .= '</tr>';
         return $html;
     }
@@ -59,7 +59,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
             $size =  $this->convertBytesToHumanReadable($stats['size']);
 
             // Summary
-            $html .= '<h3>'.dgettext('tuleap-docman', 'Summary').'</h3>';
+            $html .= '<h3>' . dgettext('tuleap-docman', 'Summary') . '</h3>';
             $html .= '<table class="docman_item_details_properties">';
             $html .= $this->_getPropertyRow(dgettext('tuleap-docman', 'Size:'), $size);
             $html .= $this->_getPropertyRow(dgettext('tuleap-docman', 'Number of items in this folder:'), $stats['count']);
@@ -67,8 +67,8 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
 
             // Details
             if ($stats['count'] > 0) {
-                $html .= '<h3>'.dgettext('tuleap-docman', 'Details').'</h3>';
-                $html .= '<p>'.dgettext('tuleap-docman', 'This table shows the number of elements of each type.').'</p>';
+                $html .= '<h3>' . dgettext('tuleap-docman', 'Details') . '</h3>';
+                $html .= '<p>' . dgettext('tuleap-docman', 'This table shows the number of elements of each type.') . '</p>';
                 $html .= '<table class="docman_item_details_properties">';
                 arsort($stats['types']);
                 foreach ($stats['types'] as $type => $stat) {
@@ -104,7 +104,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
 
     public function getContent($params = array())
     {
-        $html = '<div class="docman_help">'.dgettext('tuleap-docman', '<ul><li>The whole folder sub-tree is taken in account for these statistics.</li><li>To compute the size, only the last versions of "file" and "embedded file" documents are taken in account.</li></ul>').'</div>';
+        $html = '<div class="docman_help">' . dgettext('tuleap-docman', '<ul><li>The whole folder sub-tree is taken in account for these statistics.</li><li>To compute the size, only the last versions of "file" and "embedded file" documents are taken in account.</li></ul>') . '</div>';
         $html .= $this->_getStatisticsFields($params);
         return $html;
     }
@@ -114,13 +114,13 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         $s = array('', 'k', 'M', 'G', 'T', 'P');
 
         if ($bytes > 0) {
-            $e = floor(log($bytes)/log(1024));
-            $displayedSize = round($bytes/pow(1024, floor($e)), 2);
+            $e = floor(log($bytes) / log(1024));
+            $displayedSize = round($bytes / pow(1024, floor($e)), 2);
         } else {
             $e = 0;
             $displayedSize = 0;
         }
 
-        return $displayedSize.' '.$s[$e].'B';
+        return $displayedSize . ' ' . $s[$e] . 'B';
     }
 }

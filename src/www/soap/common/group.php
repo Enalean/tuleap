@@ -34,10 +34,10 @@ if (defined('NUSOAP')) {
         'all',
         '',
         array(
-        'group_id' => array('name'=>'group_id', 'type'=>'xsd:int'),
-        'group_name' => array('name'=>'group_name', 'type'=>'xsd:string'),
-        'unix_group_name' => array('name'=>'unix_group_name', 'type'=>'xsd:string'),
-        'description' => array('name'=>'description', 'type'=>'xsd:string')
+        'group_id' => array('name' => 'group_id', 'type' => 'xsd:int'),
+        'group_name' => array('name' => 'group_name', 'type' => 'xsd:string'),
+        'unix_group_name' => array('name' => 'unix_group_name', 'type' => 'xsd:string'),
+        'description' => array('name' => 'description', 'type' => 'xsd:string')
         )
     );
 
@@ -61,8 +61,8 @@ if (defined('NUSOAP')) {
         'all',
         '',
         array(
-        'user_id'   => array('name'=>'user_id',   'type'=>'xsd:int'),
-        'user_name' => array('name'=>'user_name', 'type'=>'xsd:string')
+        'user_id'   => array('name' => 'user_id',   'type' => 'xsd:int'),
+        'user_name' => array('name' => 'user_name', 'type' => 'xsd:string')
         )
     );
 
@@ -86,9 +86,9 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         array(
-        'ugroup_id' => array('name'=>'ugroup_id', 'type' => 'xsd:int'),
-        'name' => array('name'=>'name', 'type' => 'xsd:string'),
-        'members' => array('name'=>'members', 'type' => 'tns:ArrayOfUGroupMember'),
+        'ugroup_id' => array('name' => 'ugroup_id', 'type' => 'xsd:int'),
+        'name' => array('name' => 'name', 'type' => 'xsd:string'),
+        'members' => array('name' => 'members', 'type' => 'tns:ArrayOfUGroupMember'),
         )
     );
 
@@ -99,7 +99,7 @@ if (defined('NUSOAP')) {
         '',
         'SOAP-ENC:Array',
         array(),
-        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Ugroup[]')),
+        array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:Ugroup[]')),
         'tns:Ugroup'
     );
 
@@ -110,7 +110,7 @@ if (defined('NUSOAP')) {
         ),
         array('return'   => 'tns:ArrayOfGroup'),           // output parameters
         $uri,                   // namespace
-        $uri.'#getMyProjects',        // soapaction
+        $uri . '#getMyProjects',        // soapaction
         'rpc',                           // style
         'encoded',                           // use
         'Returns the list of Groups that the current user belong to'             // documentation
@@ -118,11 +118,11 @@ if (defined('NUSOAP')) {
 
     $server->register(
         'getGroupByName',
-        array('sessionKey'=>'xsd:string',
-        'unix_group_name'=>'xsd:string'),
-        array('return'=>'tns:Group'),
+        array('sessionKey' => 'xsd:string',
+        'unix_group_name' => 'xsd:string'),
+        array('return' => 'tns:Group'),
         $uri,
-        $uri.'#getGroupByName',
+        $uri . '#getGroupByName',
         'rpc',
         'encoded',
         'Returns a Group object matching with the given unix_group_name, or a soap fault if the name does not match with a valid project.'
@@ -130,12 +130,12 @@ if (defined('NUSOAP')) {
 
     $server->register(
         'getGroupById',
-        array('sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int'
+        array('sessionKey' => 'xsd:string',
+        'group_id' => 'xsd:int'
         ),
-        array('return'=>'tns:Group'),
+        array('return' => 'tns:Group'),
         $uri,
-        $uri.'#getGroupById',
+        $uri . '#getGroupById',
         'rpc',
         'encoded',
         'Returns the Group object associated with the given ID, or a soap fault if the ID does not match with a valid project.'
@@ -144,12 +144,12 @@ if (defined('NUSOAP')) {
 
     $server->register(
         'getGroupUgroups',
-        array('sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int'
+        array('sessionKey' => 'xsd:string',
+        'group_id' => 'xsd:int'
         ),
-        array('return'=>'tns:ArrayOfUgroup'),
+        array('return' => 'tns:ArrayOfUgroup'),
         $uri,
-        $uri.'#getGroupUgroups',
+        $uri . '#getGroupUgroups',
         'rpc',
         'encoded',
         'Returns the Ugroups associated to the given project:
@@ -171,9 +171,9 @@ if (defined('NUSOAP')) {
         array('sessionKey' => 'xsd:string',
           'group_id'   => 'xsd:int'
         ),
-        array('return'=>'tns:ArrayOfUgroup'),
+        array('return' => 'tns:ArrayOfUgroup'),
         $uri,
-        $uri.'#getProjectGroupsAndUsers',
+        $uri . '#getProjectGroupsAndUsers',
         'rpc',
         'encoded',
         'Returns all groups defined in project both dynamic and static (aka user group).

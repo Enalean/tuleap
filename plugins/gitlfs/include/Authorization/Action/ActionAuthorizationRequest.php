@@ -48,7 +48,6 @@ class ActionAuthorizationRequest
         ActionAuthorizationType $action_type,
         \DateTimeImmutable $expiration
     ) {
-
         $this->git_repository = $git_repository;
         $this->object         = $object;
         $this->action_type    = $action_type;

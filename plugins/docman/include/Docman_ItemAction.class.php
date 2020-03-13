@@ -46,10 +46,10 @@ class Docman_ItemAction
 
     public function fetchAction($params)
     {
-        $url   = $params['default_url'].'&action='.$this->action.'&id='.$this->item->getId();
+        $url   = $params['default_url'] . '&action=' . $this->action . '&id=' . $this->item->getId();
         $title = $this->title;
-        $href  = '<a href="'.$url.'">'.$title.'</a>';
-        $html  = '<li>'.$href.'</li>';
+        $href  = '<a href="' . $url . '">' . $title . '</a>';
+        $html  = '<li>' . $href . '</li>';
         return $html;
     }
 
@@ -65,8 +65,8 @@ class Docman_ItemAction
             true,
             true
         );
-        $html  = '<a href="'.$url.'" class="'. $this->classes .'" title="'. $this->title .'">';
-        $html .= '<img src="'. $params['docman_icons']->getActionIcon($this->action) .'" class="docman_item_icon" alt="['. $this->title .']" />';
+        $html  = '<a href="' . $url . '" class="' . $this->classes . '" title="' . $this->title . '">';
+        $html .= '<img src="' . $params['docman_icons']->getActionIcon($this->action) . '" class="docman_item_icon" alt="[' . $this->title . ']" />';
         $html .= '</a>&nbsp;';
         return $html;
     }

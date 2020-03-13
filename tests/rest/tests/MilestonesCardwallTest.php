@@ -28,14 +28,14 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
 {
     public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET(): void
     {
-        $response = $this->getResponse($this->client->options('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'));
+        $response = $this->getResponse($this->client->options('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSCardwallWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->options('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'),
+            $this->client->options('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -44,7 +44,7 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
 
     public function testGETCardwall(): void
     {
-        $response = $this->getResponse($this->client->get('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'));
+        $response = $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'));
 
         $this->assertCardwall($response);
     }
@@ -52,7 +52,7 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
     public function testGETCardwallWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'),
+            $this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 

@@ -50,7 +50,7 @@ class Chart_GanttMileStone
         $colors_for_charts = new ColorsForCharts();
 
         $color      = $colors_for_charts->getGanttMilestoneColor();
-        $color_dark = $color .':0.6';
+        $color_dark = $color . ':0.6';
 
         $this->jpgraph_instance->mark->setColor($color_dark);
         $this->jpgraph_instance->mark->setFillColor($color);

@@ -39,11 +39,11 @@ $xml = simplexml_load_string(<<<XML
 XML
 );
 
-$src_dir = __DIR__.'/../../../';
+$src_dir = __DIR__ . '/../../../';
 
-$xml->testsuites[0]->testsuite[0]->addChild('directory', $src_dir."/tests/soap/tests");
+$xml->testsuites[0]->testsuite[0]->addChild('directory', $src_dir . "/tests/soap/tests");
 
-foreach (glob($src_dir.'/plugins/*/tests/soap') as $directory) {
+foreach (glob($src_dir . '/plugins/*/tests/soap') as $directory) {
     $xml->testsuites[0]->testsuite[0]->addChild('directory', $directory);
 }
 

@@ -17,34 +17,34 @@
 class Text
 {
     public $t;
-    public $x=0;
-    public $y=0;
-    public $halign="left";
-    public $valign="top";
-    public $color=array(0,0,0);
-    public $hide=false;
-    public $dir=0;
-    public $iScalePosY=null;
-    public $iScalePosX=null;
-    public $iWordwrap=0;
-    public $font_family=FF_DEFAULT;
-    public $font_style=FS_NORMAL; // old. FF_FONT1
-    protected $boxed=false; // Should the text be boxed
-    protected $paragraph_align="left";
-    protected $icornerradius=0;
-    protected $ishadowwidth=3;
-    protected $fcolor='white';
-    protected $bcolor='black';
-    protected $shadow=false;
-    protected $iCSIMarea='';
-    protected $iCSIMalt='';
-    protected $iCSIMtarget='';
-    protected $iCSIMWinTarget='';
+    public $x = 0;
+    public $y = 0;
+    public $halign = "left";
+    public $valign = "top";
+    public $color = array(0,0,0);
+    public $hide = false;
+    public $dir = 0;
+    public $iScalePosY = null;
+    public $iScalePosX = null;
+    public $iWordwrap = 0;
+    public $font_family = FF_DEFAULT;
+    public $font_style = FS_NORMAL; // old. FF_FONT1
+    protected $boxed = false; // Should the text be boxed
+    protected $paragraph_align = "left";
+    protected $icornerradius = 0;
+    protected $ishadowwidth = 3;
+    protected $fcolor = 'white';
+    protected $bcolor = 'black';
+    protected $shadow = false;
+    protected $iCSIMarea = '';
+    protected $iCSIMalt = '';
+    protected $iCSIMtarget = '';
+    protected $iCSIMWinTarget = '';
     private $iBoxType = 1; // Which variant of filled box around text we want
 
     // for __get, __set
     private $_margin; // phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedProperty
-    private $_font_size=8; // phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedProperty
+    private $_font_size = 8; // phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedProperty
 
     //---------------
     // CONSTRUCTOR
@@ -114,14 +114,14 @@ class Text
 
     public function SetShadow($aShadowColor = 'gray', $aShadowWidth = 3)
     {
-        $this->ishadowwidth=$aShadowWidth;
-        $this->shadow=$aShadowColor;
-        $this->boxed=true;
+        $this->ishadowwidth = $aShadowWidth;
+        $this->shadow = $aShadowColor;
+        $this->boxed = true;
     }
 
     public function SetWordWrap($aCol)
     {
-        $this->iWordwrap = $aCol ;
+        $this->iWordwrap = $aCol;
     }
 
     // Specify that the text should be boxed. fcolor=frame color, bcolor=border color,
@@ -129,31 +129,31 @@ class Text
     public function SetBox($aFrameColor = array(255,255,255), $aBorderColor = array(0,0,0), $aShadowColor = false, $aCornerRadius = 4, $aShadowWidth = 3)
     {
         if ($aFrameColor === false) {
-            $this->boxed=false;
+            $this->boxed = false;
         } else {
-            $this->boxed=true;
+            $this->boxed = true;
         }
-        $this->fcolor=$aFrameColor;
-        $this->bcolor=$aBorderColor;
+        $this->fcolor = $aFrameColor;
+        $this->bcolor = $aBorderColor;
         // For backwards compatibility when shadow was just true or false
         if ($aShadowColor === true) {
             $aShadowColor = 'gray';
         }
-        $this->shadow=$aShadowColor;
-        $this->icornerradius=$aCornerRadius;
-        $this->ishadowwidth=$aShadowWidth;
+        $this->shadow = $aShadowColor;
+        $this->icornerradius = $aCornerRadius;
+        $this->ishadowwidth = $aShadowWidth;
     }
 
     public function SetBox2($aFrameColor = array(255,255,255), $aBorderColor = array(0,0,0), $aShadowColor = false, $aCornerRadius = 4, $aShadowWidth = 3)
     {
-        $this->iBoxType=2;
+        $this->iBoxType = 2;
         $this->SetBox($aFrameColor, $aBorderColor, $aShadowColor, $aCornerRadius, $aShadowWidth);
     }
 
     // Hide the text
     public function Hide($aHide = true)
     {
-        $this->hide=$aHide;
+        $this->hide = $aHide;
     }
 
     // This looks ugly since it's not a very orthogonal design
@@ -162,21 +162,21 @@ class Text
     // jpgraph_gantt
     public function Show($aShow = true)
     {
-        $this->hide=!$aShow;
+        $this->hide = !$aShow;
     }
 
     // Specify font
     public function SetFont($aFamily, $aStyle = FS_NORMAL, $aSize = 10)
     {
-        $this->font_family=$aFamily;
-        $this->font_style=$aStyle;
-        $this->font_size=$aSize;
+        $this->font_family = $aFamily;
+        $this->font_style = $aStyle;
+        $this->font_size = $aSize;
     }
 
     // Center the text between $left and $right coordinates
     public function Center($aLeft, $aRight, $aYAbsPos = false)
     {
-        $this->x = $aLeft + ($aRight-$aLeft )/2;
+        $this->x = $aLeft + ($aRight - $aLeft ) / 2;
         $this->halign = "center";
         if (is_numeric($aYAbsPos)) {
             $this->y = $aYAbsPos;
@@ -198,10 +198,10 @@ class Text
     public function SetOrientation($aDirection = 0)
     {
         if (is_numeric($aDirection)) {
-            $this->dir=$aDirection;
-        } elseif ($aDirection=="h") {
+            $this->dir = $aDirection;
+        } elseif ($aDirection == "h") {
             $this->dir = 0;
-        } elseif ($aDirection=="v") {
+        } elseif ($aDirection == "v") {
             $this->dir = 90;
         } else {
             JpGraphError::RaiseL(25051);//(" Invalid direction specified for text.");
@@ -278,7 +278,6 @@ class Text
     // Display text in image
     public function Stroke($aImg, $x = null, $y = null)
     {
-
         if ($x !== null) {
             $this->x = round($x);
         }
@@ -305,13 +304,13 @@ class Text
         $aImg->SetTextAlign($this->halign, $this->valign);
 
         if ($this->boxed) {
-            if ($this->fcolor=="nofill") {
-                $this->fcolor=false;
+            if ($this->fcolor == "nofill") {
+                $this->fcolor = false;
             }
 
-            $oldweight=$aImg->SetLineWeight(1);
+            $oldweight = $aImg->SetLineWeight(1);
 
-            if ($this->iBoxType == 2 && $this->font_family > FF_FONT2+2) {
+            if ($this->iBoxType == 2 && $this->font_family > FF_FONT2 + 2) {
                 $bbox = $aImg->StrokeBoxedText2(
                     $this->x,
                     $this->y,
@@ -345,19 +344,19 @@ class Text
 
             $aImg->SetLineWeight($oldweight);
         } else {
-            $debug=false;
+            $debug = false;
             $bbox = $aImg->StrokeText($this->x, $this->y, $this->t, $this->dir, $this->paragraph_align, $debug);
         }
 
         // Create CSIM targets
-        $coords = $bbox[0].','.$bbox[1].','.$bbox[2].','.$bbox[3].','.$bbox[4].','.$bbox[5].','.$bbox[6].','.$bbox[7];
-        $this->iCSIMarea = "<area shape=\"poly\" coords=\"$coords\" href=\"".htmlentities($this->iCSIMtarget)."\" ";
+        $coords = $bbox[0] . ',' . $bbox[1] . ',' . $bbox[2] . ',' . $bbox[3] . ',' . $bbox[4] . ',' . $bbox[5] . ',' . $bbox[6] . ',' . $bbox[7];
+        $this->iCSIMarea = "<area shape=\"poly\" coords=\"$coords\" href=\"" . htmlentities($this->iCSIMtarget) . "\" ";
         if (trim($this->iCSIMalt) != '') {
-            $this->iCSIMarea .= " alt=\"".$this->iCSIMalt."\" ";
-            $this->iCSIMarea .= " title=\"".$this->iCSIMalt."\" ";
+            $this->iCSIMarea .= " alt=\"" . $this->iCSIMalt . "\" ";
+            $this->iCSIMarea .= " title=\"" . $this->iCSIMalt . "\" ";
         }
         if (trim($this->iCSIMWinTarget) != '') {
-            $this->iCSIMarea .= " target=\"".$this->iCSIMWinTarget."\" ";
+            $this->iCSIMarea .= " target=\"" . $this->iCSIMWinTarget . "\" ";
         }
         $this->iCSIMarea .= " />\n";
 
@@ -366,7 +365,6 @@ class Text
 
     public function __get($name)
     {
-
         if (strpos($name, 'raw_') !== false) {
             // if $name == 'raw_left_margin' , return $this->_left_margin;
             $variable_name = '_' . str_replace('raw_', '', $name);
@@ -384,6 +382,6 @@ class Text
 
     public function __set($name, $value)
     {
-        $this->{'_'.$name} = $value;
+        $this->{'_' . $name} = $value;
     }
 } // Class

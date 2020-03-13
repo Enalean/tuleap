@@ -53,7 +53,7 @@ class ConfigureCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (! file_exists($this->base_directory.'/etc/httpd/conf/httpd.conf') && ! file_exists($this->base_directory . '/etc/httpd/conf.d/ssl.conf')) {
+        if (! file_exists($this->base_directory . '/etc/httpd/conf/httpd.conf') && ! file_exists($this->base_directory . '/etc/httpd/conf.d/ssl.conf')) {
             $output->writeln('Nothing to do for Apache');
             return 0;
         }

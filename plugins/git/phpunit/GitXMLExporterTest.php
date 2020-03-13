@@ -279,7 +279,7 @@ class GitXMLExporterTest extends TestCase
         $exported_repository = $this->xml_tree->git->repository[0];
         $last_push_date      = $exported_repository->{'last-push-date'};
         $attrs               = $last_push_date->attributes();
-        $this->assertEquals('my user name', (string)$last_push_date->user);
-        $this->assertEquals('1527145976', (string)$attrs['push_date']);
+        $this->assertEquals('my user name', (string) $last_push_date->user);
+        $this->assertEquals('1527145976', (string) $attrs['push_date']);
     }
 }

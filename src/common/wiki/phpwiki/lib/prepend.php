@@ -22,8 +22,8 @@ define('PHPWIKI_VERSION', '1.3.12p2');
   * for easier coding.
   */
 foreach (array('SERVER','REQUEST','GET','POST','SESSION','ENV','COOKIE') as $k) {
-    if (!isset($GLOBALS['HTTP_'.$k.'_VARS']) and isset($GLOBALS['_'.$k])) {
-        $GLOBALS['HTTP_'.$k.'_VARS'] = $GLOBALS['_'.$k];
+    if (!isset($GLOBALS['HTTP_' . $k . '_VARS']) and isset($GLOBALS['_' . $k])) {
+        $GLOBALS['HTTP_' . $k . '_VARS'] = $GLOBALS['_' . $k];
     }
 }
 unset($k);
@@ -101,7 +101,7 @@ class DebugTimer
     public function microtime()
     {
         list($usec, $sec) = explode(" ", microtime());
-        return ((float)$usec + (float)$sec);
+        return ((float) $usec + (float) $sec);
     }
 }
 $GLOBALS['RUNTIMER'] = new DebugTimer;
@@ -112,8 +112,8 @@ else
     error_reporting(E_ALL); // php4
 //echo " prepend: ", error_reporting();
 */
-require_once(dirname(__FILE__).'/ErrorManager.php');
-require_once(dirname(__FILE__).'/WikiCallback.php');
+require_once(dirname(__FILE__) . '/ErrorManager.php');
+require_once(dirname(__FILE__) . '/WikiCallback.php');
 
 $ErrorManager = $GLOBALS['ErrorManager'];
 

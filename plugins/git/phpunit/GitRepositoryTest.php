@@ -31,14 +31,14 @@ class GitRepositoryTest extends TestCase
     public function testDeletionPathShouldBeInProjectPath(): void
     {
         $tmp_folder = $this->getTmpDir() . '/perms';
-        symlink(__DIR__.'/_fixtures/perms', $tmp_folder);
+        symlink(__DIR__ . '/_fixtures/perms', $tmp_folder);
 
         $repo = new GitRepository();
-        $this->assertTrue($repo->isSubPath(__DIR__.'/_fixtures/perms/', __DIR__.'/_fixtures/perms/default.conf'));
-        $this->assertTrue($repo->isSubPath(__DIR__.'/_fixtures/perms/', $tmp_folder . '/default.conf'));
-        $this->assertTrue($repo->isSubPath(__DIR__.'/_fixtures/perms/', $tmp_folder . '/coincoin.git.git'));
+        $this->assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', __DIR__ . '/_fixtures/perms/default.conf'));
+        $this->assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', $tmp_folder . '/default.conf'));
+        $this->assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', $tmp_folder . '/coincoin.git.git'));
 
-        $this->assertFalse($repo->isSubPath(__DIR__.'/_fixtures/perms/', __DIR__.'/_fixtures/perms/../../default.conf'));
+        $this->assertFalse($repo->isSubPath(__DIR__ . '/_fixtures/perms/', __DIR__ . '/_fixtures/perms/../../default.conf'));
         $this->assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
 
         unlink($tmp_folder);

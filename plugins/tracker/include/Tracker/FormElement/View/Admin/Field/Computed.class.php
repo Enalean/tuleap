@@ -37,21 +37,21 @@ class Computed extends Tracker_FormElement_View_Admin_Field
                 $title    = '';
                 if (! $this->canUpgrade()) {
                     $disabled = 'disabled="disabled"';
-                    $title    = 'title="'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') .'"';
+                    $title    = 'title="' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') . '"';
                 }
 
                 $html .= '
                         <input type="hidden"
-                               name="formElement_data[specific_properties]['. $key .']"
+                               name="formElement_data[specific_properties][' . $key . ']"
                                value="0">';
                 $html .= '<div class="alert alert-warning">';
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_description');
-                $html .= '<h6>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') .'</h6>';
+                $html .= '<h6>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') . '</h6>';
                 $html .= '<button class="btn"
-                                    name="formElement_data[specific_properties]['. $key .']"
+                                    name="formElement_data[specific_properties][' . $key . ']"
                                     value="1"
-                                    '. $title .'
-                                    '. $disabled .'
+                                    ' . $title . '
+                                    ' . $disabled . '
                                     type="submit">';
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_button');
                 $html .= '</button>';
@@ -68,7 +68,7 @@ class Computed extends Tracker_FormElement_View_Admin_Field
 
                 if (! $this->canUpgrade()) {
                     $html .= '<div class="alert alert-warning">';
-                    $html .= '<h6>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') .'</h6>';
+                    $html .= '<h6>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') . '</h6>';
                 }
                 $html .= parent::fetchAdminSpecificProperty($key, $property);
 

@@ -141,7 +141,7 @@ class RdfWriter extends RssWriter // in fact it should be rewritten to be other 
 */
 class OwlWriter extends RdfWriter
 {
-};
+}
 
 /**
  * ModelWriter - Export a KB as set of wiki pages.
@@ -153,7 +153,7 @@ class OwlWriter extends RdfWriter
 */
 class ModelWriter extends OwlWriter
 {
-};
+}
 
 
 /**
@@ -165,38 +165,34 @@ class ReasonerBackend
 {
     public function __construct()
     {
-        ;
     }
     /**
      * transform to reasoner syntax
      */
     public function transformTo()
     {
-        ;
     }
     /**
      * transform from reasoner syntax
      */
     public function transformFrom()
     {
-        ;
     }
     /**
      * call the reasoner
      */
     public function invoke()
     {
-        ;
     }
-};
+}
 
 class ReasonerBackend_LISA extends ReasonerBackend
 {
-};
+}
 
 class ReasonerBackend_KM extends ReasonerBackend
 {
-};
+}
 
 
 // (c-file-style: "gnu")

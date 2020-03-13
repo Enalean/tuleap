@@ -305,8 +305,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $raw_email_button_title = $GLOBALS['Language']->getText('plugin_tracker', 'raw_email_button_title');
         $raw_mail               = Codendi_HTMLPurifier::instance()->purify($raw_mail);
 
-        $html = '<button type="button" class="btn btn-mini tracker_artifact_followup_comment_controls_raw_email" data-raw-email="'. $raw_mail .'">
-                      <i class="fa fa-envelope"></i> '. $raw_email_button_title .'
+        $html = '<button type="button" class="btn btn-mini tracker_artifact_followup_comment_controls_raw_email" data-raw-email="' . $raw_mail . '">
+                      <i class="fa fa-envelope"></i> ' . $raw_email_button_title . '
                  </button>';
 
         return $html;
@@ -321,7 +321,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 'alt'   => 'permalink',
                 'class' => 'tracker_artifact_followup_permalink',
                 'style' => 'vertical-align:middle',
-                'title' => 'Link to this followup - #'. (int) $this->id
+                'title' => 'Link to this followup - #' . (int) $this->id
             )
         );
     }
@@ -464,7 +464,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
             $user = $this->getUserManager()->getCurrentUser();
         }
         // Only tracker admin and original submitter (minus anonymous) can edit a comment
-        return $this->artifact->getTracker()->userIsAdmin($user) || ((int)$this->submitted_by && $user->getId() == $this->submitted_by);
+        return $this->artifact->getTracker()->userIsAdmin($user) || ((int) $this->submitted_by && $user->getId() == $this->submitted_by);
     }
 
     /**
@@ -766,12 +766,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         switch ($format) {
             case 'html':
                 $result .= '<li>';
-                $result .= '<span class="tracker_artifact_followup_changes_field"><b>'. Codendi_HTMLPurifier::instance()->purify($field->getLabel()) .'</b></span> ';
-                $result .= '<span class="tracker_artifact_followup_changes_changes">'. $diff .'</span>';
+                $result .= '<span class="tracker_artifact_followup_changes_field"><b>' . Codendi_HTMLPurifier::instance()->purify($field->getLabel()) . '</b></span> ';
+                $result .= '<span class="tracker_artifact_followup_changes_changes">' . $diff . '</span>';
                 $result .= '</li>';
                 break;
             default://text
-                $result .= ' * '.$field->getLabel().' : '.PHP_EOL;
+                $result .= ' * ' . $field->getLabel() . ' : ' . PHP_EOL;
                 $result .= $diff . PHP_EOL;
                 break;
         }
@@ -894,7 +894,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     public function getUri()
     {
-        return  TRACKER_BASE_URL.'/?aid='.$this->getArtifact()->getId().'#followup_'.$this->getId();
+        return TRACKER_BASE_URL . '/?aid=' . $this->getArtifact()->getId() . '#followup_' . $this->getId();
     }
 
     /**

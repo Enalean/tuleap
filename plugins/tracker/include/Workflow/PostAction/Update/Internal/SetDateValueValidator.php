@@ -91,7 +91,7 @@ class SetDateValueValidator
         $date_field_ids = [];
         /** @var \Tracker_FormElement_Field_Date $date_field */
         foreach ($date_fields as $date_field) {
-            $date_field_ids[] = (int)$date_field->getId();
+            $date_field_ids[] = (int) $date_field->getId();
         }
         return $date_field_ids;
     }

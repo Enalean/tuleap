@@ -107,7 +107,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
 
     private function getMatchingIdsForTopBacklog(Planning_VirtualTopMilestone $milestone, Tracker $backlog_tracker, PFUser $user)
     {
-        $project_id = (int)$milestone->getProject()->getID();
+        $project_id = (int) $milestone->getProject()->getID();
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
             foreach ($this->artifacts_in_explicit_backlog_dao->getAllTopBacklogItemsForProjectSortedByRank($project_id) as $row) {
                 $this->backlog_ids[$row['artifact_id']] = true;

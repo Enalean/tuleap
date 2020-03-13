@@ -62,7 +62,7 @@ class MemberRemoverTest extends TestCase
     {
         $project = new \Project(['group_id' => 101]);
 
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProject' => $project, 'getId' => 202, 'isBound' => false, 'isStatic' => false ]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getProject' => $project, 'getId' => 202, 'isBound' => false, 'isStatic' => false]);
 
         $this->static_member_remover->shouldNotReceive('removeUser');
         $this->dynamic_ugroup_members_updater->shouldReceive('removeUser')->with($project, $ugroup, $this->user_to_remove);
@@ -74,7 +74,7 @@ class MemberRemoverTest extends TestCase
     {
         $project = new \Project(['group_id' => 101]);
 
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProject' => $project, 'getId' => 202, 'isBound' => false, 'isStatic' => true ]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getProject' => $project, 'getId' => 202, 'isBound' => false, 'isStatic' => true]);
 
         $this->static_member_remover->shouldReceive('removeUser')->with($ugroup, $this->user_to_remove);
         $this->dynamic_ugroup_members_updater->shouldNotReceive('removeUser');
@@ -84,7 +84,7 @@ class MemberRemoverTest extends TestCase
 
     public function testItRemovesNothingFromBoundGroup()
     {
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getId' => 202, 'isBound' => true]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getId' => 202, 'isBound' => true]);
 
         $this->static_member_remover->shouldNotReceive('removeUser')->with($ugroup, $this->user_to_remove);
         $this->dynamic_ugroup_members_updater->shouldNotReceive('removeUser');

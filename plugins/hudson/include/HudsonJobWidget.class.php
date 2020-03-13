@@ -42,7 +42,7 @@ abstract class HudsonJobWidget extends HudsonWidget
         $vId->required();
         if ($request->valid($vId)) {
             $job_id = $request->get($this->widget_id . '_job_id');
-            $sql = 'INSERT INTO plugin_hudson_widget (widget_name, owner_id, owner_type, job_id) VALUES ("' . $this->id . '", '. $this->owner_id .", '". $this->owner_type ."', " . db_escape_int($job_id) ." )";
+            $sql = 'INSERT INTO plugin_hudson_widget (widget_name, owner_id, owner_type, job_id) VALUES ("' . $this->id . '", ' . $this->owner_id . ", '" . $this->owner_type . "', " . db_escape_int($job_id) . " )";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
@@ -51,13 +51,13 @@ abstract class HudsonJobWidget extends HudsonWidget
 
     public function destroy($id)
     {
-        $sql = 'DELETE FROM plugin_hudson_widget WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
+        $sql = 'DELETE FROM plugin_hudson_widget WHERE id = ' . $id . ' AND owner_id = ' . $this->owner_id . " AND owner_type = '" . $this->owner_type . "'";
         db_query($sql);
     }
 
     public function getPreferences($widget_id)
     {
-        $select_id = 'job-'. (int)$widget_id;
+        $select_id = 'job-' . (int) $widget_id;
 
         return $this->buildPreferencesForm($select_id);
     }
@@ -120,7 +120,7 @@ abstract class HudsonJobWidget extends HudsonWidget
         $request->valid(new Valid_String('cancel'));
         if (!$request->exist('cancel')) {
             $job_id = $request->get($this->widget_id . '_job_id');
-            $sql = "UPDATE plugin_hudson_widget SET job_id=". $job_id ." WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". (int)$request->get('content_id');
+            $sql = "UPDATE plugin_hudson_widget SET job_id=" . $job_id . " WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . (int) $request->get('content_id');
             $res = db_query($sql);
         }
         return true;

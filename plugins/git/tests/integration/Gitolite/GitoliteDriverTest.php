@@ -155,7 +155,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
     {
         $this->gitoliterc_reader->shouldReceive('getHostname')->andReturns(null);
 
-        touch($this->gitolite_admin_dir.'/conf/projects/project1.conf');
+        touch($this->gitolite_admin_dir . '/conf/projects/project1.conf');
 
         $this->another_gitolite_driver->updateMainConfIncludes();
 
@@ -166,12 +166,12 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
     protected function getGitoliteConf()
     {
-        return file_get_contents($this->gitolite_admin_dir.'/conf/gitolite.conf');
+        return file_get_contents($this->gitolite_admin_dir . '/conf/gitolite.conf');
     }
 
     protected function getFileConf($filename)
     {
-        return file_get_contents($this->gitolite_admin_dir.'/conf/'.$filename.'.conf');
+        return file_get_contents($this->gitolite_admin_dir . '/conf/' . $filename . '.conf');
     }
 
     public function testItCanRenameProject() : void
@@ -180,14 +180,14 @@ final class GitoliteDriverTest extends GitoliteTestCase
         $this->project_manager->shouldReceive('getProjectByUnixName')->with($new_name)->andReturns(Mockery::mock(Project::class)->shouldReceive('getUnixName')->andReturn($new_name)->getMock());
         $this->git_exec->shouldReceive('push')->andReturn(true)->once();
 
-        $this->assertTrue(is_file($this->gitolite_admin_dir.'/conf/projects/legacy.conf'));
-        $this->assertFalse(is_file($this->gitolite_admin_dir.'/conf/projects/newone.conf'));
+        $this->assertTrue(is_file($this->gitolite_admin_dir . '/conf/projects/legacy.conf'));
+        $this->assertFalse(is_file($this->gitolite_admin_dir . '/conf/projects/newone.conf'));
 
         $this->assertTrue($this->a_gitolite_driver->renameProject('legacy', $new_name));
 
-        clearstatcache(true, $this->gitolite_admin_dir.'/conf/projects/legacy.conf');
-        $this->assertFalse(is_file($this->gitolite_admin_dir.'/conf/projects/legacy.conf'));
-        $this->assertTrue(is_file($this->gitolite_admin_dir.'/conf/projects/newone.conf'));
+        clearstatcache(true, $this->gitolite_admin_dir . '/conf/projects/legacy.conf');
+        $this->assertFalse(is_file($this->gitolite_admin_dir . '/conf/projects/legacy.conf'));
+        $this->assertTrue(is_file($this->gitolite_admin_dir . '/conf/projects/newone.conf'));
         $this->assertFileEquals(
             $this->fixtures_dir . '/perms/newone.conf',
             $this->gitolite_admin_dir . '/conf/projects/newone.conf'
@@ -209,7 +209,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
     {
         $this->gitoliterc_reader->shouldReceive('getHostname')->andReturns("master");
 
-        touch($this->gitolite_admin_dir.'/conf/projects/project1.conf');
+        touch($this->gitolite_admin_dir . '/conf/projects/project1.conf');
 
         $this->another_gitolite_driver->updateMainConfIncludes();
 
@@ -248,7 +248,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
     public function testItIsInitializedEvenIfThereIsNoMaster() : void
     {
-        $this->assertTrue($this->driver->isInitialized($this->fixtures_dir.'/headless.git'));
+        $this->assertTrue($this->driver->isInitialized($this->fixtures_dir . '/headless.git'));
     }
 
     public function testItIsNotInitializedIfThereIsNoValidDirectory() : void

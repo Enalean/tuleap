@@ -132,7 +132,6 @@ class WikiPlugin
         foreach (array_merge($argstr_args, $argstr_defaults) as $arg => $val) {
             if ($request and $request->getArg('pagename') == _("PhpWikiAdministration")
                 and $arg == 'overwrite') { // silence this warning
-                ;
             } else {
                 trigger_error(sprintf(
                     _("Argument '%s' not declared by plugin."),
@@ -318,7 +317,7 @@ class WikiPlugin
                      'class'      => 'wikiaction',
                      'method'     => 'get',
                      'textinput'  => 's',
-                     'description'=> $this->getDescription(),
+                     'description' => $this->getDescription(),
                      'formsize'   => 30);
     }
 
@@ -416,9 +415,9 @@ class WikiPlugin
             $title = $this->getName();
         }
         return HTML::div(
-            array('class'=>'box'),
-            HTML::div(array('class'=>'box-title'), $title),
-            HTML::div(array('class'=>'box-data'), $body)
+            array('class' => 'box'),
+            HTML::div(array('class' => 'box-title'), $title),
+            HTML::div(array('class' => 'box-data'), $body)
         );
     }
 
@@ -463,13 +462,13 @@ class WikiPlugin
     public function getUsage()
     {
         $args = $this->getDefaultArguments();
-        $string = '<'.'?plugin '.$this->getName().' ';
+        $string = '<' . '?plugin ' . $this->getName() . ' ';
         if ($args) {
             foreach ($args as $key => $value) {
-                $string .= ($key."||=".(string)$value." ");
+                $string .= ($key . "||=" . (string) $value . " ");
             }
         }
-        return $string . '?'.'>';
+        return $string . '?' . '>';
     }
 
     public function getArgumentsDescription()
@@ -532,7 +531,7 @@ class WikiPluginLoader
 
                     $timestamp = $dbi->getTimestamp();
                     $request->appendValidators(array('dbi_timestamp' => $timestamp,
-                                                     '%mtime' => (int)$timestamp,
+                                                     '%mtime' => (int) $timestamp,
                                                      '%weak' => true));
                 }
                 return $plugin->run($dbi, $plugin_args, $request, $basepage);
@@ -636,7 +635,7 @@ class WikiPluginLoader
         $this->_errors = $message;
         return false;
     }
-};
+}
 
 // (c-file-style: "gnu")
 // Local Variables:

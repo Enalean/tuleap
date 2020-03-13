@@ -64,9 +64,9 @@ class FormPresenter
         $this->svn_paths_placeholder        = $GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_placeholder');
         $this->params_header                = $GLOBALS['Language']->getText('plugin_hudson_svn', 'params_header', ForgeConfig::get("sys_name"));
 
-        $this->project_param_description    = BuildParams::BUILD_PARAMETER_PROJECT .' : '. $GLOBALS['Language']->getText('plugin_hudson_svn', 'project_param');
-        $this->user_param_description       = BuildParams::BUILD_PARAMETER_USER .' : '. $GLOBALS['Language']->getText('plugin_hudson_svn', 'user_param', ForgeConfig::get("sys_name"));
-        $this->repository_param_description = BuildParams::BUILD_PARAMETER_REPOSITORY .' : '. $GLOBALS['Language']->getText('plugin_hudson_svn', 'repository_param');
-        $this->path_param_description       = BuildParams::BUILD_PARAMETER_PATH .' : '. $GLOBALS['Language']->getText('plugin_hudson_svn', 'path_param');
+        $this->project_param_description    = BuildParams::BUILD_PARAMETER_PROJECT . ' : ' . $GLOBALS['Language']->getText('plugin_hudson_svn', 'project_param');
+        $this->user_param_description       = BuildParams::BUILD_PARAMETER_USER . ' : ' . $GLOBALS['Language']->getText('plugin_hudson_svn', 'user_param', ForgeConfig::get("sys_name"));
+        $this->repository_param_description = BuildParams::BUILD_PARAMETER_REPOSITORY . ' : ' . $GLOBALS['Language']->getText('plugin_hudson_svn', 'repository_param');
+        $this->path_param_description       = BuildParams::BUILD_PARAMETER_PATH . ' : ' . $GLOBALS['Language']->getText('plugin_hudson_svn', 'path_param');
     }
 }

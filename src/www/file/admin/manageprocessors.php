@@ -55,7 +55,7 @@ if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
     }
 }
 
-$renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
+$renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/frs');
 $presenter = new ToolbarPresenter($project);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
@@ -77,15 +77,14 @@ if ($request->isPost() && $request->existAndNonEmpty('add')) {
         $procname = $request->get('procname');
         $procrank = $request->get('procrank');
         if ($procrank == "") {
-            $feedback .= " ".$Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank'));
+            $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank'));
         } elseif ($procname == "") {
-            $feedback .= " ".$Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name'));
+            $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name'));
         } else {
             file_utils_add_proc($procname, $procrank);
         }
     } else {
         $feedback .= $Language->getText('file_file_utils', 'add_proc_fail');
-        ;
     }
 }
 
@@ -107,9 +106,9 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
         $processname = $request->get('processname');
         $processrank = $request->get('processrank');
         if ($processrank == "") {
-            $feedback .= " ".$Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank'));
+            $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank'));
         } elseif ($processname == "") {
-            $feedback .= " ".$Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name'));
+            $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name'));
         } else {
             file_utils_update_proc($proc_id, $processname, $processrank);
         }
@@ -118,7 +117,7 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
     }
 }
 
-$sql = "SELECT * FROM frs_processor WHERE group_id=".db_ei($group_id)." OR group_id=100 ORDER BY rank";
+$sql = "SELECT * FROM frs_processor WHERE group_id=" . db_ei($group_id) . " OR group_id=100 ORDER BY rank";
 $result = db_query($sql);
 
 ?>
@@ -138,14 +137,14 @@ file_utils_show_processors($result);
 
 <?php
 
-$return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id='.$group_id.'" METHOD="POST">
-    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-    <TR><TD>'.$Language->getText('file_file_utils', 'proc_name').': <font color=red>*</font> </TD>
+$return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id=' . $group_id . '" METHOD="POST">
+    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
+    <TR><TD>' . $Language->getText('file_file_utils', 'proc_name') . ': <font color=red>*</font> </TD>
     <TD><INPUT TYPE="TEXT" NAME="procname" VALUE="" SIZE=30></TD></TR>
-    <TR><TD>'.$Language->getText('file_file_utils', 'proc_rank').': <font color=red>*</font> </TD>
+    <TR><TD>' . $Language->getText('file_file_utils', 'proc_rank') . ': <font color=red>*</font> </TD>
     <TD><INPUT TYPE="TEXT" NAME="procrank" VALUE="" SIZE=10></TD></TR></TABLE>
-    <p><INPUT TYPE="SUBMIT" NAME="add" VALUE="'. $Language->getText('file_file_utils', 'add_proc').'"></p></FORM>
-    <p><font color="red">*</font>: '.$Language->getText('file_file_utils', 'required_fields').'</p>';
+    <p><INPUT TYPE="SUBMIT" NAME="add" VALUE="' . $Language->getText('file_file_utils', 'add_proc') . '"></p></FORM>
+    <p><font color="red">*</font>: ' . $Language->getText('file_file_utils', 'required_fields') . '</p>';
 
 echo $return;
 

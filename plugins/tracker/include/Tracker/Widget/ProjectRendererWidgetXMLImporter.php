@@ -42,13 +42,13 @@ class ProjectRendererWidgetXMLImporter
 
         if (isset($xml->preference)) {
             foreach ($xml->preference as $preference) {
-                $preference_name = trim((string)$xml->preference['name']);
+                $preference_name = trim((string) $xml->preference['name']);
                 if ($preference_name !== self::RENDERER_PREFERENCE_NAME) {
                     continue;
                 }
 
                 foreach ($preference->reference as $reference) {
-                    $key = trim((string)$reference['name']);
+                    $key = trim((string) $reference['name']);
                     if ($key !== self::RENDERER_ID_REFERENCE_NAME) {
                         continue;
                     }
@@ -57,12 +57,12 @@ class ProjectRendererWidgetXMLImporter
                 }
 
                 foreach ($preference->value as $value) {
-                    $key = trim((string)$value['name']);
+                    $key = trim((string) $value['name']);
                     if ($key !== self::RENDERER_TITLE_VALUE_NAME) {
                         continue;
                     }
 
-                    $value = trim((string)$value);
+                    $value = trim((string) $value);
                     $request_params[self::RENDERER_PREFERENCE_NAME][self::RENDERER_TITLE_REQUEST_KEY] = $value;
                 }
             }
@@ -86,7 +86,7 @@ class ProjectRendererWidgetXMLImporter
      */
     private function getRendererId(ConfigureAtXMLImport $event, $reference): int
     {
-        $ref      = trim((string)$reference['REF']);
+        $ref      = trim((string) $reference['REF']);
         $renderer = $event->getMappingsRegistry()->getReference($ref);
         assert($renderer instanceof Tracker_Report_Renderer);
         if ($renderer === null) {

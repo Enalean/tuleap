@@ -229,7 +229,7 @@ class Tracker_Artifact_PriorityManager
             $this->tracker_artifact_factory->getArtifactById($row['artifact_id_lower']),
             $row['context'],
             ProjectManager::instance()->getProject($row['project_id']),
-            (bool)$row['has_been_raised'],
+            (bool) $row['has_been_raised'],
             $this->user_manager->getUserById($row['prioritized_by']),
             $row['prioritized_on']
         );

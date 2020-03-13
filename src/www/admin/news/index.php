@@ -26,7 +26,7 @@ use Tuleap\News\Admin\AdminNewsDao;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\News\Admin\NewsRetriever;
 
-require_once __DIR__ .'/../../include/pre.php';
+require_once __DIR__ . '/../../include/pre.php';
 
 //common forum tools which are used during the creation/editing of news items
 require_once __DIR__ . '/../../forum/forum_utils.php';

@@ -153,7 +153,7 @@ class TrackerCreationDataChecker
             throw TrackerIsInvalidException::buildInvalidLength();
         }
 
-        $tracker = $this->tracker_factory->getTrackerById((int)$tracker_template_id);
+        $tracker = $this->tracker_factory->getTrackerById((int) $tracker_template_id);
         if (! $tracker) {
             throw TrackerIsInvalidException::trackerNotFound($tracker_template_id);
         }

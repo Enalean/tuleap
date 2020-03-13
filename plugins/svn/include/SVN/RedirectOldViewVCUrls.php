@@ -52,9 +52,9 @@ class RedirectOldViewVCUrls implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $redirect_url = $this->base_url.'/'.$variables['path'];
+        $redirect_url = $this->base_url . '/' . $variables['path'];
         if ($_SERVER['QUERY_STRING'] !== '') {
-            $redirect_url .= '?'.$_SERVER['QUERY_STRING'];
+            $redirect_url .= '?' . $_SERVER['QUERY_STRING'];
         }
         $layout->permanentRedirect($redirect_url);
     }

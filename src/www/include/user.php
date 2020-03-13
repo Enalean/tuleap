@@ -20,7 +20,7 @@
  */
 
 
-$USER_RES=array();
+$USER_RES = array();
 
 
 //Deprecated. Use User->isLoggedIn() instead
@@ -60,14 +60,14 @@ function user_getname($user_id = 0)
             return $USER_NAMES["user_$user_id"];
         } else {
          //fetch the user name and store it for future reference
-            $result = db_query("SELECT user_id,user_name FROM user WHERE user_id='".db_es($user_id)."'");
+            $result = db_query("SELECT user_id,user_name FROM user WHERE user_id='" . db_es($user_id) . "'");
             if ($result && db_numrows($result) > 0) {
                 //valid user - store and return
-                $USER_NAMES["user_$user_id"]=db_result($result, 0, "user_name");
+                $USER_NAMES["user_$user_id"] = db_result($result, 0, "user_name");
                 return $USER_NAMES["user_$user_id"];
             } else {
                 //invalid user - store and return
-                $USER_NAMES["user_$user_id"]="<B>".$Language->getText('include_user', 'invalid_u_id')."</B>";
+                $USER_NAMES["user_$user_id"] = "<B>" . $Language->getText('include_user', 'invalid_u_id') . "</B>";
                 return $USER_NAMES["user_$user_id"];
             }
         }
@@ -104,7 +104,7 @@ function user_getemail($user_id)
 function user_getid_from_email($email)
 {
     global $Language;
-    $result = db_query("SELECT user_id FROM user WHERE email='".db_es($email)."'");
+    $result = db_query("SELECT user_id FROM user WHERE email='" . db_es($email) . "'");
     if ($result && db_numrows($result) > 0) {
         return db_result($result, 0, "user_id");
     } else {
@@ -131,11 +131,11 @@ function user_get_result_set($user_id)
     //so it doesn't have to be fetched each time
 
     global $USER_RES;
-    if (!isset($USER_RES["_".$user_id."_"]) || !$USER_RES["_".$user_id."_"]) {
-        $USER_RES["_".$user_id."_"]=db_query("SELECT * FROM user WHERE user_id='".db_es($user_id)."'");
-        return $USER_RES["_".$user_id."_"];
+    if (!isset($USER_RES["_" . $user_id . "_"]) || !$USER_RES["_" . $user_id . "_"]) {
+        $USER_RES["_" . $user_id . "_"] = db_query("SELECT * FROM user WHERE user_id='" . db_es($user_id) . "'");
+        return $USER_RES["_" . $user_id . "_"];
     } else {
-        return $USER_RES["_".$user_id."_"];
+        return $USER_RES["_" . $user_id . "_"];
     }
 }
 
@@ -146,10 +146,10 @@ function user_get_result_set_from_unix($user_name)
     //so it doesn't have to be fetched each time
 
     global $USER_RES;
-    $res = db_query("SELECT * FROM user WHERE user_name='".db_es($user_name)."'");
+    $res = db_query("SELECT * FROM user WHERE user_name='" . db_es($user_name) . "'");
     $user_id = db_result($res, 0, 'user_id');
-    $USER_RES["_".$user_id."_"] = $res;
-    return $USER_RES["_".$user_id."_"];
+    $USER_RES["_" . $user_id . "_"] = $res;
+    return $USER_RES["_" . $user_id . "_"];
 }
 function user_get_result_set_from_email($email)
 {
@@ -157,11 +157,11 @@ function user_get_result_set_from_email($email)
     //so it doesn't have to be fetched each time
 
     global $USER_RES;
-    $sql = "SELECT * FROM user WHERE (user_name='".db_es($email)."' or email='".db_es($email)."')";
+    $sql = "SELECT * FROM user WHERE (user_name='" . db_es($email) . "' or email='" . db_es($email) . "')";
     $res = db_query($sql);
     $user_id = db_result($res, 0, 'user_id');
-    $USER_RES["_".$user_id."_"] = $res;
-    return $USER_RES["_".$user_id."_"];
+    $USER_RES["_" . $user_id . "_"] = $res;
+    return $USER_RES["_" . $user_id . "_"];
 }
 
 //Deprecated. Use user->getTimezone() instead
@@ -184,13 +184,13 @@ function user_set_preference($preference_name, $value)
     global $user_pref;
     if (user_isloggedin()) {
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-        $preference_name=strtolower(trim($preference_name));
-        $result=db_query("UPDATE user_preferences SET preference_value='".db_es($value)."' ".
-        "WHERE user_id='".$db_escaped_user_id."' AND preference_name='".db_es($preference_name)."'");
+        $preference_name = strtolower(trim($preference_name));
+        $result = db_query("UPDATE user_preferences SET preference_value='" . db_es($value) . "' " .
+        "WHERE user_id='" . $db_escaped_user_id . "' AND preference_name='" . db_es($preference_name) . "'");
         if (db_affected_rows($result) < 1) {
             echo db_error();
-            $result=db_query("INSERT INTO user_preferences (user_id,preference_name,preference_value) ".
-             "VALUES ('".$db_escaped_user_id."','".db_es($preference_name)."','".db_es($value)."')");
+            $result = db_query("INSERT INTO user_preferences (user_id,preference_name,preference_value) " .
+             "VALUES ('" . $db_escaped_user_id . "','" . db_es($preference_name) . "','" . db_es($value) . "')");
         }
 
      // Update the Preference cache if it was setup by a user_get_preference
@@ -209,7 +209,7 @@ function user_get_preference($preference_name)
 {
     global $user_pref;
     if (user_isloggedin()) {
-        $preference_name=strtolower(trim($preference_name));
+        $preference_name = strtolower(trim($preference_name));
      /*
       First check to see if we have already fetched the preferences
      */
@@ -224,15 +224,15 @@ function user_get_preference($preference_name)
         } else {
             $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
          //we haven't returned prefs - go to the db
-            $result=db_query("SELECT preference_name,preference_value FROM user_preferences ".
-            "WHERE user_id='".$db_escaped_user_id."'");
+            $result = db_query("SELECT preference_name,preference_value FROM user_preferences " .
+            "WHERE user_id='" . $db_escaped_user_id . "'");
 
             if (db_numrows($result) < 1) {
                 return false;
             } else {
                 //iterate and put the results into an array
                 while ($row = db_fetch_array($result)) {
-                    $user_pref[$row['preference_name']]=$row['preference_value'];
+                    $user_pref[$row['preference_name']] = $row['preference_value'];
                 }
                 if (isset($user_pref["$preference_name"])) {
                  //we have fetched prefs - return part of array
@@ -258,8 +258,8 @@ function user_del_preference($preference_name)
         }
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
         $sql = 'DELETE FROM user_preferences'
-            .' WHERE preference_name="'.db_es($preference_name).'"'
-            .' AND user_id='.$db_escaped_user_id;
+            . ' WHERE preference_name="' . db_es($preference_name) . '"'
+            . ' AND user_id=' . $db_escaped_user_id;
         $res = db_query($sql);
         if (db_affected_rows($res) != 1) {
             return false;

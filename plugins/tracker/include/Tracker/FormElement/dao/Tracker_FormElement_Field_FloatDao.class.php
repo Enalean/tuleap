@@ -34,20 +34,20 @@ class Tracker_FormElement_Field_FloatDao extends Tracker_FormElement_SpecificPro
     {
         $field_id  = $this->da->escapeInt($field_id);
 
-        if (isset($row['maxchars']) && (int)$row['maxchars']) {
+        if (isset($row['maxchars']) && (int) $row['maxchars']) {
             $maxchars = $this->da->escapeInt($row['maxchars']);
         } else {
             $maxchars = 0;
         }
 
-        if (isset($row['size']) && (int)$row['size']) {
+        if (isset($row['size']) && (int) $row['size']) {
             $size = $this->da->escapeInt($row['size']);
         } else {
             $size = 30;
         }
 
         if (isset($row['default_value']) && trim($row['default_value']) !== '') {
-            $default_value = (float)$row['default_value'];
+            $default_value = (float) $row['default_value'];
         } else {
             $default_value = "NULL";
         }

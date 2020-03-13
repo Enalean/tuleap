@@ -28,7 +28,7 @@ class ForumDao extends DataAccessObject
 
     public function searchByGroupForumId($forum_id)
     {
-        $forum_id= $this->da->quoteSmart($forum_id);
+        $forum_id = $this->da->quoteSmart($forum_id);
         $sql = "SELECT group_id 
                 FROM $this->table_name
                 WHERE group_forum_id=$forum_id";

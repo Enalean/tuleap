@@ -92,7 +92,6 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-
         extract($this->getArgs($argstr, $request));
         $source = $this->source;
 
@@ -191,7 +190,7 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
         ini_set('highlight.default', $this->olddefault);
         ini_set('highlight.html', $this->oldhtml);
     }
-};
+}
 
 // $Log: PhpHighlight.php,v $
 // Revision 1.9  2004/04/10 07:25:24  rurban

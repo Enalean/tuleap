@@ -39,7 +39,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
         if (!isset($this->log) || $this->log == '') {
             $this->log = $log;
         } else {
-            $this->log .= PHP_EOL.$log;
+            $this->log .= PHP_EOL . $log;
         }
     }
 
@@ -55,7 +55,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
     public function verbalizeParameters($with_link)
     {
         $txt = '';
-        $txt .= 'File ID: #'. $this->getIdFromParam($this->parameters);
+        $txt .= 'File ID: #' . $this->getIdFromParam($this->parameters);
         return $txt;
     }
 
@@ -84,7 +84,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
             }
             // Update DB
             if (!$this->updateDB($fileId, $md5Computed)) {
-                $this->error('Could not update the computed checksum for file (Filename: '.$file->getFileName().')');
+                $this->error('Could not update the computed checksum for file (Filename: ' . $file->getFileName() . ')');
                 return false;
             }
 
@@ -151,7 +151,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
         $factory  = new BaseLanguageFactory();
         $language = $factory->getBaseLanguage($user->getLocale());
 
-        $subject = $GLOBALS['sys_name'] . ' Error in '.$file->getFileLocation();
+        $subject = $GLOBALS['sys_name'] . ' Error in ' . $file->getFileLocation();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setBcc($user->getEmail());
         $mail->setSubject($subject);

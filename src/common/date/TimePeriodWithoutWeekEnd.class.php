@@ -185,7 +185,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     {
         $day_offsets_excluding_we = array();
         $day_offset = 0;
-        while (count($day_offsets_excluding_we)-1 !== $duration) {
+        while (count($day_offsets_excluding_we) - 1 !== $duration) {
             $day = self::getNextDay($day_offset, $start_date);
             if (self::isNotWeekendDay($day)) {
                 $day_offsets_excluding_we[] = $day_offset;

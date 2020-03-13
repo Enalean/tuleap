@@ -68,7 +68,7 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
     public function renameHelper($name, $from, $to, $options = false)
     {
         if ($options['regex']) {
-            $pattern = '/' . str_replace('/', '\/', $from) . '/'.($options['icase']?'i':'');
+            $pattern = '/' . str_replace('/', '\/', $from) . '/' . ($options['icase'] ? 'i' : '');
             return preg_replace($pattern, $to, $name);
         } elseif ($options['icase']) {
             return str_ireplace($from, $to, $name);
@@ -243,7 +243,7 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
     public function checkBox(&$post_args, $name, $msg)
     {
         $checkbox = HTML::input(array('type' => 'checkbox',
-                                      'name' => 'admin_rename['.$name.']',
+                                      'name' => 'admin_rename[' . $name . ']',
                                       'value' => 1));
         if (!empty($post_args[$name])) {
             $checkbox->setAttr('checked', 'checked');
@@ -253,10 +253,10 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
 
     public function renameForm(&$header, $post_args)
     {
-        $header->pushContent(_("Rename")." "._("from").': ');
+        $header->pushContent(_("Rename") . " " . _("from") . ': ');
         $header->pushContent(HTML::input(array('name' => 'admin_rename[from]',
                                                'value' => $post_args['from'])));
-        $header->pushContent(' '._("to").': ');
+        $header->pushContent(' ' . _("to") . ': ');
         $header->pushContent(HTML::input(array('name' => 'admin_rename[to]',
                                                'value' => $post_args['to'])));
         $header->pushContent($this->checkBox($post_args, 'regex', _("Regex?")));
@@ -301,7 +301,7 @@ class _PageList_Column_renamed_pagename extends _PageList_Column
         }
         return $div;
     }
-};
+}
 
 // $Log: WikiAdminRename.php,v $
 // Revision 1.26  2005/04/01 16:06:41  rurban

@@ -76,8 +76,8 @@ class MailingListDao extends DataAccessObject
     public function deleteList($listId)
     {
         $listId = $this->da->escapeInt($listId);
-        $sql="UPDATE mail_group_list SET is_public=9 ".
-             " WHERE group_list_id=".$listId;
+        $sql = "UPDATE mail_group_list SET is_public=9 " .
+             " WHERE group_list_id=" . $listId;
         return $this->update($sql);
     }
 
@@ -91,8 +91,8 @@ class MailingListDao extends DataAccessObject
     public function deleteListDefinitively($listId)
     {
         $listId = $this->da->escapeInt($listId);
-        $sql="DELETE FROM mail_group_list ".
-             " WHERE group_list_id=".$listId;
+        $sql = "DELETE FROM mail_group_list " .
+             " WHERE group_list_id=" . $listId;
         return $this->update($sql);
     }
 }

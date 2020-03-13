@@ -82,27 +82,27 @@ abstract class Tracker_Widget_Renderer extends Widget
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="title-'. $purifier->purify($widget_id) .'">
-                    '. $purifier->purify(_('Title')) .'
+                <label class="tlp-label" for="title-' . $purifier->purify($widget_id) . '">
+                    ' . $purifier->purify(_('Title')) . '
                 </label>
                 <input type="text"
                        class="tlp-input"
-                       id="title-'. $purifier->purify($widget_id) .'"
+                       id="title-' . $purifier->purify($widget_id) . '"
                        name="renderer[title]"
-                       value="'. $purifier->purify($this->getTitle()) .'"
-                       placeholder="'. $purifier->purify(dgettext('tuleap-tracker', 'Tracker renderer')) .'">
+                       value="' . $purifier->purify($this->getTitle()) . '"
+                       placeholder="' . $purifier->purify(dgettext('tuleap-tracker', 'Tracker renderer')) . '">
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="renderer-id-'. $purifier->purify($widget_id) .'">
-                    '. $purifier->purify(dgettext('tuleap-tracker', 'Renderer id')) .'
+                <label class="tlp-label" for="renderer-id-' . $purifier->purify($widget_id) . '">
+                    ' . $purifier->purify(dgettext('tuleap-tracker', 'Renderer id')) . '
                     <i class="fa fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"
                        class="tlp-input"
-                       id="renderer-id-'. $purifier->purify($widget_id) .'"
+                       id="renderer-id-' . $purifier->purify($widget_id) . '"
                        name="renderer[renderer_id]"
-                       value="'. $purifier->purify($this->renderer_id) .'"
+                       value="' . $purifier->purify($this->renderer_id) . '"
                        required
                        placeholder="123">
             </div>
@@ -115,17 +115,17 @@ abstract class Tracker_Widget_Renderer extends Widget
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="widget-renderer-title">'. $purifier->purify(_('Title')) .'</label>
+                <label class="tlp-label" for="widget-renderer-title">' . $purifier->purify(_('Title')) . '</label>
                 <input type="text"
                        class="tlp-input"
                        id="widget-renderer-title"
                        name="renderer[title]"
-                       value="'. $purifier->purify($this->getTitle()) .'"
-                       placeholder="'. $purifier->purify(dgettext('tuleap-tracker', 'Tracker renderer')) .'">
+                       value="' . $purifier->purify($this->getTitle()) . '"
+                       placeholder="' . $purifier->purify(dgettext('tuleap-tracker', 'Tracker renderer')) . '">
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="widget-renderer-id">
-                    '. $purifier->purify(dgettext('tuleap-tracker', 'Renderer id')) .'
+                    ' . $purifier->purify(dgettext('tuleap-tracker', 'Renderer id')) . '
                     <i class="fa fa-asterisk"></i>
                 </label>
                 <input type="number"
@@ -147,16 +147,16 @@ abstract class Tracker_Widget_Renderer extends Widget
         $owner_type
     ) {
         $sql = "INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id)
-        SELECT  ". $owner_id .", '". $owner_type ."', title, renderer_id
+        SELECT  " . $owner_id . ", '" . $owner_type . "', title, renderer_id
         FROM tracker_widget_renderer
-        WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' ";
+        WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' ";
         $res = db_query($sql);
         return db_insertid($res);
     }
 
     public function loadContent($id)
     {
-        $sql = "SELECT * FROM tracker_widget_renderer WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+        $sql = "SELECT * FROM tracker_widget_renderer WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -174,7 +174,7 @@ abstract class Tracker_Widget_Renderer extends Widget
         $vId->required();
         if ($request->validInArray('renderer', $vId)) {
             $renderer = $request->get('renderer');
-            $sql = 'INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($renderer['title']) ."', ". db_escape_int($renderer['renderer_id']) .")";
+            $sql = 'INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id) VALUES (' . $this->owner_id . ", '" . $this->owner_type . "', '" . db_escape_string($renderer['title']) . "', " . db_escape_int($renderer['renderer_id']) . ")";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
@@ -189,20 +189,20 @@ abstract class Tracker_Widget_Renderer extends Widget
         if (($renderer = $request->get('renderer')) && $request->valid($vContentId)) {
             $vId = new Valid_UInt('renderer_id');
             if ($request->validInArray('renderer', $vId)) {
-                $id = " renderer_id   = ". db_escape_int($renderer['renderer_id']) ." ";
+                $id = " renderer_id   = " . db_escape_int($renderer['renderer_id']) . " ";
             } else {
                 $id = '';
             }
 
             $vTitle = new Valid_String('title');
             if ($request->validInArray('renderer', $vTitle)) {
-                $title = " title = '". db_escape_string($renderer['title']) ."' ";
+                $title = " title = '" . db_escape_string($renderer['title']) . "' ";
             } else {
                 $title = '';
             }
 
             if ($id || $title) {
-                $sql = "UPDATE tracker_widget_renderer SET ". $title .", ". $id ." WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". (int)$request->get('content_id');
+                $sql = "UPDATE tracker_widget_renderer SET " . $title . ", " . $id . " WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . (int) $request->get('content_id');
                 $res = db_query($sql);
                 $done = true;
             }
@@ -212,7 +212,7 @@ abstract class Tracker_Widget_Renderer extends Widget
 
     public function destroy($id)
     {
-        $sql = 'DELETE FROM tracker_widget_renderer WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
+        $sql = 'DELETE FROM tracker_widget_renderer WHERE id = ' . $id . ' AND owner_id = ' . $this->owner_id . " AND owner_type = '" . $this->owner_type . "'";
         db_query($sql);
     }
 

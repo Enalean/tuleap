@@ -130,7 +130,6 @@ class SystemControlCommand extends Command
 
     private function getAllCommands(array $targets, string $action, bool $quiet): array
     {
-
         if ($this->getSystemControlContext() === self::ENV_SYSTEMCTL_DOCKER_C7) {
             $all_commands = [];
             if (in_array(SystemControlTuleapCron::TARGET_NAME, $targets, true)) {
@@ -152,20 +151,20 @@ class SystemControlCommand extends Command
 
     private function formatErrorMessage(SystemControlInterface $command) : string
     {
-        $error_message = '<error>Error while running `'.$command->getCommandLine().'`';
+        $error_message = '<error>Error while running `' . $command->getCommandLine() . '`';
         $stdout = $command->getOutput();
         $stderr = $command->getErrorOutput();
         if ($stdout && $stderr) {
-            $error_message .= PHP_EOL.'Got on stdout:'.PHP_EOL;
+            $error_message .= PHP_EOL . 'Got on stdout:' . PHP_EOL;
             $error_message .= $this->addTrailingCRLFWhenMissing($stdout);
-            $error_message .= 'Got on stderr:'.PHP_EOL;
+            $error_message .= 'Got on stderr:' . PHP_EOL;
             $error_message .= $this->addTrailingCRLFWhenMissing($stderr);
         } elseif ($stderr) {
-            $error_message .= PHP_EOL.$this->addTrailingCRLFWhenMissing($stderr);
+            $error_message .= PHP_EOL . $this->addTrailingCRLFWhenMissing($stderr);
         } elseif ($stdout) {
-            $error_message .= PHP_EOL.$this->addTrailingCRLFWhenMissing($stdout);
+            $error_message .= PHP_EOL . $this->addTrailingCRLFWhenMissing($stdout);
         } else {
-            $error_message .= ' without output'.PHP_EOL;
+            $error_message .= ' without output' . PHP_EOL;
         }
         $error_message .= '</error>';
 
@@ -174,6 +173,6 @@ class SystemControlCommand extends Command
 
     private function addTrailingCRLFWhenMissing(string $string) : string
     {
-        return substr($string, -1) === PHP_EOL ? $string : $string.PHP_EOL;
+        return substr($string, -1) === PHP_EOL ? $string : $string . PHP_EOL;
     }
 }

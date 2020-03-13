@@ -67,7 +67,7 @@ class ProjectOwnershipTest extends \RestBase
         $response_update_admins = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->put(
-                'user_groups/'.$new_project_id.'_'.\REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users',
+                'user_groups/' . $new_project_id . '_' . \REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
                 null,
                 json_encode([
                     'user_references' => [

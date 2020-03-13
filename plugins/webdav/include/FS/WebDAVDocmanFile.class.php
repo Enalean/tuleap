@@ -117,7 +117,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
     {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
-        return '"'.$this->getUtils()->getIncomingFileMd5Sum($version->getPath()).'"';
+        return '"' . $this->getUtils()->getIncomingFileMd5Sum($version->getPath()) . '"';
     }
 
     /**

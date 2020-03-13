@@ -78,7 +78,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'trackers',
-                'uri' => 'projects/'.$this->project_private_member_id.'/trackers',
+                'uri' => 'projects/' . $this->project_private_member_id . '/trackers',
             ),
             $json_projects[0]['resources']
         );
@@ -86,7 +86,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'backlog',
-                'uri' => 'projects/'.$this->project_private_member_id.'/backlog',
+                'uri' => 'projects/' . $this->project_private_member_id . '/backlog',
             ),
             $json_projects[0]['resources']
         );
@@ -94,7 +94,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'milestones',
-                'uri' => 'projects/'.$this->project_private_member_id.'/milestones',
+                'uri' => 'projects/' . $this->project_private_member_id . '/milestones',
             ),
             $json_projects[0]['resources']
         );
@@ -102,7 +102,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'plannings',
-                'uri' => 'projects/'.$this->project_private_member_id.'/plannings',
+                'uri' => 'projects/' . $this->project_private_member_id . '/plannings',
             ),
             $json_projects[0]['resources']
         );
@@ -110,7 +110,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'user_groups',
-                'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
+                'uri' => 'projects/' . $this->project_private_member_id . '/user_groups',
             ),
             $json_projects[0]['resources']
         );
@@ -118,7 +118,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'labels',
-                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
+                'uri' => 'projects/' . $this->project_private_member_id . '/labels',
             ),
             $json_projects[0]['resources']
         );
@@ -126,7 +126,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'project_services',
-                'uri' => 'projects/'.$this->project_private_member_id.'/project_services',
+                'uri' => 'projects/' . $this->project_private_member_id . '/project_services',
             ),
             $json_projects[0]['resources']
         );
@@ -134,14 +134,14 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             [
                 'type' => 'docman_service',
-                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_service',
+                'uri'  => 'projects/' . $this->project_private_member_id . '/docman_service',
             ],
             $json_projects[0]['resources']
         );
         $this->assertContains(
             [
                 'type' => 'docman_metadata',
-                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_metadata',
+                'uri'  => 'projects/' . $this->project_private_member_id . '/docman_metadata',
             ],
             $json_projects[0]['resources']
         );
@@ -150,7 +150,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($this->project_private_member_id, $json_projects[0]['id']);
 
         $this->assertArrayHasKey('uri', $json_projects[0]);
-        $this->assertEquals('projects/'.$this->project_private_member_id, $json_projects[0]['uri']);
+        $this->assertEquals('projects/' . $this->project_private_member_id, $json_projects[0]['uri']);
 
         $this->assertArrayHasKey('label', $json_projects[0]);
         $this->assertEquals('Private member', $json_projects[0]['label']);
@@ -200,7 +200,7 @@ class ProjectTest extends ProjectBase
 
             $this->assertFalse($project['is_member_of']);
 
-            $project_members_uri = "user_groups/$this->project_private_id"."_3/users";
+            $project_members_uri = "user_groups/$this->project_private_id" . "_3/users";
             $project_members = $this->getResponse($this->client->get($project_members_uri))->json();
             foreach ($project_members as $member) {
                 $this->assertNotEquals('admin', $member['username']);
@@ -213,7 +213,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETMilestones(): void
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/milestones'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/milestones'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -223,7 +223,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETTrackers(): void
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/trackers'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/trackers'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -233,7 +233,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETBacklog(): void
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/backlog'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/backlog'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -245,9 +245,9 @@ class ProjectTest extends ProjectBase
     {
         $response_put = $this->getResponse(
             $this->client->put(
-                'projects/'.$this->project_private_member_id.'/backlog',
+                'projects/' . $this->project_private_member_id . '/backlog',
                 null,
-                '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']'
+                '[' . $this->epic_artifact_ids[7] . ',' . $this->epic_artifact_ids[5] . ',' . $this->epic_artifact_ids[6] . ']'
             )
         );
 
@@ -256,7 +256,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETLabels(): void
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/labels'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/labels'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -274,7 +274,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETWiki(): void
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/phpwiki'));
 
         $expected_result = array(
             'pages' => array(
@@ -300,7 +300,7 @@ class ProjectTest extends ProjectBase
             'status' => 'suspended'
         ]);
 
-        $response = $this->getResponse($this->client->patch('projects/'. $this->project_deleted_id, null, $patch_resource));
+        $response = $this->getResponse($this->client->patch('projects/' . $this->project_deleted_id, null, $patch_resource));
 
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -311,33 +311,33 @@ class ProjectTest extends ProjectBase
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
 
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id));
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
 
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/milestones'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/milestones'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
 
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/trackers'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/trackers'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(200, $response->getStatusCode());
 
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/backlog'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/backlog'));
 
         $this->assertEquals(['OPTIONS', 'GET', 'PUT', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
 
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/labels'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/labels'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
 
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/user_groups'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/user_groups'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
 
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/phpwiki'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/phpwiki'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }

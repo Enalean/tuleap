@@ -80,7 +80,7 @@ class Git_Widget_UserPushes extends Widget
         if (count($result) > 0) {
             foreach ($result as $entry) {
                 if (! empty($entry['repository_namespace'])) {
-                    $namespace = $entry['repository_namespace']."/";
+                    $namespace = $entry['repository_namespace'] . "/";
                 } else {
                     $namespace = '';
                 }
@@ -93,41 +93,41 @@ class Git_Widget_UserPushes extends Widget
                         $project = $entry['group_name'];
                         $unix_name = $hp->purify($entry['unix_group_name']);
                         $content .= '<fieldset class="widget-last-git-pushes-project">
-                            <legend id="plugin_git_user_pushes_widget_project_'.$unix_name.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$unix_name).'">
-                            <span title="'.dgettext('tuleap-git', 'Project').'">
-                            <b>'. $hp->purify($project) .'</b>
+                            <legend id="plugin_git_user_pushes_widget_project_' . $unix_name . '" class="' . Toggler::getClassname('plugin_git_user_pushes_widget_project_' . $unix_name) . '">
+                            <span title="' . dgettext('tuleap-git', 'Project') . '">
+                            <b>' . $hp->purify($project) . '</b>
                             </span>
                             </legend>
                             <div class="widget-last-git-pushes-details">
-                            <a href="'.$this->pluginPath.'/index.php?group_id='.$entry['group_id'].'">
-                                [ '.dgettext('tuleap-git', 'Details').' ]
+                            <a href="' . $this->pluginPath . '/index.php?group_id=' . $entry['group_id'] . '">
+                                [ ' . dgettext('tuleap-git', 'Details') . ' ]
                             </a>
                             </div>';
                     }
                     $content .= '<fieldset class="widget-last-git-pushes-repository">
                         <legend
-                            id="plugin_git_user_pushes_widget_repo_'.$project.$namespace.$entry['repository_name'].'"
-                            class="'.Toggler::getClassname('plugin_git_user_pushes_widget_repo_'.$project.$namespace.$entry['repository_name']).'"
+                            id="plugin_git_user_pushes_widget_repo_' . $project . $namespace . $entry['repository_name'] . '"
+                            class="' . Toggler::getClassname('plugin_git_user_pushes_widget_repo_' . $project . $namespace . $entry['repository_name']) . '"
                         >
-                        <span title="'.dgettext('tuleap-git', 'Repository').'">
-                        '.$namespace.$entry['repository_name'].'
+                        <span title="' . dgettext('tuleap-git', 'Repository') . '">
+                        ' . $namespace . $entry['repository_name'] . '
                         </span>
                         </legend>
                         <table class="tlp-table">
                         <thead>
                         <tr>
-                        <th>'.dgettext('tuleap-git', 'Date').'</th>
-                        <th>'.dgettext('tuleap-git', 'Commits').'</th>
+                        <th>' . dgettext('tuleap-git', 'Date') . '</th>
+                        <th>' . dgettext('tuleap-git', 'Commits') . '</th>
                         </tr>
                         </thead>
                         <tbody>';
                     $i   = 0;
                     foreach ($rows as $row) {
-                        $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
-                                         <td><span title="'.$dh->timeAgoInWords($row['push_date'], true).'">'.$hp->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['push_date'])).'</span></td>
+                        $content .= '<tr class="' . html_get_alt_row_color(++$i) . '">
+                                         <td><span title="' . $dh->timeAgoInWords($row['push_date'], true) . '">' . $hp->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['push_date'])) . '</span></td>
                                          <td>
-                                             <a href="'.$this->pluginPath.'/index.php/'.$entry['group_id'].'/view/'.$entry['repository_id'].'/">
-                                             '.$hp->purify($row['commits_number']).'
+                                             <a href="' . $this->pluginPath . '/index.php/' . $entry['group_id'] . '/view/' . $entry['repository_id'] . '/">
+                                             ' . $hp->purify($row['commits_number']) . '
                                              </a>
                                          </td>
                                      </tr>';
@@ -135,11 +135,11 @@ class Git_Widget_UserPushes extends Widget
                     $content .= "</tbody></table>
                                  </fieldset>";
                 } else {
-                    $content .= '<p>'.dgettext('tuleap-git', 'No pushes to display').'</p>';
+                    $content .= '<p>' . dgettext('tuleap-git', 'No pushes to display') . '</p>';
                 }
             }
         } else {
-            $content = '<p>'.dgettext('tuleap-git', 'No pushes to display').'</p>';
+            $content = '<p>' . dgettext('tuleap-git', 'No pushes to display') . '</p>';
         }
         return $content;
     }
@@ -204,27 +204,27 @@ class Git_Widget_UserPushes extends Widget
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="offset-'. (int)$widget_id .'">
-                    '. $purifier->purify(dgettext('tuleap-git', 'Maximum number of push by repository')) .'
+                <label class="tlp-label" for="offset-' . (int) $widget_id . '">
+                    ' . $purifier->purify(dgettext('tuleap-git', 'Maximum number of push by repository')) . '
                 </label>
                 <input type="number"
                        size="2"
                        class="tlp-input"
-                       id="offset-'. (int)$widget_id .'"
+                       id="offset-' . (int) $widget_id . '"
                        name="plugin_git_user_pushes_offset"
-                       value="'. $purifier->purify($this->offset) .'"
+                       value="' . $purifier->purify($this->offset) . '"
                        placeholder="5">
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="days-'. (int)$widget_id .'">
-                    '. $purifier->purify(dgettext('tuleap-git', 'Maximum number of days ago')) .'
+                <label class="tlp-label" for="days-' . (int) $widget_id . '">
+                    ' . $purifier->purify(dgettext('tuleap-git', 'Maximum number of days ago')) . '
                 </label>
                 <input type="number"
                        size="2"
                        class="tlp-input"
-                       id="days-'. (int)$widget_id .'"
+                       id="days-' . (int) $widget_id . '"
                        name="plugin_git_user_pushes_past_days"
-                       value="'. $purifier->purify($this->pastDays) .'"
+                       value="' . $purifier->purify($this->pastDays) . '"
                        placeholder="30">
             </div>
             ';

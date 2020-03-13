@@ -406,7 +406,6 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase
     //testing field import
     public function testImportFormElement()
     {
-
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <formElement type="mon_type" ID="F0" rank="20" required="1">
                 <name>field_name</name>
@@ -555,7 +554,7 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
         $this->list     = new Tracker_FormElement_Field_ListTestVersion();
         $this->list->id = 234;
         stub($this->list)->getBind()->returns($this->bind);
-        stub($this->bind)->getAllValues()->returns(array(101 => 101, 102=> 102, 103 => 103));
+        stub($this->bind)->getAllValues()->returns(array(101 => 101, 102 => 102, 103 => 103));
     }
 
     public function itThrowsAnExceptionIfValueIsNotUsable()

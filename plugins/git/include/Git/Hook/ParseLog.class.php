@@ -48,7 +48,7 @@ class Git_Hook_ParseLog
             try {
                 $this->extract_cross_ref->execute($push_details, $commit);
             } catch (Git_Command_Exception $exception) {
-                $this->logger->error(self::class.": cannot extract references for {$push_details->getRepository()->getFullPath()} {$push_details->getRefname()} $commit: $exception");
+                $this->logger->error(self::class . ": cannot extract references for {$push_details->getRepository()->getFullPath()} {$push_details->getRefname()} $commit: $exception");
             }
         }
     }

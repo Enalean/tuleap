@@ -145,7 +145,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $burndown_rest_representation = null;
 
         try {
-            $value_retriever= $this->getBurndownConfigurationValueRetriever();
+            $value_retriever = $this->getBurndownConfigurationValueRetriever();
 
             $burndown_data = $this->getBurndownData(
                 $artifact,
@@ -248,7 +248,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">' . $cancel . '</button>
-                    <a href="?aid='.$artifact->getId().'&func=burndown-cache-generate&field='.$this->getId().'"
+                    <a href="?aid=' . $artifact->getId() . '&func=burndown-cache-generate&field=' . $this->getId() . '"
                         class="btn btn-primary force-burndown-generation" name="add-keys">' . $generate . '</a>
                 </div>
             </div>';
@@ -418,8 +418,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $purifier = Codendi_HTMLPurifier::instance();
         $output   = '';
         if ($format == Codendi_Mail::FORMAT_HTML) {
-            $output .= '<img src="'.HTTPRequest::instance()->getServerUrl().$this->getBurndownImageUrl($artifact).'" alt="'.$purifier->purify($this->getLabel()).'" width="640" height="480" />';
-            $output .= '<p><em>'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today').'</em></p>';
+            $output .= '<img src="' . HTTPRequest::instance()->getServerUrl() . $this->getBurndownImageUrl($artifact) . '" alt="' . $purifier->purify($this->getLabel()) . '" width="640" height="480" />';
+            $output .= '<p><em>' . $GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today') . '</em></p>';
         }
         return $output;
     }
@@ -595,7 +595,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             )
         );
 
-        return TRACKER_BASE_URL .'/?'.$url_query;
+        return TRACKER_BASE_URL . '/?' . $url_query;
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
@@ -634,7 +634,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_Artifact_Changeset $new_changeset,
         ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
-
         try {
             if ($previous_changeset !== null &&
                 $this->getBurndownCacheChecker()->isCacheBurndownAlreadyAsked($artifact) === false &&

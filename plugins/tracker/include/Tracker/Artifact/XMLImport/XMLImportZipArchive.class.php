@@ -79,7 +79,7 @@ class Tracker_Artifact_XMLImport_XMLImportZipArchive
      */
     private function tempdir($tmp_dir, $resource_name, $id)
     {
-        $template = 'import_'. $resource_name .'_'. $id .'_XXXXXX';
+        $template = 'import_' . $resource_name . '_' . $id . '_XXXXXX';
 
         return trim(`mktemp -d -p $tmp_dir $template`);
     }

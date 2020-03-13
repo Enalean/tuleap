@@ -80,11 +80,11 @@ if (is_array($sparkline_urls)) {
                         $event_manager->processEvent(
                             Event::AJAX_REFERENCE_SPARKLINE,
                             array(
-                            'reference'=> $ref,
+                            'reference' => $ref,
                             'keyword'  => $key,
                             'group_id' => $group_id,
                             'val'      => $val,
-                            'sparkline'=> &$res_sparkline
+                            'sparkline' => &$res_sparkline
                             )
                         );
                         if ($res_sparkline) {

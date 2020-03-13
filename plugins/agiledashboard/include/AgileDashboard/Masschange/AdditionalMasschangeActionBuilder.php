@@ -61,7 +61,7 @@ class AdditionalMasschangeActionBuilder
             return null;
         }
 
-        $project_id = (int)$tracker->getProject()->getID();
+        $project_id = (int) $tracker->getProject()->getID();
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id) === false) {
             return null;
         }

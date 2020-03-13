@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
 
-include __DIR__.'/bootstrap.php';
+include __DIR__ . '/bootstrap.php';
 
 class ReferencesImporterTest extends TestCase
 {

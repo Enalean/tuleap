@@ -50,8 +50,8 @@ class UGroupManagerGetUGroupTest extends TestCase
             array('ugroup_id' => "103", 'name' => "ugroup_supra_name_key",              'description' => "",                                    'group_id' => "123"),
         );
         foreach ($ugroup_definitions as $def) {
-            $dao->shouldReceive('searchByGroupIdAndUGroupId')->with((int)$def['group_id'], (int)$def['ugroup_id'])->andReturns(\TestHelper::arrayToDar($def));
-            $dao->shouldReceive('searchByGroupIdAndName')->with((int)$def['group_id'], $def['name'])->andReturns(\TestHelper::arrayToDar($def));
+            $dao->shouldReceive('searchByGroupIdAndUGroupId')->with((int) $def['group_id'], (int) $def['ugroup_id'])->andReturns(\TestHelper::arrayToDar($def));
+            $dao->shouldReceive('searchByGroupIdAndName')->with((int) $def['group_id'], $def['name'])->andReturns(\TestHelper::arrayToDar($def));
         }
         $dao->shouldReceive('searchByGroupIdAndUGroupId')->andReturns(\TestHelper::emptyDar());
         $dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());

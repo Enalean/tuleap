@@ -89,7 +89,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
     public function nodiff($format = 'html')
     {
         if ($this->getNumeric() != 0) {
-            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' '. $this->format($this->getValue(), $format);
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ' . $this->format($this->getValue(), $format);
         }
         return '';
     }

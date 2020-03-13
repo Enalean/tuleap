@@ -117,7 +117,7 @@ class PluginHudsonJobDao extends DataAccessObject
         $job_name        = $this->da->quoteSmart($job_name);
         $use_svn_trigger = $this->da->escapeInt($use_svn_trigger);
         $use_cvs_trigger = $this->da->escapeInt($use_cvs_trigger);
-        $token           = ($token !== null)? $this->da->quoteSmart($token) : $this->da->quoteSmart('');
+        $token           = ($token !== null) ? $this->da->quoteSmart($token) : $this->da->quoteSmart('');
         $svn_paths       = $this->da->quoteSmart($svn_paths);
 
         $sql = "INSERT INTO plugin_hudson_job (group_id, job_url, name, use_svn_trigger, use_cvs_trigger, token, svn_paths)
@@ -140,7 +140,7 @@ class PluginHudsonJobDao extends DataAccessObject
         $job_name        = $this->da->quoteSmart($job_name);
         $use_svn_trigger = $this->da->escapeInt($use_svn_trigger);
         $use_cvs_trigger = $this->da->escapeInt($use_cvs_trigger);
-        $token           = ($token !== null)? $this->da->quoteSmart($token) : $this->da->quoteSmart('');
+        $token           = ($token !== null) ? $this->da->quoteSmart($token) : $this->da->quoteSmart('');
         $svn_paths       = $this->da->quoteSmart($svn_paths);
 
         $sql = "UPDATE plugin_hudson_job
@@ -186,13 +186,13 @@ class PluginHudsonJobDao extends DataAccessObject
     {
         $condition = '';
         if ($groupId) {
-            $condition = "AND group_id = ".$this->da->escapeInt($groupId);
+            $condition = "AND group_id = " . $this->da->escapeInt($groupId);
         }
         $sql = "SELECT COUNT(*) AS count
                 FROM plugin_hudson_job
                 JOIN groups USING (group_id)
                 WHERE status = 'A'
-                  ".$condition;
+                  " . $condition;
         return $this->retrieve($sql);
     }
 }

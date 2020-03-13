@@ -116,7 +116,7 @@ class XMLRepositoryImporter
             $this->dump_file_path = $extraction_path . '/' . $attrs['dump-file'];
         }
 
-        $this->access_file_contents = (string)$xml_repo->{"access-file"};
+        $this->access_file_contents = (string) $xml_repo->{"access-file"};
 
         $this->subscriptions = array();
         foreach ($xml_repo->notification as $notif) {

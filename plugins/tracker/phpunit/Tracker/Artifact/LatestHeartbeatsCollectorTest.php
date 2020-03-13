@@ -29,7 +29,7 @@ use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Tracker\TrackerColor;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class LatestHeartbeatsCollectorTest extends TestCase
 {

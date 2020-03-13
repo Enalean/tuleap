@@ -46,6 +46,6 @@ class Wrapper extends AbstractLogger
 
     private function formatMessage($message)
     {
-        return '['. implode('][', $this->prefix) .'] '.$message;
+        return '[' . implode('][', $this->prefix) . '] ' . $message;
     }
 }

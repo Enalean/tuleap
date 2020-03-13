@@ -31,7 +31,7 @@ class Statistics_ConfigurationDao extends DataAccessObject
 
         $row = $this->retrieve($sql)->getRow();
 
-        return (bool)$row['daily_purge_is_activated'];
+        return (bool) $row['daily_purge_is_activated'];
     }
 
     public function activateDailyPurge()

@@ -67,17 +67,17 @@ class AdminDelegation_ShowProjectWidget extends Widget
 
     public function getAllProject($offset, $limit, $condition, $pattern)
     {
-        if (count($condition)> 0) {
+        if (count($condition) > 0) {
             $statements   = '(';
             $i            = 0;
             $nbConditions = count($condition) - 1;
             for ($i; $i < $nbConditions; $i++) {
-                $statements .= db_es($condition[$i]).' LIKE "%'.db_es($pattern).'%" OR ';
+                $statements .= db_es($condition[$i]) . ' LIKE "%' . db_es($pattern) . '%" OR ';
             }
-            $statements .= db_es($condition[$i]).' LIKE "%'.db_es($pattern).'%") AND ';
+            $statements .= db_es($condition[$i]) . ' LIKE "%' . db_es($pattern) . '%") AND ';
         }
 
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS group_name, group_id, unix_group_name, access FROM groups WHERE '.$statements.' status = "A" ORDER BY register_time DESC LIMIT '.db_ei($offset).', '.db_ei($limit);
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS group_name, group_id, unix_group_name, access FROM groups WHERE ' . $statements . ' status = "A" ORDER BY register_time DESC LIMIT ' . db_ei($offset) . ', ' . db_ei($limit);
         $res = db_query($sql);
 
         $sql = 'SELECT FOUND_ROWS() as nb';
@@ -115,7 +115,7 @@ class AdminDelegation_ShowProjectWidget extends Widget
         }
         foreach ($criteria as $val) {
             $condition[] = $val;
-            $urlParam   .= '&criteria[]='.urlencode($val);
+            $urlParam   .= '&criteria[]=' . urlencode($val);
             $selectedCriteria[$val] = 'checked="checked"';
         }
 
@@ -139,9 +139,9 @@ class AdminDelegation_ShowProjectWidget extends Widget
         $html .= '<form method="post" action="">';
 
         $html .= '<div class="tlp-form-element">';
-        $html .= '<label class="tlp-label" for="plugin_admindelegation_pattern">'.dgettext('tuleap-admindelegation', 'Show all projects containing:').'</label>';
+        $html .= '<label class="tlp-label" for="plugin_admindelegation_pattern">' . dgettext('tuleap-admindelegation', 'Show all projects containing:') . '</label>';
         $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_projects" />';
-        $html .= '<input type="text" name="plugin_admindelegation_pattern" class="tlp-input" placeholder="'.dgettext('tuleap-admindelegation', 'Search').'" value="'.$purifier->purify($pattern).'" size ="40" id="plugin_admindelegation_pattern" />';
+        $html .= '<input type="text" name="plugin_admindelegation_pattern" class="tlp-input" placeholder="' . dgettext('tuleap-admindelegation', 'Search') . '" value="' . $purifier->purify($pattern) . '" size ="40" id="plugin_admindelegation_pattern" />';
         $html .= '</div>';
 
         $html .= '<div class="tlp-form-element">';
@@ -160,7 +160,7 @@ class AdminDelegation_ShowProjectWidget extends Widget
             dgettext('tuleap-admindelegation', 'Description') .
             '</label>';
         $html .= '</div>';
-        $html .= '<input type="submit" class="tlp-button-primary" value="'.dgettext('tuleap-admindelegation', 'Search').'"/>';
+        $html .= '<input type="submit" class="tlp-button-primary" value="' . dgettext('tuleap-admindelegation', 'Search') . '"/>';
 
         $html .= '</form>';
 
@@ -171,43 +171,43 @@ class AdminDelegation_ShowProjectWidget extends Widget
                 $html .= '<table width="100%" class="tlp-table">';
                 $html .= '<thead>';
                 $html .= '<tr>';
-                $html .= '<th>'.dgettext('tuleap-admindelegation', 'Project name').'</th>';
-                $html .= '<th>'.dgettext('tuleap-admindelegation', 'Project id').'</th>';
+                $html .= '<th>' . dgettext('tuleap-admindelegation', 'Project name') . '</th>';
+                $html .= '<th>' . dgettext('tuleap-admindelegation', 'Project id') . '</th>';
                 $html .= '</tr>';
                 $html .= '</thead>';
 
                 $html .= '<tbody>';
                 $i = 1;
                 while ($row = db_fetch_array($res['projects'])) {
-                    $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
+                    $html .= '<tr class="' . util_get_alt_row_color($i++) . '">';
                     $html .= '<td>';
-                    $html .= '<a href="/projects/'.$purifier->purify(urlencode($row['unix_group_name'])).'">'.$purifier->purify($row['group_name']).'</a>';
+                    $html .= '<a href="/projects/' . $purifier->purify(urlencode($row['unix_group_name'])) . '">' . $purifier->purify($row['group_name']) . '</a>';
                     if ($row['access'] === Project::ACCESS_PRIVATE || $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
                         $html .= '&nbsp;(*)';
                     }
                     $html .= '</td>';
-                    $html .= '<td>'.$purifier->purify($row['group_id']).'</td>';
+                    $html .= '<td>' . $purifier->purify($row['group_id']) . '</td>';
                     $html .= '</tr>';
                 }
                 $html .= '</tbody>';
 
                 $html .= '</table>';
 
-                $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+                $html .= '<div style="text-align:center" class="' . util_get_alt_row_color($i++) . '">';
                 if ($offset > 0) {
-                    $href  = '?plugin_admindelegation_func=show_projects&offset='.urlencode($offset-$limit).$urlParam.'&plugin_admindelegation_pattern='.urlencode($pattern). '&dashboard_id=' . urlencode($this->getDashboardId());
-                    $html .= '<a href="' . $purifier->purify($href) . '">[ '.dgettext('tuleap-admindelegation', 'Previous').' ]</a>';
+                    $href  = '?plugin_admindelegation_func=show_projects&offset=' . urlencode($offset - $limit) . $urlParam . '&plugin_admindelegation_pattern=' . urlencode($pattern) . '&dashboard_id=' . urlencode($this->getDashboardId());
+                    $html .= '<a href="' . $purifier->purify($href) . '">[ ' . dgettext('tuleap-admindelegation', 'Previous') . ' ]</a>';
                     $html .= '&nbsp;';
                 }
                 if (($offset + $limit) < $res['numrows']) {
-                    $href  = '?plugin_admindelegation_func=show_projects&offset='.urlencode($offset+$limit).$urlParam.'&plugin_admindelegation_pattern='.urlencode($pattern) . '&dashboard_id=' . urlencode($this->getDashboardId());
+                    $href  = '?plugin_admindelegation_func=show_projects&offset=' . urlencode($offset + $limit) . $urlParam . '&plugin_admindelegation_pattern=' . urlencode($pattern) . '&dashboard_id=' . urlencode($this->getDashboardId());
                     $html .= '&nbsp;';
-                    $html .= '<a href="' . $purifier->purify($href) . '">[ '.dgettext('tuleap-admindelegation', 'Next').' ]</a>';
+                    $html .= '<a href="' . $purifier->purify($href) . '">[ ' . dgettext('tuleap-admindelegation', 'Next') . ' ]</a>';
                 }
                 $html .= '</div>';
-                $html .= '<div style="text-align:left" class="'. util_get_alt_row_color($i++) .'">';
-                $html .= '(*)&nbsp;'.$GLOBALS['Language']->getText('my_index', 'priv_proj');
-                $html .= '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'. $purifier->purify(sprintf(dgettext('tuleap-admindelegation', '%1$s project(s) found'), $res['numrows']));
+                $html .= '<div style="text-align:left" class="' . util_get_alt_row_color($i++) . '">';
+                $html .= '(*)&nbsp;' . $GLOBALS['Language']->getText('my_index', 'priv_proj');
+                $html .= '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;' . $purifier->purify(sprintf(dgettext('tuleap-admindelegation', '%1$s project(s) found'), $res['numrows']));
                 $html .= '</div>';
             }
         }

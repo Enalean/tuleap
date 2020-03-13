@@ -163,7 +163,7 @@ class Tracker_FileInfo
         if ($this->getFilesize()) {
             $e = floor(log($this->getFilesize()) / log(1024));
         }
-        return sprintf('%.0f '.$s[$e], ($this->getFilesize() / pow(1024, floor($e))));
+        return sprintf('%.0f ' . $s[$e], ($this->getFilesize() / pow(1024, floor($e))));
     }
 
     /**
@@ -188,7 +188,7 @@ class Tracker_FileInfo
     public function isImage()
     {
         $parts = explode('/', $this->getFileType());
-        return $parts[0] == 'image' && in_array(strtolower($parts[1]), $this->supported_image_types) ;
+        return $parts[0] == 'image' && in_array(strtolower($parts[1]), $this->supported_image_types);
     }
 
     /**
@@ -196,7 +196,7 @@ class Tracker_FileInfo
      */
     public function getPath()
     {
-        return $this->getRootPath() .'/'. $this->id;
+        return $this->getRootPath() . '/' . $this->id;
     }
 
     /**
@@ -205,7 +205,7 @@ class Tracker_FileInfo
     public function getThumbnailPath()
     {
         if ($this->isImage()) {
-            return $this->getRootPath() .'/thumbnails/'. $this->id;
+            return $this->getRootPath() . '/thumbnails/' . $this->id;
         }
         return null;
     }
@@ -221,7 +221,7 @@ class Tracker_FileInfo
 
     public function __toString()
     {
-        return '#'. $this->getId() .' '. $this->getFilename();
+        return '#' . $this->getId() . ' ' . $this->getFilename();
     }
 
     public function fileExists()
@@ -278,25 +278,25 @@ class Tracker_FileInfo
         switch ($size[2]) {
             case IMAGETYPE_GIF:
                 $source      = imagecreatefromgif($this->getPath());
-                $destination = imagecreate((int)$thumbnail_width, (int)$thumbnail_height);
+                $destination = imagecreate((int) $thumbnail_width, (int) $thumbnail_height);
                 imagepalettecopy($destination, $source);
                 $store       = 'imagegif';
                 break;
             case IMAGETYPE_JPEG:
                 $source      = imagecreatefromjpeg($this->getPath());
-                $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
+                $destination = imagecreatetruecolor((int) $thumbnail_width, (int) $thumbnail_height);
                 $store       = 'imagejpeg';
                 break;
             case IMAGETYPE_PNG:
                 $source      = imagecreatefrompng($this->getPath());
-                $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
+                $destination = imagecreatetruecolor((int) $thumbnail_width, (int) $thumbnail_height);
                 $store       = 'imagepng';
                 break;
             default:
                 // Not an image, exit;
                 return false;
         }
-        imagecopyresized($destination, $source, 0, 0, 0, 0, (int)$thumbnail_width, (int)$thumbnail_height, $size[0], $size[1]);
+        imagecopyresized($destination, $source, 0, 0, 0, 0, (int) $thumbnail_width, (int) $thumbnail_height, $size[0], $size[1]);
         $store($destination, $this->getThumbnailPath());
         imagedestroy($source);
         imagedestroy($destination);

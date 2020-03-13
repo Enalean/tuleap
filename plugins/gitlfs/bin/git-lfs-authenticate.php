@@ -34,7 +34,7 @@ use Tuleap\GitLFS\Authorization\User\UserTokenCreator;
 use Tuleap\GitLFS\SSHAuthenticate\SSHAuthenticate;
 use Tuleap\GitLFS\SSHAuthenticate\SSHAuthenticateResponseBuilder;
 
-require_once __DIR__.'/../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/gitlfsPlugin.php';
 
 try {
@@ -58,6 +58,6 @@ try {
     $response = $ssh_auth->main($_SERVER['GL_USER'], $argv);
     echo \json_encode($response, JSON_FORCE_OBJECT);
 } catch (\Tuleap\GitLFS\SSHAuthenticate\InvalidCommandException $exception) {
-    fwrite(STDERR, $exception->getMessage().PHP_EOL);
+    fwrite(STDERR, $exception->getMessage() . PHP_EOL);
     exit(1);
 }

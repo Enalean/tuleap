@@ -51,7 +51,6 @@ class GerritStatusPresenter
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         array $gerrit_servers
     ) {
-
         $status                      = $project_creator_status->getStatus($repository);
         $this->is_migration_queued   = ($status === Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE);
         $this->is_migrated_to_gerrit = ($status === Git_Driver_Gerrit_ProjectCreatorStatus::DONE);

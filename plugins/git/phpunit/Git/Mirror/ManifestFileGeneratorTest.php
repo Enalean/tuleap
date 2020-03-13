@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\TemporaryTestDirectory;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ManifestFileGeneratorTest extends TestCase
@@ -55,7 +55,7 @@ class ManifestFileGeneratorTest extends TestCase
         $this->current_time       = $_SERVER['REQUEST_TIME'];
         $this->time_in_the_past   = 1414684049;
         $this->fixture_dir        = $this->getTmpDir();
-        $this->manifest_directory = $this->fixture_dir .'/manifests';
+        $this->manifest_directory = $this->fixture_dir . '/manifests';
         mkdir($this->manifest_directory);
 
         $this->kernel_repository = $this->buildMockedRepository('linux/kernel.git', 'Linux4ever');
@@ -96,7 +96,7 @@ class ManifestFileGeneratorTest extends TestCase
     {
         file_put_contents(
             "compress.zlib://$path",
-            '{"\/linux\/kernel.git":{"owner":null,"description":"Linux4ever","reference":null,"modified":'. $this->time_in_the_past .'}}'
+            '{"\/linux\/kernel.git":{"owner":null,"description":"Linux4ever","reference":null,"modified":' . $this->time_in_the_past . '}}'
         );
     }
 
@@ -104,7 +104,7 @@ class ManifestFileGeneratorTest extends TestCase
     {
         file_put_contents(
             "compress.zlib://$path",
-            '{"\/gitolite-admin.git":{"owner":null,"description":"","reference":null,"modified":'. $this->time_in_the_past .'},"\/linux\/kernel.git":{"owner":null,"description":"Linux4ever","reference":null,"modified":'. $this->time_in_the_past .'}}'
+            '{"\/gitolite-admin.git":{"owner":null,"description":"","reference":null,"modified":' . $this->time_in_the_past . '},"\/linux\/kernel.git":{"owner":null,"description":"Linux4ever","reference":null,"modified":' . $this->time_in_the_past . '}}'
         );
     }
 

@@ -29,7 +29,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. $this->_getTitle($params) .' - '. dgettext('tuleap-docman', 'Locked Documents') .'</h2>';
+        echo '<h2>' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Locked Documents') . '</h2>';
     }
 
     public function _content($params)
@@ -76,16 +76,16 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
                     return '</table>';
                 }
                 $parent = $dIF->getItemFromDb($item->getParentId());
-                $content .= '<tr class="'.$trclass.'">';
-                $content .= '<td>'. '<a href="/plugins/docman/?group_id='. $params['group_id']. '&action=details&id='. $item->getId(). '">'. $item->getTitle() .'</a></td>';
+                $content .= '<tr class="' . $trclass . '">';
+                $content .= '<td>' . '<a href="/plugins/docman/?group_id=' . $params['group_id'] . '&action=details&id=' . $item->getId() . '">' . $item->getTitle() . '</a></td>';
                 $content .= '<td>';
                 if ($parent === null || $dIF->isRoot($parent)) {
                     $content .= '</td>';
                 } else {
-                    $content .=  '<a href="'. $this->defaultUrl. '&action=show&id='. $parent->getId(). '">' .$parent->getTitle() .'</a></td>';
+                    $content .=  '<a href="' . $this->defaultUrl . '&action=show&id=' . $parent->getId() . '">' . $parent->getTitle() . '</a></td>';
                 }
-                $content .= '<td>'. $hp->purify($uH->getDisplayNameFromUserId($row['user_id'])) .'</td>';
-                $content .= '<td>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['lock_date']) .'</td>';
+                $content .= '<td>' . $hp->purify($uH->getDisplayNameFromUserId($row['user_id'])) . '</td>';
+                $content .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['lock_date']) . '</td>';
                 $content .= '</tr>';
             }
         }

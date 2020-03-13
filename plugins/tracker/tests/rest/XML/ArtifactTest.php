@@ -24,7 +24,7 @@ use SimpleXMLElement;
 use Guzzle\Http\Client;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
-require_once __DIR__ .'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 /**
  * @group TrackerTests
@@ -111,7 +111,7 @@ class ArtifactTest extends TrackerBase
 
     public function testGetArtifact()
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/'.$this->release_artifact_ids[1]));
+        $response = $this->getResponse($this->xml_client->get('artifacts/' . $this->release_artifact_ids[1]));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $artifact_xml = $response->xml();
@@ -157,7 +157,7 @@ class ArtifactTest extends TrackerBase
 
     public function testPOSTArtifactInXMLTracker()
     {
-        $xml = "<request><tracker><id>".$this->tracker_id."</id></tracker><values><item><field_id>".$this->slogan_field_id."</field_id><value>slogan</value></item><item><field_id>".$this->desc_field_id."</field_id><value>desc</value></item><item><field_id>".$this->status_field_id."</field_id><bind_value_ids><item>".$this->status_value_id."</item></bind_value_ids></item></values></request>";
+        $xml = "<request><tracker><id>" . $this->tracker_id . "</id></tracker><values><item><field_id>" . $this->slogan_field_id . "</field_id><value>slogan</value></item><item><field_id>" . $this->desc_field_id . "</field_id><value>desc</value></item><item><field_id>" . $this->status_field_id . "</field_id><bind_value_ids><item>" . $this->status_value_id . "</item></bind_value_ids></item></values></request>";
 
         $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
 
@@ -175,7 +175,7 @@ class ArtifactTest extends TrackerBase
      */
     public function testGetArtifactInXMLTracker($artifact_id)
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id));
+        $response = $this->getResponse($this->xml_client->get('artifacts/' . $artifact_id));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $artifact_xml = $response->xml();
@@ -194,7 +194,7 @@ class ArtifactTest extends TrackerBase
      */
     public function testGetArtifactInXMLTrackerWithValuesByField($artifact_id)
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=by_field'));
+        $response = $this->getResponse($this->xml_client->get('artifacts/' . $artifact_id . '?values_format=by_field'));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $artifact_xml = $response->xml();
@@ -213,7 +213,7 @@ class ArtifactTest extends TrackerBase
      */
     public function testGetArtifactInXMLTrackerInBothFormat($artifact_id)
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=all'));
+        $response = $this->getResponse($this->xml_client->get('artifacts/' . $artifact_id . '?values_format=all'));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $artifact_xml = $response->xml();
@@ -262,7 +262,7 @@ class ArtifactTest extends TrackerBase
      */
     public function testPOSTArtifactInXMLTrackerWithValuesByField()
     {
-        $xml = "<request><tracker><id>".$this->tracker_id."</id></tracker><values_by_field><slogan><value>Sloganv2</value></slogan><epic_desc><value><content>Descv2</content><format>html</format></value></epic_desc></values_by_field></request>";
+        $xml = "<request><tracker><id>" . $this->tracker_id . "</id></tracker><values_by_field><slogan><value>Sloganv2</value></slogan><epic_desc><value><content>Descv2</content><format>html</format></value></epic_desc></values_by_field></request>";
 
         $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
 
@@ -280,7 +280,7 @@ class ArtifactTest extends TrackerBase
      */
     public function testGetArtifactCreatedWithValueByFieldInXMLTracker($artifact_id)
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=by_field'));
+        $response = $this->getResponse($this->xml_client->get('artifacts/' . $artifact_id . '?values_format=by_field'));
         $this->assertEquals(200, $response->getStatusCode());
 
         $artifact_xml = $response->xml();

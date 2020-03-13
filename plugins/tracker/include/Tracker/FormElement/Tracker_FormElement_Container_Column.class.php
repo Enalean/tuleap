@@ -124,21 +124,21 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
-        $html .= $this->fetchColumnPrefix('class="tracker-admin-container tracker-admin-column" id="tracker-admin-formElements_'. $this->id .'" style="min-width:200px; min-height:80px; border:1px dashed #ccc; margin: 1px; padding: 4px;"');
-        $html .= '<div><label title="'. $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) .'">';
+        $html .= $this->fetchColumnPrefix('class="tracker-admin-container tracker-admin-column" id="tracker-admin-formElements_' . $this->id . '" style="min-width:200px; min-height:80px; border:1px dashed #ccc; margin: 1px; padding: 4px;"');
+        $html .= '<div><label title="' . $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) . '">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '<span class="tracker-admin-field-controls">';
-        $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
+        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
 
         if ($this->canBeRemovedFromUsage()) {
-            $html .= '<a href="?'. http_build_query(array(
+            $html .= '<a href="?' . http_build_query(array(
                 'tracker'  => $this->tracker_id,
                 'func'     => 'admin-formElement-remove',
                 'formElement' => $this->id,
-            )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
+            )) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) . '</a>';
         } else {
             $cannot_remove_message = $this->getCannotRemoveMessage();
-            $html .= '<span style="color:gray;" title="'. $cannot_remove_message .'">';
+            $html .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
         }
@@ -209,7 +209,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      */
     protected function fetchColumnPrefix($htmlparams = '')
     {
-        $html = '<div '. $htmlparams .'>';
+        $html = '<div ' . $htmlparams . '>';
         return $html;
     }
 

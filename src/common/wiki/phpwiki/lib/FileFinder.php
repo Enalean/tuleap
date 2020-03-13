@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/stdlib.php');
+require_once(dirname(__FILE__) . '/stdlib.php');
 
 /**
  * A class for finding files.
@@ -535,7 +535,7 @@ function FindFile($file, $missing_okay = false, $slashify = false)
         // remove "/lib" from dirname(__FILE__)
         $wikidir = preg_replace('/.lib$/', '', dirname(__FILE__));
         // let the system favor its local pear?
-        $finder->_append_to_include_path(dirname(__FILE__)."/pear");
+        $finder->_append_to_include_path(dirname(__FILE__) . "/pear");
         $finder->_prepend_to_include_path($wikidir);
         // Don't override existing INCLUDE_PATH config.
         if (!defined("INCLUDE_PATH")) {

@@ -31,7 +31,7 @@ class ProjectTest extends TrackerBase
     public function testItFiltersProjectsWithTrackerAdministrationPermission()
     {
         $url = 'projects?' . http_build_query([
-            'limit' => 50, 'offset' =>0
+            'limit' => 50, 'offset' => 0
         ]);
 
         $response      = $this->getResponse($this->client->get($url), DataBuilder::USER_TESTER_NAME);

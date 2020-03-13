@@ -102,7 +102,7 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
         $html[] = $line;        // postmatch
         return $html;
     }
-};
+}
 
 // $Log: SearchHighlight.php,v $
 // Revision 1.1  2004/09/26 14:58:36  rurban

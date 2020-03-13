@@ -218,7 +218,7 @@ class ProjectHistoryPresenter
 
     public function current_on_total()
     {
-        return ($this->offset + $this->index-3) . '/' . $this->history_rows['numrows'];
+        return ($this->offset + $this->index - 3) . '/' . $this->history_rows['numrows'];
     }
 
     public function export_history()

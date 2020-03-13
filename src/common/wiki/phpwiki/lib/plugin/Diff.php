@@ -66,7 +66,6 @@ class WikiPlugin_Diff extends WikiPlugin
 
     public function PageInfoRow($label, $rev, &$request)
     {
-
         global $WikiTheme, $WikiNameRegexp;
 
         $row = HTML::tr(HTML::td(array('align' => 'right'), $label));
@@ -141,7 +140,7 @@ class WikiPlugin_Diff extends WikiPlugin
                     $others = array('major', 'minor');
                     break;
                 case 'minor':
-                    $previous='minor';
+                    $previous = 'minor';
                     $old = $page->getRevisionBefore($new);
                     $old_version = _("previous revision");
                     $others = array('major', 'author');
@@ -175,7 +174,7 @@ class WikiPlugin_Diff extends WikiPlugin
         $otherdiffs = HTML::p(_("Other diffs:"));
         $label = array('major' => _("Previous Major Revision"),
                        'minor' => _("Previous Revision"),
-                       'author'=> _("Previous Author"));
+                       'author' => _("Previous Author"));
         foreach ($others as $other) {
             $args = array('pagename' => $pagename, 'previous' => $other);
             if ($version) {
@@ -234,7 +233,7 @@ class WikiPlugin_Diff extends WikiPlugin
 
         return $html;
     }
-};
+}
 
 class _HWLDF_WordAccumulator
 {

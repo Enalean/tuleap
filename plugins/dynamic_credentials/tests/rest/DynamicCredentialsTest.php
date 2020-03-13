@@ -90,8 +90,8 @@ class DynamicCredentialsTest extends \RestBase
 
     public function testDELETENonExistingAccount()
     {
-        $uri = 'dynamic_credentials/' . urlencode(self::USERNAME. 'donotexist') . '?' . http_build_query([
-                'signature'  => $this->getSignatureForDeleteAction(self::USERNAME. 'donotexist')
+        $uri = 'dynamic_credentials/' . urlencode(self::USERNAME . 'donotexist') . '?' . http_build_query([
+                'signature'  => $this->getSignatureForDeleteAction(self::USERNAME . 'donotexist')
             ]);
         $response = $this->getResponseWithoutAuth($this->client->delete($uri));
 

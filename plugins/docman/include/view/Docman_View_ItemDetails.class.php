@@ -56,11 +56,11 @@ class Docman_View_ItemDetails
         if (count($this->sections)) {
             $html .= '<ul class="docman_properties_navlist">';
             foreach ($this->sections as $section) {
-                $html .= '<li><a href="'. $this->url .'&amp;action=details&amp;id='. $this->item->getId() .'&amp;section='. $section->getId() .'"';
+                $html .= '<li><a href="' . $this->url . '&amp;action=details&amp;id=' . $this->item->getId() . '&amp;section=' . $section->getId() . '"';
                 if ($section->getId() == $this->current_section) {
                     $html .= ' class="docman_properties_navlist_current" ';
                 }
-                $html .= '>'. $section->getTitle() .'</a></li>';
+                $html .= '>' . $section->getTitle() . '</a></li>';
             }
             $html .= '</ul>';
             $html .= '<div class="docman_properties_content">';

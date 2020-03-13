@@ -30,7 +30,6 @@ class DVCSDriverFactory
 
     public static function getDriver($name)
     {
-
         switch ($name) {
             case 'Git':
                 break;

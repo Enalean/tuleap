@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends TuleapTestCase
 {
@@ -49,10 +49,10 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends Tule
             )
         );
 
-        $this->assertEqual((int)$this->field_change_xml->value[0], 2001);
-        $this->assertEqual((string)$this->field_change_xml->value[0]['format'], 'id');
-        $this->assertEqual((int)$this->field_change_xml->value[1], 2002);
-        $this->assertEqual((string)$this->field_change_xml->value[1]['format'], 'id');
+        $this->assertEqual((int) $this->field_change_xml->value[0], 2001);
+        $this->assertEqual((string) $this->field_change_xml->value[0]['format'], 'id');
+        $this->assertEqual((int) $this->field_change_xml->value[1], 2002);
+        $this->assertEqual((string) $this->field_change_xml->value[1]['format'], 'id');
     }
 
     public function itUpdatesTheValueNodesValueWithOneNewSubmittedValue()
@@ -64,7 +64,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends Tule
             )
         );
 
-        $this->assertEqual((int)$this->field_change_xml->value[0], 2001);
-        $this->assertEqual((string)$this->field_change_xml->value[0]['format'], 'id');
+        $this->assertEqual((int) $this->field_change_xml->value[0], 2001);
+        $this->assertEqual((string) $this->field_change_xml->value[0]['format'], 'id');
     }
 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once dirname(__FILE__) . '/../../bootstrap.php';
 
 class ACLUpdaterTest extends PHPUnit\Framework\TestCase
 {
@@ -34,7 +34,7 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase
         parent::setUp();
         $this->backend     = $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock();
         $this->acl_updater = new Tuleap\ProFTPd\Admin\ACLUpdater($this->backend);
-        $this->path        = realpath(dirname(__FILE__).'/../_fixtures/project_name');
+        $this->path        = realpath(dirname(__FILE__) . '/../_fixtures/project_name');
         $this->http_user   = 'httpuser';
         $this->writers     = 'gpig-ftp_writers';
         $this->readers     = 'gpig-ftp_readers';
@@ -47,31 +47,31 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase
         $this->backend->expects($this->any())->method('resetacl')->will($this->returnCallback(function ($path) use ($root_path) {
             switch ($path) {
                 case $root_path:
-                case $root_path.'/SomeFile':
-                case $root_path.'/SomeDirectory':
-                case $root_path.'/SomeDirectory/AnotherFile':
+                case $root_path . '/SomeFile':
+                case $root_path . '/SomeDirectory':
+                case $root_path . '/SomeDirectory/AnotherFile':
                     return true;
                 default:
-                    throw new Exception('invalid value for resetacl '.$path);
+                    throw new Exception('invalid value for resetacl ' . $path);
             }
         }));
 
         $this->backend->expects($this->any())->method('modifyacl')->will($this->returnCallback(function ($acl, $path) use ($root_path) {
             switch ($path) {
                 case $root_path:
-                case $root_path.'/SomeDirectory':
+                case $root_path . '/SomeDirectory':
                     if ($acl == 'd:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_writers:rwx,g:gpig-ftp_readers:rx') {
                         break;
                     }
                     // Fall-through seems to be intentional for the test...
-                case $root_path.'/SomeFile':
-                case $root_path.'/SomeDirectory/AnotherFile':
+                case $root_path . '/SomeFile':
+                case $root_path . '/SomeDirectory/AnotherFile':
                     if ($acl == 'u:httpuser:rw,g:gpig-ftp_writers:rw,g:gpig-ftp_readers:r') {
                         break;
                     }
                     // Fall-through seems to be intentional for the test...
                 default:
-                    throw new Exception('invalid value for modifyacl '.$path.' '.$acl);
+                    throw new Exception('invalid value for modifyacl ' . $path . ' ' . $acl);
             }
         }));
 

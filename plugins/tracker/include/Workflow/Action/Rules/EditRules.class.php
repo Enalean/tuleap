@@ -44,9 +44,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         parent::__construct($tracker);
         $this->rule_date_factory    = $rule_date_factory;
         $this->token                = $token;
-        $this->url_query            = TRACKER_BASE_URL.'/?'. http_build_query(
+        $this->url_query            = TRACKER_BASE_URL . '/?' . http_build_query(
             array(
-                'tracker' => (int)$this->tracker->id,
+                'tracker' => (int) $this->tracker->id,
                 'func'    => Workflow::FUNC_ADMIN_RULES,
             )
         );
@@ -76,7 +76,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
             $fields_have_good_type = $this->fieldsAreDateOnes($source_field_id, $target_field_id);
         }
 
-        $exist_comparator = (bool)$this->getComparatorFromAddRequest($request);
+        $exist_comparator = (bool) $this->getComparatorFromAddRequest($request);
 
         return $fields_exist && $fields_are_different && $exist_comparator && $fields_have_good_type;
     }
@@ -95,7 +95,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
     {
         $add = $request->get(self::PARAMETER_ADD_RULE);
         if (is_array($add) && isset($add[$source_or_target])) {
-            return (int)$add[$source_or_target];
+            return (int) $add[$source_or_target];
         }
     }
 
@@ -117,8 +117,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 
     private function fieldsAreDateOnes($source_field_id, $target_field_id)
     {
-        $source_field_is_date = (bool)$this->rule_date_factory->getUsedDateFieldById($this->tracker, $source_field_id);
-        $target_field_is_date = (bool)$this->rule_date_factory->getUsedDateFieldById($this->tracker, $target_field_id);
+        $source_field_is_date = (bool) $this->rule_date_factory->getUsedDateFieldById($this->tracker, $source_field_id);
+        $target_field_is_date = (bool) $this->rule_date_factory->getUsedDateFieldById($this->tracker, $target_field_id);
 
         return $source_field_is_date && $target_field_is_date;
     }
@@ -162,7 +162,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 
     private function updateARule($rule_id, array $new_values)
     {
-        $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
+        $rule = $this->rule_date_factory->getRule($this->tracker, (int) $rule_id);
         list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($new_values);
         if ($this->shouldUpdateTheRule($rule, $source_field, $target_field, $comparator)) {
             $rule->setSourceField($source_field);
@@ -192,10 +192,10 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         $source_field = null;
         $target_field = null;
         if (isset($param[self::PARAMETER_SOURCE_FIELD])) {
-            $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$param[self::PARAMETER_SOURCE_FIELD]);
+            $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int) $param[self::PARAMETER_SOURCE_FIELD]);
         }
         if (isset($param[self::PARAMETER_TARGET_FIELD])) {
-            $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$param[self::PARAMETER_TARGET_FIELD]);
+            $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int) $param[self::PARAMETER_TARGET_FIELD]);
         }
         $comparator = $this->getComparatorFromRequestParameter($param);
         return array($source_field, $target_field, $comparator);
@@ -207,7 +207,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         $nb_deleted = 0;
         if (is_array($remove_rules)) {
             foreach ($remove_rules as $rule_id) {
-                if ($this->rule_date_factory->deleteById($this->tracker->getId(), (int)$rule_id)) {
+                if ($this->rule_date_factory->deleteById($this->tracker->getId(), (int) $rule_id)) {
                     ++$nb_deleted;
                 }
             }
@@ -240,16 +240,16 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 
         $this->displayHeader($layout, $title);
         echo '<div class="workflow_rules">';
-        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
-        echo '<p class="help">'. $GLOBALS['Language']->getText('workflow_admin', 'hint_date_rules_definition') .'</p>';
-        echo '<form method="post" action="'. $this->url_query .'">';
+        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
+        echo '<p class="help">' . $GLOBALS['Language']->getText('workflow_admin', 'hint_date_rules_definition') . '</p>';
+        echo '<form method="post" action="' . $this->url_query . '">';
         // CSRF Protection
         echo $this->token->fetchHTMLInput();
         $this->displayRules();
         $this->displayAdd();
-        echo '<p><input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
+        echo '<p><input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></p>';
         echo '</form>';
-        echo '</div>' ;
+        echo '</div>';
         $this->displayFooter($layout);
     }
 
@@ -260,18 +260,18 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         echo '<table class="workflow_existing_rules">';
         echo '<tbody>';
         foreach ($rules as $rule) {
-            $name_prefix = self::PARAMETER_UPDATE_RULES .'['. $rule->getId() .']';
+            $name_prefix = self::PARAMETER_UPDATE_RULES . '[' . $rule->getId() . ']';
             echo '<tr>';
             echo '<td>';
             echo '<div class="workflow_rule">';
-            $this->displayFieldSelector($fields, $name_prefix .'['. self::PARAMETER_SOURCE_FIELD .']', $rule->getSourceField()->getId());
-            $this->displayComparatorSelector($name_prefix .'['. self::PARAMETER_COMPARATOR .']', $rule->getComparator());
-            $this->displayFieldSelector($fields, $name_prefix .'['. self::PARAMETER_TARGET_FIELD .']', $rule->getTargetField()->getId());
+            $this->displayFieldSelector($fields, $name_prefix . '[' . self::PARAMETER_SOURCE_FIELD . ']', $rule->getSourceField()->getId());
+            $this->displayComparatorSelector($name_prefix . '[' . self::PARAMETER_COMPARATOR . ']', $rule->getComparator());
+            $this->displayFieldSelector($fields, $name_prefix . '[' . self::PARAMETER_TARGET_FIELD . ']', $rule->getTargetField()->getId());
             echo '</div>';
             echo '</td>';
             echo '<td>';
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
-            echo '<input type="checkbox" name="'. self::PARAMETER_REMOVE_RULES .'[]" value="'.$rule->getId().'" ></input>';
+            echo '<input type="checkbox" name="' . self::PARAMETER_REMOVE_RULES . '[]" value="' . $rule->getId() . '" ></input>';
             echo '</label>';
             echo '</td>';
             echo '</tr>';
@@ -303,12 +303,12 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         echo '<p class="add_new_rule">';
         echo '<span class="add_new_rule_title">';
         echo '<i class="fa fa-plus"></i> ';
-        echo $GLOBALS['Language']->getText('workflow_admin', 'add_new_rule').' ';
+        echo $GLOBALS['Language']->getText('workflow_admin', 'add_new_rule') . ' ';
         echo '</span>';
         echo '<span>';
-        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'['. self::PARAMETER_SOURCE_FIELD .']', $selected);
-        $this->displayComparatorSelector(self::PARAMETER_ADD_RULE .'['. self::PARAMETER_COMPARATOR .']');
-        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'['. self::PARAMETER_TARGET_FIELD .']', $selected);
+        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE . '[' . self::PARAMETER_SOURCE_FIELD . ']', $selected);
+        $this->displayComparatorSelector(self::PARAMETER_ADD_RULE . '[' . self::PARAMETER_COMPARATOR . ']');
+        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE . '[' . self::PARAMETER_TARGET_FIELD . ']', $selected);
         echo '</span>';
         echo '</p>';
     }

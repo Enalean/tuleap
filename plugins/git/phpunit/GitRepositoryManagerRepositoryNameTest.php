@@ -21,7 +21,7 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitRepositoryManagerRepositoryNameTest extends TestCase
@@ -68,8 +68,8 @@ class GitRepositoryManagerRepositoryNameTest extends TestCase
     private function aRepoWithPath($path)
     {
         $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getPath')->andReturn($this->project_name.'/'.$path.'.git');
-        $repository->shouldReceive('getPathWithoutLazyLoading')->andReturn($this->project_name.'/'.$path.'.git');
+        $repository->shouldReceive('getPath')->andReturn($this->project_name . '/' . $path . '.git');
+        $repository->shouldReceive('getPathWithoutLazyLoading')->andReturn($this->project_name . '/' . $path . '.git');
         $repository->shouldReceive('getProject')->andReturn($this->project);
         return $repository;
     }

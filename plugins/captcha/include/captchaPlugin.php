@@ -85,7 +85,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
                 __DIR__ . '/../../../src/www/assets/captcha',
                 '/assets/captcha'
             );
-            echo '<link rel="stylesheet" type="text/css" href="'. $assets->getFileURL('style.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $assets->getFileURL('style.css') . '" />';
         }
     }
 

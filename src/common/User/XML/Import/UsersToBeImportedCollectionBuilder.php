@@ -92,7 +92,7 @@ class UsersToBeImportedCollectionBuilder
 
         $xml_element = $this->security->loadString($xml_contents);
 
-        $rng_path = realpath(__DIR__ .'/../../../xml/resources/users.rng');
+        $rng_path = realpath(__DIR__ . '/../../../xml/resources/users.rng');
         $this->xml_validator->validate($xml_element, $rng_path);
 
         return $xml_element;

@@ -91,14 +91,14 @@ class URLVerificationTest extends TestCase
     public function testItDoesNotTreatRegularUrlsAsExceptions(): void
     {
         $urlVerification = new URLVerification();
-        $this->assertFalse((bool)$urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar')));
+        $this->assertFalse((bool) $urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar')));
     }
 
     public function testItDoesNotTreatRegularUrlsWhichContainsSOAPAsExceptions(): void
     {
         $urlVerification = new URLVerification();
         $this->assertFalse(
-            (bool)$urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/?p=/soap/index.php'))
+            (bool) $urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/?p=/soap/index.php'))
         );
     }
 
@@ -106,7 +106,7 @@ class URLVerificationTest extends TestCase
     {
         $urlVerification = new URLVerification();
         $this->assertFalse(
-            (bool)$urlVerification->isException(
+            (bool) $urlVerification->isException(
                 array('SCRIPT_NAME' => '/projects/foobar/?p=/api/reference/extractCross')
             )
         );
@@ -115,21 +115,21 @@ class URLVerificationTest extends TestCase
     public function testItTreatsSOAPApiAsException(): void
     {
         $urlVerification = new URLVerification();
-        $this->assertTrue((bool)$urlVerification->isException(array('SCRIPT_NAME' => '/soap/index.php')));
+        $this->assertTrue((bool) $urlVerification->isException(array('SCRIPT_NAME' => '/soap/index.php')));
     }
 
     public function testItTreatsSOAPApiOfPluginsAsException(): void
     {
         $urlVerification = new URLVerification();
         $this->assertTrue(
-            (bool)$urlVerification->isException(array('SCRIPT_NAME' => '/plugins/docman/soap/index.php'))
+            (bool) $urlVerification->isException(array('SCRIPT_NAME' => '/plugins/docman/soap/index.php'))
         );
     }
 
     public function testItTreatsExtractionOfCrossReferencesApiAsException(): void
     {
         $urlVerification = new URLVerification();
-        $this->assertTrue((bool)$urlVerification->isException(array('SCRIPT_NAME' => '/api/reference/extractCross')));
+        $this->assertTrue((bool) $urlVerification->isException(array('SCRIPT_NAME' => '/api/reference/extractCross')));
     }
 
     public function testIsScriptAllowedForAnonymousFromHook(): void

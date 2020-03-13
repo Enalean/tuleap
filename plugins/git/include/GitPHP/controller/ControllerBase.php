@@ -81,13 +81,13 @@ abstract class ControllerBase
                 mkdir($smarty_tmp, 0755, true);
             }
 
-            $templates_c = $smarty_tmp.'/templates_c';
+            $templates_c = $smarty_tmp . '/templates_c';
             if (!is_dir($templates_c)) {
                 mkdir($templates_c, 0755, true);
             }
             $this->tpl->compile_dir = $templates_c;
 
-            $cache = $smarty_tmp.'/cache';
+            $cache = $smarty_tmp . '/cache';
             if (!is_dir($cache)) {
                 mkdir($cache, 0755, true);
             }

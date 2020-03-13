@@ -88,7 +88,7 @@ class MoveChangesetXMLUpdater
         SimpleXMLElement $field_change,
         Tracker_FormElement_Field $source_field
     ) {
-        return (string)$field_change['field_name'] === $source_field->getName();
+        return (string) $field_change['field_name'] === $source_field->getName();
     }
 
     private function updateFieldChangeNode(

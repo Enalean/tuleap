@@ -146,8 +146,8 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
     {
         $fields = [];
         foreach ($xml->field_id as $xml_field_id) {
-            if (isset($xmlMapping[(string)$xml_field_id['REF']])) {
-                $fields[] = $xmlMapping[(string)$xml_field_id['REF']];
+            if (isset($xmlMapping[(string) $xml_field_id['REF']])) {
+                $fields[] = $xmlMapping[(string) $xml_field_id['REF']];
             }
         }
 

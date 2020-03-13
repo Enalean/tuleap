@@ -42,7 +42,7 @@ class ArtifactsDeletionConfigDAO extends DataAccessObject
 
     public function updateDeletableArtifactsLimit($new_artifacts_limit)
     {
-        $sql= "REPLACE INTO plugin_tracker_config (name, value)
+        $sql = "REPLACE INTO plugin_tracker_config (name, value)
                 VALUES (?, ?)
         ";
 

@@ -260,7 +260,7 @@ class Tracker_Report_RendererFactory
             $session = new Tracker_Report_Session($report->id);
             $session->changeSessionNamespace('renderers');
             $nb_renderers = count($report->getRenderers());
-            $renderer_id = -$nb_renderers-1;
+            $renderer_id = -$nb_renderers - 1;
             $session->set(
                 $renderer_id,
                 array(
@@ -392,7 +392,7 @@ class Tracker_Report_RendererFactory
             $this->report_session->changeSessionNamespace('renderers');
         }
 
-        if (!isset($this->renderers[$row['id']]) || $row['id']== 0) {
+        if (!isset($this->renderers[$row['id']]) || $row['id'] == 0) {
             $instance = null;
             switch ($row['renderer_type']) {
                 case Tracker_Report_Renderer::TABLE:
@@ -493,17 +493,17 @@ class Tracker_Report_RendererFactory
         assert($att !== null);
         $row = array(
             'id'            => 0,
-            'name'          => (string)$xml->name,
-            'description'   => (string)$xml->description,
-            'rank'          => (int)$att['type'],
-            'renderer_type' => (string)$att['type'],
+            'name'          => (string) $xml->name,
+            'description'   => (string) $xml->description,
+            'rank'          => (int) $att['type'],
+            'renderer_type' => (string) $att['type'],
         );
 
         switch ($row['renderer_type']) {
             case Tracker_Report_Renderer::TABLE:
                 // specific TABLE attributes
-                $row['chunksz']   = (int)$att['chunksz'];
-                $row['multisort'] = (int)$att['multisort'];
+                $row['chunksz']   = (int) $att['chunksz'];
+                $row['multisort'] = (int) $att['multisort'];
 
                 //columns
                 $cols = array();
@@ -511,16 +511,16 @@ class Tracker_Report_RendererFactory
                     $att    = $f->attributes();
                     $column = array();
 
-                    if (! isset($xmlMapping[(string)$att['REF']])) {
+                    if (! isset($xmlMapping[(string) $att['REF']])) {
                         continue;
                     }
 
-                    $column['field'] = $xmlMapping[(string)$att['REF']];
+                    $column['field'] = $xmlMapping[(string) $att['REF']];
                     if (isset($att['artlink-nature'])) {
                         $column['artlink_nature'] = $att['artlink-nature'];
                     }
                     if (isset($att['artlink-nature-format'])) {
-                        $column['artlink_nature_format'] = (string)$att['artlink-nature-format'];
+                        $column['artlink_nature_format'] = (string) $att['artlink-nature-format'];
                     }
                     $cols[] = $column;
                 }
@@ -533,11 +533,11 @@ class Tracker_Report_RendererFactory
                     foreach ($xml->sort->field as $f) {
                         $att = $f->attributes();
                         $column = array();
-                        if (! isset($xmlMapping[(string)$att['REF']])) {
+                        if (! isset($xmlMapping[(string) $att['REF']])) {
                             continue;
                         }
 
-                        $column['field'] = $xmlMapping[(string)$att['REF']];
+                        $column['field'] = $xmlMapping[(string) $att['REF']];
                         $sort[] = $column;
                     }
                     $row['sort'] = $sort;

@@ -289,7 +289,7 @@ XML;
 
         $this->assertEquals($this->last_saved_repository->getName(), 'empty');
 
-        $iterator = new DirectoryIterator($GLOBALS['sys_data_dir'].'/gitolite/repositories/test_project');
+        $iterator = new DirectoryIterator($GLOBALS['sys_data_dir'] . '/gitolite/repositories/test_project');
         $empty_is_here = false;
         foreach ($iterator as $it) {
             if ($it->getFilename() == 'empty') {

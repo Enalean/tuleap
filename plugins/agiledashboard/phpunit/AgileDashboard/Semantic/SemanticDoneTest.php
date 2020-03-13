@@ -107,9 +107,9 @@ class SemanticDoneTest extends TestCase
 
         $semantic_done->exportToXML($xml, $array_xml_mapping);
 
-        $this->assertEquals('done', (string)$xml->semantic->shortname);
-        $this->assertEquals('Done', (string)$xml->semantic->label);
-        $this->assertEquals('F14-V68', (string)$xml->semantic->closed_values->closed_value[0]['REF']);
+        $this->assertEquals('done', (string) $xml->semantic->shortname);
+        $this->assertEquals('Done', (string) $xml->semantic->label);
+        $this->assertEquals('F14-V68', (string) $xml->semantic->closed_values->closed_value[0]['REF']);
     }
 
     public function testItExportsNothingIfNoSemanticStatusDefined(): void

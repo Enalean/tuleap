@@ -50,7 +50,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
         if (!isset($rank)) {
-            $rank        = (int)$this->prepareRanking('tracker_report_renderer_table_sort', 0, $renderer_id, 'end', 'field_id', 'renderer_id');
+            $rank        = (int) $this->prepareRanking('tracker_report_renderer_table_sort', 0, $renderer_id, 'end', 'field_id', 'renderer_id');
         } else {
             $rank = $this->da->escapeInt($rank);
         }
@@ -78,7 +78,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
 
     public function delete($renderer_id)
     {
-        $sql = "DELETE FROM $this->table_name WHERE renderer_id = ". $this->da->escapeInt($renderer_id);
+        $sql = "DELETE FROM $this->table_name WHERE renderer_id = " . $this->da->escapeInt($renderer_id);
         return $this->update($sql);
     }
 

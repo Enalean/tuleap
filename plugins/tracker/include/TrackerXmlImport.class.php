@@ -287,7 +287,7 @@ class TrackerXmlImport
             return;
         }
 
-        $partial_element = new SimpleXMLElement((string)$xml_input->asXML());
+        $partial_element = new SimpleXMLElement((string) $xml_input->asXML());
         $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
 
         $this->rng_validator->validate(
@@ -429,10 +429,10 @@ class TrackerXmlImport
         if (! $xml_input->trackers) {
             return '';
         }
-        $partial_element = new SimpleXMLElement((string)$xml_input->asXML());
+        $partial_element = new SimpleXMLElement((string) $xml_input->asXML());
         $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
 
-        $this->rng_validator->validate($partial_element->trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
+        $this->rng_validator->validate($partial_element->trackers, dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng');
 
         $xml_trackers = $this->getAllXmlTrackers($xml_input);
         $trackers = array();
@@ -613,7 +613,7 @@ class TrackerXmlImport
                 continue;
             }
 
-            $tracker_shortname = (String)$xml_tracker->item_name;
+            $tracker_shortname = (String) $xml_tracker->item_name;
 
             if (in_array($tracker_shortname, $extra_configuration->getValue())) {
                 $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId(
@@ -638,7 +638,7 @@ class TrackerXmlImport
      */
     public function updateFromXML(Project $project, SimpleXMLElement $xml_tracker)
     {
-        $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId((String)$xml_tracker->item_name, $project->getID());
+        $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId((String) $xml_tracker->item_name, $project->getID());
 
         if (! $tracker_existing) {
             throw new TrackerFromXmlImportCannotBeUpdatedException((String) $xml_tracker->name);
@@ -675,9 +675,9 @@ class TrackerXmlImport
         }
 
         try {
-            $name        = (string)$tracker_xml->name;
-            $description = (string)$tracker_xml->description;
-            $item_name   = (string)$tracker_xml->item_name;
+            $name        = (string) $tracker_xml->name;
+            $description = (string) $tracker_xml->description;
+            $item_name   = (string) $tracker_xml->item_name;
 
             return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name);
         } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
@@ -691,7 +691,7 @@ class TrackerXmlImport
     {
         $tracker_xml = $this->loadXmlFile($filepath);
         if ($tracker_xml !== false) {
-            return (string)$tracker_xml->item_name;
+            return (string) $tracker_xml->item_name;
         }
     }
 
@@ -735,8 +735,8 @@ class TrackerXmlImport
         string $itemname
     ): Tracker {
         $tracker = null;
-        $partial_element = new SimpleXMLElement((string)$xml_element->asXML());
-        $this->creation_data_checker->checkAtProjectCreation((int)$project->getId(), $name, $itemname);
+        $partial_element = new SimpleXMLElement((string) $xml_element->asXML());
+        $this->creation_data_checker->checkAtProjectCreation((int) $project->getId(), $name, $itemname);
 
         $this->external_fields_extractor->extractExternalFieldsFromTracker($partial_element);
 

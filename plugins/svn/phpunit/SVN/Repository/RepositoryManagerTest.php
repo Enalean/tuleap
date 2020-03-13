@@ -36,7 +36,7 @@ use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\SvnAdmin;
 
-require_once __DIR__ .'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class RepositoryManagerTest extends TestCase
 {

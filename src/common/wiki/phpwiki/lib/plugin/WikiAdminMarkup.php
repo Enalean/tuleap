@@ -219,8 +219,8 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
 
     public function chmarkupForm(&$header, $post_args)
     {
-        $header->pushContent(_("Change markup")." ");
-        $header->pushContent(' '._("to").': ');
+        $header->pushContent(_("Change markup") . " ");
+        $header->pushContent(' ' . _("to") . ': ');
         $header->pushContent(HTML::input(array('name' => 'admin_markup[markup]',
                                                'value' => $post_args['markup'])));
         $header->pushContent(HTML::p());

@@ -29,7 +29,7 @@ use Tuleap\GlobalLanguageMock;
 use Workflow_Transition_Condition_CommentNotEmpty;
 use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 class CommentNotEmpty_validateTest extends TestCase
 {

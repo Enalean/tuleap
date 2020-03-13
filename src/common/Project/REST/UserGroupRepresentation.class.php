@@ -63,10 +63,10 @@ class UserGroupRepresentation
     public function build(int $project_id, ProjectUGroup $ugroup): self
     {
         $this->id         = self::getRESTIdForProject($project_id, $ugroup->getId());
-        $this->uri        = self::ROUTE . '/' . $this->id ;
+        $this->uri        = self::ROUTE . '/' . $this->id;
         $this->label      = NameTranslator::getUserGroupDisplayName($ugroup->getName());
         $this->key        = $ugroup->getName();
-        $this->users_uri  = self::ROUTE . '/'. $this->id .'/users';
+        $this->users_uri  = self::ROUTE . '/' . $this->id . '/users';
         $this->short_name = $ugroup->getNormalizedName();
         return $this;
     }
@@ -79,7 +79,7 @@ class UserGroupRepresentation
             return (string) $user_group_id;
         }
 
-        return $project_id.'_'.$user_group_id;
+        return $project_id . '_' . $user_group_id;
     }
 
     public static function getProjectAndUserGroupFromRESTId($identifier)
@@ -109,7 +109,7 @@ class UserGroupRepresentation
                 return;
             }
 
-            throw new Exception("Invalid ID for user group ('".$simple_id[0]."'), format must be: projectId_ugroupId");
+            throw new Exception("Invalid ID for user group ('" . $simple_id[0] . "'), format must be: projectId_ugroupId");
         }
 
         if (preg_match(self::COMPLEX_REST_ID_PATTERN, $identifier, $complex_id)) {
@@ -119,6 +119,6 @@ class UserGroupRepresentation
             }
         }
 
-        throw new Exception('Invalid ID format('.$identifier.')');
+        throw new Exception('Invalid ID format(' . $identifier . ')');
     }
 }

@@ -89,7 +89,7 @@ class WebhooksDisplayController implements DispatchableWithRequest
         $admin_page = new AdminPageRenderer();
         $admin_page->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') .'/src/templates/admin/projects/',
+            ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
             'configuration',
             $presenter
         );

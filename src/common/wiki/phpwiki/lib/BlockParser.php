@@ -136,7 +136,7 @@ class AnchoredRegexpSet
             return false;
         }
 
-        $pat= "/ ( (" . join(')|(', $regexps) . ") ) /Axs";
+        $pat = "/ ( (" . join(')|(', $regexps) . ") ) /Axs";
 
         if (! preg_match($pat, $text, $m)) {
             return false;
@@ -156,7 +156,6 @@ class BlockParser_Input
 {
     public function __construct($text)
     {
-
         // Expand leading tabs.
         // FIXME: do this better.
         //
@@ -623,7 +622,7 @@ class Block_dl extends Block_list
 
     public function __construct()
     {
-        $this->_re = '\ {0,4}\S.*(?<!'.ESCAPE_CHAR.'):\s*$';
+        $this->_re = '\ {0,4}\S.*(?<!' . ESCAPE_CHAR . '):\s*$';
     }
 
     public function _match(&$input, $m)
@@ -850,7 +849,7 @@ class Block_table_dl extends Block_dl
 
     public function __construct()
     {
-        $this->_re = '\ {0,4} (?:\S.*)? (?<!'.ESCAPE_CHAR.') \| \s* $';
+        $this->_re = '\ {0,4} (?:\S.*)? (?<!' . ESCAPE_CHAR . ') \| \s* $';
     }
 
     public function _match(&$input, $m)
@@ -968,7 +967,7 @@ class Block_oldlists extends Block_list
                     echo "\$this->_content[0]: ";
                     var_dump($this->_content[0]);
 
-                    for ($i=1; $i < min(5, count($this->_content)); $i++) {
+                    for ($i = 1; $i < min(5, count($this->_content)); $i++) {
                         $c = $this->_content[$i];
                         echo '$this->_content[',$i,"]: \n";
                         echo "_tag: ";
@@ -1038,7 +1037,7 @@ class Block_plugin extends Block_pre
     {
         $pos = $input->getPos();
         $pi = $m->match . $m->postmatch;
-        while (!preg_match('/(?<!'.ESCAPE_CHAR.')\?>\s*$/', $pi)) {
+        while (!preg_match('/(?<!' . ESCAPE_CHAR . ')\?>\s*$/', $pi)) {
             if (($line = $input->nextLine()) === false) {
                 $input->setPos($pos);
                 return false;

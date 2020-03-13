@@ -276,7 +276,6 @@ class FieldDataFromRESTBuilderTest extends TestCase
 
     public function testFileIsTemporaryButDoesNotExist(): void
     {
-
         $this->file_info_factory
             ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
             ->with(123)
@@ -317,7 +316,6 @@ class FieldDataFromRESTBuilderTest extends TestCase
 
     public function testFileIsTemporaryButItsCreatorDoesNotExist(): void
     {
-
         $this->file_info_factory
             ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
             ->with(123)
@@ -353,7 +351,6 @@ class FieldDataFromRESTBuilderTest extends TestCase
 
     public function testTemporaryFileIsGivenInRESTData(): void
     {
-
         $this->file_info_factory
             ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
             ->with(123)

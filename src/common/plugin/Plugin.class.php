@@ -151,7 +151,7 @@ class Plugin implements PFO_Plugin
     public function addHook($hook, $callback = null, $recallHook = false)
     {
         if ($this->hooks->containsKey($hook)) {
-            throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check '.$hook);
+            throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check ' . $hook);
         }
         $value = array();
         $value['hook']       = $hook;
@@ -203,7 +203,7 @@ class Plugin implements PFO_Plugin
 
     public function getPluginEtcRoot()
     {
-        return $GLOBALS['sys_custompluginsroot'] . '/' . $this->getName() .'/etc';
+        return $GLOBALS['sys_custompluginsroot'] . '/' . $this->getName() . '/etc';
     }
 
     public function getEtcTemplatesPath()
@@ -214,7 +214,7 @@ class Plugin implements PFO_Plugin
     public function _getPluginPath()
     {
         $trace = debug_backtrace();
-        trigger_error("Plugin->_getPluginPath() is deprecated. Please use Plugin->getPluginPath() instead in ". $trace[0]['file'] ." at line ". $trace[0]['line'], E_USER_WARNING);
+        trigger_error("Plugin->_getPluginPath() is deprecated. Please use Plugin->getPluginPath() instead in " . $trace[0]['file'] . " at line " . $trace[0]['line'], E_USER_WARNING);
         return $this->getPluginPath();
     }
 
@@ -231,18 +231,18 @@ class Plugin implements PFO_Plugin
         if (isset($GLOBALS['sys_pluginspath'])) {
             $path = $GLOBALS['sys_pluginspath'];
         } else {
-            $path="";
+            $path = "";
         }
         if ($pm->pluginIsCustom($this)) {
             $path = $GLOBALS['sys_custompluginspath'];
         }
-        return $path .'/'. $this->getName();
+        return $path . '/' . $this->getName();
     }
 
     public function _getThemePath()
     {
         $trace = debug_backtrace();
-        trigger_error("Plugin->_getThemePath() is deprecated. Please use Plugin->getThemePath() instead in ". $trace[0]['file'] ." at line ". $trace[0]['line'], E_USER_WARNING);
+        trigger_error("Plugin->_getThemePath() is deprecated. Please use Plugin->getThemePath() instead in " . $trace[0]['file'] . " at line " . $trace[0]['line'], E_USER_WARNING);
         return $this->getThemePath();
     }
 
@@ -256,14 +256,14 @@ class Plugin implements PFO_Plugin
 
         $paths  = array($GLOBALS['sys_custompluginspath'], $GLOBALS['sys_pluginspath']);
         $roots  = array($GLOBALS['sys_custompluginsroot'], $GLOBALS['sys_pluginsroot']);
-        $dir    = '/'. $pluginName .'/www/themes/';
-        $dirs   = array($dir.$GLOBALS['sys_user_theme'], $dir.'default');
-        $dir    = '/'. $pluginName .'/themes/';
-        $themes = array($dir.$GLOBALS['sys_user_theme'], $dir.'default');
+        $dir    = '/' . $pluginName . '/www/themes/';
+        $dirs   = array($dir . $GLOBALS['sys_user_theme'], $dir . 'default');
+        $dir    = '/' . $pluginName . '/themes/';
+        $themes = array($dir . $GLOBALS['sys_user_theme'], $dir . 'default');
         foreach ($dirs as $kd => $dir) {
             foreach ($roots as $kr => $root) {
-                if (is_dir($root.$dir) && $paths[$kr].$themes[$kd]) {
-                    return $paths[$kr].$themes[$kd];
+                if (is_dir($root . $dir) && $paths[$kr] . $themes[$kd]) {
+                    return $paths[$kr] . $themes[$kd];
                 }
             }
         }
@@ -286,7 +286,7 @@ class Plugin implements PFO_Plugin
             } else {
                 $path = $GLOBALS['sys_pluginsroot'];
             }
-            if ($path[strlen($path) -1 ] != '/') {
+            if ($path[strlen($path) - 1] != '/') {
                 $path .= '/';
             }
             $this->filesystem_path = $path . $this->getName();
@@ -361,7 +361,7 @@ class Plugin implements PFO_Plugin
      */
     public function getReadme()
     {
-        return $this->getFilesystemPath().'/README';
+        return $this->getFilesystemPath() . '/README';
     }
 
     /**
@@ -406,7 +406,7 @@ class Plugin implements PFO_Plugin
             $this->getFilesystemPath() . '/www/assets',
             $this->getPluginPath() . '/assets'
         );
-        return $include_assets->getHTMLSnippet($this->getName().'.js');
+        return $include_assets->getHTMLSnippet($this->getName() . '.js');
     }
 
     public function currentRequestIsForPlugin()

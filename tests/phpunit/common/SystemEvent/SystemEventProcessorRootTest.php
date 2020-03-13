@@ -141,7 +141,7 @@ class SystemEventProcessorRootTest extends TestCase
         $this->system_event_dao->shouldReceive('checkOutNextEvent')->once()->andReturn(M::mock(\DataAccessResult::class, ['getRow' => ['whatever']]))->ordered();
         $this->system_event_dao->shouldReceive('checkOutNextEvent')->once()->andReturn(null)->ordered();
 
-        $command   = '/usr/bin/tuleap process-system-events '.SystemEvent::OWNER_APP;
+        $command   = '/usr/bin/tuleap process-system-events ' . SystemEvent::OWNER_APP;
         $this->processor->shouldReceive('launchAs')->with($this->sys_http_user, $command)->once();
         $category = SystemEvent::DEFAULT_QUEUE;
         $this->processor->execute($category);

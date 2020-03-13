@@ -259,7 +259,7 @@ class Docman_Controller extends Controler
     public function getDefaultUrl()
     {
         $_gid = $this->getGroupId();
-        return $this->pluginPath.'/?group_id='.urlencode((string) $_gid);
+        return $this->pluginPath . '/?group_id=' . urlencode((string) $_gid);
     }
 
     public function getThemePath()
@@ -388,9 +388,9 @@ class Docman_Controller extends Controler
                 )
             ) {
             if ($this->request->get('hide')) {
-                user_set_preference('hide_'. $this->request->get('action'), 1);
+                user_set_preference('hide_' . $this->request->get('action'), 1);
             } else {
-                user_del_preference('hide_'. $this->request->get('action'));
+                user_del_preference('hide_' . $this->request->get('action'));
             }
             exit;
         }
@@ -891,8 +891,8 @@ class Docman_Controller extends Controler
                     $this->action                = 'update_monitoring';
                 }
                 $this->view                       = 'RedirectAfterCrud';
-                $this->_viewParams['redirect_to'] = DOCMAN_BASE_URL.'/index.php?group_id='
-                .$item->groupId.'&id='.$item->id.'&action=details&section=notifications';
+                $this->_viewParams['redirect_to'] = DOCMAN_BASE_URL . '/index.php?group_id='
+                . $item->groupId . '&id=' . $item->id . '&action=details&section=notifications';
                 break;
             case 'move_here':
                 if (!$this->request->exist('item_to_move')) {
@@ -1395,7 +1395,7 @@ class Docman_Controller extends Controler
                             $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
                         } elseif ($valid) {
                             $this->updateItemFromUserInput($item);
-                            $valid = (($this->_validateApprovalTable($this->request, $item))&&($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)))));
+                            $valid = (($this->_validateApprovalTable($this->request, $item)) && ($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)))));
                         }
                         //Actions
                         if ($valid && $updateConfirmed) {
@@ -1755,7 +1755,7 @@ class Docman_Controller extends Controler
         // Redefine actions classes names building.
         $className = static::class;
         $class = substr($className, 0, -(strlen("Controller"))) . 'Actions';
-        require_once($class.'.class.php');
+        require_once($class . '.class.php');
         $wa = new $class($this, $this->gid);
         $wa->process($this->action, $this->_actionParams);
     }
@@ -1768,7 +1768,7 @@ class Docman_Controller extends Controler
                 $wv = new $className($this);
                 return $wv->display($this->_viewParams);
             } else {
-                die($className .' does not exist.');
+                die($className . ' does not exist.');
             }
         }
     }

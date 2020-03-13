@@ -62,7 +62,7 @@ if ($request->exist('export')) {
     $project_list_csv      = $project_list_exporter->exportProjectList($group_name_search, $status_values);
     header('Content-Type: text/csv');
     header('Content-Disposition:attachment; filename=project_list.csv');
-    header('Content-Length:'.strlen($project_list_csv));
+    header('Content-Length:' . strlen($project_list_csv));
     echo $project_list_csv;
     exit;
 }
@@ -108,7 +108,7 @@ $total_nb_projects = $dao->getFoundRows();
 
 if ($total_nb_projects == 1) {
     $row = $projects->getRow();
-    $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$row['group_id']);
+    $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . $row['group_id']);
 }
 
 $title = $Language->getText('admin_projectlist', 'project_list');
@@ -141,7 +141,7 @@ $project_list_presenter = new ProjectListPresenter(
 $admin_page = new AdminPageRenderer();
 $admin_page->renderAPresenter(
     $Language->getText('admin_projectlist', 'title'),
-    ForgeConfig::get('codendi_dir') .'/src/templates/admin/projects/',
+    ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
     'projectlist',
     $project_list_presenter
 );

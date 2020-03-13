@@ -71,7 +71,7 @@ class Docman_ImportFromDocmanV1
             $project->getID(),
             $root_folder_id,
             'Docman v1 import',
-            'Documents imported from legacy documentation system on '.date('c', $_SERVER['REQUEST_TIME']),
+            'Documents imported from legacy documentation system on ' . date('c', $_SERVER['REQUEST_TIME']),
             'begin',
             'none',
             array(
@@ -116,7 +116,7 @@ class Docman_ImportFromDocmanV1
             $logger
         );
 
-        $xml_import->importPath($this->temporary_directory, $folder_id, '/'.DocmanV1_XMLExportData::ROOT_FOLDER_NAME);
+        $xml_import->importPath($this->temporary_directory, $folder_id, '/' . DocmanV1_XMLExportData::ROOT_FOLDER_NAME);
     }
 
     private function createTemporaryDirectory()

@@ -58,8 +58,8 @@ class HistoryValueFormatter
     private $permissions_manager;
 
     public function __construct(
-        PermissionsManager   $permissions_manager,
-        UGroupManager        $ugroup_manager,
+        PermissionsManager $permissions_manager,
+        UGroupManager $ugroup_manager,
         FineGrainedRetriever $fine_grained_retriever,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         FineGrainedPermissionFactory $fine_grained_factory

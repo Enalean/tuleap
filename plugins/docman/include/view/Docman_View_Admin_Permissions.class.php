@@ -27,7 +27,7 @@ class Docman_View_Admin_Permissions extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. $this->_getTitle($params) .' - '. dgettext('tuleap-docman', 'Manage Permissions') .'</h2>';
+        echo '<h2>' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Manage Permissions') . '</h2>';
     }
     public function _content($params)
     {

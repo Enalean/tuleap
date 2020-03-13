@@ -118,9 +118,9 @@ class GitXmlImporter
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
-        GitRepositoryManager   $repository_manager,
-        GitRepositoryFactory   $repository_factory,
-        Git_Backend_Gitolite   $gitolite_backend,
+        GitRepositoryManager $repository_manager,
+        GitRepositoryFactory $repository_factory,
+        Git_Backend_Gitolite $gitolite_backend,
         Git_SystemEventManager $system_event_manager,
         PermissionsManager $permissions_manager,
         EventManager $event_manager,
@@ -400,8 +400,8 @@ class GitXmlImporter
         $this->git_dao->logGitPush(
             $repository->getId(),
             $this->user_finder->getUser($push_informations->user)->getId(),
-            (int)$push_informations['push_date'],
-            (int)$push_informations['commits_number'],
+            (int) $push_informations['push_date'],
+            (int) $push_informations['commits_number'],
             $push_informations['refname'],
             $push_informations['operation_type'],
             $push_informations['refname_type']

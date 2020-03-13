@@ -64,7 +64,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
     {
         $report_id    = $this->da->escapeInt($report_id);
         $field_id     = $this->da->escapeInt($field_id);
-        $rank         = (int)$this->prepareRanking('tracker_report_criteria', 0, $report_id, 'end', 'id', 'report_id');
+        $rank         = (int) $this->prepareRanking('tracker_report_criteria', 0, $report_id, 'end', 'id', 'report_id');
         $is_advanced  = $this->da->escapeInt($is_advanced);
         $sql = "INSERT INTO $this->table_name
                        (report_id, field_id, rank, is_advanced)

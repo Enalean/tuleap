@@ -63,7 +63,7 @@ class SetDateValueRepository
                         $transition->getId()
                     )
                 );
-            };
+            }
             $success = $this->set_date_value_dao->updatePostAction(
                 $id_or_failure,
                 $set_date_value->getFieldId(),

@@ -51,13 +51,13 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
     public function calculateReadStats()
     {
         $readIndex[]          = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $totalRead[]          = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_total_read');
-        $readProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_read_project');
-        $readUsersNumber[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_read_user');
+        $totalRead[]          = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_total_read');
+        $readProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_read_project');
+        $readUsersNumber[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_read_user');
         $readDar              = $this->dao->totalRead($this->startDate, $this->endDate);
         if ($readDar && !$readDar->isError()) {
             foreach ($readDar as $row) {
-                $readIndex[]          = $row['month']." ".$row['year'];
+                $readIndex[]          = $row['month'] . " " . $row['year'];
                 $readProjectsNumber[] = $row['projects'];
                 $readUsersNumber[]    = $row['users'];
                 $totalRead[]          = intval($row['count']);
@@ -78,13 +78,13 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
     public function calculateCommitsStats()
     {
         $commitsIndex[]         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $totalCommits[]         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_total_commit');
-        $commitProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_commit_project');
-        $commitUsersNumber[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_commit_user');
+        $totalCommits[]         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_total_commit');
+        $commitProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_commit_project');
+        $commitUsersNumber[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_commit_user');
         $commitsDar = $this->dao->totalCommits($this->startDate, $this->endDate);
         if ($commitsDar && !$commitsDar->isError()) {
             foreach ($commitsDar as $row) {
-                $commitsIndex[]         = $row['month']." ".$row['year'];
+                $commitsIndex[]         = $row['month'] . " " . $row['year'];
                 $commitProjectsNumber[] = $row['projects'];
                 $commitUsersNumber[]    = $row['users'];
                 $totalCommits[]         = intval($row['count']);
@@ -149,7 +149,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $repositories[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_repo_total');
         $count = 0;
         $dar = $this->dao->repositoriesWithCommit($this->startDate, $this->endDate);
-        if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             $row = $dar->getRow();
             if ($row) {
                 $count = $row['count'];

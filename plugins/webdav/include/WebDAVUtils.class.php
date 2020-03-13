@@ -60,7 +60,6 @@ class WebDAVUtils
      */
     public static function getInstance()
     {
-
         if (self::$instance === null) {
             self::$instance = new self();
         }
@@ -86,7 +85,6 @@ class WebDAVUtils
      */
     public function convertName($name)
     {
-
         $name = str_replace('%', '%25', $name);
         $name = str_replace('/', '%2F', $name);
         $name = str_replace('|', '&#124;', $name);
@@ -114,7 +112,6 @@ class WebDAVUtils
      */
     public function retrieveName($name)
     {
-
         $name = str_replace('%2F', '/', $name);
         $name = str_replace('%25', '%', $name);
         $name = str_replace('&#124;', '|', $name);
@@ -167,7 +164,6 @@ class WebDAVUtils
      */
     public function getProjectManager()
     {
-
         $pm = ProjectManager::instance();
         return $pm;
     }
@@ -179,7 +175,6 @@ class WebDAVUtils
      */
     public function getPackageFactory()
     {
-
         return new FRSPackageFactory();
     }
 
@@ -190,7 +185,6 @@ class WebDAVUtils
      */
     public function getReleaseFactory()
     {
-
         return new FRSReleaseFactory();
     }
 
@@ -201,7 +195,6 @@ class WebDAVUtils
      */
     public function getFileFactory()
     {
-
         return new FRSFileFactory();
     }
 
@@ -212,7 +205,6 @@ class WebDAVUtils
      */
     public function getPermissionsManager()
     {
-
         $pm = & PermissionsManager::instance();
         return $pm;
     }
@@ -229,7 +221,7 @@ class WebDAVUtils
 
     public function getIncomingFileSize($name)
     {
-        return PHP_BigFile::getSize($GLOBALS['ftp_incoming_dir'].'/'.$name);
+        return PHP_BigFile::getSize($GLOBALS['ftp_incoming_dir'] . '/' . $name);
     }
 
     public function getIncomingFileMd5Sum($file)

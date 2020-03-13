@@ -215,7 +215,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
     public function display(Codendi_Request $request)
     {
         $title    = dgettext('tuleap-git', 'Git');
-        $template_path = dirname(GIT_BASE_DIR).'/templates';
+        $template_path = dirname(GIT_BASE_DIR) . '/templates';
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($this->include_assets->getFileURL('siteadmin-gitolite.js'));
 

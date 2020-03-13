@@ -65,7 +65,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        include_once __DIR__.'/../../../src/www/include/account.php';
+        include_once __DIR__ . '/../../../src/www/include/account.php';
 
         $current_user = $request->getCurrentUser();
         $timezone     = $request->get('timezone');
@@ -114,7 +114,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
         if ((int) $request->get('pv') === 2) {
             $layout->pv_header(array());
         } else {
-            site_header(array('title'=>$GLOBALS['Language']->getText('include_exit', 'exit_error'), 'registeration_process' => true));
+            site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error'), 'registeration_process' => true));
         }
 
         echo '<p>',$text,'</p>';

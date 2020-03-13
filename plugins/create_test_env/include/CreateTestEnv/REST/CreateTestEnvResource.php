@@ -88,13 +88,13 @@ class CreateTestEnvResource
                 \HTTPRequest::instance()->getServerUrl()
             );
         } catch (InvalidPasswordException $exception) {
-            $this->notifier->notify('Client error at environment creation: '.$exception->getMessage());
+            $this->notifier->notify('Client error at environment creation: ' . $exception->getMessage());
             throw new RestException(400, $exception->getMessage(), ['exception' => get_class($exception), 'password_exceptions' => $exception->getPasswordErrors()]);
         } catch (InvalidInputException $exception) {
-            $this->notifier->notify('Client error at environment creation: '.$exception->getMessage());
+            $this->notifier->notify('Client error at environment creation: ' . $exception->getMessage());
             throw new RestException(400, $exception->getMessage(), ['exception' => get_class($exception)]);
         } catch (CreateTestEnvException $exception) {
-            $this->notifier->notify('Server error at environment creation: '.$exception->getMessage());
+            $this->notifier->notify('Server error at environment creation: ' . $exception->getMessage());
             throw new RestException(500, $exception->getMessage(), ['exception' => get_class($exception)]);
         } finally {
             $this->cleanUpTempDir($tmp_name);
@@ -144,7 +144,7 @@ class CreateTestEnvResource
      */
     private function getSecret()
     {
-        $path = $this->getPlugin()->getPluginEtcRoot().'/creation_secret';
+        $path = $this->getPlugin()->getPluginEtcRoot() . '/creation_secret';
         if (! file_exists($path)) {
             $random = (new \RandomNumberGenerator(32))->getNumber();
             touch($path);

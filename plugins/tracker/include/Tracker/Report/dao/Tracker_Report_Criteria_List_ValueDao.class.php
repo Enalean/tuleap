@@ -45,7 +45,7 @@ class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_Valu
             }
             $sql = '';
             if (count($new_values)) {
-                $sql = "INSERT INTO $this->table_name(criteria_id, value) VALUES ".implode(',', $new_values);
+                $sql = "INSERT INTO $this->table_name(criteria_id, value) VALUES " . implode(',', $new_values);
             }
             $r = null;
             if ($sql != '') {

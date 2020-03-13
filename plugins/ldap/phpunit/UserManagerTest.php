@@ -31,7 +31,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SystemEvent;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 final class UserManagerTest extends TestCase
 {
@@ -145,7 +145,7 @@ final class UserManagerTest extends TestCase
         $lum  = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $sem = \Mockery::spy(\SystemEventManager::class);
-        $sem->shouldReceive('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '101'.SystemEvent::PARAMETER_SEPARATOR.'102'.SystemEvent::PARAMETER_SEPARATOR.'103', SystemEvent::PRIORITY_MEDIUM)->once();
+        $sem->shouldReceive('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '101' . SystemEvent::PARAMETER_SEPARATOR . '102' . SystemEvent::PARAMETER_SEPARATOR . '103', SystemEvent::PRIORITY_MEDIUM)->once();
         $lum->shouldReceive('getSystemEventManager')->andReturns($sem);
 
         $lum->addUserToRename($user1);

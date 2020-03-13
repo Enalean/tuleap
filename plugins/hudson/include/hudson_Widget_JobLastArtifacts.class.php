@@ -132,7 +132,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
 
             $html .= '<ul>';
             foreach ($dom->artifact as $artifact) {
-                $html .= ' <li><a href="'.$purifier->purify($build->getUrl().'/artifact/'.$artifact->relativePath).'">'.$purifier->purify($artifact->fileName).'</a></li>';
+                $html .= ' <li><a href="' . $purifier->purify($build->getUrl() . '/artifact/' . $artifact->relativePath) . '">' . $purifier->purify($artifact->fileName) . '</a></li>';
             }
             $html .= '</ul>';
         } else {

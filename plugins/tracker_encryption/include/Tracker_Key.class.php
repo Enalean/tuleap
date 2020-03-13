@@ -106,6 +106,6 @@ class Tracker_Key
     {
         $rsa = new \phpseclib\Crypt\RSA();
         $rsa->loadKey($key);
-        return (($rsa->getSize()/8) - (2 * Encryption_Manager::HLEN) - 2);
+        return (($rsa->getSize() / 8) - (2 * Encryption_Manager::HLEN) - 2);
     }
 }

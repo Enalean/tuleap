@@ -30,7 +30,7 @@ class Logger extends TruncateLevelLogger
     public function __construct()
     {
         parent::__construct(
-            new BackendLogger(ForgeConfig::get('codendi_log') .'/pullrequest_syslog'),
+            new BackendLogger(ForgeConfig::get('codendi_log') . '/pullrequest_syslog'),
             ForgeConfig::get('sys_logger_level')
         );
     }

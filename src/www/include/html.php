@@ -32,10 +32,10 @@ function html_feedback_bottom($feedback)
 function html_image($src, $args, $display = 1)
 {
     global $img_size;
-    $return   = ('<IMG src="'.util_get_dir_image_theme().$src.'"');
+    $return   = ('<IMG src="' . util_get_dir_image_theme() . $src . '"');
     $purifier = Codendi_HTMLPurifier::instance();
     foreach ($args as $k => $v) {
-        $return .= ' '.$purifier->purify($k).'="'.$purifier->purify($v).'"';
+        $return .= ' ' . $purifier->purify($k) . '="' . $purifier->purify($v) . '"';
     }
 
     // ## insert a border tag if there isn't one
@@ -48,20 +48,20 @@ function html_image($src, $args, $display = 1)
             (!isset($args['width'])  || !$args['width'])) {
      /* Check to see if we've already fetched the image data */
         if ($img_size) {
-            if ((!isset($img_size[$src]) || !$img_size[$src]) && is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)) {
-                $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
+            if ((!isset($img_size[$src]) || !$img_size[$src]) && is_file($GLOBALS['sys_urlroot'] . util_get_dir_image_theme() . $src)) {
+                $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'] . util_get_dir_image_theme() . $src);
             }
         } else {
-            if (is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)) {
-                $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
+            if (is_file($GLOBALS['sys_urlroot'] . util_get_dir_image_theme() . $src)) {
+                $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'] . util_get_dir_image_theme() . $src);
             }
         }
-        $return .= ' width="' . $img_size[$src][0].'" height="'.$img_size[$src][1].'"';
+        $return .= ' width="' . $img_size[$src][0] . '" height="' . $img_size[$src][1] . '"';
     }
 
     // ## insert alt tag if there isn't one
     if (!isset($args['alt']) || !$args['alt']) {
-        $return .= ' alt="'.$purifier->purify($src).'"';
+        $return .= ' alt="' . $purifier->purify($src) . '"';
     }
 
     $return .= ('>');
@@ -76,7 +76,7 @@ function html_get_timezone_popup($selected = 0)
 {
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
+    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
     return $renderer->renderToString('timezone', new Account_TimezoneSelectorPresenter($selected));
 }
 
@@ -92,10 +92,10 @@ function html_get_language_popup($Language, $title = 'language_id', $selected = 
     $hp   = Codendi_HTMLPurifier::instance();
     $language_factory = new BaseLanguageFactory();
 
-    $html = '<select name="'. $hp->purify($title) .'">';
+    $html = '<select name="' . $hp->purify($title) . '">';
     foreach ($language_factory->getAvailableLanguages() as $code => $lang) {
         $select = ($selected == $code) ? 'selected="selected"' : '';
-        $html .= '<option value="'.  $hp->purify($code, CODENDI_PURIFIER_CONVERT_HTML)  .'" '. $select .'>';
+        $html .= '<option value="' .  $hp->purify($code, CODENDI_PURIFIER_CONVERT_HTML)  . '" ' . $select . '>';
         $html .= $hp->purify($lang, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</option>';
     }
@@ -106,7 +106,6 @@ function html_get_language_popup($Language, $title = 'language_id', $selected = 
 
 function html_build_list_table_top($title_arr, $links_arr = false, $mass_change = false, $full_width = true, $id = null, $class = null, $cellspacing = 1, $cellpadding = 2)
 {
-
     /*
         Takes an array of titles and builds
         The first row of a new table
@@ -117,23 +116,23 @@ function html_build_list_table_top($title_arr, $links_arr = false, $mass_change 
     $return   = '
        <TABLE data-test="table-test"';
     if ($full_width) {
-        $return.='WIDTH="100%" ';
+        $return .= 'WIDTH="100%" ';
     }
     if ($id) {
-        $return .='id="'.$purifier->purify($id).'"';
+        $return .= 'id="' . $purifier->purify($id) . '"';
     }
     if ($class) {
-        $return .=' class="'.$purifier->purify($class).'" ';
+        $return .= ' class="' . $purifier->purify($class) . '" ';
     }
-    $return .= 'BORDER="0" CELLSPACING="'. $purifier->purify($cellspacing) .'" CELLPADDING="'. $purifier->purify($cellpadding) .'">
+    $return .= 'BORDER="0" CELLSPACING="' . $purifier->purify($cellspacing) . '" CELLPADDING="' . $purifier->purify($cellpadding) . '">
 		<TR class="boxtable">';
 
     if ($mass_change) {
         $return .= '<TD class="boxtitle">Select?</TD>';
     }
-    $count=count($title_arr);
+    $count = count($title_arr);
     if ($links_arr) {
-        for ($i=0; $i<$count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             if (empty($links_arr[$i])) {
                 $return .= '<td class="boxtitle">' . $purifier->purify($title_arr[$i]) . '</td>';
             } else {
@@ -142,12 +141,12 @@ function html_build_list_table_top($title_arr, $links_arr = false, $mass_change 
             }
         }
     } else {
-        for ($i=0; $i<$count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $return .= '
-			<TD class="boxtitle">'.$purifier->purify($title_arr[$i]).'</TD>';
+			<TD class="boxtitle">' . $purifier->purify($title_arr[$i]) . '</TD>';
         }
     }
-    return $return.'</TR>';
+    return $return . '</TR>';
 }
 
 //deprecated
@@ -180,7 +179,7 @@ function html_build_select_box_from_array($vals, $select_name, $checked_val = 'x
 
     $purifier = Codendi_HTMLPurifier::instance();
     $return   = '
-		<SELECT NAME="'. $purifier->purify($select_name) .'" id="'. $purifier->purify($select_name) .'">';
+		<SELECT NAME="' . $purifier->purify($select_name) . '" id="' . $purifier->purify($select_name) . '">';
 
     foreach ($vals as $value => $label) {
         if ($samevals) {
@@ -189,12 +188,12 @@ function html_build_select_box_from_array($vals, $select_name, $checked_val = 'x
                 $return .= ' SELECTED';
             }
         } else {
-            $return .= '<OPTION VALUE="' . $purifier->purify($value) .'"';
+            $return .= '<OPTION VALUE="' . $purifier->purify($value) . '"';
             if ($value == $checked_val) {
                 $return .= ' SELECTED';
             }
         }
-        $return .= '>'. $purifier->purify($label) .'</OPTION>';
+        $return .= '>' . $purifier->purify($label) . '</OPTION>';
     }
     $return .= '
 		</SELECT>';
@@ -267,17 +266,17 @@ function html_build_select_box_from_arrays(
 
     if (is_array($checked_val)) {
         $return .= '
-			<SELECT id="'.$select_name.'" NAME="'.$select_name.'[]" MULTIPLE SIZE="6">';
+			<SELECT id="' . $select_name . '" NAME="' . $select_name . '[]" MULTIPLE SIZE="6">';
     } else {
         $return .= '
-			<SELECT id="'.$select_name.'" NAME="'.$select_name.'">';
+			<SELECT id="' . $select_name . '" NAME="' . $select_name . '">';
     }
 
     /*
         Put in the Unchanged box
     */
     if ($show_unchanged) {
-        $return .= '<OPTION VALUE="'.$hp->purify($text_unchanged).'" SELECTED>'.$hp->purify($text_unchanged, $purify_level).'</OPTION>';
+        $return .= '<OPTION VALUE="' . $hp->purify($text_unchanged) . '" SELECTED>' . $hp->purify($text_unchanged, $purify_level) . '</OPTION>';
          $isAValueSelected = true;
     }
 
@@ -291,12 +290,12 @@ function html_build_select_box_from_arrays(
                 $selected = "";
             }
         } else {
-            $selected = ( $checked_val == 0 ? 'SELECTED':'');
+            $selected = ( $checked_val == 0 ? 'SELECTED' : '');
             if ($checked_val == 0) {
                 $isAValueSelected = true;
             }
         }
-        $return .= '<OPTION VALUE="0" '.$selected.'>'.$hp->purify($text_any, $purify_level).'</OPTION>';
+        $return .= '<OPTION VALUE="0" ' . $selected . '>' . $hp->purify($text_any, $purify_level) . '</OPTION>';
     }
 
     //we don't always want the default 100 row shown
@@ -309,27 +308,27 @@ function html_build_select_box_from_arrays(
                 $selected = "";
             }
         } else {
-            $selected = ( $checked_val == 100 ? 'SELECTED':'');
+            $selected = ( $checked_val == 100 ? 'SELECTED' : '');
             if ($checked_val == 100) {
                 $isAValueSelected = true;
             }
         }
-        $return .= '<OPTION VALUE="100" '.$selected.'>'.$hp->purify($text_100, $purify_level).'</OPTION>';
+        $return .= '<OPTION VALUE="100" ' . $selected . '>' . $hp->purify($text_100, $purify_level) . '</OPTION>';
     }
 
-    $rows=count($vals);
+    $rows = count($vals);
     if (count($texts) != $rows) {
         $return .= 'ERROR - uneven row counts';
     }
 
-    for ($i=0; $i<$rows; $i++) {
+    for ($i = 0; $i < $rows; $i++) {
         //  uggh - sorry - don't show the 100 row and Any row
         //  if it was shown above, otherwise do show it
         if ((($vals[$i] != '100') && ($vals[$i] != '0')) ||
         ($vals[$i] == '100' && !$show_100) ||
         ($vals[$i] == '0' && !$show_any)) {
             $return .= '
-				<OPTION VALUE="'.$hp->purify($vals[$i]).'"';
+				<OPTION VALUE="' . $hp->purify($vals[$i]) . '"';
             if (is_array($checked_val)) {
                 if (in_array($vals[$i], $checked_val)) {
                     $return .= ' SELECTED';
@@ -341,11 +340,11 @@ function html_build_select_box_from_arrays(
                     $isAValueSelected = true;
                 }
             }
-            $return .= '>'.$hp->purify($texts[$i], $purify_level).'</OPTION>';
+            $return .= '>' . $hp->purify($texts[$i], $purify_level) . '</OPTION>';
         }
     }
     if ($show_unknown_value && ($checked_val && $checked_val != 'xzxz' && ! $isAValueSelected)) {
-        $return .= '<OPTION VALUE="'.$hp->purify($checked_val).'" SELECTED>'.$hp->purify($Language->getText('include_html', 'unknown_value'), $purify_level).'</OPTION>';
+        $return .= '<OPTION VALUE="' . $hp->purify($checked_val) . '" SELECTED>' . $hp->purify($Language->getText('include_html', 'unknown_value'), $purify_level) . '</OPTION>';
     }
     $return .= '
 		</SELECT>';
@@ -451,17 +450,17 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
     }
         $disabled = $disabled ? 'disabled="disabled"' : '';
 
-    $checked_count=count($checked_array);
+    $checked_count = count($checked_array);
 //      echo '-- '.$checked_count.' --';
     $id = str_replace('[]', '', $name);
     $return = '
-		<SELECT NAME="'.$hp->purify($name).'" id="'.$hp->purify($id).'" MULTIPLE SIZE="'.$hp->purify($size).'" '. $disabled .'>';
+		<SELECT NAME="' . $hp->purify($name) . '" id="' . $hp->purify($id) . '" MULTIPLE SIZE="' . $hp->purify($size) . '" ' . $disabled . '>';
 
     /*
         Put in the Unchanged box
     */
     if ($show_unchanged) {
-        $return .= "\n".'<OPTION VALUE="'.$hp->purify($text_unchanged).'" SELECTED>'.$hp->purify($text_unchanged, $purify_level).'</OPTION>';
+        $return .= "\n" . '<OPTION VALUE="' . $hp->purify($text_unchanged) . '" SELECTED>' . $hp->purify($text_unchanged, $purify_level) . '</OPTION>';
     }
 
     /*
@@ -470,12 +469,12 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
     if ($show_any) {
         $return .= '
 		<OPTION VALUE="0"';
-        for ($j=0; $j<$checked_count; $j++) {
+        for ($j = 0; $j < $checked_count; $j++) {
             if ($checked_array[$j] == '0') {
                     $return .= ' SELECTED';
             }
         }
-        $return .= '>'.$hp->purify($text_any, $purify_level).'</OPTION>';
+        $return .= '>' . $hp->purify($text_any, $purify_level) . '</OPTION>';
     }
 
     /*
@@ -484,28 +483,28 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
     if ($show_100) {
         $return .= '
 		<OPTION VALUE="100"';
-        for ($j=0; $j<$checked_count; $j++) {
+        for ($j = 0; $j < $checked_count; $j++) {
             if ($checked_array[$j] == '100') {
                     $return .= ' SELECTED';
             }
         }
-        $return .= '>'.$hp->purify($text_100, $purify_level).'</OPTION>';
+        $return .= '>' . $hp->purify($text_100, $purify_level) . '</OPTION>';
     }
 
     foreach ($array as $row) {
         $val = $row['value'];
         if ($val != '100') {
             $return .= '
-				<OPTION VALUE="'.$hp->purify($val).'"';
+				<OPTION VALUE="' . $hp->purify($val) . '"';
             /*
                 Determine if it's checked
             */
-            for ($j=0; $j<$checked_count; $j++) {
+            for ($j = 0; $j < $checked_count; $j++) {
                 if ($val == $checked_array[$j]) {
                     $return .= ' SELECTED';
                 }
             }
-            $return .= '>'.$hp->purify(($show_value?$val.'-':'').substr($row['text'], 0, 60), $purify_level). '</OPTION>';
+            $return .= '>' . $hp->purify(($show_value ? $val . '-' : '') . substr($row['text'], 0, 60), $purify_level) . '</OPTION>';
         }
     }
     $return .= '
@@ -523,31 +522,31 @@ function html_buildpriority_select_box($name = 'priority', $checked_val = '5')
     $purifier = Codendi_HTMLPurifier::instance();
     ?>
     <SELECT NAME="<?php echo $purifier->purify($name); ?>">
-    <OPTION VALUE="1"<?php if ($checked_val=="1") {
+    <OPTION VALUE="1"<?php if ($checked_val == "1") {
         echo " SELECTED";
                      } ?>>1 - <?php echo $Language->getText('include_html', 'lowest'); ?></OPTION>
-    <OPTION VALUE="2"<?php if ($checked_val=="2") {
+    <OPTION VALUE="2"<?php if ($checked_val == "2") {
         echo " SELECTED";
                      } ?>>2</OPTION>
-    <OPTION VALUE="3"<?php if ($checked_val=="3") {
+    <OPTION VALUE="3"<?php if ($checked_val == "3") {
         echo " SELECTED";
                      } ?>>3</OPTION>
-    <OPTION VALUE="4"<?php if ($checked_val=="4") {
+    <OPTION VALUE="4"<?php if ($checked_val == "4") {
         echo " SELECTED";
                      } ?>>4</OPTION>
-    <OPTION VALUE="5"<?php if ($checked_val=="5") {
+    <OPTION VALUE="5"<?php if ($checked_val == "5") {
         echo " SELECTED";
                      } ?>>5 - <?php echo $Language->getText('include_html', 'medium'); ?></OPTION>
-    <OPTION VALUE="6"<?php if ($checked_val=="6") {
+    <OPTION VALUE="6"<?php if ($checked_val == "6") {
         echo " SELECTED";
                      } ?>>6</OPTION>
-    <OPTION VALUE="7"<?php if ($checked_val=="7") {
+    <OPTION VALUE="7"<?php if ($checked_val == "7") {
         echo " SELECTED";
                      } ?>>7</OPTION>
-    <OPTION VALUE="8"<?php if ($checked_val=="8") {
+    <OPTION VALUE="8"<?php if ($checked_val == "8") {
         echo " SELECTED";
                      } ?>>8</OPTION>
-    <OPTION VALUE="9"<?php if ($checked_val=="9") {
+    <OPTION VALUE="9"<?php if ($checked_val == "9") {
         echo " SELECTED";
                      } ?>>9 - <?php echo $Language->getText('include_html', 'highest'); ?></OPTION>
     </SELECT>
@@ -570,7 +569,7 @@ function site_header($params)
 
     if (isset($params['group'])) {
         $pm = ProjectManager::instance();
-        $project=$pm->getProject($params['group']);
+        $project = $pm->getProject($params['group']);
         if ($project->isTemplate()) {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('include_layout', 'template_warning'));
         }
@@ -601,11 +600,11 @@ function site_project_header($params)
         Check to see if private (if private check if user_ismember)
     */
 
-    $group_id=$params['group'];
+    $group_id = $params['group'];
 
     //get the project object
     $pm = ProjectManager::instance();
-    $project=$pm->getProject($group_id);
+    $project = $pm->getProject($group_id);
 
     //group doesn't exist
     if ($project->isError()) {
@@ -615,7 +614,7 @@ function site_project_header($params)
     //group is private
     if (! $project->isPublic() && isset($params['user_has_special_access']) && ! $params['user_has_special_access']) {
      //if its a private group, you must be a member of that group
-        session_require(array('group'=>$group_id));
+        session_require(array('group' => $group_id));
     }
 
     //for dead projects must be member of admin project
@@ -662,7 +661,7 @@ function html_display_boolean($value, $true_value = 'Yes', $false_value = 'No')
     if (!isset($false_value)) {
         $false_value = $Language->getText('global', 'no');
     }
-    if (($value == 1)||($value == true)) {
+    if (($value == 1) || ($value == true)) {
         echo $true_value;
     } else {
         echo $false_value;
@@ -672,14 +671,14 @@ function html_display_boolean($value, $true_value = 'Yes', $false_value = 'No')
 function html_trash_image($alt)
 {
     $purifier = Codendi_HTMLPurifier::instance();
-    return '<img src="'.util_get_image_theme("ic/trash.png").'" '.
-        'height="16" width="16" border="0" alt="'.$purifier->purify($alt).'" title="'.$purifier->purify($alt).'">';
+    return '<img src="' . util_get_image_theme("ic/trash.png") . '" ' .
+        'height="16" width="16" border="0" alt="' . $purifier->purify($alt) . '" title="' . $purifier->purify($alt) . '">';
 }
 
 function html_trash_link($link, $warn, $alt)
 {
     $purifier = Codendi_HTMLPurifier::instance();
-    return '<a href="'.$link.'" onClick="return confirm(\''.$purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE).'\')">'.html_trash_image($alt).'</a>';
+    return '<a href="' . $link . '" onClick="return confirm(\'' . $purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">' . html_trash_image($alt) . '</a>';
 }
 
 /**
@@ -688,7 +687,7 @@ function html_trash_link($link, $warn, $alt)
 function html_trash_link_fontawesome($link, $warn)
 {
     $purifier = Codendi_HTMLPurifier::instance();
-    return '<a href="'.$link.'" onClick="return confirm(\''.$purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE).'\')"><i class="fa fa-trash-o"></i></a>';
+    return '<a href="' . $link . '" onClick="return confirm(\'' . $purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')"><i class="fa fa-trash-o"></i></a>';
 }
 
 /**
@@ -705,10 +704,10 @@ function html_select_operator($name = '', $value = '', $ro = false)
     if ($ro) {
         $html = htmlspecialchars($value);
     } else {
-        $html = '<select name="'.$name.'">'.
-        '<option value="1"'.(($value == '1') ? 'selected="selected"':'').'>&gt;</option>'.
-        '<option value="0"'.(($value == '0') ? 'selected="selected"':'').'>=</option>'.
-        '<option value="-1"'.(($value == '-1') ? 'selected="selected"':'').'>&lt;</option>'.
+        $html = '<select name="' . $name . '">' .
+        '<option value="1"' . (($value == '1') ? 'selected="selected"' : '') . '>&gt;</option>' .
+        '<option value="0"' . (($value == '0') ? 'selected="selected"' : '') . '>=</option>' .
+        '<option value="-1"' . (($value == '-1') ? 'selected="selected"' : '') . '>&lt;</option>' .
         '</select>';
     }
     return($html);
@@ -736,7 +735,7 @@ function html_field_date(
     if ($ro) {
         $html = $value;
     } else {
-        $html = $GLOBALS['HTML']->getDatePicker('field_'.$field_name, $field_name, $value, $size, $maxlength);
+        $html = $GLOBALS['HTML']->getDatePicker('field_' . $field_name, $field_name, $value, $size, $maxlength);
     }
     return($html);
 }

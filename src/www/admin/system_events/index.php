@@ -47,7 +47,7 @@ if (isset($available_queues[$request_queue])) {
     $selected_queue_name = $request_queue;
 }
 
-$offset          = $request->get('offset') && !$request->exist('filter') ? (int)$request->get('offset') : 0;
+$offset          = $request->get('offset') && !$request->exist('filter') ? (int) $request->get('offset') : 0;
 $limit           = 25;
 $full            = true;
 $selected_status = $request->get('filter_status');
@@ -142,7 +142,7 @@ $GLOBALS['HTML']->includeFooterJavascriptFile(
 $renderer = new \Tuleap\Admin\AdminPageRenderer();
 $renderer->renderANoFramedPresenter(
     $title,
-    ForgeConfig::get('codendi_dir') .'/src/templates/admin/system_events/',
+    ForgeConfig::get('codendi_dir') . '/src/templates/admin/system_events/',
     'admin-system-events',
     new SystemEvents_adminPresenter(
         $title,

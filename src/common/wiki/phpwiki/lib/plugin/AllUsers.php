@@ -98,7 +98,7 @@ class WikiPlugin_AllUsers extends WikiPlugin
         if (!$pagesize) {
             $pagelist->addPageList($allusers);
         } else {
-            for ($i=$offset; $i < $offset + $pagesize - 1; $i++) {
+            for ($i = $offset; $i < $offset + $pagesize - 1; $i++) {
                 if ($i >= $args['count']) {
                     break;
                 }
@@ -122,7 +122,7 @@ class WikiPlugin_AllUsers extends WikiPlugin
             return $pagelist;
         }
     }
-};
+}
 
 // $Log: AllUsers.php,v $
 // Revision 1.18  2004/11/23 15:17:19  rurban

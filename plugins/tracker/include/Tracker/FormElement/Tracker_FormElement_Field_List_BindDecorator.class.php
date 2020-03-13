@@ -93,7 +93,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         }
 
         if ($full) {
-            $html .= ' '. $value .'</span>';
+            $html .= ' ' . $value . '</span>';
         }
         return $html;
     }
@@ -118,7 +118,7 @@ class Tracker_FormElement_Field_List_BindDecorator
 
         return [
             'classes'       => '',
-            'inline-styles' => 'border-left: 16px solid '. $hexa_color .';'
+            'inline-styles' => 'border-left: 16px solid ' . $hexa_color . ';'
         ];
     }
 
@@ -130,7 +130,7 @@ class Tracker_FormElement_Field_List_BindDecorator
     {
         $html  = '';
         $color = $this->getCurrentColor();
-        $id    = 'decorator_'. $this->field_id .'_'. $this->value_id;
+        $id    = 'decorator_' . $this->field_id . '_' . $this->value_id;
         $html .= self::getColorPickerMountPoint($id, $this->value_id, $color, $is_used_in_semantics);
 
         return $html;
@@ -165,7 +165,7 @@ class Tracker_FormElement_Field_List_BindDecorator
     public static function noDecoratorEdit($field_id, $value_id, $is_used_in_semantics)
     {
         $html = '';
-        $id   = 'decorator_'. $field_id .'_'. $value_id;
+        $id   = 'decorator_' . $field_id . '_' . $value_id;
 
         $html .= self::getColorPickerMountPoint($id, $value_id, null, $is_used_in_semantics);
         return $html;
@@ -187,7 +187,7 @@ class Tracker_FormElement_Field_List_BindDecorator
             'id'     => $id,
             'width'  => '16px',
             'height' => '16px',
-            'style'  => 'vertical-align:middle; '. $bgcolor,
+            'style'  => 'vertical-align:middle; ' . $bgcolor,
             'title'  => $title,
             'class'  => $classname
         ]);
@@ -277,7 +277,7 @@ class Tracker_FormElement_Field_List_BindDecorator
     public function css($default = 'transparent')
     {
         if ($this->r !== null && $this->g !== null && $this->b !== null) {
-            return 'rgb('. (int)$this->r .', '. (int)$this->g .', '. (int)$this->b .');';
+            return 'rgb(' . (int) $this->r . ', ' . (int) $this->g . ', ' . (int) $this->b . ');';
         }
         return $default;
     }

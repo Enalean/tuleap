@@ -85,13 +85,13 @@ class Widget_MyAdmin extends Widget
         $row = db_fetch_array();
         $validated_users = $row['count'];
 
-        $sql="SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3";
-        $result=db_query($sql);
+        $sql = "SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3";
+        $result = db_query($sql);
         $pending_news = 0;
-        $rows=db_numrows($result);
-        for ($i=0; $i<$rows; $i++) {
+        $rows = db_numrows($result);
+        for ($i = 0; $i < $rows; $i++) {
             //if the news is private, not display it in the list of news to be approved
-            $forum_id=db_result($result, $i, 'forum_id');
+            $forum_id = db_result($result, $i, 'forum_id');
             $res = news_read_permissions($forum_id);
             // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
             // with ST DB state
@@ -121,7 +121,7 @@ class Widget_MyAdmin extends Widget
 
         $html_my_admin .= $this->_get_admin_row(
             $i++,
-            '<a href="/admin/news/">'. $GLOBALS['Language']->getText('admin_main', 'site_news_approval') .'</a>',
+            '<a href="/admin/news/">' . $GLOBALS['Language']->getText('admin_main', 'site_news_approval') . '</a>',
             $pending_news,
             $this->_get_color($pending_news)
         );
@@ -163,6 +163,6 @@ class Widget_MyAdmin extends Widget
 
     public function _get_admin_row($i, $text, $value, $bgcolor, $textcolor = 'white')
     {
-        return '<tr class="'. util_get_alt_row_color($i++) .'"><td>'. $text .'</td><td nowrap="nowrap" style="width:20%; background:'. $bgcolor .'; color:'. $textcolor .'; padding: 2px 8px; font-weight:bold; text-align:center;">'. $value .'</td></tr>';
+        return '<tr class="' . util_get_alt_row_color($i++) . '"><td>' . $text . '</td><td nowrap="nowrap" style="width:20%; background:' . $bgcolor . '; color:' . $textcolor . '; padding: 2px 8px; font-weight:bold; text-align:center;">' . $value . '</td></tr>';
     }
 }

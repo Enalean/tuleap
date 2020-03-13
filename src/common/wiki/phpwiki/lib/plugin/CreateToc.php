@@ -80,7 +80,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
     // Initialisation of toc counter
     public function _initTocCounter()
     {
-        $counter = array(1=>0, 2=>0, 3=>0);
+        $counter = array(1 => 0, 2 => 0, 3 => 0);
         return $counter;
     }
 
@@ -97,10 +97,10 @@ class WikiPlugin_CreateToc extends WikiPlugin
     // Get string corresponding to the current title
     public function _getCounter(&$counter, $level)
     {
-        $str=$counter[3];
+        $str = $counter[3];
         for ($i = 2; $i > 0; $i--) {
             if ($counter[$i] != 0) {
-                $str .= '.'.$counter[$i];
+                $str .= '.' . $counter[$i];
             }
         }
         return $str;
@@ -164,7 +164,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $hend = 0;
         $h = $this->_getHeader($level);
         $qheading = $this->_quote($heading);
-        for ($j=$start_index; $j < count($content); $j++) {
+        for ($j = $start_index; $j < count($content); $j++) {
             if (is_string($content[$j])) {
                 if (preg_match(
                     "/<$h>$qheading<\/$h>/",
@@ -181,19 +181,19 @@ class WikiPlugin_CreateToc extends WikiPlugin
                 }
         // shortcut for single wikiword or link headers
                 if ($content[$j] == $heading
-                and substr($content[$j-1], -4, 4) == "<$h>"
-                and substr($content[$j+1], 0, 5) == "</$h>") {
-                    $hstart = $j-1;
-                    $hend = $j+1;
+                and substr($content[$j - 1], -4, 4) == "<$h>"
+                and substr($content[$j + 1], 0, 5) == "</$h>") {
+                    $hstart = $j - 1;
+                    $hend = $j + 1;
                     return $j; // single wikiword
                 } elseif (TOC_FULL_SYNTAX) {
                     //DONE: To allow "!! WikiWord link" or !! http://anylink/
                     // Check against joined content (after cached_plugininvocation).
                     // The first link is the anchor then.
-                    if (preg_match("/<$h>(?!.*<\/$h>)/", $content[$j-1])) {
-                        $hstart = $j-1;
+                    if (preg_match("/<$h>(?!.*<\/$h>)/", $content[$j - 1])) {
+                        $hstart = $j - 1;
                         $joined = '';
-                        for ($k=max($j-1, $start_index); $k<count($content); $k++) {
+                        for ($k = max($j - 1, $start_index); $k < count($content); $k++) {
                             if (is_string($content[$k])) {
                                 $joined .= $content[$k];
                             } elseif (method_exists($content[$k], 'asXML')) {
@@ -202,7 +202,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
                                 $joined .= $content[$k]->asString();
                             }
                             if (preg_match("/<$h>$qheading<\/$h>/", $joined)) {
-                                $hend=$k;
+                                $hend = $k;
                                 return $k;
                             }
                         }
@@ -248,13 +248,13 @@ class WikiPlugin_CreateToc extends WikiPlugin
         sort($levels);
         $headers = array();
         $j = 0;
-        for ($i=0; $i<count($content); $i++) {
+        for ($i = 0; $i < count($content); $i++) {
             foreach ($levels as $level) {
                 if ($level < 1 or $level > 3) {
                     continue;
                 }
                 if (preg_match(
-                    '/^\s*(!{'.$level.','.$level.'})([^!].*)$/',
+                    '/^\s*(!{' . $level . ',' . $level . '})([^!].*)$/',
                     $content[$i],
                     $match
                 )) {
@@ -269,13 +269,13 @@ class WikiPlugin_CreateToc extends WikiPlugin
                         $manchor = MangleXmlIdentifier($anchor);
                         $texts = $s;
                         if ($counter) {
-                            $texts = $this->_getCounter($tocCounter, $level).' - '.$s;
+                            $texts = $this->_getCounter($tocCounter, $level) . ' - ' . $s;
                         }
                         $headers[] = array('text' => $texts,
                                            'anchor' => $anchor,
                                            'level' => $level);
                         // Change original wikitext, but that is useless art...
-                        $content[$i] = $match[1]." #[|$manchor][$s|#TOC]";
+                        $content[$i] = $match[1] . " #[|$manchor][$s|#TOC]";
                         // And now change the to be printed markup (XmlTree):
                         // Search <hn>$s</hn> line in markup
                         /* Url for backlink */
@@ -309,14 +309,14 @@ class WikiPlugin_CreateToc extends WikiPlugin
                                     }
                                 }
                                 if ($x = preg_replace(
-                                    '/(<h\d>)('.$qheading.')(<\/h\d>)/',
+                                    '/(<h\d>)(' . $qheading . ')(<\/h\d>)/',
                                     "\$1$anchorString\$2\$3",
                                     $x,
                                     1
                                 )) {
                                     if ($backlink) {
                                         $x = preg_replace(
-                                            '/(<h\d>)('.$qheading.')(<\/h\d>)/',
+                                            '/(<h\d>)(' . $qheading . ')(<\/h\d>)/',
                                             "\$1$anchorString\$3",
                                             $markup->_content[$j],
                                             1
@@ -392,7 +392,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
             }
         }
         $content = $current->getContent();
-        $html = HTML::div(array('class' => 'toc', 'id'=>'toc'));
+        $html = HTML::div(array('class' => 'toc', 'id' => 'toc'));
         /*if ($liststyle == 'dl')
             $list = HTML::dl(array('id'=>'toclist','class' => 'toc'));
         elseif ($liststyle == 'ul')
@@ -400,7 +400,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         elseif ($liststyle == 'ol')
             $list = HTML::ol(array('id'=>'toclist','class' => 'toc'));
             */
-        $list = HTML::ul(array('id'=>'toclist','class' => 'toc'));
+        $list = HTML::ul(array('id' => 'toclist','class' => 'toc'));
 
         if (!strstr($headers, ",")) {
             $headers = array($headers);
@@ -459,22 +459,22 @@ class WikiPlugin_CreateToc extends WikiPlugin
                 $previousLevel = $h['level'];
             }
         }
-        $list->setAttr('style', 'display:'.($jshide?'none;':'block;'));
-        $open = DATA_PATH.'/'.$WikiTheme->_findFile("images/folderArrowOpen.png");
-        $close = DATA_PATH.'/'.$WikiTheme->_findFile("images/folderArrowClosed.png");
+        $list->setAttr('style', 'display:' . ($jshide ? 'none;' : 'block;'));
+        $open = DATA_PATH . '/' . $WikiTheme->_findFile("images/folderArrowOpen.png");
+        $close = DATA_PATH . '/' . $WikiTheme->_findFile("images/folderArrowClosed.png");
         $html->pushContent(Javascript("
 function toggletoc(a) {
   var toc=document.getElementById('toclist')
   //toctoggle=document.getElementById('toctoggle')
-  var open='".$open."'
-  var close='".$close."'
+  var open='" . $open . "'
+  var close='" . $close . "'
   if (toc.style.display=='none') {
     toc.style.display='block'
-    a.title='"._("Click to hide the TOC")."'
+    a.title='" . _("Click to hide the TOC") . "'
     a.src = open
   } else {
     toc.style.display='none';
-    a.title='"._("Click to display")."'
+    a.title='" . _("Click to display") . "'
     a.src = close
   }
 }"));
@@ -482,12 +482,12 @@ function toggletoc(a) {
             $toclink = HTML(
                 _("Table Of Contents"),
                 " ",
-                HTML::a(array('name'=>'TOC')),
+                HTML::a(array('name' => 'TOC')),
                 HTML::img(array(
-                                            'id'=>'toctoggle',
-                                            'class'=>'wikiaction',
-                                            'title'=>_("Click to display to TOC"),
-                                            'onClick'=>"toggletoc(this)",
+                                            'id' => 'toctoggle',
+                                            'class' => 'wikiaction',
+                                            'title' => _("Click to display to TOC"),
+                                            'onClick' => "toggletoc(this)",
                                             'height' => 15,
                                             'width' => 15,
                                             'border' => 0,
@@ -495,14 +495,14 @@ function toggletoc(a) {
             );
         } else {
             $toclink = HTML::a(
-                array('name'=>'TOC',
-                     'class'=>'wikiaction',
-                     'title'=>_("Click to display"),
-                     'onclick'=>"toggletoc(this)"),
+                array('name' => 'TOC',
+                     'class' => 'wikiaction',
+                     'title' => _("Click to display"),
+                     'onclick' => "toggletoc(this)"),
                 _("Table Of Contents"),
                 HTML::span(
-                    array('style'=>'display:none',
-                    'id'=>'toctoggle'),
+                    array('style' => 'display:none',
+                    'id' => 'toctoggle'),
                     " "
                 )
             );
@@ -511,7 +511,7 @@ function toggletoc(a) {
         $html->pushContent($list);
         return $html;
     }
-};
+}
 
 // $Log: CreateToc.php,v $
 // Revision 1.36  2007/07/19 12:41:25  labbenes

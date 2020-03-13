@@ -62,8 +62,8 @@ class VelocityCollection
 
     public function addVelocityRepresentation(VelocityRepresentation $velocity_representation)
     {
-        $ordering_key =  $velocity_representation->start_date . $velocity_representation->id ;
-        $this->velocity_representations[ $ordering_key ] = $velocity_representation;
+        $ordering_key =  $velocity_representation->start_date . $velocity_representation->id;
+        $this->velocity_representations[$ordering_key] = $velocity_representation;
     }
 
     /**

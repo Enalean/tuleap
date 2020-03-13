@@ -53,7 +53,7 @@ class Git_Exec
     public function setWorkTree($work_tree)
     {
         $this->work_tree = $work_tree;
-        $this->git_dir   = $this->work_tree.'/.git';
+        $this->git_dir   = $this->work_tree . '/.git';
     }
 
     /**
@@ -73,7 +73,7 @@ class Git_Exec
 
     public static function isGit212Installed()
     {
-        return is_file(self::GIT212_PATH.'/usr/bin/git');
+        return is_file(self::GIT212_PATH . '/usr/bin/git');
     }
 
     /**
@@ -86,12 +86,12 @@ class Git_Exec
      */
     public function allowUsageOfExtProtocol()
     {
-        $this->allowedTransports []= self::TRANSPORT_EXT;
+        $this->allowedTransports[] = self::TRANSPORT_EXT;
     }
 
     public function allowUsageOfFileProtocol()
     {
-        $this->allowedTransports []= self::TRANSPORT_FILE;
+        $this->allowedTransports[] = self::TRANSPORT_FILE;
     }
 
     public function init()
@@ -101,28 +101,28 @@ class Git_Exec
 
     public function setLocalCommiter($name, $email)
     {
-        $this->gitCmd('config --add user.name '.escapeshellarg($name));
-        $this->gitCmd('config --add user.email '.escapeshellarg($email));
+        $this->gitCmd('config --add user.name ' . escapeshellarg($name));
+        $this->gitCmd('config --add user.email ' . escapeshellarg($email));
     }
 
     public function remoteAdd($remote)
     {
-        $this->gitCmd('remote add origin '.escapeshellarg($remote));
+        $this->gitCmd('remote add origin ' . escapeshellarg($remote));
     }
 
     public function pullBranch($remote, $branch)
     {
-        $this->gitCmd('pull --quiet '.$remote.' '.$branch);
+        $this->gitCmd('pull --quiet ' . $remote . ' ' . $branch);
     }
 
     public function checkoutBranch($branch)
     {
-        $this->gitCmd('checkout --quiet '.$branch);
+        $this->gitCmd('checkout --quiet ' . $branch);
     }
 
     public function configFile($file, $config)
     {
-        $this->gitCmd('config -f '. escapeshellarg($file) .' '. $config);
+        $this->gitCmd('config -f ' . escapeshellarg($file) . ' ' . $config);
     }
 
     /**
@@ -137,8 +137,8 @@ class Git_Exec
     public function mv($from, $to)
     {
         $to_name = basename($to);
-        $to_path = realpath(dirname($to)).'/'.$to_name;
-        $cmd     = 'mv '.escapeshellarg(realpath($from)) .' '. escapeshellarg($to_path);
+        $to_path = realpath(dirname($to)) . '/' . $to_name;
+        $cmd     = 'mv ' . escapeshellarg(realpath($from)) . ' ' . escapeshellarg($to_path);
         return $this->gitCmd($cmd);
     }
 
@@ -152,7 +152,7 @@ class Git_Exec
      */
     public function add($file)
     {
-        $cmd = 'add '.escapeshellarg(realpath($file));
+        $cmd = 'add ' . escapeshellarg(realpath($file));
         return $this->gitCmd($cmd);
     }
 
@@ -167,7 +167,7 @@ class Git_Exec
     public function rm($file)
     {
         if ($this->canRemove($file)) {
-            $cmd = 'rm '.escapeshellarg(realpath($file));
+            $cmd = 'rm ' . escapeshellarg(realpath($file));
             return $this->gitCmd($cmd);
         }
         return true;
@@ -176,7 +176,7 @@ class Git_Exec
     public function recursiveRm($file)
     {
         if ($this->canRemove($file)) {
-            $cmd = 'rm -r '.escapeshellarg(realpath($file));
+            $cmd = 'rm -r ' . escapeshellarg(realpath($file));
             return $this->gitCmd($cmd);
         }
         return true;
@@ -185,7 +185,7 @@ class Git_Exec
     private function canRemove($file)
     {
         $output = array();
-        $this->gitCmdWithOutput('status --porcelain '.escapeshellarg(realpath($file)), $output);
+        $this->gitCmdWithOutput('status --porcelain ' . escapeshellarg(realpath($file)), $output);
         return count($output) == 0;
     }
 
@@ -200,7 +200,7 @@ class Git_Exec
     public function revList($oldrev, $newrev)
     {
         $output = array();
-        $this->gitCmdWithOutput('rev-list '.escapeshellarg($oldrev).'..'.escapeshellarg($newrev), $output);
+        $this->gitCmdWithOutput('rev-list ' . escapeshellarg($oldrev) . '..' . escapeshellarg($newrev), $output);
         return $output;
     }
 
@@ -216,7 +216,7 @@ class Git_Exec
     {
         $output = array();
         $other_branches = implode(' ', array_map('escapeshellarg', $this->getOtherBranches($refname)));
-        $this->gitCmdWithOutput('rev-parse --not '.$other_branches.' | git rev-list --stdin '.escapeshellarg($newrev), $output);
+        $this->gitCmdWithOutput('rev-parse --not ' . $other_branches . ' | git rev-list --stdin ' . escapeshellarg($newrev), $output);
         return $output;
     }
 
@@ -248,7 +248,7 @@ class Git_Exec
     public function catFile($rev)
     {
         $output = array();
-        $this->gitCmdWithOutput('cat-file -p '.escapeshellarg($rev), $output);
+        $this->gitCmdWithOutput('cat-file -p ' . escapeshellarg($rev), $output);
         return implode(PHP_EOL, $output);
     }
 
@@ -262,7 +262,7 @@ class Git_Exec
     public function getObjectType($rev)
     {
         $output = array();
-        $this->gitCmdWithOutput('cat-file -t '.escapeshellarg($rev), $output);
+        $this->gitCmdWithOutput('cat-file -t ' . escapeshellarg($rev), $output);
         if (count($output) == 1) {
             return $output[0];
         }
@@ -273,7 +273,7 @@ class Git_Exec
     {
         $output = array();
         try {
-            $this->gitCmdWithOutput('cat-file -e '.escapeshellarg($rev), $output);
+            $this->gitCmdWithOutput('cat-file -e ' . escapeshellarg($rev), $output);
         } catch (Git_Command_Exception $exception) {
             return false;
         }
@@ -310,7 +310,7 @@ class Git_Exec
     public function commit($message)
     {
         if ($this->isThereAnythingToCommit()) {
-            $cmd = 'commit -m '.escapeshellarg($message);
+            $cmd = 'commit -m ' . escapeshellarg($message);
             return $this->gitCmd($cmd);
         }
         return true;
@@ -324,7 +324,7 @@ class Git_Exec
      */
     public function push($origin = 'origin master')
     {
-        $cmd = 'push --porcelain '.$origin;
+        $cmd = 'push --porcelain ' . $origin;
         return $this->gitCmd($cmd);
     }
 
@@ -406,8 +406,8 @@ class Git_Exec
     protected function execInPath($cmd, &$output)
     {
         $git = $this->getAllowedProtocolEnvVariable();
-        $git .= $this->git_cmd.' --work-tree='.escapeshellarg($this->work_tree).' --git-dir='.escapeshellarg($this->git_dir);
-        $git .= ' '.$cmd;
+        $git .= $this->git_cmd . ' --work-tree=' . escapeshellarg($this->work_tree) . ' --git-dir=' . escapeshellarg($this->git_dir);
+        $git .= ' ' . $cmd;
         try {
             $command = new System_Command();
             $output = $command->exec($git);
@@ -420,7 +420,7 @@ class Git_Exec
     private function getAllowedProtocolEnvVariable()
     {
         if (count($this->allowedTransports) > 0) {
-            return 'GIT_ALLOW_PROTOCOL='.implode(':', $this->allowedTransports).' ';
+            return 'GIT_ALLOW_PROTOCOL=' . implode(':', $this->allowedTransports) . ' ';
         }
         return '';
     }

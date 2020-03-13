@@ -95,7 +95,7 @@ class TrackerDao extends DataAccessObject
                 WHERE item_name = $item_name
                   AND group_id = $group_id
                   AND deletion_date IS NULL
-                ".$search_tv3;
+                " . $search_tv3;
         return count($this->retrieve($sql))  > 0;
     }
 
@@ -307,15 +307,15 @@ class TrackerDao extends DataAccessObject
 
     public function delete($id)
     {
-        $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
+        $sql = "DELETE FROM $this->table_name WHERE id = " . $this->da->escapeInt($id);
         return $this->update($sql);
     }
 
     public function updateItemName($group_id, $oldItemname, $itemname)
     {
         $group_id = $this->da->quoteSmart($group_id);
-        $itemname= $this->da->quoteSmart($itemname);
-        $oldItemname= $this->da->quoteSmart($oldItemname);
+        $itemname = $this->da->quoteSmart($itemname);
+        $oldItemname = $this->da->quoteSmart($oldItemname);
         $sql = "UPDATE $this->table_name SET
 			item_name=$itemname
             WHERE item_name=$oldItemname AND group_id=$group_id";

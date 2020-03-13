@@ -81,7 +81,7 @@ class DocmanWithMetadataActivatedDataBuilder
     private function addContent(): void
     {
         $docman_root = $this->docman_factory->getRoot($this->common_builder->getProject()->getID());
-        $this->common_builder->addWritePermissionOnItem((int)$docman_root->getId(), ProjectUGroup::PROJECT_MEMBERS);
+        $this->common_builder->addWritePermissionOnItem((int) $docman_root->getId(), ProjectUGroup::PROJECT_MEMBERS);
         $this->createFolderWithHardcodedMetadataItems($docman_root);
     }
 
@@ -103,7 +103,7 @@ class DocmanWithMetadataActivatedDataBuilder
     {
         $folder_with_hardcoded_metadata_items_id = $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
-            (int)$docman_root->getId(),
+            (int) $docman_root->getId(),
             'Folder HM',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );

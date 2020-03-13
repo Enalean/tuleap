@@ -71,7 +71,7 @@ class hudsonActions extends Actions
                 $params   = array('job_id' => $jobId, 'request' => $request);
                 $em->processEvent('save_ci_triggers', $params);
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_added'));
-                $GLOBALS['Response']->redirect('/plugins/hudson/?group_id='.intval($group_id));
+                $GLOBALS['Response']->redirect('/plugins/hudson/?group_id=' . intval($group_id));
             }
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());

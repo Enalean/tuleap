@@ -169,7 +169,7 @@ class Codendi_Request
         $isValid = true;
         $array = $this->get($validator->getKey());
         if (is_array($array)) {
-            if (count($array)>0) {
+            if (count($array) > 0) {
                 foreach ($array as $key => $v) {
                     if (!$validator->validate($v)) {
                         $isValid = false;
@@ -221,7 +221,7 @@ class Codendi_Request
         if ($v = ValidFactory::getInstance($validator, $variable)) {
             $is_valid = $this->valid($v);
         } else {
-            trigger_error('Validator '. $validator .' is not found', E_USER_ERROR);
+            trigger_error('Validator ' . $validator . ' is not found', E_USER_ERROR);
         }
         return $is_valid ? $this->get($variable) : $default_value;
     }
@@ -273,7 +273,7 @@ class Codendi_Request
      */
     public function getProject()
     {
-        return $this->project_manager->getProject((int)$this->get('group_id'));
+        return $this->project_manager->getProject((int) $this->get('group_id'));
     }
 
     /**

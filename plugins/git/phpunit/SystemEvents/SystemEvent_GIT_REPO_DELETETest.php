@@ -22,7 +22,7 @@
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 
-require_once __DIR__ .'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_GIT_REPO_DELETETest extends \PHPUnit\Framework\TestCase

@@ -60,7 +60,7 @@ class WidgetKanbanXMLImporter
         ];
         if (isset($xml->preference)) {
             foreach ($xml->preference as $preference) {
-                $preference_name = trim((string)$preference['name']);
+                $preference_name = trim((string) $preference['name']);
                 $this->setNameReferenceParameters($preference, $mapping_registry, $preference_name, $params);
             }
         }
@@ -79,8 +79,8 @@ class WidgetKanbanXMLImporter
     private function setNameReferenceParameters(\SimpleXMLElement $preference, MappingsRegistry $mapping_registry, $preference_name, array &$params)
     {
         foreach ($preference->reference as $reference) {
-            $key = trim((string)$reference['name']);
-            $ref = trim((string)$reference['REF']);
+            $key = trim((string) $reference['name']);
+            $ref = trim((string) $reference['REF']);
             $kanban = $mapping_registry->getReference($ref);
             if ($kanban === null) {
                 throw new \RuntimeException("Reference $ref for kanban widget was not found");

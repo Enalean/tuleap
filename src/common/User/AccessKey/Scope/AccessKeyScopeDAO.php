@@ -28,7 +28,6 @@ class AccessKeyScopeDAO extends DataAccessObject
 {
     public function saveScopeKeysByAccessKeyID(int $access_key_id, string ...$scope_keys): void
     {
-
         $data_to_insert = [];
 
         foreach ($scope_keys as $scope_key) {

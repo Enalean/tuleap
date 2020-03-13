@@ -47,24 +47,24 @@ function get_sort_values($previous_sort_header, $current_sort_header, $sort_orde
         'status_icon'    => '',
         'order'          => 'DESC'
     );
-    $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-down";
+    $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
 
     if ($offset === 0) {
         if ($previous_sort_header === $current_sort_header) {
             if ($sort_order === "ASC") {
-                $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-down";
+                $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
                 $sort_order_hash["order"] = "DESC";
             } else {
-                $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-up";
+                $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-up";
                 $sort_order_hash["order"] = "ASC";
             }
         }
     } else {
         if ($sort_order === "ASC") {
-            $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-down";
+            $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
             $sort_order_hash["order"] = "DESC";
         } else {
-            $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-up";
+            $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-up";
             $sort_order_hash["order"] = "ASC";
         }
     }
@@ -83,14 +83,14 @@ if ($request->exist('export')) {
     //Get current sort header
     $header_whitelist = array('user_name', 'realname', 'status');
     if (in_array($request->get('current_sort_header'), $header_whitelist)) {
-        $current_sort_header=$request->get('current_sort_header');
+        $current_sort_header = $request->get('current_sort_header');
     } else {
         $current_sort_header = 'user_name';
     }
     //Get current sort order
     $sort_order_whitelist = array('ASC','DESC');
     if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
-        $sort_order=$request->get('sort_order');
+        $sort_order = $request->get('sort_order');
     } else {
         $sort_order = 'ASC';
     }
@@ -136,19 +136,19 @@ if ($request->valid($vUserNameSearch)) {
 
 $header_whitelist = array('user_name', 'realname', 'status');
 if (in_array($request->get('previous_sort_header'), $header_whitelist)) {
-    $previous_sort_header=$request->get('previous_sort_header');
+    $previous_sort_header = $request->get('previous_sort_header');
 } else {
     $previous_sort_header = '';
 }
 if (in_array($request->get('current_sort_header'), $header_whitelist)) {
-    $current_sort_header=$request->get('current_sort_header');
+    $current_sort_header = $request->get('current_sort_header');
 } else {
     $current_sort_header = 'user_name';
 }
 
 $sort_order_whitelist = array('ASC','DESC');
 if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
-    $sort_order=$request->get('sort_order');
+    $sort_order = $request->get('sort_order');
 } else {
     $sort_order = 'ASC';
 }
@@ -236,7 +236,7 @@ if ($group_id) {
 
     $admin_page->renderANoFramedPresenter(
         $Language->getText('admin_project', 'members_label'),
-        ForgeConfig::get('codendi_dir') .'/src/templates/admin/users/',
+        ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
         'project-members',
         $user_list_presenter
     );
@@ -255,7 +255,7 @@ if ($group_id) {
 
     $admin_page->renderAPresenter(
         $title,
-        ForgeConfig::get('codendi_dir') .'/src/templates/admin/users/',
+        ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
         'all-users',
         $user_list_presenter
     );

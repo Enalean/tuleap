@@ -42,6 +42,6 @@ class HookConfigChecker
 
     private function hasChanged(HookConfig $old_hook_config, array $hook_config, $key)
     {
-        return (bool)$old_hook_config->getHookConfig($key) !== (bool)$hook_config[$key];
+        return (bool) $old_hook_config->getHookConfig($key) !== (bool) $hook_config[$key];
     }
 }

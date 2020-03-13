@@ -45,39 +45,39 @@ class UserLogDao extends DataAccessObject
      */
     public function search($start, $end, $offset, $count)
     {
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS *'.
-            ' FROM plugin_userlog_request'.
-            ' WHERE time >= '.$this->da->escapeInt($start).
-            ' AND time <= '.$this->da->escapeInt($end).
-            ' ORDER BY time DESC'.
-            ' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($count);
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS *' .
+            ' FROM plugin_userlog_request' .
+            ' WHERE time >= ' . $this->da->escapeInt($start) .
+            ' AND time <= ' . $this->da->escapeInt($end) .
+            ' ORDER BY time DESC' .
+            ' LIMIT ' . $this->da->escapeInt($offset) . ', ' . $this->da->escapeInt($count);
         return $this->retrieve($sql);
     }
 
     public function addRequest($time, $gid, $uid, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer)
     {
-        $sql = 'INSERT INTO plugin_userlog_request'.
-            '(time,group_id,user_id,http_user_agent,http_request_method,http_request_uri,http_remote_addr,http_referer)'.
-            ' VALUES '.
-            '('.
-            $this->da->escapeInt($time).','.
-            $this->da->escapeInt($gid).','.
-            $this->da->escapeInt($uid).','.
-            $this->da->quoteSmart($userAgent).','.
-            $this->da->quoteSmart($requestMethod).','.
-            $this->da->quoteSmart($requestUri).','.
-            $this->da->quoteSmart($remoteAddr).','.
-            $this->da->quoteSmart($httpReferer).
+        $sql = 'INSERT INTO plugin_userlog_request' .
+            '(time,group_id,user_id,http_user_agent,http_request_method,http_request_uri,http_remote_addr,http_referer)' .
+            ' VALUES ' .
+            '(' .
+            $this->da->escapeInt($time) . ',' .
+            $this->da->escapeInt($gid) . ',' .
+            $this->da->escapeInt($uid) . ',' .
+            $this->da->quoteSmart($userAgent) . ',' .
+            $this->da->quoteSmart($requestMethod) . ',' .
+            $this->da->quoteSmart($requestUri) . ',' .
+            $this->da->quoteSmart($remoteAddr) . ',' .
+            $this->da->quoteSmart($httpReferer) .
             ')';
         return $this->update($sql);
     }
 
     public function getLogsForDay($start, $end)
     {
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS *'.
-            ' FROM plugin_userlog_request'.
-            ' WHERE time >= '.$this->da->escapeInt($start).
-            ' AND time <= '.$this->da->escapeInt($end).
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS *' .
+            ' FROM plugin_userlog_request' .
+            ' WHERE time >= ' . $this->da->escapeInt($start) .
+            ' AND time <= ' . $this->da->escapeInt($end) .
             ' ORDER BY time DESC';
 
         return $this->retrieve($sql);

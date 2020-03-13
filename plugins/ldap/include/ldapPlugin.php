@@ -306,7 +306,7 @@ class LdapPlugin extends Plugin
                     $tuleap_user    = $user_manager->getUserByLdapId($lr->getEdUid());
                     if ($tuleap_user !== null) {
                         $params['userList'][] = array(
-                            'display_name' => $tuleap_user->getRealName().' ('.$tuleap_user->getUserName().')',
+                            'display_name' => $tuleap_user->getRealName() . ' (' . $tuleap_user->getUserName() . ')',
                             'login'        => $tuleap_user->getUserName(),
                             'user_id'      => $tuleap_user->getId(),
                             'has_avatar'   => $tuleap_user->hasAvatar(),
@@ -314,7 +314,7 @@ class LdapPlugin extends Plugin
                         );
                     } else {
                         $params['userList'][] = array(
-                            'display_name' => $sync->getCommonName($lr).' ('.$lr->getLogin().')',
+                            'display_name' => $sync->getCommonName($lr) . ' (' . $lr->getLogin() . ')',
                             'login'        => $lr->getLogin(),
                             'user_id'      => $tuleap_user_id,
                             'has_avatar'   => false,
@@ -351,8 +351,8 @@ class LdapPlugin extends Plugin
     {
         return TemplateRendererFactory::build()->getRenderer(
             array(
-                dirname(__FILE__).'/../templates',
-                ForgeConfig::get('codendi_dir') .'/src/templates/search',
+                dirname(__FILE__) . '/../templates',
+                ForgeConfig::get('codendi_dir') . '/src/templates/search',
             )
         );
     }
@@ -382,7 +382,7 @@ class LdapPlugin extends Plugin
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             } catch (LDAP_AuthenticationFailedException $exception) {
                 $logger = $this->getLogger();
-                $logger->info("[LDAP] User ".$params['loginname']." failed to authenticate");
+                $logger->info("[LDAP] User " . $params['loginname'] . " failed to authenticate");
             }
         }
     }
@@ -400,16 +400,16 @@ class LdapPlugin extends Plugin
             if (!$ldapUserDao->alreadyLoggedInOnce(UserManager::instance()->getCurrentUser()->getId())) {
                 $return_to_arg = "";
                 if ($params['return_to']) {
-                    $return_to_arg ='?return_to='.urlencode($params['return_to']);
+                    $return_to_arg = '?return_to=' . urlencode($params['return_to']);
                     if (isset($pv) && $pv == 2) {
-                        $return_to_arg .= '&pv='.$pv;
+                        $return_to_arg .= '&pv=' . $pv;
                     }
                 } else {
                     if (isset($pv) && $pv == 2) {
-                        $return_to_arg .= '?pv='.$pv;
+                        $return_to_arg .= '?pv=' . $pv;
                     }
                 }
-                $params['return_to'] = '/plugins/ldap/welcome'.$return_to_arg;
+                $params['return_to'] = '/plugins/ldap/welcome' . $return_to_arg;
             }
         }
     }
@@ -430,7 +430,7 @@ class LdapPlugin extends Plugin
             $lr = $ldapUm->getLdapFromUserId($params['user']->getId());
             if ($lr) {
                 $params['allow_codendi_login'] = false;
-                $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText(
+                $GLOBALS['feedback'] .= ' ' . $GLOBALS['Language']->getText(
                     'plugin_ldap',
                     'login_pls_use_ldap',
                     array($GLOBALS['sys_name'])
@@ -444,7 +444,7 @@ class LdapPlugin extends Plugin
             try {
                 $this->getLDAPUserWrite()->updateWithUser($params['user']);
             } catch (Exception $exception) {
-                $this->getLogger()->error('An error occured while registering user (session_after_login): '.$exception->getMessage());
+                $this->getLogger()->error('An error occured while registering user (session_after_login): ' . $exception->getMessage());
             }
         }
     }
@@ -612,7 +612,7 @@ class LdapPlugin extends Plugin
     {
         global $Language;
         if ($this->isLdapAuthType()) {
-            echo $Language->getText('admin_usergroup', 'ldap_id').': <INPUT TYPE="TEXT" NAME="ldap_id" VALUE="'.$params['row_user']['ldap_id'].'" SIZE="35" MAXLENGTH="55">
+            echo $Language->getText('admin_usergroup', 'ldap_id') . ': <INPUT TYPE="TEXT" NAME="ldap_id" VALUE="' . $params['row_user']['ldap_id'] . '" SIZE="35" MAXLENGTH="55">
 <P>';
         }
     }
@@ -633,13 +633,13 @@ class LdapPlugin extends Plugin
             $request = HTTPRequest::instance();
             $ldapId = $request->getValidated('ldap_id', 'string', false);
             if ($ldapId !== false) {
-                $result = db_query("UPDATE user SET ldap_id='".db_es($ldapId)."' WHERE user_id=".db_ei($params['user_id']));
+                $result = db_query("UPDATE user SET ldap_id='" . db_es($ldapId) . "' WHERE user_id=" . db_ei($params['user_id']));
             }
             if (!$result) {
-                $GLOBALS['feedback'] .= ' '.$Language->getText('admin_usergroup', 'error_upd_u');
+                $GLOBALS['feedback'] .= ' ' . $Language->getText('admin_usergroup', 'error_upd_u');
                 echo db_error();
             } else {
-                $GLOBALS['feedback'] .= ' '.$Language->getText('admin_usergroup', 'success_upd_u');
+                $GLOBALS['feedback'] .= ' ' . $Language->getText('admin_usergroup', 'success_upd_u');
             }
         }
     }
@@ -675,7 +675,7 @@ class LdapPlugin extends Plugin
     {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        if ($this->isLdapAuthType()&& $user->getLdapId() != '') {
+        if ($this->isLdapAuthType() && $user->getLdapId() != '') {
             if (! $this->hasLDAPWrite()) {
                 $params['allow'] = false;
             }
@@ -1010,7 +1010,7 @@ class LdapPlugin extends Plugin
             $non_unique_uids = $retriever->getNonUniqueLdapUid();
             if ($non_unique_uids) {
                 $event->addWarning('The following ldap_uids are non unique: ' . implode(', ', $non_unique_uids)
-                                      . PHP_EOL .' This might lead to some SVN misbehaviours for concerned users');
+                                      . PHP_EOL . ' This might lead to some SVN misbehaviours for concerned users');
             }
         }
     }
@@ -1067,7 +1067,7 @@ class LdapPlugin extends Plugin
     {
         switch ($params['type']) {
             case 'PLUGIN_LDAP_UPDATE_LOGIN':
-                include_once dirname(__FILE__).'/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
+                include_once dirname(__FILE__) . '/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
                 $params['class'] = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
                 $params['dependencies'] = array(
                     UserManager::instance(),
@@ -1089,7 +1089,7 @@ class LdapPlugin extends Plugin
     public function login_presenter($params)
     {
         if ($this->isLdapAuthType()) {
-            include_once dirname(__FILE__).'/LoginPresenter.class.php';
+            include_once dirname(__FILE__) . '/LoginPresenter.class.php';
             $params['authoritative'] = true;
             $params['presenter']     = new LDAP_LoginPresenter($params['presenter']);
         }
@@ -1105,7 +1105,7 @@ class LdapPlugin extends Plugin
         } catch (LDAP_Exception_NoWriteException $exception) {
             $this->getLogger()->debug('User info not updated in LDAP, no write LDAP configured');
         } catch (Exception $exception) {
-            $this->getLogger()->error('An error occured while updating user settings (user_manager_update_db): '.$exception->getMessage());
+            $this->getLogger()->error('An error occured while updating user settings (user_manager_update_db): ' . $exception->getMessage());
         }
     }
 
@@ -1120,7 +1120,7 @@ class LdapPlugin extends Plugin
         } catch (LDAP_Exception_NoWriteException $exception) {
             $this->getLogger()->debug('User info not updated in LDAP, no write LDAP configured');
         } catch (Exception $exception) {
-            $this->getLogger()->error('An error occured while activating user as site admin (project_admin_activate_user): '.$exception->getMessage());
+            $this->getLogger()->error('An error occured while activating user as site admin (project_admin_activate_user): ' . $exception->getMessage());
         }
     }
 
@@ -1171,25 +1171,25 @@ class LdapPlugin extends Plugin
         }
 
         if ($ldap_type === LDAP::SERVER_TYPE_ACTIVE_DIRECTORY) {
-            $config_file = $this->getEtcDir().LDAP::SERVER_TYPE_ACTIVE_DIRECTORY.'.inc';
+            $config_file = $this->getEtcDir() . LDAP::SERVER_TYPE_ACTIVE_DIRECTORY . '.inc';
         } else {
-            $config_file = $this->getEtcDir().LDAP::SERVER_TYPE_OPEN_LDAP.'.inc';
+            $config_file = $this->getEtcDir() . LDAP::SERVER_TYPE_OPEN_LDAP . '.inc';
         }
 
         if (! file_exists($this->getConfigFilePath())) {
             copy($config_file, $this->getConfigFilePath());
-            $GLOBALS['Response']->redirect('/plugins/pluginsadministration//?view=properties&plugin_id='.$this->getId());
+            $GLOBALS['Response']->redirect('/plugins/pluginsadministration//?view=properties&plugin_id=' . $this->getId());
         }
     }
 
     private function getEtcDir()
     {
-        return $GLOBALS['sys_custompluginsroot'] .'ldap/etc/';
+        return $GLOBALS['sys_custompluginsroot'] . 'ldap/etc/';
     }
 
     private function getConfigFilePath()
     {
-        return $this->getEtcDir().'ldap.inc';
+        return $this->getEtcDir() . 'ldap.inc';
     }
 
     public function ugroup_duplication($params)

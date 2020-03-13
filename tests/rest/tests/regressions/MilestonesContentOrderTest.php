@@ -38,11 +38,11 @@ class Regressions_MilestonesContentOrderTest extends RestBase
         $products = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'product');
 
         $put = json_encode(array($epics['Epic 1'], $epics['Epic 2'], $epics['Epic 3'], $epics['Epic 4']));
-        $this->getResponse($this->client->put('milestones/'.$products['Widget 1'].'/content', null, $put));
+        $this->getResponse($this->client->put('milestones/' . $products['Widget 1'] . '/content', null, $put));
         $this->assertEquals($this->getMilestoneContentIds($products['Widget 1']), array($epics['Epic 1'], $epics['Epic 2'], $epics['Epic 3'], $epics['Epic 4']));
 
         $put = json_encode(array($epics['Epic 3'], $epics['Epic 1'], $epics['Epic 2'], $epics['Epic 4']));
-        $this->getResponse($this->client->put('milestones/'.$products['Widget 1'].'/content', null, $put));
+        $this->getResponse($this->client->put('milestones/' . $products['Widget 1'] . '/content', null, $put));
         $this->assertEquals($this->getMilestoneContentIds($products['Widget 1']), array($epics['Epic 3'], $epics['Epic 1'], $epics['Epic 2'], $epics['Epic 4']));
     }
 

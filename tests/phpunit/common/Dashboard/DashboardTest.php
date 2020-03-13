@@ -59,7 +59,6 @@ class DashboardTest extends TestCase
      */
     public function testOneColumnIsValidWithOneColumn(Dashboard $dashboard, $layout, $column_count, $expected)
     {
-
         $this->assertEquals($dashboard->isLayoutValid($layout, $column_count), $expected);
     }
 }

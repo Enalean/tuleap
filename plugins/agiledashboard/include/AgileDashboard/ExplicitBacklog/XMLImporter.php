@@ -91,13 +91,13 @@ class XMLImporter
 
         $added_artifact_ids = [];
         foreach ($xml->top_backlog->artifact as $xml_backlog_item) {
-            $base_artifact_id = (string)$xml_backlog_item['artifact_id'];
+            $base_artifact_id = (string) $xml_backlog_item['artifact_id'];
             if (! $artifact_id_mapping->containsSource($base_artifact_id)) {
                 $logger->warning("Artifact #$base_artifact_id not found in XML. Skipping.");
                 continue;
             }
 
-            $new_artifact_id      = (int)$artifact_id_mapping->get($base_artifact_id);
+            $new_artifact_id      = (int) $artifact_id_mapping->get($base_artifact_id);
             $added_artifact_ids[] = $new_artifact_id;
         }
 
@@ -111,7 +111,7 @@ class XMLImporter
             $logger->error($no_root_planning_exception->getMessage());
             return;
         } catch (ProvidedAddedIdIsNotInPartOfTopBacklogException $exception) {
-            $logger->warning($exception->getMessage(). "They are not added in the top backlog.");
+            $logger->warning($exception->getMessage() . "They are not added in the top backlog.");
 
             $added_artifact_ids = array_diff($added_artifact_ids, $exception->getArtifactIds());
         }

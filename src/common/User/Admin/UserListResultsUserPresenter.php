@@ -51,8 +51,8 @@ class UserListResultsUserPresenter
         $this->realname     = $realname;
         $this->has_avatar   = $has_avatar;
         $this->avatar_url   = $avatar_url;
-        $this->nb_member_of = (int)$nb_member_of;
-        $this->nb_admin_of  = (int)$nb_admin_of;
+        $this->nb_member_of = (int) $nb_member_of;
+        $this->nb_admin_of  = (int) $nb_admin_of;
 
         $this->member_of_title     = $GLOBALS['Language']->getText('admin_userlist', 'member_of', $nb_member_of);
         $this->admin_of_title      = $GLOBALS['Language']->getText('admin_userlist', 'admin_of', $nb_admin_of);

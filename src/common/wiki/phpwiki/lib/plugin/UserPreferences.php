@@ -163,7 +163,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                             }
                         }
                         if (!$num) {
-                            $errmsg .= " " ._("No changes.");
+                            $errmsg .= " " . _("No changes.");
                         } else {
                             $request->_setUser($user);
                             $pref = $user->_prefs;
@@ -183,7 +183,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
             //return $user->PrintLoginForm ($request, $args, false, false);
         }
     }
-};
+}
 
 // $Log: UserPreferences.php,v $
 // Revision 1.35  2004/10/13 14:13:55  rurban

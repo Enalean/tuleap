@@ -71,9 +71,9 @@ class MailSender
 
         $server_url = HTTPRequest::instance()->getServerUrl();
 
-        $breadcrumbs[] = '<a href="'. $server_url .'/projects/'. $project_unix_name .'" />'. $hp->purify($project->getPublicName()) .'</a>';
-        $breadcrumbs[] = '<a href="'. $server_url .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify($changeset->getTracker()->getName()) .'</a>';
-        $breadcrumbs[] = '<a href="'. $server_url.'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($changeset->getTracker()->getName().' #'.$artifactId) .'</a>';
+        $breadcrumbs[] = '<a href="' . $server_url . '/projects/' . $project_unix_name . '" />' . $hp->purify($project->getPublicName()) . '</a>';
+        $breadcrumbs[] = '<a href="' . $server_url . '/plugins/tracker/?tracker=' . (int) $tracker->getId() . '" />' . $hp->purify($changeset->getTracker()->getName()) . '</a>';
+        $breadcrumbs[] = '<a href="' . $server_url . '/plugins/tracker/?aid=' . (int) $artifactId . '" />' . $hp->purify($changeset->getTracker()->getName() . ' #' . $artifactId) . '</a>';
 
         $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
         $mail_enhancer->addPropertiesToLookAndFeel('unsubscribe_link', $this->getUnsubscribeLink($changeset->getArtifact()));
@@ -113,7 +113,7 @@ class MailSender
             $subject,
             $htmlBody,
             $txtBody,
-            $server_url.$changeset->getUri(),
+            $server_url . $changeset->getUri(),
             trackerPlugin::TRUNCATED_SERVICE_NAME,
             $mail_enhancer
         );
@@ -121,8 +121,8 @@ class MailSender
 
     private function getTextBodyFilter($project_name, $tracker_name)
     {
-        $project_filter = '=PROJECT='.$project_name;
-        $tracker_filter = '=TRACKER='.$tracker_name;
+        $project_filter = '=PROJECT=' . $project_name;
+        $tracker_filter = '=TRACKER=' . $tracker_name;
 
         return PHP_EOL . $project_filter . PHP_EOL . $tracker_filter . PHP_EOL;
     }
@@ -142,9 +142,9 @@ class MailSender
      */
     private function getUnsubscribeLink(Tracker_Artifact $artifact)
     {
-        $link = HTTPRequest::instance()->getServerUrl() .'/plugins/tracker/?aid='.(int)$artifact->getId().'&func=manage-subscription';
+        $link = HTTPRequest::instance()->getServerUrl() . '/plugins/tracker/?aid=' . (int) $artifact->getId() . '&func=manage-subscription';
 
-        return '<a href="'. $link .'" target="_blank" rel="noreferrer">' .
+        return '<a href="' . $link . '" target="_blank" rel="noreferrer">' .
             $GLOBALS['Language']->getText('plugin_tracker_artifact', 'mail_unsubscribe') .
             '</a>';
     }

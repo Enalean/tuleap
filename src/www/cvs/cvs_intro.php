@@ -22,14 +22,14 @@ commits_header(array(
 ));
 
 // Table for summary info
-print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
+print '<TABLE width="100%"><TR valign="top"><TD width="65%">' . "\n";
 
 // Get group properties
 $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
 $row_grp = db_fetch_array($res_grp);
 
 // Show CVS access information
-if ($row_grp['cvs_preamble']!='') {
+if ($row_grp['cvs_preamble'] != '') {
     echo util_unconvert_htmlspecialchars($row_grp['cvs_preamble']);
 } else {
     include($GLOBALS['Language']->getContent('cvs/intro'));
@@ -42,11 +42,11 @@ echo format_cvs_history($group_id);
 
 
 // CVS Browsing Box
-$uri = session_make_url('/cvs/viewvc.php/?root='.$row_grp['unix_group_name'].'&roottype=cvs');
-print '<HR><B>'.$GLOBALS['Language']->getText('cvs_intro', 'browse_title').'</B>
-<P>'.$GLOBALS['Language']->getText('cvs_intro', 'browse_msg').'
+$uri = session_make_url('/cvs/viewvc.php/?root=' . $row_grp['unix_group_name'] . '&roottype=cvs');
+print '<HR><B>' . $GLOBALS['Language']->getText('cvs_intro', 'browse_title') . '</B>
+<P>' . $GLOBALS['Language']->getText('cvs_intro', 'browse_msg') . '
 <UL>
-<LI><A href="'.$uri.'"><B>'.$GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse').'</B></A></LI>';
+<LI><A href="' . $uri . '"><B>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse') . '</B></A></LI>';
 
 print $HTML->box1_bottom();
 

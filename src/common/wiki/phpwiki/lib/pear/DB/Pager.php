@@ -186,7 +186,7 @@ class DB_Pager extends PEAR
         }
 
         // Total number of pages
-        $pages = ceil($numrows/$limit);
+        $pages = ceil($numrows / $limit);
         $data['numpages'] = $pages;
 
         // first & last page
@@ -195,8 +195,8 @@ class DB_Pager extends PEAR
 
         // Build pages array
         $data['pages'] = array();
-        for ($i=1; $i <= $pages; $i++) {
-            $offset = $limit * ($i-1);
+        for ($i = 1; $i <= $pages; $i++) {
+            $offset = $limit * ($i - 1);
             $data['pages'][$i] = $offset;
             // $from must point to one page
             if ($from == $offset) {
@@ -218,7 +218,7 @@ class DB_Pager extends PEAR
 
         // Limit number of pages (goole algoritm)
         if ($maxpages) {
-            $radio = floor($maxpages/2);
+            $radio = floor($maxpages / 2);
             $minpage = $data['current'] - $radio;
             if ($minpage < 1) {
                 $minpage = 1;
@@ -250,7 +250,7 @@ class DB_Pager extends PEAR
             $data['to'] = $numrows;
         } else {
             if ($data['current'] == ($pages - 1)) {
-                $data['remain'] = $numrows - ($limit*($pages-1));
+                $data['remain'] = $numrows - ($limit * ($pages - 1));
             } else {
                 $data['remain'] = $limit;
             }

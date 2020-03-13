@@ -20,7 +20,7 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__.'/../lib/TestDataBuilder.php';
+require_once __DIR__ . '/../lib/TestDataBuilder.php';
 
 $data_builder = new SOAP_TestDataBuilder();
 $data_builder->generateUsers();

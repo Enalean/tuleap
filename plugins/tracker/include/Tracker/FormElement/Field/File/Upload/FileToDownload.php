@@ -40,6 +40,6 @@ final class FileToDownload
 
     public function getDownloadHref(): string
     {
-        return TRACKER_BASE_URL . '/attachments/' . urlencode((string) $this->id) .'-'. rawurlencode($this->filename);
+        return TRACKER_BASE_URL . '/attachments/' . urlencode((string) $this->id) . '-' . rawurlencode($this->filename);
     }
 }

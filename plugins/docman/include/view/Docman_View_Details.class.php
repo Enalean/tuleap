@@ -34,7 +34,7 @@ require_once('Docman_View_ItemDetailsSectionReferences.class.php');
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
 require_once('Docman_View_ItemDetailsSectionApproval.class.php');
 
-require_once(dirname(__FILE__).'/../Docman_LockFactory.class.php');
+require_once(dirname(__FILE__) . '/../Docman_LockFactory.class.php');
 
 class Docman_View_Details extends Docman_View_Display
 {

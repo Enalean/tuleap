@@ -35,7 +35,7 @@ class DaemonLocker
     public function isRunning()
     {
         if (file_exists($this->pid_file)) {
-            $pid =(int) trim(file_get_contents($this->pid_file));
+            $pid = (int) trim(file_get_contents($this->pid_file));
             $ret = posix_kill($pid, SIG_DFL);
             if ($ret === true) {
                 throw new DaemonLockerException("Application already running with pid $pid");
@@ -47,7 +47,7 @@ class DaemonLocker
                     case PCNTL_EPERM:
                         throw new DaemonLockerException("Application already running with pid $pid (EPERM)");
                     default:
-                        throw new DaemonLockerException("Application already running with pid $pid (".posix_get_last_error().", ".posix_strerror(posix_get_last_error()).")\n");
+                        throw new DaemonLockerException("Application already running with pid $pid (" . posix_get_last_error() . ", " . posix_strerror(posix_get_last_error()) . ")\n");
                 }
             }
         }

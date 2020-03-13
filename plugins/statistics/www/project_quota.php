@@ -23,7 +23,7 @@ use Tuleap\Statistics\AdminHeaderPresenter;
 use Tuleap\Statistics\ProjectQuotaPresenter;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ .'/../include/ProjectQuotaHtml.class.php';
+require_once __DIR__ . '/../include/ProjectQuotaHtml.class.php';
 
 
 $pluginManager = PluginManager::instance();

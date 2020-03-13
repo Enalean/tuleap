@@ -21,4 +21,4 @@
 require_once __DIR__ . '/../../include/pre.php';
 
 $wsdl_renderer = new SOAP_WSDLRenderer();
-$wsdl_renderer->render(HTTPRequest::instance()->getServerUrl()."/soap/svn/?wsdl");
+$wsdl_renderer->render(HTTPRequest::instance()->getServerUrl() . "/soap/svn/?wsdl");

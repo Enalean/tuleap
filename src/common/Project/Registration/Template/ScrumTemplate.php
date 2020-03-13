@@ -33,7 +33,7 @@ class ScrumTemplate implements TuleapTemplate
     public const NAME = 'scrum';
 
     private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/scrum/project.xml';
-    private const AGILEDASHBOARD_XML = __DIR__.'/../../../../../plugins/agiledashboard/www/resources/scrum_dashboard_template.xml';
+    private const AGILEDASHBOARD_XML = __DIR__ . '/../../../../../plugins/agiledashboard/www/resources/scrum_dashboard_template.xml';
 
     /**
      * @var string

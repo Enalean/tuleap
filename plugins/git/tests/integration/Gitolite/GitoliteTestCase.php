@@ -97,18 +97,18 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
         $this->cwd           = getcwd();
-        $this->fixtures_dir       = __DIR__ .'/_fixtures';
+        $this->fixtures_dir       = __DIR__ . '/_fixtures';
         $tmpDir              = $this->getTmpDir();
-        $this->gitolite_admin_ref  = $tmpDir.'/gitolite-admin-ref';
+        $this->gitolite_admin_ref  = $tmpDir . '/gitolite-admin-ref';
         $this->sys_data_dir  = $tmpDir;
-        $this->gitolite_admin_dir     = $tmpDir.'/gitolite/admin';
-        $this->repo_dir       = $tmpDir.'/repositories';
+        $this->gitolite_admin_dir     = $tmpDir . '/gitolite/admin';
+        $this->repo_dir       = $tmpDir . '/repositories';
 
         // Copy the reference to save time & create symlink because
         // git is very sensitive to path you are using. Just symlinking
         // spots bugs
-        mkdir($tmpDir.'/gitolite');
-        system('tar -xf '. $this->fixtures_dir.'/gitolite-admin-ref' .'.tar --directory '.$tmpDir);
+        mkdir($tmpDir . '/gitolite');
+        system('tar -xf ' . $this->fixtures_dir . '/gitolite-admin-ref' . '.tar --directory ' . $tmpDir);
         symlink($this->gitolite_admin_ref, $this->gitolite_admin_dir);
 
         mkdir($this->repo_dir);

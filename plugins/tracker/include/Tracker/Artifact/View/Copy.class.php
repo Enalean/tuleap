@@ -24,7 +24,7 @@ class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit
     /** @see Tracker_Artifact_View_Edit::getURL() */
     public function getURL()
     {
-        return TRACKER_BASE_URL .'/?'. http_build_query(
+        return TRACKER_BASE_URL . '/?' . http_build_query(
             array(
                 'aid' => $this->artifact->getId(),
                 'func' => 'copy-artifact'

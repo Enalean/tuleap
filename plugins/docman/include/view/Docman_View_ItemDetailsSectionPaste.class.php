@@ -63,7 +63,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         );
         $cmpTable = $mdCmp->getMetadataCompareTable($sthToImport);
         if ($sthToImport) {
-            $html .= '<h2>'. dgettext('tuleap-docman', 'Document properties') .'</h2>';
+            $html .= '<h2>' . dgettext('tuleap-docman', 'Document properties') . '</h2>';
             $dPm = Docman_PermissionsManager::instance($this->dstGo->getGroupId());
             $current_user = UserManager::instance()->getCurrentUser();
             if ($dPm->userCanAdmin($current_user)) {
@@ -94,7 +94,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
             $content = $this->checkMdDifferences($mdDiffers);
         }
 
-        $content .= '<h2>'. dgettext('tuleap-docman', 'Paste') .'</h2>';
+        $content .= '<h2>' . dgettext('tuleap-docman', 'Paste') . '</h2>';
 
         $content .= '<p>';
         if ($this->mode === 'copy') {
@@ -106,8 +106,8 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
 
         $content .= '<form name="select_paste_location" method="POST" action="?">';
         $content .= '<input type="hidden" name="action" value="paste" />';
-        $content .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';
-        $content .= '<input type="hidden" name="id" value="'.$this->item->getId().'" />';
+        $content .= '<input type="hidden" name="group_id" value="' . $this->item->getGroupId() . '" />';
+        $content .= '<input type="hidden" name="id" value="' . $this->item->getId() . '" />';
         $content .= '<p>';
         $itemRanking = new Docman_View_ItemRanking();
         $itemRanking->setDropDownName('rank');
@@ -127,9 +127,9 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         if ($this->mode == 'copy' && $mdDiffers == 'user') {
             $buttonTxt = dgettext('tuleap-docman', 'Paste Anyway');
         }
-        $content .= '<input type="submit" name="submit" value="'.$buttonTxt.'" />';
+        $content .= '<input type="submit" name="submit" value="' . $buttonTxt . '" />';
         $content .= ' ';
-        $content .= '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
+        $content .= '<input type="submit" name="cancel" value="' . $GLOBALS['Language']->getText('global', 'btn_cancel') . '" />';
 
         $content .= '</form>';
         return $content;
@@ -167,7 +167,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
 
     public function &_getDocmanIcons()
     {
-        $icons = new Docman_Icons($this->_controller->getThemePath().'/images/ic/');
+        $icons = new Docman_Icons($this->_controller->getThemePath() . '/images/ic/');
         return $icons;
     }
 }

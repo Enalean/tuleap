@@ -39,7 +39,7 @@ use Sabre_DAV_Exception_MethodNotAllowed;
 use Sabre_DAV_Exception_RequestedRangeNotSatisfiable;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVDocmanFile
@@ -110,7 +110,7 @@ class WebDAVDocmanFileTest extends TestCase
     public function testGetNotFound(): void
     {
         $version = \Mockery::spy(\Docman_Version::class);
-        $version->shouldReceive('getPath')->andReturns(dirname(__FILE__).'/_fixtures/nonExistant');
+        $version->shouldReceive('getPath')->andReturns(dirname(__FILE__) . '/_fixtures/nonExistant');
         $item = \Mockery::spy(\Docman_File::class);
         $item->shouldReceive('getCurrentVersion')->andReturns($version);
 
@@ -134,7 +134,7 @@ class WebDAVDocmanFileTest extends TestCase
     public function testGetBigFile(): void
     {
         $version = \Mockery::spy(\Docman_Version::class);
-        $version->shouldReceive('getPath')->andReturns(dirname(__FILE__).'/_fixtures/test.txt');
+        $version->shouldReceive('getPath')->andReturns(dirname(__FILE__) . '/_fixtures/test.txt');
         $item = \Mockery::spy(\Docman_File::class);
         $item->shouldReceive('getCurrentVersion')->andReturns($version);
 
@@ -160,7 +160,7 @@ class WebDAVDocmanFileTest extends TestCase
     public function testGetSucceede(): void
     {
         $version = \Mockery::spy(\Docman_Version::class);
-        $version->shouldReceive('getPath')->andReturns(dirname(__FILE__).'/_fixtures/test.txt');
+        $version->shouldReceive('getPath')->andReturns(dirname(__FILE__) . '/_fixtures/test.txt');
         $version->shouldReceive('getFiletype')->andReturns('type1');
         $item = \Mockery::spy(\Docman_File::class);
         $item->shouldReceive('getCurrentVersion')->andReturns($version);
@@ -201,7 +201,7 @@ class WebDAVDocmanFileTest extends TestCase
         $webDAVDocmanFile->shouldReceive('getUtils')->andReturns($utils);
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
-        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
 
         $webDAVDocmanFile->put($data);
     }
@@ -227,7 +227,7 @@ class WebDAVDocmanFileTest extends TestCase
         $webDAVDocmanFile->shouldReceive('getMaxFileSize')->andReturns(20);
 
         $this->expectException(Sabre_DAV_Exception_RequestedRangeNotSatisfiable::class);
-        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFile->put($data);
     }
 
@@ -251,7 +251,7 @@ class WebDAVDocmanFileTest extends TestCase
 
         $webDAVDocmanFile->shouldReceive('getMaxFileSize')->andReturns(4096);
 
-        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFile->put($data);
     }
 

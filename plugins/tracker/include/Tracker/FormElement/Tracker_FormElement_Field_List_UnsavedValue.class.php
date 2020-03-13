@@ -41,6 +41,6 @@ class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Fi
 
     public function getJsonId()
     {
-        return '!'. $this->getId();
+        return '!' . $this->getId();
     }
 }

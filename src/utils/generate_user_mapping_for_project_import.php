@@ -26,7 +26,7 @@ use Tuleap\Project\XML\Import;
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
 if ($sys_user !== 'root' && $sys_user !== 'codendiadm') {
-    fwrite(STDERR, 'Unsufficient privileges for user '.$sys_user.PHP_EOL);
+    fwrite(STDERR, 'Unsufficient privileges for user ' . $sys_user . PHP_EOL);
     exit(1);
 }
 

@@ -35,7 +35,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
         if (!isset($this->log) || $this->log == '') {
             $this->log = $log;
         } else {
-            $this->log .= PHP_EOL.$log;
+            $this->log .= PHP_EOL . $log;
         }
     }
 
@@ -52,7 +52,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
     {
         $txt = '';
         list($project_path, $file_id, $old_path) = $this->getParametersAsArray();
-        $txt .= 'project_path: '. $project_path.' -file ID: '.$file_id.' -old file path: '.$old_path;
+        $txt .= 'project_path: ' . $project_path . ' -file ID: ' . $file_id . ' -old file path: ' . $old_path;
         return $txt;
     }
 
@@ -77,7 +77,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
         $this->createNecessaryFolders($project_path, $file_path);
 
         if (! file_exists($project_path . $old_path)) {
-            $this->error('Cannot find file to move: ' . $file_id . ' from: ' . $project_path.$old_path);
+            $this->error('Cannot find file to move: ' . $file_id . ' from: ' . $project_path . $old_path);
             return false;
         }
 
@@ -91,7 +91,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
             return true;
         }
 
-        $this->error('Unable to move file: ' . $file_id . ' from: ' . $project_path.$old_path . ' to ' . $project_path . $file_path);
+        $this->error('Unable to move file: ' . $file_id . ' from: ' . $project_path . $old_path . ' to ' . $project_path . $file_path);
         return false;
     }
 
@@ -104,7 +104,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
             return;
         }
 
-        $folder_name = $project_path .$path_parts[0];
+        $folder_name = $project_path . $path_parts[0];
 
         if (! is_dir($folder_name)) {
             mkdir($folder_name);

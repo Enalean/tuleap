@@ -903,7 +903,7 @@ class PEAR_Error
                 $callback = $this->callback;
             }
             return sprintf(
-                '[%s: message="%s" code=%d mode=callback '.
+                '[%s: message="%s" code=%d mode=callback ' .
                            'callback=%s prefix="%s" info="%s"]',
                 static::class,
                 $this->message,
@@ -926,7 +926,7 @@ class PEAR_Error
             $modes[] = 'return';
         }
         return sprintf(
-            '[%s: message="%s" code=%d mode=%s level=%s '.
+            '[%s: message="%s" code=%d mode=%s level=%s ' .
                        'prefix="%s" info="%s"]',
             static::class,
             $this->message,

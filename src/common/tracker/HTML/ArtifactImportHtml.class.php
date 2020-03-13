@@ -57,9 +57,9 @@ class ArtifactImportHtml extends ArtifactImport
       //}
 
         if (array_key_exists('notify', $_REQUEST) && $_REQUEST['notify']) {
-            user_set_preference('tracker_import_notify_'.$this->ath->getID(), 1);
+            user_set_preference('tracker_import_notify_' . $this->ath->getID(), 1);
         } else {
-            user_set_preference('tracker_import_notify_'.$this->ath->getID(), 0);
+            user_set_preference('tracker_import_notify_' . $this->ath->getID(), 0);
         }
 
         $ok = $this->parse(
@@ -70,16 +70,16 @@ class ArtifactImportHtml extends ArtifactImport
             $number_updates
         );
 
-        $this->ath->header(array ('title'=>$Language->getText('tracker_import', 'art_import').$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
-        'atid'=>$this->ath->getID(),
+        $this->ath->header(array ('title' => $Language->getText('tracker_import', 'art_import') . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
+        'atid' => $this->ath->getID(),
         'help' => 'tracker-v3.html#tracker-artifact-import'));
-        echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
+        echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
-        echo '<h2>'.$Language->getText('tracker_import', 'parse_report').'</h2>';
+        echo '<h2>' . $Language->getText('tracker_import', 'parse_report') . '</h2>';
         if (!$ok) {
             $this->showErrors();
         } else {
-            echo $Language->getText('tracker_import', 'ready', array(($number_inserts+$number_updates),$number_inserts, $number_updates))."<br><br>\n";
+            echo $Language->getText('tracker_import', 'ready', array(($number_inserts + $number_updates),$number_inserts, $number_updates)) . "<br><br>\n";
             echo $Language->getText('tracker_import', 'check_data');
             $this->showParseResults($this->parsed_labels, $artifacts_data);
         }
@@ -90,7 +90,7 @@ class ArtifactImportHtml extends ArtifactImport
 
     public function showErrors()
     {
-        echo $this->getErrorMessage()." <br>\n";
+        echo $this->getErrorMessage() . " <br>\n";
     }
 
 
@@ -124,19 +124,19 @@ class ArtifactImportHtml extends ArtifactImport
 
         echo '
         <FORM NAME="acceptimportdata" action="" method="POST" enctype="multipart/form-data">
-        <p align="left"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('tracker_import_admin', 'import').'"></p>';
+        <p align="left"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="' . $Language->getText('tracker_import_admin', 'import') . '"></p>';
 
         echo html_build_list_table_top($parsed_labels);
 
-        for ($i=0; $i < count($artifacts_data); $i++) {
+        for ($i = 0; $i < count($artifacts_data); $i++) {
             $data = $artifacts_data[$i];
             if ($this->aid_column != -1) {
                 $aid = $data[$this->aid_column];
             }
 
-            echo '<TR class="'.util_get_alt_row_color($i).'">'."\n";
+            echo '<TR class="' . util_get_alt_row_color($i) . '">' . "\n";
 
-            for ($c=0; $c < count($parsed_labels); $c++) {
+            for ($c = 0; $c < count($parsed_labels); $c++) {
                 $value = $data[$c];
                 $width = ' class="small"';
 
@@ -149,12 +149,12 @@ class ArtifactImportHtml extends ArtifactImport
                        //if insert show default value
                     if ($this->aid_column == -1 || $aid == "") {
                         if ($value == "") {
-                                 echo '<TD '. $width .' valign="top"><I>'.  $hp->purify($sub_on, CODENDI_PURIFIER_CONVERT_HTML) .'</I></TD>';
+                                 echo '<TD ' . $width . ' valign="top"><I>' .  $hp->purify($sub_on, CODENDI_PURIFIER_CONVERT_HTML) . '</I></TD>';
                         } else {
-                             echo '<TD '. $width .' valign="top">'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'</TD>';
+                             echo '<TD ' . $width . ' valign="top">' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '</TD>';
                         }
                     } else {
-                        echo '<TD '. $width .' valign="top"><I>'.$Language->getText('global', 'unchanged')."</I></TD>\n";
+                        echo '<TD ' . $width . ' valign="top"><I>' . $Language->getText('global', 'unchanged') . "</I></TD>\n";
                     }
                      continue;
 
@@ -162,12 +162,12 @@ class ArtifactImportHtml extends ArtifactImport
                 } elseif ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
                     if ($this->aid_column == -1 || $aid == "") {
                         if ($value == "") {
-                             echo '<TD '. $width .' valign="top"><I>'. $sub_user_name ."</I></TD>\n";
+                             echo '<TD ' . $width . ' valign="top"><I>' . $sub_user_name . "</I></TD>\n";
                         } else {
-                            echo '<TD '. $width .' valign="top">'. $value ."</TD>\n";
+                            echo '<TD ' . $width . ' valign="top">' . $value . "</TD>\n";
                         }
                     } else {
-                        echo '<TD '. $width .' valign="top"><I>'.$Language->getText('global', 'unchanged')."</I></TD>\n";
+                        echo '<TD ' . $width . ' valign="top"><I>' . $Language->getText('global', 'unchanged') . "</I></TD>\n";
                     }
                     continue;
                 }
@@ -180,36 +180,36 @@ class ArtifactImportHtml extends ArtifactImport
                         $art_id = (($this->aid_column != -1 && $aid != "") ? $aid : "0");
                         if ($this->parseFollowUpComments($data[$c], $parsed_comments, $art_id, true)) {
                             if (count($parsed_comments) > 0) {
-                                echo '<TD '. $width .' valign="top"><TABLE>';
-                                echo '<TR class ="boxtable"><TD class="boxtitle">'.$Language->getText('tracker_import_utils', 'date').'</TD><TD class="boxtitle">'.$Language->getText('global', 'by').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils', 'type').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils', 'comment').'</TD></TR>';
-                                for ($d=0; $d < count($parsed_comments); $d++) {
+                                echo '<TD ' . $width . ' valign="top"><TABLE>';
+                                echo '<TR class ="boxtable"><TD class="boxtitle">' . $Language->getText('tracker_import_utils', 'date') . '</TD><TD class="boxtitle">' . $Language->getText('global', 'by') . '</TD><TD class="boxtitle">' . $Language->getText('tracker_import_utils', 'type') . '</TD><TD class="boxtitle">' . $Language->getText('tracker_import_utils', 'comment') . '</TD></TR>';
+                                for ($d = 0; $d < count($parsed_comments); $d++) {
                                       $arr = $parsed_comments[$d];
-                                      echo '<TR class="'.util_get_alt_row_color($d).'">';
-                                      echo "<TD $width>". $hp->purify($arr['date'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
-                                      echo "<TD $width>". $hp->purify($arr['by'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
-                                      echo "<TD $width>". $hp->purify($arr['type'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
-                                      echo "<TD $width>". $hp->purify($arr['comment'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
+                                      echo '<TR class="' . util_get_alt_row_color($d) . '">';
+                                      echo "<TD $width>" . $hp->purify($arr['date'], CODENDI_PURIFIER_CONVERT_HTML) . "</TD>";
+                                      echo "<TD $width>" . $hp->purify($arr['by'], CODENDI_PURIFIER_CONVERT_HTML) . "</TD>";
+                                      echo "<TD $width>" . $hp->purify($arr['type'], CODENDI_PURIFIER_CONVERT_HTML) . "</TD>";
+                                      echo "<TD $width>" . $hp->purify($arr['comment'], CODENDI_PURIFIER_CONVERT_HTML) . "</TD>";
                                       echo "</TR>\n";
                                 }
                                 echo "</TABLE></TD>";
                             } else {
-                                echo '<TD '. $width .' align="center">-</TD>';
+                                echo '<TD ' . $width . ' align="center">-</TD>';
                             }
                         } else {
-                            echo '<TD '. $width ."><I>".$Language->getText('tracker_import_utils', 'comment_parse_error', $this->getErrorMessage())."</I></TD>\n";
+                            echo '<TD ' . $width . "><I>" . $Language->getText('tracker_import_utils', 'comment_parse_error', $this->getErrorMessage()) . "</I></TD>\n";
                         }
 
                 //DEFAULT
                     } else {
-                        echo '<TD '. $width .' valign="top">'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) ."</TD>\n";
+                        echo '<TD ' . $width . ' valign="top">' .  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . "</TD>\n";
                     }
                 } else {
                     if ($parsed_labels[$c] == $aid_field->getLabel()) {
-                        echo '<TD '. $width .' valign="top"><I>'.$Language->getText('tracker_import_utils', 'new')."</I></TD>\n";
+                        echo '<TD ' . $width . ' valign="top"><I>' . $Language->getText('tracker_import_utils', 'new') . "</I></TD>\n";
 
             //DEFAULT
                     } else {
-                        echo '<TD '. $width .' valign="top" align="center">-</TD>';
+                        echo '<TD ' . $width . ' valign="top" align="center">-</TD>';
                     }
                 }
             }
@@ -219,23 +219,23 @@ class ArtifactImportHtml extends ArtifactImport
         echo "</TABLE>\n";
 
         echo '
-        <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->ath->getID().'">
-        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$this->group->group_id.'">
+        <INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . (int) $this->ath->getID() . '">
+        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . (int) $this->group->group_id . '">
         <INPUT TYPE="HIDDEN" NAME="func" VALUE="import">
         <INPUT TYPE="HIDDEN" NAME="mode" VALUE="import">
-        <INPUT TYPE="HIDDEN" NAME="aid_column" VALUE="'.(int)$this->aid_column.'">
-        <INPUT TYPE="HIDDEN" NAME="count_artifacts" VALUE="'.count($artifacts_data).'">';
+        <INPUT TYPE="HIDDEN" NAME="aid_column" VALUE="' . (int) $this->aid_column . '">
+        <INPUT TYPE="HIDDEN" NAME="count_artifacts" VALUE="' . count($artifacts_data) . '">';
 
         foreach ($parsed_labels as $label) {
             echo '
-        <INPUT TYPE="HIDDEN" NAME="parsed_labels[]" VALUE="'. $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) .'">';
+        <INPUT TYPE="HIDDEN" NAME="parsed_labels[]" VALUE="' . $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) . '">';
         }
 
-        for ($i=0; $i < count($artifacts_data); $i++) {
+        for ($i = 0; $i < count($artifacts_data); $i++) {
             $data = $artifacts_data[$i];
-            for ($c=0; $c < count($data); $c++) {
+            for ($c = 0; $c < count($data); $c++) {
                 echo '
-        <INPUT TYPE="HIDDEN" NAME="artifacts_data_'.$i.'_'.$c.'" VALUE="'. $hp->purify($data[$c], CODENDI_PURIFIER_CONVERT_HTML) .'">';
+        <INPUT TYPE="HIDDEN" NAME="artifacts_data_' . $i . '_' . $c . '" VALUE="' . $hp->purify($data[$c], CODENDI_PURIFIER_CONVERT_HTML) . '">';
             }
         }
 
@@ -253,7 +253,7 @@ class ArtifactImportHtml extends ArtifactImport
         global $Language;
 
         $notify = false;
-        if (user_get_preference('tracker_import_notify_'.$this->ath->getID()) == '1') {
+        if (user_get_preference('tracker_import_notify_' . $this->ath->getID()) == '1') {
             $notify = true;
         }
 
@@ -284,10 +284,10 @@ class ArtifactImportHtml extends ArtifactImport
 
       // project_export_utils is using $at instead of $ath
         $at = $this->ath;
-        $this->ath->header(array ('title'=>$Language->getText('tracker_import', 'art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
-        'atid'=>$this->ath->getID(),
+        $this->ath->header(array ('title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
+        'atid' => $this->ath->getID(),
         'help' => 'tracker-v3.html#tracker-artifact-import'));
-        echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
+        echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
         $sql = $this->ath->buildExportQuery($fields, $col_list, $this->lbl_list, $this->dsc_list, $select, $from, $where, $multiple_queries, $all_queries);
 
@@ -308,11 +308,11 @@ class ArtifactImportHtml extends ArtifactImport
 
         $eol = "\n";
 
-        $result=db_query($sql);
+        $result = db_query($sql);
         $rows = db_numrows($result);
 
-        echo '<h3>'.$Language->getText('tracker_import', 'format_hdr'),'</h3>';
-        echo '<p>'.$Language->getText('tracker_import', 'format_msg'),'<p>';
+        echo '<h3>' . $Language->getText('tracker_import', 'format_hdr'),'</h3>';
+        echo '<p>' . $Language->getText('tracker_import', 'format_msg'),'<p>';
 
         if ($rows > 0) {
             $record = pick_a_record_at_random($result, $rows, $col_list);
@@ -329,7 +329,7 @@ class ArtifactImportHtml extends ArtifactImport
 
         display_exported_fields($col_list, $this->lbl_list, $this->dsc_list, $record, $mand_list);
 
-        echo '<br><br><h4>'.$Language->getText('tracker_import', 'sample_cvs_file').'</h4>';
+        echo '<br><br><h4>' . $Language->getText('tracker_import', 'sample_cvs_file') . '</h4>';
 
         echo build_csv_header($col_list, $this->lbl_list);
         echo '<br>';
@@ -348,15 +348,15 @@ class ArtifactImportHtml extends ArtifactImport
     {
         global $Language,$sys_max_size_upload;
 
-        $this->ath->header(array ('title'=>$Language->getText('tracker_import', 'art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
-        'atid'=>$this->ath->getID(),
+        $this->ath->header(array ('title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
+        'atid' => $this->ath->getID(),
         'help' => 'tracker-v3.html#tracker-artifact-import'));
-        echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
+        echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
-        echo '<h3>'.$Language->getText('tracker_import', 'import_new_hdr').'</h3>';
-        echo '<p>'.$Language->getText('tracker_import', 'import_new_msg', array('/tracker/index.php?group_id='.(int)$this->group->group_id.'&atid='.(int)$atid.'&user_id='.(int)$user_id.'&mode=showformat&func=import')).'</p>';
+        echo '<h3>' . $Language->getText('tracker_import', 'import_new_hdr') . '</h3>';
+        echo '<p>' . $Language->getText('tracker_import', 'import_new_msg', array('/tracker/index.php?group_id=' . (int) $this->group->group_id . '&atid=' . (int) $atid . '&user_id=' . (int) $user_id . '&mode=showformat&func=import')) . '</p>';
 
-        $_pref_notify  = user_get_preference('tracker_import_notify_'.$atid);
+        $_pref_notify  = user_get_preference('tracker_import_notify_' . $atid);
         $notifychecked = '';
         if ($_pref_notify === '1') {
             $notifychecked = 'checked="checked"';
@@ -364,24 +364,24 @@ class ArtifactImportHtml extends ArtifactImport
 
         echo '
 	    <FORM NAME="importdata" id="tracker-import-data" action="" method="POST" enctype="multipart/form-data">
-            <INPUT TYPE="hidden" name="group_id" value="'.(int)$this->group->group_id.'">
-            <INPUT TYPE="hidden" name="atid" value="'.(int)$atid.'">
+            <INPUT TYPE="hidden" name="group_id" value="' . (int) $this->group->group_id . '">
+            <INPUT TYPE="hidden" name="atid" value="' . (int) $atid . '">
             <INPUT TYPE="hidden" name="func" value="import">
             <INPUT TYPE="hidden" name="mode" value="parse">
 
 			<table border="0">
 			<tr>
 			<th> ';//<input type="checkbox" name="file_upload" value="1">
-        echo '<B>'.$Language->getText('tracker_import', 'upload_file').'</B></th>
+        echo '<B>' . $Language->getText('tracker_import', 'upload_file') . '</B></th>
 			<td> <input type="file" name="csv_filename" size="50"> </td>
-      <td> <span class="help"><i>'.$Language->getText('tracker_import', 'max_upload_size', formatByteToMb($sys_max_size_upload)).'</i></span> </td>
+      <td> <span class="help"><i>' . $Language->getText('tracker_import', 'max_upload_size', formatByteToMb($sys_max_size_upload)) . '</i></span> </td>
 			</tr>
             <tr>
               <th>
-                '.$Language->getText('tracker_import', 'send_notifications').'
+                ' . $Language->getText('tracker_import', 'send_notifications') . '
               </th>
               <td colspan="2">
-                <input type="checkbox" name="notify" value="ok" "'.$notifychecked.'"/>
+                <input type="checkbox" name="notify" value="ok" "' . $notifychecked . '"/>
               </td>
             </tr>';
 
@@ -392,7 +392,7 @@ class ArtifactImportHtml extends ArtifactImport
         echo '
                         </table>
       <br>
-			<input class="btn btn-primary" type="submit" value="'.$Language->getText('tracker_import', 'submit_info').'">
+			<input class="btn btn-primary" type="submit" value="' . $Language->getText('tracker_import', 'submit_info') . '">
 
 	    </FORM> ';
         $this->ath->footer(array());

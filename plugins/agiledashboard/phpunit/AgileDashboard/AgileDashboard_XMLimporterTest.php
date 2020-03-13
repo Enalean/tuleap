@@ -49,20 +49,20 @@ final class AgileDashboard_XMLimporterTest extends \PHPUnit\Framework\TestCase
         $default_xml = '<?xml version="1.0" encoding="UTF-8"?>
                  <agiledashboard>
                     <plannings>
-                        <planning '.
-                            $name.'="Sprint Planning" '.
-                            $plan_title.'="Sprint Plan" '.
-                            $planning_tracker_id.'="T11" '.
-                            $backlog_title.'="Release Backlog">
+                        <planning ' .
+                            $name . '="Sprint Planning" ' .
+                            $plan_title . '="Sprint Plan" ' .
+                            $planning_tracker_id . '="T11" ' .
+                            $backlog_title . '="Release Backlog">
                             <backlogs>
                                 <backlog>T14</backlog>
                             </backlogs>
                         </planning>
-                        <planning '.
-                            $name.'="Sprint Planning" '.
-                            $plan_title.'="Sprint Plan" '.
-                            $planning_tracker_id.'="T11" '.
-                            $backlog_title.'="Release Backlog">
+                        <planning ' .
+                            $name . '="Sprint Planning" ' .
+                            $plan_title . '="Sprint Plan" ' .
+                            $planning_tracker_id . '="T11" ' .
+                            $backlog_title . '="Release Backlog">
                             <backlogs>
                                 <backlog>T14</backlog>
                                 <backlog>T15</backlog>

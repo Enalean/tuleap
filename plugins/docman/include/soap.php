@@ -37,19 +37,19 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         array(
-        'item_id' => array('name'=>'item_id', 'type' => 'xsd:int'),
-        'parent_id' => array('name'=>'parent', 'type' => 'xsd:int'),
-        'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
-        'title' => array('name'=>'title', 'type' => 'xsd:string'),
-        'description' => array('name'=>'description', 'type' => 'xsd:string'),
-        'create_date' => array('name'=>'create_date', 'type' => 'xsd:int'),
-        'update_date' => array('name'=>'update_date', 'type' => 'xsd:int'),
-        'delete_date' => array('name'=>'delete_date', 'type' => 'xsd:int'),
-        'user_id' => array('name'=>'user_id', 'type'=>'xsd:int'),
-        'status' => array('name'=>'status', 'type' => 'xsd:int'),
-        'obsolescence_date' => array('name'=>'obsolescence_date', 'type' => 'xsd:int'),
-        'rank' => array('name'=>'rank', 'type' => 'xsd:int'),
-        'item_type' => array('name'=>'item_type', 'type' => 'xsd:int'),
+        'item_id' => array('name' => 'item_id', 'type' => 'xsd:int'),
+        'parent_id' => array('name' => 'parent', 'type' => 'xsd:int'),
+        'group_id' => array('name' => 'group_id', 'type' => 'xsd:int'),
+        'title' => array('name' => 'title', 'type' => 'xsd:string'),
+        'description' => array('name' => 'description', 'type' => 'xsd:string'),
+        'create_date' => array('name' => 'create_date', 'type' => 'xsd:int'),
+        'update_date' => array('name' => 'update_date', 'type' => 'xsd:int'),
+        'delete_date' => array('name' => 'delete_date', 'type' => 'xsd:int'),
+        'user_id' => array('name' => 'user_id', 'type' => 'xsd:int'),
+        'status' => array('name' => 'status', 'type' => 'xsd:int'),
+        'obsolescence_date' => array('name' => 'obsolescence_date', 'type' => 'xsd:int'),
+        'rank' => array('name' => 'rank', 'type' => 'xsd:int'),
+        'item_type' => array('name' => 'item_type', 'type' => 'xsd:int'),
         )
     );
 
@@ -60,7 +60,7 @@ if (defined('NUSOAP')) {
         '',
         'SOAP-ENC:Array',
         array(),
-        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Docman_Item[]')),
+        array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:Docman_Item[]')),
         'tns:Docman_Item'
     );
 
@@ -71,8 +71,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         array(
-        'type' => array('name'=>'type', 'type' => 'xsd:string'),
-        'ugroup_id' => array('name'=>'ugroup_id', 'type' => 'xsd:int'),
+        'type' => array('name' => 'type', 'type' => 'xsd:string'),
+        'ugroup_id' => array('name' => 'ugroup_id', 'type' => 'xsd:int'),
         )
     );
 
@@ -83,7 +83,7 @@ if (defined('NUSOAP')) {
         '',
         'SOAP-ENC:Array',
         array(),
-        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Permission[]')),
+        array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:Permission[]')),
         'tns:Permission'
     );
 
@@ -94,8 +94,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         array(
-        'label' => array('name'=>'label', 'type' => 'xsd:string'),
-        'value' => array('name'=>'value', 'type' => 'xsd:string'),
+        'label' => array('name' => 'label', 'type' => 'xsd:string'),
+        'value' => array('name' => 'value', 'type' => 'xsd:string'),
         )
     );
 
@@ -106,7 +106,7 @@ if (defined('NUSOAP')) {
         '',
         'SOAP-ENC:Array',
         array(),
-        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:MetadataValue[]')),
+        array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:MetadataValue[]')),
         'tns:MetadataValue'
     );
 
@@ -117,8 +117,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         array(
-        'id' => array('name'=>'id', 'type' => 'xsd:int'),
-        'name'     => array('name'=>'name', 'type' => 'xsd:string'),
+        'id' => array('name' => 'id', 'type' => 'xsd:int'),
+        'name'     => array('name' => 'name', 'type' => 'xsd:string'),
         )
     );
 
@@ -129,7 +129,7 @@ if (defined('NUSOAP')) {
         '',
         'SOAP-ENC:Array',
         array(),
-        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:MetadataListValue[]')),
+        array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:MetadataListValue[]')),
         'tns:MetadataListValue'
     );
 
@@ -140,12 +140,12 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         array(
-        'label' => array('name'=>'label', 'type' => 'xsd:string'),
-        'name' => array('name'=>'name', 'type' => 'xsd:string'),
-        'type' => array('name'=>'type', 'type' => 'xsd:string'),
-        'isMultipleValuesAllowed' => array('name'=>'isMultipleValuesAllowed', 'type' => 'xsd:int'),
-        'isEmptyAllowed' => array('name'=>'isEmptyAllowed', 'type' => 'xsd:int'),
-        'listOfValues' => array('name'=>'listOfValues', 'type' => 'tns:ArrayOfMetadataListValue'),
+        'label' => array('name' => 'label', 'type' => 'xsd:string'),
+        'name' => array('name' => 'name', 'type' => 'xsd:string'),
+        'type' => array('name' => 'type', 'type' => 'xsd:string'),
+        'isMultipleValuesAllowed' => array('name' => 'isMultipleValuesAllowed', 'type' => 'xsd:int'),
+        'isEmptyAllowed' => array('name' => 'isEmptyAllowed', 'type' => 'xsd:int'),
+        'listOfValues' => array('name' => 'listOfValues', 'type' => 'tns:ArrayOfMetadataListValue'),
         )
     );
 
@@ -156,7 +156,7 @@ if (defined('NUSOAP')) {
         '',
         'SOAP-ENC:Array',
         array(),
-        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Metadata[]')),
+        array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:Metadata[]')),
         'tns:Metadata'
     );
 
@@ -167,12 +167,12 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         array(
-        'id' => array('name'=>'id', 'type' => 'xsd:int'),
-        'parent_id' => array('name'=>'parent_id', 'type' => 'xsd:int'),
-        'title' => array('name'=>'title', 'type' => 'xsd:string'),
-        'filename' => array('name'=>'filename', 'type' => 'xsd:string'),
-        'type' => array('name'=>'type', 'type' => 'xsd:string'),
-        'nb_versions' => array('name'=>'nb_versions', 'type' => 'xsd:int'),
+        'id' => array('name' => 'id', 'type' => 'xsd:int'),
+        'parent_id' => array('name' => 'parent_id', 'type' => 'xsd:int'),
+        'title' => array('name' => 'title', 'type' => 'xsd:string'),
+        'filename' => array('name' => 'filename', 'type' => 'xsd:string'),
+        'type' => array('name' => 'type', 'type' => 'xsd:string'),
+        'nb_versions' => array('name' => 'nb_versions', 'type' => 'xsd:int'),
         )
     );
 
@@ -183,7 +183,7 @@ if (defined('NUSOAP')) {
         '',
         'SOAP-ENC:Array',
         array(),
-        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ItemInfo[]')),
+        array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ItemInfo[]')),
         'tns:ItemInfo'
     );
 }
@@ -324,7 +324,7 @@ function _getUserIdByUserName($userName)
  */
 function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array())
 {
-    $actor ="_makeDocmanRequest ($action)";
+    $actor = "_makeDocmanRequest ($action)";
 
     if (session_continue($sessionKey)) {
         try {
@@ -432,7 +432,6 @@ function _safe_array_merge_recursive($array1, $array2)
  */
 function _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array())
 {
-
     $params = _buildItemParams($group_id, $parent_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
     $params['item']['parent_id'] = $parent_id;
     $params['ordering'] = $ordering;
@@ -456,7 +455,6 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
  */
 function _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array())
 {
-
     $params = _buildItemParams($group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
     $params['item']['id'] = $item_id;
 
@@ -532,11 +530,11 @@ function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias)
 {
     $params = array('id' => $item_id);
     foreach ($criterias as $criteria) {
-        $params[$criteria->field_name.'_value'] = $criteria->field_value;
+        $params[$criteria->field_name . '_value'] = $criteria->field_value;
         if (!isValidOperator($criteria->operator)) {
             return new SoapFault(INVALID_OPERATOR, 'This operator is not valid. Only <, >, = are valid.', 'searchDocmanItem');
         }
-        $params[$criteria->field_name.'_operator']  = operatorToValue($criteria->operator);
+        $params[$criteria->field_name . '_operator']  = operatorToValue($criteria->operator);
     }
     return _makeDocmanRequest($sessionKey, $group_id, 'search', $params);
 }
@@ -582,7 +580,6 @@ $soapFunctions[] = array('getDocmanFileAllVersionsMD5sum', 'Returns the MD5 chec
  */
 function getDocmanProjectMetadata($sessionKey, $group_id)
 {
-
     $result = _makeDocmanRequest($sessionKey, $group_id, 'getProjectMetadata');
     if ($result instanceof SoapFault) {
         return $result;
@@ -645,7 +642,7 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
     //Write the content of the file into a temporary file
     //The best accurate results are got when the file has the real extension, therefore use the filename
     $tmp     = tempnam(ForgeConfig::get('tmp_dir'), 'Mime-detect');
-    $tmpname = $tmp .'-'. basename($file_name);
+    $tmpname = $tmp . '-' . basename($file_name);
     file_put_contents($tmpname, $content);
     $mime_type = MIME::instance()->type($tmpname);
 
@@ -673,7 +670,6 @@ $soapFunctions[] = array('createDocmanFile', 'Creates a docman file');
  */
 function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $author, $date, $owner, $create_date, $update_date)
 {
-
     $extraParams = array(
         'content' => $content,
         'date'    => $date,
@@ -760,7 +756,6 @@ $soapFunctions[] = array('createDocmanFileVersion', 'Creates a docman file versi
  */
 function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $content, $author, $date)
 {
-
     $params = array(
         'id'        => $item_id,
         'version'   => array('label' => $label, 'changelog' => $changelog,),
@@ -779,7 +774,6 @@ $soapFunctions[] = array('createDocmanEmbeddedFileVersion', 'Creates a docman em
  */
 function appendDocmanFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offset, $chunk_size)
 {
-
     $params = array(
         'item_id'        => $item_id,
         'upload_content' => base64_decode($content),
@@ -817,10 +811,10 @@ function getDocmanFileChunk($sessionKey, $group_id, $item_id, $version_number, $
 
         return _makeDocmanRequest($sessionKey, $group_id, 'getFileChunk', $params);
 }
-$soapFunctions[] = array('getDocmanFileChunk', 'Returns a part (chunk) of the content, encoded in base64, '.
-                                               'of the file/embedded file which id item_id of a given version version_number, '.
-                                               'if the version is not specified it will be the current one, in the project group_id.'.
-                                               'Returns an error if the group ID does not match with a valid project, or if the item ID '.
+$soapFunctions[] = array('getDocmanFileChunk', 'Returns a part (chunk) of the content, encoded in base64, ' .
+                                               'of the file/embedded file which id item_id of a given version version_number, ' .
+                                               'if the version is not specified it will be the current one, in the project group_id.' .
+                                               'Returns an error if the group ID does not match with a valid project, or if the item ID ' .
                                                'does not match with the right group ID, or if the version number does not match with the item ID.', 'xsd:string');
 
 /**
@@ -964,7 +958,7 @@ function _registerFunction($name, $doc, $response = 'xsd:int')
 
         foreach ($usedParameters as $usedParameter) {
             $parameters[$usedParameter] = $soapParameters[$usedParameter][0];
-            $paramsDoc .= str_pad($usedParameter, 20).$soapParameters[$usedParameter][1].'<br/>';
+            $paramsDoc .= str_pad($usedParameter, 20) . $soapParameters[$usedParameter][1] . '<br/>';
         }
 
         $paramsDoc .= '</pre>';
@@ -972,9 +966,9 @@ function _registerFunction($name, $doc, $response = 'xsd:int')
         $GLOBALS['server']->register(
             $name,
             $parameters,
-            array($name.'Response' => $response),
+            array($name . 'Response' => $response),
             $GLOBALS['uri'],
-            $GLOBALS['uri'].'#'.$name,
+            $GLOBALS['uri'] . '#' . $name,
             'rpc',
             'encoded',
             "$doc $paramsDoc"

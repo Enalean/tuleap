@@ -77,7 +77,7 @@ class UserGroupDao extends DataAccessObject
         $groupId = $this->da->escapeInt($groupId);
         $sql = 'SELECT count(*) as numrows
                 FROM user_group
-                WHERE group_id ='.$groupId;
+                WHERE group_id =' . $groupId;
         $row = $this->retrieve($sql)->getRow();
         return $row['numrows'];
     }
@@ -96,7 +96,7 @@ class UserGroupDao extends DataAccessObject
                     USING(user_id)
                     WHERE ug.admin_flags="A"
                     AND u.status IN ("A", "R")
-                    AND ug.group_id ='.$this->da->escapeInt($groupId);
+                    AND ug.group_id =' . $this->da->escapeInt($groupId);
         return $this->retrieve($sql);
     }
 
@@ -123,8 +123,8 @@ class UserGroupDao extends DataAccessObject
     public function removeProjectMembers($groupId)
     {
         $groupId = $this->da->escapeInt($groupId);
-        $sql     = "DELETE FROM user_group".
-                   " WHERE group_id = ".$groupId;
+        $sql     = "DELETE FROM user_group" .
+                   " WHERE group_id = " . $groupId;
         return $this->update($sql);
     }
 
@@ -159,12 +159,12 @@ class UserGroupDao extends DataAccessObject
         $extra = '';
         if ($predefined !== null && is_array($predefined)) {
             $predefined = implode(',', $predefined);
-            $extra = ' OR ugroup_id IN ('.$this->da->quoteSmart($predefined).')';
+            $extra = ' OR ugroup_id IN (' . $this->da->quoteSmart($predefined) . ')';
         }
-        $sql="SELECT *
+        $sql = "SELECT *
               FROM ugroup
-              WHERE group_id=".$this->da->escapeInt($groupId)."
-                ".$extra."
+              WHERE group_id=" . $this->da->escapeInt($groupId) . "
+                " . $extra . "
               ORDER BY name";
         return $this->retrieve($sql);
     }
@@ -298,6 +298,5 @@ class UserGroupDao extends DataAccessObject
 
         $sql = "SELECT * FROM ugroup WHERE name = $name";
         return $this->retrieveFirstRow($sql);
-        ;
     }
 }

@@ -160,7 +160,6 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
 
     public function pageLink($rev, $link_text = false)
     {
-
         return WikiLink($this->include_versions_in_URLs() ? $rev : $rev->getPage(), 'auto', $link_text);
         /*
         $page = $rev->getPage();
@@ -364,19 +363,19 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
 
         $addsidebarjsfunc =
             "function addPanel() {\n"
-            ."    window.sidebar.addPanel (\"" . sprintf("%s - %s", WIKI_NAME, $pagetitle) . "\",\n"
-            ."       \"$sidebarurl\",\"\");\n"
-            ."}\n";
+            . "    window.sidebar.addPanel (\"" . sprintf("%s - %s", WIKI_NAME, $pagetitle) . "\",\n"
+            . "       \"$sidebarurl\",\"\");\n"
+            . "}\n";
         $jsf = JavaScript($addsidebarjsfunc);
 
         global $WikiTheme;
         $sidebar_button = $WikiTheme->makeButton("sidebar", 'javascript:addPanel();', 'sidebaricon');
         $addsidebarjsclick = asXML(HTML::small(array('style' => 'font-weight:normal;vertical-align:middle;'), $sidebar_button));
         $jsc = JavaScript("if ((typeof window.sidebar == 'object') &&\n"
-                                ."    (typeof window.sidebar.addPanel == 'function'))\n"
-                                ."   {\n"
-                                ."       document.write('$addsidebarjsclick');\n"
-                                ."   }\n");
+                                . "    (typeof window.sidebar.addPanel == 'function'))\n"
+                                . "   {\n"
+                                . "       document.write('$addsidebarjsclick');\n"
+                                . "   }\n");
         return HTML(new RawXml("\n"), $jsf, new RawXml("\n"), $jsc);
     }
 
@@ -654,7 +653,6 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
 
     public function format($changes)
     {
-
         include_once('lib/RssWriter.php');
         $rss = new RssWriter;
 
@@ -819,7 +817,7 @@ class _RecentChanges_Rss2Formatter extends _RecentChanges_RssFormatter
         $chann_10 = parent::channel_properties();
         return array_merge(
             $chann_10,
-            array('generator' => 'PhpWiki-'.PHPWIKI_VERSION,
+            array('generator' => 'PhpWiki-' . PHPWIKI_VERSION,
                                  //<pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
                                  //<lastBuildDate>Tue, 10 Jun 2003 09:41:01 GMT</lastBuildDate>
                                  //<docs>http://blogs.law.harvard.edu/tech/rss</docs>
@@ -1037,7 +1035,7 @@ class WikiPlugin_RecentChanges extends WikiPlugin
             $this->format($this->getChanges($request->_dbi, $args), $args)
         );
     }
-};
+}
 
 
 class DayButtonBar extends HtmlElement

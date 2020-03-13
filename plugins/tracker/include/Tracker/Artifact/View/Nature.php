@@ -40,6 +40,6 @@ class Nature extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch()
     {
-        return '<div data-artifact-id="'. $this->artifact->getId() .'" class="artifact-nature"></div>';
+        return '<div data-artifact-id="' . $this->artifact->getId() . '" class="artifact-nature"></div>';
     }
 }

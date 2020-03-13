@@ -54,7 +54,7 @@ class ForInteger implements FieldFromWhereBuilder
         if ($value === '') {
             $condition = "$changeset_value_int_alias.value IS NULL";
         } else {
-            $condition = "$changeset_value_int_alias.value = ".$this->escapeInt($value);
+            $condition = "$changeset_value_int_alias.value = " . $this->escapeInt($value);
         }
 
         return $this->from_where_builder->getFromWhere(

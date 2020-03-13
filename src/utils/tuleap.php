@@ -173,7 +173,7 @@ $CLI_command_collector->addCommand(
             ),
             new UserSuspensionManager(
                 new MailPresenterFactory(),
-                TemplateRendererFactory::build()->getRenderer(__DIR__ .'/../templates/mail/'),
+                TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/mail/'),
                 'mail-suspension-alert',
                 new Codendi_Mail,
                 new UserSuspensionDao(),

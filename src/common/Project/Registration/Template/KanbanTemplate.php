@@ -33,7 +33,7 @@ class KanbanTemplate implements TuleapTemplate
     public const NAME = 'kanban';
 
     private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/kanban/project.xml';
-    private const KANBAN_XML = __DIR__.'/../../../../../tools/utils/setup_templates/kanban/kanban_template.xml';
+    private const KANBAN_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/kanban/kanban_template.xml';
 
     /**
      * @var string

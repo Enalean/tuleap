@@ -19,7 +19,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
         $minor_edit = (int) !empty($data['is_minor_edit']);
         unset($data['is_minor_edit']);
 
-        $mtime = (int)$data['mtime'];
+        $mtime = (int) $data['mtime'];
         unset($data['mtime']);
         assert(!empty($mtime));
 
@@ -54,7 +54,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
         extract($this->_table_names);
         extract($this->_expressions);
 
-        $pageid = (int)$pageid;
+        $pageid = (int) $pageid;
 
         // optimized: mysql can do this with one REPLACE INTO.
         // supported in every (?) mysql version
@@ -62,7 +62,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
         if ($pageid) {
             $stmt = " WHERE id=$pageid";
         } else {
-            $stmt = " JOIN wiki_page USING (id) WHERE group_id = ".GROUP_ID;
+            $stmt = " JOIN wiki_page USING (id) WHERE group_id = " . GROUP_ID;
         }
         $dbh->query("REPLACE INTO $recent_tbl"
                     . " (id, latestversion, latestmajor, latestminor)"
@@ -82,17 +82,17 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
         }
 
         if ($exclude_from) { // array of pagenames
-            $exclude_from = " AND linked.pagename NOT IN ".$this->_sql_set($exclude_from);
+            $exclude_from = " AND linked.pagename NOT IN " . $this->_sql_set($exclude_from);
         }
         if ($exclude) { // array of pagenames
-            $exclude = " AND $page_tbl.pagename NOT IN ".$this->_sql_set($exclude);
+            $exclude = " AND $page_tbl.pagename NOT IN " . $this->_sql_set($exclude);
         }
 
         $sql = "SELECT $page_tbl.pagename,linked.pagename as wantedfrom"
             . " FROM $page_tbl as linked, $link_tbl "
             . " LEFT JOIN $page_tbl ON ($link_tbl.linkto=$page_tbl.id)"
             . " LEFT JOIN $nonempty_tbl ON ($link_tbl.linkto=$nonempty_tbl.id)"
-            . " WHERE ISNULL($nonempty_tbl.id) AND linked.id=$link_tbl.linkfrom AND linked.group_id=".GROUP_ID
+            . " WHERE ISNULL($nonempty_tbl.id) AND linked.id=$link_tbl.linkfrom AND linked.group_id=" . GROUP_ID
             . $exclude_from
             . $exclude
             . $orderby;
@@ -158,11 +158,11 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
             $this->_table_names['page_tbl'],
             $dbh->escapeSimple($pagename),
             GROUP_ID,
-            ($this->_serverinfo['version'] >= 323.0) ? "LIMIT 1": ""
+            ($this->_serverinfo['version'] >= 323.0) ? "LIMIT 1" : ""
         ));
         return;
     }
-};
+}
 
 class WikiDB_backend_PearDB_mysql_search extends WikiDB_backend_PearDB_search
 {

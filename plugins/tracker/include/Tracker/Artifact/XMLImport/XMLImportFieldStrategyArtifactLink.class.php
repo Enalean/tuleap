@@ -96,7 +96,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         $natures        = array();
 
         foreach ($field_change->value as $artifact_link) {
-            $linked_artifact_id = (int)$artifact_link;
+            $linked_artifact_id = (int) $artifact_link;
 
             if ($this->artifact_id_mapping->containsSource($linked_artifact_id)) {
                 $link             = $this->artifact_id_mapping->get($linked_artifact_id);
@@ -131,7 +131,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         SimpleXMLElement $xml_element,
         $mapped_artifact_id
     ) {
-        $nature       = (string)$xml_element['nature'];
+        $nature       = (string) $xml_element['nature'];
         $xml_artifact = $this->artifact_factory->getArtifactById($mapped_artifact_id);
         if ($xml_artifact) {
             $error_message = $this->isLinkValid($xml_artifact->getTrackerId(), $artifact, $mapped_artifact_id, $nature);

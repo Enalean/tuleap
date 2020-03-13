@@ -177,7 +177,7 @@ class create_test_envPlugin extends Plugin
         }
         $artifact     = $event->getArtifact();
         $project      = $artifact->getTracker()->getProject();
-        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Created artifact #".$artifact->getId());
+        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Created artifact #" . $artifact->getId());
     }
 
     public function trackerArtifactUpdated(ArtifactUpdated $event)
@@ -189,7 +189,7 @@ class create_test_envPlugin extends Plugin
         }
         $artifact     = $event->getArtifact();
         $project      = $artifact->getTracker()->getProject();
-        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Updated artifact #".$artifact->getId());
+        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Updated artifact #" . $artifact->getId());
     }
 
     public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event)
@@ -277,7 +277,7 @@ class create_test_envPlugin extends Plugin
 
             $mail = new Codendi_Mail();
             $mail->setTo(implode(',', $emails));
-            $mail->setSubject("[create_test_env] Activity snapshot at ".$now->format('c'));
+            $mail->setSubject("[create_test_env] Activity snapshot at " . $now->format('c'));
             $mail->addAttachment(file_get_contents($zip_file_name), 'application/zip', "csv-export-$date_tag.zip");
             $mail->send();
         } finally {

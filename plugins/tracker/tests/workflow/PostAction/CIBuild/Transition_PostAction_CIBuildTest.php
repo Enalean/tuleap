@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class Transition_PostAction_CIBuildTest extends TuleapTestCase
 {
@@ -57,7 +57,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase
         $array_xml_mapping = array();
 
         $post_action_ci_build->exportToXml($root, $array_xml_mapping);
-        $this->assertEqual((string)$root->postaction_ci_build['job_url'], $job_url);
+        $this->assertEqual((string) $root->postaction_ci_build['job_url'], $job_url);
     }
 
     public function itDoesNotExportThePostActionIfJobUrlIsNotSet()

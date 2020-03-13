@@ -295,7 +295,7 @@ class Blob extends FilesystemObject
 
         $dotpos = strrpos($file, '.');
         if ($dotpos !== false) {
-            $file = substr($file, $dotpos+1);
+            $file = substr($file, $dotpos + 1);
         }
         switch ($file) {
             case 'jpg':
@@ -429,7 +429,7 @@ class Blob extends FilesystemObject
         foreach ($blamelines as $line) {
             if (preg_match('/^([0-9a-fA-F]{40})(\s+.+)?\s+([0-9]+)\)/', $line, $regs)) {
                 if ($regs[1] != $lastcommit) {
-                    $this->blame[(int)($regs[3])] = $this->GetProject()->GetCommit($regs[1]);
+                    $this->blame[(int) ($regs[3])] = $this->GetProject()->GetCommit($regs[1]);
                     $lastcommit = $regs[1];
                 }
             }

@@ -99,7 +99,7 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
     {
         $params['plugins'][] = [
             'label' => dgettext('tuleap-tuleap_synchro', 'Tuleap to Tuleap'),
-            'href'  => '/admin/'.self::NAME,
+            'href'  => '/admin/' . self::NAME,
         ];
     }
 }

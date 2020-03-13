@@ -130,7 +130,7 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \PHPUnit\Framework\Te
         $this->file_updater->shouldReceive('update')
             ->withArgs(
                 function (SimpleXMLElement $xml_artifact): bool {
-                    return (int)$xml_artifact['id'] === $this->artifact_id_1;
+                    return (int) $xml_artifact['id'] === $this->artifact_id_1;
                 }
             )->once();
         $this->changeset_exporter->shouldReceive('exportWithoutComments')->once();
@@ -146,13 +146,13 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \PHPUnit\Framework\Te
         $this->file_updater->shouldReceive('update')
             ->withArgs(
                 function (SimpleXMLElement $xml_artifact): bool {
-                    return (int)$xml_artifact['id'] === $this->artifact_id_1;
+                    return (int) $xml_artifact['id'] === $this->artifact_id_1;
                 }
             )->once();
         $this->file_updater->shouldReceive('update')
             ->withArgs(
                 function (SimpleXMLElement $xml_artifact): bool {
-                    return (int)$xml_artifact['id'] === $this->artifact_id_2;
+                    return (int) $xml_artifact['id'] === $this->artifact_id_2;
                 }
             )->once();
         $this->changeset_exporter->shouldReceive('exportWithoutComments')->twice();

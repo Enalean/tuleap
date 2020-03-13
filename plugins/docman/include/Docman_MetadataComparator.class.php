@@ -30,7 +30,7 @@ class Docman_MetadataComparator
 
     public function __construct($srcGroupId, $dstGroupId, $themePath)
     {
-        $this->docmanIcons = new Docman_Icons($themePath.'/images/ic/');
+        $this->docmanIcons = new Docman_Icons($themePath . '/images/ic/');
         $pm = ProjectManager::instance();
         $this->srcGo = $pm->getProject($srcGroupId);
         $this->dstGo = $pm->getProject($dstGroupId);
@@ -122,22 +122,22 @@ class Docman_MetadataComparator
 
             // Name
             $html .= "<td style=\"padding-left: 2em;\"></td>\n";
-            $html .= "<td>".Docman_MetadataHtmlList::_getElementName($srcLove)."</td>\n";
+            $html .= "<td>" . Docman_MetadataHtmlList::_getElementName($srcLove) . "</td>\n";
 
             // Presence in source project
-            $html .= '<td align="center"><img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" /></td>';
+            $html .= '<td align="center"><img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" /></td>';
 
             // Presence in destination project
             $html .= "<td align=\"center\">";
             switch ($rowStyle) {
                 case 'equals':
-                    $html .= '<img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" />';
+                    $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
                     break;
             }
             $html .= "</td>\n";
 
             // Differences
-            $html .= "<td class=\"docman_md_".$rowStyle."\">";
+            $html .= "<td class=\"docman_md_" . $rowStyle . "\">";
             switch ($rowStyle) {
                 case 'missing':
                     $html .= dgettext('tuleap-docman', 'Doesn\'t exist');
@@ -164,11 +164,11 @@ class Docman_MetadataComparator
                 $html .= "<tr>\n";
                 // Name
                 $html .= "<td>&nbsp;</td>\n";
-                $html .= "<td>".$purifier->purify($love->getName())."</td>\n";
+                $html .= "<td>" . $purifier->purify($love->getName()) . "</td>\n";
                 // Presence in source project
                 $html .= "<td></td>\n";
                 // Presence in destination project
-                $html .= '<td align="center"><img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" /></td>';
+                $html .= '<td align="center"><img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" /></td>';
                 // Differences
                 $html .= "<td></td>\n";
                 // Action
@@ -207,11 +207,11 @@ class Docman_MetadataComparator
         $html .= "<table border=\"1\">\n";
 
         $html .= "<tr>\n";
-        $html .= "<th colspan=\"2\">".dgettext('tuleap-docman', 'Property')."</th>\n";
-        $html .= "<th>".$purifier->purify($this->srcGo->getPublicName())."</th>\n";
-        $html .= "<th>".$purifier->purify($this->dstGo->getPublicName())."</th>\n";
-        $html .= "<th>".sprintf(dgettext('tuleap-docman', 'Differences<br />in %1$s vs. %2$s'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName()))."</th>\n";
-        $html .= "<th>".sprintf(dgettext('tuleap-docman', 'Import actions<br />in %1$s'), $purifier->purify($this->dstGo->getPublicName()))."</th>\n";
+        $html .= "<th colspan=\"2\">" . dgettext('tuleap-docman', 'Property') . "</th>\n";
+        $html .= "<th>" . $purifier->purify($this->srcGo->getPublicName()) . "</th>\n";
+        $html .= "<th>" . $purifier->purify($this->dstGo->getPublicName()) . "</th>\n";
+        $html .= "<th>" . sprintf(dgettext('tuleap-docman', 'Differences<br />in %1$s vs. %2$s'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName())) . "</th>\n";
+        $html .= "<th>" . sprintf(dgettext('tuleap-docman', 'Import actions<br />in %1$s'), $purifier->purify($this->dstGo->getPublicName())) . "</th>\n";
         $html .= "</tr>\n";
 
         $purifier = Codendi_HTMLPurifier::instance();
@@ -270,7 +270,7 @@ class Docman_MetadataComparator
 
             // Presence in source project
             $html .= "<td align=\"center\">";
-            $html .= '<img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" />';
+            $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
             $html .= "</td>";
 
             // Presence in destination project
@@ -278,13 +278,13 @@ class Docman_MetadataComparator
             switch ($dstMdStatus) {
                 case 'equals':
                 case 'equivalent':
-                    $html .= '<img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" />';
+                    $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
                     break;
             }
             $html .= "</td>";
 
             // Differences
-            $html .= "<td class=\"docman_md_".$dstMdStatus."\">";
+            $html .= "<td class=\"docman_md_" . $dstMdStatus . "\">";
             switch ($dstMdStatus) {
                 case 'equivalent':
                     $html .= dgettext('tuleap-docman', 'Settings differ');
@@ -354,7 +354,7 @@ class Docman_MetadataComparator
 
                 // Presence in destination project
                 $html .= "<td align=\"center\">";
-                $html .= '<img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" />';
+                $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
                 $html .= "</td>";
 
                 // Differences

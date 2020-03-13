@@ -63,7 +63,7 @@ final class DocmanValidateRepresentationForCopy
         $default_representation          = new $representation_class_name();
         $default_representation_as_array = (array) $default_representation;
         unset($default_representation_as_array[self::COPY_PROPERTY_NAME]);
-        $representation_as_array = (array)$representation;
+        $representation_as_array = (array) $representation;
         unset($representation_as_array[self::COPY_PROPERTY_NAME]);
 
         return $representation_as_array === $default_representation_as_array;

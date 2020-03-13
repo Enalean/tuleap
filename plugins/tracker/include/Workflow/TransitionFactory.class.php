@@ -212,14 +212,14 @@ class TransitionFactory
     public function getInstanceFromXML($xml, &$xmlMapping, Project $project)
     {
         $from = null;
-        if (isset($xmlMapping[(string)$xml->from_id['REF']]) && (string)$xml->from_id['REF'] != 'null') {
-            $from = $xmlMapping[(string)$xml->from_id['REF']];
+        if (isset($xmlMapping[(string) $xml->from_id['REF']]) && (string) $xml->from_id['REF'] != 'null') {
+            $from = $xmlMapping[(string) $xml->from_id['REF']];
         }
 
-        if (! isset($xmlMapping[(string)$xml->to_id['REF']])) {
+        if (! isset($xmlMapping[(string) $xml->to_id['REF']])) {
             return null;
         }
-        $to = $xmlMapping[(string)$xml->to_id['REF']];
+        $to = $xmlMapping[(string) $xml->to_id['REF']];
 
         return $this->buildTransitionFromXML($xml, $project, $xmlMapping, $from, $to);
     }
@@ -236,8 +236,8 @@ class TransitionFactory
         $transitions = [];
         foreach ($state_xml->transitions->transition as $transition_xml) {
             $from_value = null;
-            if ((string)$transition_xml->from_id['REF'] !== 'null') {
-                $from_value = $xml_mapping[(string)$transition_xml->from_id['REF']];
+            if ((string) $transition_xml->from_id['REF'] !== 'null') {
+                $from_value = $xml_mapping[(string) $transition_xml->from_id['REF']];
             }
 
             $transitions[] = $this->buildTransitionFromXML($state_xml, $project, $xml_mapping, $from_value, $to_value);
@@ -357,7 +357,7 @@ class TransitionFactory
         $dao = $this->getDao();
 
         if ($transition->getFieldValueFrom() == null) {
-            $from_id=null;
+            $from_id = null;
         } else {
             $from_id = $transition->getFieldValueFrom()->getId();
         }
@@ -400,7 +400,7 @@ class TransitionFactory
         $pm = PermissionsManager::instance();
         $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
         foreach ($ugroups_ids as $ugroup_id) {
-            if (!$pm->addPermission($permission_type, (int)$transition_id, $ugroup_id)) {
+            if (!$pm->addPermission($permission_type, (int) $transition_id, $ugroup_id)) {
                 return false;
             }
         }

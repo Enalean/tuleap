@@ -46,6 +46,6 @@ class Planning_ArtifactCreationController extends MVC2_PluginController
         $planning    = $this->planning_factory->getPlanning($planning_id);
         $tracker_id  = $planning->getPlanningTrackerId();
 
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL."/?tracker=$tracker_id&func=new-artifact&planning[$planning_id]=-1");
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . "/?tracker=$tracker_id&func=new-artifact&planning[$planning_id]=-1");
     }
 }

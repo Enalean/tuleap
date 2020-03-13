@@ -21,7 +21,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/DocmanImport/ImportFromDocmanV1.class.php';
 
 if ($argc != 4) {
-    die("*** Usage: ".basename($argv[0])." wsdl_url admin_loginame projectid\n");
+    die("*** Usage: " . basename($argv[0]) . " wsdl_url admin_loginame projectid\n");
 }
 
 $wsdl_url   = $argv[1];
@@ -44,7 +44,7 @@ function getPasswordFromStdin($login)
     } else {
         $password = fgets(STDIN);
     }
-    $password = substr($password, 0, strlen($password)-1);
+    $password = substr($password, 0, strlen($password) - 1);
     echo PHP_EOL;
     return $password;
 }

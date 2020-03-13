@@ -51,11 +51,11 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
     {
         $xml_field            = $xml->field;
         $xml_field_attributes = $xml_field->attributes();
-        if (! isset($xml_mapping[(string)$xml_field_attributes['REF']])) {
+        if (! isset($xml_mapping[(string) $xml_field_attributes['REF']])) {
             return null;
         }
 
-        $field = $xml_mapping[(string)$xml_field_attributes['REF']];
+        $field = $xml_mapping[(string) $xml_field_attributes['REF']];
         return new Tracker_Semantic_Title($tracker, $field);
     }
 

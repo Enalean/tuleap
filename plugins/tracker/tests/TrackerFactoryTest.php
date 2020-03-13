@@ -133,7 +133,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase
 
         $t_new = stub('Tracker')->getId()->returns(555);
 
-        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array())) ;
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array()));
 
         $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null));
 
@@ -169,7 +169,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase
             'create',
             array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping, 'report_mapping' => array()),
             array($to_project_id, $from_project_id, 567, '*', '*', '*', null)
-        ) ;
+        );
 
         $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, $from_project_id, $full_field_mapping));
         $this->tracker_factory->duplicate($from_project_id, $to_project_id, null);
@@ -208,7 +208,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase
 
         $t_new = stub('Tracker')->getId()->returns(555);
 
-        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array())) ;
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array()));
 
         $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null));
 

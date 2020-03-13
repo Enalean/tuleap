@@ -59,10 +59,10 @@ class NewsPermissionsManager
     public function isProjectNewsPublic($project_news)
     {
         $granted_ugroup = $this->permissions_manager->getAuthorizedUgroups(
-            $project_news[ 'forum_id' ],
+            $project_news['forum_id'],
             self::NEWS_READ
         )->getRow();
 
-        return ((int) $granted_ugroup[ 'ugroup_id' ] === ProjectUGroup::ANONYMOUS);
+        return ((int) $granted_ugroup['ugroup_id'] === ProjectUGroup::ANONYMOUS);
     }
 }

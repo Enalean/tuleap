@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Tests\REST\Artifacts;
 use Tuleap\Tracker\REST\DataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 final class UsersArtifactsTest extends TrackerBase
 {

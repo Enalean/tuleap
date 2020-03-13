@@ -271,7 +271,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         $file_path       = __DIR__ . '/../_fixtures/docmanFile/embeddedFile';
         $version_id = $this->addFileVersion($item_id, $file_version_title, 'application/pdf', $file_path);
 
-        $this->addApprovalTable($file_name, (int)$version_id, $approval_status, 'version_id');
+        $this->addApprovalTable($file_name, (int) $version_id, $approval_status, 'version_id');
     }
 
     /**

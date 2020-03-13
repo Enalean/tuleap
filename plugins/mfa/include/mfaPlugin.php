@@ -39,7 +39,7 @@ class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
-        bindtextdomain('tuleap-mfa', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-mfa', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()

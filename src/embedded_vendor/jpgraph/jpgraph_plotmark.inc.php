@@ -17,24 +17,24 @@
 class PlotMark
 {
     public $title;
-    public $show=true;
+    public $show = true;
     public $type;
-    public $weight=1;
-    public $iFormatCallback="";
-    public $iFormatCallback2="";
-    public $fill_color="blue";
-    public $color="black";
-    public $width=4;
+    public $weight = 1;
+    public $iFormatCallback = "";
+    public $iFormatCallback2 = "";
+    public $fill_color = "blue";
+    public $color = "black";
+    public $width = 4;
     private $yvalue;
-    private $xvalue='';
+    private $xvalue = '';
     private $csimtarget;
-    private $csimwintarget='';
+    private $csimwintarget = '';
     private $csimalt;
     private $csimareas;
-    private $markimg='';
-    private $iScale=1.0;
-    private $oldfilename='';
-    private $iFileName='';
+    private $markimg = '';
+    private $iScale = 1.0;
+    private $oldfilename = '';
+    private $iFileName = '';
     private $imgdata_balls = null;
     private $imgdata_diamonds = null;
     private $imgdata_squares = null;
@@ -49,14 +49,14 @@ class PlotMark
         $this->title = new Text();
         $this->title->Hide();
         $this->csimareas = '';
-        $this->type=-1;
+        $this->type = -1;
     }
     //---------------
     // PUBLIC METHODS
     public function SetType($aType, $aFileName = '', $aScale = 1.0)
     {
         $this->type = $aType;
-        if ($aType == MARK_IMG && $aFileName=='') {
+        if ($aType == MARK_IMG && $aFileName == '') {
             JpGraphError::RaiseL(23003);//('A filename must be specified if you set the mark type to MARK_IMG.');
         }
         $this->iFileName = $aFileName;
@@ -80,7 +80,7 @@ class PlotMark
 
     public function SetColor($aColor)
     {
-        $this->color=$aColor;
+        $this->color = $aColor;
     }
 
     public function SetFillColor($aFillColor)
@@ -96,12 +96,12 @@ class PlotMark
     // Synonym for SetWidth()
     public function SetSize($aWidth)
     {
-        $this->width=$aWidth;
+        $this->width = $aWidth;
     }
 
     public function SetWidth($aWidth)
     {
-        $this->width=$aWidth;
+        $this->width = $aWidth;
     }
 
     public function SetDefaultWidth()
@@ -109,10 +109,10 @@ class PlotMark
         switch ($this->type) {
             case MARK_CIRCLE:
             case MARK_FILLEDCIRCLE:
-                $this->width=4;
+                $this->width = 4;
                 break;
             default:
-                $this->width=7;
+                $this->width = 7;
         }
     }
 
@@ -133,19 +133,19 @@ class PlotMark
 
     public function SetCSIMAltVal($aY, $aX = '')
     {
-        $this->yvalue=$aY;
-        $this->xvalue=$aX;
+        $this->yvalue = $aY;
+        $this->xvalue = $aX;
     }
 
     public function SetCSIMTarget($aTarget, $aWinTarget = '')
     {
-        $this->csimtarget=$aTarget;
-        $this->csimwintarget=$aWinTarget;
+        $this->csimtarget = $aTarget;
+        $this->csimwintarget = $aWinTarget;
     }
 
     public function SetCSIMAlt($aAlt)
     {
-        $this->csimalt=$aAlt;
+        $this->csimalt = $aAlt;
     }
 
     public function GetCSIMAreas()
@@ -155,21 +155,21 @@ class PlotMark
 
     public function AddCSIMPoly($aPts)
     {
-        $coords = round($aPts[0]).", ".round($aPts[1]);
-        $n = count($aPts)/2;
-        for ($i=1; $i < $n; ++$i) {
-            $coords .= ", ".round($aPts[2*$i]).", ".round($aPts[2*$i+1]);
+        $coords = round($aPts[0]) . ", " . round($aPts[1]);
+        $n = count($aPts) / 2;
+        for ($i = 1; $i < $n; ++$i) {
+            $coords .= ", " . round($aPts[2 * $i]) . ", " . round($aPts[2 * $i + 1]);
         }
-        $this->csimareas="";
+        $this->csimareas = "";
         if (!empty($this->csimtarget)) {
-            $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"".htmlentities($this->csimtarget)."\"";
+            $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . htmlentities($this->csimtarget) . "\"";
 
             if (!empty($this->csimwintarget)) {
-                $this->csimareas .= " target=\"".$this->csimwintarget."\" ";
+                $this->csimareas .= " target=\"" . $this->csimwintarget . "\" ";
             }
 
             if (!empty($this->csimalt)) {
-                $tmp=sprintf($this->csimalt, $this->yvalue, $this->xvalue);
+                $tmp = sprintf($this->csimalt, $this->yvalue, $this->xvalue);
                 $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\"";
             }
             $this->csimareas .= " />\n";
@@ -179,18 +179,18 @@ class PlotMark
     public function AddCSIMCircle($x, $y, $r)
     {
         $x = round($x);
-        $y=round($y);
-        $r=round($r);
-        $this->csimareas="";
+        $y = round($y);
+        $r = round($r);
+        $this->csimareas = "";
         if (!empty($this->csimtarget)) {
-            $this->csimareas .= "<area shape=\"circle\" coords=\"$x,$y,$r\" href=\"".htmlentities($this->csimtarget)."\"";
+            $this->csimareas .= "<area shape=\"circle\" coords=\"$x,$y,$r\" href=\"" . htmlentities($this->csimtarget) . "\"";
 
             if (!empty($this->csimwintarget)) {
-                $this->csimareas .= " target=\"".$this->csimwintarget."\" ";
+                $this->csimareas .= " target=\"" . $this->csimwintarget . "\" ";
             }
 
             if (!empty($this->csimalt)) {
-                $tmp=sprintf($this->csimalt, $this->yvalue, $this->xvalue);
+                $tmp = sprintf($this->csimalt, $this->yvalue, $this->xvalue);
                 $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
             }
             $this->csimareas .= " />\n";
@@ -212,21 +212,21 @@ class PlotMark
             } else {
                 $f = $this->iFormatCallback2;
                 list($width,$color,$fcolor,$filename,$imgscale) = call_user_func($f, $this->yvalue, $this->xvalue);
-                if ($filename=="") {
+                if ($filename == "") {
                     $filename = $this->iFileName;
                 }
-                if ($imgscale=="") {
+                if ($imgscale == "") {
                     $imgscale = $this->iScale;
                 }
             }
 
-            if ($width=="") {
+            if ($width == "") {
                 $width = $this->width;
             }
-            if ($color=="") {
+            if ($color == "") {
                 $color = $this->color;
             }
-            if ($fcolor=="") {
+            if ($fcolor == "") {
                 $fcolor = $this->fill_color;
             }
         } else {
@@ -249,7 +249,7 @@ class PlotMark
                 case MARK_FLAG2:
                 case MARK_FLAG3:
                 case MARK_FLAG4:
-                    $this->markimg = FlagCache::GetFlagImgByName($this->type-MARK_FLAG1+1, $filename);
+                    $this->markimg = FlagCache::GetFlagImgByName($this->type - MARK_FLAG1 + 1, $filename);
                     break;
 
                 case MARK_IMG:
@@ -258,7 +258,7 @@ class PlotMark
                     // waste time reading it again.
                     if ($this->markimg == '' || !($this->oldfilename === $filename)) {
                         $this->markimg = Graph::LoadBkgImage('', $filename);
-                        $this->oldfilename = $filename ;
+                        $this->oldfilename = $filename;
                     }
                     break;
 
@@ -331,23 +331,23 @@ class PlotMark
             // Do potential rotation
             list($x,$y) = $img->Rotate($x, $y);
 
-            $dx = round($x-$dw*$anchor_x);
-            $dy = round($y-$dh*$anchor_y);
+            $dx = round($x - $dw * $anchor_x);
+            $dy = round($y - $dh * $anchor_y);
 
             $this->width = max($dx, $dy);
 
             $img->Copy($this->markimg, $dx, $dy, 0, 0, $dw, $dh, $w, $h);
             if (!empty($this->csimtarget)) {
-                $this->csimareas = "<area shape=\"rect\" coords=\"".
-                $dx.','.$dy.','.round($dx+$dw).','.round($dy+$dh).'" '.
-                "href=\"".htmlentities($this->csimtarget)."\"";
+                $this->csimareas = "<area shape=\"rect\" coords=\"" .
+                $dx . ',' . $dy . ',' . round($dx + $dw) . ',' . round($dy + $dh) . '" ' .
+                "href=\"" . htmlentities($this->csimtarget) . "\"";
 
                 if (!empty($this->csimwintarget)) {
-                    $this->csimareas .= " target=\"".$this->csimwintarget."\" ";
+                    $this->csimareas .= " target=\"" . $this->csimwintarget . "\" ";
                 }
 
                 if (!empty($this->csimalt)) {
-                    $tmp=sprintf($this->csimalt, $this->yvalue, $this->xvalue);
+                    $tmp = sprintf($this->csimalt, $this->yvalue, $this->xvalue);
                     $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
                 }
                 $this->csimareas .= " />\n";
@@ -355,100 +355,100 @@ class PlotMark
 
             // Stroke title
             $this->title->Align("center", "top");
-            $this->title->Stroke($img, $x, $y+round($dh/2));
+            $this->title->Stroke($img, $x, $y + round($dh / 2));
             return;
         }
 
         $weight = $this->weight;
-        $dx=round($width/2, 0);
-        $dy=round($width/2, 0);
-        $pts=0;
+        $dx = round($width / 2, 0);
+        $dy = round($width / 2, 0);
+        $pts = 0;
 
         switch ($this->type) {
             case MARK_SQUARE:
-                $c[]=$x-$dx;
-                $c[]=$y-$dy;
-                $c[]=$x+$dx;
-                $c[]=$y-$dy;
-                $c[]=$x+$dx;
-                $c[]=$y+$dy;
-                $c[]=$x-$dx;
-                $c[]=$y+$dy;
-                $c[]=$x-$dx;
-                $c[]=$y-$dy;
-                $pts=5;
+                $c[] = $x - $dx;
+                $c[] = $y - $dy;
+                $c[] = $x + $dx;
+                $c[] = $y - $dy;
+                $c[] = $x + $dx;
+                $c[] = $y + $dy;
+                $c[] = $x - $dx;
+                $c[] = $y + $dy;
+                $c[] = $x - $dx;
+                $c[] = $y - $dy;
+                $pts = 5;
                 break;
             case MARK_UTRIANGLE:
                 ++$dx;
                 ++$dy;
-                $c[]=$x-$dx;
-                $c[]=$y+0.87*$dy; // tan(60)/2*$dx
-                $c[]=$x;
-                $c[]=$y-0.87*$dy;
-                $c[]=$x+$dx;
-                $c[]=$y+0.87*$dy;
-                $c[]=$x-$dx;
-                $c[]=$y+0.87*$dy; // tan(60)/2*$dx
-                $pts=4;
+                $c[] = $x - $dx;
+                $c[] = $y + 0.87 * $dy; // tan(60)/2*$dx
+                $c[] = $x;
+                $c[] = $y - 0.87 * $dy;
+                $c[] = $x + $dx;
+                $c[] = $y + 0.87 * $dy;
+                $c[] = $x - $dx;
+                $c[] = $y + 0.87 * $dy; // tan(60)/2*$dx
+                $pts = 4;
                 break;
             case MARK_DTRIANGLE:
                 ++$dx;
                 ++$dy;
-                $c[]=$x;
-                $c[]=$y+0.87*$dy; // tan(60)/2*$dx
-                $c[]=$x-$dx;
-                $c[]=$y-0.87*$dy;
-                $c[]=$x+$dx;
-                $c[]=$y-0.87*$dy;
-                $c[]=$x;
-                $c[]=$y+0.87*$dy; // tan(60)/2*$dx
-                $pts=4;
+                $c[] = $x;
+                $c[] = $y + 0.87 * $dy; // tan(60)/2*$dx
+                $c[] = $x - $dx;
+                $c[] = $y - 0.87 * $dy;
+                $c[] = $x + $dx;
+                $c[] = $y - 0.87 * $dy;
+                $c[] = $x;
+                $c[] = $y + 0.87 * $dy; // tan(60)/2*$dx
+                $pts = 4;
                 break;
             case MARK_DIAMOND:
-                $c[]=$x;
-                $c[]=$y+$dy;
-                $c[]=$x-$dx;
-                $c[]=$y;
-                $c[]=$x;
-                $c[]=$y-$dy;
-                $c[]=$x+$dx;
-                $c[]=$y;
-                $c[]=$x;
-                $c[]=$y+$dy;
-                $pts=5;
+                $c[] = $x;
+                $c[] = $y + $dy;
+                $c[] = $x - $dx;
+                $c[] = $y;
+                $c[] = $x;
+                $c[] = $y - $dy;
+                $c[] = $x + $dx;
+                $c[] = $y;
+                $c[] = $x;
+                $c[] = $y + $dy;
+                $pts = 5;
                 break;
             case MARK_LEFTTRIANGLE:
-                $c[]=$x;
-                $c[]=$y;
-                $c[]=$x;
-                $c[]=$y+2*$dy;
-                $c[]=$x+$dx*2;
-                $c[]=$y;
-                $c[]=$x;
-                $c[]=$y;
-                $pts=4;
+                $c[] = $x;
+                $c[] = $y;
+                $c[] = $x;
+                $c[] = $y + 2 * $dy;
+                $c[] = $x + $dx * 2;
+                $c[] = $y;
+                $c[] = $x;
+                $c[] = $y;
+                $pts = 4;
                 break;
             case MARK_RIGHTTRIANGLE:
-                $c[]=$x-$dx*2;
-                $c[]=$y;
-                $c[]=$x;
-                $c[]=$y+2*$dy;
-                $c[]=$x;
-                $c[]=$y;
-                $c[]=$x-$dx*2;
-                $c[]=$y;
-                $pts=4;
+                $c[] = $x - $dx * 2;
+                $c[] = $y;
+                $c[] = $x;
+                $c[] = $y + 2 * $dy;
+                $c[] = $x;
+                $c[] = $y;
+                $c[] = $x - $dx * 2;
+                $c[] = $y;
+                $pts = 4;
                 break;
             case MARK_FLASH:
                 $dy *= 2;
-                $c[]=$x+$dx/2;
-                $c[]=$y-$dy;
-                $c[]=$x-$dx+$dx/2;
-                $c[]=$y+$dy*0.7-$dy;
-                $c[]=$x+$dx/2;
-                $c[]=$y+$dy*1.3-$dy;
-                $c[]=$x-$dx+$dx/2;
-                $c[]=$y+2*$dy-$dy;
+                $c[] = $x + $dx / 2;
+                $c[] = $y - $dy;
+                $c[] = $x - $dx + $dx / 2;
+                $c[] = $y + $dy * 0.7 - $dy;
+                $c[] = $x + $dx / 2;
+                $c[] = $y + $dy * 1.3 - $dy;
+                $c[] = $x - $dx + $dx / 2;
+                $c[] = $y + 2 * $dy - $dy;
                 $img->SetLineWeight($weight);
                 $img->SetColor($color);
                 $img->Polygon($c);
@@ -457,7 +457,7 @@ class PlotMark
                 break;
         }
 
-        if ($pts>0) {
+        if ($pts > 0) {
             $this->AddCSIMPoly($c);
             $img->SetLineWeight($weight);
             $img->SetColor($fcolor);
@@ -465,38 +465,38 @@ class PlotMark
             $img->SetColor($color);
             $img->Polygon($c);
             $img->SetLineWeight(1);
-        } elseif ($this->type==MARK_CIRCLE) {
+        } elseif ($this->type == MARK_CIRCLE) {
             $img->SetColor($color);
             $img->Circle($x, $y, $width);
             $this->AddCSIMCircle($x, $y, $width);
-        } elseif ($this->type==MARK_FILLEDCIRCLE) {
+        } elseif ($this->type == MARK_FILLEDCIRCLE) {
             $img->SetColor($fcolor);
             $img->FilledCircle($x, $y, $width);
             $img->SetColor($color);
             $img->Circle($x, $y, $width);
             $this->AddCSIMCircle($x, $y, $width);
-        } elseif ($this->type==MARK_CROSS) {
+        } elseif ($this->type == MARK_CROSS) {
             // Oversize by a pixel to match the X
             $img->SetColor($color);
             $img->SetLineWeight($weight);
-            $img->Line($x, $y+$dy+1, $x, $y-$dy-1);
-            $img->Line($x-$dx-1, $y, $x+$dx+1, $y);
+            $img->Line($x, $y + $dy + 1, $x, $y - $dy - 1);
+            $img->Line($x - $dx - 1, $y, $x + $dx + 1, $y);
             $this->AddCSIMCircle($x, $y, $dx);
-        } elseif ($this->type==MARK_X) {
+        } elseif ($this->type == MARK_X) {
             $img->SetColor($color);
             $img->SetLineWeight($weight);
-            $img->Line($x+$dx, $y+$dy, $x-$dx, $y-$dy);
-            $img->Line($x-$dx, $y+$dy, $x+$dx, $y-$dy);
-            $this->AddCSIMCircle($x, $y, $dx+$dy);
-        } elseif ($this->type==MARK_STAR) {
+            $img->Line($x + $dx, $y + $dy, $x - $dx, $y - $dy);
+            $img->Line($x - $dx, $y + $dy, $x + $dx, $y - $dy);
+            $this->AddCSIMCircle($x, $y, $dx + $dy);
+        } elseif ($this->type == MARK_STAR) {
             $img->SetColor($color);
             $img->SetLineWeight($weight);
-            $img->Line($x+$dx, $y+$dy, $x-$dx, $y-$dy);
-            $img->Line($x-$dx, $y+$dy, $x+$dx, $y-$dy);
+            $img->Line($x + $dx, $y + $dy, $x - $dx, $y - $dy);
+            $img->Line($x - $dx, $y + $dy, $x + $dx, $y - $dy);
             // Oversize by a pixel to match the X
-            $img->Line($x, $y+$dy+1, $x, $y-$dy-1);
-            $img->Line($x-$dx-1, $y, $x+$dx+1, $y);
-            $this->AddCSIMCircle($x, $y, $dx+$dy);
+            $img->Line($x, $y + $dy + 1, $x, $y - $dy - 1);
+            $img->Line($x - $dx - 1, $y, $x + $dx + 1, $y);
+            $this->AddCSIMCircle($x, $y, $dx + $dy);
         }
 
         // Stroke title
@@ -518,9 +518,9 @@ class ImgData
     protected $an = array();  // Data array names
     protected $colors = array(); // Available colors
     protected $index  = array(); // Index for colors
-    protected $maxidx = 0 ;  // Max color index
-    protected $anchor_x=0.5;
-    private $anchor_y=0.5 ;    // Where is the center of the image
+    protected $maxidx = 0;  // Max color index
+    protected $anchor_x = 0.5;
+    private $anchor_y = 0.5;    // Where is the center of the image
 
     public function __construct()
     {
@@ -540,7 +540,7 @@ class ImgData
         (is_integer($aIdx) && $aIdx > $this->maxidx )) {
             JpGraphError::RaiseL(23002, $this->name);//('Mark color index too large for marker "'.($this->name).'"');
         } else {
-            $idx = $aIdx ;
+            $idx = $aIdx;
         }
         return Image::CreateFromString(base64_decode($this->{$n}[$idx][1]));
     }
@@ -553,7 +553,7 @@ class ImgData
 
 
 // Keep a global flag cache to reduce memory usage
-$_gFlagCache=array(
+$_gFlagCache = array(
 1 => null,
 2 => null,
 3 => null,

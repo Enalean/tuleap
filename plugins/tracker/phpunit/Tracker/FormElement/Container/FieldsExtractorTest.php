@@ -27,7 +27,7 @@ use Tracker_FormElement_Container;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field;
 
-require_once __DIR__. '/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class FieldsExtractorTest extends TestCase
 {

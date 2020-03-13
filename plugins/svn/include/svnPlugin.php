@@ -19,7 +19,7 @@
  */
 
 require_once 'constants.php';
-require_once __DIR__. '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use FastRoute\RouteCollector;
 use Tuleap\BurningParrotCompatiblePageDetector;
@@ -149,7 +149,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        bindtextdomain('tuleap-svn', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-svn', __DIR__ . '/../site-content');
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
@@ -338,15 +338,15 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function system_event_get_types_for_default_queue($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
-        $params['types'][] = 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME;
-        $params['types'][] = 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME;
-        $params['types'][] = 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_RESTORE_REPOSITORY::NAME;
+        $params['types'][] = 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME;
+        $params['types'][] = 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME;
+        $params['types'][] = 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_RESTORE_REPOSITORY::NAME;
     }
 
     public function get_system_event_class($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         switch ($params['type']) {
-            case 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME:
+            case 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME:
                 $params['class'] = SystemEvent_SVN_CREATE_REPOSITORY::class;
                 $params['dependencies'] = array(
                     $this->getAccessFileHistoryCreator(),
@@ -357,7 +357,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     $this->getCopier()
                 );
                 break;
-            case 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME:
+            case 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME:
                 $params['class'] = SystemEvent_SVN_DELETE_REPOSITORY::class;
                 $params['dependencies'] = array(
                     $this->getRepositoryManager(),
@@ -697,7 +697,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function svn_repository_created($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $backend           = Backend::instance();
-        $svn_plugin_folder = ForgeConfig::get('sys_data_dir') .'/svn_plugin/';
+        $svn_plugin_folder = ForgeConfig::get('sys_data_dir') . '/svn_plugin/';
         $project_id        = $params['project_id'];
 
         $backend->chown($svn_plugin_folder, $backend->getHTTPUser());
@@ -880,7 +880,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     private function getRetriever()
     {
-
         $disk_usage_dao  = new Statistics_DiskUsageDao();
         $svn_log_dao     = new SVN_LogDao();
         $svn_retriever   = new SVNRetriever($disk_usage_dao);
@@ -932,7 +931,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         $event->setPluginActivated();
 
-        $class            = "Tuleap\\SVN\\REST\\".$event->getVersion()."\\ProjectResource";
+        $class            = "Tuleap\\SVN\\REST\\" . $event->getVersion() . "\\ProjectResource";
         $project_resource = new $class($this->getRepositoryManager());
         $project          = $event->getProject();
 

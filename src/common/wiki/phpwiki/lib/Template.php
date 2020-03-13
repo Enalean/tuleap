@@ -203,7 +203,7 @@ class Template
         } elseif (strstr($error->errfile, "In template 'htmldump'")) {
             // ignore recursively nested htmldump loop: browse -> body -> htmldump -> browse -> body ...
             // FIXME for other possible loops also
-            ; //return $error;
+//return $error;
         } elseif (strstr($error->errfile, "In template '")) { // merge
             $error->errfile = preg_replace("/'(\w+)'\)$/", "'\\1' < '$this->_name')", $error->errfile);
         } else {
@@ -218,7 +218,7 @@ class Template
         }
         return $error;
     }
-};
+}
 
 /**
  * Get a templates

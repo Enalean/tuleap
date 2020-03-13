@@ -44,7 +44,7 @@ class XML_SecurityTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClass
     public function testItDisableExternalLoadOfEntities()
     {
         $doc = $this->loadXML();
-        $this->assertEquals('', (string)$doc->testing);
+        $this->assertEquals('', (string) $doc->testing);
     }
 
     private function loadXML()

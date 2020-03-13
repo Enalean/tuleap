@@ -140,7 +140,7 @@ class TaskboardCardTest extends RestBase
     public function testGetIdFailsWhenWrongMilestoneGiven(): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard_cards/' . self::$user_story_6_id. '?milestone_id=0'),
+            $this->client->get('taskboard_cards/' . self::$user_story_6_id . '?milestone_id=0'),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertEquals(404, $response->getStatusCode());

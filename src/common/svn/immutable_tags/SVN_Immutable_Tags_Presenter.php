@@ -66,7 +66,7 @@ class SVN_ImmutableTagsPresenter
                 $existing_tree,
                 static function (&$path) {
                     if ($path !== '/') {
-                        $path = '/'. $path;
+                        $path = '/' . $path;
                     }
                 }
             );

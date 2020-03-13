@@ -118,7 +118,7 @@ class Tracker_FormElement_DateFormatter
      */
     public function formatDate($timestamp)
     {
-        return format_date(self::DATE_FORMAT, (float)$timestamp, '');
+        return format_date(self::DATE_FORMAT, (float) $timestamp, '');
     }
 
     public function formatDateForDisplay($timestamp)
@@ -129,8 +129,8 @@ class Tracker_FormElement_DateFormatter
     protected function getDatePicker($value, array $errors)
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
-            "tracker_admin_field_". $this->field->getId(),
-            'artifact['. $this->field->getId() .']',
+            "tracker_admin_field_" . $this->field->getId(),
+            'artifact[' . $this->field->getId() . ']',
             $value,
             array(),
             $errors,

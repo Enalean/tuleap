@@ -51,7 +51,6 @@ class BatchRequest implements GitLfsHTTPOperation
         array $transfers,
         ?RequestReference $reference = null
     ) {
-
         $this->operation = $operation;
         $this->objects   = $objects;
         $this->transfers = $transfers;

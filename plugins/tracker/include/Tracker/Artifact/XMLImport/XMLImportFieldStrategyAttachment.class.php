@@ -108,7 +108,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
 
     private function getFileInfoForAttachment(SimpleXMLElement $file_xml, PFUser $submitted_by)
     {
-        $file_path =  $this->extraction_path .'/'. (string) $file_xml->path;
+        $file_path =  $this->extraction_path . '/' . (string) $file_xml->path;
         if (! is_file($file_path)) {
             throw new Tracker_Artifact_XMLImport_Exception_FileNotFoundException($file_path);
         }

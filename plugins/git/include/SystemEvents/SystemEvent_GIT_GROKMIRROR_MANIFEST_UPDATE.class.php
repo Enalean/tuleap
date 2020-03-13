@@ -63,7 +63,7 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE extends SystemEvent
         if ($with_link) {
             $repository = $this->getRepositoryFromParameters();
             if ($repository) {
-                return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
+                return '<a href="/plugins/git/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '">' . $repository->getName() . '</a>';
             }
         }
         return $this->getRepositoryIdFromParameters();

@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once dirname(__FILE__) . '/../../bootstrap.php';
 
 class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCase
 {

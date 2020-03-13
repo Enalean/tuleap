@@ -69,7 +69,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     }
 
     // Redirect to the same page just to refresh it !
-    header("Location: ".$_SERVER['SCRIPT_URI']."?".$_SERVER['QUERY_STRING']);
+    header("Location: " . $_SERVER['SCRIPT_URI'] . "?" . $_SERVER['QUERY_STRING']);
     exit();
 }
 
@@ -86,63 +86,63 @@ if (!$project->isSVNTracked()) {
 
 // Display the form
 svn_header_admin(array(
-    'title'=> $Language->getText('svn_admin_general_settings', 'gen_settings'),
+    'title' => $Language->getText('svn_admin_general_settings', 'gen_settings'),
     'help' => 'svn.html#subversion-email-notification'
     ));
 
 // Mail header
 echo '
-       <h2>'.$Language->getText('svn_admin_notification', 'email').'</h2>
-       '.$Language->getText('svn_admin_notification', 'mail_comment').'
-       <p><i>'.$Language->getText('svn_admin_notification', 'star_operator').'</i></p>
+       <h2>' . $Language->getText('svn_admin_notification', 'email') . '</h2>
+       ' . $Language->getText('svn_admin_notification', 'mail_comment') . '
+       <p><i>' . $Language->getText('svn_admin_notification', 'star_operator') . '</i></p>
        <form action="" method="post">
-           <input type="hidden" name="group_id" value="'.$group_id.'">
+           <input type="hidden" name="group_id" value="' . $group_id . '">
            <input type="hidden" name="post_changes" value="subject_header">
-           <label>'.$Language->getText('svn_admin_notification', 'header').'</label>
-           <input type="text" name="form_mailing_header" value="'.$hp->purify($svn_mailing_header).'" '.$disabled.'>
+           <label>' . $Language->getText('svn_admin_notification', 'header') . '</label>
+           <input type="text" name="form_mailing_header" value="' . $hp->purify($svn_mailing_header) . '" ' . $disabled . '>
            <br/>
-           <input type="submit" name="submit" value="'.$Language->getText('global', 'btn_submit').'" class="btn" '.$disabled.'>
+           <input type="submit" name="submit" value="' . $Language->getText('global', 'btn_submit') . '" class="btn" ' . $disabled . '>
        </form>';
 
 // List of paths & mail addresses (+delete)
 $svnNotificationsDetails = $svnNotification->getSvnEventNotificationDetails($group_id);
 $content = '<table>';
 if ($svnNotificationsDetails) {
-    $content .= '<th align="left">'.$Language->getText('svn_admin_notification', 'existent_notifications').'</th><tbody>';
-    $content .= '<input type="hidden" name="group_id" value="'.$group_id.'">';
+    $content .= '<th align="left">' . $Language->getText('svn_admin_notification', 'existent_notifications') . '</th><tbody>';
+    $content .= '<input type="hidden" name="group_id" value="' . $group_id . '">';
     $content .= '<input type="hidden" name="post_changes" value="list_of_paths">';
     $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('svn_admin_notification', 'path_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'mailing_list_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'path_delete_ask')), false, false, false);
     $rowBgColor  = 0;
     foreach ($svnNotificationsDetails as $item) {
-        $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
-        $content .= '<td>'. $hp->purify($item['path']) .'</td>';
-        $content .= '<td>'. $hp->purify($item['svn_events_mailing_list']) .'</td><td>';
-        $content .= '<input type="checkbox" value="'. $hp->purify($item['path']) .'" name="paths_to_delete[]" >';
+        $content .= '<tr class="' . html_get_alt_row_color(++$rowBgColor) . '">';
+        $content .= '<td>' . $hp->purify($item['path']) . '</td>';
+        $content .= '<td>' . $hp->purify($item['svn_events_mailing_list']) . '</td><td>';
+        $content .= '<input type="checkbox" value="' . $hp->purify($item['path']) . '" name="paths_to_delete[]" >';
         $content .= '</td></tr>';
     }
-    $content .= '<tr align="right"><td colspan="3"><input type="submit" value="'.$Language->getText('global', 'delete').'" class="btn"></td></tr></tbody>';
+    $content .= '<tr align="right"><td colspan="3"><input type="submit" value="' . $Language->getText('global', 'delete') . '" class="btn"></td></tr></tbody>';
 }
 $content .= '</table>';
 echo '
        <br/>
-       <form action="" method="post">'.$content.'</form>';
+       <form action="" method="post">' . $content . '</form>';
 
 // Add a path & mail addresses
 $svnMailingList = $svnNotification->getSvnMailingList($group_id, $path);
 echo '
        <form action="" method="post">
-           <input type="hidden" name="group_id" value="'.$group_id.'">
+           <input type="hidden" name="group_id" value="' . $group_id . '">
            <input type="hidden" name="post_changes" value="path_mailing_list">
 
-           <label>'.$Language->getText('svn_admin_notification', 'notification_path').'</label>
-           <input type="text" name="form_path" value="'.$hp->purify($path).'" '.$disabled.' />
+           <label>' . $Language->getText('svn_admin_notification', 'notification_path') . '</label>
+           <input type="text" name="form_path" value="' . $hp->purify($path) . '" ' . $disabled . ' />
 
-           <label>'.$Language->getText('svn_admin_notification', 'mail_to').'</label>
-           <input type="text" size="50%" name="form_mailing_list" value="'.$hp->purify($svnMailingList).'" '.$disabled.' />
+           <label>' . $Language->getText('svn_admin_notification', 'mail_to') . '</label>
+           <input type="text" size="50%" name="form_mailing_list" value="' . $hp->purify($svnMailingList) . '" ' . $disabled . ' />
 
            <br />
 
-           <input type="submit" name="submit" value="'.$Language->getText('global', 'btn_submit').'" class="btn" '.$disabled.' />
+           <input type="submit" name="submit" value="' . $Language->getText('global', 'btn_submit') . '" class="btn" ' . $disabled . ' />
        </form>';
 
 svn_footer(array());

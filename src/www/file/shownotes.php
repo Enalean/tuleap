@@ -25,7 +25,7 @@ use Tuleap\FRS\ReleasePermissionManager;
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/file_utils.php';
 
-$release_id = (int)     $request->getValidated('release_id', 'uint', 0);
+$release_id = (int) $request->getValidated('release_id', 'uint', 0);
 if ($release_id === 0) {
     exit_error($GLOBALS['Language']->getText('file_shownotes', 'not_found_err'), $GLOBALS['Language']->getText('file_shownotes', 'release_not_found'));
 }
@@ -42,13 +42,13 @@ if ($release === null ||
 }
 
 $group_id = $release->getGroupID();
-file_utils_header(array('title'=>$Language->getText('file_shownotes', 'release_notes'),'group'=>$group_id));
+file_utils_header(array('title' => $Language->getText('file_shownotes', 'release_notes'),'group' => $group_id));
 
 $hp = Codendi_HTMLPurifier::instance();
 
 $HTML->box1_top($Language->getText('file_shownotes', 'notes'));
 
-echo '<h3>'.$Language->getText('file_shownotes', 'release_name').': <A HREF="showfiles.php?group_id='.$group_id.'">'.$hp->purify($release->getName()).'</A></H3>
+echo '<h3>' . $Language->getText('file_shownotes', 'release_name') . ': <A HREF="showfiles.php?group_id=' . $group_id . '">' . $hp->purify($release->getName()) . '</A></H3>
     <P>';
 
 /*
@@ -56,23 +56,23 @@ echo '<h3>'.$Language->getText('file_shownotes', 'release_name').': <A HREF="sho
 */
 $purify_level = CODENDI_PURIFIER_BASIC;
 if ($release->isPreformatted()) {
-    echo '<PRE>'.PHP_EOL;
+    echo '<PRE>' . PHP_EOL;
     $purify_level = CODENDI_PURIFIER_BASIC_NOBR;
 }
-echo '<B>'.$Language->getText('file_shownotes', 'notes').':</B>'.PHP_EOL
-     .$hp->purify($release->getNotes(), $purify_level, $group_id).
-    '<HR NOSHADE SIZE=1>'.
-    '<B>'.$Language->getText('file_shownotes', 'changes').':</B>'.PHP_EOL
-    .$hp->purify($release->getChanges(), $purify_level, $group_id);
+echo '<B>' . $Language->getText('file_shownotes', 'notes') . ':</B>' . PHP_EOL
+     . $hp->purify($release->getNotes(), $purify_level, $group_id) .
+    '<HR NOSHADE SIZE=1>' .
+    '<B>' . $Language->getText('file_shownotes', 'changes') . ':</B>' . PHP_EOL
+    . $hp->purify($release->getChanges(), $purify_level, $group_id);
 if ($release->isPreformatted()) {
     echo '</PRE>';
 }
 
-$crossref_fact= new CrossReferenceFactory($release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
+$crossref_fact = new CrossReferenceFactory($release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
 $crossref_fact->fetchDatas();
 if ($crossref_fact->getNbReferences() > 0) {
     echo '<hr noshade>';
-    echo '<b> '.$Language->getText('cross_ref_fact_include', 'references').'</b>';
+    echo '<b> ' . $Language->getText('cross_ref_fact_include', 'references') . '</b>';
     $crossref_fact->DisplayCrossRefs();
 }
 

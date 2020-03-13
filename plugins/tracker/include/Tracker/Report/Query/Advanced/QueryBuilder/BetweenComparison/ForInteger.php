@@ -51,7 +51,7 @@ class ForInteger implements FieldFromWhereBuilder
         $changeset_value_int_alias = "CVInt_{$field_id}_{$suffix}";
         $changeset_value_alias     = "CV_{$field_id}_{$suffix}";
 
-        $condition = "$changeset_value_int_alias.value BETWEEN ".$this->escapeInt($min_value)." AND ".$this->escapeInt($max_value);
+        $condition = "$changeset_value_int_alias.value BETWEEN " . $this->escapeInt($min_value) . " AND " . $this->escapeInt($max_value);
 
         return $this->from_where_builder->getFromWhere(
             $field_id,

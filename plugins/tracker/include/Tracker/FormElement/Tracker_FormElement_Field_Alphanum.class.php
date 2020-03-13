@@ -54,7 +54,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
 
     public function fetchCriteriaValue($criteria)
     {
-        $html = '<input type="text" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .'" value="';
+        $html = '<input type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             $hp = Codendi_HTMLPurifier::instance();
             $html .= $hp->purify($criteria_value, CODENDI_PURIFIER_CONVERT_HTML);
@@ -73,8 +73,8 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
      */
     public function getQueryGroupby()
     {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
+        $R1 = 'R1_' . $this->id;
+        $R2 = 'R2_' . $this->id;
         return "$R2.value";
     }
 

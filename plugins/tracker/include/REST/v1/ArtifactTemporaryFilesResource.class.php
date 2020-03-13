@@ -239,7 +239,7 @@ class ArtifactTemporaryFilesResource
         } catch (ChunkTooBigException $e) {
             $this->raiseError(406, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
         } catch (InvalidOffsetException $e) {
-            $this->raiseError(406, 'Invalid offset received. Expected: '. ($file->getCurrentChunkOffset() +1));
+            $this->raiseError(406, 'Invalid offset received. Expected: ' . ($file->getCurrentChunkOffset() + 1));
         } catch (QuotaExceededException $e) {
             $this->raiseError(406, 'You exceeded your quota. Please remove existing temporary files before continuing.');
         }

@@ -18,25 +18,25 @@ if (!defined('USE_IMAGE_ERROR_HANDLER')) {
     define('USE_IMAGE_ERROR_HANDLER', true);
 }
 
-global $__jpg_err_locale ;
+global $__jpg_err_locale;
 $__jpg_err_locale = DEFAULT_ERR_LOCALE;
 
 class ErrMsgText
 {
-    private $lt=null;
+    private $lt = null;
     public function __construct()
     {
         global $__jpg_err_locale;
-        $file = 'lang/'.$__jpg_err_locale.'.inc.php';
+        $file = 'lang/' . $__jpg_err_locale . '.inc.php';
 
         // If the chosen locale doesn't exist try english
-        if (!file_exists(dirname(__FILE__).'/'.$file)) {
+        if (!file_exists(dirname(__FILE__) . '/' . $file)) {
             $__jpg_err_locale = 'en';
         }
 
-        $file = 'lang/'.$__jpg_err_locale.'.inc.php';
-        if (!file_exists(dirname(__FILE__).'/'.$file)) {
-            die('Chosen locale file ("'.$file.'") for error messages does not exist or is not readable for the PHP process. Please make sure that the file exists and that the file permissions are such that the PHP process is allowed to read this file.');
+        $file = 'lang/' . $__jpg_err_locale . '.inc.php';
+        if (!file_exists(dirname(__FILE__) . '/' . $file)) {
+            die('Chosen locale file ("' . $file . '") for error messages does not exist or is not readable for the PHP process. Please make sure that the file exists and that the file permissions are such that the PHP process is allowed to read this file.');
         }
         require($file);
         $this->lt = $_jpg_messages;
@@ -46,10 +46,10 @@ class ErrMsgText
     {
         global $__jpg_err_locale;
         if (!isset($this->lt[$errnbr])) {
-            return 'Internal error: The specified error message ('.$errnbr.') does not exist in the chosen locale ('.$__jpg_err_locale.')';
+            return 'Internal error: The specified error message (' . $errnbr . ') does not exist in the chosen locale (' . $__jpg_err_locale . ')';
         }
         $ea = $this->lt[$errnbr];
-        $j=0;
+        $j = 0;
         if ($a1 !== null) {
             $argv[$j++] = $a1;
             if ($a2 !== null) {
@@ -110,7 +110,7 @@ class JpGraphError
     }
     public static function SetErrLocale($aLoc)
     {
-        global $__jpg_err_locale ;
+        global $__jpg_err_locale;
         $__jpg_err_locale = $aLoc;
     }
     public static function RaiseL($errnbr, $a1 = null, $a2 = null, $a3 = null, $a4 = null, $a5 = null)
@@ -191,7 +191,7 @@ class JpGraphExceptionL extends JpGraphException
     {
         // make sure everything is assigned properly
         $errtxt = new ErrMsgText();
-        JpGraphError::SetTitle('JpGraph Error: '.$errcode);
+        JpGraphError::SetTitle('JpGraph Error: ' . $errcode);
         parent::__construct($errtxt->Get($errcode, $a1, $a2, $a3, $a4, $a5), 0);
     }
 }
@@ -231,9 +231,9 @@ class JpGraphErrObject
     {
         if ($this->iDest != '') {
             if ($this->iDest == 'syslog') {
-                error_log($this->iTitle.$aMsg);
+                error_log($this->iTitle . $aMsg);
             } else {
-                $str = '['.date('r').'] '.$this->iTitle.$aMsg."\n";
+                $str = '[' . date('r') . '] ' . $this->iTitle . $aMsg . "\n";
                 $f = @fopen($this->iDest, 'a');
                 if ($f) {
                     @fwrite($f, $str);
@@ -241,7 +241,7 @@ class JpGraphErrObject
                 }
             }
         } else {
-            $aMsg = $this->iTitle.$aMsg;
+            $aMsg = $this->iTitle . $aMsg;
             // Check SAPI and if we are called from the command line
             // send the error to STDERR instead
             if (PHP_SAPI == 'cli') {
@@ -271,21 +271,21 @@ class JpGraphErrObjectImg extends JpGraphErrObject
     public function Raise($aMsg, $aHalt = true)
     {
         $img_iconerror =
-        'iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAaV'.
-        'BMVEX//////2Xy8mLl5V/Z2VvMzFi/v1WyslKlpU+ZmUyMjEh/'.
-        'f0VyckJlZT9YWDxMTDjAwMDy8sLl5bnY2K/MzKW/v5yyspKlpY'.
-        'iYmH+MjHY/PzV/f2xycmJlZVlZWU9MTEXY2Ms/PzwyMjLFTjea'.
-        'AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACx'.
-        'IAAAsSAdLdfvwAAAAHdElNRQfTBgISOCqusfs5AAABLUlEQVR4'.
-        '2tWV3XKCMBBGWfkranCIVClKLd/7P2Q3QsgCxjDTq+6FE2cPH+'.
-        'xJ0Ogn2lQbsT+Wrs+buAZAV4W5T6Bs0YXBBwpKgEuIu+JERAX6'.
-        'wM2rHjmDdEITmsQEEmWADgZm6rAjhXsoMGY9B/NZBwJzBvn+e3'.
-        'wHntCAJdGu9SviwIwoZVDxPB9+Rc0TSEbQr0j3SA1gwdSn6Db0'.
-        '6Tm1KfV6yzWGQO7zdpvyKLKBDmRFjzeB3LYgK7r6A/noDAfjtS'.
-        'IXaIzbJSv6WgUebTMV4EoRB8a2mQiQjgtF91HdKDKZ1gtFtQjk'.
-        'YcWaR5OKOhkYt+ZsTFdJRfPAApOpQYJTNHvCRSJR6SJngQadfc'.
-        'vd69OLMddVOPCGVnmrFD8bVYd3JXfxXPtLR/+mtv59/ALWiiMx'.
-        'qL72fwAAAABJRU5ErkJggg==' ;
+        'iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAaV' .
+        'BMVEX//////2Xy8mLl5V/Z2VvMzFi/v1WyslKlpU+ZmUyMjEh/' .
+        'f0VyckJlZT9YWDxMTDjAwMDy8sLl5bnY2K/MzKW/v5yyspKlpY' .
+        'iYmH+MjHY/PzV/f2xycmJlZVlZWU9MTEXY2Ms/PzwyMjLFTjea' .
+        'AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACx' .
+        'IAAAsSAdLdfvwAAAAHdElNRQfTBgISOCqusfs5AAABLUlEQVR4' .
+        '2tWV3XKCMBBGWfkranCIVClKLd/7P2Q3QsgCxjDTq+6FE2cPH+' .
+        'xJ0Ogn2lQbsT+Wrs+buAZAV4W5T6Bs0YXBBwpKgEuIu+JERAX6' .
+        'wM2rHjmDdEITmsQEEmWADgZm6rAjhXsoMGY9B/NZBwJzBvn+e3' .
+        'wHntCAJdGu9SviwIwoZVDxPB9+Rc0TSEbQr0j3SA1gwdSn6Db0' .
+        '6Tm1KfV6yzWGQO7zdpvyKLKBDmRFjzeB3LYgK7r6A/noDAfjtS' .
+        'IXaIzbJSv6WgUebTMV4EoRB8a2mQiQjgtF91HdKDKZ1gtFtQjk' .
+        'YcWaR5OKOhkYt+ZsTFdJRfPAApOpQYJTNHvCRSJR6SJngQadfc' .
+        'vd69OLMddVOPCGVnmrFD8bVYd3JXfxXPtLR/+mtv59/ALWiiMx' .
+        'qL72fwAAAABJRU5ErkJggg==';
 
         if (function_exists("imagetypes")) {
             $supported = imagetypes();
@@ -301,7 +301,7 @@ class JpGraphErrObjectImg extends JpGraphErrObject
             // Special case for headers already sent or that the installation doesn't support
             // the PNG format (which the error icon is encoded in).
             // Dont return an image since it can't be displayed
-            die($this->iTitle.' '.$aMsg);
+            die($this->iTitle . ' ' . $aMsg);
         }
 
         $aMsg = wordwrap($aMsg, 55);
@@ -311,57 +311,57 @@ class JpGraphErrObjectImg extends JpGraphErrObject
         $erricon = Image::CreateFromString(base64_decode($img_iconerror));
 
         // Create an image that contains the error text.
-        $w=400;
-        $h=100 + 15*max(0, $lines-3);
+        $w = 400;
+        $h = 100 + 15 * max(0, $lines - 3);
 
         $img = new Image($w, $h);
 
         // Drop shadow
         $img->SetColor("gray");
-        $img->FilledRectangle(5, 5, $w-1, $h-1, 10);
+        $img->FilledRectangle(5, 5, $w - 1, $h - 1, 10);
         $img->SetColor("gray:0.7");
-        $img->FilledRectangle(5, 5, $w-3, $h-3, 10);
+        $img->FilledRectangle(5, 5, $w - 3, $h - 3, 10);
 
         // Window background
         $img->SetColor("lightblue");
-        $img->FilledRectangle(1, 1, $w-5, $h-5);
+        $img->FilledRectangle(1, 1, $w - 5, $h - 5);
         $img->CopyCanvasH($img->img, $erricon, 5, 30, 0, 0, 40, 40);
 
         // Window border
         $img->SetColor("black");
-        $img->Rectangle(1, 1, $w-5, $h-5);
-        $img->Rectangle(0, 0, $w-4, $h-4);
+        $img->Rectangle(1, 1, $w - 5, $h - 5);
+        $img->Rectangle(0, 0, $w - 4, $h - 4);
 
         // Window top row
         $img->SetColor("darkred");
-        for ($y=3; $y < 18; $y += 2) {
-            $img->Line(1, $y, $w-6, $y);
+        for ($y = 3; $y < 18; $y += 2) {
+            $img->Line(1, $y, $w - 6, $y);
         }
 
         // "White shadow"
         $img->SetColor("white");
 
         // Left window edge
-        $img->Line(2, 2, 2, $h-5);
-        $img->Line(2, 2, $w-6, 2);
+        $img->Line(2, 2, 2, $h - 5);
+        $img->Line(2, 2, $w - 6, 2);
 
         // "Gray button shadow"
         $img->SetColor("darkgray");
 
         // Gray window shadow
-        $img->Line(2, $h-6, $w-5, $h-6);
-        $img->Line(3, $h-7, $w-5, $h-7);
+        $img->Line(2, $h - 6, $w - 5, $h - 6);
+        $img->Line(3, $h - 7, $w - 5, $h - 7);
 
         // Window title
-        $m = floor($w/2-5);
+        $m = floor($w / 2 - 5);
         $l = 110;
         $img->SetColor("lightgray:1.3");
-        $img->FilledRectangle($m-$l, 2, $m+$l, 16);
+        $img->FilledRectangle($m - $l, 2, $m + $l, 16);
 
         // Stroke text
         $img->SetColor("darkred");
         $img->SetFont(FF_FONT2, FS_BOLD);
-        $img->StrokeText($m-90, 15, $this->iTitle);
+        $img->StrokeText($m - 90, 15, $this->iTitle);
         $img->SetColor("black");
         $img->SetFont(FF_FONT1, FS_NORMAL);
         $txt = new Text($aMsg, 52, 25);

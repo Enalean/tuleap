@@ -70,7 +70,7 @@ class AgileDashboard_FirstKanbanCreator
         $this->kanban_manager   = $kanban_manager;
         $this->tracker_factory  = $tracker_factory;
         $this->xml_import       = $xml_import;
-        $this->template_path    = AGILEDASHBOARD_RESOURCE_DIR .'/Tracker_activity.xml';
+        $this->template_path    = AGILEDASHBOARD_RESOURCE_DIR . '/Tracker_activity.xml';
         $this->tracker_itemname = $this->xml_import->getTrackerItemNameFromXMLFile($this->template_path);
         $this->tracker_report_updater = $tracker_report_updater;
         $this->kanban_factory = $kanban_factory;
@@ -114,7 +114,7 @@ class AgileDashboard_FirstKanbanCreator
             $GLOBALS['Language']->getText(
                 'plugin_agiledashboard_first_kanban',
                 'created',
-                '?'. http_build_query(
+                '?' . http_build_query(
                     array(
                         'group_id' => $this->project->getId(),
                         'action'   => 'showKanban',
@@ -138,7 +138,7 @@ class AgileDashboard_FirstKanbanCreator
             return $this->xml_import->createFromXMLFile($this->project, $this->template_path);
         } catch (Exception $exception) {
             $logger = new BackendLogger();
-            $logger->error('Unable to create first kanban for '. $this->project->getId() .': '. $exception->getMessage());
+            $logger->error('Unable to create first kanban for ' . $this->project->getId() . ': ' . $exception->getMessage());
             return;
         }
     }

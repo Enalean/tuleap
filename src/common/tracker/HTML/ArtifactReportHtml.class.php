@@ -58,24 +58,24 @@ class ArtifactReportHtml extends ArtifactReport
             $html_result .= '<table width="100%"><tr><td align="left" width="50%">';
         }
 
-            $html_result .= '<P class="small"><B>'.($msg ? $msg : $Language->getText('tracker_include_report', 'prio_colors')).'</B><BR><TABLE BORDER=0><TR>';
+            $html_result .= '<P class="small"><B>' . ($msg ? $msg : $Language->getText('tracker_include_report', 'prio_colors')) . '</B><BR><TABLE BORDER=0><TR>';
 
-        for ($i=1; $i<10; $i++) {
-                $html_result .=  '<TD class="'.get_priority_color($i).'">'.$i.'</TD>';
+        for ($i = 1; $i < 10; $i++) {
+                $html_result .=  '<TD class="' . get_priority_color($i) . '">' . $i . '</TD>';
         }
             $html_result .=  '</TR></TABLE>';
 
-        if ((!$masschange)&&($pv == 0)) {
+        if ((!$masschange) && ($pv == 0)) {
             $html_result .= '</td><td align="right" width="50%">';
             $html_result .= '
                           <FORM ACTION="" METHOD="POST" NAME="artifact_export_form">
-                          <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->group_artifact_id.'">
-                          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
+                          <INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . (int) $this->group_artifact_id . '">
+                          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . (int) $group_id . '">
 			  <INPUT TYPE="HIDDEN" NAME="func" VALUE="export">
-                          <INPUT TYPE="HIDDEN" NAME="export_aids" VALUE="'. $hp->purify(implode(",", $aids), CODENDI_PURIFIER_CONVERT_HTML) .'">
-                          <input type="checkbox" name="only_displayed_fields" /> <small>'.$Language->getText('tracker_include_report', 'export_only_report_fields').'</small><br />
-                          <FONT SIZE="-1"><INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('tracker_include_report', 'btn_export').'"></FONT><br />
-                          <input type="hidden" name="report_id" value="'.(int)$this->getReportId().'" />
+                          <INPUT TYPE="HIDDEN" NAME="export_aids" VALUE="' . $hp->purify(implode(",", $aids), CODENDI_PURIFIER_CONVERT_HTML) . '">
+                          <input type="checkbox" name="only_displayed_fields" /> <small>' . $Language->getText('tracker_include_report', 'export_only_report_fields') . '</small><br />
+                          <FONT SIZE="-1"><INPUT TYPE="SUBMIT" VALUE="' . $Language->getText('tracker_include_report', 'btn_export') . '"></FONT><br />
+                          <input type="hidden" name="report_id" value="' . (int) $this->getReportId() . '" />
                           </FORM>';
 
             $html_result .=  '</td></tr></table>';
@@ -108,9 +108,9 @@ class ArtifactReportHtml extends ArtifactReport
             //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
                 if ($mattr == $order) {
                     if (($mdir == '>') || (!isset($mdir))) {
-                        $arr[$i] = $order.'<';
+                        $arr[$i] = $order . '<';
                     } else {
-                        $arr[$i] = $order.'>';
+                        $arr[$i] = $order . '>';
                     }
                                     $found = true;
                 }
@@ -124,9 +124,9 @@ class ArtifactReportHtml extends ArtifactReport
             }
             if (($order == 'severity') || ($order == 'hours')) {
             // severity, effort and dates sorted in descending order by default
-                $arr[] = $order.'<';
+                $arr[] = $order . '<';
             } else {
-                $arr[] = $order.'>';
+                $arr[] = $order . '>';
             }
         }
 
@@ -146,23 +146,22 @@ class ArtifactReportHtml extends ArtifactReport
          */
     public function criteriaListToText($criteria_list, $url)
     {
-
         global $art_field_fact;
         $arr_text = array();
         if ($criteria_list) {
             $arr = explode(',', $criteria_list);
-            $morder='';
+            $morder = '';
             foreach ($arr as $crit) {
-                $morder .= ($morder ? ",".$crit : $crit);
+                $morder .= ($morder ? "," . $crit : $crit);
                 $attr = str_replace('>', '', $crit);
                 $attr = str_replace('<', '', $attr);
 
                 $field = $art_field_fact->getFieldFromName($attr);
                 if ($field && $field->isUsed()) {
                     $label = $field->getLabel();
-                    $arr_text[] = '<a href="'.$url.'&morder='.urlencode($morder).'#results">'.
-                     $label.'</a><img src="'.util_get_dir_image_theme().
-                     ((substr($crit, -1) == '<') ? 'dn' : 'up').
+                    $arr_text[] = '<a href="' . $url . '&morder=' . urlencode($morder) . '#results">' .
+                     $label . '</a><img src="' . util_get_dir_image_theme() .
+                     ((substr($crit, -1) == '<') ? 'dn' : 'up') .
                      '_arrow.png" border="0">';
                 }
             }
@@ -196,9 +195,9 @@ class ArtifactReportHtml extends ArtifactReport
         // Number of search criteria (boxes) displayed in one row
         $this->fields_per_line = 5;
 
-        $ib=0;
-        $is=0;
-        $load_cal=false;
+        $ib = 0;
+        $is = 0;
+        $load_cal = false;
 
         foreach ($query_fields as $field) {
             $field_html = new ArtifactFieldHtml($field);
@@ -208,15 +207,15 @@ class ArtifactReportHtml extends ArtifactReport
             // beginning of a new row
             if ($ib % $this->fields_per_line == 0) {
                 $align = "left";
-                $labels .= "\n".'<TR align="'.$align.'" valign="top">';
-                $boxes .= "\n".'<TR align="'.$align.'" valign="top">';
+                $labels .= "\n" . '<TR align="' . $align . '" valign="top">';
+                $boxes .= "\n" . '<TR align="' . $align . '" valign="top">';
             }
 
             // Need to build help button argument.
             // Concatenate 3 args in one string
             $group_id = $ath->Group->getID();
-            $help_args = $group_id.'|'.$this->group_artifact_id.'|'.$field->getName();
-            $labels .= '<td class="small"><b>'. $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'&nbsp;'.
+            $help_args = $group_id . '|' . $this->group_artifact_id . '|' . $field->getName();
+            $labels .= '<td class="small"><b>' . $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . '&nbsp;' .
                 '</b></td>';
 
             $boxes .= '<TD><FONT SIZE="-1">';
@@ -237,7 +236,7 @@ class ArtifactReportHtml extends ArtifactReport
                     if (isset($prefs[$field->getName()][0])) {
                         $values = $prefs[$field->getName()][0];
                     } else {
-                        $values="";
+                        $values = "";
                     }
                 }
 
@@ -247,7 +246,7 @@ class ArtifactReportHtml extends ArtifactReport
                         $values,
                         false,
                         false,
-                        ($pv != 0?true:false),
+                        ($pv != 0 ? true : false),
                         false,
                         true,
                         $Language->getText('global', 'none'),
@@ -261,7 +260,7 @@ class ArtifactReportHtml extends ArtifactReport
                         $prefs[$field->getName()],
                         false,
                         false,
-                        ($pv != 0?true:false),
+                        ($pv != 0 ? true : false),
                         false,
                         true,
                         $Language->getText('global', 'none'),
@@ -272,18 +271,18 @@ class ArtifactReportHtml extends ArtifactReport
                 $load_cal = true; // We need to load the Javascript Calendar
                 if ($advsrch) {
                     $date_begin = isset($prefs[$field->getName()][0])        ? $prefs[$field->getName()][0]        : '';
-                    $date_end   = isset($prefs[$field->getName().'_end'][0]) ? $prefs[$field->getName().'_end'][0] : '';
+                    $date_end   = isset($prefs[$field->getName() . '_end'][0]) ? $prefs[$field->getName() . '_end'][0] : '';
                     $boxes .= $field_html->multipleFieldDate($date_begin, $date_end, 0, 0, $pv);
                 } else {
-                    $val_op = isset($prefs[$field->getName().'_op'][0]) ? $prefs[$field->getName().'_op'][0] : '';
+                    $val_op = isset($prefs[$field->getName() . '_op'][0]) ? $prefs[$field->getName() . '_op'][0] : '';
                     $val    = isset($prefs[$field->getName()][0])       ? $prefs[$field->getName()][0]       : '';
                     $boxes .= $field_html->fieldDateOperator($val_op, $pv) . $field_html->fieldDate($val, $pv);
                 }
             } elseif ($field->isTextField() ||
                        $field->isTextArea()) {
-                $val=isset($prefs[$field->getName()][0])?$prefs[$field->getName()][0]:"";
+                $val = isset($prefs[$field->getName()][0]) ? $prefs[$field->getName()][0] : "";
                 $boxes .=
-                    ($pv != 0 ? $val : $field_html->fieldText(stripslashes($val), 15, 80)) ;
+                    ($pv != 0 ? $val : $field_html->fieldText(stripslashes($val), 15, 80));
             }
             $boxes .= "</TD>\n";
 
@@ -291,14 +290,14 @@ class ArtifactReportHtml extends ArtifactReport
 
             // end of this row
             if ($ib % $this->fields_per_line == 0) {
-                $html_select .= $labels.'</TR>'.$boxes.'</TR>';
+                $html_select .= $labels . '</TR>' . $boxes . '</TR>';
                 $labels = $boxes = '';
             }
         }
 
         // Make sure the last few cells are in the table
         if ($labels) {
-            $html_select .= $labels.'</TR>'.$boxes.'</TR>';
+            $html_select .= $labels . '</TR>' . $boxes . '</TR>';
         }
 
         $html_select .= "</table>";
@@ -309,11 +308,11 @@ class ArtifactReportHtml extends ArtifactReport
     public function getFieldsSelectbox($name, $label, $used, $ath)
     {
         $html_result  = '';
-        $html_result .= '<select name="'. $name .'" onchange="this.form.submit();">';
-        $html_result .= '<option selected="selected" value="">'. $label .'</option>';
+        $html_result .= '<select name="' . $name . '" onchange="this.form.submit();">';
+        $html_result .= '<option selected="selected" value="">' . $label . '</option>';
         $afsf = new ArtifactFieldSetFactory($ath);
         foreach ($afsf->getAllFieldSets() as $fieldset) {
-            $html_result .= '<optgroup label="'. $fieldset->getLabel() .'">';
+            $html_result .= '<optgroup label="' . $fieldset->getLabel() . '">';
             foreach ($fieldset->getArtifactFields() as $field) {
                 if ($field->isUsed()) {
                     $highlight = '';
@@ -321,7 +320,7 @@ class ArtifactReportHtml extends ArtifactReport
                         if (isset($used[$field->getName()])) {
                             $highlight = 'boxhighlight';
                         }
-                        $html_result .= '<option value="'. $field->getName() .'" class="'. $highlight .'">';
+                        $html_result .= '<option value="' . $field->getName() . '" class="' . $highlight . '">';
                         $html_result .= $field->getLabel();
                         $html_result .= '</option>';
                     }
@@ -367,13 +366,13 @@ class ArtifactReportHtml extends ArtifactReport
 
         foreach ($result_fields as $field) {
             if ($pv != 0) {
-                $links_arr[] = $url.'&pv='.(int)$pv.'&order='.urlencode($field->getName()).'#results';
+                $links_arr[] = $url . '&pv=' . (int) $pv . '&order=' . urlencode($field->getName()) . '#results';
             } else {
-                $links_arr[] = $url.'&order='.urlencode($field->getName()).'#results';
+                $links_arr[] = $url . '&order=' . urlencode($field->getName()) . '#results';
             }
-            $title_arr[] =  $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) ;
+            $title_arr[] =  $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML);
             $width_arr[$field->getName()] = $field->getColWidth();
-            $id_arr[] = $hp->purify($field->getName(), CODENDI_PURIFIER_CONVERT_HTML) ;
+            $id_arr[] = $hp->purify($field->getName(), CODENDI_PURIFIER_CONVERT_HTML);
         }
 
         $query = $this->createQueryReport($prefs, $morder, $advsrch, $offset, $chunksz, $aids);
@@ -383,57 +382,57 @@ class ArtifactReportHtml extends ArtifactReport
        /*
           Show extra rows for <-- Prev / Next -->
         */
-        $nav_bar ='<table width= "100%"><tr>';
+        $nav_bar = '<table width= "100%"><tr>';
         $nav_bar .= '<td width="40%" align ="left">';
 
         // If all artifacts on screen so no prev/begin pointer at all
         if ($total_rows > $chunksz) {
             if ($offset > 0) {
                 $nav_bar .=
-                '<A HREF="'.$url.'&offset=0#results" class="small"><B>&lt;&lt; '.$Language->getText('global', 'begin').'</B></A>'.
-                '&nbsp;&nbsp;&nbsp;'.
-                '<A HREF="'.$url.'&offset='.($offset-$chunksz).
-                '#results" class="small"><B>&lt; '.$Language->getText('global', 'prev').' '.(int)$chunksz.'</B></A></td>';
+                '<A HREF="' . $url . '&offset=0#results" class="small"><B>&lt;&lt; ' . $Language->getText('global', 'begin') . '</B></A>' .
+                '&nbsp;&nbsp;&nbsp;' .
+                '<A HREF="' . $url . '&offset=' . ($offset - $chunksz) .
+                '#results" class="small"><B>&lt; ' . $Language->getText('global', 'prev') . ' ' . (int) $chunksz . '</B></A></td>';
             } else {
                 $nav_bar .=
-                    '<span class="disable">&lt;&lt; '.$Language->getText('global', 'begin').'&nbsp;&nbsp;&lt; '.$Language->getText('global', 'prev').' '.(int)$chunksz.'</span>';
+                    '<span class="disable">&lt;&lt; ' . $Language->getText('global', 'begin') . '&nbsp;&nbsp;&lt; ' . $Language->getText('global', 'prev') . ' ' . (int) $chunksz . '</span>';
             }
         }
 
         $nav_bar .= '</td>';
 
-        $offset_last = min($offset+$chunksz-1, $total_rows-1);
+        $offset_last = min($offset + $chunksz - 1, $total_rows - 1);
 
         // display 'Items x - y'  only in normal and printer-version modes
         if ($pv != 2) {
-            $nav_bar .= '<td width= "20% " align = "center" class="small">'.$Language->getText('tracker_include_report', 'items').' '.($offset+1).' - '.
-                ($offset_last+1)."</td>\n";
+            $nav_bar .= '<td width= "20% " align = "center" class="small">' . $Language->getText('tracker_include_report', 'items') . ' ' . ($offset + 1) . ' - ' .
+                ($offset_last + 1) . "</td>\n";
         }
 
         $nav_bar .= '<td width="40%" align ="right">';
 
         // If all artifacts on screen, no next/end pointer at all
         if ($total_rows > $chunksz) {
-            if (($offset+$chunksz) < $total_rows) {
+            if (($offset + $chunksz) < $total_rows) {
                 $offset_end = ($total_rows - ($total_rows % $chunksz));
                 if ($offset_end == $total_rows) {
                     $offset_end -= $chunksz;
                 }
 
                 $nav_bar .=
-                    '<A HREF="'.$url.'&offset='.($offset+$chunksz).
-                    '#results" class="small"><B>'.$Language->getText('global', 'next').' '.(int)$chunksz.' &gt;</B></A>'.
-                    '&nbsp;&nbsp;&nbsp;'.
-                    '<A HREF="'.$url.'&offset='.($offset_end).
-                    '#results" class="small"><B>'.$Language->getText('global', 'end').' &gt;&gt;</B></A></td>';
+                    '<A HREF="' . $url . '&offset=' . ($offset + $chunksz) .
+                    '#results" class="small"><B>' . $Language->getText('global', 'next') . ' ' . (int) $chunksz . ' &gt;</B></A>' .
+                    '&nbsp;&nbsp;&nbsp;' .
+                    '<A HREF="' . $url . '&offset=' . ($offset_end) .
+                    '#results" class="small"><B>' . $Language->getText('global', 'end') . ' &gt;&gt;</B></A></td>';
             } else {
                 $nav_bar .=
-                    '<span class="disable">'.$Language->getText('global', 'next').' '.(int)$chunksz.
-                    ' &gt;&nbsp;&nbsp;'.$Language->getText('global', 'end').' &gt;&gt;</span>';
+                    '<span class="disable">' . $Language->getText('global', 'next') . ' ' . (int) $chunksz .
+                    ' &gt;&nbsp;&nbsp;' . $Language->getText('global', 'end') . ' &gt;&gt;</span>';
             }
         }
         $nav_bar .= '</td>';
-        $nav_bar .="</tr></table>\n";
+        $nav_bar .= "</tr></table>\n";
 
         $html_result .= $nav_bar;
 
@@ -450,11 +449,11 @@ class ArtifactReportHtml extends ArtifactReport
                   ($id = current($id_arr)) &&
                   ($width = current($width_arr))) {
                 if ($width) {
-                    $width = 'style="width:'.$width.'%"';
+                    $width = 'style="width:' . $width . '%"';
                 } else {
                     $width = '';
                 }
-                $html_result .= '<th class="boxtitle" '. $width .'><a href="'. $link .'" id="'. $id .'">'. $title .'</a></th>';
+                $html_result .= '<th class="boxtitle" ' . $width . '><a href="' . $link . '" id="' . $id . '">' . $title . '</a></th>';
                 next($title_arr);
                 next($links_arr);
                 next($id_arr);
@@ -464,11 +463,11 @@ class ArtifactReportHtml extends ArtifactReport
             $html_result .= '</thead>';
         }
         $html_result .= '<tbody>';
-        for ($i=0; $i < $rows; $i++) {
-            $html_result .= '<TR class="'. get_priority_color($result[$i]['severity_id']) .'">'."\n";
+        for ($i = 0; $i < $rows; $i++) {
+            $html_result .= '<TR class="' . get_priority_color($result[$i]['severity_id']) . '">' . "\n";
 
             if ($masschange) {
-                    $html_result .= '<TD align="center"><INPUT TYPE="checkbox" name="mass_change_ids[]" value="'.$result[$i]['artifact_id'].'"></td>';
+                    $html_result .= '<TD align="center"><INPUT TYPE="checkbox" name="mass_change_ids[]" value="' . $result[$i]['artifact_id'] . '"></td>';
             }
 
             foreach ($result_fields as $key => $field) {
@@ -480,51 +479,51 @@ class ArtifactReportHtml extends ArtifactReport
                 if ($field->isDateField()) {
                     if ($value) {
                         if ($field->getName() == 'last_update_date') {
-                             $html_result .= "<TD $width>".format_date("Y-m-d H:i", $value).'</TD>'."\n";
+                             $html_result .= "<TD $width>" . format_date("Y-m-d H:i", $value) . '</TD>' . "\n";
                         } else {
-                            $html_result .= "<TD $width>".format_date("Y-m-d", $value).'</TD>'."\n";
+                            $html_result .= "<TD $width>" . format_date("Y-m-d", $value) . '</TD>' . "\n";
                         }
                     } else {
                         $html_result .= '<TD align="center">-</TD>';
                     }
                 } elseif ($field->getName() == 'artifact_id') {
                     if ($nolink) {
-                        $html_result .= "<TD $width>".  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) ."</TD>\n";
+                        $html_result .= "<TD $width>" .  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . "</TD>\n";
                     } else {
                         $target = ($pv == 0 ? "" : " target=blank");
-                        $html_result .= "<TD $width>".'<A HREF="/tracker/?func=detail&aid='.
-                        urlencode($value).'&atid='.(int)$this->group_artifact_id.'&group_id='.(int)$group_id.'"'.$target.'>'.
-                        $value .'</A></TD>'."\n";
+                        $html_result .= "<TD $width>" . '<A HREF="/tracker/?func=detail&aid=' .
+                        urlencode($value) . '&atid=' . (int) $this->group_artifact_id . '&group_id=' . (int) $group_id . '"' . $target . '>' .
+                        $value . '</A></TD>' . "\n";
                     }
                 } elseif ($field->isUsername()) {
                     if ($nolink) {
-                        $html_result .= "<TD $width>".util_multi_user_nolink($value)."</TD>\n";
+                        $html_result .= "<TD $width>" . util_multi_user_nolink($value) . "</TD>\n";
                     } else {
-                        $html_result .= "<TD $width>".util_multi_user_link($value)."</TD>\n";
+                        $html_result .= "<TD $width>" . util_multi_user_link($value) . "</TD>\n";
                     }
                 } elseif ($field->isFloat()) {
-                         $html_result .= "<TD $width>". number_format($value, 2) .'&nbsp;</TD>'."\n";
+                         $html_result .= "<TD $width>" . number_format($value, 2) . '&nbsp;</TD>' . "\n";
                 } elseif ($field->isTextArea()) {
                                    $unsane = util_unconvert_htmlspecialchars($value);
                                    $text = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $hp->purify($unsane, CODENDI_PURIFIER_BASIC, $group_id));
                                    $text = str_replace('  ', '&nbsp; ', $text);
                                    $text = str_replace('  ', '&nbsp; ', $text);
-                                   $html_result .= '<TD '. $width .' style="font-family:monospace; font-size:10pt;">'. $text . '&nbsp;</TD>';
+                                   $html_result .= '<TD ' . $width . ' style="font-family:monospace; font-size:10pt;">' . $text . '&nbsp;</TD>';
                 } elseif ($field->getName() == 'status_id') {
                     $html_result .= "<TD $width>";
-                    $html_result .= '<div id="status_id_'. $i .'">';
+                    $html_result .= '<div id="status_id_' . $i . '">';
                     $html_result .= $hp->purify($value, CODENDI_PURIFIER_BASIC, $group_id);
                     $html_result .= '</div>';
                     if ($field->userCanUpdate($group_id, $ath->getId())) {
                         $field_values = $field->getFieldPredefinedValues($ath->getId(), false, false, true, false);
                         $array_values = array();
                         while ($row = db_fetch_array($field_values)) {
-                            $array_values[]  = "[".$row['value_id'].", '". addslashes($row['value']) ."']";
+                            $array_values[]  = "[" . $row['value_id'] . ", '" . addslashes($row['value']) . "']";
                         }
                     }
                     $html_result .= "</TD>\n";
                 } else {
-                    $html_result .= "<TD $width>".  $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_BASIC, $group_id)  .'&nbsp;</TD>'."\n";
+                    $html_result .= "<TD $width>" .  $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_BASIC, $group_id)  . '&nbsp;</TD>' . "\n";
                 }
             } // while
             $html_result .= "</tr>\n";
@@ -544,19 +543,19 @@ class ArtifactReportHtml extends ArtifactReport
        //-->
        </script>";
 
-            $html_result .= '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->group_artifact_id.'">
-                          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
-                          <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="'.(int)$this->report_id.'">
-                          <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'.(int)$advsrch.'">
+            $html_result .= '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . (int) $this->group_artifact_id . '">
+                          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . (int) $group_id . '">
+                          <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="' . (int) $this->report_id . '">
+                          <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="' . (int) $advsrch . '">
                           <INPUT TYPE="HIDDEN" NAME="func" VALUE="masschange_detail">';
         // get the query
             foreach ($prefs as $field => $value) {
                 if (is_array($value)) {
                     foreach ($value as $val) {
-                        $html_result .= '<INPUT TYPE="HIDDEN" NAME="'. $hp->purify($field, CODENDI_PURIFIER_CONVERT_HTML) .'[]" VALUE="'. $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) .'">';
+                        $html_result .= '<INPUT TYPE="HIDDEN" NAME="' . $hp->purify($field, CODENDI_PURIFIER_CONVERT_HTML) . '[]" VALUE="' . $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) . '">';
                     }
                 } else {
-                    $html_result .= '<INPUT TYPE="HIDDEN" NAME="'. $hp->purify($field, CODENDI_PURIFIER_CONVERT_HTML) .'" VALUE="'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'">';
+                    $html_result .= '<INPUT TYPE="HIDDEN" NAME="' . $hp->purify($field, CODENDI_PURIFIER_CONVERT_HTML) . '" VALUE="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '">';
                 }
             }
         // stuff related to mass-change (buttons, check_all_items link, clear_all_items link) should be hidden in printer version
@@ -564,20 +563,20 @@ class ArtifactReportHtml extends ArtifactReport
             if ($pv == 0) {
                 if ($total_rows > $chunksz) {
                            $html_result .=
-                           '<a href="javascript:checkAll(1)">'.$Language->getText('tracker_include_report', 'check_items').' '.($offset+1).'-'.($offset_last+1).'</a>'.
-                           ' - <a href="javascript:checkAll(0)">'.$Language->getText('tracker_include_report', 'clear_items').' '.($offset+1).'-'.($offset_last+1).'</a><p>';
+                           '<a href="javascript:checkAll(1)">' . $Language->getText('tracker_include_report', 'check_items') . ' ' . ($offset + 1) . '-' . ($offset_last + 1) . '</a>' .
+                           ' - <a href="javascript:checkAll(0)">' . $Language->getText('tracker_include_report', 'clear_items') . ' ' . ($offset + 1) . '-' . ($offset_last + 1) . '</a><p>';
 
                     $html_result .= '<table width= "100%"><tr><td width="50%" align ="center" class="small">';
-                    $html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="'.$Language->getText('tracker_masschange_detail', 'selected_items').'('.($offset+1).'-'.($offset_last+1).')">';
+                    $html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="' . $Language->getText('tracker_masschange_detail', 'selected_items') . '(' . ($offset + 1) . '-' . ($offset_last + 1) . ')">';
                     $html_result .= '</td><td width="50%" align ="center" class="small">';
-                    $html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="'.$Language->getText('tracker_include_report', 'mass_change_all', (int)$total_rows).'">';
+                    $html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="' . $Language->getText('tracker_include_report', 'mass_change_all', (int) $total_rows) . '">';
                 } else {
                     $html_result .=
-                           '<a href="javascript:checkAll(1)">'.$Language->getText('tracker_include_report', 'check_all_items').'</a>'.
-                           ' - <a href="javascript:checkAll(0)">'.$Language->getText('tracker_include_report', 'clear_all_items').' </a><p>';
+                           '<a href="javascript:checkAll(1)">' . $Language->getText('tracker_include_report', 'check_all_items') . '</a>' .
+                           ' - <a href="javascript:checkAll(0)">' . $Language->getText('tracker_include_report', 'clear_all_items') . ' </a><p>';
 
                     $html_result .= '<table width= "100%"><tr><td width="60%" align ="center" class="small">';
-                    $html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="'.$Language->getText('tracker_masschange_detail', 'selected_items', array(1,(int)$total_rows)).'">';
+                    $html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="' . $Language->getText('tracker_masschange_detail', 'selected_items', array(1,(int) $total_rows)) . '">';
                 }
             }
             $html_result .= '</td></tr></table>';
@@ -606,13 +605,13 @@ class ArtifactReportHtml extends ArtifactReport
 
             // Display browse informations if any
         if ($ath->getBrowseInstructions() && $pv == 0) {
-                $html_result .=  $hp->purify($ath->getBrowseInstructions(), CODENDI_PURIFIER_FULL) ;
+                $html_result .=  $hp->purify($ath->getBrowseInstructions(), CODENDI_PURIFIER_FULL);
         }
 
             $html_result .= '
                           <FORM ACTION="" METHOD="GET" CLASS="form-inline" NAME="artifact_form">
-                          <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->group_artifact_id.'">
-                          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">';
+                          <INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . (int) $this->group_artifact_id . '">
+                          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . (int) $group_id . '">';
         if ($masschange) {
             $html_result .= '<INPUT TYPE="HIDDEN" NAME="func" VALUE="masschange">';
         } else {
@@ -621,23 +620,23 @@ class ArtifactReportHtml extends ArtifactReport
 
             $html_result .= '
                           <INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
-                          <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'. $hp->purify($advsrch, CODENDI_PURIFIER_CONVERT_HTML) .'">
-                          <INPUT TYPE="HIDDEN" NAME="msort" VALUE="'. $hp->purify($msort, CODENDI_PURIFIER_CONVERT_HTML) .'">
+                          <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="' . $hp->purify($advsrch, CODENDI_PURIFIER_CONVERT_HTML) . '">
+                          <INPUT TYPE="HIDDEN" NAME="msort" VALUE="' . $hp->purify($msort, CODENDI_PURIFIER_CONVERT_HTML) . '">
                           <BR>
                           <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
-                          <TR><TD colspan="'.(int)$this->fields_per_line.'" nowrap>';
+                          <TR><TD colspan="' . (int) $this->fields_per_line . '" nowrap>';
 
             //Show the list of available artifact reports
         if ($pv == 0) {
             $res_report = $this->getReports($this->group_artifact_id, UserManager::instance()->getCurrentUser()->getId());
             $box_name = 'report_id" onChange="document.artifact_form.go_report.click()';
-                $html_result .= '<b>'.$Language->getText('tracker_include_report', 'using_report');
+                $html_result .= '<b>' . $Language->getText('tracker_include_report', 'using_report');
                 $html_result .= html_build_select_box($res_report, $box_name, $report_id, false, '', false, '', false, '', CODENDI_PURIFIER_CONVERT_HTML);
-                $html_result .= ' <input class="btn" VALUE="'.$Language->getText('tracker_include_report', 'btn_go').'" NAME="go_report" type="submit">'.'</b>';
+                $html_result .= ' <input class="btn" VALUE="' . $Language->getText('tracker_include_report', 'btn_go') . '" NAME="go_report" type="submit">' . '</b>';
         }
 
             // Start building the URL that we use to for hyperlink in the form
-            $url = "/tracker/?atid=".(int)$this->group_artifact_id."&group_id=". (int)$group_id ."&set=".  $hp->purify($set, CODENDI_PURIFIER_CONVERT_HTML)  ."&msort=".  $hp->purify($msort, CODENDI_PURIFIER_CONVERT_HTML) ;
+            $url = "/tracker/?atid=" . (int) $this->group_artifact_id . "&group_id=" . (int) $group_id . "&set=" .  $hp->purify($set, CODENDI_PURIFIER_CONVERT_HTML)  . "&msort=" .  $hp->purify($msort, CODENDI_PURIFIER_CONVERT_HTML);
         if ($masschange) {
             $url .= '&func=masschange';
         }
@@ -645,16 +644,16 @@ class ArtifactReportHtml extends ArtifactReport
         if ($set == 'custom') {
              $url .= $pref_stg;
         } else {
-             $url .= '&advsrch='. $hp->purify($advsrch, CODENDI_PURIFIER_CONVERT_HTML) ;
+             $url .= '&advsrch=' . $hp->purify($advsrch, CODENDI_PURIFIER_CONVERT_HTML);
         }
 
             $url_nomorder = $url;
         if ($pv != 0) {
-            $url_nomorder .= "&pv=". (int)$pv;
+            $url_nomorder .= "&pv=" . (int) $pv;
         }
-            $url .= "&morder=".  $hp->purify($morder, CODENDI_PURIFIER_CONVERT_HTML) ;
+            $url .= "&morder=" .  $hp->purify($morder, CODENDI_PURIFIER_CONVERT_HTML);
 
-            $params = array('url'=>&$url);
+            $params = array('url' => &$url);
             $em = EventManager::instance();
             $em->processEvent('tracker_urlparam_processing', $params);
             $url_nomorder = $url;
@@ -669,12 +668,12 @@ class ArtifactReportHtml extends ArtifactReport
         }
 
         if ($pv == 0) {
-             $html_result .= '<small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('.$Language->getText('tracker_include_report', 'or_use').' <a href="'.
-                 $url_alternate_search.'">'. $hp->purify($text, CODENDI_PURIFIER_CONVERT_HTML) .'</a>)</small></h3><p>';
+             $html_result .= '<small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(' . $Language->getText('tracker_include_report', 'or_use') . ' <a href="' .
+                 $url_alternate_search . '">' . $hp->purify($text, CODENDI_PURIFIER_CONVERT_HTML) . '</a>)</small></h3><p>';
         }
 
             $current_user = UserManager::instance()->getCurrentUser();
-            $user_dont_want_to_see_query = $current_user->getPreference('tracker_'. (int)$this->group_artifact_id .'_hide_section_query');
+            $user_dont_want_to_see_query = $current_user->getPreference('tracker_' . (int) $this->group_artifact_id . '_hide_section_query');
             $html_result .= '</TABLE>';
             // Display query fields
         if ($pv != 2) {
@@ -688,7 +687,7 @@ class ArtifactReportHtml extends ArtifactReport
             $onclick .= "if ($('artifacts_query').visible()) { this.firstChild.src.replace(/minus.png/, 'plus.png'); } else {this.firstChild.src.replace(/plus.png/, 'minus.png');}";
             $onclick .= "new Effect.toggle($('artifacts_query'), 'slide', {duration:0.1});";
             $onclick .= "return false;";
-            $html_result .= '<a href="'. $url .'&amp;func=toggle_section&amp;section=query" onclick="'. $onclick .'">';
+            $html_result .= '<a href="' . $url . '&amp;func=toggle_section&amp;section=query" onclick="' . $onclick . '">';
             if ($user_dont_want_to_see_query) {
                 $image = 'ic/toggle_plus.png';
             } else {
@@ -696,27 +695,27 @@ class ArtifactReportHtml extends ArtifactReport
             }
             $html_result .= $GLOBALS['HTML']->getimage($image);
             $html_result .= '</a>';
-            $html_result .= $Language->getText('tracker_include_report', 'query') .'</legend>';
+            $html_result .= $Language->getText('tracker_include_report', 'query') . '</legend>';
             $html_result .= '<div id="artifacts_query" style="padding-left:16px;">';
             if (!$user_dont_want_to_see_query) {
                 $html_result .= $this->displayQueryFields($prefs, $advsrch, $pv);
-                $html_result .= '<div style="text-align:left"><br><input class="btn" type="submit" value="'.$Language->getText('global', 'btn_submit').'" /></div>';
+                $html_result .= '<div style="text-align:left"><br><input class="btn" type="submit" value="' . $Language->getText('global', 'btn_submit') . '" /></div>';
             }
             $html_result .= '</div></fieldset><br>';
         }
 
             // Finally display the result table
-            $user_dont_want_to_see_results = $current_user->getPreference('tracker_'. (int)$this->group_artifact_id .'_hide_section_results');
+            $user_dont_want_to_see_results = $current_user->getPreference('tracker_' . (int) $this->group_artifact_id . '_hide_section_results');
             $totalrows = $this->selectReportItems($prefs, $morder, $advsrch, $aids); // Filter according to permissions
 
         if ($totalrows > 0) {
             // Build the sorting header messages
             if ($pv != 2) {
                 if ($morder) {
-                        $order_statement = $Language->getText('tracker_include_report', 'sorted_by').
-                            ' : '.$this->criteriaListToText($morder, $url_nomorder);
+                        $order_statement = $Language->getText('tracker_include_report', 'sorted_by') .
+                            ' : ' . $this->criteriaListToText($morder, $url_nomorder);
                 } else {
-                        $order_statement ='';
+                        $order_statement = '';
                 }
 
                 $html_result .= '<A name="results"></A>';
@@ -730,7 +729,7 @@ class ArtifactReportHtml extends ArtifactReport
                     $onclick .= "if ($('artifacts_result').visible()) { this.firstChild.src.replace(/minus.png/, 'plus.png'); } else {this.firstChild.src.replace(/plus.png/, 'minus.png');}";
                     $onclick .= "new Effect.toggle($('artifacts_result'), 'slide', {duration:0.1});";
                     $onclick .= "return false;";
-                    $html_result .= '<a href="'. $url .'&amp;func=toggle_section&amp;section=results" onclick="'. $onclick .'">';
+                    $html_result .= '<a href="' . $url . '&amp;func=toggle_section&amp;section=results" onclick="' . $onclick . '">';
                     if ($user_dont_want_to_see_results) {
                         $image = 'ic/toggle_plus.png';
                     } else {
@@ -739,36 +738,36 @@ class ArtifactReportHtml extends ArtifactReport
                     $html_result .= $GLOBALS['HTML']->getimage($image);
                     $html_result .= '</a>';
                 }
-                $html_result .= (int)$totalrows.' '.$Language->getText('tracker_include_report', 'matching').' '. $order_statement .'</legend>';
+                $html_result .= (int) $totalrows . ' ' . $Language->getText('tracker_include_report', 'matching') . ' ' . $order_statement . '</legend>';
                 $html_result .= '<div id="artifacts_result" style="padding-left:16px;">';
             }
             if ($pv != 2 && !$user_dont_want_to_see_results) {
                 if ($pv == 0) {
-                        $html_result .= '<p> '.$Language->getText('global', 'btn_browse') .
-                            ' <input TYPE="text" class="input-mini" name="chunksz" size="3" MAXLENGTH="5" '.
-                            'VALUE="'. (int)$chunksz.'">&nbsp;'. $hp->purify($ath->getItemName(), CODENDI_PURIFIER_CONVERT_HTML) .$Language->getText('tracker_include_report', 'at_once');
-                        $html_result .= '<P>'.$Language->getText('tracker_include_report', 'sort_results').' ';
+                        $html_result .= '<p> ' . $Language->getText('global', 'btn_browse') .
+                            ' <input TYPE="text" class="input-mini" name="chunksz" size="3" MAXLENGTH="5" ' .
+                            'VALUE="' . (int) $chunksz . '">&nbsp;' . $hp->purify($ath->getItemName(), CODENDI_PURIFIER_CONVERT_HTML) . $Language->getText('tracker_include_report', 'at_once');
+                        $html_result .= '<P>' . $Language->getText('tracker_include_report', 'sort_results') . ' ';
                         $field = $art_field_fact->getFieldFromName('severity');
                     if ($field && $field->isUsed()) {
-                        $html_result .= $Language->getText('global', 'or').' <A HREF="'.$url.'&order=severity#results"><b>'. $hp->purify($Language->getText('tracker_include_report', 'sort_sev', $field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</b></A> ';
+                        $html_result .= $Language->getText('global', 'or') . ' <A HREF="' . $url . '&order=severity#results"><b>' . $hp->purify($Language->getText('tracker_include_report', 'sort_sev', $field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . '</b></A> ';
                     }
-                        $html_result .= $Language->getText('global', 'or').' <A HREF="'.$url.'&order=#results"><b>'.$Language->getText('tracker_include_report', 'reset_sort').'</b></a>. ';
+                        $html_result .= $Language->getText('global', 'or') . ' <A HREF="' . $url . '&order=#results"><b>' . $Language->getText('tracker_include_report', 'reset_sort') . '</b></a>. ';
                 }
 
                 if ($msort) {
-                        $url_alternate_sort = str_replace('msort=1', 'msort=0', $url).
+                        $url_alternate_sort = str_replace('msort=1', 'msort=0', $url) .
                             '&order=#results';
                         $text = $Language->getText('global', 'deactivate');
                 } else {
-                        $url_alternate_sort = str_replace('msort=0', 'msort=1', $url).
+                        $url_alternate_sort = str_replace('msort=0', 'msort=1', $url) .
                     '&order=#results';
                         $text = $Language->getText('global', 'activate');
                 }
 
                 if ($pv == 0) {
-                        $html_result .= $Language->getText('tracker_include_report', 'multicolumn_sort', array($url_alternate_sort,$text)).'&nbsp;&nbsp;&nbsp;&nbsp;'.
-                            '(<a href="'.$url.'&pv=1"> <img src="'.util_get_image_theme("ic/printer.png").'" border="0">'.
-                            '&nbsp;'.$Language->getText('global', 'printer_version').'</a>)'."\n";
+                        $html_result .= $Language->getText('tracker_include_report', 'multicolumn_sort', array($url_alternate_sort,$text)) . '&nbsp;&nbsp;&nbsp;&nbsp;' .
+                            '(<a href="' . $url . '&pv=1"> <img src="' . util_get_image_theme("ic/printer.png") . '" border="0">' .
+                            '&nbsp;' . $Language->getText('global', 'printer_version') . '</a>)' . "\n";
                 }
             }
 
@@ -776,7 +775,7 @@ class ArtifactReportHtml extends ArtifactReport
                 $chunksz = 100000;
             }
             if ($pv == 2 || !$user_dont_want_to_see_results) {
-                $html_result .= $this->showResult($group_id, $prefs, $offset, $totalrows, $url, ($pv == 1 ? true:false), $chunksz, $morder, $advsrch, $aids, $masschange, $pv);
+                $html_result .= $this->showResult($group_id, $prefs, $offset, $totalrows, $url, ($pv == 1 ? true : false), $chunksz, $morder, $advsrch, $aids, $masschange, $pv);
             }
             $html_result .= '</form>';
             if ($pv != 2 && !$user_dont_want_to_see_results) {
@@ -785,14 +784,14 @@ class ArtifactReportHtml extends ArtifactReport
             }
         } else {
             $html_result .= '</form>';
-            $html_result .= '<h2>'.$Language->getText('tracker_include_report', 'no_match').'</h2>';
+            $html_result .= '<h2>' . $Language->getText('tracker_include_report', 'no_match') . '</h2>';
             $html_result .= db_error();
         }
             $html_result .= '</div></fieldset>';
             echo $html_result;
 
             $em = EventManager::instance();
-            $em->processEvent('tracker_after_report', array('group_id' => $group_id, 'atid' => (int)$this->group_artifact_id, 'url' => $url));
+            $em->processEvent('tracker_after_report', array('group_id' => $group_id, 'atid' => (int) $this->group_artifact_id, 'url' => $url));
     }
 
         /**
@@ -831,11 +830,11 @@ class ArtifactReportHtml extends ArtifactReport
         if (($scope != 'S') && ($scope != 'I')) {
             switch ($default_val) {
                 case 0:
-                    return '<a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'&update_default='.$report_id.'">'.$GLOBALS['Language']->getText('tracker_include_report', 'set_default').'</a>';
+                    return '<a href="/tracker/admin/?func=report&group_id=' . $group_id . '&atid=' . $atid . '&update_default=' . $report_id . '">' . $GLOBALS['Language']->getText('tracker_include_report', 'set_default') . '</a>';
                 case 1:
-                    return '<b>'.$GLOBALS['Language']->getText('tracker_include_report', 'is_default').'</b>';
+                    return '<b>' . $GLOBALS['Language']->getText('tracker_include_report', 'is_default') . '</b>';
                 default:
-                    return '<a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'&update_default='.$report_id.'">'.$GLOBALS['Language']->getText('tracker_include_report', 'set_default').'</a>';
+                    return '<a href="/tracker/admin/?func=report&group_id=' . $group_id . '&atid=' . $atid . '&update_default=' . $report_id . '">' . $GLOBALS['Language']->getText('tracker_include_report', 'set_default') . '</a>';
             }
         } else {
             return '<b>-</b>';
@@ -858,57 +857,57 @@ class ArtifactReportHtml extends ArtifactReport
             $group_id = $g->getID();
             $atid = $ath->getID();
 
-            $ath->adminHeader(array ('title'=>$Language->getText('tracker_include_report', 'report_mgmt'),
+            $ath->adminHeader(array ('title' => $Language->getText('tracker_include_report', 'report_mgmt'),
                                 'help' => 'tracker-v3.html#tracker-report-management'));
             $trackerName = $ath->getName();
 
-            echo '<H2>'.$Language->getText('tracker_import_admin', 'tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">';
+            echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">';
             echo $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML);
-            echo '</a>\''.$Language->getText('tracker_include_report', 'report_admin').'</H2>';
+            echo '</a>\'' . $Language->getText('tracker_include_report', 'report_admin') . '</H2>';
 
         if ($reports) {
        // Loop through the list of all artifact report
-            $title_arr=array();
-            $title_arr[]=$Language->getText('tracker_include_report', 'id');
-            $title_arr[]=$Language->getText('tracker_include_report', 'report_name');
-            $title_arr[]=$Language->getText('tracker_include_artifact', 'desc');
-            $title_arr[]=$Language->getText('tracker_include_report', 'scope');
+            $title_arr = array();
+            $title_arr[] = $Language->getText('tracker_include_report', 'id');
+            $title_arr[] = $Language->getText('tracker_include_report', 'report_name');
+            $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
+            $title_arr[] = $Language->getText('tracker_include_report', 'scope');
             if ($ath->userIsAdmin()) {
-                    $title_arr[]=$Language->getText('tracker_include_report', 'default');
+                    $title_arr[] = $Language->getText('tracker_include_report', 'default');
             }
-               $title_arr[]=$Language->getText('tracker_include_canned', 'delete');
+               $title_arr[] = $Language->getText('tracker_include_canned', 'delete');
 
-               echo '<p>'.$Language->getText('tracker_include_report', 'mod');
+               echo '<p>' . $Language->getText('tracker_include_report', 'mod');
                echo html_build_list_table_top($title_arr);
-               $i=0;
+               $i = 0;
             while ($arr = db_fetch_array($reports)) {
-                  echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
+                  echo '<TR class="' . util_get_alt_row_color($i) . '"><TD>';
 
-                if ($arr['scope'] == 'S' || (!$ath->userIsAdmin()&&($arr['scope'] == 'P'))) {
-                    echo (int)$arr['report_id'];
+                if ($arr['scope'] == 'S' || (!$ath->userIsAdmin() && ($arr['scope'] == 'P'))) {
+                    echo (int) $arr['report_id'];
                 } else {
-                            echo '<A HREF="/tracker/admin/?func=report&group_id='.(int)$group_id.
-                        '&show_report=1&report_id='.(int)$arr['report_id'].'&group_id='.(int)$group_id.'&atid='.(int)$ath->getID().'">'.
-                         $hp->purify($arr['report_id'], CODENDI_PURIFIER_CONVERT_HTML) .'</A>';
+                            echo '<A HREF="/tracker/admin/?func=report&group_id=' . (int) $group_id .
+                        '&show_report=1&report_id=' . (int) $arr['report_id'] . '&group_id=' . (int) $group_id . '&atid=' . (int) $ath->getID() . '">' .
+                         $hp->purify($arr['report_id'], CODENDI_PURIFIER_CONVERT_HTML) . '</A>';
                 }
 
-                    echo "</td><td>". $hp->purify($arr['name'], CODENDI_PURIFIER_CONVERT_HTML) .'</td>'.
-                  "<td>". $hp->purify($arr['description'], CODENDI_PURIFIER_BASIC, $group_id) .'</td>'.
-                  '<td align="center">'. $hp->purify($this->getScopeLabel($arr['scope']), CODENDI_PURIFIER_CONVERT_HTML) .'</td>';
+                    echo "</td><td>" . $hp->purify($arr['name'], CODENDI_PURIFIER_CONVERT_HTML) . '</td>' .
+                  "<td>" . $hp->purify($arr['description'], CODENDI_PURIFIER_BASIC, $group_id) . '</td>' .
+                  '<td align="center">' . $hp->purify($this->getScopeLabel($arr['scope']), CODENDI_PURIFIER_CONVERT_HTML) . '</td>';
 
                   $name = $arr['name'];
 
                 if ($ath->userIsAdmin()) {
-                    echo "\n<td align=\"center\">".$this->getDefaultLink($arr['is_default'], $arr['scope'], $arr['report_id']).'</td>';
+                    echo "\n<td align=\"center\">" . $this->getDefaultLink($arr['is_default'], $arr['scope'], $arr['report_id']) . '</td>';
                 }
                     echo "\n<td align=\"center\">";
-                if ($arr['scope'] == 'S' || (!$ath->userIsAdmin()&&($arr['scope'] == 'P'))) {
+                if ($arr['scope'] == 'S' || (!$ath->userIsAdmin() && ($arr['scope'] == 'P'))) {
                       echo '-';
                 } else {
-                    echo '<A HREF="/tracker/admin/?func=report&group_id='.(int)$group_id.
-                        '&atid='.(int)$atid.'&delete_report=1&report_id='.(int)$arr['report_id'].
-                        '" onClick="return confirm(\''.$Language->getText('tracker_include_report', 'delete_report', $hp->purify(addslashes($name), CODENDI_PURIFIER_CONVERT_HTML)).'\');">'.
-                            '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A>';
+                    echo '<A HREF="/tracker/admin/?func=report&group_id=' . (int) $group_id .
+                        '&atid=' . (int) $atid . '&delete_report=1&report_id=' . (int) $arr['report_id'] .
+                        '" onClick="return confirm(\'' . $Language->getText('tracker_include_report', 'delete_report', $hp->purify(addslashes($name), CODENDI_PURIFIER_CONVERT_HTML)) . '\');">' .
+                            '<img src="' . util_get_image_theme("ic/trash.png") . '" border="0"></A>';
                 }
 
                     echo '</td></tr>';
@@ -916,10 +915,10 @@ class ArtifactReportHtml extends ArtifactReport
             }
                     echo '</TABLE>';
         } else {
-            echo '<p><h3>'.$Language->getText('tracker_include_report', 'no_rep_def').'</h3>';
+            echo '<p><h3>' . $Language->getText('tracker_include_report', 'no_rep_def') . '</h3>';
         }
 
-        echo '<P> '.$Language->getText('tracker_include_report', 'create_report', array('/tracker/admin/?func=report&group_id='.(int)$group_id.'&atid='.(int)$atid.'&new_report=1'));
+        echo '<P> ' . $Language->getText('tracker_include_report', 'create_report', array('/tracker/admin/?func=report&group_id=' . (int) $group_id . '&atid=' . (int) $atid . '&new_report=1'));
     }
 
         /**
@@ -936,49 +935,49 @@ class ArtifactReportHtml extends ArtifactReport
             $group_id = $g->getID();
             $atid = $ath->getID();
 
-            $ath->adminHeader(array ('title'=>$Language->getText('tracker_include_report', 'create_rep'),
+            $ath->adminHeader(array ('title' => $Language->getText('tracker_include_report', 'create_rep'),
                                 'help' => 'tracker-v3.html#tracker-report-setting'));
 
-        echo '<H2>'.$Language->getText('tracker_import_admin', 'tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</a>\'  - '.$Language->getText('tracker_include_report', 'create_rep').' </H2>';
+        echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\'  - ' . $Language->getText('tracker_include_report', 'create_rep') . ' </H2>';
 
         // display the table of all fields that can be included in the report
-        $title_arr=array();
-        $title_arr[]=$Language->getText('tracker_include_report', 'field_label');
-        $title_arr[]=$Language->getText('tracker_include_artifact', 'desc');
-        $title_arr[]=$Language->getText('tracker_include_report', 'search_crit');
-        $title_arr[]=$Language->getText('tracker_include_report', 'rank_search');
-        $title_arr[]=$Language->getText('tracker_include_report', 'rep_col');
-        $title_arr[]=$Language->getText('tracker_include_report', 'rank_repo');
-        $title_arr[]=$Language->getText('tracker_include_report', 'col_width');
+        $title_arr = array();
+        $title_arr[] = $Language->getText('tracker_include_report', 'field_label');
+        $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
+        $title_arr[] = $Language->getText('tracker_include_report', 'search_crit');
+        $title_arr[] = $Language->getText('tracker_include_report', 'rank_search');
+        $title_arr[] = $Language->getText('tracker_include_report', 'rep_col');
+        $title_arr[] = $Language->getText('tracker_include_report', 'rank_repo');
+        $title_arr[] = $Language->getText('tracker_include_report', 'col_width');
 
         echo'
                 <FORM ACTION="/tracker/admin/" METHOD="POST">
                    <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
                    <INPUT TYPE="HIDDEN" NAME="create_report" VALUE="y">
-                   <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
-                   <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$atid.'">
+                   <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . (int) $group_id . '">
+                   <INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . (int) $atid . '">
                    <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
-                   <B>'.$Language->getText('tracker_include_artifact', 'name').':</B>
+                   <B>' . $Language->getText('tracker_include_artifact', 'name') . ':</B>
                    <INPUT TYPE="TEXT" NAME="rep_name" VALUE="" CLASS="textfield_small" MAXLENGTH="80">
-                   &nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report', 'scope').': </B>';
+                   &nbsp;&nbsp;&nbsp;&nbsp;<B>' . $Language->getText('tracker_include_report', 'scope') . ': </B>';
 
         if ($ath->userIsAdmin()) {
                     echo '<SELECT ID="rep_scope" NAME="rep_scope" onchange="if (document.getElementById(\'rep_scope\').value == \'P\') {document.getElementById(\'rep_default\').disabled=false} else { document.getElementById(\'rep_default\').disabled=true;document.getElementById(\'rep_default\').checked=false }">
-                                        <OPTION VALUE="I">'.$Language->getText('global', 'Personal').'</OPTION>
-                                        <OPTION VALUE="P">'.$Language->getText('global', 'Project').'</OPTION>
+                                        <OPTION VALUE="I">' . $Language->getText('global', 'Personal') . '</OPTION>
+                                        <OPTION VALUE="P">' . $Language->getText('global', 'Project') . '</OPTION>
                                         </SELECT>';
-                    echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report', 'default').':</B>'.'<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" DISABLED>';
+                    echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>' . $Language->getText('tracker_include_report', 'default') . ':</B>' . '<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" DISABLED>';
         } else {
-                    echo $Language->getText('global', 'Personal').' <INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="I">';
-                    echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report', 'default').':</B>'.'<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" DISABLED>';
+                    echo $Language->getText('global', 'Personal') . ' <INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="I">';
+                    echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>' . $Language->getText('tracker_include_report', 'default') . ':</B>' . '<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" DISABLED>';
         }
         echo ' <P>
-                    <B>'.$Language->getText('tracker_include_artifact', 'desc').': </B>
+                    <B>' . $Language->getText('tracker_include_artifact', 'desc') . ': </B>
                      <INPUT TYPE="TEXT" NAME="rep_desc" VALUE="" SIZE="50" MAXLENGTH="120">
                           <P>';
 
         echo html_build_list_table_top($title_arr);
-        $i=0;
+        $i = 0;
         $aff = new ArtifactFieldFactory($ath);
 
         $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
@@ -988,7 +987,7 @@ class ArtifactReportHtml extends ArtifactReport
         foreach ($used_fieldsets as $fieldset_id => $fieldset) {
                 $used_fields = $fieldset->getAllUsedFields();
                 echo '<TR class="fieldset_separator">';
-                echo '<TD colspan="7">'.$fieldset->getLabel().'</TD>';
+                echo '<TD colspan="7">' . $fieldset->getLabel() . '</TD>';
                 echo '</TR>';
             foreach ($used_fields as $field) {
              // Do not show fields not used by the project
@@ -1009,26 +1008,26 @@ class ArtifactReportHtml extends ArtifactReport
                     continue;
                 }
 
-                    $cb_search = 'CBSRCH_'.$field->getName();
-                    $cb_report = 'CBREP_'.$field->getName();
-                    $tf_search = 'TFSRCH_'.$field->getName();
-                    $tf_report = 'TFREP_'.$field->getName();
-                    $tf_colwidth = 'TFCW_'.$field->getName();
-                    echo '<TR class="'. util_get_alt_row_color($i) .'">';
+                    $cb_search = 'CBSRCH_' . $field->getName();
+                    $cb_report = 'CBREP_' . $field->getName();
+                    $tf_search = 'TFSRCH_' . $field->getName();
+                    $tf_report = 'TFREP_' . $field->getName();
+                    $tf_colwidth = 'TFCW_' . $field->getName();
+                    echo '<TR class="' . util_get_alt_row_color($i) . '">';
 
-                    echo "\n<td>".$field->label.'</td>'.
-                 "\n<td>".$field->description.'</td>'.
-                 "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1"></td>'.
-                 "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="" size="5" maxlen="5"></td>'.
-                 "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1"></td>'.
-                 "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="" size="5" maxlen="5"></td>'.
-                 "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="" size="5" maxlen="5"></td>'.
+                    echo "\n<td>" . $field->label . '</td>' .
+                 "\n<td>" . $field->description . '</td>' .
+                 "\n<td align=\"center\">" . '<input type="checkbox" name="' . $cb_search . '" value="1"></td>' .
+                 "\n<td align=\"center\">" . '<input type="text" name="' . $tf_search . '" value="" size="5" maxlen="5"></td>' .
+                 "\n<td align=\"center\">" . '<input type="checkbox" name="' . $cb_report . '" value="1"></td>' .
+                 "\n<td align=\"center\">" . '<input type="text" name="' . $tf_report . '" value="" size="5" maxlen="5"></td>' .
+                 "\n<td align=\"center\">" . '<input type="text" name="' . $tf_colwidth . '" value="" size="5" maxlen="5"></td>' .
                  '</tr>';
                     $i++;
             }
         }
-        echo '</TABLE>'.
-            '<P><CENTER><INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global', 'btn_submit').'"></CENTER>'.
+        echo '</TABLE>' .
+            '<P><CENTER><INPUT TYPE="SUBMIT" VALUE="' . $Language->getText('global', 'btn_submit') . '"></CENTER>' .
             '</FORM>';
     }
 
@@ -1046,55 +1045,55 @@ class ArtifactReportHtml extends ArtifactReport
             $group_id = $g->getID();
             $atid = $ath->getID();
 
-            $ath->adminHeader(array ('title'=>$Language->getText('tracker_include_report', 'modify_report'),
+            $ath->adminHeader(array ('title' => $Language->getText('tracker_include_report', 'modify_report'),
                                 'help' => 'tracker-v3.html#tracker-report-setting'));
 
-        echo '<H2>'.$Language->getText('tracker_import_admin', 'tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</a>\' -  '.$Language->getText('tracker_include_report', 'modify_report').' \''. $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'\'</H2>';
+        echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\' -  ' . $Language->getText('tracker_include_report', 'modify_report') . ' \'' . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '\'</H2>';
 
         // display the table of all fields that can be included in the report
         // along with their current state in this report
-        $title_arr=array();
-        $title_arr[]=$Language->getText('tracker_include_report', 'field_label');
-        $title_arr[]=$Language->getText('tracker_include_artifact', 'desc');
-        $title_arr[]=$Language->getText('tracker_include_report', 'search_crit');
-        $title_arr[]=$Language->getText('tracker_include_report', 'rank_search');
-        $title_arr[]=$Language->getText('tracker_include_report', 'rep_col');
-        $title_arr[]=$Language->getText('tracker_include_report', 'rank_repo');
-        $title_arr[]=$Language->getText('tracker_include_report', 'col_width');
+        $title_arr = array();
+        $title_arr[] = $Language->getText('tracker_include_report', 'field_label');
+        $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
+        $title_arr[] = $Language->getText('tracker_include_report', 'search_crit');
+        $title_arr[] = $Language->getText('tracker_include_report', 'rank_search');
+        $title_arr[] = $Language->getText('tracker_include_report', 'rep_col');
+        $title_arr[] = $Language->getText('tracker_include_report', 'rank_repo');
+        $title_arr[] = $Language->getText('tracker_include_report', 'col_width');
 
         echo '<FORM ACTION="/tracker/admin/" METHOD="POST">
                    <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
                    <INPUT TYPE="HIDDEN" NAME="update_report" VALUE="y">
-                   <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$atid.'">
-                   <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
-                   <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="'.(int)$this->report_id.'">
+                   <INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . (int) $atid . '">
+                   <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . (int) $group_id . '">
+                   <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="' . (int) $this->report_id . '">
                    <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
-                   <B>'.$Language->getText('tracker_include_artifact', 'name').': </B>
-                   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="'. $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'" CLASS="textfield_small" MAXLENGTH="80">
-                         &nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report', 'scope').': </B>';
+                   <B>' . $Language->getText('tracker_include_artifact', 'name') . ': </B>
+                   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="' . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '" CLASS="textfield_small" MAXLENGTH="80">
+                         &nbsp;&nbsp;&nbsp;&nbsp;<B>' . $Language->getText('tracker_include_report', 'scope') . ': </B>';
         $scope = $this->scope;
         if ($ath->userIsAdmin()) {
                     echo '<SELECT ID="rep_scope" NAME="rep_scope" onchange="if (document.getElementById(\'rep_scope\').value == \'P\') {document.getElementById(\'rep_default\').disabled=false} else { document.getElementById(\'rep_default\').disabled=true;document.getElementById(\'rep_default\').checked=false }" >
-                                        <OPTION VALUE="I"'.($scope=='I' ? 'SELECTED':'').'>'.$Language->getText('global', 'Personal').'</OPTION>
-                                        <OPTION VALUE="P"'.($scope=='P' ? 'SELECTED':'').'>'.$Language->getText('global', 'Project').'</OPTION>
+                                        <OPTION VALUE="I"' . ($scope == 'I' ? 'SELECTED' : '') . '>' . $Language->getText('global', 'Personal') . '</OPTION>
+                                        <OPTION VALUE="P"' . ($scope == 'P' ? 'SELECTED' : '') . '>' . $Language->getText('global', 'Project') . '</OPTION>
                                         </SELECT>';
-                    echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report', 'default').':</B>'.'<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" '.($this->is_default == 1 ? 'CHECKED':'').' '.($this->scope != 'P' ? 'DISABLED':'').'>';
+                    echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>' . $Language->getText('tracker_include_report', 'default') . ':</B>' . '<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" ' . ($this->is_default == 1 ? 'CHECKED' : '') . ' ' . ($this->scope != 'P' ? 'DISABLED' : '') . '>';
         } else {
-                    echo ($scope=='P' ? $Language->getText('global', 'Project'):$Language->getText('global', 'Personal')).
-                        '<INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="'. $hp->purify($scope, CODENDI_PURIFIER_CONVERT_HTML) .'">';
-                    echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report', 'default').':</B>'.'<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" '.($this->is_default == 1 ? 'CHECKED':'').' DISABLED >';
+                    echo ($scope == 'P' ? $Language->getText('global', 'Project') : $Language->getText('global', 'Personal')) .
+                        '<INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="' . $hp->purify($scope, CODENDI_PURIFIER_CONVERT_HTML) . '">';
+                    echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>' . $Language->getText('tracker_include_report', 'default') . ':</B>' . '<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" ' . ($this->is_default == 1 ? 'CHECKED' : '') . ' DISABLED >';
         }
         echo '
                     <P>
-                    <B>'.$Language->getText('tracker_include_artifact', 'desc').':</B>
-                    <INPUT TYPE="TEXT" NAME="rep_desc" VALUE="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" SIZE="50" MAXLENGTH="120">
+                    <B>' . $Language->getText('tracker_include_artifact', 'desc') . ':</B>
+                    <INPUT TYPE="TEXT" NAME="rep_desc" VALUE="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '" SIZE="50" MAXLENGTH="120">
                           <P>';
 
         echo html_build_list_table_top($title_arr);
 
         // Write all the fields, grouped by fieldsetset and ordered by rank.
 
-        $i=0;
+        $i = 0;
         $aff = new ArtifactFieldFactory($ath);
 
         $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
@@ -1104,7 +1103,7 @@ class ArtifactReportHtml extends ArtifactReport
         foreach ($used_fieldsets as $fieldset_id => $fieldset) {
                 $used_fields = $fieldset->getAllUsedFields();
                 echo '<TR class="fieldset_separator">';
-                echo '<TD colspan="7">'.$fieldset->getLabel().'</TD>';
+                echo '<TD colspan="7">' . $fieldset->getLabel() . '</TD>';
                 echo '</TR>';
             foreach ($used_fields as $field) {
              // Do not show fields not used by the project
@@ -1124,11 +1123,11 @@ class ArtifactReportHtml extends ArtifactReport
                 if (!$ath->userIsAdmin() && !$field->userCanRead($group_id, $this->group_artifact_id)) {
                     continue;
                 }
-                    $cb_search = 'CBSRCH_'.$field->getName();
-                    $cb_report = 'CBREP_'.$field->getName();
-                    $tf_search = 'TFSRCH_'.$field->getName();
-                    $tf_report = 'TFREP_'.$field->getName();
-                    $tf_colwidth = 'TFCW_'.$field->getName();
+                    $cb_search = 'CBSRCH_' . $field->getName();
+                    $cb_report = 'CBREP_' . $field->getName();
+                    $tf_search = 'TFSRCH_' . $field->getName();
+                    $tf_report = 'TFREP_' . $field->getName();
+                    $tf_colwidth = 'TFCW_' . $field->getName();
 
                     $rep_field = null;
                 if (isset($this->fields[$field->getName()])) {
@@ -1138,28 +1137,28 @@ class ArtifactReportHtml extends ArtifactReport
                     $rep_field = new ArtifactReportField();
                 }
 
-                    $cb_search_chk = ($rep_field->isShowOnQuery() ? 'CHECKED':'');
-                    $cb_report_chk = ($rep_field->isShowOnResult() ? 'CHECKED':'');
+                    $cb_search_chk = ($rep_field->isShowOnQuery() ? 'CHECKED' : '');
+                    $cb_report_chk = ($rep_field->isShowOnResult() ? 'CHECKED' : '');
                     $tf_search_val = $rep_field->getPlaceQuery();
                     $tf_report_val = $rep_field->getPlaceResult();
                     $tf_colwidth_val = $rep_field->getColWidth();
 
-                    echo '<TR class="'. util_get_alt_row_color($i) .'">';
+                    echo '<TR class="' . util_get_alt_row_color($i) . '">';
 
-                    echo "\n<td>".$field->getLabel().'</td>'.
-                 "\n<td>".$field->getDescription().'</td>'.
-                 "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1" '.$cb_search_chk.' ></td>'.
-                 "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="'.$tf_search_val.'" size="5" maxlen="5"></td>'.
-                 "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1" '.$cb_report_chk.' ></td>'.
-                 "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="'.$tf_report_val.'" size="5" maxlen="5"></td>'.
-                 "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="'.$tf_colwidth_val.'" size="5" maxlen="5"></td>'.
+                    echo "\n<td>" . $field->getLabel() . '</td>' .
+                 "\n<td>" . $field->getDescription() . '</td>' .
+                 "\n<td align=\"center\">" . '<input type="checkbox" name="' . $cb_search . '" value="1" ' . $cb_search_chk . ' ></td>' .
+                 "\n<td align=\"center\">" . '<input type="text" name="' . $tf_search . '" value="' . $tf_search_val . '" size="5" maxlen="5"></td>' .
+                 "\n<td align=\"center\">" . '<input type="checkbox" name="' . $cb_report . '" value="1" ' . $cb_report_chk . ' ></td>' .
+                 "\n<td align=\"center\">" . '<input type="text" name="' . $tf_report . '" value="' . $tf_report_val . '" size="5" maxlen="5"></td>' .
+                 "\n<td align=\"center\">" . '<input type="text" name="' . $tf_colwidth . '" value="' . $tf_colwidth_val . '" size="5" maxlen="5"></td>' .
                  '</TR>';
                     $i++;
             }
         }
 
-        echo '</TABLE>'.
-            '<P><CENTER><INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global', 'btn_submit').'"></CENTER>'.
+        echo '</TABLE>' .
+            '<P><CENTER><INPUT TYPE="SUBMIT" VALUE="' . $Language->getText('global', 'btn_submit') . '"></CENTER>' .
             '</FORM>';
     }
 }

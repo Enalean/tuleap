@@ -84,7 +84,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     public function display(Codendi_Request $request)
     {
         $title         = dgettext('tuleap-git', 'Git');
-        $template_path = dirname(GIT_BASE_DIR).'/templates';
+        $template_path = dirname(GIT_BASE_DIR) . '/templates';
         $presenter     = null;
 
         switch ($request->get('action')) {
@@ -321,7 +321,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     private function redirectToEditFormWithError($mirror_id, $message)
     {
         $GLOBALS['Response']->addFeedback('error', $message);
-        $GLOBALS['Response']->redirect("?pane=mirrors_admin&action=show-edit-mirror&mirror_id=".$mirror_id);
+        $GLOBALS['Response']->redirect("?pane=mirrors_admin&action=show-edit-mirror&mirror_id=" . $mirror_id);
     }
 
     private function deleteMirror(Codendi_Request $request)

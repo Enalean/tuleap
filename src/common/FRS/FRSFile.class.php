@@ -222,7 +222,7 @@ class FRSFile
             $group = $this->getGroup();
             $group_unix_name = $group->getUnixName(false);
             $basename = $this->getFilePath();
-            $this->file_location = $GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$basename;
+            $this->file_location = $GLOBALS['ftp_frs_dir_prefix'] . '/' . $group_unix_name . '/' . $basename;
         }
         return $this->file_location;
     }
@@ -562,19 +562,19 @@ class FRSFile
         $tooltip .= '<table>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'filename') . ':</strong></td>';
-        $tooltip .= '  <td>'.$html_purifier->purify(basename($this->getFileName())).'</td>';
+        $tooltip .= '  <td>' . $html_purifier->purify(basename($this->getFileName())) . '</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_ref_tooltip', 'package_release') . ':</strong></td>';
-        $tooltip .= '  <td>'.$html_purifier->purify($package->getName().' / '.$release->getName()).'</td>';
+        $tooltip .= '  <td>' . $html_purifier->purify($package->getName() . ' / ' . $release->getName()) . '</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
-        $tooltip .= '  <td>'.$html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $release->getReleaseDate())).'</td>';
+        $tooltip .= '  <td>' . $html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $release->getReleaseDate())) . '</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'size') . ':</strong></td>';
-        $tooltip .= '  <td>'.$html_purifier->purify($this->getDisplayFileSize()).'</td>';
+        $tooltip .= '  <td>' . $html_purifier->purify($this->getDisplayFileSize()) . '</td>';
         $tooltip .= ' </tr>';
         $tooltip .= '</table>';
         return $tooltip;

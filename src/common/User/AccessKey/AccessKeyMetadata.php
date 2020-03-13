@@ -76,7 +76,6 @@ class AccessKeyMetadata
         ?\DateTimeImmutable $expiration_date,
         array $scopes
     ) {
-
         $this->id               = $id;
         $this->creation_date    = $creation_date;
         $this->expiration_date  = $expiration_date;

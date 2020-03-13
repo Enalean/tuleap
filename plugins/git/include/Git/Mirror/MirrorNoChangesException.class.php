@@ -20,4 +20,4 @@
 
 class Git_Mirror_MirrorNoChangesException extends Exception
 {
-};
+}

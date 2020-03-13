@@ -105,7 +105,6 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function getName()
     {
-
         $utils = $this->getUtils();
         return $this->getProject()->getUnixName();
     }
@@ -118,7 +117,6 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function getLastModified()
     {
-
         return 0;
     }
 
@@ -129,7 +127,6 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function getProject()
     {
-
         return $this->project;
     }
 
@@ -140,7 +137,6 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function getGroupId()
     {
-
         return $this->getProject()->getGroupId();
     }
 
@@ -151,7 +147,6 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function getUser()
     {
-
         return $this->user;
     }
 
@@ -162,7 +157,6 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function getUtils()
     {
-
         return WebDAVUtils::getInstance();
     }
 
@@ -183,7 +177,6 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function exist()
     {
-
         // D refers to deleted
         return !$this->getProject()->isError() && $this->getProject()->getStatus() != 'D';
     }
@@ -195,7 +188,6 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function isActive()
     {
-
         return $this->getProject()->isActive();
     }
 
@@ -216,7 +208,6 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function usesFile()
     {
-
         return $this->getProject()->usesFile();
     }
 

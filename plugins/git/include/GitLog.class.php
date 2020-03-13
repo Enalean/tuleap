@@ -127,8 +127,8 @@ class GitLog
     private function getDateFilter($span)
     {
         $start_date = new DateTime();
-        $start_date->sub(new DateInterval('P'.$span.'D'));
+        $start_date->sub(new DateInterval('P' . $span . 'D'));
 
-        return 'log.day >= '.$this->data_access->quoteSmart($start_date->format('Ymd'));
+        return 'log.day >= ' . $this->data_access->quoteSmart($start_date->format('Ymd'));
     }
 }

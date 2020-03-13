@@ -35,7 +35,6 @@ class Codendi_DiffTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testHtmlUnifiedDiffFormatterNoChanges()
     {
-
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
 
         $this->assertEquals(
@@ -46,25 +45,24 @@ class Codendi_DiffTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testHtmlUnifiedDiffFormatterLineModified()
     {
-
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
         $this->assertEquals(
-            '<div class="block">'.
-                                    '<div class="difftext">'.
-                                        '<div class="context">'.
-                                            '<tt class="prefix">&nbsp;</tt>Line 1&nbsp;'.
-                                        '</div>'.
-                                    '</div>'.
-                                    '<div class="difftext">'.
-                                        '<div class="original">'.
-                                            '<tt class="prefix">-</tt>Line 2&nbsp;'.
-                                        '</div>'.
-                                    '</div>'.
-                                    '<div class="difftext">'.
-                                        '<div class="final">'.
-                                            '<tt class="prefix">+</tt>Line 2 <ins>modified</ins>&nbsp;'.
-                                        '</div>'.
-                                    '</div>'.
+            '<div class="block">' .
+                                    '<div class="difftext">' .
+                                        '<div class="context">' .
+                                            '<tt class="prefix">&nbsp;</tt>Line 1&nbsp;' .
+                                        '</div>' .
+                                    '</div>' .
+                                    '<div class="difftext">' .
+                                        '<div class="original">' .
+                                            '<tt class="prefix">-</tt>Line 2&nbsp;' .
+                                        '</div>' .
+                                    '</div>' .
+                                    '<div class="difftext">' .
+                                        '<div class="final">' .
+                                            '<tt class="prefix">+</tt>Line 2 <ins>modified</ins>&nbsp;' .
+                                        '</div>' .
+                                    '</div>' .
             '</div>',
             $formatter->format(new Codendi_Diff($this->b, $this->c)),
         );
@@ -72,20 +70,19 @@ class Codendi_DiffTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testHtmlUnifiedDiffFormatterLineDeleted()
     {
-
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
         $this->assertEquals(
-            '<div class="block">'.
-                                    '<div class="difftext">'.
-                                        '<div class="context">'.
-                                            '<tt class="prefix">&nbsp;</tt>Line 1&nbsp;'.
-                                        '</div>'.
-                                    '</div>'.
-                                    '<div class="difftext">'.
-                                        '<div class="deleted">'.
-                                            '<tt class="prefix">-</tt><del>Line 2</del>&nbsp;'.
-                                        '</div>'.
-                                    '</div>'.
+            '<div class="block">' .
+                                    '<div class="difftext">' .
+                                        '<div class="context">' .
+                                            '<tt class="prefix">&nbsp;</tt>Line 1&nbsp;' .
+                                        '</div>' .
+                                    '</div>' .
+                                    '<div class="difftext">' .
+                                        '<div class="deleted">' .
+                                            '<tt class="prefix">-</tt><del>Line 2</del>&nbsp;' .
+                                        '</div>' .
+                                    '</div>' .
             '</div>',
             $formatter->format(new Codendi_Diff($this->b, $this->d)),
         );
@@ -93,15 +90,14 @@ class Codendi_DiffTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testHtmlUnifiedDiffFormatterLineAdded()
     {
-
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
         $this->assertEquals(
-            '<div class="block">'.
-                                    '<div class="difftext">'.
-                                        '<div class="added">'.
-                                            '<tt class="prefix">+</tt><ins>Line 1</ins>&nbsp;'.
-                                        '</div>'.
-                                    '</div>'.
+            '<div class="block">' .
+                                    '<div class="difftext">' .
+                                        '<div class="added">' .
+                                            '<tt class="prefix">+</tt><ins>Line 1</ins>&nbsp;' .
+                                        '</div>' .
+                                    '</div>' .
             '</div>',
             $formatter->format(new Codendi_Diff($this->e, $this->d)),
         );
@@ -111,26 +107,26 @@ class Codendi_DiffTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     {
         $formatter = new Codendi_HtmlUnifiedDiffFormatter(0);
         $this->assertEquals(
-            '<div class="block">'.
-                                    '<div class="difftext">'.
-                                        '<div class="original">'.
-                                            '<tt class="prefix">-</tt>Line <del>1</del>&nbsp;</div>'.
-                                    '</div>'.
-                                    '<div class="difftext">'.
-                                        '<div class="final">'.
-                                            '<tt class="prefix">+</tt>Line <ins>10</ins>&nbsp;</div>'.
-                                    '</div>'.
-                                '</div>'.
-                                '<div class="block">'.
-                                    '<tt>[...]</tt>'.
-                                    '<div class="difftext">'.
-                                        '<div class="original">'.
-                                            '<tt class="prefix">-</tt>Line <del>5</del>&nbsp;</div>'.
-                                    '</div>'.
-                                    '<div class="difftext">'.
-                                        '<div class="final">'.
-                                            '<tt class="prefix">+</tt>Line <ins>50</ins>&nbsp;</div>'.
-                                    '</div>'.
+            '<div class="block">' .
+                                    '<div class="difftext">' .
+                                        '<div class="original">' .
+                                            '<tt class="prefix">-</tt>Line <del>1</del>&nbsp;</div>' .
+                                    '</div>' .
+                                    '<div class="difftext">' .
+                                        '<div class="final">' .
+                                            '<tt class="prefix">+</tt>Line <ins>10</ins>&nbsp;</div>' .
+                                    '</div>' .
+                                '</div>' .
+                                '<div class="block">' .
+                                    '<tt>[...]</tt>' .
+                                    '<div class="difftext">' .
+                                        '<div class="original">' .
+                                            '<tt class="prefix">-</tt>Line <del>5</del>&nbsp;</div>' .
+                                    '</div>' .
+                                    '<div class="difftext">' .
+                                        '<div class="final">' .
+                                            '<tt class="prefix">+</tt>Line <ins>50</ins>&nbsp;</div>' .
+                                    '</div>' .
             '</div>',
             $formatter->format(new Codendi_Diff($this->f, $this->g)),
         );

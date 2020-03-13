@@ -314,8 +314,8 @@ class Tracker_NotificationsManager
 
     private function displayAdminNotifications_Global()
     {
-        echo '<h3><a name="GlobalEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'global_mail_notif').' '.
-        help_button('tracker.html#e-mail-notification').'</h3>';
+        echo '<h3><a name="GlobalEmailNotification"></a>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'global_mail_notif') . ' ' .
+        help_button('tracker.html#e-mail-notification') . '</h3>';
 
         $notifs   = $this->getGlobalNotifications();
         $renderer = $this->getNotificationsRenderer();
@@ -342,7 +342,7 @@ class Tracker_NotificationsManager
      */
     private function getNotificationsRenderer()
     {
-        return TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates/notifications');
+        return TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates/notifications');
     }
 
     /**
@@ -688,7 +688,7 @@ class Tracker_NotificationsManager
 
     private function notificationLevelMustBeUpdated(HTTPRequest $request)
     {
-        return ((int)$this->tracker->getNotificationsLevel() !== (int)$request->get('notifications_level')) ||
+        return ((int) $this->tracker->getNotificationsLevel() !== (int) $request->get('notifications_level')) ||
             $request->exist('disable_notifications');
     }
 

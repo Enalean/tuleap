@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
+require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/MembershipCommand.class.php';
 
 class Git_Driver_Gerrit_MembershipCommand_AddBinding extends Git_Driver_Gerrit_MembershipCommand
 {

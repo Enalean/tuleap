@@ -258,7 +258,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
         $select_fields = array('artifact.id');
         $join_fields   = array();
         if (in_array(Tracker_Semantic_Title::NAME, $semantics)) {
-            $select_fields[] = 'CVT.value as '.Tracker_Semantic_Title::NAME.', CVT.body_format AS title_format';
+            $select_fields[] = 'CVT.value as ' . Tracker_Semantic_Title::NAME . ', CVT.body_format AS title_format';
             $join_fields[]   = 'LEFT JOIN (
                                   tracker_changeset_value                 AS CV0
                                   INNER JOIN tracker_semantic_title       AS ST  ON (
@@ -273,7 +273,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
         }
 
         if (in_array(Tracker_Semantic_Status::NAME, $semantics)) {
-            $select_fields[] = '(SS0.open_value_id IS NOT NULL OR SS1.open_value_id IS NULL) as '.Tracker_Semantic_Status::NAME;
+            $select_fields[] = '(SS0.open_value_id IS NOT NULL OR SS1.open_value_id IS NULL) as ' . Tracker_Semantic_Status::NAME;
             $join_fields[]   = 'LEFT JOIN (
                                     tracker_changeset_value                 AS CV1
                                     INNER JOIN tracker_semantic_status      AS SS0  ON (
@@ -291,10 +291,10 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
             $select_fields[] = '0 as status';
         }
 
-        $sql = "SELECT ".implode(',', $select_fields)."
+        $sql = "SELECT " . implode(',', $select_fields) . "
                 FROM tracker_artifact AS artifact
                     INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
-                    ".implode('', $join_fields)."
+                    " . implode('', $join_fields) . "
                 WHERE artifact.id IN ($artifact_ids)
                 GROUP by artifact.id";
         return $this->retrieve($sql);

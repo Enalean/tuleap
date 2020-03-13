@@ -156,7 +156,6 @@ class URLVerification
      */
     public function isValidServerName($server, $host)
     {
-
         return ($server['HTTP_HOST'] == $host);
     }
 
@@ -209,7 +208,7 @@ class URLVerification
     private function rewriteProtocol(HTTPRequest $request, array $server, array $chunks)
     {
         if (isset($chunks['protocol'])) {
-            $location = $chunks['protocol']."://";
+            $location = $chunks['protocol'] . "://";
         } else {
             if ($request->isSecure()) {
                 $location = "https://";
@@ -542,7 +541,7 @@ class URLVerification
      */
     public function header($location)
     {
-        header('Location: '.$location);
+        header('Location: ' . $location);
         exit;
     }
 

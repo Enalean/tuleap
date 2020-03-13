@@ -38,6 +38,6 @@ final class Docman_MIMETypeDetectorTest extends TestCase
         $filename = 'image.jpg';
         $detector = new Docman_MIMETypeDetector();
 
-        $this->assertEquals(null, $detector->getRightOfficeType($filename)) ;
+        $this->assertEquals(null, $detector->getRightOfficeType($filename));
     }
 }

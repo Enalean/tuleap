@@ -31,8 +31,8 @@ class Docman_SOAPController extends Docman_Controller
 
     /* protected */ public function _includeView()
     {
-        $className = 'Docman_View_SOAP_'. $this->view;
-        require_once('view/soap/'. $className .'.class.php');
+        $className = 'Docman_View_SOAP_' . $this->view;
+        require_once('view/soap/' . $className . '.class.php');
         return $className;
     }
 
@@ -73,7 +73,6 @@ class Docman_SOAPController extends Docman_Controller
 
     public function _dispatch($view, $item, $root, $get_show_view)
     {
-
         switch ($view) {
             case 'permissions':
                 if (!$this->userCanManage($item->getId())) {

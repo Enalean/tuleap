@@ -55,9 +55,9 @@ class Mapping implements IFindUserFromXMLReference
             return $this->getUserFromXML($xml_element);
         } catch (UserNotFoundException $exception) {
             $this->logger->error(
-                'It seems that the user referenced by '. (string) $xml_element
-                .' (format = '. (string) $xml_element['format'] .')'
-                .' does not match an existing user.'
+                'It seems that the user referenced by ' . (string) $xml_element
+                . ' (format = ' . (string) $xml_element['format'] . ')'
+                . ' does not match an existing user.'
             );
             throw $exception;
         }

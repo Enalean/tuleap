@@ -35,7 +35,7 @@ class SimpleXMLCDATAFactoryTest extends TestCase
 
         $factory->insert($xml, 'test', 'value01');
 
-        $this->assertEquals('value01', (string)$xml->test);
+        $this->assertEquals('value01', (string) $xml->test);
         $this->assertNull($xml->test['attr1']);
     }
 
@@ -46,7 +46,7 @@ class SimpleXMLCDATAFactoryTest extends TestCase
 
         $factory->insertWithAttributes($xml, 'test', 'value01', ['attr1' => 'valattr1']);
 
-        $this->assertEquals('value01', (string)$xml->test);
-        $this->assertEquals('valattr1', (string)$xml->test['attr1']);
+        $this->assertEquals('value01', (string) $xml->test);
+        $this->assertEquals('valattr1', (string) $xml->test['attr1']);
     }
 }

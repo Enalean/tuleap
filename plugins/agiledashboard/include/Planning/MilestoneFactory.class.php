@@ -303,7 +303,7 @@ class Planning_MilestoneFactory
      * @return TreeNode
      */
     public function getPlannedArtifacts(
-        PFUser             $user,
+        PFUser $user,
         Tracker_Artifact $milestone_artifact
     ) {
         if ($milestone_artifact == null) {
@@ -322,10 +322,10 @@ class Planning_MilestoneFactory
      * @param array $parents     The list of parents to prevent infinite recursion
      */
     private function addChildrenPlannedArtifacts(
-        PFUser             $user,
+        PFUser $user,
         Tracker_Artifact $artifact,
-        TreeNode         $parent_node,
-        array            $parents
+        TreeNode $parent_node,
+        array $parents
     ) {
         $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
         if (! $linked_artifacts) {
@@ -852,7 +852,6 @@ class Planning_MilestoneFactory
      */
     public function getLastMilestoneCreated(PFUser $user, $planning_id)
     {
-
         $planning  = $this->planning_factory->getPlanning($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         if (count($artifacts) > 0) {
@@ -929,7 +928,7 @@ class Planning_MilestoneFactory
             }
 
             $end_date = $this->getMilestoneEndDate($artifact, $user);
-            $milestones[$end_date.'_'.$artifact->getId()] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
+            $milestones[$end_date . '_' . $artifact->getId()] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
         }
         ksort($milestones);
         $milestones = array_values($milestones);

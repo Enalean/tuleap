@@ -113,7 +113,7 @@ class AdminController
             dgettext('tuleap-proftpd', 'Permissions will be propagated on filesystem shortly')
         );
 
-        $GLOBALS['Response']->redirect('?'.http_build_query(array(
+        $GLOBALS['Response']->redirect('?' . http_build_query(array(
             'group_id'   => $project->getID(),
             'controller' => self::NAME,
             'action'     => 'index',

@@ -51,10 +51,10 @@ class BackendSVNTest extends TuleapTestCase
         $GLOBALS['sys_name']                  = 'MyForge';
         $GLOBALS['sys_dbauth_user']           = 'dbauth_user';
         $GLOBALS['sys_dbauth_passwd']         = 'dbauth_passwd';
-        $GLOBALS['svnadmin_cmd']              = '/usr/bin/svnadmin --config-dir '. dirname(__FILE__) . '/_fixtures/.subversion';
+        $GLOBALS['svnadmin_cmd']              = '/usr/bin/svnadmin --config-dir ' . dirname(__FILE__) . '/_fixtures/.subversion';
 
         ForgeConfig::store();
-        ForgeConfig::set('sys_project_backup_path', $this->tmp_dir .'/backup');
+        ForgeConfig::set('sys_project_backup_path', $this->tmp_dir . '/backup');
         ForgeConfig::set('svn_root_file', $this->getTmpDir() . '/codendi_svnroot.conf');
         mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
         mkdir($GLOBALS['tmp_dir'], 0777, true);
@@ -62,7 +62,6 @@ class BackendSVNTest extends TuleapTestCase
 
         $this->project_manager  = mock('ProjectManager');
         $this->cache_parameters = mock('Tuleap\SvnCore\Cache\Parameters');
-        ;
 
         $this->backend = partial_mock(
             'BackendSVN',
@@ -108,22 +107,22 @@ class BackendSVNTest extends TuleapTestCase
     {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
-        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'] . '/TestProj');
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
         $this->backend->setReturnValue('getProjectManager', $pm);
 
-        $projdir=$GLOBALS['svn_prefix']."/TestProj";
+        $projdir = $GLOBALS['svn_prefix'] . "/TestProj";
 
         // Setup test data
         mkdir($projdir);
-        mkdir($projdir."/db");
+        mkdir($projdir . "/db");
 
         $this->assertEqual($this->backend->archiveProjectSVN(142), true);
         $this->assertFalse(is_dir($projdir), "Project SVN repository should be deleted");
-        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/TestProj-svn.tgz"), "SVN Archive should be created");
+        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path') . "/TestProj-svn.tgz"), "SVN Archive should be created");
 
         // Check that a wrong project id does not raise an error
         $this->assertEqual($this->backend->archiveProjectSVN(99999), false);
@@ -142,19 +141,19 @@ class BackendSVNTest extends TuleapTestCase
         $user4->setReturnValue('getUserName', 'user4');
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
-        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'] . '/TestProj');
         $project->setReturnValue('isSVNTracked', true);
         $proj_members = array("0" =>
                               array (
-                                     "user_name"=> "user1",
+                                     "user_name" => "user1",
                                      "user_id"  => "1"),
                               "1" =>
                               array (
-                                     "user_name"=> "user2",
+                                     "user_name" => "user2",
                                      "user_id"  => "2"),
                               "2" =>
                               array (
-                                     "user_name"=> "user3",
+                                     "user_name" => "user3",
                                      "user_id"  => "3"));
         $project->setReturnValue('getMembersUserNames', $proj_members);
         $project->setReturnValue('getMembers', array($user1, $user2, $user3));
@@ -164,11 +163,11 @@ class BackendSVNTest extends TuleapTestCase
 
         $ugroups = array("0" =>
                          array (
-                                "name"=> "QA",
+                                "name" => "QA",
                                 "ugroup_id"  => "104"),
                          "1" =>
                          array (
-                                "name"=> "Customers",
+                                "name" => "Customers",
                                 "ugroup_id"  => "102"));
         $ugdao = new MockUGroupDao();
         $ugdao->setReturnValue('searchByGroupId', $ugroups);
@@ -193,9 +192,9 @@ class BackendSVNTest extends TuleapTestCase
         $this->backend->setReturnValue('_getSVNAccessFile', $access_file);
 
         $this->assertEqual($this->backend->createProjectSVN(142), true);
-        $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"), "SVN dir should be created");
-        $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj/hooks"), "hooks dir should be created");
-        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/hooks/post-commit"), "post-commit file should be created");
+        $this->assertTrue(is_dir($GLOBALS['svn_prefix'] . "/TestProj"), "SVN dir should be created");
+        $this->assertTrue(is_dir($GLOBALS['svn_prefix'] . "/TestProj/hooks"), "hooks dir should be created");
+        $this->assertTrue(is_file($GLOBALS['svn_prefix'] . "/TestProj/hooks/post-commit"), "post-commit file should be created");
     }
 
     public function testUpdateSVNAccess()
@@ -212,19 +211,19 @@ class BackendSVNTest extends TuleapTestCase
         $user5->setReturnValue('getUserName', 'user5');
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
-        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'] . '/TestProj');
         $project->setReturnValue('isSVNTracked', true);
         $proj_members = array("0" =>
                               array (
-                                     "user_name"=> "user1",
+                                     "user_name" => "user1",
                                      "user_id"  => "1"),
                               "1" =>
                               array (
-                                     "user_name"=> "user2",
+                                     "user_name" => "user2",
                                      "user_id"  => "2"),
                               "2" =>
                               array (
-                                     "user_name"=> "user3",
+                                     "user_name" => "user3",
                                      "user_id"  => "3"));
         $project->setReturnValue('getMembersUserNames', $proj_members);
         $project->setReturnValue('getMembers', array($user1, $user2, $user3));
@@ -234,11 +233,11 @@ class BackendSVNTest extends TuleapTestCase
 
         $ugroups = array("0" =>
                          array (
-                                "name"=> "QA",
+                                "name" => "QA",
                                 "ugroup_id"  => "104"),
                          "1" =>
                          array (
-                                "name"=> "Customers",
+                                "name" => "Customers",
                                 "ugroup_id"  => "102"));
         $ugdao = new MockUGroupDao();
         $ugdao->setReturnValue('searchByGroupId', $ugroups);
@@ -278,14 +277,14 @@ class BackendSVNTest extends TuleapTestCase
         $this->backend->setReturnValue('_getSVNAccessFile', $access_file);
 
         $this->assertEqual($this->backend->createProjectSVN(142), true);
-        $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"), "SVN dir should be created");
-        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"), "SVN access file should be created");
+        $this->assertTrue(is_dir($GLOBALS['svn_prefix'] . "/TestProj"), "SVN dir should be created");
+        $this->assertTrue(is_file($GLOBALS['svn_prefix'] . "/TestProj/.SVNAccessFile"), "SVN access file should be created");
 
         // Update without modification
-        $this->assertEqual($this->backend->updateSVNAccess(142, $GLOBALS['svn_prefix'].'/TestProj'), true);
-        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"), "SVN access file should exist");
-        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.new"), "SVN access file (.new) should be created");
-        $this->assertFalse(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.old"), "SVN access file (.old) should not be created");
+        $this->assertEqual($this->backend->updateSVNAccess(142, $GLOBALS['svn_prefix'] . '/TestProj'), true);
+        $this->assertTrue(is_file($GLOBALS['svn_prefix'] . "/TestProj/.SVNAccessFile"), "SVN access file should exist");
+        $this->assertTrue(is_file($GLOBALS['svn_prefix'] . "/TestProj/.SVNAccessFile.new"), "SVN access file (.new) should be created");
+        $this->assertFalse(is_file($GLOBALS['svn_prefix'] . "/TestProj/.SVNAccessFile.old"), "SVN access file (.old) should not be created");
     }
 
     public function testGenerateSVNApacheConf()
@@ -318,7 +317,7 @@ class BackendSVNTest extends TuleapTestCase
         $this->backend->setReturnReference('getSVNCacheParameters', $this->cache_parameters);
 
         $this->assertEqual($this->backend->generateSVNApacheConf(), true);
-        $svnroots=file_get_contents(ForgeConfig::get('svn_root_file'));
+        $svnroots = file_get_contents(ForgeConfig::get('svn_root_file'));
 
         $this->assertFalse($svnroots === false);
         $this->assertPattern("/gpig2/", $svnroots, "Project name not found in SVN root");
@@ -333,7 +332,7 @@ class BackendSVNTest extends TuleapTestCase
 
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'toto');
-        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/toto');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'] . '/toto');
 
         $this->assertTrue($this->backend->setSVNPrivacy($project, true));
     }
@@ -345,7 +344,7 @@ class BackendSVNTest extends TuleapTestCase
 
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'toto');
-        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/toto');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'] . '/toto');
 
         $this->assertTrue($this->backend->setSVNPrivacy($project, false));
     }
@@ -358,7 +357,7 @@ class BackendSVNTest extends TuleapTestCase
 
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', $path_that_doesnt_exist);
-        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/'.$path_that_doesnt_exist);
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'] . '/' . $path_that_doesnt_exist);
 
         $this->assertFalse($this->backend->setSVNPrivacy($project, true));
         $this->assertFalse($this->backend->setSVNPrivacy($project, false));
@@ -368,7 +367,7 @@ class BackendSVNTest extends TuleapTestCase
     {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
-        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'] . '/TestProj');
         $project->setReturnValue('isSVNTracked', false);
 
         $project->setReturnValue('getMembersUserNames', array());
@@ -388,12 +387,11 @@ class BackendSVNTest extends TuleapTestCase
 
         $this->assertEqual($this->backend->renameSVNRepository($project, "foobar"), true);
 
-        $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/foobar"), "SVN dir should be renamed");
+        $this->assertTrue(is_dir($GLOBALS['svn_prefix'] . "/foobar"), "SVN dir should be renamed");
     }
 
     public function testUpdateSVNAccessForGivenMember()
     {
-
         $backend = new BackendSVNAccessTestVersion($this);
 
         // The user
@@ -442,14 +440,14 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase
     {
         parent::setUp();
         $this->tmp_dir = $this->getTmpDir();
-        $this->svn_prefix = $this->tmp_dir. '/svnroot';
+        $this->svn_prefix = $this->tmp_dir . '/svnroot';
         mkdir($this->svn_prefix . '/toto/hooks', 0777, true);
         ForgeConfig::store();
         $this->bin_dir = dirname(__FILE__) . '/_fixtures';
-        $this->fake_revprop = $this->bin_dir.'/post-revprop-change.php';
+        $this->fake_revprop = $this->bin_dir . '/post-revprop-change.php';
         ForgeConfig::set('codendi_bin_prefix', $this->bin_dir);
         $this->project = stub('Project')->getUnixName()->returns('toto');
-        stub($this->project)->getSVNRootPath()->returns($this->svn_prefix.'/toto');
+        stub($this->project)->getSVNRootPath()->returns($this->svn_prefix . '/toto');
     }
 
     public function tearDown()
@@ -464,7 +462,7 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase
     {
         $backend = partial_mock('BackendSVN', array('log', 'chgrp', 'chown'));
         $path    = $this->svn_prefix . '/toto/hooks';
-        touch($path.'/post-revprop-change');
+        touch($path . '/post-revprop-change');
 
         stub($this->project)->isSVNTracked()->returns(true);
         expect($backend)->log()->once();
@@ -472,7 +470,7 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase
         $this->expectException('BackendSVNFileForSimlinkAlreadyExistsException');
         $backend->updateHooks(
             $this->project,
-            $this->svn_prefix.'/toto',
+            $this->svn_prefix . '/toto',
             true,
             ForgeConfig::get('codendi_bin_prefix'),
             'commit-email.pl',
@@ -487,14 +485,14 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase
         $path    = $this->svn_prefix . '/toto/hooks';
 
         // Create link to fake post-revprop-change
-        symlink($this->fake_revprop, $path.'/post-revprop-change');
+        symlink($this->fake_revprop, $path . '/post-revprop-change');
 
         stub($this->project)->isSVNTracked()->returns(true);
         expect($backend)->log()->never();
 
         $backend->updateHooks(
             $this->project,
-            $this->svn_prefix.'/toto',
+            $this->svn_prefix . '/toto',
             true,
             ForgeConfig::get('codendi_bin_prefix'),
             'commit-email.pl',

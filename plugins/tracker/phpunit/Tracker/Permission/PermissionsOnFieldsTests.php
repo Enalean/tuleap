@@ -39,14 +39,14 @@ class PermissionsOnFieldsTests extends TestCase
      */
     public function testAdminCanDisplay(string $controller_class_name)
     {
-        $request = \Mockery::mock(\HTTPRequest::class, [ 'getCurrentUser' => \Mockery::mock(\PFUser::class)]);
+        $request = \Mockery::mock(\HTTPRequest::class, ['getCurrentUser' => \Mockery::mock(\PFUser::class)]);
         $tracker = \Mockery::mock(\Tracker::class, ['isActive' => true, 'userIsAdmin' => true]);
-        $tracker_factory = \Mockery::mock(\TrackerFactory::class, [ 'getTrackerById' => $tracker]);
+        $tracker_factory = \Mockery::mock(\TrackerFactory::class, ['getTrackerById' => $tracker]);
         $controller = \Mockery::mock($controller_class_name, [$tracker_factory])->makePartial()->shouldAllowMockingProtectedMethods();
 
         $controller->shouldReceive('display')->with($tracker, $request)->once();
 
-        $controller->process($request, \Mockery::mock(BaseLayout::class), [ 'id' => 23 ]);
+        $controller->process($request, \Mockery::mock(BaseLayout::class), ['id' => 23]);
     }
 
     /**
@@ -54,14 +54,14 @@ class PermissionsOnFieldsTests extends TestCase
      */
     public function testNonAdminGetsBlocked(string $controller_class_name)
     {
-        $request = \Mockery::mock(\HTTPRequest::class, [ 'getCurrentUser' => \Mockery::mock(\PFUser::class)]);
+        $request = \Mockery::mock(\HTTPRequest::class, ['getCurrentUser' => \Mockery::mock(\PFUser::class)]);
         $tracker = \Mockery::mock(\Tracker::class, ['isActive' => true, 'userIsAdmin' => false]);
-        $tracker_factory = \Mockery::mock(\TrackerFactory::class, [ 'getTrackerById' => $tracker]);
+        $tracker_factory = \Mockery::mock(\TrackerFactory::class, ['getTrackerById' => $tracker]);
         $controller = \Mockery::mock($controller_class_name, [$tracker_factory])->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->expectException(ForbiddenException::class);
 
-        $controller->process($request, \Mockery::mock(BaseLayout::class), [ 'id' => 23 ]);
+        $controller->process($request, \Mockery::mock(BaseLayout::class), ['id' => 23]);
     }
 
     /**
@@ -69,14 +69,14 @@ class PermissionsOnFieldsTests extends TestCase
      */
     public function testTrackerWasDeleted(string $controller_class_name)
     {
-        $request = \Mockery::mock(\HTTPRequest::class, [ 'getCurrentUser' => \Mockery::mock(\PFUser::class)]);
+        $request = \Mockery::mock(\HTTPRequest::class, ['getCurrentUser' => \Mockery::mock(\PFUser::class)]);
         $tracker = \Mockery::mock(\Tracker::class, ['isActive' => false, 'userIsAdmin' => true]);
-        $tracker_factory = \Mockery::mock(\TrackerFactory::class, [ 'getTrackerById' => $tracker]);
+        $tracker_factory = \Mockery::mock(\TrackerFactory::class, ['getTrackerById' => $tracker]);
         $controller = \Mockery::mock($controller_class_name, [$tracker_factory])->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->expectException(NotFoundException::class);
 
-        $controller->process($request, \Mockery::mock(BaseLayout::class), [ 'id' => 23 ]);
+        $controller->process($request, \Mockery::mock(BaseLayout::class), ['id' => 23]);
     }
 
     /**
@@ -84,14 +84,14 @@ class PermissionsOnFieldsTests extends TestCase
      */
     public function testTrackerWasNotFound(string $controller_class_name)
     {
-        $request = \Mockery::mock(\HTTPRequest::class, [ 'getCurrentUser' => \Mockery::mock(\PFUser::class)]);
+        $request = \Mockery::mock(\HTTPRequest::class, ['getCurrentUser' => \Mockery::mock(\PFUser::class)]);
         $tracker_factory = \Mockery::mock(\TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackerById')->with(23)->andReturns(null);
         $controller = \Mockery::mock($controller_class_name, [$tracker_factory])->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->expectException(NotFoundException::class);
 
-        $controller->process($request, \Mockery::mock(BaseLayout::class), [ 'id' => 23 ]);
+        $controller->process($request, \Mockery::mock(BaseLayout::class), ['id' => 23]);
     }
 
     public function controllerProvider() : array

@@ -74,7 +74,7 @@ class FRSReleaseDao extends DataAccessObject
         $sql = sprintf("SELECT r.release_id, p.name AS package_name, p.package_id, r.name AS release_name, " .
         "r.status_id " .
         "FROM frs_release AS r, frs_package AS p " .
-        "WHERE p.status_id != ". $this->da->escapeInt($this->STATUS_DELETED) ." AND r.status_id != ". $this->da->escapeInt($this->STATUS_DELETED) ." AND p.group_id= %s " .
+        "WHERE p.status_id != " . $this->da->escapeInt($this->STATUS_DELETED) . " AND r.status_id != " . $this->da->escapeInt($this->STATUS_DELETED) . " AND p.group_id= %s " .
         "AND r.package_id = p.package_id " .
          ($package_id ? "AND p.package_id = %s " : ""), $this->da->quoteSmart($_group_id), $this->da->quoteSmart($_package_id));
         return $this->retrieve($sql);
@@ -130,12 +130,12 @@ class FRSReleaseDao extends DataAccessObject
         ' FROM frs_release AS r ' .
         (count($from) > 0 ? ', ' . implode(', ', $from) : '');
         if (trim($where) != '') {
-            $sql .= ' WHERE ' . $where. ' ';
+            $sql .= ' WHERE ' . $where . ' ';
             if (($extraFlags & self::INCLUDE_DELETED) == 0) {
                 $sql .= ' AND r.status_id!= ' . $this->da->escapeInt($this->STATUS_DELETED) . ' ';
             }
         }
-        $sql .= $group.$order;
+        $sql .= $group . $order;
         return $this->retrieve($sql);
     }
 
@@ -176,7 +176,6 @@ class FRSReleaseDao extends DataAccessObject
      */
     public function create($package_id = null, $name = null, $notes = null, $changes = null, $status_id = null, $preformatted = 1, $release_date = null)
     {
-
         $arg = array ();
         $values = array ();
 
@@ -218,7 +217,7 @@ class FRSReleaseDao extends DataAccessObject
             $values[] = ($this->da->escapeInt(time()));
         }
 
-        $um = & UserManager :: instance();
+        $um = & UserManager::instance();
         $user = & $um->getCurrentUser();
         $arg[] = 'released_by';
         $values[] = $this->da->quoteSmart($user->getID());
@@ -261,7 +260,7 @@ class FRSReleaseDao extends DataAccessObject
         }
 
         $arg[] = 'released_by';
-        $um = UserManager :: instance();
+        $um = UserManager::instance();
         $user = $um->getCurrentUser();
         $values[] = $this->da->quoteSmart($user->getID());
 
@@ -286,7 +285,6 @@ class FRSReleaseDao extends DataAccessObject
      */
     public function updateById($release_id, $package_id = null, $name = null, $notes = null, $changes = null, $status_id = null, $preformatted = null, $release_date = null)
     {
-
         $argArray = array ();
 
         if ($package_id !== null) {

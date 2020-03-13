@@ -64,7 +64,7 @@ class Statistics_DiskUsageOutput
         // Adapt the decimal places to the number of digit:
         // 1.24 / 12.3 / 123
         if ($retstring == 'auto') {
-            $nbDigit = (int)(log(abs($size))/log(10)) + 1;
+            $nbDigit = (int) (log(abs($size)) / log(10)) + 1;
             switch ($nbDigit) {
                 case 1:
                     $retstring = '%.2f %s';

@@ -206,8 +206,8 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
                 foreach ($p as $page => $x) {
                     $args["p[$page]"] = 1;
                 }
-                header("Location: ".
-                  WikiURL(_("PhpWikiAdministration")."/"._($plugin_action), $args, 1));
+                header("Location: " .
+                  WikiURL(_("PhpWikiAdministration") . "/" . _($plugin_action), $args, 1));
                 exit();
             }
         } elseif (empty($args['s'])) {
@@ -264,8 +264,7 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
         }
         if (! $request->getArg('select')) {
             return $form;
-        } else {
-            ; //return $action_result;
+        } else {//return $action_result;
         }
     }
 }

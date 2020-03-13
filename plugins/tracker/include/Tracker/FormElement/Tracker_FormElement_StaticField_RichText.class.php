@@ -55,7 +55,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     protected function fetchReadOnly()
     {
         $html = '';
-        $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_'. $this->id .'" />';
+        $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_' . $this->id . '" />';
         $html .= $this->getRichText();
         $html .= '</div>';
         return $html;
@@ -64,14 +64,14 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     public function fetchAdmin($tracker)
     {
         $html = '';
-        $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
+        $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
         $html .= '<div class="tracker-admin-field-controls">';
-        $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        $html .= '<a href="?'. http_build_query(array(
+        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
+        $html .= '<a href="?' . http_build_query(array(
                 'tracker'  => $this->tracker_id,
                 'func'     => 'admin-formElement-remove',
                 'formElement' => $this->id,
-            )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
+            )) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) . '</a>';
         $html .= '</div>';
         $html .= '<br />';
         $html .= $this->fetchAdminFormElement();
@@ -86,9 +86,8 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     protected function fetchAdminFormElement()
     {
         $html = '';
-        $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_'. $this->id .'" />';
+        $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_' . $this->id . '" />';
         $html .= $this->getRichText();
-        ;
         $html .= '</div>';
         return $html;
     }

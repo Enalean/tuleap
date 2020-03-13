@@ -40,11 +40,11 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
                 $criteria_value = CodendiDataAccess::instance()->quoteSmart($criteria_value);
-                $a = 'A_'. $this->id;
+                $a = 'A_' . $this->id;
                 return " INNER JOIN cross_references AS $a
-                         ON (artifact.id = $a.source_id AND $a.source_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.target_id = $criteria_value
+                         ON (artifact.id = $a.source_id AND $a.source_type = '" . Tracker_Artifact::REFERENCE_NATURE . "' AND $a.target_id = $criteria_value
                              OR
-                             artifact.id = $a.target_id AND $a.target_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.source_id = $criteria_value
+                             artifact.id = $a.target_id AND $a.target_type = '" . Tracker_Artifact::REFERENCE_NATURE . "' AND $a.source_id = $criteria_value
                          )
                 ";
             }
@@ -141,7 +141,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     private function getCrossReferencesFactory($artifact_id)
     {
         $crossref_factory = new CrossReferenceFactory($artifact_id, Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
-        $crossref_factory ->fetchDatas();
+        $crossref_factory->fetchDatas();
 
         return $crossref_factory;
     }
@@ -173,7 +173,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
             $value = '';
         }
         $hp = Codendi_HTMLPurifier::instance();
-        return '<input type="text" name="criteria['. $this->id .']" value="'. $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
+        return '<input type="text" name="criteria[' . $this->id . ']" value="' . $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
     }
 
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
@@ -341,12 +341,12 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
-        $crossref_fact= new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $crossref_fact = new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs();
         } else {
-            $html .= '<div>'."<span class='empty_value'>".$GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty')."</span>".'</div>';
+            $html .= '<div>' . "<span class='empty_value'>" . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') . "</span>" . '</div>';
         }
         return $html;
     }
@@ -400,7 +400,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                         $tgt .= $refTgt['url'];
                         $tgt .= PHP_EOL;
                     }
-                    $output .= ' -> Target : '.PHP_EOL.$tgt;
+                    $output .= ' -> Target : ' . PHP_EOL . $tgt;
                     $output .= PHP_EOL;
                 }
                 if (!empty($refs['source'])) {
@@ -410,7 +410,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                         $src .= $refSrc['url'];
                         $src .= PHP_EOL;
                     }
-                    $output .= ' -> Source : '.PHP_EOL.$src;
+                    $output .= ' -> Source : ' . PHP_EOL . $src;
                     $output .= PHP_EOL;
                 }
                 if (!empty($refs['both'])) {
@@ -420,7 +420,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                         $both .= $refBoth['url'];
                         $both .= PHP_EOL;
                     }
-                    $output .= ' -> Both   : '.PHP_EOL.$both;
+                    $output .= ' -> Both   : ' . PHP_EOL . $both;
                     $output .= PHP_EOL;
                 }
                 break;
@@ -435,7 +435,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     protected function fetchAdminFormElement()
     {
         $html = '';
-        $html .= '<div>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'display_references') .'</div>';
+        $html .= '<div>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'display_references') . '</div>';
         return $html;
     }
 
@@ -468,12 +468,12 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
-        $crossref_fact= new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $crossref_fact = new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs($with_links = false, $condensed = true);
         } else {
-            $html .= '<div>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') .'</div>';
+            $html .= '<div>' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') . '</div>';
         }
         return $html;
     }

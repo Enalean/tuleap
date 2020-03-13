@@ -293,10 +293,10 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $this->createNewEmbeddedFileVersion(
             $representation,
             $item_request,
-            (int)$item->getStatus(),
-            (int)$item->getObsolescenceDate(),
-            (string)$item->getTitle(),
-            (string)$item->getDescription()
+            (int) $item->getStatus(),
+            (int) $item->getObsolescenceDate(),
+            (string) $item->getTitle(),
+            (string) $item->getDescription()
         );
     }
 
@@ -332,7 +332,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         int $id,
         PUTMetadataRepresentation $representation
     ): void {
-
         $this->checkAccess();
         $this->setMetadataHeaders();
 

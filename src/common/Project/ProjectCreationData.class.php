@@ -252,9 +252,9 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         }
 
         $this->logger->debug("Start import from XML, validate RNG");
-        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/project/project.rng');
+        $rng_path = realpath(dirname(__FILE__) . '/../xml/resources/project/project.rng');
 
-        $partial_element = new SimpleXMLElement((string)$xml->asXML());
+        $partial_element = new SimpleXMLElement((string) $xml->asXML());
         $external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
         $xml_validator->validate($partial_element, $rng_path);
         $this->logger->debug("RNG validated, feed the data");
@@ -270,7 +270,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->trove_data    = array();
         $this->data_services = array();
         $this->data_fields   = array(
-            'form_101' => (string)$xml->$long_description_tagname
+            'form_101' => (string) $xml->$long_description_tagname
         );
         $this->is_built_from_xml = true;
 

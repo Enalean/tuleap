@@ -328,7 +328,6 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
 
     public function testValidateAndGenerateErrorsWhenARequiredCustomDescriptionIsNotSet()
     {
-
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
         $request->shouldReceive('getTemplateId')->once()->andReturn(10);
         $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));

@@ -21,7 +21,7 @@
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase
 {
@@ -514,7 +514,7 @@ class TriggerRuleComparatorExpectaction extends SimpleExpectation
         if ($candidate == $this->trigger_rule->getCondition()) {
             return true;
         }
-        throw new Exception("Condition `".$this->trigger_rule->getCondition()."` expected, `$candidate` given");
+        throw new Exception("Condition `" . $this->trigger_rule->getCondition() . "` expected, `$candidate` given");
     }
 
     private function isTargetEqual(Tracker_Workflow_Trigger_FieldValue $candidate)
@@ -522,23 +522,23 @@ class TriggerRuleComparatorExpectaction extends SimpleExpectation
         if ($this->isFieldValueEqual($this->trigger_rule->getTarget(), $candidate)) {
             return true;
         }
-        throw new Exception("Target `".$this->formatFieldValue($this->trigger_rule->getTarget())."` expected, `".$this->formatFieldValue($candidate)."` given");
+        throw new Exception("Target `" . $this->formatFieldValue($this->trigger_rule->getTarget()) . "` expected, `" . $this->formatFieldValue($candidate) . "` given");
     }
 
     private function formatFieldValue(Tracker_Workflow_Trigger_FieldValue $field_value)
     {
-        return '(field_id :'.$field_value->getField()->getId().', field_value_id: '.$field_value->getValue()->getId().')';
+        return '(field_id :' . $field_value->getField()->getId() . ', field_value_id: ' . $field_value->getValue()->getId() . ')';
     }
 
     private function areTriggersEqual(array $triggers)
     {
         $reference_triggers = $this->trigger_rule->getTriggers();
         if (count($triggers) !== count($reference_triggers)) {
-            throw new Exception('Triggers: '.count($reference_triggers).' tiggers expected, '.count($triggers).' given');
+            throw new Exception('Triggers: ' . count($reference_triggers) . ' tiggers expected, ' . count($triggers) . ' given');
         }
         foreach ($triggers as $index => $trigger) {
             if (! $this->isFieldValueEqual($reference_triggers[$index], $trigger)) {
-                throw new Exception("Trigger['".$index."'] `".$this->formatFieldValue($this->trigger_rule->getTarget())."` expected, `".$this->formatFieldValue($candidate)."` given");
+                throw new Exception("Trigger['" . $index . "'] `" . $this->formatFieldValue($this->trigger_rule->getTarget()) . "` expected, `" . $this->formatFieldValue($candidate) . "` given");
             }
         }
         return true;
@@ -632,7 +632,6 @@ class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workfl
 
     public function itImportRules()
     {
-
         $trigger_rule_1 = new Tracker_Workflow_Trigger_TriggerRule(
             0,
             new Tracker_Workflow_Trigger_FieldValue(

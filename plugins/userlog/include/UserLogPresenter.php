@@ -65,7 +65,7 @@ class UserLogPresenter
         $this->label_referrer        = $GLOBALS['Language']->getText('plugin_userlog', 'label_referrer');
         $this->export_csv            = $GLOBALS['Language']->getText('plugin_userlog', 'export_csv');
 
-        $this->export_url = USERLOG_BASE_URL.'/?'.http_build_query(
+        $this->export_url = USERLOG_BASE_URL . '/?' . http_build_query(
             array(
                 'action' => 'export',
                 'day'    => $selected_day,

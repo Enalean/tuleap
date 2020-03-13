@@ -65,9 +65,9 @@ class SvnAdmin
             $this->logger->debug('[svn ' . $repository->getName() . '] Backup done in [ ' . "$dump_path/$dump_name" . ']');
         } catch (System_Command_CommandException $e) {
             foreach ($e->output as $line) {
-                $this->logger->error('[svn '.$repository->getName().'] svnadmin: '.$line);
+                $this->logger->error('[svn ' . $repository->getName() . '] svnadmin: ' . $line);
             }
-            $this->logger->error('[svn '.$repository->getName().'] svnadmin returned with status '.$e->return_value);
+            $this->logger->error('[svn ' . $repository->getName() . '] svnadmin returned with status ' . $e->return_value);
         }
     }
 
@@ -82,7 +82,7 @@ class SvnAdmin
     private function svnAdminDumpRepository(Repository $repository, $dump_path)
     {
         $system_path = escapeshellarg($repository->getSystemPath());
-        $dump_name   = escapeshellarg($dump_path ."/". $repository->getBackupFileName());
+        $dump_name   = escapeshellarg($dump_path . "/" . $repository->getBackupFileName());
 
         $command = "umask 77 && svnadmin dump --quiet $system_path > $dump_name";
         $this->system_command->exec($command);
@@ -110,7 +110,7 @@ class SvnAdmin
         $permissions   = escapeshellarg(ForgeConfig::get('sys_http_user') . ":" . $repository->getProject()->getUnixName());
 
         try {
-            $command = "su -l " . ForgeConfig::get('sys_http_user') . " -c 'svnadmin create " . $system_path ."'";
+            $command = "su -l " . ForgeConfig::get('sys_http_user') . " -c 'svnadmin create " . $system_path . "'";
             $command_output = $this->system_command->exec($command);
             foreach ($command_output as $line) {
                 $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin create: ' . $line);
@@ -133,18 +133,18 @@ class SvnAdmin
                 $repository->getProject(),
                 $repository->getSystemPath(),
                 true,
-                ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/',
+                ForgeConfig::get('tuleap_dir') . '/plugins/svn/bin/',
                 'svn_post_commit.php',
-                ForgeConfig::get('tuleap_dir').'/src/utils/php-launcher.sh',
+                ForgeConfig::get('tuleap_dir') . '/src/utils/php-launcher.sh',
                 'svn_pre_commit.php'
             );
 
             $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin restore: done');
         } catch (System_Command_CommandException $e) {
             foreach ($e->output as $line) {
-                $this->logger->error('[svn '.$repository->getName().'] svnadmin: '.$line);
+                $this->logger->error('[svn ' . $repository->getName() . '] svnadmin: ' . $line);
             }
-            $this->logger->error('[svn '.$repository->getName().'] svnadmin returned with status '.$e->return_value);
+            $this->logger->error('[svn ' . $repository->getName() . '] svnadmin returned with status ' . $e->return_value);
         }
     }
 }

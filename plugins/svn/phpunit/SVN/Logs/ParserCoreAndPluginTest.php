@@ -22,14 +22,14 @@ namespace Tuleap\SVN\Logs;
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ .'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class ParserCoreAndPluginTest extends TestCase
 {
     public function testItReturnsLogsFromCoreAndPlugin()
     {
         $parser    = new Parser();
-        $log_cache = $parser->parse(__DIR__.'/_fixtures/svn.5.log');
+        $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.5.log');
         $this->assertEquals(
             $log_cache->getProjects(),
             array(
@@ -76,7 +76,7 @@ class ParserCoreAndPluginTest extends TestCase
     public function testItReturnsLastAccessTimeStampForUsers()
     {
         $parser    = new Parser();
-        $log_cache = $parser->parse(__DIR__.'/_fixtures/svn.5.log');
+        $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.5.log');
         $this->assertEquals(
             $log_cache->getLastAccessTimestamps(),
             array(

@@ -139,23 +139,23 @@ class WikiPlugin_PageDump extends WikiPlugin
         $dlcvs = Button(
             array(//'page' => $page,
                               'action' => $this->getName(),
-                              'format'=> 'forcvs',
-                              'download'=> true),
+                              'format' => 'forcvs',
+                              'download' => true),
             _("Download for CVS"),
             $page
         );
         $dl = Button(
             array(//'page' => $page,
                            'action' => $this->getName(),
-                           'download'=> true),
+                           'download' => true),
             _("Download for backup"),
             $page
         );
         $dlall = Button(
             array(//'page' => $page,
                            'action' => $this->getName(),
-                           'format'=> 'backup',
-                           'download'=> true),
+                           'format' => 'backup',
+                           'download' => true),
             _("Download all revisions for backup"),
             $page
         );
@@ -181,7 +181,7 @@ class WikiPlugin_PageDump extends WikiPlugin
                 Button(
                     array(
                                                    'action' => $this->getName(),
-                                                   'format'=> 'backup'),
+                                                   'format' => 'backup'),
                     _("Preview as backup format"),
                     $page
                 )
@@ -191,7 +191,7 @@ class WikiPlugin_PageDump extends WikiPlugin
             $altpreviewbuttons = HTML(
                 Button(
                     array('action' => $this->getName(),
-                                                   'format'=> 'forcvs'),
+                                                   'format' => 'forcvs'),
                     _("Preview as developer format"),
                     $page
                 ),
@@ -199,7 +199,7 @@ class WikiPlugin_PageDump extends WikiPlugin
                 Button(
                     array(
                                                    'action' => $this->getName(),
-                                                   'format'=> ''),
+                                                   'format' => ''),
                     _("Preview as normal format"),
                     $page
                 )
@@ -209,7 +209,7 @@ class WikiPlugin_PageDump extends WikiPlugin
             $altpreviewbuttons = HTML(
                 Button(
                     array('action' => $this->getName(),
-                                                   'format'=> 'forcvs'),
+                                                   'format' => 'forcvs'),
                     _("Preview as developer format"),
                     $page
                 ),
@@ -217,7 +217,7 @@ class WikiPlugin_PageDump extends WikiPlugin
                 Button(
                     array(
                                                    'action' => $this->getName(),
-                                                   'format'=> 'backup'),
+                                                   'format' => 'backup'),
                     _("Preview as backup format"),
                     $page
                 )
@@ -283,8 +283,8 @@ class WikiPlugin_PageDump extends WikiPlugin
         $this->MessageId = implode('', explode('.', PHPWIKI_VERSION))
             . "-" . $m2[0] . date("O")
             //. "-". rawurlencode(WIKI_NAME.":" . $request->getURLtoSelf())
-            . "-". rawurlencode(WIKI_NAME.":" . $this->pagename)
-            . "@". rawurlencode(SERVER_NAME);
+            . "-" . rawurlencode(WIKI_NAME . ":" . $this->pagename)
+            . "@" . rawurlencode(SERVER_NAME);
     }
 
     public function fixup_headers(&$mailified)
@@ -292,7 +292,7 @@ class WikiPlugin_PageDump extends WikiPlugin
         $return = explode("\n", $mailified);
 
         // Leave message intact for backing up, just add Message-Id header before transmitting.
-        $item_to_insert = "Message-Id: <" . $this->MessageId .">";
+        $item_to_insert = "Message-Id: <" . $this->MessageId . ">";
         $insert_into_key_position = 2;
         $returnval_ignored = array_splice(
             $return,
@@ -354,7 +354,7 @@ class WikiPlugin_PageDump extends WikiPlugin
 
         $mailified = implode("\n", $return);
     }
-};
+}
 
 // $Log: PageDump.php,v $
 // Revision 1.18  2004/10/14 19:19:34  rurban

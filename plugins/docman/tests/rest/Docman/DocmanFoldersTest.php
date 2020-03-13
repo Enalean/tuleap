@@ -658,7 +658,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id ."/wikis", $headers, $query)
+            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -682,7 +682,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id ."/wikis", $headers, $query),
+            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -747,7 +747,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/'.$root_id.'/embedded_files', $headers, $query)
+            $this->client->post('docman_folders/' . $root_id . '/embedded_files', $headers, $query)
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -771,7 +771,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/'.$root_id.'/embedded_files', $headers, $query),
+            $this->client->post('docman_folders/' . $root_id . '/embedded_files', $headers, $query),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -836,7 +836,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id ."/links", $headers, $query)
+            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -860,7 +860,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id ."/links", $headers, $query),
+            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -1033,7 +1033,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $response_child_update_permissions = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post(
-                'docman_folders/' . urlencode((string)$folder_id) . '/empties',
+                'docman_folders/' . urlencode((string) $folder_id) . '/empties',
                 null,
                 json_encode(['title' => 'Child update permissions'])
             )

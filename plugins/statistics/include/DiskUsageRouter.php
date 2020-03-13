@@ -92,7 +92,7 @@ class DiskUsageRouter
                     Feedback::ERROR,
                     $GLOBALS['Language']->getText('plugin_statistics', 'period_error')
                 );
-                $GLOBALS['Response']->redirect('/plugins/statistics/disk_usage.php?menu='.$menu);
+                $GLOBALS['Response']->redirect('/plugins/statistics/disk_usage.php?menu=' . $menu);
             }
         }
     }

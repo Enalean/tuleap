@@ -189,7 +189,7 @@ class Docman_SOAPActions extends Docman_Actions
                     if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
                         $filename = $item->getCurrentVersion()->getFilename();
                     } else {
-                        $filename = $item->getTitle().'.html';
+                        $filename = $item->getTitle() . '.html';
                     }
                 } else {
                     $nbVersions = null;

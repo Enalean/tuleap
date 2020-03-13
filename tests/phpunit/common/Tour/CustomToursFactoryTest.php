@@ -54,7 +54,7 @@ final class CustomToursFactoryTest extends TestCase
     {
         $this->project_manager = \Mockery::spy(ProjectManager::class);
         $this->url_processor   = \Mockery::spy(URL::class);
-        $this->fixtures_dir    = __DIR__ .'/_fixtures';
+        $this->fixtures_dir    = __DIR__ . '/_fixtures';
         $this->factory         = \Mockery::mock(\Tuleap_CustomToursFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->factory->__construct($this->project_manager, $this->url_processor);
 
@@ -66,7 +66,7 @@ final class CustomToursFactoryTest extends TestCase
     public function testItDoesNotGetToursIfCustomTourFolderDoesntExist() : void
     {
         $request_uri = '';
-        ForgeConfig::set('sys_custom_incdir', $this->fixtures_dir.'/somewhereElse');
+        ForgeConfig::set('sys_custom_incdir', $this->fixtures_dir . '/somewhereElse');
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getLocale')->andReturns('en_US');
 

@@ -38,11 +38,11 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits
     }
     public function _getLinkToCommit($data)
     {
-        return '/svn/?func=detailrevision&amp;group_id='.$this->group_id.'&amp;commit_id='.$data['commit_id'];
+        return '/svn/?func=detailrevision&amp;group_id=' . $this->group_id . '&amp;commit_id=' . $data['commit_id'];
     }
     public function _getLinkToMore()
     {
-        return '/svn/?func=browse&group_id='.$this->group_id;
+        return '/svn/?func=browse&group_id=' . $this->group_id;
     }
 
     protected function canBeUsedByProject(Project $project)

@@ -62,7 +62,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
         $clone_command->mustRun();
 
         $this->expected_file_in_old_dir = bin2hex(random_bytes(16));
-        touch($this->fixtures .'/admin/'. $this->expected_file_in_old_dir);
+        touch($this->fixtures . '/admin/' . $this->expected_file_in_old_dir);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo(
             $this->response,
@@ -89,15 +89,15 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
     {
         $this->command->execute();
 
-        $this->assertTrue(is_file($this->fixtures .'/admin.old/'. $this->expected_file_in_old_dir));
+        $this->assertTrue(is_file($this->fixtures . '/admin.old/' . $this->expected_file_in_old_dir));
     }
 
     public function testItClonesAFreshRepository(): void
     {
         $this->command->execute();
 
-        $this->assertTrue(is_dir($this->fixtures .'/admin/'));
-        $this->assertFalse(is_dir($this->fixtures .'/admin/'. $this->expected_file_in_old_dir));
+        $this->assertTrue(is_dir($this->fixtures . '/admin/'));
+        $this->assertFalse(is_dir($this->fixtures . '/admin/' . $this->expected_file_in_old_dir));
     }
 
     public function testItDisplaysMeaningfulFeedbackToTheUser(): void

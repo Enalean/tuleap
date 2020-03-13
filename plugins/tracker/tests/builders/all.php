@@ -22,6 +22,6 @@
 
 // first load tracker to set all includes
 
-foreach (glob(dirname(__FILE__).'/*.php') as $file) {
+foreach (glob(dirname(__FILE__) . '/*.php') as $file) {
     require_once $file;
 }

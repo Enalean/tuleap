@@ -44,7 +44,7 @@ final class MappingFileOptimusPrimeTransformerTest extends \PHPUnit\Framework\Te
     protected function setUp() : void
     {
         parent::setUp();
-        $this->filename = vfsStream::setup()->url() .'/users.csv';
+        $this->filename = vfsStream::setup()->url() . '/users.csv';
 
         $this->user_manager = \Mockery::spy(\UserManager::class);
 

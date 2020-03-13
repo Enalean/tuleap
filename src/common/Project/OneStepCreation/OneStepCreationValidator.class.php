@@ -85,8 +85,7 @@ class Project_OneStepCreation_OneStepCreationValidator //phpcs:ignore PSR1.Class
             ->validateShortDescription()
             ->validateTosApproval()
             ->validateCustomDescriptions()
-            ->validateTroveCats()
-        ;
+            ->validateTroveCats();
 
         return $this->is_valid;
     }

@@ -26,7 +26,7 @@ $wgExtensionCredits['validextensionclass'][] = array(
     'path'        => __FILE__,
     'name'        => 'TuleapArtLinks',
     'author'      => 'Enalean SAS',
-    'url'         => HTTPRequest::instance()->getServerUrl().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/documents-and-files/mediawiki.html#tuleap-specific-extension',
+    'url'         => HTTPRequest::instance()->getServerUrl() . '/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/documents-and-files/mediawiki.html#tuleap-specific-extension',
     'description' => 'This extension provides ArtifactLinks integration with Tuleap',
     'version'     => 0.1
 );

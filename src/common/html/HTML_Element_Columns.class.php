@@ -49,9 +49,9 @@ class HTML_Element_Columns extends HTML_Element
     }
     public function render()
     {
-        $html = '<table id="'. $this->id .'" ><tr>';
+        $html = '<table id="' . $this->id . '" ><tr>';
         foreach ($this->components as $c) {
-            $html .= '<td>'. $c->render() .'</td>';
+            $html .= '<td>' . $c->render() . '</td>';
         }
         $html .= '</tr></table>';
         return $html;

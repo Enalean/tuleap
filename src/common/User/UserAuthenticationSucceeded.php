@@ -35,7 +35,6 @@ class UserAuthenticationSucceeded implements Dispatchable
 
     public function __construct(PFUser $user)
     {
-
         $this->user = $user;
     }
 

@@ -42,14 +42,14 @@ class XMLTemplatesController implements DispatchableWithRequestNoAuthz, Dispatch
     {
         $layout->header(['title' => 'Tracker templates']);
         echo '<ul>';
-        foreach (new \DirectoryIterator(__DIR__.'/../www/resources/templates/') as $file) {
+        foreach (new \DirectoryIterator(__DIR__ . '/../www/resources/templates/') as $file) {
             /** @var \SplFileInfo $file */
             if ($file->isFile() && $file->getExtension() === 'xml') {
                 $xml_security = new XML_Security();
                 $xml = $xml_security->loadFile($file->getPathname());
                 echo '<li><p>';
-                echo '<strong><a href="/plugins/tracker/resources/templates/'. $file->getBasename().'">'. $xml->name .'</a></strong><br/>';
-                echo ''. $xml->description .'</p>';
+                echo '<strong><a href="/plugins/tracker/resources/templates/' . $file->getBasename() . '">' . $xml->name . '</a></strong><br/>';
+                echo '' . $xml->description . '</p>';
                 echo '</li>';
             }
         }

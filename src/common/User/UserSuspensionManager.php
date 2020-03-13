@@ -57,7 +57,7 @@ class UserSuspensionManager
     /**
      * @var Codendi_Mail
      */
-    private $mail ;
+    private $mail;
 
     /**
      * @var UserSuspensionDao
@@ -107,8 +107,8 @@ class UserSuspensionManager
      */
     public function sendNotificationMailToIdleAccounts() : bool
     {
-        $inactive_delay = (int)ForgeConfig::get(self::CONFIG_INACTIVE_DELAY);
-        $notification_delay = (int)ForgeConfig::get(self::CONFIG_NOTIFICATION_DELAY);
+        $inactive_delay = (int) ForgeConfig::get(self::CONFIG_INACTIVE_DELAY);
+        $notification_delay = (int) ForgeConfig::get(self::CONFIG_NOTIFICATION_DELAY);
         $result = true;
 
         if (($notification_delay > 0) && ($inactive_delay > 0)) {
@@ -251,7 +251,7 @@ class UserSuspensionManager
             if ($dar) {
                 //we should verify the delay for it user has been no more belonging to any project
                 foreach ($dar as $row) {
-                    $user_id = (int)$row['user_id'];
+                    $user_id = (int) $row['user_id'];
                     $this->logger->debug("Checking user #$user_id");
                     //we split the treatment in two methods to distinguish between 0 row returned
                     //by the fact that there is no "removed user" entry for this user_id and the case

@@ -70,7 +70,7 @@ class LatestNewsController implements DispatchableWithRequest
         foreach ($this->dao->getNewsForSitePublicRSSFeed() as $row) {
             $entry = $feed->createEntry();
             $entry->setTitle($this->html_purifier->purify($row['summary']));
-            $entry->setLink($request->getServerUrl().'/forum/forum.php?forum_id='.(int)$row['forum_id']);
+            $entry->setLink($request->getServerUrl() . '/forum/forum.php?forum_id=' . (int) $row['forum_id']);
             $entry->setDescription($this->html_purifier->purify($row['details']));
             $feed->addEntry($entry);
         }

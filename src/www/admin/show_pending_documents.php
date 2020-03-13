@@ -51,7 +51,7 @@ $project = $pm->getProject($group_id);
 if (! $project->isActive()) {
     $GLOBALS['Response']->addFeedback(
         Feedback::ERROR,
-        $GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus())
+        $GLOBALS['Language']->getText('include_exit', 'project_status_' . $project->getStatus())
     );
     $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . (int) $group_id);
 }
@@ -71,7 +71,7 @@ switch ($func) {
 
 $focus = $request->get('focus');
 if (!$focus) {
-    $focus ='frs_file';
+    $focus = 'frs_file';
 }
 
 $idArray   = array();
@@ -100,27 +100,27 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
     <h1 class="tlp-framed-horizontally"><?php echo $purifier->purify($project->getPublicName()) ?></h1>
 
     <nav class="tlp-tabs">
-        <a href="/admin/groupedit.php?group_id=<?php echo (int)$group_id ?>" class="tlp-tab">
+        <a href="/admin/groupedit.php?group_id=<?php echo (int) $group_id ?>" class="tlp-tab">
             <?php echo $GLOBALS['Language']->getText('admin_project', 'information_label') ?>
         </a>
-        <a href="/admin/userlist.php?group_id=<?php echo (int)$group_id ?>" class="tlp-tab">
+        <a href="/admin/userlist.php?group_id=<?php echo (int) $group_id ?>" class="tlp-tab">
             <?php echo $GLOBALS['Language']->getText('admin_project', 'members_label') ?>
         </a>
-        <a href="/admin/projecthistory.php?group_id=<?php echo (int)$group_id ?>" class="tlp-tab">
+        <a href="/admin/projecthistory.php?group_id=<?php echo (int) $group_id ?>" class="tlp-tab">
             <?php echo $GLOBALS['Language']->getText('admin_project', 'history_label') ?>
         </a>
-        <a href="/admin/show_pending_documents.php?group_id=<?php echo (int)$group_id ?>" class="tlp-tab tlp-tab-active">
+        <a href="/admin/show_pending_documents.php?group_id=<?php echo (int) $group_id ?>" class="tlp-tab tlp-tab-active">
             <?php echo $GLOBALS['Language']->getText('admin_project', 'pending_label') ?>
         </a>
     </nav>
     <main role="main" class="tlp-framed">
     <?php
         $project = $pm->getProject($group_id, false, true);
-        echo '<div class="tlp-alert-info">'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</div>';
-        echo '<div class="tlp-alert-info"><p>'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro').'<br />';
-        echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system').' <a href="/admin/system_events/">system event</a> ';
+        echo '<div class="tlp-alert-info">' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'delay_info', array($GLOBALS['sys_file_deletion_delay'])) . '</div>';
+        echo '<div class="tlp-alert-info"><p>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro') . '<br />';
+        echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system') . ' <a href="/admin/system_events/">system event</a> ';
         echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system_end') . '</p>';
-        echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_restaure').'</p></div>';
+        echo '<p>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_restaure') . '</p></div>';
 
     foreach ($params['html'] as $html) {
         echo $html;
@@ -317,7 +317,7 @@ function frs_file_restore_process($request, $group_id)
             $GLOBALS['Language']->getText('admin_show_pending_documents', 'frs_bad')
         );
     }
-    $GLOBALS['Response']->redirect('?group_id=' . (int)$group_id);
+    $GLOBALS['Response']->redirect('?group_id=' . (int) $group_id);
 }
 
 function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$idArray, &$nomArray, &$htmlArray)
@@ -330,15 +330,15 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
     $tabbed_content .= '<section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">'. $GLOBALS['Language']->getText('admin_groupedit', 'archived_wiki') .'</h1>
+            <h1 class="tlp-pane-title">' . $GLOBALS['Language']->getText('admin_groupedit', 'archived_wiki') . '</h1>
         </div>
         <section class="tlp-pane-section">
             <table class="tlp-table">
                 <thead>
                     <tr>
-                        <th>'. $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_name') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_date') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_purge') .'</th>
+                        <th>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_name') . '</th>
+                        <th>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_date') . '</th>
+                        <th>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_purge') . '</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -346,19 +346,19 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
 
     if ($attachments->rowCount() > 0) {
         foreach ($attachments as $wiki_attachment) {
-            $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $wiki_attachment['delete_date']);
+            $purgeDate = strtotime('+' . $GLOBALS['sys_file_deletion_delay'] . ' day', $wiki_attachment['delete_date']);
             $nonRestorableAttachments = $wikiAttachment->getDao()->getIdFromFilename($group_id, $wiki_attachment['name']);
             $tabbed_content .= '<tr>';
-            $tabbed_content .= '<td>'.$purifier->purify($wiki_attachment['name']).'</td>';
-            $tabbed_content .= '<td>'.html_time_ago($wiki_attachment['delete_date']).'</td>';
-            $tabbed_content .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
+            $tabbed_content .= '<td>' . $purifier->purify($wiki_attachment['name']) . '</td>';
+            $tabbed_content .= '<td>' . html_time_ago($wiki_attachment['delete_date']) . '</td>';
+            $tabbed_content .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>';
             $tabbed_content .= '<td class="tlp-table-cell-actions">';
             if ($nonRestorableAttachments->rowCount()) {
                 $tabbed_content .= '<button type="button"
                             class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-left"
                             data-tlp-tooltip="Non-restorable attachment"
                             disabled>
-                        <i class="fa fa-repeat tlp-button-icon"></i> '. $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') .'
+                        <i class="fa fa-repeat tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') . '
                     </button>';
             } else {
                 $tabbed_content .= '<form method="POST" onsubmit="return confirm(\'Confirm restore of this attachment\');">
@@ -367,7 +367,7 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
                         <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
                         <i class="fa fa-repeat tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') . '</button>';
                 $tabbed_content .= $csrf_token->fetchHTMLInput();
-                $tabbed_content .='</form>';
+                $tabbed_content .= '</form>';
             }
             $tabbed_content .= '</td>';
             $tabbed_content .= '</tr>';
@@ -375,7 +375,7 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
     } else {
         $tabbed_content .= '<tr>
             <td class="tlp-table-cell-empty" colspan="6">
-                '. $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_no_restore') .'
+                ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_no_restore') . '
             </td>
         </tr>';
     }

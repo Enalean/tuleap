@@ -33,7 +33,7 @@ class Console extends AbstractLogger
 
     public function log($level, $message, array $context = array())
     {
-        fwrite(STDERR, $this->colorize($level, $level.' '.$message).PHP_EOL);
+        fwrite(STDERR, $this->colorize($level, $level . ' ' . $message) . PHP_EOL);
         fflush(STDERR);
     }
 
@@ -64,7 +64,7 @@ class Console extends AbstractLogger
                 break;
         }
         if ($color) {
-            $message = $color.$message.self::NOCOLOR;
+            $message = $color . $message . self::NOCOLOR;
         }
         return $message;
     }

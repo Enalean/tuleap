@@ -81,7 +81,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     private function addPermissions($ugroups)
     {
         foreach ($ugroups as $ugroup) {
-            if (! $this->permission_manager->addPermission(self::PERMISSION_TRANSITION, (int)$this->transition->getId(), $ugroup)) {
+            if (! $this->permission_manager->addPermission(self::PERMISSION_TRANSITION, (int) $this->transition->getId(), $ugroup)) {
                 return false;
             }
         }

@@ -64,12 +64,12 @@ class SCMUsageCollector
 
         $accesses_by_month['month'][]            = dgettext('tuleap-svn', 'Month');
         $accesses_by_month['nb_browse'][]        = dgettext('tuleap-svn', 'Total number of SVN browse operations');
-        $accesses_by_month['nb_read'] []         = dgettext('tuleap-svn', 'Total number of SVN read operations');
-        $accesses_by_month['nb_write'] []        = dgettext('tuleap-svn', 'Total number of SVN write operations');
-        $accesses_by_month['nb_project_read'] [] = dgettext('tuleap-svn', 'Total number of projects with SVN read operations');
-        $accesses_by_month['nb_user_read'] []    = dgettext('tuleap-svn', 'Total number of users with SVN read operations');
+        $accesses_by_month['nb_read'][]         = dgettext('tuleap-svn', 'Total number of SVN read operations');
+        $accesses_by_month['nb_write'][]        = dgettext('tuleap-svn', 'Total number of SVN write operations');
+        $accesses_by_month['nb_project_read'][] = dgettext('tuleap-svn', 'Total number of projects with SVN read operations');
+        $accesses_by_month['nb_user_read'][]    = dgettext('tuleap-svn', 'Total number of users with SVN read operations');
         $accesses_by_month['nb_project_write'][] = dgettext('tuleap-svn', 'Total number of projects with SVN write operations');
-        $accesses_by_month['nb_user_write'] []   = dgettext('tuleap-svn', 'Total number of users with SVN write operations');
+        $accesses_by_month['nb_user_write'][]   = dgettext('tuleap-svn', 'Total number of users with SVN write operations');
 
         foreach ($global_accesses as $access) {
             $month_key                                         = $access['month'] . ' ' . $access['year'];

@@ -54,7 +54,7 @@ class Git_ReferenceManager
     {
         $reference = false;
         list($repository_name, $sha1) = $this->splitRepositoryAndSha1($value);
-        $repository = $this->repository_factory->getRepositoryByPath($project->getId(), $project->getUnixName().'/'.$repository_name.'.git');
+        $repository = $this->repository_factory->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
         if ($repository) {
             $args = array($repository->getId(), $sha1);
             $reference = $this->reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $project->getID(), count($args), $value);

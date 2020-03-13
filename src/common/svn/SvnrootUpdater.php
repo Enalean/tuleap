@@ -54,7 +54,7 @@ class SvnrootUpdater
 
     public function push()
     {
-        $this->logger->info('Send message to '.self::TOPIC);
+        $this->logger->info('Send message to ' . self::TOPIC);
         $this->queue->pushSinglePersistentMessage(self::TOPIC, 'Update');
         $this->logger->debug('Done');
     }
@@ -64,7 +64,7 @@ class SvnrootUpdater
      */
     public function listen($server_id)
     {
-        $this->logger->info("Wait for messages on ".get_class($this->queue));
+        $this->logger->info("Wait for messages on " . get_class($this->queue));
 
         $generate = function () {
             ForgeConfig::set('svn_root_file', '/etc/httpd/conf.d/svnroot.conf');
@@ -85,13 +85,13 @@ class SvnrootUpdater
         $logger = $this->logger;
 
         $this->logger->debug('Waiting for new events');
-        $this->queue->listen(self::QUEUE_PREFIX.$server_id, self::TOPIC, function ($msg) use ($logger, $generate) {
+        $this->queue->listen(self::QUEUE_PREFIX . $server_id, self::TOPIC, function ($msg) use ($logger, $generate) {
             try {
                 $logger->info("Received ", $msg);
                 $generate();
                 $logger->info("Update completed");
             } catch (Exception $e) {
-                $logger->error("Caught exception ".get_class($e).": ".$e->getMessage());
+                $logger->error("Caught exception " . get_class($e) . ": " . $e->getMessage());
             }
         });
     }

@@ -73,10 +73,10 @@ class Tracker_DateReminderDao extends DataAccessObject
     {
         $values = array();
         foreach ($roles as $role) {
-            $role = (int)$this->da->escapeInt($role);
+            $role = (int) $this->da->escapeInt($role);
             $values[] = " (
-                    ".$reminderId.",
-                    ".$role."
+                    " . $reminderId . ",
+                    " . $role . "
                 )";
         }
         $values = implode(', ', $values);
@@ -85,7 +85,7 @@ class Tracker_DateReminderDao extends DataAccessObject
                     reminder_id,
                     role_id
                     )
-                    VALUES ".$values;
+                    VALUES " . $values;
         return $this->update($sql);
     }
 
@@ -119,11 +119,11 @@ class Tracker_DateReminderDao extends DataAccessObject
                 )
                 VALUES
                 (
-                ".$trackerId.",
-                ".$fieldId.",
-                ".$ugroups.",
-                ".$notificationType.",
-                ".$distance."
+                " . $trackerId . ",
+                " . $fieldId . ",
+                " . $ugroups . ",
+                " . $notificationType . ",
+                " . $distance . "
                 )";
         $reminderId = $this->updateAndGetLastId($sql);
         if ($reminderId && !empty($roles)) {
@@ -153,11 +153,11 @@ class Tracker_DateReminderDao extends DataAccessObject
         $status           = $this->da->escapeInt($status);
         $sql = "Update tracker_reminder
                 SET
-                ugroups           = ".$ugroups.",
-                notification_type = ".$notificationType.",
-                distance          = ".$distance.",
-                status            = ".$status."
-                WHERE reminder_id = ".$reminderId;
+                ugroups           = " . $ugroups . ",
+                notification_type = " . $notificationType . ",
+                distance          = " . $distance . ",
+                status            = " . $status . "
+                WHERE reminder_id = " . $reminderId;
         $result = $this->update($sql);
 
         if ($result) {
@@ -208,7 +208,7 @@ class Tracker_DateReminderDao extends DataAccessObject
         $condition  = "";
         if ($reminderId > 0) {
             $reminderId       = $this->da->escapeInt($reminderId);
-            $condition = " AND reminder_id <>  ".$reminderId ;
+            $condition = " AND reminder_id <>  " . $reminderId;
         }
         $sql = "SELECT *
                 FROM tracker_reminder
@@ -219,7 +219,7 @@ class Tracker_DateReminderDao extends DataAccessObject
                   AND distance                    = $distance
                   AND tracker_reminder.status     = 1
                   AND tracker_field.use_it        = 1
-                  ".$condition;
+                  " . $condition;
         return $this->retrieve($sql);
     }
 

@@ -60,7 +60,6 @@ final class DisplayNotificationsController implements DispatchableWithRequest, D
         CSRFSynchronizerToken $csrf_token,
         MailManager $mail_manager
     ) {
-
         $this->dispatcher   = $dispatcher;
         $this->csrf_token   = $csrf_token;
         $this->renderer     = $renderer_factory->getRenderer(__DIR__ . '/templates');

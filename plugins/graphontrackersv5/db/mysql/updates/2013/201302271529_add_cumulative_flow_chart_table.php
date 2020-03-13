@@ -47,7 +47,7 @@ EOT;
 )";
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding table plugin_graphontrackersv5_cumulative_flow_chart: '.implode(', ', $this->db->dbh->errorInfo()));
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding table plugin_graphontrackersv5_cumulative_flow_chart: ' . implode(', ', $this->db->dbh->errorInfo()));
             }
         }
     }

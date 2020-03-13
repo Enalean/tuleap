@@ -77,18 +77,18 @@ class ArtifactFieldHtml extends ArtifactField
     public function labelDisplay($break = false, $ascii = false, $tooltip = false)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $output = SimpleSanitizer::unsanitize($this->getLabel()).': ';
+        $output = SimpleSanitizer::unsanitize($this->getLabel()) . ': ';
         if (!$ascii) {
-            $output =  $hp->purify($output, CODENDI_PURIFIER_CONVERT_HTML) ;
+            $output =  $hp->purify($output, CODENDI_PURIFIER_CONVERT_HTML);
             if ($tooltip) {
-                $output = '<a class="artifact_field_tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($this->description), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $output .'</a>';
+                $output = '<a class="artifact_field_tooltip" href="#" title="' . $hp->purify(SimpleSanitizer::unsanitize($this->description), CODENDI_PURIFIER_CONVERT_HTML) . '">' . $output . '</a>';
             }
-            $output = '<B>'. $output .'</B>';
+            $output = '<B>' . $output . '</B>';
         }
         if ($break) {
-            $output .= ($ascii?"\n":'<BR>');
+            $output .= ($ascii ? "\n" : '<BR>');
         } else {
-            $output .= ($ascii? ' ':'&nbsp;');
+            $output .= ($ascii ? ' ' : '&nbsp;');
         }
         return $output;
     }
@@ -110,13 +110,13 @@ class ArtifactFieldHtml extends ArtifactField
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();
         if (!$text_none) {
-            $text_none=$Language->getText('global', 'none');
+            $text_none = $Language->getText('global', 'none');
         }
         if (!$text_any) {
-            $text_any=$Language->getText('global', 'any');
+            $text_any = $Language->getText('global', 'any');
         }
         if (!$text_unchanged) {
-            $text_unchanged=$Language->getText('global', 'unchanged');
+            $text_unchanged = $Language->getText('global', 'unchanged');
         }
 
         if (!$group_artifact_id) {
@@ -136,20 +136,20 @@ class ArtifactFieldHtml extends ArtifactField
             while ($row = db_fetch_array($result)) {
                 $array_values[]  = $row;
             }
-            if (db_numrows($result)>0) {
+            if (db_numrows($result) > 0) {
                 db_reset_result($result);
             }
 
             if ($box_name == '') {
-                $box_name = $this->field_name.'[]';
+                $box_name = $this->field_name . '[]';
             }
             $output = '';
             if ($display) {
-                $output  .= html_build_multiple_select_box($result, $box_name, $checked, ($this->getDisplaySize()!=""?$this->getDisplaySize():"6"), $show_none, $text_none, $show_any, $text_any, $show_unchanged, $text_unchanged, $show_value);
+                $output  .= html_build_multiple_select_box($result, $box_name, $checked, ($this->getDisplaySize() != "" ? $this->getDisplaySize() : "6"), $show_none, $text_none, $show_any, $text_any, $show_unchanged, $text_unchanged, $show_value);
             }
             if ($this->isJavascriptEnabled) {
                 $output .= '<script type="text/javascript">';
-                $output .= "\ncodendi.trackerv3.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
+                $output .= "\ncodendi.trackerv3.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE) . "')";
                 $output .= $this->_getValuesAsJavascript($array_values, $checked);
                 $output .= ";\n";
                 $output .= "</script>";
@@ -182,9 +182,9 @@ class ArtifactFieldHtml extends ArtifactField
             $isDefaultValuePresent = false;
         foreach ($values as $row) {
             if ($row['0'] === $text_unchanged) {
-                $output .= "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". $row['0'] ."', ". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') .")";
+                $output .= "\n\t.addOption('" .  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . $row['0'] . "', " . ($this->_isValueDefaultValue($row['0'], $default_value) ? 'true' : 'false') . ")";
             } else {
-                $output .= "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$row['0'] ."', ". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') .")";
+                $output .= "\n\t.addOption('" .  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $row['0'] . "', " . ($this->_isValueDefaultValue($row['0'], $default_value) ? 'true' : 'false') . ")";
             }
             if ($row['0'] == $default_value) {
                 $isDefaultValuePresent = true;
@@ -193,7 +193,7 @@ class ArtifactFieldHtml extends ArtifactField
         if (!$isDefaultValuePresent && !is_array($default_value)) {
             // for single select box, if the default value is not present,
             // we add the javascript for this "missing value" (the corresponding html code will be added by html_build_select_box_from_arrays)
-            $output .= "\n\t.addOption('". $hp->purify($Language->getText('tracker_include_field', 'unknown_value'), CODENDI_PURIFIER_JS_QUOTE) ."', '". (int)$default_value ."', true)\n";
+            $output .= "\n\t.addOption('" . $hp->purify($Language->getText('tracker_include_field', 'unknown_value'), CODENDI_PURIFIER_JS_QUOTE) . "', '" . (int) $default_value . "', true)\n";
         }
             return $output;
     }
@@ -215,13 +215,13 @@ class ArtifactFieldHtml extends ArtifactField
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();
         if (!$text_none) {
-            $text_none=$Language->getText('global', 'none');
+            $text_none = $Language->getText('global', 'none');
         }
         if (!$text_any) {
-            $text_any=$Language->getText('global', 'any');
+            $text_any = $Language->getText('global', 'any');
         }
         if (!$text_unchanged) {
-            $text_unchanged=$Language->getText('global', 'unchanged');
+            $text_unchanged = $Language->getText('global', 'unchanged');
         }
 
         if (!$group_artifact_id) {
@@ -244,7 +244,7 @@ class ArtifactFieldHtml extends ArtifactField
             while ($row = db_fetch_array($result)) {
                 $array_values[]  = $row;
             }
-            if (db_numrows($result)>0) {
+            if (db_numrows($result) > 0) {
                 db_reset_result($result);
             }
 
@@ -269,7 +269,7 @@ class ArtifactFieldHtml extends ArtifactField
             }
             if ($this->isJavascriptEnabled) {
                 $output .= '<script type="text/javascript">';
-                $output .= "\ncodendi.trackerv3.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
+                $output .= "\ncodendi.trackerv3.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE) . "')";
                 $output .= $this->_getValuesAsJavascript($array_values, $checked, $text_unchanged);
                 $output .= ';';
                 $output .= "\n</script>";
@@ -299,7 +299,7 @@ class ArtifactFieldHtml extends ArtifactField
         $hp = Codendi_HTMLPurifier::instance();
         if ($ro) {
             if ($date_begin || $date_end) {
-                $html = $Language->getText('tracker_include_field', 'start')."&nbsp;$date_begin<br>".$Language->getText('tracker_include_field', 'end')."&nbsp;$date_end";
+                $html = $Language->getText('tracker_include_field', 'start') . "&nbsp;$date_begin<br>" . $Language->getText('tracker_include_field', 'end') . "&nbsp;$date_end";
             } else {
                 $html = $Language->getText('tracker_include_field', 'any_time');
             }
@@ -309,10 +309,10 @@ class ArtifactFieldHtml extends ArtifactField
             }
 
               $html = $Language->getText('tracker_include_field', 'start');
-              $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id, $this->getName(), $date_begin, $size, $maxlength);
+              $html .= $GLOBALS['HTML']->getDatePicker("field_" . $this->field_id, $this->getName(), $date_begin, $size, $maxlength);
               $html .= "<br />";
               $html .= $Language->getText('tracker_include_field', 'end');
-              $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id."_end", $this->getName()."_end", $date_end, $size, $maxlength);
+              $html .= $GLOBALS['HTML']->getDatePicker("field_" . $this->field_id . "_end", $this->getName() . "_end", $date_end, $size, $maxlength);
         }
 
             return($html);
@@ -334,10 +334,10 @@ class ArtifactFieldHtml extends ArtifactField
         if ($ro) {
             $html = htmlspecialchars($value);
         } else {
-            $html = '<SELECT name="'. $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) .'_op">'.
-            '<OPTION VALUE=">"'.(($value == '>') ? 'SELECTED':'').'>&gt;</OPTION>'.
-            '<OPTION VALUE="="'.(($value == '=') ? 'SELECTED':'').'>=</OPTION>'.
-            '<OPTION VALUE="<"'.(($value == '<') ? 'SELECTED':'').'>&lt;</OPTION>'.
+            $html = '<SELECT name="' . $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) . '_op">' .
+            '<OPTION VALUE=">"' . (($value == '>') ? 'SELECTED' : '') . '>&gt;</OPTION>' .
+            '<OPTION VALUE="="' . (($value == '=') ? 'SELECTED' : '') . '>=</OPTION>' .
+            '<OPTION VALUE="<"' . (($value == '<') ? 'SELECTED' : '') . '>&lt;</OPTION>' .
             '</SELECT>';
         }
         return($html);
@@ -361,7 +361,7 @@ class ArtifactFieldHtml extends ArtifactField
         if ($ro) {
             $html = $value;
         } else {
-            $html = $GLOBALS['HTML']->getDatePicker("field_".$this->field_id, $this->field_name, $value, $size, $maxlength);
+            $html = $GLOBALS['HTML']->getDatePicker("field_" . $this->field_id, $this->field_name, $value, $size, $maxlength);
         }
         return($html);
     }
@@ -383,22 +383,22 @@ class ArtifactFieldHtml extends ArtifactField
             list($size, $maxlength) = $this->getGlobalDisplaySize();
         }
 
-        $maxlengtharg = ' maxlength="'.(int)$maxlength.'"';
+        $maxlengtharg = ' maxlength="' . (int) $maxlength . '"';
         if ($maxlength == "") {
             $maxlengtharg = "";
         }
 
-        $sizearg = ' size="'.(int)$size.'"';
+        $sizearg = ' size="' . (int) $size . '"';
         if ($size == "") {
             $sizearg = "";
         }
 
         $html = '<input type="text"'
-            .' name="'. $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) .'"'
-            .' value="'. $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_CONVERT_HTML) .'"'
-            .$sizearg
-            .$maxlengtharg
-            .'>';
+            . ' name="' . $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) . '"'
+            . ' value="' . $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_CONVERT_HTML) . '"'
+            . $sizearg
+            . $maxlengtharg
+            . '>';
 
         return($html);
     }
@@ -420,8 +420,8 @@ class ArtifactFieldHtml extends ArtifactField
             list($cols, $rows) = $this->getGlobalDisplaySize();
         }
 
-        $html = '<TEXTAREA NAME="'. $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) .
-        '" id="tracker_'. $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML)  .'" ROWS="'.(int)$rows.'" COLS="'.(int)$cols.'" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
+        $html = '<TEXTAREA NAME="' . $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) .
+        '" id="tracker_' . $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML)  . '" ROWS="' . (int) $rows . '" COLS="' . (int) $cols . '" WRAP="SOFT">' . $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_CONVERT_HTML) . '</TEXTAREA>';
 
         return($html);
     }
@@ -476,13 +476,13 @@ class ArtifactFieldHtml extends ArtifactField
         }
 
         if (!$text_none) {
-            $text_none=$Language->getText('global', 'none');
+            $text_none = $Language->getText('global', 'none');
         }
         if (!$text_any) {
-            $text_any=$Language->getText('global', 'any');
+            $text_any = $Language->getText('global', 'any');
         }
         if (!$text_unchanged) {
-            $text_unchanged=$Language->getText('global', 'unchanged');
+            $text_unchanged = $Language->getText('global', 'unchanged');
         }
 
         $output = "";
@@ -496,7 +496,7 @@ class ArtifactFieldHtml extends ArtifactField
                 if ($ro) {
                       // if multiple selected values return a list of <br> separated values
                       $arr = ( is_array($value) ? $value : array($value));
-                    for ($i=0; $i < count($arr); $i++) {
+                    for ($i = 0; $i < count($arr); $i++) {
                         if ($arr[$i] == 0) {
                             $arr[$i] = $text_any;
                         } elseif ($arr[$i] == 100) {
@@ -514,7 +514,7 @@ class ArtifactFieldHtml extends ArtifactField
                         $output .= join('<br>', $arr);
                         if ($htmlEmail) {
                             //The span is used to pass values that would be processed in JS as dependency sources' values
-                            $output .= '<span id="'.$this->field_name.'" style="display: none;">'.$value.'</span>';
+                            $output .= '<span id="' . $this->field_name . '" style="display: none;">' . $value . '</span>';
                         }
                         $output .= $this->fieldBox(
                             '',
@@ -533,9 +533,9 @@ class ArtifactFieldHtml extends ArtifactField
                     // Only show the 'None" label if empty value is allowed or
                     // if value is already none (it can happen if the field was not used in
                     // the artifact submission form)
-                    if ($this->isEmptyOk() || $value==100) {
-                        $show_none=true;
-                        $text_none=$Language->getText('global', 'none');
+                    if ($this->isEmptyOk() || $value == 100) {
+                        $show_none = true;
+                        $text_none = $Language->getText('global', 'none');
                     }
 
                     if (is_array($value)) {
@@ -571,7 +571,7 @@ class ArtifactFieldHtml extends ArtifactField
                 $valueArray = $arr;
                 if ($ro) {
                       // if multiple selected values return a list of , separated values
-                    for ($i=0; $i < count($arr); $i++) {
+                    for ($i = 0; $i < count($arr); $i++) {
                         if ($arr[$i] == 0) {
                             $arr[$i] = $text_any;
                         } elseif ($arr[$i] == 100) {
@@ -587,7 +587,7 @@ class ArtifactFieldHtml extends ArtifactField
                     if (!$ascii) {
                         if ($htmlEmail) {
                             //The span is used to pass values id that would be processed in JS as dependency sources' values
-                            $output .= '<span id="'.$this->field_name.'" style="display: none;">'.implode(',', $valueArray).'</span>';
+                            $output .= '<span id="' . $this->field_name . '" style="display: none;">' . implode(',', $valueArray) . '</span>';
                         }
                         $output .= $this->multipleFieldBox(
                             '',
@@ -607,9 +607,9 @@ class ArtifactFieldHtml extends ArtifactField
                     // Only show the 'None" label if empty value is allowed or
                     // if value is already none (it can happen if the field was not used in
                     // the artifact submission form)
-                    if ($this->isEmptyOk() || (implode(",", $arr)=="100")) {
-                        $show_none=true;
-                        $text_none=$Language->getText('global', 'none');
+                    if ($this->isEmptyOk() || (implode(",", $arr) == "100")) {
+                        $show_none = true;
+                        $text_none = $Language->getText('global', 'none');
                     }
 
                     //if (is_array($value))
@@ -635,7 +635,7 @@ class ArtifactFieldHtml extends ArtifactField
                 if ($value == $Language->getText('global', 'unchanged')) {
                          //$value = 'Unchanged (e.g. '.format_date("Y-m-j",time()).')';
                          $value = $Language->getText('global', 'unchanged');
-                         $output .= $this->fieldDate($value, false, (strlen($value)+1), (strlen($value)+1), 'masschange_form', true);
+                         $output .= $this->fieldDate($value, false, (strlen($value) + 1), (strlen($value) + 1), 'masschange_form', true);
                 } else {
                       // Default value
                     if ($value == "") {
@@ -658,7 +658,7 @@ class ArtifactFieldHtml extends ArtifactField
                 if ($this->getDataType() == $this->DATATYPE_FLOAT) {
                     if ($value == $Language->getText('global', 'unchanged')) {
                            //$value = 'Unchanged (e.g. '.number_format($value,2).')';
-                           $output .= $this->fieldText($value, (strlen($value)+1), (strlen($value)+1));
+                           $output .= $this->fieldText($value, (strlen($value) + 1), (strlen($value) + 1));
                            break;
                     } else {
                            $value = number_format($value, 2, '.', '');
@@ -667,7 +667,7 @@ class ArtifactFieldHtml extends ArtifactField
                 if ($ascii) {
                     $output .= util_unconvert_htmlspecialchars($value);
                 } else {
-                    $output .= ($ro ? $value: $this->fieldText($value));
+                    $output .= ($ro ? $value : $this->fieldText($value));
                 }
                 break;
 
@@ -675,7 +675,7 @@ class ArtifactFieldHtml extends ArtifactField
                 if ($ascii) {
                     $output .= util_unconvert_htmlspecialchars($value);
                 } else {
-                    $output .= ($ro ? nl2br($value):$this->fieldTextarea($value));
+                    $output .= ($ro ? nl2br($value) : $this->fieldTextarea($value));
                 }
                 break;
 

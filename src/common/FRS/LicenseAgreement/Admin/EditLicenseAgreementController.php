@@ -119,7 +119,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest
             $can_be_deleted = $this->factory->canBeDeleted($project, $license);
             if (! $can_be_deleted) {
                 foreach ($this->factory->getListOfPackagesForLicenseAgreement($license) as $package) {
-                    $used_by []= new UsedByPresenter($project, $package);
+                    $used_by[] = new UsedByPresenter($project, $package);
                 }
             }
         }

@@ -111,6 +111,6 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
 
     public function form_action()
     {
-        return '/plugins/git/?group_id='. $this->project_id .'&action=admin-mass-update';
+        return '/plugins/git/?group_id=' . $this->project_id . '&action=admin-mass-update';
     }
 }

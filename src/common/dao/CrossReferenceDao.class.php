@@ -66,21 +66,20 @@ class CrossReferenceDao extends DataAccessObject
 
     public function createDbCrossRef($cross_ref)
     {
-
-        $sql="INSERT INTO {$this->table_name}
+        $sql = "INSERT INTO {$this->table_name}
               (created_at,user_id,source_type,source_keyword,source_id,
                source_gid,target_type,target_keyword, target_id,target_gid)
-              VALUES ( ".
-                (time()) .",".
-                $this->da->quoteSmart((int) $cross_ref->userId) .", ".
-                $this->da->quoteSmart((string) $cross_ref->insertSourceType) .", ".
-                $this->da->quoteSmart((string) $cross_ref->sourceKey) ." ,".
-                $this->da->quoteSmart((string) $cross_ref->refSourceId) ." ,".
-                $this->da->quoteSmart((int) $cross_ref->refSourceGid) .", ".
-                $this->da->quoteSmart((string) $cross_ref->insertTargetType) .", ".
-                $this->da->quoteSmart((string) $cross_ref->targetKey) ." ,".
-                $this->da->quoteSmart((string) $cross_ref->refTargetId) .", ".
-                $this->da->quoteSmart((int) $cross_ref->refTargetGid) .")";
+              VALUES ( " .
+                (time()) . "," .
+                $this->da->quoteSmart((int) $cross_ref->userId) . ", " .
+                $this->da->quoteSmart((string) $cross_ref->insertSourceType) . ", " .
+                $this->da->quoteSmart((string) $cross_ref->sourceKey) . " ," .
+                $this->da->quoteSmart((string) $cross_ref->refSourceId) . " ," .
+                $this->da->quoteSmart((int) $cross_ref->refSourceGid) . ", " .
+                $this->da->quoteSmart((string) $cross_ref->insertTargetType) . ", " .
+                $this->da->quoteSmart((string) $cross_ref->targetKey) . " ," .
+                $this->da->quoteSmart((string) $cross_ref->refTargetId) . ", " .
+                $this->da->quoteSmart((int) $cross_ref->refTargetGid) . ")";
 
         $res = $this->da->query($sql);
         return (bool) ($res && !$res->isError());
@@ -88,13 +87,13 @@ class CrossReferenceDao extends DataAccessObject
 
     public function existInDb($cross_ref)
     {
-        $sql= "SELECT * from {$this->table_name} WHERE ".
-              "source_id='". db_es($cross_ref->refSourceId)."' AND " .
-              "target_id='". db_es($cross_ref->refTargetId)."' AND ".
-              "source_gid='". db_ei($cross_ref->refSourceGid)."' AND ".
-              "target_gid='". db_ei($cross_ref->refTargetGid)."' AND ".
-              "source_type='". db_es($cross_ref->insertSourceType) ."' AND ".
-              "target_type='". db_es($cross_ref->insertTargetType) ."'";
+        $sql = "SELECT * from {$this->table_name} WHERE " .
+              "source_id='" . db_es($cross_ref->refSourceId) . "' AND " .
+              "target_id='" . db_es($cross_ref->refTargetId) . "' AND " .
+              "source_gid='" . db_ei($cross_ref->refSourceGid) . "' AND " .
+              "target_gid='" . db_ei($cross_ref->refTargetGid) . "' AND " .
+              "source_type='" . db_es($cross_ref->insertSourceType) . "' AND " .
+              "target_type='" . db_es($cross_ref->insertTargetType) . "'";
         $res = $this->da->query($sql);
         return (bool) ($res && !$res->isError() && $res->rowCount() >= 1);
     }

@@ -45,6 +45,6 @@ class MilestoneInfoRepresentation
         $this->id            = JsonCast::toInt($milestone->getArtifactId());
         $this->label         = $milestone->getArtifactTitle();
         $this->last_modified = JsonCast::toDate($milestone->getLastModifiedDate());
-        $this->uri           = self::ROUTE.'/'.$this->id;
+        $this->uri           = self::ROUTE . '/' . $this->id;
     }
 }

@@ -43,9 +43,9 @@ class Destructor
     public function delete(Repository $repository)
     {
         if (! $this->dao->delete($repository->getId())) {
-            $this->logger->error('Unable to delete repository:'. $repository->getName() .' from database');
+            $this->logger->error('Unable to delete repository:' . $repository->getName() . ' from database');
         } else {
-            $this->logger->error('Repository:'. $repository->getName() .' deleted from database with success');
+            $this->logger->error('Repository:' . $repository->getName() . ' deleted from database with success');
         }
     }
 }

@@ -172,7 +172,7 @@ class Git_Driver_Gerrit_ProjectCreator
             $repository,
             $gerrit_server,
             $migrated_ugroups,
-            ForgeConfig::get('sys_default_domain') .'-'. self::GROUP_REPLICATION,
+            ForgeConfig::get('sys_default_domain') . '-' . self::GROUP_REPLICATION,
             $template_id
         );
 
@@ -230,7 +230,7 @@ class Git_Driver_Gerrit_ProjectCreator
 
     private function dumpTemplateContent($template_content)
     {
-        file_put_contents($this->dir.'/project.config', $template_content);
+        file_put_contents($this->dir . '/project.config', $template_content);
     }
 
     private function noAccessRightsMigrationRequested($template_id)
@@ -254,7 +254,7 @@ class Git_Driver_Gerrit_ProjectCreator
     private function pushFullTuleapAccessRightsToGerrit(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, array $ugroups, $replication_group, $template_id)
     {
         foreach ($ugroups as $ugroup) {
-            $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName());
+            $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName() . '/' . $ugroup->getNormalizedName());
         }
         $this->addGroupToGroupFile($gerrit_server, $replication_group);
         $this->addRegisteredUsersGroupToGroupFile();
@@ -277,7 +277,7 @@ class Git_Driver_Gerrit_ProjectCreator
         if (! is_dir($this->dir)) {
             mkdir($this->dir);
             $this->git_exec->init();
-            $this->git_exec->setLocalCommiter($gerrit_server->getLogin(), 'codendiadm@'. ForgeConfig::get('sys_default_domain'));
+            $this->git_exec->setLocalCommiter($gerrit_server->getLogin(), 'codendiadm@' . ForgeConfig::get('sys_default_domain'));
             $this->git_exec->remoteAdd($gerrit_project_url);
         }
         $this->git_exec->pullBranch('origin', 'refs/meta/config');
@@ -337,13 +337,13 @@ class Git_Driver_Gerrit_ProjectCreator
 
         foreach ($ugroups as $ugroup) {
             if (in_array($ugroup->getId(), $ugroup_ids_read)) {
-                $ugroups_read[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+                $ugroups_read[] = $repository->getProject()->getUnixName() . '/' . $ugroup->getNormalizedName();
             }
             if (in_array($ugroup->getId(), $ugroup_ids_write)) {
-                $ugroups_write[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+                $ugroups_write[] = $repository->getProject()->getUnixName() . '/' . $ugroup->getNormalizedName();
             }
             if (in_array($ugroup->getId(), $ugroup_ids_rewind)) {
-                $ugroups_rewind[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+                $ugroups_rewind[] = $repository->getProject()->getUnixName() . '/' . $ugroup->getNormalizedName();
             }
         }
 
@@ -425,19 +425,19 @@ class Git_Driver_Gerrit_ProjectCreator
     private function removeFromSection($section, $permission, $value)
     {
         $this->git_exec->setWorkTree($this->dir);
-        $this->git_exec->configFile($this->dir.'/project.config', "--unset access.$section/*.$permission '$value'");
+        $this->git_exec->configFile($this->dir . '/project.config', "--unset access.$section/*.$permission '$value'");
     }
 
     private function addToSection($section, $permission, $value)
     {
         $this->git_exec->setWorkTree($this->dir);
-        $this->git_exec->configFile($this->dir.'/project.config', "--add access.$section/*.$permission '$value'");
+        $this->git_exec->configFile($this->dir . '/project.config', "--add access.$section/*.$permission '$value'");
     }
     private function pushToServer()
     {
         $this->git_exec->setWorkTree($this->dir);
-        $this->git_exec->add($this->dir.'/project.config');
-        $this->git_exec->add($this->dir.'/groups');
+        $this->git_exec->add($this->dir . '/project.config');
+        $this->git_exec->add($this->dir . '/groups');
         $this->git_exec->commit('Updated project config and access rights');
         $this->git_exec->push('origin HEAD:refs/meta/config');
     }

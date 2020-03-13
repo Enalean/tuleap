@@ -73,7 +73,7 @@ class Git_Hook_LogAnalyzer
                 $rev_type = $this->exec_repo->getObjectType($newrev);
             }
         } catch (Git_Command_Exception $exception) {
-            $this->logger->error(self::class." {$repository->getFullName()} $refname $oldrev $newrev ".$exception->getMessage());
+            $this->logger->error(self::class . " {$repository->getFullName()} $refname $oldrev $newrev " . $exception->getMessage());
         }
 
         return new Git_Hook_PushDetails(

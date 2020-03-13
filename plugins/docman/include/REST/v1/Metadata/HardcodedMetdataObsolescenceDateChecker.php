@@ -42,7 +42,7 @@ class HardcodedMetdataObsolescenceDateChecker
      */
     public function checkDateValidity(int $current_date, int $obsolescence_date): void
     {
-        if ($obsolescence_date === (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE) {
+        if ($obsolescence_date === (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE) {
             return;
         }
 

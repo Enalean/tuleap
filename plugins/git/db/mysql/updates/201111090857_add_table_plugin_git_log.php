@@ -51,11 +51,11 @@ EOT;
      */
     public function up()
     {
-        $sql = 'CREATE TABLE plugin_git_log ('.
-                    ' repository_id INT(10) UNSIGNED NOT NULL,'.
-                    ' user_id INT(11) UNSIGNED NULL,'.
-                    ' push_date INT(11) NOT NULL,'.
-                    ' commits_number INT,'.
+        $sql = 'CREATE TABLE plugin_git_log (' .
+                    ' repository_id INT(10) UNSIGNED NOT NULL,' .
+                    ' user_id INT(11) UNSIGNED NULL,' .
+                    ' push_date INT(11) NOT NULL,' .
+                    ' commits_number INT,' .
                     ' INDEX idx_repository_user(repository_id, user_id))';
         $this->db->createTable('plugin_git_log', $sql);
     }

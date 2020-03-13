@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;

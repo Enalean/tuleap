@@ -275,7 +275,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
-            (int)$this->getArtifactRank($changeset->getArtifact()->getID())
+            (int) $this->getArtifactRank($changeset->getArtifact()->getID())
         );
         return $artifact_field_value_full_representation;
     }

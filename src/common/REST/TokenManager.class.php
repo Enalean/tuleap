@@ -50,7 +50,6 @@ class Rest_TokenManager
      */
     public function checkToken(Rest_Token $token)
     {
-
         if ($this->token_factory->doesTokenExist($token->getUserId(), $token->getTokenValue())) {
             return $this->user_manager->getUserById($token->getUserId());
         }

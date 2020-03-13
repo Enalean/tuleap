@@ -58,7 +58,6 @@ class KanbanRepresentationBuilder
      */
     public function build(AgileDashboard_Kanban $kanban, PFUser $user)
     {
-
         try {
             $this->kanban_actions_checker->checkUserCanAddInPlace($user, $kanban);
             $user_can_add_in_place = true;

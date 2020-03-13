@@ -153,7 +153,6 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
         $offset,
         $order
     ) {
-
         $sub_milestones = $this->milestone_factory
             ->getPaginatedTopMilestonesWithStatusCriterion($user, $project, $criterion, $limit, $offset, $order);
 

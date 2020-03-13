@@ -58,7 +58,6 @@ final class DocmanItemMover
         Docman_PermissionsManager $permissions_manager,
         EventManager $event_manager
     ) {
-
         $this->item_factory        = $item_factory;
         $this->before_move_visitor = $before_move_visitor;
         $this->permissions_manager = $permissions_manager;

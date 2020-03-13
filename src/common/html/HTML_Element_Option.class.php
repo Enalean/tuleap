@@ -42,8 +42,8 @@ class HTML_Element_Option extends HTML_Element
     protected function renderValue()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $html = '<option value="'.  $hp->purify($this->value, CODENDI_PURIFIER_CONVERT_HTML) .'" '. $this->selected .'>';
-        $html .=  $hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML) ;
+        $html = '<option value="' .  $hp->purify($this->value, CODENDI_PURIFIER_CONVERT_HTML) . '" ' . $this->selected . '>';
+        $html .=  $hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</option>';
         return $html;
     }

@@ -58,7 +58,7 @@ class DelegationController
             if ($this->membership_delegation_dao->updateMembershipManagement($ugroup->getId(), $has_membership_management)) {
                 $this->history_dao->groupAddHistory(
                     'ugroup_membership_management_updated',
-                    (int)$has_membership_management,
+                    (int) $has_membership_management,
                     $ugroup->getProjectId(),
                     array($ugroup->getName())
                 );

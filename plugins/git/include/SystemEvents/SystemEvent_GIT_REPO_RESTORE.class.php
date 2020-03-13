@@ -60,7 +60,7 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
         }
 
         if (!$repository->getBackend()->restoreArchivedRepository($repository)) {
-            $this->error('Unable to restore repository : '.$repository->getName());
+            $this->error('Unable to restore repository : ' . $repository->getName());
             return false;
         }
 
@@ -74,7 +74,7 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
     {
         $repository = $this->getRepositoryFromParameters();
         if ($repository !== null) {
-            return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
+            return '<a href="/plugins/git/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '">' . $repository->getName() . '</a>';
         }
         return '';
     }

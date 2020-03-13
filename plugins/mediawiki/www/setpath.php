@@ -23,17 +23,17 @@ spl_autoload_register(function ($class_with_namespace) {
     $iterator = new AppendIterator();
     $iterator->append(
         new RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(__DIR__ .'/../../../src/common/dao/include/', \FilesystemIterator::SKIP_DOTS)
+            new \RecursiveDirectoryIterator(__DIR__ . '/../../../src/common/dao/include/', \FilesystemIterator::SKIP_DOTS)
         )
     );
     $iterator->append(
         new RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(__DIR__ .'/../../../src/common/DB/', \FilesystemIterator::SKIP_DOTS)
+            new \RecursiveDirectoryIterator(__DIR__ . '/../../../src/common/DB/', \FilesystemIterator::SKIP_DOTS)
         )
     );
     $iterator->append(
         new RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(__DIR__ .'/../../../src/common/Config/', \FilesystemIterator::SKIP_DOTS)
+            new \RecursiveDirectoryIterator(__DIR__ . '/../../../src/common/Config/', \FilesystemIterator::SKIP_DOTS)
         )
     );
 

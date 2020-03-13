@@ -83,7 +83,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         $project_id      = $this->getRequiredParameter(1);
         $repository_name = $this->getRequiredParameter(2);
 
-        $txt = 'project: '. $this->verbalizeProjectId($project_id, $with_link) .', path: '.$path.', name: '.$repository_name;
+        $txt = 'project: ' . $this->verbalizeProjectId($project_id, $with_link) . ', path: ' . $path . ', name: ' . $repository_name;
         return $txt;
     }
 
@@ -91,7 +91,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
     public function process()
     {
         $system_path    = $this->getRequiredParameter(0);
-        $project_id     = (int)$this->getRequiredParameter(1);
+        $project_id     = (int) $this->getRequiredParameter(1);
         $repository_id  = $this->getRequiredParameter(3);
         $initial_layout = $this->getParameter(4) ?: array();
         $user           = $this->user_manager->getUserById($this->getParameter(5));
@@ -107,7 +107,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
             $this->backend_svn->createRepositorySVN(
                 $project_id,
                 $system_path,
-                ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/',
+                ForgeConfig::get('tuleap_dir') . '/plugins/svn/bin/',
                 $user,
                 $initial_layout
             );

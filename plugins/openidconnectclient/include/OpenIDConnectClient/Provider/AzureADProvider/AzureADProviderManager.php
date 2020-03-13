@@ -98,11 +98,11 @@ class AzureADProviderManager
     public function instantiateAzureProviderFromRow(array $row): AzureADProvider
     {
         return new AzureADProvider(
-            (int)$row['id'],
+            (int) $row['id'],
             $row['name'],
             $row['client_id'],
             $row['client_secret'],
-            (bool)$row['unique_authentication_endpoint'],
+            (bool) $row['unique_authentication_endpoint'],
             $row['icon'],
             $row['color'],
             $row['tenant_id'],

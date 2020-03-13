@@ -51,7 +51,6 @@ class AquaTheme extends Theme
 
     public function SetupGraph($graph)
     {
-
         // graph
         /*
         $img = $graph->img;
@@ -101,7 +100,6 @@ class AquaTheme extends Theme
 
     public function SetupPieGraph($graph)
     {
-
         // graph
         $graph->SetFrame(false);
 
@@ -140,7 +138,6 @@ class AquaTheme extends Theme
 
     public function ApplyPlot($plot)
     {
-
         switch (get_class($plot)) {
             case 'GroupBarPlot':
                 foreach ($plot->plots as $_plot) {

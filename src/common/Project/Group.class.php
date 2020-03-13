@@ -76,22 +76,22 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             // - a row from the groups table -> use it
             // - a group_id -> retrieve row from table
         if (is_array($param)) {
-            $this->group_id=$param['group_id'];
-            $this->data_array=$param;
+            $this->group_id = $param['group_id'];
+            $this->data_array = $param;
         } elseif (intval($param) > 0) {
-            $this->group_id=(int)$param; // TODO db_es()?
-            $this->db_result=db_query("SELECT * FROM groups WHERE group_id=".$this->group_id);
+            $this->group_id = (int) $param; // TODO db_es()?
+            $this->db_result = db_query("SELECT * FROM groups WHERE group_id=" . $this->group_id);
             if (db_numrows($this->db_result) < 1) {
              //function in class we extended
                 $this->setError($GLOBALS['Language']->getText('include_group', 'g_not_found'));
-                $this->data_array=array();
+                $this->data_array = array();
             } else {
              //set up an associative array for use by other functions
-                $this->data_array=db_fetch_array($this->db_result);
+                $this->data_array = db_fetch_array($this->db_result);
             }
         } else {
             $this->setError('');
-            $this->data_array=array();
+            $this->data_array = array();
         }
     }
 
@@ -181,7 +181,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     public function getUrl()
     {
-        return '/projects/'.urlencode($this->getUnixNameMixedCase());
+        return '/projects/' . urlencode($this->getUnixNameMixedCase());
     }
 
     /**
@@ -229,7 +229,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getUnixGID()
     {
-        return $this->data_array['group_id']+$GLOBALS['unix_gid_add'];
+        return $this->data_array['group_id'] + $GLOBALS['unix_gid_add'];
     }
 
     /**
@@ -242,7 +242,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if ($this->members_data_array) {
      //list of members already built
         } else {
-            $res=db_query("SELECT user_id FROM user_group WHERE group_id='". $this->getGroupId() ."'");
+            $res = db_query("SELECT user_id FROM user_group WHERE group_id='" . $this->getGroupId() . "'");
             if ($res && db_numrows($res) > 0) {
                     $mb_array = array();
                 while ($row = db_fetch_array($res)) {
@@ -251,7 +251,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 $this->members_data_array = $mb_array;
             } else {
                     echo db_error();
-                    $this->members_data_array=array();
+                    $this->members_data_array = array();
             }
             db_free_result($res);
         }
@@ -292,7 +292,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      //on their project
             return true;
         } else {
-            $arr=$this->getPermData();
+            $arr = $this->getPermData();
             if (array_key_exists($field, $arr) && ($arr[$field] > $value)) {
                     return true;
             } else {
@@ -351,16 +351,16 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         } else {
             if (user_isloggedin()) {
                     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-                    $res=db_query("SELECT * FROM user_group WHERE user_id='".$db_escaped_user_id."' and group_id='". $this->getGroupId() ."'");
+                    $res = db_query("SELECT * FROM user_group WHERE user_id='" . $db_escaped_user_id . "' and group_id='" . $this->getGroupId() . "'");
                 if ($res && db_numrows($res) > 0) {
-                    $this->perm_data_array=db_fetch_array($res);
+                    $this->perm_data_array = db_fetch_array($res);
                 } else {
                     echo db_error();
-                    $this->perm_data_array=array();
+                    $this->perm_data_array = array();
                 }
                 db_free_result($res);
             } else {
-                    $this->perm_data_array=array();
+                    $this->perm_data_array = array();
             }
         }
         return $this->perm_data_array;
@@ -386,7 +386,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     public function setType($type)
     {
-        db_query("UPDATE groups SET type='$type' WHERE group_id='".$this->group_id."'");
+        db_query("UPDATE groups SET type='$type' WHERE group_id='" . $this->group_id . "'");
     }
 
     /**

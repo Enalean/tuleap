@@ -131,7 +131,7 @@ class Admin_PermissionDelegationController
     {
         if ($id) {
             $redirect = http_build_query(array('id' => $id));
-            $GLOBALS['Response']->redirect(self::REDIRECT_URL.'?'.$redirect);
+            $GLOBALS['Response']->redirect(self::REDIRECT_URL . '?' . $redirect);
         }
 
         $GLOBALS['Response']->redirect(self::REDIRECT_URL);
@@ -378,7 +378,7 @@ class Admin_PermissionDelegationController
 
     private function getTemplatesDir()
     {
-        return ForgeConfig::get('codendi_dir') .'/src/templates/admin/permission_delegation/';
+        return ForgeConfig::get('codendi_dir') . '/src/templates/admin/permission_delegation/';
     }
 
     private function manageUsers()

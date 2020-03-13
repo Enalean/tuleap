@@ -157,11 +157,11 @@ class MediaWikiInstantiater
         }
 
         if ($dir_exists && ! $db_name) {
-            throw new MediawikiInstantiaterException('Project dir ' . $this->project_name_dir . ' exists, but database '.$db_name.' cannot be found');
+            throw new MediawikiInstantiaterException('Project dir ' . $this->project_name_dir . ' exists, but database ' . $db_name . ' cannot be found');
         }
 
         if (! $dir_exists && $db_name) {
-            throw new MediawikiInstantiaterException('Project dir ' . $this->project_name_dir . ' does not exist, but database '.$db_name.' found');
+            throw new MediawikiInstantiaterException('Project dir ' . $this->project_name_dir . ' does not exist, but database ' . $db_name . ' found');
         }
 
         $this->ensureDatabaseIsCorrect($db_name);

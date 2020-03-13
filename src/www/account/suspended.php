@@ -5,8 +5,8 @@
 require_once __DIR__ . '/../include/pre.php';
 
 
-$HTML->header(array('title'=>$Language->getText('account_suspended', 'title')));
+$HTML->header(array('title' => $Language->getText('account_suspended', 'title')));
 
-echo '<P>'.$Language->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
+echo '<P>' . $Language->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
 
 echo $HTML->footer(array());

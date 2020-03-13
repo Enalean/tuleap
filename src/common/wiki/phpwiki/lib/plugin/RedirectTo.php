@@ -127,7 +127,7 @@ class WikiPlugin_RedirectTo extends WikiPlugin
 
         return $request->redirect($url);
     }
-};
+}
 
 // $Log: RedirectTo.php,v $
 // Revision 1.13  2004/02/17 12:11:36  rurban

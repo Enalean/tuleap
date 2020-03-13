@@ -56,13 +56,13 @@ class AdminPresenter
 
     public function admin_action()
     {
-        return PROFTPD_BASE_URL.'/';
+        return PROFTPD_BASE_URL . '/';
     }
 
     public function readers_selector()
     {
         return array(
-            'name'    => 'permissions['.PermissionsManager::PERM_READ.']',
+            'name'    => 'permissions[' . PermissionsManager::PERM_READ . ']',
             'options' => $this->getSelectorOptions($this->readers_ugroup_id)
         );
     }
@@ -70,7 +70,7 @@ class AdminPresenter
     public function writers_selector()
     {
         return array(
-            'name'    => 'permissions['.PermissionsManager::PERM_WRITE.']',
+            'name'    => 'permissions[' . PermissionsManager::PERM_WRITE . ']',
             'options' => $this->getSelectorOptions($this->writers_ugroup_id)
         );
     }
@@ -129,7 +129,7 @@ class AdminPresenter
 
     public function permissions_pitch()
     {
-        return dgettext('tuleap-proftpd', 'Select the user group that will be allowed to access and/or'.
+        return dgettext('tuleap-proftpd', 'Select the user group that will be allowed to access and/or' .
             ' modify content in the FTP area. Please note that Writers will automatically have read access as well.');
     }
 

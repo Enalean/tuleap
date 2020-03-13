@@ -44,7 +44,7 @@ if (!$GLOBALS['sys_frs_license_mandatory']) {
     // This is useful when using a 'file #123' reference, that points to this script
     $res = $frspf->getFRSPackageByFileIdFromDb($file_id);
     if ($res !== null) {
-        if ($res->getApproveLicense()==0) {
+        if ($res->getApproveLicense() == 0) {
             // Directly display file
             $location = 'Location: /file/download/' . urlencode($file_id);
             header($location);
@@ -54,11 +54,11 @@ if (!$GLOBALS['sys_frs_license_mandatory']) {
 }
 
 if ($request->exist('popup')) {
-    $dlscript='opener.download';
-    $cancelscript='window.close()';
+    $dlscript = 'opener.download';
+    $cancelscript = 'window.close()';
 } else {
-    $dlscript='download_local';
-    $cancelscript='history.back()';
+    $dlscript = 'download_local';
+    $cancelscript = 'history.back()';
 }
 ?>
 <html>
@@ -102,7 +102,7 @@ echo $Language->getText('file_confirm_download', 'download_explain', array($GLOB
     </td>
   </tr>
 <?php if (!$request->exist('popup')) {
-    echo '<p>  <tr><td colspan="2" class="small"><a href="javascript:history.back();">'.$Language->getText('file_confirm_download', 'back').'</a></td></tr>';
+    echo '<p>  <tr><td colspan="2" class="small"><a href="javascript:history.back();">' . $Language->getText('file_confirm_download', 'back') . '</a></td></tr>';
 } ?>
 </table>
 </span>

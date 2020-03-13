@@ -68,7 +68,7 @@ class SOAP_NusoapWSDL
             $wsdlGen->getParameters(),
             $wsdlGen->getReturnType(),
             $this->uri,
-            $this->uri.'#'.$method->getName(),
+            $this->uri . '#' . $method->getName(),
             'rpc',
             'encoded',
             $wsdlGen->getHTMLFormattedComment()

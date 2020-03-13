@@ -78,7 +78,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent
     public function process()
     {
         $user_id = $this->getUserIdFromParameters();
-        $this->logger->debug('Dump key for user '.$user_id);
+        $this->logger->debug('Dump key for user ' . $user_id);
 
         $user                   = $this->getUserFromParameters();
         $gitolite_admin_repo    = new GitRepositoryGitoliteAdmin();
@@ -94,7 +94,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent
             $this->done();
         } catch (Git_UserSynchronisationException $e) {
             $are_keys_successfuly_deployed = false;
-            $warning_message               = 'Unable to propagate ssh keys on gerrit for user: ' . $user->getUnixName().': '.$e->getMessage();
+            $warning_message               = 'Unable to propagate ssh keys on gerrit for user: ' . $user->getUnixName() . ': ' . $e->getMessage();
         }
 
         if ($are_keys_successfuly_deployed) {

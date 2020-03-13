@@ -166,7 +166,7 @@ class Statistics_DiskUsageManager
             if ($dar && !$dar->isError()) {
                 foreach ($dar as $row) {
                     if (strpos($row['service'], self::PATH) !== false) {
-                        $path = substr($row['service'], strlen(self::PATH.'_')-1);
+                        $path = substr($row['service'], strlen(self::PATH . '_') - 1);
                         $res['path'][$path] = $row['size'];
                     } else {
                         $res['service'][$row['service']] = $row['size'];
@@ -187,13 +187,13 @@ class Statistics_DiskUsageManager
     {
         switch ($groupBy) {
             case 'DAY':
-                return $row['year'].'-'.$row['month'].'-'.$row['day'];
+                return $row['year'] . '-' . $row['month'] . '-' . $row['day'];
                 break;
             case 'MONTH':
-                return $row['year'].'-'.$row['month'];
+                return $row['year'] . '-' . $row['month'];
                 break;
             case 'WEEK':
-                return $row['year'].'-'.$row['week'];
+                return $row['year'] . '-' . $row['week'];
                 break;
             default:
             case 'YEAR':
@@ -281,7 +281,7 @@ class Statistics_DiskUsageManager
                     if (isset($values[$row['service']]['start_size'])) {
                         $values[$row['service']]['evolution'] = $row['size'] - $values[$row['service']]['start_size'];
                         if ($values[$row['service']]['start_size'] != 0) {
-                            $values[$row['service']]['evolution_rate'] = ($row['size'] / $values[$row['service']]['start_size'])-1;
+                            $values[$row['service']]['evolution_rate'] = ($row['size'] / $values[$row['service']]['start_size']) - 1;
                         } else {
                             $values[$row['service']]['evolution_rate'] = 1;
                         }
@@ -311,7 +311,7 @@ class Statistics_DiskUsageManager
 
         if (isset($res['start_size'])) {
             if ($res['start_size'] != 0) {
-                $res['evolution_rate'] = ($res['end_size'] / $res['start_size'])-1;
+                $res['evolution_rate'] = ($res['end_size'] / $res['start_size']) - 1;
             } else {
                 $res['evolution_rate'] = 1;
             }
@@ -491,7 +491,7 @@ class Statistics_DiskUsageManager
         array &$time_to_collect
     ) {
         $start = microtime(true);
-        $size  = $this->getDirSize($path.'/');
+        $size  = $this->getDirSize($path . '/');
         if ($size) {
             $this->dao->addGroup($project_id, $service, $size, $collect_date->getTimestamp());
         }
@@ -504,7 +504,7 @@ class Statistics_DiskUsageManager
 
     public function storeForUser(DateTimeImmutable $collect_date, $userId, $service, $path)
     {
-        $size = $this->getDirSize($path.'/');
+        $size = $this->getDirSize($path . '/');
         if ($size) {
             $dao = $this->_getDao();
             $dao->addUser($userId, $service, $size, $collect_date->getTimestamp());
@@ -513,7 +513,7 @@ class Statistics_DiskUsageManager
 
     public function storeForSite(DateTimeImmutable $collect_date, $service, $path)
     {
-        $size = $this->getDirSize($path.'/');
+        $size = $this->getDirSize($path . '/');
         if ($size) {
             $dao = $this->_getDao();
             $dao->addSite($service, $size, $collect_date->getTimestamp());
@@ -557,14 +557,14 @@ class Statistics_DiskUsageManager
             $this->collectSVNDiskUsage($project, $collect_date, $time_to_collect);
             $this->collectCVSDiskUsage($project, $collect_date, $time_to_collect);
 
-            $this->storeForGroup($collect_date, $row['group_id'], self::FRS, $GLOBALS['ftp_frs_dir_prefix']."/".$row['unix_group_name'], $time_to_collect);
-            $this->storeForGroup($collect_date, $row['group_id'], self::FTP, $GLOBALS['ftp_anon_dir_prefix']."/".$row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], self::FRS, $GLOBALS['ftp_frs_dir_prefix'] . "/" . $row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], self::FTP, $GLOBALS['ftp_anon_dir_prefix'] . "/" . $row['unix_group_name'], $time_to_collect);
             if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
                 $this->storeForGroup($collect_date, $row['group_id'], self::GRP_HOME, ForgeConfig::get('grpdir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
             }
-            $this->storeForGroup($collect_date, $row['group_id'], Service::WIKI, $GLOBALS['sys_wiki_attachment_data_dir']."/".$row['group_id'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], Service::WIKI, $GLOBALS['sys_wiki_attachment_data_dir'] . "/" . $row['group_id'], $time_to_collect);
             // Fake plugin for webdav/subversion
-            $this->storeForGroup($collect_date, $row['group_id'], self::PLUGIN_WEBDAV, '/var/lib/codendi/webdav'."/".$row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], self::PLUGIN_WEBDAV, '/var/lib/codendi/webdav' . "/" . $row['unix_group_name'], $time_to_collect);
 
             $params = array(
                 'DiskUsageManager' => $this,
@@ -592,8 +592,8 @@ class Statistics_DiskUsageManager
         $start = microtime(true);
         $size  = $this->cvs_collector->collectForCVSRepositories($project);
         if (! $size) {
-            $path = ForgeConfig::get('cvs_prefix').'/'.$project->getUnixNameMixedCase();
-            $size = $this->getDirSize($path.'/');
+            $path = ForgeConfig::get('cvs_prefix') . '/' . $project->getUnixNameMixedCase();
+            $size = $this->getDirSize($path . '/');
         }
 
         $this->dao->addGroup(
@@ -615,7 +615,7 @@ class Statistics_DiskUsageManager
         $size  = $this->svn_collector->collectForSubversionRepositories($project);
         if (! $size) {
             $path = $project->getSVNRootPath();
-            $size = $this->getDirSize($path.'/');
+            $size = $this->getDirSize($path . '/');
         }
 
         $this->dao->addGroup(
@@ -648,8 +648,8 @@ class Statistics_DiskUsageManager
                 }
                 $sMailman = 0;
             }
-            $sMailman += $this->getDirSize($mmArchivesPath.'/'.$row['list_name'].'/');
-            $sMailman += $this->getDirSize($mmArchivesPath.'/'.$row['list_name'].'.mbox/');
+            $sMailman += $this->getDirSize($mmArchivesPath . '/' . $row['list_name'] . '/');
+            $sMailman += $this->getDirSize($mmArchivesPath . '/' . $row['list_name'] . '.mbox/');
 
             $previous = $row['group_id'];
         }
@@ -711,7 +711,7 @@ class Statistics_DiskUsageManager
                 } else {
                     $df = preg_split("/[\s]+/", $line);
                     if ($df[0] != 'tmpfs') {
-                        $dao->addSite('path_'.$df[5], $df[2], $collect_date->getTimestamp());
+                        $dao->addSite('path_' . $df[5], $df[2], $collect_date->getTimestamp());
                     }
                 }
             }
@@ -735,7 +735,7 @@ class Statistics_DiskUsageManager
     {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('statistics');
-        $info =$p->getPluginInfo();
+        $info = $p->getPluginInfo();
         return $info->getPropertyValueForName($name);
     }
 }

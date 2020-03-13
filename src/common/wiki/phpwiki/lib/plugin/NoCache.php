@@ -66,7 +66,7 @@ class WikiPlugin_NoCache extends WikiPlugin
         // if WIKIDB_NOCACHE_MARKUP is false it doesn't hurt
         return $request->setArg('nocache', $args['nocache']);
     }
-};
+}
 
 // $Log: NoCache.php,v $
 // Revision 1.3  2004/06/18 14:42:17  rurban

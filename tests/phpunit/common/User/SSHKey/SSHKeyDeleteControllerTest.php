@@ -69,12 +69,12 @@ final class SSHKeyDeleteControllerTest extends TestCase
         $user = UserTestBuilder::aUser()->withId(110)->build();
         $this->csrf_token->shouldReceive('check')->with('/account/keys-tokens')->once();
 
-        $this->user_manager->shouldReceive('deleteSSHKeys')->with($user, [ '1', '3' ])->once();
+        $this->user_manager->shouldReceive('deleteSSHKeys')->with($user, ['1', '3'])->once();
 
         $layout_inspector = new LayoutInspector();
 
         $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)->withParam('ssh_key_selected', [ '1', '3' ])->build(),
+            HTTPRequestBuilder::get()->withUser($user)->withParam('ssh_key_selected', ['1', '3'])->build(),
             LayoutBuilder::buildWithInspector($layout_inspector),
             []
         );

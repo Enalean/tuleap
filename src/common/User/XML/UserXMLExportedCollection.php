@@ -61,14 +61,14 @@ class UserXMLExportedCollection
             }
 
             $user_node = $xml_element->addChild('user');
-            $this->cdata_factory->insert($user_node, 'id', (int)$user->getId());
+            $this->cdata_factory->insert($user_node, 'id', (int) $user->getId());
             $this->cdata_factory->insert($user_node, 'username', $user->getUserName());
             $this->cdata_factory->insert($user_node, 'realname', $user->getRealName());
             $this->cdata_factory->insert($user_node, 'email', $user->getEmail());
             $this->cdata_factory->insert($user_node, 'ldapid', $user->getLdapId());
         }
 
-        $rng_path = realpath(ForgeConfig::get('tuleap_dir') .'/src/common/xml/resources/users.rng');
+        $rng_path = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/users.rng');
         $this->xml_validator->validate($xml_element, $rng_path);
 
         return $this->convertToXml($xml_element);

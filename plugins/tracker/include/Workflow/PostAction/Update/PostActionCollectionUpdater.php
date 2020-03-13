@@ -34,7 +34,7 @@ class PostActionCollectionUpdater
      */
     private $post_action_updaters;
 
-    public function __construct(PostActionUpdater...$post_action_updaters)
+    public function __construct(PostActionUpdater ...$post_action_updaters)
     {
         $this->post_action_updaters = $post_action_updaters;
     }

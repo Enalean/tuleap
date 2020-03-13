@@ -187,7 +187,7 @@ class TrackerXmlExport
     private function validateTrackerExport(SimpleXMLElement $xml_trackers)
     {
         try {
-            $partial_element = new SimpleXMLElement((string)$xml_trackers->asXML());
+            $partial_element = new SimpleXMLElement((string) $xml_trackers->asXML());
             foreach ($partial_element->tracker as $xml_tracker) {
                 $this->external_field_extractor->extractExternalFieldsFromTracker($xml_tracker);
             }
@@ -195,7 +195,7 @@ class TrackerXmlExport
             return $xml_trackers;
         } catch (XML_ParseException $exception) {
             foreach ($exception->getErrors() as $parse_error) {
-                fwrite(STDERR, $parse_error.PHP_EOL);
+                fwrite(STDERR, $parse_error . PHP_EOL);
             }
         }
     }
@@ -239,7 +239,7 @@ class TrackerXmlExport
 
     private function validateExport(SimpleXMLElement $xml_trackers)
     {
-        $partial_element = new SimpleXMLElement((string)$xml_trackers->asXML());
+        $partial_element = new SimpleXMLElement((string) $xml_trackers->asXML());
 
         foreach ($partial_element->tracker as $xml_tracker) {
             $this->external_field_extractor->extractExternalFieldsFromTracker($xml_tracker);

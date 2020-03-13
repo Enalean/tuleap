@@ -46,7 +46,7 @@ if (!$project || $project->isError()) {
     $GLOBALS['Response']->redirect('/admin');
 }
 
-$csrf_token = new CSRFSynchronizerToken('/admin/groupedit.php?group_id='.urlencode($project_id));
+$csrf_token = new CSRFSynchronizerToken('/admin/groupedit.php?group_id=' . urlencode($project_id));
 
 $fields_factory            = new Tuleap\Project\DescriptionFieldsFactory(new Tuleap\Project\DescriptionFieldsDao());
 $description_field_builder = new ProjectDescriptionFieldBuilder($fields_factory);

@@ -20,7 +20,7 @@
 
 namespace Tuleap\Git\Hook;
 
-require_once __DIR__ .'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 use GitRepository;
 use Mockery;

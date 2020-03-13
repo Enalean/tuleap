@@ -230,7 +230,7 @@ class Docman_NotificationsManager
     protected function _addMessage(PFUser $to, $subject, $msg, $link)
     {
         if (!isset($this->notifications[$msg])) {
-            $subject = '['. $this->_group_name .' - Documents] '. $subject;
+            $subject = '[' . $this->_group_name . ' - Documents] ' . $subject;
 
             $this->notifications[$msg] = new Notification(
                 array(),
@@ -296,15 +296,15 @@ class Docman_NotificationsManager
                         dgettext('tuleap-docman', '%s has been modified by %s.'),
                         $params['path']->get($params['item']),
                         $user->getRealName()
-                    ) ."\n";
-                $msg .= $this->getMessageLink($message_type, $params) ."\n";
+                    ) . "\n";
+                $msg .= $this->getMessageLink($message_type, $params) . "\n";
                 break;
             case self::MESSAGE_WIKI_NEWVERSION:
                 $msg .= sprintf(
                     dgettext('tuleap-docman', "New version of %s wiki page was created by %s."),
                     $params['wiki_page'],
                     $user->getRealName()
-                ) ."\n";
+                ) . "\n";
                 $msg .= $this->getMessageLink($message_type, $params) . "\n";
                 break;
             default:

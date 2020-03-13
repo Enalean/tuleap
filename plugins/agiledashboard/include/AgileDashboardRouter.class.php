@@ -297,7 +297,7 @@ class AgileDashboardRouter
                         $this->renderAction($this->buildController($request), 'adminScrum', $request);
                     }
                 } else {
-                    $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL .'/?group_id='. urlencode($request->get('group_id')));
+                    $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL . '/?group_id=' . urlencode($request->get('group_id')));
                 }
                 break;
             case 'export':
@@ -532,8 +532,8 @@ class AgileDashboardRouter
         MVC2_Controller $controller,
         $action_name,
         Codendi_Request $request,
-        array           $args = array(),
-        array           $header_options = array()
+        array $args = array(),
+        array $header_options = array()
     ) {
         $content = $this->executeAction($controller, $action_name, $args);
         $header_options = array_merge($header_options, $controller->getHeaderOptions());
@@ -554,9 +554,8 @@ class AgileDashboardRouter
     protected function executeAction(
         MVC2_Controller $controller,
         $action_name,
-        array           $args = array()
+        array $args = array()
     ) {
-
         return call_user_func_array(array($controller, $action_name), $args);
     }
 

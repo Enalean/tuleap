@@ -187,7 +187,7 @@ class FrontRouterTest extends TestCase
 
     public function testItDispatchWithProject() : void
     {
-        $handler = \Mockery::mock(DispatchableWithRequest::class.', '.DispatchableWithProject::class);
+        $handler = \Mockery::mock(DispatchableWithRequest::class . ', ' . DispatchableWithProject::class);
         $handler->shouldReceive('process')->with($this->request, $this->layout, [])->once();
         $this->request_instrumentation->shouldReceive('increment')->once();
 
@@ -213,7 +213,7 @@ class FrontRouterTest extends TestCase
 
     public function testItProvidesABurningParrotThemeWhenControllerAskForIt() : void
     {
-        $handler = \Mockery::mock(DispatchableWithRequest::class.', '.DispatchableWithBurningParrot::class);
+        $handler = \Mockery::mock(DispatchableWithRequest::class . ', ' . DispatchableWithBurningParrot::class);
 
         $handler->shouldReceive('process')->with($this->request, $this->burning_parrot, [])->once();
         $this->request_instrumentation->shouldReceive('increment')->once();
@@ -263,7 +263,7 @@ class FrontRouterTest extends TestCase
         $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
 
         $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) {
-            $r->get('/stuff', [ 'plugin' => 'foobar', 'handler' => 'myHandler']);
+            $r->get('/stuff', ['plugin' => 'foobar', 'handler' => 'myHandler']);
             return true;
         }));
 
@@ -283,7 +283,7 @@ class FrontRouterTest extends TestCase
         $this->route_collector->shouldReceive('myHandler')->with('some_param1', 'some_param2')->andReturns(Mockery::spy(DispatchableWithRequest::class));
 
         $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) {
-            $r->get('/stuff', [ 'core' => true, 'handler' => 'myHandler', 'params' => ['some_param1', 'some_param2']]);
+            $r->get('/stuff', ['core' => true, 'handler' => 'myHandler', 'params' => ['some_param1', 'some_param2']]);
             return true;
         }));
 

@@ -65,7 +65,7 @@ class Widget_Contacts extends Widget
 
         $html  = '<a href="javascript:;" ';
         $html .= 'class="massmail-project-member-link project_home_contact_admins" ';
-        $html .= 'data-project-id="'. $group_id .'">';
+        $html .= 'data-project-id="' . $group_id . '">';
         $html .= '<i class="fa fa-envelope-o massmail-project-member-link-icon"></i>';
         $html .= $GLOBALS['Language']->getText('include_project_home', 'contact_admins');
         $html .= '</a>';

@@ -69,7 +69,7 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
 
     public function get_project_summary_page()
     {
-        return HTTPRequest::instance()->getServerUrl().'/projects/'.$this->project->getUnixName();
+        return HTTPRequest::instance()->getServerUrl() . '/projects/' . $this->project->getUnixName();
     }
 
     public function get_project_full_name_title()
@@ -114,17 +114,17 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
 
     public function getUrlSummaryLink()
     {
-        return HTTPRequest::instance()->getServerUrl().'/projects/'.$this->project->getUnixName();
+        return HTTPRequest::instance()->getServerUrl() . '/projects/' . $this->project->getUnixName();
     }
 
     private function getUrlDocumentationSite()
     {
-        return HTTPRequest::instance()->getServerUrl().'/help/';
+        return HTTPRequest::instance()->getServerUrl() . '/help/';
     }
 
     public function getUrlProjectAdministration()
     {
-        return HTTPRequest::instance()->getServerUrl().'/project/admin/?group_id='.$this->project->getID();
+        return HTTPRequest::instance()->getServerUrl() . '/project/admin/?group_id=' . $this->project->getID();
     }
 
     public function getMessageText()

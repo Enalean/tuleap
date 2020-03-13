@@ -51,15 +51,15 @@ class ReverseProxy
     public function configure()
     {
         $this->logger->info("Configure Nginx as front Reverse Proxy");
-        if (is_file($this->nginx_base_dir.'/nginx.conf.orig')) {
-            $this->logger->warning($this->nginx_base_dir.'/nginx.conf.orig already exists, skip configuration');
+        if (is_file($this->nginx_base_dir . '/nginx.conf.orig')) {
+            $this->logger->warning($this->nginx_base_dir . '/nginx.conf.orig already exists, skip configuration');
             return;
         }
-        $this->backupOriginalFile($this->nginx_base_dir.'/nginx.conf');
-        copy($this->tuleap_base_dir.'/tools/distlp/reverse-proxy/nginx.conf', $this->nginx_base_dir.'/nginx.conf');
+        $this->backupOriginalFile($this->nginx_base_dir . '/nginx.conf');
+        copy($this->tuleap_base_dir . '/tools/distlp/reverse-proxy/nginx.conf', $this->nginx_base_dir . '/nginx.conf');
 
-        copy($this->tuleap_base_dir.'/tools/distlp/reverse-proxy/proxy-vars.conf', $this->nginx_base_dir.'/proxy-vars.conf');
-        copy($this->tuleap_base_dir.'/tools/distlp/reverse-proxy/tcp_ssh.conf', $this->nginx_base_dir.'/conf.d/tcp_ssh.conf');
+        copy($this->tuleap_base_dir . '/tools/distlp/reverse-proxy/proxy-vars.conf', $this->nginx_base_dir . '/proxy-vars.conf');
+        copy($this->tuleap_base_dir . '/tools/distlp/reverse-proxy/tcp_ssh.conf', $this->nginx_base_dir . '/conf.d/tcp_ssh.conf');
         $this->deployHTTPConfFromTemplate();
 
         $this->logger->info("Generate SSL certificate");
@@ -69,7 +69,7 @@ class ReverseProxy
 
     private function deployHTTPConfFromTemplate()
     {
-        $template = file_get_contents($this->tuleap_base_dir.'/tools/distlp/reverse-proxy/http_tuleap.conf');
+        $template = file_get_contents($this->tuleap_base_dir . '/tools/distlp/reverse-proxy/http_tuleap.conf');
         $searches = array(
             '%sys_default_domain%',
         );
@@ -78,13 +78,13 @@ class ReverseProxy
         );
 
         $conf = str_replace($searches, $replaces, $template);
-        file_put_contents($this->nginx_base_dir.'/conf.d/http_tuleap.conf', $conf);
+        file_put_contents($this->nginx_base_dir . '/conf.d/http_tuleap.conf', $conf);
     }
 
     private function backupOriginalFile($file)
     {
-        if (! file_exists($file.'.orig')) {
-            copy($file, $file.'.orig');
+        if (! file_exists($file . '.orig')) {
+            copy($file, $file . '.orig');
         }
     }
 }

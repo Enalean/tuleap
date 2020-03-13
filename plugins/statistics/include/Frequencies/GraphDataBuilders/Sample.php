@@ -146,7 +146,7 @@ class Sample
      */
     public function initDateSimple($year, $month, $day)
     {
-        if ($year != 0 && $month !=0 && $day != 0) {
+        if ($year != 0 && $month != 0 && $day != 0) {
             $this->start = mktime(0, 0, 0, $month, $day, $year);
         } elseif ($year != 0 && $month != 0) {
             $this->start = mktime(0, 0, 0, $month, 1, $year);
@@ -157,9 +157,9 @@ class Sample
             $this->start = mktime(0, 0, 0, 1, 1, $year);
         }
 
-        if ($day !=0) {
+        if ($day != 0) {
             $this->filter = 'hour';
-        } elseif ($month !=0) {
+        } elseif ($month != 0) {
             $this->filter = 'day';
         } else {
             $this->filter = 'month';
@@ -167,21 +167,21 @@ class Sample
 
         switch ($this->filter) {
             case 'month':
-                $this->end = mktime(0, 0, 0, 1, 1, $year+1); //I search timestamps strictly inferior to the end timestamps. That's why I use $year+! instead of 12,31,$year
+                $this->end = mktime(0, 0, 0, 1, 1, $year + 1); //I search timestamps strictly inferior to the end timestamps. That's why I use $year+! instead of 12,31,$year
 
                 $this->titlePeriod = $year;
                 break;
 
             case 'day':
-                $this->end = mktime(0, 0, 0, $month+1, 1, $year); //$month+1 is used for the same reason
+                $this->end = mktime(0, 0, 0, $month + 1, 1, $year); //$month+1 is used for the same reason
 
-                $this->titlePeriod = $month.'/'.$year;
+                $this->titlePeriod = $month . '/' . $year;
                 break;
 
             case 'hour':
-                $this->end = mktime(0, 0, 0, $month, $day+1, $year); //$day+1 is used for the same reason
+                $this->end = mktime(0, 0, 0, $month, $day + 1, $year); //$day+1 is used for the same reason
 
-                $this->titlePeriod = $day.'/'.$month.'/'.$year;
+                $this->titlePeriod = $day . '/' . $month . '/' . $year;
                 break;
         }
 
@@ -227,7 +227,7 @@ class Sample
         $date1 = preg_replace('#(\d{4})-(\d{1,2})-(\d{1,2})#', '$3/$2/$1', $startdate);
         $date2 = preg_replace('#(\d{4})-(\d{1,2})-(\d{1,2})#', '$3/$2/$1', $enddate);
 
-        $this->titlePeriod = $date1.' and '.$date2;
+        $this->titlePeriod = $date1 . ' and ' . $date2;
         $this->startdate   = $startdate;
         $this->enddate     = $enddate;
     }
@@ -274,10 +274,10 @@ class Sample
 
     protected function getDataSQLQuery($filter, $startDate, $endDate)
     {
-        return sprintf('SELECT %s(FROM_UNIXTIME('.$this->field.')) as '.$this->getFilter().',COUNT(*) as c'.
-            ' FROM '.$this->table.
-            ' WHERE '.$this->field.' >= %d'.
-            ' AND  '.$this->field.' < %d'.
+        return sprintf('SELECT %s(FROM_UNIXTIME(' . $this->field . ')) as ' . $this->getFilter() . ',COUNT(*) as c' .
+            ' FROM ' . $this->table .
+            ' WHERE ' . $this->field . ' >= %d' .
+            ' AND  ' . $this->field . ' < %d' .
             ' GROUP BY %s', db_escape_string($filter), db_escape_int($startDate), db_escape_int($endDate), db_escape_string($filter));
     }
 
@@ -298,14 +298,14 @@ class Sample
         if ($this->getFilter() == 'month') {
             $nbr = 11;
         } elseif ($this->getFilter() == 'day') {
-            $nbr = date("t", mktime(0, 0, 0, date('m', $this->start), 1, date('Y', $this->start)))-1;
+            $nbr = date("t", mktime(0, 0, 0, date('m', $this->start), 1, date('Y', $this->start))) - 1;
         } elseif ($this->getFilter() == 'hour') {
             $nbr = 23;
         }
 
         $i = 0;
         while ($i <= $nbr) {
-            $paramarray[] =0;
+            $paramarray[] = 0;
             $i++;
         }
 
@@ -324,11 +324,11 @@ class Sample
 
     protected function getMonthDataSQLQuery($startDate, $endDate)
     {
-        return sprintf('SELECT month(FROM_UNIXTIME('.$this->field.')) as month,COUNT(*) as c, YEAR(FROM_UNIXTIME('.$this->field.')) as year'.
-            ' FROM '.$this->table.
-            ' WHERE '.$this->field.' >= %d'.
-            ' AND  '.$this->field.' < %d'.
-            ' GROUP BY month, year'.
+        return sprintf('SELECT month(FROM_UNIXTIME(' . $this->field . ')) as month,COUNT(*) as c, YEAR(FROM_UNIXTIME(' . $this->field . ')) as year' .
+            ' FROM ' . $this->table .
+            ' WHERE ' . $this->field . ' >= %d' .
+            ' AND  ' . $this->field . ' < %d' .
+            ' GROUP BY month, year' .
             ' ORDER BY year, month', db_escape_int($startDate), db_escape_int($endDate));
     }
 
@@ -358,11 +358,11 @@ class Sample
 
     protected function getDayDataSQLQuery($startDate, $endDate)
     {
-        return sprintf('SELECT day(FROM_UNIXTIME('.$this->field.')) as day,COUNT(*) as c, MONTH(FROM_UNIXTIME('.$this->field.')) as month, YEAR(FROM_UNIXTIME('.$this->field.')) as year'.
-            ' FROM '.$this->table.
-            ' WHERE '.$this->field.' >= %d'.
-            ' AND  '.$this->field.' < %d'.
-            ' GROUP BY day, month, year'.
+        return sprintf('SELECT day(FROM_UNIXTIME(' . $this->field . ')) as day,COUNT(*) as c, MONTH(FROM_UNIXTIME(' . $this->field . ')) as month, YEAR(FROM_UNIXTIME(' . $this->field . ')) as year' .
+            ' FROM ' . $this->table .
+            ' WHERE ' . $this->field . ' >= %d' .
+            ' AND  ' . $this->field . ' < %d' .
+            ' GROUP BY day, month, year' .
             ' ORDER BY year, month, day', db_escape_int($startDate), db_escape_int($endDate));
     }
 

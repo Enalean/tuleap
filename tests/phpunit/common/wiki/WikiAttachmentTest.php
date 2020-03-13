@@ -57,12 +57,12 @@ class WikiAttachmentTest extends TestCase
         $wa->basedir = $this->getTmpDir();
         $wa->shouldReceive('dbadd')->andReturns(true);
 
-        $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
+        $this->assertFalse(is_dir($wa->basedir . '/testing.txt'));
         $this->assertFalse($wa->exist());
         $this->assertTrue($wa->create());
-        $this->assertTrue(is_dir($wa->basedir.'/testing.txt'));
+        $this->assertTrue(is_dir($wa->basedir . '/testing.txt'));
         $this->assertTrue($wa->exist());
-        rmdir($wa->basedir.'/testing.txt');
+        rmdir($wa->basedir . '/testing.txt');
     }
 
     public function testCreateFolderAlreadyExistNoFilesystemName(): void
@@ -74,10 +74,10 @@ class WikiAttachmentTest extends TestCase
         mkdir("$wa->basedir/toto.txt");
         $wa->shouldReceive('dbadd')->andReturns(true);
 
-        $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
+        $this->assertTrue(is_dir($wa->basedir . '/toto.txt'));
         $this->assertTrue($wa->exist());
         $this->assertTrue($wa->create());
-        $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
+        $this->assertTrue(is_dir($wa->basedir . '/toto.txt'));
         $this->assertTrue($wa->exist());
     }
 
@@ -89,15 +89,15 @@ class WikiAttachmentTest extends TestCase
         $wa->initFilesystemName();
         $wa->basedir = $this->getTmpDir();
         $wa->shouldReceive('dbadd')->andReturns(true);
-        mkdir($wa->basedir.'/'.$wa->getFilesystemName());
+        mkdir($wa->basedir . '/' . $wa->getFilesystemName());
 
-        $this->assertTrue(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
+        $this->assertTrue(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
         $this->assertTrue($wa->exist());
         $this->assertTrue($wa->create());
-        $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
-        $this->assertTrue(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
+        $this->assertFalse(is_dir($wa->basedir . '/testing.txt'));
+        $this->assertTrue(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
         $this->assertTrue($wa->exist());
-        rmdir($wa->basedir.'/'.$wa->getFilesystemName());
+        rmdir($wa->basedir . '/' . $wa->getFilesystemName());
     }
 
     public function testCreateWithFilesystemName(): void
@@ -108,13 +108,13 @@ class WikiAttachmentTest extends TestCase
         $wa->basedir = $this->getTmpDir();
         $wa->shouldReceive('dbadd')->andReturns(true);
 
-        $this->assertFalse(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
+        $this->assertFalse(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
         $this->assertFalse($wa->exist());
         $this->assertTrue($wa->create());
-        $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
-        $this->assertTrue(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
+        $this->assertFalse(is_dir($wa->basedir . '/testing.txt'));
+        $this->assertTrue(is_dir($wa->basedir . '/' . $wa->getFilesystemName()));
         $this->assertTrue($wa->exist());
-        rmdir($wa->basedir.'/'.$wa->getFilesystemName());
+        rmdir($wa->basedir . '/' . $wa->getFilesystemName());
     }
 
     public function testPurgeAttachmentSucceeded(): void
@@ -124,8 +124,8 @@ class WikiAttachmentTest extends TestCase
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
         $wa->basedir = $this->getTmpDir();
-        mkdir($wa->basedir.'/'.$wa->getFilesystemName());
-        touch($wa->basedir.'/'.$wa->getFilesystemName().'/0');
+        mkdir($wa->basedir . '/' . $wa->getFilesystemName());
+        touch($wa->basedir . '/' . $wa->getFilesystemName() . '/0');
 
         $dao = \Mockery::spy(\WikiAttachmentDao::class);
         $wa->shouldReceive('getDao')->andReturns($dao);
@@ -142,9 +142,9 @@ class WikiAttachmentTest extends TestCase
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
         $wa->basedir = $this->getTmpDir();
-        mkdir($wa->basedir.'/'.$wa->getFilesystemName());
-        touch($wa->basedir.'/'.$wa->getFilesystemName().'/0');
-        touch($wa->basedir.'/'.$wa->getFilesystemName().'/1');
+        mkdir($wa->basedir . '/' . $wa->getFilesystemName());
+        touch($wa->basedir . '/' . $wa->getFilesystemName() . '/0');
+        touch($wa->basedir . '/' . $wa->getFilesystemName() . '/1');
 
         $dao = \Mockery::spy(\WikiAttachmentDao::class);
         $wa->shouldReceive('getDao')->andReturns($dao);

@@ -123,7 +123,7 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
 
         $this->repository = $this->repository_factory->getByProjectNameAndPath(
             $this->matches['project_name'],
-            $this->matches['path'].'.git'
+            $this->matches['path'] . '.git'
         );
         if (! $this->repository) {
             return;
@@ -171,9 +171,9 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
             return;
         }
 
-        $this->path_info    = '/'.$this->matches['project_name'].'/'.$repository_path.'/'.$this->matches['smart_http'];
+        $this->path_info    = '/' . $this->matches['project_name'] . '/' . $repository_path . '/' . $this->matches['smart_http'];
         if ($params_position !== false) {
-            $this->query_string = substr($this->uri, $params_position+1);
+            $this->query_string = substr($this->uri, $params_position + 1);
         }
     }
 

@@ -66,7 +66,6 @@ class WikiPlugin_PrevNext extends WikiPlugin
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-
         $args = $this->getArgs($argstr, $request);
         extract($args);
         $directions = array ('first'    => _("First"),

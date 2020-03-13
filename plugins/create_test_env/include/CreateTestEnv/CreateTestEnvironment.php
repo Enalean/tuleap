@@ -109,12 +109,12 @@ class CreateTestEnvironment
 
     private function getArchiveBaseDir($archive_dir_name)
     {
-        $etc_base_dir = \ForgeConfig::get('sys_custompluginsroot').'/'.\create_test_envPlugin::NAME.'/resources';
-        $project_xml_path = $etc_base_dir.'/'.$archive_dir_name.'/project.xml';
+        $etc_base_dir = \ForgeConfig::get('sys_custompluginsroot') . '/' . \create_test_envPlugin::NAME . '/resources';
+        $project_xml_path = $etc_base_dir . '/' . $archive_dir_name . '/project.xml';
         if (file_exists($project_xml_path)) {
-            return $etc_base_dir.'/'.$archive_dir_name;
+            return $etc_base_dir . '/' . $archive_dir_name;
         }
-        return __DIR__.'/../../resources/sample-project';
+        return __DIR__ . '/../../resources/sample-project';
     }
 
     public function getProject()
@@ -132,8 +132,8 @@ class CreateTestEnvironment
         if (!is_dir($this->output_dir) && !mkdir($this->output_dir, 0770, true) && !is_dir($this->output_dir)) {
             throw new Exception\UnableToCreateTemporaryDirectoryException(sprintf('Directory "%s" was not created', $this->output_dir));
         }
-        if ($xml->saveXML($this->output_dir.DIRECTORY_SEPARATOR.$filename) !== true) {
-            throw new Exception\UnableToWriteFileException("Unable to write file ".$this->output_dir.DIRECTORY_SEPARATOR.$filename);
+        if ($xml->saveXML($this->output_dir . DIRECTORY_SEPARATOR . $filename) !== true) {
+            throw new Exception\UnableToWriteFileException("Unable to write file " . $this->output_dir . DIRECTORY_SEPARATOR . $filename);
         }
     }
 
@@ -142,7 +142,7 @@ class CreateTestEnvironment
         $iterator = new \DirectoryIterator($archive_base_dir);
         foreach ($iterator as $file) {
             if ($file->isFile() && ! in_array($file->getBasename(), ['project.xml', 'users.xml'])) {
-                copy($file->getPathname(), $this->output_dir.'/'.$file->getBasename());
+                copy($file->getPathname(), $this->output_dir . '/' . $file->getBasename());
             }
         }
     }

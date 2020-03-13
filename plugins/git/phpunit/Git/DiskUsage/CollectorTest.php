@@ -73,8 +73,8 @@ class CollectorTest extends TestCase
         $this->git_log_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(true);
         $this->git_log_dao->shouldReceive('hasRepositories')->andReturn(true);
 
-        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir').'/gitolite/repositories/leprojet')->andReturn(11);
-        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir').'/gitroot/leprojet')->andReturn(0);
+        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/leprojet')->andReturn(11);
+        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir') . '/gitroot/leprojet')->andReturn(0);
 
         $this->assertEquals(11, $this->collector->collectForGitoliteRepositories($this->project));
     }
@@ -84,8 +84,8 @@ class CollectorTest extends TestCase
         $this->git_log_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(false);
         $this->git_log_dao->shouldReceive('hasRepositories')->andReturn(false);
 
-        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir').'/gitolite/repositories/leprojet')->andReturn(11);
-        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir').'/gitroot/leprojet')->andReturn(0);
+        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/leprojet')->andReturn(11);
+        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir') . '/gitroot/leprojet')->andReturn(0);
 
         $this->assertEquals(11, $this->collector->collectForGitoliteRepositories($this->project));
     }

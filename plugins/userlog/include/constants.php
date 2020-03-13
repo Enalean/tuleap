@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
- define('USERLOGS_TEMPLATE_DIR', dirname(__FILE__).'/../templates');
+ define('USERLOGS_TEMPLATE_DIR', dirname(__FILE__) . '/../templates');
 define('USERLOG_BASE_URL', '/plugins/userlog');

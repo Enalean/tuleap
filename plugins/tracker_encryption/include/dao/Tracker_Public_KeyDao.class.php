@@ -32,7 +32,7 @@ class TrackerPublicKeyDao extends DataAccessObject
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT key_content
                 FROM $this->table_name
-                WHERE tracker_id=".$tracker_id;
+                WHERE tracker_id=" . $tracker_id;
         return $this->retrieve($sql);
     }
 

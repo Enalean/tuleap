@@ -50,7 +50,7 @@ try {
         exit(0);
     }
 
-    $logger->info("Nb of widgets to migrate: ". $row['nb']);
+    $logger->info("Nb of widgets to migrate: " . $row['nb']);
     $sql = "INSERT INTO plugin_crosstracker_report (id)
             SELECT id FROM plugin_tracker_cross_tracker_report";
     $dao->update($sql);

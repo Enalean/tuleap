@@ -62,7 +62,7 @@ class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_
             return false;
         }
          $sql = "INSERT INTO $this->table_name(changeset_value_id, bindvalue_id)
-                    VALUES ( ".implode(', 100 ),( ', $changeset_value_ids).", 100 )";
+                    VALUES ( " . implode(', 100 ),( ', $changeset_value_ids) . ", 100 )";
          return $this->update($sql);
     }
 

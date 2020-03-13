@@ -44,7 +44,6 @@ abstract class Theme
 
     public function ApplyGraph($graph)
     {
-
         $this->graph = $graph;
         $method_name = '';
 

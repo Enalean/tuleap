@@ -63,7 +63,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
 
         $colors = $this->getColors();
 
-        if ((is_array($this->data)) && (array_sum($this->data)>0)) {
+        if ((is_array($this->data)) && (array_sum($this->data) > 0)) {
             $p = new PiePlot($this->data);
 
             $p->setSliceColors($colors);

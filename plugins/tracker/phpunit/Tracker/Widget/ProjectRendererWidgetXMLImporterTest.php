@@ -71,7 +71,6 @@ class ProjectRendererWidgetXMLImporterTest extends TestCase
 
     public function testItImportsTheWidget(): void
     {
-
         $widget_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <widget name="plugin_tracker_projectrenderer">
             <preference name="renderer">

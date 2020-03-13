@@ -50,7 +50,7 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
      */
     protected function getMainWrapper($inner)
     {
-        return '<select multiple size="7" id="fork_repositories_repo" name="repos[]">'. $inner .'</select>';
+        return '<select multiple size="7" id="fork_repositories_repo" name="repos[]">' . $inner . '</select>';
     }
 
     /**
@@ -64,7 +64,7 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
     protected function getItemWrapper(GitRepository $repo, $inner)
     {
         if ($repo->getBackend() instanceof Git_Backend_Gitolite) {
-            return '<option value="'. $repo->getId() .'">'. $inner .'</option>';
+            return '<option value="' . $repo->getId() . '">' . $inner . '</option>';
         }
         return '';
     }

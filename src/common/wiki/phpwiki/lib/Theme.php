@@ -23,7 +23,7 @@
  * and more formatting.
  */
 
-require_once(dirname(__FILE__).'/HtmlElement.php');
+require_once(dirname(__FILE__) . '/HtmlElement.php');
 
 /**
  * Make a link to a wiki page (in this wiki).
@@ -503,7 +503,7 @@ class Theme
             if ($dbi->isWikiPage($owner)) {
                 return fmt("Owner: %s", WikiLink($owner));
             } else {
-                return fmt("Owner: %s", '"'.$owner.'"');
+                return fmt("Owner: %s", '"' . $owner . '"');
             }
         }
     }
@@ -529,7 +529,7 @@ class Theme
             if ($dbi->isWikiPage($author)) {
                 return fmt("by %s", WikiLink($author));
             } else {
-                return fmt("by %s", '"'.$author.'"');
+                return fmt("by %s", '"' . $author . '"');
             }
         }
     }
@@ -754,7 +754,7 @@ class Theme
             if (empty($this->dumped_images)) {
                 $this->dumped_images = array();
             }
-            $path = "images/". basename($path);
+            $path = "images/" . basename($path);
             if (!in_array($path, $this->dumped_images)) {
                 $this->dumped_images[] = $path;
             }
@@ -845,9 +845,9 @@ class Theme
             }
             $file = $url;
             if (defined('DATA_PATH')) {
-                $file = substr($url, strlen(DATA_PATH)+1);
+                $file = substr($url, strlen(DATA_PATH) + 1);
             }
-            $url = "images/buttons/".basename($file);
+            $url = "images/buttons/" . basename($file);
             if (!array_key_exists($text, $this->dumped_buttons)) {
                 $this->dumped_buttons[$text] = $file;
             }
@@ -1241,7 +1241,7 @@ class Theme
             return $this->_path . $tmp;
         } else {
             $f1 = $this->file("templates/$name.tmpl");
-            trigger_error("pwd: ".getcwd(), E_USER_ERROR);
+            trigger_error("pwd: " . getcwd(), E_USER_ERROR);
             if (isset($this->_default_theme)) {
                 $f2 = $this->_default_theme->file("templates/$name.tmpl");
                 trigger_error("$f1 nor $f2 found", E_USER_ERROR);
@@ -1280,7 +1280,7 @@ class Theme
     {
         // protect from duplicate attr (body jscript: themes, prefs, ...)
         static $_attr_cache = array();
-        $hash = md5($tag."/".$element);
+        $hash = md5($tag . "/" . $element);
         if (!empty($_attr_cache[$hash])) {
             return;
         }
@@ -1366,12 +1366,12 @@ class Theme
                 HTML::Raw(" onload=\"liveSearchInit()")
             );
             $this->addMoreHeaders(JavaScript('var liveSearchURI="'
-                                             .WikiURL(_("TitleSearch"), false, true).'";'));
+                                             . WikiURL(_("TitleSearch"), false, true) . '";'));
             $this->addMoreHeaders(JavaScript('', array
                                              ('src' => $this->_findData('livesearch.js'))));
         }
     }
-};
+}
 
 
 /**
@@ -1406,7 +1406,7 @@ class Button extends HtmlElement
         }
         $this->pushContent($GLOBALS['WikiTheme']->maybeSplitWikiWord($text));
     }
-};
+}
 
 
 /**
@@ -1443,7 +1443,7 @@ class ImageButton extends Button
         $img_attr['border'] = 0;
         $this->pushContent(HTML::img($img_attr));
     }
-};
+}
 
 /**
  * A class representing a form <samp>submit</samp> button.
@@ -1467,7 +1467,7 @@ class SubmitButton extends HtmlElement
             $this->setAttr('class', $class);
         }
     }
-};
+}
 
 
 /**
@@ -1496,7 +1496,7 @@ class SubmitImageButton extends SubmitButton
             $this->setAttr('class', $class);
         }
     }
-};
+}
 
 /**
  * A sidebar box with title and body, narrow fixed-width.
@@ -1627,7 +1627,7 @@ function listAvailableThemes()
     $dir = dir($dir_root);
     if ($dir) {
         while ($entry = $dir->read()) {
-            if (is_dir($dir_root.'/'.$entry)
+            if (is_dir($dir_root . '/' . $entry)
                 && (substr($entry, 0, 1) != '.')
                 && $entry != 'CVS') {
                 array_push($available_themes, $entry);
@@ -1647,7 +1647,7 @@ function listAvailableLanguages()
     }
     if ($dir = dir($dir_root)) {
         while ($entry = $dir->read()) {
-            if (is_dir($dir_root."/".$entry)
+            if (is_dir($dir_root . "/" . $entry)
                 && (substr($entry, 0, 1) != '.')
                 && $entry != 'po'
                 && $entry != 'CVS') {

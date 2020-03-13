@@ -37,19 +37,19 @@ class Docman_Icons
     {
         switch ($action) {
             case 'popup':
-                return $this->images_path. 'popup.png';
+                return $this->images_path . 'popup.png';
                 break;
             case 'newFolder':
-                return $this->images_path. 'folder-new.png';
+                return $this->images_path . 'folder-new.png';
                 break;
             case 'newDocument':
-                return $this->images_path. 'document-new.png';
+                return $this->images_path . 'document-new.png';
                 break;
             case 'details':
-                return $this->images_path. 'item-details.png';
+                return $this->images_path . 'item-details.png';
                 break;
             case 'show':
-                return $this->images_path. 'folder-show.png';
+                return $this->images_path . 'folder-show.png';
                 break;
             default:
                 break;
@@ -203,6 +203,6 @@ class Docman_Icons
 
     public function getThemeIcon($icon)
     {
-        return util_get_image_theme('ic/'.$icon);
+        return util_get_image_theme('ic/' . $icon);
     }
 }

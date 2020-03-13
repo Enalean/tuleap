@@ -142,9 +142,9 @@ class Tree extends FilesystemObject
         while ($start < $len) {
             $pos = strpos($treeData, "\0", $start);
 
-            list($mode, $path) = explode(' ', substr($treeData, $start, $pos-$start), 2);
+            list($mode, $path) = explode(' ', substr($treeData, $start, $pos - $start), 2);
             $mode = str_pad($mode, 6, '0', STR_PAD_LEFT);
-            $hash = bin2hex(substr($treeData, $pos+1, 20));
+            $hash = bin2hex(substr($treeData, $pos + 1, 20));
             $start = $pos + 21;
 
             $octmode = octdec($mode);

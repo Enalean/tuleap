@@ -58,7 +58,7 @@ class RedisWaiterCommand extends Command
             } catch (RedisNotConnectedException $exception) {
                 $output->writeln("Redis not connected");
             } catch (RedisException $exception) {
-                $output->writeln("Redis not connected: ".$exception->getMessage());
+                $output->writeln("Redis not connected: " . $exception->getMessage());
             }
             sleep(1);
         } while (true);

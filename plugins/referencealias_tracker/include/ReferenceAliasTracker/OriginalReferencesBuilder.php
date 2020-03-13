@@ -45,7 +45,7 @@ class OriginalReferencesBuilder
      */
     public function getReference($keyword, $value)
     {
-        return $this->findReference($keyword, $keyword.$value);
+        return $this->findReference($keyword, $keyword . $value);
     }
 
     /**
@@ -61,9 +61,9 @@ class OriginalReferencesBuilder
                 'regexp' => '/
                     (?<![_a-zA-Z0-9])  # ensure the pattern is not following digits or letters
                     (?P<ref>
-                        (?P<key>'. ReferencesImporter::XREF_ARTF .'
-                            |'. ReferencesImporter::XREF_TRACKER .'
-                            |'. ReferencesImporter::XREF_PLAN .')
+                        (?P<key>' . ReferencesImporter::XREF_ARTF . '
+                            |' . ReferencesImporter::XREF_TRACKER . '
+                            |' . ReferencesImporter::XREF_PLAN . ')
                         (?P<val>[0-9]+)
                     )
                     (?![_A-Za-z0-9])   # ensure the pattern is not folloed by digits or letters

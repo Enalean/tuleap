@@ -79,14 +79,14 @@ final class GanttVerticalLine extends GanttPlotObject
             return;
         }
         if ($this->iDayOffset != 0.0) {
-            $d += 24*60*60*$this->iDayOffset;
+            $d += 24 * 60 * 60 * $this->iDayOffset;
         }
         $x = $aScale->TranslateDate($d);//d=1006858800,
 
         if ($this->iStartRow > -1) {
             $y1 = $aScale->TranslateVertPos($this->iStartRow, true);
         } else {
-            $y1 = $aScale->iVertHeaderSize+$aImg->top_margin;
+            $y1 = $aScale->iVertHeaderSize + $aImg->top_margin;
         }
 
         if ($this->iEndRow > -1) {
@@ -97,6 +97,6 @@ final class GanttVerticalLine extends GanttPlotObject
 
         $this->iLine->Stroke($aImg, $x, $y1, $x, $y2);
         $this->title->Align('center', 'top');
-        $this->title->Stroke($aImg, $x, $y2+$this->title_margin);
+        $this->title->Stroke($aImg, $x, $y2 + $this->title_margin);
     }
 }

@@ -37,8 +37,8 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
     public function getContent($params = [])
     {
         $content = '';
-        $content .= '<dl><dt>'. dgettext('tuleap-docman', 'Move') .'</dt><dd>';
-        $content .= '<form action="'. $this->url .'" method="POST">';
+        $content .= '<dl><dt>' . dgettext('tuleap-docman', 'Move') . '</dt><dd>';
+        $content .= '<form action="' . $this->url . '" method="POST">';
 
         $parents_tree = new Docman_View_ParentsTree($this->_controller);
         $content .= $parents_tree->fetch(array(
@@ -48,18 +48,18 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
             'input_name'   => 'id',
             'excludes'     => array($this->item->getId())
         ));
-        $content .= '<script type="text/javascript">docman.options.move.item_id = '. $this->item->getId() .';</script>';
+        $content .= '<script type="text/javascript">docman.options.move.item_id = ' . $this->item->getId() . ';</script>';
         $content .=  '<br />';
 
         //submit
         $content .= '<div>';
         if ($this->token) {
-            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+            $content .= '<input type="hidden" name="token" value="' . $this->token . '" />';
         }
         $content .= '<input type="hidden" name="action" value="move_here" />';
-        $content .= '<input type="hidden" name="item_to_move" value="'. $this->item->getId() .'" />';
-        $content .= '<input type="submit" tabindex="2" name="confirm" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $content .= '<input type="submit" tabindex="1" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
+        $content .= '<input type="hidden" name="item_to_move" value="' . $this->item->getId() . '" />';
+        $content .= '<input type="submit" tabindex="2" name="confirm" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        $content .= '<input type="submit" tabindex="1" name="cancel" value="' . $GLOBALS['Language']->getText('global', 'btn_cancel') . '" />';
         $content .= '</div></form>';
         $content .= '</dd></dl>';
         return $content;

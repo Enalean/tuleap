@@ -97,7 +97,7 @@ class DocmanLinkVersionCreator
     ): void {
         $this->transaction_executor->execute(
             function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_timestamp, $current_time, $title, $description) {
-                $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
+                $next_version_id = (int) $this->version_factory->getNextVersionNumber($item);
 
                 $new_link_version_row = [
                     'item_id'           => $item->getId(),

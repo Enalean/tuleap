@@ -43,7 +43,7 @@ class FieldFileRepresentation extends \Tracker_REST_FormElementRepresentation
         }
 
         parent::build($form_element, $type, $permissions, $permissions_for_groups);
-        $this->file_creation_uri = TrackerFieldsResource::ROUTE .'/'. (int) $form_element->getId() .'/files';
+        $this->file_creation_uri = TrackerFieldsResource::ROUTE . '/' . (int) $form_element->getId() . '/files';
         $this->max_size_upload = \ForgeConfig::get('sys_max_size_upload');
     }
 }

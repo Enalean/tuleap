@@ -50,7 +50,7 @@ class DocmanMetadataInputValidator
                 break;
             case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
                 if (preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $value, $d)) {
-                    return mktime(0, 0, 0, (int)$d[2], (int)$d[3], (int)$d[1]);
+                    return mktime(0, 0, 0, (int) $d[2], (int) $d[3], (int) $d[1]);
                 } elseif (! preg_match('/\d+/', $value)) { // Allow timestamps as supplied value
                     return 0;
                 }

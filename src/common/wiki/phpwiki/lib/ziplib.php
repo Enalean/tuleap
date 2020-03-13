@@ -851,7 +851,7 @@ function GenerateFootnotesFromRefs($params)
     if (sizeof($footnotes) > 0) {
         ksort($footnotes);
         return "-----\n"
-            . "!" ._("References") . "\n"
+            . "!" . _("References") . "\n"
             . join("\n%%%\n", $footnotes) . "\n";
     } else {
         return "";

@@ -39,10 +39,9 @@ class MessageArchiver
     // Insert values into forumml_messageheader table
     private function insertMessageHeader($id_message, $id_header, $value)
     {
-
         $qry = sprintf(
-            'INSERT INTO plugin_forumml_messageheader'.
-                        ' (id_message, id_header, value)'.
+            'INSERT INTO plugin_forumml_messageheader' .
+                        ' (id_message, id_header, value)' .
                         ' VALUES (%d,%d,"%s")',
             db_ei($id_message),
             db_ei($id_header),
@@ -60,8 +59,8 @@ class MessageArchiver
             $filesize = 0;
         }
         $qry = sprintf(
-            'INSERT INTO plugin_forumml_attachment'.
-                       ' (id_message, file_name, file_type, file_size, file_path, content_id)'.
+            'INSERT INTO plugin_forumml_attachment' .
+                       ' (id_message, file_name, file_type, file_size, file_path, content_id)' .
                        ' VALUES (%d,"%s","%s",%d, "%s", "%s")',
             db_ei($id_message),
             db_es($filename),
@@ -76,11 +75,10 @@ class MessageArchiver
     // Insert values into forumml_header table
     private function insertHeader($header)
     {
-
         // Search if the header is already in the table
         $qry = sprintf(
-            'SELECT id_header'.
-                        ' FROM plugin_forumml_header'.
+            'SELECT id_header' .
+                        ' FROM plugin_forumml_header' .
                         ' WHERE name = "%s"',
             db_es($header)
         );
@@ -89,8 +87,8 @@ class MessageArchiver
         // If not, insert it
         if (db_result($result, 0, 'id_header') == "") {
             $sql = sprintf(
-                'INSERT INTO plugin_forumml_header'.
-                            ' (id_header, name)'.
+                'INSERT INTO plugin_forumml_header' .
+                            ' (id_header, name)' .
                             ' VALUES (%d, "%s")',
                 "",
                 db_es($header)
@@ -104,10 +102,10 @@ class MessageArchiver
 
     private function getParentMessageFromHeader($messageIdHeader)
     {
-        $qry = 'SELECT id_message'.
-            ' FROM plugin_forumml_messageheader'.
-            ' WHERE id_header = 1'.
-            ' AND value = "'.db_es($messageIdHeader).'"';
+        $qry = 'SELECT id_message' .
+            ' FROM plugin_forumml_messageheader' .
+            ' WHERE id_header = 1' .
+            ' AND value = "' . db_es($messageIdHeader) . '"';
         $result = db_query($qry);
         if ($result && !db_error()) {
             $row = db_fetch_array($result);
@@ -119,14 +117,14 @@ class MessageArchiver
     private function updateParentDate($messageId, $date)
     {
         if ($messageId != 0) {
-            $sql = 'SELECT id_parent, last_thread_update FROM plugin_forumml_message WHERE id_message = '. db_ei($messageId);
+            $sql = 'SELECT id_parent, last_thread_update FROM plugin_forumml_message WHERE id_message = ' . db_ei($messageId);
             $dar = db_query($sql);
             if ($dar && !db_error()) {
                 $row = db_fetch_array($dar);
                 if ($date > $row['last_thread_update']) {
-                    $sql = 'UPDATE plugin_forumml_message'.
+                    $sql = 'UPDATE plugin_forumml_message' .
                         ' SET last_thread_update = ' . db_ei($date) .
-                        ' WHERE id_message='. db_ei($messageId);
+                        ' WHERE id_message=' . db_ei($messageId);
                     db_query($sql);
 
                     $this->updateParentDate($row['id_parent'], $date);
@@ -175,8 +173,8 @@ class MessageArchiver
 
         $body = $incoming_mail->getBody();
         $sql  = sprintf(
-            'INSERT INTO plugin_forumml_message'.
-                        ' (id_message, id_list, id_parent, body, last_thread_update, msg_type)'.
+            'INSERT INTO plugin_forumml_message' .
+                        ' (id_message, id_list, id_parent, body, last_thread_update, msg_type)' .
                         ' VALUES (%d, %d, %d, "%s", %d, "%s")',
             "",
             db_ei($this->id_list),
@@ -189,7 +187,7 @@ class MessageArchiver
         $id_message = db_insertid($res);
 
         // All headers of the current mail are stored in the forumml_messageheader table
-        $k=0;
+        $k = 0;
         foreach ($headers as $header => $value_header) {
             $k++;
             if ($k != 1) {

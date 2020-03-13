@@ -85,7 +85,7 @@ class FileTest extends RestBase
         $this->assertEquals(200, $file_data_response->getStatusCode());
         $this->assertStringEqualsFile(
             __DIR__ . '/../_fixtures/frs/data/authors.txt',
-            (string)$file_data_response->getBody()
+            (string) $file_data_response->getBody()
         );
     }
 

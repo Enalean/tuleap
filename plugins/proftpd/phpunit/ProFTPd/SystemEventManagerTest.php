@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -41,7 +41,7 @@ class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase
             $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder('Tuleap\ProFTPd\Admin\PermissionsManager')->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder('ProjectManager')->disableOriginalConstructor()->getMock(),
-            dirname(__FILE__).'/_fixtures'
+            dirname(__FILE__) . '/_fixtures'
         );
     }
 

@@ -45,7 +45,7 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
 
     public function getJsonId()
     {
-        return self::OPEN_PREFIX. $this->getId();
+        return self::OPEN_PREFIX . $this->getId();
     }
 
     public function getUsername()

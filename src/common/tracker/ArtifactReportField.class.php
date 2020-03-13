@@ -148,10 +148,10 @@ class ArtifactReportField extends ArtifactField
      */
     public function dump()
     {
-        return "show_on_query=".$this->show_on_query.
-         " - show_on_result=".$this->show_on_result.
-         " - place_query=".$this->place_query.
-         " - place_result=".$this->place_result.
-         " - col_width=".$this->col_width;
+        return "show_on_query=" . $this->show_on_query .
+         " - show_on_result=" . $this->show_on_result .
+         " - place_query=" . $this->place_query .
+         " - place_result=" . $this->place_result .
+         " - col_width=" . $this->col_width;
     }
 }

@@ -90,22 +90,22 @@ class Tracker_Widget_MyArtifacts extends Widget
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="show-'. (int)$widget_id .'">
-                    '. $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'display_arts')) .'
+                <label class="tlp-label" for="show-' . (int) $widget_id . '">
+                    ' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'display_arts')) . '
                 </label>
                 <select type="text"
                     class="tlp-select"
-                    id="show-'. (int)$widget_id .'"
+                    id="show-' . (int) $widget_id . '"
                     name="show"
                 >
-                    <option value="A" '. $selected_a .'>
-                        '. $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'a_info')) .'
+                    <option value="A" ' . $selected_a . '>
+                        ' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'a_info')) . '
                     </option>
-                    <option value="S" '. $selected_s .'>
-                        '. $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 's_info')) .'
+                    <option value="S" ' . $selected_s . '>
+                        ' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 's_info')) . '
                     </option>
-                    <option value="AS" '. $selected_as .'>
-                        '. $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'as_info')) .'
+                    <option value="AS" ' . $selected_as . '>
+                        ' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'as_info')) . '
                     </option>
                 </select>
             </div>

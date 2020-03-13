@@ -36,7 +36,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->listenToCollectRouteEventWithDefaultController();
-        bindtextdomain('tuleap-pluginsadministration', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-pluginsadministration', __DIR__ . '/../site-content');
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)

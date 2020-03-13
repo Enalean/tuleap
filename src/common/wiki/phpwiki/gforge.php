@@ -48,9 +48,9 @@ if (!$group_id || !$project) {
     // E.g. Use another DB:
     $DBParams['dbtype'] = 'SQL';
     $DBParams['dsn']    = 'pgsql://' . $sys_dbuser . ':' .
-                              $sys_dbpasswd . '@' . $sys_dbhost .'/' . $sys_dbname
+                              $sys_dbpasswd . '@' . $sys_dbhost . '/' . $sys_dbname
     . '_wiki';
-    $DBParams['prefix'] = $project->getUnixName() ."_";
+    $DBParams['prefix'] = $project->getUnixName() . "_";
 
     // If the user is logged in, let the Wiki know
     if (session_loggedin()) {

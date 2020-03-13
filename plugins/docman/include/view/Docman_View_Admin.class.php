@@ -26,28 +26,28 @@ class Docman_View_Admin extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. dgettext('tuleap-docman', 'Documents') .' - '. dgettext('tuleap-docman', 'Administration') .'</h2>';
+        echo '<h2>' . dgettext('tuleap-docman', 'Documents') . ' - ' . dgettext('tuleap-docman', 'Administration') . '</h2>';
     }
     public function _content($params)
     {
         $html = '';
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_permissions')) .'">'. dgettext('tuleap-docman', 'Manage Permissions') .'</a></h3>';
-        $html .= '<p>'. dgettext('tuleap-docman', 'Define who can administrate the document manager.') .'</p>';
+        $html .= '<h3><a href="' . DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_permissions')) . '">' . dgettext('tuleap-docman', 'Manage Permissions') . '</a></h3>';
+        $html .= '<p>' . dgettext('tuleap-docman', 'Define who can administrate the document manager.') . '</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_view')) .'">'. dgettext('tuleap-docman', 'Manage Display Preferences') .'</a></h3>';
-        $html .= '<p>'. dgettext('tuleap-docman', 'Define the default view for the document manager.') .'</p>';
+        $html .= '<h3><a href="' . DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_view')) . '">' . dgettext('tuleap-docman', 'Manage Display Preferences') . '</a></h3>';
+        $html .= '<p>' . dgettext('tuleap-docman', 'Define the default view for the document manager.') . '</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_metadata')) .'">'. dgettext('tuleap-docman', 'Manage Properties') .'</a></h3>';
-        $html .= '<p>'. dgettext('tuleap-docman', 'Define the properties of your documents.') .'</p>';
+        $html .= '<h3><a href="' . DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_metadata')) . '">' . dgettext('tuleap-docman', 'Manage Properties') . '</a></h3>';
+        $html .= '<p>' . dgettext('tuleap-docman', 'Define the properties of your documents.') . '</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'report_settings')) .'">'. dgettext('tuleap-docman', 'Manage Search Report') .'</a></h3>';
-        $html .= '<p>'. dgettext('tuleap-docman', 'Modify the scope of the reports.') .'</p>';
+        $html .= '<h3><a href="' . DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'report_settings')) . '">' . dgettext('tuleap-docman', 'Manage Search Report') . '</a></h3>';
+        $html .= '<p>' . dgettext('tuleap-docman', 'Modify the scope of the reports.') . '</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_obsolete')) .'">'. dgettext('tuleap-docman', 'Manage Obsolete Documents') .'</a></h3>';
-        $html .= '<p>'. dgettext('tuleap-docman', 'View and update obsolete documents.') .'</p>';
+        $html .= '<h3><a href="' . DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_obsolete')) . '">' . dgettext('tuleap-docman', 'Manage Obsolete Documents') . '</a></h3>';
+        $html .= '<p>' . dgettext('tuleap-docman', 'View and update obsolete documents.') . '</p>';
 
-        $html .= '<h3><a href="'. DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_lock_infos')) .'">'. dgettext('tuleap-docman', 'Locked Documents'). '</a></h3>';
-        $html .= '<p>'. dgettext('tuleap-docman', 'List of locked documents.') .'</p>';
+        $html .= '<h3><a href="' . DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_lock_infos')) . '">' . dgettext('tuleap-docman', 'Locked Documents') . '</a></h3>';
+        $html .= '<p>' . dgettext('tuleap-docman', 'List of locked documents.') . '</p>';
 
         echo $html;
     }

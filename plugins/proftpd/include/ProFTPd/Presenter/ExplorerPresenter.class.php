@@ -65,18 +65,18 @@ class ExplorerPresenter
 
     public function current_directory_url()
     {
-        return PROFTPD_BASE_URL.'/explorer.php?group_id='.$this->group_id.'&path='.$this->getPathUrlParameter();
+        return PROFTPD_BASE_URL . '/explorer.php?group_id=' . $this->group_id . '&path=' . $this->getPathUrlParameter();
     }
 
     public function nav_url()
     {
-        return PROFTPD_BASE_URL.'/explorer.php?group_id='.$this->group_id.'&path=';
+        return PROFTPD_BASE_URL . '/explorer.php?group_id=' . $this->group_id . '&path=';
     }
 
     private function getPathUrlParameter()
     {
         if ($this->path_parts->count() > 0) {
-            return urlencode($this->path.'/');
+            return urlencode($this->path . '/');
         }
 
         return urlencode($this->path);

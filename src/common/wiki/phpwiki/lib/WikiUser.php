@@ -197,7 +197,7 @@ class WikiUser
             $args[$key] = isset($postargs[$key]) ? $postargs[$key] : false;
         }
         extract($args);
-        $require_level = max(0, min(WIKIAUTH_ADMIN, (int)$require_level));
+        $require_level = max(0, min(WIKIAUTH_ADMIN, (int) $require_level));
 
         if ($logout) {
             return new WikiUser($this->_request); // Log out
@@ -237,7 +237,7 @@ class WikiUser
         $require_level = 0;
         extract($args); // fixme
 
-        $require_level = max(0, min(WIKIAUTH_ADMIN, (int)$require_level));
+        $require_level = max(0, min(WIKIAUTH_ADMIN, (int) $require_level));
 
         $pagename = $request->getArg('pagename');
         $login = new Template(
@@ -522,7 +522,7 @@ class _UserPreference
 
     public function sanify($value)
     {
-        return (string)$value;
+        return (string) $value;
     }
 
     public function update($value)
@@ -537,14 +537,14 @@ class _UserPreference_numeric extends _UserPreference
         $minval = false,
         $maxval = false
     ) {
-        parent::__construct((double)$default);
-        $this->_minval = (double)$minval;
-        $this->_maxval = (double)$maxval;
+        parent::__construct((double) $default);
+        $this->_minval = (double) $minval;
+        $this->_maxval = (double) $maxval;
     }
 
     public function sanify($value)
     {
-        $value = (double)$value;
+        $value = (double) $value;
         if ($this->_minval !== false && $value < $this->_minval) {
             $value = $this->_minval;
         }
@@ -560,15 +560,15 @@ class _UserPreference_int extends _UserPreference_numeric
     public function __construct($default, $minval = false, $maxval = false)
     {
         parent::__construct(
-            (int)$default,
-            (int)$minval,
-            (int)$maxval
+            (int) $default,
+            (int) $minval,
+            (int) $maxval
         );
     }
 
     public function sanify($value)
     {
-        return (int)parent::sanify((int)$value);
+        return (int) parent::sanify((int) $value);
     }
 }
 
@@ -576,7 +576,7 @@ class _UserPreference_bool extends _UserPreference
 {
     public function __construct($default = false)
     {
-        parent::__construct((bool)$default);
+        parent::__construct((bool) $default);
     }
 
     public function sanify($value)

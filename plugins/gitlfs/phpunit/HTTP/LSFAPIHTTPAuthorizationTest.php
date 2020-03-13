@@ -46,7 +46,7 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
 
     public function testUserWithAValidAuthorizationTokenIsFoundWithADownloadOperation() : void
     {
-        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('valid_authorization');
@@ -69,7 +69,7 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
 
     public function testUserWithAValidAuthorizationTokenIsFoundWithAnUploadOperation()
     {
-        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('valid_authorization');
@@ -92,7 +92,7 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
 
     public function testUserIsFoundWhenTheOperationCanBeEitherAnDownloadOrUploadOperationAndUploadTokenIsGiven() : void
     {
-        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('valid_authorization');
@@ -120,7 +120,7 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
 
     public function testNoUserIsRetrievedWhenThereIsNoAuthorizationHeader()
     {
-        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns(false);
@@ -136,7 +136,7 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
 
     public function testNoUserIsRetrievedWhenTheAuthorizationHeaderIsNotAValidToken()
     {
-        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('invalid_token');
@@ -153,7 +153,7 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
 
     public function testNoUserIsRetrievedWhenTheBatchRequestOperationIsNotKnown()
     {
-        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('valid_token');
@@ -173,7 +173,7 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
 
     public function testNoUserIsRetrievedWhenTheAuthorizationIsNotValid() : void
     {
-        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('valid_authorization');

@@ -233,7 +233,7 @@ class NotificationBuilders
     private function getProvider(Project $project): ILinkUrlProvider
     {
         $provider = new LegacyLinkProvider(
-            HTTPRequest::instance()->getServerUrl(). '/plugins/docman/?group_id=' . urlencode((string) $project->getID())
+            HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . urlencode((string) $project->getID())
         );
         $link_provider = new DocmanLinkProvider($project, $provider);
         EventManager::instance()->processEvent($link_provider);

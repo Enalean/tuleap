@@ -460,8 +460,8 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
                 $current_user,
                 $representation,
                 new \DateTimeImmutable(),
-                (int)$item->getStatus(),
-                (int)$item->getObsolescenceDate()
+                (int) $item->getStatus(),
+                (int) $item->getObsolescenceDate()
             );
         } catch (UploadMaxSizeExceededException $exception) {
             throw new RestException(

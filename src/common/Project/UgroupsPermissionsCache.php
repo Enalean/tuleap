@@ -52,6 +52,6 @@ class UgroupsPermissionsCache
     private function getKey($group_id, $object_id, array $permission_types, $use_default_permissions)
     {
         $use = $use_default_permissions ? 'true' : 'false';
-        return $group_id.'-'.$object_id.'-'.implode('-', $permission_types).'-'.$use;
+        return $group_id . '-' . $object_id . '-' . implode('-', $permission_types) . '-' . $use;
     }
 }

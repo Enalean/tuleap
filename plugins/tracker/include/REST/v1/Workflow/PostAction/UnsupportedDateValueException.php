@@ -34,7 +34,7 @@ class UnsupportedDateValueException extends Exception
     {
         parent::__construct(sprintf(
             "Unsupported date value ('%s') used in post action. Supported values: '%s'",
-            (string)($value ?: "null"),
+            (string) ($value ?: "null"),
             implode("', '", $known_date_values)
         ));
         $this->value = $value;

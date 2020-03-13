@@ -334,7 +334,7 @@ class MoveChangesetXMLUpdater
     ) {
         $field_change = $changeset_xml->field_change[$index];
 
-        return (string)$field_change['field_name'] === $source_field->getName();
+        return (string) $field_change['field_name'] === $source_field->getName();
     }
 
     private function useTargetTrackerFieldName(

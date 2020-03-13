@@ -47,7 +47,7 @@ final class XMLDateHelper
     public static function extractFromNode(SimpleXMLElement $xml): DateTimeImmutable
     {
         if ((string) $xml['format'] !== self::FORMAT) {
-            throw new InvalidDateException('Invalid format for date. Should be '. self::FORMAT);
+            throw new InvalidDateException('Invalid format for date. Should be ' . self::FORMAT);
         }
 
         $time = (string) $xml;
@@ -57,7 +57,7 @@ final class XMLDateHelper
         );
 
         if ($date === false) {
-            throw new InvalidDateException('Invalid date (format not ISO8601?):'. $time);
+            throw new InvalidDateException('Invalid date (format not ISO8601?):' . $time);
         }
 
         return $date;

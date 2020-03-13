@@ -109,7 +109,7 @@ class WikiPlugin_CalendarList extends WikiPlugin
         $timeTMP = time();                // start with today's date
         $t = $timeTMP;                    // init the control date variable to now
 
-        for ($i=0; $i<=180; $i++) {            // loop thru 180 days, past or future
+        for ($i = 0; $i <= 180; $i++) {            // loop thru 180 days, past or future
             $date_string = strftime($args['date_format'], $t);
             $page_for_date = $args['prefix'] . SUBPAGE_SEPARATOR . $date_string;
             if ($dbi->isWikiPage($page_for_date)) { // if this date has any comments/events

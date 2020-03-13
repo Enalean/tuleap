@@ -54,7 +54,7 @@ class MediawikiAdminController
     public function index(ServiceMediawiki $service, HTTPRequest $request)
     {
         $this->assertUserIsProjectAdmin($service, $request);
-        $GLOBALS['HTML']->includeFooterJavascriptFile(MEDIAWIKI_BASE_URL.'/forgejs/admin.js');
+        $GLOBALS['HTML']->includeFooterJavascriptFile(MEDIAWIKI_BASE_URL . '/forgejs/admin.js');
 
         $project = $request->getProject();
 
@@ -170,7 +170,7 @@ class MediawikiAdminController
         }
         return new MediawikiGroupPresenter(
             $mw_group_name,
-            $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_'.$mw_group_name),
+            $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_' . $mw_group_name),
             $available_groups,
             $mapped_groups
         );
@@ -190,7 +190,7 @@ class MediawikiAdminController
             }
         }
 
-        $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin.php?'. http_build_query(
+        $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query(
             array(
                 'group_id'   => $request->get('group_id'),
                 'pane'       => 'language',
@@ -237,7 +237,7 @@ class MediawikiAdminController
             }
         }
 
-        $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin.php?'. http_build_query(
+        $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query(
             array(
                 'group_id'   => $request->get('group_id'),
             )
@@ -252,7 +252,7 @@ class MediawikiAdminController
 
         $list = array();
         foreach (MediawikiUserGroupsMapper::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
-            $list[$mw_group_name] = array_filter(explode(',', $request->get('hidden_selected_'.$mw_group_name)));
+            $list[$mw_group_name] = array_filter(explode(',', $request->get('hidden_selected_' . $mw_group_name)));
         }
         return $list;
     }
@@ -265,7 +265,7 @@ class MediawikiAdminController
     private function assertUserIsProjectAdmin(ServiceMediawiki $service, HTTPRequest $request)
     {
         if (! $service->userIsAdmin($request->getCurrentUser())) {
-            $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL.'/wiki/'.$request->getProject()->getUnixName());
+            $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL . '/wiki/' . $request->getProject()->getUnixName());
         }
     }
 }

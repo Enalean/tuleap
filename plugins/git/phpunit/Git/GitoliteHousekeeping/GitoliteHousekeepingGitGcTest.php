@@ -21,7 +21,7 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ .'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TestCase
@@ -60,8 +60,8 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TestCase
     {
         $this->dao->shouldReceive('isGitGcEnabled')->andReturns(false);
 
-        $this->logger->shouldReceive('warning')->with('Cannot run git gc on gitolite admin working copy. '.
-        'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh '.
+        $this->logger->shouldReceive('warning')->with('Cannot run git gc on gitolite admin working copy. ' .
+        'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh ' .
         '/usr/share/tuleap/plugins/git/bin/gl-admin-housekeeping.php')->once();
         $this->gitgc->shouldReceive('execGitGcAsAppAdm')->never();
 

@@ -145,7 +145,7 @@ class RepositoryCreator
         $repo_event['copy_from_core'] = $copy_from_core;
 
         return $this->system_event_manager->createEvent(
-            'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME,
+            'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME,
             SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($repo_event),
             SystemEvent::PRIORITY_HIGH
         );

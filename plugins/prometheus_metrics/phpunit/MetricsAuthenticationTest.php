@@ -119,7 +119,7 @@ final class MetricsAuthenticationTest extends TestCase
         $server_request = Mockery::mock(ServerRequestInterface::class);
         $server_request->shouldReceive('getHeaderLine')
             ->with('Authorization')
-            ->andReturn('Basic ' .base64_encode($username . ':' . $password));
+            ->andReturn('Basic ' . base64_encode($username . ':' . $password));
         return $server_request;
     }
 }

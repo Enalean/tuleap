@@ -245,7 +245,7 @@ class XmlImportTest extends TestCase
 
         $artifact = $this->mockAnArtifact(101, $this->tracker, $this->tracker_id, []);
 
-        $xml_field_mapping = file_get_contents(__DIR__.'/_fixtures/testImportChangesetInNewArtifact.xml');
+        $xml_field_mapping = file_get_contents(__DIR__ . '/_fixtures/testImportChangesetInNewArtifact.xml');
         $xml_input = simplexml_load_string($xml_field_mapping);
 
         $data = array(
@@ -344,7 +344,7 @@ class XmlImportTest extends TestCase
 
         $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($artifact);
 
-        $xml_field_mapping = file_get_contents(__DIR__.'/_fixtures/testImportChangesetInNewArtifact.xml');
+        $xml_field_mapping = file_get_contents(__DIR__ . '/_fixtures/testImportChangesetInNewArtifact.xml');
         $xml_input = simplexml_load_string($xml_field_mapping);
 
         $data = array(
@@ -436,7 +436,7 @@ class XmlImportTest extends TestCase
 
         $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($artifact);
 
-        $xml_field_mapping = file_get_contents(__DIR__.'/_fixtures/testImportChangesetInArtifactWithoutSourcePlatformAttribute.xml');
+        $xml_field_mapping = file_get_contents(__DIR__ . '/_fixtures/testImportChangesetInArtifactWithoutSourcePlatformAttribute.xml');
         $xml_input = simplexml_load_string($xml_field_mapping);
 
         $data = array(
@@ -525,7 +525,7 @@ class XmlImportTest extends TestCase
 
         $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($artifact);
 
-        $xml_field_mapping = file_get_contents(dirname(__FILE__).'/_fixtures/testImportChangesetInArtifactWithWrongSourcePlatformAttribute.xml');
+        $xml_field_mapping = file_get_contents(dirname(__FILE__) . '/_fixtures/testImportChangesetInArtifactWithWrongSourcePlatformAttribute.xml');
         $xml_input = simplexml_load_string($xml_field_mapping);
 
         $data = array(
@@ -612,7 +612,7 @@ class XmlImportTest extends TestCase
 
         $artifact = $this->mockAnArtifact(101, $this->tracker, $this->tracker_id, [$changeset]);
 
-        $xml_field_mapping = file_get_contents(dirname(__FILE__).'/_fixtures/testImportChangesetInNewArtifact.xml');
+        $xml_field_mapping = file_get_contents(dirname(__FILE__) . '/_fixtures/testImportChangesetInNewArtifact.xml');
         $xml_input = simplexml_load_string($xml_field_mapping);
 
         $this->tracker_artifact_factory->shouldReceive('getArtifactById')->andReturn($artifact)->times(2);

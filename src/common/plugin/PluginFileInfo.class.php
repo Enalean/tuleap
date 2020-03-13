@@ -43,7 +43,7 @@ class PluginFileInfo extends PluginInfo
     {
         parent::__construct($plugin);
 
-        $this->conf_path         = $plugin->getPluginEtcRoot()  .'/'.$incname.'.inc';
+        $this->conf_path         = $plugin->getPluginEtcRoot()  . '/' . $incname . '.inc';
         $this->default_conf_path = $this->getDefaultConfPath($plugin, $incname);
         $this->loadProperties();
     }
@@ -93,7 +93,7 @@ class PluginFileInfo extends PluginInfo
      */
     public function saveProperties()
     {
-        copy($this->conf_path, $this->conf_path .'.'. date('YmdHis'));
+        copy($this->conf_path, $this->conf_path . '.' . date('YmdHis'));
         $content = file_get_contents($this->conf_path);
         $descs   =& $this->getPropertyDescriptors();
         $keys    =& $descs->getKeys();
@@ -105,20 +105,20 @@ class PluginFileInfo extends PluginInfo
             $desc_name =& $desc->getName();
 
             if (is_bool($desc->getValue())) {
-                $value = ($desc->getValue() ? 'true' : 'false') .';';
+                $value = ($desc->getValue() ? 'true' : 'false') . ';';
             } else {
-                $value = "'".addslashes($desc->getValue())."';";
+                $value = "'" . addslashes($desc->getValue()) . "';";
             }
 
-            $replace = '$1'. $value;
+            $replace = '$1' . $value;
             $content = preg_replace(
-                '`((?:^|\n)\$'. preg_quote($desc_name, '`') .'\s*=\s*)(.*)\s*;`',
+                '`((?:^|\n)\$' . preg_quote($desc_name, '`') . '\s*=\s*)(.*)\s*;`',
                 $replace,
                 $content
             );
 
-            if (! preg_match('`(?:^|\n)\$'. preg_quote($desc_name, '`') .'\s*=`', $content)) {
-                $content .= '$' . $desc_name .' = '. $value . PHP_EOL;
+            if (! preg_match('`(?:^|\n)\$' . preg_quote($desc_name, '`') . '\s*=`', $content)) {
+                $content .= '$' . $desc_name . ' = ' . $value . PHP_EOL;
             }
             $iter->next();
         }
@@ -184,7 +184,7 @@ class PluginFileInfo extends PluginInfo
                 case T_LNUMBER:
                 case T_NUM_STRING:
                     if (T_STRING == $token[0] && (!strcasecmp($token[1], "false") || !strcasecmp($token[1], "true"))) {
-                        $val = (bool)strcasecmp($token[1], "false");
+                        $val = (bool) strcasecmp($token[1], "false");
                         if (isset($variables[$current])) {
                             $variables[$current]['value'] = $val;
                         }

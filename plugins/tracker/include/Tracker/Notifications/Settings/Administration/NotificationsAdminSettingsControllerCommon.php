@@ -122,6 +122,6 @@ trait NotificationsAdminSettingsControllerCommon
 
     private function getURL(Tracker $tracker)
     {
-        return TRACKER_BASE_URL.'/notifications/' . urlencode($tracker->getId()) . '/';
+        return TRACKER_BASE_URL . '/notifications/' . urlencode($tracker->getId()) . '/';
     }
 }

@@ -61,13 +61,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         if ($this->isUsed()) {
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
-                $a = 'A_'. $this->id;
-                $b = 'B_'. $this->id;
+                $a = 'A_' . $this->id;
+                $b = 'B_' . $this->id;
                 return " INNER JOIN tracker_changeset_value AS $a
                          ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
                          INNER JOIN tracker_changeset_value_text AS $b
                          ON ($b.changeset_value_id = $a.id
-                             AND ". $this->buildMatchExpression("$b.value", $criteria_value) ."
+                             AND " . $this->buildMatchExpression("$b.value", $criteria_value) . "
                          ) ";
             }
         }
@@ -81,19 +81,19 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
     public function getQuerySelect()
     {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
-        return "$R2.value AS `". $this->name ."`";
+        $R1 = 'R1_' . $this->id;
+        $R2 = 'R2_' . $this->id;
+        return "$R2.value AS `" . $this->name . "`";
     }
 
     public function getQueryFrom()
     {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
+        $R1 = 'R1_' . $this->id;
+        $R2 = 'R2_' . $this->id;
 
         return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN tracker_changeset_value_text AS $R2 ON ($R2.changeset_value_id = $R1.id)
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
+                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
     }
 
     protected function buildMatchExpression($field_name, $criteria_value)
@@ -113,7 +113,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
                 return '';
             }
             foreach ($split as $w) {
-                $words[] = $field_name." LIKE ". $criterie_dao->getDa()->quoteLikeValueSurround($w);
+                $words[] = $field_name . " LIKE " . $criterie_dao->getDa()->quoteLikeValueSurround($w);
             }
             $expr = join(' AND ', $words);
         }
@@ -235,13 +235,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
         //check if this field is the title we do not allow to change it
         if ($this->isSemanticTitle()) {
-            $html .= '<textarea readonly="readonly" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'">'.$value.'</textarea>';
+            $html .= '<textarea readonly="readonly" title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title') . '">' . $value . '</textarea>';
         } else {
             $hp = Codendi_HTMLPurifier::instance();
-            $html .= '<textarea id = field_'.$this->id.' class="user-mention"
-                                name="artifact['. $this->id .'][content]"
-                                rows="'. $this->getProperty('rows') .'"
-                                cols="'. $this->getProperty('cols') .'">';
+            $html .= '<textarea id = field_' . $this->id . ' class="user-mention"
+                                name="artifact[' . $this->id . '][content]"
+                                rows="' . $this->getProperty('rows') . '"
+                                cols="' . $this->getProperty('cols') . '">';
             $html .= $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML);
             $html .= '</textarea>';
         }
@@ -289,7 +289,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     {
         $tracker = $this->getTracker();
         if (! $tracker) {
-            throw new LogicException(self::class.' # '.$this->getId().' must have a valid tracker');
+            throw new LogicException(self::class . ' # ' . $this->getId() . ' must have a valid tracker');
         }
 
         $hp = Codendi_HTMLPurifier::instance();
@@ -420,7 +420,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     protected function _filter_html_callback($s)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return  $hp->purify($s, CODENDI_PURIFIER_CONVERT_HTML);
+        return $hp->purify($s, CODENDI_PURIFIER_CONVERT_HTML);
     }
 
     /**
@@ -436,8 +436,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $value = $this->getDefaultValue();
             $content = $value['content'];
         }
-        $html .= '<textarea rows="'. $this->getProperty('rows') .'" cols="'. $this->getProperty('cols') .'" autocomplete="off">';
-        $html .=  $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML) ;
+        $html .= '<textarea rows="' . $this->getProperty('rows') . '" cols="' . $this->getProperty('cols') . '" autocomplete="off">';
+        $html .=  $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;
     }

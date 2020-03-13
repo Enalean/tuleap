@@ -121,7 +121,7 @@ class Codendi_Session extends PHP_Session
         $count   = count($pathway);
         $i = 0;
         foreach ($pathway as $path) {
-                $i = $i+1;
+                $i = $i + 1;
                 //last path element not reached yet <=> wrong path
             if (!$create_path && $i < $count && ((is_array($session) && !isset($session[$path])) || !is_array($session) || !is_array($session[$path]) )) {
                 $r = null;
@@ -176,7 +176,6 @@ class Codendi_Session extends PHP_Session
      */
     public function changeSessionNamespace($namespace)
     {
-
         if (strpos($namespace, '.') === 0) {
             //absolute path
             $this->session_namespace_path = $namespace;
@@ -185,7 +184,7 @@ class Codendi_Session extends PHP_Session
         } else {
             //relative path (down the tree)
             if ($this->session_name_path != '.') {
-                $this->session_namespace_path .= '.'.$namespace;
+                $this->session_namespace_path .= '.' . $namespace;
             } else {
                 $this->session_namespace_path .= $namespace;
             }

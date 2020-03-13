@@ -69,7 +69,7 @@ class ProjectHeartbeat extends Widget
 
     public function getJavascriptDependencies()
     {
-        $include_assets = new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets');
+        $include_assets = new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets');
 
         return array(
             array('file' => $include_assets->getFileURL('widget-project-heartbeat.js'))

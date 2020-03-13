@@ -42,9 +42,9 @@ class ArtifactFieldDao extends DataAccessObject
     public function & searchAssignedToFieldIdByArtifactTypeId($artifactTypeId)
     {
         $sql = sprintf(
-            " SELECT field_id ".
-                       " FROM artifact_field ".
-                       " WHERE group_artifact_id = %s ".
+            " SELECT field_id " .
+                       " FROM artifact_field " .
+                       " WHERE group_artifact_id = %s " .
                        "   AND (field_name = 'assigned_to' OR field_name = 'multi_assigned_to') ",
             $artifactTypeId
         );

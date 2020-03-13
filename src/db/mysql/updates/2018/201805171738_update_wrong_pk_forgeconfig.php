@@ -49,7 +49,7 @@ class b201805171738_update_wrong_pk_forgeconfig extends ForgeUpgrade_Bucket // @
 
     private function indexNameExists($table_name, $index)
     {
-        $sql = 'SHOW INDEX FROM '.$table_name.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
+        $sql = 'SHOW INDEX FROM ' . $table_name . ' WHERE Key_name LIKE ' . $this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {
             return true;

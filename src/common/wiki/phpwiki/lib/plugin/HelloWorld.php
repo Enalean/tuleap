@@ -81,7 +81,7 @@ class WikiPlugin_HelloWorld extends WikiPlugin
         );
         return $html;
     }
-};
+}
 
 // $Log: HelloWorld.php,v $
 // Revision 1.13  2004/02/17 12:11:36  rurban

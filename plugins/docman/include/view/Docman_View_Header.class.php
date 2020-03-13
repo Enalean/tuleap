@@ -71,7 +71,7 @@
         $title = '';
         $project = $this->getProjectFromParams($params);
         if ($project) {
-            $title .= Codendi_HTMLPurifier::instance()->purify($project->getPublicName()).' - ';
+            $title .= Codendi_HTMLPurifier::instance()->purify($project->getPublicName()) . ' - ';
         }
         $title .= dgettext('tuleap-docman', 'Project Documentation');
 

@@ -254,7 +254,7 @@ class GitRepositoryManager
         $clone->setParent($repository);
         $clone->setNamespace($namespace);
         $clone->setId(null);
-        $path = PathJoinUtil::unixPathJoin(array($to_project->getUnixName(), $namespace, $repository->getName())).'.git';
+        $path = PathJoinUtil::unixPathJoin(array($to_project->getUnixName(), $namespace, $repository->getName())) . '.git';
         $clone->setPath($path);
         $clone->setScope($scope);
 
@@ -456,11 +456,11 @@ class GitRepositoryManager
                 $backend = $repository->getBackend();
                 $backend->deletePermissions($repository);
                 if ($backend->archiveBeforePurge($repository)) {
-                    $logger->info('Archive of the Gitolite repository: '.$repository->getName().' done');
-                    $logger->info('Purge of archived Gitolite repository: '.$repository->getName());
+                    $logger->info('Archive of the Gitolite repository: ' . $repository->getName() . ' done');
+                    $logger->info('Purge of archived Gitolite repository: ' . $repository->getName());
                     $backend->deleteArchivedRepository($repository);
                 } else {
-                    $logger->warning('An error occured while archiving Gitolite repository: '.$repository->getName());
+                    $logger->warning('An error occured while archiving Gitolite repository: ' . $repository->getName());
                 }
             } catch (GitDriverErrorException $exception) {
                 $logger->error($exception->getMessage());
@@ -482,7 +482,7 @@ class GitRepositoryManager
         $retention_period      = intval($GLOBALS['sys_file_deletion_delay']);
         $deleted_repositories  = $this->repository_factory->getDeletedRepositoriesByProjectId($project_id, $retention_period);
         foreach ($deleted_repositories as $repository) {
-            $archive = realpath($this->backup_directory.'/'.$repository->getBackupPath().".tar.gz");
+            $archive = realpath($this->backup_directory . '/' . $repository->getBackupPath() . ".tar.gz");
             if (file_exists($archive)) {
                 array_push($archived_repositories, $repository);
             }

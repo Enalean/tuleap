@@ -57,7 +57,7 @@ class AccessFileHistory
 
     public function getVersionNumber()
     {
-        return (int)$this->version_number;
+        return (int) $this->version_number;
     }
 
     public function setContent($content)

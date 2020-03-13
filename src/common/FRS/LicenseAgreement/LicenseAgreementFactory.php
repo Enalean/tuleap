@@ -61,7 +61,7 @@ class LicenseAgreementFactory
     {
         $agreements = [];
         foreach ($this->dao->getProjectLicenseAgreements($project) as $row) {
-            $agreements []= new LicenseAgreement($row['id'], $row['title'], $row['content']);
+            $agreements[] = new LicenseAgreement($row['id'], $row['title'], $row['content']);
         }
         return $agreements;
     }
@@ -155,7 +155,7 @@ class LicenseAgreementFactory
     {
         $packages = [];
         foreach ($this->dao->getListOfPackagesForLicenseAgreement($license) as $package_row) {
-            $packages []= new FRSPackage($package_row);
+            $packages[] = new FRSPackage($package_row);
         }
         return $packages;
     }

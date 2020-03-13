@@ -37,9 +37,9 @@ class SvnNotificationDao extends DataAccessObject
         $sql = ' REPLACE INTO svn_notification
                          ( group_id, svn_events_mailing_list, path)
                  VALUES (
-                 '.$this->da->escapeInt($groupId).',
-                 '.$this->da->quoteSmart($mailingList).',
-                 '.$this->da->quoteSmart($path).'
+                 ' . $this->da->escapeInt($groupId) . ',
+                 ' . $this->da->quoteSmart($mailingList) . ',
+                 ' . $this->da->quoteSmart($path) . '
                  )';
         return $this->update($sql);
     }
@@ -57,12 +57,12 @@ class SvnNotificationDao extends DataAccessObject
     {
         $condition = '';
         if (!empty($path)) {
-            $condition = 'AND path = '.$this->da->quoteSmart($path);
+            $condition = 'AND path = ' . $this->da->quoteSmart($path);
         }
         $sql = ' SELECT svn_events_mailing_list, path
                  FROM svn_notification 
-                 WHERE group_id = '.$this->da->escapeInt($groupId).'
-                 '.$condition;
+                 WHERE group_id = ' . $this->da->escapeInt($groupId) . '
+                 ' . $condition;
         return $this->retrieve($sql);
     }
 
@@ -77,8 +77,8 @@ class SvnNotificationDao extends DataAccessObject
     public function deleteSvnMailingList($groupId, $path)
     {
         $sql = 'DELETE FROM svn_notification
-                WHERE path='.$this->da->quoteSmart($path).'
-                AND group_id='.$this->da->escapeInt($groupId);
+                WHERE path=' . $this->da->quoteSmart($path) . '
+                AND group_id=' . $this->da->escapeInt($groupId);
         return $this->update($sql);
     }
 }

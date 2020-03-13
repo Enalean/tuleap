@@ -150,7 +150,7 @@
     <InvalidPropertyAssignmentValue occurrences="3">
       <code>json_encode($dashboard_widget_id)</code>
       <code>json_encode($tracker_report_builder-&gt;build($selected_tracker_report_id))</code>
-      <code>(int)$user_is_kanban_admin</code>
+      <code>(int) $user_is_kanban_admin</code>
     </InvalidPropertyAssignmentValue>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;kanban_url</code>
@@ -346,7 +346,7 @@
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Kanban/KanbanRepresentation.php">
     <InvalidPropertyAssignmentValue occurrences="3">
-      <code>self::ROUTE.'/'.$this-&gt;id</code>
+      <code>self::ROUTE . '/' . $this-&gt;id</code>
       <code>new KanbanBacklogInfoRepresentation()</code>
       <code>new KanbanArchiveInfoRepresentation()</code>
     </InvalidPropertyAssignmentValue>
@@ -2893,7 +2893,7 @@
   <file src="plugins/git/include/GitPHP/smartyplugins/modifier.highlight.php">
     <InvalidScalarArgument occurrences="2">
       <code>$leftlen - ($leftremain - 3)</code>
-      <code>$rightremain-3</code>
+      <code>$rightremain - 3</code>
     </InvalidScalarArgument>
   </file>
   <file src="plugins/git/include/GitPresenters/AccessControlPresenter.class.php">
@@ -5222,7 +5222,7 @@
   </file>
   <file src="plugins/tracker/include/REST/FieldListStaticValueRepresentation.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
-      <code>(bool)$value-&gt;isHidden()</code>
+      <code>(bool) $value-&gt;isHidden()</code>
     </InvalidPropertyAssignmentValue>
     <UndefinedDocblockClass occurrences="1">
       <code>is_hidden</code>
@@ -5646,7 +5646,7 @@
       <code>$linked_artifact_ids</code>
     </InvalidScalarArgument>
     <LessSpecificReturnStatement occurrences="1">
-      <code>TemplateRendererFactory::build()-&gt;getRenderer(dirname(TRACKER_BASE_DIR).'/templates')</code>
+      <code>TemplateRendererFactory::build()-&gt;getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')</code>
     </LessSpecificReturnStatement>
     <LoopInvalidation occurrences="1">
       <code>$artifact_links</code>
@@ -7099,7 +7099,7 @@
       <code>void</code>
     </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
-      <code>(int)$value-&gt;isHidden()</code>
+      <code>(int) $value-&gt;isHidden()</code>
     </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>array</code>
@@ -8540,7 +8540,7 @@
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_Renderer_Table.class.php">
     <InvalidArrayOffset occurrences="1">
-      <code>$queries['aggregates_group_by'][$column['field']-&gt;getName() .'_'. $sel['function']]</code>
+      <code>$queries['aggregates_group_by'][$column['field']-&gt;getName() . '_' . $sel['function']]</code>
     </InvalidArrayOffset>
     <InvalidReturnStatement occurrences="1">
       <code>array('head' =&gt; $head, 'rows' =&gt; $html)</code>
@@ -9062,7 +9062,7 @@
   <file src="plugins/tracker/include/Tracker/Tracker.class.php">
     <ArgumentTypeCoercion occurrences="8">
       <code>$layout</code>
-      <code>TemplateRendererFactory::build()-&gt;getRenderer(dirname(TRACKER_BASE_DIR).'/templates')</code>
+      <code>TemplateRendererFactory::build()-&gt;getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')</code>
       <code>$layout</code>
       <code>$layout</code>
       <code>$layout</code>
@@ -9135,7 +9135,7 @@
     </PossiblyUndefinedVariable>
     <TypeDoesNotContainType occurrences="2">
       <code>$line === false</code>
-      <code>count($error_nature) &gt;0</code>
+      <code>count($error_nature) &gt; 0</code>
     </TypeDoesNotContainType>
     <UndefinedMethod occurrences="1">
       <code>getFieldDataFromCSVValue</code>
@@ -9321,7 +9321,7 @@
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValuePermissionsOnArtifactXMLExporter.class.php">
     <InvalidScalarArgument occurrences="1">
-      <code>(int)$this-&gt;isUsed($changeset_value)</code>
+      <code>(int) $this-&gt;isUsed($changeset_value)</code>
     </InvalidScalarArgument>
     <UndefinedMethod occurrences="2">
       <code>getUgroupNamesFromPerms</code>
@@ -10004,7 +10004,7 @@
   </file>
   <file src="plugins/tracker_encryption/include/Tracker_Key.class.php">
     <InvalidReturnStatement occurrences="1">
-      <code>($rsa-&gt;getSize()/8) - (2 * Encryption_Manager::HLEN) - 2</code>
+      <code>($rsa-&gt;getSize() / 8) - (2 * Encryption_Manager::HLEN) - 2</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="1">
       <code>int</code>
@@ -10572,7 +10572,7 @@
       <code>$backend</code>
     </ArgumentTypeCoercion>
     <ForbiddenCode occurrences="1">
-      <code>shell_exec("/usr/bin/find ". $src_dir ." -maxdepth 1 -type f -printf \"%f\\n\"")</code>
+      <code>shell_exec("/usr/bin/find " . $src_dir . " -maxdepth 1 -type f -printf \"%f\\n\"")</code>
     </ForbiddenCode>
     <PossiblyNullArgument occurrences="2">
       <code>$filelist</code>
@@ -10972,7 +10972,7 @@
   </file>
   <file src="src/common/Project/Admin/ProjectUGroup/DelegationController.php">
     <InvalidScalarArgument occurrences="1">
-      <code>(int)$has_membership_management</code>
+      <code>(int) $has_membership_management</code>
     </InvalidScalarArgument>
   </file>
   <file src="src/common/Project/Admin/ProjectVisibilityPresenter.class.php">
@@ -11100,7 +11100,7 @@
   </file>
   <file src="src/common/Project/ProjectCreator.class.php">
     <InvalidScalarArgument occurrences="2">
-      <code>(double)microtime()*1000000</code>
+      <code>(double) microtime() * 1000000</code>
       <code>$random_num</code>
     </InvalidScalarArgument>
   </file>
@@ -12007,7 +12007,7 @@
   </file>
   <file src="src/common/backend/BackendCVS.class.php">
     <ForbiddenCode occurrences="1">
-      <code>shell_exec("/usr/bin/find ".$GLOBALS['cvs_hook_tmp_dir'].' -name "*.files.*" -amin +120;')</code>
+      <code>shell_exec("/usr/bin/find " . $GLOBALS['cvs_hook_tmp_dir'] . ' -name "*.files.*" -amin +120;')</code>
     </ForbiddenCode>
     <InvalidArgument occurrences="17">
       <code>$filename</code>
@@ -13064,7 +13064,7 @@
       <code>bool</code>
     </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
-      <code>1 - (int)$current_user-&gt;getPreference('toggle_'. $id)</code>
+      <code>1 - (int) $current_user-&gt;getPreference('toggle_' . $id)</code>
     </InvalidScalarArgument>
     <UndefinedMethod occurrences="1">
       <code>ArtifactReportFactory::instance()</code>
@@ -13913,13 +13913,13 @@
       <code>bool</code>
     </InvalidReturnType>
     <InvalidScalarArgument occurrences="7">
-      <code>$group_artifact_id."#".$this-&gt;field_id</code>
-      <code>$group_artifact_id."#".$this-&gt;field_id</code>
-      <code>$group_artifact_id."#".$this-&gt;field_id</code>
-      <code>$group_artifact_id."#".$this-&gt;field_id</code>
-      <code>$group_artifact_id."#".$this-&gt;field_id</code>
-      <code>$group_artifact_id."#".$this-&gt;field_id</code>
-      <code>$group_artifact_id."#".$this-&gt;field_id</code>
+      <code>$group_artifact_id . "#" . $this-&gt;field_id</code>
+      <code>$group_artifact_id . "#" . $this-&gt;field_id</code>
+      <code>$group_artifact_id . "#" . $this-&gt;field_id</code>
+      <code>$group_artifact_id . "#" . $this-&gt;field_id</code>
+      <code>$group_artifact_id . "#" . $this-&gt;field_id</code>
+      <code>$group_artifact_id . "#" . $this-&gt;field_id</code>
+      <code>$group_artifact_id . "#" . $this-&gt;field_id</code>
     </InvalidScalarArgument>
     <PossiblyNullReference occurrences="1">
       <code>isSuperUser</code>
@@ -14107,7 +14107,7 @@
       <code>0</code>
     </InvalidPropertyAssignmentValue>
     <InvalidReturnStatement occurrences="1">
-      <code>"field_".$id</code>
+      <code>"field_" . $id</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="1">
       <code>array</code>
@@ -14119,8 +14119,8 @@
       <code>$keywords[1]</code>
       <code>$keywords[2]</code>
       <code>$keywords[0]</code>
-      <code>count($fields)/2</code>
-      <code>count($chunk)/2</code>
+      <code>count($fields) / 2</code>
+      <code>count($chunk) / 2</code>
     </InvalidScalarArgument>
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>null</code>
@@ -14472,8 +14472,8 @@
       <code>$request</code>
     </UndefinedDocblockClass>
     <UndefinedFunction occurrences="2">
-      <code>IniConfig(PHPWIKI_DIR."/config/config.ini")</code>
-      <code>IniConfig(PHPWIKI_DIR."/config/config.ini")</code>
+      <code>IniConfig(PHPWIKI_DIR . "/config/config.ini")</code>
+      <code>IniConfig(PHPWIKI_DIR . "/config/config.ini")</code>
     </UndefinedFunction>
   </file>
   <file src="src/common/wiki/views/WikiServiceAdminViews.class.php">
@@ -14948,8 +14948,8 @@
   </file>
   <file src="src/www/include/user.php">
     <EmptyArrayAccess occurrences="2">
-      <code>$USER_RES["_".$user_id."_"]</code>
-      <code>$USER_RES["_".$user_id."_"]</code>
+      <code>$USER_RES["_" . $user_id . "_"]</code>
+      <code>$USER_RES["_" . $user_id . "_"]</code>
     </EmptyArrayAccess>
   </file>
   <file src="src/www/include/utils.php">
@@ -15003,7 +15003,7 @@
       <code>false</code>
     </InvalidReturnType>
     <ParadoxicalCondition occurrences="1">
-      <code>$permission_type=='TRACKER_ACCESS_FULL'</code>
+      <code>$permission_type == 'TRACKER_ACCESS_FULL'</code>
     </ParadoxicalCondition>
     <PossiblyNullReference occurrences="1">
       <code>isSuperUser</code>
@@ -15139,7 +15139,7 @@
   </file>
   <file src="src/www/soap/common/session.php">
     <InvalidReturnStatement occurrences="2">
-      <code>new SoapFault(LOGIN_FAULT, $loginname.' : '.$Language-&gt;getText('include_session', 'invalid_pwd'), 'login')</code>
+      <code>new SoapFault(LOGIN_FAULT, $loginname . ' : ' . $Language-&gt;getText('include_session', 'invalid_pwd'), 'login')</code>
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session.', 'retrieveSession')</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="2">
@@ -15235,7 +15235,7 @@
       <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addFile')</code>
       <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'addFile')</code>
       <code>new SoapFault(INVALID_FILE_FAULT, 'Could not create temporary file in directory /tmp', 'addFile')</code>
-      <code>new SoapFault(INVALID_FILE_FAULT, 'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'], 'addFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Impossible to move the file in the incoming dir: ' . $GLOBALS['ftp_incoming_dir'], 'addFile')</code>
       <code>new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to add a file', 'addFile')</code>
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addFile')</code>
       <code>$e</code>
@@ -15263,14 +15263,14 @@
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteFile')</code>
       <code>$e</code>
       <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deletePackage')</code>
-      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Package '.$package-&gt;getPackageID().' could not be deleted', 'deletePackage')</code>
-      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package '.$package-&gt;getPackageID(), 'deletePackage')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Package ' . $package-&gt;getPackageID() . ' could not be deleted', 'deletePackage')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package ' . $package-&gt;getPackageID(), 'deletePackage')</code>
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deletePackage')</code>
       <code>$e</code>
       <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deleteRelease')</code>
       <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'deleteRelease')</code>
-      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Release '.$release-&gt;getReleaseID().' could not be deleted', 'deleteRelease')</code>
-      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package '.$release-&gt;getReleaseID(), 'deleteRelease')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Release ' . $release-&gt;getReleaseID() . ' could not be deleted', 'deleteRelease')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package ' . $release-&gt;getReleaseID(), 'deleteRelease')</code>
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteRelease')</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="10">
@@ -15404,7 +15404,7 @@
       <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'addArtifact')</code>
       <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifact')</code>
       <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'addArtifact')</code>
-      <code>new SoapFault(INVALID_FIELD_FAULT, 'Invalid Field:'.$extra_field_name-&gt;field_name, 'addArtifact')</code>
+      <code>new SoapFault(INVALID_FIELD_FAULT, 'Invalid Field:' . $extra_field_name-&gt;field_name, 'addArtifact')</code>
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'addArtifact')</code>
       <code>$e</code>
       <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'updateArtifact')</code>
@@ -15421,7 +15421,7 @@
       <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'updateArtifact')</code>
       <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'updateArtifact')</code>
       <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'updateArtifact')</code>
-      <code>new SoapFault(INVALID_FIELD_FAULT, 'Invalid Field:'.$extra_field_name-&gt;field_name, 'updateArtifact')</code>
+      <code>new SoapFault(INVALID_FIELD_FAULT, 'Invalid Field:' . $extra_field_name-&gt;field_name, 'updateArtifact')</code>
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'updateArtifact')</code>
       <code>$e</code>
       <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactFollowups')</code>
@@ -15498,7 +15498,7 @@
       <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'addArtifactDependencies')</code>
       <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactDependencies')</code>
       <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'addArtifactDependencies')</code>
-      <code>new SoapFault(ADD_DEPENDENCY_FAULT, 'Dependencies addition for artifact #'.$a-&gt;getID().' failed', 'addArtifactDependencies')</code>
+      <code>new SoapFault(ADD_DEPENDENCY_FAULT, 'Dependencies addition for artifact #' . $a-&gt;getID() . ' failed', 'addArtifactDependencies')</code>
       <code>true</code>
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addArtifactDependencies')</code>
       <code>$e</code>
@@ -15528,7 +15528,7 @@
       <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'deleteArtifactDependency')</code>
       <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactDependency')</code>
       <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'deleteArtifactDependency')</code>
-      <code>new SoapFault(DELETE_DEPENDENCY_FAULT, 'Error deleting dependency'. $dependent_on_artifact_id, 'deleteArtifactDependency')</code>
+      <code>new SoapFault(DELETE_DEPENDENCY_FAULT, 'Error deleting dependency' . $dependent_on_artifact_id, 'deleteArtifactDependency')</code>
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteArtifactDependency')</code>
       <code>$e</code>
       <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactFollowup')</code>

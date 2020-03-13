@@ -36,6 +36,6 @@ class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer
             $submitted_artifact = "submitted_artifact";
         }
 
-        return "<div class='".$submitted_artifact."'>".$artifact->getTracker()->fetchFormElementsReadOnly($artifact, $submitted_values)."</div>";
+        return "<div class='" . $submitted_artifact . "'>" . $artifact->getTracker()->fetchFormElementsReadOnly($artifact, $submitted_values) . "</div>";
     }
 }

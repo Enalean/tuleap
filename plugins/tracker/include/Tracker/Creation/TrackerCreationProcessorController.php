@@ -128,7 +128,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                 $project,
                 $exception->getTranslatedMessage()
             );
-        } catch (Tracker_Exception|TrackerFromXmlException|\XML_ParseException $exception) {
+        } catch (Tracker_Exception | TrackerFromXmlException | \XML_ParseException $exception) {
             $this->redirectToTrackerCreation(
                 $project,
                 $exception->getMessage()
@@ -153,7 +153,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
     private function redirectToModal(\Tracker $tracker): void
     {
         $GLOBALS['Response']->redirect(
-            "/plugins/tracker/?tracker=" . urlencode((string)$tracker->getId()) .
+            "/plugins/tracker/?tracker=" . urlencode((string) $tracker->getId()) .
             "&should-display-created-tracker-modal=true"
         );
     }

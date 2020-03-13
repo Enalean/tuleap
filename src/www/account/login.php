@@ -109,9 +109,9 @@ $presenter = $presenter_builder->build(
 );
 
 if ($pvMode) {
-    $GLOBALS['HTML']->pv_header(array('title'=>$presenter->account_login_page_title()));
+    $GLOBALS['HTML']->pv_header(array('title' => $presenter->account_login_page_title()));
 } else {
-    $GLOBALS['HTML']->header(array('title'=>$presenter->account_login_page_title(), 'body_class' => array('login-page')));
+    $GLOBALS['HTML']->header(array('title' => $presenter->account_login_page_title(), 'body_class' => array('login-page')));
 }
 
 $login_controller->index($presenter);

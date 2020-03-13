@@ -35,7 +35,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldCheck
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use UserManager;
 
-require_once __DIR__.'/../../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../../bootstrap.php';
 
 class ListFieldCheckerWithBindUsersTest extends TestCase
 {

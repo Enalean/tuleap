@@ -105,7 +105,7 @@ class ProjectXMLExporter
             $this->exportProjectUgroup($ugroups_node, $ugroup);
         }
 
-        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/ugroups.rng');
+        $rng_path = realpath(dirname(__FILE__) . '/../xml/resources/ugroups.rng');
         $this->xml_validator->validate($ugroups_node, $rng_path);
     }
 

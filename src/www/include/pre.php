@@ -41,12 +41,12 @@ $locar_inc_finder = new Config_LocalIncFinder();
 $local_inc = $locar_inc_finder->getLocalIncPath();
 require($local_inc);
 require($GLOBALS['db_config_file']);
-ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
+ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] . '/src/etc/local.inc.dist'); //load the default settings
 ForgeConfig::loadFromFile($local_inc);
 ForgeConfig::loadFromFile($GLOBALS['db_config_file']);
 if (isset($GLOBALS['DEBUG_MODE'])) {
-    ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
-    ForgeConfig::loadFromFile(dirname($local_inc).'/development.inc');
+    ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] . '/src/etc/development.inc.dist');
+    ForgeConfig::loadFromFile(dirname($local_inc) . '/development.inc');
 }
 ForgeConfig::loadFromDatabase();
 ForgeConfig::loadFromFile(ForgeConfig::get('redis_config_file'));
@@ -104,7 +104,7 @@ foreach (array(
         'pv',
     ) as $variable) {
     if (isset($_REQUEST[$variable])) {
-        $$variable = $_REQUEST[$variable] = $_GET[$variable] = $_POST[$variable] = (int)$_REQUEST[$variable];
+        $$variable = $_REQUEST[$variable] = $_GET[$variable] = $_POST[$variable] = (int) $_REQUEST[$variable];
     }
 }
 //}}}
@@ -161,14 +161,14 @@ if (!IS_SCRIPT) {
     header('Content-Security-Policy: ' . $csp_rules);
 }
 
-$feedback=''; // Initialize global var
+$feedback = ''; // Initialize global var
 
 $request = HTTPRequest::instance();
 $request->setTrustedProxies(array_map('trim', explode(',', ForgeConfig::get('sys_trusted_proxies'))));
 
 //Language
 if (!$GLOBALS['sys_lang']) {
-    $GLOBALS['sys_lang']="en_US";
+    $GLOBALS['sys_lang'] = "en_US";
 }
 $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
 
@@ -219,7 +219,7 @@ if (!IS_SCRIPT) {
     }
 
     if (! $current_user->isAnonymous()) {
-        header('X-Tuleap-Username: '.$current_user->getUserName());
+        header('X-Tuleap-Username: ' . $current_user->getUserName());
     }
 }
 

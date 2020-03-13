@@ -79,7 +79,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
                 return '';
             }
 
-            return Tracker_FormElement_Field_OpenList::BIND_PREFIX.$user->getId();
+            return Tracker_FormElement_Field_OpenList::BIND_PREFIX . $user->getId();
         }
 
         return $field->getFieldData((string) $value);

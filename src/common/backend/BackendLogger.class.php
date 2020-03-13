@@ -26,7 +26,7 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
 
     public function __construct($filename = null)
     {
-        $this->filepath = empty($filename) ? ForgeConfig::get('codendi_log').'/'.self::FILENAME : $filename;
+        $this->filepath = empty($filename) ? ForgeConfig::get('codendi_log') . '/' . self::FILENAME : $filename;
     }
 
     /**
@@ -51,7 +51,7 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
 
         $message = $this->generateLogWithException($message, $context);
 
-        error_log(date('c')." [$pid] [$level] $message\n", 3, $this->filepath);
+        error_log(date('c') . " [$pid] [$level] $message\n", 3, $this->filepath);
     }
 
     private function generateLogWithException($message, array $context): string

@@ -122,7 +122,7 @@ class ForumML_FileStorage
 
         $path = '';
         foreach ($path_elements as $elem) {
-            $path .= $elem .'/';
+            $path .= $elem . '/';
             if (!is_dir($path)) {
                 mkdir($path, 0755);
             }
@@ -131,12 +131,12 @@ class ForumML_FileStorage
         // Ensure that same file doesn't exists yet
         $ext = '';
         $i   = 1;
-        while ($this->fileExists($path.$name.$ext)) {
-            $ext = '_'.$i;
+        while ($this->fileExists($path . $name . $ext)) {
+            $ext = '_' . $i;
             $i++;
         }
 
-        return $path.$name.$ext;
+        return $path . $name . $ext;
     }
 
     public function fileExists($path)

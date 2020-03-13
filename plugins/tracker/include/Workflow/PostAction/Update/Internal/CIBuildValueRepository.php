@@ -55,7 +55,7 @@ class CIBuildValueRepository
                     $transition->getId()
                 )
             );
-        };
+        }
     }
 
     public function deleteAllByTransition(Transition $transition)

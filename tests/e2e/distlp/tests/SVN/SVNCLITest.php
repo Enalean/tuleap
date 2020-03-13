@@ -56,7 +56,7 @@ class SVNCLITest extends TestCase
 
     private function getSvnCommand(string $username, string $command) : string
     {
-        return 'svn --username '.$username.' --password "Correct Horse Battery Staple" --non-interactive --trust-server-cert '.$command;
+        return 'svn --username ' . $username . ' --password "Correct Horse Battery Staple" --non-interactive --trust-server-cert ' . $command;
     }
 
     public function testWriteAccessByAlice()
@@ -90,7 +90,7 @@ class SVNCLITest extends TestCase
                 $got_exception = true;
             }
         }
-        $this->assertTrue($got_exception, "Message: ".$message);
+        $this->assertTrue($got_exception, "Message: " . $message);
     }
 
     public function testWriteAccessGrantedToAlice()
@@ -141,7 +141,7 @@ class SVNCLITest extends TestCase
             fclose($pipes[2]);
             $return_value = proc_close($process);
             if ($return_value !== 0) {
-                throw new \Exception("$command return code: ".$return_value." ".$total_stderr);
+                throw new \Exception("$command return code: " . $return_value . " " . $total_stderr);
             }
         }
         return $total_stdout;

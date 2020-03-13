@@ -140,7 +140,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
      */
     function processMail($messageToAdmin)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
-        $request =HTTPRequest::instance();
+        $request = HTTPRequest::instance();
 
         $pm = $this->getProjectManager();
         $project = $pm->getProject($request->get('groupId'));
@@ -149,10 +149,10 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         $user         = $user_manager->getCurrentUser();
 
         $messageToAdmin = trim($messageToAdmin);
-        $messageToAdmin ='>'.$messageToAdmin;
+        $messageToAdmin = '>' . $messageToAdmin;
         $messageToAdmin = str_replace(array("\r\n"), "\n>", $messageToAdmin);
 
-        $hrefApproval = $request->getServerUrl() . '/project/admin/?group_id='.$request->get('groupId');
+        $hrefApproval = $request->getServerUrl() . '/project/admin/?group_id=' . $request->get('groupId');
         $urlData      = $request->getServerUrl() . $request->get('url_data');
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
     }
@@ -184,8 +184,8 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
 
         $link = $this->getRedirectLink($urlData, $GLOBALS['Language']);
         $body = $this->getPermissionDeniedMailBody($project, $user, $hrefApproval, $messageToAdmin, $link);
-        if ($adminList['status']== false) {
-            $body .= "\n\n". $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_unvalid_ugroup', array($project->getPublicName()));
+        if ($adminList['status'] == false) {
+            $body .= "\n\n" . $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_unvalid_ugroup', array($project->getPublicName()));
         }
         $mail->setBodyText($body);
 

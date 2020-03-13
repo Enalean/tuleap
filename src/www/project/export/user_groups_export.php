@@ -61,10 +61,10 @@ if ($request->valid($vExport)) {
             $sep = get_csv_separator();
             $eol = "\n";
 
-            $name = 'export_user_groups_'.$project->getUnixName().'.csv';
-            header('Content-Disposition: filename='.$name);
+            $name = 'export_user_groups_' . $project->getUnixName() . '.csv';
+            header('Content-Disposition: filename=' . $name);
             header('Content-Type: text/csv');
-            echo build_csv_header($col_list, $lbl_list).$eol;
+            echo build_csv_header($col_list, $lbl_list) . $eol;
 
             /** @psalm-suppress DeprecatedFunction */
             $ugs = ugroup_db_get_existing_ugroups($group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
@@ -85,14 +85,14 @@ if ($request->valid($vExport)) {
                                'realname' => $um->getUserById($user['user_id'])->getRealname(),
                                'email'    => $user['email'],
                                'status'   => $user_status_presenter->status_label);
-                    echo build_csv_record($col_list, $r).$eol;
+                    echo build_csv_record($col_list, $r) . $eol;
                 }
             }
             break;
 
         case 'user_groups_format':
-            echo '<h3>'.$Language->getText('project_export_user_groups', 'exp_format').'</h3>';
-            echo '<p>'.$Language->getText('project_export_user_groups', 'exp_format_msg').'</p>';
+            echo '<h3>' . $Language->getText('project_export_user_groups', 'exp_format') . '</h3>';
+            echo '<p>' . $Language->getText('project_export_user_groups', 'exp_format_msg') . '</p>';
 
             // Pick-up a random project member
             $sqlUsers = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], false, $group_id, false, null, true, true);

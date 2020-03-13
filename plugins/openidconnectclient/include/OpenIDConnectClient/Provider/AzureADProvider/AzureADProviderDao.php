@@ -57,7 +57,7 @@ class AzureADProviderDao extends DataAccessObject
                     VALUES (?, ?, ?)';
                 $db->run($sql, $id, $tenant_id, $acceptable_tenant_auth_identifier);
 
-                return (int)$id;
+                return (int) $id;
             }
         );
     }
@@ -91,7 +91,6 @@ class AzureADProviderDao extends DataAccessObject
                 $tenant_id,
                 $acceptable_tenant_auth_identifier
             ) : void {
-
                 if ($is_unique_authentication_endpoint) {
                     $this->disableUniqueAuthenticationProvider();
                 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends \PHPUnit\Framework\TestCase
 {

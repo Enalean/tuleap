@@ -46,10 +46,10 @@ if ($atid) {
 
 // This is the SQL query to retrieve all the bugs which depends on another bug
 
-$sql = 'SELECT ad.artifact_id,'.
-'ad.is_dependent_on_artifact_id '.
-'FROM artifact_dependencies ad, artifact a '.
-'WHERE ad.artifact_id = a.artifact_id AND a.group_artifact_id = '.$atid.' AND '.
+$sql = 'SELECT ad.artifact_id,' .
+'ad.is_dependent_on_artifact_id ' .
+'FROM artifact_dependencies ad, artifact a ' .
+'WHERE ad.artifact_id = a.artifact_id AND a.group_artifact_id = ' . $atid . ' AND ' .
 'ad.is_dependent_on_artifact_id <> 100';
 
 $col_list = array('artifact_id','is_dependent_on_artifact_id');
@@ -62,37 +62,37 @@ $eol = "\n";
 
 //echo "DBG -- $sql<br>";
 
-$result=db_query($sql);
+$result = db_query($sql);
 $rows = db_numrows($result);
 
 $export = isset($export) ? (string) $export : '';
 if ($export == 'artifact_deps') {
     // Send the result in CSV format
     if ($result && $rows > 0) {
-            $tbl_name = str_replace(' ', '_', 'artifact_deps_'.$at->getItemName());
+            $tbl_name = str_replace(' ', '_', 'artifact_deps_' . $at->getItemName());
         header('Content-Type: text/csv');
-        header('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
+        header('Content-Disposition: filename=' . $tbl_name . '_' . $dbname . '.csv');
 
-        echo build_csv_header($col_list, $lbl_list).$eol;
+        echo build_csv_header($col_list, $lbl_list) . $eol;
 
         while ($arr = db_fetch_array($result)) {
-            echo build_csv_record($col_list, $arr).$eol;
+            echo build_csv_record($col_list, $arr) . $eol;
         }
     } else {
-        project_admin_header(array('title'=>$pg_title), 'data');
+        project_admin_header(array('title' => $pg_title), 'data');
 
-        echo '<h3>'.$Language->getText('project_export_artifact_deps_export', 'art_deps_export').'</h3>';
+        echo '<h3>' . $Language->getText('project_export_artifact_deps_export', 'art_deps_export') . '</h3>';
         if ($result) {
-            echo '<P>'.$Language->getText('project_export_artifact_deps_export', 'no_deps_found');
+            echo '<P>' . $Language->getText('project_export_artifact_deps_export', 'no_deps_found');
         } else {
-            echo '<P>'.$Language->getText('project_export_artifact_deps_export', 'db_access_err', $GLOBALS['sys_name']);
-            echo '<br>'.db_error();
+            echo '<P>' . $Language->getText('project_export_artifact_deps_export', 'db_access_err', $GLOBALS['sys_name']);
+            echo '<br>' . db_error();
         }
         site_project_footer(array());
     }
 } elseif ($export == "artifact_deps_format") {
-    echo '<h3>'.$Language->getText('project_export_artifact_deps_export', 'deps_export_format').'</h3>';
-    echo '<p>'.$Language->getText('project_export_artifact_deps_export', 'deps_export_format_msg').'</p>';
+    echo '<h3>' . $Language->getText('project_export_artifact_deps_export', 'deps_export_format') . '</h3>';
+    echo '<p>' . $Language->getText('project_export_artifact_deps_export', 'deps_export_format_msg') . '</p>';
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
 

@@ -107,7 +107,7 @@ class PermissionController extends BaseFrsPresenter
 
     private function isUgroupHidden(User_UGroup $project_ugroup)
     {
-        return (int)$project_ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
+        return (int) $project_ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
     }
 
     private function isUgroupSelected(array $frs_ugroups, User_UGroup $project_ugroup)
@@ -153,7 +153,7 @@ class PermissionController extends BaseFrsPresenter
     /** @return TemplateRenderer */
     private function getRenderer()
     {
-        $template_dir = ForgeConfig::get('codendi_dir') .'/src/templates/frs';
+        $template_dir = ForgeConfig::get('codendi_dir') . '/src/templates/frs';
 
         return TemplateRendererFactory::build()->getRenderer($template_dir);
     }

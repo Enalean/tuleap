@@ -24,10 +24,10 @@
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 
 require_once('GraphOnTrackersV5_Chart.class.php');
-require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_CumulativeFlow_DataBuilder.class.php');
-require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_CumulativeFlow.class.php');
+require_once(dirname(__FILE__) . '/../data-transformation/GraphOnTrackersV5_CumulativeFlow_DataBuilder.class.php');
+require_once(dirname(__FILE__) . '/../graphic-library/GraphOnTrackersV5_Engine_CumulativeFlow.class.php');
 require_once('GraphOnTrackersV5_Chart_CumulativeFlowDao.class.php');
-require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
+require_once(dirname(__FILE__) . '/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
 
 /**
  * Base class to provide a cumulative flow Chart
@@ -296,16 +296,16 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     public function setSpecificPropertiesFromXML($xml, $formsMapping)
     {
         if ($xml['start_date']) {
-            $this->setStartDate((int)$xml['start_date']);
+            $this->setStartDate((int) $xml['start_date']);
         }
         if ($xml['scale']) {
-            $this->setScale((int)$xml['scale']);
+            $this->setScale((int) $xml['scale']);
         }
         if ($xml['stop_date']) {
-            $this->setStopDate((int)$xml['stop_date']);
+            $this->setStopDate((int) $xml['stop_date']);
         }
-        if (isset($formsMapping[(int)$xml['field_id']])) {
-            $this->setFieldId($formsMapping[(int)$xml['field_id']]);
+        if (isset($formsMapping[(int) $xml['field_id']])) {
+            $this->setFieldId($formsMapping[(int) $xml['field_id']]);
         }
     }
 

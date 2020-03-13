@@ -69,7 +69,7 @@ class SemanticDoneAdminPresenter
         $go_back_url,
         ?Tracker_FormElement_Field $semantic_status_field = null
     ) {
-        $this->semantic_status_is_defined = (boolean)($semantic_status_field !== null);
+        $this->semantic_status_is_defined = (boolean) ($semantic_status_field !== null);
         $this->tracker_id                 = $tracker->getId();
         $this->closed_values              = $closed_values;
 

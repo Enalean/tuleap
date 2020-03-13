@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVN\Repository\Repository;
 
-require_once __DIR__ .'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class LastAccessUpdaterTest extends TestCase
 {

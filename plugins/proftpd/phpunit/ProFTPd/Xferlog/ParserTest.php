@@ -20,7 +20,7 @@
 
 use Tuleap\ProFTPd\Xferlog\InvalidEntryException;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class ParserTest extends \PHPUnit\Framework\TestCase
 {

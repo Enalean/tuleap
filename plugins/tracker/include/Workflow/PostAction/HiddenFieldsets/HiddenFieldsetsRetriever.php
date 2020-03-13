@@ -43,7 +43,7 @@ class HiddenFieldsetsRetriever
      */
     public function getHiddenFieldsets(\Transition $transition): HiddenFieldsets
     {
-        $rows = $this->dao->searchByTransitionId((int)$transition->getId());
+        $rows = $this->dao->searchByTransitionId((int) $transition->getId());
 
         $fieldset_ids   = [];
         $post_action_id = null;

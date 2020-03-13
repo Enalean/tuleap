@@ -14,7 +14,7 @@ class Docman_View_Installed extends Docman_View_ProjectHeader
     /* protected */ public function _content($params)
     {
         echo '<h2>Congratulations!</h2>';
-        echo '<p>You can now create folders and documents in <a href="'.  $params['default_url'] .'">your Advanced Document Manager</a>.<br />';
+        echo '<p>You can now create folders and documents in <a href="' .  $params['default_url'] . '">your Advanced Document Manager</a>.<br />';
         echo 'Do not permissions to set permissions!</p>';
     }
 }

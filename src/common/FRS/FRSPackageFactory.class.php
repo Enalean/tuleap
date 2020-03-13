@@ -176,7 +176,7 @@ class FRSPackageFactory
                     $packages[] = $this->getFRSPackageFromArray($data_array);
                 } else {
                     $authorised_releases = $frsrf->getActiveFRSReleases($data_array['package_id'], $group_id);
-                    if ($authorised_releases && count($authorised_releases)>0) {
+                    if ($authorised_releases && count($authorised_releases) > 0) {
                         $packages[] = $this->getFRSPackageFromArray($data_array);
                     }
                 }

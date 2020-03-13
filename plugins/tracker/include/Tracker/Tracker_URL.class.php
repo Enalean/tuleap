@@ -32,33 +32,33 @@ class Tracker_URL extends URL
      */
     public function getDispatchableFromRequest(Codendi_Request $request, PFUser $user)
     {
-        if ((int)$request->get('aid')) {
+        if ((int) $request->get('aid')) {
             if ($artifact = $this->getArtifactFactory()->getArtifactByid($request->get('aid'))) {
                 return $artifact;
             } else {
                 throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
             }
-        } elseif ((int)$request->get('report')) {
+        } elseif ((int) $request->get('report')) {
             $store_in_session = true;
             if ($request->exist('store_in_session')) {
-                $store_in_session = (bool)$request->get('store_in_session');
+                $store_in_session = (bool) $request->get('store_in_session');
             }
             if ($report = $this->getArtifactReportFactory()->getReportById($request->get('report'), $user->getId(), $store_in_session)) {
                 return $report;
             } else {
                 throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'report_not_exist'));
             }
-        } elseif ((int)$request->get('tracker') || (int)$request->get('atid')) {
-            $tracker_id = (int)$request->get('tracker');
+        } elseif ((int) $request->get('tracker') || (int) $request->get('atid')) {
+            $tracker_id = (int) $request->get('tracker');
             if (!$tracker_id) {
-                $tracker_id = (int)$request->get('atid');
+                $tracker_id = (int) $request->get('atid');
             }
             if (($tracker = $this->getTrackerFactory()->getTrackerByid($tracker_id))) {
                 return $tracker;
             } else {
                 throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
             }
-        } elseif ((int)$request->get('formElement')) {
+        } elseif ((int) $request->get('formElement')) {
             if ($formElement = $this->getTracker_FormElementFactory()->getFormElementByid($request->get('formElement'))) {
                 return $formElement;
             }
@@ -68,7 +68,7 @@ class Tracker_URL extends URL
             } else {
                 throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
             }
-        } elseif ((int)$request->get('link-artifact-id')) {
+        } elseif ((int) $request->get('link-artifact-id')) {
             if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($request->get('link-artifact-id'))) {
                 return $artifact;
             } else {

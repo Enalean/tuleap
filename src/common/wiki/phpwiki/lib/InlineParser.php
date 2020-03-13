@@ -30,9 +30,9 @@
  */
 define('ESCAPE_CHAR', '~');
 
-require_once(dirname(__FILE__).'/HtmlElement.php');
+require_once(dirname(__FILE__) . '/HtmlElement.php');
 require_once('lib/CachedMarkup.php');
-require_once(dirname(__FILE__).'/stdlib.php');
+require_once(dirname(__FILE__) . '/stdlib.php');
 
 
 function WikiEscape($text)
@@ -158,12 +158,12 @@ class RegexpSet
         // and match inside until the shortest is empty.
             $matched = array();
             $matched_ind = array();
-            for ($i=0; $i<count($regexps); $i++) {
+            for ($i = 0; $i < count($regexps); $i++) {
                 if (!trim($regexps[$i])) {
                     trigger_error("empty regexp $i", E_USER_WARNING);
                     continue;
                 }
-                $pat= "/ ( . $repeat ) ( " . $regexps[$i] . " ) /x";
+                $pat = "/ ( . $repeat ) ( " . $regexps[$i] . " ) /x";
                 if (preg_match($pat, $text, $_m)) {
                     $m = $_m; // FIXME: prematch, postmatch is wrong
                     $matched[] = $regexps[$i];
@@ -183,7 +183,7 @@ class RegexpSet
         if (! _INLINE_OPTIMIZATION or count($matched) > 2) {
             assert(!empty($repeat));
             assert(!empty($regexps));
-            for ($i=0; $i<count($regexps); $i++) {
+            for ($i = 0; $i < count($regexps); $i++) {
                 if (!trim($regexps[$i])) {
                     trigger_error("empty regexp $i", E_USER_WARNING);
                     $regexps[$i] = '\Wxxxx\w\W\w\W\w\W\w\W\w\W\w'; // some placeholder
@@ -191,7 +191,7 @@ class RegexpSet
             }
             // We could do much better, if we would know the matching markup for the
             // longest regexp match:
-            $hugepat= "/ ( . $repeat ) ( (" . join(')|(', $regexps) . ") ) /Asx";
+            $hugepat = "/ ( . $repeat ) ( (" . join(')|(', $regexps) . ") ) /Asx";
             // Proposed premature optimization 1:
             //$hugepat= "/ ( . $repeat ) ( (" . join(')|(', array_values($matched)) . ") ) /Asx";
             if (! preg_match($hugepat, $text, $m)) {
@@ -341,7 +341,6 @@ function isImageLink($link)
 
 function LinkBracketLink($bracketlink)
 {
-
     // $bracketlink will start and end with brackets; in between will
     // be either a page name, a URL or both separated by a pipe.
 
@@ -353,7 +352,7 @@ function LinkBracketLink($bracketlink)
         $matches
     );
     if (count($matches) < 4) {
-        trigger_error(_("Invalid [] syntax ignored").": ".$bracketlink, E_USER_WARNING);
+        trigger_error(_("Invalid [] syntax ignored") . ": " . $bracketlink, E_USER_WARNING);
         return new Cached_Link;
     }
     list (, $hash, $label, $bar, $rawlink) = $matches;
@@ -439,7 +438,7 @@ function LinkBracketLink($bracketlink)
         return new Cached_InterwikiLink($link, $label);
     } else {
         // Split anchor off end of pagename.
-        if (preg_match('/\A(.*)(?<!'.ESCAPE_CHAR.')#(.*?)\Z/', $rawlink, $m)) {
+        if (preg_match('/\A(.*)(?<!' . ESCAPE_CHAR . ')#(.*?)\Z/', $rawlink, $m)) {
             list(,$rawlink,$anchor) = $m;
             $pagename = UnWikiEscape($rawlink);
             $anchor = UnWikiEscape($anchor);
@@ -486,7 +485,7 @@ class Markup_interwiki extends SimpleMarkup
     {
         global $request;
         $map = getInterwikiMap();
-        return "(?<! [[:alnum:]])" . $map->getRegexp(). ": \S+ (?<![ ,.?;! \] \) \" \' ])";
+        return "(?<! [[:alnum:]])" . $map->getRegexp() . ": \S+ (?<![ ,.?;! \] \) \" \' ])";
     }
 
     public function markup($match)
@@ -667,7 +666,7 @@ class Markup_html_abbr extends BalancedMarkup
         } else {
             $tag = 'acronym';
         }
-        $rest = substr($match, 1+strlen($tag), -1);
+        $rest = substr($match, 1 + strlen($tag), -1);
         if (!empty($rest)) {
             list($key,$val) = explode("=", $rest);
             $args = array($key => $val);
@@ -696,7 +695,7 @@ class Markup_color extends BalancedMarkup
             // must be a name
             return new HtmlElement('font', array('color' => $color), $body);
         } elseif ((substr($color, 0, 1) == '#')
-                  and (strspn(substr($color, 1), '0123456789ABCDEFabcdef') == strlen($color)-1)) {
+                  and (strspn(substr($color, 1), '0123456789ABCDEFabcdef') == strlen($color) - 1)) {
             return new HtmlElement('font', array('color' => $color), $body);
         } else {
             trigger_error(sprintf(_("unknown color %s ignored"), $color), E_USER_WARNING);
@@ -852,7 +851,7 @@ class InlineTransformer
                 // No start pattern found before end pattern.
                 // We're all done!
                 if (isset($markup) and is_object($markup) and isa($markup, 'Markup_plugin')) {
-                    $current = $output->_content[count($output->_content)-1];
+                    $current = $output->_content[count($output->_content) - 1];
                     $current->setTightness(true, true);
                 }
                 $output->pushContent($match->prematch);

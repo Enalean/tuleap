@@ -109,7 +109,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         while ($link = $pagelinks->next()) {
             $linkpagename = $link->getName();
             if (($linkpagename != $startpagename)
-                and (!$this->ExcludedPages or !preg_match("/".$this->ExcludedPages."/", $linkpagename))) {
+                and (!$this->ExcludedPages or !preg_match("/" . $this->ExcludedPages . "/", $linkpagename))) {
                 $pagearr[$level . " [$linkpagename]"] = $link;
                 $pagearr = $this->recursivelyGetBackLinks(
                     $link,
@@ -196,7 +196,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         //Fixme:  override given arg
         $description = $this->getDescription();
         if (! $noheader) {
-            $out = $this->getDescription() ." ". sprintf(
+            $out = $this->getDescription() . " " . sprintf(
                 _("(max. recursion level: %d)"),
                 $reclimit
             ) . ":\n\n";
@@ -256,7 +256,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
             return $html;
         }
     }
-};
+}
 
 // $Log: SiteMap.php,v $
 // Revision 1.13  2004/12/14 21:36:06  rurban

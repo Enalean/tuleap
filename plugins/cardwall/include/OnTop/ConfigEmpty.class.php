@@ -89,9 +89,9 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
     }
 
     public function isInColumn(
-        Tracker_Artifact                                     $artifact,
+        Tracker_Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
-        Cardwall_Column                                      $column
+        Cardwall_Column $column
     ) {
         return false;
     }
@@ -110,7 +110,7 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
     }
 
     public function fillMappingsWithOnTopMappings(
-        Cardwall_MappingCollection             $mappings,
+        Cardwall_MappingCollection $mappings,
         Cardwall_OnTop_Config_ColumnCollection $columns
     ) {
     }

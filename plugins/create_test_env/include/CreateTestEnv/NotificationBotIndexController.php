@@ -47,7 +47,6 @@ class NotificationBotIndexController implements DispatchableWithRequest
         NotificationBotDao $notification_bot_dao,
         AdminPageRenderer $admin_page_renderer
     ) {
-
         $this->bot_factory          = $bot_factory;
         $this->notification_bot_dao = $notification_bot_dao;
         $this->admin_page_renderer  = $admin_page_renderer;
@@ -70,7 +69,7 @@ class NotificationBotIndexController implements DispatchableWithRequest
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             dgettext('tuleap-create_test_env', 'Create test environment'),
-            __DIR__.'/../../templates',
+            __DIR__ . '/../../templates',
             'notification-bot-tab',
             new NotificationBotPresenter($bots, $selected_bot_id)
         );

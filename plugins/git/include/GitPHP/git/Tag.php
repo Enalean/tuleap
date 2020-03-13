@@ -275,7 +275,7 @@ class Tag extends Ref
         $epoch = $this->GetTaggerEpoch();
         $tz = $this->GetTaggerTimezone();
         if (preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $tz, $regs)) {
-            $local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
+            $local = $epoch + ((((int) $regs[1]) + ($regs[2] / 60)) * 3600);
             return $local;
         }
         return $epoch;

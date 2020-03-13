@@ -34,13 +34,13 @@ class Tracker_FormElement_Field_IntegerDao extends Tracker_FormElement_SpecificP
     {
         $field_id  = $this->da->escapeInt($field_id);
 
-        if (isset($row['maxchars']) && (int)$row['maxchars']) {
+        if (isset($row['maxchars']) && (int) $row['maxchars']) {
             $maxchars = $this->da->escapeInt($row['maxchars']);
         } else {
             $maxchars = 0;
         }
 
-        if (isset($row['size']) && (int)$row['size']) {
+        if (isset($row['size']) && (int) $row['size']) {
             $size = $this->da->escapeInt($row['size']);
         } else {
             $size = 30;

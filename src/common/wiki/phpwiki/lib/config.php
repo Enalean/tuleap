@@ -154,17 +154,17 @@ function guessing_lang($languages = false)
     if ($accept) {
         $lang_list = array();
         $list = explode(",", $accept);
-        for ($i=0; $i<count($list); $i++) {
-            $pos = strchr($list[$i], ";") ;
+        for ($i = 0; $i < count($list); $i++) {
+            $pos = strchr($list[$i], ";");
             if ($pos === false) {
                 // No Q it is only a locale...
                 $lang_list[$list[$i]] = 100;
             } else {
                 // Has a Q rating
-                $q = explode(";", $list[$i]) ;
-                $loc = $q[0] ;
-                $q = explode("=", $q[1]) ;
-                $lang_list[$loc] = $q[1]*100 ;
+                $q = explode(";", $list[$i]);
+                $loc = $q[0];
+                $q = explode("=", $q[1]);
+                $lang_list[$loc] = $q[1] * 100;
             }
         }
 
@@ -222,7 +222,7 @@ function guessing_setlocale($category, $locale)
                  'ja.euc-jp' => array('ja_JP','ja_JP.eucJP','japanese.euc'),
                  'zh' => array('zh_TW', 'zh_CN'),
                  );
-    if (!$locale or $locale=='C') {
+    if (!$locale or $locale == 'C') {
         // do the reverse: return the detected locale collapsed to our LANG
         $locale = setlocale($category, '');
         if ($locale) {
@@ -251,7 +251,7 @@ function guessing_setlocale($category, $locale)
     }
 
     foreach ($alt[$lang] as $try) {
-        if ($res = setlocale($category, $try. '.' . $GLOBALS['charset'])) {
+        if ($res = setlocale($category, $try . '.' . $GLOBALS['charset'])) {
             return $res;
         }
         if ($res = setlocale($category, $try)) {
@@ -369,7 +369,7 @@ function getUploadFilePath()
 }
 function getUploadDataPath()
 {
-    return SERVER_URL . ((substr(DATA_PATH, 0, 1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';
+    return SERVER_URL . ((substr(DATA_PATH, 0, 1) == '/') ? '' : "/") . DATA_PATH . '/uploads/' . GROUP_ID . '/';
 }
 
 // $Log: config.php,v $

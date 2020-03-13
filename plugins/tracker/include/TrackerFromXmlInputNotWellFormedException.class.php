@@ -23,7 +23,7 @@ class TrackerFromXmlInputNotWellFormedException extends TrackerFromXmlException
 {
     public function __construct($errors = array())
     {
-        $message = 'The Tracker XML input is not well formed: '.PHP_EOL.implode(PHP_EOL, $errors);
+        $message = 'The Tracker XML input is not well formed: ' . PHP_EOL . implode(PHP_EOL, $errors);
         parent::__construct($message);
     }
 }

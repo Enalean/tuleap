@@ -102,7 +102,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
         $tr = HTML::tr();
         $headings = array(_("Plugin"), _("Version"), _("Description"));
         if ($info == 'args') {
-            $headings []= _("Arguments");
+            $headings[] = _("Arguments");
         }
         foreach ($headings as $title) {
             $tr->pushContent(HTML::td($title));
@@ -183,7 +183,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
 
             // highlight alternate rows
             $row_no++;
-            $group = (int)($row_no / 1); //_group_rows
+            $group = (int) ($row_no / 1); //_group_rows
             $class = ($group % 2) ? 'evenrow' : 'oddrow';
             // generate table row
             $tr = HTML::tr(array('class' => $class));
@@ -210,7 +210,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
         }
         $table->pushContent($tbody);
     }
-};
+}
 
 // $Log: PluginManager.php,v $
 // Revision 1.19  2005/10/12 06:15:25  rurban

@@ -31,7 +31,7 @@ class DocmanV1_XMLExport
         $this->project      = $project;
         $this->archive_name = basename($archive_name);
         $this->package_path = $archive_name;
-        $this->data_path    = $this->package_path.'/'.$this->archive_name;
+        $this->data_path    = $this->package_path . '/' . $this->archive_name;
         $this->user_manager = UserManager::instance();
         $this->admin_user   = $this->user_manager->getUserByUserName($admin_name);
     }
@@ -39,7 +39,7 @@ class DocmanV1_XMLExport
     public function createDomDocument()
     {
         $implementation    = new DOMImplementation();
-        $dtd               = $implementation->createDocumentType('docman', '', HTTPRequest::instance()->getServerUrl().'/plugins/docman/docman-1.0.dtd');
+        $dtd               = $implementation->createDocumentType('docman', '', HTTPRequest::instance()->getServerUrl() . '/plugins/docman/docman-1.0.dtd');
         $doc               = $implementation->createDocument('', '', $dtd);
         $doc->encoding     = 'UTF-8';
         $doc->standalone   = 'no';
@@ -52,7 +52,7 @@ class DocmanV1_XMLExport
     {
         $this->createDirectories();
         $doc = $this->dump();
-        $doc->save($this->package_path.'/'.$this->archive_name.'.xml');
+        $doc->save($this->package_path . '/' . $this->archive_name . '.xml');
     }
 
     public function dump()

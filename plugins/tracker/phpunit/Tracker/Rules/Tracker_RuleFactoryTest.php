@@ -98,7 +98,6 @@ XML;
 
     public function testImportListRules()
     {
-
         $list_rules = $this->xml->addChild('list_rules');
 
         $rule1 = $list_rules->addChild('rule');

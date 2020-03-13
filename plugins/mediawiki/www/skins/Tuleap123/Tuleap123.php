@@ -12,7 +12,7 @@
 
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
-require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
+require_once MEDIAWIKI_BASE_DIR . '/MediawikiManager.class.php';
 
 if (!defined('MEDIAWIKI')) {
     die(-1);
@@ -123,9 +123,9 @@ class Tuleap123Template extends BaseTemplate
             if ($this->IsUserAdmin()) {
                 echo '<ul class="nav nav-pills toolbar">
                             <li>
-                                <a href="/plugins/mediawiki/forge_admin.php?group_id='.$GLOBALS['group']->getId().'"
-                                    data-test="mediawiki-administration-link">'.
-                                $GLOBALS['Language']->getText('global', 'Administration').'
+                                <a href="/plugins/mediawiki/forge_admin.php?group_id=' . $GLOBALS['group']->getId() . '"
+                                    data-test="mediawiki-administration-link">' .
+                                $GLOBALS['Language']->getText('global', 'Administration') . '
                                 </a>
                             </li>
                         </ul>';
@@ -292,13 +292,13 @@ class Tuleap123Template extends BaseTemplate
 
         $added_toolbox[] = array(
            'text' => $GLOBALS['Language']->getText('plugin_mediawiki', 'back_to_forge', array($forge_name)),
-           'href' => '/projects/'.$GLOBALS['group']->getUnixName()
+           'href' => '/projects/' . $GLOBALS['group']->getUnixName()
         );
 
         if ($this->IsUserAdmin()) {
-            $added_toolbox []= array(
+            $added_toolbox[] = array(
                 'text' => $GLOBALS['Language']->getText('global', 'Administration'),
-                'href' => '/plugins/mediawiki/forge_admin.php?group_id='.$GLOBALS['group']->getId()
+                'href' => '/plugins/mediawiki/forge_admin.php?group_id=' . $GLOBALS['group']->getId()
             );
         }
 

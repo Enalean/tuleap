@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class MockTrackerBuilder
 {
@@ -87,7 +87,7 @@ class MockTrackerBuilder
     public function build()
     {
         stub($this->tracker)->getId()->returns($this->id);
-        stub($this->tracker)->__toString()->returns('Tracker #'.$this->id);
+        stub($this->tracker)->__toString()->returns('Tracker #' . $this->id);
         return $this->tracker;
     }
 }

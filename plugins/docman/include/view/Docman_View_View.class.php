@@ -86,10 +86,10 @@
     /* protected */ public function _javascript($params)
     {
         if ($this->javascript != "") {
-            echo "<script type=\"text/javascript\">\n".
-            "//<!--\n".
-            $this->javascript.
-            "//-->\n".
+            echo "<script type=\"text/javascript\">\n" .
+            "//<!--\n" .
+            $this->javascript .
+            "//-->\n" .
             "</script>\n";
         }
     }
@@ -105,7 +105,7 @@
     }
     public function &_getDocmanIcons($params)
     {
-        $icons = new Docman_Icons($params['theme_path'] .'/images/ic/');
+        $icons = new Docman_Icons($params['theme_path'] . '/images/ic/');
         return $icons;
     }
     public function &_getItemFactory($params)
@@ -186,7 +186,7 @@
      */
     public function getActionForItem(Docman_Item $item)
     {
-        $js = 'docman.addActionForItem('.$item->getId().', ';
+        $js = 'docman.addActionForItem(' . $item->getId() . ', ';
         $params = array();
         $user = $this->_controller->getUser();
         $itemMenuVisitor = new Docman_View_GetMenuItemsVisitor($user, $item->getGroupId());

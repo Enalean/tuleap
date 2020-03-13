@@ -45,7 +45,7 @@ class b201704051751_add_index_to_tracker_changeset_value_list extends ForgeUpgra
 
     private function indexNameExists($table_name, $index)
     {
-        $sql = 'SHOW INDEX FROM '.$table_name.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
+        $sql = 'SHOW INDEX FROM ' . $table_name . ' WHERE Key_name LIKE ' . $this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {
             return true;
@@ -56,18 +56,18 @@ class b201704051751_add_index_to_tracker_changeset_value_list extends ForgeUpgra
 
     private function addIndex($table_name, $index, $sql)
     {
-        $this->log->info('Add index '.$table_name);
+        $this->log->info('Add index ' . $table_name);
         if (!$this->indexNameExists($table_name, $index)) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 $info = $this->db->dbh->errorInfo();
-                $msg  = 'An error occured adding index to '.$table_name.': '.$info[2].' ('.$info[1].' - '.$info[0].')';
+                $msg  = 'An error occured adding index to ' . $table_name . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
                 throw new ForgeUpgrade_Bucket_Db_Exception($msg);
             }
-            $this->log->info($index.' successfully added index');
+            $this->log->info($index . ' successfully added index');
         } else {
-            $this->log->info($index.' already exists');
+            $this->log->info($index . ' already exists');
         }
     }
 }

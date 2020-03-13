@@ -137,9 +137,9 @@ class WikiPlugin_FrameInclude extends WikiPlugin
         $frame = HTML::frame(array('name' => $name,
                                    'src' => $sanitized_src,
                                    'title' => $title,
-                                   'frameborder' => (int)$frameborder,
-                                   'scrolling' => (string)$scrolling,
-                                   'noresize' => (bool)$noresize,
+                                   'frameborder' => (int) $frameborder,
+                                   'scrolling' => (string) $scrolling,
+                                   'noresize' => (bool) $noresize,
                                    ));
 
         if ($marginwidth) {
@@ -160,7 +160,7 @@ class WikiPlugin_FrameInclude extends WikiPlugin
         displayPage($request, new Template('frameset', $request, $tokens));
         $request->finish(); //noreturn
     }
-};
+}
 
 // $Log: FrameInclude.php,v $
 // Revision 1.10  2004/06/14 11:31:39  rurban

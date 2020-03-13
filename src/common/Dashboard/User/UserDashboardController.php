@@ -286,7 +286,7 @@ class UserDashboardController
 
     private function redirectToDashboard($dashboard_id)
     {
-        $GLOBALS['Response']->redirect('/my/?dashboard_id='. urlencode($dashboard_id));
+        $GLOBALS['Response']->redirect('/my/?dashboard_id=' . urlencode($dashboard_id));
     }
 
     public function editDashboard(HTTPRequest $request)

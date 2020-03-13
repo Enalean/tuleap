@@ -32,7 +32,6 @@ class b201704051330_remove_binary_serialized_feedback extends ForgeUpgrade_Bucke
 
     public function up()
     {
-
         $sql = 'TRUNCATE TABLE feedback';
 
         $has_been_truncated = $this->db->dbh->exec($sql);

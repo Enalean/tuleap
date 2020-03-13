@@ -91,7 +91,7 @@ class LDAP_UserWrite
         if ($user && $user->isAlive()) {
             $this->updateWithUser($user);
         } else {
-            $this->logger->warning('Do not write LDAP info about non existant or suspended users '.$user_id);
+            $this->logger->warning('Do not write LDAP info about non existant or suspended users ' . $user_id);
         }
     }
 
@@ -115,7 +115,7 @@ class LDAP_UserWrite
                 $this->ldap->update($dn, $this->getLDAPInfo($user));
             } elseif ($user->isSuspended()) {
                 $info = $this->getLDAPInfo($user);
-                $info['userPassword'] = '!'.$this->getLDAPPassword($user);
+                $info['userPassword'] = '!' . $this->getLDAPPassword($user);
                 $this->ldap->update($dn, $info);
             } else {
                 $this->ldap->delete($dn);
@@ -137,7 +137,7 @@ class LDAP_UserWrite
             $this->updateUserLdapId($user);
             $this->ldap_user_dao->createLdapUser($user->getId(), $_SERVER['REQUEST_TIME'], $this->getUserLdapId($user));
         } else {
-            $this->logger->debug('No password for user '.$user->getUnixName().' '.$user->getId().' skip LDAP account creation');
+            $this->logger->debug('No password for user ' . $user->getUnixName() . ' ' . $user->getId() . ' skip LDAP account creation');
         }
     }
 
@@ -164,12 +164,12 @@ class LDAP_UserWrite
 
     private function getUserDN(PFUser $user)
     {
-        return $this->getUserRDN($user).','.$this->ldap->getLDAPParam('write_people_dn');
+        return $this->getUserRDN($user) . ',' . $this->ldap->getLDAPParam('write_people_dn');
     }
 
     private function getUserRDN(PFUser $user)
     {
-        return 'uid='.$this->getUserLdapId($user);
+        return 'uid=' . $this->getUserLdapId($user);
     }
 
     private function updateUserLdapId(PFUser $user)
@@ -213,7 +213,7 @@ class LDAP_UserWrite
 
     private function getEncryptedPassword($password)
     {
-        return '{CRYPT}'.crypt($password, '$6$rounds=50000$' . bin2hex(openssl_random_pseudo_bytes(25) . '$'));
+        return '{CRYPT}' . crypt($password, '$6$rounds=50000$' . bin2hex(openssl_random_pseudo_bytes(25) . '$'));
     }
 
     private function rename(PFUser $old_user, PFUser $new_user)

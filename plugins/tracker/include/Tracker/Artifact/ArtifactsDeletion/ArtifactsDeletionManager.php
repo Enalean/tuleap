@@ -63,7 +63,7 @@ class ArtifactsDeletionManager
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
-        $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) -1;
+        $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) - 1;
 
         $this->artifact_deletor->delete($artifact, $user);
         $this->dao->recordDeletionForUser($user->getId(), time());
@@ -81,7 +81,7 @@ class ArtifactsDeletionManager
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
-        $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) -1;
+        $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) - 1;
 
         $this->artifact_deletor->deleteWithoutTransaction($artifact, $user);
         $this->dao->recordDeletionForUser($user->getId(), time());

@@ -51,7 +51,7 @@ class ForFloat implements FieldFromWhereBuilder
         $changeset_value_float_alias = "CVFloat_{$field_id}_{$suffix}";
         $changeset_value_alias       = "CV_{$field_id}_{$suffix}";
 
-        $condition = "$changeset_value_float_alias.value < ".$this->escapeFloat($value);
+        $condition = "$changeset_value_float_alias.value < " . $this->escapeFloat($value);
 
         return $this->from_where_builder->getFromWhere(
             $field_id,

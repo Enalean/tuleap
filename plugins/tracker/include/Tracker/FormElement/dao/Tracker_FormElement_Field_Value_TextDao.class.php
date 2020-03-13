@@ -64,7 +64,7 @@ class Tracker_FormElement_Field_Value_TextDao extends Tracker_FormElement_Field_
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
                  VALUES
-                  ( ".implode(' , \'\' ),'."\n".' ( ', $changeset_value_ids).", '')";
+                  ( " . implode(' , \'\' ),' . "\n" . ' ( ', $changeset_value_ids) . ", '')";
         return $this->update($sql);
     }
 

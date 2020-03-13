@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -113,7 +113,7 @@ class NotifierCustomSenderTest extends TestCase
 
         $this->recipients_manager->shouldReceive('getRecipients')->andReturn(array(
             'a_user' => true,
-            'email@example.com'=> true,
+            'email@example.com' => true,
             'comment1' => true,
         ));
 

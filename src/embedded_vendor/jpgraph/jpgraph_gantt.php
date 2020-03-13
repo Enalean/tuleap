@@ -36,7 +36,7 @@ define("GANTT_HVCROSS", BAND_HVCROSS);  // Vertical/Hor crosses
 define("GANTT_DIAGCROSS", BAND_DIAGCROSS); // Diagonal crosses
 
 // Conversion constant
-define("SECPERDAY", 3600*24);
+define("SECPERDAY", 3600 * 24);
 
 // Locales. ONLY KEPT FOR BACKWARDS COMPATIBILITY
 // You should use the proper locale strings directly
@@ -129,24 +129,24 @@ define('ACTINFO_2D', 0);
 //===================================================
 class GanttActivityInfo
 {
-    public $iShow=true;
-    public $iLeftColMargin=4;
-    public $iRightColMargin=1;
-    public $iTopColMargin=1;
-    public $iBottomColMargin=3;
+    public $iShow = true;
+    public $iLeftColMargin = 4;
+    public $iRightColMargin = 1;
+    public $iTopColMargin = 1;
+    public $iBottomColMargin = 3;
     public $vgrid = null;
-    private $iColor='black';
-    private $iBackgroundColor='lightgray';
-    private $iFFamily=FF_FONT1;
-    private $iFStyle=FS_NORMAL;
-    private $iFSize=10;
-    private $iFontColor='black';
-    private $iTitles=array();
-    private $iWidth=array();
-    private $iHeight=-1;
+    private $iColor = 'black';
+    private $iBackgroundColor = 'lightgray';
+    private $iFFamily = FF_FONT1;
+    private $iFStyle = FS_NORMAL;
+    private $iFSize = 10;
+    private $iFontColor = 'black';
+    private $iTitles = array();
+    private $iWidth = array();
+    private $iHeight = -1;
     private $iTopHeaderMargin = 4;
-    private $iStyle=1;
-    private $iHeaderAlign='center';
+    private $iStyle = 1;
+    private $iHeaderAlign = 'center';
 
     public function __construct()
     {
@@ -155,12 +155,12 @@ class GanttActivityInfo
 
     public function Hide($aF = true)
     {
-        $this->iShow=!$aF;
+        $this->iShow = !$aF;
     }
 
     public function Show($aF = true)
     {
-        $this->iShow=$aF;
+        $this->iShow = $aF;
     }
 
     // Specify font
@@ -206,7 +206,7 @@ class GanttActivityInfo
     public function SetMinColWidth($aWidths)
     {
         $n = min(count($this->iTitles), count($aWidths));
-        for ($i=0; $i < $n; ++$i) {
+        for ($i = 0; $i < $n; ++$i) {
             if (!empty($aWidths[$i])) {
                 if (empty($this->iWidth[$i])) {
                     $this->iWidth[$i] = $aWidths[$i];
@@ -221,45 +221,44 @@ class GanttActivityInfo
     {
         $txt = new TextProperty();
         $txt->SetFont($this->iFFamily, $this->iFStyle, $this->iFSize);
-        $n = count($this->iTitles) ;
-        $rm=$this->iRightColMargin;
+        $n = count($this->iTitles);
+        $rm = $this->iRightColMargin;
         $w = 0;
-        for ($h=0, $i=0; $i < $n; ++$i) {
+        for ($h = 0, $i = 0; $i < $n; ++$i) {
             $w += $this->iLeftColMargin;
             $txt->Set($this->iTitles[$i]);
             if (!empty($this->iWidth[$i])) {
-                $w1 = max($txt->GetWidth($aImg)+$rm, $this->iWidth[$i]);
+                $w1 = max($txt->GetWidth($aImg) + $rm, $this->iWidth[$i]);
             } else {
-                $w1 = $txt->GetWidth($aImg)+$rm;
+                $w1 = $txt->GetWidth($aImg) + $rm;
             }
             $this->iWidth[$i] = $w1;
             $w += $w1;
             $h = max($h, $txt->GetHeight($aImg));
         }
-        $this->iHeight = $h+$this->iTopHeaderMargin;
-        $txt='';
+        $this->iHeight = $h + $this->iTopHeaderMargin;
+        $txt = '';
         return $w;
     }
 
     public function GetColStart($aImg, &$aStart, $aAddLeftMargin = false)
     {
-        $n = count($this->iTitles) ;
+        $n = count($this->iTitles);
         $adj = $aAddLeftMargin ? $this->iLeftColMargin : 0;
-        $aStart=array($aImg->left_margin+$adj);
-        for ($i=1; $i < $n; ++$i) {
-            $aStart[$i] = $aStart[$i-1]+$this->iLeftColMargin+$this->iWidth[$i-1];
+        $aStart = array($aImg->left_margin + $adj);
+        for ($i = 1; $i < $n; ++$i) {
+            $aStart[$i] = $aStart[$i - 1] + $this->iLeftColMargin + $this->iWidth[$i - 1];
         }
     }
 
     // Adjust headers left, right or centered
     public function SetHeaderAlign($aAlign)
     {
-        $this->iHeaderAlign=$aAlign;
+        $this->iHeaderAlign = $aAlign;
     }
 
     public function Stroke($aImg, $aXLeft, $aYTop, $aXRight, $aYBottom, $aUseTextHeight = false)
     {
-
         if (!$this->iShow) {
             return;
         }
@@ -268,7 +267,7 @@ class GanttActivityInfo
         $txt->SetFont($this->iFFamily, $this->iFStyle, $this->iFSize);
         $txt->SetColor($this->iFontColor);
         $txt->SetAlign($this->iHeaderAlign, 'top');
-        $n=count($this->iTitles);
+        $n = count($this->iTitles);
 
         if ($n == 0) {
             return;
@@ -276,7 +275,7 @@ class GanttActivityInfo
 
         $x = $aXLeft;
         $h = $this->iHeight;
-        $yTop = $aUseTextHeight ? $aYBottom-$h-$this->iTopColMargin-$this->iBottomColMargin : $aYTop ;
+        $yTop = $aUseTextHeight ? $aYBottom - $h - $this->iTopColMargin - $this->iBottomColMargin : $aYTop;
 
         if ($h < 0) {
             JpGraphError::RaiseL(6001);
@@ -286,19 +285,19 @@ class GanttActivityInfo
         $aImg->SetLineWeight(1);
         // Set background color
         $aImg->SetColor($this->iBackgroundColor);
-        $aImg->FilledRectangle($aXLeft, $yTop, $aXRight, $aYBottom-1);
+        $aImg->FilledRectangle($aXLeft, $yTop, $aXRight, $aYBottom - 1);
 
         if ($this->iStyle == 1) {
             // Make a 3D effect
             $aImg->SetColor('white');
-            $aImg->Line($aXLeft, $yTop+1, $aXRight, $yTop+1);
+            $aImg->Line($aXLeft, $yTop + 1, $aXRight, $yTop + 1);
         }
 
-        for ($i=0; $i < $n; ++$i) {
+        for ($i = 0; $i < $n; ++$i) {
             if ($this->iStyle == 1) {
                 // Make a 3D effect
                 $aImg->SetColor('white');
-                $aImg->Line($x+1, $yTop, $x+1, $aYBottom);
+                $aImg->Line($x + 1, $yTop, $x + 1, $aYBottom);
             }
             $x += $this->iLeftColMargin;
             $txt->Set($this->iTitles[$i]);
@@ -306,14 +305,14 @@ class GanttActivityInfo
             // Adjust the text anchor position according to the choosen alignment
             $xp = $x;
             if ($this->iHeaderAlign == 'center') {
-                $xp = (($x-$this->iLeftColMargin)+($x+$this->iWidth[$i]))/2;
+                $xp = (($x - $this->iLeftColMargin) + ($x + $this->iWidth[$i])) / 2;
             } elseif ($this->iHeaderAlign == 'right') {
-                $xp = $x +$this->iWidth[$i]-$this->iRightColMargin;
+                $xp = $x + $this->iWidth[$i] - $this->iRightColMargin;
             }
 
-            $txt->Stroke($aImg, $xp, $yTop+$this->iTopHeaderMargin);
+            $txt->Stroke($aImg, $xp, $yTop + $this->iTopHeaderMargin);
             $x += $this->iWidth[$i];
-            if ($i < $n-1) {
+            if ($i < $n - 1) {
                 $aImg->SetColor($this->iColor);
                 $aImg->Line($x, $yTop, $x, $aYBottom);
             }
@@ -323,10 +322,10 @@ class GanttActivityInfo
         $aImg->Line($aXLeft, $yTop, $aXRight, $yTop);
 
         // Stroke vertical column dividers
-        $cols=array();
+        $cols = array();
         $this->GetColStart($aImg, $cols);
-        $n=count($cols);
-        for ($i=1; $i < $n; ++$i) {
+        $n = count($cols);
+        for ($i = 1; $i < $n; ++$i) {
             $this->vgrid->Stroke(
                 $aImg,
                 $cols[$i],
@@ -346,34 +345,33 @@ class GanttActivityInfo
 class GanttGraph extends Graph
 {
     public $scale;  // Public accessible
-    public $hgrid=null;
-    private $iObj=array();    // Gantt objects
-    private $iLabelVMarginFactor=0.4; // 40% margin on top and bottom of label
-    private $iLayout=GANTT_FROMTOP; // Could also be GANTT_EVEN
+    public $hgrid = null;
+    private $iObj = array();    // Gantt objects
+    private $iLabelVMarginFactor = 0.4; // 40% margin on top and bottom of label
+    private $iLayout = GANTT_FROMTOP; // Could also be GANTT_EVEN
     private $iSimpleFont = FF_FONT1;
-    private $iSimpleFontSize=11;
-    private $iSimpleStyle=GANTT_RDIAG;
-    private $iSimpleColor='yellow';
-    private $iSimpleBkgColor='red';
-    private $iSimpleProgressBkgColor='gray';
-    private $iSimpleProgressColor='darkgreen';
-    private $iSimpleProgressStyle=GANTT_SOLID;
+    private $iSimpleFontSize = 11;
+    private $iSimpleStyle = GANTT_RDIAG;
+    private $iSimpleColor = 'yellow';
+    private $iSimpleBkgColor = 'red';
+    private $iSimpleProgressBkgColor = 'gray';
+    private $iSimpleProgressColor = 'darkgreen';
+    private $iSimpleProgressStyle = GANTT_SOLID;
     private $iZoomFactor = 1.0;
     //---------------
     // CONSTRUCTOR
     // Create a new gantt graph
     public function __construct($aWidth = 0, $aHeight = 0, $aCachedName = "", $aTimeOut = 0, $aInline = true)
     {
-
         // Backward compatibility
         if ($aWidth == -1) {
-            $aWidth=0;
+            $aWidth = 0;
         }
         if ($aHeight == -1) {
-            $aHeight=0;
+            $aHeight = 0;
         }
 
-        if ($aWidth<  0 || $aHeight < 0) {
+        if ($aWidth <  0 || $aHeight < 0) {
             JpgraphError::RaiseL(6002);
             //("You can't specify negative sizes for Gantt graph dimensions. Use 0 to indicate that you want the library to automatically determine a dimension.");
         }
@@ -385,7 +383,7 @@ class GanttGraph extends Graph
 
         $this->hgrid = new HorizontalGridLine();
 
-        $this->scale->ShowHeaders(GANTT_HWEEK|GANTT_HDAY);
+        $this->scale->ShowHeaders(GANTT_HWEEK | GANTT_HDAY);
         $this->SetBox();
     }
 
@@ -409,7 +407,7 @@ class GanttGraph extends Graph
     public function CreateSimple($data, $constrains = array(), $progress = array())
     {
         $num = count($data);
-        for ($i=0; $i < $num; ++$i) {
+        for ($i = 0; $i < $num; ++$i) {
             switch ($data[$i][1]) {
                 case ACTYPE_GROUP:
                     // Create a slightly smaller height bar since the
@@ -439,24 +437,24 @@ class GanttGraph extends Graph
                     $a->SetFillColor($this->iSimpleBkgColor);
                     // Check if this activity should have a constrain line
                     $n = count($constrains);
-                    for ($j=0; $j < $n; ++$j) {
+                    for ($j = 0; $j < $n; ++$j) {
                         if (empty($constrains[$j]) || (count($constrains[$j]) != 3)) {
                             JpGraphError::RaiseL(6003, $j);
                             //("Invalid format for Constrain parameter at index=$j in CreateSimple(). Parameter must start with index 0 and contain arrays of (Row,Constrain-To,Constrain-Type)");
                         }
-                        if ($constrains[$j][0]==$data[$i][0]) {
+                        if ($constrains[$j][0] == $data[$i][0]) {
                             $a->SetConstrain($constrains[$j][1], $constrains[$j][2], 'black', ARROW_S2, ARROWT_SOLID);
                         }
                     }
 
                     // Check if this activity have a progress bar
                     $n = count($progress);
-                    for ($j=0; $j < $n; ++$j) {
+                    for ($j = 0; $j < $n; ++$j) {
                         if (empty($progress[$j]) || (count($progress[$j]) != 2)) {
                             JpGraphError::RaiseL(6004, $j);
                             //("Invalid format for Progress parameter at index=$j in CreateSimple(). Parameter must start with index 0 and contain arrays of (Row,Progress)");
                         }
-                        if ($progress[$j][0]==$data[$i][0]) {
+                        if ($progress[$j][0] == $data[$i][0]) {
                             $a->progress->Set($progress[$j][1]);
                             $a->progress->SetPattern(
                                 $this->iSimpleProgressStyle,
@@ -482,16 +480,16 @@ class GanttGraph extends Graph
             }
 
             // Setup caption
-            $a->caption->Set($data[$i][$csimpos-1]);
+            $a->caption->Set($data[$i][$csimpos - 1]);
 
             // Check if this activity should have a CSIM target�?
             if (!empty($data[$i][$csimpos])) {
                 $a->SetCSIMTarget($data[$i][$csimpos]);
-                $a->SetCSIMAlt($data[$i][$csimpos+1]);
+                $a->SetCSIMAlt($data[$i][$csimpos + 1]);
             }
-            if (!empty($data[$i][$csimpos+2])) {
-                $a->title->SetCSIMTarget($data[$i][$csimpos+2]);
-                $a->title->SetCSIMAlt($data[$i][$csimpos+3]);
+            if (!empty($data[$i][$csimpos + 2])) {
+                $a->title->SetCSIMTarget($data[$i][$csimpos + 2]);
+                $a->title->SetCSIMAlt($data[$i][$csimpos + 3]);
             }
 
             $this->Add($a);
@@ -536,7 +534,7 @@ class GanttGraph extends Graph
                 $this->AddText($aObject);
             } else {
                 $n = count($aObject);
-                for ($i=0; $i < $n; ++$i) {
+                for ($i = 0; $i < $n; ++$i) {
                     $this->iObj[] = $aObject[$i];
                 }
             }
@@ -556,11 +554,11 @@ class GanttGraph extends Graph
         // Stroke any user added text objects
         if ($this->texts != null) {
             $n = count($this->texts);
-            for ($i=0; $i < $n; ++$i) {
+            for ($i = 0; $i < $n; ++$i) {
                 if ($this->texts[$i]->iScalePosX !== null && $this->texts[$i]->iScalePosY !== null) {
                     $x = $this->scale->TranslateDate($this->texts[$i]->iScalePosX);
                     $y = $this->scale->TranslateVertPos($this->texts[$i]->iScalePosY);
-                    $y -= $this->scale->GetVertSpacing()/2;
+                    $y -= $this->scale->GetVertSpacing() / 2;
                 } else {
                     $x = $y = null;
                 }
@@ -597,17 +595,17 @@ class GanttGraph extends Graph
     // it only supported a single label, hence the name.
     public function GetMaxLabelWidth()
     {
-        $m=10;
+        $m = 10;
         if ($this->iObj != null) {
-            $marg = $this->scale->actinfo->iLeftColMargin+$this->scale->actinfo->iRightColMargin;
+            $marg = $this->scale->actinfo->iLeftColMargin + $this->scale->actinfo->iRightColMargin;
             $n = count($this->iObj);
-            for ($i=0; $i < $n; ++$i) {
+            for ($i = 0; $i < $n; ++$i) {
                 if (!empty($this->iObj[$i]->title)) {
                     if ($this->iObj[$i]->title->HasTabs()) {
                         list($tot,$w) = $this->iObj[$i]->title->GetWidth($this->img, true);
-                        $m=max($m, $tot);
+                        $m = max($m, $tot);
                     } else {
-                        $m=max($m, $this->iObj[$i]->title->GetWidth($this->img));
+                        $m = max($m, $this->iObj[$i]->title->GetWidth($this->img));
                     }
                 }
             }
@@ -618,14 +616,14 @@ class GanttGraph extends Graph
     // Get the maximum height of the titles for the bars
     public function GetMaxLabelHeight()
     {
-        $m=10;
+        $m = 10;
         if ($this->iObj != null) {
             $n = count($this->iObj);
             // We can not include the title of GnttVLine since that title is stroked at the bottom
             // of the Gantt bar and not in the activity title columns
-            for ($i=0; $i < $n; ++$i) {
+            for ($i = 0; $i < $n; ++$i) {
                 if (!empty($this->iObj[$i]->title) && !($this->iObj[$i] instanceof GanttVLine)) {
-                    $m=max($m, $this->iObj[$i]->title->GetHeight($this->img));
+                    $m = max($m, $this->iObj[$i]->title->GetHeight($this->img));
                 }
             }
         }
@@ -634,12 +632,12 @@ class GanttGraph extends Graph
 
     public function GetMaxBarAbsHeight()
     {
-        $m=0;
+        $m = 0;
         if ($this->iObj != null) {
             $m = $this->iObj[0]->GetAbsHeight($this->img);
             $n = count($this->iObj);
-            for ($i=1; $i < $n; ++$i) {
-                $m=max($m, $this->iObj[$i]->GetAbsHeight($this->img));
+            for ($i = 1; $i < $n; ++$i) {
+                $m = max($m, $this->iObj[$i]->GetAbsHeight($this->img));
             }
         }
         return $m;
@@ -648,12 +646,12 @@ class GanttGraph extends Graph
     // Get the maximum used line number (vertical position) for bars
     public function GetBarMaxLineNumber()
     {
-        $m=1;
+        $m = 1;
         if ($this->iObj != null) {
             $m = $this->iObj[0]->GetLineNbr();
             $n = count($this->iObj);
-            for ($i=1; $i < $n; ++$i) {
-                $m=max($m, $this->iObj[$i]->GetLineNbr());
+            for ($i = 1; $i < $n; ++$i) {
+                $m = max($m, $this->iObj[$i]->GetLineNbr());
             }
         }
         return $m;
@@ -662,7 +660,7 @@ class GanttGraph extends Graph
     // Get the minumum and maximum used dates for all bars
     public function GetBarMinMax()
     {
-        $start = 0 ;
+        $start = 0;
         $n = count($this->iObj);
         while ($start < $n && $this->iObj[$start]->GetMaxDate() === false) {
             ++$start;
@@ -672,17 +670,17 @@ class GanttGraph extends Graph
             //('Cannot autoscale Gantt chart. No dated activities exist. [GetBarMinMax() start >= n]');
         }
 
-        $max=$this->scale->NormalizeDate($this->iObj[$start]->GetMaxDate());
-        $min=$this->scale->NormalizeDate($this->iObj[$start]->GetMinDate());
+        $max = $this->scale->NormalizeDate($this->iObj[$start]->GetMaxDate());
+        $min = $this->scale->NormalizeDate($this->iObj[$start]->GetMinDate());
 
-        for ($i=$start+1; $i < $n; ++$i) {
+        for ($i = $start + 1; $i < $n; ++$i) {
             $rmax = $this->scale->NormalizeDate($this->iObj[$i]->GetMaxDate());
             if ($rmax != false) {
-                $max=Max($max, $rmax);
+                $max = Max($max, $rmax);
             }
             $rmin = $this->scale->NormalizeDate($this->iObj[$i]->GetMinDate());
             if ($rmin != false) {
-                $min=Min($min, $rmin);
+                $min = Min($min, $rmin);
             }
         }
         $minDate = date("Y-m-d", $min);
@@ -698,7 +696,6 @@ class GanttGraph extends Graph
     // also added to make it better looking.
     public function AutoSize()
     {
-
         if ($this->img->img == null) {
             // The predefined left, right, top, bottom margins.
             // Note that the top margin might incease depending on
@@ -706,12 +703,12 @@ class GanttGraph extends Graph
             $hadj = $vadj = 0;
             if ($this->doshadow) {
                 $hadj = $this->shadow_width;
-                $vadj = $this->shadow_width+5;
+                $vadj = $this->shadow_width + 5;
             }
 
             $lm = $this->img->left_margin;
-            $rm = $this->img->right_margin +$hadj;
-            $rm += 2 ;
+            $rm = $this->img->right_margin + $hadj;
+            $rm += 2;
             $tm = $this->img->top_margin;
             $bm = $this->img->bottom_margin + $vadj;
             $bm += 2;
@@ -719,19 +716,19 @@ class GanttGraph extends Graph
             // If there are any added GanttVLine we must make sure that the
             // bottom margin is wide enough to hold a title.
             $n = count($this->iObj);
-            for ($i=0; $i < $n; ++$i) {
+            for ($i = 0; $i < $n; ++$i) {
                 if ($this->iObj[$i] instanceof GanttVLine) {
-                    $bm = max($bm, $this->iObj[$i]->title->GetHeight($this->img)+10);
+                    $bm = max($bm, $this->iObj[$i]->title->GetHeight($this->img) + 10);
                 }
             }
 
             // First find out the height
-            $n=$this->GetBarMaxLineNumber()+1;
-            $m=max($this->GetMaxLabelHeight(), $this->GetMaxBarAbsHeight());
-            $height=$n*((1+$this->iLabelVMarginFactor)*$m);
+            $n = $this->GetBarMaxLineNumber() + 1;
+            $m = max($this->GetMaxLabelHeight(), $this->GetMaxBarAbsHeight());
+            $height = $n * ((1 + $this->iLabelVMarginFactor) * $m);
 
             // Add the height of the scale titles
-            $h=$this->scale->GetHeaderHeight();
+            $h = $this->scale->GetHeaderHeight();
             $height += $h;
 
             // Calculate the top margin needed for title and subtitle
@@ -752,7 +749,7 @@ class GanttGraph extends Graph
             // get a smaller image.
             if ($this->scale->IsDisplayHour() || $this->scale->IsDisplayMinute()) {
                 // Add 2 pixel margin on each side
-                $fw=$this->scale->day->GetFontWidth($this->img)+4;
+                $fw = $this->scale->day->GetFontWidth($this->img) + 4;
             } elseif ($this->scale->IsDisplayWeek()) {
                 $fw = 8;
             } elseif ($this->scale->IsDisplayMonth()) {
@@ -761,7 +758,7 @@ class GanttGraph extends Graph
                 $fw = 2;
             }
 
-            $nd=$this->scale->GetNumberOfDays();
+            $nd = $this->scale->GetNumberOfDays();
 
             if ($this->scale->IsDisplayDay()) {
                 // If the days are displayed we also need to figure out
@@ -808,7 +805,7 @@ class GanttGraph extends Graph
                         $txt = "M";
                         break;
                 }
-                $fw = $this->scale->day->GetStrWidth($this->img, $txt)+6;
+                $fw = $this->scale->day->GetStrWidth($this->img, $txt) + 6;
             }
 
             // If we have hours enabled we must make sure that each day has enough
@@ -837,7 +834,7 @@ class GanttGraph extends Graph
                         break;
                 }
 
-                $hfw = $this->scale->hour->GetStrWidth($this->img, $txt)+6;
+                $hfw = $this->scale->hour->GetStrWidth($this->img, $txt) + 6;
                 $mw = $hfw;
                 if ($this->scale->IsDisplayMinute()) {
                     // Depending on what format the user has choose we need different amount
@@ -853,14 +850,14 @@ class GanttGraph extends Graph
                             break;
                     }
 
-                    $mfw = $this->scale->minute->GetStrWidth($this->img, $txt2)+6;
+                    $mfw = $this->scale->minute->GetStrWidth($this->img, $txt2) + 6;
                     $n2 = ceil(60 / $this->scale->minute->GetIntervall());
                     $mw = $n2 * $mfw;
                 }
-                $hfw = $hfw < $mw ? $mw : $hfw ;
-                $n = ceil(24*60 / $this->scale->TimeToMinutes($this->scale->hour->GetIntervall()));
+                $hfw = $hfw < $mw ? $mw : $hfw;
+                $n = ceil(24 * 60 / $this->scale->TimeToMinutes($this->scale->hour->GetIntervall()));
                 $hw = $n * $hfw;
-                $fw = $fw < $hw ? $hw : $fw ;
+                $fw = $fw < $hw ? $hw : $fw;
             }
 
             // We need to repeat this code block here as well.
@@ -882,10 +879,10 @@ class GanttGraph extends Graph
                         break;
                 }
 
-                $mfw = $this->scale->minute->GetStrWidth($this->img, $txt)+6;
+                $mfw = $this->scale->minute->GetStrWidth($this->img, $txt) + 6;
                 $n = ceil(60 / $this->scale->TimeToMinutes($this->scale->minute->GetIntervall()));
                 $mw = $n * $mfw;
-                $fw = $fw < $mw ? $mw : $fw ;
+                $fw = $fw < $mw ? $mw : $fw;
             }
 
             // If we display week we must make sure that 7*$fw is enough
@@ -894,23 +891,23 @@ class GanttGraph extends Graph
                 // Depending on what format the user has choose we need different amount
                 // of space
                 $fsw = strlen($this->scale->week->iLabelFormStr);
-                if ($this->scale->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) {
+                if ($this->scale->week->iStyle == WEEKSTYLE_FIRSTDAY2WNBR) {
                     $fsw += 8;
-                } elseif ($this->scale->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR) {
+                } elseif ($this->scale->week->iStyle == WEEKSTYLE_FIRSTDAYWNBR) {
                     $fsw += 7;
                 } else {
                     $fsw += 4;
                 }
 
-                $ww = $fsw*$this->scale->week->GetFontWidth($this->img);
-                if (7*$fw < $ww) {
-                    $fw = ceil($ww/7);
+                $ww = $fsw * $this->scale->week->GetFontWidth($this->img);
+                if (7 * $fw < $ww) {
+                    $fw = ceil($ww / 7);
                 }
             }
 
             if (!$this->scale->IsDisplayDay() && !$this->scale->IsDisplayHour() &&
-                !( ($this->scale->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR ||
-                    $this->scale->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) && $this->scale->IsDisplayWeek() )) {
+                !( ($this->scale->week->iStyle == WEEKSTYLE_FIRSTDAYWNBR ||
+                    $this->scale->week->iStyle == WEEKSTYLE_FIRSTDAY2WNBR) && $this->scale->IsDisplayWeek() )) {
                 // If we don't display the individual days we can shrink the
                 // scale a little bit. This is a little bit pragmatic at the
                 // moment and should be re-written to take into account
@@ -923,7 +920,7 @@ class GanttGraph extends Graph
                 }
             }
 
-            $cw = $this->GetMaxActInfoColWidth() ;
+            $cw = $this->GetMaxActInfoColWidth();
             $this->scale->actinfo->SetMinColWidth($cw);
             if ($this->img->width <= 0) {
                 // Now determine the width for the activity titles column
@@ -938,7 +935,7 @@ class GanttGraph extends Graph
                 );
 
                 // Add the width of the vertivcal divider line
-                $titlewidth += $this->scale->divider->iWeight*2;
+                $titlewidth += $this->scale->divider->iWeight * 2;
 
                 // Adjust the width by the user specified zoom factor
                 $fw *= $this->iZoomFactor;
@@ -946,7 +943,7 @@ class GanttGraph extends Graph
                 // Now get the total width taking
                 // titlewidth, left and rigt margin, dayfont size
                 // into account
-                $width = $titlewidth + $nd*$fw + $lm+$rm;
+                $width = $titlewidth + $nd * $fw + $lm + $rm;
             } else {
                 $width = $this->img->width;
             }
@@ -976,10 +973,10 @@ class GanttGraph extends Graph
         $w = array();
         $m = $this->scale->actinfo->iLeftColMargin + $this->scale->actinfo->iRightColMargin;
 
-        for ($i=0; $i < $n; ++$i) {
+        for ($i = 0; $i < $n; ++$i) {
             $tmp = $this->iObj[$i]->title->GetColWidth($this->img, $m);
             $nn = count($tmp);
-            for ($j=0; $j < $nn; ++$j) {
+            for ($j = 0; $j < $nn; ++$j) {
                 if (empty($w[$j])) {
                     $w[$j] = $tmp[$j];
                 } else {
@@ -993,7 +990,6 @@ class GanttGraph extends Graph
     // Stroke the gantt chart
     public function Stroke($aStrokeFileName = "")
     {
-
         // If the filename is the predefined value = '_csim_special_'
         // we assume that the call to stroke only needs to do enough
         // to correctly generate the CSIM maps.
@@ -1001,7 +997,7 @@ class GanttGraph extends Graph
         // to do to generate the image map to improve performance
         // a best we can. Therefor you will see a lot of tests !$_csim in the
         // code below.
-        $_csim = ($aStrokeFileName===_CSIM_SPECIALFILE);
+        $_csim = ($aStrokeFileName === _CSIM_SPECIALFILE);
 
         // Should we autoscale dates?
 
@@ -1019,15 +1015,15 @@ class GanttGraph extends Graph
         // available height
         $this->scale->SetVertLayout($this->iLayout);
         if ($this->iLayout == GANTT_FROMTOP) {
-            $maxheight=max($this->GetMaxLabelHeight(), $this->GetMaxBarAbsHeight());
-            $this->scale->SetVertSpacing($maxheight*(1+$this->iLabelVMarginFactor));
+            $maxheight = max($this->GetMaxLabelHeight(), $this->GetMaxBarAbsHeight());
+            $this->scale->SetVertSpacing($maxheight * (1 + $this->iLabelVMarginFactor));
         }
         // If it hasn't been set find out the maximum line number
         if ($this->scale->iVertLines == -1) {
-            $this->scale->iVertLines = $this->GetBarMaxLineNumber()+1;
+            $this->scale->iVertLines = $this->GetBarMaxLineNumber() + 1;
         }
 
-        $maxwidth=max(
+        $maxwidth = max(
             $this->scale->actinfo->GetWidth($this->img),
             max(
                 $this->GetMaxLabelWidth(),
@@ -1035,7 +1031,7 @@ class GanttGraph extends Graph
             )
         );
 
-        $this->scale->SetLabelWidth($maxwidth+$this->scale->divider->iWeight);//*(1+$this->iLabelHMarginFactor));
+        $this->scale->SetLabelWidth($maxwidth + $this->scale->divider->iWeight);//*(1+$this->iLabelHMarginFactor));
 
         if (!$_csim) {
             $this->StrokePlotArea();
@@ -1057,7 +1053,7 @@ class GanttGraph extends Graph
         $this->hgrid->Stroke($this->img, $this->scale);
 
         $n = count($this->iObj);
-        for ($i=0; $i < $n; ++$i) {
+        for ($i = 0; $i < $n; ++$i) {
             //$this->iObj[$i]->SetLabelLeftMargin(round($maxwidth*$this->iLabelHMarginFactor/2));
             $this->iObj[$i]->Stroke($this->img, $this->scale);
         }
@@ -1115,7 +1111,7 @@ class GanttGraph extends Graph
         $n = count($this->iObj);
 
         // Stroke all constrains
-        for ($i=0; $i < $n; ++$i) {
+        for ($i = 0; $i < $n; ++$i) {
             // Some gantt objects may not have constraints associated with them
             // for example we can add IconPlots which doesn't have this property.
             if (empty($this->iObj[$i]->constraints)) {
@@ -1131,7 +1127,7 @@ class GanttGraph extends Graph
 
                     // Find out which object is on the target row
                     $targetobj = -1;
-                    for ($j=0; $j < $n && $targetobj == -1; ++$j) {
+                    for ($j = 0; $j < $n && $targetobj == -1; ++$j) {
                         if ($this->iObj[$j]->iVPos == $vpos) {
                             $targetobj = $j;
                         }
@@ -1205,7 +1201,7 @@ class GanttGraph extends Graph
         $csim .= $this->subsubtitle->GetCSIMAreas();
 
         $n = count($this->iObj);
-        for ($i=$n-1; $i >= 0; --$i) {
+        for ($i = $n - 1; $i >= 0; --$i) {
             $csim .= $this->iObj[$i]->GetCSIMArea();
         }
         return $csim;
@@ -1237,7 +1233,7 @@ class PredefIcons
 
     public function GetLen()
     {
-        return $this->iLen ;
+        return $this->iLen;
     }
 
     public function GetImg($aIdx)
@@ -1254,278 +1250,278 @@ class PredefIcons
         //==========================================================
         // warning.png
         //==========================================================
-        $this->iBuiltinIcon[0][0]= 1043 ;
-        $this->iBuiltinIcon[0][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAA'.
-        'B3RJTUUH0wgKFSgilWPhUQAAA6BJREFUeNrtl91rHFUYh5/3zMx+Z5JNUoOamCZNaqTZ6IWIkqRiQWmi1IDetHfeiCiltgXBP8AL'.
-        '0SIUxf/AvfRSBS9EKILFFqyIH9CEmFZtPqrBJLs7c+b1YneT3WTTbNsUFPLCcAbmzPt73o9zzgzs2Z793231UOdv3w9k9Z2uzOdA'.
-        '5+2+79yNeL7Hl7hw7oeixRMZ6PJM26W18DNAm/Vh7lR8fqh97NmMF11es1iFpMATqdirwMNA/J4DpIzkr5YsAF1PO6gIMYHRdPwl'.
-        'oO2elmB+qH3sm7XozbkgYvy8SzYnZPtcblyM6I+5z3jQ+0vJfgpEu56BfI9vUkbyi2HZd1QJoeWRiAjBd4SDCW8SSAOy6wBHMzF7'.
-        'YdV2A+ROuvRPLfHoiSU0EMY/cDAIhxJeGngKaN1VgHyPL7NBxI1K9P4QxBzw3K1zJ/zkG8B9uwaQ7/HNsRZv9kohBGD0o7JqMYS/'.
-        '/ynPidQw/LrBiPBcS/yFCT95DvB2BWAy4575PaQbQKW+tPd3GCItu2odKI++YxiKu0d26oWmAD7paZU/rLz37VqIijD2YbnzNBBE'.
-        'IBHf8K8qjL7vYhCGErEU8CTg3xXAeMp96GrJEqkyXkm9Bhui1xfsunjdGhcYLq+IzjsGmBt5YH/cmJkFq6gIqlon3u4LxdKGuCIo'.
-        'Qu41g0E41po+2R33Xt5uz9kRIB2UTle7PnfKrROP1HD4sRjZlq0lzhwoZ6rDNeTi3nEg1si/7FT7kYQbXS6E5E65tA5uRF9tutq0'.
-        'K/VwAF+/FbIYWt6+tjQM/AqUms7A4Wy6d7YSfSNxgMmzi0ycWWworio4QJvj4LpuL5BqugTnXzzqJsJwurrlNhJXFaavW67NRw3F'.
-        'q+aJcCQVe9fzvJGmAY7/dPH0gi0f64OveGxa+usCuQMeZ0+kt8BVrX+qPO9Bzx0MgqBvs+a2PfDdYIf+WAjXU1ub4tqNaPPzRs8A'.
-        'blrli+WVn79cXn0cWKl+tGx7HLc7pu3CSmnfitL+l1UihAhwjFkPQev4K/fSABjBM8JCaFuurJU+rgW41SroA8aNMVNAFtgHJCsn'.
-        'XGy/58QVxAC9MccJtZ5kIzNlW440WrJ2ea4YPA9cAooA7i0A/gS+iqLoOpB1HOegqrYB3UBmJrAtQAJwpwPr1Ry92wVlgZsiYlW1'.
-        'uX1gU36dymgqYxJIJJNJT1W9QqHgNwFQBGYqo94OwHZQUuPD7ACglSvc+5n5T9m/wfJJX4U9qzEAAAAASUVORK5CYII=' ;
+        $this->iBuiltinIcon[0][0] = 1043;
+        $this->iBuiltinIcon[0][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAA' .
+        'B3RJTUUH0wgKFSgilWPhUQAAA6BJREFUeNrtl91rHFUYh5/3zMx+Z5JNUoOamCZNaqTZ6IWIkqRiQWmi1IDetHfeiCiltgXBP8AL' .
+        '0SIUxf/AvfRSBS9EKILFFqyIH9CEmFZtPqrBJLs7c+b1YneT3WTTbNsUFPLCcAbmzPt73o9zzgzs2Z793231UOdv3w9k9Z2uzOdA' .
+        '5+2+79yNeL7Hl7hw7oeixRMZ6PJM26W18DNAm/Vh7lR8fqh97NmMF11es1iFpMATqdirwMNA/J4DpIzkr5YsAF1PO6gIMYHRdPwl' .
+        'oO2elmB+qH3sm7XozbkgYvy8SzYnZPtcblyM6I+5z3jQ+0vJfgpEu56BfI9vUkbyi2HZd1QJoeWRiAjBd4SDCW8SSAOy6wBHMzF7' .
+        'YdV2A+ROuvRPLfHoiSU0EMY/cDAIhxJeGngKaN1VgHyPL7NBxI1K9P4QxBzw3K1zJ/zkG8B9uwaQ7/HNsRZv9kohBGD0o7JqMYS/' .
+        '/ynPidQw/LrBiPBcS/yFCT95DvB2BWAy4575PaQbQKW+tPd3GCItu2odKI++YxiKu0d26oWmAD7paZU/rLz37VqIijD2YbnzNBBE' .
+        'IBHf8K8qjL7vYhCGErEU8CTg3xXAeMp96GrJEqkyXkm9Bhui1xfsunjdGhcYLq+IzjsGmBt5YH/cmJkFq6gIqlon3u4LxdKGuCIo' .
+        'Qu41g0E41po+2R33Xt5uz9kRIB2UTle7PnfKrROP1HD4sRjZlq0lzhwoZ6rDNeTi3nEg1si/7FT7kYQbXS6E5E65tA5uRF9tutq0' .
+        'K/VwAF+/FbIYWt6+tjQM/AqUms7A4Wy6d7YSfSNxgMmzi0ycWWworio4QJvj4LpuL5BqugTnXzzqJsJwurrlNhJXFaavW67NRw3F' .
+        'q+aJcCQVe9fzvJGmAY7/dPH0gi0f64OveGxa+usCuQMeZ0+kt8BVrX+qPO9Bzx0MgqBvs+a2PfDdYIf+WAjXU1ub4tqNaPPzRs8A' .
+        'blrli+WVn79cXn0cWKl+tGx7HLc7pu3CSmnfitL+l1UihAhwjFkPQev4K/fSABjBM8JCaFuurJU+rgW41SroA8aNMVNAFtgHJCsn' .
+        'XGy/58QVxAC9MccJtZ5kIzNlW440WrJ2ea4YPA9cAooA7i0A/gS+iqLoOpB1HOegqrYB3UBmJrAtQAJwpwPr1Ry92wVlgZsiYlW1' .
+        'uX1gU36dymgqYxJIJJNJT1W9QqHgNwFQBGYqo94OwHZQUuPD7ACglSvc+5n5T9m/wfJJX4U9qzEAAAAASUVORK5CYII=';
 
         //==========================================================
         // edit.png
         //==========================================================
-        $this->iBuiltinIcon[1][0]= 959 ;
-        $this->iBuiltinIcon[1][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAFgAWABY9j+ZuwAAAAlwSFlz'.
-        'AAALEAAACxABrSO9dQAAAAd0SU1FB9AKDAwbIEXOA6AAAAM8SURBVHicpdRPaBxlHMbx76ZvsmOTmm1dsEqQSIIsEmGVBAQjivEQ'.
-        'PAUJngpWsAWlBw8egpQepKwplN4ULEG9CjkEyUFKlSJrWTG0IU51pCsdYW2ncUPjdtp9Z+f3vuNhu8nKbmhaf5cZeGc+PO8zf1Lc'.
-        'm0KhkACICCKCMeaBjiLC0tLSnjNvPmuOHRpH0TZTU1M8zBi9wakzn7OFTs5sw8YYACYmJrre7HkeuVyu69qPF77hlT1XmZ0eQ03O'.
-        'wOLJTvhBx1rLz18VmJ0eY+jVd2FxDkKXnvYLHgb97OgLzE4ON9Hzc1B1QaQzsed5O0Lta3Ec89OnR5h5McfQ+Mw2qgQUnfBOPbZ3'.
-        'bK3l+xOvMT0+3ERLp5FNF6UEjcL32+DdVmGt5WLhDYYPZrbRqreFumXwql0S3w9tnDvLWD5PZigPpdOwuYpSCo3C8wU3UHxQdHbf'.
-        'cZIkNM6dxcnlUM4k1eUFMlUPpUADbpkttFarHe6oYqeOr6yt4RzMQHYUcUsQVtGicHDwKprViuLDkkOtVnsHCHZVRVy/zcj1i5Af'.
-        'h8AjdIts+hUcGcYPK3iBtKM3gD/uAzf/AdY2mmmVgy6X8YNNKmGIvyloPcB8SUin07RQ4EZHFdsdG0wkJEnEaHAJxvKEpSLeaokV'.
-        'r4zWmhUZYLlY4b1D03y5eIEWCtS7vsciAgiIxkQRabWOrlQor66y4pUphoJb1jiO4uO5o0S3q6RSqVbiOmC7VCEgAhLSaDQ48dH7'.
-        'vD46REY0iysegSjKQciRt99ib7qXwX0O+pG4teM6YKHLB9JMq4mTmF9/+AKA4wvLZByH7OgYL7+UY2qvw/7Bfg5kHiXjJFyv3CGO'.
-        'Y1rof+BW4t/XLiPG0DCGr79d4XzRxRnIMn98huXSTYyJ6et1UNYQhRvcinpJq86H3wGPPPM0iBDd+QffD1g4eZjLvuG7S1Wef26E'.
-        'J7L7eSx7gAHVg7V3MSbi6m/r93baBd6qQjerAJg/9Ql/XrvG0ON1+vv7GH3qSfY5fahUnSTpwZgIEQesaVXRPbHRG/xyJSAxMYlp'.
-        'EOm71HUINiY7mGb95l/8jZCyQmJjMDGJjUmsdCROtZ0n/P/Z8v4Fs2MTUUf7vYoAAAAASUVORK5CYII=' ;
+        $this->iBuiltinIcon[1][0] = 959;
+        $this->iBuiltinIcon[1][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAFgAWABY9j+ZuwAAAAlwSFlz' .
+        'AAALEAAACxABrSO9dQAAAAd0SU1FB9AKDAwbIEXOA6AAAAM8SURBVHicpdRPaBxlHMbx76ZvsmOTmm1dsEqQSIIsEmGVBAQjivEQ' .
+        'PAUJngpWsAWlBw8egpQepKwplN4ULEG9CjkEyUFKlSJrWTG0IU51pCsdYW2ncUPjdtp9Z+f3vuNhu8nKbmhaf5cZeGc+PO8zf1Lc' .
+        'm0KhkACICCKCMeaBjiLC0tLSnjNvPmuOHRpH0TZTU1M8zBi9wakzn7OFTs5sw8YYACYmJrre7HkeuVyu69qPF77hlT1XmZ0eQ03O' .
+        'wOLJTvhBx1rLz18VmJ0eY+jVd2FxDkKXnvYLHgb97OgLzE4ON9Hzc1B1QaQzsed5O0Lta3Ec89OnR5h5McfQ+Mw2qgQUnfBOPbZ3' .
+        'bK3l+xOvMT0+3ERLp5FNF6UEjcL32+DdVmGt5WLhDYYPZrbRqreFumXwql0S3w9tnDvLWD5PZigPpdOwuYpSCo3C8wU3UHxQdHbf' .
+        'cZIkNM6dxcnlUM4k1eUFMlUPpUADbpkttFarHe6oYqeOr6yt4RzMQHYUcUsQVtGicHDwKprViuLDkkOtVnsHCHZVRVy/zcj1i5Af' .
+        'h8AjdIts+hUcGcYPK3iBtKM3gD/uAzf/AdY2mmmVgy6X8YNNKmGIvyloPcB8SUin07RQ4EZHFdsdG0wkJEnEaHAJxvKEpSLeaokV' .
+        'r4zWmhUZYLlY4b1D03y5eIEWCtS7vsciAgiIxkQRabWOrlQor66y4pUphoJb1jiO4uO5o0S3q6RSqVbiOmC7VCEgAhLSaDQ48dH7' .
+        'vD46REY0iysegSjKQciRt99ib7qXwX0O+pG4teM6YKHLB9JMq4mTmF9/+AKA4wvLZByH7OgYL7+UY2qvw/7Bfg5kHiXjJFyv3CGO' .
+        'Y1rof+BW4t/XLiPG0DCGr79d4XzRxRnIMn98huXSTYyJ6et1UNYQhRvcinpJq86H3wGPPPM0iBDd+QffD1g4eZjLvuG7S1Wef26E' .
+        'J7L7eSx7gAHVg7V3MSbi6m/r93baBd6qQjerAJg/9Ql/XrvG0ON1+vv7GH3qSfY5fahUnSTpwZgIEQesaVXRPbHRG/xyJSAxMYlp' .
+        'EOm71HUINiY7mGb95l/8jZCyQmJjMDGJjUmsdCROtZ0n/P/Z8v4Fs2MTUUf7vYoAAAAASUVORK5CYII=';
 
         //==========================================================
         // endconstrain.png
         //==========================================================
-        $this->iBuiltinIcon[2][0]= 666 ;
-        $this->iBuiltinIcon[2][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlz'.
-        'AAALDwAACw8BkvkDpQAAAAd0SU1FB9ALEREILkh0+eQAAAIXSURBVHictZU9aFNRFMd/N81HX77aptJUWmp1LHRpIcWhg5sIDlUQ'.
-        'LAXB4t7RRUpwEhy7iQ46CCIoSHcl0CFaoVARU2MFMYktadLXJNok7x2HtCExvuYFmnO4w/3gx+Gc/z1HKRTdMEdXqHbB/sgc/sic'.
-        'nDoYAI8XwDa8o1RMLT+2hAsigtTvbIGVqhX46szUifBGswUeCPgAGB7QeLk0X4Ork+HOxo1VgSqGASjMqkn8W4r4vVtEgI/RRQEL'.
-        'vaoGD85cl5V3nySR/S1mxWxab7f35PnntNyMJeRr9kCMqiHTy09EoeToLwggx6ymiMOD/VwcD7Oa/MHkcIiQx026WGYto5P/U+ZZ'.
-        '7gD0QwDuT5z9N3LrVPi0Xs543eQPKkRzaS54eviJIp4tMFQFMllAWN2qcRZHBnixNM8NYD162xq8u7ePSQ+GX2Pjwxc2dB2cLtB8'.
-        '7GgamCb0anBYBeChMtl8855CarclxU1gvViiUK4w2OMkNDnGeJ8bt9fH90yOnOkCwLFTwhzykhvtYzOWoBBbY//R3dbaNTYhf2RO'.
-        'QpeuUMzv188MlwuHy0H13HnE48UzMcL0WAtUHX8OxZHoG1URiFw7rnLLCswuSPD1ulze/iWjT2PSf+dBXRFtVVGIvzqph0pQL7VE'.
-        'avXYaXXxPwsnt0imdttCocMmZBdK7YU9D8wuNOW0nXc6QWzPsSa5naZ1beb9BbGB6dxGtMnXAAAAAElFTkSuQmCC' ;
+        $this->iBuiltinIcon[2][0] = 666;
+        $this->iBuiltinIcon[2][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlz' .
+        'AAALDwAACw8BkvkDpQAAAAd0SU1FB9ALEREILkh0+eQAAAIXSURBVHictZU9aFNRFMd/N81HX77aptJUWmp1LHRpIcWhg5sIDlUQ' .
+        'LAXB4t7RRUpwEhy7iQ46CCIoSHcl0CFaoVARU2MFMYktadLXJNok7x2HtCExvuYFmnO4w/3gx+Gc/z1HKRTdMEdXqHbB/sgc/sic' .
+        'nDoYAI8XwDa8o1RMLT+2hAsigtTvbIGVqhX46szUifBGswUeCPgAGB7QeLk0X4Ork+HOxo1VgSqGASjMqkn8W4r4vVtEgI/RRQEL' .
+        'vaoGD85cl5V3nySR/S1mxWxab7f35PnntNyMJeRr9kCMqiHTy09EoeToLwggx6ymiMOD/VwcD7Oa/MHkcIiQx026WGYto5P/U+ZZ' .
+        '7gD0QwDuT5z9N3LrVPi0Xs543eQPKkRzaS54eviJIp4tMFQFMllAWN2qcRZHBnixNM8NYD162xq8u7ePSQ+GX2Pjwxc2dB2cLtB8' .
+        '7GgamCb0anBYBeChMtl8855CarclxU1gvViiUK4w2OMkNDnGeJ8bt9fH90yOnOkCwLFTwhzykhvtYzOWoBBbY//R3dbaNTYhf2RO' .
+        'QpeuUMzv188MlwuHy0H13HnE48UzMcL0WAtUHX8OxZHoG1URiFw7rnLLCswuSPD1ulze/iWjT2PSf+dBXRFtVVGIvzqph0pQL7VE' .
+        'avXYaXXxPwsnt0imdttCocMmZBdK7YU9D8wuNOW0nXc6QWzPsSa5naZ1beb9BbGB6dxGtMnXAAAAAElFTkSuQmCC';
 
         //==========================================================
         // mail.png
         //==========================================================
-        $this->iBuiltinIcon[3][0]= 1122 ;
-        $this->iBuiltinIcon[3][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlz'.
-        'AAALEAAACxABrSO9dQAAAAd0SU1FB9AJHAMfFvL9OU8AAAPfSURBVHictZRdaBRXFMd/987H7tbNx8aYtGCrEexDsOBDaKHFxirb'.
-        'h0qhsiY0ykppKq1osI99C4H2WSiFFMHWUhXBrjRi0uCmtSEUGgP1QWqhWjGkoW7M1kTX3WRn5p4+TJJNGolQ6IXDnDtz+N0z/3PP'.
-        'UWBIpdpYa23b9g09PZ2kUrOrvmUyGVKp1Ao/mUyi56YnVgWfO/P1CihAd/dJMpmaNROIRq8BkM1m0bH6TasC3j6QXgFdXI+DR6PR'.
-        'JX/Pno8B+KLnMKqlpUU8z8MYs2RBEDzWf9J+0RcRbMdxGBsbw/fmCXwPMUEYID4iAVp8wIRmDIHMo4yHSIBSASKC+CWE0C/PF9jU'.
-        '3B6Cp+4M07C5FUtKGNvGwQJctPgIsgD2wRhEIqAMGB+UQYkHJgYYZD7P1HwVlmWhHcfhyk83KeRGUW4t6CgoG5SNUS4KBWgQDUov'.
-        '7AGlwYASBVqH0Bk49dXpCviVV3dw/tI1Bvr7kMIIlh0NYUpjlF0BAYvcxSXmEVLKceHSCJm+PnbueBHbtkNwTXUNBzo6aGpq4sSZ'.
-        'GwT5H7BsF6Wdf1GWHQAoM0upeI9PT1yioS7B7tdaSdSuw7KsUGMAy7HYsmUztTW1nMwM0txssX1rlHjjS5jy/Uq2YkK/eJuLl6/z'.
-        'x+1xkslW6mrixGIODx8EFSlEBC0+tmXT0NhA2763iEUjnLv4C8XpUbSbAB1mKkGJ3J83Od77HW5EszvZSqK2iljMIeJaRGNuJePF'.
-        '6mspY7BJ1DXwQnCd2fxGRq5OUCz8xt72dyhMZcn++Cu3xu9SKhdp2b4ZHWnAtTSxmIWlhcIjlksR3lNBYzlxZsb7+f7ne+xtSzOd'.
-        'u83szH1OnThOPp/n+a0beeP1l4mvq+PU2Qyd+5PY1RuwlAqLYFaBfbTbyPSdfgaH77A//QF4f1O/vpr6RJyq+C5Kc/M8FbFxXItY'.
-        'xOHDrvfo/fxLDnbsJBp5BowBReVWYAzabeTh5ABDw7cWoNNL3YYYNtSv57lnn6Z+Qx01VeuIuBa2DV1HD3H63BAPZu4u1WGpeLHq'.
-        'Rh7+NcjA0O+0p4+CNwXigwnbWlQQdpuEpli+n+PIkcOc//YKuckJJFh2K2anrjFw+QZt6S6kPImIF/b+cqAJD1LihWAxC61twBTo'.
-        'fPcQF/oGsVW5ovHQlavs2/8+uYnRVSOUgHAmmAClBIOBwKC0gPjhIRgEIX2wg7NnwpZW3d3d4vs+vu8TBMGK51rvPM9b8hdteZxd'.
-        'LBbVR8feJDs0Rlv6GFKeXJ21rNRXESxMPR+CBUl0nN7PjtO+dye7Up/8v1I88bf/ixT/AO1/hZsqW+C6AAAAAElFTkSuQmCC' ;
+        $this->iBuiltinIcon[3][0] = 1122;
+        $this->iBuiltinIcon[3][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlz' .
+        'AAALEAAACxABrSO9dQAAAAd0SU1FB9AJHAMfFvL9OU8AAAPfSURBVHictZRdaBRXFMd/987H7tbNx8aYtGCrEexDsOBDaKHFxirb' .
+        'h0qhsiY0ykppKq1osI99C4H2WSiFFMHWUhXBrjRi0uCmtSEUGgP1QWqhWjGkoW7M1kTX3WRn5p4+TJJNGolQ6IXDnDtz+N0z/3PP' .
+        'UWBIpdpYa23b9g09PZ2kUrOrvmUyGVKp1Ao/mUyi56YnVgWfO/P1CihAd/dJMpmaNROIRq8BkM1m0bH6TasC3j6QXgFdXI+DR6PR' .
+        'JX/Pno8B+KLnMKqlpUU8z8MYs2RBEDzWf9J+0RcRbMdxGBsbw/fmCXwPMUEYID4iAVp8wIRmDIHMo4yHSIBSASKC+CWE0C/PF9jU' .
+        '3B6Cp+4M07C5FUtKGNvGwQJctPgIsgD2wRhEIqAMGB+UQYkHJgYYZD7P1HwVlmWhHcfhyk83KeRGUW4t6CgoG5SNUS4KBWgQDUov' .
+        '7AGlwYASBVqH0Bk49dXpCviVV3dw/tI1Bvr7kMIIlh0NYUpjlF0BAYvcxSXmEVLKceHSCJm+PnbueBHbtkNwTXUNBzo6aGpq4sSZ' .
+        'GwT5H7BsF6Wdf1GWHQAoM0upeI9PT1yioS7B7tdaSdSuw7KsUGMAy7HYsmUztTW1nMwM0txssX1rlHjjS5jy/Uq2YkK/eJuLl6/z' .
+        'x+1xkslW6mrixGIODx8EFSlEBC0+tmXT0NhA2763iEUjnLv4C8XpUbSbAB1mKkGJ3J83Od77HW5EszvZSqK2iljMIeJaRGNuJePF' .
+        '6mspY7BJ1DXwQnCd2fxGRq5OUCz8xt72dyhMZcn++Cu3xu9SKhdp2b4ZHWnAtTSxmIWlhcIjlksR3lNBYzlxZsb7+f7ne+xtSzOd' .
+        'u83szH1OnThOPp/n+a0beeP1l4mvq+PU2Qyd+5PY1RuwlAqLYFaBfbTbyPSdfgaH77A//QF4f1O/vpr6RJyq+C5Kc/M8FbFxXItY' .
+        'xOHDrvfo/fxLDnbsJBp5BowBReVWYAzabeTh5ABDw7cWoNNL3YYYNtSv57lnn6Z+Qx01VeuIuBa2DV1HD3H63BAPZu4u1WGpeLHq' .
+        'Rh7+NcjA0O+0p4+CNwXigwnbWlQQdpuEpli+n+PIkcOc//YKuckJJFh2K2anrjFw+QZt6S6kPImIF/b+cqAJD1LihWAxC61twBTo' .
+        'fPcQF/oGsVW5ovHQlavs2/8+uYnRVSOUgHAmmAClBIOBwKC0gPjhIRgEIX2wg7NnwpZW3d3d4vs+vu8TBMGK51rvPM9b8hdteZxd' .
+        'LBbVR8feJDs0Rlv6GFKeXJ21rNRXESxMPR+CBUl0nN7PjtO+dye7Up/8v1I88bf/ixT/AO1/hZsqW+C6AAAAAElFTkSuQmCC';
 
         //==========================================================
         // startconstrain.png
         //==========================================================
-        $this->iBuiltinIcon[4][0]= 725 ;
-        $this->iBuiltinIcon[4][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlz'.
-        'AAALDgAACw4BQL7hQQAAAAd0SU1FB9ALEREICJp5fBkAAAJSSURBVHic3dS9a1NRGMfx77kxtS+xqS9FG6p1ER3qVJpBQUUc3CRU'.
-        'BwURVLB1EAuKIP0THJQiiNRJBK3iJl18AyeltRZa0bbaJMbUNmlNSm5e7s25j0NqpSSmyag/OMM9POdzDuflwn8djz8gClVRrVEV'.
-        'ur4Bl1FTNSzLrSS6vbml0jUUwSXj8Qfk3PkLtLW2AeBIybmrgz3+gFzpucjlE4f4btuFTuWuCF5XDr3a3UPf6cM8GQvxzbsRAJdh'.
-        'ScfxSywml5j7mVypN0eGEJ0tebIre+zxB6Tv7jPReS2hREpOvpmUXU+H5eC913JnNCSRVE60pUVbWoZjprR39Yq70bdqj4pW7PEH'.
-        '5FpvL9e79jOTTHM7ssDL6CJZ08LbvAGnrpZg2mI2Z/MlZfN8IkxuSwu4V9+WIrj7zFlOHfXzKrLIi2SGh5ECKjnNVNxkQEc55vOw'.
-        'rb6O8JLFdHyJ+ayFElUeHvjwkfteL/V7fKTSkFvIQE4DoLI2Mz/muTkTApcBKIwaN8pwIUrKw+ajWwDknAO0d/r4zFaMuRS63sWm'.
-        'RoOdm+vRIriUYjKexrQV+t1o0YEVwfZSVJmD/dIABJuO0LG3lRFx0GOfiAELE9OgCrfU0XnIp5FwGLEy5WEAOxlR5uN+ARhP7GN3'.
-        '5w7Gv4bQI2+xpt4jjv2nWBmIlcExE2vDAHYioszBZXw6CPE4ADoWVHmd/tuwlZR9eXYyoszBfpiNQqaAOU5+TXRN+DeeenADPT9b'.
-        'EVgKVsutKPl0TGWGhwofoquaoKK4apsq/tH/e/kFwBMXLgAEKK4AAAAASUVORK5CYII=' ;
+        $this->iBuiltinIcon[4][0] = 725;
+        $this->iBuiltinIcon[4][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlz' .
+        'AAALDgAACw4BQL7hQQAAAAd0SU1FB9ALEREICJp5fBkAAAJSSURBVHic3dS9a1NRGMfx77kxtS+xqS9FG6p1ER3qVJpBQUUc3CRU' .
+        'BwURVLB1EAuKIP0THJQiiNRJBK3iJl18AyeltRZa0bbaJMbUNmlNSm5e7s25j0NqpSSmyag/OMM9POdzDuflwn8djz8gClVRrVEV' .
+        'ur4Bl1FTNSzLrSS6vbml0jUUwSXj8Qfk3PkLtLW2AeBIybmrgz3+gFzpucjlE4f4btuFTuWuCF5XDr3a3UPf6cM8GQvxzbsRAJdh' .
+        'ScfxSywml5j7mVypN0eGEJ0tebIre+zxB6Tv7jPReS2hREpOvpmUXU+H5eC913JnNCSRVE60pUVbWoZjprR39Yq70bdqj4pW7PEH' .
+        '5FpvL9e79jOTTHM7ssDL6CJZ08LbvAGnrpZg2mI2Z/MlZfN8IkxuSwu4V9+WIrj7zFlOHfXzKrLIi2SGh5ECKjnNVNxkQEc55vOw' .
+        'rb6O8JLFdHyJ+ayFElUeHvjwkfteL/V7fKTSkFvIQE4DoLI2Mz/muTkTApcBKIwaN8pwIUrKw+ajWwDknAO0d/r4zFaMuRS63sWm' .
+        'RoOdm+vRIriUYjKexrQV+t1o0YEVwfZSVJmD/dIABJuO0LG3lRFx0GOfiAELE9OgCrfU0XnIp5FwGLEy5WEAOxlR5uN+ARhP7GN3' .
+        '5w7Gv4bQI2+xpt4jjv2nWBmIlcExE2vDAHYioszBZXw6CPE4ADoWVHmd/tuwlZR9eXYyoszBfpiNQqaAOU5+TXRN+DeeenADPT9b' .
+        'EVgKVsutKPl0TGWGhwofoquaoKK4apsq/tH/e/kFwBMXLgAEKK4AAAAASUVORK5CYII=';
 
         //==========================================================
         // calc.png
         //==========================================================
-        $this->iBuiltinIcon[5][0]= 589 ;
-        $this->iBuiltinIcon[5][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAA4AIwBbgMF12wAAAAlwSFlz'.
-        'AAALEQAACxEBf2RfkQAAAAd0SU1FB9AHBxQeFsqn0wQAAAHKSURBVHicnZWff+RAGIef3U/gcOEgUAgUCgcLhYXCwsHBQeGgUDgs'.
-        'FgMHB4VA/4Bg4XChWFgIFIqBwkJhsRAYeOGF+TQHmWSTTbKd9pU37/x45jvfTDITXEynAbdWKVQB0NazcVm0alcL4rJaRVzm+w/e'.
-        '3iwAkzbYRcnnYgI04GCvsxxSPabYaEdt2Ra6D0atcvvvDmyrMWBX1zPq2ircP/Tk98DiJtjV/fim6ziOCL6dDHZNhxQ3arIMsox4'.
-        'vejleL2Ay9+jaw6A+4OSICG2cacGKhsGxg+CxeqAQS0Y7BYJvowq7iGMOhXHEfzpvpQkA9bLKgOgWKt+4Lo1mM9hs9m17QNsJ70P'.
-        'Fjc/O52joogoX8MZKiBiAFxd9Z1vcj9wfSpUlDRNMcYQxzFpmnJ0FPH8nDe1MQaWSz9woQpWSZKEojDkeaWoKAyr1tlu+s48wfVx'.
-        'u7n5i7jthmGIiEGcT+36PP+gFeJrxWLhb0UA/lb4ggGs1T0rZs0zwM/ZjNfilcIY5tutPxgOW3F6dUX464LrKILLiw+A7WErrl+2'.
-        'rABG1EL/BilZP8DjU2uR4U+2E49P1Z8QJmNXUzl24A9GBT0IruCfi86d9x+D12RGzt+pNAAAAABJRU5ErkJggg==' ;
+        $this->iBuiltinIcon[5][0] = 589;
+        $this->iBuiltinIcon[5][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAA4AIwBbgMF12wAAAAlwSFlz' .
+        'AAALEQAACxEBf2RfkQAAAAd0SU1FB9AHBxQeFsqn0wQAAAHKSURBVHicnZWff+RAGIef3U/gcOEgUAgUCgcLhYXCwsHBQeGgUDgs' .
+        'FgMHB4VA/4Bg4XChWFgIFIqBwkJhsRAYeOGF+TQHmWSTTbKd9pU37/x45jvfTDITXEynAbdWKVQB0NazcVm0alcL4rJaRVzm+w/e' .
+        '3iwAkzbYRcnnYgI04GCvsxxSPabYaEdt2Ra6D0atcvvvDmyrMWBX1zPq2ircP/Tk98DiJtjV/fim6ziOCL6dDHZNhxQ3arIMsox4' .
+        'vejleL2Ay9+jaw6A+4OSICG2cacGKhsGxg+CxeqAQS0Y7BYJvowq7iGMOhXHEfzpvpQkA9bLKgOgWKt+4Lo1mM9hs9m17QNsJ70P' .
+        'Fjc/O52joogoX8MZKiBiAFxd9Z1vcj9wfSpUlDRNMcYQxzFpmnJ0FPH8nDe1MQaWSz9woQpWSZKEojDkeaWoKAyr1tlu+s48wfVx' .
+        'u7n5i7jthmGIiEGcT+36PP+gFeJrxWLhb0UA/lb4ggGs1T0rZs0zwM/ZjNfilcIY5tutPxgOW3F6dUX464LrKILLiw+A7WErrl+2' .
+        'rABG1EL/BilZP8DjU2uR4U+2E49P1Z8QJmNXUzl24A9GBT0IruCfi86d9x+D12RGzt+pNAAAAABJRU5ErkJggg==';
 
         //==========================================================
         // mag.png
         //==========================================================
-        $this->iBuiltinIcon[6][0]= 1415 ;
-        $this->iBuiltinIcon[6][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlz'.
-        'AAALDAAACwwBP0AiyAAAAAd0SU1FB9ALDxEWDY6Ul+UAAAUESURBVHicdZVrbFRFGIafsyyF0nalV1R6WiggaAptlzsr1OgEogmC'.
-        '0IgoBAsBgkIrBAPEhBj/AP6xRTCUFEwRI4jcgsitXMrFCJptJWvBNpXYbbXtbtttt6e7e86ec/yxadlCfZPJZDIz73zzzjfvR2VL'.
-        'F7U+hf0HD2JduIzTFy6SlJRkPtkcDgdCCE65OxFC8NPV6wghyM7OptankJ2dzbSC5QghEEIgCSHog9PpNAF27dlN6miZuPgElB4/'.
-        'nmY3O7ZtByA1NVUCkGWZweD1eklJScESTbqxuIjrd+/x6uIl5M19hSy7nfGOeUxf+g7VjU1sKi7C4/GYsiyz7tAJAD4/cRaA1tZW'.
-        'AHIPnECUVGD1+/3U19ebG4uLeHf1akamjsIwoVnVCOvQEdLoVILYYmMo3PIxSBJflpSaDX5FAmju1QAYv/8k/s8+wLVxOU0jR2LZ'.
-        '8sMFAApWrCApbRRDrRZirBYSLBKaoRPQw3SFernf2sav7T0Ubt4KwL4FMwF4Vu8FoHBCKgCzDhwHwLIhZ7y5a89u4m2JhA0wTdDC'.
-        'OrphEjJMNElCHxKDEjaobmvlfo/Krj27CQQCJsCGJW8C0KXqAMxMiosQA8hZWcTFx9OsaniDKh1qmG7VoFsL0x0K06kbeAMhWpRe'.
-        '/KpG+gwHAKUnz7Dz3BUMw6DK18nuw99wt0Nh6VdHI8RJicmETQgFg7SFwjSrGv+oKp6ghldV6dZ0ugJBlF6FmCESQ2w2AIqXLsan'.
-        'BrFYLJTnTCBrdBqveeopWZiPFaBHUegJhegMqGgxEkHDwB/UaQ9rdIV06v0+TD2EEQjQFtAY0dsNgNvt5sialQAIIXh7wQKuVf6J'.
-        'gTsSccPDWlQstClBGjr9eHpVWvUQncEwdYEedF8noQ4vmYmpZMTH0nTvDn25vLbrNmu7bvfnsYEbAMnhcPDgwQPzUo2LJusw/mhp'.
-        'QwlHNO0KBAnoIfxtrcQMT2De1Mm891wyUzNlUlJSpIyMDBobGzlzr5rFM/Koq6vrP8ASGxsLwPmKcvIShjPGZiPOakE3VFB8hHwd'.
-        'vJAxhrk5L7Ly+RQuH/sWgPdXrwFg/6HDFBUsIj09nehfbAWwPWOT9n5RYhqGwarNWxkRM5TRCfF4U1PQsDDJFk9uYhwXvzvKjm3b'.
-        'KSsro3DJInNW5RXp7u2bAKSlpeH1esnPz6eqqgqLpmmcr3Fht9ulfaV7mZk1Bs+lM6T1djM9fhg5egDPpTNMy5TZsW07kydPYdWM'.
-        'aXx96ixOp9O8cfUa80srmDpjOgAulytiQqZpMnvObLbt/JTtHxXj9/tRVdU0DGOAufRpevPDTeac0hJyc3NxOOawfv161lVWS6eX'.
-        'z+9/UOCxu1VWVvaTRGv16NFfjB2bNeAQp9NpTpmSM4DcbrdL0WsGDKLRR+52uwe1yP8jb2lpYfikyY9t80n03UCWZeaXVjw1f+zs'.
-        'Oen+/d+pqanhzp2fKSsrw+l0mi6XiyPl5ZGITdN8fAVJwjRNJEmi1qfw1kw7siyTnJxMe3s71dXV3GpoZO64DG41NPJylvxU5D/e'.
-        'qJKsfWQD9IkaZ2RmUvr9aV4aGYcQgjfO3aWoYBF5eXm4ewIsu/CbdPz1aWb0/p1bNoOrQxlUiuiaFo3c3FyEEOx9+C9CCD6paaTW'.
-        'p/TXyYkTJ0Xe59jf7QOyAKDWp/QXxcFQ61P4pT3ShBBcvnUHIQTjxmX19/8BCeVg+/GPpskAAAAASUVORK5CYII=' ;
+        $this->iBuiltinIcon[6][0] = 1415;
+        $this->iBuiltinIcon[6][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlz' .
+        'AAALDAAACwwBP0AiyAAAAAd0SU1FB9ALDxEWDY6Ul+UAAAUESURBVHicdZVrbFRFGIafsyyF0nalV1R6WiggaAptlzsr1OgEogmC' .
+        '0IgoBAsBgkIrBAPEhBj/AP6xRTCUFEwRI4jcgsitXMrFCJptJWvBNpXYbbXtbtttt6e7e86ec/yxadlCfZPJZDIz73zzzjfvR2VL' .
+        'F7U+hf0HD2JduIzTFy6SlJRkPtkcDgdCCE65OxFC8NPV6wghyM7OptankJ2dzbSC5QghEEIgCSHog9PpNAF27dlN6miZuPgElB4/' .
+        'nmY3O7ZtByA1NVUCkGWZweD1eklJScESTbqxuIjrd+/x6uIl5M19hSy7nfGOeUxf+g7VjU1sKi7C4/GYsiyz7tAJAD4/cRaA1tZW' .
+        'AHIPnECUVGD1+/3U19ebG4uLeHf1akamjsIwoVnVCOvQEdLoVILYYmMo3PIxSBJflpSaDX5FAmju1QAYv/8k/s8+wLVxOU0jR2LZ' .
+        '8sMFAApWrCApbRRDrRZirBYSLBKaoRPQw3SFernf2sav7T0Ubt4KwL4FMwF4Vu8FoHBCKgCzDhwHwLIhZ7y5a89u4m2JhA0wTdDC' .
+        'OrphEjJMNElCHxKDEjaobmvlfo/Krj27CQQCJsCGJW8C0KXqAMxMiosQA8hZWcTFx9OsaniDKh1qmG7VoFsL0x0K06kbeAMhWpRe' .
+        '/KpG+gwHAKUnz7Dz3BUMw6DK18nuw99wt0Nh6VdHI8RJicmETQgFg7SFwjSrGv+oKp6ghldV6dZ0ugJBlF6FmCESQ2w2AIqXLsan' .
+        'BrFYLJTnTCBrdBqveeopWZiPFaBHUegJhegMqGgxEkHDwB/UaQ9rdIV06v0+TD2EEQjQFtAY0dsNgNvt5sialQAIIXh7wQKuVf6J' .
+        'gTsSccPDWlQstClBGjr9eHpVWvUQncEwdYEedF8noQ4vmYmpZMTH0nTvDn25vLbrNmu7bvfnsYEbAMnhcPDgwQPzUo2LJusw/mhp' .
+        'QwlHNO0KBAnoIfxtrcQMT2De1Mm891wyUzNlUlJSpIyMDBobGzlzr5rFM/Koq6vrP8ASGxsLwPmKcvIShjPGZiPOakE3VFB8hHwd' .
+        'vJAxhrk5L7Ly+RQuH/sWgPdXrwFg/6HDFBUsIj09nehfbAWwPWOT9n5RYhqGwarNWxkRM5TRCfF4U1PQsDDJFk9uYhwXvzvKjm3b' .
+        'KSsro3DJInNW5RXp7u2bAKSlpeH1esnPz6eqqgqLpmmcr3Fht9ulfaV7mZk1Bs+lM6T1djM9fhg5egDPpTNMy5TZsW07kydPYdWM' .
+        'aXx96ixOp9O8cfUa80srmDpjOgAulytiQqZpMnvObLbt/JTtHxXj9/tRVdU0DGOAufRpevPDTeac0hJyc3NxOOawfv161lVWS6eX' .
+        'z+9/UOCxu1VWVvaTRGv16NFfjB2bNeAQp9NpTpmSM4DcbrdL0WsGDKLRR+52uwe1yP8jb2lpYfikyY9t80n03UCWZeaXVjw1f+zs' .
+        'Oen+/d+pqanhzp2fKSsrw+l0mi6XiyPl5ZGITdN8fAVJwjRNJEmi1qfw1kw7siyTnJxMe3s71dXV3GpoZO64DG41NPJylvxU5D/e' .
+        'qJKsfWQD9IkaZ2RmUvr9aV4aGYcQgjfO3aWoYBF5eXm4ewIsu/CbdPz1aWb0/p1bNoOrQxlUiuiaFo3c3FyEEOx9+C9CCD6paaTW' .
+        'p/TXyYkTJ0Xe59jf7QOyAKDWp/QXxcFQ61P4pT3ShBBcvnUHIQTjxmX19/8BCeVg+/GPpskAAAAASUVORK5CYII=';
 
         //==========================================================
         // lock.png
         //==========================================================
-        $this->iBuiltinIcon[7][0]= 963 ;
-        $this->iBuiltinIcon[7][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlz'.
-        'AAALCwAACwsBbQSEtwAAAAd0SU1FB9AKAw0XDmwMOwIAAANASURBVHic7ZXfS1t3GMY/3+PprI7aisvo2YU6h6ATA8JW4rrlsF4U'.
-        'qiAsF9mhl0N2cYTRy9G/wptAYWPD9iJtRy5asDe7cYFmyjaXOLaMImOrmkRrjL9yTmIS3120JybWQgfb3R74wuc8Lzw858vLOUpE'.
-        'OK6pqSm2trbY39+nu7tbPHYch7m5OcLhMIA67kWj0aMQEWk6tm17rNm2LSIie3t7ksvlJJ1OSyqVkls3Z8SyLMnlcqTTaVKpFLdu'.
-        'zmBZVj1HeY2VUti2TSQSQSml2bZdi0QirK2tMT09zerqKtlslqGhISYnJ4nHv2N+foFsNquOe9FotLlxOBwmk8lgWRbhcFgymYxY'.
-        'liUi0mqaJoAuIi2macrdO7fFsizx3to0Te7euV1vrXtXEgqFmJmZYWVlhXK5LB4/U9kwDL784kYV0A3DYHd3m4sXRymXywKoRi8U'.
-        'Ch01DgQCJBIJLMsiEAhIIpHw2uLz+eqtYrEYIqKZpimxWEyCwaCMjY01zYPBIJpXqVQqsby8TLVabWKA/v5+RkZGMAyDrq4ulFKH'.
-        'HsfjcWZnZ+ns7KTRqwcnk0mKxSKFQqGJlVKtruuSTCYB6O3trW9UI/v9/iZPB/j8s2HOnX0FgHfeXpeffnzK+fWf+fijvhLs0PtG'.
-        'D/n1OJ9+MsrlSwb3733DwMCAt1EyPj6uACYmJp56168NU6nUqFSE9nZdPE7+WqC/r4NKTagcCJVqDaUUB5VDAA4Pa9x7sMLlSwan'.
-        'WjRmv13D7/erpaWlo604qOp88OF7LC48rPNosMq5Th+Dgxd4/XyA1rbzADi7j8jnf2P++wdcvSr8MJ/i8eomAKlUqn41OsDAQDeD'.
-        'g++yuPCwzm/2vU8+n2a7sMFfj79mp7BBuVzioFSiXHJx3SKuW2Rzy0Up9dxnQVvODALQerqNRn4ZKe0Mvtc6TpzpmqbxalcY9Ato'.
-        '2v06t515C73YQftZB9GLnDrt4LoujuPgOA4Ui+C6yOpXJwZrJ7r/gv4P/u+D9W7fLxTz+1ScQxrZ3atRLaVxdjbY2d184R6/sLHe'.
-        'opHP7/Do90Ua+WWUyezzZHObP/7cfX54/dowE1d66s8TV3oE+Mfn+L/zb4XmHPjRG9YjAAAAAElFTkSuQmCC' ;
+        $this->iBuiltinIcon[7][0] = 963;
+        $this->iBuiltinIcon[7][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlz' .
+        'AAALCwAACwsBbQSEtwAAAAd0SU1FB9AKAw0XDmwMOwIAAANASURBVHic7ZXfS1t3GMY/3+PprI7aisvo2YU6h6ATA8JW4rrlsF4U' .
+        'qiAsF9mhl0N2cYTRy9G/wptAYWPD9iJtRy5asDe7cYFmyjaXOLaMImOrmkRrjL9yTmIS3120JybWQgfb3R74wuc8Lzw858vLOUpE' .
+        'OK6pqSm2trbY39+nu7tbPHYch7m5OcLhMIA67kWj0aMQEWk6tm17rNm2LSIie3t7ksvlJJ1OSyqVkls3Z8SyLMnlcqTTaVKpFLdu' .
+        'zmBZVj1HeY2VUti2TSQSQSml2bZdi0QirK2tMT09zerqKtlslqGhISYnJ4nHv2N+foFsNquOe9FotLlxOBwmk8lgWRbhcFgymYxY' .
+        'liUi0mqaJoAuIi2macrdO7fFsizx3to0Te7euV1vrXtXEgqFmJmZYWVlhXK5LB4/U9kwDL784kYV0A3DYHd3m4sXRymXywKoRi8U' .
+        'Ch01DgQCJBIJLMsiEAhIIpHw2uLz+eqtYrEYIqKZpimxWEyCwaCMjY01zYPBIJpXqVQqsby8TLVabWKA/v5+RkZGMAyDrq4ulFKH' .
+        'HsfjcWZnZ+ns7KTRqwcnk0mKxSKFQqGJlVKtruuSTCYB6O3trW9UI/v9/iZPB/j8s2HOnX0FgHfeXpeffnzK+fWf+fijvhLs0PtG' .
+        'D/n1OJ9+MsrlSwb3733DwMCAt1EyPj6uACYmJp56168NU6nUqFSE9nZdPE7+WqC/r4NKTagcCJVqDaUUB5VDAA4Pa9x7sMLlSwan' .
+        'WjRmv13D7/erpaWlo604qOp88OF7LC48rPNosMq5Th+Dgxd4/XyA1rbzADi7j8jnf2P++wdcvSr8MJ/i8eomAKlUqn41OsDAQDeD' .
+        'g++yuPCwzm/2vU8+n2a7sMFfj79mp7BBuVzioFSiXHJx3SKuW2Rzy0Up9dxnQVvODALQerqNRn4ZKe0Mvtc6TpzpmqbxalcY9Ato' .
+        '2v06t515C73YQftZB9GLnDrt4LoujuPgOA4Ui+C6yOpXJwZrJ7r/gv4P/u+D9W7fLxTz+1ScQxrZ3atRLaVxdjbY2d184R6/sLHe' .
+        'opHP7/Do90Ua+WWUyezzZHObP/7cfX54/dowE1d66s8TV3oE+Mfn+L/zb4XmHPjRG9YjAAAAAElFTkSuQmCC';
 
         //==========================================================
         // stop.png
         //==========================================================
-        $this->iBuiltinIcon[8][0]= 889 ;
-        $this->iBuiltinIcon[8][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlz'.
-        'AAALDwAACw8BkvkDpQAAAAd0SU1FB9AJDwEvNyD6M/0AAAL2SURBVHic1ZTLaxVnGIefb2bO5OScHJN4oWrFNqcUJYoUEgU3/Qf6'.
-        'F7gwCkIrvdBLUtqqiLhSg9bgBduFSHZdiG5ctkJ3xRDbUFwUmghNzBDanPGMkzOX79LFJGPMOSd204U/+Bbzvd/78F4H/ieJdoad'.
-        'pZKxRFszAI/DcP0HazXY22v+HB01kee1PA/v3zfnjx4xgGnHcNZe7OvuNj+cOEF1ZATv5nUA4jhBSgmADCVWo8Ge2Of9wb18P/G7'.
-        'oUXmYi30zqlTVEdGWLh1g2D6MYlKkXGE0Vl8aa2GEB149+4xXSzyoOIw/mimiZV/DPb25pFOj13A9gOMEChhUEqhVYqWKUk9QAUp'.
-        'sT/P4s8PmKlUmNhQaIJbkDVqBbpw6wZ2zUc4Nm+ePku5p4eOrgpueQOFUoVCVxcD4+N07dpF9+5tVJeWGPBjhvr7WF1zC8ASgtcP'.
-        'H8a7eZ1odh4sh50nzwCw9ZNh3M4Stutiu0X2nB/LyjZ6lcIbVTpdQU/jWVPzLADM8+ZGBRdtC7wrF/O7bR99iu26VL86iU4SAH4b'.
-        'Po5d6AQhstMSvGyI4wS5FJBKSRwnzF8byx/u+PjzzMF1mfryQ1K/jnCahqp1xEopjFLoNEFJSRJHzF799gWHqa+/QKcSUXBI609f'.
-        'Al5W4teQSiHDOipNUKnMI13RvnOXAIEKQixvGWya98SC560MFwPiqEG86JM8q79Q06lvhnOndy5/B6GPCUOMUu3BQgg8z0M3GmBZ'.
-        'iGJn3v2VmsqnfzNx7FDueODuj8ROCFpjtG5TCmOYv32bJ09msP0ISydMfnAUgF8/O45RAA6WTPjlvXcB+Gn7FuRf/zAnNX6x3ARe'.
-        'PSdmqL+P/YHkwMGDOGWDZTlQcNBRhPEComgB/YeHfq2InF1kLlXUOkpMbio1bd7aATRD/X0M1lPeSlM2vt2X1XBZjZnpLG2tmZO6'.
-        'LbQVOIcP+HG2UauH3xgwBqOz9Cc3l1tC24Fz+MvUDroeGNb5if9H/1dM/wLPCYMw9fryKgAAAABJRU5ErkJggg==' ;
+        $this->iBuiltinIcon[8][0] = 889;
+        $this->iBuiltinIcon[8][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlz' .
+        'AAALDwAACw8BkvkDpQAAAAd0SU1FB9AJDwEvNyD6M/0AAAL2SURBVHic1ZTLaxVnGIefb2bO5OScHJN4oWrFNqcUJYoUEgU3/Qf6' .
+        'F7gwCkIrvdBLUtqqiLhSg9bgBduFSHZdiG5ctkJ3xRDbUFwUmghNzBDanPGMkzOX79LFJGPMOSd204U/+Bbzvd/78F4H/ieJdoad' .
+        'pZKxRFszAI/DcP0HazXY22v+HB01kee1PA/v3zfnjx4xgGnHcNZe7OvuNj+cOEF1ZATv5nUA4jhBSgmADCVWo8Ge2Of9wb18P/G7' .
+        'oUXmYi30zqlTVEdGWLh1g2D6MYlKkXGE0Vl8aa2GEB149+4xXSzyoOIw/mimiZV/DPb25pFOj13A9gOMEChhUEqhVYqWKUk9QAUp' .
+        'sT/P4s8PmKlUmNhQaIJbkDVqBbpw6wZ2zUc4Nm+ePku5p4eOrgpueQOFUoVCVxcD4+N07dpF9+5tVJeWGPBjhvr7WF1zC8ASgtcP' .
+        'H8a7eZ1odh4sh50nzwCw9ZNh3M4Stutiu0X2nB/LyjZ6lcIbVTpdQU/jWVPzLADM8+ZGBRdtC7wrF/O7bR99iu26VL86iU4SAH4b' .
+        'Po5d6AQhstMSvGyI4wS5FJBKSRwnzF8byx/u+PjzzMF1mfryQ1K/jnCahqp1xEopjFLoNEFJSRJHzF799gWHqa+/QKcSUXBI609f' .
+        'Al5W4teQSiHDOipNUKnMI13RvnOXAIEKQixvGWya98SC560MFwPiqEG86JM8q79Q06lvhnOndy5/B6GPCUOMUu3BQgg8z0M3GmBZ' .
+        'iGJn3v2VmsqnfzNx7FDueODuj8ROCFpjtG5TCmOYv32bJ09msP0ISydMfnAUgF8/O45RAA6WTPjlvXcB+Gn7FuRf/zAnNX6x3ARe' .
+        'PSdmqL+P/YHkwMGDOGWDZTlQcNBRhPEComgB/YeHfq2InF1kLlXUOkpMbio1bd7aATRD/X0M1lPeSlM2vt2X1XBZjZnpLG2tmZO6' .
+        'LbQVOIcP+HG2UauH3xgwBqOz9Cc3l1tC24Fz+MvUDroeGNb5if9H/1dM/wLPCYMw9fryKgAAAABJRU5ErkJggg==';
 
         //==========================================================
         // error.png
         //==========================================================
-        $this->iBuiltinIcon[9][0]= 541 ;
-        $this->iBuiltinIcon[9][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAaVBMVEX//////2Xy8mLl5V/Z2VvMzFi/v1WyslKlpU+ZmUyMjEh/'.
-        'f0VyckJlZT9YWDxMTDjAwMDy8sLl5bnY2K/MzKW/v5yyspKlpYiYmH+MjHY/PzV/f2xycmJlZVlZWU9MTEXY2Ms/PzwyMjLFTjea'.
-        'AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfTCAkUMSj9wWSOAAABLUlEQVR4'.
-        '2s2U3ZKCMAxGjfzJanFAXFkUle/9H9JUKA1gKTN7Yy6YMjl+kNPK5rlZVSuxf1ZRnlZxFYAm93NnIKvR+MEHUgqBXx93wZGIUrSe'.
-        'h+ctEgbpiMo3iQ4kioHCGxir/ZYUbr7AgPXs9bX0BCYM8vN/cPe8oQYzom3tVsSBMVHEoOJ5dm5F1RsIe9CtqGgRacCAkUvRtevT'.
-        'e2pd6vOWF+gCuc/brcuhyARakBU9FgK5bUBWdHEH8tHpDsZnRTZQGzdLVvQ3CzyYZiTAmSIODEwzFCAdJopuvbpeZDisJ4pKEcjD'.
-        'ijWPJhU1MjCo9dkYfiUVjQNTDKY6CVbR6A0niUSZjRwFanR0l9i/TyvGnFdqwStq5axMfDbyBksld/FUumvxS/Bd9VyJvQDWiiMx'.
-        'iOsCHgAAAABJRU5ErkJggg==' ;
+        $this->iBuiltinIcon[9][0] = 541;
+        $this->iBuiltinIcon[9][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAaVBMVEX//////2Xy8mLl5V/Z2VvMzFi/v1WyslKlpU+ZmUyMjEh/' .
+        'f0VyckJlZT9YWDxMTDjAwMDy8sLl5bnY2K/MzKW/v5yyspKlpYiYmH+MjHY/PzV/f2xycmJlZVlZWU9MTEXY2Ms/PzwyMjLFTjea' .
+        'AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfTCAkUMSj9wWSOAAABLUlEQVR4' .
+        '2s2U3ZKCMAxGjfzJanFAXFkUle/9H9JUKA1gKTN7Yy6YMjl+kNPK5rlZVSuxf1ZRnlZxFYAm93NnIKvR+MEHUgqBXx93wZGIUrSe' .
+        'h+ctEgbpiMo3iQ4kioHCGxir/ZYUbr7AgPXs9bX0BCYM8vN/cPe8oQYzom3tVsSBMVHEoOJ5dm5F1RsIe9CtqGgRacCAkUvRtevT' .
+        'e2pd6vOWF+gCuc/brcuhyARakBU9FgK5bUBWdHEH8tHpDsZnRTZQGzdLVvQ3CzyYZiTAmSIODEwzFCAdJopuvbpeZDisJ4pKEcjD' .
+        'ijWPJhU1MjCo9dkYfiUVjQNTDKY6CVbR6A0niUSZjRwFanR0l9i/TyvGnFdqwStq5axMfDbyBksld/FUumvxS/Bd9VyJvQDWiiMx' .
+        'iOsCHgAAAABJRU5ErkJggg==';
 
         //==========================================================
         // openfolder.png
         //==========================================================
-        $this->iBuiltinIcon[10][0]= 2040 ;
-        $this->iBuiltinIcon[10][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEANAAtwClFht71AAAAAlwSFlz'.
-        'AAALEAAACxABrSO9dQAAAAd0SU1FB9AKDQ4RIXMeaLcAAAd1SURBVHicxZd7jBXVHcc/58zcvTNzH8vusqw8FsTsKiCUUh5WBZXG'.
-        'GkOptmqwNWsWLKXFGlEpzZI0AWNKSy0WhDS22gJKtWlTsSRqzYIuLGB2WVvDIwQMZQMsy2OFfdzde+/OnHP6x907vJaFpjb9JZM5'.
-        'c85Mfp/f9/s7Jxn4P4e41gtSyp78WGvtfdEAcqDFYUOH9HS0NhGk9tPb/ilSyp789UUB2AMuqhQy3Uzm7HGkE6W3dTNZMRI3EcWO'.
-        'jf9ClLmWBT3dzW8jUsevWHCG3UpWl+IkHSxnbDh/Mcz12NevBcuWXTmf6TjnXvJ88gDmVB3pw3+nt3UzHa1NqMzBS2zqPLGFjtMN'.
-        'ZNr3XdW+qyqwZcFk76HX/tHWfuQvyO4W7qhaHwL8efkMRlRUpPv7rqD0RrJ+FgAjLy1a20OIxZJEEuNCRfIApj+om4bGM3u2/sYU'.
-        '9J41d8973f3Dhg1pISTV1dXXBRNJxPGFCzhou+DCQrScZOkktNaeDZjamgeZ9MgiYmVDccvHhjAzJw0NTh8/alyZMaVJicp0iTHj'.
-        'JpgNv38tjWUhhGROdbUL9W5/MH5XCkjlcibi+KIop5LVHLKEu8A/f4r286doa9pGrGwYAAsfqbbH3b8MgO/Nqgy6WvdbbXHMkEFJ'.
-        '4xUOMVEvaTZu3BgmvF4Yk4hz9rO/Ulr5cE9owae/rcGxohSOuiWkC2IjcIqKyPZm+OmCH7GhoZEF077EEzVVweAbJ+riEeO0Ey8y'.
-        'UubqOHn0AOgMwvf59txnBrSp9dgxKmf/+kIP1NY8SFk0jh5ajmNHAWg5b2E5EexojGHjbiVRMoRMNs0LC+Yz46vTuH3enN7BI8fr'.
-        'qFdo0BoVZNC9aVSQ4fNjBzEmQJiARxb+/AqYPMAVB5FsPU5v37g9OxgLhe14ZM5/ju052E6MNZvf5pmHHuLmmWOkEysxUtpGAtme'.
-        'dtHTflJkezqQto3jFRnLssyf1jydxiiM7zNnye/c3ZsqLu2BN5fcMfzrv/hby1tPzmRUoihcTJ87CwQI2yLtDcIqsIjYUf51qBlf'.
-        'OnScOSrdQUOMURkiXsLUzJnvbGhoBGDHH5cGyZLhOpYoNl5hqYnYEXOu5fDl9eYAHntx98n8hFHZcPHUuTSxSASAeK/CGIOxJJ0f'.
-        'bOGNPU280dgkq6Y2yu8vfjCIlwwzr+/ZQ/PHO0gOLuO5qsftDQ2NbN+4OCgqG6WTxWVaq6zpF+DiSHWnicdylp3r6aZTWthIOrNp'.
-        'ktHcvBu0sHX1Sm6ozB3B42d90zZA9bQp7PvgPSzXZfnqX/HS4DKKK2+x69Y/HURs26iBAN5ccsfw7774UcumF37C6f07KSt2OHji'.
-        'DEUJD0tISjyPrrSPlAKvN0JP/U4O1NfjuhG2rvklN1SOpfXwftpbTqAyKRrff5fb7rs9V1R7m4wlz2ihA3HpmXflUWyOH2umpLiY'.
-        'ui3v8M+6bWzfsRNbSgqkxaCkiy0simMuEWEhpcRzIhQWOIAh6tiAwS4owInFiTou5dOnMnl2NR++ujBwXEc9terD6M43nrj6LgAB'.
-        'QnDPA9/irtkP8JRS7Hr/3T6YekDQ1pEiEXOwpUVJzCVlZZFS4mZtkpEo9ChAkDp/jtLMBACy6S4RiQghLyv5cgBRPnKUOX6smUGF'.
-        'hSil0MYw9d77mPy1e5mnFE3batm3czvb6nYgEJztSFGU9LCRlMRdUjIH0+lnEMIwPNXD3NumoVJnrMCJaiciMUZfvQnz4QcBSvV1'.
-        'vjE5GK358t0zmXDnDB79saLpo20c+aSRD+t25JTp7GZQwsEWFiVxl6hlUf/WO9z32CxmL1rOe6u/I2KuwGhzLQCB7/sYY9Bah3el'.
-        'FKbvrrVm4vS7GH/7ncx+chEHGz7myCeNbPtoO0JI2jq78WIRLGkzsqs7V5SfFV5EovXACoiqqsfNpk2vo5VCWtYFBfoU0VoTBAFa'.
-        'a7TRaK2p+MoURk+cxMzq+Rzbv49DDbuo27UTW9h0dedssPxuK+kIfN8XxhgDYPVXf2Fh4XKtFIl4AiklAlBKAYRKKK36wHIweTCt'.
-        'NfHiEkaOn8j0+7/BmDFjaT30GbHywSxcuZkpFfFg+m1jjZ/NmnVvNfRvwd69e8WBA/uNFAIh4JVXXmHsmDHE4vEQQgjQ2lxQIm9N'.
-        'nz35q3BEOZOHzaG2thaA4mRU+L29It+IV21CpbRQfeMFC35gRB/M2rVrubnyZmLxWJhECBEmz/eHyo/7lMlH3LFFujsthNFCCGOu'.
-        '+WNyeUgpjSVzMKtWraKyshLPdcPEeYWCIEBdpIxSivr6eta8vI7d6+cGnhdV06pe1QP+F/QXWmuRL+jZZ58LlVmxYgUVFRV4rhtu'.
-        '4TzMxXAA6XRaRAtsYUkx8I/JtSJQOlSwpmZpCLN8+fPcdNNoHMfB9/0QJgRoP295TlR7UVv8xxZcHMuWIZ9/Hn35vG3JEGZpzVJG'.
-        'jx5N1IlitKahsZE1L69j69qHgx+urFX/lQL9JYdLlfnZihUhzOLFi8N3Ml1dthOxVH/f/8/CtqSJ2JaJ2JZ59J7RPsC/AViJsQS/'.
-        'dBntAAAAAElFTkSuQmCC' ;
+        $this->iBuiltinIcon[10][0] = 2040;
+        $this->iBuiltinIcon[10][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEANAAtwClFht71AAAAAlwSFlz' .
+        'AAALEAAACxABrSO9dQAAAAd0SU1FB9AKDQ4RIXMeaLcAAAd1SURBVHicxZd7jBXVHcc/58zcvTNzH8vusqw8FsTsKiCUUh5WBZXG' .
+        'GkOptmqwNWsWLKXFGlEpzZI0AWNKSy0WhDS22gJKtWlTsSRqzYIuLGB2WVvDIwQMZQMsy2OFfdzde+/OnHP6x907vJaFpjb9JZM5' .
+        'c85Mfp/f9/s7Jxn4P4e41gtSyp78WGvtfdEAcqDFYUOH9HS0NhGk9tPb/ilSyp789UUB2AMuqhQy3Uzm7HGkE6W3dTNZMRI3EcWO' .
+        'jf9ClLmWBT3dzW8jUsevWHCG3UpWl+IkHSxnbDh/Mcz12NevBcuWXTmf6TjnXvJ88gDmVB3pw3+nt3UzHa1NqMzBS2zqPLGFjtMN' .
+        'ZNr3XdW+qyqwZcFk76HX/tHWfuQvyO4W7qhaHwL8efkMRlRUpPv7rqD0RrJ+FgAjLy1a20OIxZJEEuNCRfIApj+om4bGM3u2/sYU' .
+        '9J41d8973f3Dhg1pISTV1dXXBRNJxPGFCzhou+DCQrScZOkktNaeDZjamgeZ9MgiYmVDccvHhjAzJw0NTh8/alyZMaVJicp0iTHj' .
+        'JpgNv38tjWUhhGROdbUL9W5/MH5XCkjlcibi+KIop5LVHLKEu8A/f4r286doa9pGrGwYAAsfqbbH3b8MgO/Nqgy6WvdbbXHMkEFJ' .
+        '4xUOMVEvaTZu3BgmvF4Yk4hz9rO/Ulr5cE9owae/rcGxohSOuiWkC2IjcIqKyPZm+OmCH7GhoZEF077EEzVVweAbJ+riEeO0Ey8y' .
+        'UubqOHn0AOgMwvf59txnBrSp9dgxKmf/+kIP1NY8SFk0jh5ajmNHAWg5b2E5EexojGHjbiVRMoRMNs0LC+Yz46vTuH3enN7BI8fr' .
+        'qFdo0BoVZNC9aVSQ4fNjBzEmQJiARxb+/AqYPMAVB5FsPU5v37g9OxgLhe14ZM5/ju052E6MNZvf5pmHHuLmmWOkEysxUtpGAtme' .
+        'dtHTflJkezqQto3jFRnLssyf1jydxiiM7zNnye/c3ZsqLu2BN5fcMfzrv/hby1tPzmRUoihcTJ87CwQI2yLtDcIqsIjYUf51qBlf' .
+        'OnScOSrdQUOMURkiXsLUzJnvbGhoBGDHH5cGyZLhOpYoNl5hqYnYEXOu5fDl9eYAHntx98n8hFHZcPHUuTSxSASAeK/CGIOxJJ0f' .
+        'bOGNPU280dgkq6Y2yu8vfjCIlwwzr+/ZQ/PHO0gOLuO5qsftDQ2NbN+4OCgqG6WTxWVaq6zpF+DiSHWnicdylp3r6aZTWthIOrNp' .
+        'ktHcvBu0sHX1Sm6ozB3B42d90zZA9bQp7PvgPSzXZfnqX/HS4DKKK2+x69Y/HURs26iBAN5ccsfw7774UcumF37C6f07KSt2OHji' .
+        'DEUJD0tISjyPrrSPlAKvN0JP/U4O1NfjuhG2rvklN1SOpfXwftpbTqAyKRrff5fb7rs9V1R7m4wlz2ihA3HpmXflUWyOH2umpLiY' .
+        'ui3v8M+6bWzfsRNbSgqkxaCkiy0simMuEWEhpcRzIhQWOIAh6tiAwS4owInFiTou5dOnMnl2NR++ujBwXEc9terD6M43nrj6LgAB' .
+        'QnDPA9/irtkP8JRS7Hr/3T6YekDQ1pEiEXOwpUVJzCVlZZFS4mZtkpEo9ChAkDp/jtLMBACy6S4RiQghLyv5cgBRPnKUOX6smUGF' .
+        'hSil0MYw9d77mPy1e5mnFE3batm3czvb6nYgEJztSFGU9LCRlMRdUjIH0+lnEMIwPNXD3NumoVJnrMCJaiciMUZfvQnz4QcBSvV1' .
+        'vjE5GK358t0zmXDnDB79saLpo20c+aSRD+t25JTp7GZQwsEWFiVxl6hlUf/WO9z32CxmL1rOe6u/I2KuwGhzLQCB7/sYY9Bah3el' .
+        'FKbvrrVm4vS7GH/7ncx+chEHGz7myCeNbPtoO0JI2jq78WIRLGkzsqs7V5SfFV5EovXACoiqqsfNpk2vo5VCWtYFBfoU0VoTBAFa' .
+        'a7TRaK2p+MoURk+cxMzq+Rzbv49DDbuo27UTW9h0dedssPxuK+kIfN8XxhgDYPVXf2Fh4XKtFIl4AiklAlBKAYRKKK36wHIweTCt' .
+        'NfHiEkaOn8j0+7/BmDFjaT30GbHywSxcuZkpFfFg+m1jjZ/NmnVvNfRvwd69e8WBA/uNFAIh4JVXXmHsmDHE4vEQQgjQ2lxQIm9N' .
+        'nz35q3BEOZOHzaG2thaA4mRU+L29It+IV21CpbRQfeMFC35gRB/M2rVrubnyZmLxWJhECBEmz/eHyo/7lMlH3LFFujsthNFCCGOu' .
+        '+WNyeUgpjSVzMKtWraKyshLPdcPEeYWCIEBdpIxSivr6eta8vI7d6+cGnhdV06pe1QP+F/QXWmuRL+jZZ58LlVmxYgUVFRV4rhtu' .
+        '4TzMxXAA6XRaRAtsYUkx8I/JtSJQOlSwpmZpCLN8+fPcdNNoHMfB9/0QJgRoP295TlR7UVv8xxZcHMuWIZ9/Hn35vG3JEGZpzVJG' .
+        'jx5N1IlitKahsZE1L69j69qHgx+urFX/lQL9JYdLlfnZihUhzOLFi8N3Ml1dthOxVH/f/8/CtqSJ2JaJ2JZ59J7RPsC/AViJsQS/' .
+        'dBntAAAAAElFTkSuQmCC';
 
         //==========================================================
         // folder.png
         //==========================================================
-        $this->iBuiltinIcon[11][0]= 1824 ;
-        $this->iBuiltinIcon[11][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlz'.
-        'AAALEAAACxABrSO9dQAAAAd0SU1FB9ECAQgFFyd9cRUAAAadSURBVHiczdhvbBP3Hcfx9/2xfefEOA5JoCNNnIT8AdtZmYBETJsI'.
-        '6+jQOlQihT1AYgytqzZpD1atfyYqlT1h0lRpT7aRJ4NQpRvZGELVuo5Ua9jEJDIETQsNQyPBsUJMWGPnj//e+e72wNg4xElMR6ed'.
-        'ZNln3933dZ/f93f6yfB/sgmrHdDV1WXlPg8NDZUDScD8LFFFEZZlWYZhWMFg0Orq6sq/gDJAfFy1iiZy9OjrVnj4JzQ1rMWqfxm/'.
-        '309jYyNtbW0kEgnu3bvH4cOH88c/jqSKQl4/XGkd+eVtAN46up1LH92ktqYS++ZX8Pv9NDQ0sGnTJlKpFOFwmO7u7vy5IyMjeVRd'.
-        'XV1+WEOh0IrY4pDnq6wXX/sTiCJaMkFZdRNqxefoe7VtCSqXVDqdZnZ2ltraWkzTpKqqijt3JpFlG7dvj7NzZ1f++qFQyA3EClHL'.
-        'Ql743nFkhxPDtJAd5eTaYSVUfX09lZWVlJWVIUnSg7sVQMBCUcu4ceMGe/bsIRQK1QAzOcyykIM9P0KyudAyCWyqG8nhwqa4SkLt'.
-        '3r0bVVVxu924XC40TUOWZUQxe97CwgIdHR2LMHIxSCaVInVvFElxE0vMY1Pd2NUKJMWNTXHlUfF//4vETJCelwbpFm3MjP2dt37x'.
-        'AlN+PzU1NViWRSwW4+7du3g8HjweD4qi5EFAJzAExIpCANbooxhplfB0FJvTg6xWIqsVRVF6MopkU3FXPcnkJxGU0VEAdF2noqKC'.
-        'W3/8DpnqLjzep2lubsblcjE8PExHR8fboVDID9xYFpLBDpJF0jDQIncQpWlkm31FlFLtp9PfyuW/vYQj1kPSuRW/38+lj27S2Q7v'.
-        '/aWXUBVUffVNtm3blivVCEwsC5Eyc5iiApEpDEAXMqQdldhSiWVQHjJagud+8Fuexck/zv+K82dfoSbSCsDe75/km+4GVPd6+l5t'.
-        '4zJHcqVUYN2yEEtZQDCSJCueRAYsPY49HsFIZVG6p25JUumFafT4DKJN4amtT7Nz38sk5+5A70HMtEYyMkFiZhxzjQ/poXrLQrRU'.
-        'DFGEeFpAlkQkm4pRiCpIKodKzk0T/2QMh+piPjxKZPwiSkUtu/b9mNnJEWS7E8nhAmvpM60oJDkXJxqNozxRRUxPIesispBBlsXV'.
-        'UaKEFo8gzoaJhz8s2lOmrpUG+WBhJ9/60g+Z+fDXTAXfxllRjl1VkO0OFATsYhYliiK21ZKKhhHnFveUqSdKgwAEOp7F2v51vvw8'.
-        'XH7/N1wd/BlTweuUV65BdtgfoLTSkipsdD3tRi0VYpommUwGwzDwdT5HYEc3giAwcvH3jLz3BlPB67jWeZBEKYsSBWwpHZtNKo4q'.
-        'aHTDsJeeiGEYWJaFZVmYpommaRiGQdPnv0bb1m8gSRL/vPIOV979aR4lmAJ2p4qCgCxksNuKJ6VNpx4NYhgGpmkuQhmGQTqdxjAM'.
-        'qr2d7HtxEEEQuH1tkKvvvkF44tqDnrIcKJKAPf1g+LAUElq8dIiu60sApmnm93Pfzc7OYhgGrie+wFe++ztcLhcT1wf54PzPCU9c'.
-        'w7XWjWS3IdsdOAUBWZAxrRJnTQ6SG5bce2FCpmkughmGQSqVYm5uDtnj44sH38TtdhP6+Dwf//V4ttHXrkGURZJaic8RgHQ6jWma'.
-        'SJKUL5RLKNfIOczDKF3XSSaTRCIRhLJWntp3nGfWrSMxc5OLf3iNP4+68T9Ub9nF76lTpxgfHycajZJKpdA0LZ9GbjYV7hcDWZaF'.
-        'pmnMz88Ti8UYunSLmu1HFi2aVkxkaGjINTY2ttDb24vX6+XQoUNs3ryZ8vJyIDu1BUFYkkxhgxeiWlpaOHPmDE1NTdTX1xe98eWG'.
-        'JnF/9dQZCoXUYDA4AOD1ejlw4ACtra2Ul5fniwmCkEcUJiUIAoFAgL6+Pnw+H21tbfT39z8SxCS7hHsfWH9/8dL4MKqnp4eWlhac'.
-        'TmcekEvMNE2am5s5ceIEgUCA9vZ2Tp48ic/nY3j4UsmQHCYOjJHtpeBKqL1799Lc3IzT6UTXdRobGxkYGKC9vZ3W1tZ8Ko86NJ8a'.
-        'tXHjRo4dO8bp06fZsmULGzZsoL+/n0AggNfr5ezZs/8VpGTU5OSkc//+/acBfD4f1dXV7Nq1i4aGBs6dO4fP5+Pq1SuPBbIiyjTN'.
-        'RUnV1dUNXLhwAa/Xy44dO4jFYgBEo9FFF1r134BPuYlk16LrAYXsAlmtq6sbKDwoFAp9m+ykuP5ZQVZF3f8tCdwCov8LyHIoAANI'.
-        'AXf/A1TI0XCDh7OWAAAAAElFTkSuQmCC' ;
+        $this->iBuiltinIcon[11][0] = 1824;
+        $this->iBuiltinIcon[11][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlz' .
+        'AAALEAAACxABrSO9dQAAAAd0SU1FB9ECAQgFFyd9cRUAAAadSURBVHiczdhvbBP3Hcfx9/2xfefEOA5JoCNNnIT8AdtZmYBETJsI' .
+        '6+jQOlQihT1AYgytqzZpD1atfyYqlT1h0lRpT7aRJ4NQpRvZGELVuo5Ua9jEJDIETQsNQyPBsUJMWGPnj//e+e72wNg4xElMR6ed' .
+        'ZNln3933dZ/f93f6yfB/sgmrHdDV1WXlPg8NDZUDScD8LFFFEZZlWYZhWMFg0Orq6sq/gDJAfFy1iiZy9OjrVnj4JzQ1rMWqfxm/' .
+        '309jYyNtbW0kEgnu3bvH4cOH88c/jqSKQl4/XGkd+eVtAN46up1LH92ktqYS++ZX8Pv9NDQ0sGnTJlKpFOFwmO7u7vy5IyMjeVRd' .
+        'XV1+WEOh0IrY4pDnq6wXX/sTiCJaMkFZdRNqxefoe7VtCSqXVDqdZnZ2ltraWkzTpKqqijt3JpFlG7dvj7NzZ1f++qFQyA3EClHL' .
+        'Ql743nFkhxPDtJAd5eTaYSVUfX09lZWVlJWVIUnSg7sVQMBCUcu4ceMGe/bsIRQK1QAzOcyykIM9P0KyudAyCWyqG8nhwqa4SkLt' .
+        '3r0bVVVxu924XC40TUOWZUQxe97CwgIdHR2LMHIxSCaVInVvFElxE0vMY1Pd2NUKJMWNTXHlUfF//4vETJCelwbpFm3MjP2dt37x' .
+        'AlN+PzU1NViWRSwW4+7du3g8HjweD4qi5EFAJzAExIpCANbooxhplfB0FJvTg6xWIqsVRVF6MopkU3FXPcnkJxGU0VEAdF2noqKC' .
+        'W3/8DpnqLjzep2lubsblcjE8PExHR8fboVDID9xYFpLBDpJF0jDQIncQpWlkm31FlFLtp9PfyuW/vYQj1kPSuRW/38+lj27S2Q7v' .
+        '/aWXUBVUffVNtm3blivVCEwsC5Eyc5iiApEpDEAXMqQdldhSiWVQHjJagud+8Fuexck/zv+K82dfoSbSCsDe75/km+4GVPd6+l5t' .
+        '4zJHcqVUYN2yEEtZQDCSJCueRAYsPY49HsFIZVG6p25JUumFafT4DKJN4amtT7Nz38sk5+5A70HMtEYyMkFiZhxzjQ/poXrLQrRU' .
+        'DFGEeFpAlkQkm4pRiCpIKodKzk0T/2QMh+piPjxKZPwiSkUtu/b9mNnJEWS7E8nhAmvpM60oJDkXJxqNozxRRUxPIesispBBlsXV' .
+        'UaKEFo8gzoaJhz8s2lOmrpUG+WBhJ9/60g+Z+fDXTAXfxllRjl1VkO0OFATsYhYliiK21ZKKhhHnFveUqSdKgwAEOp7F2v51vvw8' .
+        'XH7/N1wd/BlTweuUV65BdtgfoLTSkipsdD3tRi0VYpommUwGwzDwdT5HYEc3giAwcvH3jLz3BlPB67jWeZBEKYsSBWwpHZtNKo4q' .
+        'aHTDsJeeiGEYWJaFZVmYpommaRiGQdPnv0bb1m8gSRL/vPIOV979aR4lmAJ2p4qCgCxksNuKJ6VNpx4NYhgGpmkuQhmGQTqdxjAM' .
+        'qr2d7HtxEEEQuH1tkKvvvkF44tqDnrIcKJKAPf1g+LAUElq8dIiu60sApmnm93Pfzc7OYhgGrie+wFe++ztcLhcT1wf54PzPCU9c' .
+        'w7XWjWS3IdsdOAUBWZAxrRJnTQ6SG5bce2FCpmkughmGQSqVYm5uDtnj44sH38TtdhP6+Dwf//V4ttHXrkGURZJaic8RgHQ6jWma' .
+        'SJKUL5RLKNfIOczDKF3XSSaTRCIRhLJWntp3nGfWrSMxc5OLf3iNP4+68T9Ub9nF76lTpxgfHycajZJKpdA0LZ9GbjYV7hcDWZaF' .
+        'pmnMz88Ti8UYunSLmu1HFi2aVkxkaGjINTY2ttDb24vX6+XQoUNs3ryZ8vJyIDu1BUFYkkxhgxeiWlpaOHPmDE1NTdTX1xe98eWG' .
+        'JnF/9dQZCoXUYDA4AOD1ejlw4ACtra2Ul5fniwmCkEcUJiUIAoFAgL6+Pnw+H21tbfT39z8SxCS7hHsfWH9/8dL4MKqnp4eWlhac' .
+        'TmcekEvMNE2am5s5ceIEgUCA9vZ2Tp48ic/nY3j4UsmQHCYOjJHtpeBKqL1799Lc3IzT6UTXdRobGxkYGKC9vZ3W1tZ8Ko86NJ8a' .
+        'tXHjRo4dO8bp06fZsmULGzZsoL+/n0AggNfr5ezZs/8VpGTU5OSkc//+/acBfD4f1dXV7Nq1i4aGBs6dO4fP5+Pq1SuPBbIiyjTN' .
+        'RUnV1dUNXLhwAa/Xy44dO4jFYgBEo9FFF1r134BPuYlk16LrAYXsAlmtq6sbKDwoFAp9m+ykuP5ZQVZF3f8tCdwCov8LyHIoAANI' .
+        'AXf/A1TI0XCDh7OWAAAAAElFTkSuQmCC';
 
         //==========================================================
         // file_important.png
         //==========================================================
-        $this->iBuiltinIcon[12][0]= 1785 ;
-        $this->iBuiltinIcon[12][1]=
-        'iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlz'.
-        'AAALDwAACw8BkvkDpQAAAAd0SU1FB9ECDAcjDeD3lKsAAAZ2SURBVHicrZhPaFzHHcc/897s7lutJCsr2VHsOHWMk0MPbsBUrcnF'.
-        'OFRdSo6FNhdB6SGHlpDmYtJCDyoxyKe6EBxKQkt7KKL0T6ABo0NbciqigtC6PhWKI2NFqqxdSd7V2/dmftPDvPd212t55dCBYfbN'.
-        'zpvfZ77z+/1mdhUjytWrV93Hf/24eD5z9gwiMlDjOKbb7dLtdhER2u02u7u73Lp1CxEZBw4AeZwdNQqkMd9wbziFGINJUt6rRbz5'.
-        '1ptUq1XK5TJBEAAUMHt7e+zu7gKwvLzMysoKwAng/uNg9CgQgFKlgg1DUJ67Vqtx6tQpZmdniaIIpRTOOZRSdDoddnZ2aLfbLC8v'.
-        's7S0xJUrV7ZGwQSj1PhhfRodVdDlMrpc5vup5Z2fvMPdu3fZ29vDWjvwztjYGPV6nVqtRqVS4dKlSywtLQFsAdOH2XwsCEApg3jl'.
-        'w98Rak2gvYjNZpNms0mSJDjnHgkDMDc3dySYQ0Ea8w139YUX0OUKulzyg7UmCEO+l1huvHuDra0t9vf3h1TJYSqVypFhHquIrlQI'.
-        'S5qv/uIDAC7/4bcEQYAKvK+0Wq1DVQGIoog7d+4cCeaRII35hrt+8SsEOkRlUaEyR0UpFIrXHxyMVKVUKnHv3r0jwRwaNelBjBjL'.
-        'Sz/7KYuLiwAsLi7y4z/9kY9e+TpkCuSqjI+Po7XuAWeKXLt2DWNMUZMkwRjDhQsXWFtbK6JpCCT3jfQgxomPtPX19YHWicM5x3c2'.
-        '73Pj3Ru8/aO3mZqaolKpoHVvyuvXr/Ppnf/Q7uzz380NPtu4y/qnG+ztd1hfX2dtbQ3gIvDnRyqSxl1UoPjyz98D4PTp0wPtq39Z'.
-        '4fdzLxegrVaLVqvF5OQkYRgWqpRKJZ77wvNsbW1RG5tgfKLOTH2G7Z1twqBQrgrMDvhInjfSOCY5iIv+hYWFgRZArEWsZWF941Bf'.
-        'SdMUgMnJCWpjVU4cn+HUyePM1Gc4+fRUPkzBI5w1jbukcczLv/5l0XfmzJmBFuCba38r/CRXpT+CrDUoZ0jjB4RYonJAOYRobJKT'.
-        'z5zgqfqxAbsFSH6mpHFM2qdGXh4VnoViD6mSJF2cTQeqDqBaKVHWmonJCWpZjhkC6anR5WsffTgwaHV1FaUUq6urA/2v3f5k4LnV'.
-        'arG9tUn3oI2YBCcWHYAxMVYs1qZEZY2SFB2aYZDGfMN9d7uJiWPSeFiNo5Rclc3NTXZbO6RpF7EJVixYA9agwwDnUiqlEPdQ3imi'.
-        'Jo27BGHIt/7x9yEjc3Nzh27Na7c/4TdffKl4bja3ae5MUIu0T/HOEIaOpJt4gwoSsVTK4SBIY77hFtY3ABBjBiZ90rKwvsH77/+K'.
-        't37wOhO1iPpTk4SBw1mLsz6CnKQ4l3qV+kE+t9XHlNZOk+bUJLVIE1VCcIJWQmJ6qjj30NbcXLkZMt8YPig+Z3n1G5fZ39/j/vY2'.
-        '9ckqZT2Ochbn0p4qNkU/dDfUADdXbh4HXgRO4zNdEU0XL1784PLly5w9e7Z4SazFOfGrEotDcOKrcoJPmrYIXf/Zop3QNd1skuGt'.
-        'cUAb2MgAxvHZTgFUq1Wmp6eZnZ0F8JlTjDduDThBnDeECEoJtbGIp6enqEblzCcEZ1PECU4yVRiOGgd0gc+AB0CZvkv1sWPHOHfu'.
-        'HOfPn8da41cpkkltEBEPJhYnBkTQJcdYVKGkgRxCfBsq5xXNgAa2Bn+hjTOgHEKBP8pzRUxykIH4ifLJRTJAl+UMBJzPHQ6bfe/f'.
-        'cWIzPxlUpD+zugzIZtVk1d8znBAqRxgoQuVQgSJQ3h9C5QhDRYgjUILCAzlnEdsHYTKfMTEBcP7F54YUGVmc2GLlIn6ve6v0ahSt'.
-        '8X25TzjJ+rIx1grKpQPWR4LkGVVsMgghvS0qjPdvm5OeceOTWA5Evo2mFzkjQfL7hZPUy5yvvF/uPFQL3+nbDmsLCEmT3sTmCTNr'.
-        'rogT6yFsOix3ftw7OwQhkvSU6CuinhCk0+kAkFoBazEEICHaHHiPVmU0gnUp4EAc1mYrF0EBVpwPi34VrBkwPxKk3W5ju/e5/c+d'.
-        'bGUHIAIuydTIE5zfc5Wr4lJcahHnHTP3CVGm78DrgY38N+DEibp7dmYKdAQmBh1hjEFjis+9CTWYGK21H6PxPyOI0DobYwzZF/z7'.
-        '7jadTvJtYG0kCD7lfwl49ijgT1gc0AH+dZSJA/xB+Mz/GSIvFoj/B7H1mAd8CO/zAAAAAElFTkSuQmCC' ;
+        $this->iBuiltinIcon[12][0] = 1785;
+        $this->iBuiltinIcon[12][1] =
+        'iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlz' .
+        'AAALDwAACw8BkvkDpQAAAAd0SU1FB9ECDAcjDeD3lKsAAAZ2SURBVHicrZhPaFzHHcc/897s7lutJCsr2VHsOHWMk0MPbsBUrcnF' .
+        'OFRdSo6FNhdB6SGHlpDmYtJCDyoxyKe6EBxKQkt7KKL0T6ABo0NbciqigtC6PhWKI2NFqqxdSd7V2/dmftPDvPd212t55dCBYfbN' .
+        'zpvfZ77z+/1mdhUjytWrV93Hf/24eD5z9gwiMlDjOKbb7dLtdhER2u02u7u73Lp1CxEZBw4AeZwdNQqkMd9wbziFGINJUt6rRbz5' .
+        '1ptUq1XK5TJBEAAUMHt7e+zu7gKwvLzMysoKwAng/uNg9CgQgFKlgg1DUJ67Vqtx6tQpZmdniaIIpRTOOZRSdDoddnZ2aLfbLC8v' .
+        's7S0xJUrV7ZGwQSj1PhhfRodVdDlMrpc5vup5Z2fvMPdu3fZ29vDWjvwztjYGPV6nVqtRqVS4dKlSywtLQFsAdOH2XwsCEApg3jl' .
+        'w98Rak2gvYjNZpNms0mSJDjnHgkDMDc3dySYQ0Ea8w139YUX0OUKulzyg7UmCEO+l1huvHuDra0t9vf3h1TJYSqVypFhHquIrlQI' .
+        'S5qv/uIDAC7/4bcEQYAKvK+0Wq1DVQGIoog7d+4cCeaRII35hrt+8SsEOkRlUaEyR0UpFIrXHxyMVKVUKnHv3r0jwRwaNelBjBjL' .
+        'Sz/7KYuLiwAsLi7y4z/9kY9e+TpkCuSqjI+Po7XuAWeKXLt2DWNMUZMkwRjDhQsXWFtbK6JpCCT3jfQgxomPtPX19YHWicM5x3c2' .
+        '73Pj3Ru8/aO3mZqaolKpoHVvyuvXr/Ppnf/Q7uzz380NPtu4y/qnG+ztd1hfX2dtbQ3gIvDnRyqSxl1UoPjyz98D4PTp0wPtq39Z' .
+        '4fdzLxegrVaLVqvF5OQkYRgWqpRKJZ77wvNsbW1RG5tgfKLOTH2G7Z1twqBQrgrMDvhInjfSOCY5iIv+hYWFgRZArEWsZWF941Bf' .
+        'SdMUgMnJCWpjVU4cn+HUyePM1Gc4+fRUPkzBI5w1jbukcczLv/5l0XfmzJmBFuCba38r/CRXpT+CrDUoZ0jjB4RYonJAOYRobJKT' .
+        'z5zgqfqxAbsFSH6mpHFM2qdGXh4VnoViD6mSJF2cTQeqDqBaKVHWmonJCWpZjhkC6anR5WsffTgwaHV1FaUUq6urA/2v3f5k4LnV' .
+        'arG9tUn3oI2YBCcWHYAxMVYs1qZEZY2SFB2aYZDGfMN9d7uJiWPSeFiNo5Rclc3NTXZbO6RpF7EJVixYA9agwwDnUiqlEPdQ3imi' .
+        'Jo27BGHIt/7x9yEjc3Nzh27Na7c/4TdffKl4bja3ae5MUIu0T/HOEIaOpJt4gwoSsVTK4SBIY77hFtY3ABBjBiZ90rKwvsH77/+K' .
+        't37wOhO1iPpTk4SBw1mLsz6CnKQ4l3qV+kE+t9XHlNZOk+bUJLVIE1VCcIJWQmJ6qjj30NbcXLkZMt8YPig+Z3n1G5fZ39/j/vY2' .
+        '9ckqZT2Ochbn0p4qNkU/dDfUADdXbh4HXgRO4zNdEU0XL1784PLly5w9e7Z4SazFOfGrEotDcOKrcoJPmrYIXf/Zop3QNd1skuGt' .
+        'cUAb2MgAxvHZTgFUq1Wmp6eZnZ0F8JlTjDduDThBnDeECEoJtbGIp6enqEblzCcEZ1PECU4yVRiOGgd0gc+AB0CZvkv1sWPHOHfu' .
+        'HOfPn8da41cpkkltEBEPJhYnBkTQJcdYVKGkgRxCfBsq5xXNgAa2Bn+hjTOgHEKBP8pzRUxykIH4ifLJRTJAl+UMBJzPHQ6bfe/f' .
+        'cWIzPxlUpD+zugzIZtVk1d8znBAqRxgoQuVQgSJQ3h9C5QhDRYgjUILCAzlnEdsHYTKfMTEBcP7F54YUGVmc2GLlIn6ve6v0ahSt' .
+        '8X25TzjJ+rIx1grKpQPWR4LkGVVsMgghvS0qjPdvm5OeceOTWA5Evo2mFzkjQfL7hZPUy5yvvF/uPFQL3+nbDmsLCEmT3sTmCTNr' .
+        'rogT6yFsOix3ftw7OwQhkvSU6CuinhCk0+kAkFoBazEEICHaHHiPVmU0gnUp4EAc1mYrF0EBVpwPi34VrBkwPxKk3W5ju/e5/c+d' .
+        'bGUHIAIuydTIE5zfc5Wr4lJcahHnHTP3CVGm78DrgY38N+DEibp7dmYKdAQmBh1hjEFjis+9CTWYGK21H6PxPyOI0DobYwzZF/z7' .
+        '7jadTvJtYG0kCD7lfwl49ijgT1gc0AH+dZSJA/xB+Mz/GSIvFoj/B7H1mAd8CO/zAAAAAElFTkSuQmCC';
 
         $this->iLen = count($this->iBuiltinIcon);
     }
@@ -1542,16 +1538,16 @@ $_gPredefIcons = new PredefIcons();
 //===================================================
 class IconImage
 {
-    private $iGDImage=null;
+    private $iGDImage = null;
     private $iWidth;
     private $iHeight;
-    private $ixalign='left';
-    private $iyalign='center';
-    private $iScale=1.0;
+    private $ixalign = 'left';
+    private $iyalign = 'center';
+    private $iScale = 1.0;
 
     public function __construct($aIcon, $aScale = 1)
     {
-        global $_gPredefIcons ;
+        global $_gPredefIcons;
         if (is_string($aIcon)) {
             $this->iGDImage = Graph::LoadBkgImage('', $aIcon);
         } elseif (is_integer($aIcon)) {
@@ -1568,12 +1564,12 @@ class IconImage
 
     public function GetWidth()
     {
-        return round($this->iScale*$this->iWidth);
+        return round($this->iScale * $this->iWidth);
     }
 
     public function GetHeight()
     {
-        return round($this->iScale*$this->iHeight);
+        return round($this->iScale * $this->iHeight);
     }
 
     public function SetAlign($aX = 'left', $aY = 'center')
@@ -1584,17 +1580,16 @@ class IconImage
 
     public function Stroke($aImg, $x, $y)
     {
-
         if ($this->ixalign == 'right') {
             $x -= $this->iWidth;
         } elseif ($this->ixalign == 'center') {
-            $x -= round($this->iWidth/2*$this->iScale);
+            $x -= round($this->iWidth / 2 * $this->iScale);
         }
 
         if ($this->iyalign == 'bottom') {
             $y -= $this->iHeight;
         } elseif ($this->iyalign == 'center') {
-            $y -= round($this->iHeight/2*$this->iScale);
+            $y -= round($this->iHeight / 2 * $this->iScale);
         }
 
         $aImg->Copy(
@@ -1603,8 +1598,8 @@ class IconImage
             $y,
             0,
             0,
-            round($this->iWidth*$this->iScale),
-            round($this->iHeight*$this->iScale),
+            round($this->iWidth * $this->iScale),
+            round($this->iHeight * $this->iScale),
             $this->iWidth,
             $this->iHeight
         );
@@ -1618,18 +1613,18 @@ class IconImage
 //===================================================
 class TextProperty
 {
-    public $iShow=true;
-    public $csimtarget='';
-    public $csimwintarget='';
-    public $csimalt='';
-    private $iFFamily=FF_FONT1;
-    private $iFStyle=FS_NORMAL;
-    private $iFSize=10;
-    private $iFontArray=array();
-    private $iColor="black";
-    private $iText="";
-    private $iHAlign="left";
-    private $iVAlign="bottom";
+    public $iShow = true;
+    public $csimtarget = '';
+    public $csimwintarget = '';
+    public $csimalt = '';
+    private $iFFamily = FF_FONT1;
+    private $iFStyle = FS_NORMAL;
+    private $iFSize = 10;
+    private $iFontArray = array();
+    private $iColor = "black";
+    private $iText = "";
+    private $iHAlign = "left";
+    private $iVAlign = "bottom";
 
     //---------------
     // CONSTRUCTOR
@@ -1650,17 +1645,17 @@ class TextProperty
         if (is_string($aTarget)) {
             $aTarget = array($aTarget);
         }
-        $this->csimtarget=$aTarget;
+        $this->csimtarget = $aTarget;
 
         if (is_string($aWinTarget)) {
             $aWinTarget = array($aWinTarget);
         }
-        $this->csimwintarget=$aWinTarget;
+        $this->csimwintarget = $aWinTarget;
 
         if (is_string($aAltText)) {
             $aAltText = array($aAltText);
         }
-        $this->csimalt=$aAltText;
+        $this->csimalt = $aAltText;
     }
 
     public function SetCSIMAlt($aAltText)
@@ -1668,7 +1663,7 @@ class TextProperty
         if (is_string($aAltText)) {
             $aAltText = array($aAltText);
         }
-        $this->csimalt=$aAltText;
+        $this->csimalt = $aAltText;
     }
 
     // Set text color
@@ -1690,7 +1685,7 @@ class TextProperty
     public function GetNbrTabs()
     {
         if (is_string($this->iText)) {
-            return substr_count($this->iText, "\t") ;
+            return substr_count($this->iText, "\t");
         } else {
             return 0;
         }
@@ -1699,15 +1694,15 @@ class TextProperty
     // Set alignment
     public function Align($aHAlign, $aVAlign = "bottom")
     {
-        $this->iHAlign=$aHAlign;
-        $this->iVAlign=$aVAlign;
+        $this->iHAlign = $aHAlign;
+        $this->iVAlign = $aVAlign;
     }
 
     // Synonym
     public function SetAlign($aHAlign, $aVAlign = "bottom")
     {
-        $this->iHAlign=$aHAlign;
-        $this->iVAlign=$aVAlign;
+        $this->iHAlign = $aHAlign;
+        $this->iVAlign = $aVAlign;
     }
 
     // Specify font
@@ -1730,7 +1725,7 @@ class TextProperty
 
     public function IsColumns()
     {
-        return is_array($this->iText) ;
+        return is_array($this->iText);
     }
 
     // Get width of text. If text contains several columns separated by
@@ -1738,7 +1733,7 @@ class TextProperty
     // width for each column.
     public function GetWidth($aImg, $aUseTabs = false, $aTabExtraMargin = 1.1)
     {
-        $extra_margin=4;
+        $extra_margin = 4;
         $aImg->SetFont($this->iFFamily, $this->iFStyle, $this->iFSize);
         if (is_string($this->iText)) {
             if (strlen($this->iText) == 0) {
@@ -1747,25 +1742,25 @@ class TextProperty
             $tmp = preg_split('/\t/', $this->iText);
             if (count($tmp) <= 1 || !$aUseTabs) {
                 $w = $aImg->GetTextWidth($this->iText);
-                return $w + 2*$extra_margin;
+                return $w + 2 * $extra_margin;
             } else {
-                $tot=0;
+                $tot = 0;
                 $n = count($tmp);
-                for ($i=0; $i < $n; ++$i) {
+                for ($i = 0; $i < $n; ++$i) {
                     $res[$i] = $aImg->GetTextWidth($tmp[$i]);
-                    $tot += $res[$i]*$aTabExtraMargin;
+                    $tot += $res[$i] * $aTabExtraMargin;
                 }
                 return array(round($tot),$res);
             }
         } elseif (is_object($this->iText)) {
             // A single icon
-            return $this->iText->GetWidth()+2*$extra_margin;
+            return $this->iText->GetWidth() + 2 * $extra_margin;
         } elseif (is_array($this->iText)) {
             // Must be an array of texts. In this case we return the sum of the
             // length + a fixed margin of 4 pixels on each text string
             $n = count($this->iText);
             $nf = count($this->iFontArray);
-            for ($i=0, $w=0; $i < $n; ++$i) {
+            for ($i = 0, $w = 0; $i < $n; ++$i) {
                 if ($i < $nf) {
                     $aImg->SetFont($this->iFontArray[$i][0], $this->iFontArray[$i][1], $this->iFontArray[$i][2]);
                 } else {
@@ -1773,12 +1768,12 @@ class TextProperty
                 }
                 $tmp = $this->iText[$i];
                 if (is_string($tmp)) {
-                    $w += $aImg->GetTextWidth($tmp)+$extra_margin;
+                    $w += $aImg->GetTextWidth($tmp) + $extra_margin;
                 } else {
                     if (is_object($tmp) === false) {
                         JpGraphError::RaiseL(6012);
                     }
-                    $w += $tmp->GetWidth()+$extra_margin;
+                    $w += $tmp->GetWidth() + $extra_margin;
                 }
             }
             return $w;
@@ -1796,7 +1791,7 @@ class TextProperty
         if (is_array($this->iText)) {
             $n = count($this->iText);
             $nf = count($this->iFontArray);
-            for ($i=0, $w=array(); $i < $n; ++$i) {
+            for ($i = 0, $w = array(); $i < $n; ++$i) {
                 $tmp = $this->iText[$i];
                 if (is_string($tmp)) {
                     if ($i < $nf) {
@@ -1804,12 +1799,12 @@ class TextProperty
                     } else {
                         $aImg->SetFont($this->iFFamily, $this->iFStyle, $this->iFSize);
                     }
-                    $w[$i] = $aImg->GetTextWidth($tmp)+$aMargin;
+                    $w[$i] = $aImg->GetTextWidth($tmp) + $aMargin;
                 } else {
                     if (is_object($tmp) === false) {
                         JpGraphError::RaiseL(6012);
                     }
-                    $w[$i] = $tmp->GetWidth()+$aMargin;
+                    $w[$i] = $tmp->GetWidth() + $aMargin;
                 }
             }
             return $w;
@@ -1827,7 +1822,7 @@ class TextProperty
         if ($nf > 0) {
             // We have to find out the largest font and take that one as the
             // height of the row
-            for ($i=0; $i < $nf; ++$i) {
+            for ($i = 0; $i < $nf; ++$i) {
                 $aImg->SetFont($this->iFontArray[$i][0], $this->iFontArray[$i][1], $this->iFontArray[$i][2]);
                 $height = $aImg->GetFontHeight();
                 $maxheight = max($height, $maxheight);
@@ -1843,7 +1838,7 @@ class TextProperty
     // Unhide/hide the text
     public function Show($aShow = true)
     {
-        $this->iShow=$aShow;
+        $this->iShow = $aShow;
     }
 
     // Stroke text at (x,y) coordinates. If the text contains tabs then the
@@ -1858,15 +1853,15 @@ class TextProperty
             if ($this->GetNbrTabs() < 1) {
                 if (is_string($this->iText)) {
                     if (is_array($aX)) {
-                        $aX=$aX[0];
+                        $aX = $aX[0];
                     }
                     if (is_array($aY)) {
-                        $aY=$aY[0];
+                        $aY = $aY[0];
                     }
                     $aImg->StrokeText($aX, $aY, $this->iText);
                 } elseif (is_array($this->iText) && ($n = count($this->iText)) > 0) {
-                    $ax = is_array($aX) ;
-                    $ay = is_array($aY) ;
+                    $ax = is_array($aX);
+                    $ay = is_array($aY);
                     if ($ax && $ay) {
                         // Nothing; both are already arrays
                     } elseif ($ax) {
@@ -1877,9 +1872,9 @@ class TextProperty
                         $aX = array_fill(0, $n, $aX);
                         $aY = array_fill(0, $n, $aY);
                     }
-                    $n = min($n, count($aX)) ;
-                    $n = min($n, count($aY)) ;
-                    for ($i=0; $i < $n; ++$i) {
+                    $n = min($n, count($aX));
+                    $n = min($n, count($aY));
+                    for ($i = 0; $i < $n; ++$i) {
                         $tmp = $this->iText[$i];
                         if (is_object($tmp)) {
                             $tmp->Stroke($aImg, $aX[$i], $aY[$i]);
@@ -1897,7 +1892,7 @@ class TextProperty
             } else {
                 $tmp = preg_split('/\t/', $this->iText);
                 $n = min(count($tmp), count($aX));
-                for ($i=0; $i < $n; ++$i) {
+                for ($i = 0; $i < $n; ++$i) {
                     if ($i < count($this->iFontArray)) {
                         $font = $this->iFontArray[$i];
                         $aImg->SetFont($font[0], $font[1], $font[2]);
@@ -1919,20 +1914,20 @@ class TextProperty
 class HeaderProperty
 {
     public $grid;
-    public $iShowLabels=true;
-    public $iShowGrid=true;
-    public $iTitleVertMargin=3;
-    public $iFFamily=FF_FONT0;
-    public $iFStyle=FS_NORMAL;
-    public $iFSize=8;
-    public $iStyle=0;
-    public $iFrameColor="black";
-    public $iFrameWeight=1;
-    public $iBackgroundColor="white";
-    public $iWeekendBackgroundColor="lightgray";
-    public $iSundayTextColor="red"; // these are only used with day scale
-    public $iTextColor="black";
-    public $iLabelFormStr="%d";
+    public $iShowLabels = true;
+    public $iShowGrid = true;
+    public $iTitleVertMargin = 3;
+    public $iFFamily = FF_FONT0;
+    public $iFStyle = FS_NORMAL;
+    public $iFSize = 8;
+    public $iStyle = 0;
+    public $iFrameColor = "black";
+    public $iFrameWeight = 1;
+    public $iBackgroundColor = "white";
+    public $iWeekendBackgroundColor = "lightgray";
+    public $iSundayTextColor = "red"; // these are only used with day scale
+    public $iTextColor = "black";
+    public $iLabelFormStr = "%d";
     public $iIntervall = 1;
 
     //---------------
@@ -1961,7 +1956,7 @@ class HeaderProperty
 
     public function GetIntervall()
     {
-        return $this->iIntervall ;
+        return $this->iIntervall;
     }
 
     public function SetFont($aFFamily, $aFStyle = FS_NORMAL, $aFSize = 10)
@@ -2001,39 +1996,39 @@ class HeaderProperty
 
     public function SetBackgroundColor($aColor)
     {
-        $this->iBackgroundColor=$aColor;
+        $this->iBackgroundColor = $aColor;
     }
 
     public function SetFrameWeight($aWeight)
     {
-        $this->iFrameWeight=$aWeight;
+        $this->iFrameWeight = $aWeight;
     }
 
     public function SetFrameColor($aColor)
     {
-        $this->iFrameColor=$aColor;
+        $this->iFrameColor = $aColor;
     }
 
     // Only used by day scale
     public function SetWeekendColor($aColor)
     {
-        $this->iWeekendBackgroundColor=$aColor;
+        $this->iWeekendBackgroundColor = $aColor;
     }
 
     // Only used by day scale
     public function SetSundayFontColor($aColor)
     {
-        $this->iSundayTextColor=$aColor;
+        $this->iSundayTextColor = $aColor;
     }
 
     public function SetTitleVertMargin($aMargin)
     {
-        $this->iTitleVertMargin=$aMargin;
+        $this->iTitleVertMargin = $aMargin;
     }
 
     public function SetLabelFormatString($aStr)
     {
-        $this->iLabelFormStr=$aStr;
+        $this->iLabelFormStr = $aStr;
     }
 
     public function SetFormatString($aStr)
@@ -2060,28 +2055,28 @@ class GanttScale
     public $divider;
     public $dividerh;
     public $tableTitle;
-    public $iStartDate=-1;
-    public $iEndDate=-1;
+    public $iStartDate = -1;
+    public $iEndDate = -1;
     // Number of gantt bar position (n.b not necessariliy the same as the number of bars)
     // we could have on bar in position 1, and one bar in position 5 then there are two
     // bars but the number of bar positions is 5
     public $actinfo;
-    public $iTopPlotMargin=10;
-    public $iBottomPlotMargin=15;
-    public $iVertLines=-1;
-    public $iVertHeaderSize=-1;
+    public $iTopPlotMargin = 10;
+    public $iBottomPlotMargin = 15;
+    public $iVertLines = -1;
+    public $iVertHeaderSize = -1;
     // The width of the labels (defaults to the widest of all labels)
     private $iLabelWidth;
     // Out image to stroke the scale to
     private $iImg;
-    private $iTableHeaderBackgroundColor="white";
-    private $iTableHeaderFrameColor="black";
-    private $iTableHeaderFrameWeight=1;
-    private $iAvailableHeight=-1;
-    private $iVertSpacing=-1;
+    private $iTableHeaderBackgroundColor = "white";
+    private $iTableHeaderFrameColor = "black";
+    private $iTableHeaderFrameWeight = 1;
+    private $iAvailableHeight = -1;
+    private $iVertSpacing = -1;
     private $iDateLocale;
-    private $iVertLayout=GANTT_EVEN;
-    private $iUsePlotWeekendBackground=true;
+    private $iVertLayout = GANTT_EVEN;
+    private $iUsePlotWeekendBackground = true;
     private $iWeekStart = 1; // Default to have weekends start on Monday
 
     //---------------
@@ -2118,14 +2113,14 @@ class GanttScale
         $this->year = new HeaderProperty();
         $this->year->SetFont(FF_FONT1, FS_BOLD);
 
-        $this->divider=new LineProperty();
-        $this->dividerh=new LineProperty();
+        $this->divider = new LineProperty();
+        $this->dividerh = new LineProperty();
         $this->dividerh->SetWeight(2);
         $this->divider->SetWeight(6);
         $this->divider->SetColor('gray');
         $this->divider->SetStyle('fancy');
 
-        $this->tableTitle=new TextProperty();
+        $this->tableTitle = new TextProperty();
         $this->tableTitle->Show(false);
         $this->actinfo = new GanttActivityInfo();
     }
@@ -2161,7 +2156,7 @@ class GanttScale
     // Have a range been specified?
     public function IsRangeSet()
     {
-        return $this->iStartDate!=-1 && $this->iEndDate!=-1;
+        return $this->iStartDate != -1 && $this->iEndDate != -1;
     }
 
     // Should the layout be from top or even?
@@ -2179,13 +2174,13 @@ class GanttScale
     // Number of days we are showing
     public function GetNumberOfDays()
     {
-        return round(($this->iEndDate-$this->iStartDate)/SECPERDAY);
+        return round(($this->iEndDate - $this->iStartDate) / SECPERDAY);
     }
 
     // The width of the actual plot area
     public function GetPlotWidth()
     {
-        $img=$this->iImg;
+        $img = $this->iImg;
         return $img->width - $img->left_margin - $img->right_margin;
     }
 
@@ -2194,7 +2189,7 @@ class GanttScale
     // widest title)
     public function SetLabelWidth($aLabelWidth)
     {
-        $this->iLabelWidth=$aLabelWidth;
+        $this->iLabelWidth = $aLabelWidth;
     }
 
     // Which day should the week start?
@@ -2263,15 +2258,14 @@ class GanttScale
     // of the week taking the specified week start day into account.
     public function AdjustStartEndDay()
     {
-
-        if (!($this->IsDisplayYear() ||$this->IsDisplayMonth() || $this->IsDisplayWeek())) {
+        if (!($this->IsDisplayYear() || $this->IsDisplayMonth() || $this->IsDisplayWeek())) {
             // Don't adjust
             return;
         }
 
         // Get day in week for start and ending date (Sun==0)
-        $ds=strftime("%w", $this->iStartDate);
-        $de=strftime("%w", $this->iEndDate);
+        $ds = strftime("%w", $this->iStartDate);
+        $de = strftime("%w", $this->iEndDate);
 
         // We want to start on iWeekStart day. But first we subtract a week
         // if the startdate is "behind" the day the week start at.
@@ -2283,14 +2277,14 @@ class GanttScale
         } else {
             $d = $this->iStartDate;
         }
-        $adjdate = strtotime(($this->iWeekStart-$ds).' day', $d /*$this->iStartDate*/);
+        $adjdate = strtotime(($this->iWeekStart - $ds) . ' day', $d /*$this->iStartDate*/);
         $this->iStartDate = $adjdate;
 
         // We want to end on the last day of the week
-        $preferredEndDay = ($this->iWeekStart+6)%7;
+        $preferredEndDay = ($this->iWeekStart + 6) % 7;
         if ($preferredEndDay != $de) {
             // Solve equivalence eq:    $de + x ~ $preferredDay (mod 7)
-            $adj = (7+($preferredEndDay - $de)) % 7;
+            $adj = (7 + ($preferredEndDay - $de)) % 7;
             $adjdate = strtotime("+$adj day", $this->iEndDate);
             $this->iEndDate = $adjdate;
         }
@@ -2308,8 +2302,8 @@ class GanttScale
     // Determine the height of all the scale headers combined
     public function GetHeaderHeight()
     {
-        $img=$this->iImg;
-        $height=1;
+        $img = $this->iImg;
+        $height = 1;
         if ($this->minute->iShowLabels) {
             $height += $this->minute->GetFontHeight($img);
             $height += $this->minute->iTitleVertMargin;
@@ -2340,18 +2334,18 @@ class GanttScale
     // Get width (in pixels) for a single day
     public function GetDayWidth()
     {
-        return ($this->GetPlotWidth()-$this->iLabelWidth+1)/$this->GetNumberOfDays();
+        return ($this->GetPlotWidth() - $this->iLabelWidth + 1) / $this->GetNumberOfDays();
     }
 
     // Get width (in pixels) for a single hour
     public function GetHourWidth()
     {
-        return $this->GetDayWidth() / 24 ;
+        return $this->GetDayWidth() / 24;
     }
 
     public function GetMinuteWidth()
     {
-        return $this->GetHourWidth() / 60 ;
+        return $this->GetHourWidth() / 60;
     }
 
     // Nuber of days in a year
@@ -2379,7 +2373,7 @@ class GanttScale
 
         $day = $this->NormalizeDate($aDate);
         if ($aSunStart) {
-            $day += 60*60*24;
+            $day += 60 * 60 * 24;
         }
 
         /*-------------------------------------------------------------------------
@@ -2419,14 +2413,14 @@ class GanttScale
     // Get current year
     public function GetYear($aDate)
     {
-        return 0+Date("Y", $aDate);
+        return 0 + Date("Y", $aDate);
     }
 
     // Return number of days in a year
     public function GetNumDaysInMonth($aMonth, $aYear)
     {
-        $days=array(31,28,31,30,31,30,31,31,30,31,30,31);
-        $daysl=array(31,29,31,30,31,30,31,31,30,31,30,31);
+        $days = array(31,28,31,30,31,30,31,31,30,31,30,31);
+        $daysl = array(31,29,31,30,31,30,31,31,30,31,30,31);
         if ($this->IsLeap($aYear)) {
             return $daysl[$aMonth];
         } else {
@@ -2437,19 +2431,19 @@ class GanttScale
     // Get day in month
     public function GetMonthDayNbr($aDate)
     {
-        return 0+strftime("%d", $aDate);
+        return 0 + strftime("%d", $aDate);
     }
 
     // Get day in year
     public function GetYearDayNbr($aDate)
     {
-        return 0+strftime("%j", $aDate);
+        return 0 + strftime("%j", $aDate);
     }
 
     // Get month number
     public function GetMonthNbr($aDate)
     {
-        return 0+strftime("%m", $aDate);
+        return 0 + strftime("%m", $aDate);
     }
 
     // Translate a date to screen coordinates (horizontal scale)
@@ -2475,25 +2469,24 @@ class GanttScale
                 $offset = -3600;
             }
         }
-        $img=$this->iImg;
-        return ($aDate-$this->iStartDate-$offset)/SECPERDAY*$this->GetDayWidth()+$img->left_margin+$this->iLabelWidth;
-        ;
+        $img = $this->iImg;
+        return ($aDate - $this->iStartDate - $offset) / SECPERDAY * $this->GetDayWidth() + $img->left_margin + $this->iLabelWidth;
     }
 
     // Get screen coordinatesz for the vertical position for a bar
     public function TranslateVertPos($aPos, $atTop = false)
     {
-        $img=$this->iImg;
+        $img = $this->iImg;
         if ($aPos > $this->iVertLines) {
             JpGraphError::RaiseL(6015, $aPos);
         }
         // 'Illegal vertical position %d'
         if ($this->iVertLayout == GANTT_EVEN) {
             // Position the top bar at 1 vert spacing from the scale
-            $pos =  round($img->top_margin + $this->iVertHeaderSize +  ($aPos+1)*$this->iVertSpacing);
+            $pos =  round($img->top_margin + $this->iVertHeaderSize +  ($aPos + 1) * $this->iVertSpacing);
         } else {
             // position the top bar at 1/2 a vert spacing from the scale
-            $pos = round($img->top_margin + $this->iVertHeaderSize  + $this->iTopPlotMargin + ($aPos+1)*$this->iVertSpacing);
+            $pos = round($img->top_margin + $this->iVertHeaderSize  + $this->iTopPlotMargin + ($aPos + 1) * $this->iVertSpacing);
         }
 
         if ($atTop) {
@@ -2536,14 +2529,14 @@ class GanttScale
     public function TimeToMinutes($aTimeString)
     {
         // Split in hours and minutes
-        $pos=strpos($aTimeString, ':');
-        $minint=60;
+        $pos = strpos($aTimeString, ':');
+        $minint = 60;
         if ($pos === false) {
             $hourint = $aTimeString;
             $minint = 0;
         } else {
             $hourint = floor(substr($aTimeString, 0, $pos));
-            $minint = floor(substr($aTimeString, $pos+1));
+            $minint = floor(substr($aTimeString, $pos + 1));
         }
         $minint += 60 * $hourint;
         return $minint;
@@ -2552,9 +2545,9 @@ class GanttScale
     // Stroke the day scale (including gridlines)
     public function StrokeMinutes($aYCoord, $getHeight = false)
     {
-        $img=$this->iImg;
-        $xt=$img->left_margin+$this->iLabelWidth;
-        $yt=$aYCoord+$img->top_margin;
+        $img = $this->iImg;
+        $xt = $img->left_margin + $this->iLabelWidth;
+        $yt = $aYCoord + $img->top_margin;
         if ($this->minute->iShowLabels) {
             $img->SetFont($this->minute->iFFamily, $this->minute->iFStyle, $this->minute->iFSize);
             $yb = $yt + $img->GetFontHeight() +
@@ -2562,14 +2555,14 @@ class GanttScale
             if ($getHeight) {
                 return $yb - $img->top_margin;
             }
-            $xb = $img->width-$img->right_margin+1;
+            $xb = $img->width - $img->right_margin + 1;
             $img->SetColor($this->minute->iBackgroundColor);
             $img->FilledRectangle($xt, $yt, $xb, $yb);
 
             $x = $xt;
             $img->SetTextAlign("center");
             $day = date('w', $this->iStartDate);
-            $minint = $this->minute->GetIntervall() ;
+            $minint = $this->minute->GetIntervall();
 
             if (60 % $minint !== 0) {
                 JpGraphError::RaiseL(6018, $minint);
@@ -2578,31 +2571,31 @@ class GanttScale
 
             $n = 60 / $minint;
             $datestamp = $this->iStartDate;
-            $width = $this->GetHourWidth() / $n ;
+            $width = $this->GetHourWidth() / $n;
             if ($width < 8) {
                 // TO small width to draw minute scale
                 JpGraphError::RaiseL(6019, $width);
                 //('The available width ('.$width.') for minutes are to small for this scale to be displayed. Please use auto-sizing or increase the width of the graph.');
             }
 
-            $nh = ceil(24*60 / $this->TimeToMinutes($this->hour->GetIntervall()));
+            $nh = ceil(24 * 60 / $this->TimeToMinutes($this->hour->GetIntervall()));
             $nd = $this->GetNumberOfDays();
             // Convert to intervall to seconds
             $minint *= 60;
-            for ($j=0; $j < $nd; ++$j, $day += 1, $day %= 7) {
-                for ($k=0; $k < $nh; ++$k) {
-                    for ($i=0; $i < $n; ++$i, $x+=$width, $datestamp += $minint) {
-                        if ($day==6 || $day==0) {
+            for ($j = 0; $j < $nd; ++$j, $day += 1, $day %= 7) {
+                for ($k = 0; $k < $nh; ++$k) {
+                    for ($i = 0; $i < $n; ++$i, $x += $width, $datestamp += $minint) {
+                        if ($day == 6 || $day == 0) {
                             $img->PushColor($this->day->iWeekendBackgroundColor);
                             if ($this->iUsePlotWeekendBackground) {
-                                $img->FilledRectangle($x, $yt+$this->day->iFrameWeight, $x+$width, $img->height-$img->bottom_margin);
+                                $img->FilledRectangle($x, $yt + $this->day->iFrameWeight, $x + $width, $img->height - $img->bottom_margin);
                             } else {
-                                $img->FilledRectangle($x, $yt+$this->day->iFrameWeight, $x+$width, $yb-$this->day->iFrameWeight);
+                                $img->FilledRectangle($x, $yt + $this->day->iFrameWeight, $x + $width, $yb - $this->day->iFrameWeight);
                             }
                             $img->PopColor();
                         }
 
-                        if ($day==0) {
+                        if ($day == 0) {
                             $img->SetColor($this->day->iSundayTextColor);
                         } else {
                             $img->SetColor($this->day->iTextColor);
@@ -2618,7 +2611,7 @@ class GanttScale
                                 $txt = date('i', $datestamp);
                                 break;
                         }
-                        $img->StrokeText(round($x+$width/2), round($yb-$this->minute->iTitleVertMargin), $txt);
+                        $img->StrokeText(round($x + $width / 2), round($yb - $this->minute->iTitleVertMargin), $txt);
 
                         // Fix a rounding problem the wrong way ..
                         // If we also have hour scale then don't draw the firsta or last
@@ -2627,11 +2620,11 @@ class GanttScale
                         // this might sometimes be one pixel of so we fix this by not drawing it.
                         // The proper way to fix it would be to re-calculate the scale for each step and
                         // not using the additive term.
-                        if (!(($i == $n || $i==0) && $this->hour->iShowLabels && $this->hour->grid->iShow)) {
+                        if (!(($i == $n || $i == 0) && $this->hour->iShowLabels && $this->hour->grid->iShow)) {
                             $img->SetColor($this->minute->grid->iColor);
                             $img->SetLineWeight($this->minute->grid->iWeight);
                             $img->Line($x, $yt, $x, $yb);
-                            $this->minute->grid->Stroke($img, $x, $yb, $x, $img->height-$img->bottom_margin);
+                            $this->minute->grid->Stroke($img, $x, $yb, $x, $img->height - $img->bottom_margin);
                         }
                     }
                 }
@@ -2647,9 +2640,9 @@ class GanttScale
     // Stroke the day scale (including gridlines)
     public function StrokeHours($aYCoord, $getHeight = false)
     {
-        $img=$this->iImg;
-        $xt=$img->left_margin+$this->iLabelWidth;
-        $yt=$aYCoord+$img->top_margin;
+        $img = $this->iImg;
+        $xt = $img->left_margin + $this->iLabelWidth;
+        $yt = $aYCoord + $img->top_margin;
         if ($this->hour->iShowLabels) {
             $img->SetFont($this->hour->iFFamily, $this->hour->iFStyle, $this->hour->iFSize);
             $yb = $yt + $img->GetFontHeight() +
@@ -2657,37 +2650,37 @@ class GanttScale
             if ($getHeight) {
                 return $yb - $img->top_margin;
             }
-            $xb = $img->width-$img->right_margin+1;
+            $xb = $img->width - $img->right_margin + 1;
             $img->SetColor($this->hour->iBackgroundColor);
             $img->FilledRectangle($xt, $yt, $xb, $yb);
 
             $x = $xt;
             $img->SetTextAlign("center");
-            $tmp = $this->hour->GetIntervall() ;
+            $tmp = $this->hour->GetIntervall();
             $minint = $this->TimeToMinutes($tmp);
             if (1440 % $minint !== 0) {
                 JpGraphError::RaiseL(6020, $tmp);
                 //('Intervall for hours must divide the day evenly, e.g. 0:30, 1:00, 1:30, 4:00 etc. You have specified an intervall of '.$tmp);
             }
 
-            $n = ceil(24*60 / $minint);
+            $n = ceil(24 * 60 / $minint);
             $datestamp = $this->iStartDate;
             $day = date('w', $this->iStartDate);
             $doback = !$this->minute->iShowLabels;
-            $width = $this->GetDayWidth() / $n ;
-            for ($j=0; $j < $this->GetNumberOfDays(); ++$j, $day += 1,$day %= 7) {
-                for ($i=0; $i < $n; ++$i, $x+=$width) {
-                    if ($day==6 || $day==0) {
+            $width = $this->GetDayWidth() / $n;
+            for ($j = 0; $j < $this->GetNumberOfDays(); ++$j, $day += 1,$day %= 7) {
+                for ($i = 0; $i < $n; ++$i, $x += $width) {
+                    if ($day == 6 || $day == 0) {
                         $img->PushColor($this->day->iWeekendBackgroundColor);
                         if ($this->iUsePlotWeekendBackground && $doback) {
-                            $img->FilledRectangle($x, $yt+$this->day->iFrameWeight, $x+$width, $img->height-$img->bottom_margin);
+                            $img->FilledRectangle($x, $yt + $this->day->iFrameWeight, $x + $width, $img->height - $img->bottom_margin);
                         } else {
-                            $img->FilledRectangle($x, $yt+$this->day->iFrameWeight, $x+$width, $yb-$this->day->iFrameWeight);
+                            $img->FilledRectangle($x, $yt + $this->day->iFrameWeight, $x + $width, $yb - $this->day->iFrameWeight);
                         }
                         $img->PopColor();
                     }
 
-                    if ($day==0) {
+                    if ($day == 0) {
                         $img->SetColor($this->day->iSundayTextColor);
                     } else {
                         $img->SetColor($this->day->iTextColor);
@@ -2713,18 +2706,18 @@ class GanttScale
                             $txt = date('H:i', $datestamp);
                             break;
                     }
-                    $img->StrokeText(round($x+$width/2), round($yb-$this->hour->iTitleVertMargin), $txt);
+                    $img->StrokeText(round($x + $width / 2), round($yb - $this->hour->iTitleVertMargin), $txt);
                     $img->SetColor($this->hour->grid->iColor);
                     $img->SetLineWeight($this->hour->grid->iWeight);
                     $img->Line($x, $yt, $x, $yb);
-                    $this->hour->grid->Stroke($img, $x, $yb, $x, $img->height-$img->bottom_margin);
+                    $this->hour->grid->Stroke($img, $x, $yb, $x, $img->height - $img->bottom_margin);
                     //$datestamp += $minint*60
                     $datestamp = mktime(
                         date('H', $datestamp),
-                        date('i', $datestamp)+$minint,
+                        date('i', $datestamp) + $minint,
                         0,
                         date("m", $datestamp),
-                        date("d", $datestamp)+1,
+                        date("d", $datestamp) + 1,
                         date("Y", $datestamp)
                     );
                 }
@@ -2741,17 +2734,17 @@ class GanttScale
     // Stroke the day scale (including gridlines)
     public function StrokeDays($aYCoord, $getHeight = false)
     {
-        $img=$this->iImg;
-        $daywidth=$this->GetDayWidth();
-        $xt=$img->left_margin+$this->iLabelWidth;
-        $yt=$aYCoord+$img->top_margin;
+        $img = $this->iImg;
+        $daywidth = $this->GetDayWidth();
+        $xt = $img->left_margin + $this->iLabelWidth;
+        $yt = $aYCoord + $img->top_margin;
         if ($this->day->iShowLabels) {
             $img->SetFont($this->day->iFFamily, $this->day->iFStyle, $this->day->iFSize);
-            $yb=$yt + $img->GetFontHeight() + $this->day->iTitleVertMargin + $this->day->iFrameWeight;
+            $yb = $yt + $img->GetFontHeight() + $this->day->iTitleVertMargin + $this->day->iFrameWeight;
             if ($getHeight) {
                 return $yb - $img->top_margin;
             }
-            $xb=$img->width-$img->right_margin+1;
+            $xb = $img->width - $img->right_margin + 1;
             $img->SetColor($this->day->iBackgroundColor);
             $img->FilledRectangle($xt, $yt, $xb, $yb);
 
@@ -2764,28 +2757,28 @@ class GanttScale
 
             setlocale(LC_TIME, $this->iDateLocale->iLocale);
 
-            for ($i=0; $i < $this->GetNumberOfDays(); ++$i, $x+=$daywidth, $day += 1,$day %= 7) {
-                if ($day==6 || $day==0) {
+            for ($i = 0; $i < $this->GetNumberOfDays(); ++$i, $x += $daywidth, $day += 1,$day %= 7) {
+                if ($day == 6 || $day == 0) {
                     $img->SetColor($this->day->iWeekendBackgroundColor);
                     if ($this->iUsePlotWeekendBackground && $doback) {
                         $img->FilledRectangle(
                             $x,
-                            $yt+$this->day->iFrameWeight,
-                            $x+$daywidth,
-                            $img->height-$img->bottom_margin
+                            $yt + $this->day->iFrameWeight,
+                            $x + $daywidth,
+                            $img->height - $img->bottom_margin
                         );
                     } else {
                         $img->FilledRectangle(
                             $x,
-                            $yt+$this->day->iFrameWeight,
-                            $x+$daywidth,
-                            $yb-$this->day->iFrameWeight
+                            $yt + $this->day->iFrameWeight,
+                            $x + $daywidth,
+                            $yb - $this->day->iFrameWeight
                         );
                     }
                 }
 
                 $mn = strftime('%m', $datestamp);
-                if ($mn[0]=='0') {
+                if ($mn[0] == '0') {
                     $mn = $mn[1];
                 }
 
@@ -2800,7 +2793,7 @@ class GanttScale
                         break;
                     case DAYSTYLE_SHORTDAYDATE1:
                         // "Mon 23/6"
-                        $txt = strftime('%a %d/'.$mn, $datestamp);
+                        $txt = strftime('%a %d/' . $mn, $datestamp);
                         break;
                     case DAYSTYLE_SHORTDAYDATE2:
                         // "Mon 23 Jun"
@@ -2820,7 +2813,7 @@ class GanttScale
                         break;
                     case DAYSTYLE_SHORTDATE1:
                         // "23/6"
-                        $txt = strftime('%d/'.$mn, $datestamp);
+                        $txt = strftime('%d/' . $mn, $datestamp);
                         break;
                     case DAYSTYLE_SHORTDATE2:
                         // "23 Jun"
@@ -2846,21 +2839,21 @@ class GanttScale
                         break;
                 }
 
-                if ($day==0) {
+                if ($day == 0) {
                     $img->SetColor($this->day->iSundayTextColor);
                 } else {
                     $img->SetColor($this->day->iTextColor);
                 }
                 $img->StrokeText(
-                    round($x+$daywidth/2+1),
-                    round($yb-$this->day->iTitleVertMargin),
+                    round($x + $daywidth / 2 + 1),
+                    round($yb - $this->day->iTitleVertMargin),
                     $txt
                 );
                 $img->SetColor($this->day->grid->iColor);
                 $img->SetLineWeight($this->day->grid->iWeight);
                 $img->Line($x, $yt, $x, $yb);
-                $this->day->grid->Stroke($img, $x, $yb, $x, $img->height-$img->bottom_margin);
-                $datestamp = mktime(0, 0, 0, date("m", $datestamp), date("d", $datestamp)+1, date("Y", $datestamp));
+                $this->day->grid->Stroke($img, $x, $yb, $x, $img->height - $img->bottom_margin);
+                $datestamp = mktime(0, 0, 0, date("m", $datestamp), date("d", $datestamp) + 1, date("Y", $datestamp));
                 //$datestamp += SECPERDAY;
             }
             $img->SetColor($this->day->iFrameColor);
@@ -2875,32 +2868,32 @@ class GanttScale
     public function StrokeWeeks($aYCoord, $getHeight = false)
     {
         if ($this->week->iShowLabels) {
-            $img=$this->iImg;
-            $yt=$aYCoord+$img->top_margin;
+            $img = $this->iImg;
+            $yt = $aYCoord + $img->top_margin;
             $img->SetFont($this->week->iFFamily, $this->week->iFStyle, $this->week->iFSize);
-            $yb=$yt + $img->GetFontHeight() + $this->week->iTitleVertMargin + $this->week->iFrameWeight;
+            $yb = $yt + $img->GetFontHeight() + $this->week->iTitleVertMargin + $this->week->iFrameWeight;
 
             if ($getHeight) {
                 return $yb - $img->top_margin;
             }
 
-            $xt=$img->left_margin+$this->iLabelWidth;
-            $weekwidth=$this->GetDayWidth()*7;
-            $wdays=$this->iDateLocale->GetDayAbb();
-            $xb=$img->width-$img->right_margin+1;
+            $xt = $img->left_margin + $this->iLabelWidth;
+            $weekwidth = $this->GetDayWidth() * 7;
+            $wdays = $this->iDateLocale->GetDayAbb();
+            $xb = $img->width - $img->right_margin + 1;
             $week = $this->iStartDate;
-            $weeknbr=$this->GetWeekNbr($week);
+            $weeknbr = $this->GetWeekNbr($week);
             $img->SetColor($this->week->iBackgroundColor);
             $img->FilledRectangle($xt, $yt, $xb, $yb);
             $img->SetColor($this->week->grid->iColor);
             $x = $xt;
-            if ($this->week->iStyle==WEEKSTYLE_WNBR) {
+            if ($this->week->iStyle == WEEKSTYLE_WNBR) {
                 $img->SetTextAlign("center");
-                $txtOffset = $weekwidth/2+1;
-            } elseif ($this->week->iStyle==WEEKSTYLE_FIRSTDAY  ||
-                    $this->week->iStyle==WEEKSTYLE_FIRSTDAY2 ||
-                    $this->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR ||
-                    $this->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) {
+                $txtOffset = $weekwidth / 2 + 1;
+            } elseif ($this->week->iStyle == WEEKSTYLE_FIRSTDAY  ||
+                    $this->week->iStyle == WEEKSTYLE_FIRSTDAY2 ||
+                    $this->week->iStyle == WEEKSTYLE_FIRSTDAYWNBR ||
+                    $this->week->iStyle == WEEKSTYLE_FIRSTDAY2WNBR) {
                 $img->SetTextAlign("left");
                 $txtOffset = 3;
             } else {
@@ -2908,30 +2901,30 @@ class GanttScale
                 //("Unknown formatting style for week.");
             }
 
-            for ($i=0; $i<$this->GetNumberOfDays()/7; ++$i, $x+=$weekwidth) {
+            for ($i = 0; $i < $this->GetNumberOfDays() / 7; ++$i, $x += $weekwidth) {
                 $img->PushColor($this->week->iTextColor);
 
-                if ($this->week->iStyle==WEEKSTYLE_WNBR) {
+                if ($this->week->iStyle == WEEKSTYLE_WNBR) {
                     $txt = sprintf($this->week->iLabelFormStr, $weeknbr);
-                } elseif ($this->week->iStyle==WEEKSTYLE_FIRSTDAY ||
-                        $this->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR) {
+                } elseif ($this->week->iStyle == WEEKSTYLE_FIRSTDAY ||
+                        $this->week->iStyle == WEEKSTYLE_FIRSTDAYWNBR) {
                     $txt = date("j/n", $week);
-                } elseif ($this->week->iStyle==WEEKSTYLE_FIRSTDAY2 ||
-                        $this->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) {
-                    $monthnbr = date("n", $week)-1;
+                } elseif ($this->week->iStyle == WEEKSTYLE_FIRSTDAY2 ||
+                        $this->week->iStyle == WEEKSTYLE_FIRSTDAY2WNBR) {
+                    $monthnbr = date("n", $week) - 1;
                     $shortmonth = $this->iDateLocale->GetShortMonthName($monthnbr);
-                    $txt = Date("j", $week)." ".$shortmonth;
+                    $txt = Date("j", $week) . " " . $shortmonth;
                 }
 
-                if ($this->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR ||
-                $this->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) {
+                if ($this->week->iStyle == WEEKSTYLE_FIRSTDAYWNBR ||
+                $this->week->iStyle == WEEKSTYLE_FIRSTDAY2WNBR) {
                     $w = sprintf($this->week->iLabelFormStr, $weeknbr);
-                    $txt .= ' '.$w;
+                    $txt .= ' ' . $w;
                 }
 
                 $img->StrokeText(
-                    round($x+$txtOffset),
-                    round($yb-$this->week->iTitleVertMargin),
+                    round($x + $txtOffset),
+                    round($yb - $this->week->iTitleVertMargin),
                     $txt
                 );
 
@@ -2940,12 +2933,12 @@ class GanttScale
                 $img->PopColor();
                 $img->SetLineWeight($this->week->grid->iWeight);
                 $img->Line($x, $yt, $x, $yb);
-                $this->week->grid->Stroke($img, $x, $yb, $x, $img->height-$img->bottom_margin);
+                $this->week->grid->Stroke($img, $x, $yb, $x, $img->height - $img->bottom_margin);
             }
             $img->SetColor($this->week->iFrameColor);
             $img->SetLineWeight($this->week->iFrameWeight);
             $img->Rectangle($xt, $yt, $xb, $yb);
-            return $yb-$img->top_margin;
+            return $yb - $img->top_margin;
         }
         return $aYCoord;
     }
@@ -2957,25 +2950,25 @@ class GanttScale
         $ln = $this->iDateLocale->GetLongMonthName($aMonthNbr);
         switch ($this->month->iStyle) {
             case MONTHSTYLE_SHORTNAME:
-                $m=$sn;
+                $m = $sn;
                 break;
             case MONTHSTYLE_LONGNAME:
-                $m=$ln;
+                $m = $ln;
                 break;
             case MONTHSTYLE_SHORTNAMEYEAR2:
-                $m=$sn." '".substr("".$year, 2);
+                $m = $sn . " '" . substr("" . $year, 2);
                 break;
             case MONTHSTYLE_SHORTNAMEYEAR4:
-                $m=$sn." ".$year;
+                $m = $sn . " " . $year;
                 break;
             case MONTHSTYLE_LONGNAMEYEAR2:
-                $m=$ln." '".substr("".$year, 2);
+                $m = $ln . " '" . substr("" . $year, 2);
                 break;
             case MONTHSTYLE_LONGNAMEYEAR4:
-                $m=$ln." ".$year;
+                $m = $ln . " " . $year;
                 break;
             case MONTHSTYLE_FIRSTLETTER:
-                $m=$sn[0];
+                $m = $sn[0];
                 break;
         }
         return $m;
@@ -2985,37 +2978,37 @@ class GanttScale
     public function StrokeMonths($aYCoord, $getHeight = false)
     {
         if ($this->month->iShowLabels) {
-            $img=$this->iImg;
+            $img = $this->iImg;
             $img->SetFont($this->month->iFFamily, $this->month->iFStyle, $this->month->iFSize);
-            $yt=$aYCoord+$img->top_margin;
-            $yb=$yt + $img->GetFontHeight() + $this->month->iTitleVertMargin + $this->month->iFrameWeight;
+            $yt = $aYCoord + $img->top_margin;
+            $yb = $yt + $img->GetFontHeight() + $this->month->iTitleVertMargin + $this->month->iFrameWeight;
             if ($getHeight) {
                 return $yb - $img->top_margin;
             }
-            $monthnbr = $this->GetMonthNbr($this->iStartDate)-1;
-            $xt=$img->left_margin+$this->iLabelWidth;
-            $xb=$img->width-$img->right_margin+1;
+            $monthnbr = $this->GetMonthNbr($this->iStartDate) - 1;
+            $xt = $img->left_margin + $this->iLabelWidth;
+            $xb = $img->width - $img->right_margin + 1;
 
             $img->SetColor($this->month->iBackgroundColor);
             $img->FilledRectangle($xt, $yt, $xb, $yb);
 
             $img->SetLineWeight($this->month->grid->iWeight);
             $img->SetColor($this->month->iTextColor);
-            $year = 0+strftime("%Y", $this->iStartDate);
+            $year = 0 + strftime("%Y", $this->iStartDate);
             $img->SetTextAlign("center");
             if ($this->GetMonthNbr($this->iStartDate) == $this->GetMonthNbr($this->iEndDate)
-                && $this->GetYear($this->iStartDate)==$this->GetYear($this->iEndDate)) {
-                $monthwidth=$this->GetDayWidth()*($this->GetMonthDayNbr($this->iEndDate) - $this->GetMonthDayNbr($this->iStartDate) + 1);
+                && $this->GetYear($this->iStartDate) == $this->GetYear($this->iEndDate)) {
+                $monthwidth = $this->GetDayWidth() * ($this->GetMonthDayNbr($this->iEndDate) - $this->GetMonthDayNbr($this->iStartDate) + 1);
             } else {
-                $monthwidth=$this->GetDayWidth()*($this->GetNumDaysInMonth($monthnbr, $year)-$this->GetMonthDayNbr($this->iStartDate)+1);
+                $monthwidth = $this->GetDayWidth() * ($this->GetNumDaysInMonth($monthnbr, $year) - $this->GetMonthDayNbr($this->iStartDate) + 1);
             }
             // Is it enough space to stroke the first month?
             $monthName = $this->GetMonthLabel($monthnbr, $year);
-            if ($monthwidth >= 1.2*$img->GetTextWidth($monthName)) {
+            if ($monthwidth >= 1.2 * $img->GetTextWidth($monthName)) {
                 $img->SetColor($this->month->iTextColor);
                 $img->StrokeText(
-                    round($xt+$monthwidth/2+1),
-                    round($yb-$this->month->iTitleVertMargin),
+                    round($xt + $monthwidth / 2 + 1),
+                    round($yb - $this->month->iTitleVertMargin),
                     $monthName
                 );
             }
@@ -3023,24 +3016,24 @@ class GanttScale
             while ($x < $xb) {
                 $img->SetColor($this->month->grid->iColor);
                 $img->Line($x, $yt, $x, $yb);
-                $this->month->grid->Stroke($img, $x, $yb, $x, $img->height-$img->bottom_margin);
+                $this->month->grid->Stroke($img, $x, $yb, $x, $img->height - $img->bottom_margin);
                 $monthnbr++;
-                if ($monthnbr==12) {
-                    $monthnbr=0;
+                if ($monthnbr == 12) {
+                    $monthnbr = 0;
                     $year++;
                 }
                 $monthName = $this->GetMonthLabel($monthnbr, $year);
-                $monthwidth=$this->GetDayWidth()*$this->GetNumDaysInMonth($monthnbr, $year);
+                $monthwidth = $this->GetDayWidth() * $this->GetNumDaysInMonth($monthnbr, $year);
                 if ($x + $monthwidth < $xb) {
                     $w = $monthwidth;
                 } else {
-                    $w = $xb-$x;
+                    $w = $xb - $x;
                 }
-                if ($w >= 1.2*$img->GetTextWidth($monthName)) {
+                if ($w >= 1.2 * $img->GetTextWidth($monthName)) {
                     $img->SetColor($this->month->iTextColor);
                     $img->StrokeText(
-                        round($x+$w/2+1),
-                        round($yb-$this->month->iTitleVertMargin),
+                        round($x + $w / 2 + 1),
+                        round($yb - $this->month->iTitleVertMargin),
                         $monthName
                     );
                 }
@@ -3049,7 +3042,7 @@ class GanttScale
             $img->SetColor($this->month->iFrameColor);
             $img->SetLineWeight($this->month->iFrameWeight);
             $img->Rectangle($xt, $yt, $xb, $yb);
-            return $yb-$img->top_margin;
+            return $yb - $img->top_margin;
         }
         return $aYCoord;
     }
@@ -3058,35 +3051,35 @@ class GanttScale
     public function StrokeYears($aYCoord, $getHeight = false)
     {
         if ($this->year->iShowLabels) {
-            $img=$this->iImg;
-            $yt=$aYCoord+$img->top_margin;
+            $img = $this->iImg;
+            $yt = $aYCoord + $img->top_margin;
             $img->SetFont($this->year->iFFamily, $this->year->iFStyle, $this->year->iFSize);
-            $yb=$yt + $img->GetFontHeight() + $this->year->iTitleVertMargin + $this->year->iFrameWeight;
+            $yb = $yt + $img->GetFontHeight() + $this->year->iTitleVertMargin + $this->year->iFrameWeight;
 
             if ($getHeight) {
                 return $yb - $img->top_margin;
             }
 
-            $xb=$img->width-$img->right_margin+1;
-            $xt=$img->left_margin+$this->iLabelWidth;
+            $xb = $img->width - $img->right_margin + 1;
+            $xt = $img->left_margin + $this->iLabelWidth;
             $year = $this->GetYear($this->iStartDate);
             $img->SetColor($this->year->iBackgroundColor);
             $img->FilledRectangle($xt, $yt, $xb, $yb);
             $img->SetLineWeight($this->year->grid->iWeight);
             $img->SetTextAlign("center");
             if ($year == $this->GetYear($this->iEndDate)) {
-                $yearwidth=$this->GetDayWidth()*($this->GetYearDayNbr($this->iEndDate)-$this->GetYearDayNbr($this->iStartDate)+1);
+                $yearwidth = $this->GetDayWidth() * ($this->GetYearDayNbr($this->iEndDate) - $this->GetYearDayNbr($this->iStartDate) + 1);
             } else {
-                $yearwidth=$this->GetDayWidth()*($this->GetNumDaysInYear($year)-$this->GetYearDayNbr($this->iStartDate)+1);
+                $yearwidth = $this->GetDayWidth() * ($this->GetNumDaysInYear($year) - $this->GetYearDayNbr($this->iStartDate) + 1);
             }
 
             // The space for a year must be at least 20% bigger than the actual text
             // so we allow 10% margin on each side
-            if ($yearwidth >= 1.20*$img->GetTextWidth("".$year)) {
+            if ($yearwidth >= 1.20 * $img->GetTextWidth("" . $year)) {
                 $img->SetColor($this->year->iTextColor);
                 $img->StrokeText(
-                    round($xt+$yearwidth/2+1),
-                    round($yb-$this->year->iTitleVertMargin),
+                    round($xt + $yearwidth / 2 + 1),
+                    round($yb - $this->year->iTitleVertMargin),
                     $year
                 );
             }
@@ -3094,19 +3087,19 @@ class GanttScale
             while ($x < $xb) {
                 $img->SetColor($this->year->grid->iColor);
                 $img->Line($x, $yt, $x, $yb);
-                $this->year->grid->Stroke($img, $x, $yb, $x, $img->height-$img->bottom_margin);
+                $this->year->grid->Stroke($img, $x, $yb, $x, $img->height - $img->bottom_margin);
                 $year += 1;
-                $yearwidth=$this->GetDayWidth()*$this->GetNumDaysInYear($year);
+                $yearwidth = $this->GetDayWidth() * $this->GetNumDaysInYear($year);
                 if ($x + $yearwidth < $xb) {
                     $w = $yearwidth;
                 } else {
-                    $w = $xb-$x;
+                    $w = $xb - $x;
                 }
-                if ($w >= 1.2*$img->GetTextWidth("".$year)) {
+                if ($w >= 1.2 * $img->GetTextWidth("" . $year)) {
                     $img->SetColor($this->year->iTextColor);
                     $img->StrokeText(
-                        round($x+$w/2+1),
-                        round($yb-$this->year->iTitleVertMargin),
+                        round($x + $w / 2 + 1),
+                        round($yb - $this->year->iTitleVertMargin),
                         $year
                     );
                 }
@@ -3115,7 +3108,7 @@ class GanttScale
             $img->SetColor($this->year->iFrameColor);
             $img->SetLineWeight($this->year->iFrameWeight);
             $img->Rectangle($xt, $yt, $xb, $yb);
-            return $yb-$img->top_margin;
+            return $yb - $img->top_margin;
         }
         return $aYCoord;
     }
@@ -3123,17 +3116,17 @@ class GanttScale
     // Stroke table title (upper left corner)
     public function StrokeTableHeaders($aYBottom)
     {
-        $img=$this->iImg;
-        $xt=$img->left_margin;
-        $yt=$img->top_margin;
-        $xb=$xt+$this->iLabelWidth;
-        $yb=$aYBottom+$img->top_margin;
+        $img = $this->iImg;
+        $xt = $img->left_margin;
+        $yt = $img->top_margin;
+        $xb = $xt + $this->iLabelWidth;
+        $yb = $aYBottom + $img->top_margin;
 
         if ($this->tableTitle->iShow) {
             $img->SetColor($this->iTableHeaderBackgroundColor);
             $img->FilledRectangle($xt, $yt, $xb, $yb);
             $this->tableTitle->Align("center", "top");
-            $this->tableTitle->Stroke($img, $xt+($xb-$xt)/2+1, $yt+2);
+            $this->tableTitle->Stroke($img, $xt + ($xb - $xt) / 2 + 1, $yt + 2);
             $img->SetColor($this->iTableHeaderFrameColor);
             $img->SetLineWeight($this->iTableHeaderFrameWeight);
             $img->Rectangle($xt, $yt, $xb, $yb);
@@ -3142,21 +3135,21 @@ class GanttScale
         $this->actinfo->Stroke($img, $xt, $yt, $xb, $yb, $this->tableTitle->iShow);
 
         // Draw the horizontal dividing line
-        $this->dividerh->Stroke($img, $xt, $yb, $img->width-$img->right_margin, $yb);
+        $this->dividerh->Stroke($img, $xt, $yb, $img->width - $img->right_margin, $yb);
 
         // Draw the vertical dividing line
         // We do the width "manually" since we want the line only to grow
         // to the left
-        $fancy = $this->divider->iStyle == 'fancy' ;
+        $fancy = $this->divider->iStyle == 'fancy';
         if ($fancy) {
             $this->divider->iStyle = 'solid';
         }
 
         $tmp = $this->divider->iWeight;
-        $this->divider->iWeight=1;
-        $y = $img->height-$img->bottom_margin;
-        for ($i=0; $i < $tmp; ++$i) {
-            $this->divider->Stroke($img, $xb-$i, $yt, $xb-$i, $y);
+        $this->divider->iWeight = 1;
+        $y = $img->height - $img->bottom_margin;
+        for ($i = 0; $i < $tmp; ++$i) {
+            $this->divider->Stroke($img, $xb - $i, $yt, $xb - $i, $y);
         }
 
         // Should we draw "fancy" divider
@@ -3164,9 +3157,9 @@ class GanttScale
             $img->SetLineWeight(1);
             $img->SetColor($this->iTableHeaderFrameColor);
             $img->Line($xb, $yt, $xb, $y);
-            $img->Line($xb-$tmp+1, $yt, $xb-$tmp+1, $y);
+            $img->Line($xb - $tmp + 1, $yt, $xb - $tmp + 1, $y);
             $img->SetColor('white');
-            $img->Line($xb-$tmp+2, $yt, $xb-$tmp+2, $y);
+            $img->Line($xb - $tmp + 2, $yt, $xb - $tmp + 2, $y);
         }
     }
 
@@ -3177,7 +3170,7 @@ class GanttScale
             JpGraphError::RaiseL(6022);
             //("Gantt scale has not been specified.");
         }
-        $img=$this->iImg;
+        $img = $this->iImg;
 
         // If minutes are displayed then hour interval must be 1
         if ($this->IsDisplayMinute() && $this->hour->GetIntervall() > 1) {
@@ -3189,12 +3182,12 @@ class GanttScale
         // top which depends on any previous headers
 
         // First find out the height of each header
-        $offy=$this->StrokeYears(0, true);
-        $offm=$this->StrokeMonths($offy, true);
-        $offw=$this->StrokeWeeks($offm, true);
-        $offd=$this->StrokeDays($offw, true);
-        $offh=$this->StrokeHours($offd, true);
-        $offmin=$this->StrokeMinutes($offh, true);
+        $offy = $this->StrokeYears(0, true);
+        $offm = $this->StrokeMonths($offy, true);
+        $offw = $this->StrokeWeeks($offm, true);
+        $offd = $this->StrokeDays($offw, true);
+        $offh = $this->StrokeHours($offd, true);
+        $offmin = $this->StrokeMinutes($offh, true);
 
         // ... then we can stroke them in the "backwards order to ensure that
         // the larger scale gridlines is stroked over the smaller scale gridline
@@ -3238,9 +3231,9 @@ class GanttConstraint
     {
         $this->iConstrainType = $aType;
         $this->iConstrainRow = $aRow;
-        $this->iConstrainColor=$aColor;
-        $this->iConstrainArrowSize=$aArrowSize;
-        $this->iConstrainArrowType=$aArrowType;
+        $this->iConstrainColor = $aColor;
+        $this->iConstrainArrowSize = $aArrowSize;
+        $this->iConstrainArrowType = $aArrowType;
     }
 }
 
@@ -3253,16 +3246,16 @@ class GanttPlotObject
 {
     public $title;
     public $caption;
-    public $csimarea='';
-    public $csimtarget='';
-    public $csimwintarget='';
-    public $csimalt='';
+    public $csimarea = '';
+    public $csimtarget = '';
+    public $csimwintarget = '';
+    public $csimalt = '';
     public $constraints = array();
-    public $iCaptionMargin=5;
-    public $iConstrainPos=array();
-    protected $iStart="";    // Start date
-    public $iVPos=0;     // Vertical position
-    protected $iLabelLeftMargin=2; // Title margin
+    public $iCaptionMargin = 5;
+    public $iConstrainPos = array();
+    protected $iStart = "";    // Start date
+    public $iVPos = 0;     // Vertical position
+    protected $iLabelLeftMargin = 2; // Title margin
 
     public function __construct()
     {
@@ -3289,9 +3282,9 @@ class GanttPlotObject
             //('CSIM Alt text must be specified as a string.'."\nStart of alt text is:\n$tv");
         }
 
-        $this->csimtarget=$aTarget;
-        $this->csimwintarget=$aWinTarget;
-        $this->csimalt=$aAlt;
+        $this->csimtarget = $aTarget;
+        $this->csimwintarget = $aWinTarget;
+        $this->csimalt = $aAlt;
     }
 
     public function SetCSIMAlt($aAlt)
@@ -3301,7 +3294,7 @@ class GanttPlotObject
             JpGraphError::RaiseL(6025, $tv);
             //('CSIM Alt text must be specified as a string.'."\nStart of alt text is:\n$tv");
         }
-        $this->csimalt=$aAlt;
+        $this->csimalt = $aAlt;
     }
 
     public function SetConstrain($aRow, $aType, $aColor = 'black', $aArrowSize = ARROW_S2, $aArrowType = ARROWT_SOLID)
@@ -3326,7 +3319,7 @@ class GanttPlotObject
 
     public function SetCaptionMargin($aMarg)
     {
-        $this->iCaptionMargin=$aMarg;
+        $this->iCaptionMargin = $aMarg;
     }
 
     public function GetAbsHeight($aImg)
@@ -3341,12 +3334,12 @@ class GanttPlotObject
 
     public function SetLabelLeftMargin($aOff)
     {
-        $this->iLabelLeftMargin=$aOff;
+        $this->iLabelLeftMargin = $aOff;
     }
 
     public function StrokeActInfo($aImg, $aScale, $aYPos)
     {
-        $cols=array();
+        $cols = array();
         $aScale->actinfo->GetColStart($aImg, $cols, true);
         $this->title->Stroke($aImg, $cols, $aYPos);
     }
@@ -3359,12 +3352,12 @@ class GanttPlotObject
 //===================================================
 class Progress
 {
-    public $iProgress=-1;
-    public $iPattern=GANTT_SOLID;
-    public $iColor="black";
-    public $iFillColor='black';
-    public $iDensity=98;
-    public $iHeight=0.65;
+    public $iProgress = -1;
+    public $iPattern = GANTT_SOLID;
+    public $iColor = "black";
+    public $iFillColor = 'black';
+    public $iDensity = 98;
+    public $iHeight = 0.65;
 
     public function Set($aProg)
     {
@@ -3404,9 +3397,9 @@ class HorizontalGridLine
 {
     private $iRowColor1 = '';
     private $iRowColor2 = '';
-    private $iShow=false;
-    private $line=null;
-    private $iStart=0; // 0=from left margin, 1=just along header
+    private $iShow = false;
+    private $line = null;
+    private $iStart = 0; // 0=from left margin, 1=just along header
 
     public function __construct()
     {
@@ -3433,7 +3426,6 @@ class HorizontalGridLine
 
     public function Stroke($aImg, $aScale)
     {
-
         if (! $this->iShow) {
             return;
         }
@@ -3447,19 +3439,19 @@ class HorizontalGridLine
         */
 
         if ($this->iStart === 0) {
-            $xt = $aImg->left_margin-1;
+            $xt = $aImg->left_margin - 1;
         } else {
-            $xt = round($aScale->TranslateDate($aScale->iStartDate))+1;
+            $xt = round($aScale->TranslateDate($aScale->iStartDate)) + 1;
         }
 
-        $xb = $aImg->width-$aImg->right_margin;
+        $xb = $aImg->width - $aImg->right_margin;
 
         $yt = round($aScale->TranslateVertPos(0));
         $yb = round($aScale->TranslateVertPos(1));
         $height = $yb - $yt;
 
         // Loop around for all lines in the chart
-        for ($i=0; $i < $aScale->iVertLines; ++$i) {
+        for ($i = 0; $i < $aScale->iVertLines; ++$i) {
             $yb = $yt - $height;
             $this->line->Stroke($aImg, $xt, $yb, $xb, $yb);
             if ($this->iRowColor1 !== '') {
@@ -3473,7 +3465,7 @@ class HorizontalGridLine
                     $aImg->PopColor();
                 }
             }
-            $yt = round($aScale->TranslateVertPos($i+1));
+            $yt = round($aScale->TranslateVertPos($i + 1));
         }
         $yb = $yt - $height;
         $this->line->Stroke($aImg, $xt, $yb, $xb, $yb);
@@ -3491,18 +3483,18 @@ class GanttBar extends GanttPlotObject
     public $leftMark;
     public $rightMark;
     private $iEnd;
-    private $iHeightFactor=0.5;
-    private $iFillColor="white";
-    private $iFrameColor="black";
-    private $iShadow=false;
-    private $iShadowColor="darkgray";
-    private $iShadowWidth=1;
-    private $iPattern=GANTT_RDIAG;
-    private $iPatternColor="blue";
-    private $iPatternDensity=95;
-    private $iBreakStyle=false;
-    private $iBreakLineStyle='dotted';
-    private $iBreakLineWeight=1;
+    private $iHeightFactor = 0.5;
+    private $iFillColor = "white";
+    private $iFrameColor = "black";
+    private $iShadow = false;
+    private $iShadowColor = "darkgray";
+    private $iShadowWidth = 1;
+    private $iPattern = GANTT_RDIAG;
+    private $iPatternColor = "blue";
+    private $iPatternDensity = 95;
+    private $iBreakStyle = false;
+    private $iBreakLineStyle = 'dotted';
+    private $iBreakLineWeight = 1;
     //---------------
     // CONSTRUCTOR
     public function __construct($aPos, $aLabel, $aStart, $aEnd, $aCaption = "", $aHeightFactor = 0.6)
@@ -3514,21 +3506,21 @@ class GanttBar extends GanttPlotObject
             // If end date has been specified without a time we will asssume
             // end date is at the end of that date
             if (strpos($aEnd, ':') === false) {
-                $this->iEnd = strtotime($aEnd)+SECPERDAY-1;
+                $this->iEnd = strtotime($aEnd) + SECPERDAY - 1;
             } else {
                 $this->iEnd = $aEnd;
             }
         } elseif (is_int($aEnd) || is_float($aEnd)) {
-            $this->iEnd = strtotime($aStart)+round($aEnd*SECPERDAY);
+            $this->iEnd = strtotime($aStart) + round($aEnd * SECPERDAY);
         }
         $this->iVPos = $aPos;
         $this->iHeightFactor = $aHeightFactor;
         $this->title->Set($aLabel);
         $this->caption = new TextProperty($aCaption);
         $this->caption->Align("left", "center");
-        $this->leftMark =new PlotMark();
+        $this->leftMark = new PlotMark();
         $this->leftMark->Hide();
-        $this->rightMark=new PlotMark();
+        $this->rightMark = new PlotMark();
         $this->rightMark->Hide();
         $this->progress = new Progress();
     }
@@ -3537,8 +3529,8 @@ class GanttBar extends GanttPlotObject
     // PUBLIC METHODS
     public function SetShadow($aShadow = true, $aColor = "gray")
     {
-        $this->iShadow=$aShadow;
-        $this->iShadowColor=$aColor;
+        $this->iShadow = $aShadow;
+        $this->iShadowColor = $aColor;
     }
 
     public function SetBreakStyle($aFlg = true, $aLineStyle = 'dotted', $aLineWeight = 1)
@@ -3571,15 +3563,15 @@ class GanttBar extends GanttPlotObject
     public function GetAbsHeight($aImg)
     {
         if (is_int($this->iHeightFactor) || $this->leftMark->show || $this->rightMark->show) {
-            $m=-1;
+            $m = -1;
             if (is_int($this->iHeightFactor)) {
                 $m = $this->iHeightFactor;
             }
             if ($this->leftMark->show) {
-                $m = max($m, $this->leftMark->width*2);
+                $m = max($m, $this->leftMark->width * 2);
             }
             if ($this->rightMark->show) {
-                $m = max($m, $this->rightMark->width*2);
+                $m = max($m, $this->rightMark->width * 2);
             }
             return $m;
         } else {
@@ -3604,8 +3596,8 @@ class GanttBar extends GanttPlotObject
         // percetage of the scale width between horizontal line.
         // If it is an integer > 1 we take it to mean the absolute height in pixels
         if ($this->iHeightFactor > -0.0 && $this->iHeightFactor <= 1.1) {
-            $vs = $aScale->GetVertSpacing()*$this->iHeightFactor;
-        } elseif (is_int($this->iHeightFactor) && $this->iHeightFactor>2 && $this->iHeightFactor < 200) {
+            $vs = $aScale->GetVertSpacing() * $this->iHeightFactor;
+        } elseif (is_int($this->iHeightFactor) && $this->iHeightFactor > 2 && $this->iHeightFactor < 200) {
             $vs = $this->iHeightFactor;
         } else {
             JpGraphError::RaiseL(6028, $this->iHeightFactor);
@@ -3621,27 +3613,27 @@ class GanttBar extends GanttPlotObject
 
         $xt = round($aScale->TranslateDate($limst));
         $xb = round($aScale->TranslateDate($limen));
-        $yt = round($aScale->TranslateVertPos($this->iVPos)-$vs-($aScale->GetVertSpacing()/2-$vs/2));
-        $yb = round($aScale->TranslateVertPos($this->iVPos)-($aScale->GetVertSpacing()/2-$vs/2));
-        $middle = round($yt+($yb-$yt)/2);
+        $yt = round($aScale->TranslateVertPos($this->iVPos) - $vs - ($aScale->GetVertSpacing() / 2 - $vs / 2));
+        $yb = round($aScale->TranslateVertPos($this->iVPos) - ($aScale->GetVertSpacing() / 2 - $vs / 2));
+        $middle = round($yt + ($yb - $yt) / 2);
         $this->StrokeActInfo($aImg, $aScale, $middle);
 
         // CSIM for title
         if (! empty($this->title->csimtarget)) {
             $colwidth = $this->title->GetColWidth($aImg);
-            $colstarts=array();
+            $colstarts = array();
             $aScale->actinfo->GetColStart($aImg, $colstarts, true);
             $n = min(count($colwidth), count($this->title->csimtarget));
-            for ($i=0; $i < $n; ++$i) {
+            for ($i = 0; $i < $n; ++$i) {
                 $title_xt = $colstarts[$i];
                 $title_xb = $title_xt + $colwidth[$i];
                 $coords = "$title_xt,$yt,$title_xb,$yt,$title_xb,$yb,$title_xt,$yb";
 
                 if (! empty($this->title->csimtarget[$i])) {
-                    $this->csimarea .= "<area shape=\"poly\" coords=\"$coords\" href=\"".$this->title->csimtarget[$i]."\"";
+                    $this->csimarea .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->title->csimtarget[$i] . "\"";
 
                     if (! empty($this->title->csimwintarget[$i])) {
-                        $this->csimarea .= "target=\"".$this->title->csimwintarget[$i]."\" ";
+                        $this->csimarea .= "target=\"" . $this->title->csimwintarget[$i] . "\" ";
                     }
 
                     if (! empty($this->title->csimalt[$i])) {
@@ -3675,10 +3667,10 @@ class GanttBar extends GanttPlotObject
             if ($this->iShadow) {
                 $aImg->SetColor($this->iFrameColor);
                 $aImg->ShadowRectangle($xt, $yt, $xb, $yb, $this->iFillColor, $this->iShadowWidth, $this->iShadowColor);
-                $prect->SetPos(new Rectangle($xt+1, $yt+1, $xb-$xt-$this->iShadowWidth-2, $yb-$yt-$this->iShadowWidth-2));
+                $prect->SetPos(new Rectangle($xt + 1, $yt + 1, $xb - $xt - $this->iShadowWidth - 2, $yb - $yt - $this->iShadowWidth - 2));
                 $prect->Stroke($aImg);
             } else {
-                $prect->SetPos(new Rectangle($xt, $yt, $xb-$xt+1, $yb-$yt+1));
+                $prect->SetPos(new Rectangle($xt, $yt, $xb - $xt + 1, $yb - $yt + 1));
                 $prect->Stroke($aImg);
                 $aImg->SetColor($this->iFrameColor);
                 $aImg->Rectangle($xt, $yt, $xb, $yb);
@@ -3687,10 +3679,10 @@ class GanttBar extends GanttPlotObject
         // CSIM for bar
         if (! empty($this->csimtarget)) {
             $coords = "$xt,$yt,$xb,$yt,$xb,$yb,$xt,$yb";
-            $this->csimarea .= "<area shape=\"poly\" coords=\"$coords\" href=\"".$this->csimtarget."\"";
+            $this->csimarea .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->csimtarget . "\"";
 
             if (!empty($this->csimwintarget)) {
-                $this->csimarea .= " target=\"".$this->csimwintarget."\" ";
+                $this->csimarea .= " target=\"" . $this->csimwintarget . "\" ";
             }
 
             if ($this->csimalt != '') {
@@ -3704,12 +3696,12 @@ class GanttBar extends GanttPlotObject
         if ($this->progress->iProgress > 0) {
             $xtp = $aScale->TranslateDate($st);
             $xbp = $aScale->TranslateDate($en);
-            $len = ($xbp-$xtp)*$this->progress->iProgress;
+            $len = ($xbp - $xtp) * $this->progress->iProgress;
 
-            $endpos = $xtp+$len;
+            $endpos = $xtp + $len;
             if ($endpos > $xt) {
                 // Take away the length of the progress that is not visible (before the start date)
-                $len -= ($xt-$xtp);
+                $len -= ($xt - $xtp);
 
                 // Is the the progress bar visible after the start date?
                 if ($xtp < $xt) {
@@ -3717,20 +3709,20 @@ class GanttBar extends GanttPlotObject
                 }
 
                 // Make sure that the progess bar doesn't extend over the end date
-                if ($xtp+$len-1 > $xb) {
-                    $len = $xb - $xtp ;
+                if ($xtp + $len - 1 > $xb) {
+                    $len = $xb - $xtp;
                 }
 
                 $prog = $factory->Create($this->progress->iPattern, $this->progress->iColor);
                 $prog->SetDensity($this->progress->iDensity);
                 $prog->SetBackground($this->progress->iFillColor);
-                $barheight = ($yb-$yt+1);
+                $barheight = ($yb - $yt + 1);
                 if ($this->iShadow) {
                     $barheight -= $this->iShadowWidth;
                 }
-                $progressheight = floor($barheight*$this->progress->iHeight);
-                $marg = ceil(($barheight-$progressheight)/2);
-                $pos = new Rectangle($xtp, $yt + $marg, $len, $barheight-2*$marg);
+                $progressheight = floor($barheight * $this->progress->iHeight);
+                $marg = ceil(($barheight - $progressheight) / 2);
+                $pos = new Rectangle($xtp, $yt + $marg, $len, $barheight - 2 * $marg);
                 $prog->SetPos($pos);
                 $prog->Stroke($aImg);
             }
@@ -3743,7 +3735,7 @@ class GanttBar extends GanttPlotObject
             // special so that these marks are placed right under the
             // bar.
             if ($this->leftMark->GetType() == MARK_LEFTTRIANGLE) {
-                $y = $yb ;
+                $y = $yb;
             }
             $this->leftMark->Stroke($aImg, $xt, $y);
         }
@@ -3753,7 +3745,7 @@ class GanttBar extends GanttPlotObject
             // special so that these marks are placed right under the
             // bar.
             if ($this->rightMark->GetType() == MARK_RIGHTTRIANGLE) {
-                $y = $yb ;
+                $y = $yb;
             }
             $this->rightMark->Stroke($aImg, $xb, $y);
 
@@ -3761,7 +3753,7 @@ class GanttBar extends GanttPlotObject
             if ($this->rightMark->show) {
                 $margin += $this->rightMark->GetWidth();
             }
-            $this->caption->Stroke($aImg, $xb+$margin, $middle);
+            $this->caption->Stroke($aImg, $xb + $margin, $middle);
         }
     }
 }
@@ -3804,31 +3796,31 @@ class MileStone extends GanttPlotObject
     public function Stroke($aImg, $aScale)
     {
         // Put the mark in the middle at the middle of the day
-        $d = $aScale->NormalizeDate($this->iStart)+SECPERDAY/2;
+        $d = $aScale->NormalizeDate($this->iStart) + SECPERDAY / 2;
         $x = $aScale->TranslateDate($d);
-        $y = $aScale->TranslateVertPos($this->iVPos)-($aScale->GetVertSpacing()/2);
+        $y = $aScale->TranslateVertPos($this->iVPos) - ($aScale->GetVertSpacing() / 2);
 
         $this->StrokeActInfo($aImg, $aScale, $y);
 
         // CSIM for title
         if (! empty($this->title->csimtarget)) {
-            $yt = round($y - $this->title->GetHeight($aImg)/2);
-            $yb = round($y + $this->title->GetHeight($aImg)/2);
+            $yt = round($y - $this->title->GetHeight($aImg) / 2);
+            $yb = round($y + $this->title->GetHeight($aImg) / 2);
 
             $colwidth = $this->title->GetColWidth($aImg);
-            $colstarts=array();
+            $colstarts = array();
             $aScale->actinfo->GetColStart($aImg, $colstarts, true);
             $n = min(count($colwidth), count($this->title->csimtarget));
-            for ($i=0; $i < $n; ++$i) {
+            for ($i = 0; $i < $n; ++$i) {
                 $title_xt = $colstarts[$i];
                 $title_xb = $title_xt + $colwidth[$i];
                 $coords = "$title_xt,$yt,$title_xb,$yt,$title_xb,$yb,$title_xt,$yb";
 
                 if (!empty($this->title->csimtarget[$i])) {
-                    $this->csimarea .= "<area shape=\"poly\" coords=\"$coords\" href=\"".$this->title->csimtarget[$i]."\"";
+                    $this->csimarea .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->title->csimtarget[$i] . "\"";
 
                     if (!empty($this->title->csimwintarget[$i])) {
-                        $this->csimarea .= "target=\"".$this->title->csimwintarget[$i]."\"";
+                        $this->csimarea .= "target=\"" . $this->title->csimwintarget[$i] . "\"";
                     }
 
                     if (! empty($this->title->csimalt[$i])) {
@@ -3846,8 +3838,8 @@ class MileStone extends GanttPlotObject
 
         // Remember the coordinates for any constrains linking to
         // this milestone
-        $w = $this->mark->GetWidth()/2;
-        $this->SetConstrainPos($x, round($y-$w), $x, round($y+$w));
+        $w = $this->mark->GetWidth() / 2;
+        $this->SetConstrainPos($x, round($y - $w), $x, round($y + $w));
 
         // Setup CSIM
         if ($this->csimtarget != '') {
@@ -3856,7 +3848,7 @@ class MileStone extends GanttPlotObject
         }
 
         $this->mark->Stroke($aImg, $x, $y);
-        $this->caption->Stroke($aImg, $x+$this->mark->width/2+$this->iCaptionMargin, $y);
+        $this->caption->Stroke($aImg, $x + $this->mark->width / 2 + $this->iCaptionMargin, $y);
 
         $this->csimarea .= $this->mark->GetCSIMAreas();
     }
@@ -3887,8 +3879,8 @@ class GanttVLine extends GanttPlotObject
 {
 
     private $iLine;
-    private $title_margin=3;
-    private $iDayOffset=0.5;
+    private $title_margin = 3;
+    private $iDayOffset = 0.5;
     private $iStartRow = -1;
     private $iEndRow = -1;
 
@@ -3943,14 +3935,14 @@ class GanttVLine extends GanttPlotObject
             return;
         }
         if ($this->iDayOffset != 0.0) {
-            $d += 24*60*60*$this->iDayOffset;
+            $d += 24 * 60 * 60 * $this->iDayOffset;
         }
         $x = $aScale->TranslateDate($d);//d=1006858800,
 
         if ($this->iStartRow > -1) {
-            $y1 = $aScale->TranslateVertPos($this->iStartRow, true) ;
+            $y1 = $aScale->TranslateVertPos($this->iStartRow, true);
         } else {
-            $y1 = $aScale->iVertHeaderSize+$aImg->top_margin;
+            $y1 = $aScale->iVertHeaderSize + $aImg->top_margin;
         }
 
         if ($this->iEndRow > -1) {
@@ -3961,7 +3953,7 @@ class GanttVLine extends GanttPlotObject
 
         $this->iLine->Stroke($aImg, $x, $y1, $x, $y2);
         $this->title->Align("center", "top");
-        $this->title->Stroke($aImg, $x, $y2+$this->title_margin);
+        $this->title->Stroke($aImg, $x, $y2 + $this->title_margin);
     }
 }
 
@@ -3975,10 +3967,10 @@ class LinkArrow
     private $iy;
     private $isizespec = array(
     array(2,3),array(3,5),array(3,8),array(6,15),array(8,22));
-    private $iDirection=ARROW_DOWN;
-    private $iType=ARROWT_SOLID;
-    private $iSize=ARROW_S2;
-    private $iColor='black';
+    private $iDirection = ARROW_DOWN;
+    private $iType = ARROWT_SOLID;
+    private $iSize = ARROW_S2;
+    private $iColor = 'black';
 
     public function __construct($x, $y, $aDirection, $aType = ARROWT_SOLID, $aSize = ARROW_S2)
     {
@@ -4011,16 +4003,16 @@ class LinkArrow
         $y = $this->iy;
         switch ($this->iDirection) {
             case ARROW_DOWN:
-                $c = array($x,$y,$x-$dx,$y-$dy,$x+$dx,$y-$dy,$x,$y);
+                $c = array($x,$y,$x - $dx,$y - $dy,$x + $dx,$y - $dy,$x,$y);
                 break;
             case ARROW_UP:
-                $c = array($x,$y,$x-$dx,$y+$dy,$x+$dx,$y+$dy,$x,$y);
+                $c = array($x,$y,$x - $dx,$y + $dy,$x + $dx,$y + $dy,$x,$y);
                 break;
             case ARROW_LEFT:
-                $c = array($x,$y,$x+$dy,$y-$dx,$x+$dy,$y+$dx,$x,$y);
+                $c = array($x,$y,$x + $dy,$y - $dx,$x + $dy,$y + $dx,$x,$y);
                 break;
             case ARROW_RIGHT:
-                $c = array($x,$y,$x-$dy,$y-$dx,$x-$dy,$y+$dx,$x,$y);
+                $c = array($x,$y,$x - $dy,$y - $dx,$x - $dy,$y + $dx,$x,$y);
                 break;
             default:
                 JpGraphError::RaiseL(6030);
@@ -4056,12 +4048,12 @@ class GanttLink
     private $ix2;
     private $iy1;
     private $iy2;
-    private $iPathType=2;
-    private $iPathExtend=15;
-    private $iColor='black';
-    private $iWeight=1;
-    private $iArrowSize=ARROW_S2;
-    private $iArrowType=ARROWT_SOLID;
+    private $iPathType = 2;
+    private $iPathExtend = 15;
+    private $iColor = 'black';
+    private $iWeight = 1;
+    private $iArrowSize = ARROW_S2;
+    private $iArrowType = ARROWT_SOLID;
 
     public function __construct($x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0)
     {
@@ -4116,16 +4108,16 @@ class GanttLink
         // he wants.
 
         // The arrow is drawn between (x1,y1) to (x2,y2)
-        $x1 = $this->ix1 ;
-        $x2 = $this->ix2 ;
-        $y1 = $this->iy1 ;
-        $y2 = $this->iy2 ;
+        $x1 = $this->ix1;
+        $x2 = $this->ix2;
+        $y1 = $this->iy1;
+        $y2 = $this->iy2;
 
         // Depending on if the target is below or above we have to
         // handle thi different.
         if ($y2 > $y1) {
             $arrowtype = ARROW_DOWN;
-            $midy = round(($y2-$y1)/2+$y1);
+            $midy = round(($y2 - $y1) / 2 + $y1);
             if ($x2 > $x1) {
                 switch ($this->iPathType) {
                     case 0:
@@ -4153,15 +4145,15 @@ class GanttLink
                         // If we draw a link back in time (end to start) and the bars
                         // are very close we also change the path so it comes in from
                         // the left on the activity
-                        $c = array($x1,$y1,$x1+$this->iPathExtend,$y1,
-                        $x1+$this->iPathExtend,$midy,
+                        $c = array($x1,$y1,$x1 + $this->iPathExtend,$y1,
+                        $x1 + $this->iPathExtend,$midy,
                         $x2,$midy,$x2,$y2);
                         break;
                     case 3:
-                        if ($y2-$midy < 6) {
+                        if ($y2 - $midy < 6) {
                             $c = array($x1,$y1,$x1,$midy,
-                            $x2-$this->iPathExtend,$midy,
-                            $x2-$this->iPathExtend,$y2,
+                            $x2 - $this->iPathExtend,$midy,
+                            $x2 - $this->iPathExtend,$y2,
                             $x2,$y2);
                             $arrowtype = ARROW_RIGHT;
                         } else {
@@ -4179,7 +4171,7 @@ class GanttLink
         } else {
             // Y2 < Y1
             $arrowtype = ARROW_UP;
-            $midy = round(($y1-$y2)/2+$y2);
+            $midy = round(($y1 - $y2) / 2 + $y2);
             if ($x2 > $x1) {
                 switch ($this->iPathType) {
                     case 0:
@@ -4187,7 +4179,7 @@ class GanttLink
                         $c = array($x1,$y1,$x1,$midy,$x2,$midy,$x2,$y2);
                         break;
                     case 3:
-                        if ($midy-$y2 < 8) {
+                        if ($midy - $y2 < 8) {
                             $arrowtype = ARROW_RIGHT;
                             $c = array($x1,$y1,$x1,$y2,$x2,$y2);
                         } else {
@@ -4207,15 +4199,15 @@ class GanttLink
                         break;
                     case 2:
                         // Always extend out horizontally a bit from the first point
-                        $c = array($x1,$y1,$x1+$this->iPathExtend,$y1,
-                        $x1+$this->iPathExtend,$midy,
+                        $c = array($x1,$y1,$x1 + $this->iPathExtend,$y1,
+                        $x1 + $this->iPathExtend,$midy,
                         $x2,$midy,$x2,$y2);
                         break;
                     case 3:
-                        if ($midy-$y2 < 16) {
+                        if ($midy - $y2 < 16) {
                             $arrowtype = ARROW_RIGHT;
-                            $c = array($x1,$y1,$x1,$midy,$x2-$this->iPathExtend,$midy,
-                            $x2-$this->iPathExtend,$y2,
+                            $c = array($x1,$y1,$x1,$midy,$x2 - $this->iPathExtend,$midy,
+                            $x2 - $this->iPathExtend,$y2,
                             $x2,$y2);
                         } else {
                             $c = array($x1,$y1,$x1,$midy,$x2,$midy,$x2,$y2);

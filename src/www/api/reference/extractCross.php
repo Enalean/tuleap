@@ -52,8 +52,8 @@ if ($request->existAndNonEmpty('group_id')) {
     }
 }
 
-if (!$request->get('text')||!$request->get('login')||!$request->get('type')||!$request->get('rev_id')) {
-    echo $GLOBALS['Language']->getText('include_exit', 'missing_param_err')."\n";
+if (!$request->get('text') || !$request->get('login') || !$request->get('type') || !$request->get('rev_id')) {
+    echo $GLOBALS['Language']->getText('include_exit', 'missing_param_err') . "\n";
     echo $GLOBALS['Language']->getText('project_reference', 'extract_syntax');
     exit;
 }
@@ -65,20 +65,20 @@ if ($user !== null) {
     $user_id = $user->getId();
 }
 
-$text=trim($request->get('text'));
-$source_id=trim($request->get('rev_id'));
-$source_type=trim($request->get('type'));
+$text = trim($request->get('text'));
+$source_id = trim($request->get('rev_id'));
+$source_type = trim($request->get('type'));
 
 $reference_manager = ReferenceManager::instance();
 $reference_manager->extractCrossRef($text, $source_id, $source_type, $group_id, $user_id);
 
-$refs=$reference_manager->extractReferences($text, $group_id);
+$refs = $reference_manager->extractReferences($text, $group_id);
 if (isset($refs)) {
     foreach ($refs as $ref_instance) {
         $ref = $ref_instance->getReference();
-        print $ref->getDescription()."\n";
-        print $ref_instance->getMatch()."\n";
-        print $ref_instance->getFullGotoLink()."\n\n";
+        print $ref->getDescription() . "\n";
+        print $ref_instance->getMatch() . "\n";
+        print $ref_instance->getFullGotoLink() . "\n\n";
     }
 }
 exit;

@@ -39,7 +39,7 @@ class Workflow_Transition_Condition_Permissions_Factory
         $authorized_ugroups_keyname = array();
         if (isset($xml->permissions)) {
             foreach ($xml->permissions->permission as $perm) {
-                $ugroup = (string)$perm['ugroup'];
+                $ugroup = (string) $perm['ugroup'];
                 if (isset($GLOBALS['UGROUPS'][$ugroup])) {
                     $authorized_ugroups_keyname[] = $GLOBALS['UGROUPS'][$ugroup];
                 } else {

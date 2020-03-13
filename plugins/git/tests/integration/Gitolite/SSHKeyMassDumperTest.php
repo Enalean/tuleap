@@ -134,8 +134,8 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $keyfile = 'forge__gerrit_1@0.pub';
-        touch($this->gitolite_admin_dir . '/keydir/'.$keyfile);
-        $this->git_exec->add($this->gitolite_admin_dir . '/keydir/'.$keyfile);
+        touch($this->gitolite_admin_dir . '/keydir/' . $keyfile);
+        $this->git_exec->add($this->gitolite_admin_dir . '/keydir/' . $keyfile);
         $this->git_exec->commit("Gerrit key");
         $this->assertEmptyGitStatus();
 
@@ -143,6 +143,6 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
-        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/'.$keyfile));
+        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/' . $keyfile));
     }
 }

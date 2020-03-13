@@ -44,15 +44,15 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
                 if (strpos($sys_dbhost, ':') !== false) {
                     list($host, $details) = explode(':', $sys_dbhost);
                     if (is_numeric($details)) {
-                        $port = ';port='.$details;
+                        $port = ';port=' . $details;
                     } else {
-                        $socket = ';unix_socket='.$socket;
+                        $socket = ';unix_socket=' . $socket;
                     }
                 } else {
                     $host   = $sys_dbhost;
                 }
 
-                $this->dsn      = 'mysql:host='.$host.$socket.$port.';dbname='.$sys_dbname;
+                $this->dsn      = 'mysql:host=' . $host . $socket . $port . ';dbname=' . $sys_dbname;
                 $this->user     = $sys_dbuser;
                 $this->password = $sys_dbpasswd;
             } else {
@@ -63,12 +63,12 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
 
     private function getLocalInc()
     {
-        return getenv($this->env_variable_name) ? getenv($this->env_variable_name) : '/etc/'.$this->platform_name.'/conf/local.inc';
+        return getenv($this->env_variable_name) ? getenv($this->env_variable_name) : '/etc/' . $this->platform_name . '/conf/local.inc';
     }
 
     private function getErrorLocalIncMessage()
     {
-        return 'Unable to find a valid local.inc for '.$this->platform_name.', please check '.$this->env_variable_name.' environment variable';
+        return 'Unable to find a valid local.inc for ' . $this->platform_name . ', please check ' . $this->env_variable_name . ' environment variable';
     }
 
     /**
@@ -109,7 +109,7 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
         $logger->setPassword($this->password);
         $logger->setDSN($this->dsn);
         $logger->setTable('forge_upgrade_log');
-        $logger->setInsertSql('INSERT INTO forge_upgrade_log (id, bucket_id, timestamp, logger, level, message, thread, file, line) VALUES (NULL,'.$bucket->getId().',?,?,?,?,?,?,?)');
+        $logger->setInsertSql('INSERT INTO forge_upgrade_log (id, bucket_id, timestamp, logger, level, message, thread, file, line) VALUES (NULL,' . $bucket->getId() . ',?,?,?,?,?,?,?)');
         $logger->setInsertPattern('%d,%c,%p,%m,%t,%F,%L');
         $logger->activateOptions();
 

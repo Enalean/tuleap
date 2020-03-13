@@ -65,7 +65,7 @@ if ($filter == "member") {
 }
     $hp = Codendi_HTMLPurifier::instance();
 while ($groups_array = db_fetch_array($results)) {
-    echo '<option value="'.(int)$groups_array["group_id"].'">'. $hp->purify(html_entity_decode($groups_array["group_name"])) .'</option>';
+    echo '<option value="' . (int) $groups_array["group_id"] . '">' . $hp->purify(html_entity_decode($groups_array["group_name"])) . '</option>';
 }
 
 ?>

@@ -172,7 +172,7 @@ class BurningParrotTheme extends BaseLayout
         }
 
         $color = \ThemeVariantColor::buildFromVariant((new \ThemeVariant())->getVariantForUser($this->user));
-        $body_classes[] = 'theme-'. $color->getName();
+        $body_classes[] = 'theme-' . $color->getName();
         $is_condensed = $this->user->getPreference(\PFUser::PREFERENCE_DISPLAY_DENSITY) === \PFUser::DISPLAY_DENSITY_CONDENSED;
         if ($is_condensed) {
             $body_classes[] = 'theme-condensed';

@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
 if ($sys_user !== 'codendiadm') {
-    fwrite(STDERR, 'User must be codendiadm'.PHP_EOL);
+    fwrite(STDERR, 'User must be codendiadm' . PHP_EOL);
     exit(1);
 }
 

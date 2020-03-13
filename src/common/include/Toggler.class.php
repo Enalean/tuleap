@@ -83,12 +83,12 @@ class Toggler
         $current_user = UserManager::instance()->getCurrentUser();
         $ajax_mode = $current_user->isAnonymous() || $noajax ? '-noajax' : '';
         if ($current_user->isAnonymous()) {
-            return $force === true ? 'toggler'. $ajax_mode : 'toggler-hide'. $ajax_mode;
+            return $force === true ? 'toggler' . $ajax_mode : 'toggler-hide' . $ajax_mode;
         } else {
             if ($force === null) {
-                return $current_user->getPreference('toggle_'. $id) ? 'toggler'. $ajax_mode : 'toggler-hide'. $ajax_mode;
+                return $current_user->getPreference('toggle_' . $id) ? 'toggler' . $ajax_mode : 'toggler-hide' . $ajax_mode;
             } else {
-                return $force ? 'toggler'. $ajax_mode : 'toggler-hide'. $ajax_mode;
+                return $force ? 'toggler' . $ajax_mode : 'toggler-hide' . $ajax_mode;
             }
         }
     }
@@ -106,7 +106,7 @@ class Toggler
             EventManager::instance()->processEvent(Event::TOGGLE, array('id' => $id, 'user' => $current_user, 'done' => &$done));
             if (!$done) {
                 if (strpos($id, 'tracker_report_query_') === 0) {
-                    $report_id = (int)substr($id, strlen('tracker_report_query_'));
+                    $report_id = (int) substr($id, strlen('tracker_report_query_'));
                     $report_factory = ArtifactReportFactory::instance();
                     if (($report = $report_factory->getReportById($report_id, $current_user->getid())) && $report->userCanUpdate($current_user)) {
                         $report->toggleQueryDisplay();
@@ -131,7 +131,7 @@ class Toggler
     public static function shouldBeDisplayed(PFUser $user, $id, $default)
     {
         if ($user->isLoggedIn()) {
-            $should_be_displayed = $user->getPreference('toggle_'. $id); //TODO: DRY 'toggle_'. $id
+            $should_be_displayed = $user->getPreference('toggle_' . $id); //TODO: DRY 'toggle_'. $id
             if ($should_be_displayed !== false) {
                 return $should_be_displayed;
             }
@@ -148,6 +148,6 @@ class Toggler
      */
     public static function togglePreference(PFUser $current_user, $id)
     {
-        $current_user->setPreference('toggle_'. $id, 1 - (int)$current_user->getPreference('toggle_'. $id));
+        $current_user->setPreference('toggle_' . $id, 1 - (int) $current_user->getPreference('toggle_' . $id));
     }
 }

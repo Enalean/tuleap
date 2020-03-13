@@ -26,6 +26,6 @@ class ArtifactIsNotInBacklogTrackerException extends Exception
 
     public function __construct($potential_backlog_item_id)
     {
-        parent::__construct('Artifact '. $potential_backlog_item_id .' is not in a backlog tracker');
+        parent::__construct('Artifact ' . $potential_backlog_item_id . ' is not in a backlog tracker');
     }
 }

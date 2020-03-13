@@ -16,8 +16,8 @@ require_once('jpgraph_plotmark.inc.php');
 //===================================================
 class FieldArrow
 {
-    public $iColor='black';
-    public $iSize=10;  // Length in pixels for  arrow
+    public $iColor = 'black';
+    public $iSize = 10;  // Length in pixels for  arrow
     public $iArrowSize = 2;
     private $isizespec = array(
         array(2,1),array(3,2),array(4,3),array(6,4),array(7,4),array(8,5),array(10,6),array(12,7),array(16,8),array(20,10)
@@ -45,14 +45,14 @@ class FieldArrow
 
         $old_origin = $aImg->SetCenter($x, $y);
         $old_a = $aImg->a;
-        $aImg->SetAngle(-$a+$old_a);
+        $aImg->SetAngle(-$a + $old_a);
 
-        $dx = round($this->iSize/2);
-        $c = array($x-$dx,$y,$x+$dx,$y);
+        $dx = round($this->iSize / 2);
+        $c = array($x - $dx,$y,$x + $dx,$y);
         $x += $dx;
 
         list($dx,$dy) = $this->isizespec[$this->iArrowSize];
-        $ca = array($x,$y,$x-$dx,$y-$dy,$x-$dx,$y+$dy,$x,$y);
+        $ca = array($x,$y,$x - $dx,$y - $dy,$x - $dx,$y + $dy,$x,$y);
 
         $aImg->SetColor($this->iColor);
         $aImg->Polygon($c);
@@ -98,15 +98,14 @@ class FieldPlot extends Plot
 
     public function Stroke($img, $xscale, $yscale)
     {
-
         // Remeber base color and size
         $bc = $this->arrow->iColor;
         $bs = $this->arrow->iSize;
         $bas = $this->arrow->iArrowSize;
 
-        for ($i=0; $i<$this->numpoints; ++$i) {
+        for ($i = 0; $i < $this->numpoints; ++$i) {
             // Skip null values
-            if ($this->coords[0][$i]==="") {
+            if ($this->coords[0][$i] === "") {
                 continue;
             }
 
@@ -201,18 +200,17 @@ class ScatterPlot extends Plot
 
     public function Stroke($img, $xscale, $yscale)
     {
-
-        $ymin=$yscale->scale_abs[0];
+        $ymin = $yscale->scale_abs[0];
         if ($yscale->scale[0] < 0) {
-            $yzero=$yscale->Translate(0);
+            $yzero = $yscale->Translate(0);
         } else {
-            $yzero=$yscale->scale_abs[0];
+            $yzero = $yscale->scale_abs[0];
         }
 
         $this->csimareas = '';
-        for ($i=0; $i<$this->numpoints; ++$i) {
+        for ($i = 0; $i < $this->numpoints; ++$i) {
             // Skip null values
-            if ($this->coords[0][$i]==='' || $this->coords[0][$i]==='-' || $this->coords[0][$i]==='x') {
+            if ($this->coords[0][$i] === '' || $this->coords[0][$i] === '-' || $this->coords[0][$i] === 'x') {
                 continue;
             }
 

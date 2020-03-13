@@ -38,7 +38,7 @@ class ArtifactsDeletionDAO extends DataAccessObject
                     AND user_id = ?
         ";
 
-        return $this->getDB()->single($sql, [ $timestamp, $user_id ]);
+        return $this->getDB()->single($sql, [$timestamp, $user_id]);
     }
 
     public function recordDeletionForUser(

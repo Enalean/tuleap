@@ -90,10 +90,10 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
         if ($reminderId && !empty($roles)) {
             $values = array();
             foreach ($roles as $role) {
-                $role = (int)$this->da->escapeInt($role);
+                $role = (int) $this->da->escapeInt($role);
                 $values[] = " (
-                        ".$reminderId.",
-                        ".$role."
+                        " . $reminderId . ",
+                        " . $role . "
                     )";
             }
             $values = implode(', ', $values);
@@ -102,7 +102,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
                         reminder_id,
                         role_id
                         )
-                    VALUES ".$values;
+                    VALUES " . $values;
             $this->update($sql);
         }
     }

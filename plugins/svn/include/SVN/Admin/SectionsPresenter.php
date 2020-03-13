@@ -40,27 +40,27 @@ class SectionsPresenter
         $this->hooks_config      = dgettext('tuleap-svn', 'Commit rules');
         $this->repository_delete = dgettext('tuleap-svn', 'Delete');
 
-        $this->notifications_url = SVN_BASE_URL .'/?'. http_build_query(array(
+        $this->notifications_url = SVN_BASE_URL . '/?' . http_build_query(array(
             'group_id' => $repository->getProject()->getId(),
             'action'   => 'display-mail-notification',
             'repo_id'  => $repository->getId()
         ));
-        $this->access_control_url = SVN_BASE_URL .'/?'. http_build_query(array(
+        $this->access_control_url = SVN_BASE_URL . '/?' . http_build_query(array(
             'group_id' => $repository->getProject()->getId(),
             'action'   => 'access-control',
             'repo_id'  => $repository->getId()
         ));
-        $this->immutable_tag_url = SVN_BASE_URL .'/?'. http_build_query(array(
+        $this->immutable_tag_url = SVN_BASE_URL . '/?' . http_build_query(array(
             'group_id' => $repository->getProject()->getId(),
             'action'   => 'display-immutable-tag',
             'repo_id'  => $repository->getId()
         ));
-        $this->hooks_config_url = SVN_BASE_URL .'/?'. http_build_query(array(
+        $this->hooks_config_url = SVN_BASE_URL . '/?' . http_build_query(array(
             'group_id' => $repository->getProject()->getId(),
             'action'   => 'hooks-config',
             'repo_id'  => $repository->getId()
         ));
-        $this->repository_delete_url = SVN_BASE_URL .'/?'. http_build_query(array(
+        $this->repository_delete_url = SVN_BASE_URL . '/?' . http_build_query(array(
             'group_id' => $repository->getProject()->getId(),
             'action'   => 'display-repository-delete',
             'repo_id'  => $repository->getId()

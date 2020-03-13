@@ -25,7 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 
-require_once __DIR__.'/../../../../src/www/include/service.php';
+require_once __DIR__ . '/../../../../src/www/include/service.php';
 
 class ServiceCreateServiceTest extends TestCase
 {

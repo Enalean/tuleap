@@ -34,13 +34,13 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact imp
         Tracker_Artifact $artifact
     ) {
         $data = array(
-            'use_artifact_permissions' => (int)$field_change['use_perm'],
+            'use_artifact_permissions' => (int) $field_change['use_perm'],
             'u_groups' => array()
         );
 
         foreach ($field_change->ugroup as $ugroup_xml) {
             if (isset($ugroup_xml['ugroup_id'])) {
-                $data['u_groups'][] = (int)$ugroup_xml['ugroup_id'];
+                $data['u_groups'][] = (int) $ugroup_xml['ugroup_id'];
             } elseif (isset($ugroup_xml['ugroup_name'])) {
                 $ugroup_manager = new UGroupManager();
                 $ugroup = $ugroup_manager->getUGroupByName(

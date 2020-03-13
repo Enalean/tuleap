@@ -27,6 +27,6 @@ class InvalidUGroupException extends \Exception
 {
     public function __construct($ugroup_id)
     {
-        parent::__construct('This ugroup id is invalid: '.$ugroup_id);
+        parent::__construct('This ugroup id is invalid: ' . $ugroup_id);
     }
 }

@@ -259,7 +259,7 @@ class Tracker_Workflow_Trigger_RulesManager
         foreach ($dar_rules as $row) {
             $artifact = Tracker_ArtifactFactory::instance()->getInstanceFromRow($row);
             $rule     = $this->getRuleById($row['rule_id']);
-            $this->logger->debug("Found matching rule ". json_encode($rule->fetchFormattedForJson()));
+            $this->logger->debug("Found matching rule " . json_encode($rule->fetchFormattedForJson()));
             $this->rules_processor->process($artifact, $rule);
         }
 
@@ -273,7 +273,7 @@ class Tracker_Workflow_Trigger_RulesManager
         $dar_rules = $this->dao->searchForInvolvedRulesIdsByChangesetId($changeset->getId());
         foreach ($dar_rules as $row) {
             $rule = $this->getRuleById($row['rule_id']);
-            $this->logger->debug("Found matching rule ". json_encode($rule->fetchFormattedForJson()));
+            $this->logger->debug("Found matching rule " . json_encode($rule->fetchFormattedForJson()));
             $this->rules_processor->process($changeset->getArtifact(), $rule);
         }
 

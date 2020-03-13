@@ -29,7 +29,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. $this->_getTitle($params) .' - '. dgettext('tuleap-docman', 'Manage Obsolete Documents') .'</h2>';
+        echo '<h2>' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Manage Obsolete Documents') . '</h2>';
     }
 
     public function getTable($params)
@@ -65,12 +65,12 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
             $type = $itemFactory->getItemTypeForItem($item);
             if ($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
                 $trclass = html_get_alt_row_color($altRowClass++);
-                $table .= "<tr class=\"".$trclass."\">\n";
+                $table .= "<tr class=\"" . $trclass . "\">\n";
 
                 // Name
                 $docmanIcons = $this->_getDocmanIcons($params);
                 $icon_src = $docmanIcons->getIconForItem($item, $params);
-                $icon = '<img src="'. $icon_src .'" class="docman_item_icon" />';
+                $icon = '<img src="' . $icon_src . '" class="docman_item_icon" />';
                 $table .= "<td>";
                 $table .= '<span style="white-space: nowrap;">';
                 $table .= $icon;
@@ -81,7 +81,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
                     false,
                     true
                 );
-                $table .= '<a href="'.$url.'">';
+                $table .= '<a href="' . $url . '">';
                 $table .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
                 $table .= '</a>';
                 $table .= '</span>';

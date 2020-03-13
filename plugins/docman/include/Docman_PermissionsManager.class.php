@@ -242,7 +242,7 @@ class Docman_PermissionsManager
             // Check permissions
             $hasWritePerm = $this->_userHasWritePermission($user, $item_id);
             // Check lock status
-            $itemLocked = $this->_itemIsLockedForUser($user, (int)$item_id);
+            $itemLocked = $this->_itemIsLockedForUser($user, (int) $item_id);
 
             $canWrite = false;
             if (!$itemLocked) {
@@ -343,7 +343,7 @@ class Docman_PermissionsManager
             $pm = $this->_getPermissionManagerInstance();
             $canManage = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_MANAGE, $user->getUgroups($this->getProject()->getID(), array())) ;
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_MANAGE, $user->getUgroups($this->getProject()->getID(), array()));
             $this->_setCanManage($user->getId(), $item_id, $canManage);
         }
         return $this->cache_manage[$user->getId()][$item_id];
@@ -363,11 +363,11 @@ class Docman_PermissionsManager
         $object_id       = $this->getProject()->getID();
 
         // permissions set for this object.
-        $res = permission_db_authorized_ugroups($permission_type, (int)$object_id);
+        $res = permission_db_authorized_ugroups($permission_type, (int) $object_id);
         if (db_numrows($res) < 1 && $permission_type == self::PLUGIN_DOCMAN_ADMIN) {
             // No ugroup defined => no permissions set => get default permissions only for admin permission
             /** @psalm-suppress DeprecatedFunction */
-            $res=permission_db_get_defaults($permission_type);
+            $res = permission_db_get_defaults($permission_type);
         }
         while (!$has_permission && ($row = db_fetch_array($res))) {
             // should work even for anonymous users

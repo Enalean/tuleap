@@ -37,11 +37,11 @@ class Tracker_SystemEventManager extends SystemEventManager
     {
         $this->system_event_manager->createEvent(
             SystemEvent_TRACKER_V3_MIGRATION::NAME,
-            $short_name.SystemEvent::PARAMETER_SEPARATOR.
-            $name.SystemEvent::PARAMETER_SEPARATOR.
-            $description.SystemEvent::PARAMETER_SEPARATOR.
-            $user->getUnixName().SystemEvent::PARAMETER_SEPARATOR.
-            $project->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
+            $short_name . SystemEvent::PARAMETER_SEPARATOR .
+            $name . SystemEvent::PARAMETER_SEPARATOR .
+            $description . SystemEvent::PARAMETER_SEPARATOR .
+            $user->getUnixName() . SystemEvent::PARAMETER_SEPARATOR .
+            $project->getGroupId() . SystemEvent::PARAMETER_SEPARATOR .
             $tracker_id,
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP

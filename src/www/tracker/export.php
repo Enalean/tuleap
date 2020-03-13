@@ -32,7 +32,7 @@ if (!$ath->isValid()) {
 }
 
 $export_aids = $request->get('export_aids');
-$constraint = 'AND a.artifact_id IN ('. db_es($export_aids) .')';
+$constraint = 'AND a.artifact_id IN (' . db_es($export_aids) . ')';
 
 $sql = $ath->buildExportQuery($fields, $col_list, $lbl_list, $dsc_list, $export_select, $export_from, $export_where, $multiple_queries, $all_queries, $constraint);
 
@@ -88,14 +88,14 @@ if ($multiple_queries) {
 // Send the result in CSV format
 if ($result && $rows > 0) {
     $http = Codendi_HTTPPurifier::instance();
-    $file_name = str_replace(' ', '_', 'artifact_'.$ath->getItemName());
+    $file_name = str_replace(' ', '_', 'artifact_' . $ath->getItemName());
     header('Content-Type: text/csv');
-    header('Content-Disposition: filename='.$http->purify($file_name).'_'.$ath->Group->getUnixName().'.csv');
+    header('Content-Disposition: filename=' . $http->purify($file_name) . '_' . $ath->Group->getUnixName() . '.csv');
 
     foreach ($lbl_list as $k => $v) {
         $lbl_list[$k] = SimpleSanitizer::unsanitize($v);
     }
-    echo build_csv_header($col_list, $lbl_list).$eol;
+    echo build_csv_header($col_list, $lbl_list) . $eol;
 
     if ($multiple_queries) {
         $multiarr = array();
@@ -105,35 +105,35 @@ if ($result && $rows > 0) {
             }
 
             prepare_artifact_record($ath, $fields, $atid, $multiarr, 'csv');
-            $curArtifact=new Artifact($ath, $multiarr['artifact_id']);
+            $curArtifact = new Artifact($ath, $multiarr['artifact_id']);
             if ($curArtifact->userCanView()) {
-                echo build_csv_record($col_list, $multiarr).$eol;
+                echo build_csv_record($col_list, $multiarr) . $eol;
             }
         }
     } else {
         while ($arr = db_fetch_array($result)) {
             prepare_artifact_record($ath, $fields, $atid, $arr, 'csv');
-            $curArtifact=new Artifact($ath, $arr['artifact_id']);
+            $curArtifact = new Artifact($ath, $arr['artifact_id']);
             if ($curArtifact->userCanView()) {
-                echo build_csv_record($col_list, $arr).$eol;
+                echo build_csv_record($col_list, $arr) . $eol;
             }
         }
     }
 } else {
-    $params['group']=$group_id;
-    $params['toptab']='tracker';
-    $params['pagename']='trackers';
-    $params['title']=$Language->getText('tracker_index', 'trackers_for');
-    $params['help']='tracker-v3.html';
+    $params['group'] = $group_id;
+    $params['toptab'] = 'tracker';
+    $params['pagename'] = 'trackers';
+    $params['title'] = $Language->getText('tracker_index', 'trackers_for');
+    $params['help'] = 'tracker-v3.html';
     $params['pv']  = $request->exist('pv') ? $request->get('pv') : '';
     site_project_header($params);
 
-    echo '<h3>'.$Language->getText('project_export_artifact_export', 'art_export').'</h3>';
+    echo '<h3>' . $Language->getText('project_export_artifact_export', 'art_export') . '</h3>';
     if ($result) {
-        echo '<P>'.$Language->getText('project_export_artifact_export', 'no_art_found');
+        echo '<P>' . $Language->getText('project_export_artifact_export', 'no_art_found');
     } else {
-        echo '<P>'.$Language->getText('project_export_artifact_export', 'db_access_err', $GLOBALS['sys_name']);
-        echo '<br>'.db_error();
+        echo '<P>' . $Language->getText('project_export_artifact_export', 'db_access_err', $GLOBALS['sys_name']);
+        echo '<br>' . db_error();
     }
     site_project_footer(array());
 }

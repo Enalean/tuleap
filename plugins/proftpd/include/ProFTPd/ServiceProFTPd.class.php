@@ -46,7 +46,7 @@ class ServiceProFTPd extends Service
 
     private function getRenderer()
     {
-        return TemplateRendererFactory::build()->getRenderer(dirname(PROFTPD_BASE_DIR).'/templates');
+        return TemplateRendererFactory::build()->getRenderer(dirname(PROFTPD_BASE_DIR) . '/templates');
     }
 
     private function displayServiceHeader(HTTPRequest $request, $title)
@@ -55,7 +55,7 @@ class ServiceProFTPd extends Service
         if ($this->userIsAdmin($request)) {
             $toolbar[] = array(
                 'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => PROFTPD_BASE_URL .'/?'. http_build_query(array(
+                'url'   => PROFTPD_BASE_URL . '/?' . http_build_query(array(
                     'group_id'   => $request->get('group_id'),
                     'controller' => 'admin',
                     'action'     => 'index',
@@ -63,7 +63,7 @@ class ServiceProFTPd extends Service
             );
         }
 
-        $title       = $title.' - '.$GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key');
+        $title       = $title . ' - ' . $GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key');
         $breadcrumbs = array();
         parent::displayHeader($title, $breadcrumbs, $toolbar);
     }

@@ -52,7 +52,7 @@ class ReferencesBuilder
      */
     public function getReference(Project $project, $keyword, $value)
     {
-        return $this->findReference($project, $keyword, $keyword.$value);
+        return $this->findReference($project, $keyword, $keyword . $value);
     }
 
     /**
@@ -121,7 +121,7 @@ class ReferencesBuilder
             case 'wiki':
                 $base_id     = 0;
                 $description = '';
-                $url         = "plugins/mediawiki/wiki/".urlencode($project->getUnixNameLowerCase())."/index.php/".urlencode($target);
+                $url         = "plugins/mediawiki/wiki/" . urlencode($project->getUnixNameLowerCase()) . "/index.php/" . urlencode($target);
                 $visibility  = 'P';
                 $service     = 'mediawiki';
                 $nature      = 'mediawiki';

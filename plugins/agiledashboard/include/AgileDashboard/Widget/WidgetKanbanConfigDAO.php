@@ -36,7 +36,7 @@ class WidgetKanbanConfigDAO extends DataAccessObject
             WHERE widget_id = ?
         ";
 
-        return $this->getDB()->single($sql, [ $kanban_widget_id ]);
+        return $this->getDB()->single($sql, [$kanban_widget_id]);
     }
 
     public function createNewConfigForWidgetId($widget_id, $tracker_report_id)

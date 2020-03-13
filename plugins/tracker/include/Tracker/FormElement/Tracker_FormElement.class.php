@@ -238,19 +238,19 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             case 'admin-formElement-remove':
                 if ($this->isUsedInTrigger()) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'used_in_triggers'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
                 }
 
                 if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_removed'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
                 }
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
                 break;
             case 'admin-formElement-delete':
                 if ($this->delete() && Tracker_FormElementFactory::instance()->deleteFormElement($this->id)) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_deleted'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
                 }
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
                 break;
@@ -280,7 +280,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                     $history_dao = new ProjectHistoryDao();
                     $history_dao->groupAddHistory(
                         self::PROJECT_HISTORY_UPDATE,
-                        '#'. $this->getId() .' '. $this->getLabel() .' ('. $this->getTracker()->getName() .')',
+                        '#' . $this->getId() . ' ' . $this->getLabel() . ' (' . $this->getTracker()->getName() . ')',
                         $this->getTracker()->getProject()->getId()
                     );
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_updated'));
@@ -301,7 +301,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $redirect = true;
         }
         if ($redirect) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
         }
     }
 
@@ -477,10 +477,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<tr><td>';
-        $html .= Tracker_FormElementFactory::instance()->getFactoryButton(self::class, 'add-formElement['. $this->id .']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
+        $html .= Tracker_FormElementFactory::instance()->getFactoryButton(self::class, 'add-formElement[' . $this->id . ']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
         $html .= '</td><td>';
-        $html .= '<a href="'. $this->getAdminEditUrl() .'" title="'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'edit_field').'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'delete_field') .' '. $this->getLabel() .'?';
+        $html .= '<a href="' . $this->getAdminEditUrl() . '" title="' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'edit_field') . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
+        $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'delete_field') . ' ' . $this->getLabel() . '?';
         $query = http_build_query(
             array(
                 'tracker'  => $this->getTracker()->id,
@@ -489,9 +489,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             )
         );
         $html .= '<a class="delete-field"
-                     onclick="return confirm(\''. $hp->purify($confirm, CODENDI_PURIFIER_JS_QUOTE) .'\')"
-                     title="'. $hp->purify($confirm) .'"
-                     href="?'. $query .'">'. $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete')) .'</a>';
+                     onclick="return confirm(\'' . $hp->purify($confirm, CODENDI_PURIFIER_JS_QUOTE) . '\')"
+                     title="' . $hp->purify($confirm) . '"
+                     href="?' . $query . '">' . $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete')) . '</a>';
         $html .= '</td></tr>';
         return $html;
     }
@@ -821,7 +821,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function getAdminEditUrl()
     {
-        return TRACKER_BASE_URL.'/?tracker='. (int)$this->getTracker()->getId() .'&amp;func=admin-formElement-update&amp;formElement='. $this->id;
+        return TRACKER_BASE_URL . '/?tracker=' . (int) $this->getTracker()->getId() . '&amp;func=admin-formElement-update&amp;formElement=' . $this->id;
     }
 
     /**
@@ -876,7 +876,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     public function getXMLId()
     {
-        return self::XML_ID_PREFIX.$this->getId();
+        return self::XML_ID_PREFIX . $this->getId();
     }
 
     /**
@@ -932,7 +932,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         // add properties to specific fields
         if (isset($xml->properties)) {
             foreach ($xml->properties->attributes() as $name => $prop) {
-                $this->default_properties[(string)$name] = (string)$prop;
+                $this->default_properties[(string) $name] = (string) $prop;
             }
         }
     }
@@ -1341,12 +1341,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function formatDate($date)
     {
-        return format_date(Tracker_FormElement_DateFormatter::DATE_FORMAT, (float)$date, '');
+        return format_date(Tracker_FormElement_DateFormatter::DATE_FORMAT, (float) $date, '');
     }
 
     public function exportCurrentUserPermissionsToREST(PFUser $user)
     {
-
         $permissions = array();
 
         if ($this->userCanRead($user)) {

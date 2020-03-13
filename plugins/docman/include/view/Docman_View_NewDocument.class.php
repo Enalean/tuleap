@@ -51,13 +51,13 @@ class Docman_View_NewDocument extends Docman_View_New
             array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
                 'label'   => dgettext('tuleap-docman', 'Empty document'),
-                'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY)? $params['force_item'] : new Docman_Empty(),
+                'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY) ? $params['force_item'] : new Docman_Empty(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY)
             ),
             array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 'label'   => dgettext('tuleap-docman', 'Link'),
-                'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)? $params['force_item'] : new Docman_Link(),
+                'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK) ? $params['force_item'] : new Docman_Link(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)
                 ));
         $wikiAvailable = true;
@@ -70,7 +70,7 @@ class Docman_View_NewDocument extends Docman_View_New
             $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                 'label'   => dgettext('tuleap-docman', 'Wiki Page'),
-                'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI)? $params['force_item'] : new Docman_Wiki(),
+                'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) ? $params['force_item'] : new Docman_Wiki(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI)
                 );
         }
@@ -93,14 +93,14 @@ class Docman_View_NewDocument extends Docman_View_New
         $get_specific_fields = new Docman_View_GetSpecificFieldsVisitor();
 
         foreach ($specifics as $specific) {
-            $html .= '<div><label class="docman-create-doctype radio" for="item_item_type_'. $specific['type'] .'">';
-            $html .= '<input type="radio" name="item[item_type]" value="'. $specific['type'] .'" id="item_item_type_'. $specific['type'] .'" '. ($specific['checked']?'checked="checked"':'') .'/>';
-            $html .= '<b>'. $specific['label'] .'</b></label></div>';
-            $html .= '<div style="padding-left:20px" id="item_item_type_'. $specific['type'] .'_specific_properties">';
+            $html .= '<div><label class="docman-create-doctype radio" for="item_item_type_' . $specific['type'] . '">';
+            $html .= '<input type="radio" name="item[item_type]" value="' . $specific['type'] . '" id="item_item_type_' . $specific['type'] . '" ' . ($specific['checked'] ? 'checked="checked"' : '') . '/>';
+            $html .= '<b>' . $specific['label'] . '</b></label></div>';
+            $html .= '<div style="padding-left:20px" id="item_item_type_' . $specific['type'] . '_specific_properties">';
             $fields = $specific['obj']->accept($get_specific_fields, array('request' => $this->_controller->request));
             $html .= '<table>';
             foreach ($fields as $field) {
-                $html .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
+                $html .= '<tr style="vertical-align:top;"><td><label>' . $field->getLabel() . '</label></td><td>' . $field->getField() . '</td></tr>';
             }
             $html .= '</table>';
             $html .= '</div>';

@@ -340,8 +340,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     private function isAgileDashboardOrTrackerUrl()
     {
         return (defined('AGILEDASHBOARD_BASE_DIR') &&
-                strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
-                strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0);
+                strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL . '/') === 0 ||
+                strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0);
     }
 
     private function canUseStandardJavsacript()
@@ -362,9 +362,9 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function javascript($params)
     {
         include $GLOBALS['Language']->getContent('script_locale', null, 'cardwall', '.js');
-        echo "var tuleap = tuleap || { };".PHP_EOL;
-        echo "tuleap.cardwall = tuleap.cardwall || { };".PHP_EOL;
-        echo "tuleap.cardwall.base_url = '". CARDWALL_BASE_URL ."/';".PHP_EOL;
+        echo "var tuleap = tuleap || { };" . PHP_EOL;
+        echo "tuleap.cardwall = tuleap.cardwall || { };" . PHP_EOL;
+        echo "tuleap.cardwall.base_url = '" . CARDWALL_BASE_URL . "/';" . PHP_EOL;
         echo PHP_EOL;
     }
 
@@ -571,7 +571,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function buildRightVersionOfMilestonesCardwallResource($version)
     {
-        $class_with_right_namespace = '\\Tuleap\\Cardwall\\REST\\'.$version.'\\MilestonesCardwallResource';
+        $class_with_right_namespace = '\\Tuleap\\Cardwall\\REST\\' . $version . '\\MilestonesCardwallResource';
         return new $class_with_right_namespace($this->getConfigFactory());
     }
 

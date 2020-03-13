@@ -25,7 +25,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ .'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class FineGrainedPermissionFactoryTest extends TestCase
 {
@@ -117,7 +117,7 @@ class FineGrainedPermissionFactoryTest extends TestCase
     {
         $params = [
             'edit-branch-write' => array(1 => array(101, 102)),
-            'edit-branch-rewind'=> array(1 => array(102)),
+            'edit-branch-rewind' => array(1 => array(102)),
             'edit-tag-write' => array(2 => array(101)),
             'edit-tag-rewind' => array(2 => array(102)),
             'group_id' => 101
@@ -136,7 +136,7 @@ class FineGrainedPermissionFactoryTest extends TestCase
     {
         $params = [
             'edit-branch-write' => array(1 => array(101, 102)),
-            'edit-branch-rewind'=> array(1 => array(103)),
+            'edit-branch-rewind' => array(1 => array(103)),
             'edit-tag-rewind' => array(2 => array(102)),
             'group_id' => 101
         ];

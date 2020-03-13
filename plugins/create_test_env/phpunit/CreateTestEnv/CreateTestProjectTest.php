@@ -80,7 +80,7 @@ final class CreateTestProjectTest extends TestCase
         $rule_project_name->shouldReceive('isValid')->once()->andReturn(true);
         $rule_project_full_name = \Mockery::mock(\Rule_ProjectFullName::class);
         $rule_project_full_name->shouldReceive('isValid')->once()->andReturn(true);
-        $create = new CreateTestProject('</member><foo>', __DIR__.'/../../resources/sample-project', $rule_project_name, $rule_project_full_name);
+        $create = new CreateTestProject('</member><foo>', __DIR__ . '/../../resources/sample-project', $rule_project_name, $rule_project_full_name);
         $create->generateXML();
     }
 }

@@ -261,11 +261,11 @@ class HTTPRequest extends Codendi_Request
     public function getServerUrl()
     {
         if ($this->reverseProxyForwardsOriginalProtocol()) {
-            return $this->getScheme().$_SERVER[self::HEADER_HOST];
+            return $this->getScheme() . $_SERVER[self::HEADER_HOST];
         } elseif ($this->isSecure() && ForgeConfig::get('sys_https_host')) {
-            return $this->getScheme().ForgeConfig::get('sys_https_host');
+            return $this->getScheme() . ForgeConfig::get('sys_https_host');
         } else {
-            return $this->getScheme().ForgeConfig::get('sys_default_domain');
+            return $this->getScheme() . ForgeConfig::get('sys_default_domain');
         }
     }
 

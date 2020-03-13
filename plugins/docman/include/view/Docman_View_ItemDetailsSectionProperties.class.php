@@ -46,8 +46,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     {
         $html = '';
         $html .= '<tr style="vertical-align:top;">';
-        $html .= '<td class="label">'.$label.'</td>';
-        $html .= '<td class="value">'.$value.'</td>';
+        $html .= '<td class="label">' . $label . '</td>';
+        $html .= '<td class="value">' . $value . '</td>';
         $html .= '</tr>';
         return $html;
     }
@@ -70,7 +70,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
 
     public function _getItemIdField()
     {
-        return "<input type='hidden' value='".$this->item->getId()."' data-test='docman_root_id'>" .
+        return "<input type='hidden' value='" . $this->item->getId() . "' data-test='docman_root_id'>" .
             $this->_getPropertyRow(
                 'Id:',
                 $this->item->getId()
@@ -92,7 +92,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
                     ['default_url' => $this->url],
                     ['action' => 'show', 'id' => $this->item->getId()]
                 );
-                $href = '<a href="'.$url.'">'.dgettext('tuleap-docman', 'Click to open the document').'</a>';
+                $href = '<a href="' . $url . '">' . dgettext('tuleap-docman', 'Click to open the document') . '</a>';
             }
             $html = $this->_getPropertyRow(
                 dgettext('tuleap-docman', 'Direct link:'),
@@ -140,7 +140,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         }
 
         if ($defaultValuesToManage) {
-            $html .= '<h3>'.dgettext('tuleap-docman', 'Folder Properties').'</h3>';
+            $html .= '<h3>' . dgettext('tuleap-docman', 'Folder Properties') . '</h3>';
         }
         $html .= $this->_getPropertiesFields($params);
         if ($defaultValuesToManage) {
@@ -166,7 +166,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html = '';
 
         if ($this->user_can_write) {
-            $html .= '<p><a href="'. $this->url .'&amp;action=edit&amp;id='. $this->item->getid() .'">'. dgettext('tuleap-docman', 'Edit properties') .'</a></p>';
+            $html .= '<p><a href="' . $this->url . '&amp;action=edit&amp;id=' . $this->item->getid() . '">' . dgettext('tuleap-docman', 'Edit properties') . '</a></p>';
         }
         return $html;
     }
@@ -206,8 +206,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     public function _getDefaultValuesFields()
     {
         $html = '';
-        $html .= '<h3>'.dgettext('tuleap-docman', 'Default Values').'</h3>';
-        $html .= '<p>'.dgettext('tuleap-docman', 'Define the default properties values for the item that will be created within this folder.').'</p>';
+        $html .= '<h3>' . dgettext('tuleap-docman', 'Default Values') . '</h3>';
+        $html .= '<p>' . dgettext('tuleap-docman', 'Define the default properties values for the item that will be created within this folder.') . '</p>';
         $html .= $this->_getDefaultValues();
         return $html;
     }

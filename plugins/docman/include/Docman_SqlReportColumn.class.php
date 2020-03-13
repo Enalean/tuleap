@@ -56,9 +56,9 @@ class Docman_SqlReportColumn extends Docman_MetadataSqlQueryChunk
         $sort = $this->column->getSort();
         if ($sort !== null) {
             if ($sort == PLUGIN_DOCMAN_SORT_ASC) {
-                $sql = $this->field.' ASC';
+                $sql = $this->field . ' ASC';
             } else {
-                $sql = $this->field.' DESC';
+                $sql = $this->field . ' DESC';
             }
         }
 

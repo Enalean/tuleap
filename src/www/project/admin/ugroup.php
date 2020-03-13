@@ -67,11 +67,11 @@ if ($request->existAndNonEmpty('func')) {
             }
             break;
     }
-    $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. urlencode($group_id));
+    $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id=' . urlencode($group_id));
 }
 
 $pm = ProjectManager::instance();
-$project=$pm->getProject($group_id);
+$project = $pm->getProject($group_id);
 
 $title = $Language->getText('project_admin_ugroup', 'manage_ug');
 

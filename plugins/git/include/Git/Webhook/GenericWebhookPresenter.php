@@ -66,7 +66,7 @@ class GenericWebhookPresenter implements WebhookPresenter
 
         $this->remove_webhook_desc    = dgettext('tuleap-git', 'You are about to remove the webhook. Please confirm your action.');
         $this->remove_webhook_confirm = dgettext('tuleap-git', 'Confirm deletion');
-        $this->remove_form_action     = GIT_BASE_URL .'/?group_id='. (int)$repository->getProjectId();
+        $this->remove_form_action     = GIT_BASE_URL . '/?group_id=' . (int) $repository->getProjectId();
 
         $this->logs_for   = sprintf(dgettext('tuleap-git', 'Logs for %1$s'), $webhook_url);
         $this->empty_logs = dgettext('tuleap-git', 'No logs yet');

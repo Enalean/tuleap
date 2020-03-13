@@ -57,7 +57,7 @@ class UserSuspensionDao extends DataAccessObject
     {
         $timestamp = $date->getTimestamp();
         $sql = 'UPDATE user SET status = "S", unix_status = "S"' .
-            ' WHERE ( status != "D" AND expiry_date != 0'.
+            ' WHERE ( status != "D" AND expiry_date != 0' .
             ' AND expiry_date <  ? )';
         return $this->getDB()->run($sql, $timestamp);
     }
@@ -92,7 +92,7 @@ class UserSuspensionDao extends DataAccessObject
     public function delayForBeingNotProjectMembers(int $user_id) : array
     {
         $req = 'SELECT date from group_history where field_name = "removed_user" and old_value REGEXP ? order by date desc LIMIT 1';
-        $param = '[(]' . $this->getDB()->escapeLikeValue((string) $user_id) .'[)]$';
+        $param = '[(]' . $this->getDB()->escapeLikeValue((string) $user_id) . '[)]$';
         return $this->getDB()->run($req, $param);
     }
 

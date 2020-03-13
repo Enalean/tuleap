@@ -225,7 +225,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     {
         $l = new BaseLanguage('en_US', 'en_US');
         $l->dumpLanguageFile('my_lang', array('module' => array('key' => 'value')));
-        $stuff = require $this->cache_dir .'/lang/my_lang.php';
+        $stuff = require $this->cache_dir . '/lang/my_lang.php';
         $this->assertEquals('value', $stuff['module']['key']);
     }
 
@@ -270,8 +270,8 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
         $language = \Mockery::mock(BaseLanguage::class)->makePartial();
 
-        $language->shouldReceive('loadAllTabFiles')->with($extra_path.'/bla/site-content/en_US', \Mockery::any())->once()->ordered();
-        $language->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_pluginsroot').'/toto/site-content/en_US', \Mockery::any())->once()->ordered();
+        $language->shouldReceive('loadAllTabFiles')->with($extra_path . '/bla/site-content/en_US', \Mockery::any())->once()->ordered();
+        $language->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', \Mockery::any())->once()->ordered();
         $language->loadPluginsSiteContent('en_US', []);
     }
 }

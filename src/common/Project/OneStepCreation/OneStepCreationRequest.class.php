@@ -351,7 +351,7 @@ class Project_OneStepCreation_OneStepCreationRequest
     private function setCustomDescriptions($data) : self
     {
         foreach ($data as $key => $value) {
-            if (preg_match('/^'. preg_quote(Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX) .'(\d+)$/', $key, $matches)) {
+            if (preg_match('/^' . preg_quote(Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX) . '(\d+)$/', $key, $matches)) {
                 $this->custom_descriptions[$key] = $value;
             }
         }

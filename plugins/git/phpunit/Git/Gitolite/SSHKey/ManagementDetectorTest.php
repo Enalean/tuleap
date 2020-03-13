@@ -22,7 +22,7 @@ namespace Tuleap\Git\Gitolite\SSHKey;
 
 use Tuleap\Git\GlobalParameterDao;
 
-require_once __DIR__ .'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
 {

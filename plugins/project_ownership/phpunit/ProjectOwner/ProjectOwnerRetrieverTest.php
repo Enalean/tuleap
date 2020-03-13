@@ -44,7 +44,7 @@ class ProjectOwnerRetrieverTest extends TestCase
 
     public function testProjectOwnerCanBeRetrieved()
     {
-        $this->dao->shouldReceive('searchByProjectID')->andReturns(['user_id' => 101, 'project_id'=> 102]);
+        $this->dao->shouldReceive('searchByProjectID')->andReturns(['user_id' => 101, 'project_id' => 102]);
         $expected_user = \Mockery::mock(\PFUser::class);
         $this->user_manager->shouldReceive('getUserById')->andReturns($expected_user);
 

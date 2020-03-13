@@ -140,7 +140,7 @@ class AccessRightsPresenterOptionsBuilder
             }
 
             $selected  = in_array($ugroup->getId(), $selected_values) ? 'selected="selected"' : '';
-            $options []= array(
+            $options[] = array(
                 'value'    => $ugroup->getId(),
                 'label'    => $ugroup->getName(),
                 'selected' => $selected

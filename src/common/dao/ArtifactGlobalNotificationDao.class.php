@@ -132,9 +132,9 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
     {
         $updates = array();
         foreach ($values as $field => $value) {
-            $updates[] = $field .' = '. $this->da->quoteSmart($value);
+            $updates[] = $field . ' = ' . $this->da->quoteSmart($value);
         }
-        $sql = "UPDATE artifact_global_notification SET ". implode(', ', $updates) ." WHERE id = ". $this->da->quoteSmart($id);
+        $sql = "UPDATE artifact_global_notification SET " . implode(', ', $updates) . " WHERE id = " . $this->da->quoteSmart($id);
         return $this->update($sql);
     }
 

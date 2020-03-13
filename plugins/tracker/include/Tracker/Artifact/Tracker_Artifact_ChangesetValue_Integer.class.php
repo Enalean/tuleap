@@ -41,7 +41,7 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
     public function getInteger()
     {
         if ($this->numeric !== null) {
-            $this->numeric = (int)$this->numeric;
+            $this->numeric = (int) $this->numeric;
         }
         return $this->numeric;
     }

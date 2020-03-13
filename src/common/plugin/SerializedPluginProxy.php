@@ -82,7 +82,7 @@ class SerializedPluginProxy
         if (file_exists($path)) {
             include_once $path;
         }
-        $autoload = dirname($path).'/autoload.php';
+        $autoload = dirname($path) . '/autoload.php';
         if (file_exists($autoload)) {
             include_once $autoload;
         }

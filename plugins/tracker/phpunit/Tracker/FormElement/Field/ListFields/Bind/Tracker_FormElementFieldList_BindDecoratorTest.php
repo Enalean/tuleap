@@ -35,9 +35,9 @@ class Tracker_FormElementFieldList_BindDecoratorTest extends TestCase // @coding
         $decorator->exportToXml($root, 'val');
 
         $attr = $root->decorator->attributes();
-        $this->assertEquals((string)$attr->r, 255);
-        $this->assertEquals((string)$attr->g, 255);
-        $this->assertEquals((string)$attr->b, 255);
+        $this->assertEquals((string) $attr->r, 255);
+        $this->assertEquals((string) $attr->g, 255);
+        $this->assertEquals((string) $attr->b, 255);
     }
 
     public function testitExportTlpColor()
@@ -47,7 +47,7 @@ class Tracker_FormElementFieldList_BindDecoratorTest extends TestCase // @coding
         $decorator->exportToXml($root, 'val');
 
         $attr = $root->decorator->attributes();
-        $this->assertEquals((string)$attr->tlp_color_name, 'inca-silver');
+        $this->assertEquals((string) $attr->tlp_color_name, 'inca-silver');
     }
 
     public function testIsUsingOldPaletteWithLegacyColorComingFromXMLImport()

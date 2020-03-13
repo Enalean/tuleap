@@ -600,7 +600,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->widget_dao->shouldReceive('createLine')->andReturns(12);
         $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
 
-        $widget = \Mockery::mock(\Widget::class, [ 'getId' => 'projectrss' ])->shouldIgnoreMissing();
+        $widget = \Mockery::mock(\Widget::class, ['getId' => 'projectrss'])->shouldIgnoreMissing();
         $widget->shouldReceive('create')->with(\Mockery::on(function (\Codendi_Request $request) {
             if ($request->get('rss') &&
                 $request->getInArray('rss', 'title') === 'Da feed' &&

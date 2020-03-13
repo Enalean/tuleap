@@ -103,11 +103,11 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
     $gconfig_dir = forge_get_config('mwdata_path', 'mediawiki');
     $project_dir = forge_get_config('projects_path', 'mediawiki') . "/"
-    . $group->getID() ;
+    . $group->getID();
     if (! is_dir($project_dir)) {
         $project_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $group->getUnixName();
         if (! is_dir($project_dir)) {
-            exit_error(sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), Codendi_HTMLPurifier::instance()->purify($group->getPublicName()).' : '.$project_dir)) ;
+            exit_error(sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), Codendi_HTMLPurifier::instance()->purify($group->getPublicName()) . ' : ' . $project_dir));
         }
     }
     $path = array( $IP, "$IP/includes", "$IP/languages" );
@@ -124,30 +124,30 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     }
 
     $wgSitename         = $group->getPublicName() . " Wiki";
-    $wgScriptPath       = "/plugins/mediawiki/wiki/$fusionforgeproject" ;
+    $wgScriptPath       = "/plugins/mediawiki/wiki/$fusionforgeproject";
     $wgEmergencyContact = forge_get_config('admin_email');
     $wgPasswordSender   = forge_get_config('admin_email');
     $wgDBtype           = "forge";
-    $wgDBserver         = forge_get_config('database_host') ;
+    $wgDBserver         = forge_get_config('database_host');
 
     if (forge_get_config('mw_dbtype', 'mediawiki') == 'mysql') {
         // At the time writing schema in mysql is synonym for database
         $wgDBname = $manager->getWgDBname($group);
         if (! $wgDBname) {
-            exit_error(sprintf(_('Mediawiki for project %s cannot be found, please contact your system admininistrators.'), $fusionforgeproject.':'.$project_dir)) ;
+            exit_error(sprintf(_('Mediawiki for project %s cannot be found, please contact your system admininistrators.'), $fusionforgeproject . ':' . $project_dir));
         }
         $wgDBprefix = $manager->getWgDBprefix($group);
     } else {
         $wgDBname      = forge_get_config('database_name');
-        $wgDBmwschema  = str_replace('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
-        $wgDBts2schema = str_replace('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
+        $wgDBmwschema  = str_replace('-', '_', "plugin_mediawiki_$fusionforgeproject");
+        $wgDBts2schema = str_replace('-', '_', "plugin_mediawiki_$fusionforgeproject");
     }
 
-    $wgDBuser           = forge_get_config('database_user') ;
-    $wgDBpassword       = forge_get_config('database_password') ;
-    $wgDBadminuser      = forge_get_config('database_user') ;
-    $wgDBadminpassword  = forge_get_config('database_password') ;
-    $wgDBport           = forge_get_config('database_port') ;
+    $wgDBuser           = forge_get_config('database_user');
+    $wgDBpassword       = forge_get_config('database_password');
+    $wgDBadminuser      = forge_get_config('database_user');
+    $wgDBadminpassword  = forge_get_config('database_password');
+    $wgDBport           = forge_get_config('database_port');
     $wgMainCacheType    = CACHE_NONE;
     $wgMemCachedServers = array();
     $wgEnableParserCache = false;
@@ -180,7 +180,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $wgUseImageMagick            = true;
     $wgImageMagickConvertCommand = "/usr/bin/convert";
     $wgLocalInterwiki            = $wgSitename;
-    $wgShowExceptionDetails      = true ;
+    $wgShowExceptionDetails      = true;
 
     $user       = UserManager::instance()->getCurrentUser();
     $mw_service = $group->getService(MediaWikiPlugin::SERVICE_SHORTNAME);
@@ -189,48 +189,48 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     if ($used_language) {
         $wgLanguageCode  = substr($used_language, 0, 2);
     } elseif ($mw_service && $mw_service->userIsAdmin($user)) {
-        header('Location: /plugins/mediawiki/forge_admin.php?group_id='. $group->getID() .'&pane=language&nolang=1');
+        header('Location: /plugins/mediawiki/forge_admin.php?group_id=' . $group->getID() . '&pane=language&nolang=1');
         die();
     } else {
         $wgLanguageCode  = substr($user->getLocale(), 0, 2);
     }
 
     $wgHtml5          = false;
-    $wgStyleDirectory = forge_get_config('codendi_dir').forge_get_config('mw_style_path', 'mediawiki');
+    $wgStyleDirectory = forge_get_config('codendi_dir') . forge_get_config('mw_style_path', 'mediawiki');
     $wgWellFormedXml  = true;
     $wgLogo           = "";
 
-    $GLOBALS['sys_dbhost']         = forge_get_config('database_host') ;
-    $GLOBALS['sys_dbport']         = forge_get_config('database_port') ;
-    $GLOBALS['sys_dbname']         = forge_get_config('database_name') ;
-    $GLOBALS['sys_dbuser']         = forge_get_config('database_user') ;
-    $GLOBALS['sys_dbpasswd']       = forge_get_config('database_password') ;
-    $GLOBALS['sys_plugins_path']   = forge_get_config('plugins_path') ;
-    $GLOBALS['sys_urlprefix']      = forge_get_config('url_prefix') ;
+    $GLOBALS['sys_dbhost']         = forge_get_config('database_host');
+    $GLOBALS['sys_dbport']         = forge_get_config('database_port');
+    $GLOBALS['sys_dbname']         = forge_get_config('database_name');
+    $GLOBALS['sys_dbuser']         = forge_get_config('database_user');
+    $GLOBALS['sys_dbpasswd']       = forge_get_config('database_password');
+    $GLOBALS['sys_plugins_path']   = forge_get_config('plugins_path');
+    $GLOBALS['sys_urlprefix']      = forge_get_config('url_prefix');
     $GLOBALS['sys_use_ssl']        = (bool) ForgeConfig::get('sys_https_host');
-    $GLOBALS['sys_default_domain'] = forge_get_config('web_host') ;
-    $GLOBALS['sys_custom_path']    = forge_get_config('custom_path') ;
-    $GLOBALS['gfwww']              = $gfwww ;
-    $GLOBALS['gfplugins']          = $gfplugins ;
-    $GLOBALS['sys_lang']           = forge_get_config('default_language') ;
+    $GLOBALS['sys_default_domain'] = forge_get_config('web_host');
+    $GLOBALS['sys_custom_path']    = forge_get_config('custom_path');
+    $GLOBALS['gfwww']              = $gfwww;
+    $GLOBALS['gfplugins']          = $gfplugins;
+    $GLOBALS['sys_lang']           = forge_get_config('default_language');
     $GLOBALS['sys_urlroot']        = forge_get_config('url_root');
     $GLOBALS['sys_session_key']    = forge_get_config('session_key');
     $GLOBALS['sys_session_expire'] = forge_get_config('session_expire');
-    $GLOBALS['REMOTE_ADDR']        = getStringFromServer('REMOTE_ADDR') ;
-    $GLOBALS['HTTP_USER_AGENT']    = getStringFromServer('HTTP_USER_AGENT') ;
+    $GLOBALS['REMOTE_ADDR']        = getStringFromServer('REMOTE_ADDR');
+    $GLOBALS['HTTP_USER_AGENT']    = getStringFromServer('HTTP_USER_AGENT');
 
     require_once 'DatabaseForgeMysql123.php';
 
     function TuleapMediawikiAuthentication($user, &$result)
     {
-        global $fusionforgeproject, $wgGroupPermissions ;
+        global $fusionforgeproject, $wgGroupPermissions;
 
         $user_manager = UserManager::instance();
         $tuleap_user  = $user_manager->getCurrentUser();
 
         if ($tuleap_user->isLoggedIn()) {
             $group          = group_get_object_by_name($fusionforgeproject);
-            $madiawiki_name = ucfirst($tuleap_user->getUnixName()) ;
+            $madiawiki_name = ucfirst($tuleap_user->getUnixName());
             $mediawiki_user = User::newFromName($madiawiki_name);
 
             if ($mediawiki_user->getID() == 0) {
@@ -242,7 +242,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
             }
 
             $user->mId = $mediawiki_user->getID();
-            $user->loadFromId() ;
+            $user->loadFromId();
             $user = manageMediawikiGroupsForUser($user, $tuleap_user, $group);
 
             $user->saveSettings();
@@ -252,7 +252,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         }
 
         $result = true;
-        return true ;
+        return true;
     }
 
 /**
@@ -376,7 +376,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         return true;
     }
 
-    $wgHooks['PersonalUrls'][]='NoLinkOnMainPage';
+    $wgHooks['PersonalUrls'][] = 'NoLinkOnMainPage';
 
     if (isset($_SERVER['SERVER_SOFTWARE'])) {
         class SpecialForgeRedir extends SpecialPage
@@ -446,18 +446,18 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         $write_permissions
     );
 
-    $wgFavicon     = '/images/icon.png' ;
-    $wgBreakFrames = false ;
+    $wgFavicon     = '/images/icon.png';
+    $wgBreakFrames = false;
 
     if (forge_get_config('unbreak_frames', 'mediawiki')) {
         $wgEditPageFrameOptions = false;
     }
 
-    ini_set('memory_limit', '100M') ;
+    ini_set('memory_limit', '100M');
 
 // LOAD THE SITE-WIDE AND PROJECT-SPECIFIC EXTRA-SETTINGS
-    if (is_file(forge_get_config('config_path')."/plugins/mediawiki/LocalSettings.php")) {
-        include(forge_get_config('config_path')."/plugins/mediawiki/LocalSettings.php");
+    if (is_file(forge_get_config('config_path') . "/plugins/mediawiki/LocalSettings.php")) {
+        include(forge_get_config('config_path') . "/plugins/mediawiki/LocalSettings.php");
     }
 
 // debian style system-wide mediawiki extensions
@@ -471,17 +471,17 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
 // forge global settings
     if (is_file("$gconfig_dir/ForgeSettings.php")) {
-        include("$gconfig_dir/ForgeSettings.php") ;
+        include("$gconfig_dir/ForgeSettings.php");
     }
 // project specific settings
     if (is_file("$project_dir/ProjectSettings.php")) {
-        include("$project_dir/ProjectSettings.php") ;
+        include("$project_dir/ProjectSettings.php");
     }
 }
 
 // Add Tuleap Skin
 $wgDefaultSkin    = 'tuleap123';
-$wgAutoloadClasses['Tuleap123'] = __DIR__."/skins/Tuleap123/Tuleap123.php";
+$wgAutoloadClasses['Tuleap123'] = __DIR__ . "/skins/Tuleap123/Tuleap123.php";
 $wgValidSkinNames['tuleap123'] = 'Tuleap123';
 require_once $wgAutoloadClasses['Tuleap123'];
 
@@ -559,7 +559,7 @@ if ($manager->isCompatibilityViewEnabled($group)) {
 }
 
 // TuleapArtLinks Extension inclusion
-require_once dirname(__FILE__) .'/../extensions/TuleapArtLinks/TuleapArtLinks.php';
+require_once dirname(__FILE__) . '/../extensions/TuleapArtLinks/TuleapArtLinks.php';
 $wgTuleapArtLinksGroupId = $group->getGroupId();
 
 $mleb_manager_loader = new MediawikiMLEBExtensionManagerLoader();
@@ -569,23 +569,23 @@ if ($mleb_manager->isMLEBExtensionInstalled()) {
         $mleb_path = forge_get_config('extension_mleb_path', 'mediawiki');
 
         // Babelww
-        require_once $mleb_path."/extensions/Babel/Babel.php";
+        require_once $mleb_path . "/extensions/Babel/Babel.php";
 
         // CLDR
-        require_once $mleb_path."/extensions/cldr/cldr.php";
+        require_once $mleb_path . "/extensions/cldr/cldr.php";
 
         // CleanChanges
-        require_once $mleb_path."/extensions/CleanChanges/CleanChanges.php";
+        require_once $mleb_path . "/extensions/CleanChanges/CleanChanges.php";
         $wgCCTrailerFilter                = true;
         $wgCCUserFilter                   = false;
         $wgDefaultUserOptions['usenewrc'] = 1;
 
         // LocalisationUpdate
-        require_once $mleb_path."/extensions/LocalisationUpdate/LocalisationUpdate.php";
-        $wgLocalisationUpdateDirectory = $mleb_path."/cache";
+        require_once $mleb_path . "/extensions/LocalisationUpdate/LocalisationUpdate.php";
+        $wgLocalisationUpdateDirectory = $mleb_path . "/cache";
 
         // Translate
-        require_once $mleb_path."/extensions/Translate/Translate.php";
+        require_once $mleb_path . "/extensions/Translate/Translate.php";
         $wgGroupPermissions['user']['translate']               = true;
         $wgGroupPermissions['user']['translate-messagereview'] = true;
         $wgGroupPermissions['user']['translate-groupreview']   = true;
@@ -594,7 +594,7 @@ if ($mleb_manager->isMLEBExtensionInstalled()) {
         $wgGroupPermissions['sysop']['translate-manage']       = true;
         $wgExtraLanguageNames['qqq']                           = 'Message documentation'; // No linguistic content. Used for documenting messages
 
-        require_once $mleb_path."/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php";
+        require_once $mleb_path . "/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php";
         $GLOBALS['wgTranslatePageTranslationULS'] = true;
     }
 }

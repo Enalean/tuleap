@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('REFERENCEALIAS_GIT_BASE_DIR', realpath(__DIR__.'/..'));
+define('REFERENCEALIAS_GIT_BASE_DIR', realpath(__DIR__ . '/..'));

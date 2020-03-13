@@ -43,7 +43,7 @@ if (user_isloggedin()) {
         $user_id = UserManager::instance()->getCurrentUser()->getId();
         //If the forum is associated to a private news, non-allowed users shouldn't be able to monitor this forum
         // but they should be able to disable monitoring news that have been set from public to private
-        $qry = "SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
+        $qry = "SELECT * FROM news_bytes WHERE forum_id=" . db_ei($forum_id);
         $res = db_query($qry);
         if (db_numrows($res) > 0) {
             if (!forum_utils_news_access($forum_id) && !user_monitor_forum($forum_id, $user_id)) {
@@ -63,32 +63,32 @@ if (user_isloggedin()) {
      /*
       Set up navigation vars
      */
-        $result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=".db_ei($forum_id));
+        $result = db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=" . db_ei($forum_id));
 
-        $group_id=db_result($result, 0, 'group_id');
-        $forum_name=db_result($result, 0, 'forum_name');
+        $group_id = db_result($result, 0, 'group_id');
+        $forum_name = db_result($result, 0, 'forum_name');
 
-        forum_header(array('title'=>$Language->getText('forum_monitor', 'monitor')));
+        forum_header(array('title' => $Language->getText('forum_monitor', 'monitor')));
 
         echo '
-			<H2>'.$Language->getText('forum_monitor', 'monitor').'</H2>';
+			<H2>' . $Language->getText('forum_monitor', 'monitor') . '</H2>';
 
         if (user_monitor_forum($forum_id, $user_id)) {
-            echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor', 'now_monitoring')."</H3></span>";
-            echo '<P>'.$Language->getText('forum_monitor', 'get_followups').'</p>';
-            echo '<P>'.$Language->getText('forum_monitor', 'to_turn_monitor_off').'</p>';
+            echo "<span class=\"highlight\"><H3>" . $Language->getText('forum_monitor', 'now_monitoring') . "</H3></span>";
+            echo '<P>' . $Language->getText('forum_monitor', 'get_followups') . '</p>';
+            echo '<P>' . $Language->getText('forum_monitor', 'to_turn_monitor_off') . '</p>';
         } else {
-            echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor', 'monitor_off')."</H3></span>";
-            echo '<P>'.$Language->getText('forum_monitor', 'no_mails_anymore').'</p>';
+            echo "<span class=\"highlight\"><H3>" . $Language->getText('forum_monitor', 'monitor_off') . "</H3></span>";
+            echo '<P>' . $Language->getText('forum_monitor', 'no_mails_anymore') . '</p>';
         }
         if ($forum_monitor_error) {
-            echo "<span class=\"highlight\">".$Language->getText('forum_forum_utils', 'insert_err')."</span>";
+            echo "<span class=\"highlight\">" . $Language->getText('forum_forum_utils', 'insert_err') . "</span>";
         }
         forum_footer(array());
     } else {
-        forum_header(array('title'=>$Language->getText('forum_monitor', 'choose_forum_first')));
+        forum_header(array('title' => $Language->getText('forum_monitor', 'choose_forum_first')));
         echo '
-			<H1>'.$Language->getText('forum_forum', 'choose_forum_first').'</H1>';
+			<H1>' . $Language->getText('forum_forum', 'choose_forum_first') . '</H1>';
         forum_footer(array());
     }
 } else {

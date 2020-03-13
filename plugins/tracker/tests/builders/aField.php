@@ -22,7 +22,7 @@
 // please add the functions/methods below when needed.
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 function aTextField()
 {

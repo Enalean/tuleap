@@ -22,7 +22,7 @@
  */
 
 require_once('WikiActions.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
+require_once(dirname(__FILE__) . '/../lib/WikiEntry.class.php');
 
 class WikiServiceActions extends WikiActions
 {

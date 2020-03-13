@@ -53,7 +53,7 @@ class TuleapWeb
 
     private function updateHttpdConf()
     {
-        $httpd_conf = file_get_contents($this->httpd_conf_path.'/conf/httpd.conf');
+        $httpd_conf = file_get_contents($this->httpd_conf_path . '/conf/httpd.conf');
 
         $conf = preg_replace(
             array(
@@ -71,13 +71,13 @@ class TuleapWeb
 
         if ($httpd_conf !== $conf) {
             $this->logger->info("Make apache listen on localhost 8080");
-            file_put_contents($this->httpd_conf_path.'/conf/httpd.conf', $conf);
+            file_put_contents($this->httpd_conf_path . '/conf/httpd.conf', $conf);
         }
     }
 
     private function disableSSLvhost()
     {
-        $vhost_file = $this->httpd_conf_path.'/conf.d/tuleap-vhost.conf';
+        $vhost_file = $this->httpd_conf_path . '/conf.d/tuleap-vhost.conf';
         if (is_file($vhost_file)) {
             $new_content = '';
             $in_ssl_vhost = false;

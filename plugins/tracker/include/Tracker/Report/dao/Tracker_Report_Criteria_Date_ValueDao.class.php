@@ -33,19 +33,19 @@ class Tracker_Report_Criteria_Date_ValueDao extends Tracker_Report_Criteria_Valu
         if (isset($value['op'])) {
             $op = $this->da->quoteSmart($value['op']);
         } else {
-            $op ='';
+            $op = '';
         }
 
         if (isset($value['from_date'])) {
             $from_date = $this->da->escapeInt($value['from_date']);
         } else {
-            $from_date ='';
+            $from_date = '';
         }
 
         if (isset($value['to_date'])) {
             $to_date = $this->da->escapeInt($value['to_date']);
         } else {
-            $to_date ='';
+            $to_date = '';
         }
 
         if ($to_date != '') {

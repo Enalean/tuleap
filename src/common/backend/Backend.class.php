@@ -55,7 +55,6 @@ class Backend
      */
     protected function __construct()
     {
-
         /* Make sure umask is properly positioned for the
          entire session. Root has umask 022 by default
          causing all the mkdir xxx, 775 to actually
@@ -113,7 +112,7 @@ class Backend
 
             //check that all is ok
             if (!is_a($backend, $wanted_base)) {
-                throw new Exception('Backend should inherit from '. $wanted_base .'. Received: "'. get_class($backend) .'"');
+                throw new Exception('Backend should inherit from ' . $wanted_base . '. Received: "' . get_class($backend) . '"');
             }
 
             //SetUp if needed
@@ -121,7 +120,7 @@ class Backend
                 if (method_exists($backend, 'setUp')) {
                     call_user_func_array(array($backend, 'setUp'), $setup);
                 } else {
-                    throw new Exception($base .' does not have setUp.');
+                    throw new Exception($base . ' does not have setUp.');
                 }
             }
 
@@ -270,9 +269,9 @@ class Backend
      */
     protected function getent($database, $entry = false)
     {
-        $cmd = 'getent '.escapeshellarg($database);
+        $cmd = 'getent ' . escapeshellarg($database);
         if ($entry !== false) {
-            $cmd .= ' '.escapeshellarg($entry);
+            $cmd .= ' ' . escapeshellarg($entry);
         }
         $output      = array();
         $returnValue = null;
@@ -470,13 +469,12 @@ class Backend
      */
     public function addBlock($filename, $command)
     {
-
         if (!$handle = fopen($filename, 'a')) {
             $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
             return false;
         }
         fwrite($handle, $this->block_marker_start);
-        fwrite($handle, $command."\n");
+        fwrite($handle, $command . "\n");
         fwrite($handle, $this->block_marker_end);
         return fclose($handle);
     }
@@ -519,7 +517,6 @@ class Backend
      */
     public function writeArrayToFile($file_array, $filename)
     {
-
         if (!$handle = fopen($filename, 'w')) {
             $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
             return false;

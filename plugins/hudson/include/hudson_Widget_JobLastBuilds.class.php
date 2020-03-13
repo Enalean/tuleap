@@ -111,16 +111,16 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget
             $html .= '  <td>';
             $html .= '   <ul>';
             if ($job->hasBuilds()) {
-                $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build').' <a href="/plugins/hudson/?action=view_build&group_id='.$this->group_id.'&job_id='.$this->job_id.'&build_id='.$job->getLastBuildNumber().'"># '.$job->getLastBuildNumber().'</a></li>';
-                $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build_success').' <a href="/plugins/hudson/?action=view_build&group_id='.$this->group_id.'&job_id='.$this->job_id.'&build_id='.$job->getLastSuccessfulBuildNumber().'"># '.$job->getLastSuccessfulBuildNumber().'</a></li>';
-                $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build_failure').' <a href="/plugins/hudson/?action=view_build&group_id='.$this->group_id.'&job_id='.$this->job_id.'&build_id='.$job->getLastFailedBuildNumber().'"># '.$job->getLastFailedBuildNumber().'</a></li>';
+                $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'last_build') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $this->group_id . '&job_id=' . $this->job_id . '&build_id=' . $job->getLastBuildNumber() . '"># ' . $job->getLastBuildNumber() . '</a></li>';
+                $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'last_build_success') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $this->group_id . '&job_id=' . $this->job_id . '&build_id=' . $job->getLastSuccessfulBuildNumber() . '"># ' . $job->getLastSuccessfulBuildNumber() . '</a></li>';
+                $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'last_build_failure') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $this->group_id . '&job_id=' . $this->job_id . '&build_id=' . $job->getLastFailedBuildNumber() . '"># ' . $job->getLastFailedBuildNumber() . '</a></li>';
             } else {
-                $html .= ' <li>'. $GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found') . '</li>';
+                $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found') . '</li>';
             }
             $html .= '   </ul>';
             $html .= '  </td>';
             $html .= '  <td class="widget_lastbuilds_weather">';
-            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" class="widget-lastbuilds-weather-img" />';
+            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report') . '<img src="' . $job->getWeatherReportIcon() . '" class="widget-lastbuilds-weather-img" />';
             $html .= '  </td>';
             $html .= ' </tr>';
             $html .= '</table>';

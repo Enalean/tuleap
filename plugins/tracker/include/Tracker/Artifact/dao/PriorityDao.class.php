@@ -195,7 +195,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
                 $ids = $this->da->escapeIntImplode($list_of_artifact_ids);
 
                 $sql = "UPDATE tracker_artifact_priority_rank
-                        SET rank = CASE ". implode(' ', $new_ranks). " ELSE rank END
+                        SET rank = CASE " . implode(' ', $new_ranks) . " ELSE rank END
                         WHERE artifact_id IN ($ids)";
                 if (! $this->update($sql)) {
                     throw new RuntimeException('Cannot update rank');

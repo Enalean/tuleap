@@ -20,4 +20,4 @@ if ($request->valid($vGroupId)) {
 }
 
 $pm = ProjectManager::instance();
-$GLOBALS['Response']->redirect('/projects/'.$pm->getProject($group_id)->getUnixName());
+$GLOBALS['Response']->redirect('/projects/' . $pm->getProject($group_id)->getUnixName());

@@ -116,7 +116,7 @@ class Wiki_PermissionsManager
             $comparable_wiki_page_ugroup_id    = $this->getComparableUGroupId($wiki_page_ugroup_id);
             $comparable_wiki_service_ugroup_id = $this->getComparableUGroupId($wiki_service_ugroup_id);
 
-            if ((int)$comparable_wiki_service_ugroup_id > (int)$comparable_wiki_page_ugroup_id) {
+            if ((int) $comparable_wiki_service_ugroup_id > (int) $comparable_wiki_page_ugroup_id) {
                 unset($wiki_page_ugroup_ids[$key]);
             }
         }

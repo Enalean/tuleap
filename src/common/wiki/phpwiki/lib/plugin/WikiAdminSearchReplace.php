@@ -72,7 +72,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
             $version = $current->getVersion();
             $text = $current->getPackedContent();
             if ($regex) {
-                $newtext = preg_replace('/' . str_replace('/', '\/', $from) . '/' .($case_exact?'':'i'), $to, $text);
+                $newtext = preg_replace('/' . str_replace('/', '\/', $from) . '/' . ($case_exact ? '' : 'i'), $to, $text);
             } else {
                 if ($case_exact) {
                     $newtext = str_replace($from, $to, $text);
@@ -242,7 +242,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
     {
         $header->pushContent(
             HTML::div(
-                array('class'=>'hint'),
+                array('class' => 'hint'),
                 _("Replace all occurences of the given string in the content of all pages.")
             ),
             HTML::br()
@@ -250,7 +250,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         $header->pushContent(_("Replace: "));
         $header->pushContent(HTML::input(array('name' => 'admin_replace[from]',
                                                'value' => $post_args['from'])));
-        $header->pushContent(' '._("by").': ');
+        $header->pushContent(' ' . _("by") . ': ');
         $header->pushContent(HTML::input(array('name' => 'admin_replace[to]',
                                                'value' => $post_args['to'])));
         $checkbox = HTML::input(array('type' => 'checkbox',

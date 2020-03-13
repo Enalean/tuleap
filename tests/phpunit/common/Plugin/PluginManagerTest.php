@@ -135,11 +135,11 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
     public function testInstallPlugin() : void
     {
         $root = \org\bovigo\vfs\vfsStream::setup()->url();
-        $GLOBALS['sys_pluginsroot']       = $root.'/test/custom/';
-        $GLOBALS['sys_custompluginsroot'] = $root.'/test/custom/';
+        $GLOBALS['sys_pluginsroot']       = $root . '/test/custom/';
+        $GLOBALS['sys_custompluginsroot'] = $root . '/test/custom/';
 
-        mkdir($root.'/test');
-        mkdir($root.'/test/custom');
+        mkdir($root . '/test');
+        mkdir($root . '/test/custom');
 
         //The plugins
         $plugin = \Mockery::spy(\Plugin::class);
@@ -149,12 +149,12 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
         $plugin_factory->shouldReceive('createPlugin')->with('New_Plugin')->once()->andReturns($plugin);
 
         $plugin_factory->shouldReceive('getAllPossiblePluginsDir')->andReturns(array(
-            __DIR__ .'/test'
+            __DIR__ . '/test'
         ));
 
         $forgeupgrade_config = \Mockery::spy(\ForgeUpgradeConfig::class);
-        $forgeupgrade_config->shouldReceive('addPath')->with($GLOBALS['sys_pluginsroot'].'New_Plugin')->once();
-        $forgeupgrade_config->shouldReceive('recordOnlyPath')->with($GLOBALS['sys_pluginsroot'].'New_Plugin')->once();
+        $forgeupgrade_config->shouldReceive('addPath')->with($GLOBALS['sys_pluginsroot'] . 'New_Plugin')->once();
+        $forgeupgrade_config->shouldReceive('recordOnlyPath')->with($GLOBALS['sys_pluginsroot'] . 'New_Plugin')->once();
 
         //The plugins manager
         $pm = new PluginManager(

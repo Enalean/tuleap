@@ -76,14 +76,14 @@ class URL
     public function getGroupIdFromUrl($url)
     {
         $request = HTTPRequest::instance();
-        $req_uri = '/'.trim($url, "/");
+        $req_uri = '/' . trim($url, "/");
         // /projects/ and /viewvc/
         if ((strpos($req_uri, '/projects/') === 0) || (strpos($req_uri, '/viewvc.php/') !== false)) {
             if (strpos($req_uri, '/viewvc.php/') !== false) {
                 $this_proj_name = $this->getGroupNameFromSVNUrl($req_uri);
             } elseif (strpos($req_uri, '/projects/') !== false) {
                 $pieces = explode("/", $url);
-                $this_proj_name=$pieces[2];
+                $this_proj_name = $pieces[2];
             }
             //Project short name validation
             $rule = $this->getProjectNameRule();
@@ -91,12 +91,12 @@ class URL
                 return false;
             }
             $dao = $this->getProjectDao();
-            $dao_results=$dao->searchByUnixGroupName($this_proj_name);
+            $dao_results = $dao->searchByUnixGroupName($this_proj_name);
             if ($dao_results->rowCount() < 1) {// project does not exist
                 return false;
             }
-            $group_id=$dao_results->getRow();
-            $group_id=$group_id['group_id'];
+            $group_id = $dao_results->getRow();
+            $group_id = $group_id['group_id'];
         }
         // Forum and news. Each published news is a special forum of project 'news'
         if (strpos($req_uri, '/forum/') === 0) {
@@ -104,8 +104,8 @@ class URL
                 // Get corresponding project
                 $dao = $this->getForumDao();
                 $result = $dao->searchByGroupForumId($_REQUEST['forum_id']);
-                $group_id=$result->getRow();
-                $group_id=$group_id['group_id'];
+                $group_id = $result->getRow();
+                $group_id = $group_id['group_id'];
 
                 // News
                 if ($group_id == $GLOBALS['sys_news_group']) {
@@ -117,8 +117,8 @@ class URL
                 // Get corresponding project
                 $dao = $this->getForumDao();
                 $row = $dao->getMessageProjectIdAndForumId($_REQUEST['msg_id']);
-                $group_id=$row['group_id'];
-                $forum_id=$row['group_forum_id'];
+                $group_id = $row['group_id'];
+                $forum_id = $row['group_forum_id'];
 
                 // News
                 if ($group_id == $GLOBALS['sys_news_group']) {
@@ -133,8 +133,8 @@ class URL
             if (isset($_REQUEST['artifact_id'])) {
                 $dao = $this->getArtifactDao();
                 $result = $dao->searchArtifactId($_REQUEST['artifact_id']);
-                $group_id=$result->getRow();
-                $group_id=$group_id['group_id'];
+                $group_id = $result->getRow();
+                $group_id = $group_id['group_id'];
             }
         }
 

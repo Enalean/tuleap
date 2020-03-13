@@ -117,7 +117,7 @@ class TimeTrackingOverview extends Widget
     {
         $content_id = $request->getValidated('content_id', 'uint', 0);
 
-        $title = $request->params[ "timetracking-overview-title" ];
+        $title = $request->params["timetracking-overview-title"];
         $this->checkTitleValidity($title);
 
         return $this->report_dao->setReportTitleById($title, $content_id);
@@ -158,7 +158,7 @@ class TimeTrackingOverview extends Widget
      */
     public function create(Codendi_Request $request)
     {
-        $title = $request->params[ "timetracking-overview-title" ];
+        $title = $request->params["timetracking-overview-title"];
         $this->checkTitleValidity($title);
 
         $content_id = $this->report_dao->create();

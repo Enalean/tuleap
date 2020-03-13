@@ -46,7 +46,7 @@ class documentPlugin extends Plugin // phpcs:ignore
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
 
-        bindtextdomain('tuleap-document', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-document', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()

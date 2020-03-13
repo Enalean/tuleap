@@ -78,14 +78,14 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     {
         $session = &$this->codendi_session->getSessionNamespace();
         $this->codendi_session->set('fifi.riri.loulou.oncle', 'picsou');
-        $expected = ['fifi' => ['riri'=> ['loulou' => ['oncle' => 'picsou']]]];
+        $expected = ['fifi' => ['riri' => ['loulou' => ['oncle' => 'picsou']]]];
         $this->assertSame($expected, $session);
     }
 
     public function testRemoveWithKey()
     {
         $session                           = &$this->codendi_session->getSessionNamespace();
-        $session['fifi']['riri']['loulou'] = ['oncle'=>'picsou'];
+        $session['fifi']['riri']['loulou'] = ['oncle' => 'picsou'];
         $this->codendi_session->remove('fifi.riri.loulou', 'oncle');
         $this->assertFalse(isset($session['fifi']['riri']['loulou']['oncle']));
     }
@@ -93,7 +93,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     public function testRemoveNoKey()
     {
         $session                           = &$this->codendi_session->getSessionNamespace();
-        $session['fifi']['riri']['loulou'] = ['oncle'=>'picsou'];
+        $session['fifi']['riri']['loulou'] = ['oncle' => 'picsou'];
         $this->codendi_session->remove('fifi.riri.loulou.oncle');
         $this->assertSame($session['fifi']['riri']['loulou']['oncle'], '');
     }
@@ -101,7 +101,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     public function testCleanNamespace()
     {
         $session                           = &$this->codendi_session->getSessionNamespace();
-        $session['fifi']['riri']['loulou'] = ['oncle'=>'picsou'];
+        $session['fifi']['riri']['loulou'] = ['oncle' => 'picsou'];
         $this->codendi_session->cleanNamespace();
         $this->assertSame($session, '');
     }
@@ -109,15 +109,15 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     public function testGetNoKey()
     {
         $session                           = &$this->codendi_session->getSessionNamespace();
-        $session['fifi']['riri']['loulou'] = ['oncle'=>'picsou'];
+        $session['fifi']['riri']['loulou'] = ['oncle' => 'picsou'];
         $value                             = $this->codendi_session->get('fifi.riri.loulou');
-        $this->assertSame($value, ['oncle'=>'picsou']);
+        $this->assertSame($value, ['oncle' => 'picsou']);
     }
 
     public function testGetWithKey()
     {
         $session                           = &$this->codendi_session->getSessionNamespace();
-        $session['fifi']['riri']['loulou'] = ['oncle'=>'picsou'];
+        $session['fifi']['riri']['loulou'] = ['oncle' => 'picsou'];
         $value                             = $this->codendi_session->get('fifi.riri.loulou', 'oncle');
         $this->assertSame($value, 'picsou');
     }
@@ -157,10 +157,10 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     public function testChangeSessionNamespaceRelativeAlreadyExists()
     {
         $session = &$this->codendi_session->getSessionNamespace();
-        $session = ['fifi' => ['riri' => ['loulou'=> ['oncle' => 'picsou']]]];
+        $session = ['fifi' => ['riri' => ['loulou' => ['oncle' => 'picsou']]]];
         $this->codendi_session->changeSessionNamespace('fifi.riri');
         $new_session = &$this->codendi_session->getSessionNamespace();
-        $this->assertSame($new_session, ['loulou'=>['oncle'=>'picsou']]);
+        $this->assertSame($new_session, ['loulou' => ['oncle' => 'picsou']]);
     }
 
     public function testChangeSessionNamespaceRelativeDoesntExist()
@@ -187,7 +187,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->codendi_session->changeSessionNamespace('.');
         $session_bis = &$this->codendi_session->getSessionNamespace();
         $this->assertSame($session, []);
-        $this->assertSame($session_bis, ['Codendi_SessionTest'=>[]]);
+        $this->assertSame($session_bis, ['Codendi_SessionTest' => []]);
     }
 
     public function testOverloading()

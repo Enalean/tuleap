@@ -70,11 +70,11 @@ class ByFieldPresenter
         $this->self_url              = ByFieldController::getUrl($tracker);
         $this->update_url            = PermissionsOnFieldsUpdateController::getUrl($tracker);
         $this->by_group_url          = ByGroupController::getUrl($tracker);
-        $this->tracker_url           = TRACKER_BASE_URL.'?tracker='.$tracker->getId();
+        $this->tracker_url           = TRACKER_BASE_URL . '?tracker=' . $tracker->getId();
         $this->selected_id           = $selected_id;
         $this->ugroup_list           = $ugroup_list;
         $this->might_not_have_access = $might_not_have_access;
         $this->project_id            = $tracker->getGroupId();
-        $this->has_permissions       = count($ugroup_list) >=1 ;
+        $this->has_permissions       = count($ugroup_list) >= 1;
     }
 }

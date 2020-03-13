@@ -36,12 +36,12 @@ class BackendAliasesTest extends TuleapTestCase
         stub($listdao)
             ->searchAllActiveML()
             ->returnsDar(
-                array("list_name"=> "list1"),
-                array("list_name"=> "list2"),
-                array("list_name"=> "list3"),
-                array("list_name"=> "list4"),
-                array("list_name"=> 'list with an unexpected quote "'),
-                array("list_name"=> "list with an unexpected newline\n")
+                array("list_name" => "list1"),
+                array("list_name" => "list2"),
+                array("list_name" => "list3"),
+                array("list_name" => "list4"),
+                array("list_name" => 'list with an unexpected quote "'),
+                array("list_name" => "list with an unexpected newline\n")
             );
 
         $this->backend = partial_mock(

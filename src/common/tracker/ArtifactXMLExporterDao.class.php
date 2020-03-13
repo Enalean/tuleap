@@ -77,7 +77,7 @@ class ArtifactXMLExporterDao extends DataAccessObject
      */
     private function unconvertHtmlspecialcharsAlias($column_name, $alias)
     {
-        return $this->unconvertHtmlspecialchars($column_name)." AS $alias";
+        return $this->unconvertHtmlspecialchars($column_name) . " AS $alias";
     }
 
     private function unconvertHtmlspecialchars($column_name)

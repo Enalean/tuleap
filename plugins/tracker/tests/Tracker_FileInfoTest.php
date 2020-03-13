@@ -36,8 +36,8 @@ class Tracker_FileInfo_CommonTest extends TuleapTestCase
     {
         parent::setUp();
         $field_id = 123;
-        $this->fixture_data_dir  = dirname(__FILE__) .'/_fixtures/attachments';
-        $this->working_directory = '/var/tmp/'.$field_id;
+        $this->fixture_data_dir  = dirname(__FILE__) . '/_fixtures/attachments';
+        $this->working_directory = '/var/tmp/' . $field_id;
         $this->field = mock('Tracker_FormElement_Field_File');
         stub($this->field)->getId()->returns($field_id);
         stub($this->field)->getRootPath()->returns($this->working_directory);
@@ -79,8 +79,8 @@ class Tracker_FileInfoTest extends Tracker_FileInfo_CommonTest
 
     public function testGetPath()
     {
-        $this->assertEqual($this->file_info_1->getPath(), $this->working_directory .'/1');
-        $this->assertEqual($this->file_info_1->getThumbnailPath(), $this->working_directory .'/thumbnails/1');
+        $this->assertEqual($this->file_info_1->getPath(), $this->working_directory . '/1');
+        $this->assertEqual($this->file_info_1->getThumbnailPath(), $this->working_directory . '/thumbnails/1');
         $this->assertNull($this->file_info_2->getThumbnailPath(), "A file that is not an image doesn't have any thumbnail (for now)");
     }
 
@@ -168,7 +168,7 @@ class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
     {
         parent::setUp();
 
-        $this->thumbnails_dir = $this->working_directory.'/thumbnails';
+        $this->thumbnails_dir = $this->working_directory . '/thumbnails';
         mkdir($this->thumbnails_dir);
 
         $this->backend = mock(Backend::class);
@@ -187,7 +187,7 @@ class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
 
     public function itCreatesThumbnailForPng()
     {
-        copy($this->fixture_data_dir.'/logo.png', $this->working_directory.'/66');
+        copy($this->fixture_data_dir . '/logo.png', $this->working_directory . '/66');
 
         $file_info_1 = new Tracker_FileInfo(66, $this->field, 0, '', '', '', 'image/png');
         $this->assertFalse(file_exists($file_info_1->getThumbnailPath()));
@@ -206,7 +206,7 @@ class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
 
     public function itCreatesThumbnailForGif()
     {
-        copy($this->fixture_data_dir.'/logo.gif', $this->working_directory.'/111');
+        copy($this->fixture_data_dir . '/logo.gif', $this->working_directory . '/111');
 
         $file_info_1 = new Tracker_FileInfo(111, $this->field, 0, '', '', '', 'image/gif');
         $this->assertFalse(file_exists($file_info_1->getThumbnailPath()));
@@ -226,7 +226,7 @@ class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
 
     public function itCreatesThumbnailForJpeg()
     {
-        copy($this->fixture_data_dir.'/logo.jpg', $this->working_directory.'/421');
+        copy($this->fixture_data_dir . '/logo.jpg', $this->working_directory . '/421');
 
         $file_info_1 = new Tracker_FileInfo(421, $this->field, 0, '', '', '', 'image/jpg');
         $this->assertFalse(file_exists($file_info_1->getThumbnailPath()));
@@ -246,12 +246,12 @@ class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
 
     public function itEnsuresFilesIsOwnedByHttpUser()
     {
-        copy($this->fixture_data_dir.'/logo.jpg', $this->working_directory.'/421');
+        copy($this->fixture_data_dir . '/logo.jpg', $this->working_directory . '/421');
 
         $file_info_1 = new Tracker_FileInfo(421, $this->field, 0, '', '', '', 'image/jpg');
         ForgeConfig::set('sys_http_user', 'user');
 
-        expect($this->backend)->changeOwnerGroupMode($this->working_directory.'/421', 'user', 'user', 0644)->once();
+        expect($this->backend)->changeOwnerGroupMode($this->working_directory . '/421', 'user', 'user', 0644)->once();
 
         $file_info_1->postUploadActions();
     }

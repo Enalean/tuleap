@@ -36,7 +36,7 @@ class NewsItem
 
     public function isDisplayed()
     {
-        return (bool)($this->data['is_approved'] < self::NEWS_DELETED);
+        return (bool) ($this->data['is_approved'] < self::NEWS_DELETED);
     }
 
     public function getId()

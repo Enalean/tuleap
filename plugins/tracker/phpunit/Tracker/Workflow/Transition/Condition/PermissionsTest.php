@@ -29,7 +29,7 @@ use Tracker;
 use Transition;
 use Workflow_Transition_Condition_Permissions;
 
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 class PermissionsTest extends TestCase
 {

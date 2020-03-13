@@ -279,7 +279,7 @@ class AddWidgetController
     private function redirectToDashboard(HTTPRequest $request, $dashboard_id, $dashboard_type)
     {
         if ($dashboard_type === ProjectDashboardController::DASHBOARD_TYPE) {
-            $url = '/projects/' . $request->getProject()->getUnixName() .'/';
+            $url = '/projects/' . $request->getProject()->getUnixName() . '/';
         } else {
             $url = '/my/';
         }

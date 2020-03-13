@@ -22,11 +22,11 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ .'/../include/Git_GitoliteDriver.class.php';
-require_once __DIR__ .'/../include/GitRepositoryUrlManager.class.php';
+require_once __DIR__ . '/../include/Git_GitoliteDriver.class.php';
+require_once __DIR__ . '/../include/GitRepositoryUrlManager.class.php';
 
 if ($argc !== 3) {
-    echo "Usage: ".$argv[0]." oldname newname".PHP_EOL;
+    echo "Usage: " . $argv[0] . " oldname newname" . PHP_EOL;
     exit(1);
 }
 
@@ -56,6 +56,6 @@ if ($driver->renameProject($argv[1], $argv[2])) {
     echo "Rename done!\n";
     exit(0);
 } else {
-    echo "*** ERROR: Fail to rename project ".$argv[1]." into ".$argv[2]." gitolite repositories".PHP_EOL;
+    echo "*** ERROR: Fail to rename project " . $argv[1] . " into " . $argv[2] . " gitolite repositories" . PHP_EOL;
     exit(1);
 }

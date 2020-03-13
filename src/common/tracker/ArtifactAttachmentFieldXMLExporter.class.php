@@ -48,11 +48,11 @@ class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter
                 $this->appendPreviousAttachements($field_node, $artifact_id, $row['date'], $row['old_value']);
                 $changeset_node->appendChild($field_node);
             } else {
-                throw new Exception_TV3XMLAttachmentNotFoundException('new: '.$new_attachment);
+                throw new Exception_TV3XMLAttachmentNotFoundException('new: ' . $new_attachment);
             }
         } else {
             $deleted_attachment = $this->extractFirstDifference($row['new_value'], $row['old_value']);
-            throw new Exception_TV3XMLAttachmentNotFoundException('del: '.$deleted_attachment.' n:'.$row['new_value'].' o:'.$row['old_value']);
+            throw new Exception_TV3XMLAttachmentNotFoundException('del: ' . $deleted_attachment . ' n:' . $row['new_value'] . ' o:' . $row['old_value']);
         }
     }
 
@@ -71,7 +71,7 @@ class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter
     private function getNodeValueForFile($file_id)
     {
         $node = $this->node_helper->createElement('value');
-        $node->setAttribute('ref', self::XML_FILE_PREFIX.$file_id);
+        $node->setAttribute('ref', self::XML_FILE_PREFIX . $file_id);
 
         return $node;
     }

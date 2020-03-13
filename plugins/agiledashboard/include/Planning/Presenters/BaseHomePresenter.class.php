@@ -82,7 +82,7 @@ class Planning_Presenter_BaseHomePresenter
         $params['activate-scrum']    = 1;
         $params['scrum-title-admin'] = 'Scrum';
 
-        return '?'. http_build_query($params);
+        return '?' . http_build_query($params);
     }
 
     public function create_kanban_url()
@@ -91,7 +91,7 @@ class Planning_Presenter_BaseHomePresenter
         $params['activate-kanban']    = 1;
         $params['kanban-title-admin'] = 'Kanban';
 
-        return '?'. http_build_query($params);
+        return '?' . http_build_query($params);
     }
 
     private function getBaseParameters()

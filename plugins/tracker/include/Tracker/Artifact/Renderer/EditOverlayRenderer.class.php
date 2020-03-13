@@ -49,9 +49,9 @@ class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstract
     {
         if ($this->artifact->userCanUpdate($current_user)) {
             return '<p class="artifact-submit-button"  data-test="artifact-submit">
-                      <input class="btn btn-primary" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />
-                      <button class="btn" type="button" name="cancel"> '. $GLOBALS['Language']->getText('global', 'btn_cancel') .' </button>
-                      '. $this->getConcurrentEditMessage() .'
+                      <input class="btn btn-primary" type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />
+                      <button class="btn" type="button" name="cancel"> ' . $GLOBALS['Language']->getText('global', 'btn_cancel') . ' </button>
+                      ' . $this->getConcurrentEditMessage() . '
                     </p>';
         }
     }

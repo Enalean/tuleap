@@ -120,14 +120,14 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     public function javascript_file($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getAssets()->getFileURL('open-id-connect-client.js').'"></script>';
+            echo '<script type="text/javascript" src="' . $this->getAssets()->getFileURL('open-id-connect-client.js') . '"></script>';
         }
     }
 
     public function cssfile()
     {
         if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getAssets()->getFileURL('fp-style.css') .'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('fp-style.css') . '" />';
         }
     }
 
@@ -356,7 +356,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin') === 0) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }

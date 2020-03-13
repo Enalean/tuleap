@@ -78,8 +78,8 @@ class Docman_SettingsBo
     {
         $this->_cacheGroupSettings();
 
-        if (isset($this->row['use_'.$metadata])) {
-            return $this->row['use_'.$metadata];
+        if (isset($this->row['use_' . $metadata])) {
+            return $this->row['use_' . $metadata];
         } else {
             return false;
         }

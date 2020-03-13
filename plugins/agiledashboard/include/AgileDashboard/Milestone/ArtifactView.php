@@ -61,7 +61,7 @@ class ArtifactView extends Tracker_Artifact_View_View
 
     public function getURL()
     {
-        return AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(
+        return AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             array(
                 'group_id'    => $this->milestone->getGroupId(),
                 'planning_id' => $this->milestone->getPlanningId(),

@@ -36,7 +36,7 @@ trait TemporaryTestDirectory
     {
         if (!$this->temporary_directory) {
             do {
-                $this->temporary_directory = '/tmp/tuleap_tests_'.\bin2hex(\random_bytes(16));
+                $this->temporary_directory = '/tmp/tuleap_tests_' . \bin2hex(\random_bytes(16));
             } while (file_exists($this->temporary_directory));
         }
         if (! mkdir($concurrentDirectory = $this->temporary_directory, 0700, true) && ! is_dir($concurrentDirectory)) {
@@ -77,7 +77,7 @@ trait TemporaryTestDirectory
         }
         while (($file = readdir($d)) !== false) {
             if ($file !== "." && $file !== "..") {
-                $typepath = $mypath . "/" . $file ;
+                $typepath = $mypath . "/" . $file;
 
                 if (is_file($typepath) || is_link($typepath)) {
                     unlink($typepath);

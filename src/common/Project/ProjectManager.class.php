@@ -248,7 +248,6 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function getAllProjectsButDeleted()
     {
-
         $projects_active     = $this->getProjectsByStatus(Project::STATUS_ACTIVE);
         $projects_pending    = $this->getProjectsByStatus(Project::STATUS_PENDING);
         $projects_holding    = $this->getProjectsByStatus(Project::STATUS_SUSPENDED);
@@ -392,7 +391,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
         if ($this->activateWithoutNotifications($project)) {
             if (! send_new_project_email($project)) {
-                $GLOBALS['Response']->addFeedback('warning', $project->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+                $GLOBALS['Response']->addFeedback('warning', $project->getPublicName() . " - " . $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
             }
             return true;
         }
@@ -536,7 +535,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
                 $is_private = true;
                 break;
             default:
-                $GLOBALS['Response']->addFeedback('error', 'bad value '.$access_level);
+                $GLOBALS['Response']->addFeedback('error', 'bad value ' . $access_level);
                 return;
         }
 
@@ -705,11 +704,11 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $group = $this->getProject($groupId);
         }
         if (!$group || !is_object($group)) {
-            throw new SoapFault('GET_GROUP_FAULT', $groupId.' : '.$GLOBALS['Language']->getText('include_group', 'g_not_found'), $method);
+            throw new SoapFault('GET_GROUP_FAULT', $groupId . ' : ' . $GLOBALS['Language']->getText('include_group', 'g_not_found'), $method);
         } elseif ($group->isError()) {
             throw new SoapFault('GET_GROUP_FAULT', $group->getErrorMessage(), $method);
         } elseif (!$group->isActive()) {
-            throw new SoapFault('GET_GROUP_FAULT', $group->getUnixName().' : '.$GLOBALS['Language']->getText('include_exit', 'project_status_'.$group->getStatus()), $method);
+            throw new SoapFault('GET_GROUP_FAULT', $group->getUnixName() . ' : ' . $GLOBALS['Language']->getText('include_exit', 'project_status_' . $group->getStatus()), $method);
         }
         if (!$this->checkRestrictedAccess($group, $this->_getUserManager()->getCurrentUser())) {
             throw new SoapFault('GET_GROUP_FAULT', 'Restricted user: permission denied.', $method);

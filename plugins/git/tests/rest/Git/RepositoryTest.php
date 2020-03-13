@@ -25,7 +25,7 @@ use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use Tuleap\Git\REST\TestBase;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 /**
  * @group GitTests
@@ -71,14 +71,14 @@ class RepositoryTest extends TestBase
 
     public function testOPTIONS(): void
     {
-        $response = $this->getResponse($this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID));
+        $response = $this->getResponse($this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID));
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID),
+            $this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
@@ -87,7 +87,7 @@ class RepositoryTest extends TestBase
     public function testGetGitRepositoryThrows403IfUserCantSeeRepository(): void
     {
         $response = $this->getResponseForNonMember($this->client->get(
-            'git/'.GitDataBuilder::REPOSITORY_GIT_ID
+            'git/' . GitDataBuilder::REPOSITORY_GIT_ID
         ));
 
         $this->assertEquals($response->getStatusCode(), 403);
@@ -104,7 +104,7 @@ class RepositoryTest extends TestBase
             )
         );
 
-        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID;
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID;
 
         $response = $this->getResponse(
             $this->client->patch(
@@ -120,7 +120,7 @@ class RepositoryTest extends TestBase
 
     public function testOPTIONSFiles(): void
     {
-        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'file01',
             'ref'          => 'master'
         ]);
@@ -131,7 +131,7 @@ class RepositoryTest extends TestBase
 
     public function testOPTIONSFilesWithReadOnlyAdmin(): void
     {
-        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
                 'path_to_file' => 'file01',
                 'ref'          => 'master'
             ]);
@@ -182,7 +182,7 @@ class RepositoryTest extends TestBase
 
     public function testGETFilesOnOtherBranchThanMaster(): void
     {
-        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'file02',
             'ref'          => 'branch_file_02'
         ]);
@@ -197,7 +197,7 @@ class RepositoryTest extends TestBase
 
     public function testGETFilesOnNonExistingFile(): void
     {
-        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'NotAFile',
             'ref'          => 'master'
         ]);
@@ -209,7 +209,7 @@ class RepositoryTest extends TestBase
 
     public function testGETFilesOnNonExistingBranch(): void
     {
-        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'file01',
             'ref'          => 'NotABranch'
         ]);
@@ -221,14 +221,14 @@ class RepositoryTest extends TestBase
 
     public function testOPTIONSBranches(): void
     {
-        $response = $this->getResponse($this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/branches'));
+        $response = $this->getResponse($this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSBranchesWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/branches'),
+            $this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -322,14 +322,14 @@ class RepositoryTest extends TestBase
 
     public function testOPTIONSTags(): void
     {
-        $response = $this->getResponse($this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/tags'));
+        $response = $this->getResponse($this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tags'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSTagsWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/tags'),
+            $this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tags'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -398,7 +398,7 @@ class RepositoryTest extends TestBase
         );
 
         $response = $this->getResponse(
-            $this->client->post('git/'.GitDataBuilder::REPOSITORY_GIT_ID.'/statuses/5d408503daf6f1348e264122cfa8fc89a30f7f12', null, $post_payload),
+            $this->client->post('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/statuses/5d408503daf6f1348e264122cfa8fc89a30f7f12', null, $post_payload),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -445,7 +445,7 @@ class RepositoryTest extends TestBase
 
     public function testGETPullRequestsWithReadOnlyAdmin(): void
     {
-        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID.'/pull_requests';
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/pull_requests';
 
         $response = $this->getResponse(
             $this->client->get($url),
@@ -458,7 +458,7 @@ class RepositoryTest extends TestBase
 
     public function testGETPullRequests(): void
     {
-        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID.'/pull_requests';
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/pull_requests';
 
         $response = $this->getResponse($this->client->get($url));
 

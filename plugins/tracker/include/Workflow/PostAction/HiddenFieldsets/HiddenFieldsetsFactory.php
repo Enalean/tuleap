@@ -58,7 +58,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      */
     public function loadPostActions(Transition $transition)
     {
-        $rows = $this->hidden_fieldsets_dao->searchByTransitionId((int)$transition->getId());
+        $rows = $this->hidden_fieldsets_dao->searchByTransitionId((int) $transition->getId());
 
         $fieldset_ids   = [];
         $post_action_id = null;
@@ -164,8 +164,8 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
     {
         $fieldsets = [];
         foreach ($xml->fieldset_id as $xml_fieldset_id) {
-            if (isset($xmlMapping[(string)$xml_fieldset_id['REF']])) {
-                $fieldsets[] = $xmlMapping[(string)$xml_fieldset_id['REF']];
+            if (isset($xmlMapping[(string) $xml_fieldset_id['REF']])) {
+                $fieldsets[] = $xmlMapping[(string) $xml_fieldset_id['REF']];
             }
         }
 

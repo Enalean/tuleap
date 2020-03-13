@@ -244,7 +244,7 @@ class TroveCatListController implements DispatchableWithRequest
             'display'      => $display,
             'mandatory'    => $this->isMandatory($display, $request->get('is-mandatory')),
             'trove_cat_id' => $request->get('id'),
-            'fullpath'     => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy'] .  " :: " .$request->get('fullname') : $request->get('fullname'),
+            'fullpath'     => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy'] .  " :: " . $request->get('fullname') : $request->get('fullname'),
             'fullpath_ids' => (isset($trove_cat_list['hierarchy_id'])) ? $trove_cat_list['hierarchy_id'] . " :: "  . $trove_cat_id : $trove_cat_id,
             'root_parent'  => (int) $ids[0],
             'nb_max_values' => $nb_max_values,

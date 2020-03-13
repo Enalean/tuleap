@@ -43,7 +43,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
         $html = '';
         $request = HTTPRequest::instance();
         $um = UserManager::instance();
-        $user =$um->getCurrentUser();
+        $user = $um->getCurrentUser();
 
         $vFunc = new Valid_WhiteList('docman_func', array('show_docman'));
         $vFunc->required();
@@ -73,7 +73,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
             '</label>
                     <input type="text" name="docman_id" value="' . $docman_id . '" id="docman_id" class="tlp-input" placeholder="123"/>
                   </div>';
-        $html .= '<input type="submit" class="tlp-button-primary" value="'.dgettext('tuleap-docman', 'Search').'"/>';
+        $html .= '<input type="submit" class="tlp-button-primary" value="' . dgettext('tuleap-docman', 'Search') . '"/>';
         $html .= '</form>';
 
         if (($func == 'show_docman') && $docman_id) {
@@ -84,11 +84,11 @@ class Docman_Widget_MyDocmanSearch extends Widget
                 $itemPerm = $dPm->userCanAccess($user, $docman_id);
 
                 if ($itemPerm) {
-                    $html .= '<p><a href="/plugins/docman/?group_id='.$res['group_id'].'&action=details&id='.$docman_id.'&section=properties">Show &quot;'.$res['title'].'&quot; Properties</a></p>';
+                    $html .= '<p><a href="/plugins/docman/?group_id=' . $res['group_id'] . '&action=details&id=' . $docman_id . '&section=properties">Show &quot;' . $res['title'] . '&quot; Properties</a></p>';
                     return $html;
                 }
             }
-            $html .= '<p>'.dgettext('tuleap-docman', 'You do not have the permission to access the document').'</p>';
+            $html .= '<p>' . dgettext('tuleap-docman', 'You do not have the permission to access the document') . '</p>';
         }
 
         return $html;
@@ -111,12 +111,12 @@ class Docman_Widget_MyDocmanSearch extends Widget
      **/
     public function returnAllowedGroupId($docman_id, $user)
     {
-        $sql_group = 'SELECT group_id,title FROM  plugin_docman_item WHERE'.
-                         ' item_id = '. db_ei($docman_id);
+        $sql_group = 'SELECT group_id,title FROM  plugin_docman_item WHERE' .
+                         ' item_id = ' . db_ei($docman_id);
 
         $res_group = db_query($sql_group);
 
-        if ($res_group && db_numrows($res_group)== 1) {
+        if ($res_group && db_numrows($res_group) == 1) {
             $row = db_fetch_array($res_group);
             $res = [
                 'group_id' => (int) $row['group_id'],

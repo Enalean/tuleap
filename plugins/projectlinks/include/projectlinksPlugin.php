@@ -90,7 +90,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         require_once __DIR__ . '/../../../src/www/project/admin/project_admin_utils.php';
 
         $request  = HTTPRequest::instance();
-        $group_id = (int)$request->get('group_id');
+        $group_id = (int) $request->get('group_id');
 
         // get current information
         $project = ProjectManager::instance()->getProject($group_id);
@@ -130,14 +130,14 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             switch ($disp) {
                 case 'edit_link_type':
                     if ($request->exist('link_type_id')) {
-                        $link_type_id = (int)$request->get('link_type_id');
+                        $link_type_id = (int) $request->get('link_type_id');
                     } else {
                         $link_type_id = null;
                     }
                     $this->_adminPage_UpdateLinkType($group_id, $link_type_id);
                     break;
                 case 'resync_template':
-                    $template_id = (int)$request->get('template_id');
+                    $template_id = (int) $request->get('template_id');
                     $this->_adminPage_ResyncTemplate($group_id, $template_id);
                     break;
             }
@@ -151,7 +151,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     private function adminPageUpdate_Service(HTTPRequest $request)
     {
         global $Language, $feedback;
-        $group_id = (int)$request->get('group_id');
+        $group_id = (int) $request->get('group_id');
         switch ($request->get('func')) {
             case 'pl_config_update':
                 if ($request->exist('EnableProjectLink')) {
@@ -179,7 +179,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 
             case 'pl_type_delete':
                 // delete project link type and all links using the type
-                $link_type_id = (int)$request->get('link_type_id');
+                $link_type_id = (int) $request->get('link_type_id');
                 // delete project relationship instances
                 // NB: use group_id to defend against malicious use
                 if (! db_query(
@@ -215,7 +215,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $q_uri_plus = "'" . db_es('/projects/$projname/') . "'";
                 // $link_type_id is not set when submitting a new link
                 if ($request->exist('link_type_id')) {
-                    $link_type_id = (int)$request->get('link_type_id');
+                    $link_type_id = (int) $request->get('link_type_id');
                 } else {
                     $link_type_id = null;
                 }
@@ -249,9 +249,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 break;
 
             case 'pl_link_update':
-                $link_type_id = (int)$request->get('link_type_id');
+                $link_type_id = (int) $request->get('link_type_id');
                 if ($request->exist('target_group_id')) {
-                    $target_group_id = (int)$request->get('target_group_id');
+                    $target_group_id = (int) $request->get('target_group_id');
                 } else {
                     $prjManager = ProjectManager::instance();
                     $trgProject = $prjManager->getProjectFromAutocompleter($request->get('target_group'));
@@ -282,7 +282,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 break;
 
             case 'template_sync_type_add':
-                $template_type_id = (int)$request->get('template_type_id');
+                $template_type_id = (int) $request->get('template_type_id');
                 $db_res           = db_query("SELECT * FROM plugin_projectlinks_link_type
                                 WHERE (link_type_id = " . db_ei($template_type_id) . ");");
                 if (db_numrows($db_res) == 1) {

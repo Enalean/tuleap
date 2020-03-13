@@ -102,28 +102,28 @@ class WikiPlugin_AddComment extends WikiPlugin_WikiBlog
         // for new comments
         $html = HTML();
         if ($args['jshide']) {
-            $div = HTML::div(array('id'=>'comments','style'=>'display:none;'));
+            $div = HTML::div(array('id' => 'comments','style' => 'display:none;'));
             //$list->setAttr('style','display:none;');
             $div->pushContent(Javascript("
 function togglecomments(a) {
   comments=document.getElementById('comments');
   if (comments.style.display=='none') {
     comments.style.display='block';
-    a.title='"._("Click to hide the comments")."';
+    a.title='" . _("Click to hide the comments") . "';
   } else {
     comments.style.display='none';
-    a.title='"._("Click to display all comments")."';
+    a.title='" . _("Click to display all comments") . "';
   }
 }"));
             $html->pushContent(HTML::h4(HTML::a(
-                array('name'=>'comment-header',
-                                                      'class'=>'wikiaction',
-                                                      'title'=>_("Click to display"),
-                                                      'onclick'=>"togglecomments(this)"),
+                array('name' => 'comment-header',
+                                                      'class' => 'wikiaction',
+                                                      'title' => _("Click to display"),
+                                                      'onclick' => "togglecomments(this)"),
                 _("Comments")
             )));
         } else {
-            $div = HTML::div(array('id'=>'comments'));
+            $div = HTML::div(array('id' => 'comments'));
         }
         foreach (explode(',', $args['mode']) as $show) {
             if (!empty($seen[$show])) {
@@ -148,7 +148,7 @@ function togglecomments(a) {
         $html->pushContent($div);
         return $html;
     }
-};
+}
 
 // $Log: AddComment.php,v $
 // Revision 1.8  2004/06/13 09:45:23  rurban

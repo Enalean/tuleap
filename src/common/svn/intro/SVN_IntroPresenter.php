@@ -51,7 +51,7 @@ class SVN_IntroPresenter
 
     public function help_link()
     {
-        return "javascript:help_window('/doc/".$this->user->getShortLocale()."/user-guide/code-versioning/svn.html')";
+        return "javascript:help_window('/doc/" . $this->user->getShortLocale() . "/user-guide/code-versioning/svn.html')";
     }
 
     public function svn_intro_title()
@@ -92,7 +92,7 @@ class SVN_IntroPresenter
 
     public function svn_command()
     {
-        return "svn checkout --username ".strtolower($this->svn_user_username())." ". $this->svn_url;
+        return "svn checkout --username " . strtolower($this->svn_user_username()) . " " . $this->svn_url;
     }
 
     public function username_is_in_lowercase()

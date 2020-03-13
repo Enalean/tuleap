@@ -65,7 +65,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
         $this->ugroup_manager = M::spy(UGroupManager::class);
         $xml_validator        = new XML_RNGValidator();
         $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
-        $this->project        = M::spy(Project::class, [ 'getPublicName' => 'Project01']);
+        $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01']);
         $this->synch_detector   = M::mock(SynchronizedProjectMembershipDetector::class);
 
         $this->xml_exporter   = new ProjectXMLExporter(

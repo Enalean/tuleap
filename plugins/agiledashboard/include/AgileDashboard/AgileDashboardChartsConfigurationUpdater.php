@@ -64,6 +64,6 @@ class AgileDashboardChartsConfigurationUpdater
             'pane'     => 'charts'
         ];
 
-        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query($query_parts));
+        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?' . http_build_query($query_parts));
     }
 }

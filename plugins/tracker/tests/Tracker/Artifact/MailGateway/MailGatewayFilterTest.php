@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Artifact\MailGateway;
 
 use TuleapTestCase;
 
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class MailGatewayFilterTest extends TuleapTestCase
 {

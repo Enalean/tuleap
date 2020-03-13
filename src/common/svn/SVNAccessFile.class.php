@@ -165,7 +165,7 @@ class SVNAccessFile
     {
         $trimmedLine = ltrim($line);
         if ($trimmedLine && substr($trimmedLine, 0, 1) == '@' && !$this->isGroupDefined($groups, $trimmedLine, $verbose)) {
-            return "# ".$line;
+            return "# " . $line;
         } else {
             return $line;
         }
@@ -208,10 +208,10 @@ class SVNAccessFile
             switch ($currentSection) {
                 case 'groups':
                     $groups = $this->accumulateDefinedGroups($groups, $line, false);
-                    $validContents .= $line.PHP_EOL;
+                    $validContents .= $line . PHP_EOL;
                     break;
                 default:
-                    $validContents .= $this->validateUGroupLine($groups, $line, $verbose).PHP_EOL;
+                    $validContents .= $this->validateUGroupLine($groups, $line, $verbose) . PHP_EOL;
                     break;
             }
         }
@@ -235,7 +235,7 @@ class SVNAccessFile
     {
         $trimmedLine = ltrim($line);
         if ($trimmedLine != '') {
-            preg_match('/^'.self::GROUPNAME_PATTERN.'\s*=/', $trimmedLine, $matches);
+            preg_match('/^' . self::GROUPNAME_PATTERN . '\s*=/', $trimmedLine, $matches);
             if (!empty($matches)) {
                 if (!$defaultSection) {
                     $groups[$matches[1]] = self::UGROUP_REDEFINED;
@@ -289,7 +289,7 @@ class SVNAccessFile
      */
     protected function getGroupMatcher($groupPattern)
     {
-        return '/^@'.$groupPattern.'\s*=/i';
+        return '/^@' . $groupPattern . '\s*=/i';
     }
 
     /**

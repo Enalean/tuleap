@@ -28,7 +28,7 @@ final class ZipArchiveTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, TemporaryTestDirectory;
 
-    private const FIXTURES_DIR = __DIR__ .'/_fixtures';
+    private const FIXTURES_DIR = __DIR__ . '/_fixtures';
 
     /** @var string */
     private $tmp_dir;
@@ -41,7 +41,7 @@ final class ZipArchiveTest extends \PHPUnit\Framework\TestCase
         $this->tmp_dir = $this->getTmpDir();
 
         $this->archive = new ZipArchive(
-            self::FIXTURES_DIR .'/archive.zip',
+            self::FIXTURES_DIR . '/archive.zip',
             $this->tmp_dir
         );
     }
@@ -54,7 +54,7 @@ final class ZipArchiveTest extends \PHPUnit\Framework\TestCase
 
     public function testItGivesTheXMLFile() : void
     {
-        $expected = file_get_contents(self::FIXTURES_DIR .'/project.xml');
+        $expected = file_get_contents(self::FIXTURES_DIR . '/project.xml');
         $this->assertEquals($expected, $this->archive->getProjectXML());
     }
 
@@ -63,13 +63,13 @@ final class ZipArchiveTest extends \PHPUnit\Framework\TestCase
         $extraction_path = $this->archive->getExtractionPath();
         $this->assertDirectoryExists($extraction_path);
 
-        $expected_prefix = $this->tmp_dir .'/import_project_';
-        $this->assertRegExp('%'. $expected_prefix .'\w+%', $extraction_path);
+        $expected_prefix = $this->tmp_dir . '/import_project_';
+        $this->assertRegExp('%' . $expected_prefix . '\w+%', $extraction_path);
 
         $this->archive->extractFiles();
 
-        $expected  = file_get_contents(self::FIXTURES_DIR .'/data/Artifact69');
-        $extracted = file_get_contents($extraction_path .'/data/Artifact69');
+        $expected  = file_get_contents(self::FIXTURES_DIR . '/data/Artifact69');
+        $extracted = file_get_contents($extraction_path . '/data/Artifact69');
 
         $this->assertEquals($expected, $extracted);
     }

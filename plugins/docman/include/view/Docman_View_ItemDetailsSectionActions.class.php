@@ -47,7 +47,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         //}}}
 
         //{{{ Move
-        $content .= '<dt>'. dgettext('tuleap-docman', 'Move') .'</dt><dd>';
+        $content .= '<dt>' . dgettext('tuleap-docman', 'Move') . '</dt><dd>';
         if (!$this->is_moveable || !($this->_controller->userCanWrite($this->item->getId()) && $this->_controller->userCanWrite($this->item->getParentId()))) {
             if (is_a($this->item, 'Docman_Folder')) {
                 $content .= dgettext('tuleap-docman', 'You cannot move this folder.');
@@ -70,7 +70,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         //}}}
 
         //{{{ Cut
-        $content .= '<dt>'.dgettext('tuleap-docman', 'Cut').'</dt><dd>';
+        $content .= '<dt>' . dgettext('tuleap-docman', 'Cut') . '</dt><dd>';
         $itemFactory = Docman_ItemFactory::instance($this->item->getGroupId());
         if ($itemFactory->isRoot($this->item)) {
             $content .= dgettext('tuleap-docman', 'You cannot cut this folder.');
@@ -90,7 +90,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         //}}}
 
         //{{{ Copy
-        $content .= '<dt>'.dgettext('tuleap-docman', 'Copy').'</dt><dd>';
+        $content .= '<dt>' . dgettext('tuleap-docman', 'Copy') . '</dt><dd>';
         $copyurl  = DocmanViewURLBuilder::buildActionUrl(
             $this->item,
             ['default_url' => $this->url],
@@ -105,7 +105,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         //}}}
 
         //{{{ Delete
-        $content .= '<dt>'. dgettext('tuleap-docman', 'Delete') .'</dt><dd>';
+        $content .= '<dt>' . dgettext('tuleap-docman', 'Delete') . '</dt><dd>';
         if (! $this->is_deleteable || $this->_controller->userCannotDelete($user, $this->item)) {
             if (is_a($this->item, 'Docman_Folder')) {
                 $content .= dgettext('tuleap-docman', 'You cannot delete this folder.');
@@ -135,10 +135,10 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     {
         $content = '';
         if ($this->_controller->userCanWrite($this->item->getid())) {
-            $content .= '<dt>'. dgettext('tuleap-docman', 'New document') .'</dt><dd>';
+            $content .= '<dt>' . dgettext('tuleap-docman', 'New document') . '</dt><dd>';
             $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">create a new document</a> in this folder.'), DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'newDocument', 'id' => $item->getId()]));
             $content .= '</dd>';
-            $content .= '<dt>'. dgettext('tuleap-docman', 'New folder') .'</dt><dd>';
+            $content .= '<dt>' . dgettext('tuleap-docman', 'New folder') . '</dt><dd>';
             $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">create a new folder</a> in this folder.'), DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'newFolder', 'id' => $item->getId()]));
             //{{{ Paste
             $itemFactory  = Docman_ItemFactory::instance($item->getGroupId());
@@ -152,7 +152,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             }
             if ($srcItem && !$itemFactory->isInSubTree($this->item->getId(), $srcItem->getId())) {
                 $content .= '</dd>';
-                $content .= '<dt>'.dgettext('tuleap-docman', 'Paste').'</dt><dd>';
+                $content .= '<dt>' . dgettext('tuleap-docman', 'Paste') . '</dt><dd>';
                 $copyurl = DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'action_paste', 'id' => $this->item->getId()]);
                 $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">paste \'%2$s\' into this folder</a>.'), $copyurl, $this->hp->purify($srcItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
             }
@@ -164,7 +164,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     public function visitDocument($item, $params = array())
     {
         $content = '';
-        $content .= '<dt>'. dgettext('tuleap-docman', 'Update') .'</dt><dd>';
+        $content .= '<dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
 
         if (!$this->_controller->userCanWrite($this->item->getid())) {
             $content .= dgettext('tuleap-docman', 'You cannot update this document.');
@@ -190,7 +190,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
 
     private function getSectionForNewVersion()
     {
-        $content = '<dt>'. dgettext('tuleap-docman', 'New Version') .'</dt><dd>';
+        $content = '<dt>' . dgettext('tuleap-docman', 'New Version') . '</dt><dd>';
         if (!$this->_controller->userCanWrite($this->item->getid())) {
             $content .= dgettext('tuleap-docman', 'You cannot create a new version.');
         } else {

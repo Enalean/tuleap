@@ -54,7 +54,6 @@ class OAuth2AuthorizationCodeCreator
         OAuth2AuthorizationCodeDAO $authorization_code_dao,
         DateInterval $access_token_expiration_delay
     ) {
-
         $this->authorization_code_formatter  = $authorization_code_formatter;
         $this->hasher                        = $hasher;
         $this->authorization_code_dao        = $authorization_code_dao;

@@ -349,7 +349,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         );
 
         $document = $response->json();
-        $this->assertEquals($document['lock_info'] ["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
+        $this->assertEquals($document['lock_info']["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
     }
 
     /**

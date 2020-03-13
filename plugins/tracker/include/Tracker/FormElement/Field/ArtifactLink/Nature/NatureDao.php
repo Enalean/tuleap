@@ -127,7 +127,7 @@ class NatureDao extends DataAccessObject
 
         $row = $this->retrieve($sql)->getRow();
 
-        return (bool)$row['nature'];
+        return (bool) $row['nature'];
     }
 
     public function searchAllUsedNatureByProject($project_id)

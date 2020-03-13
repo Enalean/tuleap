@@ -252,6 +252,6 @@ class TimeframeBuilder
 
         assert($last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Date);
 
-        return  (int) $last_changeset_value->getTimestamp();
+        return (int) $last_changeset_value->getTimestamp();
     }
 }

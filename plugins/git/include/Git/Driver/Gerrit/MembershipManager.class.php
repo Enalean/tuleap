@@ -44,13 +44,13 @@ class Git_Driver_Gerrit_MembershipManager
     private $cache_groups = array();
 
     public function __construct(
-        Git_Driver_Gerrit_MembershipDao       $dao,
+        Git_Driver_Gerrit_MembershipDao $dao,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        Git_Driver_Gerrit_UserAccountManager  $gerrit_usermanager,
-        Git_RemoteServer_GerritServerFactory  $gerrit_server_factory,
-        \Psr\Log\LoggerInterface                                $logger,
-        UGroupManager                         $ugroup_manager,
-        ProjectManager                        $project_manager
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        \Psr\Log\LoggerInterface $logger,
+        UGroupManager $ugroup_manager,
+        ProjectManager $project_manager
     ) {
         $this->dao                    = $dao;
         $this->driver_factory         = $driver_factory;
@@ -292,7 +292,7 @@ class Git_Driver_Gerrit_MembershipManager
      */
     public function getFullyQualifiedUGroupName(ProjectUGroup $ugroup)
     {
-        return $ugroup->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+        return $ugroup->getProject()->getUnixName() . '/' . $ugroup->getNormalizedName();
     }
 
     /**
@@ -319,7 +319,7 @@ class Git_Driver_Gerrit_MembershipManager
         if (isset($this->cache_groups[$server->getId()][$gerrit_group_name])) {
             return $this->cache_groups[$server->getId()][$gerrit_group_name];
         }
-        throw new Exception("Group $gerrit_group_name doesn't not exist on server ".$server->getId()." ".$server->getBaseUrl());
+        throw new Exception("Group $gerrit_group_name doesn't not exist on server " . $server->getId() . " " . $server->getBaseUrl());
     }
 
     private function cacheGroupDefinitionForServer(Git_RemoteServer_GerritServer $server)

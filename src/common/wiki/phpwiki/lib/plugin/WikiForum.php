@@ -127,7 +127,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
 
         $dbi = $request->getDbh();
         $topics = $this->findBlogs($dbi, $args['pagename'], 'wikiforum');
-        $html = HTML::table(array('border'=>0));
+        $html = HTML::table(array('border' => 0));
         $row = HTML::tr(
             HTML::th('title'),
             HTML::th('last post'),
@@ -148,7 +148,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
         }
         return $html;
     }
-};
+}
 
 // $Log: WikiForum.php,v $
 // Revision 1.3  2004/06/14 11:31:39  rurban

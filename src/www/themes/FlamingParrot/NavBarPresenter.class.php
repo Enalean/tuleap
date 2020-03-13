@@ -148,7 +148,7 @@ class FlamingParrot_NavBarPresenter
 
     public function user_login_name()
     {
-        return "@".$this->user->getUnixName();
+        return "@" . $this->user->getUnixName();
     }
 
     public function has_user_avatar()

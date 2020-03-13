@@ -100,12 +100,12 @@ class PermissionsOverrider_PermissionsOverriderManager
 
     private function getPermissionsOverriderDirectory()
     {
-        return ForgeConfig::get("sys_custom_dir")."/".self::PERMISSIONS_OVERRIDER_DIRECTORY;
+        return ForgeConfig::get("sys_custom_dir") . "/" . self::PERMISSIONS_OVERRIDER_DIRECTORY;
     }
 
     private function getPermissionsOverriderFilePath()
     {
-        return $this->getPermissionsOverriderDirectory()."/".self::PERMISSIONS_OVERRIDER_FILE;
+        return $this->getPermissionsOverriderDirectory() . "/" . self::PERMISSIONS_OVERRIDER_FILE;
     }
 
     private function getPermissionsOverrider()

@@ -172,9 +172,9 @@ class PriorityDaoPerformancesTest extends TestCase
     private function displayStats($times)
     {
         $avg = round(array_sum($times) * 1000 / count($times));
-        echo "Min: ". round(min($times) * 1000) ."\n";
-        echo "Max: ". round(max($times) * 1000) ."\n";
-        echo "Avg: ". $avg ."\n";
+        echo "Min: " . round(min($times) * 1000) . "\n";
+        echo "Max: " . round(max($times) * 1000) . "\n";
+        echo "Avg: " . $avg . "\n";
         echo "\n";
         echo "\n";
 

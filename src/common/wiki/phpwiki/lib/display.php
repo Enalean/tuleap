@@ -166,10 +166,10 @@ function displayPage(&$request, $template = false)
     $eM = EventManager::instance();
 
     $ref_html = '';
-    $crossref_fact= new CrossReferenceFactory($pagename, ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
+    $crossref_fact = new CrossReferenceFactory($pagename, ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
-        $ref_html .= '<h3>'.$GLOBALS['Language']->getText('cross_ref_fact_include', 'references').'</h3>';
+        $ref_html .= '<h3>' . $GLOBALS['Language']->getText('cross_ref_fact_include', 'references') . '</h3>';
         $ref_html .= $crossref_fact->getHTMLDisplayCrossRefs();
     }
 
@@ -221,7 +221,7 @@ function displayPage(&$request, $template = false)
                This just parses the wikitext, and doesn't highlight the markup */
             include_once('lib/WikiPlugin.php');
             $loader = new WikiPluginLoader;
-            $xml = $loader->expandPI('<'.'?plugin SearchHighlight s="'.$result['query'].'"?'.'>', $request, $markup);
+            $xml = $loader->expandPI('<' . '?plugin SearchHighlight s="' . $result['query'] . '"?' . '>', $request, $markup);
             if ($xml and is_array($xml)) {
                 foreach (array_reverse($xml) as $line) {
                     array_unshift($page_content->_content, $line);
@@ -241,7 +241,7 @@ function displayPage(&$request, $template = false)
                 $hilight_re = $query->getHighlightRegexp();
             //$matches = preg_grep("/$hilight_re/i", $revision->getContent());
             // FIXME!
-                for ($i=0; $i < count($page_content->_content); $i++) {
+                for ($i = 0; $i < count($page_content->_content); $i++) {
                     $found = false;
                     $line = $page_content->_content[$i];
                     if (is_string($line)) {

@@ -28,7 +28,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 
 require_once 'constants.php';
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class proftpdPlugin extends Plugin
 {
@@ -37,7 +37,7 @@ class proftpdPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        bindtextdomain('tuleap-proftpd', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-proftpd', __DIR__ . '/../site-content');
 
         $this->addHook('cssfile');
         $this->addHook(Event::SERVICE_CLASSNAMES);
@@ -132,7 +132,7 @@ class proftpdPlugin extends Plugin
                 __DIR__ . '/../../../src/www/assets/proftpd/themes',
                 '/assets/proftpd/themes'
             );
-            echo '<link rel="stylesheet" type="text/css" href="'.$assets->getFileURL('style.css').'" />'."\n";
+            echo '<link rel="stylesheet" type="text/css" href="' . $assets->getFileURL('style.css') . '" />' . "\n";
         }
     }
 

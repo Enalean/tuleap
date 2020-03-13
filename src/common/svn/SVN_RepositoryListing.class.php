@@ -52,7 +52,7 @@ class SVN_RepositoryListing
 
         foreach ($content as $line) {
             if ($this->svn_permissions_manager->userCanRead($user, $project, $line)) {
-                $paths[]= $this->extractDirectoryContent($line, $svn_path);
+                $paths[] = $this->extractDirectoryContent($line, $svn_path);
             }
         }
         return array_filter($paths);
@@ -83,7 +83,7 @@ class SVN_RepositoryListing
     {
         $date_based_path = array();
         foreach ($paths as $path) {
-            $path_info = $this->getSvnSinglePathWithLogDetails($project, $svn_path.'/'.$path);
+            $path_info = $this->getSvnSinglePathWithLogDetails($project, $svn_path . '/' . $path);
             $date_based_path[$path_info->getTimestamp()][] = $path_info;
         }
 

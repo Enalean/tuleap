@@ -69,8 +69,8 @@ class Tracker_Artifact_View_ViewCollection
             if ($view == $current_view) {
                 $class = 'active';
             }
-            $html .= '<li class="'. $class .'">
-                <a href="'. $view->getURL() .'" data-test="'.$view->getIdentifier().'">'. $view->getTitle() .'</a>
+            $html .= '<li class="' . $class . '">
+                <a href="' . $view->getURL() . '" data-test="' . $view->getIdentifier() . '">' . $view->getTitle() . '</a>
             </li>';
         }
         $html .= '</ul>';

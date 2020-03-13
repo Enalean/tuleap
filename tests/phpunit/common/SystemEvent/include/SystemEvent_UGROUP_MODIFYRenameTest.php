@@ -59,7 +59,7 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
             ''
         );
 
-        $this->system_event= \Mockery::mock(\SystemEvent_UGROUP_MODIFY::class, $event_params)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->system_event = \Mockery::mock(\SystemEvent_UGROUP_MODIFY::class, $event_params)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $ugroup_binding = \Mockery::spy(\UGroupBinding::class);
         $ugroup_binding->shouldReceive('updateBindedUGroups')->andReturns(true);

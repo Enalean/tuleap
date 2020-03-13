@@ -17,23 +17,23 @@
 class PlotLine
 {
     public $scaleposition;
-    public $direction=-1;
-    protected $weight=1;
+    public $direction = -1;
+    protected $weight = 1;
     protected $color = 'black';
-    private $legend='';
-    private $hidelegend=false;
-    private $legendcsimtarget='';
-    private $legendcsimalt='';
-    private $legendcsimwintarget='';
-    private $iLineStyle='solid';
-    public $numpoints=0; // Needed since the framework expects this property
+    private $legend = '';
+    private $hidelegend = false;
+    private $legendcsimtarget = '';
+    private $legendcsimalt = '';
+    private $legendcsimwintarget = '';
+    private $iLineStyle = 'solid';
+    public $numpoints = 0; // Needed since the framework expects this property
 
     public function __construct($aDir = HORIZONTAL, $aPos = 0, $aColor = 'black', $aWeight = 1)
     {
         $this->direction = $aDir;
-        $this->color=$aColor;
-        $this->weight=$aWeight;
-        $this->scaleposition=$aPos;
+        $this->color = $aColor;
+        $this->weight = $aWeight;
+        $this->scaleposition = $aPos;
     }
 
     public function SetLegend($aLegend, $aCSIM = '', $aCSIMAlt = '', $aCSIMWinTarget = '')
@@ -51,7 +51,7 @@ class PlotLine
 
     public function SetPosition($aScalePosition)
     {
-        $this->scaleposition=$aScalePosition;
+        $this->scaleposition = $aScalePosition;
     }
 
     public function SetDirection($aDir)
@@ -61,12 +61,12 @@ class PlotLine
 
     public function SetColor($aColor)
     {
-        $this->color=$aColor;
+        $this->color = $aColor;
     }
 
     public function SetWeight($aWeight)
     {
-        $this->weight=$aWeight;
+        $this->weight = $aWeight;
     }
 
     public function SetLineStyle($aStyle)
@@ -162,7 +162,7 @@ class PlotLine
             $aImg,
             $aImg->left_margin,
             $aYScale->Translate($aYScale->GetMinVal()),
-            $aImg->width-$aImg->right_margin,
+            $aImg->width - $aImg->right_margin,
             $aYScale->Translate($aYScale->GetMaxVal()),
             $aXScale->Translate($this->scaleposition),
             $aYScale->Translate($this->scaleposition)

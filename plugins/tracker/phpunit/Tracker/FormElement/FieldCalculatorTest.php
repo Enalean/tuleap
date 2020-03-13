@@ -223,7 +223,7 @@ final class FieldCalculatorTest extends TestCase
             );
 
         $child_three = ['id' => 750, 'artifact_link_id' => 750, 'type' => 'float', 'float_value' => 5.2500, 'parent_id' => 777];
-        $child_four  = ['id' => 751, 'artifact_link_id' => 751, 'type' => 'float',  'float_value' => 15, 'parent_id' => 777];
+        $child_four  = ['id' => 751, 'artifact_link_id' => 751, 'type' => 'float', 'float_value' => 15, 'parent_id' => 777];
 
         $other_children = \TestHelper::arrayToDar($child_three, $child_four);
         $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')

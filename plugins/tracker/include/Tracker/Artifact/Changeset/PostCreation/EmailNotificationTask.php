@@ -106,7 +106,7 @@ final class EmailNotificationTask implements PostCreationTask
 
         // 1. Get the recipients list
         $recipients = $this->recipients_manager->getRecipients($changeset, $is_update);
-        $this->logger->debug('Recipients '.implode(', ', array_keys($recipients)));
+        $this->logger->debug('Recipients ' . implode(', ', array_keys($recipients)));
 
         // 2. Compute the body of the message + headers
         $messages = array();
@@ -119,7 +119,7 @@ final class EmailNotificationTask implements PostCreationTask
 
         // 3. Send the notification
         foreach ($messages as $message) {
-            $this->logger->debug('Notify '.implode(', ', $message['recipients']));
+            $this->logger->debug('Notify ' . implode(', ', $message['recipients']));
             $this->mail_sender->send(
                 $changeset,
                 $message['recipients'],
@@ -155,7 +155,7 @@ final class EmailNotificationTask implements PostCreationTask
                 $message_id = $this->getMessageId($user, $changeset);
 
                 $messages[$message_id]               = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
-                $messages[$message_id]['from']       = $this->getSenderName($changeset) . '<' .$changeset->getArtifact()->getTokenBasedEmailAddress() . '>';
+                $messages[$message_id]['from']       = $this->getSenderName($changeset) . '<' . $changeset->getArtifact()->getTokenBasedEmailAddress() . '>';
                 $messages[$message_id]['message-id'] = $message_id;
                 $messages[$message_id]['headers']    = $headers;
                 $messages[$message_id]['recipients'] = array($user->getEmail());
@@ -244,7 +244,7 @@ final class EmailNotificationTask implements PostCreationTask
         if (! $email_domain) {
             $email_domain = ForgeConfig::get('sys_default_domain');
         }
-        return self::DEFAULT_MAIL_SENDER.'@'.$email_domain;
+        return self::DEFAULT_MAIL_SENDER . '@' . $email_domain;
     }
 
     /**
@@ -356,21 +356,21 @@ final class EmailNotificationTask implements PostCreationTask
         $format = 'text';
         $art    = $changeset->getArtifact();
 
-        $output = '+============== '.'['.$art->getTracker()->getItemName() .' #'. $art->getId().'] '.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).' ==============+';
+        $output = '+============== ' . '[' . $art->getTracker()->getItemName() . ' #' . $art->getId() . '] ' . $art->fetchMailTitle($recipient_user, $format, $ignore_perms) . ' ==============+';
         $output .= PHP_EOL;
         $output .= PHP_EOL;
         $proto   = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-        $output .= ' <'. $proto .'://'. ForgeConfig::get('sys_default_domain') .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
+        $output .= ' <' . $proto . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?aid=' . $art->getId() . '>';
         $output .= PHP_EOL;
         $output .= $language->getText('plugin_tracker_include_artifact', 'last_edited');
-        $output .= ' '. $this->user_helper->getDisplayNameFromUserId($changeset->getSubmittedBy());
-        $output .= ' on '.\DateHelper::formatForLanguage($language, $changeset->getSubmittedOn());
+        $output .= ' ' . $this->user_helper->getDisplayNameFromUserId($changeset->getSubmittedBy());
+        $output .= ' on ' . \DateHelper::formatForLanguage($language, $changeset->getSubmittedOn());
         if ($comment = $changeset->getComment()) {
             $output .= PHP_EOL;
             $output .= $comment->fetchMailFollowUp($format);
         }
         $output .= PHP_EOL;
-        $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
+        $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ';
         $output .= PHP_EOL;
         $output .= $changeset->diffToPrevious($format, $recipient_user, $ignore_perms);
         $output .= PHP_EOL;
@@ -407,7 +407,7 @@ final class EmailNotificationTask implements PostCreationTask
             '<table style="width:100%">
             <tr>
                 <td align="left" colspan="2">
-                    <h1>'.$hp->purify($art->fetchMailTitle($recipient_user, $format, $ignore_perms)).'
+                    <h1>' . $hp->purify($art->fetchMailTitle($recipient_user, $format, $ignore_perms)) . '
                     </h1>
                 </td>
             </tr>';
@@ -416,7 +416,7 @@ final class EmailNotificationTask implements PostCreationTask
             $output .=
                 '<tr>
                     <td colspan="2" align="left">
-                        <h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'
+                        <h2>' . $language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset') . '
                         </h2>
                     </td>
                 </tr>';
@@ -439,20 +439,20 @@ final class EmailNotificationTask implements PostCreationTask
                     '<tr>
                         <td> </td>
                         <td align="left">
-                            <ul>'.
-                    $changes.'
+                            <ul>' .
+                    $changes . '
                             </ul>
                         </td>
                     </tr>';
             }
 
-            $artifact_link = HTTPRequest::instance()->getServerUrl() .'/plugins/tracker/?aid='.(int)$art->getId();
+            $artifact_link = HTTPRequest::instance()->getServerUrl() . '/plugins/tracker/?aid=' . (int) $art->getId();
 
             $output .=
                 '<tr>
                     <td> </td>
-                    <td align="right">'.
-                $this->fetchHtmlAnswerButton($artifact_link).
+                    <td align="right">' .
+                $this->fetchHtmlAnswerButton($artifact_link) .
                 '</span>
                     </td>
                 </tr>';
@@ -473,7 +473,7 @@ final class EmailNotificationTask implements PostCreationTask
     private function fetchHtmlAnswerButton($artifact_link)
     {
         return '<span class="cta">
-            <a href="'. $artifact_link .'" target="_blank" rel="noreferrer">' .
+            <a href="' . $artifact_link . '" target="_blank" rel="noreferrer">' .
             $GLOBALS['Language']->getText('tracker_include_artifact', 'mail_answer_now') .
             '</a>
         </span>';
@@ -525,7 +525,7 @@ final class EmailNotificationTask implements PostCreationTask
      */
     private function getSubject(\Tracker_Artifact $artifact, \PFUser $recipient, $ignore_perms = false)
     {
-        $subject  = '['. $artifact->getTracker()->getItemName() .' #'. $artifact->getId() .'] ';
+        $subject  = '[' . $artifact->getTracker()->getItemName() . ' #' . $artifact->getId() . '] ';
         $subject .= $this->getSubjectAssignedTo($artifact, $recipient);
         $subject .= $artifact->fetchMailTitle($recipient, 'text', $ignore_perms);
         return $subject;

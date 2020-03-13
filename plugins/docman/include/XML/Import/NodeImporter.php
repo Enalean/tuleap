@@ -83,7 +83,7 @@ class NodeImporter
             $this->importNode($node, $parent_item);
         } catch (CannotInstantiateItemWeHaveJustCreatedInDBException $exception) {
             $this->logger->error('An error occurred while creating in DB the item: ' . $node->properties->title);
-        } catch (InvalidDateException|UnknownItemTypeException|UserNotFoundException $exception) {
+        } catch (InvalidDateException | UnknownItemTypeException | UserNotFoundException $exception) {
             $this->logger->error($exception->getMessage());
         }
     }

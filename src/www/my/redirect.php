@@ -56,7 +56,7 @@ if ($request->valid($vReturnTo)) {
     print '
 <script type="text/javascript">
 function return_to_url() {
-  window.location="'.$hp->purify($return_url, CODENDI_PURIFIER_JS_QUOTE).'";
+  window.location="' . $hp->purify($return_url, CODENDI_PURIFIER_JS_QUOTE) . '";
 }
 
 setTimeout("return_to_url()",1000);

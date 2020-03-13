@@ -26,7 +26,7 @@ require_once __DIR__ . '/../include/pre.php';
 
 (new RequestInstrumentation(Prometheus::instance()))->incrementSoap();
 
-define('CODENDI_WS_API_VERSION', file_get_contents(dirname(__FILE__).'/VERSION'));
+define('CODENDI_WS_API_VERSION', file_get_contents(dirname(__FILE__) . '/VERSION'));
 
 define('LOG_SOAP_REQUESTS', false);
 
@@ -40,17 +40,17 @@ if ($request->isSecure()) {
 
 $default_domain = ForgeConfig::get('sys_default_domain');
 
-$uri = $protocol.'://'.$default_domain;
+$uri = $protocol . '://' . $default_domain;
 
 if ($request->exist('wsdl')) {
-    header("Location: ".$uri."/soap/codendi.wsdl.php?wsdl");
+    header("Location: " . $uri . "/soap/codendi.wsdl.php?wsdl");
     exit();
 }
 
 $event_manager = EventManager::instance();
 
 try {
-    $server = new TuleapSOAPServer($uri.'/soap/codendi.wsdl.php?wsdl', array('trace' => 1));
+    $server = new TuleapSOAPServer($uri . '/soap/codendi.wsdl.php?wsdl', array('trace' => 1));
 
     require_once __DIR__ .  '/../include/utils_soap.php';
     require_once __DIR__ . '/common/session.php';

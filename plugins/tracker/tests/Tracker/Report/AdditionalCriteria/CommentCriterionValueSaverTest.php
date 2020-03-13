@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\AdditionalCriteria;
 use Tracker_Report_AdditionalCriterion;
 use TuleapTestCase;
 
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class CommentCriterionValueSaverTest extends TuleapTestCase
 {

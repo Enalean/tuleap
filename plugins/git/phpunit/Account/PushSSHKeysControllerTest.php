@@ -75,7 +75,7 @@ class PushSSHKeysControllerTest extends TestCase
         $this->user = UserTestBuilderAlias::aUser()->withId(120)->build();
 
         $this->controller = new PushSSHKeysController(
-            Mockery::mock(CSRFSynchronizerToken::class, [ 'check' => true]),
+            Mockery::mock(CSRFSynchronizerToken::class, ['check' => true]),
             $this->user_account_manager,
             $this->gerrit_server_factory,
             $this->logger,

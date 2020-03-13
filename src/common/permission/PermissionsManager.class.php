@@ -139,7 +139,7 @@ class PermissionsManager implements IPermissionsManagerNG
         while ($dar->valid()) {
             $ugroup = $dar->current();
             $new_name = $ugroup['name'];
-            if (strpos($new_name, "ugroup_") === 0 && strpos($new_name, "_name_key")+strlen("_name_key") === strlen($new_name)) {
+            if (strpos($new_name, "ugroup_") === 0 && strpos($new_name, "_name_key") + strlen("_name_key") === strlen($new_name)) {
                 $new_name = $GLOBALS['Language']->getText('project_ugroup', $new_name);
             }
             $ugroups_name[] = $new_name;
@@ -278,12 +278,12 @@ class PermissionsManager implements IPermissionsManagerNG
         $normalized_ugroup_ids = $normalizer->getNormalizedUGroupIds($project, $ugroup_ids, $override_collection);
         $cleared = $this->_permission_dao->clearPermission($permission_type, $object_id);
         if (! $cleared) {
-            throw new PermissionDaoException("Database issue while clearPermission $permission_type, $object_id: ".$this->_permission_dao->getDa()->getErrorMessage());
+            throw new PermissionDaoException("Database issue while clearPermission $permission_type, $object_id: " . $this->_permission_dao->getDa()->getErrorMessage());
         }
         foreach ($normalized_ugroup_ids as $ugroup_id) {
             $added = $this->_permission_dao->addPermission($permission_type, $object_id, $ugroup_id);
             if (! $added) {
-                throw new PermissionDaoException("Database issue while addPermission $permission_type, $object_id, $ugroup_id: ".$this->_permission_dao->getDa()->getErrorMessage());
+                throw new PermissionDaoException("Database issue while addPermission $permission_type, $object_id, $ugroup_id: " . $this->_permission_dao->getDa()->getErrorMessage());
             }
         }
 

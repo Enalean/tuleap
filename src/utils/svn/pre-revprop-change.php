@@ -39,6 +39,6 @@ try {
     $svn_commit_message->assertCanBeModified($repository, $action, $propname, $new_commit_message);
     exit(0);
 } catch (Exception $e) {
-    fwrite(STDERR, $e->getMessage().PHP_EOL);
+    fwrite(STDERR, $e->getMessage() . PHP_EOL);
     exit(1);
 }

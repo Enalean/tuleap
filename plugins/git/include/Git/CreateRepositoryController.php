@@ -72,7 +72,7 @@ class CreateRepositoryController extends RouterLink
             $redirect_url = $this->url_manager->getRepositoryBaseUrl($repository);
         } catch (Exception $exception) {
             $GLOBALS['Response']->addFeedback('error', $exception->getMessage());
-            $redirect_url = '/plugins/git/?action=index&group_id='. $project_id;
+            $redirect_url = '/plugins/git/?action=index&group_id=' . $project_id;
         }
 
         $GLOBALS['Response']->redirect($redirect_url);

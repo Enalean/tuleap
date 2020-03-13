@@ -51,7 +51,7 @@ class GettextCollector
                 $domain = $this->transformer->shift($section_content, $parts);
                 break;
             default:
-                throw new \RuntimeException('Cannot collect gettext entries in following section: '. $section_name);
+                throw new \RuntimeException('Cannot collect gettext entries in following section: ' . $section_name);
         }
 
         switch ($section_name) {
@@ -66,7 +66,7 @@ class GettextCollector
                 $msgid_plural = $this->transformer->shift($section_content, $parts);
                 break;
             default:
-                throw new \RuntimeException('Cannot collect gettext entries in following section: '. $section_name);
+                throw new \RuntimeException('Cannot collect gettext entries in following section: ' . $section_name);
         }
 
         $collection->add($domain, new POTEntry($msgid, $msgid_plural));

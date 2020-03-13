@@ -217,8 +217,8 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                      'min'   => $min,
                      'max'   => $max,
                      'mean'  => $sum / $n,
-                     'median'=> $median,
-                     'stddev'=> stddev($hits, $sum),
+                     'median' => $median,
+                     'stddev' => stddev($hits, $sum),
                      'treshold'    => $treshold,
                      'nmin'        => $nmin,
                      'mintreshold' => $mintreshold,
@@ -435,7 +435,7 @@ function median($hits)
     $n = count($hits);
     $median = (int) $n / 2;
     if (! ($n % 2)) { // proper rounding on even length
-        return ($hits[$median] + $hits[$median-1]) * 0.5;
+        return ($hits[$median] + $hits[$median - 1]) * 0.5;
     } else {
         return $hits[$median];
     }
@@ -471,10 +471,10 @@ function stddev(&$hits, $total = false)
     }
     $mean = $total / $n;
     $r = array_map(function ($i) use ($mean) {
-        return ($i-$mean)*($i-$mean);
+        return ($i - $mean) * ($i - $mean);
     },
                    $hits);
-    return (float)sqrt(mean($r, $total) * ($n / (float)($n -1)));
+    return (float) sqrt(mean($r, $total) * ($n / (float) ($n - 1)));
 }
 
 // $Log: SystemInfo.php,v $

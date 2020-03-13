@@ -38,7 +38,6 @@ class ItemReferencingWikiPageRepresentation
 
     public function __construct(int $item_id, String $item_name)
     {
-
         $this->item_id   = JsonCast::toInt($item_id);
         $this->item_name = $item_name;
     }

@@ -80,7 +80,7 @@ class WikiDB_SQL extends WikiDB
         }
         if (DB::isError($result)) {
             $msg = $result->getMessage();
-            trigger_error("SQL Error: ".DB::errorMessage($result), E_USER_WARNING);
+            trigger_error("SQL Error: " . DB::errorMessage($result), E_USER_WARNING);
             return false;
         } else {
             return $result;
@@ -94,7 +94,7 @@ class WikiDB_SQL extends WikiDB
         $result = $this->genericSqlQuery($sql);
         return new WikiDB_backend_PearDB_generic_iter($this->_backend, $result);
     }
-};
+}
 
 
 // For emacs users

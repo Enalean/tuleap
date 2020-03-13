@@ -129,12 +129,12 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
         foreach ($this->getTriggers() as $trigger) {
             $trg[] = $trigger->getAsChangesetComment($this->getCondition());
         }
-        return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'rule_comment').
-               '<ul><li>'.implode('</li><li>'.$this->getConditionOperatorLabel().' ', $trg).'</li></ul>';
+        return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'rule_comment') .
+               '<ul><li>' . implode('</li><li>' . $this->getConditionOperatorLabel() . ' ', $trg) . '</li></ul>';
     }
 
     private function getConditionOperatorLabel()
     {
-        return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'condition_operator_'.$this->getCondition());
+        return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'condition_operator_' . $this->getCondition());
     }
 }

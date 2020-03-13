@@ -56,7 +56,7 @@ class SystemControlCommandDockerCentos7Test extends TestCase
         $this->command_tester  = new CommandTester($this->control_command);
 
         putenv('TLP_SYSTEMCTL=docker-centos7');
-        mkdir($this->root->url().'/etc/cron.d', 0755, true);
+        mkdir($this->root->url() . '/etc/cron.d', 0755, true);
     }
 
     protected function tearDown(): void
@@ -111,7 +111,7 @@ class SystemControlCommandDockerCentos7Test extends TestCase
 
     public function testTuleapCronIsEnabled()
     {
-        copy(__DIR__.'/../../../../src/utils/cron.d/codendi', $this->root->url().'/etc/cron.d/tuleap');
+        copy(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
 
         $this->command_tester->execute(['action' => 'is-enabled', 'targets' => ['tuleap']]);
 
@@ -120,7 +120,7 @@ class SystemControlCommandDockerCentos7Test extends TestCase
 
     public function testTuleapCronIsDisabled()
     {
-        copy(__DIR__.'/../../../../src/utils/cron.d/codendi-stop', $this->root->url().'/etc/cron.d/tuleap');
+        copy(__DIR__ . '/../../../../src/utils/cron.d/codendi-stop', $this->root->url() . '/etc/cron.d/tuleap');
 
         $this->command_tester->execute(['action' => 'is-enabled', 'targets' => ['tuleap']]);
 

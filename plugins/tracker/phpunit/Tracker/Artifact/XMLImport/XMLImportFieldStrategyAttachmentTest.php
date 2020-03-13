@@ -158,7 +158,7 @@ class XMLImportFieldStrategyAttachmentTest extends TestCase
                     'type'         => 'text/plain',
                     'description'  => '',
                     'size'         => 1024,
-                    'tmp_name'     => $this->extraction_path .'/Readme.mkd',
+                    'tmp_name'     => $this->extraction_path . '/Readme.mkd',
                     'error'        => 0
                 ],
                 [
@@ -168,7 +168,7 @@ class XMLImportFieldStrategyAttachmentTest extends TestCase
                     'type'         => 'image/png',
                     'description'  => '',
                     'size'         => 2048,
-                    'tmp_name'     => $this->extraction_path .'/Lenna.png',
+                    'tmp_name'     => $this->extraction_path . '/Lenna.png',
                     'error'        => 0
                 ]
             ],
@@ -202,7 +202,7 @@ class XMLImportFieldStrategyAttachmentTest extends TestCase
 
         $this->logger
             ->shouldReceive('warning')
-            ->with('Skipped attachment field Attachments: File not found: '. $this->extraction_path .'/Readme.mkd')
+            ->with('Skipped attachment field Attachments: File not found: ' . $this->extraction_path . '/Readme.mkd')
             ->once();
 
         $field_change = new SimpleXMLElement(
@@ -266,7 +266,7 @@ class XMLImportFieldStrategyAttachmentTest extends TestCase
                     'type'         => 'image/png',
                     'description'  => '',
                     'size'         => 2048,
-                    'tmp_name'     => $this->extraction_path .'/Lenna.png',
+                    'tmp_name'     => $this->extraction_path . '/Lenna.png',
                     'error'        => 0
                 ]
             ],
@@ -278,11 +278,11 @@ class XMLImportFieldStrategyAttachmentTest extends TestCase
     {
         $this->logger
             ->shouldReceive('warning')
-            ->with('Skipped attachment field Attachments: File not found: '. $this->extraction_path .'/Readme.mkd')
+            ->with('Skipped attachment field Attachments: File not found: ' . $this->extraction_path . '/Readme.mkd')
             ->once();
         $this->logger
             ->shouldReceive('warning')
-            ->with('Skipped attachment field Attachments: File not found: '. $this->extraction_path .'/Lenna.png')
+            ->with('Skipped attachment field Attachments: File not found: ' . $this->extraction_path . '/Lenna.png')
             ->once();
 
         $field_change = new SimpleXMLElement(

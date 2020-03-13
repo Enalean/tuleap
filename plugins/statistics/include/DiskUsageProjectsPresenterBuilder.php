@@ -162,7 +162,7 @@ class DiskUsageProjectsPresenterBuilder
             'project_id' => $project_id
         );
 
-        return $page.'?'.http_build_query($params);
+        return $page . '?' . http_build_query($params);
     }
 
     private function buildProjectUrl($project_id)
@@ -172,6 +172,6 @@ class DiskUsageProjectsPresenterBuilder
             'group_id' => $project_id
         );
 
-        return $page.'?'.http_build_query($params);
+        return $page . '?' . http_build_query($params);
     }
 }

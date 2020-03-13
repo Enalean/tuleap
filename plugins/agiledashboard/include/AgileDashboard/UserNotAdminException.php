@@ -24,7 +24,7 @@ class AgileDashboard_UserNotAdminException extends Exception
 
     public function __construct(PFUser $user)
     {
-        $message = "User ".$user->getName()." is not admin of the agiledashboard";
+        $message = "User " . $user->getName() . " is not admin of the agiledashboard";
         parent::__construct($message);
     }
 }

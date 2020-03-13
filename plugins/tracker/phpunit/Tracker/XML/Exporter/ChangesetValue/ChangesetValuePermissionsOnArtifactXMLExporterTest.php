@@ -28,7 +28,7 @@ use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
 use Tracker_FormElement_Field;
 use Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter;
 
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 class ChangesetValuePermissionsOnArtifactXMLExporterTest extends TestCase
 {
@@ -87,12 +87,12 @@ class ChangesetValuePermissionsOnArtifactXMLExporterTest extends TestCase
         );
 
         $field_change = $this->changeset_xml->field_change;
-        $this->assertEquals((string)$field_change['type'], 'permissions_on_artifact');
-        $this->assertEquals((string)$field_change['field_name'], 'perms');
-        $this->assertEquals((string)$field_change['use_perm'], '1');
+        $this->assertEquals((string) $field_change['type'], 'permissions_on_artifact');
+        $this->assertEquals((string) $field_change['field_name'], 'perms');
+        $this->assertEquals((string) $field_change['use_perm'], '1');
         $this->assertEquals(count($field_change->ugroup), 2);
-        $this->assertEquals((string)$field_change->ugroup[0]['ugroup_name'], 'ug01');
-        $this->assertEquals((string)$field_change->ugroup[1]['ugroup_name'], 'ug02');
+        $this->assertEquals((string) $field_change->ugroup[0]['ugroup_name'], 'ug01');
+        $this->assertEquals((string) $field_change->ugroup[1]['ugroup_name'], 'ug02');
     }
 
     public function testItDoesNotAddEmptyUgroupIfASelectedUgroupHAsBeenDeleted()
@@ -113,10 +113,10 @@ class ChangesetValuePermissionsOnArtifactXMLExporterTest extends TestCase
         );
 
         $field_change = $this->changeset_xml->field_change;
-        $this->assertEquals((string)$field_change['type'], 'permissions_on_artifact');
-        $this->assertEquals((string)$field_change['field_name'], 'perms');
-        $this->assertEquals((string)$field_change['use_perm'], '1');
+        $this->assertEquals((string) $field_change['type'], 'permissions_on_artifact');
+        $this->assertEquals((string) $field_change['field_name'], 'perms');
+        $this->assertEquals((string) $field_change['use_perm'], '1');
         $this->assertEquals(count($field_change->ugroup), 1);
-        $this->assertEquals((string)$field_change->ugroup[0]['ugroup_name'], 'ug01');
+        $this->assertEquals((string) $field_change->ugroup[0]['ugroup_name'], 'ug01');
     }
 }

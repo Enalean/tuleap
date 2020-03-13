@@ -50,7 +50,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $attachment_exporter      = new ArtifactAttachmentXMLZipper($node_helper, $this->dao, $this->archive, false);
         $this->logger             = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->exporter           = new ArtifactXMLExporter($this->dao, $attachment_exporter, $node_helper, $this->logger);
-        $this->fixtures_dir       = __DIR__ .'/_fixtures/';
+        $this->fixtures_dir       = __DIR__ . '/_fixtures/';
         $this->expected_open_date = $this->toExpectedDate($this->open_date);
         ForgeConfig::store();
         ForgeConfig::set('sys_data_dir', dirname($this->fixtures_dir));
@@ -70,7 +70,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
     private function loadFixtures($fixture)
     {
-        $file_path = $this->fixtures_dir . $fixture .'.json';
+        $file_path = $this->fixtures_dir . $fixture . '.json';
         $fixture_content = file_get_contents($file_path);
         if ($fixture_content == false) {
             throw new Exception("Unable to load $file_path (mis-typed?)");
@@ -178,45 +178,45 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_without_any_history');
 
-        $this->assertEquals('Le artifact without history', (string)$this->xml->artifact->changeset[0]->field_change[0]->value);
-        $this->assertEquals('string', (string)$this->xml->artifact->changeset[0]->field_change[0]['type']);
-        $this->assertEquals('summary', (string)$this->xml->artifact->changeset[0]->field_change[0]['field_name']);
-        $this->assertEquals('Le original submission', (string)$this->xml->artifact->changeset[0]->field_change[1]->value);
-        $this->assertEquals('text', (string)$this->xml->artifact->changeset[0]->field_change[1]['type']);
-        $this->assertEquals('details', (string)$this->xml->artifact->changeset[0]->field_change[1]['field_name']);
-        $this->assertEquals('1 - Ordinary', (string)$this->xml->artifact->changeset[0]->field_change[2]->value);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[0]->field_change[2]['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[0]->field_change[2]['bind']);
-        $this->assertEquals('severity', (string)$this->xml->artifact->changeset[0]->field_change[2]['field_name']);
-        $this->assertEquals($this->expected_open_date, (string)$this->xml->artifact->changeset[0]->submitted_on);
+        $this->assertEquals('Le artifact without history', (string) $this->xml->artifact->changeset[0]->field_change[0]->value);
+        $this->assertEquals('string', (string) $this->xml->artifact->changeset[0]->field_change[0]['type']);
+        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[0]->field_change[0]['field_name']);
+        $this->assertEquals('Le original submission', (string) $this->xml->artifact->changeset[0]->field_change[1]->value);
+        $this->assertEquals('text', (string) $this->xml->artifact->changeset[0]->field_change[1]['type']);
+        $this->assertEquals('details', (string) $this->xml->artifact->changeset[0]->field_change[1]['field_name']);
+        $this->assertEquals('1 - Ordinary', (string) $this->xml->artifact->changeset[0]->field_change[2]->value);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[0]->field_change[2]['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[0]->field_change[2]['bind']);
+        $this->assertEquals('severity', (string) $this->xml->artifact->changeset[0]->field_change[2]['field_name']);
+        $this->assertEquals($this->expected_open_date, (string) $this->xml->artifact->changeset[0]->submitted_on);
     }
 
     public function testItCreatesAnInitialChangesetBasedOnTheOldestValueKnownWhenThereIsHistory() : void
     {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
 
-        $this->assertEquals('Le artifact', (string)$this->xml->artifact->changeset[0]->field_change[0]->value);
-        $this->assertEquals('Le original submission that will be updated', (string)$this->xml->artifact->changeset[0]->field_change[1]->value);
-        $this->assertEquals('Le original submission', (string)$this->xml->artifact->changeset[2]->field_change[1]->value);
-        $this->assertEquals($this->expected_open_date, (string)$this->xml->artifact->changeset[0]->submitted_on);
+        $this->assertEquals('Le artifact', (string) $this->xml->artifact->changeset[0]->field_change[0]->value);
+        $this->assertEquals('Le original submission that will be updated', (string) $this->xml->artifact->changeset[0]->field_change[1]->value);
+        $this->assertEquals('Le original submission', (string) $this->xml->artifact->changeset[2]->field_change[1]->value);
+        $this->assertEquals($this->expected_open_date, (string) $this->xml->artifact->changeset[0]->submitted_on);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntry() : void
     {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
 
-        $this->assertEquals('Le artifact with history', (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(2234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
-        $this->assertEquals('Le artifact with full history', (string)$this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('Le artifact with history', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(2234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('Le artifact with full history', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentState() : void
     {
         $this->exportTrackerDataFromFixture('artifact_with_half_history');
 
-        $this->assertEquals('Le artifact with half history', (string)$this->xml->artifact->changeset[3]->field_change->value);
-        $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string)$this->xml->artifact->changeset[3]->submitted_on);
+        $this->assertEquals('Le artifact with half history', (string) $this->xml->artifact->changeset[3]->field_change->value);
+        $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[3]->submitted_on);
     }
 
     public function testItDoesntMessPreviousArtifactWhenTryingToUpdateInitialChangeset() : void
@@ -225,9 +225,9 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(2, $this->xml->artifact);
 
-        $this->assertEquals('Le artifact with full history', (string)$this->xml->artifact[0]->changeset[0]->field_change->value);
-        $this->assertEquals('Le artifact', (string)$this->xml->artifact[1]->changeset[0]->field_change->value);
-        $this->assertEquals('The second one', (string)$this->xml->artifact[1]->changeset[1]->field_change->value);
+        $this->assertEquals('Le artifact with full history', (string) $this->xml->artifact[0]->changeset[0]->field_change->value);
+        $this->assertEquals('Le artifact', (string) $this->xml->artifact[1]->changeset[0]->field_change->value);
+        $this->assertEquals('The second one', (string) $this->xml->artifact[1]->changeset[1]->field_change->value);
     }
 
     public function testItHasChangesetPerComment(): void
@@ -236,13 +236,13 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals($this->toExpectedDate(1234568000), (string)$this->xml->artifact->changeset[1]->submitted_on);
-        $this->assertEquals('This is my comment', (string)$this->xml->artifact->changeset[1]->comments->comment->body);
-        $this->assertEquals('text', (string)$this->xml->artifact->changeset[1]->comments->comment->body['format']);
+        $this->assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('This is my comment', (string) $this->xml->artifact->changeset[1]->comments->comment->body);
+        $this->assertEquals('text', (string) $this->xml->artifact->changeset[1]->comments->comment->body['format']);
 
-        $this->assertEquals($this->toExpectedDate(1234569000), (string)$this->xml->artifact->changeset[2]->submitted_on);
-        $this->assertEquals('<p>With<strong> CHTEUMEULEU</strong></p>', (string)$this->xml->artifact->changeset[2]->comments->comment->body);
-        $this->assertEquals('html', (string)$this->xml->artifact->changeset[2]->comments->comment->body['format']);
+        $this->assertEquals($this->toExpectedDate(1234569000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('<p>With<strong> CHTEUMEULEU</strong></p>', (string) $this->xml->artifact->changeset[2]->comments->comment->body);
+        $this->assertEquals('html', (string) $this->xml->artifact->changeset[2]->comments->comment->body['format']);
     }
 
     public function testItHasACommentVersions() : void
@@ -252,24 +252,24 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(2, $this->xml->artifact->changeset);
         $this->assertCount(3, $this->xml->artifact->changeset[1]->comments->comment);
 
-        $this->assertEquals($this->toExpectedDate(1234568000), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
         $comments = $this->xml->artifact->changeset[1]->comments;
 
-        $this->assertEquals($this->toExpectedDate(1234568000), (string)$comments->comment[0]->submitted_on);
+        $this->assertEquals($this->toExpectedDate(1234568000), (string) $comments->comment[0]->submitted_on);
 
-        $this->assertEquals('This is my comment', (string)$comments->comment[0]->body);
-        $this->assertEquals('text', (string)$comments->comment[0]->body['format']);
+        $this->assertEquals('This is my comment', (string) $comments->comment[0]->body);
+        $this->assertEquals('text', (string) $comments->comment[0]->body['format']);
 
-        $this->assertEquals($this->toExpectedDate(1234569000), (string)$comments->comment[1]->submitted_on);
-        $this->assertEquals('goofy', (string)$comments->comment[1]->submitted_by);
-        $this->assertEquals('<p>With<strong> CHTEUMEULEU</strong></p>', (string)$comments->comment[1]->body);
-        $this->assertEquals('html', (string)$comments->comment[1]->body['format']);
+        $this->assertEquals($this->toExpectedDate(1234569000), (string) $comments->comment[1]->submitted_on);
+        $this->assertEquals('goofy', (string) $comments->comment[1]->submitted_by);
+        $this->assertEquals('<p>With<strong> CHTEUMEULEU</strong></p>', (string) $comments->comment[1]->body);
+        $this->assertEquals('html', (string) $comments->comment[1]->body['format']);
 
-        $this->assertEquals($this->toExpectedDate(1234569500), (string)$comments->comment[2]->submitted_on);
-        $this->assertEquals('goofy', (string)$comments->comment[2]->submitted_by);
-        $this->assertEquals('<p>With<strong> HTML</strong></p>', (string)$comments->comment[2]->body);
-        $this->assertEquals('html', (string)$comments->comment[2]->body['format']);
+        $this->assertEquals($this->toExpectedDate(1234569500), (string) $comments->comment[2]->submitted_on);
+        $this->assertEquals('goofy', (string) $comments->comment[2]->submitted_by);
+        $this->assertEquals('<p>With<strong> HTML</strong></p>', (string) $comments->comment[2]->body);
+        $this->assertEquals('html', (string) $comments->comment[2]->body['format']);
     }
 
     public function testItCreatesAChangesetWithOneAttachment() : void
@@ -279,17 +279,17 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->exportTrackerDataFromFixture('artifact_with_one_attachment');
         $this->assertCount(2, $this->xml->artifact->changeset);
 
-        $this->assertEquals('attachment', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('file', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('File30', (string)$this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
-        $this->assertEquals($this->toExpectedDate(3234567900), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('file', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('File30', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
+        $this->assertEquals($this->toExpectedDate(3234567900), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
         $this->assertCount(1, $this->xml->artifact->file);
-        $this->assertEquals('File30', (string)$this->xml->artifact->file[0]['id']);
-        $this->assertEquals('A.png', (string)$this->xml->artifact->file[0]->filename);
-        $this->assertEquals(12323, (int)   $this->xml->artifact->file[0]->filesize);
-        $this->assertEquals('image/png', (string)$this->xml->artifact->file[0]->filetype);
-        $this->assertEquals('The screenshot', (string)$this->xml->artifact->file[0]->description);
+        $this->assertEquals('File30', (string) $this->xml->artifact->file[0]['id']);
+        $this->assertEquals('A.png', (string) $this->xml->artifact->file[0]->filename);
+        $this->assertEquals(12323, (int) $this->xml->artifact->file[0]->filesize);
+        $this->assertEquals('image/png', (string) $this->xml->artifact->file[0]->filetype);
+        $this->assertEquals('The screenshot', (string) $this->xml->artifact->file[0]->description);
     }
 
     public function testItCreatesAChangesetWithTwoAttachmentsWithSameName() : void
@@ -298,27 +298,27 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('attachment', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
         $this->assertEquals('File30', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
 
-        $this->assertEquals('attachment', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
         $this->assertCount(2, $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('File31', (string)$this->xml->artifact->changeset[2]->field_change->value[0]['ref']);
-        $this->assertEquals('File30', (string)$this->xml->artifact->changeset[2]->field_change->value[1]['ref']);
-        $this->assertEquals($this->toExpectedDate(3234568000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('File31', (string) $this->xml->artifact->changeset[2]->field_change->value[0]['ref']);
+        $this->assertEquals('File30', (string) $this->xml->artifact->changeset[2]->field_change->value[1]['ref']);
+        $this->assertEquals($this->toExpectedDate(3234568000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
         $this->assertCount(2, $this->xml->artifact->file);
-        $this->assertEquals('File30', (string)$this->xml->artifact->file[0]['id']);
-        $this->assertEquals('A.png', (string)$this->xml->artifact->file[0]->filename);
-        $this->assertEquals(12323, (int)   $this->xml->artifact->file[0]->filesize);
-        $this->assertEquals('image/png', (string)$this->xml->artifact->file[0]->filetype);
-        $this->assertEquals('The screenshot', (string)$this->xml->artifact->file[0]->description);
+        $this->assertEquals('File30', (string) $this->xml->artifact->file[0]['id']);
+        $this->assertEquals('A.png', (string) $this->xml->artifact->file[0]->filename);
+        $this->assertEquals(12323, (int) $this->xml->artifact->file[0]->filesize);
+        $this->assertEquals('image/png', (string) $this->xml->artifact->file[0]->filetype);
+        $this->assertEquals('The screenshot', (string) $this->xml->artifact->file[0]->description);
 
-        $this->assertEquals('File31', (string)$this->xml->artifact->file[1]['id']);
-        $this->assertEquals('A.png', (string)$this->xml->artifact->file[1]->filename);
-        $this->assertEquals(50, (int)   $this->xml->artifact->file[1]->filesize);
-        $this->assertEquals('image/png', (string)$this->xml->artifact->file[1]->filetype);
-        $this->assertEquals('The screenshot v2', (string)$this->xml->artifact->file[1]->description);
+        $this->assertEquals('File31', (string) $this->xml->artifact->file[1]['id']);
+        $this->assertEquals('A.png', (string) $this->xml->artifact->file[1]->filename);
+        $this->assertEquals(50, (int) $this->xml->artifact->file[1]->filesize);
+        $this->assertEquals('image/png', (string) $this->xml->artifact->file[1]->filetype);
+        $this->assertEquals('The screenshot v2', (string) $this->xml->artifact->file[1]->description);
     }
 
     public function testItCreatesAChangesetWithDeletedAttachments() : void
@@ -327,14 +327,14 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(2, $this->xml->artifact->changeset);
 
-        $this->assertEquals('attachment', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
         $this->assertCount(1, $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('File31', (string)$this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
-        $this->assertEquals($this->toExpectedDate(3234568000), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('File31', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
+        $this->assertEquals($this->toExpectedDate(3234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
         $this->assertCount(1, $this->xml->artifact->file);
-        $this->assertEquals('File31', (string)$this->xml->artifact->file[0]['id']);
-        $this->assertEquals('zzz.pdf', (string)$this->xml->artifact->file[0]->filename);
+        $this->assertEquals('File31', (string) $this->xml->artifact->file[0]['id']);
+        $this->assertEquals('zzz.pdf', (string) $this->xml->artifact->file[0]->filename);
     }
 
     public function testItCreatesAChangesetWithNullAttachments() : void
@@ -360,10 +360,10 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
     {
         switch ($field_change['field_name']) {
             case 'cc':
-                $this->assertEquals('open_list', (string)$field_change['type']);
-                $this->assertEquals('users', (string)$field_change['bind']);
-                $this->assertEquals('john@doe.org', (string)$field_change->value[0]);
-                $this->assertEquals('jeanjean', (string)$field_change->value[1]);
+                $this->assertEquals('open_list', (string) $field_change['type']);
+                $this->assertEquals('users', (string) $field_change['bind']);
+                $this->assertEquals('john@doe.org', (string) $field_change->value[0]);
+                $this->assertEquals('jeanjean', (string) $field_change->value[1]);
 
                 $this->assertFalse(isset($field_change->value[0]['format']));
                 $this->assertFalse(isset($field_change->value[1]['format']));
@@ -372,7 +372,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
                 // Ok but we don't care
                 break;
             default:
-                throw new Exception('Unexpected field type: '.$field_change['field_name']);
+                throw new Exception('Unexpected field type: ' . $field_change['field_name']);
                 break;
         }
     }
@@ -383,9 +383,9 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('john@doe.org', (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('john@doe.org', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('jeanjean', (string)$this->xml->artifact->changeset[2]->field_change->value[1]);
+        $this->assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('jeanjean', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
     }
 
     public function testItCreatesChangesWithDeletedCC() : void
@@ -395,22 +395,22 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(2, $this->xml->artifact->changeset);
 
         $this->assertCount(3, $this->xml->artifact->changeset[0]->field_change->value);
-        $this->assertEquals('john@doe.org', (string)$this->xml->artifact->changeset[0]->field_change->value[0]);
-        $this->assertEquals('jeanjean', (string)$this->xml->artifact->changeset[0]->field_change->value[1]);
-        $this->assertEquals('bla@bla.org', (string)$this->xml->artifact->changeset[0]->field_change->value[2]);
+        $this->assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[0]->field_change->value[0]);
+        $this->assertEquals('jeanjean', (string) $this->xml->artifact->changeset[0]->field_change->value[1]);
+        $this->assertEquals('bla@bla.org', (string) $this->xml->artifact->changeset[0]->field_change->value[2]);
 
         $this->assertCount(1, $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('john@doe.org', (string)$this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[1]->field_change->value);
     }
 
     public function testItSetNoneAsOriginalSeverityValue() : void
     {
         $this->exportTrackerDataFromFixture('artifact_with_severity_history');
 
-        $this->assertEquals('1 - Ordinary', (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals('severity', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('1 - Ordinary', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals('severity', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
     }
 
     public function testItCreatesASingleChangesetWithSummaryAndAttachment() : void
@@ -418,7 +418,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->exportTrackerDataFromFixture('artifact_with_summary_and_attachment');
         $this->assertCount(1, $this->xml->artifact->changeset);
 
-        $this->assertEquals($this->toExpectedDate(1234567890), (string)$this->xml->artifact->changeset[0]->submitted_on);
+        $this->assertEquals($this->toExpectedDate(1234567890), (string) $this->xml->artifact->changeset[0]->submitted_on);
 
         // cannot guarranty the order of execution therefore specific assertion in dedicated method
         $this->assertCount(2, $this->xml->artifact->changeset[0]->field_change);
@@ -438,7 +438,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
                 $this->assertEquals('Le artifact with full history', $field_change->value);
                 break;
             default:
-                throw new Exception('Unexpected field type: '.$field_change['field_name']);
+                throw new Exception('Unexpected field type: ' . $field_change['field_name']);
                 break;
         }
     }
@@ -450,19 +450,19 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(3, $this->xml->artifact->changeset);
 
         // Changeset1: original summary
-        $this->assertEquals($this->toExpectedDate(1234567890), (string)$this->xml->artifact->changeset[0]->submitted_on);
-        $this->assertEquals('summary', (string)$this->xml->artifact->changeset[0]->field_change['field_name']);
-        $this->assertEquals('Le artifact with full history', (string)$this->xml->artifact->changeset[0]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234567890), (string) $this->xml->artifact->changeset[0]->submitted_on);
+        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[0]->field_change['field_name']);
+        $this->assertEquals('Le artifact with full history', (string) $this->xml->artifact->changeset[0]->field_change->value);
 
         // Changeset2: attachment
-        $this->assertEquals($this->toExpectedDate(1234568000), (string)$this->xml->artifact->changeset[1]->submitted_on);
-        $this->assertEquals('attachment', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('File30', (string)$this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
+        $this->assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('File30', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
 
         // Changeset3: new summary
-        $this->assertEquals($this->toExpectedDate(1234569000), (string)$this->xml->artifact->changeset[2]->submitted_on);
-        $this->assertEquals('summary', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('Le artifact with updated summary', (string)$this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234569000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('Le artifact with updated summary', (string) $this->xml->artifact->changeset[2]->field_change->value);
 
         $this->assertCount(1, $this->xml->artifact->file);
     }
@@ -474,24 +474,24 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(4, $this->xml->artifact->changeset);
 
         // Changeset1: original summary
-        $this->assertEquals($this->toExpectedDate(1234567890), (string)$this->xml->artifact->changeset[0]->submitted_on);
-        $this->assertEquals('summary', (string)$this->xml->artifact->changeset[0]->field_change['field_name']);
-        $this->assertEquals('Le artifact with full history', (string)$this->xml->artifact->changeset[0]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234567890), (string) $this->xml->artifact->changeset[0]->submitted_on);
+        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[0]->field_change['field_name']);
+        $this->assertEquals('Le artifact with full history', (string) $this->xml->artifact->changeset[0]->field_change->value);
 
         // Changeset2: new summary
-        $this->assertEquals($this->toExpectedDate(1234568000), (string)$this->xml->artifact->changeset[1]->submitted_on);
-        $this->assertEquals('summary', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('Le artifact with updated summary', (string)$this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('Le artifact with updated summary', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
         // Changeset3: attachment
-        $this->assertEquals($this->toExpectedDate(1234569000), (string)$this->xml->artifact->changeset[2]->submitted_on);
-        $this->assertEquals('attachment', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('File30', (string)$this->xml->artifact->changeset[2]->field_change->value[0]['ref']);
+        $this->assertEquals($this->toExpectedDate(1234569000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('File30', (string) $this->xml->artifact->changeset[2]->field_change->value[0]['ref']);
 
         // Changeset4: last summary update
-        $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string)$this->xml->artifact->changeset[3]->submitted_on);
-        $this->assertEquals('summary', (string)$this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('Le artifact with half history', (string)$this->xml->artifact->changeset[3]->field_change->value);
+        $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[3]->submitted_on);
+        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        $this->assertEquals('Le artifact with half history', (string) $this->xml->artifact->changeset[3]->field_change->value);
 
         $this->assertCount(1, $this->xml->artifact->file);
     }
@@ -513,14 +513,14 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $last_changeset   = $this->xml->artifact->changeset[$nb_of_changesets - 1];
 
         foreach ($last_changeset->field_change as $field_change) {
-            if ((string)$field_change['field_name'] !== 'permissions_on_artifact') {
+            if ((string) $field_change['field_name'] !== 'permissions_on_artifact') {
                 continue;
             }
-            $this->assertEquals('permissions_on_artifact', (string)$field_change['type']);
-            $this->assertEquals('1', (string)$field_change['use_perm']);
+            $this->assertEquals('permissions_on_artifact', (string) $field_change['type']);
+            $this->assertEquals('1', (string) $field_change['use_perm']);
             $this->assertCount(2, $field_change->ugroup);
-            $this->assertEquals('15', (string)$field_change->ugroup[0]['ugroup_id']);
-            $this->assertEquals('101', (string)$field_change->ugroup[1]['ugroup_id']);
+            $this->assertEquals('15', (string) $field_change->ugroup[0]['ugroup_id']);
+            $this->assertEquals('101', (string) $field_change->ugroup[1]['ugroup_id']);
             $permissions_are_exported = true;
         }
 
@@ -536,13 +536,13 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $last_changeset   = $this->xml->artifact->changeset[$nb_of_changesets - 1];
 
         foreach ($last_changeset->field_change as $field_change) {
-            if ((string)$field_change['field_name'] !== 'permissions_on_artifact') {
+            if ((string) $field_change['field_name'] !== 'permissions_on_artifact') {
                 continue;
             }
-            $this->assertEquals('permissions_on_artifact', (string)$field_change['type']);
-            $this->assertEquals('1', (string)$field_change['use_perm']);
+            $this->assertEquals('permissions_on_artifact', (string) $field_change['type']);
+            $this->assertEquals('1', (string) $field_change['use_perm']);
             $this->assertCount(1, $field_change->ugroup);
-            $this->assertEquals('4', (string)$field_change->ugroup[0]['ugroup_id']);
+            $this->assertEquals('4', (string) $field_change->ugroup[0]['ugroup_id']);
             $permissions_are_exported = true;
         }
 
@@ -562,7 +562,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
     private function assertThereIsNoPermissionsFieldChange(SimpleXMLElement $changeset): void
     {
         foreach ($changeset->field_change as $field_change) {
-            $this->assertNotEquals('permissions_on_artifact', (string)$field_change['field_name']);
+            $this->assertNotEquals('permissions_on_artifact', (string) $field_change['field_name']);
         }
     }
 
@@ -572,15 +572,15 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('The error code is 23232', (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('field_14', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('string', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('The error code is 23232', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('field_14', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('string', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('The error code is not returned', (string)$this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('field_14', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('string', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('The error code is not returned', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('field_14', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('string', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistoryWithString() : void
@@ -604,7 +604,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
                 $this->assertEquals('Le artifact with full history', $field_change->value);
                 break;
             default:
-                throw new Exception('Unexpected field type: '.$field_change['field_name']);
+                throw new Exception('Unexpected field type: ' . $field_change['field_name']);
                 break;
         }
     }
@@ -615,9 +615,9 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('66.98', (string)$this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('66.98', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
-        $this->assertEquals('2048', (string)$this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
     public function testItReturnsZeroIfNoNewValue() : void
@@ -626,9 +626,9 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('66.98', (string)$this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('66.98', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
-        $this->assertEquals('0', (string)$this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
     public function testItConvertsHistoricalValuesWhenFieldTypeChanged() : void
@@ -636,9 +636,9 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->exportTrackerDataFromFixture('artifact_with_float_history_with_string_value');
         $this->assertCount(4, $this->xml->artifact->changeset);
 
-        $this->assertEquals('0', (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('2048', (string)$this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('43.0', (string)$this->xml->artifact->changeset[3]->field_change->value);
+        $this->assertEquals('0', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('43.0', (string) $this->xml->artifact->changeset[3]->field_change->value);
     }
 
     public function testItDoesntCreateAnExtraChangesetWhenThereIsAnIntToStringConversionWithTrailingZero() : void
@@ -647,9 +647,9 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('66', (string)$this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('66', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
-        $this->assertEquals('2048', (string)$this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
     public function testItReturnsZeroIfNoNewValueWithIntegerHistory() : void
@@ -658,9 +658,9 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('66', (string)$this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('66', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
-        $this->assertEquals('0', (string)$this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
     public function testItConvertsHistoricalValuesWhenFieldTypeChangedWithIntegerAndStringHistory() : void
@@ -668,10 +668,10 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->exportTrackerDataFromFixture('artifact_with_integer_history_with_string_value');
         $this->assertCount(5, $this->xml->artifact->changeset);
 
-        $this->assertEquals('0', (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('0', (string)$this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('4', (string)$this->xml->artifact->changeset[3]->field_change->value);
-        $this->assertEquals('43', (string)$this->xml->artifact->changeset[4]->field_change->value);
+        $this->assertEquals('0', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('4', (string) $this->xml->artifact->changeset[3]->field_change->value);
+        $this->assertEquals('43', (string) $this->xml->artifact->changeset[4]->field_change->value);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryWithScalarHistory() : void
@@ -681,33 +681,33 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(6, $this->xml->artifact->changeset);
 
         $this->assertCount(6, $this->xml->artifact->changeset[0]->field_change);
-        $this->assertEquals('', (string)$this->findValue($this->xml->artifact->changeset[0]->field_change, 'field_18')->value);
+        $this->assertEquals('', (string) $this->findValue($this->xml->artifact->changeset[0]->field_change, 'field_18')->value);
 
-        $this->assertEquals('The error code is 23232', (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('field_14', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('string', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567100), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('The error code is 23232', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('field_14', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('string', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals($this->toExpectedDate(3234567100), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals("some text", (string)$this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('field_15', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('text', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567200), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals("some text", (string) $this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('field_15', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('text', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals($this->toExpectedDate(3234567200), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals("9001", (string)$this->xml->artifact->changeset[3]->field_change->value);
-        $this->assertEquals('field_16', (string)$this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('int', (string)$this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567300), (string)$this->xml->artifact->changeset[3]->submitted_on);
+        $this->assertEquals("9001", (string) $this->xml->artifact->changeset[3]->field_change->value);
+        $this->assertEquals('field_16', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        $this->assertEquals('int', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        $this->assertEquals($this->toExpectedDate(3234567300), (string) $this->xml->artifact->changeset[3]->submitted_on);
 
-        $this->assertEquals("66.98", (string)$this->xml->artifact->changeset[4]->field_change->value);
-        $this->assertEquals('field_17', (string)$this->xml->artifact->changeset[4]->field_change['field_name']);
-        $this->assertEquals('float', (string)$this->xml->artifact->changeset[4]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567400), (string)$this->xml->artifact->changeset[4]->submitted_on);
+        $this->assertEquals("66.98", (string) $this->xml->artifact->changeset[4]->field_change->value);
+        $this->assertEquals('field_17', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
+        $this->assertEquals('float', (string) $this->xml->artifact->changeset[4]->field_change['type']);
+        $this->assertEquals($this->toExpectedDate(3234567400), (string) $this->xml->artifact->changeset[4]->submitted_on);
 
-        $this->assertEquals($this->toExpectedDate(1234543210), (string)$this->xml->artifact->changeset[5]->field_change->value);
-        $this->assertEquals('ISO8601', (string)$this->xml->artifact->changeset[5]->field_change->value['format']);
-        $this->assertEquals('field_18', (string)$this->xml->artifact->changeset[5]->field_change['field_name']);
-        $this->assertEquals('date', (string)$this->xml->artifact->changeset[5]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567500), (string)$this->xml->artifact->changeset[5]->submitted_on);
+        $this->assertEquals($this->toExpectedDate(1234543210), (string) $this->xml->artifact->changeset[5]->field_change->value);
+        $this->assertEquals('ISO8601', (string) $this->xml->artifact->changeset[5]->field_change->value['format']);
+        $this->assertEquals('field_18', (string) $this->xml->artifact->changeset[5]->field_change['field_name']);
+        $this->assertEquals('date', (string) $this->xml->artifact->changeset[5]->field_change['type']);
+        $this->assertEquals($this->toExpectedDate(3234567500), (string) $this->xml->artifact->changeset[5]->submitted_on);
     }
 
     public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsScalarNoHistory() : void
@@ -720,15 +720,15 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(6, $change);
 
         $string = $this->findValue($change, 'field_14');
-        $this->assertEquals('The error code is 23232', (string)$string->value);
+        $this->assertEquals('The error code is 23232', (string) $string->value);
         $text   = $this->findValue($change, 'field_15');
-        $this->assertEquals('some text', (string)$text->value);
+        $this->assertEquals('some text', (string) $text->value);
         $int    = $this->findValue($change, 'field_16');
-        $this->assertEquals('9001', (string)$int->value);
+        $this->assertEquals('9001', (string) $int->value);
         $float  = $this->findValue($change, 'field_17');
-        $this->assertEquals('66.98', (string)$float->value);
+        $this->assertEquals('66.98', (string) $float->value);
         $date   = $this->findValue($change, 'field_18');
-        $this->assertEquals($this->toExpectedDate(1234543210), (string)$date->value);
+        $this->assertEquals($this->toExpectedDate(1234543210), (string) $date->value);
     }
 
     public function testItCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentStateWithScalarHalfHistory() : void
@@ -741,15 +741,15 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(5, $change);
 
         $string = $this->findValue($change, 'field_14');
-        $this->assertEquals('The error code is wrong', (string)$string->value);
+        $this->assertEquals('The error code is wrong', (string) $string->value);
         $text   = $this->findValue($change, 'field_15');
-        $this->assertEquals('some rant', (string)$text->value);
+        $this->assertEquals('some rant', (string) $text->value);
         $int    = $this->findValue($change, 'field_16');
-        $this->assertEquals('987', (string)$int->value);
+        $this->assertEquals('987', (string) $int->value);
         $float  = $this->findValue($change, 'field_17');
-        $this->assertEquals('3.14', (string)$float->value);
+        $this->assertEquals('3.14', (string) $float->value);
         $date   = $this->findValue($change, 'field_18');
-        $this->assertEquals($this->toExpectedDate(1234555555), (string)$date->value);
+        $this->assertEquals($this->toExpectedDate(1234555555), (string) $date->value);
     }
 
     public function testItCreatesTheChangesetWithValueStoredOnArtifactTable() : void
@@ -758,10 +758,10 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(2, $this->xml->artifact->changeset);
 
-        $this->assertEquals($this->toExpectedDate(1234800000), (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('close_date', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('date', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(1234800000), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('close_date', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('date', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
     }
 
     public function testItCreatesTheChangesetWhenArtifactIsKeptReopen() : void
@@ -771,11 +771,11 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         // 1. Create artifact
         // 2. Close artifact
-        $this->assertEquals($this->toExpectedDate(1234800000), (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234800000), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
         // 3. Reopen artifact
-        $this->assertEquals('', (string)$this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234900000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234900000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesTheChangesetWhenOneOpenAndCloseArtifact() : void
@@ -786,17 +786,17 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         // 1. Create artifact
         // 2. Close artifact
-        $this->assertEquals($this->toExpectedDate(1234800000), (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234800000), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
         // 3. Reopen artifact
-        $this->assertEquals('', (string)$this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234810000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234810000), (string) $this->xml->artifact->changeset[2]->submitted_on);
         // 4. Close again artifact
-        $this->assertEquals($this->toExpectedDate(1234820000), (string)$this->xml->artifact->changeset[3]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234820000), (string)$this->xml->artifact->changeset[3]->submitted_on);
+        $this->assertEquals($this->toExpectedDate(1234820000), (string) $this->xml->artifact->changeset[3]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234820000), (string) $this->xml->artifact->changeset[3]->submitted_on);
         // 5. Change close date
-        $this->assertEquals($this->toExpectedDate(1234830000), (string)$this->xml->artifact->changeset[4]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234840000), (string)$this->xml->artifact->changeset[4]->submitted_on);
+        $this->assertEquals($this->toExpectedDate(1234830000), (string) $this->xml->artifact->changeset[4]->field_change->value);
+        $this->assertEquals($this->toExpectedDate(1234840000), (string) $this->xml->artifact->changeset[4]->submitted_on);
     }
 
     public function testItCreatesTheInitialChangesetWithRecordedValue() : void
@@ -833,22 +833,22 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(3, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'category_id');
-        $this->assertEquals('UI', (string)$initial_change->value);
-        $this->assertEquals('category_id', (string)$initial_change['field_name']);
-        $this->assertEquals('list', (string)$initial_change['type']);
-        $this->assertEquals('static', (string)$initial_change['bind']);
+        $this->assertEquals('UI', (string) $initial_change->value);
+        $this->assertEquals('category_id', (string) $initial_change['field_name']);
+        $this->assertEquals('list', (string) $initial_change['type']);
+        $this->assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('Database', (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('category_id', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('category_id', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('', (string)$this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('category_id', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('category_id', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesALastChangesetWhenHistoryWasNotRecorded() : void
@@ -857,11 +857,11 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('UI', (string)$this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('category_id', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        $this->assertEquals('category_id', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItDoesntGetBlockedWhenThereIsNoDataStatusFieldValueList() : void
@@ -876,17 +876,17 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(2, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'assigned_to');
-        $this->assertEquals('', (string)$initial_change->value);
-        $this->assertEquals('assigned_to', (string)$initial_change['field_name']);
-        $this->assertEquals('list', (string)$initial_change['type']);
-        $this->assertEquals('users', (string)$initial_change['bind']);
+        $this->assertEquals('', (string) $initial_change->value);
+        $this->assertEquals('assigned_to', (string) $initial_change['field_name']);
+        $this->assertEquals('list', (string) $initial_change['type']);
+        $this->assertEquals('users', (string) $initial_change['bind']);
 
-        $this->assertEquals('jeanjean', (string)$this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('username', (string)$this->xml->artifact->changeset[1]->field_change->value['format']);
-        $this->assertEquals('assigned_to', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('jeanjean', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        $this->assertEquals('username', (string) $this->xml->artifact->changeset[1]->field_change->value['format']);
+        $this->assertEquals('assigned_to', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
     }
 
     /**
@@ -899,9 +899,9 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(1, $this->xml->artifact->changeset);
 
         $field_change = $this->findValue($this->xml->artifact->changeset[0], 'assigned_to');
-        $this->assertEquals('jeanjean', (string)$field_change->value);
-        $this->assertEquals('list', (string)$field_change['type']);
-        $this->assertEquals('users', (string)$field_change['bind']);
+        $this->assertEquals('jeanjean', (string) $field_change->value);
+        $this->assertEquals('list', (string) $field_change['type']);
+        $this->assertEquals('users', (string) $field_change['bind']);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryInHappyPath() : void
@@ -911,23 +911,23 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
 
-        $this->assertEquals('', (string)$initial_change->value[0]);
-        $this->assertEquals('multiselect', (string)$initial_change['field_name']);
-        $this->assertEquals('list', (string)$initial_change['type']);
-        $this->assertEquals('static', (string)$initial_change['bind']);
+        $this->assertEquals('', (string) $initial_change->value[0]);
+        $this->assertEquals('multiselect', (string) $initial_change['field_name']);
+        $this->assertEquals('list', (string) $initial_change['type']);
+        $this->assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('UI', (string)$this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('Database', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('Stuff', (string)$this->xml->artifact->changeset[2]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('Stuff', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryWithMultipleStaticMultiSelectBoxesInHappyPath() : void
@@ -938,41 +938,41 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $initial_change_msb   = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
         $initial_change_msb_2 = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_2');
 
-        $this->assertEquals('', (string)$initial_change_msb->value[0]);
-        $this->assertEquals('multiselect', (string)$initial_change_msb['field_name']);
-        $this->assertEquals('list', (string)$initial_change_msb['type']);
-        $this->assertEquals('static', (string)$initial_change_msb['bind']);
+        $this->assertEquals('', (string) $initial_change_msb->value[0]);
+        $this->assertEquals('multiselect', (string) $initial_change_msb['field_name']);
+        $this->assertEquals('list', (string) $initial_change_msb['type']);
+        $this->assertEquals('static', (string) $initial_change_msb['bind']);
 
-        $this->assertEquals('', (string)$initial_change_msb_2->value[0]);
-        $this->assertEquals('multiselect_2', (string)$initial_change_msb_2['field_name']);
-        $this->assertEquals('list', (string)$initial_change_msb_2['type']);
-        $this->assertEquals('static', (string)$initial_change_msb_2['bind']);
+        $this->assertEquals('', (string) $initial_change_msb_2->value[0]);
+        $this->assertEquals('multiselect_2', (string) $initial_change_msb_2['field_name']);
+        $this->assertEquals('list', (string) $initial_change_msb_2['type']);
+        $this->assertEquals('static', (string) $initial_change_msb_2['bind']);
 
-        $this->assertEquals('UI', (string)$this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('TV3', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect_2', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('TV3', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('multiselect_2', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals('Database', (string)$this->xml->artifact->changeset[3]->field_change->value[0]);
-        $this->assertEquals('Stuff', (string)$this->xml->artifact->changeset[3]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[3]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string)$this->xml->artifact->changeset[3]->submitted_on);
+        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
+        $this->assertEquals('Stuff', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
 
-        $this->assertEquals('TV5', (string)$this->xml->artifact->changeset[4]->field_change->value[0]);
-        $this->assertEquals('TV8_mont_blanc', (string)$this->xml->artifact->changeset[4]->field_change->value[1]);
-        $this->assertEquals('multiselect_2', (string)$this->xml->artifact->changeset[4]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[4]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[4]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234590000), (string)$this->xml->artifact->changeset[4]->submitted_on);
+        $this->assertEquals('TV5', (string) $this->xml->artifact->changeset[4]->field_change->value[0]);
+        $this->assertEquals('TV8_mont_blanc', (string) $this->xml->artifact->changeset[4]->field_change->value[1]);
+        $this->assertEquals('multiselect_2', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[4]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[4]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234590000), (string) $this->xml->artifact->changeset[4]->submitted_on);
     }
 
     public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasAZeroValue() : void
@@ -984,23 +984,23 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
 
-        $this->assertEquals('', (string)$initial_change->value[0]);
-        $this->assertEquals('multiselect', (string)$initial_change['field_name']);
-        $this->assertEquals('list', (string)$initial_change['type']);
-        $this->assertEquals('static', (string)$initial_change['bind']);
+        $this->assertEquals('', (string) $initial_change->value[0]);
+        $this->assertEquals('multiselect', (string) $initial_change['field_name']);
+        $this->assertEquals('list', (string) $initial_change['type']);
+        $this->assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('UI', (string)$this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('Database', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('Stuff', (string)$this->xml->artifact->changeset[2]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('Stuff', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAChangesetForAnHistoryEntryIfItHasAZeroValueInASetOfValues() : void
@@ -1010,30 +1010,30 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
 
-        $this->assertEquals('', (string)$initial_change->value[0]);
-        $this->assertEquals('multiselect', (string)$initial_change['field_name']);
-        $this->assertEquals('list', (string)$initial_change['type']);
-        $this->assertEquals('static', (string)$initial_change['bind']);
+        $this->assertEquals('', (string) $initial_change->value[0]);
+        $this->assertEquals('multiselect', (string) $initial_change['field_name']);
+        $this->assertEquals('list', (string) $initial_change['type']);
+        $this->assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('UI', (string)$this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('Database', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('0', (string)$this->xml->artifact->changeset[2]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals('Database', (string)$this->xml->artifact->changeset[3]->field_change->value[0]);
-        $this->assertEquals('Stuff', (string)$this->xml->artifact->changeset[3]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[3]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string)$this->xml->artifact->changeset[3]->submitted_on);
+        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
+        $this->assertEquals('Stuff', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
     }
 
     public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasALabelWithAComma() : void
@@ -1045,22 +1045,22 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
 
-        $this->assertEquals('', (string)$initial_change->value[0]);
-        $this->assertEquals('multiselect', (string)$initial_change['field_name']);
-        $this->assertEquals('list', (string)$initial_change['type']);
-        $this->assertEquals('static', (string)$initial_change['bind']);
+        $this->assertEquals('', (string) $initial_change->value[0]);
+        $this->assertEquals('multiselect', (string) $initial_change['field_name']);
+        $this->assertEquals('list', (string) $initial_change['type']);
+        $this->assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('UI', (string)$this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('PHP', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('PHP', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryInHappyPathWithUserMultiList() : void
@@ -1070,23 +1070,23 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user');
 
-        $this->assertEquals('', (string)$initial_change->value[0]);
-        $this->assertEquals('multiselect_user', (string)$initial_change['field_name']);
-        $this->assertEquals('list', (string)$initial_change['type']);
-        $this->assertEquals('users', (string)$initial_change['bind']);
+        $this->assertEquals('', (string) $initial_change->value[0]);
+        $this->assertEquals('multiselect_user', (string) $initial_change['field_name']);
+        $this->assertEquals('list', (string) $initial_change['type']);
+        $this->assertEquals('users', (string) $initial_change['bind']);
 
-        $this->assertEquals('yannis', (string)$this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('nicolas', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('sandra', (string)$this->xml->artifact->changeset[2]->field_change->value[1]);
-        $this->assertEquals('multiselect_user', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('nicolas', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('sandra', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
+        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryWithMultipleUserMultiSelectBoxesInHappyPath() : void
@@ -1097,41 +1097,41 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $initial_change_msb   = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user');
         $initial_change_msb_2 = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user2');
 
-        $this->assertEquals('', (string)$initial_change_msb->value[0]);
-        $this->assertEquals('multiselect_user', (string)$initial_change_msb['field_name']);
-        $this->assertEquals('list', (string)$initial_change_msb['type']);
-        $this->assertEquals('users', (string)$initial_change_msb['bind']);
+        $this->assertEquals('', (string) $initial_change_msb->value[0]);
+        $this->assertEquals('multiselect_user', (string) $initial_change_msb['field_name']);
+        $this->assertEquals('list', (string) $initial_change_msb['type']);
+        $this->assertEquals('users', (string) $initial_change_msb['bind']);
 
-        $this->assertEquals('', (string)$initial_change_msb_2->value[0]);
-        $this->assertEquals('multiselect_user2', (string)$initial_change_msb_2['field_name']);
-        $this->assertEquals('list', (string)$initial_change_msb_2['type']);
-        $this->assertEquals('users', (string)$initial_change_msb_2['bind']);
+        $this->assertEquals('', (string) $initial_change_msb_2->value[0]);
+        $this->assertEquals('multiselect_user2', (string) $initial_change_msb_2['field_name']);
+        $this->assertEquals('list', (string) $initial_change_msb_2['type']);
+        $this->assertEquals('users', (string) $initial_change_msb_2['bind']);
 
-        $this->assertEquals('yannis', (string)$this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('nicolas', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect_user2', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('nicolas', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('multiselect_user2', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals('nicolas', (string)$this->xml->artifact->changeset[3]->field_change->value[0]);
-        $this->assertEquals('sandra', (string)$this->xml->artifact->changeset[3]->field_change->value[1]);
-        $this->assertEquals('multiselect_user', (string)$this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[3]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string)$this->xml->artifact->changeset[3]->submitted_on);
+        $this->assertEquals('nicolas', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
+        $this->assertEquals('sandra', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
+        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
 
-        $this->assertEquals('yannis', (string)$this->xml->artifact->changeset[4]->field_change->value[0]);
-        $this->assertEquals('sandra', (string)$this->xml->artifact->changeset[4]->field_change->value[1]);
-        $this->assertEquals('multiselect_user2', (string)$this->xml->artifact->changeset[4]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[4]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[4]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234590000), (string)$this->xml->artifact->changeset[4]->submitted_on);
+        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[4]->field_change->value[0]);
+        $this->assertEquals('sandra', (string) $this->xml->artifact->changeset[4]->field_change->value[1]);
+        $this->assertEquals('multiselect_user2', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[4]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[4]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234590000), (string) $this->xml->artifact->changeset[4]->submitted_on);
     }
 
     public function testItDoesNotCreateAnExtraChangesetIfUsersAreNotInTheSameOrder() : void
@@ -1141,29 +1141,29 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $initial_change_msb = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user');
 
-        $this->assertEquals('', (string)$initial_change_msb->value[0]);
-        $this->assertEquals('multiselect_user', (string)$initial_change_msb['field_name']);
-        $this->assertEquals('list', (string)$initial_change_msb['type']);
-        $this->assertEquals('users', (string)$initial_change_msb['bind']);
+        $this->assertEquals('', (string) $initial_change_msb->value[0]);
+        $this->assertEquals('multiselect_user', (string) $initial_change_msb['field_name']);
+        $this->assertEquals('list', (string) $initial_change_msb['type']);
+        $this->assertEquals('users', (string) $initial_change_msb['bind']);
 
-        $this->assertEquals('yannis', (string)$this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals('sandra', (string)$this->xml->artifact->changeset[3]->field_change->value[0]);
-        $this->assertEquals('nicolas', (string)$this->xml->artifact->changeset[3]->field_change->value[1]);
-        $this->assertEquals('multiselect_user', (string)$this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[3]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string)$this->xml->artifact->changeset[3]->submitted_on);
+        $this->assertEquals('sandra', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
+        $this->assertEquals('nicolas', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
+        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
     }
 
     public function testItDoesNotCreateAnExtraChangesetIfUsersLastValueIsNone() : void
@@ -1173,22 +1173,22 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $initial_change_msb = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user');
 
-        $this->assertEquals('', (string)$initial_change_msb->value[0]);
-        $this->assertEquals('multiselect_user', (string)$initial_change_msb['field_name']);
-        $this->assertEquals('list', (string)$initial_change_msb['type']);
-        $this->assertEquals('users', (string)$initial_change_msb['bind']);
+        $this->assertEquals('', (string) $initial_change_msb->value[0]);
+        $this->assertEquals('multiselect_user', (string) $initial_change_msb['field_name']);
+        $this->assertEquals('list', (string) $initial_change_msb['type']);
+        $this->assertEquals('users', (string) $initial_change_msb['bind']);
 
-        $this->assertEquals('yannis', (string)$this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string)$this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string)$this->xml->artifact->changeset[1]->submitted_on);
+        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('', (string)$this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string)$this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string)$this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('users', (string)$this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string)$this->xml->artifact->changeset[2]->submitted_on);
+        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        $this->assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     /**
@@ -1201,10 +1201,10 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(1, $this->xml->artifact->changeset);
 
         $field_change = $this->findValue($this->xml->artifact->changeset[0], 'multiselect_user');
-        $this->assertEquals('nicolas', (string)$field_change->value[0]);
-        $this->assertEquals('sandra', (string)$field_change->value[1]);
-        $this->assertEquals('list', (string)$field_change['type']);
-        $this->assertEquals('users', (string)$field_change['bind']);
+        $this->assertEquals('nicolas', (string) $field_change->value[0]);
+        $this->assertEquals('sandra', (string) $field_change->value[1]);
+        $this->assertEquals('list', (string) $field_change['type']);
+        $this->assertEquals('users', (string) $field_change['bind']);
     }
 
     public function testItIgnoresMissingUser() : void
@@ -1212,8 +1212,8 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_and_missing_user');
         $this->assertCount(1, $this->xml->artifact->changeset);
         $field_change = $this->findValue($this->xml->artifact->changeset[0], 'assigned_to');
-        $this->assertEquals('', (string)$field_change->value);
-        $this->assertEquals('list', (string)$field_change['type']);
-        $this->assertEquals('users', (string)$field_change['bind']);
+        $this->assertEquals('', (string) $field_change->value);
+        $this->assertEquals('list', (string) $field_change['type']);
+        $this->assertEquals('users', (string) $field_change['bind']);
     }
 }

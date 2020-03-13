@@ -37,7 +37,7 @@ class PlanningRepresentation extends PlanningRepresentationBase
         $this->id                = JsonCast::toInt($planning->getId());
         $this->uri               = ResourceReference::NO_ROUTE;
         $this->label             = $planning->getName();
-        $this->milestones_uri    = self::ROUTE .'/'. $this->id .'/'. MilestoneRepresentation::ROUTE;
+        $this->milestones_uri    = self::ROUTE . '/' . $this->id . '/' . MilestoneRepresentation::ROUTE;
 
         $this->milestone_tracker = new TrackerReference();
         $this->milestone_tracker->build($planning->getPlanningTracker());

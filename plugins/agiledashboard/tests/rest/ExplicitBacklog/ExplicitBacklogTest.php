@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class ExplicitBacklogTest extends TestBase
 {
@@ -43,7 +43,7 @@ class ExplicitBacklogTest extends TestBase
         $response_patch = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->patch(
-                'projects/'. urlencode((string) $this->explicit_backlog_project_id). '/backlog',
+                'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog',
                 null,
                 $patch_body
             )
@@ -106,7 +106,7 @@ class ExplicitBacklogTest extends TestBase
 
         $response_patch = $this->getResponse(
             $this->client->patch(
-                'milestones/'. urlencode((string) $release_artifact_id). '/content',
+                'milestones/' . urlencode((string) $release_artifact_id) . '/content',
                 null,
                 $patch_body
             )
@@ -130,7 +130,7 @@ class ExplicitBacklogTest extends TestBase
 
         $response_patch = $this->getResponse(
             $this->client->patch(
-                'projects/'. urlencode((string) $this->explicit_backlog_project_id). '/backlog',
+                'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog',
                 null,
                 $patch_body
             )
@@ -152,7 +152,7 @@ class ExplicitBacklogTest extends TestBase
 
         $response_patch = $this->getResponse(
             $this->client->patch(
-                'projects/'. urlencode((string) $this->explicit_backlog_project_id). '/backlog',
+                'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog',
                 null,
                 $patch_body
             )
@@ -173,7 +173,7 @@ class ExplicitBacklogTest extends TestBase
 
     private function assertTopBacklogContainsTheFirstStory(): void
     {
-        $response          = $this->getResponse($this->client->get('projects/' . urlencode((string)$this->explicit_backlog_project_id) . '/backlog'));
+        $response          = $this->getResponse($this->client->get('projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
         $top_backlog_items = $response->json();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -184,7 +184,7 @@ class ExplicitBacklogTest extends TestBase
 
     private function assertTopBacklogIsEmpty(): void
     {
-        $response          = $this->getResponse($this->client->get('projects/' . urlencode((string)$this->explicit_backlog_project_id) . '/backlog'));
+        $response          = $this->getResponse($this->client->get('projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
         $top_backlog_items = $response->json();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -196,7 +196,7 @@ class ExplicitBacklogTest extends TestBase
     {
         $release_artifact_id = $this->getFirstReleaseArtifactId();
 
-        $response      = $this->getResponse($this->client->get('milestones/' . urlencode((string)$release_artifact_id) . '/content'));
+        $response      = $this->getResponse($this->client->get('milestones/' . urlencode((string) $release_artifact_id) . '/content'));
         $release_items = $response->json();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -209,7 +209,7 @@ class ExplicitBacklogTest extends TestBase
     {
         $release_artifact_id = $this->getFirstReleaseArtifactId();
 
-        $response      = $this->getResponse($this->client->get('milestones/' . urlencode((string)$release_artifact_id) . '/content'));
+        $response      = $this->getResponse($this->client->get('milestones/' . urlencode((string) $release_artifact_id) . '/content'));
         $release_items = $response->json();
 
         $this->assertEquals(200, $response->getStatusCode());

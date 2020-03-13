@@ -44,7 +44,7 @@ if (defined('NUSOAP')) {
         ),
         array('return'   => 'tns:Session'), // output parameters
         $uri, // namespace
-        $uri.'#login', // soapaction
+        $uri . '#login', // soapaction
         'rpc', // style
         'encoded', // use
         'Login Tuleap Server with given login and password.
@@ -58,7 +58,7 @@ if (defined('NUSOAP')) {
         ),
         array('return'   => 'xsd:string'), // output parameters
         $uri, // namespace
-        $uri.'#loginAs', // soapaction
+        $uri . '#loginAs', // soapaction
         'rpc', // style
         'encoded', // use
         'Login Tuleap Server with given admin_session_name and login.
@@ -71,7 +71,7 @@ if (defined('NUSOAP')) {
         ),
         array('return'   => 'tns:Session'),
         $uri,
-        $uri.'#retrieveSession',
+        $uri . '#retrieveSession',
         'rpc',
         'encoded',
         'Retrieve a valid session with a given session_hash and version.
@@ -83,7 +83,7 @@ if (defined('NUSOAP')) {
         array(),
         array('return' => 'xsd:string'),
         $uri,
-        $uri.'#getAPIVersion',
+        $uri . '#getAPIVersion',
         'rpc',
         'encoded',
         'Returns the current version of this Web Service API.'
@@ -94,7 +94,7 @@ if (defined('NUSOAP')) {
         array('sessionKey' => 'xsd:string'),
         array(),
         $uri,
-        $uri.'#logout',
+        $uri . '#logout',
         'rpc',
         'encoded',
         'Logout the session identified by the given sessionKey From Codendi Server.
@@ -123,7 +123,7 @@ if (defined('NUSOAP')) {
             );
             return $return;
         } else {
-            return new SoapFault(LOGIN_FAULT, $loginname.' : '.$Language->getText('include_session', 'invalid_pwd'), 'login');
+            return new SoapFault(LOGIN_FAULT, $loginname . ' : ' . $Language->getText('include_session', 'invalid_pwd'), 'login');
         }
     }
 

@@ -80,7 +80,7 @@ if ($is_go_option && !isset($argv[2])) {
     $dry_run   = false;
     $force_all = true;
     if (isset($argv[3]) && is_numeric($argv[3])) {
-        $limit = (int)$argv[3];
+        $limit = (int) $argv[3];
         if ($limit < 0) {
             echo "limit can't be negative" . PHP_EOL;
             exit(1);
@@ -92,7 +92,7 @@ $force = [];
 if (! $force_all) {
     foreach ($argv as $arg) {
         if (is_numeric($arg)) {
-            $force[] = (int)$arg;
+            $force[] = (int) $arg;
         }
     }
 }

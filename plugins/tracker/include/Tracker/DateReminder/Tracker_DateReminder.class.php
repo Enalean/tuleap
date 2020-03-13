@@ -343,7 +343,7 @@ class Tracker_DateReminder
         $ugroups        = explode(',', $this->ugroups);
         if (!empty($ugroups)) {
             foreach ($ugroups as $ugroup) {
-                $ugroupsLabel  .= ' "'.util_translate_name_ugroup($ugroupManager->getById($ugroup)->getName()).' "';
+                $ugroupsLabel  .= ' "' . util_translate_name_ugroup($ugroupManager->getById($ugroup)->getName()) . ' "';
             }
         }
         return $ugroupsLabel;
@@ -359,7 +359,7 @@ class Tracker_DateReminder
         $rolesLabel   = '';
         $roles        = $this->getRoles();
         foreach ($roles as $role) {
-            $rolesLabel  .= ' "'.$role->getLabel().' "';
+            $rolesLabel  .= ' "' . $role->getLabel() . ' "';
         }
         return $rolesLabel;
     }

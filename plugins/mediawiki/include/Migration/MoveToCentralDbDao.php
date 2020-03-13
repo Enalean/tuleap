@@ -45,7 +45,7 @@ class MoveToCentralDbDao extends DataAccessObject
         if (trim($this->central_database_name) === '') {
             return false;
         }
-        return $this->retrieveCount('SHOW DATABASES LIKE '.$this->da->quoteSmart($this->central_database_name)) !== 0;
+        return $this->retrieveCount('SHOW DATABASES LIKE ' . $this->da->quoteSmart($this->central_database_name)) !== 0;
     }
 
     public function moveAll()

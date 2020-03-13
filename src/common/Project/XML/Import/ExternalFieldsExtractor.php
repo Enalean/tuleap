@@ -43,7 +43,7 @@ class ExternalFieldsExtractor
     {
         foreach ($xml_form_element as $index => $form_element) {
             if ($form_element->externalField) {
-                $external_field_id        = (string)$form_element->externalField['ID'];
+                $external_field_id        = (string) $form_element->externalField['ID'];
                 $validate_external_fields = new ImportValidateExternalFields($form_element->externalField);
                 $this->event_manager->processEvent($validate_external_fields);
                 $this->removeReferencesToExternalField($xml_form_element, $external_field_id);

@@ -74,7 +74,7 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
     {
         $current_hash = hash_file('sha256', $user_avatar_path);
         if ($current_hash !== $hash) {
-            $layout->permanentRedirect('/users/'.$user_name.'/avatar-'.$current_hash.'.png');
+            $layout->permanentRedirect('/users/' . $user_name . '/avatar-' . $current_hash . '.png');
         }
     }
 
@@ -82,7 +82,7 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
     {
         header('Content-Type: image/png');
         if ($this->never_expires) {
-            header('Cache-Control: max-age='.self::ONE_YEAR_IN_SECONDS);
+            header('Cache-Control: max-age=' . self::ONE_YEAR_IN_SECONDS);
         } else {
             header('Cache-Control: max-age=60');
         }
