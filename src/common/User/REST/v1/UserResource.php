@@ -33,6 +33,7 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
+use Tuleap\User\Admin\UserStatusChecker;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryRetriever;
@@ -443,31 +444,32 @@ class UserResource extends AuthenticatedResource
      * @param string  $id        Id of the user
      * @param Array   $values    User fields values
      *
+     * @throws RestException
      */
     protected function patchUserDetails($id, array $values)
     {
-        $watchee = $this->getUserById($id);
-        $watcher = $this->user_manager->getCurrentUser();
-        if ($this->checkUserCanUpdateOtherUser($watcher, $watchee)) {
+        $user_to_update = $this->getUserById($id);
+        $current_user = $this->user_manager->getCurrentUser();
+        if ($this->checkUserCanUpdate($current_user)) {
             foreach ($values as $key => $value) {
                 switch ($key) {
                     case "status":
-                        $watchee->setStatus($value);
+                        $this->updateUserStatus($user_to_update, $value);
                         break;
                     case "email":
-                        $watchee->setEmail($value);
+                        $user_to_update->setEmail($value);
                         break;
                     case "real_name":
-                        $watchee->setRealName($value);
+                        $user_to_update->setRealName($value);
                         break;
                     case "username":
-                        $watchee->setUserName($value);
+                        $user_to_update->setUserName($value);
                         break;
                     default:
                         break;
                 }
             }
-            return $this->user_manager->updateDb($watchee);
+            return $this->user_manager->updateDb($user_to_update);
         }
         throw new RestException(403, "Cannot update other's details");
     }
@@ -478,16 +480,31 @@ class UserResource extends AuthenticatedResource
      * @return bool
      *
      */
-    private function checkUserCanUpdateOtherUser(PFUser $watcher, PFUser $watchee)
+    private function checkUserCanUpdate(PFUser $current_user)
     {
-        if ($watcher->isSuperUser()) {
+        if ($current_user->isSuperUser()) {
             return true;
         }
 
         return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
-            $watcher,
+            $current_user,
             new User_ForgeUserGroupPermission_UserManagement()
         );
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function updateUserStatus(PFUser $user_to_update, string $value): void
+    {
+        if ($value === PFUser::STATUS_RESTRICTED) {
+            $user_status_checker = new UserStatusChecker();
+            if (! $user_status_checker->doesPlatformAllowRestricted()) {
+                throw new RestException(400, "Restricted users are not authorized.");
+            }
+        }
+
+        $user_to_update->setStatus($value);
     }
 
     private function getUserById($id)
