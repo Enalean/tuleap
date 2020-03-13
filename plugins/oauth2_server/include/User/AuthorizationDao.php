@@ -38,6 +38,6 @@ class AuthorizationDao extends DataAccessObject
     {
         $sql = 'SELECT id FROM plugin_oauth2_authorization
                 WHERE user_id = ? AND app_id = ?';
-        return $this->getDB()->cell($sql, $user->getId(), $app_id);
+        return $this->getDB()->cell($sql, $user->getId(), $app_id) ?: null;
     }
 }
