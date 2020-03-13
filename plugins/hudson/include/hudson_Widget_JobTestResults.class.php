@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2016-Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -28,6 +28,7 @@ use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class hudson_Widget_JobTestResults extends HudsonJobWidget
 {
     /**
@@ -142,24 +143,23 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
         return $html;
     }
 
-    public function getJavascriptDependencies()
+    public function getJavascriptDependencies(): array
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/hudson/scripts',
-            '/assets/hudson/scripts'
-        );
-
         return [
-            ['file' => $include_assets->getFileURL('test-results-pie.js')]
+            ['file' => $this->getAssets()->getFileURL('test-results-pie.js')]
         ];
     }
 
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies(): CssAssetCollection
     {
-        $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/hudson/themes',
-            '/assets/hudson/themes'
+        return new CssAssetCollection([new CssAsset($this->getAssets(), 'bp-style')]);
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/hudson',
+            '/assets/hudson'
         );
-        return new CssAssetCollection([new CssAsset($theme_include_assets, 'bp-style')]);
     }
 }

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,25 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($) {
-    var svn_paths_textarea, svn_checkbox;
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-    function changeSVNPathsTextareVisibility() {
-        if (svn_checkbox.is(":checked")) {
-            svn_paths_textarea.show();
-        } else {
-            svn_paths_textarea.hide();
-        }
-    }
-
-    $(document).ready(function() {
-        svn_paths_textarea = $("#hudson_svn_paths");
-        svn_checkbox = $("#hudson_use_svn_trigger");
-
-        changeSVNPathsTextareVisibility();
-
-        svn_checkbox.change(function() {
-            changeSVNPathsTextareVisibility();
-        });
-    });
-})(window.jQuery);
+module.exports = webpack_configurator.extendProdConfiguration(common);
