@@ -1,0 +1,54 @@
+<div class="user-preferences">
+    <h1 class="user-preferences-title">
+        {{# gettext }}Preferences{{/ gettext }}
+    </h1>
+    <div class="user-preferences-container">
+        {{> user-account-tabs }}
+
+        <div class="user-preferences-section">
+            <section class="tlp-pane">
+                <form class="tlp-pane-container" >
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">{{# dgettext }}tuleap-oauth2_server | OAuth2 Apps{{/ dgettext }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <p>{{# dgettext }}
+                            tuleap-oauth2_server |
+                            This is a list of OAuth2 apps you have authorized access to Tuleap on your behalf.
+                        {{/ dgettext }}</p>
+                        {{^ has_apps }}
+                            <div class="empty-pane user-preferences-key-empty">
+                                <p class="empty-pane-text user-preferences-key-empty-text">
+                                    {{# dgettext }}tuleap-oauth2_server | You did not authorize any OAuth2 App yet.{{/ dgettext }}
+                                </p>
+                            </div>
+                        {{/ has_apps }}
+                    </section>
+                    {{# has_apps }}
+                        <section class="tlp-pane-section-for-cards">
+                            {{# apps }}
+                                <div class="tlp-card oauth2-server-user-preferences-app">
+                                    <div class="oauth2-server-user-preferences-app-information">
+                                        <p class="oauth2-server-user-preferences-app-information-name">
+                                            {{ name }}
+                                        </p>
+                                        <div class="tlp-property">
+                                            <label class="tlp-label">
+                                                <i class="fa fa-archive tlp-label-icon"></i>
+                                                {{# dgettext }}tuleap-oauth2_server | Project{{/ dgettext }}
+                                            </label>
+                                            <p>{{ project_name }}</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="tlp-button-danger tlp-button-small tlp-button-outline" disabled>
+                                        <i class="tlp-button-icon fa fa-trash-o"></i> {{# dgettext }}tuleap-oauth2_server | Revoke authorization{{/ dgettext }}
+                                    </button>
+                                </div>
+                            {{/ apps }}
+                        </section>
+                    {{/ has_apps }}
+                </form>
+            </section>
+        </div>
+    </div>
+</div>

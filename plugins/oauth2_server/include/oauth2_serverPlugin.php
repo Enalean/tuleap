@@ -52,6 +52,7 @@ use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
@@ -80,6 +81,7 @@ final class oauth2_serverPlugin extends Plugin
     {
         $this->addHook(NavigationPresenter::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(AccountTabPresenterCollection::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -133,6 +135,7 @@ final class oauth2_serverPlugin extends Plugin
                     '/project/{project_id:\d+}/admin/delete-app',
                     $this->getRouteHandler('routeDeleteProjectAdmin')
                 );
+                $r->get('/account/apps', $this->getRouteHandler('routeGetAccountApps'));
                 $r->get(
                     '/testendpoint',
                     $this->getRouteHandler('routeTestEndpoint')
@@ -330,5 +333,26 @@ final class oauth2_serverPlugin extends Plugin
                 BackendLogger::getDefaultLogger()
             )
         );
+    }
+
+    public function routeGetAccountApps(): DispatchableWithRequest
+    {
+        return new \Tuleap\OAuth2Server\User\Account\AccountAppsController(
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new \Tuleap\OAuth2Server\User\Account\AppsPresenterBuilder(
+                EventManager::instance(),
+                new AppFactory(new AppDao(), \ProjectManager::instance())
+            ),
+            TemplateRendererFactory::build(),
+            UserManager::instance(),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+        );
+    }
+
+    public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
+    {
+        (new \Tuleap\OAuth2Server\User\Account\AppsTabAdder())->addTabs($collection);
     }
 }

@@ -56,6 +56,18 @@ class AppDao extends DataAccessObject
         return $this->getDB()->run($sql, $project->getID());
     }
 
+    /**
+     * @psalm-return array<array{id:int, project_id:int, name:string}>
+     */
+    public function searchAuthorizedAppsByUser(\PFUser $user): array
+    {
+        $sql = 'SELECT app.id, project_id, name, redirect_endpoint
+                FROM plugin_oauth2_server_app AS app
+                JOIN plugin_oauth2_authorization AS authorization ON app.id = authorization.app_id
+                WHERE authorization.user_id = ?';
+        return $this->getDB()->run($sql, $user->getId());
+    }
+
     public function create(NewOAuth2App $app): int
     {
         $this->getDB()->insert(

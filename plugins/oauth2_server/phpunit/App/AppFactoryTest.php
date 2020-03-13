@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\App;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AppFactoryTest extends TestCase
 {
@@ -116,5 +117,73 @@ final class AppFactoryTest extends TestCase
 
         $result = $this->app_factory->getAppMatchingClientId($client_id);
         $this->assertEquals(new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project), $result);
+    }
+
+    public function testGetAppsAuthorizedByUserReturnsApps(): void
+    {
+        $rows = [
+            [
+                'id'                => 1,
+                'name'              => 'Jenkins',
+                'redirect_endpoint' => 'https://jenkins.example.com',
+                'project_id'        => 204
+            ], [
+                'id'                => 2,
+                'name'              => 'My custom REST client',
+                'redirect_endpoint' => 'https://my-custom-client.example.com',
+                'project_id'        => 205
+            ]
+        ];
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->app_dao->shouldReceive('searchAuthorizedAppsByUser')
+            ->once()
+            ->with($user)
+            ->andReturn($rows);
+        $project_204 = new \Project(['group_id' => 204]);
+        $project_205 = new \Project(['group_id' => 205]);
+        $this->project_manager->shouldReceive('getValidProject')->once()->with(204)->andReturn($project_204);
+        $this->project_manager->shouldReceive('getValidProject')->once()->with(205)->andReturn($project_205);
+
+        $result = $this->app_factory->getAppsAuthorizedByUser($user);
+        $this->assertEquals(
+            [
+                new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project_204),
+                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', $project_205)
+            ],
+            $result
+        );
+    }
+
+    public function testGetAppsAuthorizedByUserSkipsAppsWithProjectsNotFound(): void
+    {
+        $rows = [
+            [
+                'id'                => 1,
+                'name'              => 'Jenkins',
+                'redirect_endpoint' => 'https://jenkins.example.com',
+                'project_id'        => 204
+            ], [
+                'id'                => 4,
+                'name'              => 'Project is invalid',
+                'redirect_endpoint' => 'https://example.com',
+                'project_id'        => 404
+            ]
+        ];
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->app_dao->shouldReceive('searchAuthorizedAppsByUser')
+            ->once()
+            ->with($user)
+            ->andReturn($rows);
+        $project_204 = new \Project(['group_id' => 204]);
+        $this->project_manager->shouldReceive('getValidProject')->once()->with(204)->andReturn($project_204);
+        $this->project_manager->shouldReceive('getValidProject')
+            ->once()
+            ->with(404)
+            ->andThrow(\Project_NotFoundException::class);
+
+        $result = $this->app_factory->getAppsAuthorizedByUser($user);
+        $this->assertEquals([
+            new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project_204),
+        ], $result);
     }
 }
