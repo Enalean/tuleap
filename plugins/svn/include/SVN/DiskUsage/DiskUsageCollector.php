@@ -23,6 +23,7 @@ namespace Tuleap\SVN\DiskUsage;
 use Project;
 use Statistics_DiskUsageDao;
 use SvnPlugin;
+use Tuleap\Statistics\DiskUsage\Subversion\Retriever;
 
 class DiskUsageCollector
 {

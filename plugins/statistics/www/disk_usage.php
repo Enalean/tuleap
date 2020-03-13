@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2009
  *
@@ -29,11 +29,11 @@ use Tuleap\Statistics\DiskUsageServicesPresenterBuilder;
 use Tuleap\Statistics\DiskUsageTopUsersPresenterBuilder;
 use Tuleap\Statistics\DiskUsageProjectsPresenterBuilder;
 use Tuleap\Statistics\DiskUsageUserDetailsPresenterBuilder;
-use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
-use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
-use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
-use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
-use Tuleap\CVS\DiskUsage\FullHistoryDao;
+use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
+use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Retriever as CVSRetriever;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ .'/../include/Statistics_DiskUsageHtml.class.php';
