@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%s templates"
+msgstr "Modèles de %s"
+
 msgid "1"
 msgstr "1"
 
@@ -62,6 +65,10 @@ msgstr ""
 msgid "Create your new tracker without any configuration."
 msgstr "Créez votre nouvel outil de suivi sans aucune configuration."
 
+
+msgid "Custom templates"
+msgstr "Modèles personnalisés"
+
 msgid "Description"
 msgstr "Description"
 
@@ -74,6 +81,9 @@ msgstr ""
 
 msgid "Empty"
 msgstr "Vide"
+
+msgid "For advanced users"
+msgstr "Pour les utilisateurs avancés"
 
 msgid "Give your tracker some basic info"
 msgstr "Donnez à votre outil de suivi quelques infos de base"

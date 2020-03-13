@@ -36,6 +36,7 @@ export interface State {
     project_id: number;
     color_picker_data: DataForColorPicker[];
     default_tracker_color: string;
+    company_name: string;
 }
 
 export interface CSRFToken {
