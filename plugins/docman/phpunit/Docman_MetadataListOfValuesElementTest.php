@@ -25,12 +25,11 @@ namespace Tuleap\Docman;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\GlobalLanguageMock;
 
 class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandardsIgnoreLine
 {
 
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
 
     /**
      * @var \Docman_MetadataListOfValuesElement
