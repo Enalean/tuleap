@@ -27,3 +27,45 @@
     height: 20px;
     margin: 0 0 0 10px;
 }
+
+#tracker-creation-success-modal {
+    > .modal-body {
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+    }
+
+    > .modal-footer {
+        display: flex;
+        justify-content: center;
+
+        > .btn {
+            flex: 1;
+        }
+    }
+}
+
+#tracker-created {
+    font-size: 34px;
+}
+
+@keyframes moveStars {
+    from {
+        transform: scale(1);
+        opacity: .5;
+    }
+
+    to {
+        transform: scale(1.2);
+        opacity: .3;
+    }
+}
+
+.tracker-creation-success-modal-illustration {
+    margin: 40px 0 10px;
+}
+
+.tracker-creation-success-modal-illustration-stars {
+    transform-origin: center bottom;
+    animation: 8s ease-out forwards moveStars;
+}
