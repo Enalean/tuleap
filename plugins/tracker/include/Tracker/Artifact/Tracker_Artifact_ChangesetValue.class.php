@@ -135,7 +135,7 @@ abstract class Tracker_Artifact_ChangesetValue
      * Return the REST value of this changeset value
      *
      *
-     * @return ArtifactFieldValueRepresentationData
+     * @return ArtifactFieldValueRepresentationData|null
      */
     abstract public function getRESTValue(PFUser $user);
 
@@ -143,7 +143,7 @@ abstract class Tracker_Artifact_ChangesetValue
      * Return the full REST value of this changeset value
      *
      *
-     * @return ArtifactFieldValueRepresentationData
+     * @return ArtifactFieldValueRepresentationData|null
      */
     abstract public function getFullRESTValue(PFUser $user);
 
