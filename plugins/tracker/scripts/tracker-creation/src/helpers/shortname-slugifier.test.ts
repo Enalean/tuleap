@@ -35,8 +35,26 @@ describe("shortname slugifier", () => {
     });
 
     it("slugifies special chars", () => {
-        const name = `+.~()!:@"'*©®-<>`;
+        const name = `+a.a~a(a)a!a:a@a"a'a`;
 
-        expect(getSlugifiedShortname(name)).toEqual("________________");
+        expect(getSlugifiedShortname(name)).toEqual("_a_a_a_a_a_a_a_a_a_a");
+    });
+
+    it("slugifies other special chars", () => {
+        const name = `*a©a®a-a<a>a`;
+
+        expect(getSlugifiedShortname(name)).toEqual("_a_a_a_a_a_a");
+    });
+
+    it("truncates when its longer than 25 characters", () => {
+        const name = `+a.a~a(a)a!a:a@a"a'a*a©a®a-a<a>a`;
+
+        expect(getSlugifiedShortname(name)).toEqual("_a_a_a_a_a_a_a_a_a_a_a_a_");
+    });
+
+    it("only slugify once when special characters are sibilings", () => {
+        const name = `"'*©®-<>`;
+
+        expect(getSlugifiedShortname(name)).toEqual("_");
     });
 });
