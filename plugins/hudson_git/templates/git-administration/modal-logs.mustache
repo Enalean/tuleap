@@ -1,5 +1,5 @@
 <div id="modal-logs-{{ jenkins_server_id }}"
-    class="modal hide fade modal-webhook"
+    class="modal hide fade modal-webhook modal-webhook-jenkins"
     tabindex="-1"
     role="dialog"
     aria-labelledby="modal-logs-title"
@@ -22,10 +22,10 @@
             <tbody>
                 {{# logs_presenters }}
                     <tr>
-                        <td>
+                        <td class="jenkins-server-jobs-list-repository">
                             {{ repository_name }}
                         </td>
-                        <td>
+                        <td class="jenkins-server-jobs-list-date">
                             {{ push_date }}
                         </td>
                         <td>

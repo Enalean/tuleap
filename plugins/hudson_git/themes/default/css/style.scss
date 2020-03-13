@@ -1,3 +1,21 @@
+.modal-webhook-jenkins {
+    width: 1000px;
+    margin: 0;
+    transform: translateX(-50%);
+}
+
+table.jenkins-server-jobs-list > tbody > tr {
+    > td.jenkins-server-jobs-list-repository {
+        vertical-align: top;
+    }
+
+    > td.jenkins-server-jobs-list-date {
+        width: 10px;
+        vertical-align: top;
+        white-space: nowrap;
+    }
+}
+
 .git-jenkins-administration-desc {
     margin: 10px 0 20px;
 }
