@@ -58,10 +58,10 @@ class SendMailSupportController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $sys_https_host  = (string)ForgeConfig::get('sys_https_host');
+        $sys_https_host  = (string) ForgeConfig::get('sys_https_host');
         $current_user    = UserManager::instance()->getCurrentUser();
-        $message_title   = (string)$request->get('message-title');
-        $message_content = (string)$request->get('message-content');
+        $message_title   = (string) $request->get('message-title');
+        $message_content = (string) $request->get('message-content');
 
         $this->sendEmailToMyTuleapSupport($sys_https_host, $current_user, $message_title, $message_content);
 

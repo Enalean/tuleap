@@ -34,6 +34,6 @@ class Info extends PluginFileInfo
 
     protected function getDefaultConfPath(Plugin $plugin, $incname)
     {
-        return $plugin->getFilesystemPath() .'/etc/'. $incname .'.inc.dist';
+        return $plugin->getFilesystemPath() . '/etc/' . $incname . '.inc.dist';
     }
 }

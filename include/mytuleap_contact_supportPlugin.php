@@ -35,7 +35,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         parent::__construct($id);
 
         $this->setScope(self::SCOPE_SYSTEM);
-        bindtextdomain('tuleap-mytuleap_contact_support', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-mytuleap_contact_support', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()
@@ -112,7 +112,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
     public function cssfile()
     {
         $asset = $this->getIncludeAssets();
-        echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('style-flamingparrot.css') .'" />';
+        echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style-flamingparrot.css') . '" />';
     }
 
     public function javascript_file($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

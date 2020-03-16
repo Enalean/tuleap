@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('MYTULEAP_CONTACT_SUPPORT_BASE_DIR', realpath(__DIR__.'/..'));
+define('MYTULEAP_CONTACT_SUPPORT_BASE_DIR', realpath(__DIR__ . '/..'));

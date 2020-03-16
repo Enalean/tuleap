@@ -53,7 +53,7 @@ class ContactSupportFormController implements DispatchableWithRequest
             $this->getHelpPageContent()
         );
 
-        $is_burning_parrot_compatible = (bool)$request->get('is-burning-parrot-compatible');
+        $is_burning_parrot_compatible = (bool) $request->get('is-burning-parrot-compatible');
         $mustache_template            = 'modal-flaming-parrot';
         if ($is_burning_parrot_compatible) {
             $mustache_template = 'modal-burning-parrot';
