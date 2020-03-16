@@ -177,7 +177,6 @@ final class BaselinesResourceTest extends RestBase
 
     private function assertGETByProject(Response $response): void
     {
-
         $this->assertEquals(200, $response->getStatusCode());
 
         $json_response = $response->json();

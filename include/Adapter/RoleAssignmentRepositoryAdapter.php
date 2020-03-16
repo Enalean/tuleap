@@ -52,7 +52,7 @@ class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
 
         $assignments = [];
         foreach ($rows as $row) {
-            $assignments [] = new RoleAssignment(
+            $assignments[] = new RoleAssignment(
                 $project,
                 $row['user_group_id'],
                 $row['role']
